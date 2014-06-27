@@ -1,0 +1,190 @@
+test_hwa_config_from_reset_counter0_loop_up_fixed_ff_none: 
+
+test_hwa_config_from_reset_counter0_loop_up_fixed_ff_syshz: 
+   	ldi	r24, 0x01	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_up_pwm_fixed_ff_syshz_div_8: 
+   	ldi	r24, 0x03	
+   	out	0x30, r24	
+   	ldi	r24, 0x02	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_updown_pwm_fixed_ff_syshz_div_64: 
+   	ldi	r24, 0x01	
+   	out	0x30, r24	
+   	ldi	r24, 0x03	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_up_ocra_syshz_div_256: 
+   	ldi	r24, 0x02	
+   	out	0x30, r24	
+   	ldi	r24, 0x04	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_up_pwm_ocra_syshz_div_1024: 
+   	ldi	r24, 0x03	
+   	out	0x30, r24	
+   	ldi	r24, 0x0D	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_updown_pwm_ocra_ext_rising: 
+   	ldi	r24, 0x01	
+   	out	0x30, r24	
+   	ldi	r24, 0x0E	
+   	out	0x33, r24	
+
+test_hwa_config_from_reset_counter0_loop_updown_pwm_ocra_ext_falling: 
+   	ldi	r24, 0x01	
+   	out	0x30, r24	
+   	ldi	r24, 0x0F	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_up_fixed_ff_none: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_up_fixed_ff_syshz: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x01	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_up_pwm_fixed_ff_syshz_div_8: 
+   	in	r24, 0x30	
+   	ori	r24, 0x03	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x02	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_updown_pwm_fixed_ff_syshz_div_64: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	ori	r24, 0x01	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x03	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_up_ocra_syshz_div_256: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	ori	r24, 0x02	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x04	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_up_pwm_ocra_syshz_div_1024: 
+   	in	r24, 0x30	
+   	ori	r24, 0x03	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x0D	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_updown_pwm_ocra_ext_rising: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	ori	r24, 0x01	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	andi	r24, 0xF0	
+   	ori	r24, 0x0E	
+   	out	0x33, r24	
+
+test_hwa_config_counter0_loop_updown_pwm_ocra_ext_falling: 
+   	in	r24, 0x30	
+   	andi	r24, 0xFC	
+   	ori	r24, 0x01	
+   	out	0x30, r24	
+   	in	r24, 0x33	
+   	ori	r24, 0x0F	
+   	out	0x33, r24	
+
+test_hw_write_counter0_ocra_0: 
+   	out	0x36, r1	
+
+test_hw_write_counter0_ocra_255: 
+   	ldi	r24, 0xFF	
+   	out	0x36, r24	
+
+test_hw_write_counter0_ocrb_0: 
+   	out	0x3c, r1	
+
+test_hw_write_counter0_ocrb_255: 
+   	ldi	r24, 0xFF	
+   	out	0x3c, r24	
+
+test_hw_write_counter0_oie_0: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFE	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_overflow_off: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFE	
+   	out	0x39, r24	
+
+test_hw_write_counter0_oie_1: 
+   	in	r24, 0x39	
+   	ori	r24, 0x01	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_overflow_on: 
+   	in	r24, 0x39	
+   	ori	r24, 0x01	
+   	out	0x39, r24	
+
+test_hw_write_counter0_ociea_0: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFD	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_matcha_off: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFD	
+   	out	0x39, r24	
+
+test_hw_write_counter0_ociea_1: 
+   	in	r24, 0x39	
+   	ori	r24, 0x02	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_matcha_on: 
+   	in	r24, 0x39	
+   	ori	r24, 0x02	
+   	out	0x39, r24	
+
+test_hw_write_counter0_ocieb_0: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFB	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_matchb_off: 
+   	in	r24, 0x39	
+   	andi	r24, 0xFB	
+   	out	0x39, r24	
+
+test_hw_write_counter0_ocieb_1: 
+   	in	r24, 0x39	
+   	ori	r24, 0x04	
+   	out	0x39, r24	
+
+test_hw_turn_irq_counter0_matchb_on: 
+   	in	r24, 0x39	
+   	ori	r24, 0x04	
+   	out	0x39, r24	
+

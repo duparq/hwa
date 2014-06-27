@@ -1,0 +1,128 @@
+
+	;; -*- asm -*-
+
+	;; Macros for enabling/disabling start of frame interrupt (falling
+	;; edge on RXD)
+	;;
+	;; The RXD pin name determines the interrupt concerned.
+	
+
+#define enable_start	HW_G2(ENABLE_START, SWUART_PIN_RX)
+#define disable_start	HW_G2(DISABLE_START, SWUART_PIN_RX)
+
+	.equ HW_ISR(PIN, SWUART_PIN_RX), isr_start
+
+	;; Enable INT0 interrupt
+	;; 
+	.macro ENABLE_START_PIN_INT0 reg
+#if GIFR < 0x20
+	sbi	GIFR, INTF0	; [2]	Clear flag
+	TX=TX+2
+#else
+	ldi	\reg, 1<<INTF0	; [1]
+	out	GIFR, \reg	; [1]
+	TX=TX+2
+#endif
+#if GIMSK < 0x20
+	sbi	GIMSK, INT0	; [2]	Set mask
+	TX=TX+2
+#else
+	cli			; [1]
+	in	\reg, GIMSK	; [1]
+	ori	\reg, 1<<INT0	; [1]
+	sei			; [1]
+	out	GIMSK, \reg	; [1]
+	TX=TX+5
+#endif
+	.endm
+
+	;; Disable INT0 interrupt
+	;; 
+	.macro DISABLE_START_PIN_INT0 reg
+#if GIMSK < 0x20
+	cbi	GIMSK, INT0	; [2]	Clear mask
+	TX=TX+2
+#else
+	cli			; [1]
+	in	\reg, GIMSK	; [1]
+	andi	\reg, ~(1<<INT0); [1]
+	sei			; [1]
+	out	GIMSK, \reg	; [1]
+	TX=TX+5
+#endif
+	.endm
+
+
+	;; Enable AIN1 interrupt
+	;; 
+	.macro ENABLE_START_PIN_AIN1 reg
+#if ACSR < 0x20
+	sbi	ACSR, ACI	; [2]	Clear flag
+	sbi	ACSR, ACIE	; [2]	Set mask
+	TX=TX+4
+#else
+	cli				; [1]
+	in	\reg, ACSR		; [1]
+	ori	\reg, 1<<ACI | 1<<ACIE	; [1]	Clear flag, set mask
+	sei				; [1]
+	out	ACSR, \reg		; [1]
+	TX=TX+5
+#endif
+	.endm
+
+	;; Disable AIN1 interrupt
+	;; 
+	.macro DISABLE_START_PIN_AIN1 reg
+#if ACSR < 0x20
+	cbi	ACSR, ACIE	; [2]	Clear mask
+	TX=TX+2
+#else
+	cli			; [1]
+	in	\reg, ACSR	; [1]
+	andi	\reg, ~(1<<ACIE); [1]
+	sei			; [1]
+	out	ACSR, \reg	; [1]
+	TX=TX+5
+#endif
+	.endm
+
+
+	;; Enable PCIE1/PCINT8 interrupt
+	;; 
+	.macro ENABLE_START_PIN_PCINT8 reg
+#if GIFR < 0x20
+	sbi	GIFR, PCIF1	; [2]	Clear flag
+	TX=TX+2
+#else
+	ldi	\reg, 1<<PCIF1	; [1]
+	out	GIFR, \reg	; [1]
+	TX=TX+2
+#endif
+#if GIMSK < 0x20
+	sbi	GIMSK, PCIE1	; [2]	Set mask
+	TX=TX+2
+#else
+	cli			; [1]
+	in	\reg, GIMSK	; [1]
+	ori	\reg, 1<<PCIE1	; [1]
+	sei			; [1]
+	out	GIMSK, \reg	; [1]
+	TX=TX+5
+#endif
+	.endm
+
+	;; Disable PCIE1/PCINT8 interrupt
+	;; 
+	.macro DISABLE_START_PIN_PCINT8 reg
+#if GIMSK < 0x20
+	cbi	GIMSK, PCIE1	; [2]
+	TX=TX+2
+#else
+	cli			; [1]
+	in	\reg, GIMSK	; [1]
+	andi	\reg, ~(1<<PCIE1); [1]
+	sei			; [1]
+	out	GIMSK, \reg	; [1]
+	TX=TX+5
+#endif
+	.endm

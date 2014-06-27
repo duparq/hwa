@@ -1,0 +1,901 @@
+
+	;; -*- asm -*-
+
+	;; Software half-duplex autobaud UART using a timer-counter
+	;; 
+	;; GCC call-used registers: R18..R27, R30, R31
+
+	;; Globals
+	;;
+	.global	swuart_data
+	swuart_data = data
+
+	.global	swuart_status
+	swuart_status = status
+
+	.global	swuart_dt0
+	swuart_dt0 = dt0
+
+	.global	swuart_dtn
+	swuart_dtn = dtn
+
+	.global	swuart_wait_ready
+ 	swuart_wait_ready = wait_ready
+
+	.global swuart_is_busy
+	swuart_is_busy = is_busy
+
+	.global swuart_is_emitting
+	swuart_is_emitting = is_emitting
+
+	.global swuart_rxq_notempty
+	swuart_rxq_notempty = rxq_notempty
+
+	.global swuart_tx_completed
+	swuart_tx_completed = tx_completed
+
+	.global swuart_wait_rxidle
+	swuart_wait_rxidle = wait_rxidle
+
+	.global swuart_wait_start
+	swuart_wait_start = wait_start
+
+	.global swuart_wait
+	swuart_wait = wait
+
+	.global swuart_set_dt
+	swuart_set_dt = setdt
+
+	.global swuart_enable_rx
+	swuart_enable_rx = enable_rx
+
+	.global swuart_getbyte
+	swuart_getbyte = getbyte
+
+	.global swuart_putbyte
+	swuart_putbyte = putbyte
+
+	.global swuart_putchar
+	swuart_putchar = putbyte
+
+	.global swuart_brk
+	swuart_brk = brk
+
+	.global swuart_config_rx
+	swuart_config_rx = config_rx
+
+	.section .bss
+	.global __do_clear_bss
+
+
+	;; Status register bits
+	;; 
+	;;   bit 0: stop bit (1: normal, 0: break)
+	;;   bit 1: idle bit
+	;;   bit 2: 1==stop bit received
+	;;   bit 3: receiving
+	;;
+	ST_STOP   = 0		; stop bit value
+	ST_       = 1		; idle state bit (always 1)
+	ST_RXQ_NE = 2		; stop bit sampled
+	ST_TXC    = 3		; tx completed
+	;; ST_START = 3		; receiving
+
+data:	.byte	0		; Data register
+status:	.byte	0		; Status register
+shift:	.byte	0		; Shift register
+nbit:	.byte	0		; # of bits to rx/tx
+
+	.global swuart_dtnl
+	swuart_dtnl = dtn+0
+	.global swuart_dtnh
+	swuart_dtnh = dtn+1
+
+	.if MATCH_BN==8
+dt0:	.byte	0	; 1.5 bit duration
+dtn:	.byte	0	; 1 bit duration
+match:	.byte	0	; Next bit rx/tx date
+	.elseif MATCH_BN==16
+dt0:	.word	0	; 1.5 bit duration
+dtn:	.word	0	; 1 bit duration
+match:	.word	0	; Next bit rx/tx date
+	.else
+	.error "MATCH_BN not set?"
+	.endif
+
+	.if CALLBACK_PTR
+cbptr:	.word	0		; C callback function (called after rx/tx done)
+	.endif
+
+	;; Pins
+	;;
+	ONEPIN = (TXDPORT == RXDPORT && TXDBIT == RXDBIT)
+
+	;; Counter macros
+	;;
+	;; HW_ISR(SWUART_COUNTER, HW_G2(match, SWUART_COUNTER_MATCH)) = isr_bit
+	HW_ISR(SWUART_COUNTER, SWUART_COUNTER_MATCH) = isr_bit
+
+	;; Enable counter compare-match: time to send/receive bit
+	;; 
+	.macro enable_match reg
+	XCF	\reg, MATCH_IF_RA, MATCH_IF_BP
+	XSBA	\reg, MATCH_IE_RA, MATCH_IE_BP
+	.endm
+
+	;; Disable counter compare-match: time to send/receive bit
+	;; 
+	.macro disable_match reg
+	XCBA	\reg, MATCH_IE_RA, MATCH_IE_BP
+	.endm
+
+	.macro test_match_ie reg ; Is 'MATCH A' enabled?
+	;; in	\reg, MATCHENB	;
+	;; andi	\reg, 1<<XMATCH	;
+	;; CYCLES=CYCLES+2
+	XLD	\reg, MATCH_IE_RA
+	andi	\reg, 1<<MATCH_IE_BP
+	CYCLES=CYCLES+1
+	.endm
+
+	;; Is the compare-match flag set?
+	;; 
+	.macro test_match_if reg
+	XLD	\reg, MATCH_IF_RA	;
+	andi	\reg, 1<<MATCH_IF_BP	;
+	CYCLES=CYCLES+2
+	.endm
+
+	.section .text
+	TSTART1 = 0
+	TSTART2 = 0
+
+
+#if defined SWUART_PIN_RX
+
+;; #  include "swuart-tc-macros-start.sx"
+
+	;; ISR START: falling edge on RX
+	;;
+	;;   All interrupts blocked for TSTART1 cycles (until sampling
+	;;   of counter COUNT).
+	;;   Total isr_start cycles: TSTART2
+	;;
+	;;  (See at the end of this file for how to get TSTART values)
+	;;
+isr_start:
+	CYCLES=4			; <- call
+	SREG_PUSHED = 0
+
+	.if CHECK_START_EDGE && RXDPIN < 0x20
+	sbic	RXDPIN, RXDBIT	; [2]
+	reti
+	CYCLES=CYCLES+2
+	.endif
+
+	.if DBG_RXSTART
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	push	R24		; [2]
+	CYCLES=CYCLES+2
+
+	.if CHECK_START_EDGE && RXDPIN > 0x1F
+	in	R24, SREG	; [1]
+	push	R24		; [2]
+	in	R24, RXDPIN	; [1]
+	andi	R24, 1<<RXDBIT  ; [1]
+	brne	1f		; [1]
+	CYCLES=CYCLES+5
+	SREG_PUSHED = 24
+	.endif
+
+	.if DBG_RXSTART2
+	cbi	DBGPORT, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	;; Get start bit date (R25:R24) and re-enable interrupts
+	;;
+	.if COUNT_BN==8
+	sei			; [1]
+	CYCLES=CYCLES+1
+	XLD	R24, COUNT
+	.endif
+
+	.if COUNT_BN==16
+	push	R25		; [2]
+	XLD	R24, COUNTL
+	sei			; [1]
+	XLD	R25, COUNTH
+	CYCLES=CYCLES+3
+	.endif
+
+	TSTART1=CYCLES		; Elapsed cycles between ISR start and date sampling
+
+	push	R26		; [2]
+	CYCLES=CYCLES+2
+
+	.if SREG_PUSHED == 0
+	XLD	R26, SREG
+	push	R26		; [2]
+	CYCLES=CYCLES+2
+	SREG_PUSHED = 26
+	.endif
+
+	;; Disable start interrupt
+	;; 
+	disable_start R26
+
+	;; Compute first data bit date
+	;;
+	.if COUNT_BN==8 && MATCH_BN==8
+	lds	R26, dt0	; [2]
+	add	R24, R26	; [1]
+	XST	MATCH, R24
+	sts	match, R24	; [2]
+	CYCLES=CYCLES+5
+	.endif
+
+	.if COUNT_BN==8 && MATCH_BN==16
+	ldi	R24, 1		; [1]		dec'ed first in isr
+	lds	R26, dt0+1	; [2]
+	add	R24, R26	; [1]		Do not add carry
+	sts	match+1, R24	; [2]
+	CYCLES=CYCLES+6
+	.endif
+
+	.if COUNT_BN==16 && MATCH_BN==16
+	lds	R26, dt0+0	; [2]
+	add	R24, R26	; [1]
+	lds	R26, dt0+1	; [2]
+	adc	R25, R26	; [1]
+	XST	MATCHH, R25
+	XST	MATCHL, R24
+	;; sts	match+0, R24	; [2]
+	;; sts	match+1, R25	; [2]
+	CYCLES=CYCLES+6
+	.endif
+
+	;; Set 'bit' reception routine up
+	;; 
+	ldi	R24, 8		; [1]		8 data bits to receive
+	sts	nbit, R24	; [2]
+	CYCLES=CYCLES+3
+
+	enable_match R24
+
+	;; Return
+	;; 
+	.if SREG_PUSHED == 26
+	pop	R26		; [2]
+	out	SREG, R26	; [1]
+	CYCLES=CYCLES+3
+	.endif
+
+	pop	R26		; [2]
+	CYCLES=CYCLES+2
+
+	.if COUNT_BN==16
+	pop	R25		; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+1:
+	.if SREG_PUSHED == 24
+	pop	R24		; [2]
+	out	SREG, R24	; [1]
+	CYCLES=CYCLES+3
+	.endif
+
+	pop	R24		; [2]
+	CYCLES=CYCLES+2
+
+	;; .if DBG_START || DBG_START2
+	;; cbi	DBGPORT, DBGBIT	; [2]
+	;; CYCLES=CYCLES+2
+	;; .endif
+
+	reti			; [4]
+	CYCLES=CYCLES+4
+	TSTART2=CYCLES
+
+#endif /* defined SWUART_PIN_RX */
+
+
+	;; ISR Bit: send/receive one bit
+	;;
+	;; The priority is to re-enable interrupts as quickly as possible.
+	;; 
+	;; RX: all interrupts blocked for 20 cycles
+	;;     received bit sampled 20 cycles after interrupt
+	;; TX: all interrupts blocked for --- cycles
+	;;     bit sent --- cycles after interrupt
+	;;
+isr_bit:
+	CYCLES=4			; [4]		<- call
+
+	.if DBG_ISR_BIT
+	;; sbi	DBGPORT, DBGBIT	; [2]
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	push	R31		; [2]
+	in	R31, SREG	; [1]
+	push	R31		; [2]
+	CYCLES=CYCLES+5
+
+	.if COUNT_BN==8 && MATCH_BN==16
+	lds	R31, match+1	; [2]
+	dec	R31		; [1]
+	sts	match+1, R31	; [2]
+	brne	L31S		; [1/2]
+	CYCLES=CYCLES+6
+	.endif
+
+	.if DBG_BIT
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	.if SWUART_TX
+	.if SWUART_RX
+	sbic	FLAGS, F_RXTX	; [2/1]		TX or RX?
+	.endif
+	rjmp	tx		; [2]
+	TBITTX=CYCLES+3
+	CYCLES=CYCLES+2
+	.else
+	.error "Not handled"
+	.endif
+
+#if defined SWUART_PIN_RX
+	;; Receiving
+	;;
+	.if DBG_RXBIT
+	;; sbi	DBGPORT, DBGBIT	; [2]
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	sei			; [1]		Sample port of RXD pin
+	in	R31, RXDPIN	; [1]		and enable interrupts
+	CYCLES=CYCLES+2
+
+	TBITRX1=CYCLES		; Elapsed cycles between interrupt and bit sampling
+
+	bst	R31, RXDBIT	; [1]		Store RXD bit to T
+	lds	R31, shift	; [2]		Store T to shift register
+	lsr	R31		; [1]
+	bld	R31, 7		; [1]
+	sts	shift, R31	; [2]
+	CYCLES=CYCLES+7
+
+	lds	R31, nbit	; [2]		One more bit received
+	subi	R31, 1		; [1]		'dec' would not set the carry!
+	sts	nbit, R31	; [2]
+	CYCLES=CYCLES+5
+
+	brmi	rxeof		; [1/2]		nbit<0
+	brne	next		; [1/2]
+	CYCLES=CYCLES+2
+
+	;; All data bits received
+	;; 
+	.if DBG_RXDATA
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	lds	R31, shift	; [2]		nbit==0: store shift reg to data byte
+	sts	data, R31	; [2]
+	CYCLES=CYCLES+4
+#endif /* defined SWUART_PIN_RX */
+
+	;; Compute next data bit date and set compare accordingly
+	;;
+next:
+	.if COUNT_BN==8
+	push	R30		; [2]
+	lds	R30, match	; [2]
+	lds	R31, dtn	; [2]
+	add	R30, R31	; [1]
+	XST	MATCH, R30
+	sts	match, R30	; [2]
+	CYCLES=CYCLES+9
+	.endif
+
+	;; .if COUNT_BN==8 && MATCH_BN==16
+	;; ldi	R30, 1		; [1]		dec'ed first in isr
+	;; lds	R31, dtn+1	; [2]
+	;; add	R30, R31	; [1]		Do not add carry
+	;; sts	match+1, R30	; [2]
+	;; CYCLES=CYCLES+6
+	;; .endif
+
+	.if COUNT_BN==8 && MATCH_BN==16
+	lds	R31, dtn+1	; [2]
+	sts	match+1, R31	; [2]
+	CYCLES=CYCLES+4
+	.endif
+
+	.if COUNT_BN==16
+	push	R30		; [2]
+	lds	R30, dtn+0	; [2]
+	lds	R31, dtn+1	; [2]
+	push	R29		; [2]
+	XLD	R29, MATCHL
+	add	R30, R29	; [1]
+	XLD	R29, MATCHH
+	adc	R31, R29	; [1]
+	pop	R29		; [2]
+	XST	MATCHH, R31
+	XST	MATCHL, R30
+	CYCLES=CYCLES+12
+	.endif
+
+L31S30:	pop	R30		; [2]
+L31S:	pop	R31		; [2]		Leave ISR
+	out	SREG, R31	; [1]
+	pop	R31		; [2]
+	CYCLES=CYCLES+7
+
+	;; .if DBG_BIT+DBG_RXBIT+DBG_RXEOF+DBG_RXDATA+DBG_TXBIT+DBG_TXEOF
+	;; cbi	DBGPORT, DBGBIT	; [2]
+	;; CYCLES=CYCLES+2
+	;; .endif
+
+	reti			; [4]
+	CYCLES=CYCLES+4
+	TBITRX2=CYCLES
+
+#if defined SWUART_PIN_RX
+
+	;; Stop bit just received
+	;;   Disable 'bit' interrupt
+	;;   Enable 'start' interrupt
+	;; 
+rxeof:
+	.if DBG_RXEOF
+	sbi	DBGPORT, DBGBIT	; [2]
+	.endif
+	ldi	R31, 1<<ST_RXQ_NE ; [1]		Status = "new data received"
+	bld	R31, ST_STOP	; [1]			+ stop bit value
+	sts	status, R31	; [2]
+	sbi	FLAGS, F_WIBTX	; [2]		Need to wait one more match before TX
+
+	disable_match R31	; [2]
+	enable_start R31	; [2]
+
+	.if HAS_CALLBACK
+	rcall	callback
+	.endif
+
+	rjmp	next		;		Compute next bit date for idle detection
+				;		before tx
+#endif /* defined SWUART_PIN_RX */
+
+	
+#if defined SWUART_PIN_TX
+
+	;; Sending
+	;; 
+	;;   Send one data bit, or stop bit, or idle bit
+	;;
+	CYCLES=TBITTX
+tx:	lds	R31, shift	; [2]		Send bit and enable ints ASAP
+	lsr	R31		; [1]
+	CYCLES=CYCLES+3
+	
+	.if DBG_TXBIT
+	sbi	DBGPIN, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	brcc	tx0		; [1/2]
+tx1:	sei			; [1]
+	sbi	TXDPORT, TXDBIT	; [2]=4
+	rjmp	1f		; [2]
+tx0:	sei			; [1]
+	cbi	TXDPORT, TXDBIT	; [2]=5
+1:	sts	shift, R31	; [2]		Prepare next bits
+	CYCLES=CYCLES+5
+	TBITTX2=CYCLES
+
+	lds	R31, nbit	; [2]		One more bit sent
+	subi	R31, 1		; [1]		'dec' would not set the carry flag!
+	sts	nbit, R31	; [2]
+
+	brmi	txeof		; [1]/[2]	nbit<0: all data bits sent
+	brne	1f		; [1]/[2]	nbit>0: data bits remaining
+
+	lds	R31, status	; [1]		nbit==0: load stop and idle bits
+	sts	shift, R31	; [2]
+1:	rjmp	next
+
+txeof:				; [ ]=15	End of frame
+	.if DBG_TXEOF
+	sbi	DBGPORT, DBGBIT	; [2]
+	.endif
+
+	sbi	FLAGS, F_WIBTX	; [2]		Need to wait one more match before next TX can start
+	disable_match R31	; [2]		nbit==-2: sending idle bit, tx done
+
+	.if ONEPIN
+	cbi	TXDDR, TXDBIT	;		Release TXD
+	cbi	TXDPORT, TXDBIT	;
+	.endif
+
+	ldi	R31, 1<<ST_TXC	; [1]		Status = tx completed
+	sts	status, R31	; [2]
+	in	R31, FLAGS	; [1]
+	cbi	FLAGS, F_RXTX	; [2]		Mode = RX
+#if defined SWUART_PIN_RX
+	enable_start R31	;
+#endif
+
+	.if DBG_PUTBYTE
+	sbi	DBGPORT, DBGBIT
+	.endif
+
+	;; Fixme: should compute 'next' before calling callback
+	;; 
+	.if HAS_CALLBACK
+	rjmp	callback
+	.else
+	rjmp	next		;		Compute last match (after stop bit is sent)
+	.endif
+
+#endif /* defined SWUART_PIN_TX */
+
+	;; Call the handler from its pointer if not NULL
+	;;
+	.if CALLBACK_PTR
+	.section	.text.callback,"ax",@progbits
+callback:
+	push	R30
+	lds	R30, cbptr+0
+	lds	R31, cbptr+1
+	push	R0
+	mov	R0, R30
+	or	R0, R31
+	breq	1f
+	push	R1
+	eor	R1, R1
+	push	R18
+	push	R19
+	push	R20
+	push	R21
+	push	R22
+	push	R23
+	push	R24
+	push	R25
+	push	R26
+	push	R27
+	icall
+	pop	R27
+	pop	R26
+	pop	R25
+	pop	R24
+	pop	R23
+	pop	R22
+	pop	R21
+	pop	R20
+	pop	R19
+	pop	R18
+	pop	R1
+1:	pop	R0
+	rjmp	L31S30
+	.endif
+
+
+	.if CALLBACK
+	.section	.text.callback,"ax",@progbits
+callback:
+	push	R30
+	push	R0
+	push	R1
+	eor	R1, R1
+	push	R18
+	push	R19
+	push	R20
+	push	R21
+	push	R22
+	push	R23
+	push	R24
+	push	R25
+	push	R26
+	push	R27
+	rcall	cb
+	pop	R27
+	pop	R26
+	pop	R25
+	pop	R24
+	pop	R23
+	pop	R22
+	pop	R21
+	pop	R20
+	pop	R19
+	pop	R18
+	pop	R1
+	pop	R0
+	rjmp	L31S30
+	.endif
+
+
+	;; Wait until rx/tx completed, i.e. match interrupt disabled
+	;;
+	.section	.text.wait_ready,"ax",@progbits
+wait_ready:
+	.if DBG_WAITREADY
+	sbi	DBGPIN, DBGBIT
+	.endif
+
+	;; disable_start R25
+	test_match_ie R26
+	brne	wait_ready
+
+	.if DBG_WAITREADY
+	sbi	DBGPORT, DBGBIT
+	.endif
+	ret
+
+
+	;; Return non null if UART is busy
+	;;
+	.section	.text.is_busy,"ax",@progbits
+is_busy:
+	test_match_ie R24
+	ret
+
+	;; Return UART flags
+	;;
+	.section	.text.is_emitting,"ax",@progbits
+is_emitting:
+	in	R24, FLAGS	; [1]
+	andi	R24, 1<<F_RXTX
+	ret
+
+
+;; 	;; Return non null if UART is receiving
+;; 	;;
+;; 	.section	.text.is_receiving,"ax",@progbits
+;; is_receiving:
+;; 	lds	R24, status
+;; 	andi	R24, 1<<ST_START | 1<<ST_RXQ_NE
+;; 	ret
+
+
+	;; Return non null if UART has unread data
+	;;
+	.section	.text.rxq_notempty,"ax",@progbits
+rxq_notempty:
+	lds	R24, status
+	andi	R24, 1<<ST_RXQ_NE
+	ret
+
+
+	;; Return non null if UART is receiving
+	;;
+	.section	.text.tx_completed,"ax",@progbits
+tx_completed:
+	lds	R24, status
+	andi	R24, 1<<ST_TXC
+	ret
+
+
+#if defined SWUART_PIN_RX
+
+	.section	.text.enable_rx,"ax",@progbits
+enable_rx:
+	rcall	wait_ready
+	enable_start	R24
+	ret
+
+	.section	.text.getbyte,"ax",@progbits
+getbyte:
+	;; .if DBG_GETBYTE
+	;; sbi	DBGPORT, DBGBIT
+	;; .endif
+1:	lds	R24, status
+	.if DBG_GETBYTE
+	sbi	DBGPIN, DBGBIT
+	.endif
+	sbrs	R24, ST_RXQ_NE
+	rjmp	1b
+	in	R25, SREG
+	cli
+	lds	R24, status
+	andi	R24, ~(1<<ST_RXQ_NE)
+	out	SREG, R25
+	sts	status, R24
+	lds	R24, data
+	.if DBG_GETBYTE
+	cbi	DBGPORT, DBGBIT
+	.endif
+	ret
+#endif /* defined SWUART_PIN_RX */
+
+
+#if defined SWUART_PIN_TX
+
+	;; Send one byte (R24)
+	;;
+	.section	.text.putbyte,"ax",@progbits
+putbyte:
+	.if DBG_PUTBYTE
+	cbi	DBGPORT, DBGBIT
+	.endif
+	ldi	R25, 8
+
+putbits:
+	rcall	wait_ready
+
+	sbis	FLAGS, F_WIBTX
+	rjmp	2f
+1:	test_match_if R26	;		wait idle state between rx and tx
+	breq	1b
+	cbi	FLAGS, F_WIBTX
+
+2:
+	.if SWUART_RX
+	disable_start R26
+	.endif
+
+	sts	shift, R24	;		Store data
+	ldi	R24, 0x03	;		Stop and idle bits, ST_TXC = 0
+	sts	status, R24	;
+	sbi	FLAGS, F_RXTX	;		Mode = TX
+	sts	nbit, R25	;		# of data bits to send
+
+	.if ONEPIN
+	sbi	TXDPORT, TXDBIT	; 		Initialize TXD
+	sbi	TXDDR, TXDBIT	;
+	.endif
+
+	.if DBG_TXSTART
+	cbi	DBGPORT, DBGBIT
+	.endif
+
+	;; Send start bit
+	;; Compute next bit date
+	;; 
+	.if COUNT_BN==8
+	cli
+	XLD	R24, COUNT	     ;		Get date
+	sei			; [1]|
+	cbi	TXDPORT, TXDBIT	; [2]|=3	Send start bit
+	lds	R25, dtn	;		Compute first data bit date
+	;; subi	R25, (TBITTX2-3+PSC/2)/PSC ;		Compensate bit isr / send delay
+	subi	R25, (TBITTX2-2+PSC/2)/PSC ;		Compensate bit isr / send delay
+	add	R24, R25
+	XST	MATCH, R24
+	sts	match, R24
+	.endif
+
+	;; .if COUNT_BN==8 && MATCH_BN==16
+	;; ldi	R24, 1		; 		dec'ed first in isr
+	;; lds	R25, dtn+1
+	;; add	R24, R25	;		Do not add carry
+	;; sts	match+1, R24
+	;; .endif
+
+	.if COUNT_BN==8 && MATCH_BN==16
+	lds	R24, dtn+1
+	sts	match+1, R24
+	.endif
+
+	.if COUNT_BN==16
+	cli
+	XLD	R24, COUNTL	     ;		Get date
+	XLD	R25, COUNTH	     ; [1]|
+	sei			     ; [1]|
+	cbi	TXDPORT, TXDBIT	     ; [2]|=4	Send start bit
+	lds	R26, dtn+0	     ;		Compute first data bit date
+	lds	R27, dtn+1	     ;
+	sbiw	R26, (TBITTX2-4+PSC/2)/PSC ;		Compensate bit isr / send delay
+	add	R24, R26
+	adc	R25, R27
+	XST	MATCHH, R25
+	XST	MATCHL, R24
+	.endif
+
+	enable_match R24
+	ret
+
+	;; Send BREAK (R24: nbits)
+	;; 
+	.section	.text.brk,"ax",@progbits
+brk:	mov	R25, R24
+	ldi	R24, 0
+	subi	R25, 1
+	rjmp	putbits
+
+#endif /* defined SWUART_PIN_TX */
+
+
+	.if 0
+	.fail TSTART1		; Elapsed cycles between start interrupt and date sampling	10
+	.fail TSTART2		; Total isr_start cycles					46
+	.fail TBITRX1		; Elapsed cycles between bit interrupt and bit sampling		15
+	.fail TBITRX2		; Total isr_bit cycles (standard case)				57
+	.fail TBITTX2		;								20
+	.endif
+
+	.ifdef SWUART_TDATA
+ 	.section .data
+ 	.global swuart_tstart1
+ 	.global swuart_tstart2
+ 	.global swuart_tbitrx1
+ 	.global swuart_tbitrx2
+ 	.global swuart_tbittx2
+swuart_tstart1:	.byte	TSTART1
+swuart_tstart2:	.byte	TSTART2
+swuart_tbitrx1:	.byte	TBITRX1
+swuart_tbitrx2:	.byte	TBITRX2
+swuart_tbittx2:	.byte	TBITTX2
+	.endif
+
+
+#if defined SWUART_PIN_RX
+
+	;; Wait RX idle for at least (R24) bits
+	;; 
+	.section	.text.wait_rxidle,"ax",@progbits
+wait_rxidle:
+	rcall	wait_ready
+
+	XLD	R20, COUNT
+	.if COUNT_BN==16
+	XLD	R21, COUNT+1
+	.endif
+
+	lds	R18, dtn
+	.if COUNT_BN==16
+	lds	R19, dtn+1
+	.endif
+
+1:
+	.if DBG_WAITIDLE
+	sbi	DBGPIN, DBGBIT
+	.endif
+
+	mov	R25, R24	; How many bits to wait
+
+2:	add	R20, R18
+	.if COUNT_BN==16
+	adc	R21, R19
+	.endif
+	.if COUNT_BN==8 && MATCH_BN==16
+	lds	R19, dtn+1
+	.endif
+
+	XST	MATCH, R20
+	.if COUNT_BN==16
+	XST	MATCH+1, R21
+	.endif
+
+3:	XCF	R22, MATCH_IF_RA, MATCH_IF_BP ; clear_matchflg R22
+
+4:	sbis	RXDPIN, RXDBIT
+	rjmp	1b		; Restart if RXD==0
+	XSBIS	R22, MATCH_IF_RA, MATCH_IF_BP
+	rjmp	4b
+
+	.if COUNT_BN==8 && MATCH_BN==16
+	dec	R19
+	brne	3b
+	.endif
+
+	dec	R25
+	brne	2b
+
+	.if DBG_WAITIDLE
+	sbi	DBGPIN, DBGBIT
+	.endif
+
+	ret
+
+#endif /* defined SWUART_PIN_RX */

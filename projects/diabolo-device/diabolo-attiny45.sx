@@ -1,0 +1,9 @@
+
+	;; -*- asm -*- Last modified: 2013-09-21 10:36:59 -*-
+
+#include <hwa.h>
+#include "attiny45.sx"
+#include "diabolo-atmelavr.sx"
+
+	;; .include "attiny45.sx"
+	;; .include "diabolo-atmelavr.sx"

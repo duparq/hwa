@@ -1,0 +1,39 @@
+
+	;; -*- asm -*-
+
+#include "hwa.h"
+#include "div_1616d.s"
+
+	;; Read one byte of EEPROM
+	;; 
+	.global hw_eeprom_read_byte
+	hw_eeprom_read_byte = eerd
+
+	.section	.text.eerd,"ax",@progbits
+eerd:	sbic	EECR, EEPE
+	rjmp	eerd
+	out	EEARL, R30 
+	;; out	EEARH, R31
+	sbi	EECR, EERE
+	in	R24, EEDR
+	ret
+
+
+	.global	hw_cycles
+	hw_cycles = cycles
+	.section	.text.cycles,"ax",@progbits
+cycles:				; [3]
+	sbiw	R24, 9		; [2]
+1:	sbiw	R24, 4		; [2]
+	brcc	1b		; [2]
+	ret			; [4]
+
+
+	.global	hw_cycles4
+	hw_cycles4 = cycles4
+	.section	.text.cycles4,"ax",@progbits
+cycles4:			; [3]
+	sbiw	R24, 9		; [2]
+1:	sbiw	R24, 1		; [2]
+	brcc	1b		; [2]
+	ret			; [4]

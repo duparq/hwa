@@ -1,0 +1,181 @@
+
+#	Commands & options
+#
+CC		= $(ARCH)gcc
+AS		= $(ARCH)as
+OBJCOPY		= $(ARCH)objcopy
+ODUMP		= $(ARCH)objdump
+GDB		= $(ARCH)gdb
+SIZE		= $(ARCH)size
+#STD		= c99
+
+DEFINES		+= -DHW_DEVICE=$(MCU)
+
+CFLAGS		+= $(MMCU)
+#CFLAGS		+= -std=$(STD)
+#CFLAGS		+= -Wall
+#CFLAGS		+= -Wextra
+#CFLAGS		+= -pedantic
+#CFLAGS		+= -fomit-frame-pointer
+#CFLAGS		+= -ffunction-sections
+#CFLAGS		+= -fno-builtins
+#CFLAGS		+= -fpack-struct
+#CFLAGS		+= -fshort-enums
+#CFLAGS		+= -mcall-prologues
+#CFLAGS		+= -g
+#CFLAGS		+= -pipe
+#CFLAGS		+= -Os
+#CFLAGS		+= -O0
+#CFLAGS		+= -O1
+#CFLAGS		+= -O2
+#CFLAGS		+= -O3
+CFLAGS		+= $(DEFINES)
+CFLAGS		+= $(INCLUDES)
+
+
+AFLAGS		+= $(MMCU)
+AFLAGS		+= $(INCLUDES)
+
+
+LDFLAGS		+= $(MMCU)
+#LDFLAGS		+= -s
+#LDFLAGS		+= -Wl,-Map,$(BUILDIR)/$(OUT).map,--cref
+#LDFLAGS		+= -Wl,-u,vfprintf -lprintf_min
+LDFLAGS		+= -nostartfiles
+#LDFLAGS		+= -Wl,--gc-sections
+LDFLAGS		+= -nostdlib # Provide clear_bss aso
+#LDFLAGS		+= -Wl,--section-start=.protext=0x1E00
+#LDFLAGS		+= -Wl,--section-start=.bss.pro=0x800100
+#LDFLAGS		+= -L/usr/lib/avr/lib
+#LDFLAGS		+= -L/home/indy/dev/avr/toolchain/current/install/avr/lib
+#LDFLAGS		+= -lm
+
+
+#ODUMPFLAGS	= -S
+ODUMPFLAGS	= -h -S
+#ODUMPFLAGS	= -D
+
+
+DEPS		= $(BUILDIR)/$(OUT).$(MCU).deps
+
+
+#	Determine object file names from their extension
+#
+SRC		:=	$(SOURCES:.c=.$(MCU).o)
+SRC		:=	$(SRC:.sx=.$(MCU).o)
+OBJECTS		=	$(patsubst %,$(BUILDIR)/%,$(SRC))
+
+
+hex:	$(BUILDIR)/$(OUT).hex
+bin:	$(BUILDIR)/$(OUT).bin
+lst:	$(BUILDIR)/$(OUT).lst
+
+size:	$(BUILDIR)/$(OUT).elf
+	$(SIZE) $^
+
+ifneq ($(strip $(FLASHSZ)),)
+  PADTO = --pad-to $(FLASHSZ)
+else
+  PADTO =
+endif
+
+
+#	Rules
+#
+%.bin : %.elf
+	$(OBJCOPY) -R .eeprom -O binary --gap-fill=0xFF $(PADTO) $^ $@
+
+%.hex : %.elf
+	$(OBJCOPY) --gap-fill=0xFF -R .eeprom -O ihex $^ $@
+
+%.lst : %.elf
+	$(ODUMP) $(ODUMPFLAGS) $^ >$@
+
+%.elf:	%.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+#%.cp.c: %.c
+#	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
+
+%.cp.c: %.c
+	$(CPP) $(CFLAGS) $< >$@
+
+%.cp.s: %.s
+	$(CPP) $(CFLAGS) $< >$@
+
+%.cp.sx: %.sx
+	$(CPP) $(CFLAGS) $< >$@
+
+$(BUILDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+
+$(BUILDIR)/%.$(MCU).o : %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDIR)/%.$(MCU).o : %.s
+	@mkdir -p $(dir $@)
+	$(AS) $(AFLAGS) $< -o $@
+
+$(BUILDIR)/%.$(MCU).o : %.sx
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.s : %.c
+	$(CC) $(MMCU) -std=c99 -Wall -Wextra -Os -c -g -S $< -o $@
+
+
+$(ROM_LD): Makefile tools/rom.ld.in
+	@mkdir -p $(dir $@)
+	@cat tools/rom.ld.in | sed -e 's/ROM_ORG/${ROM_ORG}/g' >$@
+
+
+$(RAM_LD): Makefile tools/ram.ld.in
+	@mkdir -p $(dir $@)
+	@cat tools/ram.ld.in >$@
+
+
+clean:
+	rm -rf $(BUILDIR)
+	find . '(' 			\
+		-name '*~' 		\
+		-o -name '*.cp.*'	\
+		-o -name '*.pyc'	\
+		')' -exec rm {} ';'
+
+#deps:	$(DEPS) Makefile
+deps:
+	make clean
+	make $(DEPS)
+
+$(DEPS): $(SOURCES) Makefile
+#deps: $(SOURCES) Makefile
+	@echo Rebuilding deps...
+	@mkdir -p $(dir $@)
+	@>$@
+	@for s in $(SOURCES) ; do \
+	  $(CC) -MM $(DEFINES) $(MMCU) $(INCLUDES) \
+	    -MT $(BUILDIR)/$(notdir $${s%.*}.$(MCU).o) $$s >>$@ ;\
+	done
+
+
+tarball: clean
+	SRC=$$(basename $$PWD)					;\
+	DST=$$SRC.tar.bz2					;\
+	tar -cvO --exclude=trash --exclude=$$DST		\
+		../$$SRC | bzip2 >$$DST
+
+
+.PHONY: deps flash load upload download erase read_fuses select_xtal_osc \
+	select_intern_osc_1 select_intern_osc_8 reset clean deps size
+
+
+-include $(DEPS)
+
+#ifneq ($(strip $(PROG_SW)),)
+#  include make/Makefile.$(PROG_SW)
+#endif
+
+#ifneq ($(strip $(PROG_HW)),)
+#  include Makefile.$(PROG_HW)
+#endif

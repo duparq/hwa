@@ -1,0 +1,178 @@
+
+	;; Synchronise l'UART :
+	;;   Calcule la durée d'un bit en nombre de cycles SYSHZ (R15:R14)
+	;;   Unité de chronométrage : 5 cycles
+	;; 
+	;;   t1 : durée d'un seul bit bas
+	;;   tn : durée de n bits bas
+	;; 
+	;;  16 MHz / 100 kbps
+	;;    1 bit = 10 µs = 160 cycles = 32 unités (0x20)
+	;;    8 bits = 32×8 = 256 unités (0x100)
+	;;    offset -1:  t1=0x21  tn=0x101  t=0xA0=160  parfait  -> 9.94 µs
+	;;    offset -2:  t1=0x20  tn=0x100  t=0xA0=160  parfait
+	;;
+	;;  16 MHz / 115200 bps
+	;;    1 bit = 8.68µs = 138.9 cycles = 27.8 unités (0x1B)
+	;;    8 bits = 27.8×8 = 222.4 unités (0xDE)
+	;;	8×0x1A=0xD0  8×0x1B=0xD8  8×0x1C=0xE0
+	;;    offset -1:  t1=0x1B  tn=0xDD  t=0x8A=138           -> 8.68 µs
+	;;                         tn=0xDE  t=0x8B=139  parfait	 -> 8.69 µs
+	;;    offset -2:  t1=0x1A  tn=0xDC
+	;;                         tn=0xDD
+	;; 
+	;;  16 MHz / 230400 bps
+	;;    1 bit = 4.34µs = 69.4 cycles = 13.9 unités (0x0D)
+	;;    8 bits = 13.9×8 = 111.1 unités (0x6F)
+	;;	
+	;;    offset -1:  t1=0x0D  tn=0x6E  t=0x45=69  parfait	-> 4.44 µs (+2.3%)
+	;;                         tn=0x6F  t=0x45=69
+	;; 
+
+	;; Measure low-level durations of 1 bit (dt1) and n bits (dtn) to
+	;; determine baudrate.
+	;; 
+	;; dtn and dt1 are measured in units of 5 cycles.
+	;; 
+	;; dtn overflows at 65535, i.e. 65535*5 cycles
+	;; That means that the longest low-level duration must be < 327675 cycles
+	;;
+	;; This routine can not synchronize at speeds below syshz/(327675/8) bps
+	;; using 8 low-level bits characters, i.e. 195 bps @8 MHz.
+
+sync:
+	.if DBG
+	ldi	R18, 100
+2:	XSB	R19, DBGPIN, DBGBIT
+	ldi	R19, 16
+1:	subi	R19, 1
+	brne	1b
+	subi	R18, 1
+	brne	2b
+	.endif
+
+	ldi	R18, 0xFF	; t1 = 65535	lowest low level duration (1 bit)
+	ldi	R19, 0xFF
+	ldi	R20, 0		; tn = 0	highest low level duration (n bits)
+	ldi	R21, 0
+
+	;; Start from -1 because the duration measurement algorithm
+	;; counts 1 right after the first falling edge
+	;; 
+	;; We'll compute 8×(t-1) and 8×(t+1) so we could subtract 1 right from
+	;; the beginning and just have to add 16 to get 8×(t+1) from 8×(t-1).
+	;; That would make us store t1-1 and tn-1 values.
+	;;
+	;; Start counting from -2 because the low-level duration measurement
+	;; algorithm counts 1 right after the first falling edge and we'll
+	;; have to compute 8×(t-1) first
+	;; 
+1:	ldi	R24, 0xFF	; t		next low level duration sample
+	ldi	R25, 0xFF	;
+
+2:	sbis	RXDPIN, RXDBIT	;		Wait RXD == 1
+	rjmp	2b		;
+
+2:	sbic	RXDPIN, RXDBIT	; [1/2]		Wait RXD == 0
+	rjmp	2b		; [2]
+
+2:	adiw	R24, 1		; [2]	|	Compute low level duration
+	sbis	RXDPIN, RXDBIT	; [1/2]	|	in 5 CPU cycles units
+	rjmp	2b		; [2]	|= 5
+
+	;; ;; Output debug info
+	;; ;;
+	;; SYSHZ = 8000000
+	;; BAUD = 100000
+	;; ;; 
+	;; movw	R28, R24
+	;; sbi	TXDPORT, TXDBIT
+	;; sbi	TXDDR, TXDBIT
+	;; ldi	R24, lo8(12*(SYSHZ+BAUD/2)/BAUD)
+	;; ldi	R25, hi8(12*(SYSHZ+BAUD/2)/BAUD)
+	;; rcall	delay
+	;; ldi	R24, lo8((SYSHZ+BAUD/2)/BAUD)
+	;; ldi	R25, hi8((SYSHZ+BAUD/2)/BAUD)
+	;; movw	R14, R24
+	;; mov	R24, R28
+	;; rcall	put2h
+	;; mov	R24, R29
+	;; rcall	put2h
+	;; movw	R24, R28
+	;; ;;
+	;; ;; Output debug info
+
+	cp	R24, R18	;
+	cpc	R25, R19	;
+	brcc	2f		; if ( t < t1 )
+	movw	R18, R24	;   t1 = t
+
+2:	cp	R20, R24	;
+	cpc	R21, R25	;
+	brcc	2f		; if ( t > tn )
+	movw	R20, R24	;   tn = t
+2:
+
+	;; Output debug info
+	;; 
+	;; ldi	R24, ' '
+	;; rcall	putbytenocrc
+	;; mov	R24, R18
+	;; rcall	put2h
+	;; mov	R24, R19
+	;; rcall	put2h
+	;; ldi	R24, ' '
+	;; rcall	putbytenocrc
+	;; mov	R24, R20
+	;; rcall	put2h
+	;; mov	R24, R21
+	;; rcall	put2h
+
+	movw	R24, R18	; t = t1
+	sbiw	R24, 1		; t = t1-1
+
+	ldi	R26, 3		;
+2:	lsl	R24		;
+	rol	R25		;
+	dec	R26		;
+	brne	2b		; t = 8×(t1-1)
+
+	cp	R20, R24	; if ( tn < 8×(t1-1) )
+	cpc	R21, R25	;   then we do not have tn/t1 high enough yet
+	brcs	1b		;   loop to get another sample
+
+	adiw	R24, 16		; t = 8×(t1+1)
+	cp	R24, R20	; if ( 8×(t1+1) < tn )
+	cpc	R25, R21	;   then tn/t1 is too high
+	brcs	sync		;   restart from the beginning
+
+	;; we have tn/t1 ~= 8 with t1 computed in 5 cycles units
+	;; tn + tn/4 gives 10 bits duration in 5 cycles units
+	;; (tn + tn/4)/2 gives 5 bits duration in 5 cycles units,
+	;; i.e. 1 bit duration in 1 cycle unit
+	;; 
+2:	movw	R24, R20	; R25:R24 = tn
+	adiw	R24, 2		; round
+	lsr	R25
+	ror	R24		; R25:R24 = tn/2
+	lsr	R25
+	ror	R24		; R25:R24 = tn/4
+
+	add	R24, R20
+	adc	R25, R21	; R25:R24 = tn/4 + tn
+
+	;; adiw	R24, 1		; round
+	lsr	R25
+	ror	R24		; (tn + tn/4)/2
+	movw	R14, R24	; Store bit duration
+
+	;; Output debug info
+	;; 
+	;; ldi	R24, ' '
+	;; rcall	putbytenocrc
+	;; mov	R24, R14
+	;; rcall	put2h
+	;; mov	R24, R15
+	;; rcall	put2h
+
+	dbg 0

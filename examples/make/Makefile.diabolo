@@ -1,0 +1,20 @@
+#	-*- makefile -*-
+
+erase:
+	diabolo.py $(DIABOLO_OPTS)	\
+		--erase-flash
+
+burn:	$(BUILDIR)/$(OUT).bin
+	diabolo.py $(DIABOLO_OPTS)	\
+		--flash-file $^
+
+hexdump:
+	diabolo.py $(DIABOLO_OPTS)	\
+		--hexdump-flash
+
+diabolo:
+	diabolo.py $(DIABOLO_OPTS)
+
+.PHONY: crc
+crc:	$(BUILDIR)/$(OUT).bin
+	diabolo.py -c $(BUILDIR)/$(OUT).bin

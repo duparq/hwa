@@ -1,0 +1,18 @@
+
+	;; -*- asm -*-
+
+#include "hwa.h"
+
+	;; Read one byte of EEPROM
+	;; 
+	.global hw_eeprom_read_byte
+	hw_eeprom_read_byte = eerd
+
+	.section	.text.eerd,"ax",@progbits
+eerd:	sbic	EECR, EEPE
+	rjmp	eerd
+	out	EEARL, R30 
+	;; out	EEARH, R31
+	sbi	EECR, EERE
+	in	R24, EEDR
+	ret

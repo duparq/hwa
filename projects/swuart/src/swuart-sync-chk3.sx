@@ -1,0 +1,34 @@
+
+
+	;; Compute q=dtn/dt1 with 3 bits for decimals (i.e. q*8)
+	;;
+	movw	R30, R24	; R25:R24 = dtn
+	mov	R21, R20	; Store qmin
+	ldi	R20, 3		; 2 bits of decimals
+	rcall	div_1616d
+
+	and	R25, R25
+	brne	1f		; Restart from beginning if q*8 >= 256
+	subi	R24, -1		; add 0.125 to dtn/dt1
+	lsr	R24
+	lsr	R24
+	brcs	1f
+	lsr	R24
+	brcs	1f
+	cp	R24, R21
+	brcs	1f		; Measure again if dtn/dt1 < min
+	cpi	R24, 11
+	brcc	1f		; Restart from beginning if dtn/dt1 > 10
+
+	;; Compute dt1 = dtn/q
+	;;
+	mov	R22, R24
+	ldi	R23, 0
+	movw	R24, R30
+	ldi	R20, 0
+	rcall	div_1616d
+	ret
+
+1:	ldi	R24, 0
+	ldi	R25, 0
+	ret

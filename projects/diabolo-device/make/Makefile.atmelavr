@@ -1,0 +1,19 @@
+
+#	-*- makefile -*-
+
+DEFINES		+= -DFUSE_LB=$(FUSE_LB)
+DEFINES		+= -DFUSE_HB=$(FUSE_HB)
+DEFINES		+= -DFUSE_EB=$(FUSE_EB)
+
+ARCH		= avr-
+MMCU		= -mmcu=$(MCU)
+
+ODFLAGS		= -h -S
+
+diabolo:
+	diabolo.py -f $(BUILDIR)/$(OUT).bin
+
+dasm:
+	avr-objdump -m avr:5 -b binary -D $(BUILDIR)/$(OUT).bin
+
+include make/Makefile.avrdude

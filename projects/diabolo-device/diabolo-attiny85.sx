@@ -1,0 +1,41 @@
+
+	;; ATtiny85 characteristics
+	;;
+	FLASHSIZE = 8192	; FLASH size in bytes
+	RAMSIZE   = 512		; RAM size in bytes
+	PAGESIZE  = 64		; FLASH page size in bytes
+	EESIZE    = 512		; EEPROM size in bytes
+	NVECTS    = 15		; nb of interrupt vectors
+
+	RAMSTART  = 0x0060	; Start of internal SRAM
+
+	SIGN0	= 0x1E		; Signature bytes
+	SIGN1	= 0x92
+	SIGN2	= 0x0B
+
+	;; Registers (ATtiny44 == ATtiny85)
+	;;
+	SREG	= 0x3F
+	SPH	= 0x3E
+	SPL	= 0x3D
+	SPMCSR	= 0x37
+	MCUSR	= 0x34
+	OSCCAL  = 0x31
+	WDTCSR	= 0x21
+	EEARH	= 0x1F
+	EEARL	= 0x1E
+	EEDR	= 0x1D
+	EECR	= 0x1C
+	  EEPM1	= 5
+	  EEPM0	= 4
+	  EEMPE	= 2
+	  EEPE	= 1
+	  EERE	= 0
+	PORTA	= 0x1B
+	DDRA	= 0x1A
+	PINA	= 0x19
+	PORTB	= 0x18
+	DDRB	= 0x17
+	PINB	= 0x16
+
+	.include "diabolo-atmelavr.s"

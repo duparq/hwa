@@ -1,0 +1,11 @@
+.#*
+*#
+*~
+*.cp.*
+*.o
+build/
+doxygen/html/
+exclude/
+trash/
+MEMO*
+TODO*

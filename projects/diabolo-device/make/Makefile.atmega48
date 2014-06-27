@@ -1,0 +1,7 @@
+
+#	-*- makefile -*-
+
+PARTNO	=	m48
+FLASHSZ	=	0x1000
+
+include make/Makefile.atmegaX8

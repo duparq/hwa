@@ -1,0 +1,7 @@
+
+#	-*- makefile -*-
+
+PARTNO	=	t45
+FLASHSZ	=	0x1000
+
+include make/Makefile.attinyX5
