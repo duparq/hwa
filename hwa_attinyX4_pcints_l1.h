@@ -39,6 +39,18 @@
 #define hw_pcic1_pcint8		mem, regb, msk, 1, 0
 
 
+/*	Equality test
+ */
+#define hw_is_pcic0_pcic0	,1
+#define _hw_eq_pcic0_isfn
+#define _hw_eq_pcic0		_hw_eq_pcic
+#define hw_is_pcic1_pcic1	,1
+#define _hw_eq_pcic1_isfn
+#define _hw_eq_pcic1		_hw_eq_pcic
+
+#define _hw_eq_pcic(ctr,cc,cn,ca,...)	HW_IS(cc,hw_class(__VA_ARGS__))
+
+
 /*	Pin-change interrupt controller pins
  *
  *	Each pin is an alternate io-pin of class 'aio' associated to an io-pin
@@ -93,16 +105,6 @@ typedef struct {
  */
 #define hw_ctr_pcint_isfn
 #define hw_ctr_pcint(cn,ion, ...)	__VA_ARGS__
-
-
-/*	Equality test
- */
-#define hw_is_pcic0_pcic0	,1
-#define hw_is_pcic1_pcic1	,1
-#define _hw_eq_pcic0		_hw_eq_pcic
-#define _hw_eq_pcic1		_hw_eq_pcic
-
-#define _hw_eq_pcic(ctr,cc,cn,ca,...)	HW_IS(cc,hw_class(__VA_ARGS__))
 
 
 /*	io definition
