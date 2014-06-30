@@ -19,8 +19,7 @@
 #include "hwa__is.h"
 #include "hwa__types.h"
 #include "hwa__macros.h"
-#include "hwa__apply.h"
-#include "hwa__x2r.h"
+#include "hwa__xmem.h"
 #include "hwa__xirq.h"
 
 
@@ -53,9 +52,9 @@
  * \ingroup macro
  * \hideinitializer
  */
-#define HW_RTERROR(msg)			_HW_RTERROR_2(msg, __COUNTER__)
-#define _HW_RTERROR_2(...)		_HW_RTERROR_3(__VA_ARGS__)
-#define _HW_RTERROR_3(msg, num)						\
+#define HWA_ERR(msg)			_HWA_ERR_2(msg, __COUNTER__)
+#define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
+#define _HWA_ERR_3(msg, num)						\
   do {									\
     extern void __attribute__((error(msg))) hw_rterror_##num(void);	\
     hw_rterror_##num();							\

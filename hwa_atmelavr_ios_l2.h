@@ -4,9 +4,11 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+
 #define hwa_config_io_isfn
-#define hwa_config_io(io, _ctr_,cn,cc,ca, bn, bp, mode, _)	\
-  _hwa_config_io( &hwa->cn, bn, bp, HW_G2(hw_iomode,mode) )
+#define hwa_config_io(ion, ctr,cc,cn,ca, bn, bp, mode)		\
+  _hwa_config_io(&hwa->cn, bn, bp, hw_iomode_##mode)
+
 
 /** \brief Configures one or more consecutive i/o pins
  *  \param p	pointer to i/o port instance in hwa struct
@@ -18,7 +20,7 @@ HW_INLINE void _hwa_config_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t mode
 {
   if ( mode & 0x20 ) {	/* didr */
     if ( (uintptr_t)p->didr.ra == (uintptr_t)-1 )
-      HW_RTERROR("no digital input filter for this io port");
+      HWA_ERR("no digital input filter for this io port");
     else
       _hwa_write_r8( &p->didr, bn, bp, ((mode & 0x10)!=0)*((1U<<bn)-1) );
   }
@@ -32,13 +34,15 @@ HW_INLINE void _hwa_config_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t mode
 
 
 #define hwa_write_io_isfn
-#define hwa_write_io(io, _ctr_,cn,cc,ca, bn, bp, value)	\
-  _hwa_write_io( &hwa->cn, bn, bp, value )
+#define hwa_write_io(ion, ctr,cc,cn,ca, bn, bp, v)	\
+  _hwa_write_r8(&hwa->cn.port, bn, bp, v)
+//  _hwa_write_io(&hwa->cn, bn, bp, v)
 
-HW_INLINE void _hwa_write_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t v )
-{
-  /*  Set BR bits to 1 and BS bits to 0
-   *    BS bits have priority
-   */
-  _hwa_write_r8( &p->port, bn, bp, v );
-}
+
+/* HW_INLINE void _hwa_write_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t v ) */
+/* { */
+/*   /\*  Set BR bits to 1 and BS bits to 0 */
+/*    *    BS bits have priority */
+/*    *\/ */
+/*   _hwa_write_r8(&p->port, bn, bp, v); */
+/* } */

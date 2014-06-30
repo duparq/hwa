@@ -12,28 +12,44 @@
   HWA_INIT(hw_##cn, ocrb);			\
   HWA_INIT(hw_##cn, imsk);			\
   HWA_INIT(hw_##cn, ifr);			\
-  hwa->cn.config = 0 ;				\
-  hwa->cn.countmode = 0 ;			\
-  hwa->cn.top = 0 ;				\
-  hwa->cn.clock = 0
+  hwa->cn.config = 0 ;
 
+
+#define hwa_is_clock_clock		,1
 
 #define hwa_config_c8a_isfn
-
-#define hwa_config_c8a(cn,cc,ca, ...)					\
+#define hwa_config_c8a(cn,ca, ...)					\
   do {									\
-    hwa->cn.config = 1 ;							\
-    HW_G2(hwa_config_c8a_xcountmode,HW_IS(countmode,__VA_ARGS__))(cn,__VA_ARGS__) ; \
-  } while(0)
+    hwa->cn.config = 1 ;						\
+    hwa->cn.countmode = 0 ;						\
+    hwa->cn.top = 0 ;							\
+    hwa->cn.clock = 0 ;							\
+    HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__) \
+      } while(0)
 
-#define hwa_config_c8a_xcountmode_0(cn,...)	\
-  HW_PPERROR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_xclock_0(cn,...)					\
+  HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_xcountmode_1(cn,_countmode_,...)	\
+#define hwa_config_c8a_xclock_1(cn,_clock_,...)				\
+  HW_G2(hwa_config_c8a_clock,HW_IS(ok,hw_c8a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
+
+#define hwa_config_c8a_clock_0(cn,...)					\
+  HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
+	      "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "	\
+	      "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
+
+#define hwa_config_c8a_clock_1(cn,zclock,...)				\
+  hwa->cn.clock = HW_A1(hw_c8a_clock_##zclock) ;			\
+  HW_G2(hwa_config_c8a_xcountmode,HW_IS(countmode,__VA_ARGS__))(cn,__VA_ARGS__) ; \
+
+#define hwa_config_c8a_xcountmode_0(cn,...)				\
+  HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+
+#define hwa_config_c8a_xcountmode_1(cn,_countmode_,...)			\
   HW_G2(hwa_config_c8a_countmode,HW_IS(ok,hw_c8a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
 
-#define hwa_config_c8a_countmode_0(cn,...)\
-  HW_PPERROR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
+#define hwa_config_c8a_countmode_0(cn,...)				\
+  HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
 
 #define hwa_config_c8a_countmode_1(cn,mode,...)				\
   hwa->cn.countmode = HW_A1(hw_c8a_countmode_##mode) ;			\
@@ -44,54 +60,39 @@
   (cn,__VA_ARGS__,HW_A1(hw_c8a_countmode_##mode))
 
 #define hwa_config_c8a_xbottom_xtop_0(cn,...)				\
-  HW_PPERROR("expected `bottom` or `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+  HW_ERR("expected `bottom` or `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xbottom_xtop_1	hwa_config_c8a_xtop_1
 
-#define hwa_config_c8a_xbottom_1(cn,_bottom_,...)	\
+#define hwa_config_c8a_xbottom_1(cn,_bottom_,...)			\
   HW_G2(hwa_config_c8a_bottom,HW_IS(0,__VA_ARGS__))(cn,__VA_ARGS__)
 
-#define hwa_config_c8a_bottom_0(cn,bottom,...)	\
-  HW_PPERROR("bottom must be `0`, not `" HW_QUOTE(bottom) "`.")
+#define hwa_config_c8a_bottom_0(cn,bottom,...)			\
+  HW_ERR("bottom must be `0`, not `" HW_QUOTE(bottom) "`.")
 
-#define hwa_config_c8a_bottom_1(cn,bottom,...)\
+#define hwa_config_c8a_bottom_1(cn,bottom,...)				\
   HW_G2(hwa_config_c8a_xtop,HW_IS(top,__VA_ARGS__))(cn,__VA_ARGS__ /*,bottom*/)
 
-#define hwa_config_c8a_xtop_0(cn,...)\
-  HW_PPERROR("expected `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_xtop_0(cn,...)					\
+  HW_ERR("expected `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xtop_1(cn,_top_,...)				\
-  HW_G2(hwa_config_c8a_top,HW_IS(ok,hw_c8a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_vtop,HW_IS(ok,hw_c8a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
 
-#define hwa_config_c8a_top_0(cn,...)				\
-  HW_PPERROR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\
-	     "but not `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_vtop_0(cn,...)					\
+    HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\
+	       "but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_top_1(cn,ztop,...)				\
-  hwa->cn.top = HW_A1(hw_c8a_top_##ztop);				\
-  HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__)
-
-#define hwa_config_c8a_xocra_1(cn,_ocra_,...)			\
-  hwa->cn.top = HW_A1(hw_c8a_top_ocra) ;				\
-  HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__)
-
-#define hwa_config_c8a_xclock_0(cn,...)\
-  HW_PPERROR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-
-#define hwa_config_c8a_xclock_1(cn,_clock_,...)\
-  HW_G2(hwa_config_c8a_clock,HW_IS(ok,hw_c8a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
-
-#define hwa_config_c8a_clock_0(cn,...)					\
-  HW_PPERROR( "`clock` can be `none`, `syshz`, `syshz_div_8`, " \
-	      "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "	\
-	      "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
-
-#define hwa_config_c8a_clock_1(cn,zclock,...)				\
-    hwa->cn.clock = HW_A1(hw_c8a_clock_##zclock) ;				\
+#define hwa_config_c8a_vtop_1(cn,ztop,...)				\
+    hwa->cn.top = HW_A1(hw_c8a_top_##ztop);				\
     HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__)
 
-#define hwa_config_c8a_0(cn,...)	\
-  HW_PPERROR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
+/* #define hwa_config_c8a_xocra_1(cn,_ocra_,...)			\ */
+/*   hwa->cn.top = HW_A1(hw_c8a_top_ocra) ;			\ */
+/*   HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__) */
+
+#define hwa_config_c8a_0(cn,...)					\
+  HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_1(...)
 
@@ -123,25 +124,25 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
   if ( p->countmode == HW_A1(hw_c8a_countmode_loop_up) )
     if (p->top == HW_A1(hw_c8a_top_fixed_0xFF))
-      _hwa_write_cp(p, hw_c8a_wgm, 0);
+      _hwa_write_pcr(p, c8a, wgm, 0);
     else
-      _hwa_write_cp(p, hw_c8a_wgm, 2);
+      _hwa_write_pcr(p, c8a, wgm, 2);
   else if ( p->countmode == HW_A1(hw_c8a_countmode_loop_up_pwm) )
     if (p->top == HW_A1(hw_c8a_top_fixed_0xFF) )
-      _hwa_write_cp(p, hw_c8a_wgm, 3);
+      _hwa_write_pcr(p, c8a, wgm, 3);
     else
-      _hwa_write_cp(p, hw_c8a_wgm, 7);
+      _hwa_write_pcr(p, c8a, wgm, 7);
   else if ( p->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) )
     if (p->top == HW_A1(hw_c8a_top_fixed_0xFF) )
-      _hwa_write_cp(p, hw_c8a_wgm, 1);
+      _hwa_write_pcr(p, c8a, wgm, 1);
     else
-      _hwa_write_cp(p, hw_c8a_wgm, 5);
+      _hwa_write_pcr(p, c8a, wgm, 5);
   else
-    HW_RTERROR("WGM value could not be solved for c8a class counter.");
+    HWA_ERR("WGM value could not be solved for c8a class counter.");
 
   /*	CS
    */
-  _hwa_write_cp(p, hw_c8a_cs, p->clock);
+  _hwa_write_pcr(p, c8a, cs, p->clock);
 }
 
 
@@ -153,10 +154,10 @@ HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     return ;
 
   if ( counter->config == 0 )
-    HW_RTERROR("configuration of hw_counter0 must be set.");
+    HWA_ERR("configuration of hw_counter0 must be set.");
 
   if ( counter->top == HW_A1(hw_c8a_top_register_compare_a) )
-    HW_RTERROR("ocra is already used as top value for hw_counter0.");
+    HWA_ERR("ocra is already used as top value for hw_counter0.");
 
   uint8_t	mode = 0xFF ;
 
@@ -199,11 +200,11 @@ HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
   }
 
   if ( mode == 0xFF )
-    HW_RTERROR("incompatible counting mode / output-compare mode.");
+    HWA_ERR("incompatible counting mode / output-compare mode.");
 
   /*  Set the hardware configuration bits
    */
-  _hwa_write_cp(counter, hw_c8a_coma, mode );
+  _hwa_write_pcr(counter, c8a, coma, mode );
 }
 
 
@@ -216,7 +217,7 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     return ;
 
   if ( counter->config == 0 )
-    HW_RTERROR("configuration of hw_counter0 must be set.");
+    HWA_ERR("configuration of hw_counter0 must be set.");
 
   uint8_t	mode = 0xFF ;
 
@@ -253,9 +254,9 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
   }
 
   if ( mode == 0xFF )
-    HW_RTERROR("incompatible counting mode / output-compare mode.");
+    HWA_ERR("incompatible counting mode / output-compare mode.");
 
-  _hwa_write_cp(counter, hw_c8a_comb, mode );
+  _hwa_write_pcr(counter, c8a, comb, mode );
 }
 
 

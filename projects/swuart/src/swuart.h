@@ -61,9 +61,9 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
    */
 #if defined SWUART_COUNTER
   hwa_config( SWUART_COUNTER,
+	      clock,		SWUART_COUNTER_CLOCK,
 	      countmode,	loop_up,
-	      top,		fixed_0xFF,
-	      clock,		SWUART_COUNTER_CLOCK);
+	      top,		fixed_0xFF );
 #endif
 
   /*	Start condition interrupt

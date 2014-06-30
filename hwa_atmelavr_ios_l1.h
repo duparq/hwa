@@ -47,6 +47,15 @@
 #define hw_iomode_input_analog			0x32	/* 11 0010 */
 #define hw_iomode_input_analog_0pullup		0x3A	/* 11 1010 */
 
+#define hw_ctr_io_isfn
+#define hw_ctr_io(ion, ctr,cc,cn,ca, ...)	ctr,cc,cn,ca
+
+#define hw_bp_io_isfn
+#define hw_bp_io(ion, ctr,cc,cn,ca, bn,bp)	bp
+
+#define hw_io_io_isfn
+#define hw_io_io(...)				ctr,io,__VA_ARGS__
+
 
 #if !defined __ASSEMBLER__
 
@@ -57,7 +66,7 @@ HW_INLINE void _hw_config_io( intptr_t ddr, uint8_t rwm1,
 {
   if ( mode & 0x20 ) {	/* didr */
     if ( didr == -1 )
-      HW_RTERROR("no disable digital filter for this io port");
+      HWA_ERR("no disable digital filter for this io port");
     else
       _hw_write_r8( didr, rwm3, bn, bp, -1 * ((mode & 0x10)!=0) & ((1<<bn)-1) );
   }
@@ -71,45 +80,38 @@ HW_INLINE void _hw_config_io( intptr_t ddr, uint8_t rwm1,
 
 
 #define hw_config_io_isfn
-#define hw_config_io( cn1,ctr,cn,cc,ca,bn,bp,mode )			\
+#define hw_config_io( cn1,ctr,cc,cn,ca,bn,bp,mode )			\
   _hw_config_io_2(ca,HW_G3(hw,cc,ddr),HW_G3(hw,cc,port),HW_G3(hw,cc,didr), \
 		  bn,bp,HW_G2(hw_iomode,mode))
 #define _hw_config_io_2(...)	_hw_config_io_3(__VA_ARGS__)
-#define _hw_config_io_3(ca,reg1,rn1,rw1,ra1,riv1,rwm1,		\
-			reg2,rn2,rw2,ra2,riv2,rwm2,		\
-			reg3,rn3,rw3,ra3,riv3,rwm3,		\
+#define _hw_config_io_3(ca,reg1,rw1,ra1,riv1,rwm1,		\
+			reg2,rw2,ra2,riv2,rwm2,			\
+			reg3,rw3,ra3,riv3,rwm3,			\
 			bn,bp,mode)				\
   _hw_config_io(ca+ra1,rwm1,ca+ra2,rwm2,ca+ra3,rwm3,bn,bp,mode)
 
 
 #define hw_read_io_isfn
-#define hw_read_io( cn1,ctr,cn,cc,ca, bn, bp )	\
-  _hw_read_io_2(cn,ca,HW_G3(hw,cc,port), bn, bp)
+#define hw_read_io(ion, ctr,cc,cn,ca, bn,bp)	\
+  _hw_read_io_2(cn,ca,HW_G3(hw,cc,port), bn,bp)
 #define _hw_read_io_2(...)	_hw_read_io_3(__VA_ARGS__)
-#define _hw_read_io_3(cn,ca,reg,rn,rw,ra,riv,rwm,bn,bp)	\
+#define _hw_read_io_3(cn,ca, mem,reg,rw,ra,riv,rwm, bn,bp)	\
   _hw_read_r8(ca+ra,bn,bp)
 
 
-#define hw_write_io( cn1,ctr,cn,cc,ca, bn, bp, v )	\
-  _hw_write_io_2(cn,ca,HW_G3(hw,cc,port), bn, bp, v)
-#define _hw_write_io_2(...)	_hw_write_io_3(__VA_ARGS__)
-#define _hw_write_io_3(cn,ca,reg,rn,rw,ra,riv,rwm,rbn,rbp,v)	\
-  _hw_write_r8(ca+ra,rwm,rbn,rbp,v)
-
-
 #define hw_write_io_isfn
-#define hw_write_io( cn1,ctr,cn,cc,ca, bn, bp, v )	\
-  _hw_write_io_2(cn,ca,HW_G3(hw,cc,port), bn, bp, v)
+#define hw_write_io(ion, ctr,cc,cn,ca, bn,bp,v)	\
+  _hw_write_io_2(cn,ca,HW_G3(hw,cc,port), bn,bp,v)
 #define _hw_write_io_2(...)	_hw_write_io_3(__VA_ARGS__)
-#define _hw_write_io_3(cn,ca,reg,rn,rw,ra,riv,rwm,rbn,rbp,v)	\
-  _hw_write_r8(ca+ra,rwm,rbn,rbp,v)
+#define _hw_write_io_3(cn,ca, mem,reg,rw,ra,rrv,rwm, bn,bp,v)	\
+  _hw_write_r8(ca+ra,rwm,bn,bp,v)
 
 
 #define hw_toggle_io_isfn
-#define hw_toggle_io( cn1,ctr,cn,cc,ca, bn,bp)	\
-  _hw_toggle_io_2(cn,ca,HW_G3(hw,cc,pin), bn,bp)
+#define hw_toggle_io(ion, ctr,cc,cn,ca, bn,bp)	\
+  _hw_toggle_io_2(cn,ca,HW_G3(hw,cc,port), bn,bp)
 #define _hw_toggle_io_2(...)	_hw_toggle_io_3(__VA_ARGS__)
-#define _hw_toggle_io_3(cn,ca,reg,rn,rw,ra,riv,rwm, bn,bp)	\
+#define _hw_toggle_io_3(cn,ca, mem,reg,rw,ra,rrv,rwm, bn,bp)	\
   _hw_write_r8(ca+ra,rwm,bn,bp,(1U<<bn)-1)
 
 

@@ -75,12 +75,14 @@ HW_INLINE void config_counter( hwa_t *hwa )
 HW_INLINE void config_servo( hwa_t *hwa )
 {
   hwa_config( SERVO, clearup_setdown );
+  //  hwa_write( SERVO, DUTY_MIN );
 }
 
 
 int main ( )
 {
   hwa_begin_from_reset();
+  //  hwa_config(hw_pin_8, output);
   config_servo(hwa);
   config_counter(hwa);
   hwa_commit();
@@ -92,27 +94,3 @@ int main ( )
 
   return 0 ;
 }
-
-  /* hwa_config( hw_ctr(SERVO), */
-  /* 	      countmode,	loop_updown_pwm, */
-  /* 	      bottom,		0, */
-  /* 	      top,		register_capture, */
-  /* 	      clock,		syshz_div_8, */
-  /* 	      overflow_irq,	at_top ); */
-
-
-#define hw_pin_pc0	ctr, io, pin_pc0, hw_porta, 1, 0
-
-#define hw_vrite(...)	HW_G2(_hw_vrite,HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_vrite_1(ctr, class, ...)	\
-  HW_G2(_hw_vrite_xfn,HW_IS(,hw_vrite_##class##_isfn))(class, __VA_ARGS__)
-
-//_hw_vrite_xfn_0(io, pin_pc0, ctr, porta, io8, 0x21, 1, 0, 1);
-
-#define _hw_vrite_xfn_1(class, ...)	hw_vrite_##class(__VA_ARGS__)
-//hw_vrite_io(pin_pc0, ctr, porta, io8, 0x21, 1, 0, 1);
-
-
-#define hw_vrite_io_isfn
-hw_vrite( );
-hw_vrite( hw_pin_pc0, 1 );

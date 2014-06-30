@@ -35,20 +35,20 @@
  */
 #define hwa_config_c16a_isfn
 
-#define hwa_config_c16a(cn,cc,ca, ...)					\
+#define hwa_config_c16a(cn,ca, ...)					\
   do {									\
     hwa->cn.config = 1;							\
     HW_G2(hwa_config_c16a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__) \
       } while(0)
 
 #define hwa_config_c16a_xclock_0(cn,...)				\
-  HW_PPERROR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+  HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c16a_xclock_1(cn,_clock_,...)			\
   HW_G2(hwa_config_c16a_vclock,HW_IS(ok,hw_c16a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vclock_0(cn,...)				\
-  HW_PPERROR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
+  HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
 	      "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "	\
 	      "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
@@ -57,13 +57,13 @@
   HW_G2(hwa_config_c16a_xmode,HW_IS(countmode,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_xmode_0(cn,...)					\
-  HW_PPERROR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+  HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c16a_xmode_1(cn,_countmode_,...)			\
   HW_G2(hwa_config_c16a_vmode,HW_IS(ok,hw_c16a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vmode_0(cn,...)					\
-  HW_PPERROR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
+  HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
 
 #define hwa_config_c16a_vmode_1(cn,vmode,...)				\
   hwa->cn.countmode = HW_A1(hw_c16a_countmode_##vmode);		\
@@ -73,7 +73,7 @@
   HW_G2(hwa_config_c16a_vbottom,HW_IS(0,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vbottom_0(cn,bottom,...)	\
-  HW_PPERROR("bottom must be `0`, not `" #bottom "`.")
+  HW_ERR("bottom must be `0`, not `" #bottom "`.")
 
 #define hwa_config_c16a_vbottom_1(cn,bottom,...)	\
   hwa_config_c16a_xbottom_0(cn,__VA_ARGS__)
@@ -82,13 +82,13 @@
   HW_G2(hwa_config_c16a_xtop,HW_IS(top,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_xtop_0(cn,...)					\
-  HW_PPERROR("expected `top` instead of `" #__VA_ARGS__ "`.")
+  HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
 
 #define hwa_config_c16a_xtop_1(cn,_top_,...)				\
   HW_G2(hwa_config_c16a_vtop,HW_IS(ok,hw_c16a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vtop_0(cn,...)					\
-  HW_PPERROR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, " \
+  HW_ERR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, " \
 	     "`fixed_0xFFFF`, `register_capture`, or `register_compare_a`," \
 	     " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
@@ -100,7 +100,7 @@
   HW_G2(hwa_config_c16a_vuc, HW_IS(ok,hw_counter_update_compares_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vuc_0(cn,vuc,...)			\
-  HW_PPERROR("update_compares must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
+  HW_ERR("update_compares must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
 
 #define hwa_config_c16a_vuc_1(cn,vuc,...)				\
   hwa->cn.update_compares = HW_A1(hw_counter_update_compares_##vuc);	\
@@ -115,7 +115,7 @@
     (cn,__VA_ARGS__)
 
 #define hwa_config_c16a_voverflow_0(cn,overflow,...)			\
-  HW_PPERROR("overflow_irq must be `at_bottom`, `at_top, or `at_max`, but `not `" #overflow "`.")
+  HW_ERR("overflow_irq must be `at_bottom`, `at_top, or `at_max`, but `not `" #overflow "`.")
 
 #define hwa_config_c16a_voverflow_1(cn,voverflow,...)			\
   hwa->cn.overflow_irq = HW_A1(hw_counter_overflow_irq_##voverflow);	\
@@ -128,7 +128,7 @@
   HW_G2(hwa_config_c16a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_0(cn,...)					\
-  HW_PPERROR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
+  HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c16a_1(...)
 
@@ -179,17 +179,17 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 
   if ( p->countmode == HW_A1(hw_c16a_countmode_loop_up) ) {
     if ( p->update_compares == HW_A1(hw_counter_update_compares_at_bottom) )
-      HW_RTERROR("c16a configuration: `update_compares` can not be set to "
+      HWA_ERR("c16a configuration: `update_compares` can not be set to "
 		 "`at_bottom` when counter loops up.");
     if ( (p->top == HW_A1(hw_c16a_top_fixed_0xFF)
 	  || p->top == HW_A1(hw_c16a_top_fixed_0x1FF)
 	  || p->top == HW_A1(hw_c16a_top_fixed_0x3FF))
 	 && p->update_compares == HW_A1(hw_counter_update_compares_immediately) )
-      HW_RTERROR("c16a configuration: `update_compares` can not be set to "
+      HWA_ERR("c16a configuration: `update_compares` can not be set to "
 		 "`immediately` when counter loops up with a fixed top.");
   }
   else if ( p->update_compares == HW_A1(hw_counter_update_compares_immediately) )
-    HW_RTERROR("c16a configuration: `update_compares` can not be set to "
+    HWA_ERR("c16a configuration: `update_compares` can not be set to "
 	       "`immediately` when counter loops up-down.");
 
   uint8_t mode = 0xFF ;
@@ -205,7 +205,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 	mode = 4 ;
       if ( p->overflow_irq != 0
 	   && p->overflow_irq != HW_A1(hw_counter_overflow_irq_at_bottom) )
-	HW_RTERROR("c16a configuration: `overflow` can only be set to `at_bottom`.");
+	HWA_ERR("c16a configuration: `overflow` can only be set to `at_bottom`.");
     }
     else {
       if (p->top == HW_A1(hw_c16a_top_fixed_0xFF) )
@@ -220,13 +220,13 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 	mode = 15 ;
       if ( p->overflow_irq != 0
 	   && p->overflow_irq != HW_A1(hw_counter_overflow_irq_at_top) )
-	HW_RTERROR("c16a configuration: `overflow` can only be set to `at_top`.");
+	HWA_ERR("c16a configuration: `overflow` can only be set to `at_top`.");
     }
   }
   else {
     if ( p->overflow_irq != 0
 	 && p->overflow_irq != HW_A1(hw_counter_overflow_irq_at_bottom) )
-      HW_RTERROR("c16a configuration: `overflow` can only be set to `at_bottom`.");
+      HWA_ERR("c16a configuration: `overflow` can only be set to `at_bottom`.");
 
     if ( p->countmode == HW_A1(hw_c16a_countmode_loop_updown) ) {
       if ( p->update_compares == 0 ||
@@ -252,13 +252,13 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
   }
 
   if (mode != 0xFF)
-    _hwa_write_cp(p, hw_c16a_wgm, mode);
+    _hwa_write_pcr(p, c16a, wgm, mode);
   else
-    HW_RTERROR("WGM value could not be solved for c16a class counter.");
+    HWA_ERR("WGM value could not be solved for c16a class counter.");
 
   /*	CS
    */
-  _hwa_write_cp(p, hw_c16a_cs, p->clock);
+  _hwa_write_pcr(p, c16a, cs, p->clock);
 }
 
 
@@ -270,10 +270,10 @@ HW_INLINE void hwa_solve_c16aoc1 ( hwa_c16a_t *counter, hwa_ocu_t *p )
     return ;
 
   if ( counter->config == 0 )
-    HW_RTERROR("configuration of hw_counter1 must be set.");
+    HWA_ERR("configuration of hw_counter1 must be set.");
 
   if ( counter->top == HW_A1(hw_c16a_top_register_compare_a) )
-    HW_RTERROR("ocra is used as top value for hw_counter1.");
+    HWA_ERR("ocra is used as top value for hw_counter1.");
 
   uint8_t	mode = 0xFF ;
 
@@ -316,11 +316,11 @@ HW_INLINE void hwa_solve_c16aoc1 ( hwa_c16a_t *counter, hwa_ocu_t *p )
   }
 
   if ( mode == 0xFF )
-    HW_RTERROR("incompatible counting mode / output-compare mode.");
+    HWA_ERR("incompatible counting mode / output-compare mode.");
 
   /*  Write the hardware configuration bits
    */
-  _hwa_write_cp(counter, hw_c16a_coma, mode );
+  _hwa_write_pcr(counter, c16a, coma, mode );
 }
 
 
@@ -332,7 +332,7 @@ HW_INLINE void hwa_solve_c16aoc2 ( hwa_c16a_t *counter, hwa_ocu_t *p )
     return ;
 
   if ( counter->config == 0 )
-    HW_RTERROR("configuration of hw_counter0 must be set.");
+    HWA_ERR("configuration of hw_counter0 must be set.");
 
   uint8_t	mode = 0xFF ;
 
@@ -369,9 +369,9 @@ HW_INLINE void hwa_solve_c16aoc2 ( hwa_c16a_t *counter, hwa_ocu_t *p )
   }
 
   if ( mode == 0xFF )
-    HW_RTERROR("incompatible counting mode / output-compare mode.");
+    HWA_ERR("incompatible counting mode / output-compare mode.");
 
-  _hwa_write_cp(counter, hw_c16a_comb, mode );
+  _hwa_write_pcr(counter, c16a, comb, mode );
 }
 
 
@@ -382,6 +382,7 @@ HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
   _hwa_reset_r8(  &timer->ccrc );
   _hwa_reset_r16( &timer->count );
   _hwa_reset_r16( &timer->icr );
+  //  _hwa_reset_r16( &timer->capture );
   _hwa_reset_r16( &timer->ocra );
   _hwa_reset_r16( &timer->ocrb );
   _hwa_reset_r8(  &timer->imsk );
@@ -396,6 +397,7 @@ HW_INLINE void _hwa_commit_c16a ( hwa_t *hwa, hwa_c16a_t *timer )
   _hwa_commit_r8(  hwa->commit, &timer->ccrc,  -1 );
   _hwa_commit_r16( hwa->commit, &timer->count, -1 );
   _hwa_commit_r16( hwa->commit, &timer->icr,   -1 );
+  //  _hwa_commit_r16( hwa->commit, &timer->capture,   -1 );
   _hwa_commit_r16( hwa->commit, &timer->ocra,  -1 );
   _hwa_commit_r16( hwa->commit, &timer->ocrb,  -1 );
   _hwa_commit_r8(  hwa->commit, &timer->imsk,  -1 );

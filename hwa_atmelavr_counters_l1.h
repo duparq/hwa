@@ -26,13 +26,21 @@
 /*	Write compare value of an ocu
  */
 #define hw_write_ocu_isfn
-#define hw_write_ocu(n,_ocu_, _ctr_,cn,cc,ca, reg, ion, value)	_hw_write(hw_##cn,reg,value)
+#define hw_write_ocu(ocn, ctr,cc,cn,ca, reg, ion, value)	\
+  _hw_write_mem(ctr,cc,cn,ca,reg,value)
+//  hw_write(ctr,cc,cn,ca,reg,value)
 
 
 /*	Definition of the io pin associated to an ocu
  */
 #define hw_io_ocu_isfn
-#define hw_io_ocu(_ctr1_,n,_ocu_, _ctr_,cn,cc,ca, reg, ion, _)  hw_##ion
+#define hw_io_ocu(ocun, ctr,cc,cn,ca, reg, ion)		hw_##ion
+
+
+/*	Definition of the counter associated to an ocu
+ */
+#define hw_ctr_ocu_isfn
+#define hw_ctr_ocu(ocn, ctr,cc,cn,ca, reg, ion)		ctr,cc,cn,ca
 
 
 #if !defined __ASSEMBLER__

@@ -5,7 +5,7 @@
 #SOURCES		=	blink-02.c
 #SOURCES		=	fade.c
 SOURCES		=	servo.c
-
+#SOURCES		=	test.c
 
 #	Target device
 #

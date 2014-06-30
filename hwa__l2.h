@@ -25,10 +25,10 @@
 HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
 {
   if (bn == 0)
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   if (v > (1U<<bn)-1)
-    HW_RTERROR("value too high for number of bits.");
+    HWA_ERR("value too high for number of bits.");
 
   uint8_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
 
@@ -39,10 +39,10 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
   //  *((volatile uint8_t*)0) = sv ;
 
   if ((r->rwm & sm) != sm)
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
-    HW_RTERROR("committing is required before setting a new value.");
+    HWA_ERR("committing is required before setting a new value.");
 
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
@@ -55,19 +55,19 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
 HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v )
 {
   if (bn == 0)
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   if (v > (1U<<bn)-1)
-    HW_RTERROR("value too high for bits number.");
+    HWA_ERR("value too high for bits number.");
 
   uint16_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
   uint16_t sv = v << bp ;		/* shifted value */
 
   if ((r->rwm & sm) != sm)
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
-    HW_RTERROR("commit required before setting a new value.");
+    HWA_ERR("commit required before setting a new value.");
 
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
@@ -80,19 +80,19 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
 HW_INLINE void _hwa_write_r32 ( hwa_r32_t *r, uint8_t bn, uint8_t bp, uint32_t v )
 {
   if (bn == 0)
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   if (v > (1U<<bn)-1)
-    HW_RTERROR("value too high for bits number.");
+    HWA_ERR("value too high for bits number.");
 
   uint32_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
   uint32_t sv = v << bp ;		/* shifted value */
 
   if ((r->rwm & sm) != sm)
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
-    HW_RTERROR("commit required before setting a new value.");
+    HWA_ERR("commit required before setting a new value.");
 
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
@@ -316,10 +316,10 @@ HW_INLINE void _hwa_commit_r32 ( _Bool commit, hwa_r32_t *r, uint32_t mask )
  * \hideinitializer
  */
 #define HWA_INIT(...)				_HWA_INIT_2(__VA_ARGS__)
-#define _HWA_INIT_2( _ctr_, cn,cc,ca, r )	_HWA_INIT_3( cn,ca, HW_G3(hw,cc,r) )
+#define _HWA_INIT_2(ctr,cc,cn,ca, rn )		_HWA_INIT_3(cn,ca,rn, HW_G3(hw,cc,rn))
 #define _HWA_INIT_3(...)			_HWA_INIT_4(__VA_ARGS__)
-#define _HWA_INIT_4( cn,ca, _reg_, rn,rw,ra,riv,rwm ) \
-  _hwa_init_r##rw( &hwa->cn.rn, ca+ra, riv, rwm )
+#define _HWA_INIT_4(cn,ca,rn, mem,reg,rw,ra,rrv,rwm )	\
+  _hwa_init_r##rw( &hwa->cn.rn, ca+ra, rrv, rwm )
 
 
 /** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
@@ -337,7 +337,7 @@ HW_INLINE void _hwa_reset_all(hwa_t*) ;
 
 HW_INLINE void __hwa_begin( hwa_t *hwa )
 {
-  if (0) { HW_RTERROR("You may have forgotten to turn optimizations on."); }
+  if (0) { HWA_ERR("You may have forgotten to turn optimizations on."); }
   _hwa_begin_all(hwa) ;
 }
 

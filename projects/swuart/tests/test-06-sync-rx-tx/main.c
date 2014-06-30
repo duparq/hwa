@@ -4,7 +4,6 @@
  *	./talker.py -b 115200
  */
 
-
 #include "config.h"
 #include <hwa.h>
 #include <swuart.h>

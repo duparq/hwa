@@ -53,7 +53,10 @@ typedef struct {
   hwa_r16_t count ;
   hwa_r16_t ocra ;
   hwa_r16_t ocrb ;
-  hwa_r16_t icr ;
+  union {
+    hwa_r16_t icr ;
+    hwa_r16_t capture ;
+  };
   hwa_r8_t  imsk ;
   hwa_r8_t  ifr ;
 

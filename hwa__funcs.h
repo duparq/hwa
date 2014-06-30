@@ -4,7 +4,6 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-//#include <inttypes.h>
 #include <stdint.h>
 
 /** \brief	Storage class of HWA functions.
@@ -32,23 +31,14 @@
 #endif
 
 
-/** \brief	Preprocessing error
- *
- */
-#define HW_PPERROR(msg)		0 ; _Static_assert(0, "HWA error: " msg) 
-//#define HW_PPERROR(msg)		0, _Static_assert(0, "HWA error: " msg)
-/* HW_INLINE int hw_foo() { return 0 ; } */
-/* #define HW_PPERROR(msg)		hw_foo() ; _Static_assert(0, "HWA error: " msg) */
-
-
 /** \brief	Run-time error
  *
  * \ingroup macro
  * \hideinitializer
  */
-#define HW_RTERROR(msg)			_HW_RTERROR_2(msg, __COUNTER__)
-#define _HW_RTERROR_2(...)		_HW_RTERROR_3(__VA_ARGS__)
-#define _HW_RTERROR_3(msg, num)						\
+#define HWA_ERR(msg)			_HWA_ERR_2(msg, __COUNTER__)
+#define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
+#define _HWA_ERR_3(msg, num)						\
   do {									\
     extern void __attribute__((error(msg))) hw_rterror_##num(void);	\
     hw_rterror_##num();							\
@@ -103,133 +93,162 @@ typedef struct hwa_r32_t
 } hwa_r32_t ;
 
 
-/** \brief	hw_read(...)
- *
+/*	Generic instruction 'hwa_config': configure one controller
  */
-#define hw_config(...)		HW_APPLY(hw_config, __VA_ARGS__)
+#define hwa_config(...)		HW_G2(_hwa_config_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_config_xctr_0(...)	HW_ERR("first argument is not a controller.")
+#define _hwa_config_xctr_1(ctr,cc,...)	\
+  HW_G2(_hwa_config_xfn, HW_IS(,hwa_config_##cc##_isfn))(cc,__VA_ARGS__)
+#define _hwa_config_xfn_1(cc,...)	hwa_config_##cc(__VA_ARGS__)
+#define _hwa_config_xfn_0(cc,cn,ca,...)					\
+  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hwa_config()`.")
 
 
-/** \brief	hw_read(...)
- *
+
+/*	Generic instruction 'hw_read'
  */
-#define hw_read(...)		HW_APPLY(hw_read, __VA_ARGS__)
-#define hw_read_reg_isfn
-#define hw_read_reg1(cn,ca,r,rw,ra,riv,rwm,rbn,rbp,_end_)	\
+#define hw_read(...)		HW_G2(_hw_read_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_read_xctr_0(...)	HW_ERR("first argument is not a controller.")
+#define _hw_read_xctr_1(ctr,cc,...)	\
+  HW_G2(_hw_read_xfn, HW_IS(,hw_read_##cc##_isfn))(cc,__VA_ARGS__)
+#define _hw_read_xfn_1(cc,...)	hw_read_##cc(__VA_ARGS__)
+#define _hw_read_xfn_0(cc,cn,ca,...)					\
+  HW_G2(_hw_read_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__)
+#define _hw_read_xmem_0(cc,cn,ca,...)					\
+  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_read` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.")
+#define _hw_read_xmem_1(...)	_hw_read_xmem_2(HW_XMEM(__VA_ARGS__,))
+#define _hw_read_xmem_2(...)	_hw_read_xmem_3(__VA_ARGS__)
+#define _hw_read_xmem_3(x,...)	_hw_read_mem_##x(__VA_ARGS__)
+#define _hw_read_mem_0	HW_ERR
+#define _hw_read_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\
   _hw_read_r##rw(ca+ra,rbn,rbp)
-#define hw_read_reg2(cn,ca,\
-		     r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
-		     r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,_end_)		\
+#define _hw_read_mem_2(cn,ca,						\
+			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
+			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\
   ((_hw_read_r##rw1(ca+ra1,rbn1,rbp1)&((1<<rbn1)-1)<<vbp1) |	\
    (_hw_read_r##rw2(ca+ar2,rbn2,rbp2)&((1<<rbn2)-1)<<vbp2))
 
 
-#define hw_write(...)		HW_APPLY(hw_write, __VA_ARGS__)
-#define hw_write_reg_isfn
-#define hw_write_reg1(cn,ca,r,rw,ra,riv,rwm,rbn,rbp,v,_end_)	\
+/*	Generic instruction 'hw_write'
+ */
+#define hw_write(...)		HW_G2(_hw_write_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_write_xctr_0(...)	HW_ERR("first argument is not a controller.")
+#define _hw_write_xctr_1(ctr,cc,...)	\
+  HW_G2(_hw_write_xfn, HW_IS(,hw_write_##cc##_isfn))(cc,__VA_ARGS__)
+#define _hw_write_xfn_1(cc,...)	hw_write_##cc(__VA_ARGS__)
+#define _hw_write_xfn_0(cc,cn,ca,...)					\
+  HW_G2(_hw_write_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__)
+#define _hw_write_xmem_0(cc,cn,ca,...)					\
+  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_write` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.")
+#define _hw_write_xmem_1(...)	_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+#define _hw_write_xmem_2(...)	_hw_write_xmem_3(__VA_ARGS__)
+#define _hw_write_xmem_3(x,...)	_hw_write_mem_##x(__VA_ARGS__)
+#define _hw_write_mem_0	HW_ERR
+#define _hw_write_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\
   _hw_write_r##rw(ca+ra,rwm,rbn,rbp,v)
-#define hw_write_reg2(cn,ca,\
-		      r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
-		      r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_end_)	\
+#define _hw_write_mem_2(cn,ca,						\
+			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
+			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\
   do { _hw_write_r##rw1(ca+ra1,riv1,rwm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
       _hw_write_r##rw2(ca+ra2,riv2,rwm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
 
 
 /*	Write hard registers. Internal use, no argument checking.
  */
-#define _hw_write(...)			_hw_write_2(__VA_ARGS__)
-#define _hw_write_2(_ctr_,cn,cc,ca,x,v)	_hw_write_3(hw_##cc##_##x,ca,v)
-#define _hw_write_3(...)		_hw_write_4(__VA_ARGS__)
-#define _hw_write_4(x,...)		_hw_write_##x(__VA_ARGS__)
-#define _hw_write_reg(rn,rw,ra,riv,rwm,ca,v)\
-  _hw_write_r##rw(ca+ra,rwm,rw,0,v)
-#define _hw_write_regb(_reg_,rn,rw,ra,riv,rwm,bn,bp,ca,v)\
-  _hw_write_r##rw(ca+ra,rwm,bn,bp,v)
+#define _hw_write_mem(ctr,...)		_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 
-#define hw_toggle(...)		HW_APPLY(hw_toggle, __VA_ARGS__)
-
-
-/** \brief	hwa_write(...)
- *
+/*	Generic instruction 'hwa_write'
  */
-#define hwa_write(...)		HW_APPLY(hwa_write, __VA_ARGS__)
-#define hwa_write_reg_isfn
-#define hwa_write_reg1(cn,ca,rn,rw,ra,riv,rwm,rbn,rbp,v,_end_)	\
+#define hwa_write(...)		HW_G2(_hwa_write_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_write_xctr_0(...)	HW_ERR("first argument is not a controller.")
+#define _hwa_write_xctr_1(ctr,cc,...)	\
+  HW_G2(_hwa_write_xfn, HW_IS(,hwa_write_##cc##_isfn))(cc,__VA_ARGS__)
+#define _hwa_write_xfn_1(cc,...)	hwa_write_##cc(__VA_ARGS__)
+#define _hwa_write_xfn_0(cc,cn,ca,...)					\
+  HW_G2(_hwa_write_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__)
+#define _hwa_write_xmem_0(cc,cn,ca,...)					\
+  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hwa_write` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.")
+#define _hwa_write_xmem_1(...)	_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+#define _hwa_write_xmem_2(...)	_hwa_write_xmem_3(__VA_ARGS__)
+#define _hwa_write_xmem_3(x,...)	_hwa_write_mem_##x(__VA_ARGS__)
+#define _hwa_write_mem_0	HW_ERR
+#define _hwa_write_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\
   _hwa_write_r##rw( &hwa->cn.rn, rbn, rbp, v )
-#define hwa_write_reg2(cn,ca,						\
-		       r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
-		       r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_end_)	\
+#define _hwa_write_mem_2(cn,ca,						\
+			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
+			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\
   do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
 
+/*	Write hard registers. Internal use, no argument checking.
+ */
+#define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+
+
 /*	Write regx without arguments checking
+ *	FIXME: should replace with _hw_write_xmem_1
  */
-#define _hwa_write(...)			_hwa_write_2(__VA_ARGS__)
-#define _hwa_write_2(_ctr_,cn,cc,ca,x,v)	_hwa_write_3(hw_##cc##_##x,cn,v)
-#define _hwa_write_3(...)		_hwa_write_4(__VA_ARGS__)
-#define _hwa_write_4(x,...)		_hwa_write_##x(__VA_ARGS__)
+/* #define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) */
+/* #define _hwa_write_2(_ctr_,cc,cn,ca,x,v)	_hwa_write_3(hw_##cc##_##x,cn,v) */
+/* #define _hwa_write_3(...)		_hwa_write_4(__VA_ARGS__) */
+/* #define _hwa_write_4(x,...)		_hwa_write_##x(__VA_ARGS__) */
 
-#define _hwa_write_reg(rn,rw,ra,rrv,rwm, cn, v)\
-  _hwa_write_r##rw(&((hwa->cn).rn), rw, 0, v )
+/* #define _hwa_write_reg(rn,rw,ra,rrv,rwm, cn, v)\ */
+/*   _hwa_write_r##rw(&((hwa->cn).rn), rw, 0, v ) */
 
-#define _hwa_write_regb(x,...)		_hwa_write_regb_##x(__VA_ARGS__)
+/* #define _hwa_write_regb(x,...)		_hwa_write_regb_##x(__VA_ARGS__) */
 
-#define _hwa_write_regb_ctr(cn,cc,ca,x,...)	\
-  _hwa_write_regb_ctr_2(cn, hw_##cc##_##x, __VA_ARGS__)
-#define _hwa_write_regb_ctr_2(...)	_hwa_write_regb_ctr_3(__VA_ARGS__)
-#define _hwa_write_regb_ctr_3(cn, _regb_, _reg_, rn,rw,ra,rrv,rwm, rbn,rbp, _, v) \
-  _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v )
+/* #define _hwa_write_regb_ctr(cc,cn,ca,x,...)	\ */
+/*   _hwa_write_regb_ctr_2(cn, hw_##cc##_##x, __VA_ARGS__) */
+/* #define _hwa_write_regb_ctr_2(...)	_hwa_write_regb_ctr_3(__VA_ARGS__) */
+/* #define _hwa_write_regb_ctr_3(cn, _regb_, _reg_, rn,rw,ra,rrv,rwm, rbn,rbp, _, v) \ */
+/*   _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v ) */
 
-#define _hwa_write_regb_reg(rn,rw,ra,rrv,rwm,rbn,rbp,cn,v)	\
-  _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v )
+/* #define _hwa_write_regb_reg(rn,rw,ra,rrv,rwm,rbn,rbp,cn,v)	\ */
+/*   _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v ) */
 
 
 
-/*	Write registers in hwa_t struct. Internal use, no argument checking.
+/*	Write registers in hwa_t struct. Internal use only, no argument checking!
  */
-#define _hwa_write_cp(...)			_hwa_write_cp_2(__VA_ARGS__)
-#define _hwa_write_cp_2(p,t,...)		_hwa_write_cp_##t(__VA_ARGS__,p)
-#define _hwa_write_cp_regb(_reg_,rn,rw,ra,riv,rwm,rbn,rbp,v,p)		\
-  _hwa_write_r##rw(&p->rn, rbn, rbp, v )
-#define _hwa_write_cp_regbb(_reg1_,rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
-  _reg2_,rn2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,p)			\
+#define _hwa_write_pcr(p,cc,r,v)	_hwa_write_pcr2(HW_XMEM(cc,cn,ca,r,v,p))
+#define _hwa_write_pcr2(...)		_hwa_write_pcr3(__VA_ARGS__)
+#define _hwa_write_pcr3(x,...)		_hwa_write_pcr_##x(__VA_ARGS__)
+#define _hwa_write_pcr_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,p)	\
+  _hwa_write_r##rw( &p->rn, rbn, rbp, v )
+#define  _hwa_write_pcr_2(cn,ca,					\
+			  rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
+			  rn2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,p)	\
   do { _hwa_write_r##rw1(&p->rn1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
-       _hwa_write_r##rw2(&p->rn2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
+      _hwa_write_r##rw2(&p->rn2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
 
-/*	Configure one controller
- *
- *		Append a void argument to help detect end of arguments or
- *		missing arguments
+/*	Generic instruction 'hw_toggle'
  */
-#define hwa_config(...)		HW_APPLY(hwa_config, __VA_ARGS__,)
+#define hw_toggle(...)		HW_G2(_hw_toggle_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_toggle_xctr_0(...)	HW_ERR("first argument is not a controller.")
+#define _hw_toggle_xctr_1(ctr,cc,...)	\
+  HW_G2(_hw_toggle_xfn, HW_IS(,hw_toggle_##cc##_isfn))(cc,__VA_ARGS__)
+#define _hw_toggle_xfn_1(cc,...)	hw_toggle_##cc(__VA_ARGS__)
+#define _hw_toggle_xfn_0(cc,cn,ca,...)					\
+  HW_G2(_hw_toggle_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__)
+#define _hw_toggle_xmem_0(cc,cn,ca,...)					\
+  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_toggle` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.")
+#define _hw_toggle_xmem_1(...)	_hw_toggle_xmem_2(HW_XMEM(__VA_ARGS__,))
+#define _hw_toggle_xmem_2(...)	_hw_toggle_xmem_3(__VA_ARGS__)
+#define _hw_toggle_xmem_3(x,...)	_hw_toggle_mem_##x(__VA_ARGS__)
+#define _hw_toggle_mem_0	HW_ERR
+#define _hw_toggle_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\
+  _hw_toggle_r##rw(ca+ra,rbn,rbp)
+#define _hw_toggle_mem_2(cn,ca,						\
+			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
+			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\
+  ((_hw_toggle_r##rw1(ca+ra1,rbn1,rbp1)&((1<<rbn1)-1)<<vbp1) |	\
+   (_hw_toggle_r##rw2(ca+ar2,rbn2,rbp2)&((1<<rbn2)-1)<<vbp2))
 
 
-/*	Turn irq on/off
- */
-#define hw_turn_irq(...)	HW_SPCLZ(hw_turn_irq, HW_XPIRQ(__VA_ARGS__))
-#define hw_turn_irq_0		HW_PPERROR
-#define hw_turn_irq_1(cn,cc,ca,irq,state)		\
-  _hw_write(ctr,cn,cc,ca, hw_##cc##_ie_##irq, state)
-
-#define hwa_turn_irq(...)	_hwa_turn_irq_2( HW_CALL( HW_XIRQ(__VA_ARGS__)))
-#define _hwa_turn_irq_2(...)	_hwa_turn_irq_3( __VA_ARGS__ )
-//#define _hwa_turn_irq_3(...)	_hwa_turn_irq_ ## __VA_ARGS__
-//#define _hwa_turn_irq_0(error)	HW_PPERROR(error)
-
-#define _hwa_turn_irq_3(...)	HW_G2(_hwa_turn_irq_error, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_turn_irq_error_1(...) __VA_ARGS__
-#define _hwa_turn_irq_error_0(...) _hwa_turn_irq_ ## __VA_ARGS__
-
-  //#define _hwa_turn_irq_0(error)	0, error
-#define _hwa_turn_irq_irq(vector,_ctr_,cn,cc,ca, irqe, irqf, zstate, _)	\
-  HW_G2(_hwa_turn_irq_state, HW_IS(state, hw_##zstate))(vector,_ctr_,cn,cc,ca, irqe, irqf, zstate)
-
-#define _hwa_turn_irq_state_0(vector, _ctr_,cn,cc,ca, irqe, irqf, zstate)	\
-    HW_PPERROR("`" #zstate "` is not a valid irq state.")
-#define _hwa_turn_irq_state_1(vector, _ctr_,cn,cc,ca, irqe, irqf, zstate)	\
-    _hwa_write_2(_ctr_,cn,cc,ca, irqe, HW_A1(hw_##zstate))
 
 
 /** \brief	Read from one 8-bit hardware register.
@@ -241,10 +260,10 @@ typedef struct hwa_r32_t
 HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   if ( ra == ~0 )
-    HW_RTERROR("invalid address");
+    HWA_ERR("invalid address");
 
   if ( rbp > 7 )
-    HW_RTERROR("bit pos > 7");
+    HWA_ERR("bit pos > 7");
 
   uint8_t m = (rbn > 7 ? (uint8_t)~0 : (1U<<rbn)-1) ;
   volatile uint8_t *p = (volatile uint8_t *)ra ;
@@ -261,10 +280,10 @@ HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   if ( ra == ~0 )
-    HW_RTERROR("invalid address");
+    HWA_ERR("invalid address");
 
   if ( rbp > 15 )
-    HW_RTERROR("bit pos > 15");
+    HWA_ERR("bit pos > 15");
 
   uint16_t m = (rbn > 15 ? (uint16_t)~0 : (1U<<rbn)-1) ;
   volatile uint16_t *p = (volatile uint16_t *)ra ;
@@ -281,10 +300,10 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 HW_INLINE uint32_t _hw_read_r32 ( uint32_t *p, uint8_t rbn, uint8_t rbp )
 {
   if ( (uintptr_t)p == (uintptr_t)~0 )
-    HW_RTERROR("invalid address");
+    HWA_ERR("invalid address");
 
   if ( rbp > 31 )
-    HW_RTERROR("bit pos > 31");
+    HWA_ERR("bit pos > 31");
 
   uint32_t m = (rbn > 31 ? (uint32_t)~0 : (1U<<rbn)-1) ;
   return ((*p)>>rbp) & m ;
@@ -307,15 +326,15 @@ HW_INLINE uint32_t _hw_read_r32 ( uint32_t *p, uint8_t rbn, uint8_t rbp )
 /* 			     uint8_t rbn, uint8_t rbp, uint8_t v ) */
 /* { */
 /*   if ( (uintptr_t)p == (uintptr_t)~0 ) */
-/*     HW_RTERROR("invalid access"); */
+/*     HWA_ERR("invalid access"); */
 
 /*   if ( rbn == 0 ) */
-/*     HW_RTERROR("no bit to be changed?"); */
+/*     HWA_ERR("no bit to be changed?"); */
 
 /*   uint8_t m = (rbn > 7) ? (uint8_t)-1 : (1U<<rbn)-1 ; */
 
 /*   if (v > m) */
-/*     HW_RTERROR("value too high for bits number"); */
+/*     HWA_ERR("value too high for bits number"); */
 
 /*   m <<= rbp ; */
 /*   v <<= rbp ; */
@@ -323,7 +342,7 @@ HW_INLINE uint32_t _hw_read_r32 ( uint32_t *p, uint8_t rbn, uint8_t rbp )
 /*   /\*	Check that we do not try to set non-writeable bits */
 /*    *\/ */
 /*   if ( (v & m & rwm) != (v & m) ) */
-/*     HW_RTERROR("bits not writeable."); */
+/*     HWA_ERR("bits not writeable."); */
 
 /*   if ( (m & rwm) == rwm ) */
 /*     *p = v ; */
@@ -335,15 +354,15 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm,
 			    uint8_t bn, uint8_t bp, uint8_t v )
 {
   if ( ra == ~0 )
-    HW_RTERROR("invalid access");
+    HWA_ERR("invalid access");
 
   if ( bn == 0 )
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   uint8_t m = (bn > 7) ? (uint8_t)-1 : (1U<<bn)-1 ;
 
   if (v > m)
-    HW_RTERROR("value too high for bits number");
+    HWA_ERR("value too high for bits number");
 
   m <<= bp ;
   v <<= bp ;
@@ -351,7 +370,7 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm,
   /*	Check that we do not try to set non-writeable bits
    */
   if ( (v & m & rwm) != (v & m) )
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   volatile uint8_t *p = (volatile uint8_t *)ra ;
 
@@ -376,15 +395,15 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm,
 			     uint8_t bn, uint8_t bp, uint16_t v )
 {
   if ( ra == ~0 )
-    HW_RTERROR("invalid access");
+    HWA_ERR("invalid access");
 
   if ( bn == 0 )
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   uint16_t m = (bn > 15) ? (uint16_t)-1 : (1U<<bn)-1 ;
 
   if (v > m)
-    HW_RTERROR("value too high for bits number");
+    HWA_ERR("value too high for bits number");
 
   m <<= bp ;
   v <<= bp ;
@@ -392,7 +411,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm,
   /*	Check that we do not try to set non-writeable bits
    */
   if ( (v & m & rwm) != (v & m) )
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   volatile uint16_t *p = (volatile uint16_t *)ra ;
 
@@ -416,15 +435,15 @@ HW_INLINE void _hw_write_r32 ( volatile uint32_t *p, uint32_t rwm,
 			     uint8_t rbn, uint8_t rbp, uint32_t v )
 {
   if ( (uintptr_t)p == (uintptr_t)~0 )
-    HW_RTERROR("invalid access");
+    HWA_ERR("invalid access");
 
   if ( rbn == 0 )
-    HW_RTERROR("no bit to be changed?");
+    HWA_ERR("no bit to be changed?");
 
   uint32_t m = (rbn > 31) ? (uint32_t)-1 : (1U<<rbn)-1 ;
 
   if (v > m)
-    HW_RTERROR("value too high for bits number");
+    HWA_ERR("value too high for bits number");
 
   m <<= rbp ;
   v <<= rbp ;
@@ -432,7 +451,7 @@ HW_INLINE void _hw_write_r32 ( volatile uint32_t *p, uint32_t rwm,
   /*	Check that we do not try to set non-writeable bits
    */
   if ( (v & m & rwm) != (v & m) )
-    HW_RTERROR("bits not writeable.");
+    HWA_ERR("bits not writeable.");
 
   if ( (m & rwm) == rwm )
     *p = v ;
