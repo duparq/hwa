@@ -68,7 +68,7 @@ HW_INLINE void config_counter( hwa_t *hwa )
 	      overflow_irq,	at_bottom,
 	      );
   hwa_write( hw_ctr(SERVO), capture, DUTY_PERIOD );
-  hwa_turn_irq( hw_ctr(SERVO), overflow, on );
+  hwa_turn( hw_irq(hw_ctr(SERVO), overflow), on );
 }
 
 

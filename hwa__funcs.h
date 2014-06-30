@@ -249,12 +249,21 @@ typedef struct hwa_r32_t
    (_hw_toggle_r##rw2(ca+ar2,rbn2,rbp2)&((1<<rbn2)-1)<<vbp2))
 
 
+/*	Generic instruction 'hwa_turn': turn something on/off
+ */
+#define hwa_turn(...)		_hwa_turn_2(__VA_ARGS__)
+#define _hwa_turn_2(x,...)	HW_G2(_hwa_turn_xtype, HW_IS(,hw_type_##x))(x,__VA_ARGS__)
+#define _hwa_turn_xtype_0(...)	HW_ERR("type of `" #__VA_ARGS__ "`is unknown.")
+#define _hwa_turn_xtype_1(x,...) HW_G2(_hwa_turn_xfn, HW_IS(,hwa_turn_##x##_isfn))(x,__VA_ARGS__)
+#define _hwa_turn_xfn_0(...)	HW_ERR("hwa_turn can not be applied to object `hw_" HW_QUOTE(hw_name(__VA_ARGS__)) "` of type `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.")
+#define _hwa_turn_xfn_1(t,...)	hwa_turn_##t(__VA_ARGS__)
+
 
 
 /** \brief	Read from one 8-bit hardware register.
- *  \ca+ram p	address of register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
+ *  \param p	address of register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
  *  \return	the value of the rbn consecutive bits at position rbp in the register.
  */
 HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
@@ -272,9 +281,9 @@ HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 
 
 /** \brief	Read from one 16-bit hardware register.
- *  \ca+ram p	address of register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
+ *  \param p	address of register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
  *  \return	the value of the rbn consecutive bits at position rbp in the register.
  */
 HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
@@ -292,9 +301,9 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 
 
 /** \brief	Read from one 32-bit hardware register.
- *  \ca+ram p	address of register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
+ *  \param p	address of register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
  *  \return	the value of the rbn consecutive bits at position rbp in the register.
  */
 HW_INLINE uint32_t _hw_read_r32 ( uint32_t *p, uint8_t rbn, uint8_t rbp )
@@ -316,40 +325,12 @@ HW_INLINE uint32_t _hw_read_r32 ( uint32_t *p, uint8_t rbn, uint8_t rbp )
  *	the hard register at address p. Trying to write 1s into non-writeable
  *	bits triggers an error.
  *
- *  \ca+ram p	address of register.
- *  \ca+ram rwm	writeable bits mask of the register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
- *  \ca+ram v	value to write.
+ *  \param p	address of register.
+ *  \param rwm	writeable bits mask of the register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
+ *  \param v	value to write.
  */
-/* HW_INLINE void hw_write_8 ( volatile uint8_t *p, uint8_t rwm, */
-/* 			     uint8_t rbn, uint8_t rbp, uint8_t v ) */
-/* { */
-/*   if ( (uintptr_t)p == (uintptr_t)~0 ) */
-/*     HWA_ERR("invalid access"); */
-
-/*   if ( rbn == 0 ) */
-/*     HWA_ERR("no bit to be changed?"); */
-
-/*   uint8_t m = (rbn > 7) ? (uint8_t)-1 : (1U<<rbn)-1 ; */
-
-/*   if (v > m) */
-/*     HWA_ERR("value too high for bits number"); */
-
-/*   m <<= rbp ; */
-/*   v <<= rbp ; */
-
-/*   /\*	Check that we do not try to set non-writeable bits */
-/*    *\/ */
-/*   if ( (v & m & rwm) != (v & m) ) */
-/*     HWA_ERR("bits not writeable."); */
-
-/*   if ( (m & rwm) == rwm ) */
-/*     *p = v ; */
-/*   else */
-/*     *p = (*p & ~m) | (v & m) ; */
-/* } */
-
 HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm,
 			    uint8_t bn, uint8_t bp, uint8_t v )
 {
@@ -385,11 +366,11 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm,
  *
  *  \copydetails hwa_write_r8
  *
- *  \ca+ram p	address of register.
- *  \ca+ram rwm	writeable bits mask of the register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
- *  \ca+ram v	value to write.
+ *  \param p	address of register.
+ *  \param rwm	writeable bits mask of the register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
+ *  \param v	value to write.
  */
 HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm,
 			     uint8_t bn, uint8_t bp, uint16_t v )
@@ -425,11 +406,11 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm,
  *
  *  \copydetails hwa_write_r8
  *
- *  \ca+ram p	address of register.
- *  \ca+ram rwm	writeable bits mask of the register.
- *  \ca+ram rbn	number of consecutive bits conderned.
- *  \ca+ram rbp	position of the least significant bit conderned in the register.
- *  \ca+ram v	value to write.
+ *  \param p	address of register.
+ *  \param rwm	writeable bits mask of the register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
+ *  \param v	value to write.
  */
 HW_INLINE void _hw_write_r32 ( volatile uint32_t *p, uint32_t rwm,
 			     uint8_t rbn, uint8_t rbp, uint32_t v )

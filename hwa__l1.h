@@ -16,23 +16,21 @@
  *	notations used.
  */
 
-#include "hwa__is.h"
-#include "hwa__types.h"
 #include "hwa__macros.h"
 #include "hwa__xmem.h"
-#include "hwa__xirq.h"
+#include "hwa__irqs.h"
 
 
 #if !defined __ASSEMBLER__
 #  include "hwa__funcs.h"
 #endif
 
-#define hw_state_0		0
-#define hw_state_off		0
-#define hw_state_1		1
-#define hw_state_on		1
-#define hw_on			state, 1
-#define hw_off			state, 0
+/* #define hw_state_0		0 */
+/* #define hw_state_off		0 */
+/* #define hw_state_1		1 */
+/* #define hw_state_on		1 */
+#define hw_state_on		, 1
+#define hw_state_off		, 0
 
 
 /*	Include device-specific declarations

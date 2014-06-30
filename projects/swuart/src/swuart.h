@@ -79,7 +79,7 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
    *		enabled. Then, pin-change interrupts will be enabled/disabled as
    *		required by setting the mask associated to the pin.
    */
-  hwa_turn_irq( hw_ctr(SWUART_PIN_RX), all, on );
+  hwa_turn( hw_irq(hw_ctr(SWUART_PIN_RX), all), on );
 #endif
 
   /*	RX pin

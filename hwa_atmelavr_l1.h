@@ -10,6 +10,13 @@
 #define HW_DEVICE_ATMELAVR
 
 
+#define hw_is_bottom_bottom		, 1
+#define hw_is_clock_clock		, 1
+#define hw_is_countmode_countmode	, 1
+#define hw_is_ocu_ocu			, 1
+#define hw_is_top_top			, 1
+
+
 /*	Register address offset for C/assembler
  */
 #ifndef __ASSEMBLER__
