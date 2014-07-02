@@ -187,30 +187,6 @@ typedef struct hwa_r32_t
 #define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 
-/*	Write regx without arguments checking
- *	FIXME: should replace with _hw_write_xmem_1
- */
-/* #define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) */
-/* #define _hwa_write_2(_ctr_,cc,cn,ca,x,v)	_hwa_write_3(hw_##cc##_##x,cn,v) */
-/* #define _hwa_write_3(...)		_hwa_write_4(__VA_ARGS__) */
-/* #define _hwa_write_4(x,...)		_hwa_write_##x(__VA_ARGS__) */
-
-/* #define _hwa_write_reg(rn,rw,ra,rrv,rwm, cn, v)\ */
-/*   _hwa_write_r##rw(&((hwa->cn).rn), rw, 0, v ) */
-
-/* #define _hwa_write_regb(x,...)		_hwa_write_regb_##x(__VA_ARGS__) */
-
-/* #define _hwa_write_regb_ctr(cc,cn,ca,x,...)	\ */
-/*   _hwa_write_regb_ctr_2(cn, hw_##cc##_##x, __VA_ARGS__) */
-/* #define _hwa_write_regb_ctr_2(...)	_hwa_write_regb_ctr_3(__VA_ARGS__) */
-/* #define _hwa_write_regb_ctr_3(cn, _regb_, _reg_, rn,rw,ra,rrv,rwm, rbn,rbp, _, v) \ */
-/*   _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v ) */
-
-/* #define _hwa_write_regb_reg(rn,rw,ra,rrv,rwm,rbn,rbp,cn,v)	\ */
-/*   _hwa_write_r##rw(&((hwa->cn).rn), rbn, rbp, v ) */
-
-
-
 /*	Write registers in hwa_t struct. Internal use only, no argument checking!
  */
 #define _hwa_write_pcr(p,cc,r,v)	_hwa_write_pcr2(HW_XMEM(cc,cn,ca,r,v,p))

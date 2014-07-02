@@ -18,7 +18,7 @@
 
 #include "hwa__macros.h"
 #include "hwa__xmem.h"
-#include "hwa__irqs.h"
+#include "hwa__interrupts.h"
 
 
 #if !defined __ASSEMBLER__

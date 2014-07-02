@@ -98,9 +98,3 @@ typedef struct {
 #define _hw_eq_io_1(ctr1,cc1,ion1, sctr1,scc1,scn1,sca1,sbn1,sbp1,	\
 		    ctr2,cc2,ion2, sctr2,scc2,scn2,sca2,sbn2,sbp2)	\
   (sca1==sca2 && sbn1==sbn2 && sbp1==sbp2)
-
-
-/* #define hw_ra_io4_isfn */
-/* #define hw_ra_io8_isfn */
-/* #define hw_ra_io4		hw_ra_io8 */
-/* #define hw_ra_io8(cn,...)	HW_A0(__VA_ARGS__) */

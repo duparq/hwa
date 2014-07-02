@@ -24,41 +24,41 @@
  *
  *	Syntax:		'irq', vector, controller, enable bit, flag bit
  */
-#define hw_irq_pin_int0			irq, 1, hw_core0, int0, intf0
-
-#define hw_irq_pcic0_all		irq, 2, hw_pcic0, irqe, irqf
-
-#define hw_irq_pin_pcint7		irq, 2, hw_pcic0, pcint7, irqf
-#define hw_irq_pin_pcint6		irq, 2, hw_pcic0, pcint6, irqf
-#define hw_irq_pin_pcint5		irq, 2, hw_pcic0, pcint5, irqf
-#define hw_irq_pin_pcint4		irq, 2, hw_pcic0, pcint4, irqf
-#define hw_irq_pin_pcint3		irq, 2, hw_pcic0, pcint3, irqf
-#define hw_irq_pin_pcint2		irq, 2, hw_pcic0, pcint2, irqf
-#define hw_irq_pin_pcint1		irq, 2, hw_pcic0, pcint1, irqf
-#define hw_irq_pin_pcint0		irq, 2, hw_pcic0, pcint0, irqf
-
-#define hw_irq_pcic1_all		irq, 3, hw_pcic1, irqe, irqf
-
-#define hw_irq_pin_pcint11		irq, 3, hw_pcic1, pcint11, irqf
-#define hw_irq_pin_pcint10		irq, 3, hw_pcic1, pcint10, irqf
-#define hw_irq_pin_pcint9		irq, 3, hw_pcic1, pcint9, irqf
-
-#define hw_irq_pin_pcint8_		irq, 3, hw_pcic1, pcint8, irqf
-#define hw_irq_pin_pcint8_all		irq, 3, hw_pcic1, pcint8, irqf
-
-#define hw_irq_watchdog_all		irq, 4, hw_watchdog, ie, if
-#define hw_irq_counter1_capture		irq, 5, hw_counter1, icie, icf
-#define hw_irq_counter1_match_a		irq, 6, hw_counter1, ociea, ocfa
-#define hw_irq_counter1_compare_a	irq, 6, hw_counter1, ociea, ocfa
-#define hw_irq_counter1_match_b		irq, 7, hw_counter1, ocieb, ocfb
-#define hw_irq_counter1_compare_b	irq, 7, hw_counter1, ocieb, ocfb
-#define hw_irq_counter1_overflow	irq, 8, hw_counter1, oie, ov
-					       
-/* #define hw_irq_counter0_all		irq, counter0_all, all */
-/* #define hw_irq_counter1_all		irq, counter1_all, all */
-
-#define hw_irq_counter0_match_a		irq, 9, hw_counter0, ociea, ocfa
-#define hw_irq_counter0_compare_a	irq, 9, hw_counter0, ociea, ocfa
+#define hw_irq_pin_int0			irq,  1, hw_core0, int0, intf0
+					      
+#define hw_irq_pcic0_all		irq,  2, hw_pcic0, irqe, irqf
+					      
+#define hw_irq_pin_pcint7		irq,  2, hw_pcic0, pcint7, irqf
+#define hw_irq_pin_pcint6		irq,  2, hw_pcic0, pcint6, irqf
+#define hw_irq_pin_pcint5		irq,  2, hw_pcic0, pcint5, irqf
+#define hw_irq_pin_pcint4		irq,  2, hw_pcic0, pcint4, irqf
+#define hw_irq_pin_pcint3		irq,  2, hw_pcic0, pcint3, irqf
+#define hw_irq_pin_pcint2		irq,  2, hw_pcic0, pcint2, irqf
+#define hw_irq_pin_pcint1		irq,  2, hw_pcic0, pcint1, irqf
+#define hw_irq_pin_pcint0		irq,  2, hw_pcic0, pcint0, irqf
+					      
+#define hw_irq_pcic1_all		irq,  3, hw_pcic1, irqe, irqf
+					      
+#define hw_irq_pin_pcint11		irq,  3, hw_pcic1, pcint11, irqf
+#define hw_irq_pin_pcint10		irq,  3, hw_pcic1, pcint10, irqf
+#define hw_irq_pin_pcint9		irq,  3, hw_pcic1, pcint9, irqf
+					      
+#define hw_irq_pin_pcint8_		irq,  3, hw_pcic1, pcint8, irqf
+#define hw_irq_pin_pcint8_all		irq,  3, hw_pcic1, pcint8, irqf
+					      
+#define hw_irq_watchdog_all		irq,  4, hw_watchdog, ie, if
+#define hw_irq_counter1_capture		irq,  5, hw_counter1, icie, icf
+#define hw_irq_counter1_match_a		irq,  6, hw_counter1, ociea, ocfa
+#define hw_irq_counter1_compare_a	irq,  6, hw_counter1, ociea, ocfa
+#define hw_irq_counter1_match_b		irq,  7, hw_counter1, ocieb, ocfb
+#define hw_irq_counter1_compare_b	irq,  7, hw_counter1, ocieb, ocfb
+#define hw_irq_counter1_overflow	irq,  8, hw_counter1, oie, ov
+					        
+/* #define hw_irq_counter0_all		irq,  counter0_all, all */
+/* #define hw_irq_counter1_all		irq,  counter1_all, all */
+					      
+#define hw_irq_counter0_match_a		irq,  9, hw_counter0, ociea, ocfa
+#define hw_irq_counter0_compare_a	irq,  9, hw_counter0, ociea, ocfa
 #define hw_irq_counter0_match_b		irq, 10, hw_counter0, ocieb, ocfb
 #define hw_irq_counter0_compare_b	irq, 10, hw_counter0, ocieb, ocfb
 #define hw_irq_counter0_overflow	irq, 11, hw_counter0, oie, ov
