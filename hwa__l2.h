@@ -316,9 +316,9 @@ HW_INLINE void _hwa_commit_r32 ( _Bool commit, hwa_r32_t *r, uint32_t mask )
  * \hideinitializer
  */
 #define HWA_INIT(...)				_HWA_INIT_2(__VA_ARGS__)
-#define _HWA_INIT_2(ctr,cc,cn,ca, rn )		_HWA_INIT_3(cn,ca,rn, HW_G3(hw,cc,rn))
+#define _HWA_INIT_2(cc,cn,ci,ca, rn )		_HWA_INIT_3(cn,ca,rn, hw_##cc##_##rn)
 #define _HWA_INIT_3(...)			_HWA_INIT_4(__VA_ARGS__)
-#define _HWA_INIT_4(cn,ca,rn, mem,reg,rw,ra,rrv,rwm )	\
+#define _HWA_INIT_4(cn,ca,rn, reg,rw,ra,rrv,rwm )	\
   _hwa_init_r##rw( &hwa->cn.rn, ca+ra, rrv, rwm )
 
 

@@ -9,18 +9,18 @@
 	SWUART_TX = 0
 #if defined SWUART_PIN_TX
 	SWUART_TX = 1
-	TXDPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), port))
-	TXDPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
-	TXDDR     = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
+	TXDPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), port))
+	TXDPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
+	TXDDR     = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
 	TXDBIT    = hw_bp(hw_io(SWUART_PIN_TX))
 #endif
 
 	SWUART_RX = 0
 #if defined SWUART_PIN_RX
 	SWUART_RX = 1
-	RXDPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), port))
-	RXDPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
-	RXDDR     = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
+	RXDPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), port))
+	RXDPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
+	RXDDR     = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
 	RXDBIT    = hw_bp(hw_io(SWUART_PIN_RX))
 #endif
 
@@ -37,9 +37,9 @@
 	;; 
 #if defined SWUART_PIN_DBG
 	DBG       = 1
-	DBGPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_DBG)), port))
-	DBGPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_DBG)), pin))
-	DBGDDR    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_DBG)), ddr))
+	DBGPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), port))
+	DBGPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), pin))
+	DBGDDR    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), ddr))
 	DBGBIT    = hw_bp(hw_io(SWUART_PIN_DBG))
 #else
 	DBG       = 0
@@ -95,7 +95,7 @@
 
 	;; Width of the COUNT register in bits
 	;; 
-#define COUNT_BN		hw_bn(SWUART_COUNTER, count)
+#define COUNT_BN		hw_bn(SWUART_COUNTER)
 
 
 	;; Width of MATCH register in bits
@@ -122,19 +122,19 @@
 #endif
 
 	PSC     = HW_G2(psc, SWUART_COUNTER_CLOCK)
-	COUNT   = hw_addr(hw_reg(SWUART_COUNTER, count))
-	MATCH	= hw_addr(hw_reg(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+	COUNT   = hw_addr(hw_mem(SWUART_COUNTER, count))
+	MATCH	= hw_addr(hw_mem(SWUART_COUNTER, SWUART_COUNTER_MATCH))
 	COUNTL  = COUNT+0
 	COUNTH  = COUNT+1
 	MATCHL  = MATCH+0
 	MATCHH  = MATCH+1
 
 
-#define MATCH_IF_RA	hw_addr(hw_irqf(SWUART_COUNTER, SWUART_COUNTER_MATCH))
-#define MATCH_IF_BP	hw_bp(hw_irqf(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+#define MATCH_IF_RA	hw_addr(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
+#define MATCH_IF_BP	hw_bp(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
 
-#define MATCH_IE_RA	hw_addr(hw_irqe(SWUART_COUNTER, SWUART_COUNTER_MATCH))
-#define MATCH_IE_BP	hw_bp(hw_irqe(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+#define MATCH_IE_RA	hw_addr(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
+#define MATCH_IE_BP	hw_bp(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
 
 	;; Internal flags
 	;;
@@ -148,8 +148,12 @@
 
 #if defined SWUART_PIN_RX
 
-#define START_IE	hw_addr(hw_irqe(SWUART_PIN_RX)), hw_bp(hw_irqe(SWUART_PIN_RX))
-#define START_IF	hw_addr(hw_irqf(SWUART_PIN_RX)), hw_bp(hw_irqf(SWUART_PIN_RX))
+#define START_IE	\
+	hw_addr(hw_irqe(hw_irq(SWUART_PIN_RX))), \
+	hw_bp(hw_irqe(hw_irq(SWUART_PIN_RX)))
+#define START_IF	\
+	hw_addr(hw_irqf(hw_irq(SWUART_PIN_RX))), \
+	hw_bp(hw_irqf(hw_irq(SWUART_PIN_RX)))
 
 	;; Enable start interrupt
 	;; 
@@ -167,7 +171,7 @@
 
 	;; Connect the ISR to the proper interrupt vector
 	;;
-	HW_ISR(SWUART_PIN_RX, all) = isr_start
+	HW_ISR( hw_irq(SWUART_PIN_RX) ) = isr_start
 #endif /* defined SWUART_PIN_RX */
 
 

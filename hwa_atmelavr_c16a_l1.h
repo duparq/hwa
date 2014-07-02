@@ -12,6 +12,17 @@
  */
 
 
+/*	Generic functions
+ */
+#define hw_class_c16a
+
+#define hw_fn_hw_addr_c16a		, _hw_addr_ctr
+#define hw_fn_hw_mem_c16a		, _hw_mem_cm
+
+#define hw_fn_bn_c16a			, _hw_bn_c16a
+#define _hw_bn_c16a(cc,cn,ci,ca)	16
+
+
 /*	16-bit counter class 'c16a'
  */
 #define hw_c16a_countmode_loop_up		ok, 1

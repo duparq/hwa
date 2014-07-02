@@ -17,7 +17,7 @@
 #define DUTY_STEP	10
 
 
-HW_ISR( hw_ctr(SERVO), overflow )
+HW_ISR( hw_irq(hw_ctr(SERVO), overflow) )
 {
   static uint16_t	duty = DUTY_MAX ;
   static uint8_t	phase ;
@@ -67,7 +67,9 @@ HW_INLINE void config_counter( hwa_t *hwa )
 	      update_compares,	at_bottom,
 	      overflow_irq,	at_bottom,
 	      );
-  hwa_write( hw_ctr(SERVO), capture, DUTY_PERIOD );
+
+  hwa_write( hw_mem(hw_ctr(SERVO), capture), DUTY_PERIOD );
+  //  hwa_write( hw_reg(hw_ctr(SERVO), capture), DUTY_PERIOD );
   hwa_turn( hw_irq(hw_ctr(SERVO), overflow), on );
 }
 
@@ -94,3 +96,14 @@ int main ( )
 
   return 0 ;
 }
+
+
+/* hw_irq(hw_ctr(SERVO), overflow) */
+/* HW_ISR( hw_irq(hw_ctr(SERVO), overflow) ) */
+
+/* hw_write( hw_mem(hw_ctr(SERVO), compare_a), duty ); */
+/* hw_write( SERVO, duty ); */
+
+/* hwa_turn( hw_irq(hw_ctr(SERVO), overflow), on ); */
+
+/* hwa_config( SERVO, clearup_setdown ); */

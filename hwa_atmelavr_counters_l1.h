@@ -8,6 +8,7 @@
  *  \brief	HWA layer 1, common declarations for Atmel AVR counter-timers
  */
 
+#define hw_class_ocu
 
 /*	Modes for output-compare units
  */
@@ -25,22 +26,29 @@
 
 /*	Write compare value of an ocu
  */
-#define hw_write_ocu_isfn
-#define hw_write_ocu(ocn, ctr,cc,cn,ca, reg, ion, value)	\
-  _hw_write_mem(ctr,cc,cn,ca,reg,value)
-//  hw_write(ctr,cc,cn,ca,reg,value)
+#define hw_fn_hw_write_ocu	, _hw_write_ocu
+#define _hw_write_ocu(t, ocn,oci,_, value)	_hw_write_ocu_2(hw_##ocn##_ext, value)
+#define _hw_write_ocu_2(...)			_hw_write_ocu_3(__VA_ARGS__)
+#define _hw_write_ocu_3(cc,cn,ci,ca, reg,ion, value)	\
+  _hw_write_ocu_4(_hw_mem_cm_2(cc,cn,ci,ca, reg), value)
+#define _hw_write_ocu_4(...)			_hw_write_ocu_5(__VA_ARGS__)
+#define _hw_write_ocu_5(t,...)			_hw_write_##t(t,__VA_ARGS__)
 
 
 /*	Definition of the io pin associated to an ocu
  */
-#define hw_io_ocu_isfn
-#define hw_io_ocu(ocun, ctr,cc,cn,ca, reg, ion)		hw_##ion
+#define hw_fn_hw_io_ocu		, _hw_io_ocu
+#define _hw_io_ocu(t,ocn,...)			_hw_io_ocu_2(hw_##ocn##_##ext)
+#define _hw_io_ocu_2(...)			_hw_io_ocu_3(__VA_ARGS__)
+#define _hw_io_ocu_3(ct,cn,cid,ca, ocr, ion)	hw_##ion
 
 
 /*	Definition of the counter associated to an ocu
  */
-#define hw_ctr_ocu_isfn
-#define hw_ctr_ocu(ocn, ctr,cc,cn,ca, reg, ion)		ctr,cc,cn,ca
+#define hw_fn_hw_ctr_ocu		, _hw_ctr_ocu
+#define _hw_ctr_ocu(t,ocn,...)			_hw_ctr_ocu_2(hw_##ocn##_##ext)
+#define _hw_ctr_ocu_2(...)			_hw_ctr_ocu_3(__VA_ARGS__)
+#define _hw_ctr_ocu_3(cc,cn,ci,ca, ocr, ion)	cc,cn,ci,ca
 
 
 #if !defined __ASSEMBLER__

@@ -33,9 +33,9 @@
 
 /*	Configure counter unit
  */
-#define hwa_config_c16a_isfn
+#define hw_fn_hwa_config_c16a		, _hwa_config_c16a
 
-#define hwa_config_c16a(cn,ca, ...)					\
+#define _hwa_config_c16a(t,cn,ci,ca, ...)				\
   do {									\
     hwa->cn.config = 1;							\
     HW_G2(hwa_config_c16a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__) \
@@ -192,32 +192,32 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
     HWA_ERR("c16a configuration: `update_compares` can not be set to "
 	       "`immediately` when counter loops up-down.");
 
-  uint8_t mode = 0xFF ;
+  uint8_t wgm = 0xFF ;
 
   if ( p->countmode == HW_A1(hw_c16a_countmode_loop_up) ) {
     if ( p->update_compares == 0 ||
 	 p->update_compares == HW_A1(hw_counter_update_compares_immediately) ) {
       if (p->top == HW_A1(hw_c16a_top_fixed_0xFFFF))
-	mode = 0 ;
+	wgm = 0 ;
       else if (p->top == HW_A1(hw_c16a_top_register_capture))
-	mode = 12 ;
+	wgm = 12 ;
       else
-	mode = 4 ;
+	wgm = 4 ;
       if ( p->overflow_irq != 0
 	   && p->overflow_irq != HW_A1(hw_counter_overflow_irq_at_bottom) )
 	HWA_ERR("c16a configuration: `overflow` can only be set to `at_bottom`.");
     }
     else {
       if (p->top == HW_A1(hw_c16a_top_fixed_0xFF) )
-	mode = 5 ;
+	wgm = 5 ;
       else if (p->top == HW_A1(hw_c16a_top_fixed_0x1FF) )
-	mode = 6 ;
+	wgm = 6 ;
       else if (p->top == HW_A1(hw_c16a_top_fixed_0x3FF) )
-	mode = 7 ;
+	wgm = 7 ;
       else if (p->top == HW_A1(hw_c16a_top_register_capture) )
-	mode = 14 ;
+	wgm = 14 ;
       else
-	mode = 15 ;
+	wgm = 15 ;
       if ( p->overflow_irq != 0
 	   && p->overflow_irq != HW_A1(hw_counter_overflow_irq_at_top) )
 	HWA_ERR("c16a configuration: `overflow` can only be set to `at_top`.");
@@ -232,33 +232,33 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
       if ( p->update_compares == 0 ||
 	   p->update_compares == HW_A1(hw_counter_update_compares_at_top) ) {
 	if (p->top == HW_A1(hw_c16a_top_fixed_0xFF) )
-	  mode = 1 ;
+	  wgm = 1 ;
 	else if (p->top == HW_A1(hw_c16a_top_fixed_0x1FF) )
-	  mode = 2 ;
+	  wgm = 2 ;
 	else if (p->top == HW_A1(hw_c16a_top_fixed_0x3FF) )
-	  mode = 3 ;
+	  wgm = 3 ;
 	else if (p->top == HW_A1(hw_c16a_top_register_capture) )
-	  mode = 10 ;
+	  wgm = 10 ;
 	else
-	  mode = 11 ;
+	  wgm = 11 ;
       }
       else if ( p->update_compares == HW_A1(hw_counter_update_compares_at_bottom) ) {
 	if (p->top == HW_A1(hw_c16a_top_register_capture) )
-	  mode = 8 ;
+	  wgm = 8 ;
 	else
-	  mode = 9 ;
+	  wgm = 9 ;
       }
     }
   }
 
-  if (mode != 0xFF)
-    _hwa_write_pcr(p, c16a, wgm, mode);
+  if (wgm != 0xFF)
+    _hwa_write_p(p, _hw_mem_ccrn(c16a,wgm), wgm);
   else
     HWA_ERR("WGM value could not be solved for c16a class counter.");
 
   /*	CS
    */
-  _hwa_write_pcr(p, c16a, cs, p->clock);
+  _hwa_write_p(p, _hw_mem_ccrn(c16a, cs), p->clock);
 }
 
 
@@ -320,7 +320,7 @@ HW_INLINE void hwa_solve_c16aoc1 ( hwa_c16a_t *counter, hwa_ocu_t *p )
 
   /*  Write the hardware configuration bits
    */
-  _hwa_write_pcr(counter, c16a, coma, mode );
+  _hwa_write_p(counter, _hw_mem_ccrn(c16a, coma), mode );
 }
 
 
@@ -371,7 +371,7 @@ HW_INLINE void hwa_solve_c16aoc2 ( hwa_c16a_t *counter, hwa_ocu_t *p )
   if ( mode == 0xFF )
     HWA_ERR("incompatible counting mode / output-compare mode.");
 
-  _hwa_write_pcr(counter, c16a, comb, mode );
+  _hwa_write_p(counter, _hw_mem_ccrn(c16a, comb), mode );
 }
 
 

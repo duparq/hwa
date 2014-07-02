@@ -7,36 +7,39 @@
 
 /*	Pin-change interrupt controllers
  *
- *				'ctr', class, name, address
+ *				class, name, id, address
  */
-#define hw_pcic0		ctr, pcic0, pcic0, 0x32
-#define hw_pcic1		ctr, pcic1, pcic1, 0x40
+#define hw_class_pcic0
+#define hw_pcic0		pcic0, pcic0, 300, 0x32
+
+#define hw_class_pcic1
+#define hw_pcic1		pcic1, pcic1, 400, 0x40
 
 /*	Registers		'reg', rw, ra, riv, rvm, rwm
  */
-#define hw_pcic0_msk		mem, reg, 8, 0x32-0x32, 0x00, 0xFF
+#define hw_pcic0_msk		reg, 8, 0x32-0x32, 0x00, 0xFF
 
-#define hw_pcic0_irqe		mem, xreg, hw_core0, pcie0
-#define hw_pcic0_irqf		mem, xreg, hw_core0, pcif0
+#define hw_pcic0_irqe		xreg, hw_core0, pcie0
+#define hw_pcic0_irqf		xreg, hw_core0, pcif0
 
-#define hw_pcic0_pcint7		mem, regb, msk, 1, 7
-#define hw_pcic0_pcint6		mem, regb, msk, 1, 6
-#define hw_pcic0_pcint5		mem, regb, msk, 1, 5
-#define hw_pcic0_pcint4		mem, regb, msk, 1, 4
-#define hw_pcic0_pcint3		mem, regb, msk, 1, 3
-#define hw_pcic0_pcint2		mem, regb, msk, 1, 2
-#define hw_pcic0_pcint1		mem, regb, msk, 1, 1
-#define hw_pcic0_pcint0		mem, regb, msk, 1, 0
+#define hw_pcic0_pcint7		regb, msk, 1, 7
+#define hw_pcic0_pcint6		regb, msk, 1, 6
+#define hw_pcic0_pcint5		regb, msk, 1, 5
+#define hw_pcic0_pcint4		regb, msk, 1, 4
+#define hw_pcic0_pcint3		regb, msk, 1, 3
+#define hw_pcic0_pcint2		regb, msk, 1, 2
+#define hw_pcic0_pcint1		regb, msk, 1, 1
+#define hw_pcic0_pcint0		regb, msk, 1, 0
 
-#define hw_pcic1_msk		mem, reg, 8, 0x40-0x40, 0x00, 0x0F
+#define hw_pcic1_msk		reg, 8, 0x40-0x40, 0x00, 0x0F
 
-#define hw_pcic1_irqe		mem, xreg, hw_core0, pcie1
-#define hw_pcic1_irqf		mem, xreg, hw_core0, pcif1
+#define hw_pcic1_irqe		xreg, hw_core0, pcie1
+#define hw_pcic1_irqf		xreg, hw_core0, pcif1
 
-#define hw_pcic1_pcint11	mem, regb, msk, 1, 3
-#define hw_pcic1_pcint10	mem, regb, msk, 1, 2
-#define hw_pcic1_pcint9		mem, regb, msk, 1, 1
-#define hw_pcic1_pcint8		mem, regb, msk, 1, 0
+#define hw_pcic1_pcint11	regb, msk, 1, 3
+#define hw_pcic1_pcint10	regb, msk, 1, 2
+#define hw_pcic1_pcint9		regb, msk, 1, 1
+#define hw_pcic1_pcint8		regb, msk, 1, 0
 
 
 /*	Equality test
@@ -53,24 +56,37 @@
 
 /*	Pin-change interrupt controller pins
  *
- *	Each pin is an alternate io-pin of class 'aio' associated to an io-pin
- *	and a controller of class 'pcic'.
- *
- *				'aio', name, io-name, controller def
+ *				class, name, id, "address", extension
  */
-#define hw_pin_pcint0		ctr, pcint, pin_pcint0,  pin_13, hw_pcic0
-#define hw_pin_pcint1		ctr, pcint, pin_pcint1,  pin_12, hw_pcic0
-#define hw_pin_pcint2		ctr, pcint, pin_pcint2,  pin_11, hw_pcic0
-#define hw_pin_pcint3		ctr, pcint, pin_pcint3,  pin_10, hw_pcic0
-#define hw_pin_pcint4		ctr, pcint, pin_pcint4,  pin_9,  hw_pcic0
-#define hw_pin_pcint5		ctr, pcint, pin_pcint5,  pin_8,  hw_pcic0
-#define hw_pin_pcint6		ctr, pcint, pin_pcint6,  pin_7,  hw_pcic0
-#define hw_pin_pcint7		ctr, pcint, pin_pcint7,  pin_6,  hw_pcic0
-						             	  
-#define hw_pin_pcint8		ctr, pcint, pin_pcint8,  pin_2,  hw_pcic1
-#define hw_pin_pcint9		ctr, pcint, pin_pcint9,  pin_3,  hw_pcic1
-#define hw_pin_pcint10		ctr, pcint, pin_pcint10, pin_5,  hw_pcic1
-#define hw_pin_pcint11		ctr, pcint, pin_pcint11, pin_4,  hw_pcic1
+#define hw_class_pcint
+
+#define hw_pin_pcint0		pcint, pin_pcint0,  301,
+#define hw_pin_pcint1		pcint, pin_pcint1,  302,
+#define hw_pin_pcint2		pcint, pin_pcint2,  303,
+#define hw_pin_pcint3		pcint, pin_pcint3,  304,
+#define hw_pin_pcint4		pcint, pin_pcint4,  305,
+#define hw_pin_pcint5		pcint, pin_pcint5,  306,
+#define hw_pin_pcint6		pcint, pin_pcint6,  307,
+#define hw_pin_pcint7		pcint, pin_pcint7,  308,
+
+#define hw_pin_pcint0_ext	hw_pcic0, pin_13
+#define hw_pin_pcint1_ext	hw_pcic0, pin_12
+#define hw_pin_pcint2_ext	hw_pcic0, pin_11
+#define hw_pin_pcint3_ext	hw_pcic0, pin_10
+#define hw_pin_pcint4_ext	hw_pcic0, pin_9
+#define hw_pin_pcint5_ext	hw_pcic0, pin_8
+#define hw_pin_pcint6_ext	hw_pcic0, pin_7
+#define hw_pin_pcint7_ext	hw_pcic0, pin_6
+						             	 
+#define hw_pin_pcint8		pcint, pin_pcint8,  401,
+#define hw_pin_pcint9		pcint, pin_pcint9,  402,
+#define hw_pin_pcint10		pcint, pin_pcint10, 403,
+#define hw_pin_pcint11		pcint, pin_pcint11, 404,
+
+#define hw_pin_pcint8_ext	hw_pcic1, pin_2
+#define hw_pin_pcint9_ext	hw_pcic1, pin_3
+#define hw_pin_pcint10_ext	hw_pcic1, pin_5
+#define hw_pin_pcint11_ext	hw_pcic1, pin_4
 
 							  
 /** \brief	Part of HWA struct for ios
@@ -109,5 +125,8 @@ typedef struct {
 
 /*	io definition
  */
-#define hw_io_pcint_isfn
-#define hw_io_pcint(cn,ion, ...)	hw_##ion
+#define hw_fn_hw_io_pcint		, _hw_io_pcint
+
+#define _hw_io_pcint(t,n,...)		_hw_io_pcint_2(hw_##n##_##ext)
+#define _hw_io_pcint_2(...)		_hw_io_pcint_3(__VA_ARGS__)
+#define _hw_io_pcint_3(t,n,id,a, ion)	hw_##ion

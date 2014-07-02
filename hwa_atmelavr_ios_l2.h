@@ -5,8 +5,8 @@
  */
 
 
-#define hwa_config_io_isfn
-#define hwa_config_io(ion, ctr,cc,cn,ca, bn, bp, mode)		\
+#define hw_fn_hwa_config_io	, hwa_config_io
+#define hwa_config_io(t,ion,ioid, cc,cn,cid,ca, bn, bp, mode)	\
   _hwa_config_io(&hwa->cn, bn, bp, hw_iomode_##mode)
 
 
@@ -33,16 +33,7 @@ HW_INLINE void _hwa_config_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t mode
 }
 
 
-#define hwa_write_io_isfn
-#define hwa_write_io(ion, ctr,cc,cn,ca, bn, bp, v)	\
+#define hw_fn_hwa_write_io	, _hwa_write_io
+
+#define _hwa_write_io(t, ion,ioid, cc,cn,ci,ca, bn,bp, v)	\
   _hwa_write_r8(&hwa->cn.port, bn, bp, v)
-//  _hwa_write_io(&hwa->cn, bn, bp, v)
-
-
-/* HW_INLINE void _hwa_write_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t v ) */
-/* { */
-/*   /\*  Set BR bits to 1 and BS bits to 0 */
-/*    *    BS bits have priority */
-/*    *\/ */
-/*   _hwa_write_r8(&p->port, bn, bp, v); */
-/* } */

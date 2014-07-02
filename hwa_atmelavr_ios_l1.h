@@ -47,14 +47,18 @@
 #define hw_iomode_input_analog			0x32	/* 11 0010 */
 #define hw_iomode_input_analog_0pullup		0x3A	/* 11 1010 */
 
-#define hw_ctr_io_isfn
-#define hw_ctr_io(ion, ctr,cc,cn,ca, ...)	ctr,cc,cn,ca
 
-#define hw_bp_io_isfn
-#define hw_bp_io(ion, ctr,cc,cn,ca, bn,bp)	bp
+#define hw_fn_hw_ctr_io				, _hw_ctr_io
+#define _hw_ctr_io(t,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
 
-#define hw_io_io_isfn
-#define hw_io_io(...)				ctr,io,__VA_ARGS__
+#define hw_fn_hw_bn_io				, _hw_bn_io
+#define _hw_bn_io(t,n,i, cc,cn,ci,ca, bn,bp)	bn
+
+#define hw_fn_hw_bp_io				, _hw_bp_io
+#define _hw_bp_io(t,n,i, cc,cn,ci,ca, bn,bp)	bp
+
+#define hw_fn_hw_io_io				, _hw_io_io
+#define _hw_io_io(...)				__VA_ARGS__
 
 
 #if !defined __ASSEMBLER__
@@ -99,19 +103,21 @@ HW_INLINE void _hw_config_io( intptr_t ddr, uint8_t rwm1,
   _hw_read_r8(ca+ra,bn,bp)
 
 
-#define hw_write_io_isfn
-#define hw_write_io(ion, ctr,cc,cn,ca, bn,bp,v)	\
+#define hw_fn_hw_write_io		, _hw_write_io
+
+#define _hw_write_io(t, ion,ioid, cc,cn,ci,ca, bn,bp, v)	\
   _hw_write_io_2(cn,ca,hw_##cc##_port, bn,bp,v)
 #define _hw_write_io_2(...)	_hw_write_io_3(__VA_ARGS__)
-#define _hw_write_io_3(cn,ca, mem,reg,rw,ra,rrv,rwm, bn,bp,v)	\
+#define _hw_write_io_3(cn,ca, reg,rw,ra,rrv,rwm, bn,bp,v)	\
   _hw_write_r8(ca+ra,rwm,bn,bp,v)
 
 
-#define hw_toggle_io_isfn
-#define hw_toggle_io(ion, ctr,cc,cn,ca, bn,bp)	\
+#define hw_fn_hw_toggle_io		, _hw_toggle_io
+
+#define _hw_toggle_io(t, ion,ioid, cc,cn,ci,ca, bn,bp)	\
   _hw_toggle_io_2(cn,ca,hw_##cc##_pin, bn,bp)
 #define _hw_toggle_io_2(...)	_hw_toggle_io_3(__VA_ARGS__)
-#define _hw_toggle_io_3(cn,ca, mem,reg,rw,ra,rrv,rwm, bn,bp)	\
+#define _hw_toggle_io_3(cn,ca, reg,rw,ra,rrv,rwm, bn,bp)	\
   _hw_write_r8(ca+ra,rwm,bn,bp,(1U<<bn)-1)
 
 #endif /* !defined __ASSEMBLER__ */

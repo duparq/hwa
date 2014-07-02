@@ -10,30 +10,31 @@
  */
 
 
-/*	Controller		'ctr', class, name, address
+/*	Controller		class, name, id, address
  */
-#define hw_adc0			ctr, adc, adc0, 0x0021
+#define hw_class_adc
+#define hw_adc0			adc, adc0, 500, 0x0021
 
 /*	Registers		'reg', name, rw, ra, riv, rwm
  */
-#define hw_adc_admux		mem, reg,  8, 0x27 -0x0021, 0x00,   0xFF
-#define hw_adc_sra		mem, reg,  8, 0x26 -0x0021, 0x00,   0xFF
-#define hw_adc_adc		mem, reg, 16, 0x24 -0x0021, 0x0000, 0x0000
-#define hw_adc_adch		mem, reg,  8, 0x25 -0x0021, 0x00,   0x00
-#define hw_adc_adcl		mem, reg,  8, 0x24 -0x0021, 0x00,   0x00
-#define hw_adc_srb		mem, reg,  8, 0x23 -0x0021, 0x00,   0xFF
-#define hw_adc_did		mem, reg,  8, 0x21 -0x0021, 0x00,   0xFF
+#define hw_adc_admux		reg,  8, 0x27 -0x0021, 0x00,   0xFF
+#define hw_adc_sra		reg,  8, 0x26 -0x0021, 0x00,   0xFF
+#define hw_adc_adc		reg, 16, 0x24 -0x0021, 0x0000, 0x0000
+#define hw_adc_adch		reg,  8, 0x25 -0x0021, 0x00,   0x00
+#define hw_adc_adcl		reg,  8, 0x24 -0x0021, 0x00,   0x00
+#define hw_adc_srb		reg,  8, 0x23 -0x0021, 0x00,   0xFF
+#define hw_adc_did		reg,  8, 0x21 -0x0021, 0x00,   0xFF
 
 /*	Bits
  */
-#define hw_adc_refs		mem, regb, admux, 2, 6
-#define hw_adc_mux		mem, regb, admux, 6, 0
-#define hw_adc_en		mem, regb, sra, 1, 7
-#define hw_adc_sc		mem, regb, sra, 1, 6
-#define hw_adc_ate		mem, regb, sra, 1, 5
-#define hw_adc_if		mem, regb, sra, 1, 4
-#define hw_adc_ie		mem, regb, sra, 1, 3
-#define hw_adc_ps		mem, regb, sra, 3, 0
+#define hw_adc_refs		regb, admux, 2, 6
+#define hw_adc_mux		regb, admux, 6, 0
+#define hw_adc_en		regb, sra, 1, 7
+#define hw_adc_sc		regb, sra, 1, 6
+#define hw_adc_ate		regb, sra, 1, 5
+#define hw_adc_if		regb, sra, 1, 4
+#define hw_adc_ie		regb, sra, 1, 3
+#define hw_adc_ps		regb, sra, 3, 0
 
 
 /*	OEM symbols		type, instance, reg...

@@ -99,42 +99,38 @@
 #define _HW_QUOTE_2(x,...)	#x
 
 
-/*	Generic instruction 'hw_addr': address of a controller or memory
+/*	Generic instruction 'hw_addr': address of an object
  */
-#define hw_addr(...)		HW_G2(_hw_addr_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_xctr_1(ctr,cc,cn,ca,...)	ca
-#define _hw_addr_xctr_0(...)	HW_G2(_hw_addr_xmem, HW_IS(mem,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_xmem_0(...)	HW_ERR("hw_addr(...) only applies to one controller or memory.")
-#define _hw_addr_xmem_1(mem,x,...)	_hw_addr_xmem_##x(__VA_ARGS__)
-#define _hw_addr_xmem_bit(cn,rn,ra,bn,bp)	ra+HW_RA_OFFSET
+#define hw_addr(...)		_hw_addr_2(__VA_ARGS__)
+#define _hw_addr_2(...)		HW_G2(_hw_addr_xfn, HW_IS(,hw_fn_hw_addr_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_addr_xfn_1(t,...)	HW_A1(hw_fn_hw_addr_##t)(t,__VA_ARGS__)
+#define _hw_addr_xfn_0(...)	HW_G2(_hw_addr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_addr_0(...)		HW_ERR("can not process hw_addr(" #__VA_ARGS__ ").")
+#define _hw_addr_1(...)		__VA_ARGS__
 
 
 /*	Generic instruction 'hw_bn': number of bits of something
  */
-#define hw_bn(...)		HW_G2(_hw_bn_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bn_xctr_0(...)	HW_G2(_hw_bn_xmem, HW_IS(mem,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bn_xmem_0(...)	HW_ERR("first argument is not a controller.")
-#define _hw_bn_xmem_1(mem,x,...)	_hw_bn_xmem_##x(__VA_ARGS__)
-#define _hw_bn_xmem_bit(cn,rn,ra,bn,bp)	bn
-#define _hw_bn_xctr_1(ctr,cc,...)	\
-  HW_G2(_hw_bn_xfn, HW_IS(,hw_bn_##cc##_isfn))(cc,__VA_ARGS__)
-#define _hw_bn_xfn_1(cc,...)	hw_bn_##cc(__VA_ARGS__)
-#define _hw_bn_xfn_0(cc,cn,ca,...)					\
-  HW_ERR("controller hw_`" #cn "` of class `" #cc "`has no method `hw_bn()`.")
+#define hw_bn(...)		_hw_bn_2(__VA_ARGS__)
+#define _hw_bn_2(...)		HW_G2(_hw_bn_xfn, HW_IS(,hw_fn_hw_bn_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bn_xfn_1(t,...)	HW_A1(hw_fn_hw_bn_##t)(t,__VA_ARGS__)
+#define _hw_bn_xfn_0(...)	HW_G2(_hw_bn, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bn_0(...)		HW_ERR("can not process hw_bn(" #__VA_ARGS__ ").")
+#define _hw_bn_1(...)		__VA_ARGS__
+
 
 
 /*	Generic instruction 'hw_bp': position of least significant bit of something
  */
-#define hw_bp(...)		HW_G2(_hw_bp_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bp_xctr_0(...)	HW_G2(_hw_bp_xmem, HW_IS(mem,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bp_xmem_0(...)	HW_ERR(first argument is not a controller.)
-#define _hw_bp_xmem_1(mem,x,...)	_hw_bp_xmem_##x(__VA_ARGS__)
-#define _hw_bp_xmem_bit(cn,rn,ra,bn,bp)	bp
-#define _hw_bp_xctr_1(ctr,cc,...)	\
-  HW_G2(_hw_bp_xfn, HW_IS(,hw_bp_##cc##_isfn))(cc,__VA_ARGS__)
-#define _hw_bp_xfn_1(cc,...)	hw_bp_##cc(__VA_ARGS__)
-#define _hw_bp_xfn_0(cc,cn,ca,...)					\
-  HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_bp()`.")
+#define hw_bp(...)		_hw_bp_2(__VA_ARGS__)
+#define _hw_bp_2(...)		HW_G2(_hw_bp_xfn, HW_IS(,hw_fn_hw_bp_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bp_xfn_1(t,...)	HW_A1(hw_fn_hw_bp_##t)(t,__VA_ARGS__)
+#define _hw_bp_xfn_0(...)	HW_G2(_hw_bp, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bp_0(...)		HW_ERR("can not process hw_bp(" #__VA_ARGS__ ").")
+#define _hw_bp_1(...)		__VA_ARGS__
+
+#define hw_fn_hw_bp_mem1	, _hw_bp_mem1
+#define _hw_bp_mem1(t, cc,cn, rn,rw,ra,rrv,rwm, bn,bp)	bp
 
 
 /** \brief	Class of an object
@@ -150,32 +146,68 @@
 
 /*	Generic instruction 'hw_ctr': definition of the controller associated to an object
  */
-#define hw_ctr(...)		HW_G2(_hw_ctr_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_ctr_xctr_0(...)	HW_ERR("first argument is not a controller.")
-#define _hw_ctr_xctr_1(ctr,cc,...)	\
-  HW_G2(_hw_ctr_xfn, HW_IS(,hw_ctr_##cc##_isfn))(cc,__VA_ARGS__)
-#define _hw_ctr_xfn_1(cc,...)	hw_ctr_##cc(__VA_ARGS__)
-#define _hw_ctr_xfn_0(cc,cn,ca,...)					\
-  HW_ERR("controller hw_`" #cn "` of class `" #cc "`has no method `hw_ctr()`.")
+/* #define hw_ctr(...)		HW_G2(_hw_ctr_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
+/* #define _hw_ctr_xctr_0(...)	HW_ERR("first argument is not a controller.") */
+/* #define _hw_ctr_xctr_1(ctr,cc,...)	\ */
+/*   HW_G2(_hw_ctr_xfn, HW_IS(,hw_ctr_##cc##_isfn))(cc,__VA_ARGS__) */
+/* #define _hw_ctr_xfn_1(cc,...)	hw_ctr_##cc(__VA_ARGS__) */
+/* #define _hw_ctr_xfn_0(cc,cn,ca,...)					\ */
+/*   HW_ERR("controller hw_`" #cn "` of class `" #cc "`has no method `hw_ctr()`.") */
+
+#define hw_ctr(...)		_hw_ctr_2(__VA_ARGS__)
+#define _hw_ctr_2(...)		HW_G2(_hw_ctr_xfn, HW_IS(,hw_fn_hw_ctr_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_ctr_xfn_1(t,...)	HW_A1(hw_fn_hw_ctr_##t)(t,__VA_ARGS__)
+#define _hw_ctr_xfn_0(...)	HW_G2(_hw_ctr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_ctr_0(...)		HW_ERR("can not process hw_ctr(" #__VA_ARGS__ ").")
+#define _hw_ctr_1(...)		__VA_ARGS__
 
 
 /*	Generic instruction 'hw_eq': equality of two objects
  */
-#define hw_eq(a,b)		HW_G2(_hw_eq, HW_IS(,HW_G3(_hw_eq,hw_class(a),isfn)))(a,b)
-#define _hw_eq_0(...)		0
-#define _hw_eq_1(t,c,...)	_hw_eq_##c(t,c,__VA_ARGS__)
+/* #define hw_eq(a,b)		HW_G2(_hw_eq, HW_IS(,HW_G3(_hw_eq,hw_class(a),isfn)))(a,b) */
+/* #define _hw_eq_0(...)		0 */
+/* #define _hw_eq_1(t,c,...)	_hw_eq_##c(t,c,__VA_ARGS__) */
+
+#define hw_eq(a,b)		(hw_id(a) == hw_id(b))
+
+
+/*	Generic instruction 'hw_id': id of an object
+ */
+
+#define hw_id(...)		_hw_id_2(__VA_ARGS__)
+#define _hw_id_2(...)		HW_G2(_hw_id, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+//#define _hw_id_0(...)		HW_ERR("can not process hw_id(" #__VA_ARGS__ ").")
+#define _hw_id_0(...)		-1
+#define _hw_id_1(cc,cn,ci,ca)	ci
 
 
 /*	Generic instruction 'hw_io': definition of the io associated to an
  *	object (or the io itself)
  */
-#define hw_io(...)		HW_G2(_hw_io_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_io_xctr_0(...)	HW_ERR("first argument is not a controller.")
-#define _hw_io_xctr_1(ctr,cc,...)	\
-  HW_G2(_hw_io_xfn, HW_IS(,hw_io_##cc##_isfn))(cc,__VA_ARGS__)
-#define _hw_io_xfn_1(cc,...)	hw_io_##cc(__VA_ARGS__)
-#define _hw_io_xfn_0(cc,cn,ca,...)					\
-  HW_ERR("controller hw_`" #cn "` of class `" #cc "`has no method `hw_io()`.")
+/* #define hw_io(...)		HW_G2(_hw_io_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
+/* #define _hw_io_xctr_0(...)	HW_ERR("first argument is not a controller.") */
+/* #define _hw_io_xctr_1(ctr,cc,...)	\ */
+/*   HW_G2(_hw_io_xfn, HW_IS(,hw_io_##cc##_isfn))(cc,__VA_ARGS__) */
+/* #define _hw_io_xfn_1(cc,...)	hw_io_##cc(__VA_ARGS__) */
+/* #define _hw_io_xfn_0(cc,cn,ca,...)					\ */
+/*   HW_ERR("controller hw_`" #cn "` of class `" #cc "`has no method `hw_io()`.") */
+
+#define hw_io(...)		_hw_io_2(__VA_ARGS__)
+#define _hw_io_2(...)		HW_G2(_hw_io_xfn, HW_IS(,hw_fn_hw_io_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_io_xfn_1(t,...)	HW_A1(hw_fn_hw_io_##t)(t,__VA_ARGS__)
+#define _hw_io_xfn_0(...)	HW_G2(_hw_io, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_io_0(...)		HW_ERR("can not process hw_io(" #__VA_ARGS__ ").")
+#define _hw_io_1(...)		__VA_ARGS__
+
+
+/*	Generic instruction 'hw_mem': memory definition of a controller register bits
+ */
+#define hw_mem(...)		_hw_mem_2(__VA_ARGS__)
+#define _hw_mem_2(...)		HW_G2(_hw_mem_xfn, HW_IS(,hw_fn_hw_mem_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_mem_xfn_1(t,...)	HW_A1(hw_fn_hw_mem_##t)(t,__VA_ARGS__)
+#define _hw_mem_xfn_0(...)	HW_G2(_hw_mem, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_mem_0(...)		HW_ERR("can not process hw_mem(" #__VA_ARGS__ ").")
+#define _hw_mem_1(...)		__VA_ARGS__
 
 
 /** \brief	Name of an object

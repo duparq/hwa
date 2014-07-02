@@ -114,7 +114,7 @@ cbptr:	.word	0		; C callback function (called after rx/tx done)
 	;; Counter macros
 	;;
 	;; HW_ISR(SWUART_COUNTER, HW_G2(match, SWUART_COUNTER_MATCH)) = isr_bit
-	HW_ISR(SWUART_COUNTER, SWUART_COUNTER_MATCH) = isr_bit
+	HW_ISR(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)) = isr_bit
 
 	;; Enable counter compare-match: time to send/receive bit
 	;; 
