@@ -161,7 +161,8 @@ typedef struct hwa_r32_t
 
 
 #define hw_write(...)		_hw_write_2(__VA_ARGS__)
-#define _hw_write_2(...)	HW_G2(_hw_write_xfn, HW_IS(,hw_fn_hw_write_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_write_2(...)	HW_G2(_hw_write_xfn, \
+				      HW_IS(,hw_fn_hw_write_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_write_xfn_1(t,...)	HW_A1(hw_fn_hw_write_##t)(t,__VA_ARGS__)
 #define _hw_write_xfn_0(...)	HW_G2(_hw_write, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_write_0(...)	HW_ERR("can not process hw_write(" #__VA_ARGS__ ").")

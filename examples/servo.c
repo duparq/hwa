@@ -96,14 +96,3 @@ int main ( )
 
   return 0 ;
 }
-
-
-/* hw_irq(hw_ctr(SERVO), overflow) */
-/* HW_ISR( hw_irq(hw_ctr(SERVO), overflow) ) */
-
-/* hw_write( hw_mem(hw_ctr(SERVO), compare_a), duty ); */
-/* hw_write( SERVO, duty ); */
-
-/* hwa_turn( hw_irq(hw_ctr(SERVO), overflow), on ); */
-
-/* hwa_config( SERVO, clearup_setdown ); */

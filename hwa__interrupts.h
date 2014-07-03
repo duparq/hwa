@@ -69,17 +69,10 @@
 #define _hw_irqf_0_1(...)		__VA_ARGS__
 #define _hw_irqf_1(t,v, cc,cn,ci,ca, irqe,irqf)	_hw_mem_cm_2(cc,cn,ci,ca,irqf)
 
-/* #define hw_irqf(...)			_hw_irqf_2( hw_irq(__VA_ARGS__) ) */
-/* #define _hw_irqf_2(...)			_hw_irqf_3(__VA_ARGS__) */
-/* #define _hw_irqf_3(x,...)		_hw_irqf_##x(__VA_ARGS__) */
-/* #define _hw_irqf_irq(v, ctr,cc,cn,ca, irqe,irqf, ...)	_hw_irqf_irq_2( HW_XMEM(cc,cn,ca,irqf ) ) */
-/* #define _hw_irqf_irq_2(...)		_hw_irqf_irq_3(__VA_ARGS__) */
-/* #define _hw_irqf_irq_3(_1,cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,_)	mem,bit,cn,rn,ca+ra,rbn,rbp */
-
 
 /*	Declaration of an ISR
  */
-#define HW_ISR(...)			HW_G2(_hw_isr, HW_IS(irq,__VA_ARGS__))(__VA_ARGS__)
+#define HW_ISR(...)			HW_G2(_hw_isr, HW_IS(irq,__VA_ARGS__))(__VA_ARGS__,)
 #define _hw_isr_0(...)			HW_G2(_hw_isr_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_isr_0_0(...)		HW_ERR("can not process HW_ISR(" #__VA_ARGS__ ").")
 #define _hw_isr_0_1(...)		__VA_ARGS__
