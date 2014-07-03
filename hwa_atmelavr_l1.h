@@ -30,17 +30,16 @@
  */
 #define _hw_addr_ctr(cc,cn,ci,ca)	ca /* FIXME: may be void */
 
+
+/*	Global classes & methods
+ */
+#define hw_fn_hw_addr_mem1		, _hw_addr_mem1
+
 #if defined __ASSEMBLER__
 #  define _hw_addr_mem1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
 #else
 #  define _hw_addr_mem1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
 #endif
-
-
-//#define _hw_reg_ctr(cc,cn,ci,ca, rn)	hw_##cc##_##rn
-
-#define hw_fn_hw_addr_mem1	, _hw_addr_mem1
-#define hw_fn_hw_mem_pcic0	, _hw_mem_cm
 
 
 

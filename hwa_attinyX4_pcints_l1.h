@@ -5,15 +5,27 @@
  */
 
 
-/*	Pin-change interrupt controllers
+/*
+ *	Pin-change interrupt controllers
+ */
+
+
+/*	Classes & methods
+ */
+#define hw_class_pcic0
+#define hw_fn_hw_mem_pcic0		, _hw_mem_cm
+
+#define hw_class_pcic1
+#define hw_fn_hw_mem_pcic1		, _hw_mem_cm
+
+
+/*	Instances
  *
  *				class, name, id, address
  */
-#define hw_class_pcic0
 #define hw_pcic0		pcic0, pcic0, 300, 0x32
-
-#define hw_class_pcic1
 #define hw_pcic1		pcic1, pcic1, 400, 0x40
+
 
 /*	Registers		'reg', rw, ra, riv, rvm, rwm
  */
@@ -119,8 +131,11 @@ typedef struct {
 
 /*	Controller
  */
-#define hw_ctr_pcint_isfn
-#define hw_ctr_pcint(cn,ion, ...)	__VA_ARGS__
+#define hw_fn_hw_ctr_pcint		, _hw_ctr_pcint
+
+#define _hw_ctr_pcint(t,n,...)		_hw_ctr_pcint_2(hw_##n##_##ext)
+#define _hw_ctr_pcint_2(...)		_hw_ctr_pcint_3(__VA_ARGS__)
+#define _hw_ctr_pcint_3(t,n,i,a, ion)	t,n,i,a
 
 
 /*	io definition
@@ -129,4 +144,4 @@ typedef struct {
 
 #define _hw_io_pcint(t,n,...)		_hw_io_pcint_2(hw_##n##_##ext)
 #define _hw_io_pcint_2(...)		_hw_io_pcint_3(__VA_ARGS__)
-#define _hw_io_pcint_3(t,n,id,a, ion)	hw_##ion
+#define _hw_io_pcint_3(t,n,i,a, ion)	hw_##ion
