@@ -9,24 +9,25 @@
 	SWUART_TX = 0
 #if defined SWUART_PIN_TX
 	SWUART_TX = 1
-	TXDPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), port))
-	TXDPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
-	TXDDR     = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
+	TXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), port))
+	TXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
+	TXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
 	TXDBIT    = hw_bp(hw_io(SWUART_PIN_TX))
 #endif
 
 	SWUART_RX = 0
 #if defined SWUART_PIN_RX
 	SWUART_RX = 1
-	RXDPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), port))
-	RXDPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
-	RXDDR     = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
+	RXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), port))
+	RXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
+	RXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
 	RXDBIT    = hw_bp(hw_io(SWUART_PIN_RX))
 #endif
 
 	;; Wether we need to check the edge that triggered the start condition
 	;; 
-#if hw_eq(SWUART_PIN_RX, hw_pin_int0) || hw_eq(SWUART_PIN_RX, hw_pin_ain1)
+#if hw_id(SWUART_PIN_RX) == hw_id(hw_pin_int0) \
+ || hw_id(SWUART_PIN_RX) == hw_id(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
@@ -37,9 +38,9 @@
 	;; 
 #if defined SWUART_PIN_DBG
 	DBG       = 1
-	DBGPORT   = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), port))
-	DBGPIN    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), pin))
-	DBGDDR    = hw_addr(hw_mem(hw_ctr(hw_io(SWUART_PIN_DBG)), ddr))
+	DBGPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), port))
+	DBGPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), pin))
+	DBGDDR    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), ddr))
 	DBGBIT    = hw_bp(hw_io(SWUART_PIN_DBG))
 #else
 	DBG       = 0
@@ -122,8 +123,8 @@
 #endif
 
 	PSC     = HW_G2(psc, SWUART_COUNTER_CLOCK)
-	COUNT   = hw_addr(hw_mem(SWUART_COUNTER, count))
-	MATCH	= hw_addr(hw_mem(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+	COUNT   = hw_addr(hw_bits(SWUART_COUNTER, count))
+	MATCH	= hw_addr(hw_bits(SWUART_COUNTER, SWUART_COUNTER_MATCH))
 	COUNTL  = COUNT+0
 	COUNTH  = COUNT+1
 	MATCHL  = MATCH+0

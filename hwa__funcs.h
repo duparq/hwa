@@ -168,12 +168,12 @@ typedef struct hwa_r32_t
 #define _hw_write_0(...)	HW_ERR("can not process hw_write(" #__VA_ARGS__ ").")
 #define _hw_write_1(...)	__VA_ARGS__
 
-#define hw_fn_hw_write_mem1		, _hw_write_mem1
-#define hw_fn_hw_write_mem2		, _hw_write_mem2
+#define hw_fn_hw_write_bits1		, _hw_write_bits1
+#define hw_fn_hw_write_bits2		, _hw_write_bits2
 
-#define _hw_write_mem1(mem1, cn,ca, rn,rw,ra,rrv,rwm, rbn,rbp, v)	\
+#define _hw_write_bits1(bits1, cn,ca, rn,rw,ra,rrv,rwm, rbn,rbp, v)	\
   _hw_write_r##rw(ca+ra,rwm,rbn,rbp,v)
-#define _hw_write_mem2(mem2, cn,ca,					\
+#define _hw_write_bits2(bits2, cn,ca,					\
 		       rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
 		       rn2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2, v)		\
   do { _hw_write_r##rw1(ca+ra1,riv1,rwm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
@@ -195,8 +195,8 @@ typedef struct hwa_r32_t
 #define _hwa_write_0(...)	HW_ERR("can not process hwa_write(" #__VA_ARGS__ ").")
 #define _hwa_write_1(...)	__VA_ARGS__
 
-#define hw_fn_hwa_write_mem1		, _hwa_write_mem1
-#define hw_fn_hwa_write_mem2		, _hwa_write_mem2
+#define hw_fn_hwa_write_bits1		, _hwa_write_bits1
+#define hw_fn_hwa_write_bits2		, _hwa_write_bits2
 
 /* #define hwa_write(...)		HW_G2(_hwa_write_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
 /* #define _hwa_write_xctr_0(...)	HW_ERR("first argument is not a controller.") */
@@ -212,10 +212,10 @@ typedef struct hwa_r32_t
 /* #define _hwa_write_xmem_3(x,...)	_hwa_write_mem_##x(__VA_ARGS__) */
 /* #define _hwa_write_mem_0	HW_ERR */
 
-#define _hwa_write_mem1(mem1, cn,ca, rn,rw,ra,rrv,rwm, rbn,rbp, v)	\
+#define _hwa_write_bits1(bits1, cn,ca, rn,rw,ra,rrv,rwm, rbn,rbp, v)	\
   _hwa_write_r##rw( &hwa->cn.rn, rbn, rbp, v )
 
-#define _hwa_write_mem2(mem2,cn,ca,					\
+#define _hwa_write_bits2(bits2,cn,ca,					\
 			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
 			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2, v)		\
   do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
@@ -236,14 +236,14 @@ typedef struct hwa_r32_t
 #define _hwa_write_p_0(...)	HW_ERR("can not process hwa_write_p(" #__VA_ARGS__ ").")
 #define _hwa_write_p_1(...)	__VA_ARGS__
 
-#define hw_fn_hwa_write_p_mem1		, _hwa_write_p_mem1
-#define hw_fn_hwa_write_p_mem2		, _hwa_write_p_mem2
+#define hw_fn_hwa_write_p_bits1		, _hwa_write_p_bits1
+#define hw_fn_hwa_write_p_bits2		, _hwa_write_p_bits2
 
-#define _hwa_write_p_mem1(p, mem1, cn,ca,			\
+#define _hwa_write_p_bits1(p, bits1, cn,ca,			\
 			  rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1, v)	\
   _hwa_write_r##rw1( &p->rn1, rbn1, rbp1, v )
 
-#define _hwa_write_p_mem2(p, mem2, cn,ca,				\
+#define _hwa_write_p_bits2(p, bits2, cn,ca,				\
 			  rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
 			  rn2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2, v)	\
   do { _hwa_write_r##rw1(&p->rn1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \

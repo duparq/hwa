@@ -10,25 +10,6 @@
 
 /*	Definition of an interrupt
  */
-/* #define hw_irq(...)		HW_G2(_hw_xirq_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__,) */
-/* #define _hw_xirq_xctr_0(...)	HW_G2(_hw_xirq_error, HW_IS(0,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_xirq_error_0(x,...)	0, "hw_`" #x "`: is not a controller." */
-/* #define _hw_xirq_error_1(...)	__VA_ARGS__ */
-
-/* #define _hw_xirq_xctr_1(ctr,cc,cn, ...)				\ */
-/*   _hw_xirq_xctr_2(HW_LEN(hw_##cn),cn,ctr,cc,cn,__VA_ARGS__) */
-/* #define _hw_xirq_xctr_2(...)		_hw_xirq_xctr_3(__VA_ARGS__) */
-/* #define _hw_xirq_xctr_3(n,cn,...)	_hw_xirq_xctr_4(cn,HW_POP_##n(__VA_ARGS__)) */
-/* #define _hw_xirq_xctr_4(...)		_hw_xirq_xctr_5(__VA_ARGS__) */
-/* #define _hw_xirq_xctr_5(cn,...)	\ */
-/*   HW_G2(_hw_xirq, HW_IS(irq, hw_irq_##cn##_##__VA_ARGS__))(cn, __VA_ARGS__) */
-
-/* #define _hw_xirq_0(cn,...)		\ */
-/*   0, "`" HW_QUOTE(HW_A0(__VA_ARGS__)) "` is not a valid irq name for controller `hw_" #cn "`." */
-
-/* #define _hw_xirq_1(cn,in,...)			\ */
-/*   hw_irq_##cn##_##in */
-
 #define hw_irq(...)		_hw_irq_2(__VA_ARGS__)
 #define _hw_irq_2(...)		HW_G2(_hw_irq_xclass, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__,)
 #define _hw_irq_xclass_0(...)	HW_G2(_hw_irq_error, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
@@ -50,7 +31,7 @@
 #define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\
   HW_ERR("expected `on` or `off`, got `" #zstate "` instead.")
 #define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, zstate)	\
-  hwa_write( hw_mem(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
+  hwa_write( hw_bits(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
 
 
 /*	Definition of an irq-enable bit
@@ -59,7 +40,8 @@
 #define _hw_irqe_0(...)			HW_G2(_hw_irqe_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqe_0_0(...)		HW_ERR("can not process hw_irqe(" #__VA_ARGS__ ").")
 #define _hw_irqe_0_1(...)		__VA_ARGS__
-#define _hw_irqe_1(t,v, cc,cn,ci,ca, irqe,irqf)	_hw_mem_cm_2(cc,cn,ci,ca,irqe)
+#define _hw_irqe_1(t,v, c,n,i,a, irqe,irqf)	_hw_bits(c,n,i,a,irqe)
+
 
 /*	Definition of an irq-flag bit
  */
@@ -67,7 +49,7 @@
 #define _hw_irqf_0(...)			HW_G2(_hw_irqf_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqf_0_0(...)		HW_ERR("can not process hw_irqf(" #__VA_ARGS__ ").")
 #define _hw_irqf_0_1(...)		__VA_ARGS__
-#define _hw_irqf_1(t,v, cc,cn,ci,ca, irqe,irqf)	_hw_mem_cm_2(cc,cn,ci,ca,irqf)
+#define _hw_irqf_1(t,v, c,n,i,a, irqe,irqf)	_hw_bits(c,n,i,a,irqf)
 
 
 /*	Declaration of an ISR

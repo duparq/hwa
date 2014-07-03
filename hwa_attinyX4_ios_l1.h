@@ -16,19 +16,22 @@
 #include "hwa_atmelavr_ios_l1.h"
 
 
-/*	Controllers		class, name, id, address
+/*	io classes & methods
  */
 #define hw_class_io8
-#define hw_porta		io8, porta, 100, 0x21
+#define hw_fn_hw_bits_io8	, _hw_bits
 
 #define hw_class_io4
+#define hw_fn_hw_bits_io4	, _hw_bits
+
+
+/*	io instances		class, name, id, address
+ */
+#define hw_porta		io8, porta, 100, 0x21
 #define hw_portb		io4, portb, 200, 0x36
 
-#define hw_fn_hw_mem_io4	, _hw_mem_cm
-#define hw_fn_hw_mem_io8	, _hw_mem_cm
 
-
-/*	Registers		'reg', rw, ra, riv, rvm, rwm
+/*	io class regs		'reg', rw, ra, riv, rvm, rwm
  */
 #define hw_io8_port		reg, 8, 0x3B-0x21, 0x00, 0xFF
 #define hw_io8_ddr		reg, 8, 0x3A-0x21, 0x00, 0xFF
@@ -45,7 +48,6 @@
  *
  *				class, name, id, controller, bn, bp
  */
-#define hw_class_io
 #define hw_port_a		io, port_a,  109, hw_porta, 8, 0
 #define hw_pin_pa0		io, pin_pa0, 101, hw_porta, 1, 0
 #define hw_pin_pa1		io, pin_pa1, 102, hw_porta, 1, 1
@@ -93,15 +95,3 @@ typedef struct {
 #define HWA_DCL_IOS				\
   hwa_io_t porta ;				\
   hwa_io_t portb ;
-
-
-/*	Equality test
- */
-#define hw_is_io_io	,1
-#define _hw_eq_io(ctr1,cc1,ion1, sctr1,scc1,scn1,sca1,sbn1,sbp1, ...)	\
-  HW_G2(_hw_eq_io,HW_IS(io,hw_class(__VA_ARGS__)))			\
-  (ctr1,cc1,ion1, sctr1,scc1,scn1,sca1,sbn1,sbp1, __VA_ARGS__)
-#define _hw_eq_io_0(...)	0
-#define _hw_eq_io_1(ctr1,cc1,ion1, sctr1,scc1,scn1,sca1,sbn1,sbp1,	\
-		    ctr2,cc2,ion2, sctr2,scc2,scn2,sca2,sbn2,sbp2)	\
-  (sca1==sca2 && sbn1==sbn2 && sbp1==sbp2)

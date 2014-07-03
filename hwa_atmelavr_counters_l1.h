@@ -17,7 +17,7 @@
 #define hw_fn_hw_write_ocu	, _hw_write_ocu
 #define _hw_write_ocu(t,n,i,a, value)	_hw_write_ocu_2(hw_##n##_ext, value)
 #define _hw_write_ocu_2(...)		_hw_write_ocu_3(__VA_ARGS__)
-#define _hw_write_ocu_3(t,n,i,a, rn,ion, v)	_hw_write_ocu_4(_hw_mem_cm(t,n,i,a, rn), v)
+#define _hw_write_ocu_3(t,n,i,a, rn,ion, v)	_hw_write_ocu_4(_hw_bits(t,n,i,a, rn), v)
 #define _hw_write_ocu_4(...)		_hw_write_ocu_5(__VA_ARGS__)
 #define _hw_write_ocu_5(t,...)		_hw_write_##t(t,__VA_ARGS__)
 

@@ -26,21 +26,21 @@
 
 /*	Bits
  */
-#define hw_c8a_coma		regb,  ccra, 2, 6
-#define hw_c8a_comb		regb,  ccra, 2, 4
-#define hw_c8a_wgm		regbb, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define hw_c8a_coma		rb1,  ccra, 2, 6
+#define hw_c8a_comb		rb1,  ccra, 2, 4
+#define hw_c8a_wgm		rb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 
-#define hw_c8a_foca		regb,  ccrb, 1, 7
-#define hw_c8a_focb		regb,  ccrb, 1, 6
-#define hw_c8a_cs		regb,  ccrb, 3, 0
+#define hw_c8a_foca		rb1,  ccrb, 1, 7
+#define hw_c8a_focb		rb1,  ccrb, 1, 6
+#define hw_c8a_cs		rb1,  ccrb, 3, 0
 
-#define hw_c8a_ocieb		regb,  imsk, 1, 2
-#define hw_c8a_ociea		regb,  imsk, 1, 1
-#define hw_c8a_oie		regb,  imsk, 1, 0
+#define hw_c8a_ocieb		rb1,  imsk, 1, 2
+#define hw_c8a_ociea		rb1,  imsk, 1, 1
+#define hw_c8a_oie		rb1,  imsk, 1, 0
 
-#define hw_c8a_ocfb		regb,  ifr, 1, 2
-#define hw_c8a_ocfa		regb,  ifr, 1, 1
-#define hw_c8a_ov		regb,  ifr, 1, 0
+#define hw_c8a_ocfb		rb1,  ifr, 1, 2
+#define hw_c8a_ocfa		rb1,  ifr, 1, 1
+#define hw_c8a_ov		rb1,  ifr, 1, 0
 
 
 /*	Counter0 output-compare units	class, name, id, address
@@ -81,20 +81,20 @@
 
 /*	Bits
  */
-#define hw_c16a_coma		regb,  ccra, 2, 6
-#define hw_c16a_comb		regb,  ccra, 2, 4
-#define hw_c16a_icnc		regb,  ccrb, 1, 7
-#define hw_c16a_ices		regb,  ccrb, 1, 6
-#define hw_c16a_cs		regb,  ccrb, 3, 0
-#define hw_c16a_wgm		regbb, ccrb, 2, 3, 2, ccra, 2, 0, 0
-#define hw_c16a_icie		regb,  imsk, 1, 5
-#define hw_c16a_ocieb		regb,  imsk, 1, 2
-#define hw_c16a_ociea		regb,  imsk, 1, 1
-#define hw_c16a_oie		regb,  imsk, 1, 0
-#define hw_c16a_icf		regb,  imsk, 1, 5
-#define hw_c16a_ocfb		regb,  imsk, 1, 2
-#define hw_c16a_ocfa		regb,  imsk, 1, 1
-#define hw_c16a_ov		regb,  imsk, 1, 0
+#define hw_c16a_coma		rb1,  ccra, 2, 6
+#define hw_c16a_comb		rb1,  ccra, 2, 4
+#define hw_c16a_icnc		rb1,  ccrb, 1, 7
+#define hw_c16a_ices		rb1,  ccrb, 1, 6
+#define hw_c16a_cs		rb1,  ccrb, 3, 0
+#define hw_c16a_wgm		rb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+#define hw_c16a_icie		rb1,  imsk, 1, 5
+#define hw_c16a_ocieb		rb1,  imsk, 1, 2
+#define hw_c16a_ociea		rb1,  imsk, 1, 1
+#define hw_c16a_oie		rb1,  imsk, 1, 0
+#define hw_c16a_icf		rb1,  imsk, 1, 5
+#define hw_c16a_ocfb		rb1,  imsk, 1, 2
+#define hw_c16a_ocfa		rb1,  imsk, 1, 1
+#define hw_c16a_ov		rb1,  imsk, 1, 0
 
 
 /*	Counter1 output-compare units	class, name, id, address

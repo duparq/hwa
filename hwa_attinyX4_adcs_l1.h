@@ -27,14 +27,14 @@
 
 /*	Bits
  */
-#define hw_adc_refs		regb, admux, 2, 6
-#define hw_adc_mux		regb, admux, 6, 0
-#define hw_adc_en		regb, sra, 1, 7
-#define hw_adc_sc		regb, sra, 1, 6
-#define hw_adc_ate		regb, sra, 1, 5
-#define hw_adc_if		regb, sra, 1, 4
-#define hw_adc_ie		regb, sra, 1, 3
-#define hw_adc_ps		regb, sra, 3, 0
+#define hw_adc_refs		rb1, admux, 2, 6
+#define hw_adc_mux		rb1, admux, 6, 0
+#define hw_adc_en		rb1, sra, 1, 7
+#define hw_adc_sc		rb1, sra, 1, 6
+#define hw_adc_ate		rb1, sra, 1, 5
+#define hw_adc_if		rb1, sra, 1, 4
+#define hw_adc_ie		rb1, sra, 1, 3
+#define hw_adc_ps		rb1, sra, 3, 0
 
 
 /*	OEM symbols		type, instance, reg...

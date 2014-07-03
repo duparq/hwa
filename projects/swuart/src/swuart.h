@@ -68,12 +68,14 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
 
   /*	Start condition interrupt
    */
-#if hw_eq(SWUART_PIN_RX, hw_pin_int0)
+  //#if hw_eq(SWUART_PIN_RX, hw_pin_int0)
+#if hw_id(SWUART_PIN_RX) == hw_id(hw_pin_int0)
   /*
    *		INT0 interrupt: only on falling edge
    */
   hwa_write( hw_core0, isc0, 2 );
-#elif hw_eq(hw_ctr(SWUART_PIN_RX), hw_pcic0) ||	hw_eq(hw_ctr(SWUART_PIN_RX), hw_pcic1)
+#elif hw_id(hw_ctr(SWUART_PIN_RX)) == hw_id(hw_pcic0) \
+  || hw_id(hw_ctr(SWUART_PIN_RX)) == hw_id(hw_pcic1)
   /*
    *		Pin-change interrupt: pin-change controller irq must be
    *		enabled. Then, pin-change interrupts will be enabled/disabled as
@@ -90,7 +92,7 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
 
   /*	TX pin
    */
-#if defined SWUART_PIN_TX && !hw_eq(SWUART_PIN_TX, SWUART_PIN_RX)
+#if defined SWUART_PIN_TX && hw_id(SWUART_PIN_TX) != hw_id(SWUART_PIN_RX)
   hwa_config(hw_io(SWUART_PIN_TX), output);
   hwa_write(SWUART_PIN_TX, 1);
 #endif

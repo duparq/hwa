@@ -33,12 +33,12 @@
 
 /*	Global classes & methods
  */
-#define hw_fn_hw_addr_mem1		, _hw_addr_mem1
+#define hw_fn_hw_addr_bits1		, _hw_addr_bits1
 
 #if defined __ASSEMBLER__
-#  define _hw_addr_mem1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
+#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
 #else
-#  define _hw_addr_mem1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
+#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
 #endif
 
 
