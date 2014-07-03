@@ -9,9 +9,10 @@
  *
  */
 #if defined __ASSEMBLER__
-#  define HW_ERR(msg)	.fail "HWA error: " msg
+//#  define HW_ERR(msg)	.fail "HWA error: " msg
+#  define HW_ERR(msg)	0 ; .fail "HWA: " msg
 #else
-#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA error:" msg)
+#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA:" msg)
 #endif
 
 
@@ -39,25 +40,19 @@
 #define _HW_A3_2(a0,a1,a2,a3,...)	a3
 
 
-/** \brief	Remove first element from list
- */
-/* #define HW_CDR(...)		_HW_CDR(__VA_ARGS__) */
-/* #define _HW_CDR(x,...)		__VA_ARGS__ */
-
-
-/** \brief	Glue first two arguments
+/** \brief	Glue the first two arguments
  */
 #define HW_G2(...)		_HW_G2_(__VA_ARGS__,,)
 #define _HW_G2_(a,b,...)	a##_##b
 
 
-/** \brief	Glue first three arguments
+/** \brief	Glue the first three arguments
  */
 #define HW_G3(...)		_HW_G3_(__VA_ARGS__,,,)
 #define _HW_G3_(a,b,c,...)	a##_##b##_##c
 
 
-/** \brief	Glue first for arguments
+/** \brief	Glue the first four arguments
  */
 #define HW_G4(...)		_HW_G4_(__VA_ARGS__,,,,)
 #define _HW_G4_(a,b,c,d,...)	a##_##b##_##c##_##d
@@ -71,7 +66,6 @@
 #define hw_is_0_0		, 1,	/* the comma to remove '; StaticAssert(...)' */
 #define hw_is__			, 1
 #define hw_is_irq_irq		, 1
-#define hw_is_ok_ok		, 1
 
 
 /** \brief	Quote the first element in the list

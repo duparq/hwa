@@ -38,16 +38,16 @@
 
 /*	Modes for output-compare units
  */
-#define hw_ocu_mode_disconnected				ok, 1
-#define hw_ocu_mode_toggled_on_match				ok, 2
-#define hw_ocu_mode_cleared_on_match				ok, 3
-#define hw_ocu_mode_set_on_match				ok, 4
-#define hw_ocu_mode_set_at_bottom_cleared_on_match		ok, 5
-#define hw_ocu_mode_cleared_at_bottom_set_on_match		ok, 6
-#define hw_ocu_mode_cleared_on_match_up_set_on_match_down	ok, 7
-#define hw_ocu_mode_clearup_setdown				ok, 7
-#define hw_ocu_mode_set_on_match_up_cleared_on_match_down	ok, 8
-#define hw_ocu_mode_setup_cleardown				ok, 8
+#define hw_ocu_mode_disconnected				, 1
+#define hw_ocu_mode_toggled_on_match				, 2
+#define hw_ocu_mode_cleared_on_match				, 3
+#define hw_ocu_mode_set_on_match				, 4
+#define hw_ocu_mode_set_at_bottom_cleared_on_match		, 5
+#define hw_ocu_mode_cleared_at_bottom_set_on_match		, 6
+#define hw_ocu_mode_cleared_on_match_up_set_on_match_down	, 7
+#define hw_ocu_mode_clearup_setdown				, 7
+#define hw_ocu_mode_set_on_match_up_cleared_on_match_down	, 8
+#define hw_ocu_mode_setup_cleardown				, 8
 
 
 #if !defined __ASSEMBLER__

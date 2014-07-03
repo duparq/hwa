@@ -32,7 +32,7 @@
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xclock_1(cn,_clock_,...)				\
-  HW_G2(hwa_config_c8a_clock,HW_IS(ok,hw_c8a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_clock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c8a_clock_0(cn,...)					\
   HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
@@ -47,7 +47,7 @@
   HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xcountmode_1(cn,_countmode_,...)			\
-  HW_G2(hwa_config_c8a_countmode,HW_IS(ok,hw_c8a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_countmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c8a_countmode_0(cn,...)				\
   HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
@@ -78,7 +78,7 @@
   HW_ERR("expected `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xtop_1(cn,_top_,...)				\
-  HW_G2(hwa_config_c8a_vtop,HW_IS(ok,hw_c8a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c8a_vtop_0(cn,...)					\
     HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\

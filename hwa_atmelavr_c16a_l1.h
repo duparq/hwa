@@ -25,27 +25,27 @@
 
 /*	16-bit counter class 'c16a'
  */
-#define hw_c16a_countmode_loop_up		ok, 1
-/* #define hw_c16a_countmode_loop_up_pwm		ok, 2 */
-/* #define hw_c16a_countmode_loop_updown_pwm	ok, 3 */
-#define hw_c16a_countmode_loop_updown	ok, 3
-/* #define hw_c16a_countmode_loop_updown_pafcpwm	ok, 4 */
+#define hw_c16a_countmode_loop_up		, 1
+/* #define hw_c16a_countmode_loop_up_pwm		, 2 */
+/* #define hw_c16a_countmode_loop_updown_pwm	, 3 */
+#define hw_c16a_countmode_loop_updown	, 3
+/* #define hw_c16a_countmode_loop_updown_pafcpwm	, 4 */
 
-#define hw_c16a_top_fixed_0xFF			ok, 1
-#define hw_c16a_top_fixed_0x1FF			ok, 2
-#define hw_c16a_top_fixed_0x3FF			ok, 3
-#define hw_c16a_top_fixed_0xFFFF		ok, 4
-#define hw_c16a_top_register_capture		ok, 5
-#define hw_c16a_top_register_compare_a		ok, 6
+#define hw_c16a_top_fixed_0xFF			, 1
+#define hw_c16a_top_fixed_0x1FF			, 2
+#define hw_c16a_top_fixed_0x3FF			, 3
+#define hw_c16a_top_fixed_0xFFFF		, 4
+#define hw_c16a_top_register_capture		, 5
+#define hw_c16a_top_register_compare_a		, 6
 
-#define hw_c16a_clock_none			ok, 0
-#define hw_c16a_clock_syshz			ok, 1
-#define hw_c16a_clock_syshz_div_8		ok, 2
-#define hw_c16a_clock_syshz_div_64		ok, 3
-#define hw_c16a_clock_syshz_div_256		ok, 4
-#define hw_c16a_clock_syshz_div_1024		ok, 5
-#define hw_c16a_clock_ext_rising		ok, 6
-#define hw_c16a_clock_ext_falling		ok, 7
+#define hw_c16a_clock_none			, 0
+#define hw_c16a_clock_syshz			, 1
+#define hw_c16a_clock_syshz_div_8		, 2
+#define hw_c16a_clock_syshz_div_64		, 3
+#define hw_c16a_clock_syshz_div_256		, 4
+#define hw_c16a_clock_syshz_div_1024		, 5
+#define hw_c16a_clock_ext_rising		, 6
+#define hw_c16a_clock_ext_falling		, 7
 
 
 /*	Number of bits

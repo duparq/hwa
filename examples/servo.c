@@ -8,7 +8,7 @@
 #include <hwa.h>
 
 
-#define	SERVO		hw_oc1a		/* output-compare unit */
+#define	SERVO		hw_oc1a		/* compare unit output OC1A */
 /* #define DUTY_MIN	260 */
 /* #define DUTY_MAX	1200 */
 #define DUTY_MIN	270

@@ -16,22 +16,22 @@
 
 /*	8-bit counter class 'c8a'
  */
-#define hw_c8a_countmode_loop_up		ok, 1
-#define hw_c8a_countmode_loop_up_pwm		ok, 2
-#define hw_c8a_countmode_loop_updown_pwm	ok, 3
+#define hw_c8a_countmode_loop_up		, 1
+#define hw_c8a_countmode_loop_up_pwm		, 2
+#define hw_c8a_countmode_loop_updown_pwm	, 3
 
-#define hw_c8a_top_fixed_0xFF			ok, 1
-#define hw_c8a_top_register_compare_a		ok, 2
+#define hw_c8a_top_fixed_0xFF			, 1
+#define hw_c8a_top_register_compare_a		, 2
 
-#define hw_c8a_clock_0ne			ok, 0
-#define hw_c8a_clock_stop			ok, 0
-#define hw_c8a_clock_syshz			ok, 1
-#define hw_c8a_clock_syshz_div_8		ok, 2
-#define hw_c8a_clock_syshz_div_64		ok, 3
-#define hw_c8a_clock_syshz_div_256		ok, 4
-#define hw_c8a_clock_syshz_div_1024		ok, 5
-#define hw_c8a_clock_ext_rising			ok, 6
-#define hw_c8a_clock_ext_falling		ok, 7
+#define hw_c8a_clock_0ne			, 0
+#define hw_c8a_clock_stop			, 0
+#define hw_c8a_clock_syshz			, 1
+#define hw_c8a_clock_syshz_div_8		, 2
+#define hw_c8a_clock_syshz_div_64		, 3
+#define hw_c8a_clock_syshz_div_256		, 4
+#define hw_c8a_clock_syshz_div_1024		, 5
+#define hw_c8a_clock_ext_rising			, 6
+#define hw_c8a_clock_ext_falling		, 7
 
 
 /*	Generic functions

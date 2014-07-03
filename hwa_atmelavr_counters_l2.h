@@ -14,7 +14,7 @@
 #define hw_fn_hwa_config_ocu		, _hwa_config_ocu
 
 #define _hwa_config_ocu(ocu,ocn,oci,_, mode)			\
-  HW_G2(_hwa_config_ocu, HW_IS(ok,hw_ocu_mode_##mode))(ocn,mode)
+  HW_G2(_hwa_config_ocu, HW_IS(,hw_ocu_mode_##mode))(ocn,mode)
 #define _hwa_config_ocu_0(ocn,mode)					\
   HW_ERR( "`" #mode "` is not a valid mode for `hw_" #ocn "`." )
 #define _hwa_config_ocu_1(ocn,zmode)	\

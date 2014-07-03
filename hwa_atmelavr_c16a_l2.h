@@ -45,7 +45,7 @@
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c16a_xclock_1(cn,_clock_,...)			\
-  HW_G2(hwa_config_c16a_vclock,HW_IS(ok,hw_c16a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c16a_vclock,HW_IS(,hw_c16a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vclock_0(cn,...)				\
   HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
@@ -60,7 +60,7 @@
   HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c16a_xmode_1(cn,_countmode_,...)			\
-  HW_G2(hwa_config_c16a_vmode,HW_IS(ok,hw_c16a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c16a_vmode,HW_IS(,hw_c16a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vmode_0(cn,...)					\
   HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
@@ -85,7 +85,7 @@
   HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
 
 #define hwa_config_c16a_xtop_1(cn,_top_,...)				\
-  HW_G2(hwa_config_c16a_vtop,HW_IS(ok,hw_c16a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c16a_vtop,HW_IS(,hw_c16a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vtop_0(cn,...)					\
   HW_ERR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, " \
@@ -97,7 +97,7 @@
   HW_G2(hwa_config_c16a_xuc,HW_IS(update_compares,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_xuc_1(cn,uc,...)	\
-  HW_G2(hwa_config_c16a_vuc, HW_IS(ok,hw_counter_update_compares_##__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c16a_vuc, HW_IS(,hw_counter_update_compares_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vuc_0(cn,vuc,...)			\
   HW_ERR("update_compares must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
@@ -111,7 +111,7 @@
 
 #define hwa_config_c16a_xoverflow_1(cn,overflow_irq,...)	\
     HW_G2(hwa_config_c16a_voverflow,				\
-	  HW_IS(ok,hw_counter_overflow_irq_##__VA_ARGS__))	\
+	  HW_IS(,hw_counter_overflow_irq_##__VA_ARGS__))	\
     (cn,__VA_ARGS__)
 
 #define hwa_config_c16a_voverflow_0(cn,overflow,...)			\
@@ -136,13 +136,13 @@
 #define hw_is_overflow_irq_overflow_irq		, 1
 #define hw_is_update_compares_update_compares	, 1
 
-#define hw_counter_overflow_irq_at_bottom	ok, 1
-#define hw_counter_overflow_irq_at_top		ok, 2
-#define hw_counter_overflow_irq_at_max		ok, 3
+#define hw_counter_overflow_irq_at_bottom	, 1
+#define hw_counter_overflow_irq_at_top		, 2
+#define hw_counter_overflow_irq_at_max		, 3
 
-#define hw_counter_update_compares_immediately	ok, 1
-#define hw_counter_update_compares_at_bottom	ok, 2
-#define hw_counter_update_compares_at_top	ok, 3
+#define hw_counter_update_compares_immediately	, 1
+#define hw_counter_update_compares_at_bottom	, 2
+#define hw_counter_update_compares_at_top	, 3
 
 
 /*	Solve the configuration of the counter unit
