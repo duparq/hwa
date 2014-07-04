@@ -16,20 +16,17 @@
  */
 #define hw_class_c16a
 
-#define hw_fn_hw_addr_c16a		, _hw_addr_ctr
+//#define hw_fn_hw_addr_c16a		, _hw_addr_ctr
 #define hw_fn_hw_bits_c16a		, _hw_bits
 
 #define hw_fn_bn_c16a			, _hw_bn_c16a
-#define _hw_bn_c16a(cc,cn,ci,ca)	16
+#define _hw_bn_c16a(c,n,i,a)		16
 
 
 /*	16-bit counter class 'c16a'
  */
 #define hw_c16a_countmode_loop_up		, 1
-/* #define hw_c16a_countmode_loop_up_pwm		, 2 */
-/* #define hw_c16a_countmode_loop_updown_pwm	, 3 */
-#define hw_c16a_countmode_loop_updown	, 3
-/* #define hw_c16a_countmode_loop_updown_pafcpwm	, 4 */
+#define hw_c16a_countmode_loop_updown		, 2
 
 #define hw_c16a_top_fixed_0xFF			, 1
 #define hw_c16a_top_fixed_0x1FF			, 2
@@ -48,22 +45,23 @@
 #define hw_c16a_clock_ext_falling		, 7
 
 
-/*	Number of bits
- */
-#define hw_bn_c16a_isfn
-#define hw_bn_c16a(...)				16
-
-
 /*	Registers for c16a controller
  */
 #ifndef __ASSEMBLER__
+
 typedef struct {
   hwa_r8_t  ccra ;
   hwa_r8_t  ccrb ;
   hwa_r8_t  ccrc ;
   hwa_r16_t count ;
-  hwa_r16_t ocra ;
-  hwa_r16_t ocrb ;
+  union {
+    hwa_r16_t ocra ;
+    hwa_r16_t compare_a ;
+  };
+  union {
+    hwa_r16_t ocrb ;
+    hwa_r16_t compare_b ;
+  };
   union {
     hwa_r16_t icr ;
     hwa_r16_t capture ;
@@ -73,6 +71,13 @@ typedef struct {
 
   /*  Registers for high-level configuration
    */
-  uint8_t config, countmode, top, clock, overflow_irq, update_compares ;
+  uint8_t	config, countmode, top, clock, update_compares, overflow_irq ;
+  uint8_t	ocra_config, ocra_mode ;
+  uint8_t	ocrb_config, ocrb_mode ;
+  uint8_t	icr_config, icr_mode ;
+  //  hwa_ocu_t	ocua, ocub ;
+  //  hwa_icu_t	icu ;
+
 } hwa_c16a_t ;
+
 #endif

@@ -100,8 +100,12 @@
 #define hw_hasbits_rb2
 #define hw_hasbits_xreg
 
-#define _hw_bits_cnrn(c,r)		_hw_bits_4(c,,,r,hw_##c##_##r)
+/*	Class bits
+ */
+#define _hw_cbits(c,r)			_hw_bits_4(c,,,r,hw_##c##_##r)
 
+/*	Instance bits
+ */
 #define _hw_bits(...)			_hw_bits_3(__VA_ARGS__)
 #define _hw_bits_3(c,n,i,a,r)		_hw_bits_4(c,n,a,r,hw_##c##_##r)
 #define _hw_bits_4(...)			_hw_bits_5(__VA_ARGS__)
@@ -120,17 +124,17 @@
 #define _hw_bits_rb1_3(n,a,rn, t, ...)		\
   bits1, n,a, rn,__VA_ARGS__
 
-#define _hw_bits_rb2(cc,cn,ca,crn, rn1,rbn1,rbp1,vbp1, rn2,rbn2,rbp2,vbp2) \
-  _hw_bits_rb2_2(cn,ca,						\
-		  rn1,hw_##cc##_##rn1,rbn1,rbp1,vbp1,			\
-		  rn2,hw_##cc##_##rn2,rbn2,rbp2,vbp2)
+#define _hw_bits_rb2(c,n,a,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2)	\
+  _hw_bits_rb2_2(n,a,							\
+		 r1,hw_##c##_##r1,rbn1,rbp1,vbp1,			\
+		 r2,hw_##c##_##r2,rbn2,rbp2,vbp2)
 #define _hw_bits_rb2_2(...)		_hw_bits_rb2_3(__VA_ARGS__)
-#define _hw_bits_rb2_3(cn,ca,						\
-			rn1,reg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
-			rn2,reg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
-  bits2, cn,ca,								\
-    rn1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,				\
-    rn2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2
+#define _hw_bits_rb2_3(n,a,						\
+		       r1,reg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
+		       r2,reg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
+  bits2, n,a,								\
+    r1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,				\
+    r2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2
 
 #define _hw_bits_xreg(_c,_n,_a,_x, c,n,i,a,r)	_hw_bits_xreg_2(c,n,a,r,hw_##c##_##r)
 #define _hw_bits_xreg_2(...)			_hw_bits_xreg_3(__VA_ARGS__)

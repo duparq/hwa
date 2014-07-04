@@ -40,12 +40,12 @@
 #  define HW_XSOHZ	0
 #endif
 
-#include "hwa__l1.h"
+#include "hwa__1.h"
 
 
 #if !defined __ASSEMBLER__
 struct hwa_t ;
-#  include "hwa__l2.h"
+#  include "hwa__2.h"
 #endif
 
 #endif /* _HWA_H_ */

@@ -22,7 +22,7 @@ SWUART		= $(HOME)/dev/hwa-dev/projects/swuart/src
 
 #	hwa.c is required for STM32
 #
-SOURCES		:= $(HWA)/hwa.c $(SOURCES)
+#SOURCES		:= $(HWA)/hwa.c $(SOURCES)
 
 #	HWA files path
 #

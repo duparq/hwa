@@ -4,12 +4,12 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr_counters_l1.h"
-#include "hwa_atmelavr_c8a_l1.h"
-#include "hwa_atmelavr_c16a_l1.h"
+#include "hwa_atmelavr_counters_1.h"
+#include "hwa_atmelavr_c8a_1.h"
+#include "hwa_atmelavr_c16a_1.h"
 
 
-/*	Counter0		class, name, id, address
+/*	Instance		class, name, id, address
  */
 #define hw_counter0		c8a, counter0, 600, 0x0050
 
@@ -26,30 +26,32 @@
 
 /*	Bits
  */
-#define hw_c8a_coma		rb1,  ccra, 2, 6
-#define hw_c8a_comb		rb1,  ccra, 2, 4
+#define hw_c8a_coma		rb1, ccra, 2, 6
+#define hw_c8a_comb		rb1, ccra, 2, 4
 #define hw_c8a_wgm		rb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 
-#define hw_c8a_foca		rb1,  ccrb, 1, 7
-#define hw_c8a_focb		rb1,  ccrb, 1, 6
-#define hw_c8a_cs		rb1,  ccrb, 3, 0
+#define hw_c8a_foca		rb1, ccrb, 1, 7
+#define hw_c8a_focb		rb1, ccrb, 1, 6
+#define hw_c8a_cs		rb1, ccrb, 3, 0
 
-#define hw_c8a_ocieb		rb1,  imsk, 1, 2
-#define hw_c8a_ociea		rb1,  imsk, 1, 1
-#define hw_c8a_oie		rb1,  imsk, 1, 0
+#define hw_c8a_ocieb		rb1, imsk, 1, 2
+#define hw_c8a_ociea		rb1, imsk, 1, 1
+#define hw_c8a_oie		rb1, imsk, 1, 0
 
-#define hw_c8a_ocfb		rb1,  ifr, 1, 2
-#define hw_c8a_ocfa		rb1,  ifr, 1, 1
-#define hw_c8a_ov		rb1,  ifr, 1, 0
+#define hw_c8a_ocfb		rb1, ifr, 1, 2
+#define hw_c8a_ocfa		rb1, ifr, 1, 1
+#define hw_c8a_ov		rb1, ifr, 1, 0
 
 
-/*	Counter0 output-compare units	class, name, id, address
+/*	Counter0 compare units
+ *
+ *	Instance		class, name, id, (address) ; hw_counter, ocr, io
  */
 #define hw_oc0a			ocu, oc0a, 601,
-#define hw_oc0a_ext		hw_counter0, ocra, pin_5
+#define hw_oc0a_ext		hw_counter0, ocra, pin_pb2 /* pin 5 */
 
 #define hw_oc0b			ocu, oc0b, 602,
-#define hw_oc0b_ext		hw_counter0, ocrb, pin_6
+#define hw_oc0b_ext		hw_counter0, ocrb, pin_pa7 /* pin 6 */
 
 
 /*	Counter1		class, name, id, address
@@ -81,35 +83,33 @@
 
 /*	Bits
  */
-#define hw_c16a_coma		rb1,  ccra, 2, 6
-#define hw_c16a_comb		rb1,  ccra, 2, 4
-#define hw_c16a_icnc		rb1,  ccrb, 1, 7
-#define hw_c16a_ices		rb1,  ccrb, 1, 6
-#define hw_c16a_cs		rb1,  ccrb, 3, 0
+#define hw_c16a_coma		rb1, ccra, 2, 6
+#define hw_c16a_comb		rb1, ccra, 2, 4
+#define hw_c16a_icnc		rb1, ccrb, 1, 7
+#define hw_c16a_ices		rb1, ccrb, 1, 6
+#define hw_c16a_cs		rb1, ccrb, 3, 0
 #define hw_c16a_wgm		rb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
-#define hw_c16a_icie		rb1,  imsk, 1, 5
-#define hw_c16a_ocieb		rb1,  imsk, 1, 2
-#define hw_c16a_ociea		rb1,  imsk, 1, 1
-#define hw_c16a_oie		rb1,  imsk, 1, 0
-#define hw_c16a_icf		rb1,  imsk, 1, 5
-#define hw_c16a_ocfb		rb1,  imsk, 1, 2
-#define hw_c16a_ocfa		rb1,  imsk, 1, 1
-#define hw_c16a_ov		rb1,  imsk, 1, 0
+#define hw_c16a_icie		rb1, imsk, 1, 5
+#define hw_c16a_ocieb		rb1, imsk, 1, 2
+#define hw_c16a_ociea		rb1, imsk, 1, 1
+#define hw_c16a_oie		rb1, imsk, 1, 0
+#define hw_c16a_icf		rb1, imsk, 1, 5
+#define hw_c16a_ocfb		rb1, imsk, 1, 2
+#define hw_c16a_ocfa		rb1, imsk, 1, 1
+#define hw_c16a_ov		rb1, imsk, 1, 0
 
 
-/*	Counter1 output-compare units	class, name, id, address
+/*	Counter1 OC		class, name, id, (address) ; hw_counter, ocr, io
  */
 #define hw_oc1a			ocu, oc1a, 701,
-#define hw_oc1a_ext		hw_counter1, ocra, pin_7 /* counter, register, io */
+#define hw_oc1a_ext		hw_counter1, ocra, pin_pa6 /* pin_7 */
 
 #define hw_oc1b			ocu, oc1b, 702,
-#define hw_oc1b_ext		hw_counter1, ocrb, pin_8
+#define hw_oc1b_ext		hw_counter1, ocrb, pin_pa5 /* pin_8 */
 
 
 #define HWA_DCL_COUNTERS			\
   hwa_c8a_t	counter0 ;			\
   hwa_ocu_t	oc0a ;				\
   hwa_ocu_t	oc0b ;				\
-  hwa_c16a_t	counter1 ;			\
-  hwa_ocu_t	oc1a ;				\
-  hwa_ocu_t	oc1b ;
+  hwa_c16a_t	counter1 ;

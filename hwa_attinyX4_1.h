@@ -11,13 +11,13 @@
 
 #define HW_DEVICE_ATTINYX4
 
-#include "hwa_atmelavr_l1.h"
-#include "hwa_attinyX4_cores_l1.h"
-#include "hwa_attinyX4_ios_l1.h"
-#include "hwa_attinyX4_pcints_l1.h"
-#include "hwa_attinyX4_irqs_l1.h"
-#include "hwa_attinyX4_adcs_l1.h"
-#include "hwa_attinyX4_counters_l1.h"
+#include "hwa_atmelavr_1.h"
+#include "hwa_attinyX4_cores_1.h"
+#include "hwa_attinyX4_ios_1.h"
+#include "hwa_attinyX4_pcints_1.h"
+#include "hwa_attinyX4_irqs_1.h"
+#include "hwa_attinyX4_adcs_1.h"
+#include "hwa_attinyX4_counters_1.h"
 
 
 #if !defined __ASSEMBLER__ 

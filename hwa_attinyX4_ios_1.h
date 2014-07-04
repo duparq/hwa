@@ -13,7 +13,7 @@
  *	  portb.didr is not committed and not accessed by hw_io_config.
  */
 
-#include "hwa_atmelavr_ios_l1.h"
+#include "hwa_atmelavr_ios_1.h"
 
 
 /*	io classes & methods
@@ -44,9 +44,7 @@
 #define hw_io4_didr		reg, 8,   -1-0x36, 0x00, 0x0F /* Does not exist */
 
 
-/*	Portable io names to be used with io functions
- *
- *				class, name, id, controller, bn, bp
+/*	io pins			class, name, id, controller, bn, bp
  */
 #define hw_port_a		io, port_a,  109, hw_porta, 8, 0
 #define hw_pin_pa0		io, pin_pa0, 101, hw_porta, 1, 0
@@ -65,20 +63,24 @@
 #define hw_pin_pb3		io, pin_pb3, 204, hw_portb, 1, 3
 
 
-/*	General-purpose ios by pin numbers
+/*	io pins by numbers
  */
-#define hw_pin_2		io, pin_2,  201, hw_portb, 1, 0
-#define hw_pin_3		io, pin_3,  202, hw_portb, 1, 1
-#define hw_pin_4		io, pin_4,  204, hw_portb, 1, 3
-#define hw_pin_5		io, pin_5,  203, hw_portb, 1, 2
-#define hw_pin_6		io, pin_6,  108, hw_porta, 1, 7
-#define hw_pin_7		io, pin_7,  107, hw_porta, 1, 6
-#define hw_pin_8		io, pin_8,  106, hw_porta, 1, 5
-#define hw_pin_9		io, pin_9,  105, hw_porta, 1, 4
-#define hw_pin_10		io, pin_10, 104, hw_porta, 1, 3
-#define hw_pin_11		io, pin_11, 103, hw_porta, 1, 2
-#define hw_pin_12		io, pin_12, 102, hw_porta, 1, 1
-#define hw_pin_13		io, pin_13, 101, hw_porta, 1, 0
+#if defined HW_PACKAGE_DIL
+#
+#  define hw_pin_2		hw_pin_pb0
+#  define hw_pin_3		hw_pin_pb1
+#  define hw_pin_4		hw_pin_pb3
+#  define hw_pin_5		hw_pin_pb2
+#  define hw_pin_6		hw_pin_pa7
+#  define hw_pin_7		hw_pin_pa6
+#  define hw_pin_8		hw_pin_pa5
+#  define hw_pin_9		hw_pin_pa4
+#  define hw_pin_10		hw_pin_pa3
+#  define hw_pin_11		hw_pin_pa2
+#  define hw_pin_12		hw_pin_pa1
+#  define hw_pin_13		hw_pin_pa0
+#
+#endif
 
 
 /** \brief	Part of HWA struct for ios

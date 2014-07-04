@@ -1,5 +1,5 @@
 
-	;; -*- asm -*- Last modified: 2014-05-26 14:47:05 -*-
+	;; -*- asm -*- Last modified: 2014-07-04 14:40:46 -*-
 
 #include <hwa.h>
 
@@ -20,13 +20,13 @@
 	;; Pins used
 	;;   PIN_RXD and PIN_TXD can be the same
 	;;
-	RXDPORT   = hw_ra(hw_per(PIN_RXD), port)
-	RXDPIN    = hw_ra(hw_per(PIN_RXD), pin)
-	RXDDR     = hw_ra(hw_per(PIN_RXD), ddr)
+	RXDPORT   = hw_addr(hw_bits(hw_ctr(PIN_RXD), port))
+	RXDPIN    = hw_addr(hw_bits(hw_ctr(PIN_RXD), pin))
+	RXDDR     = hw_addr(hw_bits(hw_ctr(PIN_RXD), ddr))
 	RXDBP     = hw_bp(PIN_RXD)
 
-	TXDPORT   = hw_ra(hw_per(PIN_TXD), port)
-	TXDDR     = hw_ra(hw_per(PIN_TXD), ddr)
+	TXDPORT   = hw_addr(hw_bits(hw_ctr(PIN_TXD), port))
+	TXDDR     = hw_addr(hw_bits(hw_ctr(PIN_TXD), ddr))
 	TXDBP     = hw_bp(PIN_TXD)
 
 	X_ONEWIRE = (TXDPORT==RXDPORT && TXDBP==RXDBP)
@@ -34,9 +34,9 @@
 #if defined PIN_DBG
 	DBG = 1
 
-	DBGPORT   = hw_ra(hw_per(PIN_DBG), port)
-	DBGPIN    = hw_ra(hw_per(PIN_DBG), pin)
-	DBGDR     = hw_ra(hw_per(PIN_DBG), ddr)
+	DBGPORT   = hw_addr(hw_bits(hw_ctr(PIN_DBG), port))
+	DBGPIN    = hw_addr(hw_bits(hw_ctr(PIN_DBG), pin))
+	DBGDR     = hw_addr(hw_bits(hw_ctr(PIN_DBG), ddr))
 	DBGBIT    = HW_PINNUM(PIN_DBG)
 
 	.macro dbg x

@@ -35,9 +35,9 @@
 /*	Include device-specific declarations
  */
 #ifdef DOXYGEN
-#  include "hwa_device_l1.h"
+#  include "hwa_device_1.h"
 #else
-#  include HW_QUOTE(HW_G3(hwa, HW_DEVICE, l1).h)
+#  include HW_QUOTE(HW_G3(hwa, HW_DEVICE, 1).h)
 #endif
 
 

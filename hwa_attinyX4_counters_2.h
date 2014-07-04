@@ -5,9 +5,9 @@
  */
 
 
-#include "hwa_atmelavr_counters_l2.h"
-#include "hwa_atmelavr_c8a_l2.h"
-#include "hwa_atmelavr_c16a_l2.h"
+#include "hwa_atmelavr_counters_2.h"
+#include "hwa_atmelavr_c8a_2.h"
+#include "hwa_atmelavr_c16a_2.h"
 
 
 #define hwa_begin_ocu(cn)			\
@@ -21,8 +21,6 @@ HW_INLINE void _hwa_begin_counters ( hwa_t *hwa )
   hwa_begin_ocu( oc0a );
   hwa_begin_ocu( oc0b );
   hwa_begin_c16a( counter1 );
-  hwa_begin_ocu( oc1a );
-  hwa_begin_ocu( oc1b );
 }
 
 
@@ -32,19 +30,19 @@ HW_INLINE void _hwa_solve_counters ( hwa_t *hwa )
   hwa_solve_c8aoc1( &hwa->counter0, &hwa->oc0a );
   hwa_solve_c8aoc2( &hwa->counter0, &hwa->oc0b );
   hwa_solve_c16a( &hwa->counter1 );
-  hwa_solve_c16aoc1( &hwa->counter1, &hwa->oc1a );
-  hwa_solve_c16aoc2( &hwa->counter1, &hwa->oc1b );
 
   /*  Output-compare pins must be configured as outputs when used
    */
-  if ( hwa->oc0a.mode != 0 )
-    hwa_config( hw_io(hw_oc0a), output );
-  if ( hwa->oc0b.mode != 0 )
-    hwa_config( hw_io(hw_oc0b), output );
+  /* if ( hwa->counter0.oca_mode != 0 ) */
+  /*   hwa_config( hw_io(hw_oc0a), output ); */
+  /* if ( hwa->counter0.ocb_mode != 0 ) */
+  /*   hwa_config( hw_io(hw_oc0b), output ); */
 
-  if ( hwa->oc1a.mode != 0 )
+  if ( hwa->counter1.ocra_config != 0
+       && hwa->counter1.ocra_mode != 0 )
     hwa_config( hw_io(hw_oc1a), output );
-  if ( hwa->oc1b.mode != 0 )
+  if ( hwa->counter1.ocrb_config != 0
+       && hwa->counter1.ocrb_mode != 0 )
     hwa_config( hw_io(hw_oc1b), output );
 }
 

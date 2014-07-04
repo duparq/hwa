@@ -19,13 +19,13 @@
 
 #define hw_fn_hwa_config_c8a		, _hwa_config_c8a
 
-#define _hwa_config_c8a(t,cn,ci,ca, ...)				\
+#define _hwa_config_c8a(c,n,i,a, ...)					\
   do {									\
-    hwa->cn.config = 1 ;						\
-    hwa->cn.countmode = 0 ;						\
-    hwa->cn.top = 0 ;							\
-    hwa->cn.clock = 0 ;							\
-    HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(cn,__VA_ARGS__) \
+    hwa->n.config = 1 ;							\
+    hwa->n.countmode = 0 ;						\
+    hwa->n.top = 0 ;							\
+    hwa->n.clock = 0 ;							\
+    HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__) \
       } while(0)
 
 #define hwa_config_c8a_xclock_0(cn,...)					\
@@ -144,14 +144,14 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
     HWA_ERR("WGM value could not be solved for c8a class counter.");
 
   if (wgm != 0xFF)
-    _hwa_write_p(p, _hw_bits_cnrn(c8a,wgm), wgm);
+    _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
   else
     HWA_ERR("WGM value could not be solved for c16a class counter.");
 
 
   /*	CS
    */
-  _hwa_write_p(p, _hw_bits_cnrn(c8a, cs), p->clock);
+  _hwa_write_p(p, _hw_cbits(c8a, cs), p->clock);
 }
 
 
@@ -213,7 +213,7 @@ HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
 
   /*  Set the hardware configuration bits
    */
-  _hwa_write_p(counter, _hw_bits_cnrn(c8a, coma), mode );
+  _hwa_write_p(counter, _hw_cbits(c8a, coma), mode );
 }
 
 
@@ -265,7 +265,7 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
   if ( mode == 0xFF )
     HWA_ERR("incompatible counting mode / output-compare mode.");
 
-  _hwa_write_p(counter, _hw_bits_cnrn(c8a, comb), mode );
+  _hwa_write_p(counter, _hw_cbits(c8a, comb), mode );
 }
 
 

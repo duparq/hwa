@@ -4,8 +4,8 @@
 #SOURCES		=	blink-01.c
 #SOURCES		=	blink-02.c
 #SOURCES		=	fade.c
-SOURCES		=	servo.c
-#SOURCES		=	test.c
+#SOURCES		=	servo.c
+SOURCES		=	sonar.c
 
 #	Target device
 #
@@ -29,8 +29,8 @@ HWA		= $(HOME)/dev/hwa-dev
 #	HWA files path
 #
 INCLUDES	+= -I$(HWA)
-INCLUDES	+= -I$(PWD)/lib
-INCLUDES	+= -I$(PWD)/com
+#INCLUDES	+= -I$(PWD)/lib
+#INCLUDES	+= -I$(PWD)/com
 
 #	Toolchain path
 #

@@ -224,6 +224,10 @@ typedef struct hwa_r32_t
 
 /*	Write hard registers. Internal use, no argument checking.
  */
+#define _hwa_write_bits(c,n,i,a, r, v)	_hwa_write_bits_2(_hw_bits(c,n,i,a,r),v)
+#define _hwa_write_bits_2(...)		_hwa_write_bits_3(__VA_ARGS__)
+#define _hwa_write_bits_3(x,...)	_hwa_write_##x(x,__VA_ARGS__)
+
 #define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 

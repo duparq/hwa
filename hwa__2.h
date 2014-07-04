@@ -392,5 +392,5 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
 #ifdef DOXYGEN
 #  include "hwa_device_l2.h"
 #else
-#  include HW_QUOTE(HW_G3(hwa, HW_DEVICE, l2).h)
+#  include HW_QUOTE(HW_G3(hwa, HW_DEVICE, 2).h)
 #endif

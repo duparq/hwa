@@ -4,7 +4,7 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr_ios_l2.h"
+#include "hwa_atmelavr_ios_2.h"
 
 
 HW_INLINE void _hwa_begin_ios ( hwa_t *hwa )

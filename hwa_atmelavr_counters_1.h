@@ -12,14 +12,15 @@
  */
 #define hw_class_ocu
 
-/*		Write compare value of an ocu
+/*	Write the compare register of a counter compare unit
  */
-#define hw_fn_hw_write_ocu	, _hw_write_ocu
-#define _hw_write_ocu(t,n,i,a, value)	_hw_write_ocu_2(hw_##n##_ext, value)
-#define _hw_write_ocu_2(...)		_hw_write_ocu_3(__VA_ARGS__)
-#define _hw_write_ocu_3(t,n,i,a, rn,ion, v)	_hw_write_ocu_4(_hw_bits(t,n,i,a, rn), v)
-#define _hw_write_ocu_4(...)		_hw_write_ocu_5(__VA_ARGS__)
-#define _hw_write_ocu_5(t,...)		_hw_write_##t(t,__VA_ARGS__)
+#define hw_fn_hw_write_ocu		, _hw_write_ocu
+#define _hw_write_ocu(c,n,i,a, v)		_hw_write_ocu_2(hw_##n##_ext, v)
+#define _hw_write_ocu_2(...)			_hw_write_ocu_3(__VA_ARGS__)
+#define _hw_write_ocu_3(c,n,i,a, r,io, v)	_hw_write_bits(c,n,i,a,r,v)
+/* #define _hw_write_ocu_3(c,n,i,a, r,io, v)	_hw_write_ocu_4(_hw_bits(c,n,i,a, r), v) */
+/* #define _hw_write_ocu_4(...)			_hw_write_ocu_5(__VA_ARGS__) */
+/* #define _hw_write_ocu_5(t,...)			_hw_write_##t(t,__VA_ARGS__) */
 
 /*		Definition of the io pin associated to an ocu
  */
@@ -38,12 +39,15 @@
 
 /*	Modes for output-compare units
  */
-#define hw_ocu_mode_disconnected				, 1
-#define hw_ocu_mode_toggled_on_match				, 2
-#define hw_ocu_mode_cleared_on_match				, 3
-#define hw_ocu_mode_set_on_match				, 4
-#define hw_ocu_mode_set_at_bottom_cleared_on_match		, 5
+#define hw_ocu_mode_disconnected				, 1	/* Non-PWM */
+#define hw_ocu_mode_toggled_on_match				, 2	/* Non-PWM */
+#define hw_ocu_mode_cleared_on_match				, 3	/* Non-PWM */
+#define hw_ocu_mode_set_on_match				, 4	/* Non-PWM */
+
+#define hw_ocu_mode_set_at_bottom_cleared_on_match		, 5	/* Fast PWM */
+#define hw_ocu_mode_bottomsets_matchclears			, 5
 #define hw_ocu_mode_cleared_at_bottom_set_on_match		, 6
+
 #define hw_ocu_mode_cleared_on_match_up_set_on_match_down	, 7
 #define hw_ocu_mode_clearup_setdown				, 7
 #define hw_ocu_mode_set_on_match_up_cleared_on_match_down	, 8
