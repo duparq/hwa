@@ -40,18 +40,15 @@
 /*	Modes for output-compare units
  */
 #define hw_ocu_mode_disconnected				, 1	/* Non-PWM */
-#define hw_ocu_mode_toggled_on_match				, 2	/* Non-PWM */
-#define hw_ocu_mode_cleared_on_match				, 3	/* Non-PWM */
+#define hw_ocu_mode_toggle_on_match				, 2	/* Non-PWM */
+#define hw_ocu_mode_clear_on_match				, 3	/* Non-PWM */
 #define hw_ocu_mode_set_on_match				, 4	/* Non-PWM */
 
-#define hw_ocu_mode_set_at_bottom_cleared_on_match		, 5	/* Fast PWM */
-#define hw_ocu_mode_bottomsets_matchclears			, 5
-#define hw_ocu_mode_cleared_at_bottom_set_on_match		, 6
+#define hw_ocu_mode_set_at_bottom_clear_on_match		, 5	/* Fast PWM */
+#define hw_ocu_mode_clear_at_bottom_set_on_match		, 6
 
-#define hw_ocu_mode_cleared_on_match_up_set_on_match_down	, 7
-#define hw_ocu_mode_clearup_setdown				, 7
-#define hw_ocu_mode_set_on_match_up_cleared_on_match_down	, 8
-#define hw_ocu_mode_setup_cleardown				, 8
+#define hw_ocu_mode_clear_on_match_up_set_on_match_down		, 7
+#define hw_ocu_mode_set_on_match_up_clear_on_match_down		, 8
 
 
 #if !defined __ASSEMBLER__

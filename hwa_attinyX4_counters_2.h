@@ -38,11 +38,9 @@ HW_INLINE void _hwa_solve_counters ( hwa_t *hwa )
   /* if ( hwa->counter0.ocb_mode != 0 ) */
   /*   hwa_config( hw_io(hw_oc0b), output ); */
 
-  if ( hwa->counter1.ocra_config != 0
-       && hwa->counter1.ocra_mode != 0 )
+  if ( hwa->counter1.ocra_mode != 0 )
     hwa_config( hw_io(hw_oc1a), output );
-  if ( hwa->counter1.ocrb_config != 0
-       && hwa->counter1.ocrb_mode != 0 )
+  if ( hwa->counter1.ocrb_mode != 0 )
     hwa_config( hw_io(hw_oc1b), output );
 }
 

@@ -71,10 +71,10 @@ typedef struct {
 
   /*  Registers for high-level configuration
    */
-  uint8_t	config, countmode, top, clock, update_compares, overflow_irq ;
-  uint8_t	ocra_config, ocra_mode ;
-  uint8_t	ocrb_config, ocrb_mode ;
-  uint8_t	icr_config, icr_mode ;
+  uint8_t	countmode, top, clock, update, overflow ;
+  uint8_t	ocra_mode ;
+  uint8_t	ocrb_mode ;
+  uint8_t	icr_mode ;
   //  hwa_ocu_t	ocua, ocub ;
   //  hwa_icu_t	icu ;
 

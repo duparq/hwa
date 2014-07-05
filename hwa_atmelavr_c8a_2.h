@@ -176,9 +176,9 @@ HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     /*
      * Non PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggled_on_match) )
+    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match) )
       mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_cleared_on_match) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match) )
       mode = 2 ;
     else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match) )
       mode = 3 ;
@@ -187,24 +187,24 @@ HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     /*
      * Fast PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggled_on_match)
+    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match)
 	 && counter->countmode == 7 )
       mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_cleared_on_match) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match) )
       mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_cleared_at_bottom_set_on_match) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
       mode = 3 ;
   }
   else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) ) {
     /*
      * Phase-correct PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggled_on_match)
+    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match)
 	 && counter->countmode == 5 )
       mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_cleared_on_match_up_set_on_match_down) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
       mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_cleared_on_match_down) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
       mode = 3 ;
   }
 
@@ -236,9 +236,9 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     /*
      * Non PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggled_on_match) )
+    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match) )
       mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_cleared_on_match) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match) )
       mode = 2 ;
     else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match) )
       mode = 3 ;
@@ -247,18 +247,18 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     /*
      * Fast PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_cleared_on_match) )
+    if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match) )
       mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_cleared_at_bottom_set_on_match) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
       mode = 3 ;
   }
   else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) ) {
     /*
      * Phase-correct PWM modes
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_cleared_on_match_up_set_on_match_down) )
+    if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
       mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_cleared_on_match_down) )
+    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
       mode = 3 ;
   }
 

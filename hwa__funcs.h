@@ -183,7 +183,7 @@ typedef struct hwa_r32_t
 
 /*	Write hard registers. Internal use, no argument checking.
  */
-#define _hw_write_mem(ctr,...)		_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+//#define _hw_write_mem(ctr,...)		_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 
 /*	Generic instruction 'hwa_write'
@@ -224,11 +224,15 @@ typedef struct hwa_r32_t
 
 /*	Write hard registers. Internal use, no argument checking.
  */
+#define _hw_write_bits(c,n,i,a, r, v)	_hw_write_bits_2(_hw_bits(c,n,i,a,r),v)
+#define _hw_write_bits_2(...)		_hw_write_bits_3(__VA_ARGS__)
+#define _hw_write_bits_3(x,...)		_hw_write_##x(x,__VA_ARGS__)
+
 #define _hwa_write_bits(c,n,i,a, r, v)	_hwa_write_bits_2(_hw_bits(c,n,i,a,r),v)
 #define _hwa_write_bits_2(...)		_hwa_write_bits_3(__VA_ARGS__)
 #define _hwa_write_bits_3(x,...)	_hwa_write_##x(x,__VA_ARGS__)
 
-#define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+//#define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 
 /*	Write registers in hwa_t struct. Internal use only, no argument checking!
