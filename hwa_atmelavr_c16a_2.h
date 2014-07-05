@@ -32,6 +32,20 @@
   hwa->n.ocrb_mode = 0;
 
 
+HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
+{
+  _hwa_reset_r8(  &timer->ccra );
+  _hwa_reset_r8(  &timer->ccrb );
+  _hwa_reset_r8(  &timer->ccrc );
+  _hwa_reset_r16( &timer->count );
+  _hwa_reset_r16( &timer->icr );
+  _hwa_reset_r16( &timer->ocra );
+  _hwa_reset_r16( &timer->ocrb );
+  _hwa_reset_r8(  &timer->imsk );
+  _hwa_reset_r8(  &timer->ifr );
+}
+
+
 /*	Configure counter unit
  */
 #define hw_fn_hwa_config_c16a		, _hwa_config_c16a
@@ -370,10 +384,9 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
     }
     //    else if ( p->top == HW_A1(hw_c16a_top_register_compare_a)
     else if ( p->ocra_mode ) {
-      HWA_ERR("use of compare_a as both top value for class c16a counter and "
-	      "compare output.");
+      HWA_ERR("use of `compare_a` as both top value for class c16a counter "
+	      "and compare output.");
     }
-
 
     /*	Compare output B
      */
@@ -440,21 +453,6 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 }
 
 
-HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
-{
-  _hwa_reset_r8(  &timer->ccra );
-  _hwa_reset_r8(  &timer->ccrb );
-  _hwa_reset_r8(  &timer->ccrc );
-  _hwa_reset_r16( &timer->count );
-  _hwa_reset_r16( &timer->icr );
-  //  _hwa_reset_r16( &timer->capture );
-  _hwa_reset_r16( &timer->ocra );
-  _hwa_reset_r16( &timer->ocrb );
-  _hwa_reset_r8(  &timer->imsk );
-  _hwa_reset_r8(  &timer->ifr );
-}
-
-
 HW_INLINE void _hwa_commit_c16a ( hwa_t *hwa, hwa_c16a_t *timer )
 {
   _hwa_commit_r8(  hwa->commit, &timer->ccra,  -1 );
@@ -462,7 +460,6 @@ HW_INLINE void _hwa_commit_c16a ( hwa_t *hwa, hwa_c16a_t *timer )
   _hwa_commit_r8(  hwa->commit, &timer->ccrc,  -1 );
   _hwa_commit_r16( hwa->commit, &timer->count, -1 );
   _hwa_commit_r16( hwa->commit, &timer->icr,   -1 );
-  //  _hwa_commit_r16( hwa->commit, &timer->capture,   -1 );
   _hwa_commit_r16( hwa->commit, &timer->ocra,  -1 );
   _hwa_commit_r16( hwa->commit, &timer->ocrb,  -1 );
   _hwa_commit_r8(  hwa->commit, &timer->imsk,  -1 );

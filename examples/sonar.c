@@ -47,6 +47,7 @@ int main ( )
   hwa_write(hw_bits(hw_ctr(SONAR_TRIG), compare_a), SONAR_TRIG_PERIOD * hw_syshz/64) ;
 
   hwa_config(SONAR_TRIG, set_at_bottom_clear_on_match );
+  //  hwa_config(hw_oc1a, set_at_bottom_clear_on_match );
   hwa_write(SONAR_TRIG, SONAR_TRIG_LEN * hw_syshz/64);
   //  hwa_turn( hw_irq(hw_ctr(SONAR), overflow), on );
 
