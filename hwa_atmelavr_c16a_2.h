@@ -31,9 +31,6 @@
   hwa->n.ocra_mode = 0;				\
   hwa->n.ocrb_mode = 0;
 
-/* hwa->n.oca_mode = 0;				\ */
-/* hwa->n.ocb_mode = 0; */
-
 
 /*	Configure counter unit
  */
@@ -95,35 +92,32 @@
 
 #define hwa_config_c16a_vtop_1(cn,ztop,...)				\
     hwa->cn.top = HW_A1(hw_c16a_top_##ztop);				\
-    HW_G2(hwa_config_c16a_xuc,HW_IS(update_compares,__VA_ARGS__))(cn,__VA_ARGS__)
+    HW_G2(hwa_config_c16a_xuc,HW_IS(update,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_xuc_1(cn,uc,...)				\
-    HW_G2(hwa_config_c16a_vuc, HW_IS(,hw_counter_update_compares_##__VA_ARGS__))(cn,__VA_ARGS__)
+    HW_G2(hwa_config_c16a_vuc, HW_IS(,hw_counter_update_##__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_vuc_0(cn,vuc,...)				\
-  HW_ERR("update_compares must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
+  HW_ERR("`update` must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
 
 #define hwa_config_c16a_vuc_1(cn,vuc,...)				\
-  hwa->cn.update_compares = HW_A1(hw_counter_update_compares_##vuc);	\
+  hwa->cn.update = HW_A1(hw_counter_update_##vuc);	\
   hwa_config_c16a_xuc_0(cn,__VA_ARGS__);
 
 #define hwa_config_c16a_xuc_0(cn,...)					\
-  HW_G2(hwa_config_c16a_xoverflow,HW_IS(overflow_irq,__VA_ARGS__))(cn,__VA_ARGS__)
+  HW_G2(hwa_config_c16a_xoverflow,HW_IS(overflow,__VA_ARGS__))(cn,__VA_ARGS__)
 
 #define hwa_config_c16a_xoverflow_1(cn,overflow_irq,...)	\
   HW_G2(hwa_config_c16a_voverflow,				\
-	HW_IS(,hw_counter_overflow_irq_##__VA_ARGS__))		\
+	HW_IS(,hw_counter_overflow_##__VA_ARGS__))		\
   (cn,__VA_ARGS__)
 
 #define hwa_config_c16a_voverflow_0(cn,overflow,...)			\
   HW_ERR("overflow_irq must be `at_bottom`, `at_top, or `at_max`, but `not `" #overflow "`.")
 
 #define hwa_config_c16a_voverflow_1(cn,voverflow,...)			\
-  hwa->cn.overflow_irq = HW_A1(hw_counter_overflow_irq_##voverflow);	\
+  hwa->cn.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
   hwa_config_c16a_xoverflow_0(cn,__VA_ARGS__)
-
-/* #define hwa_config_c16a_xoverflow_0(cn,...)			\ */
-/*   HW_G2(hwa_config_c16a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__) */
 
 #define hwa_config_c16a_xoverflow_0(cn,...)			\
   HW_G2(hwa_config_c16a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__)
@@ -329,12 +323,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 
     /*	Compare output A
      */
-    if ( p->top == HW_A1(hw_c16a_top_register_compare_a)
-	 && p->ocra_mode ) {
-      HWA_ERR("use of compare_a as both top value for class c16a counter and "
-	      "compare output.");
-    }
-    else if ( wgm==0 || wgm==4 || wgm==12 ) {
+    if ( wgm==0 || wgm==4 || wgm==12 ) {
       if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
 	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match)
 	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match)
@@ -379,6 +368,11 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 		"'clear_on_match_up_set_on_match_down', "
 		"or 'set_on_match_up_clear_on_match_down'.");
     }
+    //    else if ( p->top == HW_A1(hw_c16a_top_register_compare_a)
+    else if ( p->ocra_mode ) {
+      HWA_ERR("use of compare_a as both top value for class c16a counter and "
+	      "compare output.");
+    }
 
 
     /*	Compare output B
@@ -400,7 +394,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 		"'disconnected', 'set_at_bottom_clear_on_match', or "
 		"'clear_at_bottom_set_on_match'.");
     }
-    else if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) {
+    else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
       if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
 	   && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
 	   && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )

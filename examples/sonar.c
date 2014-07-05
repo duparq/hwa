@@ -39,7 +39,10 @@ int main ( )
 	      clock,		syshz_div_64,
 	      countmode,	loop_up,
 	      bottom,		0,
-	      top,		register_compare_a	);
+	      top,		register_compare_a,
+	      update,		at_top,
+	      overflow,		at_top,
+	      );
 
   hwa_write(hw_bits(hw_ctr(SONAR_TRIG), compare_a), SONAR_TRIG_PERIOD * hw_syshz/64) ;
 
