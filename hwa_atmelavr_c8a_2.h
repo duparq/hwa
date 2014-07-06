@@ -4,15 +4,33 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#define hwa_begin_c8a(cn)			\
-  HWA_INIT(hw_##cn, ccra);			\
-  HWA_INIT(hw_##cn, ccrb);			\
-  HWA_INIT(hw_##cn, count);			\
-  HWA_INIT(hw_##cn, ocra);			\
-  HWA_INIT(hw_##cn, ocrb);			\
-  HWA_INIT(hw_##cn, imsk);			\
-  HWA_INIT(hw_##cn, ifr);			\
-  hwa->cn.config = 0 ;
+#define hwa_begin_c8a(n)			\
+  HWA_INIT(hw_##n, ccra);			\
+  HWA_INIT(hw_##n, ccrb);			\
+  HWA_INIT(hw_##n, count);			\
+  HWA_INIT(hw_##n, ocra);			\
+  HWA_INIT(hw_##n, ocrb);			\
+  HWA_INIT(hw_##n, imsk);			\
+  HWA_INIT(hw_##n, ifr);			\
+  hwa->n.countmode = 0 ;			\
+  hwa->n.top = 0 ;				\
+  hwa->n.clock = 0 ;				\
+  hwa->n.overflow = 0;				\
+  hwa->n.update = 0;				\
+  hwa->n.ocra_mode = 0;				\
+  hwa->n.ocrb_mode = 0;
+
+
+HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
+{
+  _hwa_reset_r8( &timer->ccra );
+  _hwa_reset_r8( &timer->ccrb );
+  _hwa_reset_r8( &timer->count );
+  _hwa_reset_r8( &timer->ocra );
+  _hwa_reset_r8( &timer->ocrb );
+  _hwa_reset_r8( &timer->imsk );
+  _hwa_reset_r8( &timer->ifr );
+}
 
 
 #define hwa_is_clock_clock		,1
@@ -20,79 +38,69 @@
 #define hw_fn_hwa_config_c8a		, _hwa_config_c8a
 
 #define _hwa_config_c8a(c,n,i,a, ...)					\
-  do {									\
-    hwa->n.config = 1 ;							\
-    hwa->n.countmode = 0 ;						\
-    hwa->n.top = 0 ;							\
-    hwa->n.clock = 0 ;							\
-    HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__) \
-      } while(0)
+  do { HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__) } while(0)
 
-#define hwa_config_c8a_xclock_0(cn,...)					\
+#define hwa_config_c8a_xclock_0(n,...)					\
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_xclock_1(cn,_clock_,...)				\
-  HW_G2(hwa_config_c8a_clock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_xclock_1(n,_clock_,...)				\
+  HW_G2(hwa_config_c8a_clock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_clock_0(cn,...)					\
+#define hwa_config_c8a_clock_0(n,...)					\
   HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
-	      "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "	\
-	      "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
+	  "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "		\
+	  "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_clock_1(cn,zclock,...)				\
-  hwa->cn.clock = HW_A1(hw_c8a_clock_##zclock) ;			\
-  HW_G2(hwa_config_c8a_xcountmode,HW_IS(countmode,__VA_ARGS__))(cn,__VA_ARGS__) ; \
+#define hwa_config_c8a_clock_1(n,zclock,...)				\
+  hwa->n.clock = HW_A1(hw_c8a_clock_##zclock) ;				\
+  HW_G2(hwa_config_c8a_xcountmode,HW_IS(countmode,__VA_ARGS__))(n,__VA_ARGS__) ; \
 
-#define hwa_config_c8a_xcountmode_0(cn,...)				\
+#define hwa_config_c8a_xcountmode_0(n,...)				\
   HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_xcountmode_1(cn,_countmode_,...)			\
-  HW_G2(hwa_config_c8a_countmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_xcountmode_1(n,_countmode_,...)			\
+  HW_G2(hwa_config_c8a_countmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_countmode_0(cn,...)				\
+#define hwa_config_c8a_countmode_0(n,...)				\
   HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
 
-#define hwa_config_c8a_countmode_1(cn,mode,...)				\
-  hwa->cn.countmode = HW_A1(hw_c8a_countmode_##mode) ;			\
-  HW_G2(hwa_config_c8a_xbottom,HW_IS(bottom,__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_countmode_1(n,mode,...)				\
+  hwa->n.countmode = HW_A1(hw_c8a_countmode_##mode) ;			\
+  HW_G2(hwa_config_c8a_xbottom,HW_IS(bottom,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_xbottom_0(cn,...)			\
+#define hwa_config_c8a_xbottom_0(n,...)				\
   HW_G2(hwa_config_c8a_xbottom_xtop,HW_IS(top,__VA_ARGS__))	\
-  (cn,__VA_ARGS__,HW_A1(hw_c8a_countmode_##mode))
+  (n,__VA_ARGS__,HW_A1(hw_c8a_countmode_##mode))
 
-#define hwa_config_c8a_xbottom_xtop_0(cn,...)				\
+#define hwa_config_c8a_xbottom_xtop_0(n,...)				\
   HW_ERR("expected `bottom` or `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xbottom_xtop_1	hwa_config_c8a_xtop_1
 
-#define hwa_config_c8a_xbottom_1(cn,_bottom_,...)			\
-  HW_G2(hwa_config_c8a_bottom,HW_IS(0,__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_xbottom_1(n,_bottom_,...)			\
+  HW_G2(hwa_config_c8a_bottom,HW_IS(0,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_bottom_0(cn,bottom,...)			\
+#define hwa_config_c8a_bottom_0(n,bottom,...)			\
   HW_ERR("bottom must be `0`, not `" HW_QUOTE(bottom) "`.")
 
-#define hwa_config_c8a_bottom_1(cn,bottom,...)				\
-  HW_G2(hwa_config_c8a_xtop,HW_IS(top,__VA_ARGS__))(cn,__VA_ARGS__ /*,bottom*/)
+#define hwa_config_c8a_bottom_1(n,bottom,...)				\
+  HW_G2(hwa_config_c8a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__ /*,bottom*/)
 
-#define hwa_config_c8a_xtop_0(cn,...)					\
+#define hwa_config_c8a_xtop_0(n,...)					\
   HW_ERR("expected `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_xtop_1(cn,_top_,...)				\
-  HW_G2(hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_xtop_1(n,_top_,...)				\
+  HW_G2(hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_vtop_0(cn,...)					\
-    HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\
-	       "but not `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_vtop_0(n,...)				\
+  HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\
+	 "but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_vtop_1(cn,ztop,...)				\
-    hwa->cn.top = HW_A1(hw_c8a_top_##ztop);				\
-    HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__)
+#define hwa_config_c8a_vtop_1(n,ztop,...)			\
+    hwa->n.top = HW_A1(hw_c8a_top_##ztop);			\
+    HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(n,__VA_ARGS__)
 
-/* #define hwa_config_c8a_xocra_1(cn,_ocra_,...)			\ */
-/*   hwa->cn.top = HW_A1(hw_c8a_top_ocra) ;			\ */
-/*   HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(cn,__VA_ARGS__) */
-
-#define hwa_config_c8a_0(cn,...)					\
+#define hwa_config_c8a_0(n,...)					\
   HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_1(...)
@@ -108,17 +116,17 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
   /*	WGM
    *
-   * Mode WGM   Operation                     COUNTMODE    TOP    OVF    OCR UPDATED
+   * Mode WGM   Operation                     COUNTMODE    TOP   UPD  OVF 
+   *							            
+   *  0   000   Normal                        LOOP_UP      0xFF  IMM  BOT
+   *  2   010   CTC (Clear Timer on Match)    LOOP_UP      OCRA  IMM  BOT
    *
-   *  0   000   Normal                        LOOP_UP      0xFF   0xFF   Immediately
-   *  2   010   CTC (Clear Timer on Match)    LOOP_UP      OCRA   0xFF   Immediately
-   *           
-   *  3   011   Fast PWM                      LOOP_UP      0xFF   0xFF   at BOTTOM
-   *  7   111   Fast PWM                      LOOP_UP      OCRA   0xFF   at BOTTOM
-   *           
-   *  1   001   PWM, Phase Correct            LOOP_UPDOWN  0xFF   0x00   at TOP
-   *  5   101   PWM, Phase Correct            LOOP_UPDOWN  OCRA   0x00   at TOP
-   *           
+   *  3   011   Fast PWM                      LOOP_UP      0xFF  BOT  TOP
+   *  7   111   Fast PWM                      LOOP_UP      OCRA  BOT  TOP
+   *
+   *  1   001   PWM, Phase Correct            LOOP_UPDOWN  0xFF  TOP  BOT
+   *  5   101   PWM, Phase Correct            LOOP_UPDOWN  OCRA  TOP  BOT
+   *
    *  4   100   *Reserved*
    *  6   110   *Reserved*
    */
@@ -266,18 +274,6 @@ HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
     HWA_ERR("incompatible counting mode / output-compare mode.");
 
   _hwa_write_p(counter, _hw_cbits(c8a, comb), mode );
-}
-
-
-HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
-{
-  _hwa_reset_r8( &timer->ccra );
-  _hwa_reset_r8( &timer->ccrb );
-  _hwa_reset_r8( &timer->count );
-  _hwa_reset_r8( &timer->ocra );
-  _hwa_reset_r8( &timer->ocrb );
-  _hwa_reset_r8( &timer->imsk );
-  _hwa_reset_r8( &timer->ifr );
 }
 
 

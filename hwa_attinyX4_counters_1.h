@@ -110,6 +110,4 @@
 
 #define HWA_DCL_COUNTERS			\
   hwa_c8a_t	counter0 ;			\
-  hwa_ocu_t	oc0a ;				\
-  hwa_ocu_t	oc0b ;				\
   hwa_c16a_t	counter1 ;

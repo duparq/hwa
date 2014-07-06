@@ -87,13 +87,20 @@
 
 /*	hw_bits(...): memory definition of an instance's bits (generic)
  */
+/* #define hw_bits(...)		_hw_bits_2(__VA_ARGS__) */
+/* #define _hw_bits_2(...)		HW_G2(_hw_bits_xfn,			\ */
+/* 				      HW_IS(,hw_fn_hw_bits_##__VA_ARGS__))(__VA_ARGS__) */
+/* #define _hw_bits_xfn_1(t,...)	HW_A1(hw_fn_hw_bits_##t)(t,__VA_ARGS__) */
+/* #define _hw_bits_xfn_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__) */
+/* #define _hw_bits_0(...)		HW_ERR("can not process hw_bits(" #__VA_ARGS__ ").") */
+/* #define _hw_bits_1(...)		__VA_ARGS__ */
+
 #define hw_bits(...)		_hw_bits_2(__VA_ARGS__)
-#define _hw_bits_2(...)		HW_G2(_hw_bits_xfn,			\
-				      HW_IS(,hw_fn_hw_bits_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bits_xfn_1(t,...)	HW_A1(hw_fn_hw_bits_##t)(t,__VA_ARGS__)
-#define _hw_bits_xfn_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bits_0(...)		HW_ERR("can not process hw_bits(" #__VA_ARGS__ ").")
+#define _hw_bits_2(...)		HW_G2(_hw_bits_xdcl, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bits_xdcl_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bits_0(...)		HW_ERR("`" #__VA_ARGS__ "` is not declared.")
 #define _hw_bits_1(...)		__VA_ARGS__
+#define _hw_bits_xdcl_1		_hw_bits_3
 
 #define hw_hasbits_reg
 #define hw_hasbits_rb1

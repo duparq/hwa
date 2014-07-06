@@ -95,14 +95,6 @@ typedef struct hwa_r32_t
 
 /*	Generic instruction 'hwa_config': configure one controller
  */
-/* #define hwa_config(...)		HW_G2(_hwa_config_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hwa_config_xctr_0(...)	HW_ERR("first argument is not a controller.") */
-/* #define _hwa_config_xctr_1(ctr,cc,...)	\ */
-/*   HW_G2(_hwa_config_xfn, HW_IS(,hwa_config_##cc##_isfn))(cc,__VA_ARGS__) */
-/* #define _hwa_config_xfn_1(cc,...)	hwa_config_##cc(__VA_ARGS__) */
-/* #define _hwa_config_xfn_0(cc,cn,ca,...)					\ */
-/*   HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hwa_config()`.") */
-
 #define hwa_config(...)		_hwa_config_2(__VA_ARGS__)
 #define _hwa_config_2(...)	HW_G2(_hwa_config_xfn,			\
 				      HW_IS(,hw_fn_hwa_config_##__VA_ARGS__))(__VA_ARGS__)
@@ -138,28 +130,6 @@ typedef struct hwa_r32_t
 
 /*	Generic instruction 'hw_write'
  */
-/* #define hw_write(...)		HW_G2(_hw_write_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_write_xctr_0(...)	HW_ERR("first argument is not a controller.") */
-/* #define _hw_write_xctr_1(ctr,cc,...)	\ */
-/*   HW_G2(_hw_write_xfn, HW_IS(,hw_write_##cc##_isfn))(cc,__VA_ARGS__) */
-/* #define _hw_write_xfn_1(cc,...)	hw_write_##cc(__VA_ARGS__) */
-/* #define _hw_write_xfn_0(cc,cn,ca,...)					\ */
-/*   HW_G2(_hw_write_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__) */
-/* #define _hw_write_xmem_0(cc,cn,ca,...)					\ */
-/*   HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_write` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.") */
-/* #define _hw_write_xmem_1(...)	_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,)) */
-/* #define _hw_write_xmem_2(...)	_hw_write_xmem_3(__VA_ARGS__) */
-/* #define _hw_write_xmem_3(x,...)	_hw_write_mem_##x(__VA_ARGS__) */
-/* #define _hw_write_mem_0	HW_ERR */
-/* #define _hw_write_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\ */
-/*   _hw_write_r##rw(ca+ra,rwm,rbn,rbp,v) */
-/* #define _hw_write_mem_2(cn,ca,						\ */
-/* 			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\ */
-/* 			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\ */
-/*   do { _hw_write_r##rw1(ca+ra1,riv1,rwm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \ */
-/*       _hw_write_r##rw2(ca+ra2,riv2,rwm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0) */
-
-
 #define hw_write(...)		_hw_write_2(__VA_ARGS__)
 #define _hw_write_2(...)	HW_G2(_hw_write_xfn, \
 				      HW_IS(,hw_fn_hw_write_##__VA_ARGS__))(__VA_ARGS__)
@@ -176,14 +146,8 @@ typedef struct hwa_r32_t
 #define _hw_write_bits2(bits2, cn,ca,					\
 		       rn1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\
 		       rn2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2, v)		\
-  do { _hw_write_r##rw1(ca+ra1,riv1,rwm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
-      _hw_write_r##rw2(ca+ra2,riv2,rwm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
-
-
-
-/*	Write hard registers. Internal use, no argument checking.
- */
-//#define _hw_write_mem(ctr,...)		_hw_write_xmem_2(HW_XMEM(__VA_ARGS__,))
+  do { _hw_write_r##rw1(ca+ra1,rwm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
+      _hw_write_r##rw2(ca+ra2,rwm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
 
 
 /*	Generic instruction 'hwa_write'
@@ -198,20 +162,6 @@ typedef struct hwa_r32_t
 #define hw_fn_hwa_write_bits1		, _hwa_write_bits1
 #define hw_fn_hwa_write_bits2		, _hwa_write_bits2
 
-/* #define hwa_write(...)		HW_G2(_hwa_write_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hwa_write_xctr_0(...)	HW_ERR("first argument is not a controller.") */
-/* #define _hwa_write_xctr_1(ctr,cc,...)	\ */
-/*   HW_G2(_hwa_write_xfn, HW_IS(,hwa_write_##cc##_isfn))(cc,__VA_ARGS__) */
-/* #define _hwa_write_xfn_1(cc,...)	hwa_write_##cc(__VA_ARGS__) */
-/* #define _hwa_write_xfn_0(cc,cn,ca,...)					\ */
-/*   HW_G2(_hwa_write_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__) */
-/* #define _hwa_write_xmem_0(cc,cn,ca,...)					\ */
-/*   HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hwa_write` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.") */
-/* #define _hwa_write_xmem_1(...)	_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,)) */
-/* #define _hwa_write_xmem_2(...)	_hwa_write_xmem_3(__VA_ARGS__) */
-/* #define _hwa_write_xmem_3(x,...)	_hwa_write_mem_##x(__VA_ARGS__) */
-/* #define _hwa_write_mem_0	HW_ERR */
-
 #define _hwa_write_bits1(bits1, cn,ca, rn,rw,ra,rrv,rwm, rbn,rbp, v)	\
   _hwa_write_r##rw( &hwa->cn.rn, rbn, rbp, v )
 
@@ -220,6 +170,17 @@ typedef struct hwa_r32_t
 			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2, v)		\
   do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
+
+
+/*	hw/hwa_write_bits(...)
+ */
+#define hw_write_bits(n,r,v)	_hw_wrbts_2(hw_bits(n,r),v)
+#define _hw_wrbts_2(...)	_hw_wrbts_3(__VA_ARGS__)
+#define _hw_wrbts_3(t,...)	_hw_write_##t(t,__VA_ARGS__)
+
+#define hwa_write_bits(n,r,v)	_hwa_wrbts_2(hw_bits(n,r),v)
+#define _hwa_wrbts_2(...)	_hwa_wrbts_3(__VA_ARGS__)
+#define _hwa_wrbts_3(t,...)	_hwa_write_##t(t,__VA_ARGS__)
 
 
 /*	Write hard registers. Internal use, no argument checking.
@@ -231,8 +192,6 @@ typedef struct hwa_r32_t
 #define _hwa_write_bits(c,n,i,a, r, v)	_hwa_write_bits_2(_hw_bits(c,n,i,a,r),v)
 #define _hwa_write_bits_2(...)		_hwa_write_bits_3(__VA_ARGS__)
 #define _hwa_write_bits_3(x,...)	_hwa_write_##x(x,__VA_ARGS__)
-
-//#define _hwa_write_mem(ctr,...)		_hwa_write_xmem_2(HW_XMEM(__VA_ARGS__,))
 
 
 /*	Write registers in hwa_t struct. Internal use only, no argument checking!
@@ -260,27 +219,6 @@ typedef struct hwa_r32_t
 
 /*	Generic instruction 'hw_toggle'
  */
-/* #define hw_toggle(...)		HW_G2(_hw_toggle_xctr, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_toggle_xctr_0(...)	HW_ERR("first argument is not a controller.") */
-/* #define _hw_toggle_xctr_1(ctr,cc,...)	\ */
-/*   HW_G2(_hw_toggle_xfn, HW_IS(,hw_toggle_##cc##_isfn))(cc,__VA_ARGS__) */
-/* #define _hw_toggle_xfn_1(cc,...)	hw_toggle_##cc(__VA_ARGS__) */
-/* #define _hw_toggle_xfn_0(cc,cn,ca,...)					\ */
-/*   HW_G2(_hw_toggle_xmem, HW_IS(mem,hw_##cc##_##__VA_ARGS__))(cc,cn,ca,__VA_ARGS__) */
-/* #define _hw_toggle_xmem_0(cc,cn,ca,...)					\ */
-/*   HW_ERR("controller `hw_" #cn "` of class `" #cc "` has no method `hw_toggle` and no register `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.") */
-/* #define _hw_toggle_xmem_1(...)	_hw_toggle_xmem_2(HW_XMEM(__VA_ARGS__,)) */
-/* #define _hw_toggle_xmem_2(...)	_hw_toggle_xmem_3(__VA_ARGS__) */
-/* #define _hw_toggle_xmem_3(x,...)	_hw_toggle_mem_##x(__VA_ARGS__) */
-/* #define _hw_toggle_mem_0	HW_ERR */
-/* #define _hw_toggle_mem_1(cn,ca,rn,rw,ra,rrv,rwm,rbn,rbp,v,_)	\ */
-/*   _hw_toggle_r##rw(ca+ra,rbn,rbp) */
-/* #define _hw_toggle_mem_2(cn,ca,						\ */
-/* 			r1,rw1,ra1,riv1,rwm1,rbn1,rbp1,vbp1,		\ */
-/* 			r2,rw2,ra2,riv2,rwm2,rbn2,rbp2,vbp2,v,_)	\ */
-/*   ((_hw_toggle_r##rw1(ca+ra1,rbn1,rbp1)&((1<<rbn1)-1)<<vbp1) |	\ */
-/*    (_hw_toggle_r##rw2(ca+ar2,rbn2,rbp2)&((1<<rbn2)-1)<<vbp2)) */
-
 #define hw_toggle(...)		_hw_toggle_2(__VA_ARGS__)
 #define _hw_toggle_2(...)	HW_G2(_hw_toggle_xfn, HW_IS(,hw_fn_hw_toggle_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_toggle_xfn_1(t,...)	HW_A1(hw_fn_hw_toggle_##t)(t,__VA_ARGS__)
@@ -292,13 +230,6 @@ typedef struct hwa_r32_t
 
 /*	Generic instruction 'hwa_turn': turn something on/off
  */
-/* #define hwa_turn(...)		_hwa_turn_2(__VA_ARGS__) */
-/* #define _hwa_turn_2(x,...)	HW_G2(_hwa_turn_xtype, HW_IS(,hw_type_##x))(x,__VA_ARGS__) */
-/* #define _hwa_turn_xtype_0(...)	HW_ERR("type of `" #__VA_ARGS__ "`is unknown.") */
-/* #define _hwa_turn_xtype_1(x,...) HW_G2(_hwa_turn_xfn, HW_IS(,hwa_turn_##x##_isfn))(x,__VA_ARGS__) */
-/* #define _hwa_turn_xfn_0(...)	HW_ERR("hwa_turn can not be applied to object `hw_" HW_QUOTE(hw_name(__VA_ARGS__)) "` of type `" HW_QUOTE(HW_A0(__VA_ARGS__)) "`.") */
-/* #define _hwa_turn_xfn_1(t,...)	hwa_turn_##t(__VA_ARGS__) */
-
 #define hw_turn(...)		_hw_turn_2(__VA_ARGS__)
 #define _hw_turn_2(...)		HW_G2(_hw_turn_xfn, \
 				      HW_IS(,hw_fn_hw_turn_##__VA_ARGS__))(__VA_ARGS__)

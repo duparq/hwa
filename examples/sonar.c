@@ -4,7 +4,7 @@
 
 #include <hwa.h>
 
-
+#define SONAR_COUNTER		hw_counter1
 #define	SONAR_TRIG		hw_oc1b		/* output compare OC1B */
 #define SONAR_TRIG_PERIOD	0.1		/* 100 ms */
 #define SONAR_TRIG_LEN		0.000020	/* 20 µs */
@@ -35,19 +35,17 @@
 int main ( )
 {
   hwa_begin_from_reset();
-  hwa_config( hw_ctr(SONAR_TRIG),
+  hwa_config( SONAR_COUNTER,			/* hw_ctr(SONAR_TRIG) */
 	      clock,		syshz_div_64,
 	      countmode,	loop_up,
 	      bottom,		0,
 	      top,		register_compare_a,
-	      update,		at_top,
-	      overflow,		at_top,
+	      /* update,		at_top, */
+	      /* overflow,		at_top, */
 	      );
 
-  hwa_write(hw_bits(hw_ctr(SONAR_TRIG), compare_a), SONAR_TRIG_PERIOD * hw_syshz/64) ;
-
+  hwa_write_bits( SONAR_COUNTER, compare_a, SONAR_TRIG_PERIOD * hw_syshz/64) ;
   hwa_config(SONAR_TRIG, set_at_bottom_clear_on_match );
-  //  hwa_config(hw_oc1a, set_at_bottom_clear_on_match );
   hwa_write(SONAR_TRIG, SONAR_TRIG_LEN * hw_syshz/64);
   //  hwa_turn( hw_irq(hw_ctr(SONAR), overflow), on );
 
