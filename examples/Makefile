@@ -3,9 +3,9 @@
 #
 #SOURCES		=	blink-01.c
 #SOURCES		=	blink-02.c
-#SOURCES		=	fade.c
+SOURCES		=	fade.c
 #SOURCES		=	servo.c
-SOURCES		=	sonar.c
+#SOURCES		=	sonar.c
 
 #	Target device
 #

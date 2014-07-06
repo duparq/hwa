@@ -4,10 +4,10 @@
 
 #include <hwa.h>
 
-#define	LED		hw_oc0a
+#define	LED		hw_oc0b
 
 
-HW_ISR( hw_ctr(LED), overflow )
+HW_ISR( hw_irq(hw_ctr(LED), overflow) )
 {
   static uint8_t	duty ;
   static uint8_t	phase ;
@@ -27,15 +27,14 @@ HW_ISR( hw_ctr(LED), overflow )
 HW_INLINE void config_counter( hwa_t *hwa )
 {
   hwa_config( hw_ctr(LED),
-	      countmode,	loop_updown_pwm,
+	      clock,		syshz_div_64,
+	      countmode,	loop_updown,
 	      bottom,		0,
-	      //	      top,		register_icr,
-	      top,		fixed_0xFF,
-	      clock,		syshz_div_64 );
+	      top,		fixed_0xFF	);
 
   //  hwa_write( hw_ctr(LED), icr, 0xFF );
 
-  hwa_turn_irq( hw_ctr(LED), overflow, on );
+  hwa_turn( hw_irq(hw_ctr(LED), overflow), on );
   //  hwa_turn_irq( hw_counter(LED), capture, on );
   //  hwa_turn_irq( hw_counter(LED), match_a, on );
 }
@@ -43,7 +42,7 @@ HW_INLINE void config_counter( hwa_t *hwa )
 
 HW_INLINE void config_led( hwa_t *hwa )
 {
-  hwa_config( LED, clearup_setdown );
+  hwa_config( LED, clear_on_match_up_set_on_match_down );
 }
 
 

@@ -17,7 +17,7 @@
 #define hw_class_c16a
 
 //#define hw_fn_hw_addr_c16a		, _hw_addr_ctr
-#define hw_fn_hw_bits_c16a		, _hw_bits
+//#define hw_fn_hw_bits_c16a		, _hw_bits
 
 #define hw_fn_bn_c16a			, _hw_bn_c16a
 #define _hw_bn_c16a(c,n,i,a)		16
@@ -50,33 +50,31 @@
 #ifndef __ASSEMBLER__
 
 typedef struct {
-  hwa_r8_t  ccra ;
-  hwa_r8_t  ccrb ;
-  hwa_r8_t  ccrc ;
-  hwa_r16_t count ;
+  hwa_r8_t	ccra ;
+  hwa_r8_t	ccrb ;
+  hwa_r8_t	ccrc ;
+  hwa_r16_t	count ;
   union {
-    hwa_r16_t ocra ;
-    hwa_r16_t compare_a ;
+    hwa_r16_t	ocra ;
+    hwa_r16_t	compare_a ;
   };
   union {
-    hwa_r16_t ocrb ;
-    hwa_r16_t compare_b ;
+    hwa_r16_t	ocrb ;
+    hwa_r16_t	compare_b ;
   };
   union {
-    hwa_r16_t icr ;
-    hwa_r16_t capture ;
+    hwa_r16_t	icr ;
+    hwa_r16_t	capture ;
   };
-  hwa_r8_t  imsk ;
-  hwa_r8_t  ifr ;
+  hwa_r8_t	imsk ;
+  hwa_r8_t	ifr ;
 
   /*  Registers for high-level configuration
    */
-  uint8_t	countmode, top, clock, update, overflow ;
+  uint8_t	clock, countmode, top, update, overflow ;
   uint8_t	ocra_mode ;
   uint8_t	ocrb_mode ;
   uint8_t	icr_mode ;
-  //  hwa_ocu_t	ocua, ocub ;
-  //  hwa_icu_t	icu ;
 
 } hwa_c16a_t ;
 

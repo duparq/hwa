@@ -23,11 +23,11 @@
   HWA_INIT(hw_##n, ocrb);			\
   HWA_INIT(hw_##n, imsk);			\
   HWA_INIT(hw_##n, ifr);			\
+  hwa->n.clock = 0;				\
   hwa->n.countmode = 0;				\
   hwa->n.top = 0;				\
-  hwa->n.clock = 0;				\
-  hwa->n.overflow = 0;				\
   hwa->n.update = 0;				\
+  hwa->n.overflow = 0;				\
   hwa->n.ocra_mode = 0;				\
   hwa->n.ocrb_mode = 0;
 
@@ -337,83 +337,87 @@ HW_INLINE void hwa_solve_c16a ( hwa_c16a_t *p )
 
     /*	Compare output A
      */
-    if ( wgm==0 || wgm==4 || wgm==12 ) {
-      if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match) )
-	HWA_ERR("compare output A of class c16a counter mode must be "
-		"'disconnected', 'clear_on_match', 'set_on_match', or "
-		"'toggle_on_match'.");
-    }
-    else if ( wgm==5 || wgm==6 || wgm==7 ) {
-      if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
-	HWA_ERR("compare output A of class c16a counter mode must be "
-		"'disconnected', 'set_at_bottom_clear_on_match', or "
-		"'clear_at_bottom_set_on_match'.");
-    }
-    else if ( wgm==14 ) {
-      if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
-	HWA_ERR("compare output A of class c16a counter mode must be "
-		"'disconnected', 'toggle_on_match', "
-		"'set_at_bottom_clear_on_match', or "
-		"'clear_at_bottom_set_on_match'.");
-    }
-    else if ( wgm==1 || wgm==2 || wgm==3 ) {
-      if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
-	HWA_ERR("compare output A of class c16a counter mode must be "
-		"'disconnected', 'clear_on_match_up_set_on_match_down', "
-		"or 'set_on_match_up_clear_on_match_down'.");
-    }
-    else if ( wgm==8 || wgm==10 ) {
-      if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
-	   && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
-	HWA_ERR("compare output A of class c16a counter mode must be "
-		"'disconnected', 'toggle_on_match', "
-		"'clear_on_match_up_set_on_match_down', "
-		"or 'set_on_match_up_clear_on_match_down'.");
-    }
-    //    else if ( p->top == HW_A1(hw_c16a_top_register_compare_a)
-    else if ( p->ocra_mode ) {
-      HWA_ERR("use of `compare_a` as both top value for class c16a counter "
-	      "and compare output.");
+    if ( p->ocra_mode != 0 ) {
+      if ( wgm==0 || wgm==4 || wgm==12 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match) )
+	  HWA_ERR("compare output A of class c16a counter mode must be "
+		  "'disconnected', 'clear_on_match', 'set_on_match', or "
+		  "'toggle_on_match'.");
+      }
+      else if ( wgm==5 || wgm==6 || wgm==7 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output A of class c16a counter mode must be "
+		  "'disconnected', 'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else if ( wgm==14 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output A of class c16a counter mode must be "
+		  "'disconnected', 'toggle_on_match', "
+		  "'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else if ( wgm==1 || wgm==2 || wgm==3 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output A of class c16a counter mode must be "
+		  "'disconnected', 'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
+      else if ( wgm==8 || wgm==10 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output A of class c16a counter mode must be "
+		  "'disconnected', 'toggle_on_match', "
+		  "'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
+      //    else if ( p->top == HW_A1(hw_c16a_top_register_compare_a)
+      else if ( p->ocra_mode ) {
+	HWA_ERR("use of `compare_a` as both top value for class c16a counter "
+		"and compare output.");
+      }
     }
 
     /*	Compare output B
      */
-    if ( wgm==0 || wgm==4 || wgm==12 ) {
-      if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_toggle_on_match) )
-	HWA_ERR("compare output B of class c16a counter mode must be "
-		"'disconnected', 'clear_on_match', 'set_on_match', or "
-		"'toggle_on_match'.");
-    }
-    else if ( wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15 ) {
-      if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
-	HWA_ERR("compare output B of class c16a counter mode must be "
-		"'disconnected', 'set_at_bottom_clear_on_match', or "
-		"'clear_at_bottom_set_on_match'.");
-    }
-    else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
-      if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
-	   && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
-	HWA_ERR("compare output B of class c16a counter mode must be "
-		"'disconnected', 'clear_on_match_up_set_on_match_down', "
-		"or 'set_on_match_up_clear_on_match_down'.");
+    if ( p->ocrb_mode != 0 ) {
+      if ( wgm==0 || wgm==4 || wgm==12 ) {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_toggle_on_match) )
+	  HWA_ERR("compare output B of class c16a counter mode must be "
+		  "'disconnected', 'clear_on_match', 'set_on_match', or "
+		  "'toggle_on_match'.");
+      }
+      else if ( wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15 ) {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output B of class c16a counter mode must be "
+		  "'disconnected', 'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output B of class c16a counter mode must be "
+		  "'disconnected', 'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
     }
 
     /*	Update

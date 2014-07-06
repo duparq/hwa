@@ -4,6 +4,15 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/** \file
+ *  \brief	HWA 16-bits version 'a' Atmel AVR timer-counters (layer 2)
+ *
+ *	Used in: ATtinyX4 Timer 1
+ */
+
+
+/*	Initialize a c8a instance
+ */
 #define hwa_begin_c8a(n)			\
   HWA_INIT(hw_##n, ccra);			\
   HWA_INIT(hw_##n, ccrb);			\
@@ -12,11 +21,11 @@
   HWA_INIT(hw_##n, ocrb);			\
   HWA_INIT(hw_##n, imsk);			\
   HWA_INIT(hw_##n, ifr);			\
-  hwa->n.countmode = 0 ;			\
-  hwa->n.top = 0 ;				\
-  hwa->n.clock = 0 ;				\
-  hwa->n.overflow = 0;				\
+  hwa->n.clock = 0;				\
+  hwa->n.countmode = 0;				\
+  hwa->n.top = 0;				\
   hwa->n.update = 0;				\
+  hwa->n.overflow = 0;				\
   hwa->n.ocra_mode = 0;				\
   hwa->n.ocrb_mode = 0;
 
@@ -33,257 +42,359 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 }
 
 
-#define hwa_is_clock_clock		,1
-
+/*	Configure counter unit
+ */
 #define hw_fn_hwa_config_c8a		, _hwa_config_c8a
 
 #define _hwa_config_c8a(c,n,i,a, ...)					\
-  do { HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__) } while(0)
+  do { HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
 
 #define hwa_config_c8a_xclock_0(n,...)					\
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_xclock_1(n,_clock_,...)				\
-  HW_G2(hwa_config_c8a_clock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_vclock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_clock_0(n,...)					\
+#define hwa_config_c8a_vclock_0(n,...)					\
   HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
 	  "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "		\
 	  "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_clock_1(n,zclock,...)				\
-  hwa->n.clock = HW_A1(hw_c8a_clock_##zclock) ;				\
-  HW_G2(hwa_config_c8a_xcountmode,HW_IS(countmode,__VA_ARGS__))(n,__VA_ARGS__) ; \
+#define hwa_config_c8a_vclock_1(n,zclock,...)				\
+  hwa->n.clock = HW_A1(hw_c8a_clock_##zclock);				\
+  HW_G2(hwa_config_c8a_xmode,HW_IS(countmode,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_xcountmode_0(n,...)				\
+#define hwa_config_c8a_xmode_0(n,...)					\
   HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_xcountmode_1(n,_countmode_,...)			\
-  HW_G2(hwa_config_c8a_countmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
+#define hwa_config_c8a_xmode_1(n,_countmode_,...)			\
+  HW_G2(hwa_config_c8a_vmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_countmode_0(n,...)				\
+#define hwa_config_c8a_vmode_0(n,...)					\
   HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
 
-#define hwa_config_c8a_countmode_1(n,mode,...)				\
-  hwa->n.countmode = HW_A1(hw_c8a_countmode_##mode) ;			\
+#define hwa_config_c8a_vmode_1(n,vmode,...)				\
+  hwa->n.countmode = HW_A1(hw_c8a_countmode_##vmode);			\
   HW_G2(hwa_config_c8a_xbottom,HW_IS(bottom,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_xbottom_0(n,...)				\
-  HW_G2(hwa_config_c8a_xbottom_xtop,HW_IS(top,__VA_ARGS__))	\
-  (n,__VA_ARGS__,HW_A1(hw_c8a_countmode_##mode))
-
-#define hwa_config_c8a_xbottom_xtop_0(n,...)				\
-  HW_ERR("expected `bottom` or `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-
-#define hwa_config_c8a_xbottom_xtop_1	hwa_config_c8a_xtop_1
-
 #define hwa_config_c8a_xbottom_1(n,_bottom_,...)			\
-  HW_G2(hwa_config_c8a_bottom,HW_IS(0,__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(hwa_config_c8a_vbottom,HW_IS(0,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_bottom_0(n,bottom,...)			\
-  HW_ERR("bottom must be `0`, not `" HW_QUOTE(bottom) "`.")
+#define hwa_config_c8a_vbottom_0(n,bottom,...)		\
+  HW_ERR("bottom must be `0`, not `" #bottom "`.")
 
-#define hwa_config_c8a_bottom_1(n,bottom,...)				\
-  HW_G2(hwa_config_c8a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__ /*,bottom*/)
+#define hwa_config_c8a_vbottom_1(n,bottom,...)	\
+  hwa_config_c8a_xbottom_0(n,__VA_ARGS__)
 
-#define hwa_config_c8a_xtop_0(n,...)					\
-  HW_ERR("expected `top` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_xbottom_0(n,...)				\
+  HW_G2(hwa_config_c8a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__)
+
+#define hwa_config_c8a_xtop_0(n,...)				\
+  HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
 
 #define hwa_config_c8a_xtop_1(n,_top_,...)				\
   HW_G2(hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_vtop_0(n,...)				\
-  HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"	\
-	 "but not `" HW_QUOTE(__VA_ARGS__) "`.")
+#define hwa_config_c8a_vtop_0(n,...)					\
+  HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"		\
+	 " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c8a_vtop_1(n,ztop,...)			\
-    hwa->n.top = HW_A1(hw_c8a_top_##ztop);			\
-    HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(n,__VA_ARGS__)
+#define hwa_config_c8a_vtop_1(n,ztop,...)				\
+  hwa->n.top = HW_A1(hw_c8a_top_##ztop);				\
+  HW_G2(hwa_config_c8a_xuc,HW_IS(update,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_0(n,...)					\
+#define hwa_config_c8a_xuc_1(n,uc,...)					\
+  HW_G2(hwa_config_c8a_vuc, HW_IS(,hw_counter_update_##__VA_ARGS__))(n,__VA_ARGS__)
+
+#define hwa_config_c8a_vuc_0(n,vuc,...)				\
+    HW_ERR("`update` must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
+
+#define hwa_config_c8a_vuc_1(n,vuc,...)		\
+  hwa->n.update = HW_A1(hw_counter_update_##vuc);	\
+  hwa_config_c8a_xuc_0(n,__VA_ARGS__);
+
+#define hwa_config_c8a_xuc_0(n,...)					\
+  HW_G2(hwa_config_c8a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
+
+#define hwa_config_c8a_xoverflow_1(n,overflow_irq,...)	\
+  HW_G2(hwa_config_c8a_voverflow,			\
+	HW_IS(,hw_counter_overflow_##__VA_ARGS__))	\
+  (n,__VA_ARGS__)
+
+#define hwa_config_c8a_voverflow_0(n,overflow,...)			\
+  HW_ERR("overflow_irq must be `at_bottom`, `at_top, or `at_max`, but `not `" #overflow "`.")
+
+#define hwa_config_c8a_voverflow_1(n,voverflow,...)		\
+  hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
+  hwa_config_c8a_xoverflow_0(n,__VA_ARGS__)
+
+#define hwa_config_c8a_xoverflow_0(n,...)			\
+  HW_G2(hwa_config_c8a,HW_IS(,__VA_ARGS__))(n,__VA_ARGS__)
+
+#define hwa_config_c8a_0(n,...)				\
   HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define hwa_config_c8a_1(...)
 
 
-/*	Solve the configuration of the counter unit
+#define hw_is_overflow_overflow			, 1
+#define hw_is_update_update			, 1
+
+#define hw_counter_overflow_at_bottom		, 1
+#define hw_counter_overflow_at_top		, 2
+#define hw_counter_overflow_at_max		, 3
+
+#define hw_counter_update_immediately		, 1
+#define hw_counter_update_at_bottom		, 2
+#define hw_counter_update_at_top		, 3
+
+
+/*	Solve the configuration of the counter and its compare and capture units
  */
 HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 {
-
-  if ( p->config != 1 )
-    return ;
-
-  /*	WGM
-   *
-   * Mode WGM   Operation                     COUNTMODE    TOP   UPD  OVF 
-   *							            
-   *  0   000   Normal                        LOOP_UP      0xFF  IMM  BOT
-   *  2   010   CTC (Clear Timer on Match)    LOOP_UP      OCRA  IMM  BOT
-   *
-   *  3   011   Fast PWM                      LOOP_UP      0xFF  BOT  TOP
-   *  7   111   Fast PWM                      LOOP_UP      OCRA  BOT  TOP
-   *
-   *  1   001   PWM, Phase Correct            LOOP_UPDOWN  0xFF  TOP  BOT
-   *  5   101   PWM, Phase Correct            LOOP_UPDOWN  OCRA  TOP  BOT
-   *
-   *  4   100   *Reserved*
-   *  6   110   *Reserved*
-   */
-
   uint8_t wgm = 0xFF ;
 
-  if ( p->countmode == HW_A1(hw_c8a_countmode_loop_up) )
-    if (p->top == HW_A1(hw_c8a_top_fixed_0xFF))
-      wgm = 0 ;
-    else
-      wgm = 2 ;
-  else if ( p->countmode == HW_A1(hw_c8a_countmode_loop_up_pwm) )
-    if (p->top == HW_A1(hw_c8a_top_fixed_0xFF) )
-      wgm = 3 ;
-    else
-      wgm = 7 ;
-  else if ( p->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) )
-    if (p->top == HW_A1(hw_c8a_top_fixed_0xFF) )
-      wgm = 1 ;
-    else
-      wgm = 5 ;
-  else
-    HWA_ERR("WGM value could not be solved for c8a class counter.");
-
-  if (wgm != 0xFF)
-    _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
-  else
-    HWA_ERR("WGM value could not be solved for c16a class counter.");
-
-
-  /*	CS
+  /* Mode WGM  Operation  COUNTMODE    TOP   UPD  OVF  OCA                    OCB
+   *                                            
+   *  0   000  Normal     LOOP_UP      0xFF  IMM  BOT  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
+   *  2   010  CTC        LOOP_UP      OCRA  IMM  BOT  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
+   *
+   *  3   011  Fast PWM   LOOP_UP      0xFF  BOT  TOP  DIS,SaBCoM,CaBSoM      DIS,SaBCoM,CaBSoM
+   *  7   111  Fast PWM   LOOP_UP      OCRA  BOT  TOP  DIS,ToM,CoMSaB,SoMCaB  DIS,SaBCoM,CaBSoM
+   *
+   *  1   001  PWM, PhC   LOOP_UPDOWN  0xFF  TOP  BOT  DIS,CmuSmd,SmuCmd      DIS,CmuSmd,SmuCmd   
+   *  5   101  PWM, PhC   LOOP_UPDOWN  OCRA  TOP  BOT  DIS,ToM,CmuSmd,SmuCmd  DIS,CmuSmd,SmuCmd
+   *
+   *  4   100  *Reserved*
+   *  6   110  *Reserved*
    */
-  _hwa_write_p(p, _hw_cbits(c8a, cs), p->clock);
-}
 
-
-/*	Solve the configuration of the 1st output-compare unit
- */
-HW_INLINE void hwa_solve_c8aoc1 ( hwa_c8a_t *counter, hwa_ocu_t *p )
-{
-  if ( p->config != 1 )
-    return ;
-
-  if ( counter->config == 0 )
-    HWA_ERR("configuration of hw_counter0 must be set.");
-
-  if ( counter->top == HW_A1(hw_c8a_top_register_compare_a) )
-    HWA_ERR("ocra is already used as top value for hw_counter0.");
-
-  uint8_t	mode = 0xFF ;
-
-  if ( p->mode == HW_A1(hw_ocu_mode_disconnected) )
-    mode = 0 ;
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_up) ) {
-    /*
-     * Non PWM modes
+  if ( p->clock ) {	/* if the mandatory parameter 'clock' is not 0, the
+			   counter is configured */
+    /*	Clock selection
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match) )
-      mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match) )
-      mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match) )
-      mode = 3 ;
-  }
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_up_pwm) ) {
-    /*
-     * Fast PWM modes
+    _hwa_write_p(p, _hw_cbits(c8a, cs), p->clock);
+
+    /*	Determine WGM
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match)
-	 && counter->countmode == 7 )
-      mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match) )
-      mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
-      mode = 3 ;
-  }
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) ) {
-    /*
-     * Phase-correct PWM modes
-     */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match)
-	 && counter->countmode == 5 )
-      mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
-      mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
-      mode = 3 ;
+    if ( p->countmode == HW_A1(hw_c8a_countmode_loop_up) ) {
+      if (p->top == HW_A1(hw_c8a_top_fixed_0xFF)) {
+	if (p->update == HW_A1(hw_counter_update_immediately)
+	    || p->overflow == HW_A1(hw_counter_overflow_at_bottom)
+	    || p->ocra_mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match)
+	    || p->ocra_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	    || p->ocrb_mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match)
+	    || p->ocrb_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match))
+	  wgm = 3 ;
+	else 
+	  wgm = 0 ;
+      }
+      else /* p->top == HW_A1(hw_c8a_top_register_capture) */ {
+	if (p->update == HW_A1(hw_counter_update_at_top)
+	    || p->overflow == HW_A1(hw_counter_overflow_at_top)
+	    || p->ocra_mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match)
+	    || p->ocra_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	    || p->ocrb_mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match)
+	    || p->ocrb_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match))
+	  wgm = 7 ;
+	else 
+	  wgm = 2 ;
+      }
+    }
+    else /* p->countmode == HW_A1(hw_c8a_countmode_loop_updown) */ {
+      if (p->top == HW_A1(hw_c8a_top_register_compare_a) )
+	wgm = 5 ;
+      else 
+	wgm = 1 ;
+    }
+      
+    if (wgm != 0xFF)
+      _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
+    else {
+      HWA_ERR("WGM value could not be solved for c8a class counter.");
+      return ;
+    }
   }
 
-  if ( mode == 0xFF )
-    HWA_ERR("incompatible counting mode / output-compare mode.");
-
-  /*  Set the hardware configuration bits
+  /*	Solve the configuration of compare output A
    */
-  _hwa_write_p(counter, _hw_cbits(c8a, coma), mode );
-}
+  if ( p->ocra_mode ) {
 
+    uint8_t	mode = 0xFF ;
 
-/*	Solve the configuration of the 2nd output-compare unit (a little less
- *	possibilities than the 1st pin).
- */
-HW_INLINE void hwa_solve_c8aoc2 ( hwa_c8a_t *counter, hwa_ocu_t *p )
-{
-  if ( p->config != 1 )
-    return ;
-
-  if ( counter->config == 0 )
-    HWA_ERR("configuration of hw_counter0 must be set.");
-
-  uint8_t	mode = 0xFF ;
-
-  if ( p->mode == HW_A1(hw_ocu_mode_disconnected) )
-    mode = 0 ;
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_up) ) {
-    /*
-     * Non PWM modes
-     */
-    if ( p->mode == HW_A1(hw_ocu_mode_toggle_on_match) )
+    if ( p->ocra_mode == HW_A1(hw_ocu_mode_disconnected) )
+      mode = 0 ;
+    else if ( p->ocra_mode == HW_A1(hw_ocu_mode_toggle_on_match) )
       mode = 1 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match) )
+    else if ( p->ocra_mode == HW_A1(hw_ocu_mode_clear_on_match)
+	      || p->ocra_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	      || p->ocra_mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
       mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match) )
+    else
       mode = 3 ;
-  }
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_up_pwm) ) {
-    /*
-     * Fast PWM modes
+
+    /*  Write the hardware configuration bits
      */
-    if ( p->mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match) )
-      mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
-      mode = 3 ;
-  }
-  else if ( counter->countmode == HW_A1(hw_c8a_countmode_loop_updown_pwm) ) {
-    /*
-     * Phase-correct PWM modes
-     */
-    if ( p->mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
-      mode = 2 ;
-    else if ( p->mode == HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
-      mode = 3 ;
+    _hwa_write_p(p, _hw_cbits(c8a, coma), mode );
   }
 
-  if ( mode == 0xFF )
-    HWA_ERR("incompatible counting mode / output-compare mode.");
+  /*	Solve the configuration of compare output B
+   */
+  if ( p->ocrb_mode ) {
 
-  _hwa_write_p(counter, _hw_cbits(c8a, comb), mode );
+    uint8_t	mode = 0xFF ;
+
+    if ( p->ocrb_mode == HW_A1(hw_ocu_mode_disconnected) )
+      mode = 0 ;
+    else if ( p->ocrb_mode == HW_A1(hw_ocu_mode_toggle_on_match) )
+      mode = 1 ;
+    else if ( p->ocrb_mode == HW_A1(hw_ocu_mode_clear_on_match)
+	      || p->ocrb_mode == HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	      || p->ocrb_mode == HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down) )
+      mode = 2 ;
+    else
+      mode = 3 ;
+
+    /*  Write the hardware configuration bits
+     */
+    _hwa_write_p(p, _hw_cbits(c8a, comb), mode );
+  }
+
+
+  /*	Check the validity of the configuration
+   */
+  if ( p->clock || p->ocra_mode || p->ocrb_mode ) {
+
+    if ( p->clock == 0 ) {
+      HWA_ERR("configuration of counter is required.");
+      return ;
+    }
+
+    /*	Compare output A
+     */
+    if ( p->ocra_mode != 0 ) {
+      if ( wgm==0 || wgm==2 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match))
+	  HWA_ERR("compare output A of class c8a counter mode must be "
+		  "'disconnected', 'toggle_on_match', 'clear_on_match', or "
+		  "'set_on_match'.");
+      }
+      else if ( wgm==3 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output A of class c8a counter mode must be "
+		  "'disconnected', 'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else if ( wgm==7 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output A of class c8a counter mode must be "
+		  "'disconnected', 'toggle_on_match', "
+		  "'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else if ( wgm==1 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output A of class c8a counter mode must be "
+		  "'disconnected', 'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
+      else if ( wgm==5 ) {
+	if ( p->ocra_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocra_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output A of class c8a counter mode must be "
+		  "'disconnected', 'toggle_on_match', "
+		  "'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
+    }
+
+    /*	Compare output B
+     */
+    if ( p->ocrb_mode != 0 ) {
+      if ( wgm==0 || wgm==2 ) {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_toggle_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match))
+	  HWA_ERR("compare output B of class c8a counter mode must be "
+		  "'disconnected', 'toggle_on_match', 'clear_on_match', or "
+		  "'set_on_match'.");
+      }
+      else if ( wgm==3 || wgm==7 ) {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_at_bottom_clear_on_match)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_at_bottom_set_on_match) )
+	  HWA_ERR("compare output B of class c8a counter mode must be "
+		  "'disconnected', 'set_at_bottom_clear_on_match', or "
+		  "'clear_at_bottom_set_on_match'.");
+      }
+      else if ( wgm==1 || wgm==5 ) {
+	if ( p->ocrb_mode != HW_A1(hw_ocu_mode_disconnected)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_clear_on_match_up_set_on_match_down)
+	     && p->ocrb_mode != HW_A1(hw_ocu_mode_set_on_match_up_clear_on_match_down) )
+	  HWA_ERR("compare output B of class c8a counter mode must be "
+		  "'disconnected', 'clear_on_match_up_set_on_match_down', "
+		  "or 'set_on_match_up_clear_on_match_down'.");
+      }
+    }
+
+    /*	Update
+     */
+    if ( p->update != 0 ) {
+      if ( wgm==0 || wgm==2 ) {
+	if ( p->update != HW_A1(hw_counter_update_immediately) )
+	  HWA_ERR("optionnal parameter 'update' of class c8a counter must be "\
+		  "'immediately'.");
+      }
+      else if ( wgm==3 || wgm==7 ) {
+	if ( p->update != HW_A1(hw_counter_update_at_bottom) )
+	  HWA_ERR("optionnal parameter 'update' of class c8a counter must be "
+		  "'at_bottom'.");
+      }
+      else
+	if( p->update != HW_A1(hw_counter_update_at_top) )
+	  HWA_ERR("optionnal parameter 'update' of class c8a counter must be "
+		  "'at_top'.");
+    }
+
+    /*	Overflow
+     */
+    if ( p->overflow != 0 ) {
+      if ( wgm==3 || wgm==7 ) {
+	if ( p->overflow != HW_A1(hw_counter_overflow_at_top) )
+	  HWA_ERR("optionnal parameter 'overflow' of class c8a counter must be "
+		  "'at_top'.");
+      }
+      else
+	if ( p->overflow != HW_A1(hw_counter_overflow_at_bottom) )
+	  HWA_ERR("optionnal parameter 'overflow' of class c8a counter must be "
+		  "'at_bottom'.");
+    }
+
+  }
 }
 
 
 HW_INLINE void _hwa_commit_c8a ( hwa_t *hwa, hwa_c8a_t *timer )
 {
-  _hwa_commit_r8( hwa->commit, &timer->ccra, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ccrb, -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ccra,  -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ccrb,  -1 );
   _hwa_commit_r8( hwa->commit, &timer->count, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ocra, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ocrb, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->imsk, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ifr, -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ocra,  -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ocrb,  -1 );
+  _hwa_commit_r8( hwa->commit, &timer->imsk,  -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ifr,   -1 );
 }
