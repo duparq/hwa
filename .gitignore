@@ -7,5 +7,6 @@ build/
 doxygen/html/
 exclude/
 trash/
+keep/
 MEMO*
 TODO*
