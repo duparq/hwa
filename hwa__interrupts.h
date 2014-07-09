@@ -11,21 +11,21 @@
 /*	Definition of an interrupt
  */
 #define hw_irq(...)		_hw_irq_2(__VA_ARGS__)
-#define _hw_irq_2(...)		HW_G2(_hw_irq_xclass, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__,)
+#define _hw_irq_2(...)		HW_G2(_hw_irq_xclass, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__,,)
 #define _hw_irq_xclass_0(...)	HW_G2(_hw_irq_error, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irq_error_0(x,...)	HW_ERR("`hw_" #x "` is not defined.")
 #define _hw_irq_error_1(...)	__VA_ARGS__
-#define _hw_irq_xclass_1(t,n,i,a,v,...)			\
+#define _hw_irq_xclass_1(c,n,i,a,v,...)			\
   HW_G2(_hw_irq, HW_IS(irq, hw_irq_##n##_##v))(n,v, __VA_ARGS__)
 
-#define _hw_irq_0(cn,...)	HW_ERR("`" HW_QUOTE(HW_A0(__VA_ARGS__)) \
-				       "` is not a valid irq name for `hw_" #cn "`.")
+#define _hw_irq_0(n,...)	HW_ERR("`" HW_QUOTE(__VA_ARGS__) \
+				       "` is not a valid irq name for `hw_" #n "`.")
 #define _hw_irq_1(n,v,...)	hw_irq_##n##_##v
 
 
 /*	Turn irq on/off
  */
-#define hw_fn_hwa_turn_irq	, _hwa_turn_irq
+#define hw_def_hwa_turn_irq	, _hwa_turn_irq
 #define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, zstate)		\
   HW_G2(_hwa_turn_irq_state, HW_IS(,hw_state_##zstate))(vector, cc,cn,ci,ca, irqe, zstate)
 #define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\

@@ -16,22 +16,22 @@
 #include "hwa_atmelavr_ios_1.h"
 
 
-/*	io classes & methods
+/*	Classes & methods
  */
 #define hw_class_io8
-#define hw_fn_hw_bits_io8	, _hw_bits
+#define hw_def_hw_bits_io8	, _hw_bits
 
 #define hw_class_io4
-#define hw_fn_hw_bits_io4	, _hw_bits
+#define hw_def_hw_bits_io4	, _hw_bits
 
 
-/*	io instances		class, name, id, address
+/*	Instances		class, name, id, address
  */
 #define hw_porta		io8, porta, 100, 0x21
 #define hw_portb		io4, portb, 200, 0x36
 
 
-/*	io class regs		'reg', rw, ra, riv, rvm, rwm
+/*	Class regs		'reg', rw, ra, riv, rvm, rwm
  */
 #define hw_io8_port		reg, 8, 0x3B-0x21, 0x00, 0xFF
 #define hw_io8_ddr		reg, 8, 0x3A-0x21, 0x00, 0xFF

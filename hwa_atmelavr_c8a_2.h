@@ -44,7 +44,7 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 
 /*	Configure counter unit
  */
-#define hw_fn_hwa_config_c8a		, _hwa_config_c8a
+#define hw_def_hwa_config_c8a		, _hwa_config_c8a
 
 #define _hwa_config_c8a(c,n,i,a, ...)					\
   do { HW_G2(hwa_config_c8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
@@ -116,13 +116,12 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 #define hwa_config_c8a_xuc_0(n,...)					\
   HW_G2(hwa_config_c8a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_xoverflow_1(n,overflow_irq,...)	\
-  HW_G2(hwa_config_c8a_voverflow,			\
-	HW_IS(,hw_counter_overflow_##__VA_ARGS__))	\
-  (n,__VA_ARGS__)
+#define hwa_config_c8a_xoverflow_1(n,overflow,...)			\
+  HW_G2(hwa_config_c8a_voverflow, HW_IS(,hw_counter_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c8a_voverflow_0(n,overflow,...)			\
-  HW_ERR("overflow_irq must be `at_bottom`, `at_top, or `at_max`, but `not `" #overflow "`.")
+#define hwa_config_c8a_voverflow_0(n,overflow,...)		\
+  HW_ERR("optionnal parameter `overflow` must be `at_bottom`, "	\
+	 "`at_top, or `at_max`, but `not `" #overflow "`.")
 
 #define hwa_config_c8a_voverflow_1(n,voverflow,...)		\
   hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
@@ -137,18 +136,6 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 #define hwa_config_c8a_1(...)
 
 
-#define hw_is_overflow_overflow			, 1
-#define hw_is_update_update			, 1
-
-#define hw_counter_overflow_at_bottom		, 1
-#define hw_counter_overflow_at_top		, 2
-#define hw_counter_overflow_at_max		, 3
-
-#define hw_counter_update_immediately		, 1
-#define hw_counter_update_at_bottom		, 2
-#define hw_counter_update_at_top		, 3
-
-
 /*	Solve the configuration of the counter and its compare and capture units
  */
 HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
@@ -157,10 +144,10 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
   /* Mode WGM  Operation  COUNTMODE    TOP   UPD  OVF  OCA                    OCB
    *                                            
-   *  0   000  Normal     LOOP_UP      0xFF  IMM  BOT  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
-   *  2   010  CTC        LOOP_UP      OCRA  IMM  BOT  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
+   *  0   000  Normal     LOOP_UP      0xFF  IMM  MAX  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
+   *  2   010  CTC        LOOP_UP      OCRA  IMM  MAX  DIS,ToM,CoM,SoM        DIS,ToM,CoM,SoM
    *
-   *  3   011  Fast PWM   LOOP_UP      0xFF  BOT  TOP  DIS,SaBCoM,CaBSoM      DIS,SaBCoM,CaBSoM
+   *  3   011  Fast PWM   LOOP_UP      0xFF  BOT  MAX  DIS,SaBCoM,CaBSoM      DIS,SaBCoM,CaBSoM
    *  7   111  Fast PWM   LOOP_UP      OCRA  BOT  TOP  DIS,ToM,CoMSaB,SoMCaB  DIS,SaBCoM,CaBSoM
    *
    *  1   001  PWM, PhC   LOOP_UPDOWN  0xFF  TOP  BOT  DIS,CmuSmd,SmuCmd      DIS,CmuSmd,SmuCmd   
@@ -209,12 +196,12 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 	wgm = 1 ;
     }
       
-    if (wgm != 0xFF)
-      _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
-    else {
+    if (wgm == 0xFF) {
       HWA_ERR("WGM value could not be solved for c8a class counter.");
       return ;
     }
+
+    _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
   }
 
   /*	Solve the configuration of compare output A

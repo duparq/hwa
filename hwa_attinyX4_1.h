@@ -18,19 +18,7 @@
 #include "hwa_attinyX4_irqs_1.h"
 #include "hwa_attinyX4_adcs_1.h"
 #include "hwa_attinyX4_counters_1.h"
-
-
-#if !defined __ASSEMBLER__ 
-
-#define HWA_DCL					\
-  HWA_DCL_CORES					\
-  HWA_DCL_IOS					\
-  HWA_DCL_PCINTS				\
-  HWA_DCL_COUNTERS				\
-  HWA_DCL_ADCS
-
-
-#define hw_syshz	_hw_syshz()
+#include "hwa_attinyX4_acmps_1.h"
 
 
 /** \brief	Returns the system clock frequency.
@@ -39,22 +27,51 @@
  *	fuses states in the fuse low byte (FUSE_LB must be defined at compile
  *	time).
  */
-HW_INLINE uint32_t _hw_syshz()
-{
-  uint32_t syshz = 0 ;
+#if (FUSE_LB & 0x0F) == 2
+#  define hw_syshz_base 8000000
+#elif (FUSE_LB & 0x0F) == 4
+#  define hw_syshz_base 128000
+#else
+#  define hw_syshz_base HW_XSOHZ
+#endif
 
-  if ( (FUSE_LB & 0x0F) == 2 )
-    syshz = 8000000 ;
-  else if ( (FUSE_LB & 0x0F) == 4 )
-    syshz = 128000 ;
-  else
-    syshz = HW_XSOHZ ;
+#if (FUSE_LB & 0x80) == 0
+#  define hw_syshz	hw_syshz_base/8
+#else
+#  define hw_syshz	hw_syshz_base
+#endif
 
-  if ( (FUSE_LB & 0x80) == 0 )
-    syshz /= 8 ;
 
-  return syshz ;
-}
+#if !defined __ASSEMBLER__ 
+
+#define HWA_DCL					\
+  HWA_DCL_CORES					\
+  HWA_DCL_IOS					\
+  HWA_DCL_PCINTS				\
+  HWA_DCL_ADCS					\
+  HWA_DCL_COUNTERS				\
+  HWA_DCL_ACMPS
+
+
+//#define hw_syshz	_hw_syshz()
+
+/* HW_INLINE uint32_t _hw_syshz() */
+/* { */
+/*   uint32_t syshz = 0 ; */
+
+/*   if ( (FUSE_LB & 0x0F) == 2 ) */
+/*     syshz = 8000000 ; */
+/*   else if ( (FUSE_LB & 0x0F) == 4 ) */
+/*     syshz = 128000 ; */
+/*   else */
+/*     syshz = HW_XSOHZ ; */
+
+/*   if ( (FUSE_LB & 0x80) == 0 ) */
+/*     syshz /= 8 ; */
+
+/*   return syshz ; */
+/* } */
+
 #endif /* !defined __ASSEMBLER__ */
 
 

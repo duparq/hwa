@@ -16,10 +16,7 @@
  */
 #define hw_class_c16a
 
-//#define hw_fn_hw_addr_c16a		, _hw_addr_ctr
-//#define hw_fn_hw_bits_c16a		, _hw_bits
-
-#define hw_fn_bn_c16a			, _hw_bn_c16a
+#define hw_def_bn_c16a			, _hw_bn_c16a
 #define _hw_bn_c16a(c,n,i,a)		16
 
 
@@ -32,7 +29,9 @@
 #define hw_c16a_top_fixed_0x1FF			, 2
 #define hw_c16a_top_fixed_0x3FF			, 3
 #define hw_c16a_top_fixed_0xFFFF		, 4
+#define hw_c16a_top_capture			, 5
 #define hw_c16a_top_register_capture		, 5
+#define hw_c16a_top_compare_a			, 6
 #define hw_c16a_top_register_compare_a		, 6
 
 #define hw_c16a_clock_none			, 0
@@ -74,7 +73,7 @@ typedef struct {
   uint8_t	clock, countmode, top, update, overflow ;
   uint8_t	ocra_mode ;
   uint8_t	ocrb_mode ;
-  uint8_t	icr_mode ;
+  uint8_t	icr_input, icr_edge, icr_filter ;
 
 } hwa_c16a_t ;
 

@@ -10,11 +10,18 @@
 #define HW_DEVICE_ATMELAVR
 
 
-#define hw_is_bottom_bottom		, 1
-#define hw_is_clock_clock		, 1
-#define hw_is_countmode_countmode	, 1
-#define hw_is_ocu_ocu			, 1
-#define hw_is_top_top			, 1
+/*	Keywords
+ */
+#define hw_is_bottom_bottom
+#define hw_is_clock_clock
+#define hw_is_countmode_countmode
+#define hw_is_edge_edge
+#define hw_is_filter_filter
+#define hw_is_input_input
+#define hw_is_ocu_ocu
+#define hw_is_overflow_overflow
+#define hw_is_top_top
+#define hw_is_update_update
 
 
 /*	Register address offset for C/assembler
@@ -33,7 +40,7 @@
 
 /*	Global classes & methods
  */
-#define hw_fn_hw_addr_bits1		, _hw_addr_bits1
+#define hw_def_hw_addr_bits1		, _hw_addr_bits1
 
 #if defined __ASSEMBLER__
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)

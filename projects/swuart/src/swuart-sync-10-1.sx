@@ -7,15 +7,15 @@
 	;; 
 	;; Determines baudrate by measuring the low-level durations of a 10 bits
 	;; low / 1 bit low sequence.
-	;;
-	;; Measures are done with 16 bit counters of 5 SYSHZ cycles units. This
-	;; means that the longest low-level duration must be lower than
-	;; 65535*5 = 327675 cycles. This routine can not synchronize at speeds
-	;; below SYSHZ/32767 bps using 10 low-level bits characters.
 	;; 
 	;; Consecutive low-level durations t1 and t2 are measured.
 	;; When 9.5×t2 <= t1 <= 10.5×t2, synchronization is done
 	;; and R25:R24 contains the bit duration (baudrate) in CPU cycles.
+	;;
+	;; Measures are done with 16 bit counters of 5 SYSHZ cycles units. This
+	;; means that the longest low-level duration must be lower than 65535*5 =
+	;; 327675 cycles. With 10 low-level bits characters, this routine can not
+	;; synchronize at speeds below SYSHZ/32767 bps.
 	;;
 	;; Notes:
 	;; 
@@ -106,7 +106,7 @@
 	sub	R26, R30	;
 	sbc	R27, R31	; R27:R26 = 10×t2 - dt
 
-	;; Check low end
+	;; Check the lower bound
 	;; 
 	cp	R18, R26	; if ( t1 < 10×t2 - dt )
 	cpc	R19, R27	;   then t1 is too low
@@ -119,7 +119,7 @@
 	add	R26, R30	;
 	adc	R27, R31	; R27:R26 = 10×t2 + dt
 
-	;; Check high end
+	;; Check the upper bound
 	;; 
 	cp	R18, R26	; if ( t1 > 10×t2 + dt )
 	cpc	R19, R27	;   then t1 is too high

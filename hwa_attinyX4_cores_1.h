@@ -13,7 +13,7 @@
 /*	Core class & methods
  */
 #define hw_class_core
-#define hw_fn_hw_bits_core		, _hw_bits
+#define hw_def_hw_bits_core		, _hw_bits
 
 
 /*	Core instance	        class, name, id, address

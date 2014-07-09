@@ -36,10 +36,10 @@
  */
 #define hw_class_c8a
 
-//#define hw_fn_hw_addr_c8a		, _hw_addr_ctr
-//#define hw_fn_hw_bits_c8a		, _hw_bits
+//#define hw_def_hw_addr_c8a		, _hw_addr_ctr
+//#define hw_def_hw_bits_c8a		, _hw_bits
 
-#define hw_fn_hw_bn_c8a			, _hw_bn_c8a
+#define hw_def_hw_bn_c8a			, _hw_bn_c8a
 #define _hw_bn_c8a(cc,cn,ci,ca)		8
 
 

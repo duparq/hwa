@@ -58,14 +58,27 @@
 #define _HW_G4_(a,b,c,d,...)	a##_##b##_##c##_##d
 
 
-/*	1 if the second argument of hw_is_x_y is 1, 0 otherwise
+/** \brief	Error if first argument is not ''
+ *
+ *	This is used after the processing of a variable-length arguments list
+ *	instruction to check that there's no remaining arguments.
  */
-#define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
-#define _HW_IS_2(x,y,...)	HW_A1(hw_is_##x##_##y,0)
+#define HW_EOP(...)		HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
+#define _HW_EOP_0(...)		; HW_ERR("garbage at end of instruction: `"#__VA_ARGS__"`.")
+#define _HW_EOP_1(...)
 
-#define hw_is_0_0		, 1,	/* the comma to remove '; StaticAssert(...)' */
-#define hw_is__			, 1
-#define hw_is_irq_irq		, 1
+
+/*	1 if the second argument of hw_is_x_y is defined void, 0 otherwise
+ */
+#define HW_IS(...)		_HW_IS_2(HW_G3(hw_is,__VA_ARGS__,))
+#define _HW_IS_2(...)		_HW_IS_3(__VA_ARGS__)
+#define _HW_IS_3(...)		HW_A1(_hw_is_check_##__VA_ARGS__, 0)
+
+#define _hw_is_check_		, 1
+
+#define hw_is_0_0
+#define hw_is__
+#define hw_is_irq_irq
 
 
 /** \brief	Quote the first element in the list
@@ -78,8 +91,8 @@
  */
 #define hw_addr(...)		_hw_addr_2(__VA_ARGS__)
 #define _hw_addr_2(...)		HW_G2(_hw_addr_xfn,			\
-				      HW_IS(,hw_fn_hw_addr_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_xfn_1(t,...)	HW_A1(hw_fn_hw_addr_##t)(t,__VA_ARGS__)
+				      HW_IS(,hw_def_hw_addr_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_addr_xfn_1(t,...)	HW_A1(hw_def_hw_addr_##t)(t,__VA_ARGS__)
 #define _hw_addr_xfn_0(...)	HW_G2(_hw_addr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_addr_0(...)		HW_ERR("can not process hw_addr(" #__VA_ARGS__ ").")
 #define _hw_addr_1(...)		__VA_ARGS__
@@ -89,8 +102,8 @@
  */
 /* #define hw_bits(...)		_hw_bits_2(__VA_ARGS__) */
 /* #define _hw_bits_2(...)		HW_G2(_hw_bits_xfn,			\ */
-/* 				      HW_IS(,hw_fn_hw_bits_##__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_bits_xfn_1(t,...)	HW_A1(hw_fn_hw_bits_##t)(t,__VA_ARGS__) */
+/* 				      HW_IS(,hw_def_hw_bits_##__VA_ARGS__))(__VA_ARGS__) */
+/* #define _hw_bits_xfn_1(t,...)	HW_A1(hw_def_hw_bits_##t)(t,__VA_ARGS__) */
 /* #define _hw_bits_xfn_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__) */
 /* #define _hw_bits_0(...)		HW_ERR("can not process hw_bits(" #__VA_ARGS__ ").") */
 /* #define _hw_bits_1(...)		__VA_ARGS__ */
@@ -152,8 +165,8 @@
  */
 #define hw_bn(...)		_hw_bn_2(__VA_ARGS__)
 #define _hw_bn_2(...)		HW_G2(_hw_bn_xfn,			\
-				      HW_IS(,hw_fn_hw_bn_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bn_xfn_1(t,...)	HW_A1(hw_fn_hw_bn_##t)(t,__VA_ARGS__)
+				      HW_IS(,hw_def_hw_bn_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bn_xfn_1(t,...)	HW_A1(hw_def_hw_bn_##t)(t,__VA_ARGS__)
 #define _hw_bn_xfn_0(...)	HW_G2(_hw_bn, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_bn_0(...)		HW_ERR("can not process hw_bn(" #__VA_ARGS__ ").")
 #define _hw_bn_1(...)		__VA_ARGS__
@@ -163,13 +176,13 @@
  */
 #define hw_bp(...)		_hw_bp_2(__VA_ARGS__)
 #define _hw_bp_2(...)		HW_G2(_hw_bp_xfn,			\
-				      HW_IS(,hw_fn_hw_bp_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bp_xfn_1(t,...)	HW_A1(hw_fn_hw_bp_##t)(t,__VA_ARGS__)
+				      HW_IS(,hw_def_hw_bp_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_bp_xfn_1(t,...)	HW_A1(hw_def_hw_bp_##t)(t,__VA_ARGS__)
 #define _hw_bp_xfn_0(...)	HW_G2(_hw_bp, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_bp_0(...)		HW_ERR("can not process hw_bp(" #__VA_ARGS__ ").")
 #define _hw_bp_1(...)		__VA_ARGS__
 
-#define hw_fn_hw_bp_bits1	, _hw_bp_bits1
+#define hw_def_hw_bp_bits1	, _hw_bp_bits1
 #define _hw_bp_bits1(t, c,n, rn,rw,ra,rrv,rwm, bn,bp)	bp
 
 
@@ -188,8 +201,8 @@
  */
 #define hw_ctr(...)		_hw_ctr_2(__VA_ARGS__)
 #define _hw_ctr_2(...)		HW_G2(_hw_ctr_xfn,			\
-				      HW_IS(,hw_fn_hw_ctr_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_ctr_xfn_1(t,...)	HW_A1(hw_fn_hw_ctr_##t)(t,__VA_ARGS__)
+				      HW_IS(,hw_def_hw_ctr_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_ctr_xfn_1(t,...)	HW_A1(hw_def_hw_ctr_##t)(t,__VA_ARGS__)
 #define _hw_ctr_xfn_0(...)	HW_G2(_hw_ctr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_ctr_0(...)		HW_ERR("can not process hw_ctr(" #__VA_ARGS__ ").")
 #define _hw_ctr_1(...)		__VA_ARGS__
@@ -209,8 +222,8 @@
  */
 #define hw_io(...)		_hw_io_2(__VA_ARGS__)
 #define _hw_io_2(...)		HW_G2(_hw_io_xfn,			\
-				      HW_IS(,hw_fn_hw_io_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_io_xfn_1(t,...)	HW_A1(hw_fn_hw_io_##t)(t,__VA_ARGS__)
+				      HW_IS(,hw_def_hw_io_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_io_xfn_1(t,...)	HW_A1(hw_def_hw_io_##t)(t,__VA_ARGS__)
 #define _hw_io_xfn_0(...)	HW_G2(_hw_io, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_io_0(...)		HW_ERR("can not process hw_io(" #__VA_ARGS__ ").")
 #define _hw_io_1(...)		__VA_ARGS__

@@ -28,10 +28,14 @@ HW_INLINE void config_counter( hwa_t *hwa )
 {
   hwa_config( hw_ctr(LED),
 	      clock,		syshz_div_64,
-	      countmode,	loop_updown,
+	      //	      countmode,	loop_updown,
+	      countmode,	loop_up,
 	      bottom,		0,
-	      top,		fixed_0xFF	);
+	      //	      top,		fixed_0xFF	
+	      top,		register_compare_a
+	      );
 
+  hwa_write_bits( hw_ctr(LED), compare_a, 0xFF );
   //  hwa_write( hw_ctr(LED), icr, 0xFF );
 
   hwa_turn( hw_irq(hw_ctr(LED), overflow), on );
@@ -42,7 +46,8 @@ HW_INLINE void config_counter( hwa_t *hwa )
 
 HW_INLINE void config_led( hwa_t *hwa )
 {
-  hwa_config( LED, clear_on_match_up_set_on_match_down );
+  //  hwa_config( LED, clear_on_match_up_set_on_match_down );
+  hwa_config( LED, set_at_bottom_clear_on_match );
 }
 
 

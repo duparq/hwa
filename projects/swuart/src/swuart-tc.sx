@@ -340,16 +340,16 @@ isr_bit:
 	CYCLES=CYCLES+2
 	.endif
 
-	.if SWUART_TX
-	.if SWUART_RX
+#if defined SWUART_PIN_TX
+#  if defined SWUART_PIN_RX
 	sbic	FLAGS, F_RXTX	; [2/1]		TX or RX?
-	.endif
+#  endif
 	rjmp	tx		; [2]
 	TBITTX=CYCLES+3
 	CYCLES=CYCLES+2
-	.else
-	.error "Not handled"
-	.endif
+#else
+#  error "Not handled"
+#endif
 
 #if defined SWUART_PIN_RX
 	;; Receiving
@@ -466,8 +466,8 @@ rxeof:
 	sts	status, R31	; [2]
 	sbi	FLAGS, F_WIBTX	; [2]		Need to wait one more match before TX
 
-	disable_match R31	; [2]
-	enable_start R31	; [2]
+	disable_match R31
+	enable_start R31
 
 	.if HAS_CALLBACK
 	rcall	callback
@@ -530,9 +530,9 @@ txeof:				; [ ]=15	End of frame
 
 	ldi	R31, 1<<ST_TXC	; [1]		Status = tx completed
 	sts	status, R31	; [2]
+#if defined SWUART_PIN_RX
 	in	R31, FLAGS	; [1]
 	cbi	FLAGS, F_RXTX	; [2]		Mode = RX
-#if defined SWUART_PIN_RX
 	enable_start R31	;
 #endif
 
@@ -740,10 +740,9 @@ putbits:
 	cbi	FLAGS, F_WIBTX
 
 2:
-	.if SWUART_RX
+#if defined SWUART_PIN_RX
 	disable_start R26
-	.endif
-
+#endif
 	sts	shift, R24	;		Store data
 	ldi	R24, 0x03	;		Stop and idle bits, ST_TXC = 0
 	sts	status, R24	;

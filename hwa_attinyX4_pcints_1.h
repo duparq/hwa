@@ -13,10 +13,10 @@
 /*	pcic classes & methods
  */
 #define hw_class_pcic0
-#define hw_fn_hw_bits_pcic0		, _hw_bits
+#define hw_def_hw_bits_pcic0		, _hw_bits
 
 #define hw_class_pcic1
-#define hw_fn_hw_bits_pcic1		, _hw_bits
+#define hw_def_hw_bits_pcic1		, _hw_bits
 
 
 /*	pcic instances		class, name, id, address
@@ -58,7 +58,7 @@
 
 
 
-#define hw_fn_hw_ctr_pcint		, _hw_ctr_pcint
+#define hw_def_hw_ctr_pcint		, _hw_ctr_pcint
 
 #define _hw_ctr_pcint(t,n,...)		_hw_ctr_pcint_2(hw_##n##_##ext)
 #define _hw_ctr_pcint_2(...)		_hw_ctr_pcint_3(__VA_ARGS__)
@@ -67,7 +67,7 @@
 
 /*	io definition
  */
-#define hw_fn_hw_io_pcint		, _hw_io_pcint
+#define hw_def_hw_io_pcint		, _hw_io_pcint
 
 #define _hw_io_pcint(t,n,...)		_hw_io_pcint_2(hw_##n##_##ext)
 #define _hw_io_pcint_2(...)		_hw_io_pcint_3(__VA_ARGS__)

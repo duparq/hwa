@@ -16,43 +16,43 @@
 #define hw_class_io
 
 
-#define hw_fn_hw_ctr_io				, _hw_ctr_io
+#define hw_def_hw_ctr_io				, _hw_ctr_io
 #define _hw_ctr_io(t,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
 
 
-#define hw_fn_hw_bn_io				, _hw_bn_io
+#define hw_def_hw_bn_io				, _hw_bn_io
 #define _hw_bn_io(t,n,i, cc,cn,ci,ca, bn,bp)	bn
 
 
-#define hw_fn_hw_bp_io				, _hw_bp_io
+#define hw_def_hw_bp_io				, _hw_bp_io
 #define _hw_bp_io(t,n,i, cc,cn,ci,ca, bn,bp)	bp
 
 
-#define hw_fn_hw_io_io				, _hw_io_io
+#define hw_def_hw_io_io				, _hw_io_io
 #define _hw_io_io(...)				__VA_ARGS__
 
 
-#define hw_config_io_isfn
-#define hw_config_io( cn1,ctr,cc,cn,ca,bn,bp,mode )			\
-  _hw_config_io_2(ca,hw_##cc##_ddr,hw_##cc##_port,hw_##cc##_didr,	\
-		  bn,bp,hw_iomode_##mode)
-#define _hw_config_io_2(...)	_hw_config_io_3(__VA_ARGS__)
-#define _hw_config_io_3(ca,reg1,rw1,ra1,riv1,rwm1,		\
-			reg2,rw2,ra2,riv2,rwm2,			\
-			reg3,rw3,ra3,riv3,rwm3,			\
-			bn,bp,mode)				\
-  _hw_config_io(ca+ra1,rwm1,ca+ra2,rwm2,ca+ra3,rwm3,bn,bp,mode)
+/* #define hw_def_hw_config_io			, _hw_config_io */
+/* #define _hw_config_io( cn1,ctr,cc,cn,ca,bn,bp,mode )			\ */
+/*   _hw_config_io_2(ca,hw_##cc##_ddr,hw_##cc##_port,hw_##cc##_didr,	\ */
+/* 		  bn,bp,hw_iomode_##mode) */
+/* #define _hw_config_io_2(...)	_hw_config_io_3(__VA_ARGS__) */
+/* #define _hw_config_io_3(ca,reg1,rw1,ra1,riv1,rwm1,		\ */
+/* 			reg2,rw2,ra2,riv2,rwm2,			\ */
+/* 			reg3,rw3,ra3,riv3,rwm3,			\ */
+/* 			bn,bp,mode)				\ */
+/*   _hw_config_io(ca+ra1,rwm1,ca+ra2,rwm2,ca+ra3,rwm3,bn,bp,mode) */
 
 
-#define hw_read_io_isfn
-#define hw_read_io(ion, ctr,cc,cn,ca, bn,bp)	\
-  _hw_read_io_2(cn,ca,hw_##cc##_pin, bn,bp)
+#define hw_def_hw_read_io			, _hw_read_io
+#define _hw_read_io(t, ion,ioid, c,n,i,a, bn,bp)	\
+  _hw_read_io_2(n,a,hw_##c##_pin, bn,bp)
 #define _hw_read_io_2(...)	_hw_read_io_3(__VA_ARGS__)
-#define _hw_read_io_3(cn,ca, mem,reg,rw,ra,riv,rwm, bn,bp)	\
-  _hw_read_r8(ca+ra,bn,bp)
+#define _hw_read_io_3(n,a, reg,rw,ra,riv,rwm, bn,bp)	\
+  _hw_read_r8(a+ra,bn,bp)
 
 
-#define hw_fn_hw_write_io			, _hw_write_io
+#define hw_def_hw_write_io			, _hw_write_io
 #define _hw_write_io(t, ion,ioid, cc,cn,ci,ca, bn,bp, v)	\
   _hw_write_io_2(cn,ca,hw_##cc##_port, bn,bp,v)
 #define _hw_write_io_2(...)	_hw_write_io_3(__VA_ARGS__)
@@ -60,7 +60,7 @@
   _hw_write_r8(ca+ra,rwm,bn,bp,v)
 
 
-#define hw_fn_hw_toggle_io			, _hw_toggle_io
+#define hw_def_hw_toggle_io			, _hw_toggle_io
 #define _hw_toggle_io(t, ion,ioid, cc,cn,ci,ca, bn,bp)	\
   _hw_toggle_io_2(cn,ca,hw_##cc##_pin, bn,bp)
 #define _hw_toggle_io_2(...)	_hw_toggle_io_3(__VA_ARGS__)

@@ -20,7 +20,7 @@ HW_INLINE void _hwa_begin_counters ( hwa_t *hwa )
 HW_INLINE void _hwa_solve_counters ( hwa_t *hwa )
 {
   hwa_solve_c8a( &hwa->counter0 );
-  hwa_solve_c16a( &hwa->counter1 );
+  hwa_solve_c16a( hwa, &hwa->counter1 );
 
   /*  Output-compare pins must be configured as outputs when used
    */

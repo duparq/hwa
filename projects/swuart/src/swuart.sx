@@ -6,18 +6,14 @@
 
 	;; Pins used
 	;;
-	SWUART_TX = 0
 #if defined SWUART_PIN_TX
-	SWUART_TX = 1
 	TXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), port))
 	TXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
 	TXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
 	TXDBIT    = hw_bp(hw_io(SWUART_PIN_TX))
 #endif
 
-	SWUART_RX = 0
 #if defined SWUART_PIN_RX
-	SWUART_RX = 1
 	RXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), port))
 	RXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
 	RXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))

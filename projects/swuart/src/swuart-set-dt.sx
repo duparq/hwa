@@ -1,8 +1,8 @@
 
 	;; -*- asm -*-
 
-	;; Set dtn and dt0 in SYSHZ cycles according to calculated delays and
-	;; timer prescaler
+	;; Set dtn and dt0 in SYSHZ cycles according to counter clock divisor
+	;; and computed delays
 	;;
 	;;	R25:R24 = dtn in cpu cycles
 	;;
@@ -30,9 +30,9 @@
 	.section	.text.setdt,"ax",@progbits
 setdt:
 	.if PSC>1
-	.if SWUART_RX
+#if defined SWUART_PIN_RX
 	movw	R26, R24
-	.endif
+#endif
 	rcall	applydiv
 	.endif
 
@@ -52,7 +52,8 @@ setdt:
 	sts	dtn+1, R25
 	.endif
 
-	.if SWUART_RX
+#if defined SWUART_PIN_RX
+	;;
 	;; Compute dt0 = dtn + dtn/2 - dtn/8 - delay (cpu cycles)
 	;;
 	DELAY=TSTART1+TBITRX1+1
@@ -90,8 +91,7 @@ setdt:
 	.if MATCHW==16
 	sts	dt0+1, R25
 	.endif
-
-	.endif
+#endif
 	ret
 
 

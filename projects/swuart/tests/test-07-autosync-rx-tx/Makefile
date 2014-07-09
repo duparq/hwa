@@ -1,36 +1,34 @@
 
 #	Source files
 #
-#SOURCES		=	blink-01.c
-#SOURCES		=	blink-02.c
-#SOURCES		=	fade.c
-#SOURCES		=	servo.c
-SOURCES		=	sonar.c
+SOURCES		=	main.c	\
+			swuart.sx
 
 #	Target device
 #
-MCU		=	attiny84
+MCU		= attiny84
 DEFINES		+= -DHW_PACKAGE_DIL
+
 
 #	Chip programming
 #
 PROG_SW		=	diabolo
 DIABOLO_OPTS	=	--read-flash	# programming will be faster
-
+DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 #	HWA directory
 #
 HWA		= $(HOME)/dev/hwa-dev
+SWUART		= $(HOME)/dev/hwa-dev/projects/swuart/src
 
-
-#DEFINES		+= -DHWA_DEVICE=$(MCU)
-
+#	hwa.c is required for STM32
+#
+#SOURCES		:= $(HWA)/hwa.c $(SOURCES)
 
 #	HWA files path
 #
 INCLUDES	+= -I$(HWA)
-#INCLUDES	+= -I$(PWD)/lib
-#INCLUDES	+= -I$(PWD)/com
+INCLUDES	+= -I$(SWUART)
 
 #	Toolchain path
 #
@@ -46,7 +44,6 @@ BUILDIR		= build
 
 #	Default make target
 #
-#all:	deps hex bin lst size
 all:	deps bin lst crc
 
 #	Device-specific makefile

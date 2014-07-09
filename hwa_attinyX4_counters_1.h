@@ -13,9 +13,10 @@
  */
 #define hw_counter0		c8a, counter0, 600, 0x0050
 
-/*	Registers		'reg', name, rw, ra, riv, rwm
+/*	Registers		'reg', rw, ra, riv, rwm
  */
 #define hw_c8a_ocrb		reg, 8, 0x5C-0x50, 0x00, 0xFF
+#define hw_c8a_compare_b	reg, 8, 0x5C-0x50, 0x00, 0xFF
 #define hw_c8a_imsk		reg, 8, 0x59-0x50, 0x00, 0x07
 #define hw_c8a_ifr		reg, 8, 0x58-0x50, 0x00, 0x07
 #define hw_c8a_ocra		reg, 8, 0x56-0x50, 0x00, 0xFF
@@ -58,7 +59,7 @@
  */
 #define hw_counter1		c16a, counter1, 700, 0x002B
 
-/*	Registers		'reg', name, rw, ra, riv, rwm
+/*	Registers		'reg', rw, ra, riv, rwm
  */
 #define hw_c16a_ccra		reg,  8, 0x4F -0x2B, 0x00,   0xF3
 #define hw_c16a_ccrb		reg,  8, 0x4E -0x2B, 0x00,   0xDF
@@ -80,6 +81,7 @@
 #define hw_c16a_icrh		reg,  8, 0x45 -0x2B, 0x00,   0xFF
 #define hw_c16a_imsk		reg,  8, 0x2C -0x2B, 0x00,   0x27
 #define hw_c16a_ifr		reg,  8, 0x2B -0x2B, 0x00,   0x27
+#define hw_c16a_acic		xreg, hw_acmp0, acic
 
 /*	Bits
  */
@@ -99,13 +101,16 @@
 #define hw_c16a_ov		rb1, imsk, 1, 0
 
 
-/*	Counter1 OC		class, name, id, (address) ; hw_counter, ocr, io
+/*	Counter1 OC		class, name, id, (address) ; hw_counter, reg, io
  */
 #define hw_oc1a			ocu, oc1a, 701,
-#define hw_oc1a_ext		hw_counter1, ocra, pin_pa6 /* pin_7 */
+#define hw_oc1a_ext		hw_counter1, ocra, pin_pa6	/* DIL pin_7 */
 
 #define hw_oc1b			ocu, oc1b, 702,
-#define hw_oc1b_ext		hw_counter1, ocrb, pin_pa5 /* pin_8 */
+#define hw_oc1b_ext		hw_counter1, ocrb, pin_pa5	/* DIL pin_8 */
+
+#define hw_ic1a			icu, ic1a, 703,
+#define hw_ic1a_ext		hw_counter1, icr, pin_pa7	/* DIL pin_6 */
 
 
 #define HWA_DCL_COUNTERS			\

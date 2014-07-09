@@ -34,13 +34,10 @@ extern uint16_t	swuart_chksync ( uint16_t, uint16_t, uint8_t ) ;
 extern uint8_t	swuart_dtn ;
 extern uint8_t	swuart_dt0 ;
 #elif hw_bn(SWUART_COUNTER) == 16
-#  if defined SWUART_MATCH && SWUART_MATCH != 16
-#    error
-#  endif
 extern uint16_t	swuart_dtn ;
 extern uint16_t	swuart_dt0 ;
 #else
-#  error
+#  error "hw_bn(SWUART_COUNTER) must be 8 or 16"
 #endif
 
 
@@ -55,7 +52,7 @@ extern void	(*SWUART_CALLBACK_PTR)( ) ;
 
 /*	Configuration
  */
-HW_INLINE void swuart_hwa(hwa_t *hwa)
+HW_INLINE void swuart_configure(hwa_t *hwa)
 {
   /*	Configure counter
    */
@@ -68,7 +65,6 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
 
   /*	Start condition interrupt
    */
-  //#if hw_eq(SWUART_PIN_RX, hw_pin_int0)
 #if hw_id(SWUART_PIN_RX) == hw_id(hw_pin_int0)
   /*
    *		INT0 interrupt: only on falling edge
@@ -91,6 +87,9 @@ HW_INLINE void swuart_hwa(hwa_t *hwa)
 #endif
 
   /*	TX pin
+   *
+   *		Configure TX pin as state 1 output unless the pin is also used
+   *		for RX.
    */
 #if defined SWUART_PIN_TX && hw_id(SWUART_PIN_TX) != hw_id(SWUART_PIN_RX)
   hwa_config(hw_io(SWUART_PIN_TX), output);
