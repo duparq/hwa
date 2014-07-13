@@ -12,7 +12,8 @@
 //#  define HW_ERR(msg)	.fail "HWA error: " msg
 #  define HW_ERR(msg)	0 ; .fail "HWA: " msg
 #else
-#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA:" msg)
+#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA: " msg)
+//#  define HW_ERR(msg)	_Pragma ( HW_QUOTE( GCC error HWA: msg ) )
 #endif
 
 
@@ -60,25 +61,21 @@
 
 /** \brief	Error if first argument is not ''
  *
- *	This is used after the processing of a variable-length arguments list
- *	instruction to check that there's no remaining arguments.
+ *	This is used after the processing of a variable-length list to check
+ *	that there's nothing remaining.
  */
 #define HW_EOP(...)		HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_EOP_0(...)		; HW_ERR("garbage at end of instruction: `"#__VA_ARGS__"`.")
 #define _HW_EOP_1(...)
 
 
-/*	1 if the second argument of hw_is_x_y is defined void, 0 otherwise
+/*	1 if the 2nd argument of hw_is_x_y is '1', 0 if hw_is_x_y has no 2nd arg
  */
-#define HW_IS(...)		_HW_IS_2(HW_G3(hw_is,__VA_ARGS__,))
-#define _HW_IS_2(...)		_HW_IS_3(__VA_ARGS__)
-#define _HW_IS_3(...)		HW_A1(_hw_is_check_##__VA_ARGS__, 0)
-
-#define _hw_is_check_		, 1
-
-#define hw_is_0_0
-#define hw_is__
-#define hw_is_irq_irq
+#define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
+#define _HW_IS_2(x,y,...)	HW_A1(hw_is_##x##_##y,0)
+#define hw_is_0_0		, 1,	/* the comma to remove '; StaticAssert(...)' */
+#define hw_is__			, 1
+#define hw_is_irq_irq		, 1
 
 
 /** \brief	Quote the first element in the list
@@ -99,41 +96,30 @@
 
 
 /*	hw_bits(...): memory definition of an instance's bits (generic)
+ *
+ *		No need to use a specialization. hw_bits() can be applied to
+ *		every declared instance whatever its class.
  */
-/* #define hw_bits(...)		_hw_bits_2(__VA_ARGS__) */
-/* #define _hw_bits_2(...)		HW_G2(_hw_bits_xfn,			\ */
-/* 				      HW_IS(,hw_def_hw_bits_##__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_bits_xfn_1(t,...)	HW_A1(hw_def_hw_bits_##t)(t,__VA_ARGS__) */
-/* #define _hw_bits_xfn_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_bits_0(...)		HW_ERR("can not process hw_bits(" #__VA_ARGS__ ").") */
-/* #define _hw_bits_1(...)		__VA_ARGS__ */
-
 #define hw_bits(...)		_hw_bits_2(__VA_ARGS__)
 #define _hw_bits_2(...)		HW_G2(_hw_bits_xdcl, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_bits_xdcl_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bits_0(...)		HW_ERR("`" #__VA_ARGS__ "` is not declared.")
+#define _hw_bits_0(...)		HW_ERR("`"HW_QUOTE(__VA_ARGS__)"` is not a class.")
 #define _hw_bits_1(...)		__VA_ARGS__
 #define _hw_bits_xdcl_1		_hw_bits_3
+
+#define _hw_bits_3(c,n,i,a,r)		_hw_bits_4(c,n,a,r,hw_##c##_##r)
+#define _hw_bits_4(...)			_hw_bits_5(__VA_ARGS__)
+#define _hw_bits_5(c,n,a,r,...)						\
+  HW_G2(_hw_bits_x, HW_IS(,hw_hasbits_##__VA_ARGS__))(c,n,a,r,__VA_ARGS__)
 
 #define hw_hasbits_reg
 #define hw_hasbits_rb1
 #define hw_hasbits_rb2
 #define hw_hasbits_xreg
 
-/*	Class bits
- */
-#define _hw_cbits(c,r)			_hw_bits_4(c,,,r,hw_##c##_##r)
-
-/*	Instance bits
- */
-#define _hw_bits(...)			_hw_bits_3(__VA_ARGS__)
-#define _hw_bits_3(c,n,i,a,r)		_hw_bits_4(c,n,a,r,hw_##c##_##r)
-#define _hw_bits_4(...)			_hw_bits_5(__VA_ARGS__)
-#define _hw_bits_5(c,n,a,r,...)						\
-  HW_G2(_hw_bits_x, HW_IS(,hw_hasbits_##__VA_ARGS__))(c,n,a,r,__VA_ARGS__)
 #define _hw_bits_x_0(c,n,a,r,...)	HW_G2(_hw_bits_x_0, HW_IS(,r))(c,n,a,r)
 #define _hw_bits_x_0_1(c,n,a,r)		HW_ERR("member of hw_" #c "is required.")
-#define _hw_bits_x_0_0(c,n,a,r)		HW_ERR("`" #r "` is not a member of hw_" #c)
+#define _hw_bits_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
 #define _hw_bits_x_1(c,n,a,r, x,...)	_hw_bits_##x(c,n,a,r,__VA_ARGS__)
 
 #define _hw_bits_reg(c,n,a, rn,rw,ra,rrv,rwm)	\
@@ -161,6 +147,20 @@
 #define _hw_bits_xreg_3(c,n,a,r, x,...)		_hw_bits_##x(c,n,a,r,__VA_ARGS__)
 
 
+/*	_hw_bits(...): memory definition of an instance's bits (generic)
+ *
+ *		Internal use only, no argument checking
+ */
+#define _hw_bits(...)			_hw_bits_3(__VA_ARGS__)
+
+
+/*	_hw_cbits(...): memory definition of a class' bits (generic)
+ *
+ *		Internal use only, no argument checking
+ */
+#define _hw_cbits(c,r)			_hw_bits_4(c,,,r,hw_##c##_##r)
+
+
 /*	hw_bn(...): number of bits of something (generic)
  */
 #define hw_bn(...)		_hw_bn_2(__VA_ARGS__)
@@ -186,17 +186,6 @@
 #define _hw_bp_bits1(t, c,n, rn,rw,ra,rrv,rwm, bn,bp)	bp
 
 
-/** \brief	Class of an instance
- */
-/* #define hw_class(...)		HW_G2(_hw_class, HW_IS(,hw_type_##__VA_ARGS__))(__VA_ARGS__,) */
-/* #define _hw_class_0(...)	HW_ERR("type of `" #__VA_ARGS__ "` is unknown.") */
-/* #define _hw_class_1(t,c,...)	c */
-
-/* #define hw_type_ctr */
-/* #define hw_type_mem */
-/* #define hw_type_irq */
-
-
 /*	hw_ctr(...): definition of the controller associated to an instance (generic)
  */
 #define hw_ctr(...)		_hw_ctr_2(__VA_ARGS__)
@@ -214,7 +203,7 @@
 #define _hw_id_2(...)		HW_G2(_hw_id,				\
 				      HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
 //#define _hw_id_0(...)		HW_ERR("can not process hw_id(" #__VA_ARGS__ ").")
-#define _hw_id_0(...)		-1
+#define _hw_id_0(...)		-1	/* instance does not exist */
 #define _hw_id_1(c,n,i,a)	i
 
 
@@ -234,3 +223,18 @@
 #define _hw_name_0(...)		HW_ERR("first argument is not a controller.")
 #define _hw_name_1(t,cc,cn,...)	cn
  */
+
+
+
+/*	hw_rel(...): definition of the controller associated to an instance (generic)
+ */
+#define hw_rel(...)		_hw_rel_(__VA_ARGS__)
+#define _hw_rel_(...)		HW_G2(_hw_rel, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_rel_0(...)		HW_G2(_hw_rel_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_rel_0_0(...)	HW_ERR("`"HW_QUOTE(__VA_ARGS__)"` is not a class.")
+#define _hw_rel_0_1(...)	__VA_ARGS__
+
+#define _hw_rel_1(c,n,i,a, x)	_hw_rel_1_2(n,x,hw_rel_##n##_##x)
+#define _hw_rel_1_2(...)	_hw_rel_1_3(__VA_ARGS__)
+#define _hw_rel_1_3(n,x,...)	HW_G2(_hw_rel_1, HW_IS(,hw_class_##__VA_ARGS__))(n,x,__VA_ARGS__)
+#define _hw_rel_1_1(n0,n1,...)	__VA_ARGS__

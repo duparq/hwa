@@ -37,6 +37,24 @@
 #define hw_ocu_mode_clear_on_match_up_set_on_match_down		, 7
 #define hw_ocu_mode_set_on_match_up_clear_on_match_down		, 8
 
+/*	Configure an compare output unit
+ *
+ *		The only possible mode here is 'disconnected' since we do not
+ *		know the counter unit configuration.
+ */
+#define hw_def_hw_config_ocu		, _hw_config_ocu
+
+#define hw_is_disconnected_disconnected		, 1
+
+#define _hw_config_ocu(c,n,i,a, mode)	\
+  HW_G2(_hw_config_ocu, HW_IS(disconnected,mode))(n,mode)
+#define _hw_config_ocu_0(n,mode)					\
+  HW_ERR( "`disconnected` is the only acceptable mode for hw_config(ocu,...)." )
+#define _hw_config_ocu_1(n,mode)	_hw_config_ocu_2(hw_##n##_ext)
+#define _hw_config_ocu_2(...)		_hw_config_ocu_3(__VA_ARGS__)
+#define _hw_config_ocu_3(c,n,i,a, r,io)		\
+  _hw_write_bits(c,n,i,a, com##r, 0);
+
 /*		Write the compare register of a counter compare unit
  */
 #define hw_def_hw_write_ocu		, _hw_write_ocu

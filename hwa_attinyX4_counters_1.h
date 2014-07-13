@@ -11,7 +11,7 @@
 
 /*	Instance		class, name, id, address
  */
-#define hw_counter0		c8a, counter0, 600, 0x0050
+#define hw_counter0		c8a, counter0, 400, 0x0050
 
 /*	Registers		'reg', rw, ra, riv, rwm
  */
@@ -48,16 +48,16 @@
  *
  *	Instance		class, name, id, (address) ; hw_counter, ocr, io
  */
-#define hw_oc0a			ocu, oc0a, 601,
-#define hw_oc0a_ext		hw_counter0, ocra, pin_pb2 /* pin 5 */
+#define hw_counter0_compare_a		ocu, counter0_compare_a, 401,
+#define hw_counter0_compare_a_ext	hw_counter0, ocra, pin_pb2 /* pin 5 */
 
-#define hw_oc0b			ocu, oc0b, 602,
-#define hw_oc0b_ext		hw_counter0, ocrb, pin_pa7 /* pin 6 */
+#define hw_counter0_compare_b		ocu, counter0_compare_b, 402,
+#define hw_counter0_compare_b_ext	hw_counter0, ocrb, pin_pa7 /* pin 6 */
 
 
 /*	Counter1		class, name, id, address
  */
-#define hw_counter1		c16a, counter1, 700, 0x002B
+#define hw_counter1		c16a, counter1, 410, 0x002B
 
 /*	Registers		'reg', rw, ra, riv, rwm
  */
@@ -86,6 +86,7 @@
 /*	Bits
  */
 #define hw_c16a_coma		rb1, ccra, 2, 6
+#define hw_c16a_comocra		rb1, ccra, 2, 6 /* FIXME: for hw_config(ocu,...) */
 #define hw_c16a_comb		rb1, ccra, 2, 4
 #define hw_c16a_icnc		rb1, ccrb, 1, 7
 #define hw_c16a_ices		rb1, ccrb, 1, 6
@@ -101,16 +102,19 @@
 #define hw_c16a_ov		rb1, imsk, 1, 0
 
 
-/*	Counter1 OC		class, name, id, (address) ; hw_counter, reg, io
+/*	Counter1 compare units		class, name, id, (address) ; hw_counter, reg, io
  */
-#define hw_oc1a			ocu, oc1a, 701,
-#define hw_oc1a_ext		hw_counter1, ocra, pin_pa6	/* DIL pin_7 */
+#define hw_counter1_compare_a		ocu, counter1_compare_a, 411,
+#define hw_counter1_compare_a_ext	hw_counter1, ocra, pin_pa6	/* DIL pin_7 */
 
-#define hw_oc1b			ocu, oc1b, 702,
-#define hw_oc1b_ext		hw_counter1, ocrb, pin_pa5	/* DIL pin_8 */
+#define hw_counter1_compare_b		ocu, counter1_compare_b, 412,
+#define hw_counter1_compare_b_ext	hw_counter1, ocrb, pin_pa5	/* DIL pin_8 */
 
-#define hw_ic1a			icu, ic1a, 703,
-#define hw_ic1a_ext		hw_counter1, icr, pin_pa7	/* DIL pin_6 */
+
+/*	Counter1 capture unit		class, name, id, (address) ; hw_counter, reg, io
+ */
+#define hw_counter1_capture		icu, counter1_capture, 413,
+#define hw_counter1_capture_ext		hw_counter1, icr, pin_pa7	/* DIL pin_6 */
 
 
 #define HWA_DCL_COUNTERS			\

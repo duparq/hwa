@@ -1,0 +1,123 @@
+
+	;; -*- asm -*-
+
+	;; Set dtn and dt0 in SYSHZ cycles according to counter clock divisor
+	;; and computed delays
+	;;
+	;;	R25:R24 = dtn in cpu cycles
+	;;
+
+	.if PSC == 1
+	SHIFTS=0
+	.endif
+
+	.if PSC == 8
+	SHIFTS=3
+	.endif
+
+	.if PSC == 32
+	SHIFTS=5
+	.endif
+
+	.if PSC == 64
+	SHIFTS=6
+	.endif
+
+	.if PSC == 256
+	SHIFTS=8
+	.endif
+
+	.section	.text.setdt,"ax",@progbits
+setdt:
+	.if PSC>1
+#if defined SWUART_PIN_RX
+	movw	R26, R24
+#endif
+	rcall	applydiv
+	.endif
+
+	;; Store dtn
+	;;
+	sts	dtn, R24
+
+	.if COUNTW==8 && MATCHW==16
+	;;
+	;; dtn+1 is decremented first in the ISR
+	;; so we must first increment it here
+	;; 
+	inc	R25
+	.endif
+
+	.if MATCHW==16
+	sts	dtn+1, R25
+	.endif
+
+#if defined SWUART_PIN_RX
+	;;
+	;; Compute dt0 = dtn + dtn/2 - dtn/8 - delay (cpu cycles)
+	;;
+	DELAY=TSTART1+TBITRX1+1
+	.if PSC > 1
+	movw	R24, R26
+	.endif
+	movw	R26, R24	; R25:R24 = dtn in cpu cycles
+	adiw	R26, 1
+	lsr	R27
+	ror	R26
+	add	R24, R26
+	adc	R25, R27
+	adiw	R26, 1
+	lsr	R27
+	ror	R26
+	adiw	R26, 1
+	lsr	R27
+	ror	R26
+	sub	R24, R26
+	.if MATCHW==16
+	sbc	R25, R27
+	.endif
+	subi	R24, DELAY & 0xFF
+	.if MATCHW==16
+	sbci	R25, DELAY >> 8
+	.endif
+
+	.if PSC > 1
+	rcall	applydiv
+	.endif
+
+	;; Store dt0
+	;; 
+	sts	dt0, R24
+	.if MATCHW==16
+	sts	dt0+1, R25
+	.endif
+#endif
+	ret
+
+
+	.section	.text.applydiv,"ax",@progbits
+applydiv:
+	;; Convert dtn in timer prescaled units
+	;;
+	;; Round
+	;;
+	.if PSC>1
+	adiw	R24, PSC/2
+	.endif
+
+	;; Compute dtn/PSC
+	;; 
+	.if SHIFTS>0 && SHIFTS<8
+	ldi	R18, SHIFTS
+1:	lsr	R25
+	ror	R24
+	dec	R18
+	brne	1b
+	.endif
+
+	.if SHIFTS==8
+	mov	R24, R25
+	ldi	R25, 0
+	.endif
+
+	ret

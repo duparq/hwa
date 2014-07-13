@@ -12,16 +12,16 @@
 
 /*	Keywords
  */
-#define hw_is_bottom_bottom
-#define hw_is_clock_clock
-#define hw_is_countmode_countmode
-#define hw_is_edge_edge
-#define hw_is_filter_filter
-#define hw_is_input_input
-#define hw_is_ocu_ocu
-#define hw_is_overflow_overflow
-#define hw_is_top_top
-#define hw_is_update_update
+#define hw_is_bottom_bottom		, 1
+#define hw_is_clock_clock		, 1
+#define hw_is_countmode_countmode	, 1
+#define hw_is_edge_edge			, 1
+#define hw_is_filter_filter		, 1
+#define hw_is_input_input		, 1
+#define hw_is_ocu_ocu			, 1
+#define hw_is_overflow_overflow		, 1
+#define hw_is_top_top			, 1
+#define hw_is_update_update		, 1
 
 
 /*	Register address offset for C/assembler
@@ -61,8 +61,10 @@
 
 /*	Enable/disable interrupts
  */
-#define hw_enable_irqs()		__asm__ __volatile__ ("sei" ::)
-#define hw_disable_irqs()		__asm__ __volatile__ ("cli" ::)
+/* #define hw_enable_irqs()		__asm__ __volatile__ ("sei" ::) */
+/* #define hw_disable_irqs()		__asm__ __volatile__ ("cli" ::) */
+#define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)
+#define hw_disable_interrupts()		__asm__ __volatile__ ("cli" ::)
 
 
 /*	Put the MCU in sleep mode

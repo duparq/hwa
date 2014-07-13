@@ -1,0 +1,189 @@
+
+	;; -*- asm -*-
+
+	;; Wait RXD high for (R24) bits
+	;;
+	;; GCC call-used registers: R18..R27, R30, R31
+
+#if defined SWUART_PIN_RX
+	.section	.text.wait_rxidle,"ax",@progbits
+	;; wait_rxidle = HW_G2(wait_rxidle, COUNTW)
+
+
+;; wait_rxidle_16:
+;; 	rcall	wait_ready
+
+;; 	.if DBG_WAITIDLE
+;; 	sbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	;; XCB	R18, MATCHENB, XMATCH
+;; 	XCB	R18, MATCH_IE_R, MATCH_IE_B
+
+;; 	lds	R18, dtn+0
+;; 	lds	R19, dtn+1
+;; 	XLD	R20, COUNTL
+;; 	XLD	R21, COUNTH
+
+;; 1:	mov	R25, R24	; How many bits to wait
+
+;; 2:	add	R20, R18
+;; 	adc	R21, R19
+
+;; 	XST	MATCHH, R21
+;; 	XST	MATCHL, R20
+
+;; 3:	XCF	R22, MATCH_IF_R, MATCH_IF_B ; clear_matchflg R22
+
+;; 4:	sbis	RXDPIN, RXDBIT
+;; 	rjmp	1b		; Restart if RXD==0
+;; 	;; sbis	R22, MATCH_IF_R, MATCH_IF_B
+;; 	XSBIS	R22, MATCH_IF_R, MATCH_IF_B
+;; 	rjmp	4b
+;; 	dec	R25
+;; 	brne	2b
+
+;; 	.if DBG_WAITIDLE
+;; 	cbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	ret
+
+;; wait_rxidle_8:
+;; 	rcall	wait_ready
+
+;; 	.if DBG_WAITIDLE
+;; 	sbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	XCB	R18, MATCH_IE_R, MATCH_IE_B
+
+;; 	lds	R18, dtn
+;; 	XLD	R20, COUNT
+
+;; 1:	mov	R25, R24	; How many bits to wait
+
+;; 2:	add	R20, R18
+;; 	XST	MATCH, R20
+
+;; 3:	XCF	R22, MATCH_IF_R, MATCH_IF_B ; clear_matchflg R22
+
+;; 4:	sbis	RXDPIN, RXDBIT
+;; 	rjmp	1b		; Restart if RXD==0
+;; 	XSBIS	R22, MATCH_IF_R, MATCH_IF_B
+;; 	rjmp	4b
+;; 	dec	R25
+;; 	brne	2b
+
+;; 	.if DBG_WAITIDLE
+;; 	cbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	ret
+
+
+;; 	.section	.text.wait_start,"ax",@progbits
+;; 	wait_start = HW_G2(wait_start, COUNTW)
+;; wait_start_8:
+;; 	rcall	wait_ready
+
+;; 	.if DBG_WAITSTART
+;; 	sbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	lds	R18, dtn
+;; 	XLD	R20, COUNT
+
+;; 2:	cli
+;; 	test_match_ie R25
+;; 	brne	9f
+;; 	add	R20, R18
+;; 	XST	MATCH, R20
+;; 	sei
+;; 3:	XCF	R22, MATCH_IF_R, MATCH_IF_B ; clear_matchflg R22
+
+;; 4:	test_match_ie R25
+;; 	brne	9f
+;; 	sbis	MATCH_IF_R, MATCH_IF_B
+;; 	rjmp	4b
+;; 	dec	R24
+;; 	brne	2b
+
+;; 9:	sei
+;; 	.if DBG_WAITSTART
+;; 	cbi	DBGPORT, DBGBIT
+;; 	.endif
+
+;; 	ret
+
+#endif /* defined SWUART_PIN_RX */
+
+
+	.section	.text.wait,"ax",@progbits
+	wait = HW_G2(wait, COUNTW)
+
+	.section	.text.wait_16,"ax",@progbits
+wait_16:
+	.if DBG_WAIT
+	sbi	DBGPORT, DBGBIT
+	.endif
+
+	XCB	R18, MATCH_IE_R, MATCH_IE_B
+
+	lds	R18, dtn+0
+	lds	R19, dtn+1
+	XLD	R20, COUNTL
+	XLD	R21, COUNTH
+
+1:	mov	R25, R24	; How many bits to wait
+
+2:	add	R20, R18
+	adc	R21, R19
+
+	XST	MATCHH, R21
+	XST	MATCHL, R20
+
+3:	XCF	R22, MATCH_IF_R, MATCH_IF_B ; clear_matchflg R22
+
+4:	XSBIS	R22, MATCH_IF_R, MATCH_IF_B
+	rjmp	4b
+	dec	R25
+	brne	2b
+
+	.if DBG_WAITIDLE
+	cbi	DBGPORT, DBGBIT
+	.endif
+
+	ret
+
+
+	.section	.text.wait_8,"ax",@progbits
+wait_8:
+	rcall	wait_ready
+
+	.if DBG_WAITIDLE
+	sbi	DBGPORT, DBGBIT
+	.endif
+
+	XCB	R18, MATCH_IE_R, MATCH_IE_B
+
+	lds	R18, dtn
+	XLD	R20, COUNT
+
+1:	mov	R25, R24	; How many bits to wait
+
+2:	add	R20, R18
+	XST	MATCH, R20
+
+3:	XCF	R22, MATCH_IF_R, MATCH_IF_B ; clear_matchflg R22
+
+4:	XSBIS	R22, MATCH_IF_R, MATCH_IF_B
+	rjmp	4b
+	dec	R25
+	brne	2b
+
+	.if DBG_WAITIDLE
+	cbi	DBGPORT, DBGBIT
+	.endif
+
+	ret

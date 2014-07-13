@@ -24,10 +24,6 @@
 #  include "hwa__funcs.h"
 #endif
 
-/* #define hw_state_0		0 */
-/* #define hw_state_off		0 */
-/* #define hw_state_1		1 */
-/* #define hw_state_on		1 */
 #define hw_state_on		, 1
 #define hw_state_off		, 0
 
@@ -42,20 +38,6 @@
 
 
 #if !defined __ASSEMBLER__
-
-
-/** \brief	Trigger an error at run time.
- *
- * \ingroup macro
- * \hideinitializer
- */
-/* #define HWA_ERR(msg)			_HWA_ERR_2(msg, __COUNTER__) */
-/* #define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__) */
-/* #define _HWA_ERR_3(msg, num)						\ */
-/*   do {									\ */
-/*     extern void __attribute__((error(msg))) hw_rterror_##num(void);	\ */
-/*     hw_rterror_##num();							\ */
-/*   } while(0) */
 
 
 /** \brief	The hwa struct.

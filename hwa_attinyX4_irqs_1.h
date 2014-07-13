@@ -46,27 +46,31 @@
 #define hw_irq_pin_pcint8_		irq,  3, hw_pcic1, pcint8, irqf
 #define hw_irq_pin_pcint8_all		irq,  3, hw_pcic1, pcint8, irqf
 					      
+#define hw_irq_watchdog_		irq,  4, hw_watchdog, ie, if
 #define hw_irq_watchdog_all		irq,  4, hw_watchdog, ie, if
-#define hw_irq_ic1a_			irq,  5, hw_counter1, icie, icf
+
+//#define hw_irq_ic1a_			irq,  5, hw_counter1, icie, icf
 #define hw_irq_counter1_capture		irq,  5, hw_counter1, icie, icf
-#define hw_irq_counter1_match_a		irq,  6, hw_counter1, ociea, ocfa
+#define hw_irq_counter1_capture_	irq,  5, hw_counter1, icie, icf
 #define hw_irq_counter1_compare_a	irq,  6, hw_counter1, ociea, ocfa
-#define hw_irq_counter1_match_b		irq,  7, hw_counter1, ocieb, ocfb
+#define hw_irq_counter1_compare_a_	irq,  6, hw_counter1, ociea, ocfa
 #define hw_irq_counter1_compare_b	irq,  7, hw_counter1, ocieb, ocfb
+#define hw_irq_counter1_compare_b_	irq,  7, hw_counter1, ocieb, ocfb
 #define hw_irq_counter1_overflow	irq,  8, hw_counter1, oie, ov
 					        
-/* #define hw_irq_counter0_all		irq,  counter0_all, all */
-/* #define hw_irq_counter1_all		irq,  counter1_all, all */
-					      
-#define hw_irq_counter0_match_a		irq,  9, hw_counter0, ociea, ocfa
 #define hw_irq_counter0_compare_a	irq,  9, hw_counter0, ociea, ocfa
-#define hw_irq_counter0_match_b		irq, 10, hw_counter0, ocieb, ocfb
+#define hw_irq_counter0_compare_a_	irq,  9, hw_counter0, ociea, ocfa
 #define hw_irq_counter0_compare_b	irq, 10, hw_counter0, ocieb, ocfb
+#define hw_irq_counter0_compare_b_	irq, 10, hw_counter0, ocieb, ocfb
 #define hw_irq_counter0_overflow	irq, 11, hw_counter0, oie, ov
 
-#define hw_irq_acmp_all			irq, 12, acmp_all, 12
-#define hw_irq_pin_ain1			irq, 12, ain1, 12
-#define hw_irq_adc0_all			irq, 13, adc0_all, 13
-#define hw_irq_eeprom_all		irq, 14, eeprom_all, 14
-#define hw_irq_usi_str			irq, 15, usi_str, 15
-#define hw_irq_usi_overflow		irq, 16, usi_overflow, 16
+#define hw_irq_acmp_			irq, 12, hw_acmp0, acie, aci
+#define hw_irq_acmp_all			irq, 12, hw_acmp0, acie, aci
+#define hw_irq_pin_ain1			irq, 12, hw_acmp0, acie, aci
+
+#define hw_irq_adc0_			irq, 13, hw_adc0, ie, if
+#define hw_irq_adc0_all			irq, 13, hw_adc0, ie, if
+
+//#define hw_irq_eeprom_all		irq, 14, eeprom_all, 14
+//#define hw_irq_usi_str			irq, 15, usi_str, 15
+//#define hw_irq_usi_overflow		irq, 16, usi_overflow, 16

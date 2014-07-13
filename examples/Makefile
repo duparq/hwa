@@ -5,17 +5,22 @@
 #SOURCES		=	blink-02.c
 #SOURCES		=	fade.c
 #SOURCES		=	servo.c
+#SOURCES		=	servo-adc.c
+#SOURCES		=	servo-adc-sm.c
 SOURCES		=	sonar.c
+#SOURCES		=	adc.c
 
 #	Target device
 #
 MCU		=	attiny84
-DEFINES		+= -DHW_PACKAGE_DIL
+DEFINES		+=	-DHW_PKG_DIL
+#DEFINES		+=	-Wno-unknown-pragmas
 
 #	Chip programming
 #
 PROG_SW		=	diabolo
-DIABOLO_OPTS	=	--read-flash	# programming will be faster
+DIABOLO_OPTS	+=	--read-flash	# programming will be faster
+DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 
 #	HWA directory

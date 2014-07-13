@@ -223,6 +223,27 @@
 #define _hwa_turn_1(...)	__VA_ARGS__
 
 
+/*	hw_trigger(...): trigger something on/off (generic)
+ */
+#define hw_trigger(...)		_hw_trigger_2(__VA_ARGS__)
+#define _hw_trigger_2(...)	HW_G2(_hw_trigger_xfn, \
+				      HW_IS(,hw_def_hw_trigger_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_trigger_xfn_1(t,...)	HW_A1(hw_def_hw_trigger_##t)(t,__VA_ARGS__)
+#define _hw_trigger_xfn_0(...)	HW_G2(_hw_trigger, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_trigger_0(...)	HW_ERR("can not process hw_trigger("HW_QUOTE(__VA_ARGS__)".")
+#define _hw_trigger_1(...)	__VA_ARGS__
+
+/*	hwa_trigger(...): trigger something on/off (generic)
+ */
+#define hwa_trigger(...)	_hwa_trigger_2(__VA_ARGS__)
+#define _hwa_trigger_2(...)	HW_G2(_hwa_trigger_xfn, \
+				      HW_IS(,hw_def_hwa_trigger_##__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_trigger_xfn_1(t,...)	HW_A1(hw_def_hwa_trigger_##t)(t,__VA_ARGS__)
+#define _hwa_trigger_xfn_0(...)	HW_G2(_hwa_trigger, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_trigger_0(...)	HW_ERR("can not process hwa_trigger("HW_QUOTE(__VA_ARGS__)".")
+#define _hwa_trigger_1(...)	__VA_ARGS__
+
+
 /** \brief	8-bit HWA register.
  *
  *	Structure used by hwa_ prefixed functions to handle one 8-bit hardware register. 

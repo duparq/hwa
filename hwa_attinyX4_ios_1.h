@@ -16,56 +16,62 @@
 #include "hwa_atmelavr_ios_1.h"
 
 
-/*	Classes & methods
+/*	Class & method
  */
-#define hw_class_io8
-#define hw_def_hw_bits_io8	, _hw_bits
-
-#define hw_class_io4
-#define hw_def_hw_bits_io4	, _hw_bits
-
+#define hw_class_porta
+#define hw_def_hw_bits_porta	, _hw_bits
 
 /*	Instances		class, name, id, address
  */
-#define hw_porta		io8, porta, 100, 0x21
-#define hw_portb		io4, portb, 200, 0x36
-
+#define hw_porta		porta, porta, 300, 0x21
 
 /*	Class regs		'reg', rw, ra, riv, rvm, rwm
  */
-#define hw_io8_port		reg, 8, 0x3B-0x21, 0x00, 0xFF
-#define hw_io8_ddr		reg, 8, 0x3A-0x21, 0x00, 0xFF
-#define hw_io8_pin		reg, 8, 0x39-0x21, 0x00, 0xFF
-#define hw_io8_didr		reg, 8, 0x21-0x21, 0x00, 0xFF
+#define hw_porta_port		reg, 8, 0x3B-0x21, 0x00, 0xFF
+#define hw_porta_ddr		reg, 8, 0x3A-0x21, 0x00, 0xFF
+#define hw_porta_pin		reg, 8, 0x39-0x21, 0x00, 0xFF
+//#define hw_porta_didr		reg, 8, 0x21-0x21, 0x00, 0xFF
 
-#define hw_io4_port		reg, 8, 0x38-0x36, 0x00, 0x0F
-#define hw_io4_ddr		reg, 8, 0x37-0x36, 0x00, 0x0F
-#define hw_io4_pin		reg, 8, 0x36-0x36, 0x00, 0x0F
-#define hw_io4_didr		reg, 8,   -1-0x36, 0x00, 0x0F /* Does not exist */
-
-
-/*	io pins			class, name, id, controller, bn, bp
+/*	Pins			class, name, id, controller, bn, bp
  */
-#define hw_port_a		io, port_a,  109, hw_porta, 8, 0
-#define hw_pin_pa0		io, pin_pa0, 101, hw_porta, 1, 0
-#define hw_pin_pa1		io, pin_pa1, 102, hw_porta, 1, 1
-#define hw_pin_pa2		io, pin_pa2, 103, hw_porta, 1, 2
-#define hw_pin_pa3		io, pin_pa3, 104, hw_porta, 1, 3
-#define hw_pin_pa4		io, pin_pa4, 105, hw_porta, 1, 4
-#define hw_pin_pa5		io, pin_pa5, 106, hw_porta, 1, 5
-#define hw_pin_pa6		io, pin_pa6, 107, hw_porta, 1, 6
-#define hw_pin_pa7		io, pin_pa7, 108, hw_porta, 1, 7
-
-#define hw_port_b		io, port_b,  209, hw_portb, 8, 0
-#define hw_pin_pb0		io, pin_pb0, 201, hw_portb, 1, 0
-#define hw_pin_pb1		io, pin_pb1, 202, hw_portb, 1, 1
-#define hw_pin_pb2		io, pin_pb2, 203, hw_portb, 1, 2
-#define hw_pin_pb3		io, pin_pb3, 204, hw_portb, 1, 3
+#define hw_port_a		io, port_a,  309, hw_porta, 8, 0
+#define hw_pin_pa0		io, pin_pa0, 301, hw_porta, 1, 0
+#define hw_pin_pa1		io, pin_pa1, 302, hw_porta, 1, 1
+#define hw_pin_pa2		io, pin_pa2, 303, hw_porta, 1, 2
+#define hw_pin_pa3		io, pin_pa3, 304, hw_porta, 1, 3
+#define hw_pin_pa4		io, pin_pa4, 305, hw_porta, 1, 4
+#define hw_pin_pa5		io, pin_pa5, 306, hw_porta, 1, 5
+#define hw_pin_pa6		io, pin_pa6, 307, hw_porta, 1, 6
+#define hw_pin_pa7		io, pin_pa7, 308, hw_porta, 1, 7
 
 
-/*	io pins by numbers
+/*	Class & methods
  */
-#if defined HW_PACKAGE_DIL
+#define hw_class_portb
+#define hw_def_hw_bits_portb	, _hw_bits
+
+/*	Instances		class, name, id, address
+ */
+#define hw_portb		portb, portb, 310, 0x36
+
+/*	Class regs		'reg', rw, ra, riv, rvm, rwm
+ */
+#define hw_portb_port		reg, 8, 0x38-0x36, 0x00, 0x0F
+#define hw_portb_ddr		reg, 8, 0x37-0x36, 0x00, 0x0F
+#define hw_portb_pin		reg, 8, 0x36-0x36, 0x00, 0x0F
+
+/*	Pins			class, name, id, controller, bn, bp
+ */
+#define hw_port_b		io, port_b,  319, hw_portb, 8, 0
+#define hw_pin_pb0		io, pin_pb0, 311, hw_portb, 1, 0
+#define hw_pin_pb1		io, pin_pb1, 312, hw_portb, 1, 1
+#define hw_pin_pb2		io, pin_pb2, 313, hw_portb, 1, 2
+#define hw_pin_pb3		io, pin_pb3, 314, hw_portb, 1, 3
+
+
+/*	Pins by numbers
+ */
+#if defined HW_PKG_DIL
 #
 #  define hw_pin_2		hw_pin_pb0
 #  define hw_pin_3		hw_pin_pb1
@@ -83,17 +89,16 @@
 #endif
 
 
-/** \brief	Part of HWA struct for ios
- */
 #if !defined __ASSEMBLER__
+
 typedef struct {
   hwa_r8_t port ;
   hwa_r8_t ddr ;
   hwa_r8_t didr ;
 } hwa_io_t ;
-#endif
-
 
 #define HWA_DCL_IOS				\
   hwa_io_t porta ;				\
   hwa_io_t portb ;
+
+#endif /* !defined __ASSEMBLER__ */

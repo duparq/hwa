@@ -14,10 +14,9 @@
  */
 #define hw_class_acmp
 
-
 /*	Instance		class, name, id, address
  */
-#define hw_acmp0		acmp, acmp0, 800, 0x28
+#define hw_acmp0		acmp, acmp0, 700, 0x28
 
 /*	Class registers		'reg', rw, ra, riv, rwm
  */
@@ -34,16 +33,10 @@
 #define hw_acmp_acis		rb1, csr, 2, 0
 
 
-#define HWA_DCL_ACMPS			\
-  hwa_acmp_t	acmp0 ;
-
-
 #if !defined __ASSEMBLER__
-typedef struct {
 
-  /*  Hardware registers
-   */
-  hwa_r8_t 	csr ;
-} hwa_acmp_t ;
+typedef struct { hwa_r8_t csr ; } hwa_acmp_t ;
 
-#endif
+#define HWA_DCL_ACMPS		hwa_acmp_t acmp0
+
+#endif /* !defined __ASSEMBLER__ */

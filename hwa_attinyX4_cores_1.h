@@ -18,7 +18,7 @@
 
 /*	Core instance	        class, name, id, address
  */
-#define hw_core0		core, core0, 1, 0x0000
+#define hw_core0		core, core0, 101, 0x0000
 
 
 /*	Core class regs		'reg', rw, ra, riv, rwm
@@ -53,8 +53,8 @@
 
 /*	Int0 instance	        class, name, id, address
  */
-#define hw_pin_int0		int0, pin_int0, 2,
-#define hw_pin_int0_ext		hw_core0, pin_5
+#define hw_pin_int0		int0, pin_int0, 102,
+#define hw_pin_int0_ext		hw_core0, pin_pb2
 
 
 #if !defined __ASSEMBLER__

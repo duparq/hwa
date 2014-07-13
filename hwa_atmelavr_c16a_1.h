@@ -16,8 +16,10 @@
  */
 #define hw_class_c16a
 
-#define hw_def_bn_c16a			, _hw_bn_c16a
+#define hw_def_hw_bn_c16a		, _hw_bn_c16a
 #define _hw_bn_c16a(c,n,i,a)		16
+
+//#define hw_def_hw_trigger_c
 
 
 /*	16-bit counter class 'c16a'
@@ -36,6 +38,7 @@
 
 #define hw_c16a_clock_none			, 0
 #define hw_c16a_clock_syshz			, 1
+#define hw_c16a_clock_syshz_div_1		, 1	/* Useful for concat */
 #define hw_c16a_clock_syshz_div_8		, 2
 #define hw_c16a_clock_syshz_div_64		, 3
 #define hw_c16a_clock_syshz_div_256		, 4

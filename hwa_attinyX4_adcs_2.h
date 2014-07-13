@@ -4,6 +4,8 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+#include "hwa_atmelavr_ad10a_2.h"
+
 
 HW_INLINE void _hwa_begin_adcs ( hwa_t *hwa )
 {

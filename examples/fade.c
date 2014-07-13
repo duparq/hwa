@@ -4,7 +4,7 @@
 
 #include <hwa.h>
 
-#define	LED		hw_oc0b
+#define	LED		hw_counter0_compare_b
 
 
 HW_ISR( hw_irq(hw_ctr(LED), overflow) )
@@ -58,7 +58,7 @@ int main ( )
   config_counter(hwa);
   hwa_commit();
 
-  hw_enable_irqs();
+  hw_enable_interrupts();
 
   for(;;)
     hw_sleep_until_irq();

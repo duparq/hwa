@@ -298,6 +298,9 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
   /*	Solve the configuration of the capture input
    */
   if ( p->icr_input ) {
+#if !defined HW_DEVICE_ATTINYX4
+#  warn "TODO: check the validity of this"
+#endif
     hwa_write_bits( hw_acmp0, acic, p->icr_input-1 );
     /* if ( p->icr_input == HW_A1(hw_icu_input_pin_icp) ) */
     /*   hwa_write_bits( hw_acmp0, acic, 0 ); */

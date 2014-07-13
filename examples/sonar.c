@@ -5,10 +5,15 @@
 #include <hwa.h>
 
 #define SONAR_COUNTER		hw_counter1
-#define	SONAR_TRIG		hw_oc1b		/* output compare OC1B */
+//#define	SONAR_TRIG		hw_rel(SONAR_COUNTER, compare_b)
+//#define	SONAR_TRIG		HW_G2(SONAR_COUNTER, compare_b)
+#define	SONAR_TRIG		hw_counter1_compare_b
+//#define SONAR_CAPTURE		hw_rel(SONAR_COUNTER, capture)
+#define SONAR_CAPTURE		hw_counter1_capture
+//#define	SONAR_TRIG		hw_oc1b		/* output compare OC1B */
 #define SONAR_TRIG_PERIOD	0.1		/* 100 ms */
 #define SONAR_TRIG_LEN		0.000020	/* 20 µs */
-#define SONAR_CAPTURE		hw_ic1a
+//#define SONAR_CAPTURE		hw_ic1a
 
 #define SG90_MIN		0.000270*2
 #define SG90_MAX		0.001300*2
@@ -30,17 +35,6 @@ HW_ISR( hw_irq(SONAR_CAPTURE) )
   static uint16_t	start ;
 
   /* hw_toggle(PIN_DBG); */
-
-  //  hw_write_bits( SONAR_COUNTER, ices, !hw_read_bits( SONAR_COUNTER, ices) );
-  //  hw_write_bits( SONAR_COUNTER, ices, hw_read_bits(SONAR_COUNTER, ices)==0 );
-
-  /* hw_write_bits( SONAR_COUNTER, ices, 0 ); */
-  /* hw_write_bits( SONAR_COUNTER, ices, 1 ); */
-
-  /* if ( hw_read_bits( SONAR_COUNTER, ices) == 0 ) */
-  /*   hw_write_bits( SONAR_COUNTER, ices, 1 ); */
-  /* else */
-  /*   hw_write_bits( SONAR_COUNTER, ices, 0 ); */
 
 #if 0
   /* hwa_begin(); */
@@ -102,7 +96,7 @@ HW_ISR( hw_irq(SERVO_COUNTER, compare_a) )
 #define SERVO_MIN	(int)(SG90_MIN * hw_syshz/1024)
 #define SERVO_MAX	(int)(SG90_MAX * hw_syshz/1024)
 
-/*	Raise pulse for servo
+/*	Servo counter reaches TOP: raise pulse for servo
  */
 HW_ISR( hw_irq(SERVO_COUNTER, compare_a) )
 {
@@ -120,6 +114,8 @@ HW_ISR( hw_irq(SERVO_COUNTER, compare_a) )
   hw_write_bits( SERVO_COUNTER, compare_b, x );
 }
 
+/*	Servo counter compare match: lower pulse for servo
+ */
 HW_ISR( hw_irq(SERVO_COUNTER, compare_b) )
 {
   hw_write( PIN_SERVO, 0 );
@@ -172,7 +168,7 @@ int main ( )
 
   hwa_commit();
 
-  hw_enable_irqs();
+  hw_enable_interrupts();
 
   for(;;) {
     hw_sleep_until_irq();

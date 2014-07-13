@@ -11,14 +11,18 @@
 
 #define HW_DEVICE_ATTINYX4
 
+/*	The include order and ids follows that of the datasheet
+ */
 #include "hwa_atmelavr_1.h"
-#include "hwa_attinyX4_cores_1.h"
-#include "hwa_attinyX4_ios_1.h"
-#include "hwa_attinyX4_pcints_1.h"
+#include "hwa_attinyX4_cores_1.h"		/* id: 100 */
 #include "hwa_attinyX4_irqs_1.h"
-#include "hwa_attinyX4_adcs_1.h"
-#include "hwa_attinyX4_counters_1.h"
-#include "hwa_attinyX4_acmps_1.h"
+#include "hwa_attinyX4_pcints_1.h"		/* id: 200 */
+#include "hwa_attinyX4_ios_1.h"			/* id: 300 */
+#include "hwa_attinyX4_counters_1.h"		/* id: 400 */
+//#include "hwa_attinyX4_pscs_1.h"		/* id: 500 */
+//#include "hwa_attinyX4_usis_1.h"		/* id: 600 */
+#include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
+#include "hwa_attinyX4_adcs_1.h"		/* id: 800 */
 
 
 /** \brief	Returns the system clock frequency.
@@ -48,31 +52,9 @@
   HWA_DCL_CORES					\
   HWA_DCL_IOS					\
   HWA_DCL_PCINTS				\
-  HWA_DCL_ADCS					\
   HWA_DCL_COUNTERS				\
-  HWA_DCL_ACMPS
-
-
-//#define hw_syshz	_hw_syshz()
-
-/* HW_INLINE uint32_t _hw_syshz() */
-/* { */
-/*   uint32_t syshz = 0 ; */
-
-/*   if ( (FUSE_LB & 0x0F) == 2 ) */
-/*     syshz = 8000000 ; */
-/*   else if ( (FUSE_LB & 0x0F) == 4 ) */
-/*     syshz = 128000 ; */
-/*   else */
-/*     syshz = HW_XSOHZ ; */
-
-/*   if ( (FUSE_LB & 0x80) == 0 ) */
-/*     syshz /= 8 ; */
-
-/*   return syshz ; */
-/* } */
-
-#endif /* !defined __ASSEMBLER__ */
+  HWA_DCL_ACMPS ;				\
+  HWA_DCL_ADCS ;
 
 
 #define hw_sleep_until_irq()					\
@@ -84,6 +66,8 @@
 		       "    andi  r24, 0xDF"		"\n\t"	\
 		       "    out   0x35, r24"		"\n\t"	\
 		       ::: "r24" )
+
+#endif /* !defined __ASSEMBLER__ */
 
 
 #if defined HW_OEM && defined __ASSEMBLER__

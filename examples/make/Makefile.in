@@ -115,18 +115,18 @@ endif
 %.cp.sx: %.sx
 	$(CPP) $(CFLAGS) $< >$@
 
-$(BUILDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
+$(BUILDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT) Makefile
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
-$(BUILDIR)/%.$(MCU).o : %.c
+$(BUILDIR)/%.$(MCU).o : %.c Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDIR)/%.$(MCU).o : %.s
+$(BUILDIR)/%.$(MCU).o : %.s Makefile
 	@mkdir -p $(dir $@)
 	$(AS) $(AFLAGS) $< -o $@
 
-$(BUILDIR)/%.$(MCU).o : %.sx
+$(BUILDIR)/%.$(MCU).o : %.sx Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 

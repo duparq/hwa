@@ -8,7 +8,7 @@
 #include <hwa.h>
 
 
-#define	SERVO		hw_oc1a		/* compare unit output OC1A */
+#define	SERVO		hw_counter1_compare_a		/* compare unit output OC1A */
 /* #define DUTY_MIN	260 */
 /* #define DUTY_MAX	1200 */
 #define DUTY_MIN	270
@@ -64,8 +64,8 @@ HW_INLINE void config_counter( hwa_t *hwa )
 	      countmode,	loop_updown,
 	      bottom,		0,
 	      top,		register_capture,
-	      update_compares,	at_bottom,
-	      overflow_irq,	at_bottom,
+	      update,		at_bottom,
+	      overflow,		at_bottom,
 	      );
 
   hwa_write( hw_bits(hw_ctr(SERVO), capture), DUTY_PERIOD );
@@ -76,7 +76,7 @@ HW_INLINE void config_counter( hwa_t *hwa )
 
 HW_INLINE void config_servo( hwa_t *hwa )
 {
-  hwa_config( SERVO, clearup_setdown );
+  hwa_config( SERVO, clear_on_match_up_set_on_match_down );
   //  hwa_write( SERVO, DUTY_MIN );
 }
 
@@ -89,7 +89,7 @@ int main ( )
   config_counter(hwa);
   hwa_commit();
 
-  hw_enable_irqs();
+  hw_enable_interrupts();
 
   for(;;)
     hw_sleep_until_irq();

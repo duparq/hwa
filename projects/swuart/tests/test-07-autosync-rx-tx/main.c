@@ -36,22 +36,22 @@ main ( )
 
   /*	Synchronize UART
    */
-  swuart_set_dt( swuart_sync_10_1() );
-  swuart_wait_rxidle(20);
+  //  swuart_set_dt( swuart_sync_10_1() );
+  //  swuart_wait_rxidle(20);
   hw_write(PIN_DBG, 1);
 
   /*	Put prompt
    */
-  hw_enable_irqs();
-  swuart_putbyte('#');
-  swuart_enable_rx();
+  hw_enable_interrupts();
+  //  swuart_putbyte('#');
+  //  swuart_enable_rx();
 
   /*	Return received characters with a leading '>'
    */
   for(;;) {
-    uint8_t c = swuart_rx();    
+    //    uint8_t c = swuart_rx();    
     hw_toggle( PIN_DBG );
-    swuart_putbyte('>');
-    swuart_putbyte(c);
+    //    swuart_putbyte('>');
+    //    swuart_putbyte(c);
   }
 }

@@ -11,28 +11,26 @@
  */
 
 
-/*	io class & methods
+/*	Class & methods
  */
 #define hw_class_io
 
-
-#define hw_def_hw_ctr_io				, _hw_ctr_io
-#define _hw_ctr_io(t,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
-
+#define hw_def_hw_ctr_io			, _hw_ctr_io
+#define _hw_ctr_io(c,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
 
 #define hw_def_hw_bn_io				, _hw_bn_io
-#define _hw_bn_io(t,n,i, cc,cn,ci,ca, bn,bp)	bn
-
+#define _hw_bn_io(c,n,i, cc,cn,ci,ca, bn,bp)	bn
 
 #define hw_def_hw_bp_io				, _hw_bp_io
-#define _hw_bp_io(t,n,i, cc,cn,ci,ca, bn,bp)	bp
-
+#define _hw_bp_io(c,n,i, cc,cn,ci,ca, bn,bp)	bp
 
 #define hw_def_hw_io_io				, _hw_io_io
 #define _hw_io_io(...)				__VA_ARGS__
 
 
-/* #define hw_def_hw_config_io			, _hw_config_io */
+#if !defined __ASSEMBLER__
+
+#define hw_def_hw_config_io			, _hw_config_io
 /* #define _hw_config_io( cn1,ctr,cc,cn,ca,bn,bp,mode )			\ */
 /*   _hw_config_io_2(ca,hw_##cc##_ddr,hw_##cc##_port,hw_##cc##_didr,	\ */
 /* 		  bn,bp,hw_iomode_##mode) */
@@ -42,6 +40,15 @@
 /* 			reg3,rw3,ra3,riv3,rwm3,			\ */
 /* 			bn,bp,mode)				\ */
 /*   _hw_config_io(ca+ra1,rwm1,ca+ra2,rwm2,ca+ra3,rwm3,bn,bp,mode) */
+
+#define _hw_config_io( io,ion,ioi, c,n,i,a,bn,bp,mode )			\
+  _hw_config_io_2(a,hw_##c##_ddr,hw_##c##_port,				\
+		    bn,bp,hw_iomode_##mode)
+#define _hw_config_io_2(...)	_hw_config_io_3(__VA_ARGS__)
+#define _hw_config_io_3(a,reg1,rw1,ra1,riv1,rwm1,		\
+			reg2,rw2,ra2,riv2,rwm2,			\
+			bn,bp,mode)				\
+  __hw_config_io(a+ra1,rwm1,a+ra2,rwm2,bn,bp,mode)
 
 
 #define hw_def_hw_read_io			, _hw_read_io
@@ -97,27 +104,36 @@
 #define hw_iomode_nopullup			0x08	/* 00 1000 */
 #define hw_iomode_input_pullup			0x0E	/* 00 1110 */
 #define hw_iomode_input_nopullup		0x0A	/* 00 1010 */
-#define hw_iomode_input_digital			0x22	/* 10 0010 */
-#define hw_iomode_input_digital_pullup		0x2E	/* 10 1110 */
-#define hw_iomode_input_digital_nopullup	0x2A	/* 10 1010 */
-#define hw_iomode_input_analog			0x32	/* 11 0010 */
-#define hw_iomode_input_analog_nopullup		0x3A	/* 11 1010 */
+/* #define hw_iomode_input_digital			0x22	/\* 10 0010 *\/ */
+/* #define hw_iomode_input_digital_pullup		0x2E	/\* 10 1110 *\/ */
+/* #define hw_iomode_input_digital_nopullup	0x2A	/\* 10 1010 *\/ */
+/* #define hw_iomode_input_analog			0x32	/\* 11 0010 *\/ */
+/* #define hw_iomode_input_analog_nopullup		0x3A	/\* 11 1010 *\/ */
 
 
-#if !defined __ASSEMBLER__
+/* HW_INLINE void _hw_config_io( intptr_t ddr, uint8_t rwm1, */
+/* 			      intptr_t port, uint8_t rwm2, */
+/* 			      intptr_t didr, uint8_t rwm3, */
+/* 			      uint8_t bn, uint8_t bp, uint8_t mode ) */
+/* { */
+/*   if ( mode & 0x20 ) {	/\* didr *\/ */
+/*     if ( didr == -1 ) */
+/*       HWA_ERR("no disable digital filter for this io port"); */
+/*     else */
+/*       _hw_write_r8( didr, rwm3, bn, bp, -1 * ((mode & 0x10)!=0) & ((1<<bn)-1) ); */
+/*   } */
 
-HW_INLINE void _hw_config_io( intptr_t ddr, uint8_t rwm1,
+/*   if ( mode & 0x08 )	/\* pull-up *\/ */
+/*     _hw_write_r8( port, rwm2, bn, bp, -1 * ((mode & 0x04)!=0) & ((1<<bn)-1) ); */
+
+/*   if ( mode & 0x02 )	/\* ddr *\/ */
+/*     _hw_write_r8( ddr, rwm1, bn, bp, -1 * ((mode & 0x01)!=0) & ((1<<bn)-1) ); */
+/* } */
+
+HW_INLINE void __hw_config_io( intptr_t ddr, uint8_t rwm1,
 			      intptr_t port, uint8_t rwm2,
-			      intptr_t didr, uint8_t rwm3,
 			      uint8_t bn, uint8_t bp, uint8_t mode )
 {
-  if ( mode & 0x20 ) {	/* didr */
-    if ( didr == -1 )
-      HWA_ERR("no disable digital filter for this io port");
-    else
-      _hw_write_r8( didr, rwm3, bn, bp, -1 * ((mode & 0x10)!=0) & ((1<<bn)-1) );
-  }
-
   if ( mode & 0x08 )	/* pull-up */
     _hw_write_r8( port, rwm2, bn, bp, -1 * ((mode & 0x04)!=0) & ((1<<bn)-1) );
 
