@@ -5,15 +5,10 @@
 #include <hwa.h>
 
 #define SONAR_COUNTER		hw_counter1
-//#define	SONAR_TRIG		hw_rel(SONAR_COUNTER, compare_b)
-//#define	SONAR_TRIG		HW_G2(SONAR_COUNTER, compare_b)
-#define	SONAR_TRIG		hw_counter1_compare_b
-//#define SONAR_CAPTURE		hw_rel(SONAR_COUNTER, capture)
+#define	SONAR_COMP		hw_counter1_compare_b
 #define SONAR_CAPTURE		hw_counter1_capture
-//#define	SONAR_TRIG		hw_oc1b		/* output compare OC1B */
 #define SONAR_TRIG_PERIOD	0.1		/* 100 ms */
 #define SONAR_TRIG_LEN		0.000020	/* 20 µs */
-//#define SONAR_CAPTURE		hw_ic1a
 
 #define SG90_MIN		0.000270*2
 #define SG90_MAX		0.001300*2
@@ -22,7 +17,6 @@
 #define PIN_SERVO		hw_pin_5
 #define SERVO_PERIOD		0.02
 #define SERVO_COUNTER		hw_counter0
-//#define SERVO_PULSAR		hw_oc0b
 
 #define PIN_DBG			hw_pin_3
 
@@ -127,39 +121,34 @@ int main ( )
   /*	Echo delay: 58.824 µs / 1 cm
    */
   hwa_begin_from_reset();
-  hwa_config( SONAR_COUNTER,			/* hw_ctr(SONAR_TRIG) */
+  hwa_config( SONAR_COUNTER,
 	      clock,		syshz_div_64,	/* ~8 µs */
 	      countmode,	loop_up,
 	      bottom,		0,
-	      top,		register_compare_a,
-	      /* update,		at_top, */
-	      /* overflow,		at_top, */
+	      top,		register_compare_a
 	      );
   hwa_write_bits( SONAR_COUNTER, compare_a, SONAR_TRIG_PERIOD * hw_syshz/64) ;
 
-  hwa_config(SONAR_TRIG, set_at_bottom_clear_on_match );
-  hwa_write(SONAR_TRIG, SONAR_TRIG_LEN * hw_syshz/64);
+  hwa_config( SONAR_COMP, set_at_bottom_clear_on_match );
+  hwa_write( SONAR_COMP, SONAR_TRIG_LEN * hw_syshz/64);
 
   hwa_config( SONAR_CAPTURE,
   	      input,		pin_icp,
   	      edge,		rising
   	      );
-
   hwa_turn( hw_irq(SONAR_CAPTURE), on );
+
+  if ( SERVO_PERIOD * hw_syshz/1024 > (1<<hw_bn(SERVO_COUNTER))-1 )
+    HWA_ERR("SERVO_COUNTER can not afford SERVO_PERIOD." );
 
   hwa_config( SERVO_COUNTER,
   	      clock,		syshz_div_1024,
   	      countmode,	loop_up,
   	      top,		register_compare_a
   	      );
-
-  if ( SERVO_PERIOD * hw_syshz/1024 > (1<<hw_bn(SERVO_COUNTER))-1 )
-    HWA_ERR("SERVO_COUNTER can not afford SERVO_PERIOD." );
-
-  hwa_write_bits( SERVO_COUNTER, compare_a, SERVO_PERIOD * hw_syshz/1024) ;
-  //  hwa_turn( hw_irq(SERVO_COUNTER, overflow), on ); /* Overflow at MAX! */
   hwa_turn( hw_irq(SERVO_COUNTER, compare_a), on );
   hwa_turn( hw_irq(SERVO_COUNTER, compare_b), on );
+  hwa_write_bits( SERVO_COUNTER, compare_a, SERVO_PERIOD * hw_syshz/1024) ;
 
   //  hwa_config( SERVO_PULSAR, set_at_bottom_clear_on_match );
 

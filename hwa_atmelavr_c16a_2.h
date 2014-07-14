@@ -49,102 +49,122 @@ HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
 }
 
 
+/*	16-bit counter class 'c16a'
+ */
+#define hw_c16a_countmode_loop_up		, 1
+#define hw_c16a_countmode_loop_updown		, 2
+
+#define hw_c16a_top_fixed_0xFF			, 1
+#define hw_c16a_top_fixed_0x1FF			, 2
+#define hw_c16a_top_fixed_0x3FF			, 3
+#define hw_c16a_top_fixed_0xFFFF		, 4
+#define hw_c16a_top_capture			, 5
+#define hw_c16a_top_register_capture		, 5
+#define hw_c16a_top_compare_a			, 6
+#define hw_c16a_top_register_compare_a		, 6
+
+#define hw_c16a_clock_none			, 0
+#define hw_c16a_clock_syshz			, 1
+#define hw_c16a_clock_syshz_div_1		, 1	/* Useful for concat */
+#define hw_c16a_clock_syshz_div_8		, 2
+#define hw_c16a_clock_syshz_div_64		, 3
+#define hw_c16a_clock_syshz_div_256		, 4
+#define hw_c16a_clock_syshz_div_1024		, 5
+#define hw_c16a_clock_ext_rising		, 6
+#define hw_c16a_clock_ext_falling		, 7
+
+
 /*	Configure counter unit
  */
 #define hw_def_hwa_config_c16a		, _hwa_config_c16a
 
 #define _hwa_config_c16a(c,n,i,a, ...)					\
-  do { HW_G2(hwa_config_c16a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
+  do { HW_G2(_hwa_config_c16a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
 
-#define hwa_config_c16a_xclock_0(n,...)					\
+#define _hwa_config_c16a_xclock_0(n,...)					\
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c16a_xclock_1(n,_clock_,...)				\
-  HW_G2(hwa_config_c16a_vclock,HW_IS(,hw_c16a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xclock_1(n,_clock_,...)				\
+  HW_G2(_hwa_config_c16a_vclock,HW_IS(,hw_c16a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_vclock_0(n,...)					\
+#define _hwa_config_c16a_vclock_0(n,...)					\
   HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
 	  "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "		\
 	  "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c16a_vclock_1(n,zclock,...)				\
+#define _hwa_config_c16a_vclock_1(n,zclock,...)				\
   hwa->n.clock = HW_A1(hw_c16a_clock_##zclock);				\
-  HW_G2(hwa_config_c16a_xmode,HW_IS(countmode,__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(_hwa_config_c16a_xmode,HW_IS(countmode,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xmode_0(n,...)					\
+#define _hwa_config_c16a_xmode_0(n,...)					\
   HW_ERR("expected `countmode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c16a_xmode_1(n,_countmode_,...)			\
-  HW_G2(hwa_config_c16a_vmode,HW_IS(,hw_c16a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xmode_1(n,_countmode_,...)			\
+  HW_G2(_hwa_config_c16a_vmode,HW_IS(,hw_c16a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_vmode_0(n,...)					\
+#define _hwa_config_c16a_vmode_0(n,...)					\
   HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
 
-#define hwa_config_c16a_vmode_1(n,vmode,...)				\
+#define _hwa_config_c16a_vmode_1(n,vmode,...)				\
   hwa->n.countmode = HW_A1(hw_c16a_countmode_##vmode);			\
-  HW_G2(hwa_config_c16a_xbottom,HW_IS(bottom,__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(_hwa_config_c16a_xbottom,HW_IS(bottom,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xbottom_1(n,_bottom_,...)			\
-  HW_G2(hwa_config_c16a_vbottom,HW_IS(0,__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xbottom_1(n,_bottom_,...)			\
+  HW_G2(_hwa_config_c16a_vbottom,HW_IS(0,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_vbottom_0(n,bottom,...)		\
+#define _hwa_config_c16a_vbottom_0(n,bottom,...)		\
   HW_ERR("bottom must be `0`, not `" #bottom "`.")
 
-#define hwa_config_c16a_vbottom_1(n,bottom,...)	\
-  hwa_config_c16a_xbottom_0(n,__VA_ARGS__)
+#define _hwa_config_c16a_vbottom_1(n,bottom,...)	\
+  _hwa_config_c16a_xbottom_0(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xbottom_0(n,...)				\
-  HW_G2(hwa_config_c16a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xbottom_0(n,...)				\
+  HW_G2(_hwa_config_c16a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xtop_0(n,...)				\
+#define _hwa_config_c16a_xtop_0(n,...)				\
   HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
 
-#define hwa_config_c16a_xtop_1(n,_top_,...)				\
-  HW_G2(hwa_config_c16a_vtop,HW_IS(,hw_c16a_top_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xtop_1(n,_top_,...)				\
+  HW_G2(_hwa_config_c16a_vtop,HW_IS(,hw_c16a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_vtop_0(n,...)					\
+#define _hwa_config_c16a_vtop_0(n,...)					\
   HW_ERR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, "	\
 	 "`fixed_0xFFFF`, `register_capture`, or `register_compare_a`," \
 	 " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define hwa_config_c16a_vtop_1(n,ztop,...)				\
+#define _hwa_config_c16a_vtop_1(n,ztop,...)				\
   hwa->n.top = HW_A1(hw_c16a_top_##ztop);				\
-  HW_G2(hwa_config_c16a_xuc,HW_IS(update,__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(_hwa_config_c16a_xuc,HW_IS(update,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xuc_1(n,uc,...)					\
-  HW_G2(hwa_config_c16a_vuc, HW_IS(,hw_counter_update_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xuc_1(n,uc,...)					\
+  HW_G2(_hwa_config_c16a_vuc, HW_IS(,hw_counter_update_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_vuc_0(n,vuc,...)				\
+#define _hwa_config_c16a_vuc_0(n,vuc,...)				\
     HW_ERR("`update` must be `at_bottom`, `at_top, or `at_max`, but `not `" #vuc "`.")
 
-#define hwa_config_c16a_vuc_1(n,vuc,...)		\
+#define _hwa_config_c16a_vuc_1(n,vuc,...)		\
   hwa->n.update = HW_A1(hw_counter_update_##vuc);	\
-  hwa_config_c16a_xuc_0(n,__VA_ARGS__);
+  _hwa_config_c16a_xuc_0(n,__VA_ARGS__);
 
-#define hwa_config_c16a_xuc_0(n,...)					\
-  HW_G2(hwa_config_c16a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xuc_0(n,...)					\
+  HW_G2(_hwa_config_c16a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_xoverflow_1(n,overflow,...)	\
-  HW_G2(hwa_config_c16a_voverflow, HW_IS(,hw_counter_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_config_c16a_xoverflow_1(n,overflow,...)	\
+  HW_G2(_hwa_config_c16a_voverflow, HW_IS(,hw_counter_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define hwa_config_c16a_voverflow_0(n,overflow,...)			\
+#define _hwa_config_c16a_voverflow_0(n,overflow,...)			\
   HW_ERR("optionnal parameter `overflow` must be `at_bottom`, "		\
 	 "`at_top, or `at_max`, but `not `" #overflow "`.")
 
-#define hwa_config_c16a_voverflow_1(n,voverflow,...)		\
+#define _hwa_config_c16a_voverflow_1(n,voverflow,...)		\
   hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
-  hwa_config_c16a_xoverflow_0(n,__VA_ARGS__)
+  HW_EOP(__VA_ARGS__)
 
-#define hwa_config_c16a_xoverflow_0(n,...)			\
-  HW_G2(hwa_config_c16a,HW_IS(,__VA_ARGS__))(n,__VA_ARGS__)
-
-#define hwa_config_c16a_0(n,...)				\
-  HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.")
-
-#define hwa_config_c16a_1(...)
+#define _hwa_config_c16a_xoverflow_0(n,...)			\
+  HW_EOP(__VA_ARGS__)
 
 
-/*	Solve the configuration of the counter and its compare and capture units
+/*	Solve the configuration of the counter with its compare and capture units
  */
 HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 {
@@ -298,21 +318,11 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
   /*	Solve the configuration of the capture input
    */
   if ( p->icr_input ) {
-#if !defined HW_DEVICE_ATTINYX4
+#if !defined HWA_DEVICE_ATTINYX4
 #  warn "TODO: check the validity of this"
 #endif
     hwa_write_bits( hw_acmp0, acic, p->icr_input-1 );
-    /* if ( p->icr_input == HW_A1(hw_icu_input_pin_icp) ) */
-    /*   hwa_write_bits( hw_acmp0, acic, 0 ); */
-    /* else */
-    /*   hwa_write_bits( hw_acmp0, acic, 1 ); */
-
     _hwa_write_p(p, _hw_cbits(c16a, ices), p->icr_edge-1 );
-    /* if ( p->icr_edge == HW_A1(hw_icu_edge_falling) ) */
-    /*   _hwa_write_p(p, _hw_cbits(c16a, ices), 0 ); */
-    /* else */
-    /*   _hwa_write_p(p, _hw_cbits(c16a, ices), 1 ); */
-
     _hwa_write_p(p, _hw_cbits(c16a, icnc), p->icr_filter );
   }
 

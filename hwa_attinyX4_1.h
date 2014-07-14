@@ -9,7 +9,7 @@
  */
 
 
-#define HW_DEVICE_ATTINYX4
+#define HWA_DEVICE_ATTINYX4
 
 /*	The include order and ids follows that of the datasheet
  */
@@ -19,7 +19,7 @@
 #include "hwa_attinyX4_pcints_1.h"		/* id: 200 */
 #include "hwa_attinyX4_ios_1.h"			/* id: 300 */
 #include "hwa_attinyX4_counters_1.h"		/* id: 400 */
-//#include "hwa_attinyX4_pscs_1.h"		/* id: 500 */
+#include "hwa_attinyX4_pscs_1.h"		/* id: 500 */
 //#include "hwa_attinyX4_usis_1.h"		/* id: 600 */
 #include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
 #include "hwa_attinyX4_adcs_1.h"		/* id: 800 */

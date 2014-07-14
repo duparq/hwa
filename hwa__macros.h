@@ -65,7 +65,7 @@
  *	that there's nothing remaining.
  */
 #define HW_EOP(...)		HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_EOP_0(...)		; HW_ERR("garbage at end of instruction: `"#__VA_ARGS__"`.")
+#define _HW_EOP_0(...)		HW_ERR("garbage at end of instruction: `"#__VA_ARGS__"`.")
 #define _HW_EOP_1(...)
 
 
@@ -73,7 +73,7 @@
  */
 #define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)	HW_A1(hw_is_##x##_##y,0)
-#define hw_is_0_0		, 1,	/* the comma to remove '; StaticAssert(...)' */
+#define hw_is_0_0		, 1,	/* a last comma to remove '; StaticAssert(...)' */
 #define hw_is__			, 1
 #define hw_is_irq_irq		, 1
 
@@ -89,7 +89,7 @@
 #define hw_addr(...)		_hw_addr_2(__VA_ARGS__)
 #define _hw_addr_2(...)		HW_G2(_hw_addr_xfn,			\
 				      HW_IS(,hw_def_hw_addr_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_xfn_1(t,...)	HW_A1(hw_def_hw_addr_##t)(t,__VA_ARGS__)
+#define _hw_addr_xfn_1(c,...)	HW_A1(hw_def_hw_addr_##c)(c,__VA_ARGS__)
 #define _hw_addr_xfn_0(...)	HW_G2(_hw_addr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_addr_0(...)		HW_ERR("can not process hw_addr(" #__VA_ARGS__ ").")
 #define _hw_addr_1(...)		__VA_ARGS__
@@ -171,6 +171,9 @@
 #define _hw_bn_0(...)		HW_ERR("can not process hw_bn(" #__VA_ARGS__ ").")
 #define _hw_bn_1(...)		__VA_ARGS__
 
+#define hw_def_hw_bn_bits1	, _hw_bn_bits1
+#define _hw_bn_bits1(t, c,n, rn,rw,ra,rrv,rwm, bn,bp)	bn
+
 
 /*	hw_bp(...): position of least significant bit of something (generic)
  */
@@ -204,7 +207,7 @@
 				      HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
 //#define _hw_id_0(...)		HW_ERR("can not process hw_id(" #__VA_ARGS__ ").")
 #define _hw_id_0(...)		-1	/* instance does not exist */
-#define _hw_id_1(c,n,i,a)	i
+#define _hw_id_1(c,n,i,...)	i
 
 
 /*	hw_io(...): definition of the io associated to an instance, or the io itself (generic)
@@ -216,6 +219,15 @@
 #define _hw_io_xfn_0(...)	HW_G2(_hw_io, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_io_0(...)		HW_ERR("can not process hw_io(" #__VA_ARGS__ ").")
 #define _hw_io_1(...)		__VA_ARGS__
+
+
+/*	hw_name(...): name of an instance (generic)
+ */
+#define hw_name(...)		_hw_name_2(__VA_ARGS__)
+#define _hw_name_2(...)		HW_G2(_hw_name,				\
+				      HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_name_0(...)		HW_ERR("can not process hw_name(" #__VA_ARGS__ ").")
+#define _hw_name_1(c,n,i,a)	n
 
 
 /** \brief	Name of an object

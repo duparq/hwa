@@ -8,6 +8,7 @@
 #include <hwa.h>
 
 
+#define	SERVO_COUNTER	hw_counter1
 #define	SERVO		hw_counter1_compare_a		/* compare unit output OC1A */
 /* #define DUTY_MIN	260 */
 /* #define DUTY_MAX	1200 */
@@ -17,7 +18,7 @@
 #define DUTY_STEP	10
 
 
-HW_ISR( hw_irq(hw_ctr(SERVO), overflow) )
+HW_ISR( hw_irq(SERVO_COUNTER, overflow) )
 {
   static uint16_t	duty = DUTY_MAX ;
   static uint8_t	phase ;
@@ -59,7 +60,7 @@ HW_ISR( hw_irq(hw_ctr(SERVO), overflow) )
  */
 HW_INLINE void config_counter( hwa_t *hwa )
 {
-  hwa_config( hw_ctr(SERVO),
+  hwa_config( SERVO_COUNTER,
 	      clock,		syshz_div_8,
 	      countmode,	loop_updown,
 	      bottom,		0,
@@ -68,9 +69,9 @@ HW_INLINE void config_counter( hwa_t *hwa )
 	      overflow,		at_bottom,
 	      );
 
-  hwa_write( hw_bits(hw_ctr(SERVO), capture), DUTY_PERIOD );
-  //  hwa_write( hw_reg(hw_ctr(SERVO), capture), DUTY_PERIOD );
-  hwa_turn( hw_irq(hw_ctr(SERVO), overflow), on );
+  hwa_write( hw_bits(SERVO_COUNTER, capture), DUTY_PERIOD );
+  //  hwa_write( hw_reg(SERVO_COUNTER, capture), DUTY_PERIOD );
+  hwa_turn( hw_irq(SERVO_COUNTER, overflow), on );
 }
 
 

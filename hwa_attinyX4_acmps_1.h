@@ -13,6 +13,8 @@
 /*	Classes & methods
  */
 #define hw_class_acmp
+#define HW_POP_acmp(c,n,i,a,...)	__VA_ARGS__
+
 
 /*	Instance		class, name, id, address
  */

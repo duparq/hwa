@@ -19,7 +19,9 @@
 /*	Class & method
  */
 #define hw_class_porta
-#define hw_def_hw_bits_porta	, _hw_bits
+#define HW_POP_porta(c,n,i,a,...)	__VA_ARGS__
+
+#define hw_def_hw_bits_porta		, _hw_bits
 
 /*	Instances		class, name, id, address
  */
@@ -48,7 +50,9 @@
 /*	Class & methods
  */
 #define hw_class_portb
-#define hw_def_hw_bits_portb	, _hw_bits
+#define HW_POP_portb(c,n,i,a,...)	__VA_ARGS__
+
+#define hw_def_hw_bits_portb		, _hw_bits
 
 /*	Instances		class, name, id, address
  */
@@ -71,7 +75,7 @@
 
 /*	Pins by numbers
  */
-#if defined HW_PKG_DIL
+#if defined HWA_PKG_DIL
 #
 #  define hw_pin_2		hw_pin_pb0
 #  define hw_pin_3		hw_pin_pb1

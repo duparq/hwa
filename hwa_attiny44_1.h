@@ -11,7 +11,7 @@
 
 /** \brief Target device
  */
-#define HW_DEVICE_ATTINY44
+#define HWA_DEVICE_ATTINY44
 
 /** \brief Flash size
  */

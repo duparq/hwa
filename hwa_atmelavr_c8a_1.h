@@ -13,35 +13,13 @@
  */
 
 
-
-/*	8-bit counter class 'c8a'
- */
-#define hw_c8a_countmode_loop_up		, 1
-#define hw_c8a_countmode_loop_updown		, 2
-
-#define hw_c8a_top_fixed_0xFF			, 1
-#define hw_c8a_top_register_compare_a		, 2
-
-#define hw_c8a_clock_none			, 0
-#define hw_c8a_clock_syshz			, 1
-#define hw_c8a_clock_syshz_div_8		, 2
-#define hw_c8a_clock_syshz_div_64		, 3
-#define hw_c8a_clock_syshz_div_256		, 4
-#define hw_c8a_clock_syshz_div_1024		, 5
-#define hw_c8a_clock_ext_rising			, 6
-#define hw_c8a_clock_ext_falling		, 7
-
-
 /*	Generic functions
  */
 #define hw_class_c8a
-
-//#define hw_def_hw_addr_c8a		, _hw_addr_ctr
-//#define hw_def_hw_bits_c8a		, _hw_bits
+#define HW_POP_c8a(c,n,i,a,...)		__VA_ARGS__
 
 #define hw_def_hw_bn_c8a		, _hw_bn_c8a
 #define _hw_bn_c8a(cc,cn,ci,ca)		8
-
 
 /**
  * \todo

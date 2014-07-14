@@ -17,7 +17,7 @@
  * global HWA structure that virtualizes the hardware and that is used by all
  * the "advanced" or "asynchronous" functions also declared in these files.
  *
- * \req HW_DEVICE must be defined.
+ * \req HWA_DEVICE must be defined.
  *
  * \defgroup exp 	Macros that expand arguments for other macros.
  * \defgroup global	Global HWA definitions
@@ -27,8 +27,8 @@
 #ifndef _HWA_H_
 #define _HWA_H_
 
-#ifndef HW_DEVICE
-#  error "HW_DEVICE not defined."
+#ifndef HWA_DEVICE
+#  error "HWA_DEVICE not defined."
 #endif
 
 

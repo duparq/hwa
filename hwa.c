@@ -6,8 +6,8 @@
 
 /**
  * \file
- * \brief This file includes HWA material for the target device HW_DEVICE.
- * \req HW_DEVICE must be defined.
+ * \brief This file includes HWA material for the target device HWA_DEVICE.
+ * \req HWA_DEVICE must be defined.
  *
  * This file can be included once instead of hwa.h for example in the main
  * source file.

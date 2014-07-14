@@ -198,7 +198,7 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r, uint8_t mask )
 
   if ( wm ) {
 
-#if defined HW_DEVICE_ATMELAVR
+#if defined HWA_DEVICE_ATMELAVR
     _Bool x_onebit = ( wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
 		       wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80 ) ;
 
@@ -361,7 +361,7 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
  *	Solve the constraints imposed by the developer, then do the required
  *	hardware register writes.
  *
- *	Calls _hwa_commit_all() that must be defined in hwa_ \e HW_DEVICE _l2.h.
+ *	Calls _hwa_commit_all() that must be defined in hwa_ \e HWA_DEVICE _l2.h.
  *
  * \hideinitializer
  */
@@ -392,5 +392,5 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
 #ifdef DOXYGEN
 #  include "hwa_device_l2.h"
 #else
-#  include HW_QUOTE(HW_G3(hwa, HW_DEVICE, 2).h)
+#  include HW_QUOTE(HW_G3(hwa, HWA_DEVICE, 2).h)
 #endif

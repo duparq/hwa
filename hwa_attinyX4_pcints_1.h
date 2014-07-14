@@ -13,9 +13,15 @@
 /*	Classes & methods: pin-change controllers
  */
 #define hw_class_pcic0
+
+#define HW_POP_pcic0(c,n,i,a,...)	__VA_ARGS__
+
 #define hw_def_hw_bits_pcic0		, _hw_bits
 
 #define hw_class_pcic1
+
+#define HW_POP_pcic1(c,n,i,a,...)	__VA_ARGS__
+
 #define hw_def_hw_bits_pcic1		, _hw_bits
 
 /*	Instances		class, name, id, address
@@ -53,49 +59,29 @@
 /*	Classes & methods: pin-change interrupt pins
  */
 #define hw_class_pcint
+#define HW_POP_pcint(c,n,i,cn,ion,...)	__VA_ARGS__
 
 #define hw_def_hw_ctr_pcint		, _hw_ctr_pcint
-
-#define _hw_ctr_pcint(c,n,...)		_hw_ctr_pcint_2(hw_##n##_##ext)
-#define _hw_ctr_pcint_2(...)		_hw_ctr_pcint_3(__VA_ARGS__)
-#define _hw_ctr_pcint_3(c,n,i,a, ion)	c,n,i,a
+#define _hw_ctr_pcint(c,n,i,cn,...)	hw_##cn
 
 #define hw_def_hw_io_pcint		, _hw_io_pcint
+#define _hw_io_pcint(c,n,i,cn,ion)	hw_##ion
 
-#define _hw_io_pcint(c,n,...)		_hw_io_pcint_2(hw_##n##_##ext)
-#define _hw_io_pcint_2(...)		_hw_io_pcint_3(__VA_ARGS__)
-#define _hw_io_pcint_3(c,n,i,a, ion)	hw_##ion
-
-/*	Instances		class, name, id, (address)
+/*	Instances		class, name, id, controller, io
  */
-#define hw_pin_pcint0		pcint, pin_pcint0,  201,
-#define hw_pin_pcint1		pcint, pin_pcint1,  202,
-#define hw_pin_pcint2		pcint, pin_pcint2,  203,
-#define hw_pin_pcint3		pcint, pin_pcint3,  204,
-#define hw_pin_pcint4		pcint, pin_pcint4,  205,
-#define hw_pin_pcint5		pcint, pin_pcint5,  206,
-#define hw_pin_pcint6		pcint, pin_pcint6,  207,
-#define hw_pin_pcint7		pcint, pin_pcint7,  208,
+#define hw_pin_pcint0		pcint, pin_pcint0,  201, pcic0, pin_pa0
+#define hw_pin_pcint1		pcint, pin_pcint1,  202, pcic0, pin_pa1
+#define hw_pin_pcint2		pcint, pin_pcint2,  203, pcic0, pin_pa2
+#define hw_pin_pcint3		pcint, pin_pcint3,  204, pcic0, pin_pa3
+#define hw_pin_pcint4		pcint, pin_pcint4,  205, pcic0, pin_pa4
+#define hw_pin_pcint5		pcint, pin_pcint5,  206, pcic0, pin_pa5
+#define hw_pin_pcint6		pcint, pin_pcint6,  207, pcic0, pin_pa6
+#define hw_pin_pcint7		pcint, pin_pcint7,  208, pcic0, pin_pa7
 						             	 
-#define hw_pin_pcint8		pcint, pin_pcint8,  211,
-#define hw_pin_pcint9		pcint, pin_pcint9,  212,
-#define hw_pin_pcint10		pcint, pin_pcint10, 213,
-#define hw_pin_pcint11		pcint, pin_pcint11, 214,
-
-/*	Instances extensions
- */
-#define hw_pin_pcint0_ext	hw_pcic0, pin_13
-#define hw_pin_pcint1_ext	hw_pcic0, pin_12
-#define hw_pin_pcint2_ext	hw_pcic0, pin_11
-#define hw_pin_pcint3_ext	hw_pcic0, pin_10
-#define hw_pin_pcint4_ext	hw_pcic0, pin_9
-#define hw_pin_pcint5_ext	hw_pcic0, pin_8
-#define hw_pin_pcint6_ext	hw_pcic0, pin_7
-#define hw_pin_pcint7_ext	hw_pcic0, pin_6
-#define hw_pin_pcint8_ext	hw_pcic1, pin_2
-#define hw_pin_pcint9_ext	hw_pcic1, pin_3
-#define hw_pin_pcint10_ext	hw_pcic1, pin_5
-#define hw_pin_pcint11_ext	hw_pcic1, pin_4
+#define hw_pin_pcint8		pcint, pin_pcint8,  211, pcic1, pin_pb0
+#define hw_pin_pcint9		pcint, pin_pcint9,  212, pcic1, pin_pb1
+#define hw_pin_pcint10		pcint, pin_pcint10, 213, pcic1, pin_pb2
+#define hw_pin_pcint11		pcint, pin_pcint11, 214, pcic1, pin_pb3
 
 							  
 #if !defined __ASSEMBLER__

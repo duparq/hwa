@@ -13,7 +13,7 @@ int
 main ( )
 {
   hwa_begin_from_reset();
-  swuart_hwa(hwa);
+  swuart_configure(hwa);
   hwa_config(PIN_DBG, output);
   hwa_write(PIN_DBG, 0);
   hwa_commit();
@@ -23,7 +23,7 @@ main ( )
   swuart_wait_rxidle(20);
   hw_write(PIN_DBG, 1);
 
-  hw_enable_irqs();
+  hw_enable_interrupts();
   swuart_putbyte('#');
   swuart_enable_rx();
 

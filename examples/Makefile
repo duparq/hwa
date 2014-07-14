@@ -13,7 +13,7 @@ SOURCES		=	sonar.c
 #	Target device
 #
 MCU		=	attiny84
-DEFINES		+=	-DHW_PKG_DIL
+PKG		=	DIL
 #DEFINES		+=	-Wno-unknown-pragmas
 
 #	Chip programming
@@ -22,20 +22,12 @@ PROG_SW		=	diabolo
 DIABOLO_OPTS	+=	--read-flash	# programming will be faster
 DIABOLO_OPTS	+=	--mcu=$(MCU)
 
-
-#	HWA directory
+#	HWA
 #
-HWA		= $(HOME)/dev/hwa-dev
-
-
-#DEFINES		+= -DHWA_DEVICE=$(MCU)
-
-
-#	HWA files path
-#
-INCLUDES	+= -I$(HWA)
-#INCLUDES	+= -I$(PWD)/lib
-#INCLUDES	+= -I$(PWD)/com
+HWA		= 	$(HOME)/dev/hwa-dev
+INCLUDES	+= 	-I$(HWA)
+DEFINES		+=	-DHWA_DEVICE=$(MCU)
+DEFINES		+=	-DHWA_PKG_$(PKG)
 
 #	Toolchain path
 #
@@ -47,12 +39,13 @@ OUT		= out
 
 #	Build directory
 #
-BUILDIR		= build
+OBJDIR		= build
 
-#	Default make target
+#	Default target
 #
 #all:	deps hex bin lst size
 all:	deps bin lst crc
+
 
 #	Device-specific makefile
 #	Common makefile

@@ -6,8 +6,8 @@ SOURCES		=	main.c	\
 
 #	Target device
 #
-MCU		= attiny84
-DEFINES		+= -DHW_PACKAGE_DIL
+MCU		= 	attiny84
+DEFINES		+=	-DHW_PKG_DIL
 
 
 #	Chip programming

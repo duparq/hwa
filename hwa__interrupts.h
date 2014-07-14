@@ -15,7 +15,12 @@
 #define _hw_irq_xclass_0(...)	HW_G2(_hw_irq_error, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irq_error_0(x,...)	HW_ERR("`hw_" #x "` is not defined.")
 #define _hw_irq_error_1(...)	__VA_ARGS__
-#define _hw_irq_xclass_1(c,n,i,a,v,...)			\
+/* #define _hw_irq_xclass_1(c,n,i,a,v,...)			\ */
+/*   HW_G2(_hw_irq, HW_IS(irq, hw_irq_##n##_##v))(n,v, __VA_ARGS__) */
+
+#define _hw_irq_xclass_1(c,n,...)	_hw_irq_3(n,HW_POP_##c(c,n,__VA_ARGS__))
+#define _hw_irq_3(...)		_hw_irq_4(__VA_ARGS__)
+#define _hw_irq_4(n,v,...)						\
   HW_G2(_hw_irq, HW_IS(irq, hw_irq_##n##_##v))(n,v, __VA_ARGS__)
 
 #define _hw_irq_0(n,...)	HW_ERR("`" HW_QUOTE(__VA_ARGS__) \

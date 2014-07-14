@@ -46,13 +46,10 @@
 
 /*	Counter0 compare units
  *
- *	Instance		class, name, id, (address) ; hw_counter, ocr, io
+ *	Instance		class, name, id, counter, ocn, ion
  */
-#define hw_counter0_compare_a		ocu, counter0_compare_a, 401,
-#define hw_counter0_compare_a_ext	hw_counter0, ocra, pin_pb2 /* pin 5 */
-
-#define hw_counter0_compare_b		ocu, counter0_compare_b, 402,
-#define hw_counter0_compare_b_ext	hw_counter0, ocrb, pin_pa7 /* pin 6 */
+#define hw_counter0_compare_a	ocu, counter0_compare_a, 401, counter0, a, pin_pb2 /* dil#5 */
+#define hw_counter0_compare_b	ocu, counter0_compare_b, 402, counter0, b, pin_pa7 /* dil#6 */
 
 
 /*	Counter1		class, name, id, address
@@ -86,12 +83,13 @@
 /*	Bits
  */
 #define hw_c16a_coma		rb1, ccra, 2, 6
-#define hw_c16a_comocra		rb1, ccra, 2, 6 /* FIXME: for hw_config(ocu,...) */
 #define hw_c16a_comb		rb1, ccra, 2, 4
 #define hw_c16a_icnc		rb1, ccrb, 1, 7
 #define hw_c16a_ices		rb1, ccrb, 1, 6
 #define hw_c16a_cs		rb1, ccrb, 3, 0
 #define hw_c16a_wgm		rb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+#define hw_c16a_foca		rb1, ccrc, 1, 7
+#define hw_c16a_focb		rb1, ccrc, 1, 6
 #define hw_c16a_icie		rb1, imsk, 1, 5
 #define hw_c16a_ocieb		rb1, imsk, 1, 2
 #define hw_c16a_ociea		rb1, imsk, 1, 1
@@ -102,19 +100,15 @@
 #define hw_c16a_ov		rb1, imsk, 1, 0
 
 
-/*	Counter1 compare units		class, name, id, (address) ; hw_counter, reg, io
+/*	Counter1 compare units	class, name, id, counter, channel, io
  */
-#define hw_counter1_compare_a		ocu, counter1_compare_a, 411,
-#define hw_counter1_compare_a_ext	hw_counter1, ocra, pin_pa6	/* DIL pin_7 */
-
-#define hw_counter1_compare_b		ocu, counter1_compare_b, 412,
-#define hw_counter1_compare_b_ext	hw_counter1, ocrb, pin_pa5	/* DIL pin_8 */
+#define hw_counter1_compare_a	ocu, counter1_compare_a, 411, counter1, a, pin_pa6 /* dil#7 */
+#define hw_counter1_compare_b	ocu, counter1_compare_b, 412, counter1, b, pin_pa5 /* dil#8 */
 
 
-/*	Counter1 capture unit		class, name, id, (address) ; hw_counter, reg, io
+/*	Counter1 capture unit		class, name, id, counter, reg, io
  */
-#define hw_counter1_capture		icu, counter1_capture, 413,
-#define hw_counter1_capture_ext		hw_counter1, icr, pin_pa7	/* DIL pin_6 */
+#define hw_counter1_capture	icu, counter1_capture, 413, counter1, icr, pin_pa7 /* dil#6 */
 
 
 #define HWA_DCL_COUNTERS			\

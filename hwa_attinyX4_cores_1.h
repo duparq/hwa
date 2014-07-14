@@ -13,6 +13,8 @@
 /*	Core class & methods
  */
 #define hw_class_core
+#define HW_POP_core(c,n,i,a,...)	__VA_ARGS__
+
 #define hw_def_hw_bits_core		, _hw_bits
 
 
