@@ -94,7 +94,7 @@
  * \todo	Only works with compile time constants
  * \hideinitializer
  */
-#define hw_loop(n)			__builtin_avr_delay_cycles(n)
+#define hw_nop_loop(n)			__builtin_avr_delay_cycles(n)
 
 
 /*	Interrupts

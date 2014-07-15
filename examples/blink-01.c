@@ -4,15 +4,16 @@
 
 #include <hwa.h>
 
-#define	LED		hw_pin_7
+#define	LED_PIN		hw_pin_7
+#define PERIOD		0.2
 
 int main ( )
 {
-  hw_config( LED, output );
+  hw_config( LED_PIN, output );
 
   for(;;) {
-    hw_toggle( LED );
-    hw_loop( hw_syshz/10 );
+    hw_toggle( LED_PIN );
+    hw_nop_loop( PERIOD*hw_syshz/2 );
   }
 
   return 0 ;

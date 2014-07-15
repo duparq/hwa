@@ -138,7 +138,7 @@ int main ( )
   	      );
   hwa_turn( hw_irq(SONAR_CAPTURE), on );
 
-  if ( SERVO_PERIOD * hw_syshz/1024 > (1<<hw_bn(SERVO_COUNTER))-1 )
+  if ( SERVO_PERIOD * hw_syshz/1024 > (1UL<<hw_bn(SERVO_COUNTER))-1 )
     HWA_ERR("SERVO_COUNTER can not afford SERVO_PERIOD." );
 
   hwa_config( SERVO_COUNTER,
@@ -154,6 +154,8 @@ int main ( )
 
   hwa_config( PIN_DBG, output );
   hwa_config( PIN_SERVO, output );
+
+  hwa_config( hw_core0, sleep_mode, idle );
 
   hwa_commit();
 

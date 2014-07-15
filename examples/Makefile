@@ -1,13 +1,13 @@
 
 #	Source files
 #
-#SOURCES		=	blink-01.c
+SOURCES		=	blink-01.c
 #SOURCES		=	blink-02.c
 #SOURCES		=	fade.c
 #SOURCES		=	servo.c
 #SOURCES		=	servo-adc.c
 #SOURCES		=	servo-adc-sm.c
-SOURCES		=	sonar.c
+#SOURCES		=	sonar.c
 #SOURCES		=	adc.c
 
 #	Target device
