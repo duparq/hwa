@@ -15,9 +15,10 @@ OBJCOPY		= $(ARCH)objcopy
 ODUMP		= $(ARCH)objdump
 GDB		= $(ARCH)gdb
 SIZE		= $(ARCH)size
-STD		= c99
+#STD		= c99
+STD		= c1x
 
-DEFINES		+= -DHW_DEVICE=$(MCU)
+DEFINES		+= -DHWA_DEVICE=$(MCU)
 
 CFLAGS		+= $(MMCU)
 CFLAGS		+= -std=$(STD)
@@ -47,7 +48,7 @@ AFLAGS		+= $(INCLUDES)
 
 LDFLAGS		+= $(MMCU)
 #LDFLAGS		+= -s
-LDFLAGS		+= -Wl,-Map,$(BUILDIR)/$(OUT).map,--cref
+LDFLAGS		+= -Wl,-Map,$(OBJDIR)/$(OUT).map,--cref
 #LDFLAGS		+= -Wl,-u,vfprintf -lprintf_min
 #LDFLAGS		+= -nostartfiles
 LDFLAGS		+= -Wl,--gc-sections
@@ -64,21 +65,21 @@ ODUMPFLAGS	= -h -S
 #ODUMPFLAGS	= -D
 
 
-DEPS		= $(BUILDIR)/$(OUT).$(MCU).deps
+DEPS		= $(OBJDIR)/$(OUT).$(MCU).deps
 
 
 #	Determine object file names from their extension
 #
 SRC		:=	$(SOURCES:.c=.$(MCU).o)
 SRC		:=	$(SRC:.sx=.$(MCU).o)
-OBJECTS		=	$(patsubst %,$(BUILDIR)/%,$(SRC))
+OBJECTS		=	$(patsubst %,$(OBJDIR)/%,$(SRC))
 
 
-hex:	$(BUILDIR)/$(OUT).hex
-bin:	$(BUILDIR)/$(OUT).bin
-lst:	$(BUILDIR)/$(OUT).lst
+hex:	$(OBJDIR)/$(OUT).hex
+bin:	$(OBJDIR)/$(OUT).bin
+lst:	$(OBJDIR)/$(OUT).lst
 
-size:	$(BUILDIR)/$(OUT).elf
+size:	$(OBJDIR)/$(OUT).elf
 	$(SIZE) $^
 
 ifneq ($(strip $(FLASHSZ)),)
@@ -114,18 +115,18 @@ endif
 %.cp.sx: %.sx
 	$(CPP) $(CFLAGS) $< >$@
 
-$(BUILDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
+$(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
-$(BUILDIR)/%.$(MCU).o : %.c
+$(OBJDIR)/%.$(MCU).o : %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDIR)/%.$(MCU).o : %.s
+$(OBJDIR)/%.$(MCU).o : %.s
 	@mkdir -p $(dir $@)
 	$(AS) $(AFLAGS) $< -o $@
 
-$(BUILDIR)/%.$(MCU).o : %.sx
+$(OBJDIR)/%.$(MCU).o : %.sx
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -144,7 +145,7 @@ $(RAM_LD): Makefile tools/ram.ld.in
 
 
 clean:
-	rm -rf $(BUILDIR)
+	rm -rf $(OBJDIR)
 	find . '(' 			\
 		-name '*~' 		\
 		-o -name '*.cp.*'	\
@@ -159,7 +160,7 @@ $(DEPS): $(SOURCES)
 	@>$@
 	@for s in $(SOURCES) ; do \
 	  $(CC) -MM $(DEFINES) $(MMCU) \
-	    -MT $(BUILDIR)/$(notdir $${s%.*}.$(MCU).o) $(INCLUDES) $$s >>$@ ;\
+	    -MT $(OBJDIR)/$(notdir $${s%.*}.$(MCU).o) $(INCLUDES) $$s >>$@ ;\
 	done
 
 

@@ -54,7 +54,7 @@
 				      HW_IS(,hw_def_hw_config_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_config_xfn_1(c,...)	HW_A1(hw_def_hw_config_##c)(c,__VA_ARGS__)
 #define _hw_config_xfn_0(...)	HW_G2(_hw_config, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_config_0(...)	HW_ERR("can not process hw_config(" #__VA_ARGS__ ").")
+#define _hw_config_0(...)	HW_ERR("can not process hw_config(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hw_config_1(...)	__VA_ARGS__
 
 #define hwa_config(...)		_hwa_config_2(__VA_ARGS__)
@@ -62,7 +62,7 @@
 				      HW_IS(,hw_def_hwa_config_##__VA_ARGS__))(__VA_ARGS__)
 #define _hwa_config_xfn_1(t,...)	HW_A1(hw_def_hwa_config_##t)(t,__VA_ARGS__)
 #define _hwa_config_xfn_0(...)	HW_G2(_hwa_config, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_config_0(...)	HW_ERR("can not process hwa_config(" #__VA_ARGS__ ").")
+#define _hwa_config_0(...)	HW_ERR("can not process hwa_config(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_config_1(...)	__VA_ARGS__
 
 
@@ -95,7 +95,7 @@
 				      HW_IS(,hw_def_hw_read_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_read_xfn_1(t,...)	HW_A1(hw_def_hw_read_##t)(t,__VA_ARGS__)
 #define _hw_read_xfn_0(...)	HW_G2(_hw_read, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_read_0(...)		HW_ERR("can not process hw_read(" #__VA_ARGS__ ").")
+#define _hw_read_0(...)		HW_ERR("can not process hw_read(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hw_read_1(...)		__VA_ARGS__
 
 #define hw_def_hw_read_bits1	, _hw_read_bits1
@@ -118,7 +118,8 @@
 /*
  *	Internal use, no argument checking.
  */
-#define _hw_read_bits(c,n,i,a, r)	_hw_rdbts_2(_hw_bits(c,n,i,a,r))
+#define _hw_read_bits(...)		_hw_read_bits_2(__VA_ARGS__)
+#define _hw_read_bits_2(c,n,i,a, r)	_hw_rdbts_2(_hw_bits(c,n,i,a,r))
 
 
 /*	hw_release(...): release something (generic)
@@ -138,7 +139,7 @@
 #define _hw_toggle_2(...)	HW_G2(_hw_toggle_xfn, HW_IS(,hw_def_hw_toggle_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_toggle_xfn_1(t,...)	HW_A1(hw_def_hw_toggle_##t)(t,__VA_ARGS__)
 #define _hw_toggle_xfn_0(...)	HW_G2(_hw_toggle, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_toggle_0(...)	HW_ERR("can not process hw_toggle(" #__VA_ARGS__ ").")
+#define _hw_toggle_0(...)	HW_ERR("can not process hw_toggle(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hw_toggle_1(...)	__VA_ARGS__
 
 
@@ -149,7 +150,7 @@
 				      HW_IS(,hw_def_hw_turn_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_turn_xfn_1(t,...)	HW_A1(hw_def_hw_turn_##t)(t,__VA_ARGS__)
 #define _hw_turn_xfn_0(...)	HW_G2(_hw_turn, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_turn_0(...)	HW_ERR("can not process hw_turn(" #__VA_ARGS__ ").")
+#define _hw_turn_0(...)	HW_ERR("can not process hw_turn(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hw_turn_1(...)	__VA_ARGS__
 
 
@@ -160,7 +161,7 @@
 				      HW_IS(,hw_def_hwa_turn_##__VA_ARGS__))(__VA_ARGS__)
 #define _hwa_turn_xfn_1(t,...)	HW_A1(hw_def_hwa_turn_##t)(t,__VA_ARGS__)
 #define _hwa_turn_xfn_0(...)	HW_G2(_hwa_turn, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_turn_0(...)	HW_ERR("can not process hwa_turn(" #__VA_ARGS__ ").")
+#define _hwa_turn_0(...)	HW_ERR("can not process hwa_turn(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_turn_1(...)	__VA_ARGS__
 
 
@@ -192,7 +193,7 @@
 				      HW_IS(,hw_def_hw_write_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_write_xfn_1(t,...)	HW_A1(hw_def_hw_write_##t)(t,__VA_ARGS__)
 #define _hw_write_xfn_0(...)	HW_G2(_hw_write, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_write_0(...)	HW_ERR("can not process hw_write(" #__VA_ARGS__ ").")
+#define _hw_write_0(...)	HW_ERR("can not process hw_write(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hw_write_1(...)	__VA_ARGS__
 
 #define hw_def_hw_write_bits1		, _hw_write_bits1
@@ -213,7 +214,7 @@
 #define _hwa_write_2(...)	HW_G2(_hwa_write_xfn, HW_IS(,hw_def_hwa_write_##__VA_ARGS__))(__VA_ARGS__)
 #define _hwa_write_xfn_1(t,...)	HW_A1(hw_def_hwa_write_##t)(t,__VA_ARGS__)
 #define _hwa_write_xfn_0(...)	HW_G2(_hwa_write, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_write_0(...)	HW_ERR("can not process hwa_write(" #__VA_ARGS__ ").")
+#define _hwa_write_0(...)	HW_ERR("can not process hwa_write(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_write_1(...)	__VA_ARGS__
 
 #define hw_def_hwa_write_bits1		, _hwa_write_bits1
@@ -259,7 +260,7 @@
 #define _hwa_write_p_2(p, ...)	HW_G2(_hwa_write_p_xfn, HW_IS(,hw_def_hwa_write_p_##__VA_ARGS__))(p, __VA_ARGS__)
 #define _hwa_write_p_xfn_1(p, t,...)	HW_A1(hw_def_hwa_write_p_##t)(p,t,__VA_ARGS__)
 #define _hwa_write_p_xfn_0(p, ...)	HW_G2(_hwa_write_p, HW_IS(0,__VA_ARGS__))(p,__VA_ARGS__)
-#define _hwa_write_p_0(...)	HW_ERR("can not process hwa_write_p(" #__VA_ARGS__ ").")
+#define _hwa_write_p_0(...)	HW_ERR("can not process hwa_write_p(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_write_p_1(...)	__VA_ARGS__
 
 #define hw_def_hwa_write_p_bits1		, _hwa_write_p_bits1

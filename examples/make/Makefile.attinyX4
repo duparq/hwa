@@ -57,4 +57,5 @@ FUSE_HB	=	0xDF
 FUSE_EB	=	0xFE
 
 
-include make/Makefile.atmelavr
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(CWD)Makefile.atmelavr

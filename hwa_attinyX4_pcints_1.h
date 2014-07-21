@@ -90,8 +90,6 @@ typedef struct {
   hwa_r8_t msk ;
 } hwa_pcic_t ;
 
-#define HWA_DCL_PCINTS				\
-  hwa_pcic_t pcic0 ;				\
-  hwa_pcic_t pcic1 ;
+#define HWA_DCL_PCINTS		hwa_pcic_t pcic0, pcic1
 
 #endif

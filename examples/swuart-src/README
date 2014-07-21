@@ -1,9 +1,9 @@
 
 Swuart is a software UART for 1 or 2-wire communications.
 
-Swuart can work by software only without interrupt or with an 8 or 16-bit
-timer-counter. It can use any pin that can trigger an interrupt on a falling
-edge (currently: INT0, AIN1, PCINT8).
+Swuart can work without interrupts or with an 8 or 16-bit timer-counter. Any pin
+that can trigger an interrupt on a falling edge (currently: INT0, AIN1, all
+PCINTs) can be used for RX.
 
 Automatic baudrate detection is provided.
 

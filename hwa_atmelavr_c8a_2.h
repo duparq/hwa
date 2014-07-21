@@ -52,6 +52,7 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 
 #define hw_c8a_clock_none			, 0
 #define hw_c8a_clock_syshz			, 1
+#define hw_c8a_clock_syshz_div_1		, 1
 #define hw_c8a_clock_syshz_div_8		, 2
 #define hw_c8a_clock_syshz_div_64		, 3
 #define hw_c8a_clock_syshz_div_256		, 4
@@ -74,7 +75,7 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
   HW_G2(_hwa_config_c8a_vclock,HW_IS(,hw_c8a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_config_c8a_vclock_0(n,...)					\
-  HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_8`, "		\
+  HW_ERR( "`clock` can be `none`, `syshz`, `syshz_div_1`, `syshz_div_8`, " \
 	  "`syshz_div_64`, `syshz_div_256`, `syshz_div_1024`, "		\
 	  "`ext_falling`, `ext_rising`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
@@ -395,6 +396,16 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
   }
 }
+
+
+/*	Write the 'count' register of a c8a counter
+ */
+#define hw_def_hw_write_c8a		, _hw_write_c8a
+#define _hw_write_c8a(c,n,i,a,v)	_hw_write_bits(c,n,i,a,count,v)
+
+#define hw_def_hwa_write_c8a		, _hwa_write_c8a
+#define _hwa_write_c8a(c,n,i,a,v)	_hwa_write_bits(c,n,i,a,count,v)
+
 
 
 HW_INLINE void _hwa_commit_c8a ( hwa_t *hwa, hwa_c8a_t *timer )

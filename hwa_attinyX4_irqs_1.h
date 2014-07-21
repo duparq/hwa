@@ -72,5 +72,6 @@
 #define hw_irq_adc0_all			irq, 13, hw_adc0, ie, if
 
 //#define hw_irq_eeprom_all		irq, 14, eeprom_all, 14
-//#define hw_irq_usi_str			irq, 15, usi_str, 15
-//#define hw_irq_usi_overflow		irq, 16, usi_overflow, 16
+
+#define hw_irq_usi0_start		irq, 15, hw_usi0, sie, sif
+#define hw_irq_usi0_overflow		irq, 16, hw_usi0, oie, oif

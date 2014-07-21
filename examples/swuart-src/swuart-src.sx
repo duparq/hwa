@@ -18,6 +18,7 @@
 	RXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
 	RXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
 	RXDBIT    = hw_bp(hw_io(SWUART_PIN_RX))
+#  define RXD	RXDPIN, RXDBIT
 #endif
 
 	;; Wether we need to check the edge that triggered the start condition
@@ -32,12 +33,12 @@
 
 	;; Debugging options
 	;; 
-#if defined SWUART_PIN_DBG
+#if defined SWUART_DBG_PIN
 	DBG       = 1
-	DBGPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), port))
-	DBGPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), pin))
-	DBGDDR    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_DBG)), ddr))
-	DBGBIT    = hw_bp(hw_io(SWUART_PIN_DBG))
+	DBGPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), port))
+	DBGPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), pin))
+	DBGDDR    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), ddr))
+	DBGBIT    = hw_bp(hw_io(SWUART_DBG_PIN))
 #else
 	DBG       = 0
 	DBGPORT   = 0
@@ -103,22 +104,17 @@
 #endif
 
 	.if COUNT_BN != MATCH_BN
-	.fail "COUNT_BN != MATCH_BN is not handled yet"
+	.error "COUNT_BN != MATCH_BN is not handled yet"
 	.endif
 
 	;; Counter registers
 	;; 
-#define psc_syshz		1
-#define psc_syshz_div_8		8
-#define psc_syshz_div_32	32
-#define psc_syshz_div_64	64
-#define psc_syshz_div_256	256
 
-#if !defined SWUART_COUNTER_CLOCK
-#  error SWUART_COUNTER_CLOCK undefined
+#if !defined SWUART_COUNTER_PSC
+#  error SWUART_COUNTER_PSC undefined
 #endif
 
-	PSC     = HW_G2(psc, SWUART_COUNTER_CLOCK)
+	PSC     = SWUART_COUNTER_PSC
 	COUNT   = hw_addr(hw_bits(SWUART_COUNTER, count))
 	MATCH	= hw_addr(hw_bits(SWUART_COUNTER, SWUART_COUNTER_MATCH))
 	COUNTL  = COUNT+0
@@ -129,9 +125,12 @@
 
 #define MATCH_IF_RA	hw_addr(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
 #define MATCH_IF_BP	hw_bp(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
+#define MATCH_IF	MATCH_IF_RA, MATCH_IF_BP
 
 #define MATCH_IE_RA	hw_addr(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
 #define MATCH_IE_BP	hw_bp(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
+#define MATCH_IE	MATCH_IE_RA, MATCH_IE_BP
+
 
 	;; Internal flags
 	;;
@@ -156,13 +155,13 @@
 	;; 
 	.macro enable_start reg
 	XCF	\reg, START_IF
-	XSBA	\reg, START_IE
+	XSBIA	\reg, START_IE
 	.endm
 
 	;; Disable start interrupt
 	;; 
 	.macro disable_start reg
-	XCBA	\reg, START_IE
+	XCBIA	\reg, START_IE
 	.endm
 
 

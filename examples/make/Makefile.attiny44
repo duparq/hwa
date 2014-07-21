@@ -4,4 +4,5 @@
 PARTNO	=	t44
 FLASHSZ	=	0x1000
 
-include Makefile.attinyX4
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(CWD)Makefile.attinyX4

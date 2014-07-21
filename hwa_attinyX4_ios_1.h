@@ -101,8 +101,6 @@ typedef struct {
   hwa_r8_t didr ;
 } hwa_io_t ;
 
-#define HWA_DCL_IOS				\
-  hwa_io_t porta ;				\
-  hwa_io_t portb ;
+#define HWA_DCL_IOS		hwa_io_t porta, portb
 
 #endif /* !defined __ASSEMBLER__ */

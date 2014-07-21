@@ -3,42 +3,48 @@
 
 #include <hwa.h>
 
-extern uint8_t	swuart_data ;
-extern uint8_t	swuart_status ;
 
-extern uint8_t	swuart_dtnl ;
-extern uint8_t	swuart_dtnh ;
-
-extern uint16_t	swuart_sync ( uint8_t ) ;
-extern uint16_t	swuart_sync_10_1 ( ) ;
-extern void	swuart_wait_rxidle ( uint8_t n ) ;
-/* extern uint8_t	swuart_wait_start ( uint8_t n ) ; */
-extern void	swuart_wait ( uint8_t n ) ;
-extern void	swuart_wait_ready ( ) ;
-extern uint8_t	swuart_is_busy ( void ) ;
-extern uint8_t	swuart_is_emitting ( void ) ;
-extern uint8_t	swuart_rxq_notempty ( void ) ;
-extern uint8_t	swuart_tx_completed ( void ) ;
-extern void	swuart_set_dt ( uint16_t ) ;
-extern void	swuart_enable_rx ( ) ;
-extern uint8_t	swuart_getbyte ( ) ;
-#define swuart_rx swuart_getbyte
-extern void	swuart_putbyte ( uint8_t byte ) ;
-extern void	swuart_putchar ( char ) ;
-#define swuart_tx swuart_putbyte
-extern void	swuart_brk ( uint8_t n ) ;
-extern uint16_t	swuart_chksync ( uint16_t, uint16_t, uint8_t ) ;
-
-
-#if hw_bn(SWUART_COUNTER) == 8
-extern uint8_t	swuart_dtn ;
-extern uint8_t	swuart_dt0 ;
-#elif hw_bn(SWUART_COUNTER) == 16
-extern uint16_t	swuart_dtn ;
-extern uint16_t	swuart_dt0 ;
+#if defined SWUART_COUNTER
+#  if hw_bn(SWUART_COUNTER) == 8
+#    define swuart_dt_t	uint8_t
+#    define SWUART_COUNTER_TOP	fixed_0xFF
+#  elif hw_bn(SWUART_COUNTER) == 16
+#    define swuart_dt_t	uint16_t
+#    define SWUART_COUNTER_TOP	fixed_0xFFFF
+#  else
+#    error "hw_bn(SWUART_COUNTER) must be 8 or 16"
+#  endif
 #else
-#  error "hw_bn(SWUART_COUNTER) must be 8 or 16"
+#  define swuart_dt_t	uint16_t
 #endif
+
+
+extern swuart_dt_t	swuart_dtn ;
+extern swuart_dt_t	swuart_dt0 ;
+
+extern uint8_t		swuart_data ;
+extern uint8_t		swuart_status ;
+
+//extern uint16_t		swuart_sync ( uint8_t ) ;
+extern swuart_dt_t	swuart_sync_10_1 ( ) ;
+
+extern void		swuart_wait_rxidle ( uint8_t n ) ;
+/* extern uint8_t	swuart_wait_start ( uint8_t n ) ; */
+extern void		swuart_wait ( uint8_t n ) ;
+extern void		swuart_wait_ready ( ) ;
+extern uint8_t		swuart_is_busy ( void ) ;
+extern uint8_t		swuart_is_emitting ( void ) ;
+extern uint8_t		swuart_rxq_notempty ( void ) ;
+extern uint8_t		swuart_tx_completed ( void ) ;
+extern void		swuart_set_dt ( swuart_dt_t ) ;
+extern void		swuart_enable_rx ( ) ;
+extern uint8_t		swuart_getbyte ( ) ;
+#define swuart_rx	swuart_getbyte
+extern void		swuart_putbyte ( uint8_t byte ) ;
+extern void		swuart_putchar ( char ) ;
+#define swuart_tx	swuart_putbyte
+extern void		swuart_brk ( uint8_t n ) ;
+extern uint16_t		swuart_chksync ( uint16_t, uint16_t, uint8_t ) ;
 
 
 #if defined SWUART_CALLBACK
@@ -58,9 +64,9 @@ HW_INLINE void swuart_configure(hwa_t *hwa)
    */
 #if defined SWUART_COUNTER
   hwa_config( SWUART_COUNTER,
-	      clock,		SWUART_COUNTER_CLOCK,
+	      clock,		HW_G2(syshz_div, SWUART_COUNTER_PSC),
 	      countmode,	loop_up,
-	      top,		fixed_0xFF );
+	      top,		SWUART_COUNTER_TOP );
 #endif
 
   /*	Start condition interrupt
@@ -98,8 +104,8 @@ HW_INLINE void swuart_configure(hwa_t *hwa)
 
   /*	DBG pin
    */
-#if defined SWUART_PIN_DBG
-  hwa_config(SWUART_PIN_DBG, output);
+#if defined SWUART_DBG_PIN
+  hwa_config(SWUART_DBG_PIN, output);
 #endif
 }
 

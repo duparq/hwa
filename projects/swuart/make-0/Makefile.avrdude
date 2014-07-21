@@ -23,31 +23,31 @@ reset:
 
 #  Programme le microcontrôleur
 #
-burn: $(BUILDIR)/$(OUT).hex
+burn: $(OBJDIR)/$(OUT).hex
 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
 
 #  Vérifie la programmation
 #
-verify: $(BUILDIR)/$(OUT).hex
+verify: $(OBJDIR)/$(OUT).hex
 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
 
 #  Récupère le contenu de la flash
 #
 dump-flash:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U flash:r:$(BUILDIR)/$(OUT).dump-flash.bin:r
+		-U flash:r:$(OBJDIR)/$(OUT).dump-flash.bin:r
 
 #  Récupère le contenu eeprom
 #
 dump-eeprom:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U eeprom:r:$(BUILDIR)/$(OUT).dump-eeprom.bin:r
+		-U eeprom:r:$(OBJDIR)/$(OUT).dump-eeprom.bin:r
 
 #  Lit/programme les fusibles
 #
 read_fuses:
 	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)\
-		-U lock:r:$(BUILDIR)/$(OUT).read.bin:r
+		-U lock:r:$(OBJDIR)/$(OUT).read.bin:r
 
 write_fuses:
 	avrdude -p $(PARTNO) -c $(PROG_HW) $(FUSES)
@@ -56,7 +56,7 @@ write_fuses:
 #
 read_osccal:
 	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)\
-		-U calibration:r:$(BUILDIR)/$(OUT).calibration.bin:r
+		-U calibration:r:$(OBJDIR)/$(OUT).calibration.bin:r
 
 
 install: upload write_fuses

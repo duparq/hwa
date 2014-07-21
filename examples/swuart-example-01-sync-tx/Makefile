@@ -1,21 +1,15 @@
 
 #	Source files
 #
-#SOURCES		=	blink-01.c
-#SOURCES		=	blink-02.c
-#SOURCES		=	fade.c
-#SOURCES		=	servo.c
-#SOURCES		=	servo-adc.c
-#SOURCES		=	servo-adc-sm.c
-#SOURCES		=	sonar.c
-#SOURCES		=	adc.c
-SOURCES		=	usi.c
+SOURCES		=	main.c	\
+			swuart.sx
 
 
 #	Target device
 #
 MCU		=	attiny84
 PKG		=	DIL
+#DEFINES		+=	-Wno-unknown-pragmas
 
 #	Chip programming
 #
@@ -25,11 +19,16 @@ DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 #	HWA
 #
-#HWA		= 	$(HOME)/dev/hwa-dev
-HWA		= 	$(abspath $(PWD)/..)
+HWA		= 	$(abspath $(PWD)/../..)
 INCLUDES	+= 	-I$(HWA)
 DEFINES		+=	-DHWA_DEVICE=$(MCU)
 DEFINES		+=	-DHWA_PKG_$(PKG)
+
+#	SWUART
+#
+SWUART		= 	$(abspath $(PWD)/../swuart-src)
+INCLUDES	+= 	-I$(SWUART)
+
 
 #	Toolchain path
 #
@@ -53,4 +52,4 @@ all:	deps bin lst crc
 #	Device-specific makefile
 #	Common makefile
 #
-include make/Makefile.$(MCU) make/Makefile.in
+include $(abspath $(PWD)/../make/Makefile.$(MCU)) $(abspath $(PWD)/../make/Makefile.in)

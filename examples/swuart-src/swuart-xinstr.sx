@@ -43,7 +43,7 @@
 
 	;; Clear one bit
 	;;
-	.macro XCB reg a b
+	.macro XCBI reg a b
 	.if \a < 0x20
 	cbi	\a, \b
 	CYCLES=CYCLES+2
@@ -58,7 +58,7 @@
 
 	;; Clear one bit (atomic)
 	;;
-	.macro XCBA reg a b
+	.macro XCBIA reg a b
 	.if \a < 0x20
 	cbi	\a, \b
 	CYCLES=CYCLES+2
@@ -75,7 +75,7 @@
 
 	;; Set one bit
 	;; 
-	.macro XSB reg a b
+	.macro XSBI reg a b
 	.if \a < 0x20
 	sbi	\a, \b
 	CYCLES=CYCLES+2
@@ -90,7 +90,7 @@
 
 	;; Set one bit (atomic)
 	;; 
-	.macro XSBA reg a b
+	.macro XSBIA reg a b
 	.if \a < 0x20
 	sbi	\a, \b
 	CYCLES=CYCLES+2
@@ -113,5 +113,17 @@
 	.else
 	XLD	\reg, \a
 	sbrs	\reg, \b
+	.endif
+	.endm
+
+
+	;; XSBIC
+	;; 
+	.macro XSBIC reg a b
+	.if \a < 0x20
+	sbic	\a, \b
+	.else
+	XLD	\reg, \a
+	sbrc	\reg, \b
 	.endif
 	.endm

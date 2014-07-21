@@ -7,7 +7,7 @@ SOURCES		=	main.c	\
 #	Target device
 #
 MCU		= 	attiny84
-DEFINES		+=	-DHW_PKG_DIL
+PKG		=	DIL
 
 
 #	Chip programming
@@ -16,9 +16,14 @@ PROG_SW		=	diabolo
 DIABOLO_OPTS	=	--read-flash	# programming will be faster
 DIABOLO_OPTS	+=	--mcu=$(MCU)
 
-#	HWA directory
+#	HWA
 #
-HWA		= $(HOME)/dev/hwa-dev
+HWA		= 	$(HOME)/dev/hwa-dev
+DEFINES		+=	-DHWA_DEVICE=$(MCU)
+DEFINES		+=	-DHWA_PKG_$(PKG)
+
+#	SWUART
+#
 SWUART		= $(HOME)/dev/hwa-dev/projects/swuart/src
 
 #	hwa.c is required for STM32
@@ -40,7 +45,7 @@ OUT		= out
 
 #	Build directory
 #
-BUILDIR		= build
+OBJDIR		= build
 
 #	Default make target
 #
@@ -50,3 +55,7 @@ all:	deps bin lst crc
 #	Common makefile
 #
 include make/Makefile.$(MCU) make/Makefile.in
+#include $(abspath $(PWD)/../../make/Makefile.$(MCU)) make/Makefile.in
+# include $(abspath $(PWD)/../../make/Makefile.$(MCU)) \
+# 	$(abspath $(PWD)/../../make/Makefile.in)
+#include ../../make-0/Makefile.$(MCU) ../../make-0/Makefile.in

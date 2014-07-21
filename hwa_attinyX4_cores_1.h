@@ -70,6 +70,6 @@ typedef struct {
   hwa_r8_t gpior0 ;
 } hwa_core_t ;
 
-#define HWA_DCL_CORES		hwa_core_t core0 ;
+#define HWA_DCL_CORES		hwa_core_t core0
 
 #endif /* !defined __ASSEMBLER__ */

@@ -3,6 +3,7 @@
 *~
 *.cp.*
 *.o
+*.pyc
 build/
 doxygen/html/
 exclude/

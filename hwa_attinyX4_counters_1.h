@@ -84,20 +84,24 @@
  */
 #define hw_c16a_coma		rb1, ccra, 2, 6
 #define hw_c16a_comb		rb1, ccra, 2, 4
+
 #define hw_c16a_icnc		rb1, ccrb, 1, 7
 #define hw_c16a_ices		rb1, ccrb, 1, 6
 #define hw_c16a_cs		rb1, ccrb, 3, 0
 #define hw_c16a_wgm		rb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+
 #define hw_c16a_foca		rb1, ccrc, 1, 7
 #define hw_c16a_focb		rb1, ccrc, 1, 6
+
 #define hw_c16a_icie		rb1, imsk, 1, 5
 #define hw_c16a_ocieb		rb1, imsk, 1, 2
 #define hw_c16a_ociea		rb1, imsk, 1, 1
 #define hw_c16a_oie		rb1, imsk, 1, 0
-#define hw_c16a_icf		rb1, imsk, 1, 5
-#define hw_c16a_ocfb		rb1, imsk, 1, 2
-#define hw_c16a_ocfa		rb1, imsk, 1, 1
-#define hw_c16a_ov		rb1, imsk, 1, 0
+
+#define hw_c16a_icf		rb1, ifr, 1, 5
+#define hw_c16a_ocfb		rb1, ifr, 1, 2
+#define hw_c16a_ocfa		rb1, ifr, 1, 1
+#define hw_c16a_ov		rb1, ifr, 1, 0
 
 
 /*	Counter1 compare units	class, name, id, counter, channel, io
@@ -113,4 +117,4 @@
 
 #define HWA_DCL_COUNTERS			\
   hwa_c8a_t	counter0 ;			\
-  hwa_c16a_t	counter1 ;
+  hwa_c16a_t	counter1

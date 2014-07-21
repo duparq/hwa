@@ -120,13 +120,13 @@ cbptr:	.word	0		; C callback function (called after rx/tx done)
 	;; 
 	.macro enable_match reg
 	XCF	\reg, MATCH_IF_RA, MATCH_IF_BP
-	XSBA	\reg, MATCH_IE_RA, MATCH_IE_BP
+	XSBIA	\reg, MATCH_IE_RA, MATCH_IE_BP
 	.endm
 
 	;; Disable counter compare-match: time to send/receive bit
 	;; 
 	.macro disable_match reg
-	XCBA	\reg, MATCH_IE_RA, MATCH_IE_BP
+	XCBIA	\reg, MATCH_IE_RA, MATCH_IE_BP
 	.endm
 
 	.macro test_match_ie reg ; Is 'MATCH A' enabled?
@@ -238,13 +238,13 @@ isr_start:
 	CYCLES=CYCLES+5
 	.endif
 
-	.if COUNT_BN==8 && MATCH_BN==16
-	ldi	R24, 1		; [1]		dec'ed first in isr
-	lds	R26, dt0+1	; [2]
-	add	R24, R26	; [1]		Do not add carry
-	sts	match+1, R24	; [2]
-	CYCLES=CYCLES+6
-	.endif
+	;; .if COUNT_BN==8 && MATCH_BN==16
+	;; ldi	R24, 1		; [1]		dec'ed first in isr
+	;; lds	R26, dt0+1	; [2]
+	;; add	R24, R26	; [1]		Do not add carry
+	;; sts	match+1, R24	; [2]
+	;; CYCLES=CYCLES+6
+	;; .endif
 
 	.if COUNT_BN==16 && MATCH_BN==16
 	lds	R26, dt0+0	; [2]
@@ -253,8 +253,6 @@ isr_start:
 	adc	R25, R26	; [1]
 	XST	MATCHH, R25
 	XST	MATCHL, R24
-	;; sts	match+0, R24	; [2]
-	;; sts	match+1, R25	; [2]
 	CYCLES=CYCLES+6
 	.endif
 
@@ -633,10 +631,14 @@ wait_ready:
 	sbi	DBGPIN, DBGBIT
 	.endif
 
+#if 0
 	;; disable_start R25
 	test_match_ie R26
 	brne	wait_ready
-
+#else
+	XSBIC	R26, MATCH_IE_RA, MATCH_IE_BP
+	rjmp	wait_ready
+#endif
 	.if DBG_WAITREADY
 	sbi	DBGPORT, DBGBIT
 	.endif
@@ -735,8 +737,13 @@ putbits:
 
 	sbis	FLAGS, F_WIBTX
 	rjmp	2f
+#if 0
 1:	test_match_if R26	;		wait idle state between rx and tx
 	breq	1b
+#else
+1:	XSBIS	R26, MATCH_IF_RA, MATCH_IF_BP
+	rjmp	1b
+#endif
 	cbi	FLAGS, F_WIBTX
 
 2:
@@ -846,53 +853,56 @@ swuart_tbittx2:	.byte	TBITTX2
 wait_rxidle:
 	rcall	wait_ready
 
-	XLD	R20, COUNT
+	.if DBG_WAITIDLE
+	XCBI	R20, DBGPORT, DBGBIT
+	.endif
+
+	XLD	R20, COUNT+0
 	.if COUNT_BN==16
 	XLD	R21, COUNT+1
 	.endif
 
-	lds	R18, dtn
+	lds	R18, dtn+0
 	.if COUNT_BN==16
 	lds	R19, dtn+1
 	.endif
 
-1:
-	.if DBG_WAITIDLE
-	sbi	DBGPIN, DBGBIT
-	.endif
+1:	mov	R25, R24	; Number of bits to wait
+2:
+	;; .if DBG_WAITIDLE
+	;; sbi	DBGPIN, DBGBIT
+	;; .endif
 
-	mov	R25, R24	; How many bits to wait
-
-2:	add	R20, R18
+	add	R20, R18
 	.if COUNT_BN==16
 	adc	R21, R19
 	.endif
-	.if COUNT_BN==8 && MATCH_BN==16
-	lds	R19, dtn+1
-	.endif
+	;; .if COUNT_BN==8 && MATCH_BN==16
+	;; lds	R19, dtn+1
+	;; .endif
 
-	XST	MATCH, R20
 	.if COUNT_BN==16
 	XST	MATCH+1, R21
 	.endif
+	XST	MATCH+0, R20
 
-3:	XCF	R22, MATCH_IF_RA, MATCH_IF_BP ; clear_matchflg R22
+	XCF	R22, MATCH_IF	; Clear compare-match flag
 
-4:	sbis	RXDPIN, RXDBIT
+4:	XSBIS	R22, RXD
 	rjmp	1b		; Restart if RXD==0
-	XSBIS	R22, MATCH_IF_RA, MATCH_IF_BP
+	XSBIS	R22, MATCH_IF
 	rjmp	4b
 
-	.if COUNT_BN==8 && MATCH_BN==16
-	dec	R19
-	brne	3b
-	.endif
+	;; .if COUNT_BN==8 && MATCH_BN==16
+	;; dec	R19
+	;; brne	3b
+	;; .endif
 
 	dec	R25
 	brne	2b
 
 	.if DBG_WAITIDLE
-	sbi	DBGPIN, DBGBIT
+	XSBI	R22, DBGPORT, DBGBIT
 	.endif
 
 	ret

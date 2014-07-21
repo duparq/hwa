@@ -20,7 +20,7 @@
 #include "hwa_attinyX4_ios_1.h"			/* id: 300 */
 #include "hwa_attinyX4_counters_1.h"		/* id: 400 */
 #include "hwa_attinyX4_pscs_1.h"		/* id: 500 */
-//#include "hwa_attinyX4_usis_1.h"		/* id: 600 */
+#include "hwa_attinyX4_usis_1.h"		/* id: 600 */
 #include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
 #include "hwa_attinyX4_adcs_1.h"		/* id: 800 */
 
@@ -49,10 +49,11 @@
 #if !defined __ASSEMBLER__ 
 
 #define HWA_DCL					\
-  HWA_DCL_CORES					\
-  HWA_DCL_IOS					\
-  HWA_DCL_PCINTS				\
-  HWA_DCL_COUNTERS				\
+  HWA_DCL_CORES ;				\
+  HWA_DCL_IOS ;					\
+  HWA_DCL_PCINTS ;				\
+  HWA_DCL_COUNTERS ;				\
+  HWA_DCL_USIS ;				\
   HWA_DCL_ACMPS ;				\
   HWA_DCL_ADCS ;
 

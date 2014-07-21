@@ -1,10 +1,12 @@
 
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+
 ifneq ($(strip $(PROG_SW)),)
-  include make/Makefile.$(PROG_SW)
+  include $(CWD)Makefile.$(PROG_SW)
 endif
 
 ifneq ($(strip $(PROG_HW)),)
-  include make/Makefile.$(PROG_HW)
+  include $(CWD)Makefile.$(PROG_HW)
 endif
 
 #	Commands & options
@@ -38,8 +40,10 @@ CFLAGS		+= -Os
 CFLAGS		+= $(DEFINES)
 CFLAGS		+= $(INCLUDES)
 
-
 AFLAGS		+= $(MMCU)
+AFLAGS		+= -Wall
+AFLAGS		+= -Wextra
+AFLAGS		+= $(DEFINES)
 AFLAGS		+= $(INCLUDES)
 
 
@@ -60,9 +64,6 @@ LDFLAGS		+= -Wl,--gc-sections
 #ODUMPFLAGS	= -S
 ODUMPFLAGS	= -h -S
 #ODUMPFLAGS	= -D
-
-
-DEPS		= $(OBJDIR)/$(OUT).$(MCU).deps
 
 
 #	Build object files list from source files list
@@ -105,19 +106,29 @@ endif
 
 #	Compile and link
 #
-$(OBJECTS): | $(OBJDIR)
+$(OBJECTS): | $(OBJDIR)		# Create directory if needed
 
 $(OBJDIR):
 	@mkdir $(OBJDIR)
 
+
 $(OBJDIR)/%.$(MCU).o : %.c Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o : %.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.$(MCU).o : %.s Makefile
 	$(AS) $(AFLAGS) $< -o $@
 
+$(OBJDIR)/%.o : %.s Makefile
+	$(AS) $(AFLAGS) $< -o $@
+
 $(OBJDIR)/%.$(MCU).o : %.sx Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(AFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o : %.sx Makefile
+	$(CC) $(AFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT) Makefile
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
@@ -149,20 +160,6 @@ clean:
 		')' -exec rm {} ';'
 
 
-#	Dependencies
-#
-deps:	$(DEPS)
-
-$(DEPS): $(SOURCES)
-	@echo Rebuilding deps...
-	@mkdir -p $(dir $@)
-	@>$@
-	@for s in $(SOURCES) ; do \
-	  $(CC) -MM $(DEFINES) $(MMCU) \
-	    -MT $(OBJDIR)/$(notdir $${s%.*}.$(MCU).o) $(INCLUDES) $$s >>$@ ;\
-	done
-
-
 #	Archive
 #
 tarball: clean
@@ -172,8 +169,35 @@ tarball: clean
 		../$$SRC | bzip2 >$$DST
 
 
+#	Dependencies
+#
+DEPS	= $(OBJDIR)/$(OUT).$(MCU).deps
+
+deps:	$(DEPS)
+
+$(DEPS): $(SOURCES)
+	@echo Rebuilding deps for $(SOURCES) 			;\
+	mkdir -p $(dir $@)					;\
+	>$@							;\
+	for s in $(SOURCES) ; do 		\
+	  $(CC) -MM $(DEFINES) $(MMCU) 		\
+	    -MT $(OBJDIR)/$(notdir $${s%.*}.$(MCU).o) $(INCLUDES) $$s >>$@ ;\
+	done
+
+-include $(DEPS)
+
+
 .PHONY: deps flash load upload download erase read_fuses select_xtal_osc \
 	select_intern_osc_1 select_intern_osc_8 reset clean deps size
 
 
--include $(DEPS)
+# $(OBJDIR)/%.$(MCU).d: %.c
+# 	set -e; rm -f $@;					\
+# 	$(CC) -MM $(DEFINES) $(MMCU) $< > $@.$$$$;		\
+# 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
+# 	rm -f $@.$$$$
+
+# DEPS	:=	$(SOURCES:.c=.$(MCU).d)
+# DEPS	:=	$(addprefix $(OBJDIR)/,$(DEPS))
+
+# include $(DEPS)

@@ -1,0 +1,7 @@
+
+/*
+ *	Include source code for SWUART
+ */
+
+#include "config.h"
+#include <swuart-src.sx>
