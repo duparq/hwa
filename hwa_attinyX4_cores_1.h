@@ -23,29 +23,29 @@
 #define hw_core0		core, core0, 101, 0x0000
 
 
-/*	Core class regs		'reg', rw, ra, riv, rwm
+/*	Core class regs		rt, rw, ra, riv, rwm
  */
-#define hw_core_sreg		reg, 8, 0x5F, 0x00, 0xFF
-#define hw_core_gimsk		reg, 8, 0x5B, 0x00, 0xFF
-#define hw_core_gifr		reg, 8, 0x5A, 0x00, 0x70
-#define hw_core_mcucr		reg, 8, 0x55, 0x00, 0xFF
-#define hw_core_osccal		reg, 8, 0x51, 0x00, 0xFF
-#define hw_core_gpior0		reg, 8, 0x33, 0x00, 0xFF
+#define hw_core_sreg		crg, 8, 0x5F, 0x00, 0xFF
+#define hw_core_gimsk		crg, 8, 0x5B, 0x00, 0xFF
+#define hw_core_gifr		crg, 8, 0x5A, 0x00, 0x70
+#define hw_core_mcucr		crg, 8, 0x55, 0x00, 0xFF
+#define hw_core_osccal		crg, 8, 0x51, 0x00, 0xFF
+#define hw_core_gpior0		crg, 8, 0x33, 0x00, 0xFF
 
-#define hw_core_bods		rb1, mcucr, 1, 7
-#define hw_core_pud		rb1, mcucr, 1, 6
-#define hw_core_se		rb1, mcucr, 1, 5
-#define hw_core_sm		rb1, mcucr, 2, 3
-#define hw_core_bodse		rb1, mcucr, 1, 2
-#define hw_core_isc0		rb1, mcucr, 2, 0
+#define hw_core_bods		cb1, mcucr, 1, 7
+#define hw_core_pud		cb1, mcucr, 1, 6
+#define hw_core_se		cb1, mcucr, 1, 5
+#define hw_core_sm		cb1, mcucr, 2, 3
+#define hw_core_bodse		cb1, mcucr, 1, 2
+#define hw_core_isc0		cb1, mcucr, 2, 0
 
-#define hw_core_int0		rb1, gimsk, 1, 6
-#define hw_core_pcie1		rb1, gimsk, 1, 5
-#define hw_core_pcie0		rb1, gimsk, 1, 4
+#define hw_core_int0		cb1, gimsk, 1, 6
+#define hw_core_pcie1		cb1, gimsk, 1, 5
+#define hw_core_pcie0		cb1, gimsk, 1, 4
 
-#define hw_core_intf0		rb1, gifr, 1, 6
-#define hw_core_pcif1		rb1, gifr, 1, 5
-#define hw_core_pcif0		rb1, gifr, 1, 4
+#define hw_core_intf0		cb1, gifr, 1, 6
+#define hw_core_pcif1		cb1, gifr, 1, 5
+#define hw_core_pcif0		cb1, gifr, 1, 4
 
 
 /*	Int0 class & methods

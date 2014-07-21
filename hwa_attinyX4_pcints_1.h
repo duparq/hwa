@@ -29,31 +29,31 @@
 #define hw_pcic0		pcic0, pcic0, 200, 0x32
 #define hw_pcic1		pcic1, pcic1, 210, 0x40
 
-/*	Class registers		reg, rw, ra, riv, rvm, rwm
+/*	Class registers		crg, rw, ra, riv, rvm, rwm
  */
-#define hw_pcic0_msk		reg, 8, 0x32-0x32, 0x00, 0xFF
+#define hw_pcic0_msk		crg, 8, 0x32-0x32, 0x00, 0xFF
 
-#define hw_pcic0_irqe		xreg, hw_core0, pcie0
-#define hw_pcic0_irqf		xreg, hw_core0, pcif0
+#define hw_pcic0_irqe		irg, hw_core0, pcie0
+#define hw_pcic0_irqf		irg, hw_core0, pcif0
 
-#define hw_pcic0_pcint7		rb1, msk, 1, 7
-#define hw_pcic0_pcint6		rb1, msk, 1, 6
-#define hw_pcic0_pcint5		rb1, msk, 1, 5
-#define hw_pcic0_pcint4		rb1, msk, 1, 4
-#define hw_pcic0_pcint3		rb1, msk, 1, 3
-#define hw_pcic0_pcint2		rb1, msk, 1, 2
-#define hw_pcic0_pcint1		rb1, msk, 1, 1
-#define hw_pcic0_pcint0		rb1, msk, 1, 0
+#define hw_pcic0_pcint7		cb1, msk, 1, 7
+#define hw_pcic0_pcint6		cb1, msk, 1, 6
+#define hw_pcic0_pcint5		cb1, msk, 1, 5
+#define hw_pcic0_pcint4		cb1, msk, 1, 4
+#define hw_pcic0_pcint3		cb1, msk, 1, 3
+#define hw_pcic0_pcint2		cb1, msk, 1, 2
+#define hw_pcic0_pcint1		cb1, msk, 1, 1
+#define hw_pcic0_pcint0		cb1, msk, 1, 0
 
-#define hw_pcic1_msk		reg, 8, 0x40-0x40, 0x00, 0x0F
+#define hw_pcic1_msk		crg, 8, 0x40-0x40, 0x00, 0x0F
 
-#define hw_pcic1_irqe		xreg, hw_core0, pcie1
-#define hw_pcic1_irqf		xreg, hw_core0, pcif1
+#define hw_pcic1_irqe		irg, hw_core0, pcie1
+#define hw_pcic1_irqf		irg, hw_core0, pcif1
 
-#define hw_pcic1_pcint11	rb1, msk, 1, 3
-#define hw_pcic1_pcint10	rb1, msk, 1, 2
-#define hw_pcic1_pcint9		rb1, msk, 1, 1
-#define hw_pcic1_pcint8		rb1, msk, 1, 0
+#define hw_pcic1_pcint11	cb1, msk, 1, 3
+#define hw_pcic1_pcint10	cb1, msk, 1, 2
+#define hw_pcic1_pcint9		cb1, msk, 1, 1
+#define hw_pcic1_pcint8		cb1, msk, 1, 0
 
 
 /*	Classes & methods: pin-change interrupt pins

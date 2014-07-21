@@ -16,14 +16,14 @@
  */
 #define hw_prescaler0		psc, prescaler0, 500, 0x43
 
-/*	Registers		'reg', rw, ra, riv, rwm
+/*	Registers		rt, rw, ra, riv, rwm
  */
-#define hw_psc_cr		reg, 8, 0x43-0x43, 0, 0x81
+#define hw_psc_cr		crg, 8, 0x43-0x43, 0, 0x81
 
 /*	Bits
  */
-#define hw_psc_tsm		rb1, cr, 1, 7
-#define hw_psc_psr		rb1, cr, 1, 0
+#define hw_psc_tsm		cb1, cr, 1, 7
+#define hw_psc_psr		cb1, cr, 1, 0
 
 
 #define hw_def_hw_clear_psc		, _hw_clear_psc

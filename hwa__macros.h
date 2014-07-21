@@ -112,39 +112,39 @@
 #define _hw_bits_5(c,n,a,r,...)						\
   HW_G2(_hw_bits_x, HW_IS(,hw_hasbits_##__VA_ARGS__))(c,n,a,r,__VA_ARGS__)
 
-#define hw_hasbits_reg
-#define hw_hasbits_rb1
-#define hw_hasbits_rb2
-#define hw_hasbits_xreg
+#define hw_hasbits_crg
+#define hw_hasbits_cb1
+#define hw_hasbits_cb2
+#define hw_hasbits_irg
 
 #define _hw_bits_x_0(c,n,a,r,...)	HW_G2(_hw_bits_x_0, HW_IS(,r))(c,n,a,r)
 #define _hw_bits_x_0_1(c,n,a,r)		HW_ERR("member of hw_" #c "is required.")
 #define _hw_bits_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
 #define _hw_bits_x_1(c,n,a,r, x,...)	_hw_bits_##x(c,n,a,r,__VA_ARGS__)
 
-#define _hw_bits_reg(c,n,a, rn,rw,ra,rrv,rwm)	\
+#define _hw_bits_crg(c,n,a, rn,rw,ra,rrv,rwm)	\
   bits1, n,a, rn,rw,ra,rrv,rwm, rw,0
 
-#define _hw_bits_rb1(c,n,a,xn,rn,bn,bp)	_hw_bits_rb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
-#define _hw_bits_rb1_2(...)		_hw_bits_rb1_3(__VA_ARGS__)
-#define _hw_bits_rb1_3(n,a,rn, t, ...)		\
+#define _hw_bits_cb1(c,n,a,xn,rn,bn,bp)	_hw_bits_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
+#define _hw_bits_cb1_2(...)		_hw_bits_cb1_3(__VA_ARGS__)
+#define _hw_bits_cb1_3(n,a,rn, t, ...)		\
   bits1, n,a, rn,__VA_ARGS__
 
-#define _hw_bits_rb2(c,n,a,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2)	\
-  _hw_bits_rb2_2(n,a,							\
+#define _hw_bits_cb2(c,n,a,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2)	\
+  _hw_bits_cb2_2(n,a,							\
 		 r1,hw_##c##_##r1,rbn1,rbp1,vbp1,			\
 		 r2,hw_##c##_##r2,rbn2,rbp2,vbp2)
-#define _hw_bits_rb2_2(...)		_hw_bits_rb2_3(__VA_ARGS__)
-#define _hw_bits_rb2_3(n,a,						\
-		       r1,reg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
-		       r2,reg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
+#define _hw_bits_cb2_2(...)		_hw_bits_cb2_3(__VA_ARGS__)
+#define _hw_bits_cb2_3(n,a,						\
+		       r1,crg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
+		       r2,crg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
   bits2, n,a,								\
     r1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,				\
     r2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2
 
-#define _hw_bits_xreg(_c,_n,_a,_x, c,n,i,a,r)	_hw_bits_xreg_2(c,n,a,r,hw_##c##_##r)
-#define _hw_bits_xreg_2(...)			_hw_bits_xreg_3(__VA_ARGS__)
-#define _hw_bits_xreg_3(c,n,a,r, x,...)		_hw_bits_##x(c,n,a,r,__VA_ARGS__)
+#define _hw_bits_irg(_c,_n,_a,_x, c,n,i,a,r)	_hw_bits_irg_2(c,n,a,r,hw_##c##_##r)
+#define _hw_bits_irg_2(...)			_hw_bits_irg_3(__VA_ARGS__)
+#define _hw_bits_irg_3(c,n,a,r, x,...)		_hw_bits_##x(c,n,a,r,__VA_ARGS__)
 
 
 /*	_hw_bits(...): memory definition of an instance's bits (generic)

@@ -15,40 +15,40 @@
  */
 #define hw_adc0			ad10a, adc0, 800, 0x0021
 
-/*	Class registers		'reg', rw, ra, riv, rwm
+/*	Class registers		rt, rw, ra, riv, rwm
  */
-#define hw_ad10a_admux		reg,  8, 0x27 -0x0021, 0x00,   0xFF
-#define hw_ad10a_sra		reg,  8, 0x26 -0x0021, 0x00,   0xFF
-#define hw_ad10a_adc		reg, 16, 0x24 -0x0021, 0x0000, 0x0000
-#define hw_ad10a_adch		reg,  8, 0x25 -0x0021, 0x00,   0x00
-#define hw_ad10a_adcl		reg,  8, 0x24 -0x0021, 0x00,   0x00
-#define hw_ad10a_srb		reg,  8, 0x23 -0x0021, 0x00,   0xFF
-#define hw_ad10a_did		reg,  8, 0x21 -0x0021, 0x00,   0xFF /* port A */
+#define hw_ad10a_admux		crg,  8, 0x27 -0x0021, 0x00,   0xFF
+#define hw_ad10a_sra		crg,  8, 0x26 -0x0021, 0x00,   0xFF
+#define hw_ad10a_adc		crg, 16, 0x24 -0x0021, 0x0000, 0x0000
+#define hw_ad10a_adch		crg,  8, 0x25 -0x0021, 0x00,   0x00
+#define hw_ad10a_adcl		crg,  8, 0x24 -0x0021, 0x00,   0x00
+#define hw_ad10a_srb		crg,  8, 0x23 -0x0021, 0x00,   0xFF
+#define hw_ad10a_did		crg,  8, 0x21 -0x0021, 0x00,   0xFF /* port A */
 
 /*	Class bits
  */
-#define hw_ad10a_refs		rb1, admux, 2, 6
-#define hw_ad10a_mux		rb1, admux, 6, 0
-#define hw_ad10a_en		rb1, sra, 1, 7
-#define hw_ad10a_sc		rb1, sra, 1, 6
-#define hw_ad10a_ate		rb1, sra, 1, 5
-#define hw_ad10a_if		rb1, sra, 1, 4
-#define hw_ad10a_ie		rb1, sra, 1, 3
-#define hw_ad10a_ps		rb1, sra, 3, 0
+#define hw_ad10a_refs		cb1, admux, 2, 6
+#define hw_ad10a_mux		cb1, admux, 6, 0
+#define hw_ad10a_en		cb1, sra, 1, 7
+#define hw_ad10a_sc		cb1, sra, 1, 6
+#define hw_ad10a_ate		cb1, sra, 1, 5
+#define hw_ad10a_if		cb1, sra, 1, 4
+#define hw_ad10a_ie		cb1, sra, 1, 3
+#define hw_ad10a_ps		cb1, sra, 3, 0
 
-#define hw_ad10a_bin		rb1, srb, 1, 7
-#define hw_ad10a_me		rb1, srb, 1, 6
-#define hw_ad10a_lar		rb1, srb, 1, 4
-#define hw_ad10a_ts		rb1, srb, 3, 0
+#define hw_ad10a_bin		cb1, srb, 1, 7
+#define hw_ad10a_me		cb1, srb, 1, 6
+#define hw_ad10a_lar		cb1, srb, 1, 4
+#define hw_ad10a_ts		cb1, srb, 3, 0
 
-#define hw_ad10a_did_0		rb1, did, 1, 0
-#define hw_ad10a_did_1		rb1, did, 1, 1
-#define hw_ad10a_did_2		rb1, did, 1, 2
-#define hw_ad10a_did_3		rb1, did, 1, 3
-#define hw_ad10a_did_4		rb1, did, 1, 4
-#define hw_ad10a_did_5		rb1, did, 1, 5
-#define hw_ad10a_did_6		rb1, did, 1, 6
-#define hw_ad10a_did_7		rb1, did, 1, 7
+#define hw_ad10a_did_0		cb1, did, 1, 0
+#define hw_ad10a_did_1		cb1, did, 1, 1
+#define hw_ad10a_did_2		cb1, did, 1, 2
+#define hw_ad10a_did_3		cb1, did, 1, 3
+#define hw_ad10a_did_4		cb1, did, 1, 4
+#define hw_ad10a_did_5		cb1, did, 1, 5
+#define hw_ad10a_did_6		cb1, did, 1, 6
+#define hw_ad10a_did_7		cb1, did, 1, 7
 
 /*	Instances		class, name, id, (address)
  */

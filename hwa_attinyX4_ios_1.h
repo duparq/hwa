@@ -27,12 +27,12 @@
  */
 #define hw_porta		porta, porta, 300, 0x21
 
-/*	Class regs		'reg', rw, ra, riv, rvm, rwm
+/*	Class regs		rt, rw, ra, riv, rvm, rwm
  */
-#define hw_porta_port		reg, 8, 0x3B-0x21, 0x00, 0xFF
-#define hw_porta_ddr		reg, 8, 0x3A-0x21, 0x00, 0xFF
-#define hw_porta_pin		reg, 8, 0x39-0x21, 0x00, 0xFF
-//#define hw_porta_didr		reg, 8, 0x21-0x21, 0x00, 0xFF
+#define hw_porta_port		crg, 8, 0x3B-0x21, 0x00, 0xFF
+#define hw_porta_ddr		crg, 8, 0x3A-0x21, 0x00, 0xFF
+#define hw_porta_pin		crg, 8, 0x39-0x21, 0x00, 0xFF
+//#define hw_porta_didr		crg, 8, 0x21-0x21, 0x00, 0xFF
 
 /*	Pins			class, name, id, controller, bn, bp
  */
@@ -58,11 +58,11 @@
  */
 #define hw_portb		portb, portb, 310, 0x36
 
-/*	Class regs		'reg', rw, ra, riv, rvm, rwm
+/*	Class regs		rt, rw, ra, riv, rvm, rwm
  */
-#define hw_portb_port		reg, 8, 0x38-0x36, 0x00, 0x0F
-#define hw_portb_ddr		reg, 8, 0x37-0x36, 0x00, 0x0F
-#define hw_portb_pin		reg, 8, 0x36-0x36, 0x00, 0x0F
+#define hw_portb_port		crg, 8, 0x38-0x36, 0x00, 0x0F
+#define hw_portb_ddr		crg, 8, 0x37-0x36, 0x00, 0x0F
+#define hw_portb_pin		crg, 8, 0x36-0x36, 0x00, 0x0F
 
 /*	Pins			class, name, id, controller, bn, bp
  */

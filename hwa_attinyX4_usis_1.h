@@ -11,27 +11,27 @@
  */
 
 
-/*	Class registers		'reg', rw, ra, riv, rwm
+/*	Class registers		rt, rw, ra, riv, rwm
  */
-#define hw_usia_br		reg, 8, 0x30 -0x2D, 0x00, 0x00
-#define hw_usia_dr		reg, 8, 0x2F -0x2D, 0x00, 0xFF
-#define hw_usia_sr		reg, 8, 0x2E -0x2D, 0x00, 0xEF
-#define hw_usia_cr		reg, 8, 0x2D -0x2D, 0x00, 0xFF
+#define hw_usia_br		crg, 8, 0x30 -0x2D, 0x00, 0x00
+#define hw_usia_dr		crg, 8, 0x2F -0x2D, 0x00, 0xFF
+#define hw_usia_sr		crg, 8, 0x2E -0x2D, 0x00, 0xEF
+#define hw_usia_cr		crg, 8, 0x2D -0x2D, 0x00, 0xFF
 
 /*	Class bits
  */
-#define hw_usia_sie		rb1, cr, 1, 7
-#define hw_usia_oie		rb1, cr, 1, 6
-#define hw_usia_wm		rb1, cr, 2, 4
-#define hw_usia_cs		rb1, cr, 2, 2
-#define hw_usia_clk		rb1, cr, 1, 1
-#define hw_usia_tc		rb1, cr, 1, 0
+#define hw_usia_sie		cb1, cr, 1, 7
+#define hw_usia_oie		cb1, cr, 1, 6
+#define hw_usia_wm		cb1, cr, 2, 4
+#define hw_usia_cs		cb1, cr, 2, 2
+#define hw_usia_clk		cb1, cr, 1, 1
+#define hw_usia_tc		cb1, cr, 1, 0
 
-#define hw_usia_sif		rb1, sr, 1, 7
-#define hw_usia_oif		rb1, sr, 1, 6
-#define hw_usia_pf		rb1, sr, 1, 5
-#define hw_usia_dc		rb1, sr, 1, 4
-#define hw_usia_cnt		rb1, sr, 4, 0
+#define hw_usia_sif		cb1, sr, 1, 7
+#define hw_usia_oif		cb1, sr, 1, 6
+#define hw_usia_pf		cb1, sr, 1, 5
+#define hw_usia_dc		cb1, sr, 1, 4
+#define hw_usia_cnt		cb1, sr, 4, 0
 
 /*	Instance	        class, name, id, address
  */
