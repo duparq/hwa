@@ -95,10 +95,10 @@ endif
 #	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
 
 %.cp.s: %.s
-	$(CPP) $(CFLAGS) $< >$@
+	$(CPP) $(AFLAGS) $< >$@
 
 %.cp.sx: %.sx
-	$(CPP) $(CFLAGS) $< >$@
+	$(CPP) $(AFLAGS) $< >$@
 
 %.s : %.c
 	$(CC) $(MMCU) -std=c99 -Wall -Wextra -Os -c -g -S $< -o $@

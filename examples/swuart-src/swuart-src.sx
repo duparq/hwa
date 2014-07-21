@@ -7,16 +7,16 @@
 	;; Pins used
 	;;
 #if defined SWUART_PIN_TX
-	TXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), port))
-	TXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
-	TXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
+	TXDPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), port))
+	TXDPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), pin))
+	TXDDR     = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_TX)), ddr))
 	TXDBIT    = hw_bp(hw_io(SWUART_PIN_TX))
 #endif
 
 #if defined SWUART_PIN_RX
-	RXDPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), port))
-	RXDPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
-	RXDDR     = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
+	RXDPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), port))
+	RXDPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), pin))
+	RXDDR     = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_PIN_RX)), ddr))
 	RXDBIT    = hw_bp(hw_io(SWUART_PIN_RX))
 #  define RXD	RXDPIN, RXDBIT
 #endif
@@ -35,9 +35,9 @@
 	;; 
 #if defined SWUART_DBG_PIN
 	DBG       = 1
-	DBGPORT   = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), port))
-	DBGPIN    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), pin))
-	DBGDDR    = hw_addr(hw_bits(hw_ctr(hw_io(SWUART_DBG_PIN)), ddr))
+	DBGPORT   = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_DBG_PIN)), port))
+	DBGPIN    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_DBG_PIN)), pin))
+	DBGDDR    = hw_addr(hw_reg(hw_ctr(hw_io(SWUART_DBG_PIN)), ddr))
 	DBGBIT    = hw_bp(hw_io(SWUART_DBG_PIN))
 #else
 	DBG       = 0
@@ -115,8 +115,8 @@
 #endif
 
 	PSC     = SWUART_COUNTER_PSC
-	COUNT   = hw_addr(hw_bits(SWUART_COUNTER, count))
-	MATCH	= hw_addr(hw_bits(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+	COUNT   = hw_addr(hw_reg(SWUART_COUNTER, count))
+	MATCH	= hw_addr(hw_reg(SWUART_COUNTER, SWUART_COUNTER_MATCH))
 	COUNTL  = COUNT+0
 	COUNTH  = COUNT+1
 	MATCHL  = MATCH+0
