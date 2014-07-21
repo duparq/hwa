@@ -58,17 +58,17 @@
 /*	Read the ADC
  */
 #define hw_def_hw_read_ad10a		, _hw_read_ad10a
-#define _hw_read_ad10a(c,n,i,a)		_hw_read_bits(c,n,i,a, adc)
+#define _hw_read_ad10a(c,n,i,a)		_hw_read_reg(c,n,i,a, adc)
 
 
 /*	Trigger the ADC
  */
 #define hw_def_hw_trigger_ad10a		, _hw_trigger_ad10a
-#define _hw_trigger_ad10a(c,n,i,a)	_hw_write_bits(c,n,i,a, sc, 1 )
+#define _hw_trigger_ad10a(c,n,i,a)	_hw_write_reg(c,n,i,a, sc, 1 )
 
 #define hw_def_hwa_trigger_ad10a	, _hwa_trigger_ad10a
 #define _hwa_trigger_ad10a(c,n,i,a)	_hwa_write_r8( &hwa->n.sra, 1, 6, 1 );
-//#define _hwa_trigger_ad10a(c,n,i,a)	_hwa_write_bits(c,n,i,a, sc, 1 )
+//#define _hwa_trigger_ad10a(c,n,i,a)	_hwa_write_reg(c,n,i,a, sc, 1 )
 
 
 /*	Configure the ADC
@@ -77,7 +77,7 @@
 #define _hwa_cfad10a(c,n,i,a,...)					\
   do {									\
     uint8_t gain __attribute__((unused)) = 1 ;				\
-    _hwa_write_bits(ad10a,n,,,en,1);					\
+    _hwa_write_reg(ad10a,n,,,en,1);					\
     HW_G2(_hwa_cfad10a_xclock, HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) \
       } while(0)
 #define _hwa_cfad10a_xclock_0(n,...)					\
@@ -87,7 +87,7 @@
 #define _hwa_cfad10a_vclock_0(n,x,...)			\
   HW_ERR("`"#x"` is not a valid value for `clock`.")
 #define _hwa_cfad10a_vclock_1(n,vclock,...)				\
-  _hwa_write_bits(ad10a,n,,,ps, HW_A1(hw_ad10a_clock_##vclock));	\
+  _hwa_write_reg(ad10a,n,,,ps, HW_A1(hw_ad10a_clock_##vclock));	\
   HW_G2(_hwa_cfad10a_xtrigger, HW_IS(trigger,__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_cfad10a_xtrigger_0(n,...)					\
@@ -97,8 +97,8 @@
 #define _hwa_cfad10a_vtrigger_0(n,x,...)		\
   HW_ERR("`"#x"` is not a valid value for `trigger`.")
 #define _hwa_cfad10a_vtrigger_1(n,vtrigger,...)				\
-  _hwa_write_bits(ad10a,n,,,ate, HW_A1(hw_ad10a_trigger_##vtrigger));	\
-  _hwa_write_bits(ad10a,n,,,ts, HW_A2(hw_ad10a_trigger_##vtrigger));	\
+  _hwa_write_reg(ad10a,n,,,ate, HW_A1(hw_ad10a_trigger_##vtrigger));	\
+  _hwa_write_reg(ad10a,n,,,ts, HW_A2(hw_ad10a_trigger_##vtrigger));	\
   HW_G2(_hwa_cfad10a_xvref, HW_IS(vref,__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_cfad10a_xvref_0(n,...)					\
@@ -108,7 +108,7 @@
 #define _hwa_cfad10a_vvref_0(n,x,...)			\
   HW_ERR("`"#x"` is not a valid value for `vref`.")
 #define _hwa_cfad10a_vvref_1(n,vvref,...)				\
-  _hwa_write_bits(ad10a,n,,,refs, HW_A1(hw_ad10a_vref_##vvref));	\
+  _hwa_write_reg(ad10a,n,,,refs, HW_A1(hw_ad10a_vref_##vvref));	\
   _hwa_cfad10a_align(n,__VA_ARGS__)
 
 /*	Optionnal parameter 'align'
@@ -122,7 +122,7 @@
 #define _hwa_cfad10a_valign_0(n,x,...)			\
   HW_ERR("`"#x"` is not a valid value for `align`.")
 #define _hwa_cfad10a_valign_1(n,valign,...)				\
-    _hwa_write_bits(ad10a,n,,,lar, HW_A1(hw_ad10a_align_##valign));	\
+    _hwa_write_reg(ad10a,n,,,lar, HW_A1(hw_ad10a_align_##valign));	\
     _hwa_cfad10a_polarity(n,__VA_ARGS__)
 
 /*	Optionnal parameter 'polarity'
@@ -136,7 +136,7 @@
 #define _hwa_cfad10a_vpolarity_0(n,x,...)		\
   HW_ERR("`"#x"` is not a valid value for `polarity`.")
 #define _hwa_cfad10a_vpolarity_1(n,vpolarity,...)			\
-  _hwa_write_bits(ad10a,n,,,lar, HW_A1(hw_ad10a_polarity_##vpolarity));	\
+  _hwa_write_reg(ad10a,n,,,lar, HW_A1(hw_ad10a_polarity_##vpolarity));	\
   _hwa_cfad10a_gain(n,__VA_ARGS__)
 
 /*	Optionnal parameter 'gain'
@@ -188,7 +188,7 @@
 #define _hwa_cfad10a_im1_vinput_0(n,x,...)		\
   HW_ERR("`"#x"` is not a valid value for `input`.")
 #define _hwa_cfad10a_im1_vinput_1(n,vinput,...)				\
-  _hwa_write_bits(ad10a,n,,,mux, HW_A1(hw_ad10a_input_##vinput));	\
+  _hwa_write_reg(ad10a,n,,,mux, HW_A1(hw_ad10a_input_##vinput));	\
   HW_EOP(__VA_ARGS__)
 
 /*	Process 'positive_input' & 'negative_input' in differential mode
@@ -212,7 +212,7 @@
   HW_ERR("`"#x"` is not a valid value for `negative_input`.")
 #define _hwa_cfad10a_im2_vnegative_input_1(n,vinput,...)		\
   uint8_t negative_input = HW_A1(hw_ad10a_input_##vinput);		\
-  _hwa_write_bits(ad10a,n,,,mux,					\
+  _hwa_write_reg(ad10a,n,,,mux,					\
 		    _hwa_ad10a_compute_mux( positive_input, negative_input, gain )); \
   HW_EOP(__VA_ARGS__)
 

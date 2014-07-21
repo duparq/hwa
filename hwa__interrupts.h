@@ -36,7 +36,7 @@
 #define _hw_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\
   HW_ERR("expected `on` or `off`, got `" #zstate "` instead.")
 #define _hw_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, zstate)	\
-  hw_write( hw_bits(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
+  hw_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
 
 #define hw_def_hwa_turn_irq	, _hwa_turn_irq
 #define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, zstate)		\
@@ -44,7 +44,7 @@
 #define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\
   HW_ERR("expected `on` or `off`, got `" #zstate "` instead.")
 #define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, zstate)	\
-  hwa_write( hw_bits(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
+  hwa_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
 
 
 /*	Definition of an irq-enable bit
@@ -53,7 +53,7 @@
 #define _hw_irqe_0(...)			HW_G2(_hw_irqe_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqe_0_0(...)		HW_ERR("can not process hw_irqe(" #__VA_ARGS__ ").")
 #define _hw_irqe_0_1(...)		__VA_ARGS__
-#define _hw_irqe_1(t,v, c,n,i,a, irqe,irqf)	_hw_bits(c,n,i,a,irqe)
+#define _hw_irqe_1(t,v, c,n,i,a, irqe,irqf)	_hw_reg(c,n,i,a,irqe)
 
 
 /*	Definition of an irq-flag bit
@@ -62,7 +62,7 @@
 #define _hw_irqf_0(...)			HW_G2(_hw_irqf_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqf_0_0(...)		HW_ERR("can not process hw_irqf(" #__VA_ARGS__ ").")
 #define _hw_irqf_0_1(...)		__VA_ARGS__
-#define _hw_irqf_1(t,v, c,n,i,a, irqe,irqf)	_hw_bits(c,n,i,a,irqf)
+#define _hw_irqf_1(t,v, c,n,i,a, irqe,irqf)	_hw_reg(c,n,i,a,irqf)
 
 
 /*	Declaration of an ISR

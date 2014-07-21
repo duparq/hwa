@@ -48,7 +48,7 @@
   HW_ERR( "`disconnected` is the only acceptable mode for hw_config(ocu,...)." )
 #define _hw_config_ocu_1(...)		_hw_config_ocu_3(__VA_ARGS__)
 #define _hw_config_ocu_3(n,mode, cc,cn,ci,ca, chn)	\
-  _hw_write_bits(cc,cn,ci,ca, com##chn, 0)
+  _hw_write_reg(cc,cn,ci,ca, com##chn, 0)
 
 
 #define hw_def_hwa_config_ocu		, _hwa_config_ocu
@@ -65,10 +65,10 @@
 /*	Write the 'compare' register of a counter's compare unit
  */
 #define hw_def_hw_write_ocu		, _hw_write_ocu
-#define _hw_write_ocu(c,n,i,cn,ocn,ion,v)	_hw_write_bits(hw_##cn,ocr##ocn,v)
+#define _hw_write_ocu(c,n,i,cn,ocn,ion,v)	_hw_write_reg(hw_##cn,ocr##ocn,v)
 
 #define hw_def_hwa_write_ocu		, _hwa_write_ocu
-#define _hwa_write_ocu(c,n,i,cn,ocn,ion,v)	_hwa_write_bits(hw_##cn,ocr##ocn,v)
+#define _hwa_write_ocu(c,n,i,cn,ocn,ion,v)	_hwa_write_reg(hw_##cn,ocr##ocn,v)
 
 
 /*	Definition of the io pin associated to an ocu
@@ -80,10 +80,10 @@
 /*	Trigger compare
  */
 #define hw_def_hw_trigger_ocu		, _hw_trigger_ocu
-#define _hw_trigger_ocu(c,n,i, cn,ch,ion)	_hw_write_bits(hw_##cn, foc##ch, 1 )
+#define _hw_trigger_ocu(c,n,i, cn,ch,ion)	_hw_write_reg(hw_##cn, foc##ch, 1 )
 
 #define hw_def_hwa_trigger_ocu		, _hwa_trigger_ocu
-#define _hwa_trigger_ocu(c,n,i, cn,ch,ion)	_hwa_write_bits(hw_##cn, foc##ch, 1 )
+#define _hwa_trigger_ocu(c,n,i, cn,ch,ion)	_hwa_write_reg(hw_##cn, foc##ch, 1 )
 
 
 /*		Definition of the counter associated to an ocu
@@ -123,7 +123,7 @@
 #define _hw_config_icu_vedge_0(cn,...)					\
   HW_ERR( "`edge` can be `falling` or `rising` but not `" HW_QUOTE(__VA_ARGS__) "`.")
 #define _hw_config_icu_vedge_1(cn,zedge,...)			\
-  hw_write_bits(hw_##cn, ices, HW_A1(hw_icu_edge_##zedge)-1);	\
+  hw_write_reg(hw_##cn, ices, HW_A1(hw_icu_edge_##zedge)-1);	\
   HW_EOP(__VA_ARGS__)
 
 
@@ -180,7 +180,7 @@
  */
 #define hw_def_hw_read_icu		, _hw_read_icu
 #define _hw_read_icu(c,n,i,cn,...)		_hw_read_icu_2(hw_##cn,icr)
-#define _hw_read_icu_2(...)			_hw_read_bits(__VA_ARGS__)
+#define _hw_read_icu_2(...)			_hw_read_reg(__VA_ARGS__)
 
 
 /*		Definition of the io pin associated to an icu

@@ -16,13 +16,13 @@
 
 #define HW_POP_pcic0(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bits_pcic0		, _hw_bits
+#define hw_def_hw_reg_pcic0		, _hw_reg
 
 #define hw_class_pcic1
 
 #define HW_POP_pcic1(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bits_pcic1		, _hw_bits
+#define hw_def_hw_reg_pcic1		, _hw_reg
 
 /*	Instances		class, name, id, address
  */

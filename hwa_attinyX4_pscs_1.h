@@ -27,10 +27,10 @@
 
 
 #define hw_def_hw_clear_psc		, _hw_clear_psc
-#define _hw_clear_psc(c,n,i,a)		_hw_write_bits(c,n,i,a, psr, 1)
+#define _hw_clear_psc(c,n,i,a)		_hw_write_reg(c,n,i,a, psr, 1)
 
 #define hw_def_hw_lock_to_zero_psc	, _hw_lock0_psc
-#define _hw_lock0_psc(c,n,i,a)		_hw_write_bits(c,n,i,a, tsm, 1)
+#define _hw_lock0_psc(c,n,i,a)		_hw_write_reg(c,n,i,a, tsm, 1)
 
 #define hw_def_hw_release_psc		, _hw_release_psc
-#define _hw_release_psc(c,n,i,a)	_hw_write_bits(c,n,i,a, tsm, 0)
+#define _hw_release_psc(c,n,i,a)	_hw_write_reg(c,n,i,a, tsm, 0)

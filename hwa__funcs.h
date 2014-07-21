@@ -110,16 +110,16 @@
    (_hw_read_r##rw2(a+ra2,rbn2,rbp2)<<vbp2))
 
 
-/*	hw_read_bits(...)
+/*	hw_read_reg(...)
  */
-#define hw_read_bits(n,r)	_hw_rdbts_2(hw_bits(n,r))
+#define hw_read_reg(n,r)	_hw_rdbts_2(hw_reg(n,r))
 #define _hw_rdbts_2(...)	_hw_rdbts_3(__VA_ARGS__)
 #define _hw_rdbts_3(t,...)	_hw_read_##t(t,__VA_ARGS__)
 /*
  *	Internal use, no argument checking.
  */
-#define _hw_read_bits(...)		_hw_read_bits_2(__VA_ARGS__)
-#define _hw_read_bits_2(c,n,i,a, r)	_hw_rdbts_2(_hw_bits(c,n,i,a,r))
+#define _hw_read_reg(...)		_hw_read_reg_2(__VA_ARGS__)
+#define _hw_read_reg_2(c,n,i,a, r)	_hw_rdbts_2(_hw_reg(c,n,i,a,r))
 
 
 /*	hw_release(...): release something (generic)
@@ -230,28 +230,28 @@
       _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
 
-/*	hw/hwa_write_bits(...)
+/*	hw/hwa_write_reg(...)
  */
-#define hw_write_bits(n,r,v)	_hw_wrbts_2(hw_bits(n,r),v)
+#define hw_write_reg(n,r,v)	_hw_wrbts_2(hw_reg(n,r),v)
 #define _hw_wrbts_2(...)	_hw_wrbts_3(__VA_ARGS__)
 #define _hw_wrbts_3(t,...)	_hw_write_##t(t,__VA_ARGS__)
 
-#define hwa_write_bits(n,r,v)	_hwa_wrbts_2(hw_bits(n,r),v)
+#define hwa_write_reg(n,r,v)	_hwa_wrbts_2(hw_reg(n,r),v)
 #define _hwa_wrbts_2(...)	_hwa_wrbts_3(__VA_ARGS__)
 #define _hwa_wrbts_3(t,...)	_hwa_write_##t(t,__VA_ARGS__)
 
 
 /*	Write hard registers. Internal use, no argument checking.
  */
-#define _hw_write_bits(...)			_hw_write_bits_2(__VA_ARGS__)
-#define _hw_write_bits_2(c,n,i,a, r, v)		_hw_write_bits_3(_hw_bits(c,n,i,a,r),v)
-#define _hw_write_bits_3(...)			_hw_write_bits_4(__VA_ARGS__)
-#define _hw_write_bits_4(x,...)			_hw_write_##x(x,__VA_ARGS__)
+#define _hw_write_reg(...)			_hw_write_reg_2(__VA_ARGS__)
+#define _hw_write_reg_2(c,n,i,a, r, v)		_hw_write_reg_3(_hw_reg(c,n,i,a,r),v)
+#define _hw_write_reg_3(...)			_hw_write_reg_4(__VA_ARGS__)
+#define _hw_write_reg_4(x,...)			_hw_write_##x(x,__VA_ARGS__)
 
-#define _hwa_write_bits(...)			_hwa_write_bits_2(__VA_ARGS__)
-#define _hwa_write_bits_2(c,n,i,a, r, v)	_hwa_write_bits_3(_hw_bits(c,n,i,a,r),v)
-#define _hwa_write_bits_3(...)			_hwa_write_bits_4(__VA_ARGS__)
-#define _hwa_write_bits_4(x,...)		_hwa_write_##x(x,__VA_ARGS__)
+#define _hwa_write_reg(...)			_hwa_write_reg_2(__VA_ARGS__)
+#define _hwa_write_reg_2(c,n,i,a, r, v)	_hwa_write_reg_3(_hw_reg(c,n,i,a,r),v)
+#define _hwa_write_reg_3(...)			_hwa_write_reg_4(__VA_ARGS__)
+#define _hwa_write_reg_4(x,...)		_hwa_write_##x(x,__VA_ARGS__)
 
 
 /*	Write registers in hwa_t struct. Internal use only, no argument checking!

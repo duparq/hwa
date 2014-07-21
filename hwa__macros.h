@@ -95,70 +95,70 @@
 #define _hw_addr_1(...)		__VA_ARGS__
 
 
-/*	hw_bits(...): memory definition of an instance's bits (generic)
+/*	hw_reg(...): memory definition of an instance's bits (generic)
  *
- *		No need to use a specialization. hw_bits() can be applied to
+ *		No need to use a specialization. hw_reg() can be applied to
  *		every declared instance whatever its class.
  */
-#define hw_bits(...)		_hw_bits_2(__VA_ARGS__)
-#define _hw_bits_2(...)		HW_G2(_hw_bits_xdcl, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bits_xdcl_0(...)	HW_G2(_hw_bits, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bits_0(...)		HW_ERR("`"HW_QUOTE(__VA_ARGS__)"` is not a class.")
-#define _hw_bits_1(...)		__VA_ARGS__
-#define _hw_bits_xdcl_1		_hw_bits_3
+#define hw_reg(...)		_hw_reg_2(__VA_ARGS__)
+#define _hw_reg_2(...)		HW_G2(_hw_reg_xdcl, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_reg_xdcl_0(...)	HW_G2(_hw_reg, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_reg_0(...)		HW_ERR("`"HW_QUOTE(__VA_ARGS__)"` is not a class.")
+#define _hw_reg_1(...)		__VA_ARGS__
+#define _hw_reg_xdcl_1		_hw_reg_3
 
-#define _hw_bits_3(c,n,i,a,r)		_hw_bits_4(c,n,a,r,hw_##c##_##r)
-#define _hw_bits_4(...)			_hw_bits_5(__VA_ARGS__)
-#define _hw_bits_5(c,n,a,r,...)						\
-  HW_G2(_hw_bits_x, HW_IS(,hw_hasbits_##__VA_ARGS__))(c,n,a,r,__VA_ARGS__)
+#define _hw_reg_3(c,n,i,a,r)		_hw_reg_4(c,n,a,r,hw_##c##_##r)
+#define _hw_reg_4(...)			_hw_reg_5(__VA_ARGS__)
+#define _hw_reg_5(c,n,a,r,...)						\
+  HW_G2(_hw_reg_x, HW_IS(,hw_hasbits_##__VA_ARGS__))(c,n,a,r,__VA_ARGS__)
 
 #define hw_hasbits_crg
 #define hw_hasbits_cb1
 #define hw_hasbits_cb2
 #define hw_hasbits_irg
 
-#define _hw_bits_x_0(c,n,a,r,...)	HW_G2(_hw_bits_x_0, HW_IS(,r))(c,n,a,r)
-#define _hw_bits_x_0_1(c,n,a,r)		HW_ERR("member of hw_" #c "is required.")
-#define _hw_bits_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
-#define _hw_bits_x_1(c,n,a,r, x,...)	_hw_bits_##x(c,n,a,r,__VA_ARGS__)
+#define _hw_reg_x_0(c,n,a,r,...)	HW_G2(_hw_reg_x_0, HW_IS(,r))(c,n,a,r)
+#define _hw_reg_x_0_1(c,n,a,r)		HW_ERR("member of hw_" #c "is required.")
+#define _hw_reg_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
+#define _hw_reg_x_1(c,n,a,r, x,...)	_hw_reg_##x(c,n,a,r,__VA_ARGS__)
 
-#define _hw_bits_crg(c,n,a, rn,rw,ra,rrv,rwm)	\
+#define _hw_reg_crg(c,n,a, rn,rw,ra,rrv,rwm)	\
   bits1, n,a, rn,rw,ra,rrv,rwm, rw,0
 
-#define _hw_bits_cb1(c,n,a,xn,rn,bn,bp)	_hw_bits_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
-#define _hw_bits_cb1_2(...)		_hw_bits_cb1_3(__VA_ARGS__)
-#define _hw_bits_cb1_3(n,a,rn, t, ...)		\
+#define _hw_reg_cb1(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
+#define _hw_reg_cb1_2(...)		_hw_reg_cb1_3(__VA_ARGS__)
+#define _hw_reg_cb1_3(n,a,rn, t, ...)		\
   bits1, n,a, rn,__VA_ARGS__
 
-#define _hw_bits_cb2(c,n,a,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2)	\
-  _hw_bits_cb2_2(n,a,							\
+#define _hw_reg_cb2(c,n,a,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2)	\
+  _hw_reg_cb2_2(n,a,							\
 		 r1,hw_##c##_##r1,rbn1,rbp1,vbp1,			\
 		 r2,hw_##c##_##r2,rbn2,rbp2,vbp2)
-#define _hw_bits_cb2_2(...)		_hw_bits_cb2_3(__VA_ARGS__)
-#define _hw_bits_cb2_3(n,a,						\
+#define _hw_reg_cb2_2(...)		_hw_reg_cb2_3(__VA_ARGS__)
+#define _hw_reg_cb2_3(n,a,						\
 		       r1,crg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
 		       r2,crg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
   bits2, n,a,								\
     r1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,				\
     r2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2
 
-#define _hw_bits_irg(_c,_n,_a,_x, c,n,i,a,r)	_hw_bits_irg_2(c,n,a,r,hw_##c##_##r)
-#define _hw_bits_irg_2(...)			_hw_bits_irg_3(__VA_ARGS__)
-#define _hw_bits_irg_3(c,n,a,r, x,...)		_hw_bits_##x(c,n,a,r,__VA_ARGS__)
+#define _hw_reg_irg(_c,_n,_a,_x, c,n,i,a,r)	_hw_reg_irg_2(c,n,a,r,hw_##c##_##r)
+#define _hw_reg_irg_2(...)			_hw_reg_irg_3(__VA_ARGS__)
+#define _hw_reg_irg_3(c,n,a,r, x,...)		_hw_reg_##x(c,n,a,r,__VA_ARGS__)
 
 
-/*	_hw_bits(...): memory definition of an instance's bits (generic)
+/*	_hw_reg(...): memory definition of an instance's bits (generic)
  *
  *		Internal use only, no argument checking
  */
-#define _hw_bits(...)			_hw_bits_3(__VA_ARGS__)
+#define _hw_reg(...)			_hw_reg_3(__VA_ARGS__)
 
 
-/*	_hw_cbits(...): memory definition of a class' bits (generic)
+/*	_hw_creg(...): memory definition of a class' bits (generic)
  *
  *		Internal use only, no argument checking
  */
-#define _hw_cbits(c,r)			_hw_bits_4(c,,,r,hw_##c##_##r)
+#define _hw_creg(c,r)			_hw_reg_4(c,,,r,hw_##c##_##r)
 
 
 /*	hw_bn(...): number of bits of something (generic)

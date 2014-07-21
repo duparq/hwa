@@ -15,7 +15,7 @@
 #define hw_class_core
 #define HW_POP_core(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bits_core		, _hw_bits
+#define hw_def_hw_reg_core		, _hw_reg
 
 
 /*	Core instance	        class, name, id, address

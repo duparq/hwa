@@ -184,7 +184,7 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 			   counter is configured */
     /*	Clock selection
      */
-    _hwa_write_p(p, _hw_cbits(c8a, cs), p->clock);
+    _hwa_write_p(p, _hw_creg(c8a, cs), p->clock);
 
     /*	Determine WGM
      */
@@ -224,7 +224,7 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
       return ;
     }
 
-    _hwa_write_p(p, _hw_cbits(c8a,wgm), wgm);
+    _hwa_write_p(p, _hw_creg(c8a,wgm), wgm);
   }
 
   /*	Solve the configuration of compare output A
@@ -246,7 +246,7 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
     /*  Write the hardware configuration bits
      */
-    _hwa_write_p(p, _hw_cbits(c8a, coma), mode );
+    _hwa_write_p(p, _hw_creg(c8a, coma), mode );
   }
 
   /*	Solve the configuration of compare output B
@@ -268,7 +268,7 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
     /*  Write the hardware configuration bits
      */
-    _hwa_write_p(p, _hw_cbits(c8a, comb), mode );
+    _hwa_write_p(p, _hw_creg(c8a, comb), mode );
   }
 
 
@@ -401,10 +401,10 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 /*	Write the 'count' register of a c8a counter
  */
 #define hw_def_hw_write_c8a		, _hw_write_c8a
-#define _hw_write_c8a(c,n,i,a,v)	_hw_write_bits(c,n,i,a,count,v)
+#define _hw_write_c8a(c,n,i,a,v)	_hw_write_reg(c,n,i,a,count,v)
 
 #define hw_def_hwa_write_c8a		, _hwa_write_c8a
-#define _hwa_write_c8a(c,n,i,a,v)	_hwa_write_bits(c,n,i,a,count,v)
+#define _hwa_write_c8a(c,n,i,a,v)	_hwa_write_reg(c,n,i,a,count,v)
 
 
 

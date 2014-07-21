@@ -21,7 +21,7 @@
 #define hw_class_porta
 #define HW_POP_porta(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bits_porta		, _hw_bits
+#define hw_def_hw_reg_porta		, _hw_reg
 
 /*	Instances		class, name, id, address
  */
@@ -52,7 +52,7 @@
 #define hw_class_portb
 #define HW_POP_portb(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bits_portb		, _hw_bits
+#define hw_def_hw_reg_portb		, _hw_reg
 
 /*	Instances		class, name, id, address
  */

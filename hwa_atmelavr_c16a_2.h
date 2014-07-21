@@ -200,7 +200,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 			   counter is configured */
     /*	Clock selection
      */
-    _hwa_write_p(p, _hw_cbits(c16a, cs), p->clock);
+    _hwa_write_p(p, _hw_creg(c16a, cs), p->clock);
 
     /*	Determine WGM
      */
@@ -264,7 +264,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
     }
       
     if (wgm != 0xFF)
-      _hwa_write_p(p, _hw_cbits(c16a,wgm), wgm);
+      _hwa_write_p(p, _hw_creg(c16a,wgm), wgm);
     else {
       HWA_ERR("WGM value could not be solved for c16a class counter.");
       return ;
@@ -290,7 +290,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 
     /*  Write the hardware configuration bits
      */
-    _hwa_write_p(p, _hw_cbits(c16a, coma), mode );
+    _hwa_write_p(p, _hw_creg(c16a, coma), mode );
   }
 
   /*	Solve the configuration of compare output B
@@ -312,7 +312,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 
     /*  Write the hardware configuration bits
      */
-    _hwa_write_p(p, _hw_cbits(c16a, comb), mode );
+    _hwa_write_p(p, _hw_creg(c16a, comb), mode );
   }
 
   /*	Solve the configuration of the capture input
@@ -321,9 +321,9 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 #if !defined HWA_DEVICE_ATTINYX4
 #  warn "TODO: check the validity of this"
 #endif
-    hwa_write_bits( hw_acmp0, acic, p->icr_input-1 );
-    _hwa_write_p(p, _hw_cbits(c16a, ices), p->icr_edge-1 );
-    _hwa_write_p(p, _hw_cbits(c16a, icnc), p->icr_filter );
+    hwa_write_reg( hw_acmp0, acic, p->icr_input-1 );
+    _hwa_write_p(p, _hw_creg(c16a, ices), p->icr_edge-1 );
+    _hwa_write_p(p, _hw_creg(c16a, icnc), p->icr_filter );
   }
 
   /*	Check the validity of the configuration

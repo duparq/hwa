@@ -60,5 +60,5 @@ HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
 	 "`standby`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define _hwa_cfcore_vsleepmode_1(vsleepmode,...)		\
-  _hwa_write_bits(hw_core0, sm, HW_A1(hw_core_sm_##vsleepmode))	\
+  _hwa_write_reg(hw_core0, sm, HW_A1(hw_core_sm_##vsleepmode))	\
   HW_EOP(__VA_ARGS__)

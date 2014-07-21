@@ -70,20 +70,20 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 #else
     HWA_ERR("sorry, this configuration is not handled yet.");
 #endif
-    _hwa_write_p(p, _hw_cbits(usia, wm), 1 );
-    _hwa_write_p(p, _hw_cbits(usia, cs), 2 );
-    _hwa_write_p(p, _hw_cbits(usia, clk), 1 );
+    _hwa_write_p(p, _hw_creg(usia, wm), 1 );
+    _hwa_write_p(p, _hw_creg(usia, cs), 2 );
+    _hwa_write_p(p, _hw_creg(usia, clk), 1 );
   }
   else {
-    _hwa_write_p(p, _hw_cbits(usia, wm), 1 );
-    _hwa_write_p(p, _hw_cbits(usia, cs), 2 );
-    _hwa_write_p(p, _hw_cbits(usia, clk), 0 );
+    _hwa_write_p(p, _hw_creg(usia, wm), 1 );
+    _hwa_write_p(p, _hw_creg(usia, cs), 2 );
+    _hwa_write_p(p, _hw_creg(usia, clk), 0 );
   }
 }
 
 
 #define _hw_read_usia(c,n,i, usin)	\
-  hw_read_bits( hw_##usin, dr );
+  hw_read_reg( hw_##usin, dr );
 
 
 /*	Configuration of USI as SPI master with software clock
@@ -101,9 +101,9 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 #else
   HWA_ERR("sorry, this configuration is not handled yet.");
 #endif
-  _hwa_write_p(p, _hw_cbits(usia, wm), 1 );
-  _hwa_write_p(p, _hw_cbits(usia, cs), 2 );
-  _hwa_write_p(p, _hw_cbits(usia, clk), 1 );
+  _hwa_write_p(p, _hw_creg(usia, wm), 1 );
+  _hwa_write_p(p, _hw_creg(usia, cs), 2 );
+  _hwa_write_p(p, _hw_creg(usia, clk), 1 );
 }
 
 
@@ -111,10 +111,10 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 
 #define _hw_write_usia_spimaster_swclk(c,n,i, usin, v)	\
   do {							\
-    _hw_write_bits(hw_##usin, dr, v );			\
-    _hw_write_bits(hw_##usin, oif, 1 );			\
-    while( _hw_read_bits(hw_##usin, oif) == 0 ) {	\
-      _hw_write_bits(hw_##usin, tc, 1);			\
+    _hw_write_reg(hw_##usin, dr, v );			\
+    _hw_write_reg(hw_##usin, oif, 1 );			\
+    while( _hw_read_reg(hw_##usin, oif) == 0 ) {	\
+      _hw_write_reg(hw_##usin, tc, 1);			\
       /* hw_nop_loop(17); 1 bit every 5us @8MHz */					\
     }							\
   }while(0)
@@ -140,16 +140,16 @@ HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
 #else
   HWA_ERR("sorry, this configuration is not handled yet.");
 #endif
-  _hwa_write_p(p, _hw_cbits(usia, wm), 1 );
-  _hwa_write_p(p, _hw_cbits(usia, cs), 1 );
-  _hwa_write_p(p, _hw_cbits(usia, clk), 0 );
+  _hwa_write_p(p, _hw_creg(usia, wm), 1 );
+  _hwa_write_p(p, _hw_creg(usia, cs), 1 );
+  _hwa_write_p(p, _hw_creg(usia, clk), 0 );
 }
 
 
 #define hw_def_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
 #define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
-  _hw_write_bits(hw_##usin, dr, v )
+  _hw_write_reg(hw_##usin, dr, v )
 
 
 #define hw_def_hw_read_usia_spimaster_c0clk	, _hw_read_usia
