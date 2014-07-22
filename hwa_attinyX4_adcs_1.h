@@ -29,6 +29,7 @@
  */
 #define hw_ad10a_refs		cb1, admux, 2, 6
 #define hw_ad10a_mux		cb1, admux, 6, 0
+
 #define hw_ad10a_en		cb1, sra, 1, 7
 #define hw_ad10a_sc		cb1, sra, 1, 6
 #define hw_ad10a_ate		cb1, sra, 1, 5

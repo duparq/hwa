@@ -23,6 +23,7 @@
 #include "hwa_attinyX4_usis_1.h"		/* id: 600 */
 #include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
 #include "hwa_attinyX4_adcs_1.h"		/* id: 800 */
+#include "hwa_attinyX4_watchdogs_1.h"		/* id: 900 */
 
 
 /** \brief	Returns the system clock frequency.
@@ -55,7 +56,8 @@
   HWA_DCL_COUNTERS ;				\
   HWA_DCL_USIS ;				\
   HWA_DCL_ACMPS ;				\
-  HWA_DCL_ADCS ;
+  HWA_DCL_ADCS ;				\
+  HWA_DCL_WATCHDOGS ;
 
 
 #define hw_sleep_until_irq()					\

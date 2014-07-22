@@ -1,7 +1,6 @@
 
 #	Source files
 #
-SOURCES		=	main.c	\
-			swuart.sx
+SOURCES		=	main.c
 
 include $(abspath $(PWD)/../make/Makefile)

@@ -9,10 +9,20 @@
  *
  */
 #if defined __ASSEMBLER__
-//#  define HW_ERR(msg)	.fail "HWA error: " msg
 #  define HW_ERR(msg)	0 ; .fail "HWA: " msg
+//    .macro err x
+//    .error "\x"
+//    .endm
+//#  define HW_ERR(msg)	.fail "HWA error: " msg
+//#  define HW_ERR(msg)	0 ; _HW_ERR HW_QUOTE(msg)
+//#  define HW_ERR(msg)		err, HW_QUOTE(msg)
+//#  define hw_is_err_err		, 1
 #else
 #  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA: " msg)
+/*
+ *  avr-gcc ignores the GCC error pragma
+ */
+//#  define HW_ERR(msg)	0 ; _Pragma( HW_QUOTE( GCC error HWA: msg ) )
 //#  define HW_ERR(msg)	_Pragma ( HW_QUOTE( GCC error HWA: msg ) )
 #endif
 
@@ -115,6 +125,7 @@
 #define hw_hasbits_crg
 #define hw_hasbits_cb1
 #define hw_hasbits_cb2
+#define hw_hasbits_cfb
 #define hw_hasbits_irg
 
 #define _hw_reg_x_0(c,n,a,r,...)	HW_G2(_hw_reg_x_0, HW_IS(,r))(c,n,a,r)
@@ -124,6 +135,8 @@
 
 #define _hw_reg_crg(c,n,a, rn,rw,ra,rrv,rwm)	\
   bits1, n,a, rn,rw,ra,rrv,rwm, rw,0
+
+#define _hw_reg_cfb(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
 
 #define _hw_reg_cb1(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
 #define _hw_reg_cb1_2(...)		_hw_reg_cb1_3(__VA_ARGS__)

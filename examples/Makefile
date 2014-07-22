@@ -1,21 +1,20 @@
 
 #	Source files
 #
-#SOURCES		=	blink-01.c
-#SOURCES		=	blink-02.c
+SOURCES		=	blink-02.c
 #SOURCES		=	fade.c
 #SOURCES		=	servo.c
 #SOURCES		=	servo-adc.c
 #SOURCES		=	servo-adc-sm.c
 #SOURCES		=	sonar.c
 #SOURCES		=	adc.c
-SOURCES		=	usi.c
+#SOURCES		=	usi.c
 
 
 #	Target device
 #
 MCU		=	attiny84
-PKG		=	DIL
+PKG		=	dil
 
 #	Chip programming
 #
@@ -29,7 +28,7 @@ DIABOLO_OPTS	+=	--mcu=$(MCU)
 HWA		= 	$(abspath $(PWD)/..)
 INCLUDES	+= 	-I$(HWA)
 DEFINES		+=	-DHWA_DEVICE=$(MCU)
-DEFINES		+=	-DHWA_PKG_$(PKG)
+DEFINES		+=	-DHWA_DEVICE_PACKAGE=$(PKG)
 
 #	Toolchain path
 #

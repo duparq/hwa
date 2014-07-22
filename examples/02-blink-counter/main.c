@@ -2,28 +2,32 @@
 /*	Blink a LED at ~15 Hz using timer overflow and compare-match interrupts
  */
 
-#include <hwa.h>
+#define HWA_DEVICE		attiny84
+#define HWA_DEVICE_PACKAGE	dil
 
-#define	LED		hw_pin_7
-#define COUNTER		hw_counter0
+#define	LED_PIN			hw_pin_7
+//#define PERIOD			0.2
+#define COUNTER			hw_counter0
+
+#include <hwa.h>
 
 
 HW_ISR( hw_irq(COUNTER, compare_a) )
 {
-  hw_toggle( LED );
+  hw_toggle( LED_PIN );
 }
 
 
 HW_ISR( hw_irq(COUNTER, overflow) )
 {
-  hw_write( LED, 1 );
+  hw_write( LED_PIN, 1 );
 }
 
 
 int main ( )
 {
   hwa_begin_from_reset();
-  hwa_config( LED, output );
+  hwa_config( LED_PIN, output );
   hwa_config( COUNTER,
 	      clock,		syshz_div_1024,
 	      countmode,	loop_updown,
@@ -31,7 +35,7 @@ int main ( )
 	      top,		fixed_0xFF
 	      );
 
-  hwa_write_bits( COUNTER, compare_a, 16 );
+  hwa_write_reg( COUNTER, compare_a, 16 );
   hwa_turn( hw_irq(COUNTER, compare_a), on );
   hwa_turn( hw_irq(COUNTER, overflow), on );
   hwa_commit();

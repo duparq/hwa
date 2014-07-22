@@ -12,6 +12,7 @@
 #include "hwa_attinyX4_usis_2.h"
 #include "hwa_attinyX4_acmps_2.h"
 #include "hwa_attinyX4_adcs_2.h"
+#include "hwa_attinyX4_watchdogs_2.h"
 
 
 HW_INLINE void _hwa_begin_all ( hwa_t *hwa )
@@ -23,6 +24,7 @@ HW_INLINE void _hwa_begin_all ( hwa_t *hwa )
   _hwa_begin_usis(hwa);
   _hwa_begin_acmps(hwa);
   _hwa_begin_adcs(hwa);
+  _hwa_begin_watchdogs(hwa);
 }
 
 
@@ -35,6 +37,7 @@ HW_INLINE void _hwa_reset_all ( hwa_t *hwa )
   _hwa_reset_usis(hwa);
   _hwa_reset_acmps(hwa);
   _hwa_reset_adcs(hwa);
+  _hwa_reset_watchdogs(hwa);
 }
 
 
@@ -49,4 +52,5 @@ HW_INLINE void _hwa_commit_all ( hwa_t *hwa )
   _hwa_commit_usis(hwa);
   _hwa_commit_acmps(hwa);
   _hwa_commit_adcs(hwa);
+  _hwa_commit_watchdogs(hwa);
 }

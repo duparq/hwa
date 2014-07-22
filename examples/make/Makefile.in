@@ -1,10 +1,18 @@
 
 CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
+#  Device-specific Makefile
+#
+include $(CWD)Makefile.$(MCU)
+
+#  Software-program-specific Makefile
+#
 ifneq ($(strip $(PROG_SW)),)
   include $(CWD)Makefile.$(PROG_SW)
 endif
 
+#  Programming-hardware-specific Makefile
+#
 ifneq ($(strip $(PROG_HW)),)
   include $(CWD)Makefile.$(PROG_HW)
 endif

@@ -39,9 +39,12 @@
 #define hw_c8a_ociea		cb1, imsk, 1, 1
 #define hw_c8a_oie		cb1, imsk, 1, 0
 
-#define hw_c8a_ocfb		cb1, ifr, 1, 2
-#define hw_c8a_ocfa		cb1, ifr, 1, 1
-#define hw_c8a_ov		cb1, ifr, 1, 0
+/* #define hw_c8a_ocfb		cb1, ifr, 1, 2 */
+/* #define hw_c8a_ocfa		cb1, ifr, 1, 1 */
+/* #define hw_c8a_ov		cb1, ifr, 1, 0 */
+#define hw_c8a_ocfb		cfb, ifr, 1, 2
+#define hw_c8a_ocfa		cfb, ifr, 1, 1
+#define hw_c8a_ov		cfb, ifr, 1, 0
 
 
 /*	Counter0 compare units
@@ -98,10 +101,10 @@
 #define hw_c16a_ociea		cb1, imsk, 1, 1
 #define hw_c16a_oie		cb1, imsk, 1, 0
 
-#define hw_c16a_icf		cb1, ifr, 1, 5
-#define hw_c16a_ocfb		cb1, ifr, 1, 2
-#define hw_c16a_ocfa		cb1, ifr, 1, 1
-#define hw_c16a_ov		cb1, ifr, 1, 0
+#define hw_c16a_icf		cfb, ifr, 1, 5
+#define hw_c16a_ocfb		cfb, ifr, 1, 2
+#define hw_c16a_ocfa		cfb, ifr, 1, 1
+#define hw_c16a_ov		cfb, ifr, 1, 0
 
 
 /*	Counter1 compare units	class, name, id, counter, channel, io

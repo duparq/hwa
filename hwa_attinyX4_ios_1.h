@@ -75,7 +75,9 @@
 
 /*	Pins by numbers
  */
-#if defined HWA_PKG_DIL
+#define hw_is_dil_dil		, 1
+
+#if HW_IS(dil,HWA_DEVICE_PACKAGE)
 #
 #  define hw_pin_2		hw_pin_pb0
 #  define hw_pin_3		hw_pin_pb1

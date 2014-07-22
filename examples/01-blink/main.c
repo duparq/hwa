@@ -2,10 +2,14 @@
 /*	Blink a LED at ~5 Hz using a software delay loop.
  */
 
+#define HWA_DEVICE		attiny84
+#define HWA_DEVICE_PACKAGE	dil
+
+#define	LED_PIN			hw_pin_7
+#define PERIOD			0.2
+
 #include <hwa.h>
 
-#define	LED_PIN		hw_pin_7
-#define PERIOD		0.2
 
 int main ( )
 {
@@ -13,7 +17,7 @@ int main ( )
 
   for(;;) {
     hw_toggle( LED_PIN );
-    hw_nop_loop( PERIOD*hw_syshz/2 );
+    hw_delay_cycles( PERIOD*hw_syshz/2 );
   }
 
   return 0 ;

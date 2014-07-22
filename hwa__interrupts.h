@@ -31,20 +31,20 @@
 /*	Turn irq on/off
  */
 #define hw_def_hw_turn_irq	, _hw_turn_irq
-#define _hw_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, zstate)		\
-  HW_G2(_hw_turn_irq_state, HW_IS(,hw_state_##zstate))(vector, cc,cn,ci,ca, irqe, zstate)
-#define _hw_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\
-  HW_ERR("expected `on` or `off`, got `" #zstate "` instead.")
-#define _hw_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, zstate)	\
-  hw_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
+#define _hw_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
+  HW_G2(_hw_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
+#define _hw_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hw_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
+  hw_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
 
 #define hw_def_hwa_turn_irq	, _hwa_turn_irq
-#define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, zstate)		\
-  HW_G2(_hwa_turn_irq_state, HW_IS(,hw_state_##zstate))(vector, cc,cn,ci,ca, irqe, zstate)
-#define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, zstate)	\
-  HW_ERR("expected `on` or `off`, got `" #zstate "` instead.")
-#define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, zstate)	\
-  hwa_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##zstate) )
+#define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
+  HW_G2(_hwa_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
+#define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
+  hwa_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
 
 
 /*	Definition of an irq-enable bit

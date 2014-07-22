@@ -21,6 +21,8 @@ main ( )
 
   swuart_configure(hwa);
 
+  hwa_config( hw_pin_6, output );
+
   hwa_commit();
 
   /*	Synchronize

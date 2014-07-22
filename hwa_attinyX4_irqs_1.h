@@ -46,8 +46,8 @@
 #define hw_irq_pin_pcint8_		irq,  3, hw_pcic1, pcint8, irqf
 #define hw_irq_pin_pcint8_all		irq,  3, hw_pcic1, pcint8, irqf
 					      
-#define hw_irq_watchdog_		irq,  4, hw_watchdog, ie, if
-#define hw_irq_watchdog_all		irq,  4, hw_watchdog, ie, if
+#define hw_irq_watchdog0_		irq,  4, hw_watchdog0, wdie, wdif
+#define hw_irq_watchdog0_all		irq,  4, hw_watchdog0, wdie, wdif
 
 //#define hw_irq_ic1a_			irq,  5, hw_counter1, icie, icf
 #define hw_irq_counter1_capture		irq,  5, hw_counter1, icie, icf
