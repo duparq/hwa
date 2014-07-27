@@ -40,12 +40,42 @@
 #  define HW_XSOHZ	0
 #endif
 
-#include "hwa__1.h"
+#include "hwa__macros.h"
+#include "hwa__interrupts.h"
+
+#if !defined __ASSEMBLER__
+#  include "hwa__1.h"
+#endif
+
+#define hw_state_on		, 1
+#define hw_state_off		, 0
+
+
+/*	Include device-specific declarations
+ */
+#ifdef DOXYGEN
+#  include "hwa_device_1.h"
+#else
+#  include HW_QUOTE(HW_G3(hwa, HWA_DEVICE, 1).h)
+#endif
 
 
 #if !defined __ASSEMBLER__
+
+/** \brief	The hwa struct.
+ *
+ * This structure is instanciated by hwa_begin() and used by all hwa_...(...)
+ * functions to bufferize hardware accesses.
+ */
+
+typedef struct {
+  uint8_t	commit ;	/*!< 1 if commit do write hard registers		*/
+  //  uint8_t	initstate ;	/*!< 1 if system is assumed in after-reset state	*/
+  HWA_DCL			/*!< Include device-specific declarations		*/
+} hwa_t ;
+
 struct hwa_t ;
 #  include "hwa__2.h"
 #endif
 
-#endif /* _HWA_H_ */
+#endif /* !defined _HWA_H_ */

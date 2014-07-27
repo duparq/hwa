@@ -28,25 +28,6 @@
 #define _hw_irq_1(n,v,...)	hw_irq_##n##_##v
 
 
-/*	Turn irq on/off
- */
-#define hw_def_hw_turn_irq	, _hw_turn_irq
-#define _hw_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
-  HW_G2(_hw_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
-#define _hw_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
-  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
-#define _hw_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
-  hw_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
-
-#define hw_def_hwa_turn_irq	, _hwa_turn_irq
-#define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
-  HW_G2(_hwa_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
-#define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
-  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
-#define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
-  hwa_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
-
-
 /*	Definition of an irq-enable bit
  */
 #define hw_irqe(...)			HW_G2(_hw_irqe, HW_IS(irq,__VA_ARGS__))(__VA_ARGS__)
@@ -79,3 +60,26 @@
 #define _hw_isr_a2_0(attr,x,...)	HW_G2(_hw_isr_a3,HW_IS(,x))(x,__VA_ARGS__ hw_israttr_##attr)
 #define _hw_isr_a3_1(_,...)		_hw_isr_(__VA_ARGS__)
 #define _hw_isr_a3_0(...)		HW_ERR( "too many arguments." )
+
+
+#if !defined __ASSEMBLER__
+
+/*	Turn irq on/off
+ */
+#define hw_def_hw_turn_irq	, _hw_turn_irq
+#define _hw_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
+  HW_G2(_hw_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
+#define _hw_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hw_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
+  hw_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
+
+#define hw_def_hwa_turn_irq	, _hwa_turn_irq
+#define _hwa_turn_irq(irq, vector, cc,cn,ci,ca, irqe, irqf, vstate)		\
+  HW_G2(_hwa_turn_irq_state, HW_IS(,hw_state_##vstate))(vector, cc,cn,ci,ca, irqe, vstate)
+#define _hwa_turn_irq_state_0(vector, cc,cn,ci,ca, irqe, vstate)	\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hwa_turn_irq_state_1(vector, cc,cn,ci,ca, irqe, vstate)	\
+  hwa_write( hw_reg(cc,cn,ci,ca, irqe), HW_A1(hw_state_##vstate) )
+
+#endif /* !defined __ASSEMBLER__ */

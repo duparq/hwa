@@ -31,30 +31,39 @@ int main ( )
   hwa_config( LED_PIN, output );
   hwa_write(  LED_PIN, 0 );
 
+  /*	Have the CPU enter power_down mode when the 'sleep' instruction is
+   *	executed.
+   */
   hwa_config( hw_core0,
 	      sleep_mode,	power_down );
 
+  /*	Watchdog timeout and action. The IRQ is used to wake-up the CPU.
+   */
   hwa_config( hw_watchdog0,
 	      timeout,		64ms,
 	      action,		irq );
 
-  hwa_turn( hw_counter0,	off );
-  hwa_turn( hw_counter1,	off );
-  hwa_turn( hw_usi0,		off );
-  hwa_turn( hw_adc0,		off );
+  /*	Power-off unused peripherals.
+   */
+  hwa_turn( hw_counter0, off );
+  hwa_turn( hw_counter1, off );
+  hwa_turn( hw_usi0,     off );
+  hwa_turn( hw_adc0,     off );
 
   hwa_commit();
 
   hw_enable_interrupts();
 
-  uint8_t count = 0 ;
-
-  for(;;) {
+  /*	Toggle the LED each time the CPU will enter sleep mode. After the 20th
+   *	time it awakes, disable the watchdog interrupt so that the CPU will
+   *	never awake again.
+   */
+  for( uint8_t count = 0 ;; ) {
     hw_toggle( LED_PIN );
     hw_sleep_until_irq();
     count++ ;
     if ( count == 20 ) {
-      hwa_config( hw_watchdog0, action,	none );
+      hwa_config( hw_watchdog0, action,	none ); /* Reuse the HWA cache created above */
       hwa_commit();
     }
   }
