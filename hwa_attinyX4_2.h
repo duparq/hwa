@@ -4,6 +4,8 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+#include "hwa_atmelavr_2.h"
+
 #include "hwa_attinyX4_cores_2.h"
 #include "hwa_attinyX4_pcints_2.h"
 #include "hwa_attinyX4_ios_2.h"

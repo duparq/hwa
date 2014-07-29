@@ -9,9 +9,9 @@
 
 HW_INLINE void _hwa_begin_usis ( hwa_t *hwa )
 {
-  HWA_INIT(hw_usi0, cr);
-  HWA_INIT(hw_usi0, sr);
-  HWA_INIT(hw_usi0, dr);
+  _hwa_begin_reg( hw_usi0, cr );
+  _hwa_begin_reg( hw_usi0, sr );
+  _hwa_begin_reg( hw_usi0, dr );
 }
 
 

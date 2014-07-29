@@ -56,7 +56,7 @@ int main ( )
 
   /*	Toggle the LED each time the CPU will enter sleep mode. After the 20th
    *	time it awakes, disable the watchdog interrupt so that the CPU will
-   *	never awake again.
+   *	never wake-up again.
    */
   for( uint8_t count = 0 ;; ) {
     hw_toggle( LED_PIN );

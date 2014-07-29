@@ -20,9 +20,9 @@
  */
 #define hw_acmp0		acmp, acmp0, 700, 0x28
 
-/*	Class registers		rt, rw, ra, riv, rwm
+/*	Class registers		class, rw, ra, riv, rwm, rfm
  */
-#define hw_acmp_csr		crg, 8, 0x28-0x28, 0x00, 0xBF
+#define hw_acmp_csr		crg, 8, 0x28-0x28, 0x00, 0xBF, 0x00
 
 /*	Class bits
  */

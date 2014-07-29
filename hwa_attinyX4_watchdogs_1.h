@@ -14,10 +14,10 @@
  */
 #define hw_watchdog0		wdog, watchdog0, 901, 0x41
 
-/*	Watchdog class regs	rt, rw, ra, riv, rwm
+/*	Watchdog class regs	class, rw, ra, riv, rwm, rfm
  */
-#define hw_wdog_csr		crg, 8, 0x41-0x41, 0x00, 0x7F
-#define hw_wdog_wdif		cfb, csr, 1, 7
+#define hw_wdog_csr		crg, 8, 0x41-0x41, 0x00, 0x7F, 0x80
+#define hw_wdog_wdif		cb1 csr, 1, 7
 #define hw_wdog_wdie		cb1, csr, 1, 6
 #define hw_wdog_wdp		cb2, csr, 1, 5, 3, csr, 3, 0, 0
 #define hw_wdog_wdce		cb1, csr, 1, 4

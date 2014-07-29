@@ -11,12 +11,12 @@
  */
 
 
-/*	Class registers		rt, rw, ra, riv, rwm
+/*	Class registers		class, rw, ra, riv, rwm, rfm
  */
-#define hw_usia_br		crg, 8, 0x30 -0x2D, 0x00, 0x00
-#define hw_usia_dr		crg, 8, 0x2F -0x2D, 0x00, 0xFF
-#define hw_usia_sr		crg, 8, 0x2E -0x2D, 0x00, 0xEF
-#define hw_usia_cr		crg, 8, 0x2D -0x2D, 0x00, 0xFF
+#define hw_usia_br		crg, 8, 0x30 -0x2D, 0x00, 0x00, 0x00
+#define hw_usia_dr		crg, 8, 0x2F -0x2D, 0x00, 0xFF, 0x00
+#define hw_usia_sr		crg, 8, 0x2E -0x2D, 0x00, 0xEF, 0xE0
+#define hw_usia_cr		crg, 8, 0x2D -0x2D, 0x00, 0xFF, 0x00
 
 /*	Class bits
  */
@@ -32,6 +32,8 @@
 #define hw_usia_pf		cb1, sr, 1, 5
 #define hw_usia_dc		cb1, sr, 1, 4
 #define hw_usia_cnt		cb1, sr, 4, 0
+#define hw_usia_cnt		cb1, sr, 4, 0
+#define hw_usia_count		cb1, sr, 4, 0
 
 /*	Instance	        class, name, id, address
  */

@@ -6,8 +6,8 @@
 
 HW_INLINE void _hwa_begin_pcints ( hwa_t *hwa )
 {
-  HWA_INIT(hw_pcic0, msk);
-  HWA_INIT(hw_pcic1, msk);
+  _hwa_begin_reg( hw_pcic0, msk );
+  _hwa_begin_reg( hw_pcic1, msk );
 }
 
 

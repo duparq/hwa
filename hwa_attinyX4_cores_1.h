@@ -23,18 +23,18 @@
 #define hw_core0		core, core0, 101, 0x00
 
 
-/*	Class regs		rt, rw, ra, riv, rwm
+/*	Class regs		class, rw, ra, riv, rwm, rfm
  */
-#define hw_core_sreg		crg, 8, 0x5F, 0x00, 0xFF
-#define hw_core_gimsk		crg, 8, 0x5B, 0x00, 0xFF
-#define hw_core_gifr		crg, 8, 0x5A, 0x00, 0x70
-#define hw_core_mcucr		crg, 8, 0x55, 0x00, 0xFF
-#define hw_core_mcusr		crg, 8, 0x54, 0x00, 0x0F /* problem with watchdog */
-#define hw_core_osccal		crg, 8, 0x51, 0x00, 0xFF
-#define hw_core_gpior2		crg, 8, 0x35, 0x00, 0xFF
-#define hw_core_gpior1		crg, 8, 0x33, 0x00, 0xFF
-#define hw_core_gpior0		crg, 8, 0x33, 0x00, 0xFF
-#define hw_core_prr		crg, 8, 0x20, 0x00, 0xFF
+#define hw_core_sreg		crg, 8, 0x5F, 0x00, 0xFF, 0x00
+#define hw_core_gimsk		crg, 8, 0x5B, 0x00, 0xFF, 0x00
+#define hw_core_gifr		crg, 8, 0x5A, 0x00, 0x70, 0x00
+#define hw_core_mcucr		crg, 8, 0x55, 0x00, 0xFF, 0x00
+#define hw_core_mcusr		crg, 8, 0x54, 0x00, 0x0F, 0x00 /* problem with watchdog */
+#define hw_core_osccal		crg, 8, 0x51, 0x00, 0xFF, 0x00
+#define hw_core_gpior2		crg, 8, 0x35, 0x00, 0xFF, 0x00
+#define hw_core_gpior1		crg, 8, 0x33, 0x00, 0xFF, 0x00
+#define hw_core_gpior0		crg, 8, 0x33, 0x00, 0xFF, 0x00
+#define hw_core_prr		crg, 8, 0x20, 0x00, 0xFF, 0x00
 
 #define hw_core_bods		cb1, mcucr, 1, 7
 #define hw_core_pud		cb1, mcucr, 1, 6
@@ -47,9 +47,9 @@
 #define hw_core_pcie1		cb1, gimsk, 1, 5
 #define hw_core_pcie0		cb1, gimsk, 1, 4
 
-#define hw_core_intf0		cfb, gifr, 1, 6
-#define hw_core_pcif1		cfb, gifr, 1, 5
-#define hw_core_pcif0		cfb, gifr, 1, 4
+#define hw_core_intf0		cb1 gifr, 1, 6
+#define hw_core_pcif1		cb1 gifr, 1, 5
+#define hw_core_pcif0		cb1 gifr, 1, 4
 
 #define hw_core_prtim1		cb1, prr, 1, 3
 #define hw_core_prtim0		cb1, prr, 1, 2

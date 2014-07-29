@@ -12,18 +12,18 @@
 #define hw_class_psc
 #define HW_POP_psc(c,n,i,a,...)		__VA_ARGS__
 
-/*	Instance		class, name, id, address
+/*	Instance			class, name, id, address
  */
-#define hw_prescaler0		psc, prescaler0, 500, 0x43
+#define hw_prescaler0			psc, prescaler0, 500, 0x43
 
-/*	Registers		rt, rw, ra, riv, rwm
+/*	Registers			class, rw, ra, riv, rwm, rfm
  */
-#define hw_psc_cr		crg, 8, 0x43-0x43, 0, 0x81
+#define hw_psc_cr			crg, 8, 0x43-0x43, 0, 0x81, 0x00
 
 /*	Bits
  */
-#define hw_psc_tsm		cb1, cr, 1, 7
-#define hw_psc_psr		cb1, cr, 1, 0
+#define hw_psc_tsm			cb1, cr, 1, 7
+#define hw_psc_psr			cb1, cr, 1, 0
 
 
 #define hw_def_hw_clear_psc		, _hw_clear_psc

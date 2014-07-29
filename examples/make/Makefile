@@ -2,8 +2,9 @@
 #	Find target device
 #
 ifeq ($(strip $(MCU)),)
-  MCU = $(shell grep -e '^\#define[[:space:]]HWA_DEVICE[[:space:]]' $(SOURCES) config.h \
-                | head -1 | awk '{print $$NF}')
+  MCU = $(shell (grep -e '^\#define[[:space:]]HWA_DEVICE[[:space:]]'	\
+                   $(SOURCES) config.h 2>/dev/null)			\
+	  | head -1 | awk '{print $$NF}')
 endif
 
 ifeq ($(strip $(MCU)),)

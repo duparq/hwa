@@ -4,24 +4,24 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/*	HWA general purpose macro definitions usable in C or assembler source code.
+ *
+ *	Upper case definitions process arbitrary lists of arguments.
+ *
+ *	Lower case definitions deal with objects, i.e. lists of arguments
+ *	starting with a 'class' name.
+ */
 
 /** \brief	Preprocessing error
  *
  */
 #if defined __ASSEMBLER__
 #  define HW_ERR(msg)	0 ; .fail "HWA: " msg
-//    .macro err x
-//    .error "\x"
-//    .endm
-//#  define HW_ERR(msg)	.fail "HWA error: " msg
-//#  define HW_ERR(msg)	0 ; _HW_ERR HW_QUOTE(msg)
-//#  define HW_ERR(msg)		err, HW_QUOTE(msg)
-//#  define hw_is_err_err		, 1
 #else
-#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA: " msg)
 /*
  *  avr-gcc ignores the GCC error pragma
  */
+#  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA: " msg)
 //#  define HW_ERR(msg)	0 ; _Pragma( HW_QUOTE( GCC error HWA: msg ) )
 //#  define HW_ERR(msg)	_Pragma ( HW_QUOTE( GCC error HWA: msg ) )
 #endif
@@ -125,7 +125,6 @@
 #define hw_hasbits_crg
 #define hw_hasbits_cb1
 #define hw_hasbits_cb2
-#define hw_hasbits_cfb
 #define hw_hasbits_irg
 
 #define _hw_reg_x_0(c,n,a,r,...)	HW_G2(_hw_reg_x_0, HW_IS(,r))(c,n,a,r)
@@ -133,10 +132,8 @@
 #define _hw_reg_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
 #define _hw_reg_x_1(c,n,a,r, x,...)	_hw_reg_##x(c,n,a,r,__VA_ARGS__)
 
-#define _hw_reg_crg(c,n,a, rn,rw,ra,rrv,rwm)	\
-  bits1, n,a, rn,rw,ra,rrv,rwm, rw,0
-
-#define _hw_reg_cfb(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
+#define _hw_reg_crg(c,n,a,r,rw,ra,riv,rwm,rfm)	\
+  bits1, n,a, r,rw,ra,riv,rwm,rfm, rw,0
 
 #define _hw_reg_cb1(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
 #define _hw_reg_cb1_2(...)		_hw_reg_cb1_3(__VA_ARGS__)
@@ -149,11 +146,11 @@
 		 r2,hw_##c##_##r2,rbn2,rbp2,vbp2)
 #define _hw_reg_cb2_2(...)		_hw_reg_cb2_3(__VA_ARGS__)
 #define _hw_reg_cb2_3(n,a,						\
-		       r1,crg1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,	\
-		       r2,crg2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2)	\
+		       r1,crg1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
+		       r2,crg2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
   bits2, n,a,								\
-    r1,rw1,ra1,rrv1,rwm1,rbn1,rbp1,vbp1,				\
-    r2,rw2,ra2,rrv2,rwm2,rbn2,rbp2,vbp2
+    r1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
+    r2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2
 
 #define _hw_reg_irg(_c,_n,_a,_x, c,n,i,a,r)	_hw_reg_irg_2(c,n,a,r,hw_##c##_##r)
 #define _hw_reg_irg_2(...)			_hw_reg_irg_3(__VA_ARGS__)
@@ -185,7 +182,7 @@
 #define _hw_bn_1(...)		__VA_ARGS__
 
 #define hw_def_hw_bn_bits1	, _hw_bn_bits1
-#define _hw_bn_bits1(t, c,n, rn,rw,ra,rrv,rwm, bn,bp)	bn
+#define _hw_bn_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bn
 
 
 /*	hw_bp(...): position of least significant bit of something (generic)
@@ -199,7 +196,7 @@
 #define _hw_bp_1(...)		__VA_ARGS__
 
 #define hw_def_hw_bp_bits1	, _hw_bp_bits1
-#define _hw_bp_bits1(t, c,n, rn,rw,ra,rrv,rwm, bn,bp)	bp
+#define _hw_bp_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bp
 
 
 /*	hw_ctr(...): definition of the controller associated to an instance (generic)
@@ -237,18 +234,9 @@
 /*	hw_name(...): name of an instance (generic)
  */
 #define hw_name(...)		_hw_name_2(__VA_ARGS__)
-#define _hw_name_2(...)		HW_G2(_hw_name,				\
-				      HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_name_2(...)		HW_G2(_hw_name, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_name_0(...)		HW_ERR("can not process hw_name(" #__VA_ARGS__ ").")
 #define _hw_name_1(c,n,i,a)	n
-
-
-/** \brief	Name of an object
-#define hw_name(...)		HW_G2(_hw_name, HW_IS(ctr,__VA_ARGS__))(__VA_ARGS__,)
-#define _hw_name_0(...)		HW_ERR("first argument is not a controller.")
-#define _hw_name_1(t,cc,cn,...)	cn
- */
-
 
 
 /*	hw_rel(...): definition of the controller associated to an instance (generic)

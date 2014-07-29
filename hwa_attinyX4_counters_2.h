@@ -12,8 +12,8 @@
 
 HW_INLINE void _hwa_begin_counters ( hwa_t *hwa )
 {
-  hwa_begin_c8a( counter0 );
-  hwa_begin_c16a( counter1 );
+  _hwa_begin_c8a( hw_counter0 );
+  _hwa_begin_c16a( hw_counter1 );
 }
 
 

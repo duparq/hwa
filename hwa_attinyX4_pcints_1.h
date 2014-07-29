@@ -29,9 +29,9 @@
 #define hw_pcic0		pcic0, pcic0, 200, 0x32
 #define hw_pcic1		pcic1, pcic1, 210, 0x40
 
-/*	Class registers		crg, rw, ra, riv, rvm, rwm
+/*	Class registers		class, rw, ra, riv, rvm, rwm, rfm
  */
-#define hw_pcic0_msk		crg, 8, 0x32-0x32, 0x00, 0xFF
+#define hw_pcic0_msk		crg, 8, 0x32-0x32, 0x00, 0xFF, 0x00
 
 #define hw_pcic0_irqe		irg, hw_core0, pcie0
 #define hw_pcic0_irqf		irg, hw_core0, pcif0
@@ -45,7 +45,7 @@
 #define hw_pcic0_pcint1		cb1, msk, 1, 1
 #define hw_pcic0_pcint0		cb1, msk, 1, 0
 
-#define hw_pcic1_msk		crg, 8, 0x40-0x40, 0x00, 0x0F
+#define hw_pcic1_msk		crg, 8, 0x40-0x40, 0x00, 0x0F, 0x00
 
 #define hw_pcic1_irqe		irg, hw_core0, pcie1
 #define hw_pcic1_irqf		irg, hw_core0, pcif1

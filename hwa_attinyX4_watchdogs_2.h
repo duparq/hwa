@@ -5,6 +5,24 @@
  */
 
 
+HW_INLINE void _hwa_begin_watchdogs ( hwa_t *hwa )
+{
+  _hwa_begin_reg( hw_watchdog0, csr );
+}
+
+
+HW_INLINE void _hwa_reset_watchdogs ( hwa_t *hwa )
+{
+  _hwa_reset_r8( &hwa->watchdog0.csr );
+}
+
+
+HW_INLINE void _hwa_commit_watchdogs ( hwa_t *hwa )
+{
+  _hwa_commit_r8( hwa->commit, &hwa->watchdog0.csr, -1 );
+}
+
+
 #define _hw_turn_wdog(c,n,i,a, vstate)					\
   HW_G2(_hw_turn_wdog, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
 #define _hw_turn_wdog_0(c,n,i,a, vstate)			\
@@ -13,6 +31,7 @@
   HW_G2(_hw_turn_wdog, vstate)(c,n,i,a)
 #define _hw_turn_wdog_on(c,n,i,a)		\
   _hw_write_reg(c,n,i,a,wde,1)
+
 
 /*  Disable the watchdog by clearing WDE. That special sequence must be
  *  respected. That also clears WDRF (required) and other reset flags, as well
@@ -27,35 +46,6 @@
 		       "    andi r24, 0x27"	"\n\t"	\
 		       "    out  0x21, r24"	"\n\t"	\
 		       ::: "r24" );
-
-/* #define _hw_turn_wdog_off_x1(c,n,i,a)		\ */
-/*   do {						\ */
-/*     _hw_write_reg(hw_core0, mcusr, 0);		\ */
-/*     _hw_write_reg(c,n,i,a,wdc,3);		\ */
-/*     _hw_write_reg(c,n,i,a,wdc,2);		\ */
-/*   }while(0) */
-
-/* #define _hw_turn_wdog_off_x2(c,n,i,a)		\ */
-/*   do {						\ */
-/*     hwa_begin();				\ */
-/*     _hwa_write_reg(hw_core0, mcusr, 0);		\ */
-/*     _hwa_write_reg(c,n,i,a,wdc,3);		\ */
-/*     hwa_commit();				\ */
-/*     _hwa_write_reg(c,n,i,a,wdc,2);		\ */
-/*     hwa_commit();				\ */
-/*   }while(0) */
-
-
-/* #define _hwa_turn_wdog(c,n,i,a, vstate)					\ */
-/*   HW_G2(_hwa_turn_wdog, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate) */
-/* #define _hwa_turn_wdog_0(c,n,i,a, vstate)			\ */
-/*   HW_ERR("expected `on` or `off`, got `" #vstate "` instead.") */
-/* #define _hwa_turn_wdog_1(c,n,i,a, vstate)	\ */
-/*   HW_G2(_hwa_turn_wdog, vstate)(c,n,i,a) */
-/* #define _hwa_turn_wdog_on(c,n,i,a)		\ */
-/*   _hw_write_reg(c,n,i,a,wde,1) */
-/* #define _hwa_turn_wdog_off(c,n,i,a)		\ */
-/*   HW_ERR("you can only use hw_turn(hw_"#n",off).") */
 
 
 #define hw_is_timeout_timeout		, 1
@@ -97,7 +87,7 @@
   timeout = HW_A1(hw_wdog_timeout_##vtimeout);		\
   _hwa_config_wdog_action(n,__VA_ARGS__)
 
-/*    Madatory argument `action`
+/*    Mandatory argument `action`
  */
 #define _hwa_config_wdog_action(n,...)					\
   HW_G2(_hwa_config_wdog_xaction,HW_IS(action,__VA_ARGS__))(n,__VA_ARGS__)
@@ -117,6 +107,8 @@
  */
 HW_INLINE void _hwa_docfwdog( hwa_t *hwa, uint8_t timeout, uint8_t action )
 {
+  if ( timeout != 0xFF )
+    _hwa_write_reg( hw_watchdog0, wdp, timeout );
   if ( action == 0 ) {
     /*
      *  Turn the watchdog off. This requires a special sequence, so we do it
@@ -124,30 +116,8 @@ HW_INLINE void _hwa_docfwdog( hwa_t *hwa, uint8_t timeout, uint8_t action )
      */
     _hw_turn_wdog_off(,,,);
   }
-  else {
-    if ( timeout != 0xFF )
-      _hwa_write_reg(hw_watchdog0, wdp,  timeout);
-    if ( action != 0xFF ) {
-      _hwa_write_reg(hw_watchdog0, wde,  action&0x02 );
-      _hwa_write_reg(hw_watchdog0, wdie, action&0x01 );
-    }
+  else if ( action != 0xFF ) {
+    _hwa_write_reg( hw_watchdog0, wde,  action&0x02 );
+    _hwa_write_reg( hw_watchdog0, wdie, action&0x01 );
   }
-}
-
-
-HW_INLINE void _hwa_begin_watchdogs ( hwa_t *hwa )
-{
-  HWA_INIT(hw_watchdog0, csr);
-}
-
-
-HW_INLINE void _hwa_reset_watchdogs ( hwa_t *hwa )
-{
-  _hwa_reset_r8( &hwa->watchdog0.csr );
-}
-
-
-HW_INLINE void _hwa_commit_watchdogs ( hwa_t *hwa )
-{
-  _hwa_commit_r8( hwa->commit, &hwa->watchdog0.csr, -1 );
 }

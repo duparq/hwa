@@ -13,14 +13,15 @@
 
 /*	Initialize a c8a instance
  */
-#define hwa_begin_c8a(n)			\
-  HWA_INIT(hw_##n, ccra);			\
-  HWA_INIT(hw_##n, ccrb);			\
-  HWA_INIT(hw_##n, count);			\
-  HWA_INIT(hw_##n, ocra);			\
-  HWA_INIT(hw_##n, ocrb);			\
-  HWA_INIT(hw_##n, imsk);			\
-  HWA_INIT(hw_##n, ifr);			\
+#define _hwa_begin_c8a(...)		_hwa_begin_c8a_2(__VA_ARGS__)
+#define _hwa_begin_c8a_2(c,n,i,a)		\
+  _hwa_begin_reg(c,n,i,a, ccra);		\
+  _hwa_begin_reg(c,n,i,a, ccrb);		\
+  _hwa_begin_reg(c,n,i,a, count);		\
+  _hwa_begin_reg(c,n,i,a, ocra);		\
+  _hwa_begin_reg(c,n,i,a, ocrb);		\
+  _hwa_begin_reg(c,n,i,a, imsk);		\
+  _hwa_begin_reg(c,n,i,a, ifr);			\
   hwa->n.clock = 0;				\
   hwa->n.countmode = 0;				\
   hwa->n.top = 0;				\

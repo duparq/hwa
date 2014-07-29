@@ -7,15 +7,15 @@
 
 HW_INLINE void _hwa_begin_cores ( hwa_t *hwa )
 {
-  HWA_INIT( hw_core0, gimsk  );
-  HWA_INIT( hw_core0, gifr   );
-  HWA_INIT( hw_core0, mcucr  );
-  HWA_INIT( hw_core0, mcusr  );
-  HWA_INIT( hw_core0, osccal );
-  HWA_INIT( hw_core0, gpior2 );
-  HWA_INIT( hw_core0, gpior1 );
-  HWA_INIT( hw_core0, gpior0 );
-  HWA_INIT( hw_core0, prr );
+  _hwa_begin_reg( hw_core0, gimsk  );
+  _hwa_begin_reg( hw_core0, gifr   );
+  _hwa_begin_reg( hw_core0, mcucr  );
+  _hwa_begin_reg( hw_core0, mcusr  );
+  _hwa_begin_reg( hw_core0, osccal );
+  _hwa_begin_reg( hw_core0, gpior2 );
+  _hwa_begin_reg( hw_core0, gpior1 );
+  _hwa_begin_reg( hw_core0, gpior0 );
+  _hwa_begin_reg( hw_core0, prr    );
 }
 
 
@@ -29,7 +29,7 @@ HW_INLINE void _hwa_reset_cores ( hwa_t *hwa )
   _hwa_reset_r8( &hwa->core0.gpior2 );
   _hwa_reset_r8( &hwa->core0.gpior1 );
   _hwa_reset_r8( &hwa->core0.gpior0 );
-  _hwa_reset_r8( &hwa->core0.prr );
+  _hwa_reset_r8( &hwa->core0.prr    );
 }
 
 
@@ -43,7 +43,7 @@ HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
   _hwa_commit_r8( hwa->commit, &hwa->core0.gpior2, -1 );
   _hwa_commit_r8( hwa->commit, &hwa->core0.gpior1, -1 );
   _hwa_commit_r8( hwa->commit, &hwa->core0.gpior0, -1 );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.prr, -1 );
+  _hwa_commit_r8( hwa->commit, &hwa->core0.prr,    -1 );
 }
 
 
