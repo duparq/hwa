@@ -14,7 +14,7 @@
 #include <hwa.h>
 
 
-HW_ISR( hw_irq(LED_COUNTER, overflow) )
+HW_ISR( LED_COUNTER, overflow )
 {
   static uint8_t	duty ;
   static uint8_t	phase ;
@@ -40,7 +40,7 @@ HW_INLINE void config_led_counter( hwa_t *hwa )
 	      top,         register_compare_a
 	      );
   hwa_write_reg( LED_COUNTER, compare_a, 0xFF );
-  hwa_turn( hw_irq(LED_COUNTER, overflow), on );
+  hwa_turn_irq( LED_COUNTER, overflow, on );
 }
 
 
@@ -75,3 +75,43 @@ int main ( )
 
   return 0 ;
 }
+
+/* hw_irq( hw_pcint8 ); */
+/* hw_irq( hw_pin_pcint8 ); */
+/* hw_irq( hw_pin_pcint8, overflow ); */
+/* hw_irq( hw_pin_pcint8, overflow, on ); */
+/* hw_irq( LED_COUNTER, on ); */
+/* hw_irq( LED_COUNTER, overflow ); */
+/* hw_irq( LED_COUNTER, overflow, on ); */
+
+/* hwa_turn_irq( hw_pcint8 ); */
+/* hwa_turn_irq( hw_pin_pcint8 ); */
+/* hwa_turn_irq( hw_pin_pcint8, on ); */
+/* hwa_turn_irq( hw_pin_pcint8, overflow ); */
+/* hwa_turn_irq( hw_pin_pcint8, overflow, on ); */
+/* hwa_turn_irq( LED_COUNTER, on ); */
+/* hwa_turn_irq( LED_COUNTER, overflow ); */
+/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
+
+
+/* hw_irqe( hw_pcint8 ); */
+/* hw_irqe( hw_pin_pcint8 ); */
+/* hw_irqe( hw_pin_pcint8, overflow ); */
+/* hw_irqe( hw_pin_pcint8, overflow, on ); */
+/* hw_irqe( LED_COUNTER, on ); */
+/* hw_irqe( LED_COUNTER, overflow ); */
+/* hw_irqe( LED_COUNTER, overflow, on ); */
+
+/* HW_ISR( hw_pcint8 ); */
+/* HW_ISR( hw_pin_pcint8 ); */
+/* HW_ISR( hw_pin_pcint8, overflow ); */
+/* HW_ISR( hw_pin_pcint8, overflow, on ); */
+/* HW_ISR( LED_COUNTER, on ); */
+/* HW_ISR( LED_COUNTER, overflow ); */
+/* HW_ISR( LED_COUNTER, overflow, on ); */
+
+/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
+
+/* hw_irq(LED_COUNTER, overflow); */
+/* hwa_turn( hw_irq(LED_COUNTER, overflow), on ); */
+/* //hwa_turn_irq( hw_irq(LED_COUNTER, overflow), on ); */

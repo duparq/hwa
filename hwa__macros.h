@@ -12,11 +12,19 @@
  *	starting with a 'class' name.
  */
 
+
+/*	HWA basic classes
+ */
+#define hw_class_bits1
+#define hw_class_bits2
+
+
 /** \brief	Preprocessing error
  *
  */
 #if defined __ASSEMBLER__
 #  define HW_ERR(msg)	0 ; .fail "HWA: " msg
+#  define HW_FERR(...)	.fail __VA_ARGS__
 #else
 /*
  *  avr-gcc ignores the GCC error pragma
@@ -24,19 +32,26 @@
 #  define HW_ERR(msg)	0 ; _Static_assert(0, "HWA: " msg)
 //#  define HW_ERR(msg)	0 ; _Pragma( HW_QUOTE( GCC error HWA: msg ) )
 //#  define HW_ERR(msg)	_Pragma ( HW_QUOTE( GCC error HWA: msg ) )
+
+/*	Encapsulate the result of HW_ERR inside a fake function numberred n
+ */
+#define HW_FERR(...)		_HW_FERR_2(__COUNTER__, __VA_ARGS__)
+#define _HW_FERR_2(...)		_HW_FERR_3(__VA_ARGS__)
+#define _HW_FERR_3(n,...)	void hw_err##n { uint8_t x = __VA_ARGS__ } void hw_err##n##_
+
 #endif
 
 
 /** \brief	Element a0 of the list a0,...
  */
-#define HW_A0(...)		_HW_A0_2(__VA_ARGS__,)
-#define _HW_A0_2(a0,...)	a0
+#define HW_A0(...)			_HW_A0_2(__VA_ARGS__,)
+#define _HW_A0_2(a0,...)		a0
 
 
 /** \brief	Element a1 of the list a0,a1,...
  */
-#define HW_A1(...)		_HW_A1_2(__VA_ARGS__,,)
-#define _HW_A1_2(a0,a1,...)	a1
+#define HW_A1(...)			_HW_A1_2(__VA_ARGS__,,)
+#define _HW_A1_2(a0,a1,...)		a1
 
 
 /** \brief	Element a2 of the list a0,a1,a2,...
@@ -53,20 +68,51 @@
 
 /** \brief	Glue the first two arguments
  */
-#define HW_G2(...)		_HW_G2_(__VA_ARGS__,,)
-#define _HW_G2_(a,b,...)	a##_##b
+#define HW_G2(...)			_HW_G2_(__VA_ARGS__,,)
+#define _HW_G2_(a,b,...)		a##_##b
 
 
 /** \brief	Glue the first three arguments
  */
-#define HW_G3(...)		_HW_G3_(__VA_ARGS__,,,)
-#define _HW_G3_(a,b,c,...)	a##_##b##_##c
+#define HW_G3(...)			_HW_G3_(__VA_ARGS__,,,)
+#define _HW_G3_(a,b,c,...)		a##_##b##_##c
 
 
 /** \brief	Glue the first four arguments
  */
-#define HW_G4(...)		_HW_G4_(__VA_ARGS__,,,,)
-#define _HW_G4_(a,b,c,d,...)	a##_##b##_##c##_##d
+#define HW_G4(...)			_HW_G4_(__VA_ARGS__,,,,)
+#define _HW_G4_(a,b,c,d,...)		a##_##b##_##c##_##d
+
+
+/*	Method (specialize instruction)
+ *
+ *	Check that the first argument for function f has a declared class
+ *	Check that the function can be applied to that class
+ *	Detect and propagate errors
+ */
+#define HW_MD(f,...)		_HW_MD1(f,__VA_ARGS__)
+
+#define _HW_MD1(f,...)		HW_G2(_HW_MD1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
+#define _HW_MD1_1(f,...)	HW_G2(_HW_MD2, HW_IS(,HW_G3(hw_def,f,__VA_ARGS__)))(f,__VA_ARGS__)
+#define _HW_MD1_0(f,...)	HW_G2(_HW_MD1_0,HW_IS(0,__VA_ARGS__))(f,__VA_ARGS__)
+#define _HW_MD1_0_0(f,...)	HW_ERR("`" HW_QUOTE(__VA_ARGS__) "` is not defined.")
+#define _HW_MD1_0_1(f,...)	__VA_ARGS__
+#define _HW_MD2_1(f,...)	HW_A1(HW_G3(hw_def,f,__VA_ARGS__))(__VA_ARGS__)
+#define _HW_MD2_0(f,...)	HW_ERR("`"#f "` is not a method of class `" HW_QUOTE(__VA_ARGS__) "`.")
+
+
+/*	Generic instruction (no specialization)
+ *
+ *	Check that the first argument for function f has a declared class
+ *	Detect and propagate errors
+ */
+#define HW_GEN(f,...)		_HW_GEN1(f,__VA_ARGS__)
+
+#define _HW_GEN1(f,...)		HW_G2(_HW_GEN1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
+#define _HW_GEN1_1(f,...)	f(__VA_ARGS__)
+#define _HW_GEN1_0(f,...)	HW_G2(_HW_GEN1_0,HW_IS(0,__VA_ARGS__))(f,__VA_ARGS__)
+#define _HW_GEN1_0_0(f,...)	HW_ERR("`" HW_QUOTE(__VA_ARGS__) "` is not defined.")
+#define _HW_GEN1_0_1(f,...)	__VA_ARGS__
 
 
 /** \brief	Error if first argument is not ''
@@ -74,35 +120,47 @@
  *	This is used after the processing of a variable-length list to check
  *	that there's nothing remaining.
  */
-#define HW_EOP(...)		HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_EOP_0(...)		HW_ERR("garbage at end of instruction: `"#__VA_ARGS__"`.")
+#define HW_EOP(...)			HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_EOP_1(...)
+#define _HW_EOP_0(...)							\
+  HW_ERR("garbage at end of instruction: `" HW_QUOTE(__VA_ARGS__)"`...")
+
+/*	Produce result if eol is '', an error otherwise
+ *
+ */
+#define HW_EOL(result, eol, ...)	HW_G2(_HW_EOL,HW_IS(,eol))(eol,result)
+#define _HW_EOL_1(eol, ...)		__VA_ARGS__
+#define _HW_EOL_0(eol, ...)		HW_ERR("garbage beginning with `" #eol "`.")
 
 
 /*	1 if the 2nd argument of hw_is_x_y is '1', 0 if hw_is_x_y has no 2nd arg
  */
-#define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
-#define _HW_IS_2(x,y,...)	HW_A1(hw_is_##x##_##y,0)
-#define hw_is_0_0		, 1,	/* a last comma to remove '; StaticAssert(...)' */
-#define hw_is__			, 1
-#define hw_is_irq_irq		, 1
+#define HW_IS(...)			_HW_IS_2(__VA_ARGS__,,)
+#define _HW_IS_2(x,y,...)		HW_A1(hw_is_##x##_##y,0)
+#define hw_is_0_0			, 1,	/* a last comma to remove '; StaticAssert(...)' */
+#define hw_is__				, 1
+#define hw_is_irq_irq			, 1
 
 
 /** \brief	Quote the first element in the list
  */
-#define HW_QUOTE(...)		_HW_QUOTE_2(__VA_ARGS__,)
-#define _HW_QUOTE_2(x,...)	#x
+#define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__,)
+#define _HW_QUOTE_2(x,...)		#x
 
 
-/*	hw_addr(...): address of an instance (generic)
+/*	hw_addr(...): address of something (generic)
  */
-#define hw_addr(...)		_hw_addr_2(__VA_ARGS__)
-#define _hw_addr_2(...)		HW_G2(_hw_addr_xfn,			\
-				      HW_IS(,hw_def_hw_addr_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_xfn_1(c,...)	HW_A1(hw_def_hw_addr_##c)(c,__VA_ARGS__)
-#define _hw_addr_xfn_0(...)	HW_G2(_hw_addr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_addr_0(...)		HW_ERR("can not process hw_addr(" #__VA_ARGS__ ").")
-#define _hw_addr_1(...)		__VA_ARGS__
+#define hw_addr(...)			HW_MD(hw_addr, __VA_ARGS__)
+
+#define hw_def_hw_addr_bits1		, _hw_addr_bits1
+
+
+/*	hw_ap(...): address and position of least significant bit of something (generic)
+ */
+#define hw_ap(...)			HW_MD(hw_ap, __VA_ARGS__)
+
+#define hw_def_hw_ap_bits1		, _hw_ap_bits1
+#define _hw_ap_bits1(...)		_hw_addr_bits1(__VA_ARGS__), _hw_bp_bits1(__VA_ARGS__)
 
 
 /*	hw_reg(...): memory definition of an instance's bits (generic)
@@ -173,72 +231,46 @@
 
 /*	hw_bn(...): number of bits of something (generic)
  */
-#define hw_bn(...)		_hw_bn_2(__VA_ARGS__)
-#define _hw_bn_2(...)		HW_G2(_hw_bn_xfn,			\
-				      HW_IS(,hw_def_hw_bn_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bn_xfn_1(t,...)	HW_A1(hw_def_hw_bn_##t)(t,__VA_ARGS__)
-#define _hw_bn_xfn_0(...)	HW_G2(_hw_bn, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bn_0(...)		HW_ERR("can not process hw_bn(" #__VA_ARGS__ ").")
-#define _hw_bn_1(...)		__VA_ARGS__
+#define hw_bn(...)			HW_MD(hw_bn, __VA_ARGS__)
 
-#define hw_def_hw_bn_bits1	, _hw_bn_bits1
+#define hw_def_hw_bn_bits1		, _hw_bn_bits1
+
 #define _hw_bn_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bn
 
 
 /*	hw_bp(...): position of least significant bit of something (generic)
  */
-#define hw_bp(...)		_hw_bp_2(__VA_ARGS__)
-#define _hw_bp_2(...)		HW_G2(_hw_bp_xfn,			\
-				      HW_IS(,hw_def_hw_bp_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bp_xfn_1(t,...)	HW_A1(hw_def_hw_bp_##t)(t,__VA_ARGS__)
-#define _hw_bp_xfn_0(...)	HW_G2(_hw_bp, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_bp_0(...)		HW_ERR("can not process hw_bp(" #__VA_ARGS__ ").")
-#define _hw_bp_1(...)		__VA_ARGS__
+#define hw_bp(...)			HW_MD(hw_bp, __VA_ARGS__)
 
-#define hw_def_hw_bp_bits1	, _hw_bp_bits1
+#define hw_def_hw_bp_bits1		, _hw_bp_bits1
+
 #define _hw_bp_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bp
 
 
-/*	hw_ctr(...): definition of the controller associated to an instance (generic)
- */
-#define hw_ctr(...)		_hw_ctr_2(__VA_ARGS__)
-#define _hw_ctr_2(...)		HW_G2(_hw_ctr_xfn,			\
-				      HW_IS(,hw_def_hw_ctr_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_ctr_xfn_1(t,...)	HW_A1(hw_def_hw_ctr_##t)(t,__VA_ARGS__)
-#define _hw_ctr_xfn_0(...)	HW_G2(_hw_ctr, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_ctr_0(...)		HW_ERR("can not process hw_ctr(" #__VA_ARGS__ ").")
-#define _hw_ctr_1(...)		__VA_ARGS__
-
-
 /*	hw_id(...): id of an instance (generic)
+ *
+ *		No error: returns -1 if instance does not exist
  */
 #define hw_id(...)		_hw_id_2(__VA_ARGS__)
-#define _hw_id_2(...)		HW_G2(_hw_id,				\
-				      HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
-//#define _hw_id_0(...)		HW_ERR("can not process hw_id(" #__VA_ARGS__ ").")
+#define _hw_id_2(...)		HW_G2(_hw_id, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_id_0(...)		-1	/* instance does not exist */
 #define _hw_id_1(c,n,i,...)	i
 
 
 /*	hw_io(...): definition of the io associated to an instance, or the io itself (generic)
  */
-#define hw_io(...)		_hw_io_2(__VA_ARGS__)
-#define _hw_io_2(...)		HW_G2(_hw_io_xfn,			\
-				      HW_IS(,hw_def_hw_io_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_io_xfn_1(t,...)	HW_A1(hw_def_hw_io_##t)(t,__VA_ARGS__)
-#define _hw_io_xfn_0(...)	HW_G2(_hw_io, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_io_0(...)		HW_ERR("can not process hw_io(" #__VA_ARGS__ ").")
-#define _hw_io_1(...)		__VA_ARGS__
+#define hw_io(...)			HW_MD(hw_io, __VA_ARGS__)
 
 
 /*	hw_name(...): name of an instance (generic)
+ *
+ *		No specialization: can be applied to
+ *		every declared instance whatever its class.
  */
-#define hw_name(...)		_hw_name_2(__VA_ARGS__)
-#define _hw_name_2(...)		HW_G2(_hw_name, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_name_0(...)		HW_ERR("can not process hw_name(" #__VA_ARGS__ ").")
-#define _hw_name_1(c,n,i,a)	n
+#define hw_name(...)		HW_GEN(_hw_name, __VA_ARGS__)
+#define _hw_name(c,n,i,...)	n
 
-
+#if 1
 /*	hw_rel(...): definition of the controller associated to an instance (generic)
  */
 #define hw_rel(...)		_hw_rel_(__VA_ARGS__)
@@ -251,3 +283,9 @@
 #define _hw_rel_1_2(...)	_hw_rel_1_3(__VA_ARGS__)
 #define _hw_rel_1_3(n,x,...)	HW_G2(_hw_rel_1, HW_IS(,hw_class_##__VA_ARGS__))(n,x,__VA_ARGS__)
 #define _hw_rel_1_1(n0,n1,...)	__VA_ARGS__
+
+
+/*	hw_ctr(...): definition of the controller associated to an instance (generic)
+ */
+#define hw_ctr(...)		HW_MD(hw_ctr, __VA_ARGS__)
+#endif

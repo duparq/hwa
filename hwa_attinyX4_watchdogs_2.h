@@ -113,6 +113,8 @@ HW_INLINE void _hwa_docfwdog( hwa_t *hwa, uint8_t timeout, uint8_t action )
     /*
      *  Turn the watchdog off. This requires a special sequence, so we do it
      *  here instead of using the registers cache.
+     *
+     *	FIXME: that should be done in _hwa_commit_watchdogs()
      */
     _hw_turn_wdog_off(,,,);
   }

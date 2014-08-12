@@ -4,4 +4,4 @@
 SOURCES		=	main.c	\
 			swuart.sx
 
-include $(abspath $(PWD)/../make/Makefile)
+include ../make/Makefile

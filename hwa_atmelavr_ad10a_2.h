@@ -295,6 +295,30 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 }
 
 
+/*	Status of the ADC
+ */
+typedef union {
+  uint8_t         byte ;
+  struct {
+    unsigned int  __0to3    : 4 ;
+    unsigned int  interrupt : 1 ;
+    unsigned int  __5       : 1 ;
+    unsigned int  running   : 1 ;
+    unsigned int  __7       : 1 ;
+  };
+} _hw_ad10a_status_t ;
+
+#define hw_def_hw_status_ad10a		, _hw_status_ad10a
+#define _hw_status_ad10a(c,n,i,a)	_hw_ad10a_status( _hw_read_reg(c,n,i,a, sra) )
+
+HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
+{
+  _hw_ad10a_status_t	st ;
+  st.byte = byte ;
+  return st ;
+}
+
+
 /*	Class & methods
  */
 #define hw_class_adpin

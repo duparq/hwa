@@ -47,9 +47,9 @@
 #define hw_core_pcie1		cb1, gimsk, 1, 5
 #define hw_core_pcie0		cb1, gimsk, 1, 4
 
-#define hw_core_intf0		cb1 gifr, 1, 6
-#define hw_core_pcif1		cb1 gifr, 1, 5
-#define hw_core_pcif0		cb1 gifr, 1, 4
+#define hw_core_intf0		cb1, gifr, 1, 6
+#define hw_core_pcif1		cb1, gifr, 1, 5
+#define hw_core_pcif0		cb1, gifr, 1, 4
 
 #define hw_core_prtim1		cb1, prr, 1, 3
 #define hw_core_prtim0		cb1, prr, 1, 2

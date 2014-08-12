@@ -51,18 +51,24 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 			      uint8_t bn, uint8_t bp, uint8_t v )
 {
+#if !defined HWA_NO_CHECK_ACCESS
   if ( ra == ~0 )
     HWA_ERR("invalid access");
+#endif
 
+#if !defined HWA_NO_CHECK_USEFUL
   if ( bn == 0 )
     HWA_ERR("no bit to be changed?");
+#endif
 
   /*	Mask of bits to modify
    */
   uint8_t wm = (bn > 7) ? 0xFF : (1U<<bn)-1 ;
 
+#if !defined HWA_NO_CHECK_LIMITS
   if (v > wm)
     HWA_ERR("value too high for bits number");
+#endif
 
   wm <<= bp ;
   v <<= bp ;
@@ -278,3 +284,71 @@ HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r, uint16_t mask )
   r->mmask &= ~mask ;
   r->omask |= mask ;
 }
+
+
+/**\brief	Software loop of \c n system clock cycles.
+ * \todo	Only works with compile time constants
+ * \hideinitializer
+ */
+#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
+
+
+/**\brief	Reset watchdog timer
+ */
+#define _hw_clear_wdog(c,n,i,a)		__asm__( "wdr":: )
+
+
+/*	Enable/disable interrupts
+ */
+#define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)
+#define hw_disable_interrupts()		__asm__ __volatile__ ("cli" ::)
+
+
+typedef struct {
+  uint8_t byte ;
+} hw_interrupts_status_t ;
+
+
+HW_INLINE hw_interrupts_status_t hw_get_interrupts_status ( )
+{
+  hw_interrupts_status_t s ;
+  s.byte = hw_read_reg( hw_core0, sreg );
+  return s ;
+}
+
+
+HW_INLINE void hw_set_interrupts_status ( hw_interrupts_status_t s )
+{
+  hw_write_reg( hw_core0, sreg, s.byte );
+}
+
+
+#define HW_ATOMIC(...)				\
+  do{						\
+    uint8_t s = hw_read_reg(hw_core0,sreg);	\
+    hw_disable_interrupts();			\
+    __VA_ARGS__ ;				\
+    hw_write_reg(hw_core0,sreg,s) ;		\
+  }while(0)
+
+
+/*	ISR
+ */
+#define hw_israttr_interruptible		, __attribute__((interrupt))
+#define hw_israttr_non_interruptible		, 
+#define hw_israttr_naked			, __attribute__((naked))
+
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
+#endif
+
+/*  Single event ISR
+ */
+#define _hw_isr_(vector, ...)						\
+  HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
+  void __vector_##vector (void)
+
+
+#define hw_reti()  __asm__ __volatile__("reti\n":::)

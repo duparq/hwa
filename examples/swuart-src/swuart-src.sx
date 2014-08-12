@@ -123,18 +123,19 @@
 	MATCHH  = MATCH+1
 
 
-#define MATCH_IF_RA	hw_addr(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
-#define MATCH_IF_BP	hw_bp(hw_irqf(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
-#define MATCH_IF	MATCH_IF_RA, MATCH_IF_BP
+#define MATCH_IF	hw_ap(hw_irqf(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+#define MATCH_IF_RA	HW_A0(MATCH_IF)
+#define MATCH_IF_BP	HW_A1(MATCH_IF)
 
-#define MATCH_IE_RA	hw_addr(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
-#define MATCH_IE_BP	hw_bp(hw_irqe(hw_irq(SWUART_COUNTER, SWUART_COUNTER_MATCH)))
-#define MATCH_IE	MATCH_IE_RA, MATCH_IE_BP
+#define MATCH_IE	hw_ap(hw_irqe(SWUART_COUNTER, SWUART_COUNTER_MATCH))
+#define MATCH_IE_RA	HW_A0(MATCH_IE)
+#define MATCH_IE_BP	HW_A1(MATCH_IE)
 
 
 	;; Internal flags
 	;;
-	FLAGS   = GPIOR0
+	SREG	= hw_addr(hw_reg(hw_core0, sreg))
+	FLAGS   = hw_addr(hw_reg(hw_core0, gpior0))
 	F_RXTX  = 0		; 0==RX, 1==TX
 	F_WIBTX = 1		; 1: need to wait match before tx
 	;; F_NORX  = 2		; 1: do not return to rx mode after tx
@@ -144,12 +145,8 @@
 
 #if defined SWUART_PIN_RX
 
-#define START_IE	\
-	hw_addr(hw_irqe(hw_irq(SWUART_PIN_RX))), \
-	hw_bp(hw_irqe(hw_irq(SWUART_PIN_RX)))
-#define START_IF	\
-	hw_addr(hw_irqf(hw_irq(SWUART_PIN_RX))), \
-	hw_bp(hw_irqf(hw_irq(SWUART_PIN_RX)))
+#define START_IE	hw_ap(hw_irqe(SWUART_PIN_RX))
+#define START_IF	hw_ap(hw_irqf(SWUART_PIN_RX))
 
 	;; Enable start interrupt
 	;; 
@@ -167,7 +164,7 @@
 
 	;; Connect the ISR to the proper interrupt vector
 	;;
-	HW_ISR( hw_irq(SWUART_PIN_RX) ) = isr_start
+	HW_ISR( SWUART_PIN_RX ) = isr_start
 #endif /* defined SWUART_PIN_RX */
 
 

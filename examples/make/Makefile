@@ -1,4 +1,6 @@
 
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+
 #	Find target device
 #
 ifeq ($(strip $(MCU)),)
@@ -21,12 +23,12 @@ DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 #	HWA source path
 #
-HWA		= 	$(abspath $(PWD)/../..)
+HWA		= 	$(abspath $(CWD)../..)
 INCLUDES	+= 	-I$(HWA)
 
 #	SWUART source path
 #
-SWUART		= 	$(abspath $(PWD)/../swuart-src)
+SWUART		= 	$(abspath $(CWD)../swuart-src)
 INCLUDES	+= 	-I$(SWUART)
 
 
@@ -51,5 +53,4 @@ all:	deps bin lst crc
 
 #	Common makefile
 #
-CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(CWD)Makefile.in

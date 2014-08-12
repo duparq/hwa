@@ -16,9 +16,9 @@
  *    The IRQ awakes the MCU but the ISR itself does nothing. Then we can spare
  *    a few bytes of program memory declaring the ISR 'naked' and inserting the
  *    'reti' instruction ourselves since otherwise avr-gcc does some register
- *    initializations even if none is used.
+ *    initializations even though none is used.
  */
-HW_ISR( hw_irq(hw_watchdog0), naked )
+HW_ISR( hw_watchdog0, naked )
 {
   __asm__ __volatile__("reti"	"\n\t" ::: );
 }
@@ -34,8 +34,7 @@ int main ( )
   /*	Have the CPU enter power_down mode when the 'sleep' instruction is
    *	executed.
    */
-  hwa_config( hw_core0,
-	      sleep_mode,	power_down );
+  hwa_config( hw_core0, sleep_mode, power_down );
 
   /*	Watchdog timeout and action. The IRQ is used to wake-up the CPU.
    */
@@ -65,6 +64,7 @@ int main ( )
     if ( count == 20 ) {
       hwa_config( hw_watchdog0, action,	none ); /* Reuse the HWA cache created above */
       hwa_commit();
+      //      hw_config( hw_watchdog0, action,	none );
     }
   }
 
