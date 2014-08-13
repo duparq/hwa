@@ -17,7 +17,7 @@
 
 
 /**
- * \brief	Set external system clock speed to 0 if none specified.
+ * \brief	Set crystal system oscillator frequency to 0 if none specified.
  * \ingroup	global
  */
 #ifndef HW_XSOHZ
@@ -129,7 +129,7 @@ typedef struct hwa_r32_t
 #ifdef DOXYGEN
 #  include "hwa_device_1.h"
 #else
-#  include HW_QUOTE(HW_G3(hwa, HWA_DEVICE, 1).h)
+#  include HW_QUOTE(HW_G2(hwa,HWA_DEVICE)_1.h)
 #endif
 
 
@@ -148,6 +148,6 @@ typedef struct {
 
 struct hwa_t ;
 #  include "hwa__2.h"
-#endif
+#endif /* !defined __ASSEMBLER__ */
 
 #endif /* !defined _HWA_H_ */

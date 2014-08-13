@@ -35,7 +35,8 @@ HW_ISR( hw_irq(SERVO_COUNTER, compare_a) )
 
   if ( (phase & 1) == 0 ) {
     hw_write( SERVO_PIN, 1 );
-    hw_write_reg( SERVO_COUNTER, compare_b, duty );
+    //    hw_write_reg( SERVO_COUNTER, compare_b, duty );
+    hw_write( hw_reg(SERVO_COUNTER, compare_b), duty );
     hw_turn( hw_irq(SERVO_COUNTER, compare_b), on );
   //    hw_write( SERVO, duty );
   }
