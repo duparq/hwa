@@ -95,8 +95,8 @@
 #define hw_irq_pin_pcint6 		irq, 2, pcic0, pcint6 , irqf
 #define hw_irq_pin_pcint7 		irq, 2, pcic0, pcint7 , irqf
 			   			       
-#define hw_irq_pin_pcint8 		irq, 3, pcic1, pcint8 , irqf
-#define hw_irq_pin_pcint9 		irq, 3, pcic1, pcint9 , irqf
+#define hw_irq_pin_pcint8 		irq, 3, pcic1, pcint8, irqf
+#define hw_irq_pin_pcint9 		irq, 3, pcic1, pcint9, irqf
 #define hw_irq_pin_pcint10		irq, 3, pcic1, pcint10, irqf
 #define hw_irq_pin_pcint11		irq, 3, pcic1, pcint11, irqf
 

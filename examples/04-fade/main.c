@@ -15,6 +15,9 @@
 
 
 HW_ISR( LED_COUNTER, overflow )
+//HW_ISR( hw_irq(LED_COUNTER, overflow) )
+//HW_ISR( LED_COUNTER, overflow, interruptible )
+//HW_ISR( hw_irq(LED_COUNTER, overflow), interruptible )
 {
   static uint8_t	duty ;
   static uint8_t	phase ;
@@ -114,4 +117,18 @@ int main ( )
 
 /* hw_irq(LED_COUNTER, overflow); */
 /* hwa_turn( hw_irq(LED_COUNTER, overflow), on ); */
-/* //hwa_turn_irq( hw_irq(LED_COUNTER, overflow), on ); */
+/* hwa_turn_irq( hw_irq(LED_COUNTER, overflow), on ); */
+
+
+/* hw_irq(LED_COUNTER, overflow); */
+
+/* HW_ISR( LED_COUNTER, overflow ); */
+/* HW_ISR( hw_irq(LED_COUNTER, overflow) ); */
+/* HW_ISR( LED_COUNTER, overflow, naked ); */
+/* HW_ISR( hw_irq(LED_COUNTER, overflow), naked ); */
+
+/* hwa_turn( hw_irq(LED_COUNTER, overflow), on ); */
+/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
+
+/* hw_turn( hw_irq(LED_COUNTER, overflow), on ); */
+/* hw_turn_irq( LED_COUNTER, overflow, on ); */

@@ -46,7 +46,7 @@
   HW_ERR("`"#x"` is not a valid value for `clock`.")
 #define _hwa_cfusia_vclock_1(n,vclock,...)				\
   clock = HW_A1(hw_usia_clock_##vclock);				\
-  HW_EOP(__VA_ARGS__) ; _hwa_docfusia(hwa, &hwa->n, mode, clock) ;
+  HW_TX(_hwa_docfusia(hwa, &hwa->n, mode, clock),__VA_ARGS__);
 
 
 HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t clock )

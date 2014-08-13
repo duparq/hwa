@@ -123,8 +123,7 @@
 #define _hw_config_icu_vedge_0(cn,...)					\
   HW_ERR( "`edge` can be `falling` or `rising` but not `" HW_QUOTE(__VA_ARGS__) "`.")
 #define _hw_config_icu_vedge_1(cn,zedge,...)			\
-  hw_write_reg(hw_##cn, ices, HW_A1(hw_icu_edge_##zedge)-1);	\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(hw_write_reg(hw_##cn, ices, HW_A1(hw_icu_edge_##zedge)-1),__VA_ARGS__);
 
 
 /*	Configure a capture unit
@@ -163,7 +162,7 @@
   HW_G2(_hwa_config_icu_xfilter,HW_IS(filter,__VA_ARGS__))(n,r,__VA_ARGS__)
 
 #define _hwa_config_icu_xfilter_0(n,r,...)	\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(,__VA_ARGS__)
 
 #define _hwa_config_icu_xfilter_1(n,r,_filter_,...)			\
   HW_G2(_hwa_config_icu_vfilter,HW_IS(,hw_state_##__VA_ARGS__))(n,r,__VA_ARGS__)
@@ -173,7 +172,7 @@
 
 #define _hwa_config_icu_vfilter_1(n,r,zfilter,...)	\
   hwa->n.r##_filter = HW_A1(hw_state_##zfilter);	\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(,__VA_ARGS__)
 
 
 /*		Read the capture register of an icu

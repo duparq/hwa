@@ -188,8 +188,8 @@
 #define _hwa_cfad10a_im1_vinput_0(n,x,...)		\
   HW_ERR("`"#x"` is not a valid value for `input`.")
 #define _hwa_cfad10a_im1_vinput_1(n,vinput,...)				\
-  _hwa_write_reg(ad10a,n,,,mux, HW_A1(hw_ad10a_input_##vinput));	\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(_hwa_write_reg(ad10a,n,,,mux, HW_A1(hw_ad10a_input_##vinput)), \
+	 __VA_ARGS__);
 
 /*	Process 'positive_input' & 'negative_input' in differential mode
  */
@@ -212,9 +212,9 @@
   HW_ERR("`"#x"` is not a valid value for `negative_input`.")
 #define _hwa_cfad10a_im2_vnegative_input_1(n,vinput,...)		\
   uint8_t negative_input = HW_A1(hw_ad10a_input_##vinput);		\
-  _hwa_write_reg(ad10a,n,,,mux,					\
-		    _hwa_ad10a_compute_mux( positive_input, negative_input, gain )); \
-  HW_EOP(__VA_ARGS__)
+  HW_TX(_hwa_write_reg(ad10a,n,,,mux,					\
+			_hwa_ad10a_compute_mux( positive_input, negative_input, gain )), \
+	 __VA_ARGS__);
 
 
 /*	Check the combination of differential inputs & gain, return the MUX

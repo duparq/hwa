@@ -144,20 +144,10 @@ HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 	 "`at_top, or `at_max`, but `not `" #overflow "`.")
 
 #define _hwa_config_c8a_voverflow_1(n,voverflow,...)		\
-  hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
-  HW_EOP(__VA_ARGS__)
-//  _hwa_config_c8a_xoverflow_0(n,__VA_ARGS__)
+  HW_TX(hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow),__VA_ARGS__);
 
 #define _hwa_config_c8a_xoverflow_0(n,...)			\
-  HW_EOP(__VA_ARGS__)
-
-/* #define _hwa_config_c8a_xoverflow_0(n,...)			\ */
-/*   HW_G2(_hwa_config_c8a,HW_IS(,__VA_ARGS__))(n,__VA_ARGS__) */
-
-/* #define _hwa_config_c8a_0(n,...)				\ */
-/*   HW_ERR( "too many arguments: `" HW_QUOTE(__VA_ARGS__) "`.") */
-
-/* #define _hwa_config_c8a_1(...) */
+  HW_TX(,__VA_ARGS__)
 
 
 /*	Solve the configuration of the counter and its compare and capture units

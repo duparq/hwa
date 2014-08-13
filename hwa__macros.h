@@ -91,7 +91,6 @@
  *	Detect and propagate errors
  */
 #define HW_MD(f,...)		_HW_MD1(f,__VA_ARGS__)
-
 #define _HW_MD1(f,...)		HW_G2(_HW_MD1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
 #define _HW_MD1_1(f,...)	HW_G2(_HW_MD2, HW_IS(,HW_G3(hw_def,f,__VA_ARGS__)))(f,__VA_ARGS__)
 #define _HW_MD1_0(f,...)	HW_G2(_HW_MD1_0,HW_IS(0,__VA_ARGS__))(f,__VA_ARGS__)
@@ -107,7 +106,6 @@
  *	Detect and propagate errors
  */
 #define HW_GEN(f,...)		_HW_GEN1(f,__VA_ARGS__)
-
 #define _HW_GEN1(f,...)		HW_G2(_HW_GEN1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
 #define _HW_GEN1_1(f,...)	f(__VA_ARGS__)
 #define _HW_GEN1_0(f,...)	HW_G2(_HW_GEN1_0,HW_IS(0,__VA_ARGS__))(f,__VA_ARGS__)
@@ -115,22 +113,13 @@
 #define _HW_GEN1_0_1(f,...)	__VA_ARGS__
 
 
-/** \brief	Error if first argument is not ''
- *
- *	This is used after the processing of a variable-length list to check
- *	that there's nothing remaining.
- */
-#define HW_EOP(...)			HW_G2(_HW_EOP, HW_IS(,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_EOP_1(...)
-#define _HW_EOP_0(...)							\
-  HW_ERR("garbage at end of instruction: `" HW_QUOTE(__VA_ARGS__)"`...")
-
-/*	Produce result if eol is '', an error otherwise
+/*	Produce result if followed by '', an error otherwise
  *
  */
-#define HW_EOL(result, eol, ...)	HW_G2(_HW_EOL,HW_IS(,eol))(eol,result)
-#define _HW_EOL_1(eol, ...)		__VA_ARGS__
-#define _HW_EOL_0(eol, ...)		HW_ERR("garbage beginning with `" #eol "`.")
+#define HW_TX(result, ...)	HW_G2(_HW_TX,HW_IS(,__VA_ARGS__))((result),__VA_ARGS__)
+#define _HW_TX_0(result, ...)	HW_ERR("garbage found: `" HW_QUOTE(__VA_ARGS__) "`.")
+#define _HW_TX_1(result, ...)	_HW_TX_2 result
+#define _HW_TX_2(...)		__VA_ARGS__
 
 
 /*	1 if the 2nd argument of hw_is_x_y is '1', 0 if hw_is_x_y has no 2nd arg

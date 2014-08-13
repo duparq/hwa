@@ -158,11 +158,10 @@ HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
 	 "`at_top, or `at_max`, but `not `" #overflow "`.")
 
 #define _hwa_config_c16a_voverflow_1(n,voverflow,...)		\
-  hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow);	\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(hwa->n.overflow = HW_A1(hw_counter_overflow_##voverflow),__VA_ARGS__);
 
 #define _hwa_config_c16a_xoverflow_0(n,...)			\
-  HW_EOP(__VA_ARGS__)
+  HW_TX(,__VA_ARGS__)
 
 
 /*	Solve the configuration of the counter with its compare and capture units

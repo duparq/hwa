@@ -98,9 +98,9 @@ HW_INLINE void _hwa_commit_watchdogs ( hwa_t *hwa )
 #define _hwa_config_wdog_vaction_0(n,vaction,...)			\
   HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #vaction "`.")
 #define _hwa_config_wdog_vaction_1(n,vaction,...)	\
-  action = HW_A1(hw_wdog_action_##vaction);		\
-  _hwa_docfwdog( hwa, timeout, action );		\
-  HW_EOP(__VA_ARGS__)					\
+  HW_TX(action = HW_A1(hw_wdog_action_##vaction);	\
+	 _hwa_docfwdog( hwa, timeout, action );,	\
+	 __VA_ARGS__)
 
 
 /*  Process the configuration of the watchdog
