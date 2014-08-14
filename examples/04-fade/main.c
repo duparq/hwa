@@ -2,8 +2,8 @@
 /*	Fade a LED using an output-compare pin configured for PWM
  */
 
-#define HWA_DEVICE		attiny84
-#define HWA_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny84
+#define HW_DEVICE_PACKAGE	dil
 
 #define LED_COUNTER		hw_counter0
 #define LED_COUNTER_CLKDIV	64

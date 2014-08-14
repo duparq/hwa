@@ -3,8 +3,8 @@
  *	management too.
  */
 
-#define HWA_DEVICE		attiny84
-#define HWA_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny84
+#define HW_DEVICE_PACKAGE	dil
 
 #define	LED_PIN			hw_pin_5
 

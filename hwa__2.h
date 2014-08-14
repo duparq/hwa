@@ -348,7 +348,7 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
  *	Solve the constraints imposed by the developer, then do the required
  *	hardware register writes.
  *
- *	Calls _hwa_commit_all() that must be defined in hwa_ \e HWA_DEVICE _l2.h.
+ *	Calls _hwa_commit_all() that must be defined in hwa_ \e HW_DEVICE _l2.h.
  *
  * \hideinitializer
  */
@@ -379,5 +379,5 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
 #ifdef DOXYGEN
 #  include "hwa_device_2.h"
 #else
-#  include HW_QUOTE(HW_G2(hwa,HWA_DEVICE)_2.h)
+#  include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_2.h)
 #endif

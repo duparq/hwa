@@ -69,7 +69,7 @@
  */
 #define hw_is_dil_dil		, 1
 
-#if HW_IS(dil,HWA_DEVICE_PACKAGE)
+#if HW_IS(dil,HW_A1(HW_DEVICE))
 #
 #  define hw_pin_2			hw_pin_pb0
 #  define hw_pin_3			hw_pin_pb1

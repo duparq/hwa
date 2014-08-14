@@ -2,8 +2,8 @@
 #define CONFIG_H
 
 
-#define HWA_DEVICE		attiny44
-#define HWA_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny44
+#define HW_DEVICE_PACKAGE	dil
 
 /*	SWUART configuration.
  *

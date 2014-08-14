@@ -7,7 +7,7 @@
 
 /** \brief	Target device is an Atmel AVR.
  */
-#define HWA_DEVICE_ATMELAVR
+#define HW_DEVICE_ATMELAVR
 
 
 /*	Keywords

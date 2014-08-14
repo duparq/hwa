@@ -1,7 +1,0 @@
-
-#	-*- makefile -*-
-
-PARTNO	=	t84
-FLASHSZ	=	0x2000
-
-include make/Makefile.attinyX4

@@ -9,7 +9,7 @@
  */
 
 
-#define HWA_DEVICE_ATTINYX4
+#define HW_DEVICE_ATTINYX4
 
 /*	The include order and ids follows that of the datasheet
  */
@@ -23,6 +23,8 @@
 #include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
 #include "hwa_attinyX4_adcs_1.h"		/* id: 800 */
 #include "hwa_attinyX4_watchdogs_1.h"		/* id: 900 */
+#include "hwa_attinyX4_eeproms_1.h"		/* id: 1000 */
+#include "hwa_attinyX4_flashs_1.h"		/* id: 1100 */
 
 
 /** \brief	Returns the system clock frequency.

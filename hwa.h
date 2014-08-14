@@ -11,10 +11,9 @@
 #ifndef _HWA_H_
 #define _HWA_H_
 
-#ifndef HWA_DEVICE
-#  error "HWA_DEVICE not defined."
+#ifndef HW_DEVICE
+#  error "HW_DEVICE not defined."
 #endif
-
 
 /**
  * \brief	Set crystal system oscillator frequency to 0 if none specified.
@@ -26,6 +25,7 @@
 
 #include "hwa__macros.h"
 #include "hwa__interrupts.h"
+
 
 #if !defined __ASSEMBLER__
 
@@ -129,7 +129,7 @@ typedef struct hwa_r32_t
 #ifdef DOXYGEN
 #  include "hwa_device_1.h"
 #else
-#  include HW_QUOTE(HW_G2(hwa,HWA_DEVICE)_1.h)
+#  include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_1.h)
 #endif
 
 

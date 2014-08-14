@@ -2,8 +2,7 @@
 /*	ADC
  */
 
-#define HWA_DEVICE		attiny84
-#define HWA_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny84, dil
 
 #define SG90_MIN		0.000270*2
 #define SG90_MAX		0.001300*2

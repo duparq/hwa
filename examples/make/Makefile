@@ -1,19 +1,19 @@
 
 CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
-#	Find target device
+#	Find target device in source files
 #
-ifeq ($(strip $(MCU)),)
-  MCU = $(shell (grep -e '^\#define[[:space:]]HWA_DEVICE[[:space:]]'	\
+ifeq (,$(MCU))
+  comma := ,
+  MCU = $(shell (grep -e '^\#define[[:space:]]HW_DEVICE[[:space:]]'	\
                    $(SOURCES) config.h 2>/dev/null)			\
-	  | head -1 | awk '{print $$NF}')
+	  | head -1 | awk '{$$1=$$2=""; print $$0}') # print all but two first columns
+  MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
 endif
 
-ifeq ($(strip $(MCU)),)
-$(error Please define HWA_DEVICE in one source file or in config.h)
+ifeq (,$(MCU))
+$(error Please define HW_DEVICE in one of the source files or in config.h)
 endif
-
-#DEFINES		+=	-Wno-unknown-pragmas
 
 #	Chip programming
 #
@@ -47,7 +47,6 @@ OBJDIR		= build
 
 #	Default target
 #
-#all:	deps hex bin lst size
 all:	deps bin lst crc
 
 

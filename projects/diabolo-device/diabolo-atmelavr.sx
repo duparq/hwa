@@ -1,7 +1,5 @@
 
-	;; -*- asm -*- Last modified: 2014-07-04 14:40:46 -*-
-
-#include <hwa.h>
+	;; -*- asm -*-
 
 	;; Diabolo Is A BOotLOader
 	;; 
@@ -12,32 +10,46 @@
 	;; 
 	.include "atmelavr-xinstr.sx"
 
-	;; Notes :
+	;; Notes:
 	;; 
 	;; * could spare a few bytes by removing page programming verification
 	;; (then diabolo.py would do it).
 
-	;; Pins used
-	;;   PIN_RXD and PIN_TXD can be the same
+	;; Pins: PIN_RXD and PIN_TXD can be the same
 	;;
-	RXDPORT   = hw_addr(hw_bits(hw_ctr(PIN_RXD), port))
-	RXDPIN    = hw_addr(hw_bits(hw_ctr(PIN_RXD), pin))
-	RXDDR     = hw_addr(hw_bits(hw_ctr(PIN_RXD), ddr))
+	RXDPORT   = hw_addr(hw_reg(hw_ctr(PIN_RXD), port))
+	RXDPIN    = hw_addr(hw_reg(hw_ctr(PIN_RXD), pin))
+	RXDDR     = hw_addr(hw_reg(hw_ctr(PIN_RXD), ddr))
 	RXDBP     = hw_bp(PIN_RXD)
 
-	TXDPORT   = hw_addr(hw_bits(hw_ctr(PIN_TXD), port))
-	TXDDR     = hw_addr(hw_bits(hw_ctr(PIN_TXD), ddr))
+	TXDPORT   = hw_addr(hw_reg(hw_ctr(PIN_TXD), port))
+	TXDDR     = hw_addr(hw_reg(hw_ctr(PIN_TXD), ddr))
 	TXDBP     = hw_bp(PIN_TXD)
 
-	X_ONEWIRE = (TXDPORT==RXDPORT && TXDBP==RXDBP)
+	X_ONEWIRE = (hw_id(PIN_RXD)==hw_id(PIN_TXD))
+
+	;;  Registers
+	;;
+	MCUSR     = hw_addr(hw_reg(hw_core0, mcusr))
+	WDTCSR    = hw_addr(hw_reg(hw_watchdog0, csr))
+	SPMCSR    = hw_addr(hw_reg(hw_flash0, csr))
+	EEARL     = hw_addr(hw_reg(hw_eeprom0, arl))
+	EEARH     = hw_addr(hw_reg(hw_eeprom0, arh))
+	EEDR      = hw_addr(hw_reg(hw_eeprom0, dr))
+	EECR      = hw_addr(hw_reg(hw_eeprom0, cr))
+
+#define AP_EEMPE    hw_ap(hw_reg(hw_eeprom0, mpe))
+#define AP_EEPE     hw_ap(hw_reg(hw_eeprom0, pe))
+#define AP_EERE     hw_ap(hw_reg(hw_eeprom0, re))
+
 
 #if defined PIN_DBG
 	DBG = 1
 
-	DBGPORT   = hw_addr(hw_bits(hw_ctr(PIN_DBG), port))
-	DBGPIN    = hw_addr(hw_bits(hw_ctr(PIN_DBG), pin))
-	DBGDR     = hw_addr(hw_bits(hw_ctr(PIN_DBG), ddr))
-	DBGBIT    = HW_PINNUM(PIN_DBG)
+	DBGPORT   = hw_addr(hw_reg(hw_ctr(PIN_DBG), port))
+	DBGPIN    = hw_addr(hw_reg(hw_ctr(PIN_DBG), pin))
+	DBGDR     = hw_addr(hw_reg(hw_ctr(PIN_DBG), ddr))
+	DBGBIT    = hw_bp(PIN_DBG)
 
 	.macro dbg x
 	.if \x
@@ -55,43 +67,49 @@
 
 	;; Constants
 	;;
-	PROTOCOL = 3
-	BLPAGES  = 12
+	PROTOCOL  = 3
+	BLPAGES   = 12
 
-	RAMEND   = (RAMSTART + RAMSIZE - 1)
-	FLASHEND = (FLASHSIZE - 1)
-	APPSTART = NVECTS*2
+	PAGESIZE  = HW_DEVICE_PAGESIZE          ; from HWA
+	RAMSTART  = HW_DEVICE_RAMSTART          ;
+	RAMSIZE   = HW_DEVICE_RAMSIZE           ;
+	FLASHSIZE = HW_DEVICE_FLASHSIZE         ;
+	SIGNATURE0 = HW_A0(HW_DEVICE_SIGNATURE) ;
+	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
+	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
+
+	RAMEND    = (RAMSTART + RAMSIZE - 1)
+	FLASHEND  = (FLASHSIZE - 1)
+	APPSTART  = HW_DEVICE_NVECTORS*2
 
 	;; Data in EEPROM
 	;;
 	;; App CRC is stored MSB first in EEPROM because it must be
 	;; sent to the CRC algorithm in this order for checking
 	;; 
-	EEPCNT = EESIZE-4 	; 32 bit programmings count (MSB first)
-	EECRC  = EEPCNT-4	; 16 bits application CRC (MSB first)
+	EEPCNT = HW_DEVICE_EEPROMSIZE-4 ; 32 bit programmings count (MSB first)
+	EECRC  = EEPCNT-4		; 16 bits application CRC (MSB first)
 
 	;; Global variables registers
 	;;
-	;; R1:R0      mot inséré dans le tampon de programmation FLASH
-	;; R3:R2      CRC application
+	;; R1:R0      written into flash programming buffer
+	;; R3:R2      application CRC
 	;; R5:R4      RAMSTART
-	;; R6         == 0 si autorisation de programmer
-	;; R7         == 0 si CRC mémoire programme OK
-	;; R8         état du MCU au reset (MCUSR)
+	;; R7         0 if application CRC is valid
+	;; R8         MCU status at reset (MCUSR)
 	;; R9         OSCCAL value at reset
-	;; R11:R10    CRC 16 bits (CCITT) communication
-	;; R15:R14    swuart0_T
+	;; R11:R10    CRC 16 bits (CCITT) of last transfered packet
+	;; R15:R14    UART bit duration in cycles
 	;; 
-	;; R16        compteur de bits
-	;; R17        compteur de temporisation
-	;; R18        égalité des pages
-	;; R19        temporaire
-	;; R22        virginité de page
-	;; R23        virginité de page
-	;; R24        octet émis/reçu
-	;; R29:R28    pointeur de données de page en RAM
-	;;            copie temporaire de Z pour modif
-	;; R31:R30    (Z) compteur d'adresse (instructions LPM/SPM)
+	;; R16        general usage
+	;; R17        FF if all application bytes are FF, general usage
+	;; R18        virgin page received
+	;; R19        virgin page
+	;; R22        UART bits counter, page byte counter
+	;; R23        UART received byte buffer
+	;; R24        UART rx/tx byte
+	;; R29:R28    Y: RAM address, Z backup
+	;; R31:R30    Z: flash address counter (LPM/SPM)
 
 
 	;; Change MCU speed macros
@@ -116,14 +134,15 @@
 	;; /*            START             */
 	;; /********************************/
 
-	.section .text
+	.section .init1,"ax",@progbits
 	.org	0		; RESET vector
 	rjmp	start
 
 
 	;; Cold start point
 	;;
-	.org FLASHSIZE-PAGESIZE*BLPAGES, 0xFF
+	.section .text
+	.org FLASHSIZE - PAGESIZE * BLPAGES - 2, 0xFF
 start:
 	XLD	R8, MCUSR	; Store CPU status into R8 before touching it
 	ldi	R16, 0x18	; Stop the watchdog
@@ -205,12 +224,11 @@ init:	tst	R8		; if not the first time we're here
 	clr	R8
 
 	;; This is the first time init is launched
-	;;   Synchronize UART
+	;;   synchronize UART
 	;;     compute bit duration in SYSHZ cycles units
 	;;     store it in R15:R14
-	;;     sync8 uses '\xFF' and '\x80' bytes (1 & 8 bits low)
-sync:
-	.include "swuart-sync-10-1.sx"
+	;;
+sync:	.include "diabolo-atmelavr-sync-10-1.sx"
 	movw	R14, R24
 
 	;; Wait end of byte and 1 more byte
@@ -242,7 +260,7 @@ error:	ldi	R24, '!'
 	;; Main loop:
 	;;   send prompt
 	;;   wait for a character command
-	;;   process the command
+	;;   process command
 	;;
 prompt:	ldi	R24, '#'	; 0x23
 	rcall	putbytenocrc
@@ -257,26 +275,26 @@ prompt:	ldi	R24, '#'	; 0x23
 	cpi	R24, 'i'
 	brne	1f
 
-	ldi	R24, PROTOCOL	; 0: protocole
+	ldi	R24, PROTOCOL	; 0: protocol
 	rcall	putbyte
-	ldi	R24, SIGN0	; 1-3: signature du circuit
+	ldi	R24, SIGNATURE0	; 1-3: signature
 	rcall	putbyte
-	ldi	R24, SIGN1
+	ldi	R24, SIGNATURE1
 	rcall	putbyte
-	ldi	R24, SIGN2
+	ldi	R24, SIGNATURE2
 	rcall	putbyte
-	ldi	R24, lo8(start)	; 4: bootloader addresse (LSB)
+	ldi	R24, lo8(start)	; 4: bootloader address (LSB)
 	rcall	putbyte
-	ldi	R24, hi8(start)	; 5: bootloader addresse (MSB)
+	ldi	R24, hi8(start)	; 5: bootloader address (MSB)
 	rcall	putbyte
 	mov	R24, R3		; 6: application CRC (MSB)
 	rcall	putbyte
 	mov	R24, R2		; 7: application CRC (LSB)
 	rcall	putbyte
 
-	clr	R31		;  8: 0x0000: Fuses low byte		
-	clr	R30		;  9: 0x0001: Lock bits		
-2:	ldi	R24, 9		; 10: 0x0002: Fuses extended byte	
+	clr	R31		;  8: 0x0000: Fuses low byte
+	clr	R30		;  9: 0x0001: Lock bits
+2:	ldi	R24, 9		; 10: 0x0002: Fuses extended byte
 	XST	SPMCSR, R24	; 11: 0x0003: Fuses high byte
 	lpm	R24, Z+
 	rcall	putbyte
@@ -292,9 +310,7 @@ crcprompt:
 	rjmp	prompt
 
 	
-	;; 'A' : Set address
-	;;   adresse -> R31:R30
-	;;   Doit être appelé avant chaque programmation de page (R6)
+	;; 'A' : Set address (-> R31:R30)
 	;;
 1:	cpi	R24, 'A'
 	brne	1f
@@ -307,18 +323,16 @@ crcprompt:
 	rjmp	prompt
 
 
-	;; 'f': lecture d'une page FLASH
+	;; 'f': read flash page at Z=R31:R30
 	;; 
-	;;   l'adresse courante est dans R31:R30 (index Z)
-	;;
 1:	cpi	R24, 'f'
 	brne	1f
 
 	ldi	R20, PAGESIZE
-2:	lpm	R24, Z+		; Lecture FLASH
-	rcall	putbyte		; Envoie l'octet
+2:	lpm	R24, Z+		; read flash byte
+	rcall	putbyte		; send it
 	dec	R20
-	brne	2b		; Jusqu'au dernier de la page
+	brne	2b		; until end of page
 	rjmp	crcprompt
 
 
@@ -349,17 +363,17 @@ crcprompt:
 	NSPD			; Factory clock speed
 
 	movw	R28, R4		; Y = RAMSTART
-2:	sbic	EECR, EEPE	; Attend fin écriture en cours
+2:	sbic	AP_EEPE		; Attend fin écriture en cours
 	rjmp	2b
-	ldi	R24, 0		; Commande : efface + programme
+	ldi	R24, 0		; Command: erase & write
 	XST	EECR, R24
 	XST	EEARL, R30
 	XST	EEARH, R31
 	ld	R24, Y+
 	XST	EEDR, R24
 	adiw	R30, 1
-	sbi	EECR, EEMPE
-	sbi	EECR, EEPE
+	sbi	AP_EEMPE
+	sbi	AP_EEPE
 	dec	R21
 	brne	2b
 
@@ -438,42 +452,42 @@ pflash:	ldi	R20, PAGESIZE
 	ldi	R24, hi8((FLASHSIZE-BLPAGES*PAGESIZE)/2-1 + 0xC000)
 	sts	RAMSTART+1, R24
 
-2:	ldi	R24, 0x11	; Vide le tampon d'écriture en flash
+2:	ldi	R24, 0x11	; Clear flash programming buffer
 	XST	SPMCSR, R24	;
 	ldi	R24, 0		; Code 'NO ERROR'
-	ldi	R18, 0xFF	; Virginité page reçue
-	ldi	R19, 0xFF	; Virginité page existante
-	ldi	R20, 0xFF	; Égalité des pages
+	ldi	R18, 0xFF	; Received page virginity
+	ldi	R19, 0xFF	; Current page virginity
+	ldi	R20, 0xFF	; Pages equality
 
 	movw	R28, R4		; Y = RAMSTART
 	ldi	R22, PAGESIZE/2
-2:	ld	R12, Y+		; Octet reçu
-	lpm	R13, Z+		; Octet d'origine
+2:	ld	R12, Y+		; Received byte
+	lpm	R13, Z+		; Original byte
 
-	and	R18, R12	; Test virginité nouvelle page à programmer
-	and	R19, R13	; Test virginité ancienne page
-	cpse	R12, R13	; Test égalité pages
+	and	R18, R12	; Update received page virginity
+	and	R19, R13	; Update current page virginity
+	cpse	R12, R13	; Update pages equality
 	ldi	R20, 0		;
 
-	mov	R0, R1		; Fabrique un mot R1:R0 pour SPM
+	mov	R0, R1		; Build couple of bytes R1:R0 for SPM
 	mov	R1, R12		;
-	sbrc	R30, 0		; Boucle pour 2 octets
+	sbrc	R30, 0		;   2 bytes
 	rjmp	2b		;
 
-	sbiw	R30, 2		; Revient 2 octets en arrière
-	ldi	R21, 0x01	; Alimente le tampon FLASH avec R1:R0
+	sbiw	R30, 2		; 2 bytes back
+	ldi	R21, 0x01	; Store R1:R0 in page programming buffer
 	XST	SPMCSR, R21	;
 	spm			;
 	adiw	R30, 2		;
 
-	dec	R22		; Boucle jusqu'à la fin de la page
+	dec	R22		; Repeat until end of page
 	brne	2b		;
 
-	cpi	R20, 0xFF	; if page unchanged -> pdone
+	cpi	R20, 0xFF	; Go to pdone if page is unchanged
 	brne	4f		;
 99:	rjmp	pdone		;
 
-4:	subi	R30, PAGESIZE	; Revient à l'adresse du début de la page
+4:	subi	R30, PAGESIZE	; Back to start of page's address
 	sbci	R31, 0		;
 
 	;; Erase page if not virgin
@@ -501,8 +515,8 @@ pflash:	ldi	R20, PAGESIZE
 4:	HSPD	R28		; Highest clock speed
 	movw	R28, R4		; Y pointe le début de la page en RAM
 	ldi	R22, PAGESIZE
-2:	ld	R12, Y+		; Octet reçu
-	lpm	R13, Z+		; Octet programmé
+2:	ld	R12, Y+		; Received byte
+	lpm	R13, Z+		; Programmed byte
 	cp	R12, R13
 	brne	99b
 	dec	R22
@@ -510,10 +524,8 @@ pflash:	ldi	R20, PAGESIZE
 	andi	R24, ~0x10	; Clear error code 'PROGRAMMING ERROR'
 	rjmp	pdone
 
-
-	;; Reçoit R20 octets stockés en RAM, + CRC16
-	;; et vérifie autorisation de programmer
-	;; Retourne avec Z=1 si le résultat du test CRC est OK et autorisation de programmer
+	;; Get R20 bytes stored in RAM, + CRC16
+	;; Return with Z=1 if CRC is valid
 	;;
 getbuf:	movw	R28, R4		; RAMSTART
 1:	rcall	getbyte
@@ -522,29 +534,29 @@ getbuf:	movw	R28, R4		; RAMSTART
 	brne	1b
 
 	;; Receive and check CRC
+	;; Load '\x80' (CRC error) into R24
 	;; Return with Z=1 if CRC is valid (== 0)
-	;; Load '\x80' into R24
 	;; 
-chkcrc:	rcall	getbyte		; Récupère le CRC
+chkcrc:	rcall	getbyte		; Receive CRC
 	rcall	getbyte		;
-	mov	R24, R10	;
-	or	R24, R11	;  Z=1 if CRC is valid
-	ldi	R24, 0x80	; 'CRC error' code
+	mov	R24, R10	; Check CRC
+	or	R24, R11	; Z=1 if CRC is valid
+	ldi	R24, 0x80	; 'CRC error' code, Z unmodified
 	ret
 
 	
-	;; Lecture EEPROM : R24 = *Z++
+	;; Read EEPROM : R24 = *(Z++)
 	;; 
-eerd:	sbic	EECR, EEPE
+eerd:	sbic	AP_EEPE
 	rjmp	eerd
 	XST	EEARL, R30 
 	XST	EEARH, R31
-	sbi	EECR, EERE
+	sbi	AP_EERE
 	XLD	R24, EEDR
 	adiw	R30, 1
 	rjmp	crcadd
 
-	;; Temporisation R25:R24 + 7 cycles			(R24, R25)
+	;; Delay R25:R24 + 6 cycles			(R24, R25)
 	;; 3 + 4 (n/4-1) + 3 + 4 = 6 + n
 	;; 
 delay:				; [3] rcall
@@ -553,41 +565,39 @@ delay:				; [3] rcall
 	ret			; [4]
 
 
-	;; Réception d'un octet dans R24		R22, R23, R24, R25
+	;; Receive one byte in R24			R22, R23, R24, R25
 	;; 						R10, R11, R18, R19
 	;;
 getbyte:
 	ldi 	R22, 9		; 8 data bits + 1 stop bit
-1:	sbis	RXDPIN, RXDBP	;	Attend RXD == 1
+1:	sbis	RXDPIN, RXDBP	;	Wait RXD == 1
 	rjmp	1b
-1:	sbic 	RXDPIN, RXDBP	; [1/2] Attend RXD == 0
+1:	sbic 	RXDPIN, RXDBP	; [1/2] Wait RXD == 0
 	rjmp 	1b		; [2]
 
-	movw	R24, R14	; [1]	|	Délai bit start + 1/2 bit
+	movw	R24, R14	; [1]	|	Delay 1+1/2 bit (skip start)
 	lsr	R25		; [1]	|
 	ror	R24		; [1]	|
 	add	R24, R14	; [1]	|
 	adc	R25, R15	; [1]	|
-	sbiw	R24, 7+0+6	; [2]	|= 7
+	sbiw	R24, 7+6	; [2]	|=7
 	rcall	delay
 
-1:
-	XLD	R24, RXDPIN	; [1]	|	Échantillonne le bit
-	bst	R24, RXDBP	; [1]	|	dans T
-	dec 	R22		; [1]   |	SI dernier
-	breq 	1f		; [1/2] |	ALORS sortir
-	lsr 	R23		; [1]   |	Range le bit
+1:	XLD	R24, RXDPIN	; [1]	|	Sample one bit in T
+	bst	R24, RXDBP	; [1]	|
+	dec 	R22		; [1]   |
+	breq 	1f		; [1/2] |	IF last THEN break
+	lsr 	R23		; [1]   |	Store T into byte buffer
 	bld	R23, 7		; [1]	|
-	movw	R24, R14	; [1]	|=7
-	sbiw	R24,  9+4+6+2	; [2]	|=9
+	movw	R24, R14	; [1]	|
+	sbiw	R24,  9+4+6+2	; [2]	|=9	FIXME: +4 ?
 	rcall	delay
-	rjmp 	1b		; [2]   	Bit suivant
-;; 1:	brtc	sync		; [1]		Bit de stop à 0 -> resynchronise/restart
-1:	mov	R24, R23	; [1]		Octet reçu dans R24
-	;; ret			; [4]	(11 cycles après bit de stop)
+	rjmp 	1b		; [2]   	Next bit
+;; 1:	brtc	sync		; [1]		Stop bit == 0 -> resynchronise/restart
+1:	mov	R24, R23	; [1]		Store received byte in R24
 
-	;; Accumule un octet (R24) au CRC (R11:R10)
-	;; Registres modifiés : R10, R11, R18, R19
+	;; Update CRC (R11:R10) with byte R24
+	;; 						R10, R11, R18, R19
 	;;
 crcadd:				; [4] (call)
 	mov	R19, R24	; [1] Copie
@@ -620,39 +630,38 @@ crcadd:				; [4] (call)
 	ret			; [4]=30
 
 
-	;; Émission d'un octet (R24, détruit)
-	;; Accumule l'octet au CRC communication
-	;; CRC est initialisé à 0xFFFF après émission du prompt
+	;; Send one byte (R24, destroyed)
+	;; Update CRC (initialized at 0xFFFF after prompt)
 	;;
-	;; R10, R11, R18, R19, R24, R25, R26, R27
+	;; 						R10, R11, R18, R19, R24, R25, R26, R27
 	;;
 putbyte:
 	rcall	crcadd
 
-	;; R24, R25, R26, R27
+	;;						R24, R25, R26, R27
 	;; 
 putbytenocrc:
 	.if X_ONEWIRE
-	sbi	TXDPORT, TXDBP	; Initialise TXD
+	sbi	TXDPORT, TXDBP	; Setup TXD
 	sbi	TXDDR, TXDBP	;
 	.endif
 	ldi	R26, 10		; nbits = 1 start + 8 data + 1 stop
 	mov	R27, R24
-	com	R27		; Inverse l'octet (optimisation)
-	sec			; Prépare le bit de START
-1:	brcc	2f		; [1/2]	|	SI CARRY
-	cbi	TXDPORT, TXDBP	; [1]   |	ALORS envoie '0'
+	com	R27		; Complement byte (optimization)
+	sec			; Load start bit
+1:	brcc	2f		; [1/2]	|	IF CARRY
+	cbi	TXDPORT, TXDBP	; [1]   |	THEN send '0'
 	rjmp	3f		; [2]	|
-2:	sbi	TXDPORT, TXDBP	; [1]   |	SINON envoie '1'
+2:	sbi	TXDPORT, TXDBP	; [1]   |	ELSE send '1'
 	nop			; [1]	|
 3:	movw	R24, R14	; [1]	|
-	sbiw	R24, 7+2+6+4	; [2]	|= 7
+	sbiw	R24, 7+2+6+4	; [2]	|=7	FIXME: +2 ?
 	rcall	delay
-	lsr	R27		; [1]	|	Bit suivant
+	lsr	R27		; [1]	|	Next bit
 	dec	R26		; [1]	|
-	brne	1b		; [2]	|= 4	Jusqu'au dernier
+	brne	1b		; [2]	|=4	Repeat until last bit
 	.if X_ONEWIRE
 	cbi	TXDDR, TXDBP	;
-	cbi	TXDPORT, TXDBP	; Dé-initialise TXD
+	cbi	TXDPORT, TXDBP	; Release TXD
 	.endif
 	ret

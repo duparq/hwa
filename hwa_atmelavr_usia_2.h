@@ -63,7 +63,7 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
   }
 
   if ( mode == HW_A1(hw_usia_mode_spi_master) ) {
-#if defined HWA_DEVICE_ATTINYX4
+#if defined HW_DEVICE_ATTINYX4
     hwa_config(hw_pin_pa4, output);	/* USCK */
     hwa_config(hw_pin_pa5, output);	/* DO   */
     hwa_config(hw_pin_pa6, input);	/* DI   */
@@ -95,7 +95,7 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
 HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 {
-#if defined HWA_DEVICE_ATTINYX4
+#if defined HW_DEVICE_ATTINYX4
   hwa_config(hw_pin_pa4, output);	/* USCK */
   hwa_config(hw_pin_pa5, output);	/* DO   */
 #else
@@ -133,7 +133,7 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 
 HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
 {
-#if defined HWA_DEVICE_ATTINYX4
+#if defined HW_DEVICE_ATTINYX4
   hwa_config(hw_pin_pa4, output);	/* USCK */
   hwa_config(hw_pin_pa5, output);	/* DO   */
   hwa_config(hw_pin_pa6, input);	/* DI   */

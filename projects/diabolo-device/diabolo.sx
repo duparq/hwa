@@ -1,0 +1,9 @@
+
+/* -*- c -*- */
+
+#include "config.h"
+#include <hwa.h>
+
+#if defined HW_DEVICE_ATMELAVR
+#  include "diabolo-atmelavr.sx"
+#endif
