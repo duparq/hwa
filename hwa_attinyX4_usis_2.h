@@ -15,11 +15,11 @@ HW_INLINE void _hwa_begin_usis ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_usis ( hwa_t *hwa )
+HW_INLINE void _hwa_init_usis ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->usi0.cr, 0x00 );
-  _hwa_reset_r8( &hwa->usi0.sr, 0x00 );
-  _hwa_reset_r8( &hwa->usi0.dr, 0x00 );
+  _hwa_init_r8( &hwa->usi0.cr, 0x00 );
+  _hwa_init_r8( &hwa->usi0.sr, 0x00 );
+  _hwa_init_r8( &hwa->usi0.dr, 0x00 );
 }
 
 

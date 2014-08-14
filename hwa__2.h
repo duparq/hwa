@@ -185,6 +185,7 @@ HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t rwm, uint8_t rf
   r->ovalue	= 0 ;
 }
 
+
 /** \brief	Initializes a 16-bits HWA register. See _hwa_begin_r8() for details.
  */
 HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_t rfm )
@@ -201,14 +202,17 @@ HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_
 
 /** \brief	Resets an 8-bits HWA register.
  */
-HW_INLINE void _hwa_reset_r8 ( hwa_r8_t *r, uint8_t v )
+HW_INLINE void _hwa_init_r8 ( hwa_r8_t *r, uint8_t v )
 {
   /* FIXME: should check that there's nothing to commit first */
+  if ( r->mmask )
+    HWA_ERR("commit required before setting new values.");
+
   r->mmask = r->rwm ;
   r->mvalue = v ;
 }
 
-HW_INLINE void _hwa_reset_r16 ( hwa_r16_t *r, uint16_t v )
+HW_INLINE void _hwa_init_r16 ( hwa_r16_t *r, uint16_t v )
 {
   r->mmask = r->rwm ;
   r->mvalue = v ;
@@ -251,10 +255,6 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
 }
 
-/** \brief	Writes a 16-bits HWA register
- *
- *  \copydetails hwa_write_r8
- */
 HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v )
 {
   if (bn == 0)
@@ -292,7 +292,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
   _hwa_begin_r##rw( &hwa->n.r, a+ra, rwm, rfm )
 
 
-/** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
+/** \brief	Begin an HWA session (allows the use of the hwa_...() functions).
  *
  *	Instanciate an hwa_t structure named 'hwa' that virtualizes the
  *	hardware. Nothing is done on the hardware until hwa_commit() is called.
@@ -303,7 +303,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
  */
 
 HW_INLINE void _hwa_begin_all(hwa_t*) ;		/* defined in device-specific files */
-HW_INLINE void _hwa_reset_all(hwa_t*) ;		/* defined in device-specific files */
+HW_INLINE void _hwa_init_all(hwa_t*) ;		/* defined in device-specific files */
 
 HW_INLINE void __hwa_begin( hwa_t *hwa )
 {
@@ -320,10 +320,10 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
 #define hwa_begin_from_reset()						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; __hwa_begin(hwa) ;		\
   uint8_t hwa_commit = 0 ; /* Will warn if hwa_commit() is not called */ \
-  _hwa_reset_all(hwa) ; hwa_nocommit()
+  _hwa_init_all(hwa) ; hwa_nocommit()
 
 
-#define hwa_reset_all()		_hwa_reset_all(hwa)
+#define hwa_reset_all()		_hwa_init_all(hwa)
 
 
 /** \brief	Commit configuration to hardware.

@@ -11,9 +11,9 @@ HW_INLINE void _hwa_begin_watchdogs ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_watchdogs ( hwa_t *hwa )
+HW_INLINE void _hwa_init_watchdogs ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->watchdog0.csr, 0x00 );
+  _hwa_init_r8( &hwa->watchdog0.csr, 0x00 );
 }
 
 

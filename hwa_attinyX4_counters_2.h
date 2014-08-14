@@ -36,10 +36,10 @@ HW_INLINE void _hwa_solve_counters ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_counters ( hwa_t *hwa )
+HW_INLINE void _hwa_init_counters ( hwa_t *hwa )
 {
-  _hwa_reset_c8a( &hwa->counter0 );
-  _hwa_reset_c16a( &hwa->counter1 );
+  _hwa_init_c8a( &hwa->counter0 );
+  _hwa_init_c16a( &hwa->counter1 );
 }
 
 

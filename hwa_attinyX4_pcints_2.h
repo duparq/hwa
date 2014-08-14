@@ -11,10 +11,10 @@ HW_INLINE void _hwa_begin_pcints ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_pcints ( hwa_t *hwa )
+HW_INLINE void _hwa_init_pcints ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->pcic0.msk, 0x00 );
-  _hwa_reset_r8( &hwa->pcic1.msk, 0x00 );
+  _hwa_init_r8( &hwa->pcic0.msk, 0x00 );
+  _hwa_init_r8( &hwa->pcic1.msk, 0x00 );
 }
 
 

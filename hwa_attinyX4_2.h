@@ -30,16 +30,16 @@ HW_INLINE void _hwa_begin_all ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_all ( hwa_t *hwa )
+HW_INLINE void _hwa_init_all ( hwa_t *hwa )
 {
-  _hwa_reset_cores(hwa);
-  _hwa_reset_pcints(hwa);
-  _hwa_reset_ios(hwa);
-  _hwa_reset_counters(hwa);
-  _hwa_reset_usis(hwa);
-  _hwa_reset_acmps(hwa);
-  _hwa_reset_adcs(hwa);
-  _hwa_reset_watchdogs(hwa);
+  _hwa_init_cores(hwa);
+  _hwa_init_pcints(hwa);
+  _hwa_init_ios(hwa);
+  _hwa_init_counters(hwa);
+  _hwa_init_usis(hwa);
+  _hwa_init_acmps(hwa);
+  _hwa_init_adcs(hwa);
+  _hwa_init_watchdogs(hwa);
 }
 
 

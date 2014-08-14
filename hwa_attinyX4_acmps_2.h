@@ -17,9 +17,9 @@ HW_INLINE void _hwa_begin_acmps ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_acmps ( hwa_t *hwa )
+HW_INLINE void _hwa_init_acmps ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->acmp0.csr, 0x00 );
+  _hwa_init_r8( &hwa->acmp0.csr, 0x00 );
 }
 
 

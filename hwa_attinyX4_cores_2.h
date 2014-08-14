@@ -19,17 +19,17 @@ HW_INLINE void _hwa_begin_cores ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_cores ( hwa_t *hwa )
+HW_INLINE void _hwa_init_cores ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->core0.gimsk,  0x00 );
-  _hwa_reset_r8( &hwa->core0.gifr,   0x00 );
-  _hwa_reset_r8( &hwa->core0.mcucr,  0x00 );
-  _hwa_reset_r8( &hwa->core0.mcusr,  0x00 );
-  _hwa_reset_r8( &hwa->core0.osccal, 0x00 );
-  _hwa_reset_r8( &hwa->core0.gpior2, 0x00 );
-  _hwa_reset_r8( &hwa->core0.gpior1, 0x00 );
-  _hwa_reset_r8( &hwa->core0.gpior0, 0x00 );
-  _hwa_reset_r8( &hwa->core0.prr,    0x00 );
+  _hwa_init_r8( &hwa->core0.gimsk,  0x00 );
+  _hwa_init_r8( &hwa->core0.gifr,   0x00 );
+  _hwa_init_r8( &hwa->core0.mcucr,  0x00 );
+  _hwa_init_r8( &hwa->core0.mcusr,  0x00 );
+  _hwa_init_r8( &hwa->core0.osccal, 0x00 );
+  _hwa_init_r8( &hwa->core0.gpior2, 0x00 );
+  _hwa_init_r8( &hwa->core0.gpior1, 0x00 );
+  _hwa_init_r8( &hwa->core0.gpior0, 0x00 );
+  _hwa_init_r8( &hwa->core0.prr,    0x00 );
 }
 
 

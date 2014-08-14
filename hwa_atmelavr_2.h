@@ -159,19 +159,14 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
       return ;
     }
 
-    /*
-     *	Mask of bits to be read
+    /*	Mask of bits to be read
      *	  = bits that are writeable and not to be modified and not flags
      */
     uint8_t rm = r->rwm & ~mask & ~r->omask & ~r->rfm ;
 
-    //    rm = rm & ~r->omask ;
-
-    /*  Read only if needed:
-     *    something to read, commit required, real register
+    /*  Read only if needed (something to read, commit required)
      */
-    if ( rm && commit && (uintptr_t)p != (uintptr_t)~0) {
-      //      r->ovalue = *p & rm ;
+    if ( rm && commit ) {
       r->ovalue = *p ;
       r->omask = r->rwm & ~r->rfm ;
     }
@@ -180,10 +175,9 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
      */
     r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
 
-    /*  Write value
-     *    something to write, commit required, real register
+    /*  Write value if needed (something to write, commit required)
      */
-    if ( wm && commit && (uintptr_t)p != (uintptr_t)~0)
+    if ( wm && commit )
       *p = r->ovalue ;
     r->ovalue &= ~r->rfm ;
   }
@@ -192,7 +186,6 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
   r->omask |= mask ;
   r->omask &= ~r->rfm ;
 }
-
 
 
 /* TODO: Atmel AVR8 does not have 16 bit access instructions. Could check
@@ -263,9 +256,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
   }
 }
 
-/** \brief	Commit a 16-bits HWA register (update the hardware
- *		register). See _hwa_commit_r8() for details.
- */
+
 HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r )
 {
   uint8_t mask = r->mmask ;

@@ -16,12 +16,12 @@ HW_INLINE void _hwa_begin_adcs ( hwa_t *hwa )
 }
 
 
-HW_INLINE void _hwa_reset_adcs ( hwa_t *hwa )
+HW_INLINE void _hwa_init_adcs ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->adc0.admux, 0x00 );
-  _hwa_reset_r8( &hwa->adc0.sra,   0x00 );
-  _hwa_reset_r8( &hwa->adc0.srb,   0x00 );
-  _hwa_reset_r8( &hwa->adc0.did,   0x00 );
+  _hwa_init_r8( &hwa->adc0.admux, 0x00 );
+  _hwa_init_r8( &hwa->adc0.sra,   0x00 );
+  _hwa_init_r8( &hwa->adc0.srb,   0x00 );
+  _hwa_init_r8( &hwa->adc0.did,   0x00 );
 }
 
 

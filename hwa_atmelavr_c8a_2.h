@@ -31,15 +31,15 @@
   hwa->n.ocrb_mode = 0;
 
 
-HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
+HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
 {
-  _hwa_reset_r8( &timer->ccra,  0x00 );
-  _hwa_reset_r8( &timer->ccrb,  0x00 );
-  _hwa_reset_r8( &timer->count, 0x00 );
-  _hwa_reset_r8( &timer->ocra,  0x00 );
-  _hwa_reset_r8( &timer->ocrb,  0x00 );
-  _hwa_reset_r8( &timer->imsk,  0x00 );
-  _hwa_reset_r8( &timer->ifr,   0x00 );
+  _hwa_init_r8( &timer->ccra,  0x00 );
+  _hwa_init_r8( &timer->ccrb,  0x00 );
+  _hwa_init_r8( &timer->count, 0x00 );
+  _hwa_init_r8( &timer->ocra,  0x00 );
+  _hwa_init_r8( &timer->ocrb,  0x00 );
+  _hwa_init_r8( &timer->imsk,  0x00 );
+  _hwa_init_r8( &timer->ifr,   0x00 );
 }
 
 

@@ -36,17 +36,17 @@
   hwa->n.icr_filter = 0;
 
 
-HW_INLINE void _hwa_reset_c16a ( hwa_c16a_t *timer )
+HW_INLINE void _hwa_init_c16a ( hwa_c16a_t *timer )
 {
-  _hwa_reset_r8(  &timer->ccra,  0x00 );
-  _hwa_reset_r8(  &timer->ccrb,  0x00 );
-  _hwa_reset_r8(  &timer->ccrc,  0x00 );
-  _hwa_reset_r16( &timer->count, 0x00 );
-  _hwa_reset_r16( &timer->icr,   0x00 );
-  _hwa_reset_r16( &timer->ocra,  0x00 );
-  _hwa_reset_r16( &timer->ocrb,  0x00 );
-  _hwa_reset_r8(  &timer->imsk,  0x00 );
-  _hwa_reset_r8(  &timer->ifr,   0x00 );
+  _hwa_init_r8(  &timer->ccra,  0x00 );
+  _hwa_init_r8(  &timer->ccrb,  0x00 );
+  _hwa_init_r8(  &timer->ccrc,  0x00 );
+  _hwa_init_r16( &timer->count, 0x00 );
+  _hwa_init_r16( &timer->icr,   0x00 );
+  _hwa_init_r16( &timer->ocra,  0x00 );
+  _hwa_init_r16( &timer->ocrb,  0x00 );
+  _hwa_init_r8(  &timer->imsk,  0x00 );
+  _hwa_init_r8(  &timer->ifr,   0x00 );
 }
 
 
