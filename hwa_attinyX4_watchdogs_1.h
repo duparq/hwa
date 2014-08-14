@@ -12,15 +12,15 @@
 
 /*	Instance			class, name, id, address
  */
-#define hw_watchdog0			wdog, watchdog0, 901, 0x41
+#define hw_watchdog0			wdog, watchdog0, 901, 0
 
 /*	Interrupts			class, vector, controller, enable, flag
  */
 #define hw_irq_watchdog0		irq, 4, watchdog0, wdie, wdif
 
-/*	Class registers			class, rw, ra, riv, rwm, rfm
+/*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw_wdog_csr			crg, 8, 0x41-0x41, 0x00, 0x7F, 0x80
+#define hw_wdog_csr			crg, 8, 0x41, 0x7F, 0x80
 
 #define hw_wdog_wdif			cb1, csr, 1, 7
 #define hw_wdog_wdie			cb1, csr, 1, 6

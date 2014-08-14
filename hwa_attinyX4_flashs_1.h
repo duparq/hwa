@@ -18,12 +18,12 @@
 
 /*	Instance	        class, name, id, address
  */
-#define hw_flash0		flash, flash0, 1100, 0x00
+#define hw_flash0		flash, flash0, 1100, 0
 
 
-/*	Class regs		class, rw, ra, riv, rwm, rfm
+/*	Class regs		class, rw, ra, rwm, rfm
  */
-#define hw_flash_csr		crg,  8, 0x57, 0x00, 0x1F, 0x00
+#define hw_flash_csr		crg,  8, 0x57, 0x1F, 0x00
 
 #define hw_flash_rsig		cb1, csr, 1, 5
 #define hw_flash_ctpb		cb1, csr, 1, 4

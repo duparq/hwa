@@ -38,11 +38,11 @@
 #define hw_def_hw_read_bits1		, _hw_read_bits1
 #define hw_def_hw_read_bits2		, _hw_read_bits2
 
-#define _hw_read_bits1(bits1, n,a, rn,rw,ra,riv,rwm,rfm, rbn,rbp)	\
+#define _hw_read_bits1(bits1, n,a, rn,rw,ra,rwm,rfm, rbn,rbp)	\
   _hw_read_r##rw(a+ra,rbn,rbp)
 #define _hw_read_bits2(bits2, n,a,				\
-		       r1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
-		       r2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
+		       r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
+		       r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
   ((_hw_read_r##rw1(a+ra1,rbn1,rbp1)<<vbp1) |			\
    (_hw_read_r##rw2(a+ra2,rbn2,rbp2)<<vbp2))
 
@@ -96,11 +96,11 @@
 #define hw_def_hw_write_bits1		, _hw_write_bits1
 #define hw_def_hw_write_bits2		, _hw_write_bits2
 
-#define _hw_write_bits1(bits1, cn,ca, rn,rw,ra,riv,rwm,rfm, rbn,rbp, v)	\
+#define _hw_write_bits1(bits1, cn,ca, rn,rw,ra,rwm,rfm, rbn,rbp, v)	\
   _hw_write_r##rw(ca+ra,rwm,rfm,rbn,rbp,v)
 #define _hw_write_bits2(bits2, cn,ca,					\
-		       rn1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		       rn2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
+			rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+			rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
   do { _hw_write_r##rw1(ca+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
       _hw_write_r##rw2(ca+ra2,rwm2,rfm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
 
@@ -110,12 +110,12 @@
 #define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /* Internal use */
 #define _hwa_write_2(x,...)		_hwa_write_##x(x,__VA_ARGS__)
 
-#define _hwa_write_bits1(bits1, cn,ca, rn,rw,ra,riv,rwm,rfm, bn,bp, v)	\
+#define _hwa_write_bits1(bits1, cn,ca, rn,rw,ra,rwm,rfm, bn,bp, v)	\
   _hwa_write_r##rw( &hwa->cn.rn, bn,bp, v )
 
 #define _hwa_write_bits2(bits2,cn,ca,					\
-			r1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			r2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
+			 r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+			 r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
   do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
@@ -145,11 +145,11 @@
 /*	Write register in hwa_t struct. Internal use only, no argument checking!
  */
 #define _hwa_write_p(...)		_hwa_write_p_2(__VA_ARGS__)
-#define _hwa_write_p_2(p, ...)	\
+#define _hwa_write_p_2(p, ...)						\
   HW_G2(_hwa_write_p_xfn, HW_IS(,hw_def_hwa_write_p_##__VA_ARGS__))(p, __VA_ARGS__)
 #define _hwa_write_p_xfn_1(p, t,...)	HW_A1(hw_def_hwa_write_p_##t)(p,t,__VA_ARGS__)
 #define _hwa_write_p_xfn_0(p, ...)	HW_G2(_hwa_write_p, HW_IS(0,__VA_ARGS__))(p,__VA_ARGS__)
-#define _hwa_write_p_0(...)	\
+#define _hwa_write_p_0(...)						\
     HW_ERR("can not process hwa_write_p(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_write_p_1(...)		__VA_ARGS__
 
@@ -157,12 +157,12 @@
 #define hw_def_hwa_write_p_bits2	, _hwa_write_p_bits2
 
 #define _hwa_write_p_bits1(p, bits1, cn,ca,			\
-			  rn1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1, v)	\
+			   rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1, v)	\
   _hwa_write_r##rw1( &p->rn1, rbn1, rbp1, v )
 
 #define _hwa_write_p_bits2(p, bits2, cn,ca,				\
-			  rn1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			  rn2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+			   rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
+			   rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
   do { _hwa_write_r##rw1(&p->rn1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&p->rn2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
@@ -172,13 +172,11 @@
  *  \param r		pointer on the hwa register.
  *  \param x_reset	1 if the after-reset value has to be written into the register.
  *  \param p		address of the hardware register.
- *  \param riv		after-reset value of the hardware register.
  *  \param rwm		hardware register's writeable bits mask.
  */
-HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t riv, uint8_t rwm, uint8_t rfm )
+HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t rwm, uint8_t rfm )
 {
   r->ra		= ra ;
-  r->riv	= riv ;
   r->rwm	= rwm ;
   r->rfm	= rfm ;
   r->mmask	= 0 ;
@@ -189,24 +187,9 @@ HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t riv, uint8_t rw
 
 /** \brief	Initializes a 16-bits HWA register. See _hwa_begin_r8() for details.
  */
-HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t riv, uint16_t rwm, uint16_t rfm )
+HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_t rfm )
 {
   r->ra		= ra ;
-  r->riv	= riv ;
-  r->rwm	= rwm ;
-  r->rfm	= rfm ;
-  r->mmask	= 0 ;
-  r->mvalue	= 0 ;
-  r->omask	= 0 ;
-  r->ovalue	= 0 ;
-}
-
-/** \brief	Initializes a 32-bits HWA register. See _hwa_begin_r8() for details.
- */
-HW_INLINE void _hwa_begin_r32 ( hwa_r32_t *r, intptr_t ra, uint32_t riv, uint32_t rwm, uint32_t rfm )
-{
-  r->ra		= ra ;
-  r->riv	= riv ;
   r->rwm	= rwm ;
   r->rfm	= rfm ;
   r->mmask	= 0 ;
@@ -218,17 +201,17 @@ HW_INLINE void _hwa_begin_r32 ( hwa_r32_t *r, intptr_t ra, uint32_t riv, uint32_
 
 /** \brief	Resets an 8-bits HWA register.
  */
-HW_INLINE void _hwa_reset_r8 ( hwa_r8_t *r )
+HW_INLINE void _hwa_reset_r8 ( hwa_r8_t *r, uint8_t v )
 {
   /* FIXME: should check that there's nothing to commit first */
   r->mmask = r->rwm ;
-  r->mvalue = r->riv ;
+  r->mvalue = v ;
 }
 
-HW_INLINE void _hwa_reset_r16 ( hwa_r16_t *r )
+HW_INLINE void _hwa_reset_r16 ( hwa_r16_t *r, uint16_t v )
 {
   r->mmask = r->rwm ;
-  r->mvalue = r->riv ;
+  r->mvalue = v ;
 }
 
 
@@ -305,8 +288,8 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
 #define _hwa_begin_reg(...)			_hwa_begin_reg_2(__VA_ARGS__)
 #define _hwa_begin_reg_2(c,n,i,a, r)		_hwa_begin_reg_3(n,a,r, hw_##c##_##r)
 #define _hwa_begin_reg_3(...)			_hwa_begin_reg_4(__VA_ARGS__)
-#define _hwa_begin_reg_4(n,a,r, rt,rw,ra,riv,rwm,rfm )	\
-  _hwa_begin_r##rw( &hwa->n.r, a+ra, riv, rwm, rfm )
+#define _hwa_begin_reg_4(n,a,r, rt,rw,ra,rwm,rfm )	\
+  _hwa_begin_r##rw( &hwa->n.r, a+ra, rwm, rfm )
 
 
 /** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.

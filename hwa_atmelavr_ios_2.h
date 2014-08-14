@@ -10,8 +10,8 @@
   _hw_config_io_2(a,hw_##c##_ddr,hw_##c##_port,				\
 		    bn,bp,hw_iomode_##mode)
 #define _hw_config_io_2(...)	_hw_config_io_3(__VA_ARGS__)
-#define _hw_config_io_3(a,reg1,rw1,ra1,riv1,rwm1,rfm1,		\
-			reg2,rw2,ra2,riv2,rwm2,rfm2,			\
+#define _hw_config_io_3(a,reg1,rw1,ra1,rwm1,rfm1,		\
+			reg2,rw2,ra2,rwm2,rfm2,			\
 			bn,bp,mode)				\
   __hw_config_io(a+ra1,rwm1,a+ra2,rwm2,bn,bp,mode)
 
@@ -20,7 +20,7 @@
 #define _hw_read_io(t, ion,ioid, c,n,i,a, bn,bp)	\
   _hw_read_io_2(n,a,hw_##c##_pin, bn,bp)
 #define _hw_read_io_2(...)	_hw_read_io_3(__VA_ARGS__)
-#define _hw_read_io_3(n,a, reg,rw,ra,riv,rwm,rfm, bn,bp)	\
+#define _hw_read_io_3(n,a, reg,rw,ra,rwm,rfm, bn,bp)	\
   _hw_read_r8(a+ra,bn,bp)
 
 
@@ -28,7 +28,7 @@
 #define _hw_write_io(t, ion,ioid, cc,cn,ci,ca, bn,bp, v)	\
   _hw_write_io_2(cn,ca,hw_##cc##_port, bn,bp,v)
 #define _hw_write_io_2(...)	_hw_write_io_3(__VA_ARGS__)
-#define _hw_write_io_3(cn,ca, reg,rw,ra,riv,rwm,rfm, bn,bp,v)	\
+#define _hw_write_io_3(cn,ca, reg,rw,ra,rwm,rfm, bn,bp,v)	\
   _hw_write_r8(ca+ra,rwm,rfm,bn,bp,v)
 
 
@@ -36,7 +36,7 @@
 #define _hw_toggle_io(t, ion,ioid, cc,cn,ci,ca, bn,bp)	\
   _hw_toggle_io_2(cn,ca,hw_##cc##_pin, bn,bp)
 #define _hw_toggle_io_2(...)	_hw_toggle_io_3(__VA_ARGS__)
-#define _hw_toggle_io_3(cn,ca, reg,rw,ra,riv,rwm,rfm, bn,bp)	\
+#define _hw_toggle_io_3(cn,ca, reg,rw,ra,rwm,rfm, bn,bp)	\
   _hw_write_r8(ca+ra,rwm,rfm,bn,bp,(1U<<bn)-1)
 
 

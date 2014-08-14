@@ -19,11 +19,11 @@ HW_INLINE void _hwa_begin_acmps ( hwa_t *hwa )
 
 HW_INLINE void _hwa_reset_acmps ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->acmp0.csr );
+  _hwa_reset_r8( &hwa->acmp0.csr, 0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_acmps ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->acmp0.csr, -1 );
+  _hwa_commit_r8( hwa->commit, &hwa->acmp0.csr );
 }

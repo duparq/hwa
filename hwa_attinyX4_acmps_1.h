@@ -17,11 +17,11 @@
 
 /*	Instance			class, name, id, address
  */				        
-#define hw_acmp0			acmp, acmp0, 700, 0x28
+#define hw_acmp0			acmp, acmp0, 700, 0
 
-/*	Class registers			class, rw, ra, riv, rwm, rfm
+/*	Class registers			class, rw, ra, rwm, rfm
  */				        
-#define hw_acmp_csr			crg, 8, 0x28-0x28, 0x00, 0xBF, 0x10
+#define hw_acmp_csr			crg, 8, 0x28, 0xDF, 0x10
 
 #define hw_acmp_acd			cb1, csr, 1, 7
 #define hw_acmp_acbg			cb1, csr, 1, 6

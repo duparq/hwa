@@ -14,11 +14,11 @@
 
 /*	Instance			class, name, id, address
  */
-#define hw_prescaler0			psc, prescaler0, 500, 0x43
+#define hw_prescaler0			psc, prescaler0, 500, 0
 
-/*	Registers			class, rw, ra, riv, rwm, rfm
+/*	Registers			class, rw, ra, rwm, rfm
  */
-#define hw_psc_cr			crg, 8, 0x43-0x43, 0, 0x81, 0x00
+#define hw_psc_cr			crg, 8, 0x43, 0x81, 0x00
 
 /*	Bits
  */

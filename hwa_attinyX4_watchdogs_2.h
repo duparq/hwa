@@ -13,13 +13,13 @@ HW_INLINE void _hwa_begin_watchdogs ( hwa_t *hwa )
 
 HW_INLINE void _hwa_reset_watchdogs ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->watchdog0.csr );
+  _hwa_reset_r8( &hwa->watchdog0.csr, 0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_watchdogs ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->watchdog0.csr, -1 );
+  _hwa_commit_r8( hwa->commit, &hwa->watchdog0.csr );
 }
 
 

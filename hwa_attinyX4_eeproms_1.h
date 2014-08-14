@@ -18,16 +18,16 @@
 
 /*	Instance	        class, name, id, address
  */
-#define hw_eeprom0		eeprom, eeprom0, 1000, 0x00
+#define hw_eeprom0		eeprom, eeprom0, 1000, 0
 
 
-/*	Class regs		class, rw, ra, riv, rwm, rfm
+/*	Class regs		class, rw, ra, rwm, rfm
  */
-#define hw_eeprom_arh		crg,  8, 0x3F, 0x00,   0x01, 0x00
-#define hw_eeprom_arl		crg,  8, 0x3E, 0x00,   0xFF, 0x00
-#define hw_eeprom_ar		crg, 16, 0x3E, 0x00, 0x01FF, 0x00
-#define hw_eeprom_dr		crg,  8, 0x3D, 0x00,   0xFF, 0x00
-#define hw_eeprom_cr		crg,  8, 0x3C, 0x00,   0x3F, 0x00
+#define hw_eeprom_arh		crg,  8, 0x3F,   0x01, 0x00
+#define hw_eeprom_arl		crg,  8, 0x3E,   0xFF, 0x00
+#define hw_eeprom_ar		crg, 16, 0x3E, 0x01FF, 0x00
+#define hw_eeprom_dr		crg,  8, 0x3D,   0xFF, 0x00
+#define hw_eeprom_cr		crg,  8, 0x3C,   0x3F, 0x00
 
 #define hw_eeprom_pm		cb1, cr, 2, 4
 #define hw_eeprom_rie		cb1, cr, 1, 3

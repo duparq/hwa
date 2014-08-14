@@ -160,8 +160,8 @@
 #define _hw_reg_x_0_0(c,n,a,r)		HW_ERR("`"#r"` is not a memory definition of `hw_"#c"`.")
 #define _hw_reg_x_1(c,n,a,r, x,...)	_hw_reg_##x(c,n,a,r,__VA_ARGS__)
 
-#define _hw_reg_crg(c,n,a,r,rw,ra,riv,rwm,rfm)	\
-  bits1, n,a, r,rw,ra,riv,rwm,rfm, rw,0
+#define _hw_reg_crg(c,n,a,r,rw,ra,rwm,rfm)	\
+  bits1, n,a, r,rw,ra,rwm,rfm, rw,0
 
 #define _hw_reg_cb1(c,n,a,xn,rn,bn,bp)	_hw_reg_cb1_2(n,a,rn,hw_##c##_##rn,bn,bp)
 #define _hw_reg_cb1_2(...)		_hw_reg_cb1_3(__VA_ARGS__)
@@ -174,11 +174,11 @@
 		 r2,hw_##c##_##r2,rbn2,rbp2,vbp2)
 #define _hw_reg_cb2_2(...)		_hw_reg_cb2_3(__VA_ARGS__)
 #define _hw_reg_cb2_3(n,a,						\
-		       r1,crg1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
-		       r2,crg2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
+		       r1,crg1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
+		       r2,crg2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
   bits2, n,a,								\
-    r1,rw1,ra1,riv1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
-    r2,rw2,ra2,riv2,rwm2,rfm2,rbn2,rbp2,vbp2
+    r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
+    r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
 
 #define _hw_reg_irg(_c,_n,_a,_x, c,n,i,a,r)	_hw_reg_irg_2(c,n,a,r,hw_##c##_##r)
 #define _hw_reg_irg_2(...)			_hw_reg_irg_3(__VA_ARGS__)
@@ -205,7 +205,7 @@
 
 #define hw_def_hw_bn_bits1	, _hw_bn_bits1
 
-#define _hw_bn_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bn
+#define _hw_bn_bits1(t, c,n, rn,rw,ra,rwm,rfm, bn,bp)	bn
 
 
 /*	hw_bp(...): position of least significant bit of something (method)
@@ -214,7 +214,7 @@
 
 #define hw_def_hw_bp_bits1	, _hw_bp_bits1
 
-#define _hw_bp_bits1(t, c,n, rn,rw,ra,riv,rwm,rfm, bn,bp)	bp
+#define _hw_bp_bits1(t, c,n, rn,rw,ra,rwm,rfm, bn,bp)	bp
 
 
 /*	hw_id(...): id of an instance (generic)

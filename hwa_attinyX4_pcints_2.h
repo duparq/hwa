@@ -13,13 +13,13 @@ HW_INLINE void _hwa_begin_pcints ( hwa_t *hwa )
 
 HW_INLINE void _hwa_reset_pcints ( hwa_t *hwa )
 {
-  _hwa_reset_r8( &hwa->pcic0.msk );
-  _hwa_reset_r8( &hwa->pcic1.msk );
+  _hwa_reset_r8( &hwa->pcic0.msk, 0x00 );
+  _hwa_reset_r8( &hwa->pcic1.msk, 0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_pcints ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->pcic0.msk, -1 );
-  _hwa_commit_r8( hwa->commit, &hwa->pcic1.msk, -1 );
+  _hwa_commit_r8( hwa->commit, &hwa->pcic0.msk );
+  _hwa_commit_r8( hwa->commit, &hwa->pcic1.msk );
 }

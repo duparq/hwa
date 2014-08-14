@@ -33,13 +33,13 @@
 
 HW_INLINE void _hwa_reset_c8a ( hwa_c8a_t *timer )
 {
-  _hwa_reset_r8( &timer->ccra );
-  _hwa_reset_r8( &timer->ccrb );
-  _hwa_reset_r8( &timer->count );
-  _hwa_reset_r8( &timer->ocra );
-  _hwa_reset_r8( &timer->ocrb );
-  _hwa_reset_r8( &timer->imsk );
-  _hwa_reset_r8( &timer->ifr );
+  _hwa_reset_r8( &timer->ccra,  0x00 );
+  _hwa_reset_r8( &timer->ccrb,  0x00 );
+  _hwa_reset_r8( &timer->count, 0x00 );
+  _hwa_reset_r8( &timer->ocra,  0x00 );
+  _hwa_reset_r8( &timer->ocrb,  0x00 );
+  _hwa_reset_r8( &timer->imsk,  0x00 );
+  _hwa_reset_r8( &timer->ifr,   0x00 );
 }
 
 
@@ -401,11 +401,11 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 
 HW_INLINE void _hwa_commit_c8a ( hwa_t *hwa, hwa_c8a_t *timer )
 {
-  _hwa_commit_r8( hwa->commit, &timer->ccra,  -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ccrb,  -1 );
-  _hwa_commit_r8( hwa->commit, &timer->count, -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ocra,  -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ocrb,  -1 );
-  _hwa_commit_r8( hwa->commit, &timer->imsk,  -1 );
-  _hwa_commit_r8( hwa->commit, &timer->ifr,   -1 );
+  _hwa_commit_r8( hwa->commit, &timer->ccra  );
+  _hwa_commit_r8( hwa->commit, &timer->ccrb  );
+  _hwa_commit_r8( hwa->commit, &timer->count );
+  _hwa_commit_r8( hwa->commit, &timer->ocra  );
+  _hwa_commit_r8( hwa->commit, &timer->ocrb  );
+  _hwa_commit_r8( hwa->commit, &timer->imsk  );
+  _hwa_commit_r8( hwa->commit, &timer->ifr   );
 }

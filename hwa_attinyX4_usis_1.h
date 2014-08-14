@@ -13,19 +13,19 @@
 
 /*	Instance	        	class, name, id, address
  */
-#define hw_usi0				usia, usi0, 601, 0x002D
+#define hw_usi0				usia, usi0, 601, 0
 
 /*	Interrupts			class, vector, controller, enable, flag
  */
 #define hw_irq_usi0_start		irq, 15, usi0, sie, sif
 #define hw_irq_usi0_overflow		irq, 16, usi0, oie, oif
 
-/*	Class registers			class, rw, ra, riv, rwm, rfm
+/*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw_usia_br			crg, 8, 0x30 -0x2D, 0x00, 0x00, 0x00
-#define hw_usia_dr			crg, 8, 0x2F -0x2D, 0x00, 0xFF, 0x00
-#define hw_usia_sr			crg, 8, 0x2E -0x2D, 0x00, 0xEF, 0xE0
-#define hw_usia_cr			crg, 8, 0x2D -0x2D, 0x00, 0xFF, 0x00
+#define hw_usia_br			crg, 8, 0x30, 0x00, 0x00
+#define hw_usia_dr			crg, 8, 0x2F, 0xFF, 0x00
+#define hw_usia_sr			crg, 8, 0x2E, 0xEF, 0xE0
+#define hw_usia_cr			crg, 8, 0x2D, 0xFC, 0x00
 
 /*	Class bits
  */

@@ -15,26 +15,24 @@
 #define hw_class_core
 #define HW_POP_core(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_reg_core		, _hw_reg
-
 
 /*	Instance	        class, name, id, address
  */
-#define hw_core0		core, core0, 101, 0x00
+#define hw_core0		core, core0, 101, 0
 
 
-/*	Class regs		class, rw, ra, riv, rwm, rfm
+/*	Class regs		class, rw, ra, rwm, rfm
  */
-#define hw_core_sreg		crg, 8, 0x5F, 0x00, 0xFF, 0x00
-#define hw_core_gimsk		crg, 8, 0x5B, 0x00, 0xFF, 0x00
-#define hw_core_gifr		crg, 8, 0x5A, 0x00, 0x70, 0x00
-#define hw_core_mcucr		crg, 8, 0x55, 0x00, 0xFF, 0x00
-#define hw_core_mcusr		crg, 8, 0x54, 0x00, 0x0F, 0x00 /* problem with watchdog */
-#define hw_core_osccal		crg, 8, 0x51, 0x00, 0xFF, 0x00
-#define hw_core_gpior2		crg, 8, 0x35, 0x00, 0xFF, 0x00
-#define hw_core_gpior1		crg, 8, 0x33, 0x00, 0xFF, 0x00
-#define hw_core_gpior0		crg, 8, 0x33, 0x00, 0xFF, 0x00
-#define hw_core_prr		crg, 8, 0x20, 0x00, 0xFF, 0x00
+#define hw_core_sreg		crg, 8, 0x5F, 0xFF, 0x00
+#define hw_core_gimsk		crg, 8, 0x5B, 0x70, 0x00
+#define hw_core_gifr		crg, 8, 0x5A, 0x70, 0x70
+#define hw_core_mcucr		crg, 8, 0x55, 0xFF, 0x00
+#define hw_core_mcusr		crg, 8, 0x54, 0x0F, 0x00 /* problem with watchdog */
+#define hw_core_osccal		crg, 8, 0x51, 0xFF, 0x00
+#define hw_core_gpior2		crg, 8, 0x35, 0xFF, 0x00
+#define hw_core_gpior1		crg, 8, 0x34, 0xFF, 0x00
+#define hw_core_gpior0		crg, 8, 0x33, 0xFF, 0x00
+#define hw_core_prr		crg, 8, 0x20, 0x0F, 0x00
 
 #define hw_core_bods		cb1, mcucr, 1, 7
 #define hw_core_pud		cb1, mcucr, 1, 6

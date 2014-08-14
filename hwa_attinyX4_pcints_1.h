@@ -14,25 +14,23 @@
  */
 #define hw_class_pcic0
 #define HW_POP_pcic0(c,n,i,a,...)	__VA_ARGS__
-#define hw_def_hw_reg_pcic0		, _hw_reg
 
 #define hw_class_pcic1
 #define HW_POP_pcic1(c,n,i,a,...)	__VA_ARGS__
-#define hw_def_hw_reg_pcic1		, _hw_reg
 
 /*	Instances			class, name, id, address
  */
-#define hw_pcic0			pcic0, pcic0, 200, 0x32
-#define hw_pcic1			pcic1, pcic1, 210, 0x40
+#define hw_pcic0			pcic0, pcic0, 200, 0
+#define hw_pcic1			pcic1, pcic1, 210, 0
 
 /*	Interrupts			class, vector, controller, enable, flag
  */
 #define hw_irq_pcic0			irq, 2, core0, pcie0, pcif0
 #define hw_irq_pcic1			irq, 3, core0, pcie1, pcif1
 
-/*	Class registers			class, rw, ra, riv, rvm, rwm, rfm
+/*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw_pcic0_msk			crg, 8, 0x32-0x32, 0x00, 0xFF, 0x00
+#define hw_pcic0_msk			crg, 8, 0x32, 0xFF, 0x00
 
 #define hw_pcic0_irqe			irg, hw_core0, pcie0
 #define hw_pcic0_irqf			irg, hw_core0, pcif0
@@ -46,7 +44,7 @@
 #define hw_pcic0_pcint1			cb1, msk, 1, 1
 #define hw_pcic0_pcint0			cb1, msk, 1, 0
 
-#define hw_pcic1_msk			crg, 8, 0x40-0x40, 0x00, 0x0F, 0x00
+#define hw_pcic1_msk			crg, 8, 0x40, 0x0F, 0x00
 
 #define hw_pcic1_irqe			irg, hw_core0, pcie1
 #define hw_pcic1_irqf			irg, hw_core0, pcif1

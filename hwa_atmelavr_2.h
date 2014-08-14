@@ -125,14 +125,14 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
  *  - load-immediate / store:	2 instructions
  *  - load / modify / store:	3 instructions
  */
-HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r, uint8_t mask )
+HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
 {
   /*  Compute the mask of bits to be committed (do not commit bits untouched
    *  since last commit).
    *
    *  hwa_write does not permit r->mmask to extend beyond r->rwm
    */
-  mask &= r->mmask ;
+  uint8_t mask = r->mmask ;
 
   volatile uint8_t *p = (volatile uint8_t *)r->ra ;
 
@@ -266,9 +266,9 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 /** \brief	Commit a 16-bits HWA register (update the hardware
  *		register). See _hwa_commit_r8() for details.
  */
-HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r, uint16_t mask )
+HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r )
 {
-  mask &= r->mmask ;
+  uint8_t mask = r->mmask ;
   volatile uint16_t *p = (volatile uint16_t *)r->ra ;
   uint16_t wm = mask & ((r->mmask & (r->ovalue ^ r->mvalue)) | ~r->omask);
   if ( wm ) {
