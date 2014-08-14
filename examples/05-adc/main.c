@@ -1,81 +1,136 @@
 
-/*	ADC
+/*
+ *	Find limits of Tower Pro SG90 servomotor connected to output-compare pin
  */
 
 #define HW_DEVICE		attiny84, dil
 
-#define SG90_MIN		0.000270*2
-#define SG90_MAX		0.001300*2
-#define SG90_PERIOD		0.02
+#define SERVO_PERIOD		0.01
+#define SERVO_MIN		0.000300
+#define SERVO_MAX		0.003000
+#define SERVO_MID		0.001500
 
-#define SERVO_PIN		hw_pin_5
-#define SERVO_PERIOD		0.02
-#define SERVO_COUNTER		hw_counter0
-#define SERVO_COUNTER_PSC	1024
+#define SERVO_COUNTER_OUT	hw_counter1_compare_a	/* compare unit output OC1A, DIL#7 */
+#define SERVO_COUNTER		hw_counter1
+#define SERVO_COUNTER_PSC	8
+#define SERVO_COUNTER_MIN	(uint16_t)(SERVO_MIN*hw_syshz/SERVO_COUNTER_PSC)
+#define SERVO_COUNTER_MAX	(uint16_t)(SERVO_MAX*hw_syshz/SERVO_COUNTER_PSC)
+#define SERVO_COUNTER_MID	(uint16_t)(SERVO_MID*hw_syshz/SERVO_COUNTER_PSC)
 
-#define SERVO_MIN		(int)(SG90_MIN * hw_syshz/SERVO_COUNTER_PSC)
-#define SERVO_MAX		(int)(SG90_MAX * hw_syshz/SERVO_COUNTER_PSC)
-#define SERVO_STEP		1
+#define SERVO_COUNTER_STEP	((SERVO_COUNTER_MAX-SERVO_COUNTER_MIN)/180)
 
-#define PIN_DBG			hw_pin_3
-#define PIN_ADO			hw_pin_7
+#define ADC_PSC			128
+#define ADC_PERIOD		(13.0*ADC_PSC/hw_syshz)
+
+#define PIN_DBG			hw_pin_6
 
 #include <hwa.h>
 
 
-/*	Raise pulse for servo
+uint8_t				n_low_samples ;
+
+
+/*	Interrupt: PWM output has just been cleared
  */
-HW_ISR( hw_irq(SERVO_COUNTER, compare_a) )
+HW_ISR( SERVO_COUNTER_OUT )
 {
-  static uint16_t	duty = SERVO_MAX ;
+  static uint16_t	duty ;
   static uint8_t	phase ;
+  static uint8_t	nloads ;
 
-  hw_toggle(PIN_DBG);
-
-  if ( (phase & 1) == 0 ) {
-    hw_write( SERVO_PIN, 1 );
-    //    hw_write_reg( SERVO_COUNTER, compare_b, duty );
-    hw_write( hw_reg(SERVO_COUNTER, compare_b), duty );
-    hw_turn( hw_irq(SERVO_COUNTER, compare_b), on );
-  //    hw_write( SERVO, duty );
+  if ( phase == 0 ) {
+    /*
+     *	Begin with middle-length pulse width
+     */
+    duty = SERVO_COUNTER_MID ;
+    phase = 1 ;
+  }
+  else if ( phase == 1 ) {
+    /*
+     *	Wait for end of motion
+     */
+    if ( n_low_samples < (uint8_t)(0.002 / ADC_PERIOD) ) {
+      nloads = 0 ;
+      phase = 2 ;
+    }
+  }
+  else if ( phase == 2 ) {
+    //    hw_toggle( PIN_DBG );
+    /*
+     *	Reduce pulse width until the servo draws current for more than 0.2 s
+     */
+    if ( n_low_samples < (uint8_t)(0.002 / ADC_PERIOD) ) {
+      nloads = 0 ;
+      duty -= SERVO_COUNTER_STEP ;
+      if ( duty < SERVO_COUNTER_MIN )
+	phase = 99 ;
+    }
+    else {
+      nloads++ ;
+      if ( nloads > (uint8_t)(0.3 / SERVO_PERIOD) )
+	phase = 3 ;
+    }
+  }
+  else if ( phase == 3 ) {
+    /*
+     *	Grow pulse width until the servo stops drawing current for more than 0.2 s
+     */
+    if ( n_low_samples > (uint8_t)(0.002 / ADC_PERIOD) ) {
+      duty += SERVO_COUNTER_STEP ;
+      if ( duty > SERVO_COUNTER_MAX )
+	phase = 99 ;
+    }
+    else
+      phase = 4 ;
+  }
+  else if ( phase == 4 ) {
+    /*
+     *	Grow pulse width until the servo draws current for more than 0.2 s
+     */
+    if ( n_low_samples < (uint8_t)(0.002 / ADC_PERIOD) ) {
+      nloads = 0 ;
+      duty += SERVO_COUNTER_STEP ;
+      if ( duty > SERVO_COUNTER_MAX )
+	phase = 99 ;
+    }
+    else {
+      nloads++ ;
+      if ( nloads > (uint8_t)(0.3 / SERVO_PERIOD) )
+	phase = 99 ;
+    }
+  }
+  else {
+    /*
+     *	Stop everything
+     */
+    hw_turn( hw_irq(SERVO_COUNTER, compare_a), off );
+    hw_turn( hw_irq(hw_adc0), off );
+    hw_config( SERVO_COUNTER_OUT, disconnected );
+    phase = 5 ;
   }
 
-  if ( phase < 2 )
-    duty += SERVO_STEP ;
-  else
-    duty -= SERVO_STEP ;
-
-  if ( duty < SERVO_MAX && duty > SERVO_MIN )
-    return ;
-
-  phase = (phase + 1) & 3 ;
-
-  if ( phase < 2 )
-    duty = SERVO_MIN ;
-  else
-    duty = SERVO_MAX ;
-}
-
-
-/*	Lower pulse for servo
- */
-HW_ISR( hw_irq(SERVO_COUNTER, compare_b) )
-{
-  hw_write( SERVO_PIN, 0 );
-  hw_turn( hw_irq(SERVO_COUNTER, compare_b), off );
+  hw_write( SERVO_COUNTER_OUT, duty );
+  n_low_samples = 0 ;
 }
 
 
 /*	AD conversion done
  */
-HW_ISR( hw_adc0 )
+HW_ISR( hw_irq(hw_adc0) )
 {
+  //  hw_toggle( PIN_DBG ) ;
   uint8_t adc = hw_read_reg( hw_adc0, adch );
-  //  hw_write( PIN_ADO, adc >= 240 ) ;
-  if ( adc >= 240 )
-    hw_write( PIN_ADO, 1 ) ;
+
+  if ( adc < (uint8_t)(256*0.98) ) {
+    if ( n_low_samples < 0xFF ) {
+      hw_disable_interrupts();
+      n_low_samples++ ;
+      hw_enable_interrupts();
+    }
+    hw_write( PIN_DBG, 0 ) ;
+  }
   else
-    hw_write( PIN_ADO, 0 ) ;
+    hw_write( PIN_DBG, 1 ) ;
 }
 
 
@@ -83,40 +138,40 @@ int main ( )
 {
   hwa_begin_from_reset();
 
-  hwa_config( SERVO_COUNTER,
-  	      clock,		HW_G2(syshz_div, SERVO_COUNTER_PSC),
-  	      countmode,	loop_up,
-  	      top,		register_compare_a
-  	      );
-
-  if ( SERVO_PERIOD * hw_syshz/SERVO_COUNTER_PSC > (1<<hw_bn(SERVO_COUNTER))-1 )
-    HWA_ERR("SERVO_COUNTER can not afford SERVO_PERIOD." );
-
-  hwa_write_reg( SERVO_COUNTER, compare_a, SERVO_PERIOD * hw_syshz/SERVO_COUNTER_PSC) ;
-  hwa_turn( hw_irq(SERVO_COUNTER, compare_a), on );
-  hwa_turn( hw_irq(SERVO_COUNTER, compare_b), on );
-
   hwa_config( PIN_DBG, output );
-  hwa_config( SERVO_PIN, output );
+
+  if ( (uint32_t)(SERVO_PERIOD*hw_syshz/SERVO_COUNTER_PSC) > ((1UL<<hw_bn(SERVO_COUNTER))-1) )
+    HWA_ERR("SERVO_COUNTER can not afford SERVO_PERIOD.") ;
+
+  hwa_config( SERVO_COUNTER,
+	      clock,		HW_G2(syshz_div, SERVO_COUNTER_PSC),
+	      countmode,	loop_up,
+	      bottom,		0,
+	      top,		register_capture
+	      );
+  hwa_write( hw_reg(SERVO_COUNTER, capture), SERVO_PERIOD*hw_syshz/SERVO_COUNTER_PSC );
+  hwa_config( SERVO_COUNTER_OUT, set_at_bottom_clear_on_match );
+  hwa_turn_irq( SERVO_COUNTER_OUT, on );
 
   hwa_config( hw_adc0,
-	      clock,		syshz_div_128,
+	      clock,		HW_G2(syshz_div, ADC_PSC),
 	      trigger,		auto,
 	      vref,		vcc,
 	      align,		left,
 	      input,		pin_adc0
 	      );
   hwa_turn( hw_irq(hw_adc0), on );
-
+  hwa_trigger( hw_adc0 );
   hwa_config( hw_pin_adc0, input );
-  hwa_config( PIN_ADO, output );
 
   hwa_commit();
 
   hw_enable_interrupts();
 
+  /*	No sleeping ?
+   */
   for(;;) {
-    hw_sleep_until_irq();
+    //    hw_sleep_until_irq();
   }
 
   return 0 ;

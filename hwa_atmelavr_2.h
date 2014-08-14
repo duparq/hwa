@@ -203,7 +203,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 
   /*	Mask of bits to modify
    */
-  uint16_t wm = (bn > 7) ? 0xFF : (1U<<bn)-1 ;
+  uint16_t wm = (1UL<<bn)-1 ;
 
   if (v > wm)
     HWA_ERR("value too high for bits number");
