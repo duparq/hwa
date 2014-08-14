@@ -1,5 +1,7 @@
 #	-*- makefile -*-
 
+PATH:=$(CWD)../../tools/diabolo/software:$(PATH)
+
 erase:
 	diabolo.py $(DIABOLO_OPTS)	\
 		--erase-flash
@@ -7,10 +9,6 @@ erase:
 burn:	$(OBJDIR)/$(OUT).bin
 	diabolo.py $(DIABOLO_OPTS)	\
 		--flash-file $^
-
-hexdump:
-	diabolo.py $(DIABOLO_OPTS)	\
-		--hexdump-flash
 
 diabolo:
 	diabolo.py $(DIABOLO_OPTS)

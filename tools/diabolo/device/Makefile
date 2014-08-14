@@ -6,4 +6,4 @@ SOURCES		=	diabolo.sx
 LDFLAGS		+= 	-nostartfiles
 LDFLAGS		+= 	-nostdlib
 
-include ../../examples/make/Makefile
+include ../../../examples/make/Makefile

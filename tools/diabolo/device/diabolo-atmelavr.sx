@@ -134,17 +134,20 @@
 	;; /*            START             */
 	;; /********************************/
 
-	.section .init1,"ax",@progbits
-	.org	0		; RESET vector
+	;; Put the RESET vector in section .init1 so that it will not be removed
+	;; by the optimizer
+	;; 
+	.section .init1
 	rjmp	start
 
-
-	;; Cold start point
+	;; Diabolo entry point
+	;; 
+	;;   The .org directive does not set the address, it advances it!
 	;;
 	.section .text
-	.org FLASHSIZE - PAGESIZE * BLPAGES - 2, 0xFF
-start:
-	XLD	R8, MCUSR	; Store CPU status into R8 before touching it
+	.org FLASHSIZE - PAGESIZE*BLPAGES -2, 0xFF ; Subtract 2 bytes of initial rjmp
+
+start:	XLD	R8, MCUSR	; Store CPU status into R8 before touching it
 	ldi	R16, 0x18	; Stop the watchdog
 	ldi	R17, 0		;
 	XST	MCUSR, R17	; "To clear WDE, WDRF must be cleared first."
@@ -217,7 +220,7 @@ appcrc:	ldi	R16, 0xFF	;	R16==0xFF while RXD==0
 	;; Start application
 	;; 
 appstart:
-	rjmp	APPSTART
+	rjmp	APPSTART-2	; Subtract 2 bytes of initial rjmp
 
 init:	tst	R8		; if not the first time we're here
 	breq	error		;   -> error (get '\n' and give prompt)
