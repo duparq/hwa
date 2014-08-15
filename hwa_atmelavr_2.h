@@ -35,7 +35,7 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 }
 
 
-/** \brief	Write to one 8-bit hardware register.
+/** \brief	Write one hardware register.
  *
  *	Write the value into the rbn consecutive bits starting at pos rbp into
  *	the hard register at address p. Trying to write 1s into non-writeable
@@ -63,7 +63,7 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 
   /*	Mask of bits to modify
    */
-  uint8_t wm = (bn > 7) ? 0xFF : (1U<<bn)-1 ;
+  uint8_t wm = (1U<<bn)-1 ;
 
 #if !defined HWA_NO_CHECK_LIMITS
   if (v > wm)
@@ -116,78 +116,6 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
   }
 }
 
-/**  \brief Commits an 8-bit HWA register
- *
- *  The code is meant to produce the best machine code among (verified on Atmel
- *  AVRs):
- *
- *  - bit-set or bit-clear:	1 instruction
- *  - load-immediate / store:	2 instructions
- *  - load / modify / store:	3 instructions
- */
-HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
-{
-  /*  Compute the mask of bits to be committed (do not commit bits untouched
-   *  since last commit).
-   *
-   *  hwa_write does not permit r->mmask to extend beyond r->rwm
-   */
-  uint8_t mask = r->mmask ;
-
-  volatile uint8_t *p = (volatile uint8_t *)r->ra ;
-
-  /*  Mask of bits to be written (toggled or unknown bits)
-   */
-  uint8_t wm = mask & ((r->ovalue ^ r->mvalue) | ~r->omask);
-
-  if ( wm ) {
-
-    if ( commit && (uintptr_t)p < 0x40 &&
-	 (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
-	  wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80 ) ) {
-    /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
-     *  sbi/cbi
-     */
-      if ( wm & r->mvalue )
-	*p |= wm ;
-      else
-	*p &= ~wm ;
-      r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
-      r->mmask &= ~wm ;
-      r->omask |= wm ;
-      return ;
-    }
-
-    /*	Mask of bits to be read
-     *	  = bits that are writeable and not to be modified and not flags
-     */
-    uint8_t rm = r->rwm & ~mask & ~r->omask & ~r->rfm ;
-
-    /*  Read only if needed (something to read, commit required)
-     */
-    if ( rm && commit ) {
-      r->ovalue = *p ;
-      r->omask = r->rwm & ~r->rfm ;
-    }
-
-    /*  Compute value
-     */
-    r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
-
-    /*  Write value if needed (something to write, commit required)
-     */
-    if ( wm && commit )
-      *p = r->ovalue ;
-    r->ovalue &= ~r->rfm ;
-  }
-
-  r->mmask &= ~mask ;
-  r->omask |= mask ;
-  r->omask &= ~r->rfm ;
-}
-
-
 /* TODO: Atmel AVR8 does not have 16 bit access instructions. Could check
  *	sbi/cbi against 2 independent bytes
  */
@@ -203,7 +131,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 
   /*	Mask of bits to modify
    */
-  uint16_t wm = (1UL<<bn)-1 ;
+  uint16_t wm = (1U<<bn)-1 ;
 
   if (v > wm)
     HWA_ERR("value too high for bits number");
@@ -257,23 +185,95 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 }
 
 
+/**  \brief Commits an HWA register
+ *
+ *  The code is meant to produce the best machine code among (verified on Atmel
+ *  AVRs):
+ *
+ *  - bit-set or bit-clear:	1 instruction
+ *  - load-immediate / store:	2 instructions
+ *  - load / modify / store:	3 instructions
+ */
+HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
+{
+  volatile uint8_t *p = (volatile uint8_t *)r->ra ;
+
+  /*  Compute the mask of bits to be committed (do not commit bits untouched
+   *  since last commit).
+   *
+   *  hwa_write does not permit r->mmask to extend beyond r->rwm
+   */
+  /*  Mask of bits to be written (toggled or unknown bits)
+   */
+  uint8_t wm = r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
+
+  if ( wm ) {
+
+    if ( commit && (uintptr_t)p < 0x40 &&
+	 (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
+	  wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80 ) ) {
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+      if ( wm & r->mvalue )
+	*p |= wm ;
+      else
+	*p &= ~wm ;
+      r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
+      r->mmask &= ~wm ;
+      r->omask |= wm ;
+      return ;
+    }
+
+    /*	Mask of bits to be read
+     *	  = bits that are writeable and not to be modified and not flags
+     */
+    uint8_t rm = r->rwm & ~r->mmask & ~r->omask & ~r->rfm ;
+
+    /*  Read only if needed: something to read, commit required
+     */
+    if ( rm && commit ) {
+      r->ovalue = *p ;
+      r->omask = r->rwm & ~r->rfm ;
+    }
+
+    /*  Compute value
+     */
+    r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
+
+    /*  Write value if needed: something to write, commit required
+     */
+    if ( wm && commit )
+      *p = r->ovalue ;
+    r->ovalue &= ~r->rfm ;
+  }
+
+  r->omask |= r->mmask ;
+  r->omask &= ~r->rfm ;
+  r->mmask = 0 ;
+}
+
 HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r )
 {
-  uint8_t mask = r->mmask ;
   volatile uint16_t *p = (volatile uint16_t *)r->ra ;
-  uint16_t wm = mask & ((r->mmask & (r->ovalue ^ r->mvalue)) | ~r->omask);
+  uint16_t wm = r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
   if ( wm ) {
-    uint16_t rm = ~r->omask & r->rwm & ~mask ;
-    if ( rm && commit && (uintptr_t)p != (uintptr_t)~0) {
-      r->ovalue = *p & rm ;
-      r->omask = r->rwm ;
+    /* Do not check for sbi/cbi for 16-bit access as 8-bit AVRs do not have
+       16-bit configuration registers */
+    uint16_t rm = r->rwm & ~r->mmask & ~r->omask & ~r->rfm ;
+    if ( rm && commit ) {
+      r->ovalue = *p ;
+      r->omask = r->rwm & ~r->rfm ;
     }
     r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
-    if ( wm && commit && (uintptr_t)p != (uintptr_t)~0)
+    if ( wm && commit )
       *p = r->ovalue ;
+    r->ovalue &= ~r->rfm ;
   }
-  r->mmask &= ~mask ;
-  r->omask |= mask ;
+  r->omask |= r->mmask ;
+  r->omask &= ~r->rfm ;
+  r->mmask = 0 ;
 }
 
 

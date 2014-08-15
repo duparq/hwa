@@ -99,8 +99,8 @@
 #define _hw_write_bits1(bits1, cn,ca, rn,rw,ra,rwm,rfm, rbn,rbp, v)	\
   _hw_write_r##rw(ca+ra,rwm,rfm,rbn,rbp,v)
 #define _hw_write_bits2(bits2, cn,ca,					\
-			rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+		       rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+		       rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
   do { _hw_write_r##rw1(ca+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
       _hw_write_r##rw2(ca+ra2,rwm2,rfm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
 
@@ -114,8 +114,8 @@
   _hwa_write_r##rw( &hwa->cn.rn, bn,bp, v )
 
 #define _hwa_write_bits2(bits2,cn,ca,					\
-			 r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			 r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+			r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+			r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
   do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
@@ -145,11 +145,11 @@
 /*	Write register in hwa_t struct. Internal use only, no argument checking!
  */
 #define _hwa_write_p(...)		_hwa_write_p_2(__VA_ARGS__)
-#define _hwa_write_p_2(p, ...)						\
+#define _hwa_write_p_2(p, ...)	\
   HW_G2(_hwa_write_p_xfn, HW_IS(,hw_def_hwa_write_p_##__VA_ARGS__))(p, __VA_ARGS__)
 #define _hwa_write_p_xfn_1(p, t,...)	HW_A1(hw_def_hwa_write_p_##t)(p,t,__VA_ARGS__)
 #define _hwa_write_p_xfn_0(p, ...)	HW_G2(_hwa_write_p, HW_IS(0,__VA_ARGS__))(p,__VA_ARGS__)
-#define _hwa_write_p_0(...)						\
+#define _hwa_write_p_0(...)	\
     HW_ERR("can not process hwa_write_p(" HW_QUOTE(__VA_ARGS__) ",...).")
 #define _hwa_write_p_1(...)		__VA_ARGS__
 
@@ -157,22 +157,22 @@
 #define hw_def_hwa_write_p_bits2	, _hwa_write_p_bits2
 
 #define _hwa_write_p_bits1(p, bits1, cn,ca,			\
-			   rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1, v)	\
+			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1, v)	\
   _hwa_write_r##rw1( &p->rn1, rbn1, rbp1, v )
 
 #define _hwa_write_p_bits2(p, bits2, cn,ca,				\
-			   rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
-			   rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+			  rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
   do { _hwa_write_r##rw1(&p->rn1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&p->rn2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
 
-/** \brief	Initializes an 8-bits HWA register.
+/** \brief	Initializes an HWA register.
  *
  *  \param r		pointer on the hwa register.
- *  \param x_reset	1 if the after-reset value has to be written into the register.
- *  \param p		address of the hardware register.
+ *  \param ra		address of the hardware register.
  *  \param rwm		hardware register's writeable bits mask.
+ *  \param rfm		hardware register's flag bits mask.
  */
 HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t rwm, uint8_t rfm )
 {
@@ -185,9 +185,6 @@ HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t rwm, uint8_t rf
   r->ovalue	= 0 ;
 }
 
-
-/** \brief	Initializes a 16-bits HWA register. See _hwa_begin_r8() for details.
- */
 HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_t rfm )
 {
   r->ra		= ra ;
@@ -200,13 +197,12 @@ HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_
 }
 
 
-/** \brief	Resets an 8-bits HWA register.
+/** \brief	Inits an HWA register to a specific value (usually the reset value).
  */
 HW_INLINE void _hwa_init_r8 ( hwa_r8_t *r, uint8_t v )
 {
-  /* FIXME: should check that there's nothing to commit first */
   if ( r->mmask )
-    HWA_ERR("commit required before setting new values.");
+    HWA_ERR("commit required before resetting.");
 
   r->mmask = r->rwm ;
   r->mvalue = v ;
@@ -214,12 +210,15 @@ HW_INLINE void _hwa_init_r8 ( hwa_r8_t *r, uint8_t v )
 
 HW_INLINE void _hwa_init_r16 ( hwa_r16_t *r, uint16_t v )
 {
+  if ( r->mmask )
+    HWA_ERR("commit required before resetting.");
+
   r->mmask = r->rwm ;
   r->mvalue = v ;
 }
 
 
-/** \brief	Writes an 8-bits HWA register
+/** \brief	Writes an HWA register
  *
  *	Write bits according to bn/bp. mmask is set even if the value is not
  *  	modified. hwa_commit() will check if the register has effectively been
@@ -292,7 +291,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
   _hwa_begin_r##rw( &hwa->n.r, a+ra, rwm, rfm )
 
 
-/** \brief	Begin an HWA session (allows the use of the hwa_...() functions).
+/** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
  *
  *	Instanciate an hwa_t structure named 'hwa' that virtualizes the
  *	hardware. Nothing is done on the hardware until hwa_commit() is called.
@@ -323,7 +322,7 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
   _hwa_init_all(hwa) ; hwa_nocommit()
 
 
-#define hwa_reset_all()		_hwa_init_all(hwa)
+#define hwa_init_all()		_hwa_init_all(hwa)
 
 
 /** \brief	Commit configuration to hardware.
