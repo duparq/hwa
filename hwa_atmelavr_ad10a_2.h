@@ -60,6 +60,9 @@
 #define hw_def_hw_read_ad10a		, _hw_read_ad10a
 #define _hw_read_ad10a(c,n,i,a)		_hw_read_reg(c,n,i,a, adc)
 
+#define hw_def_hw_atomic_read_ad10a	, _hw_atomic_read_ad10a
+#define _hw_atomic_read_ad10a(c,n,i,a)	_hw_atomic_read_reg(c,n,i,a, adc)
+
 
 /*	Trigger the ADC
  */

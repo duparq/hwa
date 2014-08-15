@@ -2,7 +2,7 @@
 /*	Translation of ASF's adc_example1.c written for ATmegaX8
  */
 
-#define HWA_DEVICE		attiny84
+#define HW_DEVICE		attiny84
 
 #include <hwa.h>
 
@@ -29,6 +29,7 @@ int main ( )
   for(;;) {
     hw_trigger( hw_adc0 );
     while ( hw_status( hw_adc0 ).running ) {}
+    //    while ( hw_read_reg( hw_adc0, busy )) {}
     hw_write( hw_port_a, ~hw_read_reg( hw_adc0, adch ) );
   }
 

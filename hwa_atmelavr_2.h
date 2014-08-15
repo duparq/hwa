@@ -2,37 +2,32 @@
 /*	Device-specific hardware acess definitions.
  */
 
-/** \brief	Read from one 8-bit hardware register.
- *  \param p	address of register.
- *  \param rbn	number of consecutive bits conderned.
- *  \param rbp	position of the least significant bit conderned in the register.
- *  \return	the value of the rbn consecutive bits at position rbp in the register.
+
+/**\brief	Software loop of \c n system clock cycles.
+ * \todo	Only works with compile time constants
+ * \hideinitializer
  */
-HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
-{
-  if ( ra == ~0 )
-    HWA_ERR("invalid address");
+#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
-  if ( rbp > 7 )
-    HWA_ERR("bit pos > 7");
 
-  uint8_t m = (rbn > 7 ? (uint8_t)~0 : (1U<<rbn)-1) ;
-  volatile uint8_t *p = (volatile uint8_t *)ra ;
-  return ((*p)>>rbp) & m ;
-}
+/**\brief	Reset watchdog timer
+ */
+#define _hw_clear_wdog(c,n,i,a)		__asm__( "wdr":: )
 
-HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
-{
-  if ( ra == ~0 )
-    HWA_ERR("invalid address");
 
-  if ( rbp > 15 )
-    HWA_ERR("bit pos > 15");
+/*	Enable/disable interrupts
+ */
+#define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)
+#define hw_disable_interrupts()		__asm__ __volatile__ ("cli" ::)
 
-  uint16_t m = (rbn > 15 ? (uint16_t)~0 : (1U<<rbn)-1) ;
-  volatile uint16_t *p = (volatile uint16_t *)ra ;
-  return ((*p)>>rbp) & m ;
-}
+
+#define HW_ATOMIC(...)				\
+  do{						\
+    uint8_t s = hw_read_reg(hw_core0,sreg);	\
+    hw_disable_interrupts();			\
+    __VA_ARGS__ ;				\
+    hw_write_reg(hw_core0,sreg,s) ;		\
+  }while(0)
 
 
 /** \brief	Write one hardware register.
@@ -277,50 +272,50 @@ HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r )
 }
 
 
-/**\brief	Software loop of \c n system clock cycles.
- * \todo	Only works with compile time constants
- * \hideinitializer
+/** \brief	Read from one hardware register.
+ *
+ *  \param p	address of register.
+ *  \param rbn	number of consecutive bits conderned.
+ *  \param rbp	position of the least significant bit conderned in the register.
+ *  \return	the value of the rbn consecutive bits at position rbp in the register.
  */
-#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
-
-
-/**\brief	Reset watchdog timer
- */
-#define _hw_clear_wdog(c,n,i,a)		__asm__( "wdr":: )
-
-
-/*	Enable/disable interrupts
- */
-#define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)
-#define hw_disable_interrupts()		__asm__ __volatile__ ("cli" ::)
-
-
-typedef struct {
-  uint8_t byte ;
-} hw_interrupts_status_t ;
-
-
-HW_INLINE hw_interrupts_status_t hw_get_interrupts_status ( )
+HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
-  hw_interrupts_status_t s ;
-  s.byte = hw_read_reg( hw_core0, sreg );
-  return s ;
+  uint8_t m = (1U<<rbn)-1 ;
+  volatile uint8_t *p = (volatile uint8_t *)ra ;
+  return ((*p)>>rbp) & m ;
 }
 
-
-HW_INLINE void hw_set_interrupts_status ( hw_interrupts_status_t s )
+HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
-  hw_write_reg( hw_core0, sreg, s.byte );
+  uint16_t m = (1UL<<rbn)-1 ;
+  volatile uint16_t *p = (volatile uint16_t *)ra ;
+  return ((*p)>>rbp) & m ;
 }
 
+#define _hw_atomic_read_r8		_hw_read_r8
 
-#define HW_ATOMIC(...)				\
-  do{						\
-    uint8_t s = hw_read_reg(hw_core0,sreg);	\
-    hw_disable_interrupts();			\
-    __VA_ARGS__ ;				\
-    hw_write_reg(hw_core0,sreg,s) ;		\
-  }while(0)
+HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+{
+  uint16_t v ;
+  uint16_t m = (1UL<<rbn)-1 ;
+
+  if ( (m & 0xFF) && (m >> 8) ) {
+    volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
+    volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
+    uint8_t s = _hw_read_reg(hw_core0,sreg);
+    hw_disable_interrupts();
+    uint8_t lb = *pl ;
+    _hw_write_reg(hw_core0,sreg,s);
+    uint8_t hb = *ph ;
+    v = (hb << 8) | lb ;
+  }
+  else if ( m & 0xFF )
+    v = *(volatile uint8_t *)ra ;
+  else
+    v = (*(volatile uint8_t *)ra+1)<<8 ;
+  return (v>>rbp) & m ;
+}
 
 
 /*	ISR

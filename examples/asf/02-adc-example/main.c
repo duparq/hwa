@@ -2,7 +2,7 @@
 /*	Translation of ASF's adc_example1.c written for ATmegaX8
  */
 
-#define HWA_DEVICE		attiny84
+#define HW_DEVICE		attiny84
 #define HWA_NO_CHECK_LIMITS	/* let us write beyond existing port b pins */
 
 #include <hwa.h>
@@ -44,15 +44,9 @@ static inline uint16_t read_global(void)
 {
   uint16_t retval;
 
-#if 0
-  hw_interrupts_status_t s = hw_get_interrupts_status();
-  retval = avg ;
-  hw_set_interrupts_status(s);
-#else
   HW_ATOMIC(
 	    retval = avg ;
 	    );
-#endif
 
   return retval;
 }

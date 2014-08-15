@@ -31,6 +31,12 @@
 #define hwa_lock_to_zero(...)		HW_MTHD(hwa_lock_to_zero, __VA_ARGS__)
 
 
+#define hw_atomic_read(...)		HW_MTHD(hw_atomic_read, __VA_ARGS__)
+#define hw_def_hw_atomic_read_bits1	, _hw_atomic_read_bits1
+#define _hw_atomic_read_bits1(bits1, n,a, rn,rw,ra,rwm,rfm, rbn,rbp)	\
+  _hw_atomic_read_r##rw(a+ra,rbn,rbp)
+
+
 /*	hw_read(...): read something (method)
  */
 #define hw_read(...)			HW_MTHD(hw_read, __VA_ARGS__)
@@ -52,11 +58,19 @@
 #define hw_read_reg(i,r)		_hw_readreg_2(hw_reg(i,r))
 #define _hw_readreg_2(...)		_hw_readreg_3(__VA_ARGS__)
 #define _hw_readreg_3(t,...)		_hw_read_##t(t,__VA_ARGS__)
+
+#define hw_atomic_read_reg(i,r)		_hw_atomic_readreg_2(hw_reg(i,r))
+#define _hw_atomic_readreg_2(...)	_hw_atomic_readreg_3(__VA_ARGS__)
+#define _hw_atomic_readreg_3(t,...)	_hw_atomic_read_##t(t,__VA_ARGS__)
+
 /*
  *	Internal use, no argument checking.
  */
 #define _hw_read_reg(...)		_hw_read_reg_2(__VA_ARGS__)
 #define _hw_read_reg_2(c,n,i,a, r)	_hw_readreg_2(_hw_reg(c,n,i,a,r))
+
+#define _hw_atomic_read_reg(...)		_hw_atomic_read_reg_2(__VA_ARGS__)
+#define _hw_atomic_read_reg_2(c,n,i,a, r)	_hw_atomic_readreg_2(_hw_reg(c,n,i,a,r))
 
 
 /*	hw/hwa_release(...): release something (method)

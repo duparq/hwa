@@ -34,6 +34,7 @@
 
 #define hw_ad10a_en			cb1, sra, 1, 7
 #define hw_ad10a_sc			cb1, sra, 1, 6
+#define hw_ad10a_busy			cb1, sra, 1, 6	/* convenient */
 #define hw_ad10a_ate			cb1, sra, 1, 5
 #define hw_ad10a_if			cb1, sra, 1, 4
 #define hw_ad10a_ie			cb1, sra, 1, 3

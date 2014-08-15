@@ -172,6 +172,8 @@ int main ( )
    */
   for(;;) {
     //    hw_sleep_until_irq();
+    /* hw_atomic_read( hw_adc0 ); */
+    hw_read( hw_adc0 );
   }
 
   return 0 ;
