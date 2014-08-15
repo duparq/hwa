@@ -293,16 +293,23 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   return ((*p)>>rbp) & m ;
 }
 
+
+/*	Atomic read
+ *
+ *	FIXME: if the I bit is set after writing SREG with its prior value, is
+ *	the execution of the next opcode guaranteed as if the SEI instruction
+ *	was used?
+ */
 #define _hw_atomic_read_r8		_hw_read_r8
 
 HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
+  volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
+  volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
   uint16_t v ;
   uint16_t m = (1UL<<rbn)-1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
-    volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
     uint8_t s = _hw_read_reg(hw_core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
@@ -311,9 +318,9 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
     v = (hb << 8) | lb ;
   }
   else if ( m & 0xFF )
-    v = *(volatile uint8_t *)ra ;
+    v = *pl ;
   else
-    v = (*(volatile uint8_t *)ra+1)<<8 ;
+    v = (*ph)<<8 ;
   return (v>>rbp) & m ;
 }
 
