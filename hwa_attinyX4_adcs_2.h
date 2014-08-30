@@ -18,17 +18,17 @@ HW_INLINE void _hwa_begin_adcs ( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_adcs ( hwa_t *hwa )
 {
-  _hwa_init_r8( &hwa->adc0.admux, 0x00 );
-  _hwa_init_r8( &hwa->adc0.sra,   0x00 );
-  _hwa_init_r8( &hwa->adc0.srb,   0x00 );
-  _hwa_init_r8( &hwa->adc0.did,   0x00 );
+  _hwa_set_r8( &hwa->adc0.admux, 0x00 );
+  _hwa_set_r8( &hwa->adc0.sra,   0x00 );
+  _hwa_set_r8( &hwa->adc0.srb,   0x00 );
+  _hwa_set_r8( &hwa->adc0.did,   0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_adcs ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->adc0.admux );
-  _hwa_commit_r8( hwa->commit, &hwa->adc0.sra   );
-  _hwa_commit_r8( hwa->commit, &hwa->adc0.srb   );
-  _hwa_commit_r8( hwa->commit, &hwa->adc0.did   );
+  _hwa_commit_reg( hw_adc0, admux, hwa->commit );
+  _hwa_commit_reg( hw_adc0, sra,   hwa->commit );
+  _hwa_commit_reg( hw_adc0, srb,   hwa->commit );
+  _hwa_commit_reg( hw_adc0, did,   hwa->commit );
 }

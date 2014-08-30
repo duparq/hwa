@@ -21,29 +21,29 @@ HW_INLINE void _hwa_begin_cores ( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_cores ( hwa_t *hwa )
 {
-  _hwa_init_r8( &hwa->core0.gimsk,  0x00 );
-  _hwa_init_r8( &hwa->core0.gifr,   0x00 );
-  _hwa_init_r8( &hwa->core0.mcucr,  0x00 );
-  _hwa_init_r8( &hwa->core0.mcusr,  0x00 );
-  _hwa_init_r8( &hwa->core0.osccal, 0x00 );
-  _hwa_init_r8( &hwa->core0.gpior2, 0x00 );
-  _hwa_init_r8( &hwa->core0.gpior1, 0x00 );
-  _hwa_init_r8( &hwa->core0.gpior0, 0x00 );
-  _hwa_init_r8( &hwa->core0.prr,    0x00 );
+  _hwa_set_r8( &hwa->core0.gimsk,  0x00 );
+  _hwa_set_r8( &hwa->core0.gifr,   0x00 );
+  _hwa_set_r8( &hwa->core0.mcucr,  0x00 );
+  _hwa_set_r8( &hwa->core0.mcusr,  0x00 );
+  _hwa_set_r8( &hwa->core0.osccal, 0x00 );
+  _hwa_set_r8( &hwa->core0.gpior2, 0x00 );
+  _hwa_set_r8( &hwa->core0.gpior1, 0x00 );
+  _hwa_set_r8( &hwa->core0.gpior0, 0x00 );
+  _hwa_set_r8( &hwa->core0.prr,    0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->core0.gimsk  );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.gifr   );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.mcucr  );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.mcusr  );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.osccal );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.gpior2 );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.gpior1 );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.gpior0 );
-  _hwa_commit_r8( hwa->commit, &hwa->core0.prr    );
+  _hwa_commit_reg( hw_core0, gimsk,  hwa->commit );
+  _hwa_commit_reg( hw_core0, gifr,   hwa->commit );
+  _hwa_commit_reg( hw_core0, mcucr,  hwa->commit );
+  _hwa_commit_reg( hw_core0, mcusr,  hwa->commit );
+  _hwa_commit_reg( hw_core0, osccal, hwa->commit );
+  _hwa_commit_reg( hw_core0, gpior2, hwa->commit );
+  _hwa_commit_reg( hw_core0, gpior1, hwa->commit );
+  _hwa_commit_reg( hw_core0, gpior0, hwa->commit );
+  _hwa_commit_reg( hw_core0, prr,    hwa->commit );
 }
 
 

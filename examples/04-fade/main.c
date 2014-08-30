@@ -53,23 +53,12 @@ HW_INLINE void config_led_pin( hwa_t *hwa )
 }
 
 
-/* static void foo ( ) */
-/* { */
-/*   hwa_begin(); */
-/*   hwa_write_reg( hw_usi0, count, 2 ); */
-/*   hwa_write_reg( hw_usi0, sif, 1 ); */
-/*   hwa_commit(); */
-/* } */
-
-
 int main ( )
 {
   hwa_begin_from_reset();
   config_led_pin(hwa);
   config_led_counter(hwa);
   hwa_commit();
-
-  /* foo(); */
 
   hw_enable_interrupts();
 
@@ -78,57 +67,3 @@ int main ( )
 
   return 0 ;
 }
-
-/* hw_irq( hw_pcint8 ); */
-/* hw_irq( hw_pin_pcint8 ); */
-/* hw_irq( hw_pin_pcint8, overflow ); */
-/* hw_irq( hw_pin_pcint8, overflow, on ); */
-/* hw_irq( LED_COUNTER, on ); */
-/* hw_irq( LED_COUNTER, overflow ); */
-/* hw_irq( LED_COUNTER, overflow, on ); */
-
-/* hwa_turn_irq( hw_pcint8 ); */
-/* hwa_turn_irq( hw_pin_pcint8 ); */
-/* hwa_turn_irq( hw_pin_pcint8, on ); */
-/* hwa_turn_irq( hw_pin_pcint8, overflow ); */
-/* hwa_turn_irq( hw_pin_pcint8, overflow, on ); */
-/* hwa_turn_irq( LED_COUNTER, on ); */
-/* hwa_turn_irq( LED_COUNTER, overflow ); */
-/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
-
-
-/* hw_irqe( hw_pcint8 ); */
-/* hw_irqe( hw_pin_pcint8 ); */
-/* hw_irqe( hw_pin_pcint8, overflow ); */
-/* hw_irqe( hw_pin_pcint8, overflow, on ); */
-/* hw_irqe( LED_COUNTER, on ); */
-/* hw_irqe( LED_COUNTER, overflow ); */
-/* hw_irqe( LED_COUNTER, overflow, on ); */
-
-/* HW_ISR( hw_pcint8 ); */
-/* HW_ISR( hw_pin_pcint8 ); */
-/* HW_ISR( hw_pin_pcint8, overflow ); */
-/* HW_ISR( hw_pin_pcint8, overflow, on ); */
-/* HW_ISR( LED_COUNTER, on ); */
-/* HW_ISR( LED_COUNTER, overflow ); */
-/* HW_ISR( LED_COUNTER, overflow, on ); */
-
-/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
-
-/* hw_irq(LED_COUNTER, overflow); */
-/* hwa_turn( hw_irq(LED_COUNTER, overflow), on ); */
-/* hwa_turn_irq( hw_irq(LED_COUNTER, overflow), on ); */
-
-
-/* hw_irq(LED_COUNTER, overflow); */
-
-/* HW_ISR( LED_COUNTER, overflow ); */
-/* HW_ISR( hw_irq(LED_COUNTER, overflow) ); */
-/* HW_ISR( LED_COUNTER, overflow, naked ); */
-/* HW_ISR( hw_irq(LED_COUNTER, overflow), naked ); */
-
-/* hwa_turn( hw_irq(LED_COUNTER, overflow), on ); */
-/* hwa_turn_irq( LED_COUNTER, overflow, on ); */
-
-/* hw_turn( hw_irq(LED_COUNTER, overflow), on ); */
-/* hw_turn_irq( LED_COUNTER, overflow, on ); */

@@ -125,13 +125,15 @@
 #define _hwa_write_2(x,...)		_hwa_write_##x(x,__VA_ARGS__)
 
 #define _hwa_write_bits1(bits1, cn,ca, rn,rw,ra,rwm,rfm, bn,bp, v)	\
-  _hwa_write_r##rw( &hwa->cn.rn, bn,bp, v )
+  _hwa_write_r##rw( &hwa->cn.rn, rwm,rfm, bn,bp, v )
 
 #define _hwa_write_bits2(bits2,cn,ca,					\
-			r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
-  do { _hwa_write_r##rw1(&hwa->cn.r1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
-      _hwa_write_r##rw2(&hwa->cn.r2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
+			 r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+			 r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+  do {									\
+    _hwa_write_r##rw1(&hwa->cn.r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
+      _hwa_write_r##rw2(&hwa->cn.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
+  } while(0)
 
 
 /*	hw/hwa_write_reg(...): write register.
@@ -172,38 +174,29 @@
 
 #define _hwa_write_p_bits1(p, bits1, cn,ca,			\
 			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1, v)	\
-  _hwa_write_r##rw1( &p->rn1, rbn1, rbp1, v )
+  _hwa_write_r##rw1( &p->rn1, rwm1,rfm1, rbn1,rbp1, v )
 
 #define _hwa_write_p_bits2(p, bits2, cn,ca,				\
 			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
 			  rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
-  do { _hwa_write_r##rw1(&p->rn1, rbn1, rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
-      _hwa_write_r##rw2(&p->rn2, rbn2, rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
+  do { _hwa_write_r##rw1(&p->rn1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
+      _hwa_write_r##rw2(&p->rn2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
 
 
 /** \brief	Initializes an HWA register.
  *
  *  \param r		pointer on the hwa register.
- *  \param ra		address of the hardware register.
- *  \param rwm		hardware register's writeable bits mask.
- *  \param rfm		hardware register's flag bits mask.
  */
-HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t ra, uint8_t rwm, uint8_t rfm )
+HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r )
 {
-  r->ra		= ra ;
-  r->rwm	= rwm ;
-  r->rfm	= rfm ;
   r->mmask	= 0 ;
   r->mvalue	= 0 ;
   r->omask	= 0 ;
   r->ovalue	= 0 ;
 }
 
-HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_t rfm )
+HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r )
 {
-  r->ra		= ra ;
-  r->rwm	= rwm ;
-  r->rfm	= rfm ;
   r->mmask	= 0 ;
   r->mvalue	= 0 ;
   r->omask	= 0 ;
@@ -213,21 +206,21 @@ HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t ra, uint16_t rwm, uint16_
 
 /** \brief	Inits an HWA register to a specific value (usually the reset value).
  */
-HW_INLINE void _hwa_init_r8 ( hwa_r8_t *r, uint8_t v )
+HW_INLINE void _hwa_set_r8 ( hwa_r8_t *r, uint8_t v )
 {
   if ( r->mmask )
     HWA_ERR("commit required before resetting.");
 
-  r->mmask = r->rwm ;
+  r->mmask = 0xFF ;
   r->mvalue = v ;
 }
 
-HW_INLINE void _hwa_init_r16 ( hwa_r16_t *r, uint16_t v )
+HW_INLINE void _hwa_set_r16 ( hwa_r16_t *r, uint16_t v )
 {
   if ( r->mmask )
     HWA_ERR("commit required before resetting.");
 
-  r->mmask = r->rwm ;
+  r->mmask = 0xFFFF ;
   r->mvalue = v ;
 }
 
@@ -238,7 +231,9 @@ HW_INLINE void _hwa_init_r16 ( hwa_r16_t *r, uint16_t v )
  *  	modified. hwa_commit() will check if the register has effectively been
  *  	modified.
  */
-HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
+HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, 
+			       uint8_t rwm, uint8_t rfm,
+			       uint8_t bn, uint8_t bp, uint8_t v )
 {
   if (bn == 0)
     HWA_ERR("no bit to be changed?");
@@ -254,13 +249,13 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
 
   //  *((volatile uint8_t*)0) = sv ;
 
-  if ((r->rwm & sm) != sm)
+  if ((rwm & sm) != sm)
     HWA_ERR("bits not writeable.");
 
   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
     HWA_ERR("committing is required before setting a new value.");
 
-  if ( sm & r->rfm )
+  if ( sm & rfm )
     if ( v == 0 )
       HWA_ERR("flag bit can only be cleared by writing 1 into it.");
 
@@ -268,7 +263,9 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t bn, uint8_t bp, uint8_t v )
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
 }
 
-HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v )
+HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
+				uint16_t rwm, uint16_t rfm,
+				uint8_t bn, uint8_t bp, uint16_t v )
 {
   if (bn == 0)
     HWA_ERR("no bit to be changed?");
@@ -279,11 +276,15 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
   uint16_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
   uint16_t sv = v << bp ;		/* shifted value */
 
-  if ((r->rwm & sm) != sm)
+  if ((rwm & sm) != sm)
     HWA_ERR("bits not writeable.");
 
   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
     HWA_ERR("commit required before setting a new value.");
+
+  if ( sm & rfm )
+    if ( v == 0 )
+      HWA_ERR("flag bit can only be cleared by writing 1 into it.");
 
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
@@ -301,8 +302,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint8_t bn, uint8_t bp, uint16_t v
 #define _hwa_begin_reg(...)			_hwa_begin_reg_2(__VA_ARGS__)
 #define _hwa_begin_reg_2(c,n,i,a, r)		_hwa_begin_reg_3(n,a,r, hw_##c##_##r)
 #define _hwa_begin_reg_3(...)			_hwa_begin_reg_4(__VA_ARGS__)
-#define _hwa_begin_reg_4(n,a,r, rt,rw,ra,rwm,rfm )	\
-  _hwa_begin_r##rw( &hwa->n.r, a+ra, rwm, rfm )
+#define _hwa_begin_reg_4(n,a,r, rt,rw, ... )	_hwa_begin_r##rw( &hwa->n.r )
 
 
 /** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
@@ -368,6 +368,13 @@ HW_INLINE void __hwa_begin( hwa_t *hwa )
     hwa->commit = 0 ;				\
     _hwa_commit_all(hwa);			\
   } while(0)
+
+
+#define _hwa_commit_reg(...)			_hwa_commit_reg_2(__VA_ARGS__)
+#define _hwa_commit_reg_2(c,n,i,a, r, co)	_hwa_commit_reg_3(n,a,r, hw_##c##_##r, co)
+#define _hwa_commit_reg_3(...)			_hwa_commit_reg_4(__VA_ARGS__)
+#define _hwa_commit_reg_4(n,a,r, rt,rw,ra,rwm,rfm, co )	\
+  _hwa_commit_r##rw( &hwa->n.r, ra,rwm,rfm, co )
 
 
 /*	Include device-specific declarations

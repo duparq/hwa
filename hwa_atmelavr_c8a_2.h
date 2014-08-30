@@ -5,9 +5,9 @@
  */
 
 /** \file
- *  \brief	HWA 16-bits version 'a' Atmel AVR timer-counters (layer 2)
+ *  \brief	HWA 8-bit version 'a' Atmel AVR timer-counter (layer 2)
  *
- *	Used in: ATtinyX4 Timer 1
+ *	Used in: ATtinyX4 Timer 0
  */
 
 
@@ -33,13 +33,13 @@
 
 HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
 {
-  _hwa_init_r8( &timer->ccra,  0x00 );
-  _hwa_init_r8( &timer->ccrb,  0x00 );
-  _hwa_init_r8( &timer->count, 0x00 );
-  _hwa_init_r8( &timer->ocra,  0x00 );
-  _hwa_init_r8( &timer->ocrb,  0x00 );
-  _hwa_init_r8( &timer->imsk,  0x00 );
-  _hwa_init_r8( &timer->ifr,   0x00 );
+  _hwa_set_r8( &timer->ccra,  0x00 );
+  _hwa_set_r8( &timer->ccrb,  0x00 );
+  _hwa_set_r8( &timer->count, 0x00 );
+  _hwa_set_r8( &timer->ocra,  0x00 );
+  _hwa_set_r8( &timer->ocrb,  0x00 );
+  _hwa_set_r8( &timer->imsk,  0x00 );
+  _hwa_set_r8( &timer->ifr,   0x00 );
 }
 
 
@@ -398,14 +398,12 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 #define _hwa_write_c8a(c,n,i,a,v)	_hwa_write_reg(c,n,i,a,count,v)
 
 
-
-HW_INLINE void _hwa_commit_c8a ( hwa_t *hwa, hwa_c8a_t *timer )
-{
-  _hwa_commit_r8( hwa->commit, &timer->ccra  );
-  _hwa_commit_r8( hwa->commit, &timer->ccrb  );
-  _hwa_commit_r8( hwa->commit, &timer->count );
-  _hwa_commit_r8( hwa->commit, &timer->ocra  );
-  _hwa_commit_r8( hwa->commit, &timer->ocrb  );
-  _hwa_commit_r8( hwa->commit, &timer->imsk  );
-  _hwa_commit_r8( hwa->commit, &timer->ifr   );
-}
+#define _hwa_commit_c8a(...)		_hwa_commit_c8a_2(__VA_ARGS__)
+#define _hwa_commit_c8a_2(c,n,i,a, co)		\
+  _hwa_commit_reg(c,n,i,a, ccra,  co );		\
+  _hwa_commit_reg(c,n,i,a, ccrb,  co );		\
+  _hwa_commit_reg(c,n,i,a, count, co );		\
+  _hwa_commit_reg(c,n,i,a, ocra,  co );		\
+  _hwa_commit_reg(c,n,i,a, ocrb,  co );		\
+  _hwa_commit_reg(c,n,i,a, imsk,  co );		\
+  _hwa_commit_reg(c,n,i,a, ifr,   co );

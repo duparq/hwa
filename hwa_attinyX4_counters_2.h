@@ -45,6 +45,6 @@ HW_INLINE void _hwa_init_counters ( hwa_t *hwa )
 
 HW_INLINE void _hwa_commit_counters ( hwa_t *hwa )
 {
-  _hwa_commit_c8a( hwa, &hwa->counter0 );
-  _hwa_commit_c16a( hwa, &hwa->counter1 );
+  _hwa_commit_c8a( hw_counter0, hwa->commit );
+  _hwa_commit_c16a( hw_counter1, hwa->commit );
 }

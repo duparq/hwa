@@ -38,15 +38,15 @@
 
 HW_INLINE void _hwa_init_c16a ( hwa_c16a_t *timer )
 {
-  _hwa_init_r8(  &timer->ccra,  0x00 );
-  _hwa_init_r8(  &timer->ccrb,  0x00 );
-  _hwa_init_r8(  &timer->ccrc,  0x00 );
-  _hwa_init_r16( &timer->count, 0x00 );
-  _hwa_init_r16( &timer->icr,   0x00 );
-  _hwa_init_r16( &timer->ocra,  0x00 );
-  _hwa_init_r16( &timer->ocrb,  0x00 );
-  _hwa_init_r8(  &timer->imsk,  0x00 );
-  _hwa_init_r8(  &timer->ifr,   0x00 );
+  _hwa_set_r8(  &timer->ccra,  0x00 );
+  _hwa_set_r8(  &timer->ccrb,  0x00 );
+  _hwa_set_r8(  &timer->ccrc,  0x00 );
+  _hwa_set_r16( &timer->count, 0x00 );
+  _hwa_set_r16( &timer->icr,   0x00 );
+  _hwa_set_r16( &timer->ocra,  0x00 );
+  _hwa_set_r16( &timer->ocrb,  0x00 );
+  _hwa_set_r8(  &timer->imsk,  0x00 );
+  _hwa_set_r8(  &timer->ifr,   0x00 );
 }
 
 
@@ -321,7 +321,7 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 #if !defined HW_DEVICE_ATTINYX4
 #  warn "TODO: check the validity of this"
 #endif
-    hwa_write_reg( hw_acmp0, acic, p->icr_input-1 );
+    _hwa_write_reg( hw_acmp0, acic, p->icr_input-1 );
     _hwa_write_p(p, _hw_creg(c16a, ices), p->icr_edge-1 );
     _hwa_write_p(p, _hw_creg(c16a, icnc), p->icr_filter );
   }
@@ -477,15 +477,14 @@ HW_INLINE void hwa_solve_c16a ( hwa_t *hwa, hwa_c16a_t *p )
 }
 
 
-HW_INLINE void _hwa_commit_c16a ( hwa_t *hwa, hwa_c16a_t *timer )
-{
-  _hwa_commit_r8(  hwa->commit, &timer->ccra  );
-  _hwa_commit_r8(  hwa->commit, &timer->ccrb  );
-  _hwa_commit_r8(  hwa->commit, &timer->ccrc  );
-  _hwa_commit_r16( hwa->commit, &timer->count );
-  _hwa_commit_r16( hwa->commit, &timer->icr   );
-  _hwa_commit_r16( hwa->commit, &timer->ocra  );
-  _hwa_commit_r16( hwa->commit, &timer->ocrb  );
-  _hwa_commit_r8(  hwa->commit, &timer->imsk  );
-  _hwa_commit_r8(  hwa->commit, &timer->ifr   );
-}
+#define _hwa_commit_c16a(...)		_hwa_commit_c16a_2(__VA_ARGS__)
+#define _hwa_commit_c16a_2(c,n,i,a, co)		\
+  _hwa_commit_reg(c,n,i,a, ccra,  co );		\
+  _hwa_commit_reg(c,n,i,a, ccrb,  co );		\
+  _hwa_commit_reg(c,n,i,a, ccrc,  co );		\
+  _hwa_commit_reg(c,n,i,a, count, co );		\
+  _hwa_commit_reg(c,n,i,a, icr,   co );		\
+  _hwa_commit_reg(c,n,i,a, ocra,  co );		\
+  _hwa_commit_reg(c,n,i,a, ocrb,  co );		\
+  _hwa_commit_reg(c,n,i,a, imsk,  co );		\
+  _hwa_commit_reg(c,n,i,a, ifr,   co );

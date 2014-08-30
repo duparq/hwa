@@ -89,22 +89,15 @@ HW_INLINE void __hw_config_io( intptr_t ddr, uint8_t rwm1,
  */
 HW_INLINE void _hwa_config_io( hwa_io_t *p, uint8_t bn, uint8_t bp, uint8_t mode )
 {
-  /* if ( mode & 0x20 ) {	/\* didr *\/ */
-  /*   if ( (uintptr_t)p->didr.ra == (uintptr_t)-1 ) */
-  /*     HWA_ERR("no digital input filter for this io port"); */
-  /*   else */
-  /*     _hwa_write_r8( &p->didr, bn, bp, ((mode & 0x10)!=0)*((1U<<bn)-1) ); */
-  /* } */
-
   if ( mode & 0x08 )	/* pull-up */
-    _hwa_write_r8( &p->port, bn, bp, ((mode & 0x04)!=0)*((1U<<bn)-1) );
+    _hwa_write_r8( &p->port, 0xFF,0, bn,bp, ((mode & 0x04)!=0)*((1U<<bn)-1) );
 
   if ( mode & 0x02 )	/* ddr */
-    _hwa_write_r8( &p->ddr, bn, bp, ((mode & 0x01)!=0)*((1U<<bn)-1) );
+    _hwa_write_r8( &p->ddr, 0xFF,0, bn,bp, ((mode & 0x01)!=0)*((1U<<bn)-1) );
 }
 
 
-#define hw_def_hwa_write_io	, _hwa_write_io
+#define hw_def_hwa_write_io		, _hwa_write_io
 
 #define _hwa_write_io(t, ion,ioid, cc,cn,ci,ca, bn,bp, v)	\
-  _hwa_write_r8(&hwa->cn.port, bn, bp, v)
+  _hwa_write_r8(&hwa->cn.port, 0xFF,0x00, bn,bp, v)

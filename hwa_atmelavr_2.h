@@ -189,18 +189,19 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
  *  - load-immediate / store:	2 instructions
  *  - load / modify / store:	3 instructions
  */
-HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
+HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
+				intptr_t ra, uint8_t rwm, uint8_t rfm, _Bool commit )
 {
-  volatile uint8_t *p = (volatile uint8_t *)r->ra ;
+  volatile uint8_t *p = (volatile uint8_t *)ra ;
 
   /*  Compute the mask of bits to be committed (do not commit bits untouched
    *  since last commit).
    *
-   *  hwa_write does not permit r->mmask to extend beyond r->rwm
+   *  hwa_write does not permit r->mmask to extand beyond rwm but _hwa_set does.
    */
   /*  Mask of bits to be written (toggled or unknown bits)
    */
-  uint8_t wm = r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
+  uint8_t wm = rwm & r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
 
   if ( wm ) {
 
@@ -224,13 +225,13 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
     /*	Mask of bits to be read
      *	  = bits that are writeable and not to be modified and not flags
      */
-    uint8_t rm = r->rwm & ~r->mmask & ~r->omask & ~r->rfm ;
+    uint8_t rm = rwm & ~r->mmask & ~r->omask & ~rfm ;
 
     /*  Read only if needed: something to read, commit required
      */
     if ( rm && commit ) {
       r->ovalue = *p ;
-      r->omask = r->rwm & ~r->rfm ;
+      r->omask = rwm & ~rfm ;
     }
 
     /*  Compute value
@@ -241,33 +242,34 @@ HW_INLINE void _hwa_commit_r8 ( _Bool commit, hwa_r8_t *r )
      */
     if ( wm && commit )
       *p = r->ovalue ;
-    r->ovalue &= ~r->rfm ;
+    r->ovalue &= ~rfm ;
   }
 
   r->omask |= r->mmask ;
-  r->omask &= ~r->rfm ;
+  r->omask &= ~rfm ;
   r->mmask = 0 ;
 }
 
-HW_INLINE void _hwa_commit_r16 ( _Bool commit, hwa_r16_t *r )
+HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r,
+				 intptr_t ra, uint16_t rwm, uint16_t rfm, _Bool commit )
 {
-  volatile uint16_t *p = (volatile uint16_t *)r->ra ;
+  volatile uint16_t *p = (volatile uint16_t *)ra ;
   uint16_t wm = r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
   if ( wm ) {
     /* Do not check for sbi/cbi for 16-bit access as 8-bit AVRs do not have
        16-bit configuration registers */
-    uint16_t rm = r->rwm & ~r->mmask & ~r->omask & ~r->rfm ;
+    uint16_t rm = rwm & ~r->mmask & ~r->omask & ~rfm ;
     if ( rm && commit ) {
       r->ovalue = *p ;
-      r->omask = r->rwm & ~r->rfm ;
+      r->omask = rwm & ~rfm ;
     }
     r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
     if ( wm && commit )
       *p = r->ovalue ;
-    r->ovalue &= ~r->rfm ;
+    r->ovalue &= ~rfm ;
   }
   r->omask |= r->mmask ;
-  r->omask &= ~r->rfm ;
+  r->omask &= ~rfm ;
   r->mmask = 0 ;
 }
 

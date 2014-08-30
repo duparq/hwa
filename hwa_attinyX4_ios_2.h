@@ -19,19 +19,19 @@ HW_INLINE void _hwa_begin_ios ( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_ios ( hwa_t *hwa )
 {
-  _hwa_init_r8( &hwa->porta.port, 0x00 );
-  _hwa_init_r8( &hwa->porta.ddr,  0x00 );
+  _hwa_set_r8( &hwa->porta.port, 0x00 );
+  _hwa_set_r8( &hwa->porta.ddr,  0x00 );
 
-  _hwa_init_r8( &hwa->portb.port, 0x00 );
-  _hwa_init_r8( &hwa->portb.ddr,  0x00 );
+  _hwa_set_r8( &hwa->portb.port, 0x00 );
+  _hwa_set_r8( &hwa->portb.ddr,  0x00 );
 }
 
 
 HW_INLINE void _hwa_commit_ios ( hwa_t *hwa )
 {
-  _hwa_commit_r8( hwa->commit, &hwa->porta.port );
-  _hwa_commit_r8( hwa->commit, &hwa->porta.ddr  );
+  _hwa_commit_reg( hw_porta, port, hwa->commit );
+  _hwa_commit_reg( hw_porta, ddr,  hwa->commit );
 
-  _hwa_commit_r8( hwa->commit, &hwa->portb.port );
-  _hwa_commit_r8( hwa->commit, &hwa->portb.ddr  );
+  _hwa_commit_reg( hw_portb, port, hwa->commit );
+  _hwa_commit_reg( hw_portb, ddr,  hwa->commit );
 }

@@ -2,8 +2,7 @@
 /*	Blink a LED at ~5 Hz using a software delay loop.
  */
 
-#define HW_DEVICE		attiny84
-#define HW_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny84, dil
 
 #define	LED_PIN			hw_pin_7
 #define PERIOD			0.2
