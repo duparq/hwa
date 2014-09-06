@@ -15,7 +15,7 @@
 /*	Generic functions
  */
 #define hw_class_c16a
-#define HW_POP_c16a(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_c16a(c,n,i,a,...)	__VA_ARGS__
 
 #define hw_def_hw_bn_c16a		, _hw_bn_c16a
 #define _hw_bn_c16a(c,n,i,a)		16

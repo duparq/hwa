@@ -2,8 +2,8 @@
 #define CONFIG_H
 
 
-#define HW_DEVICE		attiny44
-#define HW_DEVICE_PACKAGE	dil
+#define HW_DEVICE		attiny44, dil
+
 
 /*	SWUART configuration.
  *
@@ -16,6 +16,6 @@
 #define SWUART_PIN_RX		hw_pin_pcint8
 #define SWUART_COUNTER		hw_counter0
 #define SWUART_COUNTER_PSC	1
-#define SWUART_COUNTER_MATCH	compare_a
+#define SWUART_COUNTER_MATCH	match0
 
 #endif

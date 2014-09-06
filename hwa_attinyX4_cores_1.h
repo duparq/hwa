@@ -13,7 +13,7 @@
 /*	Class & methods
  */
 #define hw_class_core
-#define HW_POP_core(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_core(c,n,i,a,...)	__VA_ARGS__
 
 
 /*	Instance	        class, name, id, address

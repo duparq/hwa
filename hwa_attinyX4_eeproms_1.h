@@ -13,7 +13,7 @@
 /*	Class & methods
  */
 #define hw_class_eeprom
-#define HW_POP_eeprom(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_eeprom(c,n,i,a,...)	__VA_ARGS__
 
 
 /*	Instance	        class, name, id, address

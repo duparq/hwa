@@ -15,8 +15,10 @@
 
 /*	Interrupts			class, vector, controller, enable, flag
  */
-#define hw_irq_counter0_compare_a	irq,  9, counter0, ociea, ocfa
-#define hw_irq_counter0_compare_b	irq, 10, counter0, ocieb, ocfb
+#define hw_irq_counter0_match0		irq,  9, counter0, ociea, ocfa
+#define hw_irq_counter0_output0		irq,  9, counter0, ociea, ocfa
+#define hw_irq_counter0_match1		irq, 10, counter0, ocieb, ocfb
+#define hw_irq_counter0_output1		irq, 10, counter0, ocieb, ocfb
 #define hw_irq_counter0_overflow	irq, 11, counter0, oie, ov
 
 /*	Class registers			class, rw, ra, rwm, rfm
@@ -48,12 +50,12 @@
 #define hw_c8a_ov			cb1, ifr, 1, 0
 
 
-/*	Counter0 compare units
+/*	Counter0 compare output units
  *
  *	Instance			class, name, id, counter, ocn, ion
  */
-#define hw_counter0_compare_a		ocu, counter0_compare_a, 401, counter0, a, pin_pb2
-#define hw_counter0_compare_b		ocu, counter0_compare_b, 402, counter0, b, pin_pa7
+#define hw_counter0_output0		ocu, counter0_output0, 401, counter0, a, pin_pb2
+#define hw_counter0_output1		ocu, counter0_output1, 402, counter0, b, pin_pa7
 
 
 /*	Instance			class, name, id, address
@@ -62,9 +64,11 @@
 
 /*	Interrupts			class, vector, controller, enable, flag
  */
-#define hw_irq_counter1_capture		irq, 5, counter1, icie, icf
-#define hw_irq_counter1_compare_a	irq, 6, counter1, ociea, ocfa
-#define hw_irq_counter1_compare_b	irq, 7, counter1, ocieb, ocfb
+#define hw_irq_counter1_input0		irq, 5, counter1, icie, icf
+#define hw_irq_counter1_match0		irq, 6, counter1, ociea, ocfa
+#define hw_irq_counter1_output0		irq, 6, counter1, ociea, ocfa
+#define hw_irq_counter1_match1		irq, 7, counter1, ocieb, ocfb
+#define hw_irq_counter1_output1		irq, 7, counter1, ocieb, ocfb
 #define hw_irq_counter1_overflow	irq, 8, counter1, oie, ov
 
 /*	Class registers			class, rw, ra, rwm, rfm
@@ -114,15 +118,19 @@
 #define hw_c16a_ov			cb1, ifr, 1, 0
 
 
-/*	Counter1 compare units	class, name, id, counter, channel, io
+/*	Counter1 compare output units	class, name, id, counter, channel, io
  */
-#define hw_counter1_compare_a	ocu, counter1_compare_a, 411, counter1, a, pin_pa6 /* dil#7 */
-#define hw_counter1_compare_b	ocu, counter1_compare_b, 412, counter1, b, pin_pa5 /* dil#8 */
+#define hw_counter1_output0	ocu, counter1_output0, 411, counter1, a, pin_pa6 /* dil#7 */
+#define hw_counter1_outputA	ocu, counter1_outputA, 411, counter1, a, pin_pa6 /* dil#7 */
+
+#define hw_counter1_output1	ocu, counter1_output1, 412, counter1, b, pin_pa5 /* dil#8 */
+#define hw_counter1_outputB	ocu, counter1_outputB, 412, counter1, b, pin_pa5 /* dil#8 */
 
 
-/*	Counter1 capture unit		class, name, id, counter, reg, io
+/*	Counter1 input capture unit	class, name, id, counter, reg, io
  */
-#define hw_counter1_capture	icu, counter1_capture, 413, counter1, icr, pin_pa7 /* dil#6 */
+#define hw_counter1_input0	icu, counter1_input0, 413, counter1, icr, pin_pa7 /* dil#6 */
+#define hw_counter1_input	icu, counter1_input,  413, counter1, icr, pin_pa7 /* dil#6 */
 
 
 #define HWA_DCL_COUNTERS			\

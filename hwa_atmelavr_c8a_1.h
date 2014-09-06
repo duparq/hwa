@@ -16,10 +16,10 @@
 /*	Generic functions
  */
 #define hw_class_c8a
-#define HW_POP_c8a(c,n,i,a,...)		__VA_ARGS__
+#define _hw_pop_c8a(c,n,i,a,...)		__VA_ARGS__
 
 #define hw_def_hw_bn_c8a		, _hw_bn_c8a
-#define _hw_bn_c8a(cc,cn,ci,ca)		8
+#define _hw_bn_c8a(c,n,i,a)		8
 
 /**
  * \todo

@@ -10,7 +10,7 @@
 #define SERVO_MAX		0.003000
 #define SERVO_MID		0.001500
 
-#define SERVO_COUNTER_OUT	hw_counter1_compare_a	/* compare unit output OC1A, DIL#7 */
+#define SERVO_COUNTER_OUT	hw_counter1_output0	/* compare unit output OC1A, DIL#7 */
 #define SERVO_COUNTER		hw_counter1
 #define SERVO_COUNTER_PSC	8
 #define SERVO_COUNTER_MIN	(uint16_t)(SERVO_MIN*hw_syshz/SERVO_COUNTER_PSC)

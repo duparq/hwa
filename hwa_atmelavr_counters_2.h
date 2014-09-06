@@ -62,13 +62,13 @@
   hwa->cn.r = HW_A1(hw_ocu_mode_##mode)
 
 
-/*	Write the 'compare' register of a counter's compare unit
+/*	Write the 'compare' register of a counter's compare output unit
  */
 #define hw_def_hw_write_ocu		, _hw_write_ocu
-#define _hw_write_ocu(c,n,i,cn,ocn,ion,v)	_hw_write_reg(hw_##cn,ocr##ocn,v)
+#define _hw_write_ocu(c,n,i, cn,ocn,ion,v)	_hw_write_reg(hw_##cn,ocr##ocn,v)
 
 #define hw_def_hwa_write_ocu		, _hwa_write_ocu
-#define _hwa_write_ocu(c,n,i,cn,ocn,ion,v)	_hwa_write_reg(hw_##cn,ocr##ocn,v)
+#define _hwa_write_ocu(c,n,i, cn,ocn,ion,v)	_hwa_write_reg(hw_##cn,ocr##ocn,v)
 
 
 /*	Definition of the io pin associated to an ocu
@@ -88,10 +88,10 @@
 
 /*		Definition of the counter associated to an ocu
  */
-/* #define hw_def_hw_ctr_ocu		, _hw_ctr_ocu */
-/* #define _hw_ctr_ocu(t,ocn,...)			_hw_ctr_ocu_2(hw_##ocn##_##ext) */
-/* #define _hw_ctr_ocu_2(...)			_hw_ctr_ocu_3(__VA_ARGS__) */
-/* #define _hw_ctr_ocu_3(cc,cn,ci,ca, ocr, ion)	cc,cn,ci,ca */
+/* #define hw_def_hw_sup_ocu		, _hw_sup_ocu */
+/* #define _hw_sup_ocu(t,ocn,...)			_hw_sup_ocu_2(hw_##ocn##_##ext) */
+/* #define _hw_sup_ocu_2(...)			_hw_sup_ocu_3(__VA_ARGS__) */
+/* #define _hw_sup_ocu_3(cc,cn,ci,ca, ocr, ion)	cc,cn,ci,ca */
 
 
 /*	Parameters for capture units
@@ -107,7 +107,7 @@
  */
 #define hw_def_hw_config_icu		, _hw_config_icu
 
-#define _hw_config_icu(c,n,i,cn,...)	_hw_config_icu_2(cn,HW_POP_icu(c,n,i,cn,__VA_ARGS__))
+#define _hw_config_icu(c,n,i,cn,...)	_hw_config_icu_2(cn,_hw_pop_icu(c,n,i,cn,__VA_ARGS__))
 #define _hw_config_icu_2(...)		_hw_config_icu_3(__VA_ARGS__)
 #define _hw_config_icu_3(cn, ...)					\
   HW_G2(_hw_config_icu, HW_IS(,_hw_config_icu_kw_##__VA_ARGS__))(cn,__VA_ARGS__,)
@@ -130,7 +130,7 @@
  */
 #define hw_def_hwa_config_icu		, _hwa_config_icu
 
-#define _hwa_config_icu(c,n,i,cn,chn, ...)	_hwa_config_icu_2(cn,chn,HW_POP_icu(c,n,i,cn,chn, __VA_ARGS__))
+#define _hwa_config_icu(c,n,i,cn,chn, ...)	_hwa_config_icu_2(cn,chn,_hw_pop_icu(c,n,i,cn,chn, __VA_ARGS__))
 #define _hwa_config_icu_2(...)		_hwa_config_icu_3(__VA_ARGS__)
 #define _hwa_config_icu_3(cn,r, ...)					\
   do { HW_G2(_hwa_config_icu_xinput,HW_IS(input,__VA_ARGS__))(cn,r,__VA_ARGS__,) } while(0)
@@ -189,7 +189,7 @@
 
 /*		Definition of the counter associated to an icu
  */
-/* #define hw_def_hw_ctr_icu		, _hw_ctr_icu */
-/* #define _hw_ctr_icu(c,n,...)			_hw_ctr_icu_2(hw_##n##_##ext) */
-/* #define _hw_ctr_icu_2(...)			_hw_ctr_icu_3(__VA_ARGS__) */
-/* #define _hw_ctr_icu_3(c,n,i,a, r, ion)		c,n,i,a */
+/* #define hw_def_hw_sup_icu		, _hw_sup_icu */
+/* #define _hw_sup_icu(c,n,...)			_hw_sup_icu_2(hw_##n##_##ext) */
+/* #define _hw_sup_icu_2(...)			_hw_sup_icu_3(__VA_ARGS__) */
+/* #define _hw_sup_icu_3(c,n,i,a, r, ion)		c,n,i,a */

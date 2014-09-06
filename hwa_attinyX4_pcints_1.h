@@ -13,10 +13,10 @@
 /*	Class & methods
  */
 #define hw_class_pcic0
-#define HW_POP_pcic0(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_pcic0(c,n,i,a,...)	__VA_ARGS__
 
 #define hw_class_pcic1
-#define HW_POP_pcic1(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_pcic1(c,n,i,a,...)	__VA_ARGS__
 
 /*	Instances			class, name, id, address
  */
@@ -58,10 +58,10 @@
 /*	Classes & methods: pin-change interrupt pins
  */
 #define hw_class_pcint
-#define HW_POP_pcint(c,n,i,cn,ion,...)	__VA_ARGS__
+#define _hw_pop_pcint(c,n,i,cn,ion,...)	__VA_ARGS__
 
-#define hw_def_hw_ctr_pcint		, _hw_ctr_pcint
-#define _hw_ctr_pcint(c,n,i,cn,...)	hw_##cn
+#define hw_def_hw_sup_pcint		, _hw_sup_pcint
+#define _hw_sup_pcint(c,n,i,cn,...)	hw_##cn
 
 #define hw_def_hw_io_pcint		, _hw_io_pcint
 #define _hw_io_pcint(c,n,i,cn,ion)	hw_##ion

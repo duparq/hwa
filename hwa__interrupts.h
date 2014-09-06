@@ -13,7 +13,7 @@
 /*	Definition of an interrupt, no extra parameter allowed
  */
 #define hw_irq(...)			HW_GNRC(_hw_irq,__VA_ARGS__)
-#define _hw_irq(c,n,...)		_hw_irq2(n,HW_POP_##c(c,n,__VA_ARGS__,))
+#define _hw_irq(c,n,...)		_hw_irq2(n,_hw_pop_##c(c,n,__VA_ARGS__,))
 #define _hw_irq2(...)			_hw_irq3(__VA_ARGS__)
 #define _hw_irq3(n,...)						\
   HW_G2(_hw_irq,HW_IS(irq,hw_irq_##n##_##__VA_ARGS__))(n,__VA_ARGS__)
@@ -45,7 +45,7 @@
 #define _hw_irqx(...)			HW_G2(_hw_irqx1,HW_IS(irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqx1_1(...)		__VA_ARGS__
 #define _hw_irqx1_0(...)		HW_GNRC(_hw_irqx2, __VA_ARGS__)
-#define _hw_irqx2(c,n,...)		_hw_irqx3(n, HW_POP_##c(c,n,__VA_ARGS__))
+#define _hw_irqx2(c,n,...)		_hw_irqx3(n,_hw_pop_##c(c,n,__VA_ARGS__))
 #define _hw_irqx3(...)			_hw_irqx4(__VA_ARGS__)
 #define _hw_irqx4(n,...)						\
   HW_G2(_hw_irqx,HW_IS(irq,hw_irq_##n##_##__VA_ARGS__))(n,__VA_ARGS__)

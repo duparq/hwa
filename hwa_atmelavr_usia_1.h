@@ -15,11 +15,12 @@
 /*	Class
  */
 #define hw_class_usia
+#define hw_class_usia_spimaster_swclk
 
 
 /*	Methods
  */
-#define HW_POP_usia(c,n,i,a,...)		__VA_ARGS__
+#define _hw_pop_usia(c,n,i,a,...)		__VA_ARGS__
 
 
 #if !defined __ASSEMBLER__

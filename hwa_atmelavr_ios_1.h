@@ -15,8 +15,8 @@
  */
 #define hw_class_io
 
-#define hw_def_hw_ctr_io			, _hw_ctr_io
-#define _hw_ctr_io(c,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
+#define hw_def_hw_sup_io			, _hw_sup_io
+#define _hw_sup_io(c,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
 
 #define hw_def_hw_bn_io				, _hw_bn_io
 #define _hw_bn_io(c,n,i, cc,cn,ci,ca, bn,bp)	bn

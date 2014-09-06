@@ -13,7 +13,7 @@
 /*	Class & methods
  */
 #define hw_class_flash
-#define HW_POP_flash(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_flash(c,n,i,a,...)	__VA_ARGS__
 
 
 /*	Instance	        class, name, id, address

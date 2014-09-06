@@ -7,7 +7,8 @@
 
 #define LED_COUNTER		hw_counter0
 #define LED_COUNTER_CLKDIV	64
-#define	LED_PWM			hw_counter0_compare_b
+//#define	LED_PWM			hw_counter0_output1
+#define	LED_PWM			hw_sub(LED_COUNTER, output1)
 //#define	LED_PWM			HW_G3(hw,hw_name(LED_COUNTER),compare_b) /* is ok too */
 //#define	LED_PWM			LED_COUNTER ## _compare_b /* will not work */
 
@@ -40,9 +41,9 @@ HW_INLINE void config_led_counter( hwa_t *hwa )
 	      clock,       HW_G2(syshz_div, LED_COUNTER_CLKDIV),
 	      countmode,   loop_up,
 	      bottom,      0,
-	      top,         register_compare_a
+	      top,         output0,
 	      );
-  hwa_write_reg( LED_COUNTER, compare_a, 0xFF );
+  hwa_write( hw_sub(LED_COUNTER, output0), 0xFF );
   hwa_turn_irq( LED_COUNTER, overflow, on );
 }
 

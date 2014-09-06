@@ -12,10 +12,10 @@
 /*	Compare units
  */
 #define hw_class_ocu
-#define HW_POP_ocu(c,n,i,cn,chn,ion,...)	__VA_ARGS__
+#define _hw_pop_ocu(c,n,i,cn,chn,ion,...)	__VA_ARGS__
 
 
 /*	Capture units
  */
 #define hw_class_icu
-#define HW_POP_icu(c,n,i,cn,chn,ion,...)	__VA_ARGS__
+#define _hw_pop_icu(c,n,i,cn,chn,ion,...)	__VA_ARGS__

@@ -1,11 +1,12 @@
 
 /*	A simple interface between software UART and USI as SPI master.
  *
- *	The talker displays the registers of an nRF24L01+ connected to USI.
+ *	The talker displays the values of the registers of an nRF24L01+
+ *	connected to USI.
  *
  *	Try it: ./talker.py
  *
- *	Commands start with '=', followed by:
+ *	The talker sends commands starting with '=' and followed by:
  *	  * the number of bytes to send to SPI slave (1 byte)
  *	  * the number of bytes to read (1 byte)
  *	  * the bytes to send
@@ -89,7 +90,7 @@ main ( )
     else {
       /*
        *  First byte of command must be '='. Send '!' as error indicator and
-       *  wait for '\n' as error aknoledgement.
+       *  wait for '\n' as error aknowledgement.
        */
       do {
       error:

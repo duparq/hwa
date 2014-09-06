@@ -10,7 +10,7 @@
 
 
 #define hw_class_psc
-#define HW_POP_psc(c,n,i,a,...)		__VA_ARGS__
+#define _hw_pop_psc(c,n,i,a,...)		__VA_ARGS__
 
 /*	Instance			class, name, id, address
  */

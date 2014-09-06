@@ -8,7 +8,7 @@
 /*	Class & methods
  */
 #define hw_class_wdog
-#define HW_POP_wdog(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop_wdog(c,n,i,a,...)	__VA_ARGS__
 
 /*	Instance			class, name, id, address
  */

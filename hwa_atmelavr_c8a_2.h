@@ -49,7 +49,7 @@ HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
 #define hw_c8a_countmode_loop_updown		, 2
 
 #define hw_c8a_top_fixed_0xFF			, 1
-#define hw_c8a_top_register_compare_a		, 2
+#define hw_c8a_top_output0			, 2
 
 #define hw_c8a_clock_none			, 0
 #define hw_c8a_clock_syshz			, 1
@@ -116,7 +116,7 @@ HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
   HW_G2(_hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_config_c8a_vtop_0(n,...)					\
-  HW_ERR("`top` can be `fixed_0xFF` or `register_compare_a`,"		\
+  HW_ERR("`top` can be `fixed_0xFF` or `output0`,"		\
 	 " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define _hwa_config_c8a_vtop_1(n,ztop,...)				\
@@ -204,7 +204,7 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
       }
     }
     else /* p->countmode == HW_A1(hw_c8a_countmode_loop_updown) */ {
-      if (p->top == HW_A1(hw_c8a_top_register_compare_a) )
+      if (p->top == HW_A1(hw_c8a_top_output0) )
 	wgm = 5 ;
       else 
 	wgm = 1 ;

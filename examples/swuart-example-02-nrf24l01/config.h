@@ -1,6 +1,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+
+#define HW_DEVICE		attiny44, dil
+
+
 /*	SWUART configuration.
  *
  *	The name of the RX pin determines the interrupt used to detect the start
@@ -12,7 +16,7 @@
 #define SWUART_PIN_RX		hw_pin_pcint8
 #define SWUART_COUNTER		hw_counter1
 #define SWUART_COUNTER_PSC	1
-#define SWUART_COUNTER_MATCH	compare_a
+#define SWUART_COUNTER_MATCH	match0
 
 
 /*	Use USI as SPI master with software-managed clocking

@@ -240,23 +240,13 @@
 #define hw_name(...)		HW_GNRC(_hw_name, __VA_ARGS__)
 #define _hw_name(c,n,...)	n
 
-#if 0
-/*	hw_rel(...): definition of the controller associated to an instance (generic)
- */
-#define hw_rel(...)		_hw_rel_(__VA_ARGS__)
-#define _hw_rel_(...)		HW_G2(_hw_rel, HW_IS(,hw_class_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_rel_0(...)		HW_G2(_hw_rel_0, HW_IS(0,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_rel_0_0(...)	HW_ERR("`"HW_QUOTE(__VA_ARGS__)"` is not a class.")
-#define _hw_rel_0_1(...)	__VA_ARGS__
 
-#define _hw_rel_1(c,n,i,a, x)	_hw_rel_1_2(n,x,hw_rel_##n##_##x)
-#define _hw_rel_1_2(...)	_hw_rel_1_3(__VA_ARGS__)
-#define _hw_rel_1_3(n,x,...)	HW_G2(_hw_rel_1, HW_IS(,hw_class_##__VA_ARGS__))(n,x,__VA_ARGS__)
-#define _hw_rel_1_1(n0,n1,...)	__VA_ARGS__
-#endif
-
-#if 1
-/*	hw_ctr(...): definition of the controller associated to an instance (method)
+/*	hw_sub(...): sub module of a controller
  */
-#define hw_ctr(...)		HW_MTHD(hw_ctr, __VA_ARGS__)
-#endif
+#define hw_sub(x,y)		HW_GNRC(_hw_sub,x,y)
+#define _hw_sub(c,n,i,a, x)	hw_##n##_##x
+
+
+/*	hw_sup(...): definition of the controller associated to an instance (method)
+ */
+#define hw_sup(...)		HW_MTHD(hw_sup, __VA_ARGS__)
