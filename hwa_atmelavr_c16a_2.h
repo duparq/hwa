@@ -59,10 +59,8 @@ HW_INLINE void _hwa_init_c16a ( hwa_c16a_t *timer )
 #define hw_c16a_top_fixed_0x1FF			, 2
 #define hw_c16a_top_fixed_0x3FF			, 3
 #define hw_c16a_top_fixed_0xFFFF		, 4
-#define hw_c16a_top_capture			, 5
-#define hw_c16a_top_register_capture		, 5
-#define hw_c16a_top_compare_a			, 6
-#define hw_c16a_top_register_compare_a		, 6
+#define hw_c16a_top_reg_input0			, 5
+#define hw_c16a_top_reg_output0			, 6
 
 #define hw_c16a_clock_none			, 0
 #define hw_c16a_clock_syshz			, 1

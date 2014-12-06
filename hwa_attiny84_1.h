@@ -37,4 +37,4 @@
 
 #define HW_DEVICE_SIGNATURE	0x1E,0x93,0x0C
 
-#include "hwa_attinyX4_1.h"
+#include "hwa_attinyx4_1.h"

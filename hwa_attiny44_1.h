@@ -26,4 +26,4 @@
 #define HW_RAMSIZE	256
 
 
-#include "hwa_attinyX4_1.h"
+#include "hwa_attinyx4_1.h"

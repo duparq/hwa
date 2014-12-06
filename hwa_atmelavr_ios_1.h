@@ -1,6 +1,6 @@
 
-/* This file is ca+rt of the HWA project.
- * Copyright (c) Christophe Duca+rquet <duca+rq at free dot fr>
+/* This file is part of the HWA project.
+ * Copyright (c) Christophe Duparquet <duparq free fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 

@@ -4,7 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/*	General purpose macro definitions usable in C or assembler source code.
+/** @file
+ *
+ *  @brief	General purpose macro definitions usable in C or assembler source code.
  *
  *	Upper case definitions process arbitrary lists of arguments.
  *
@@ -12,15 +14,14 @@
  *	class name.
  */
 
-
 /*	HWA basic classes
  */
 #define hw_class_bits1
 #define hw_class_bits2
 
 
-/** \brief	Preprocessing error
- *
+/** @brief	Produce an error while preprocessing
+ *  @hideinitializer
  */
 #if defined __ASSEMBLER__
 #  define HW_ERR(msg)		0 ; .fail "HWA: " msg
@@ -43,40 +44,46 @@
 
 
 /** \brief	Element a0 of the list a0,...
+ *  @hideinitializer
  */
 #define HW_A0(...)		_HW_A0_2(__VA_ARGS__,)
 #define _HW_A0_2(a0,...)	a0
 
 
 /** \brief	Element a1 of the list a0,a1,...
+ *  @hideinitializer
  */
 #define HW_A1(...)		_HW_A1_2(__VA_ARGS__,,)
 #define _HW_A1_2(a0,a1,...)	a1
 
 
 /** \brief	Element a2 of the list a0,a1,a2,...
+ *  @hideinitializer
  */
 #define HW_A2(...)		_HW_A2_2(__VA_ARGS__,,,)
 #define _HW_A2_2(a0,a1,a2,...)	a2
 
 
 /** \brief	Glue the first two arguments
+ *  @hideinitializer
  */
 #define HW_G2(...)		_HW_G2_(__VA_ARGS__,,)
 #define _HW_G2_(a,b,...)	a##_##b
 
 
 /** \brief	Glue the first three arguments
+ *  @hideinitializer
  */
 #define HW_G3(...)		_HW_G3_(__VA_ARGS__,,,)
 #define _HW_G3_(a,b,c,...)	a##_##b##_##c
 
 
-/*	Method (specialize instruction)
+/** \brief Apply f to the object specified.
+ *  @hideinitializer
  *
- *	Check that the first argument for function f has a declared class
- *	Check that the function can be applied to that class
- *	Detect and propagate errors
+ *  * Check that the first argument for instruction f has a declared class
+ *  * Check that f is a declared method for that class
+ *  * Detect and propagate errors
  */
 #define HW_MTHD(f,...)		_HW_MTHD1(f,__VA_ARGS__)
 #define _HW_MTHD1(f,...)	HW_G2(_HW_MTHD1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)

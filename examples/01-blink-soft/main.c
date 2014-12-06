@@ -1,5 +1,15 @@
 
-/*	Blink a LED at ~5 Hz using a software delay loop.
+/*  Blink a LED at ~5 Hz using a software delay loop.
+ *
+ *  HW_DEVICE contains the target name and its package so that pin numbers
+ *  can be used as well as pin names.
+ *
+ *  hw_syshz is the number of CPU cycles per second. This is defined by HWA
+ *  according to the target name and its fuses values.
+ */
+
+/**
+ *  See @ref HW_DEVICE
  */
 
 #define HW_DEVICE		attiny84, dil

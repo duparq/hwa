@@ -56,19 +56,19 @@
   HW_G2(_hwa_config_ocu, HW_IS(,hw_ocu_mode_##mode))(n,cn,ocn,mode)
 #define _hwa_config_ocu_0(n,cn,mode)				\
   HW_ERR( "`" #mode "` is not a valid mode for `hw_" #n "`." )
-#define _hwa_config_ocu_1(n,cn,ocn,mode)	_hwa_config_ocu_2(hw_##cn,ocr##ocn##_mode, mode)
+#define _hwa_config_ocu_1(n,cn,ocn,mode)	_hwa_config_ocu_2(hw_##cn,output##ocn##_mode, mode)
 #define _hwa_config_ocu_2(...)			_hwa_config_ocu_3(__VA_ARGS__)
 #define _hwa_config_ocu_3(cc,cn,ci,ca, r, mode)	\
   hwa->cn.r = HW_A1(hw_ocu_mode_##mode)
 
 
-/*	Write the 'compare' register of a counter's compare output unit
+/*	Write the OCR register of a counter's compare output unit
  */
 #define hw_def_hw_write_ocu		, _hw_write_ocu
-#define _hw_write_ocu(c,n,i, cn,ocn,ion,v)	_hw_write_reg(hw_##cn,ocr##ocn,v)
+#define _hw_write_ocu(c,n,i, cn,ocn,ion,v)	_hw_write_reg(hw_##cn,output##ocn,v)
 
 #define hw_def_hwa_write_ocu		, _hwa_write_ocu
-#define _hwa_write_ocu(c,n,i, cn,ocn,ion,v)	_hwa_write_reg(hw_##cn,ocr##ocn,v)
+#define _hwa_write_ocu(c,n,i, cn,ocn,ion,v)	_hwa_write_reg(hw_##cn,output##ocn,v)
 
 
 /*	Definition of the io pin associated to an ocu
@@ -84,14 +84,6 @@
 
 #define hw_def_hwa_trigger_ocu		, _hwa_trigger_ocu
 #define _hwa_trigger_ocu(c,n,i, cn,ch,ion)	_hwa_write_reg(hw_##cn, foc##ch, 1 )
-
-
-/*		Definition of the counter associated to an ocu
- */
-/* #define hw_def_hw_sup_ocu		, _hw_sup_ocu */
-/* #define _hw_sup_ocu(t,ocn,...)			_hw_sup_ocu_2(hw_##ocn##_##ext) */
-/* #define _hw_sup_ocu_2(...)			_hw_sup_ocu_3(__VA_ARGS__) */
-/* #define _hw_sup_ocu_3(cc,cn,ci,ca, ocr, ion)	cc,cn,ci,ca */
 
 
 /*	Parameters for capture units
@@ -186,10 +178,3 @@
  */
 #define hw_def_hw_io_icu		, _hw_io_icu
 #define _hw_io_icu(c,n,i,cn,icn,ion)		hw_##ion
-
-/*		Definition of the counter associated to an icu
- */
-/* #define hw_def_hw_sup_icu		, _hw_sup_icu */
-/* #define _hw_sup_icu(c,n,...)			_hw_sup_icu_2(hw_##n##_##ext) */
-/* #define _hw_sup_icu_2(...)			_hw_sup_icu_3(__VA_ARGS__) */
-/* #define _hw_sup_icu_3(c,n,i,a, r, ion)		c,n,i,a */

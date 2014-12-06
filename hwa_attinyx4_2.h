@@ -6,15 +6,15 @@
 
 #include "hwa_atmelavr_2.h"
 
-#include "hwa_attinyX4_cores_2.h"
-#include "hwa_attinyX4_pcints_2.h"
-#include "hwa_attinyX4_ios_2.h"
-#include "hwa_attinyX4_counters_2.h"
-//#include "hwa_attinyX4_pscs_2.h"
-#include "hwa_attinyX4_usis_2.h"
-#include "hwa_attinyX4_acmps_2.h"
-#include "hwa_attinyX4_adcs_2.h"
-#include "hwa_attinyX4_watchdogs_2.h"
+#include "hwa_attinyx4_cores_2.h"
+#include "hwa_attinyx4_pcints_2.h"
+#include "hwa_attinyx4_ios_2.h"
+#include "hwa_attinyx4_counters_2.h"
+//#include "hwa_attinyx4_pscs_2.h"
+#include "hwa_attinyx4_usis_2.h"
+#include "hwa_attinyx4_acmps_2.h"
+#include "hwa_attinyx4_adcs_2.h"
+#include "hwa_attinyx4_watchdogs_2.h"
 
 
 HW_INLINE void _hwa_begin_all ( hwa_t *hwa )

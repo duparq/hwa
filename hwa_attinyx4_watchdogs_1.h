@@ -14,7 +14,7 @@
  */
 #define hw_watchdog0			wdog, watchdog0, 901, 0
 
-/*	Interrupts			class, vector, controller, enable, flag
+/*	Interrupts			class, vector, controller, enable bit, flag bit
  */
 #define hw_irq_watchdog0		irq, 4, watchdog0, wdie, wdif
 

@@ -5,7 +5,7 @@
  */
 
 /** \file
- *  \brief	HWA 8-bit version 'a' Atmel AVR timer-counter (layer 2)
+ *  \brief	Atmel AVR 8-bit timer-counter version 'a' (level 2)
  *
  *	Used in: ATtinyX4 Timer 0
  */
@@ -49,11 +49,11 @@ HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
 #define hw_c8a_countmode_loop_updown		, 2
 
 #define hw_c8a_top_fixed_0xFF			, 1
-#define hw_c8a_top_output0			, 2
+#define hw_c8a_top_reg_output0			, 2
 
 #define hw_c8a_clock_none			, 0
 #define hw_c8a_clock_syshz			, 1
-#define hw_c8a_clock_syshz_div_1		, 1
+#define hw_c8a_clock_syshz_div_1		, 1	/* Useful for concat */
 #define hw_c8a_clock_syshz_div_8		, 2
 #define hw_c8a_clock_syshz_div_64		, 3
 #define hw_c8a_clock_syshz_div_256		, 4
@@ -116,7 +116,7 @@ HW_INLINE void _hwa_init_c8a ( hwa_c8a_t *timer )
   HW_G2(_hwa_config_c8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_config_c8a_vtop_0(n,...)					\
-  HW_ERR("`top` can be `fixed_0xFF` or `output0`,"		\
+  HW_ERR("`top` can be `fixed_0xFF` or `reg_output0`,"		\
 	 " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define _hwa_config_c8a_vtop_1(n,ztop,...)				\
@@ -389,8 +389,11 @@ HW_INLINE void hwa_solve_c8a ( hwa_c8a_t *p )
 }
 
 
-/*	Write the 'count' register of a c8a counter
+/*	Read/write the 'count' register of a c8a counter
  */
+#define hw_def_hw_read_c8a		, _hw_read_c8a
+#define _hw_read_c8a(c,n,i,a,v)		_hw_read_reg(c,n,i,a,count,v)
+
 #define hw_def_hw_write_c8a		, _hw_write_c8a
 #define _hw_write_c8a(c,n,i,a,v)	_hw_write_reg(c,n,i,a,count,v)
 

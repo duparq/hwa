@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2014-08-14 12:15:40 -*-
+# -*- coding: utf-8 -*- Last modified: 2014-09-07 16:18:58 -*-
 
 
 import struct
@@ -117,9 +117,10 @@ def appstat ( data ):
 
 
 def run():
+    start_time = time.time()
     import os.path
 
-    pdata = None
+    toburn = None
     options = parse_options()
 
     #  Load file to burn into flash if any
@@ -133,12 +134,12 @@ def run():
             return
 
         f = open(options.flash_file, 'rb')
-        pdata = f.read()
+        toburn = f.read()
         f.close()
 
-        pdata_crc, x = appstat(pdata)
+        toburn_crc, x = appstat(toburn)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
-               (options.flash_file, x+2, len(pdata), pdata_crc)))
+               (options.flash_file, x+2, len(toburn), toburn_crc)))
 
     #  Stop here if just for CRC
     #
@@ -263,9 +264,12 @@ def run():
             flash_cache = f.read()
             f.close()
 
-            crc, x = appstat(flash_cache[:device.bladdr])
-            cout(_("Loaded %d bytes of flash memory from %s (%d application bytes), CRC=0x%04X.\n"
-                   % (len(flash_cache), options.flash_cache, x-2, crc)))
+            flash_cache_crc, x = appstat(flash_cache)
+            cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
+                   (options.flash_cache, x+2, len(flash_cache), flash_cache_crc)))
+            if device.appcrc != flash_cache_crc:
+                cerr(_("flash-cache and application CRC do not match!"))
+                options.read_flash = True
         else:
             options.read_flash = True
 
@@ -324,24 +328,15 @@ def run():
     #  Erase flash
     #
     if options.erase_flash:
-        if pdata:
+        if toburn:
             cerr(_("Can not erase flash when data are to be burned!\n"))
             return
-        pdata = '\xFF'*device.flashsize
-        pdata_crc = 0xFFFF
-        # cout("\nErasing flash:\n")
-        # for a in range(0, device.bladdr, device.pagesize):
-        #     r = device.write_flash_page(a, '\xFF'*device.pagesize)
-        #     if r == 'T':
-        #         cout(_("Timeout\n"))
-        #         return
-        #     cout(r)
-        #     flushout()
-        # cout("\n\n")
+        toburn = '\xFF'*device.flashsize
+        toburn_crc = 0xFFFF
 
     #  Perform programming
     #
-    if pdata:
+    if toburn:
         t = time.time()
         pg = 0
         col = 0
@@ -354,7 +349,7 @@ def run():
             col += 1
             if col==64:
                 col=0
-            r = device.write_flash_page(a, pdata[a:a+device.pagesize])
+            r = device.write_flash_page(a, toburn[a:a+device.pagesize])
             if r == 'T':
                 cout(_("Timeout\n"))
                 return
@@ -374,10 +369,10 @@ def run():
             cout("\n")
             cout("Need to reprogram page at 0x%04X.\n" % a)
             cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
-            cout("To be programmed:\n%s\n" % hexdump(a, pdata[a:a+device.pagesize]))
+            cout("To be programmed:\n%s\n" % hexdump(a, toburn[a:a+device.pagesize]))
             cout("Erasing: %s\n" % device.write_flash_page(a, '\xFF'*device.pagesize) )
             cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
-            cout("Programming: %s\n" % device.write_flash_page(a, pdata[a:a+device.pagesize]) )
+            cout("Programming: %s\n" % device.write_flash_page(a, toburn[a:a+device.pagesize]) )
             cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
             cout("\n")
 
@@ -393,14 +388,14 @@ def run():
             #trace()
             device.write_eeprom_pgmcount(device.pgmcount+1)
             cout(_("Set program count to %d\n" % device.pgmcount))
-            #crc, x = appstat(pdata)
+            #crc, x = appstat(toburn)
             x_restart = True
 
-        if device.eeappcrc != pdata_crc:
+        if device.eeappcrc != toburn_crc:
         #if device.flash_changed or device.eeappcrc != crc:
             #trace()
-            device.write_eeprom_appcrc(pdata_crc)
-            cout(_("Set EEPROM application CRC to 0x%04X\n" % pdata_crc))
+            device.write_eeprom_appcrc(toburn_crc)
+            cout(_("Set EEPROM application CRC to 0x%04X\n" % toburn_crc))
             x_restart = True
 
         if x_restart:
@@ -417,14 +412,18 @@ def run():
             cout(_("      EEPROM: 0x%04X\n" % device.eeappcrc))
             cout(_("  Programmings: %d\n" % device.pgmcount))
 
+        if options.flash_cache and flash_cache:
+            flash_cache = toburn
+
     #  Update cache
     #
     if options.flash_cache and flash_cache:
         f = open(options.flash_cache, 'wb')
         f.write(flash_cache)
         f.close()
-        cout(_("Stored %d bytes of flash cache into %s.\n"
-               % (len(flash_cache), options.flash_cache)))
+        flash_cache_crc, x = appstat(flash_cache)
+        cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
+               (options.flash_cache, x+2, len(flash_cache), flash_cache_crc)))
 
     #  Start application
     #
@@ -436,8 +435,9 @@ def run():
             cout("Run failed.\n")
 
     com.close()
-    cout(_("%d commands, %d fails, %d resumes, %d resyncs\n" % 
-           (device.ncmds, device.ncmdfails, device.nresumes, device.nresyncs)))
+    cout(_("%d commands, %d fails, %d resumes, %d resyncs, total time: %.1f s.\n" % 
+           (device.ncmds, device.ncmdfails, device.nresumes, device.nresyncs,
+            time.time()-start_time+0.05)))
 
 
 if __name__ == "__main__":

@@ -4,20 +4,39 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/** \file
- *  \brief	HWA global include file
+
+/*
+ * @page dev
+ *
+ * HWA definitions are split in two parts:
+ *
+ * @list @item The first part (files ending with _1.h ) contains the
+ * definitions that do not produce C code (can be used for assembler) and the
+ * definitions related to the building of the HWA cache structure.
+ *
+ * @item The second part (files ending with _2.h) contains the definitions that
+ * produce C code or make use of the HWA cache structure.
+ */
+
+
+/** @file
+ * @brief	HWA global include file
  */
 
 #ifndef _HWA_H_
 #define _HWA_H_
+
+/** @brief	Target.
+ */
 
 #ifndef HW_DEVICE
 #  error "HW_DEVICE not defined."
 #endif
 
 /**
- * \brief	Set crystal system oscillator frequency to 0 if none specified.
- * \ingroup	global
+ * @brief	Set crystal system oscillator frequency to 0 if none specified.
+ * @ingroup	global
+ * @hideinitializer
  */
 #ifndef HW_XSOHZ
 #  define HW_XSOHZ	0
@@ -31,7 +50,7 @@
 
 #include <stdint.h>
 
-/** \brief	Storage class of HWA functions.
+/** brief	Storage class of HWA functions.
  *
  *  HWA function-like macros MUST be injected inside their callers and not leave
  *  any trace elsewhere, i.e. they must be strictly equivalent to macros,
@@ -58,7 +77,7 @@
 
 /*	HWA_ERR(msg): run-time error
  */
-/** \brief	Run-time error
+/** brief	Run-time error
  *
  * \ingroup macro
  * \hideinitializer

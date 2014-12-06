@@ -18,7 +18,8 @@ endif
 #	Chip programming
 #
 PROG_SW		=	diabolo
-DIABOLO_OPTS	+=	--read-flash	# programming will be faster
+#DIABOLO_OPTS	+=	--read-flash	# programming will be faster
+DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
 DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 #	HWA source path
@@ -49,6 +50,8 @@ OBJDIR		= build
 #
 all:	deps bin lst crc
 
+doc:
+	(cd $(CWD)../.. && make doc)
 
 #	Common makefile
 #

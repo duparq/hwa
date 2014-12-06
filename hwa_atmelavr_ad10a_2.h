@@ -29,11 +29,11 @@
 #define hw_ad10a_trigger_auto			, 1, 0
 #define hw_ad10a_trigger_acmp0			, 1, 1
 #define hw_ad10a_trigger_int0			, 1, 2
-#define hw_ad10a_trigger_counter0_compare_a	, 1, 3
+#define hw_ad10a_trigger_counter0_output0	, 1, 3
 #define hw_ad10a_trigger_counter0_overflow	, 1, 4
-#define hw_ad10a_trigger_counter1_compare_b	, 1, 5
+#define hw_ad10a_trigger_counter1_output1	, 1, 5
 #define hw_ad10a_trigger_counter1_overflow	, 1, 6
-#define hw_ad10a_trigger_counter1_capture	, 1, 7
+#define hw_ad10a_trigger_counter1_input0	, 1, 7
 
 #define hw_ad10a_vref_vcc			, 0	/* , refs */
 #define hw_ad10a_vref_pin_aref			, 1
@@ -88,7 +88,7 @@
 #define _hwa_cfad10a_xclock_1(n,clock,...)				\
   HW_G2(_hwa_cfad10a_vclock, HW_IS(,hw_ad10a_clock_##__VA_ARGS__))(n,__VA_ARGS__)
 #define _hwa_cfad10a_vclock_0(n,x,...)			\
-  HW_ERR("`"#x"` is not a valid value for `clock`.")
+  HW_ERR("`clock` can be `syshz_div_{2,4,8,16,32,64,128}`, not `"#x".")
 #define _hwa_cfad10a_vclock_1(n,vclock,...)				\
   _hwa_write_reg(ad10a,n,,,ps, HW_A1(hw_ad10a_clock_##vclock));	\
   HW_G2(_hwa_cfad10a_xtrigger, HW_IS(trigger,__VA_ARGS__))(n,__VA_ARGS__)

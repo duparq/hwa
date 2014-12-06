@@ -33,11 +33,6 @@
 #endif
 
 
-/*	Generic functions
- */
-/* #define _hw_addr_ctr(cc,cn,ci,ca)	ca /\* FIXME: may be void *\/ */
-
-
 /*	hw_addr(...) : address of a memory definition (generic)
  */
 #if defined __ASSEMBLER__

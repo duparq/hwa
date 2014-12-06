@@ -64,26 +64,6 @@
 #define hw_pin_int0		int0, pin_int0, 102, core0, pin_pb2
 
 
-/*	Power management
- */
-#define hw_def_hwa_turn_c8a	, _hwa_turn_power
-#define hw_def_hwa_turn_c16a	, _hwa_turn_power
-#define hw_def_hwa_turn_usia	, _hwa_turn_power
-#define hw_def_hwa_turn_ad10a	, _hwa_turn_power
-
-#define hw_power_counter1	prtim1
-#define hw_power_counter0	prtim0
-#define hw_power_usi0		prusi
-#define hw_power_adc0		pradc
-
-#define _hwa_turn_power(c,n,i,a,vstate)\
-  HW_G2(_hwa_turn_power, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
-#define _hwa_turn_power_0(c,n,i,a, vstate)			\
-  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
-#define _hwa_turn_power_1(c,n,i,a, vstate)	\
-  _hwa_write_reg(hw_core0, hw_power_##n, (HW_A1(hw_state_##vstate)==0))
-
-
 #if !defined __ASSEMBLER__
 
 typedef struct {

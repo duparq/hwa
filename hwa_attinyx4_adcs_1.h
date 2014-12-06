@@ -15,7 +15,7 @@
  */
 #define hw_adc0				ad10a, adc0, 800, 0
 
-/*	Interrupts			class, vector, controller, enable, flag
+/*	Interrupts			class, vector, controller, enable bit, flag bit
  */
 #define hw_irq_adc0			irq, 13, adc0, ie, if
 
@@ -24,8 +24,11 @@
 #define hw_ad10a_admux			crg,  8, 0x27,   0xFF,   0x00
 #define hw_ad10a_sra			crg,  8, 0x26,   0xFF,   0x10
 #define hw_ad10a_adc			crg, 16, 0x24, 0x0000, 0x0000
+#define hw_ad10a_data			crg, 16, 0x24, 0x0000, 0x0000
 #define hw_ad10a_adch			crg,  8, 0x25,   0x00,   0x00
+#define hw_ad10a_data_high_byte		crg,  8, 0x25,   0x00,   0x00
 #define hw_ad10a_adcl			crg,  8, 0x24,   0x00,   0x00
+#define hw_ad10a_data_low_byte		crg,  8, 0x24,   0x00,   0x00
 #define hw_ad10a_srb			crg,  8, 0x23,   0xD7,   0x00
 #define hw_ad10a_did			crg,  8, 0x21,   0xFF,   0x00   /* port A */
 

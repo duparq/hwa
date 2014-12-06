@@ -32,6 +32,15 @@
 	;;
 	MCUSR     = hw_addr(hw_reg(hw_core0, mcusr))
 	WDTCSR    = hw_addr(hw_reg(hw_watchdog0, csr))
+
+#define RA_WDCE     hw_addr(hw_reg(hw_watchdog0, wdce))
+#define RA_WDE      hw_addr(hw_reg(hw_watchdog0, wde))
+#if RA_WDCE != RA_WDE
+# error
+#endif
+#define BP_WDCE     hw_bp(hw_reg(hw_watchdog0, wdce))
+#define BP_WDE      hw_bp(hw_reg(hw_watchdog0, wde))
+
 	SPMCSR    = hw_addr(hw_reg(hw_flash0, csr))
 	EEARL     = hw_addr(hw_reg(hw_eeprom0, arl))
 	EEARH     = hw_addr(hw_reg(hw_eeprom0, arh))
@@ -147,12 +156,15 @@
 	.section .text
 	.org FLASHSIZE - PAGESIZE*BLPAGES -2, 0xFF ; Subtract 2 bytes of initial rjmp
 
-start:	XLD	R8, MCUSR	; Store CPU status into R8 before touching it
-	ldi	R16, 0x18	; Stop the watchdog
+start:
+	;; FIXME: maybe should return to the application in case of watchdog reset
+
+	XLD	R8, MCUSR	; Store CPU status into R8 before touching it
+	ldi	R16, 1<<BP_WDCE | 1<<BP_WDE ; Stop the watchdog
 	ldi	R17, 0		;
 	XST	MCUSR, R17	; "To clear WDE, WDRF must be cleared first."
-	XST	WDTCSR, R16	;
-	XST	WDTCSR, R17	;
+	XST	RA_WDE, R16	; WARNING: does not only write WDCE/WDE
+	XST	RA_WDE, R17	; WARNING: does not only write WDCE/WDE
 
 	.if X_SPD
 	XLD	R9, OSCCAL	; Store factory clock speed

@@ -73,3 +73,36 @@ HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
 
 #define _hwa_cfcore_vsleepmode_1(vsleepmode,...)		\
   HW_TX(_hwa_write_reg(hw_core0, sm, HW_A1(hw_core_sm_##vsleepmode)),__VA_ARGS__)
+
+
+/*	Power management
+ */
+#define hw_power_counter1	prtim1
+#define hw_power_counter0	prtim0
+#define hw_power_usi0		prusi
+#define hw_power_adc0		pradc
+
+#define hw_def_hw_turn_c8a	, _hw_turn_power
+#define hw_def_hw_turn_c16a	, _hw_turn_power
+#define hw_def_hw_turn_usia	, _hw_turn_power
+#define hw_def_hw_turn_ad10a	, _hw_turn_power
+
+#define _hw_turn_power(c,n,i,a,vstate)\
+  HW_G2(_hw_turn_power, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
+#define _hw_turn_power_0(c,n,i,a, vstate)			\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hw_turn_power_1(c,n,i,a, vstate)	\
+  _hw_write_reg(hw_core0, hw_power_##n, (HW_A1(hw_state_##vstate)==0))
+
+
+#define hw_def_hwa_turn_c8a	, _hwa_turn_power
+#define hw_def_hwa_turn_c16a	, _hwa_turn_power
+#define hw_def_hwa_turn_usia	, _hwa_turn_power
+#define hw_def_hwa_turn_ad10a	, _hwa_turn_power
+
+#define _hwa_turn_power(c,n,i,a,vstate)\
+  HW_G2(_hwa_turn_power, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
+#define _hwa_turn_power_0(c,n,i,a, vstate)			\
+  HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
+#define _hwa_turn_power_1(c,n,i,a, vstate)	\
+  _hwa_write_reg(hw_core0, hw_power_##n, (HW_A1(hw_state_##vstate)==0))

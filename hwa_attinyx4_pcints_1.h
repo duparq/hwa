@@ -23,7 +23,7 @@
 #define hw_pcic0			pcic0, pcic0, 200, 0
 #define hw_pcic1			pcic1, pcic1, 210, 0
 
-/*	Interrupts			class, vector, controller, enable, flag
+/*	Interrupts			class, vector, controller, enable bit, flag bit
  */
 #define hw_irq_pcic0			irq, 2, core0, pcie0, pcif0
 #define hw_irq_pcic1			irq, 3, core0, pcie1, pcif1

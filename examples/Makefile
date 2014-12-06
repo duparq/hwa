@@ -21,6 +21,7 @@ PKG		=	dil
 PROG_SW		=	diabolo
 DIABOLO_OPTS	+=	--read-flash	# programming will be faster
 DIABOLO_OPTS	+=	--mcu=$(MCU)
+DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin
 
 #	HWA
 #

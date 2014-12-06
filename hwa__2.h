@@ -13,13 +13,19 @@
 #define hw_state_off			, 0
 
 
-/*	hw/hwa_config(...): configure something (method)
+/** @brief	Configure something (method)
+ *
+ *  Use hw/hwa_config(...) to configure an instance of a class that supports
+ *  this method.
  */
 #define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__)
+/** @copydoc hw_config(...) */
 #define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__)
 
 
 /*	hw_clear(...): clear something (method)
+ *
+ *  @hideinitializer
  */
 #define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__)
 #define hwa_clear(...)			HW_MTHD(hwa_clear, __VA_ARGS__)
@@ -85,6 +91,10 @@
 
 
 /*	hw/hwa_toggle(...): toggle something, probably an io (method)
+ */
+/** @brief	Toggles something
+ *
+ *  Method for classes that support toggling, such as bits or ios.
  */
 #define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__)
 #define hwa_toggle(...)			HW_MTHD(hwa_toggle, __VA_ARGS__)
@@ -291,7 +301,9 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 }
 
 
-/** \brief	Initialize an HWA register
+/** 
+ * @addtogroup dev
+ * \brief	Initialize an HWA register
  *
  *  \param c	class of the register.
  *  \param i	instance of the register.

@@ -15,7 +15,7 @@
  */
 #define hw_usi0				usia, usi0, 601, 0
 
-/*	Interrupts			class, vector, controller, enable, flag
+/*	Interrupts			class, vector, controller, enable bit, flag bit
  */
 #define hw_irq_usi0_start		irq, 15, usi0, sie, sif
 #define hw_irq_usi0_overflow		irq, 16, usi0, oie, oif

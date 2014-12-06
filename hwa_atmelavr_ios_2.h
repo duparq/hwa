@@ -40,6 +40,18 @@
   _hw_write_r8(ca+ra,rwm,rfm,bn,bp,(1U<<bn)-1)
 
 
+/*	TODO
+ *
+ *	hw_config( io,
+ *
+ *                 direction,   input
+ *                            | output
+ *
+ *                 pullup,      on
+ *                            | off
+ *               );
+ */
+
 /*
  * Available modes for IO pins:
  * - input

@@ -14,24 +14,24 @@
 /*	The include order and ids follows that of the datasheet
  */
 #include "hwa_atmelavr_1.h"
-#include "hwa_attinyX4_cores_1.h"		/* id: 100 */
-#include "hwa_attinyX4_pcints_1.h"		/* id: 200 */
-#include "hwa_attinyX4_ios_1.h"			/* id: 300 */
-#include "hwa_attinyX4_counters_1.h"		/* id: 400 */
-#include "hwa_attinyX4_pscs_1.h"		/* id: 500 */
-#include "hwa_attinyX4_usis_1.h"		/* id: 600 */
-#include "hwa_attinyX4_acmps_1.h"		/* id: 700 */
-#include "hwa_attinyX4_adcs_1.h"		/* id: 800 */
-#include "hwa_attinyX4_watchdogs_1.h"		/* id: 900 */
-#include "hwa_attinyX4_eeproms_1.h"		/* id: 1000 */
-#include "hwa_attinyX4_flashs_1.h"		/* id: 1100 */
+#include "hwa_attinyx4_cores_1.h"		/* id: 100 */
+#include "hwa_attinyx4_pcints_1.h"		/* id: 200 */
+#include "hwa_attinyx4_ios_1.h"			/* id: 300 */
+#include "hwa_attinyx4_counters_1.h"		/* id: 400 */
+#include "hwa_attinyx4_pscs_1.h"		/* id: 500 */
+#include "hwa_attinyx4_usis_1.h"		/* id: 600 */
+#include "hwa_attinyx4_acmps_1.h"		/* id: 700 */
+#include "hwa_attinyx4_adcs_1.h"		/* id: 800 */
+#include "hwa_attinyx4_watchdogs_1.h"		/* id: 900 */
+#include "hwa_attinyx4_eeproms_1.h"		/* id: 1000 */
+#include "hwa_attinyx4_flashs_1.h"		/* id: 1100 */
 
 
 /** \brief	Returns the system clock frequency.
  *
  *	For Atmel ATtinyX4, the system clock frequency is determined from the
- *	fuses states in the fuse low byte (FUSE_LB must be defined at compile
- *	time).
+ *	fuse low byte (FUSE_LB must be defined at compile time) and HW_XSOHZ if
+ *	applicable.
  */
 #if (FUSE_LB & 0x0F) == 2
 #  define hw_syshz_base 8000000
@@ -46,6 +46,8 @@
 #else
 #  define hw_syshz	hw_syshz_base
 #endif
+
+#undef hw_syshz_base
 
 
 #if !defined __ASSEMBLER__ 
