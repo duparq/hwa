@@ -1,0 +1,21 @@
+
+Porting HWA to ATmega328
+========================
+
+File hwa_atmega328_1.h (copied from hwa_attiny84_1.h):
+  Define HW_DEVICE_ATMEGA328
+  Define HW_DEVICE_FLASHSIZE
+  Define HW_DEVICE_EEPROMSIZE
+  Define HW_DEVICE_RAMSIZE
+  Define HW_DEVICE_NVECTORS
+  Define HW_DEVICE_RAMSTART
+  Define HW_DEVICE_SIGNATURE
+  Include hwa_atmegax8_1.h
+
+File hwa_atmegax8_1.h (copied from hwa_attinyx4_1.h):
+  Define HW_DEVICE_ATMEGAX8
+  Include "hwa_atmelavr_1.h"
+  Include "hwa_atmegax8_..._1.h"
+  Define hw_syshz according to HW_DEVICE_FUSE_LB and HW_DEVICE_XSOHZ
+  Define HWA_DCL as list of HWA_DCL_...
+  Define hw_sleep_until_irq

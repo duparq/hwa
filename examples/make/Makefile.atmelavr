@@ -1,13 +1,26 @@
 #	-*- makefile -*-
 
-DEFINES		+= -DFUSE_LB=$(FUSE_LB)
-DEFINES		+= -DFUSE_HB=$(FUSE_HB)
-DEFINES		+= -DFUSE_EB=$(FUSE_EB)
+#DEFINES		+= -DFUSE_LB=$(FUSE_LB)
+#DEFINES		+= -DFUSE_HB=$(FUSE_HB)
+#DEFINES		+= -DFUSE_EB=$(FUSE_EB)
 
 ARCH		= avr-
 MMCU		= -mmcu=$(MCU)
 
 ODFLAGS		= -h -S
 
+FUSES		= $(OBJDIR)/$(OUT).fuses
+
 dasm:
 	avr-objdump -m avr:5 -b binary -D build/out.bin
+
+
+#	Fuse bytes
+#
+$(FUSES): $(SOURCES)
+	@grep -e '^\#define[[:space:]]HW_DEVICE' $(SOURCES) 2>/dev/null >$@.c
+	@echo '#include <hwa.h>' >>$@.c
+	@echo 'HW_DEVICE_FUSE_EB' >>$@.c
+	@echo 'HW_DEVICE_FUSE_HB' >>$@.c
+	@echo 'HW_DEVICE_FUSE_LB' >>$@.c
+	@$(CC) $(CFLAGS) -E $@.c -o - | tail -3 >$@

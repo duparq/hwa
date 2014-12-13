@@ -1,0 +1,7 @@
+
+#	-*- makefile -*-
+
+PARTNO	=	mega328p
+
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(CWD)Makefile.atmelavr

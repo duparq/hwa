@@ -24,20 +24,16 @@
 #define hw_is_update_update		, 1
 
 
-/*	Register address offset for C/assembler
- */
-#ifndef __ASSEMBLER__
-#  define HW_RA_OFFSET		0
-#else
-#  define HW_RA_OFFSET		-0x20
-#endif
-
-
-/*	hw_addr(...) : address of a memory definition (generic)
+/*	hw_addr(...) : address of a memory definition
  */
 #if defined __ASSEMBLER__
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
-#  define _hw_isr_(vector, ...)				__vector_##vector
 #else
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
+#endif
+
+/*	HW_ISR(...): address of ISR
+ */
+#if defined __ASSEMBLER__
+#  define _hw_isr_(vector, ...)				__vector_##vector
 #endif

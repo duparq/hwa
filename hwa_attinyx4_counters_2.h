@@ -24,14 +24,14 @@ HW_INLINE void _hwa_solve_counters ( hwa_t *hwa )
 
   /*  Output-compare pins must be configured as outputs when used
    */
-  if ( hwa->counter0.ocra_mode != 0 )
+  if ( hwa->counter0.output0_mode != 0 )
     hwa_config( hw_io(hw_counter0_output0), output );
-  if ( hwa->counter0.ocrb_mode != 0 )
+  if ( hwa->counter0.output1_mode != 0 )
     hwa_config( hw_io(hw_counter0_output1), output );
 
-  if ( hwa->counter1.ocra_mode != 0 )
+  if ( hwa->counter1.output0_mode != 0 )
     hwa_config( hw_io(hw_counter1_output0), output );
-  if ( hwa->counter1.ocrb_mode != 0 )
+  if ( hwa->counter1.output1_mode != 0 )
     hwa_config( hw_io(hw_counter1_output1), output );
 }
 

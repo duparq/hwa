@@ -159,7 +159,6 @@ $(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT) Makefile
 # %.elf:	%.o
 # 	$(CC) $(LDFLAGS) -o $@ $^
 
-
 #	Clean
 #
 clean:

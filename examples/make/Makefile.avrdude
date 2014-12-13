@@ -1,20 +1,7 @@
 #	-*- makefile -*-
 #	-*- coding: utf-8 -*-
 
-FUSES	=
-ifneq ($(LFUSE),)
-  FUSES += -U lfuse:w:$(LFUSE):m
-endif
-ifneq ($(HFUSE),)
-  FUSES += -U hfuse:w:$(HFUSE):m
-endif
-ifneq ($(EFUSE),)
-  FUSES += -U efuse:w:$(EFUSE):m
-endif
-
-
 OPTIONS	= -v
-
 
 #  Reset le microcontrôleur (permet de tester la liaison)
 #
@@ -49,8 +36,24 @@ read_fuses:
 	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)\
 		-U lock:r:$(OBJDIR)/$(OUT).read.bin:r
 
-write_fuses:
-	avrdude -p $(PARTNO) -c $(PROG_HW) $(FUSES)
+write_fuses: $(FUSES)
+	@FUSE_EB=$$(printf "0x%02X" $$(($$(tail -3 $< | head -1 -)))) ;\
+	FUSE_HB=$$(printf "0x%02X" $$(($$(tail -2 $< | head -1 -)))) ;\
+	FUSE_LB=$$(printf "0x%02X" $$(($$(tail -1 $< | head -1 -)))) ;\
+	echo "FUSE_EB=$$FUSE_EB FUSE_HB=$$FUSE_HB FUSE_LB=$$FUSE_LB"
+#	avrdude -p $(PARTNO) -c $(PROG_HW) $(FUSES)
+
+# FUSES	=
+# ifneq ($(LFUSE),)
+#   FUSES += -U lfuse:w:$(LFUSE):m
+# endif
+# ifneq ($(HFUSE),)
+#   FUSES += -U hfuse:w:$(HFUSE):m
+# endif
+# ifneq ($(EFUSE),)
+#   FUSES += -U efuse:w:$(EFUSE):m
+# endif
+
 
 #  Lit la valeur usine de OSCCAL
 #

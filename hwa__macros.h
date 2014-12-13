@@ -123,6 +123,11 @@
 #define hw_is_0_0		, 1,	/* one more comma to remove '; StaticAssert(...)' */
 #define hw_is__			, 1
 #define hw_is_irq_irq		, 1
+#define hw_is_enabled_enabled	, 1
+#define hw_is_disabled_disabled	, 1
+#define hw_is_yes_yes		, 1
+#define hw_is_no_no		, 1
+#define hw_is_off_off		, 1
 
 
 /** \brief	Quote the first element in the list

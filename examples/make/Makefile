@@ -4,10 +4,10 @@ CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 #	Find target device in source files
 #
 ifeq (,$(MCU))
-  comma := ,
   MCU = $(shell (grep -e '^\#define[[:space:]]HW_DEVICE[[:space:]]'	\
                    $(SOURCES) config.h 2>/dev/null)			\
 	  | head -1 | awk '{$$1=$$2=""; print $$0}') # print all but two first columns
+  comma := ,
   MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
 endif
 
@@ -18,6 +18,7 @@ endif
 #	Chip programming
 #
 PROG_SW		=	diabolo
+#PROG_SW		=	avrdude
 #DIABOLO_OPTS	+=	--read-flash	# programming will be faster
 DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
 DIABOLO_OPTS	+=	--mcu=$(MCU)
@@ -52,6 +53,7 @@ all:	deps bin lst crc
 
 doc:
 	(cd $(CWD)../.. && make doc)
+
 
 #	Common makefile
 #

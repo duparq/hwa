@@ -1,0 +1,5 @@
+2014-12-06  Christophe Duparquet  <duparq at free dot fr>
+
+	* hwa_atmelavr_1.h: commented HW_RA_OFFSET definition
+
+

@@ -4,10 +4,6 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/** \file
- *  \brief	HWA layer 1: definitions for Atmel AVR ATtiny44
- */
-
 
 /** \brief Target device
  */
@@ -15,7 +11,6 @@
 
 /** \brief Flash size
  */
-#define HW_FLASHSIZE		8192
 #define HW_DEVICE_FLASHSIZE	8192
 
 /** \brief Flash size
@@ -24,12 +19,10 @@
 
 /** \brief EEPROM size
  */
-#define HW_EEPROMSIZE		512
 #define HW_DEVICE_EEPROMSIZE	512
 
 /** \brief RAM size
  */
-#define HW_RAMSIZE		512
 #define HW_DEVICE_RAMSIZE	512
 
 #define HW_DEVICE_NVECTORS	17
