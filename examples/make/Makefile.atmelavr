@@ -1,26 +1,48 @@
 #	-*- makefile -*-
 
-#DEFINES		+= -DFUSE_LB=$(FUSE_LB)
-#DEFINES		+= -DFUSE_HB=$(FUSE_HB)
-#DEFINES		+= -DFUSE_EB=$(FUSE_EB)
-
 ARCH		= avr-
 MMCU		= -mmcu=$(MCU)
 
 ODFLAGS		= -h -S
 
-FUSES		= $(OBJDIR)/$(OUT).fuses
-
 dasm:
 	avr-objdump -m avr:5 -b binary -D build/out.bin
 
 
-#	Fuse bytes
+#	Device informations
 #
-$(FUSES): $(SOURCES)
-	@grep -e '^\#define[[:space:]]HW_DEVICE' $(SOURCES) 2>/dev/null >$@.c
-	@echo '#include <hwa.h>' >>$@.c
-	@echo 'HW_DEVICE_FUSE_EB' >>$@.c
-	@echo 'HW_DEVICE_FUSE_HB' >>$@.c
-	@echo 'HW_DEVICE_FUSE_LB' >>$@.c
-	@$(CC) $(CFLAGS) -E $@.c -o - | tail -3 >$@
+$(OBJDIR)/$(OUT).hwa: $(SOURCES)
+	for f in $^ ; do							\
+	    cat $$f >$$f.hwa.c							;\
+	    echo 'HW_DEVICE_FLASH_SIZE' >>$$f.hwa.c				;\
+	    echo 'HW_DEVICE_FUSE_EB' >>$$f.hwa.c				;\
+	    echo 'HW_DEVICE_FUSE_HB' >>$$f.hwa.c				;\
+	    echo 'HW_DEVICE_FUSE_LB' >>$$f.hwa.c				;\
+            echo 'HW_DEVICE' >>$$f.hwa.c					;\
+	    $(CC) $(CFLAGS) -E $$f.hwa.c -o $(OBJDIR)/$(OUT).hwa 2>/dev/null	;\
+	    rm $$f.hwa.c							;\
+	    HW_DEVICE=$$(tail -1 $(OBJDIR)/$(OUT).hwa)				;\
+	    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then 				\
+		echo "Found HW_DEVICE=\"$$HW_DEVICE\" in $$f"			;\
+		break								;\
+	    fi									;\
+	done
+
+hwa:	$(OBJDIR)/$(OUT).hwa
+
+show-fuses: $(OBJDIR)/$(OUT).hwa
+	@FUSE_EB=$$(tail -4 $< | head -1 -)			;\
+	FUSE_HB=$$(tail -3 $< | head -1 -)			;\
+	FUSE_LB=$$(tail -2 $< | head -1 -)			;\
+	if [ "$$FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then	\
+	    echo FUSE_EB=$$(printf "0x%02X" $$(($$FUSE_EB)))	;\
+	fi							;\
+	if [ "$$FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then	\
+	    echo FUSE_HB=$$(printf "0x%02X" $$(($$FUSE_HB)))	;\
+	fi							;\
+	if [ "$$FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then	\
+	    echo FUSE_LB=$$(printf "0x%02X" $$(($$FUSE_LB)))	;\
+	fi
+
+crc:	$(OBJDIR)/$(OUT).bin
+	diabolo.py -c $(OBJDIR)/$(OUT).bin

@@ -3,66 +3,71 @@
 
 OPTIONS	= -v
 
+ifeq (,$(PROG_HW))
+$(error PROG_HW is not defined)
+endif
+
 #  Reset le microcontrôleur (permet de tester la liaison)
 #
 reset:
 	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)
 
+#  Efface le microcontrôleur
+#
+erase:
+	avrdude -p $(PARTNO) -c $(PROG_HW) -e
+
 #  Programme le microcontrôleur
 #
-burn: $(OBJDIR)/$(OUT).hex
+# burn: $(OBJDIR)/$(OUT).hex
+# 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
+burn: $(OBJDIR)/$(OUT).bin
 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
 
 #  Vérifie la programmation
 #
-verify: $(OBJDIR)/$(OUT).hex
+# verify: $(OBJDIR)/$(OUT).hex
+# 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
+verify: $(OBJDIR)/$(OUT).elf
 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
 
 #  Récupère le contenu de la flash
 #
-dump-flash:
+read-flash:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U flash:r:$(OBJDIR)/$(OUT).dump-flash.bin:r
+		-U flash:r:$(OBJDIR)/flash.bin:r
 
 #  Récupère le contenu eeprom
 #
-dump-eeprom:
+read-eeprom:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U eeprom:r:$(OBJDIR)/$(OUT).dump-eeprom.bin:r
+		-U eeprom:r:$(OBJDIR)/eeprom.bin:r
 
 #  Lit/programme les fusibles
 #
-read_fuses:
-	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)\
-		-U lock:r:$(OBJDIR)/$(OUT).read.bin:r
+read-fuses:
+	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS) \
+		-U efuse:r:-:h		\
+		-U hfuse:r:-:h		\
+		-U lfuse:r:-:h		\
+		-U lock:r:-:h		\
+		-U calibration:r:-:h	\
+		2>/dev/null >$(OBJDIR)/fuses.hex
 
-write_fuses: $(FUSES)
-	@FUSE_EB=$$(printf "0x%02X" $$(($$(tail -3 $< | head -1 -)))) ;\
-	FUSE_HB=$$(printf "0x%02X" $$(($$(tail -2 $< | head -1 -)))) ;\
-	FUSE_LB=$$(printf "0x%02X" $$(($$(tail -1 $< | head -1 -)))) ;\
-	echo "FUSE_EB=$$FUSE_EB FUSE_HB=$$FUSE_HB FUSE_LB=$$FUSE_LB"
-#	avrdude -p $(PARTNO) -c $(PROG_HW) $(FUSES)
+write-fuses: $(OBJDIR)/$(OUT).hwa
+	@FUSE_EB=$$(tail -4 $< | head -1 -)					;\
+	FUSE_HB=$$(tail -3 $< | head -1 -)					;\
+	FUSE_LB=$$(tail -2 $< | head -1 -)					;\
+	FUSES=""								;\
+	if [ "$$FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then			\
+	    FUSES=$$(printf " -U efuse:w:0x%02X:m " $$(($$FUSE_EB)))		;\
+	fi									;\
+	if [ "$$FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then			\
+	    FUSES=$${FUSES}$$(printf " -U hfuse:w:0x%02X:m" $$(($$FUSE_HB)))	;\
+	fi									;\
+	if [ "$$FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then			\
+	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m" $$(($$FUSE_LB)))	;\
+	fi									;\
+	avrdude -p $(PARTNO) -c $(PROG_HW) $$FUSES
 
-# FUSES	=
-# ifneq ($(LFUSE),)
-#   FUSES += -U lfuse:w:$(LFUSE):m
-# endif
-# ifneq ($(HFUSE),)
-#   FUSES += -U hfuse:w:$(HFUSE):m
-# endif
-# ifneq ($(EFUSE),)
-#   FUSES += -U efuse:w:$(EFUSE):m
-# endif
-
-
-#  Lit la valeur usine de OSCCAL
-#
-read_osccal:
-	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)\
-		-U calibration:r:$(OBJDIR)/$(OUT).calibration.bin:r
-
-
-install: upload write_fuses
-
-
-.PHONY:	reset burn verify dump-flash dump-eeprom read_fuses write_fuses install
+.PHONY:	reset erase burn verify read-flash read-eeprom read-fuses write-fuses

@@ -24,12 +24,13 @@ class Device:
     #  Name, signature, pagesize, flashsize, eepromsize, eepromstart, ramstart
     #
     dtbl = (
-        ( 'ATtiny44',  '1E9207', 64, 4096, 256, 0x00810000, 0x00800060 ),
-        ( 'ATtiny84',  '1E930C', 64, 8192, 512, 0x00810000, 0x00800060 ),
-        ( 'ATtiny45',  '1E9206', 64, 4096, 256, 0x00810000, 0x00800060 ),
-        ( 'ATmega48',  '1E9205', 64, 4096, 256, 0x00810000, 0x00800100 ),
-        ( 'ATmega48P', '1E920A', 64, 4096, 256, 0x00810000, 0x00800100 ),
-        ( 'ATtiny85',  '1E920B', 64, 8192, 512, 0x00810000, 0x00800060 ),
+        ( 'ATtiny44',   '1E9207',  64,  4096,  256, 0x00810000, 0x00800060 ),
+        ( 'ATtiny84',   '1E930C',  64,  8192,  512, 0x00810000, 0x00800060 ),
+        ( 'ATtiny45',   '1E9206',  64,  4096,  256, 0x00810000, 0x00800060 ),
+        ( 'ATmega328P', '1E950F', 128, 32768, 1024, 0x00810000, 0x00800100 ),
+        ( 'ATmega48',   '1E9205',  64,  4096,  256, 0x00810000, 0x00800100 ),
+        ( 'ATmega48P',  '1E920A',  64,  4096,  256, 0x00810000, 0x00800100 ),
+        ( 'ATtiny85',   '1E920B',  64,  8192,  512, 0x00810000, 0x00800060 ),
         )
 
     #  Create the new device
@@ -159,8 +160,10 @@ class Device:
         if not self.get_prompt():
             return None
         self.lastchar = None
+        #trace('> '+s2hex(cmdstr))
         self.tx(cmdstr)
         r = self.rx(rlen)
+        #trace('< '+s2hex(r))
         self.ncmds += 1
         if self.lastchar!='#':
             dbg("CMDFAIL: %s -> %s\n" % (s2hex(cmdstr), s2hex(r)))
@@ -175,7 +178,7 @@ class Device:
         while time.time() <= t:
 
             r = self.execute('i', 100)
-            # trace(s2hex(r))
+            #trace(s2hex(r))
 
             if self.lastchar=='#' and len(r)>13:
                 self.curaddr = 0
@@ -204,13 +207,15 @@ class Device:
                             else:
                                 self.fuses = r[8:12]
                             self.eeappcrc = self.read_eeprom_appcrc()
-                            if not self.eeappcrc:
+                            if self.eeappcrc is None:
                                 self.error = _('could not get EEPROM application CRC')
                                 return False
                             self.pgmcount = self.read_eeprom_pgmcount()
-                            if not self.pgmcount:
+                            if self.pgmcount is None:
                                 self.error = _('could not get EEPROM programmings count')
                                 return False
+                            if self.pgmcount == 0xFFFFFFFF:
+                                self.pgmcount = 0
                             return True
                     self.error = _("Unknown signature %s" % signature)
                     return False
@@ -223,7 +228,7 @@ class Device:
 
 
     def set_address(self, address):
-        # trace( "%04X" % address )
+        #trace( "%04X" % address )
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
         s = cmdwithcrc( 'A'+chr(ah)+chr(al) )
@@ -342,6 +347,7 @@ class Device:
                             return 'e'	# Erased
                         if x == 2:
                             return 'w'	# Programmed
+                    trace("Code: %02X" % x)
                     if x == 0x80:
                         # self.curaddr = None
                         return 'C'		# CRC error

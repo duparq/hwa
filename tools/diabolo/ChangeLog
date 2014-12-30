@@ -1,0 +1,5 @@
+2014-12-30  Christophe Duparquet  <duparq at free dot fr>
+
+	* device/diabolo-atmelavr.sx (pflash):
+		Removed virginity & equality checking
+

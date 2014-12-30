@@ -6,12 +6,8 @@
 
 
 /** \file
- *  \brief	Definitions producing C code.
+ *  \brief	Definitions for C code production
  */
-
-#define hw_state_on			, 1
-#define hw_state_off			, 0
-
 
 /** @brief	Configure something (method)
  *
@@ -119,6 +115,9 @@
 
 #define hw_def_hw_write_bits1		, _hw_write_bits1
 #define hw_def_hw_write_bits2		, _hw_write_bits2
+
+#define _hw_write(...)			_hw_write_2(__VA_ARGS__) /* Internal use */
+#define _hw_write_2(x,...)		_hw_write_##x(x,__VA_ARGS__)
 
 #define _hw_write_bits1(bits1, cn,ca, rn,rw,ra,rwm,rfm, rbn,rbp, v)	\
   _hw_write_r##rw(ca+ra,rwm,rfm,rbn,rbp,v)

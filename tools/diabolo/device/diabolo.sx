@@ -1,9 +1,11 @@
 
 /* -*- c -*- */
 
-#include "config.h"
+#include "config.atmega328p.h"
 #include <hwa.h>
 
 #if defined HW_DEVICE_ATMELAVR
 #  include "diabolo-atmelavr.sx"
+#else
+#  error Device other than Atmel AVR is not supported
 #endif

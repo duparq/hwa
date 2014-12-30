@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2014-09-07 16:18:58 -*-
+# -*- coding: utf-8 -*- Last modified: 2014-12-29 16:15:31 -*-
 
 
 import struct
@@ -50,6 +50,9 @@ def parse_options():
     parser.add_option("-F", "--erase-flash", action="store_true",
                       default=False, dest="erase_flash",
                       help="Erase flash memory")
+    parser.add_option("--dump-eeprom", action="store_true",
+                      default=False, dest="dump_eeprom",
+                      help="Dump content of EEPROM memory")
     # parser.add_option("-x", "--run", metavar="FILE", type="string",
     #                   dest="run_cmd",
     #                   help="command to start when the 'run' button is pressed")
@@ -136,6 +139,10 @@ def run():
         f = open(options.flash_file, 'rb')
         toburn = f.read()
         f.close()
+
+        if len(toburn)==0:
+            cout(_("%s is void.\n" % options.flash_file))
+            return
 
         toburn_crc, x = appstat(toburn)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
@@ -273,6 +280,31 @@ def run():
         else:
             options.read_flash = True
 
+    #  Dump content of EEPROM
+    #
+    if options.dump_eeprom:
+        t = time.time()
+        cout("\nReading EEPROM:")
+        s=''
+        col=0
+        for a in range(0, device.eepromsize, 64):
+            if col==0 :
+                cout('\n')
+            col += 1
+            if col==64:
+                col=0
+            p = device.read_eeprom(a,64)
+            if p == None:
+                cerr(_("\nRead failed at 0x%04X.\n" % a))
+                return False
+            cout('.')
+            flushout()
+            s += p
+        t = time.time()-t
+        cout(_("\nRead %d bytes in %d ms (%d Bps).\n" % (len(s), t*1000, len(s)/t)))
+        cout(hexdump(0,s)+"\n")
+
+
     #  Read flash memory if needed
     #
     if options.read_flash:
@@ -365,15 +397,28 @@ def run():
         #
         #  Reprogram pages that failed
         #
+        pv = '\xFF'*device.pagesize
         for a in redo:
             cout("\n")
             cout("Need to reprogram page at 0x%04X.\n" % a)
-            cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
-            cout("To be programmed:\n%s\n" % hexdump(a, toburn[a:a+device.pagesize]))
-            cout("Erasing: %s\n" % device.write_flash_page(a, '\xFF'*device.pagesize) )
-            cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
-            cout("Programming: %s\n" % device.write_flash_page(a, toburn[a:a+device.pagesize]) )
-            cout("Contains:\n%s\n" % hexdump(a, device.read_flash_page(a)))
+            p1 = toburn[a:a+device.pagesize]
+            cout("To be programmed:\n%s\n" % hexdump(a, p1))
+            p0 = device.read_flash_page(a)
+            if p0 != pv:
+                r = device.write_flash_page(a, pv)
+                cout("Erasing: %s\n" % r )
+                p0 = device.read_flash_page(a)
+                if p0 != pv:
+                    cerr("Erasing failed.\n")
+                    return
+            if p0 != p1:
+                r = device.write_flash_page(a, p1)
+                cout("Programming: %s\n" % r )
+                p0 = device.read_flash_page(a)
+                if p0 != p1:
+                    cout("Contains:\n%s\n" % hexdump(a, p0))
+                    cerr("Programming failed.\n")
+                    return
             cout("\n")
 
         #cout("\n")

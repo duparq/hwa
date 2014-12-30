@@ -4,26 +4,16 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/** \file
- *  \brief	HWA layer 1: definitions for Atmel AVR ATtiny44
- */
 
+#define HW_DEVICE_SIGNATURE
 
-/** \brief Target device
- */
-#define HW_DEVICE_ATTINY44
-
-/** \brief Flash size
- */
-#define HW_FLASHSIZE	4096
-
-/** \brief EEPROM size
- */
-#define HW_EEPROMSIZE	256
-
-/** \brief RAM size
- */
-#define HW_RAMSIZE	256
-
+#define HW_DEVICE_FLASH_SIZE				4096
+#define HW_DEVICE_FLASH_PAGE_SIZE			64
+#define HW_DEVICE_EEPROM_SIZE				256
+#define HW_DEVICE_EEPROM_PAGE_SIZE			4
+#define HW_DEVICE_RAM_SIZE				256
+//#define HW_DEVICE_RAM_START				0x0060
+//#define HW_DEVICE_NVECTORS				17
+//#define HW_DEVICE_APP_START				0x0022
 
 #include "hwa_attinyx4_1.h"

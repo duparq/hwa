@@ -14,6 +14,13 @@
  *	class name.
  */
 
+#define hw_state_on			, 1
+#define hw_state_off			, 0
+#define hw_state_yes			, 1
+#define hw_state_no			, 0
+#define hw_state_enabled		, 1
+#define hw_state_disabled		, 0
+
 /*	HWA basic classes
  */
 #define hw_class_bits1
@@ -85,7 +92,7 @@
  *  * Check that f is a declared method for that class
  *  * Detect and propagate errors
  */
-#define HW_MTHD(f,...)		_HW_MTHD1(f,__VA_ARGS__)
+#define HW_MTHD(f,...)		_HW_MTHD1(f,__VA_ARGS__,)
 #define _HW_MTHD1(f,...)	HW_G2(_HW_MTHD1, HW_IS(,hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
 #define _HW_MTHD1_1(f,...)	HW_G2(_HW_MTHD2, HW_IS(,HW_G3(hw_def,f,__VA_ARGS__)))(f,__VA_ARGS__)
 #define _HW_MTHD1_0(f,...)	HW_G2(_HW_MTHD1_0,HW_IS(0,__VA_ARGS__))(f,__VA_ARGS__)
@@ -226,7 +233,7 @@
 
 #define hw_def_hw_bp_bits1	, _hw_bp_bits1
 
-#define _hw_bp_bits1(t, c,n, rn,rw,ra,rwm,rfm, bn,bp)	bp
+#define _hw_bp_bits1(t, c,n, rn,rw,ra,rwm,rfm, bn,bp,...)	bp
 
 
 /*	hw_id(...): id of an instance (generic)

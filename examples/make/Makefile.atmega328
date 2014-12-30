@@ -1,7 +1,7 @@
 
 #	-*- makefile -*-
 
-PARTNO	=	m328p
+PARTNO	=	m328
 
 CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(CWD)Makefile.atmelavr

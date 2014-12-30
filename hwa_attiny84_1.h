@@ -5,29 +5,16 @@
  */
 
 
-/** \brief Target device
- */
-#define HW_DEVICE_ATTINY84
+#define HW_DEVICE_SIGNATURE				0x1E,0x93,0x0C			
 
-/** \brief Flash size
- */
-#define HW_DEVICE_FLASHSIZE	8192
+#define HW_DEVICE_FLASH_SIZE				8192
+#define HW_DEVICE_FLASH_PAGE_SIZE			64
+#define HW_DEVICE_EEPROM_SIZE				512
+#define HW_DEVICE_EEPROM_PAGE_SIZE			4
+#define HW_DEVICE_RAM_SIZE				512
+#define HW_DEVICE_RAM_START				0x0060
+//#define HW_DEVICE_NVECTORS				17
+#define HW_DEVICE_APP_START				0x0022
 
-/** \brief Flash size
- */
-#define HW_DEVICE_PAGESIZE	64
-
-/** \brief EEPROM size
- */
-#define HW_DEVICE_EEPROMSIZE	512
-
-/** \brief RAM size
- */
-#define HW_DEVICE_RAMSIZE	512
-
-#define HW_DEVICE_NVECTORS	17
-#define HW_DEVICE_RAMSTART	0x0060
-
-#define HW_DEVICE_SIGNATURE	0x1E,0x93,0x0C
 
 #include "hwa_attinyx4_1.h"

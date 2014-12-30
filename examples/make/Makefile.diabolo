@@ -13,6 +13,7 @@ burn:	$(OBJDIR)/$(OUT).bin
 diabolo:
 	diabolo.py $(DIABOLO_OPTS)
 
-.PHONY: crc
-crc:	$(OBJDIR)/$(OUT).bin
-	diabolo.py -c $(OBJDIR)/$(OUT).bin
+# crc:	$(OBJDIR)/$(OUT).bin
+# 	diabolo.py -c $(OBJDIR)/$(OUT).bin
+
+.PHONY: erase burn diabolo crc

@@ -1,27 +1,6 @@
 
 CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
-#	Find target device in source files
-#
-ifeq (,$(MCU))
-  MCU = $(shell (grep -e '^\#define[[:space:]]HW_DEVICE[[:space:]]'	\
-                   $(SOURCES) config.h 2>/dev/null)			\
-	  | head -1 | awk '{$$1=$$2=""; print $$0}') # print all but two first columns
-  comma := ,
-  MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
-endif
-
-ifeq (,$(MCU))
-$(error Please define HW_DEVICE in one of the source files or in config.h)
-endif
-
-#	Chip programming
-#
-PROG_SW		=	diabolo
-#PROG_SW		=	avrdude
-#DIABOLO_OPTS	+=	--read-flash	# programming will be faster
-DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
-DIABOLO_OPTS	+=	--mcu=$(MCU)
 
 #	HWA source path
 #
@@ -47,9 +26,63 @@ OUT		= out
 OBJDIR		= build
 
 
+ifeq (,$(SOURCES))
+$(error Please define SOURCES)
+endif
+
+#	Retrieve target device informations from source files
+#
+ifeq (,$(MCU))
+  MCU = $(shell								\
+  mkdir -p $(OBJDIR)							;\
+  for f in $(SOURCES) ; do						\
+    DST=$$f.hwa.c							;\
+    cat $$f >"$$DST"							;\
+    echo 'HW_DEVICE_FLASH_SIZE' >>"$$DST"				;\
+    echo 'HW_DEVICE_FUSE_EB' >>"$$DST"					;\
+    echo 'HW_DEVICE_FUSE_HB' >>"$$DST"					;\
+    echo 'HW_DEVICE_FUSE_LB' >>"$$DST"					;\
+    echo 'HW_DEVICE' >>"$$DST"						;\
+    $(CC) -I$(HWA) -E $$DST >$(OBJDIR)/$(OUT).hwa 2>/dev/null		;\
+    rm "$$DST" >/dev/null 2>&1					;\
+    HW_DEVICE=$$(tail -1 $(OBJDIR)/$(OUT).hwa 2>/dev/null)		;\
+    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then				\
+      echo $$HW_DEVICE							;\
+      break								;\
+    fi									;\
+  done)
+  comma := ,
+  MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
+endif
+
+ifeq (,$(MCU))
+$(error Please define HW_DEVICE in one of the source files)
+endif
+
+FLASHSZ = $(shell \
+	V=$$(tail -5 $(OBJDIR)/$(OUT).hwa 2>/dev/null | head -1 -)	;\
+	if [ "$$V" != "HW_DEVICE_FLASH_SIZE" ] ; then			\
+	  echo $$V							;\
+	fi								;\
+	done)
+
+#	Chip programming
+#
+ifeq (,$(PROG_SW))
+PROG_SW		=	diabolo
+#DIABOLO_OPTS	+=	--read-flash	# programming will be faster
+DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
+DIABOLO_OPTS	+=	--mcu=$(MCU)
+else
+PROG_SW		=	avrdude
+PROG_HW		=	usbasp
+endif
+
+
+
 #	Default target
 #
-all:	deps bin lst crc
+all:	deps lst crc
 
 doc:
 	(cd $(CWD)../.. && make doc)
