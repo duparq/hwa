@@ -2,6 +2,9 @@
 
 PATH:=$(CWD)../../tools/diabolo/software:$(PATH)
 
+DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
+DIABOLO_OPTS	+=	--mcu=$(MCU)
+
 erase:
 	diabolo.py $(DIABOLO_OPTS)	\
 		--erase-flash

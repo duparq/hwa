@@ -4,8 +4,8 @@
 	;; Diabolo Is A BOotLOader
 	;; 
 	;; 1 or 2-wire serial link without timer nor interrupts
-	;; initialized at Power-On Reset or Watchdog reset
-
+	;; Started by Power-On Reset or by application.
+	;;
 	;; Operations:
 	;;
 	;;   Identify: 'i' -> data + CRC
@@ -20,39 +20,27 @@
 	;;
 	;; Returned codes
 	;;
-	CODE_CRC  = (1<<7)	; CRC error
-	CODE_FAIL = (1<<4)	; Operation failed
-	CODE_WRT  = (1<<1)	; Written
-	CODE_ERS  = (1<<0)	; Erased
-	CODE_OK = 0		; Operation succeeded
+	CODE_CRC  = (1<<7)	; Errors: CRC
+	CODE_FAIL = (1<<4)	;         Operation failed
+	CODE_WRT  = (1<<1)	; Info:   Written
+	CODE_ERS  = (1<<0)	;         Erased
+	CODE_OK = 0		; Success
 
-	;; RESET:	MCUSR != 0
-	;; Application:	MCUSR == 0
-	;; Loop:	
 
-	
 	;; TODO:
 	;;   Use R22/R23 instead of R24/R25 for delay -> R24 holds the byte to tx/rx
-	;; 
-	;; Notes:
-	;; 
-	;; * could spare a few bytes by removing page programming verification
-	;; (then diabolo.py would do it).
 
 
 #if !defined HW_DEVICE_ATTINYX4 && !defined HW_DEVICE_ATMEGAX8
 #  error Device is not supported
 #endif
 
-	;; Registers
+	;; Register affectation
 	;;
 	;; R1:R0      value written into flash page buffer
 	;; R3:R2      CRC of application
 	;; R5:R4      RAMSTART (used to store incomming data)
-	;; R8         Status: 0: Diabolo just launched by RESET
-	;;                    1: Diabolo just launched by application
-	;;                    2: Communication established
-	;; R9         OSCCAL value at reset
+	;; R9         OSCCAL value at reset if XSPEED defined
 	;; R11:R10    CRC 16 bits (CCITT) of last transfered packet
 	;; R15:R14    UART bit duration in cycles
 	;; R16        general usage
@@ -73,13 +61,9 @@
 	.include "atmelavr-xinstr.sx"
 
 
-	;;  Registers
+	;; Hardware registers
 	;;
-	SPL        = hw_addr(hw_reg(hw_core0, spl))
-	SPH        = hw_addr(hw_reg(hw_core0, sph))
-	MCUSR	   = hw_addr(hw_reg(hw_core0, mcusr))
-	 BP_WDRF   = hw_bp(hw_reg(hw_core0, wdrf))
-	 BP_PORF   = hw_bp(hw_reg(hw_core0, porf))
+#define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
 
 	SPMCSR	   = hw_addr(hw_reg(hw_flash0, csr))
 	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
@@ -109,34 +93,21 @@
 	;; Debug pin
 	;;
 #if defined PIN_DBG
-	DBG = 1
 
 	DBGPORT   = hw_addr(hw_reg(hw_sup(PIN_DBG), port))
 	DBGPIN    = hw_addr(hw_reg(hw_sup(PIN_DBG), pin))
 	DBGDDR    = hw_addr(hw_reg(hw_sup(PIN_DBG), ddr))
 	DBGBIT    = hw_bp(PIN_DBG)
 
-	.macro DBG_INIT
-	sbi	DBGDDR, DBGBIT
-	.endm
-	.macro DBGT
-	sbi	DBGPIN, DBGBIT
-	.endm
-	.macro DBG0
-	cbi	DBGPORT, DBGBIT
-	.endm
-	.macro DBG1
-	sbi	DBGPORT, DBGBIT
-	.endm
+#  define DBGI	sbi	DBGDDR, DBGBIT
+#  define DBGT	sbi	DBGPIN, DBGBIT
+#  define DBG0	cbi	DBGPORT, DBGBIT
+#  define DBG1	sbi	DBGPORT, DBGBIT
 #else
-	.macro DBG_INIT
-	.endm
-	.macro DBGT
-	.endm
-	.macro DBG0
-	.endm
-	.macro DBG1
-	.endm
+#  define DBGI
+#  define DBGT
+#  define DBG0
+#  define DBG1
 #endif
 
 	;; Constants
@@ -150,11 +121,14 @@
 	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
 	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
 
-#if defined HW_DEVICE_ATTINYX4
-	;; Allocate enough pages for Diabolo at end of flash memory
+
+#if !defined HW_DEVICE_BOOTRST
+	;;
+	;; Device without boot section: allocate enough pages
+	;; for Diabolo at end of flash memory
 	;;
 	NBLPAGES  = 10
-#elif defined HW_DEVICE_ATMEGAX8
+#else
 	;; Diabolo in boot section
 	;;
 	NBLPAGES  = HW_DEVICE_BOOTSECTION_SIZE / HW_DEVICE_FLASH_PAGE_SIZE
@@ -162,13 +136,15 @@
 	APPSTART  = HW_DEVICE_APP_START
 	BOOTSTART = FLASHSIZE - NBLPAGES*PAGESIZE
 
-	;; Data in EEPROM
+
+	;; Position of data in EEPROM
 	;;
 	;;   App CRC is stored MSB first in EEPROM because it must be
 	;;   sent to the CRC algorithm in this order for checking
 	;; 
 	EEPCNT = HW_DEVICE_EEPROM_SIZE-4 ; 32 bit programmings count (MSB first)
 	EECRC  = EEPCNT-4		 ; 16 bits application CRC (MSB first)
+
 
 	;; Change MCU speed macros
 	;;
@@ -189,12 +165,11 @@
 
 
 	;; Macros for flash memory programming
-	;;   In devices without boot section
 	;;
 #if !defined HW_DEVICE_BOOTRST
 	;;
-	;; Devices without boot section: the MCU is halted when the
-	;; flash memory is busy
+	;; Device without boot section: the MCU is halted when the
+	;; flash memory is busy, no need to wait for readiness
 	;;
 	.macro	FLASH_CLRBF
 	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN
@@ -221,8 +196,12 @@
 	.endm
 
 #  define FLASH_ERWWS
+
 #else
+	;; Device with boot section: wait the completion of SPM operation
+	;;
 #  define FLASH_CLRBF
+
 	.macro	FLASH_LDBYTE
 	ldi	R21, 1<<BP_SPMEN
 	rcall	dospm
@@ -252,6 +231,7 @@
 	;; /*                              */
 	;; /********************************/
 
+
 	;; Put this code in section .init1 so that it will not be removed
 	;; by the optimizer!
 	;;
@@ -266,137 +246,58 @@
 
 	.org BOOTSTART, 0xFF	; Fill unused space with 0xFF
 
-	;; This point is reached only after a RESET
+	;; This point is reached only just after a RESET
 	;;   If the application wants to start Diabolo, it must jump to the
 	;;   entry point at the end of flash memory
 	;;
-	;; Start immediately the application if the reset is caused by the
-	;; watchdog (Note: the brownout flag is always set at power-on).
-	;;
-reset:	XLD	R24, MCUSR
-	sbrc	R24, BP_WDRF
-#if defined XSPEED
-app:	rjmp	APPSTART
-#else
-sapp:	rjmp	FLASHSIZE+APPSTART
-#endif
-
-	;; Store status in R8:
-	;;   0: Diabolo just launched by RESET
-	;;
-	clr	R8
-
-	;; This point is reached:
-	;;   after a RESET (R8==0)
-	;;   or from the entry point for the application (R8==1)
-	;;   or after an unknown command (R8==2)
-	;;
 	;; SP points to RAMEND after RESET then no initialization is required
-	;; The application has to initialize SP before launching Diabolo
 	;;
-	;; ldi	R24, lo8(RAMEND)
-	;; out	SPL, R24
-	;; ldi	R24, hi8(RAMEND)
-	;; out	SPH, R24
-init:	DBG_INIT
+reset:	XSBIS	R24, AP_PORF		; Start immediately the application
+app:	rjmp	FLASHSIZE+APPSTART	; if the reset is not caused by power-on
+
+	DBGI
 	DBG1
 #if defined XSPEED
-	XLD	R9, OSCCAL	; Store factory clock speed
-	SPEED1	R23		; Highest clock speed
+	XLD	R9, OSCCAL		; Store factory clock speed
+	SPEED1	R23			; Highest clock speed
 #endif
+	rcall	stat			; Check application and communication status
 
-	;; Compute the CRC of application code ignoring the trailing
-	;; 0xFF bytes: read from the end to the beginning.
-	;; Also check the RXD pin level.
-	;;
-	;; Cycles = 48*nbytes
-	;;        = 48 ms/kB of flash code @1MHz
-	;;
-	ldi	R16, 0xFF	;	R16==0xFF while RXD==0
-	ldi	R17, 0xFF	;	R17==0xFF while bytes read are 0xFF
-	movw	R10, R16	;	Init CRC to 0xFFFF
-	ldi	R30, lo8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; Begin with last byte
-	ldi	R31, hi8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; of application code
-2:	lpm	R24, Z		; [3]
-	and	R17, R24	; [1]
-	cpi	R17, 0xFF	; [1]	Do not compute 0xFF bytes at end of app section
-	breq	3f		; [1]
-	clr	R17		; [1]
-	rcall	crcadd		; [30]
-3:	sbic	RXDPIN, BP_RXD	; [2]	Clear R16 if RXD == 1
-	clr	R16		; [1]
-
-	DBGT
-
-	sbiw	R30, 1		; [2]
-
-#if !defined HW_DEVICE_BOOTRST
-	cpi	R31, 0		; [1]	Do not compute the RESET vector for devices
-	brne	2b		; [2]   without a boot section
-	cpi	R30, 2		; [1]
-	brcc	2b		; [2]=48
-#else
-	brcc	2b		; [2]=44
-#endif
-
-	;; Copy application CRC in R3:R2 (used for 'i')
-	;; Check against value stored in EEPROM
-	;; 
-	movw	R2, R10
-	ldi	R30, lo8(EECRC)	; Z = address of CRC stored in EEPROM
-	ldi	R31, hi8(EECRC)
-	rcall	eerd		; Read one byte of EEPROM and update CRC
-	rcall	eerd		; Read one byte of EEPROM and update CRC
-
-	;; If R8==2 (communication already started) go into error state
-	;;
-	sbrc	R8, 1
-	rjmp	error
-
-	;; If R8==1 (Diabolo just started by application) go synchronizing
-	;;
-	sbrc	R8, 0
-	rjmp	1f
-
-	;; R8==0, Diabolo just started from RESET
 	;; Start the application if:
 	;;   RXD did not remain 0 while computing CRC (R16==0)
 	;;   and CRC of application is OK (R10 == R11 == 0)
-	;;   and all bytes read were not 0xFF (R17==0)
+	;;   and not all application bytes are 0xFF (R17==0)
 	;;     (useless if reset vector is computed in crc)
 	;;
 	or	R16, R10
 	or	R16, R11
 	or	R16, R17
-#if defined XSPEED
-	brne	2f
-sapp:	SPEED0
-	rjmp	app
-2:
+#if !defined XSPEED
+	breq	app
 #else
-	breq	sapp
+	brne	init
+	SPEED0
+	rjmp	app
 #endif
 
-1:	DBG1
-
-	;; Store RAMSTART into R5:R4
-	;; 
-	ldi	R16, lo8(RAMSTART)
-	ldi	R17, hi8(RAMSTART)
-	movw	R4, R16		; R4 = RAMSTART
-
-	;; This is the first time we are here:
-	;;   synchronize the software UART
-	;;     compute bit duration in SYSHZ cycles units
-	;;     store it in R15:R14
+	;; Prepare for communication
 	;;
-sync:	DBG0
+init:	DBG1
+	ldi	R16, lo8(RAMSTART) 	; Store RAMSTART into R5:R4
+	ldi	R17, hi8(RAMSTART)	;
+	movw	R4, R16
+	DBG0
 
+	;; Synchronize the software UART
+	;;   Compute bit duration in SYSHZ cycles units
+	;;   Store it in R15:R14
+	;;
+sync:
 #include "diabolo-atmelavr-sync-10-1.sx"
 	movw	R14, R24
 
 	;; Wait end of byte and 1 more byte
-	;;   If RXD goes low, re-sync
+	;; If RXD goes low, re-sync
 	;;
 	ldi	R20, 20		; 20 bits
 2:	movw	R24, R14	;
@@ -414,84 +315,81 @@ sync:	DBG0
 	sbi	TXDPORT, BP_TXD
 	sbi	TXDDR, BP_TXD
 #endif
-	inc	R8		; Initializations done, communication can begin
 
 	;; Error state: send '!' and wait for '\n' before giving prompt
 	;;
 error:	ldi	R24, '!'
-	rcall	putbyte
-	rcall	getbyte
+	rcall	obyte
+	rcall	ibyte
 	cpi	R24, '\n'
 	brne	error
 
-	;; Main loop:
+	;; Dialog:
 	;;   send prompt '#'
 	;;   wait for a character command
 	;;   process command
 	;;
 prompt:	ldi	R24, '#'	; 0x23
-	rcall	putbyte
-	ldi	R24, 0xFF
-	mov	R10, R24	; Initialize communication CRC to 0xFFFF
-	mov	R11, R24
-	rcall	getbyte		; Get command byte
+	rcall	obyte
+	rcall	crci
+	rcall	ibyte		; Get command byte
 
 	;; 'i': identify
+	;;   CRC of application is computed before the communication is
+	;;   established and after an unknown command is received
 	;; 
 xi:	cpi	R24, 'i'
 	brne	1f
 	ldi	R24, PROTOCOL	; 0: Diabolo protocol
-	rcall	putbytecrc
+	rcall	obytecrc
 	ldi	R24, SIGNATURE0	; 1-3: device signature
-	rcall	putbytecrc
+	rcall	obytecrc
 	ldi	R24, SIGNATURE1
-	rcall	putbytecrc
+	rcall	obytecrc
 	ldi	R24, SIGNATURE2
-	rcall	putbytecrc
-	ldi	R24, NBLPAGES	; 4: number of pages for bootloader
-	rcall	putbytecrc
-	mov	R24, R3		; 5: application CRC (MSB)
-	rcall	putbytecrc
-	mov	R24, R2		; 6: application CRC (LSB)
-	rcall	putbytecrc
+	rcall	obytecrc
+	ldi	R24, NBLPAGES	; 4: number of pages for the bootloader
+	rcall	obytecrc
+	mov	R24, R3		; 5: CRC of application (MSB)
+	rcall	obytecrc
+	mov	R24, R2		; 6: CRC of application (LSB)
+	rcall	obytecrc
 	clr	R31				;  7: Fuses low byte      (0x0000)
 	clr	R30				;  8: Lock bits		  (0x0001)
 2:	ldi	R24, 1<<BP_BLBSET | 1<<BP_SPMEN	;  9: Fuses extended byte (0x0002)
 	XST	SPMCSR, R24			; 10: Fuses high byte	  (0x0003)
 	lpm	R24, Z+
-	rcall	putbytecrc
+	rcall	obytecrc
 	cpi	R30, 4
 	brne	2b
 
 	;; Send CRC before resuming to prompt '#'
-crcprompt:
-	mov	R24, R11	; CRC (msb)
-	rcall	putbyte
+	;;
+ocrc:	mov	R24, R11	; CRC (msb)
+	rcall	obyte
 	mov	R24, R10	; CRC (lsb)
-	rcall	putbyte
+	rcall	obyte
 	rjmp	prompt
-
+1:
 
 	;; Read flash page: 'f' + addr
 	;; 
-1:
 xf:	cpi	R24, 'f'
 	brne	1f
-	rcall	getaddr		; Get address in Z
+	rcall	iaddr		; Get address in Z
 	ldi	R20, PAGESIZE
 2:	lpm	R24, Z+		; Read flash byte
-	rcall	putbytecrc	; Send it
+	rcall	obytecrc	; Send it
 	dec	R20
 	brne	2b		; Until end of page
-	rjmp	crcprompt	; Send CRC and resume to prompt
+	rjmp	ocrc		; Send CRC and resume to prompt
 
 
 	;; Receive an address (Z)
 	;; 
-getaddr:
-	rcall	getbyte
+iaddr:	rcall	ibyte
 	mov	R30, R24	; LSB
-	rcall	getbyte
+	rcall	ibyte
 	mov	R31, R24	; MSB
 	ret
 
@@ -499,8 +397,8 @@ getaddr:
 	;; Get R20 bytes stored in RAM, + CRC16
 	;; Return with Z=1 if CRC is valid
 	;;
-getbuf:	movw	R28, R4		; RAMSTART
-2:	rcall	getbyte
+ibuf:	movw	R28, R4		; RAMSTART
+2:	rcall	ibyte
 	st	Y+, R24
 	dec	R20
 	brne	2b
@@ -509,22 +407,21 @@ getbuf:	movw	R28, R4		; RAMSTART
 	;; Load '\x80' (CRC error) into R24
 	;; Return with Z=1 if CRC is valid (== 0)
 	;; 
-getcrc:	rcall	getbyte		; Receive CRC (MSB first)
-	rcall	getbyte		;
+icrc:	rcall	ibyte		; Receive CRC (MSB first)
+	rcall	ibyte		;
 	mov	R24, R10	; Check CRC
 	or	R24, R11	; Z=1 if CRC is valid
 	ldi	R24, CODE_CRC	; Z unmodified
 	ret
-
+1:
 
 	;;   Write flash page: 'F' + addr + data + CRC
 	;;
-1:
 xF:	cpi	R24, 'F'
 	brne	1f
-	rcall	getaddr		; Get address and store it in Z
+	rcall	iaddr		; Get address and store it in Z
 	ldi	R20, PAGESIZE
-	rcall	getbuf		; Get R20 bytes + CRC and store them in RAM
+	rcall	ibuf		; Get R20 bytes + CRC and store them in RAM
 	brne	abort		; Abort if CRC error
 	ldi	R24, CODE_FAIL | CODE_ERS	; Return code in R24
 	;;
@@ -573,41 +470,39 @@ xF:	cpi	R24, 'F'
 	dec	R20
 	brne	2b
 	andi	R24, ~CODE_FAIL	; Error code in R24
-abort:	rcall	putbyte
+abort:	rcall	obyte
 	rjmp	prompt
-
+1:
 
 	;; Read n eeprom bytes: 'e' + addr + n
 	;; 
-1:
 xe:	cpi	R24, 'e'
 	brne	1f
-	rcall	getaddr		; Get address and store it in Z
-	rcall	getbyte		; R24 = how many bytes to read
+	rcall	iaddr		; Get address and store it in Z
+	rcall	ibyte		; R24 = how many bytes to read
 	mov	R20, R24
 2:	rcall	eerd 		; Read EEPROM and add to CRC
-	rcall	putbytecrc
+	rcall	obyte
 	dec	R20
 	brne	2b		; Until the last one
-	rjmp	crcprompt
-
+	rjmp	ocrc		; Send CRC and resume to prompt
+1:
 
 	;;   Write n eeprom bytes: 'E' + addr + n + bytes + CRC ; Code
 	;; 
-1:
 xE:	cpi	R24, 'E'
 	brne	1f
-	rcall	getaddr		; Get address and store it in Z
-	rcall	getbyte		; R24 = how many bytes to program
+	rcall	iaddr		; Get address and store it in Z
+	rcall	ibyte		; R24 = how many bytes to program
 	mov	R20, R24
 	mov	R21, R24
-	rcall	getbuf		; Load buffer
+	rcall	ibuf		; Load buffer
 	brne	abort		; Abort if error
 	;;
 	;; Program the data
 	;;
 	SPEED0			; Factory clock speed
-
+	;;
 	movw	R28, R4		; Y = RAMSTART
 2:	ldi	R24, 0		; Command: erase & write
 	XST	EECR, R24
@@ -622,24 +517,23 @@ xE:	cpi	R24, 'E'
 	adiw	R30, 1		; Next address
 	dec	R21		; Next byte
 	brne	2b		; While some remain
-
+	;;
 	SPEED1	R24		; High clock speed
 	;;
 	;; No verification
 	;;
 	rjmp	prompt
-
+1:
 
 	;; Resume to application
 	;;
-1:
 xX:	cpi	R24, 'X'
 	brne	1f
-	rcall	getcrc
+	rcall	icrc
 	breq	2f
 	rjmp	error
 2:	ldi	R24, CODE_OK
-	rcall	putbyte
+	rcall	obyte
 	;;
 	;; Deinitialize TXD pin if not the same as RXD
 	;; 
@@ -650,24 +544,14 @@ xX:	cpi	R24, 'X'
 #endif
 	;; Jump to application
 	;;
-	rjmp	sapp
-
+	rjmp	app
+1:
 
 	;; Unknown command then go re-compute application CRC
 	;; and enter error state
 	;;
-1:
-x:	rjmp	init
-
-	
-	;; Read EEPROM : R24 = *(Z++)
-	;; 
-eerd:	XST	EEARL, R30
-	XST	EEARH, R31
-	sbi	AP_EERE
-	XLD	R24, EEDR
-	adiw	R30, 1
-	ret
+x:	rcall	stat
+	rjmp	error
 
 	;; Delay R25:R24 + 6 cycles			(R24, R25)
 	;; 3 + 4 (n/4-1) + 3 + 4 = 6 + n
@@ -681,8 +565,7 @@ delay:				; [3] rcall
 	;; Receive one byte in R24			R22, R23, R24, R25
 	;; 						R10, R11, R18, R19
 	;;
-getbyte:
-	ldi 	R22, 9		; 8 data bits + 1 stop bit
+ibyte:	ldi 	R22, 9		; 8 data bits + 1 stop bit
 2:	sbis	RXDPIN, BP_RXD	;	Wait RXD == 1
 	rjmp	2b
 2:	sbic 	RXDPIN, BP_RXD	; [1/2] Wait RXD == 0
@@ -746,14 +629,13 @@ crcadd:				; [4] (call)
 	;; Send one byte (R24, destroyed)
 	;; Update CRC (initialized at 0xFFFF after prompt)
 	;;
-	;; 						R10, R11, R18, R19, R24, R25, R26, R27
+	;; 						R10, R11, R18, R19
 	;;
-putbytecrc:
+obytecrc:
 	rcall	crcadd
-
 	;;						R24, R25, R26, R27
-	;; 
-putbyte:
+	;;
+obyte:
 #if hw_id(PIN_RXD) == hw_id(PIN_TXD)
 	sbi	TXDPORT, BP_TXD	; Set RXD/TXD as output high
 	sbi	TXDDR, BP_TXD	;
@@ -786,16 +668,82 @@ dospm:  XST	SPMCSR, R21
 	spm
 2:	XSBIC	R21, SPMCSR, BP_SPMEN ; Wait end of SPM instruction
 	rjmp	2b
-	;; XLD	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN ; Re-enable RWW section
-	;; XST	SPMCSR, R21
-	;; spm
-;; 1:	XSBIC	R21, SPMCSR, BP_SPMEN ; Wait end of SPM instruction
-;; 	rjmp	1b
 	ret
 #endif
 
+
+	;; Initialize CRC and R17:R16 to 0xFF
+	;;
+crci:	ldi	R16, 0xFF
+	ldi	R17, 0xFF
+	movw	R10, R16
+	ret
+
+
+	;; Compute the status of application code
+	;; Compute CRC ignoring the trailing 0xFF bytes:
+	;;   read from the end to the beginning
+	;;   ignore reset vector code for devices without a boot section
+	;;   check the RXD pin level
+	;;
+	;; Returned values:
+	;;   R3:R2 == CRC of application
+	;;   R11:R10 == 0 if CRC of application matches CRC in EEPROM
+	;;   R16==0xFF if RXD remains 0, R16==0 if RXD not always 0
+	;;   R17==0xFF if all opcodes are 0xFF, R17=0 if not all opcodes are 0xFF
+	;;
+	;; Cycles = 48*nbytes
+	;;        = 48 ms/kB of flash code @1MHz
+	;;
+stat:	rcall	crci
+	ldi	R30, lo8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; Begin with last byte
+	ldi	R31, hi8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; of application code
+2:	lpm	R24, Z		; [3]
+	and	R17, R24	; [1]
+	cpi	R17, 0xFF	; [1]	Do not compute 0xFF bytes at end of app section
+	breq	3f		; [1]
+	clr	R17		; [1]
+	rcall	crcadd		; [30]
+3:	sbic	RXDPIN, BP_RXD	; [2]	Clear R16 if RXD == 1
+	clr	R16		; [1]
+	;;
+	DBGT
+	;;
+	sbiw	R30, 1		; [2]
+
+#if !defined HW_DEVICE_BOOTRST
+	cpi	R31, 0		; [1]	Do not compute the RESET vector for devices
+	brne	2b		; [2]   without a boot section
+	cpi	R30, 2		; [1]
+	brcc	2b		; [2]=48
+#else
+	brcc	2b		; [2]=44
+#endif
+	;; Copy application CRC in R3:R2 (used for 'i')
+	;; Check against value stored in EEPROM
+	;; 
+	movw	R2, R10
+	ldi	R30, lo8(EECRC)	; Z = address of CRC stored in EEPROM
+	ldi	R31, hi8(EECRC)
+	rcall	eerd		; Read one byte of EEPROM and update CRC
+				; Read one byte of EEPROM and update CRC
+				; Return
+
+
+	;; Read EEPROM: R24 = *(Z++)
+	;;   Bytes read are appended to CRC
+	;;
+eerd:	XST	EEARL, R30
+	XST	EEARH, R31
+	sbi	AP_EERE
+	XLD	R24, EEDR
+	adiw	R30, 1
+	rjmp	crcadd
+
+
 	;; Entry point from the application
-	;;   The application must initialize SP=RAMEND and R8=1
+	;;   The application must deinitialize all peripherals
+	;;   and load SP with RAMEND
 	;; 
 	.org	FLASHSIZE-2, 0xFF
 	rjmp	init

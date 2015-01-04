@@ -71,8 +71,8 @@ FLASHSZ = $(shell \
 ifeq (,$(PROG_SW))
 PROG_SW		=	diabolo
 #DIABOLO_OPTS	+=	--read-flash	# programming will be faster
-DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
-DIABOLO_OPTS	+=	--mcu=$(MCU)
+#DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
+#DIABOLO_OPTS	+=	--mcu=$(MCU)
 else
 PROG_SW		=	avrdude
 PROG_HW		=	usbasp

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-03 21:43:34 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-04 14:19:16 -*-
 
 
 import struct
@@ -74,6 +74,23 @@ def parse_options():
     return options
 
 
+#  Application CRC and length of application code
+#
+#    The CRC is computed from the end to the beginning of the memory, skipping
+#    the 0xFF bytes at the end.
+#    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
+#    devices without boot section.
+#
+def appstat ( data, end ):
+    crc = CRC.init()
+    for x in range(len(data)-1, end, -1):
+        if data[x] != '\xFF':
+            break
+    for i in range(x, end, -1):
+        crc = CRC.add(crc, data[i])
+    return crc, x+1
+
+
 #  Open the communication device
 #    Return the com device if OK, None otherwise
 #
@@ -103,23 +120,6 @@ def open_com(options):
     #com.set_timeout( max( 0.01, 20.0/options.combps) )
     #com.setTimeout( 40.0/options.combps )
     return com
-
-
-#  Application CRC and length of application code
-#
-#    The CRC is computed from the end to the beginning of the memory, skipping
-#    the 0xFF bytes at the end.
-#    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
-#    devices without boot section.
-#
-def appstat ( data ):
-    crc = CRC.init()
-    for x in range(len(data)-1, -1, -1):
-        if data[x] != '\xFF':
-            break
-    for i in range(x, -1, -1):
-        crc = CRC.add(crc, data[i])
-    return crc, x+1
 
 
 def run():
@@ -160,7 +160,20 @@ def run():
         # if options.mcu.lower == 'attiny84':
         #toburn = byte0 + byte1 + toburn[2:]
 
-        toburn_crc, x = appstat(toburn)
+        device = None
+        for d in Device.dtbl:
+            if d[0].lower() == options.mcu.lower():
+                device = d
+                break
+        if not device:
+            cerr("Device name?\n");
+            return
+
+        if device[5]:
+            end = -1
+        else:
+            end = 1
+        toburn_crc, x = appstat(toburn, end)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
                (options.flash_file, x, len(toburn), toburn_crc)))
 
@@ -258,7 +271,7 @@ def run():
 
     cout("  Application CRC:\n")
     cout(_("    computed: 0x%04X\n" % device.appcrc))
-    cout(_("      EEPROM: 0x%04X\n" % device.eeappcrc))
+    cout(_("      stored: 0x%04X\n" % device.eeappcrc))
     if device.protocol < 3:
         cout(_("      status: %02X\n" % device.appstat))
     cout(_("  Programmings: %d\n" % device.pgmcount))
@@ -304,7 +317,11 @@ def run():
             flash_cache = f.read()
             f.close()
 
-            flash_cache_crc, x = appstat(flash_cache)
+            if device.bootsection:
+                end = -1
+            else:
+                end = 1
+            flash_cache_crc, x = appstat(flash_cache, end)
             cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
                    (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
             if device.appcrc != flash_cache_crc:
@@ -374,7 +391,11 @@ def run():
             s += p
         device.flash = s
         t = time.time()-t
-        crc, x = appstat(device.flash[:device.bladdr])
+        if device.bootsection:
+            end = -1
+        else:
+            end = 1
+        crc, x = appstat(device.flash[:device.bladdr],end)
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(device.flash), t*1000, len(device.flash)/t, x, crc)))
 
@@ -416,7 +437,7 @@ def run():
                 col=0
             r = device.write_flash_page(a, toburn[a:a+device.pagesize])
             if r == 'T':
-                cout(_("Timeout\n"))
+                cout(_(" Timeout!\n"))
                 return
             if r == 'P':
                 redo.append(a)
@@ -473,21 +494,21 @@ def run():
         #if device.flash_changed or device.eeappcrc != crc:
             #trace()
             device.write_eeprom_appcrc(toburn_crc)
-            cout(_("Set EEPROM application CRC to 0x%04X\n" % toburn_crc))
+            cout(_("Set stored application CRC to 0x%04X\n" % toburn_crc))
             x_restart = True
 
         if x_restart:
             cout(_("Reset device's Diabolo\n"))
-            device.tx('!') # Force CRC computation
-            time.sleep(0.2)
-            device.tx('\n')
+            device.tx('!') # Send an unkown command to force CRC computation
+            #time.sleep(0.2)
+            #device.tx('\n')
             #device.rx(1)
             device.get_prompt()
             device.identify()
             # device.display()
             cout("  Application CRC:\n")
             cout(_("    computed: 0x%04X\n" % device.appcrc))
-            cout(_("      EEPROM: 0x%04X\n" % device.eeappcrc))
+            cout(_("      stored: 0x%04X\n" % device.eeappcrc))
             cout(_("  Programmings: %d\n" % device.pgmcount))
 
         if options.flash_cache and flash_cache:
@@ -499,7 +520,11 @@ def run():
         f = open(options.flash_cache, 'wb')
         f.write(flash_cache)
         f.close()
-        flash_cache_crc, x = appstat(flash_cache)
+        if device.bootsection:
+            end = -1
+        else:
+            end = 1
+        flash_cache_crc, x = appstat(flash_cache,end)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
                (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
 

@@ -48,4 +48,4 @@ show-fuses: $(OBJDIR)/$(OUT).hwa
 	fi
 
 crc:	$(OBJDIR)/$(OUT).bin
-	diabolo.py -c $(OBJDIR)/$(OUT).bin
+	diabolo.py --mcu=$(MCU) --crc $(OBJDIR)/$(OUT).bin

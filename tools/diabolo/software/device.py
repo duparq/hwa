@@ -8,7 +8,7 @@ import time
 
 
 def dbg(s):
-    #cout(s)
+    cout(s)
     pass
 
 
@@ -49,6 +49,7 @@ class Device:
         self.pagesize= None
         self.flashsize= None
         self.eepromsize = None
+        self.bootsection = None
         # self.eepromstart = None
         # self.ramstart = None
 
@@ -64,6 +65,23 @@ class Device:
         self.flash_changed = False	# Need to change CRC in EEPROM if true
 
 
+    #  Application CRC and length of application code
+    #
+    #    The CRC is computed from the end to the beginning of the memory, skipping
+    #    the 0xFF bytes at the end.
+    #    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
+    #    devices without boot section.
+    #
+    def appstat ( data ):
+        crc = CRC.init()
+        for x in range(len(data)-1, -1, -1):
+            if data[x] != '\xFF':
+                break
+        for i in range(x, -1, -1):
+            crc = CRC.add(crc, data[i])
+        return crc, x+1
+
+
     #  Receive data
     #
     def rx ( self, n ):
@@ -76,10 +94,11 @@ class Device:
         return r
 
 
-    #  Atmel devices need about 20 cycles to compute the CRC between each
+    #  Atmel devices need about 50 cycles to compute the CRC between each
     #  received byte
     #
     def tx ( self, data ):
+        self.lastchar=None
         for d in data:
             self.com.tx(d)
             time.sleep(0.000005)
@@ -174,65 +193,72 @@ class Device:
     #  Device identification
     #
     def identify(self):
+        if not self.get_prompt():
+            return None
+
+        # Give the device enough time to compute the CRC of application
+        #
         t = time.time() + 1.0
-        while time.time() <= t:
+        r = ""
+        self.lastchar = None
+        self.tx('i')
+        while self.lastchar != '#' and time.time() <= t:
+            r += self.rx(100)
 
-            r = self.execute('i', 100)
-            #trace(s2hex(r))
+        if self.lastchar != '#':
+            self.error = _('can not decode string \'%s\'' % s2hex(r))
+            self.ncmdfails += 1
+            return False
 
-            if self.lastchar=='#' and len(r)>13:
-                self.curaddr = 0
-                crc = CRC.check('i'+r[:-1])
-                if crc == 0:
-                    self.protocol = ord(r[0])
-                    if self.protocol < 2 or self.protocol > 4:
-                        self.error = _('protocol #%d not supported' % self.protocol)
-                        return False
+        crc = CRC.check('i'+r[:-1])
+        if crc != 0:
+            self.error = _('CRC = %04X' % crc)
+            return False
 
-                    signature=s2hex(r[1:4]).replace(' ','') ; r = r[4:]
-                    for d in Device.dtbl:
-                        if d[1]==signature:
-                            self.name=d[0]
-                            self.signature=d[1]
-                            self.pagesize=d[2]
-                            self.flashsize=d[3]
-                            self.eepromsize=d[4]
-                            self.bootsection=d[5]
-                            # self.eepromstart=d[5]
-                            # self.ramstart=d[6]
-                            if self.protocol < 4:
-                                self.bladdr = struct.unpack('<H', r[0:2])[0] ; r = r[2:]
-                            else:
-                                self.blpages = struct.unpack('B', r[0])[0] ; r = r[1:]
-                                self.bladdr = self.flashsize-self.blpages*self.pagesize
-                            self.appcrc = struct.unpack('>H', r[0:2])[0] ; r = r[2:]
-                            if self.protocol < 3:
-                                self.appstat = ord(r[0])
-                                self.fuses = r[1:5] ; r = r[5:]
-                            else:
-                                self.fuses = r[0:4] ; r = r[4:]
-                            self.eeappcrc = self.read_eeprom_appcrc()
-                            if self.eeappcrc is None:
-                                self.error = _('could not get EEPROM application CRC')
-                                return False
-                            self.pgmcount = self.read_eeprom_pgmcount()
-                            if self.pgmcount is None:
-                                self.error = _('could not get EEPROM programmings count')
-                                return False
-                            if self.pgmcount == 0xFFFFFFFF:
-                                self.pgmcount = 0
-                            return True
-                    self.error = _("Unknown signature %s" % signature)
+        self.protocol = ord(r[0])
+        if self.protocol < 2 or self.protocol > 4:
+            self.error = _('protocol #%d not supported' % self.protocol)
+            return False
+
+        signature=s2hex(r[1:4]).replace(' ','') ; r = r[4:]
+        for d in Device.dtbl:
+            if d[1]==signature:
+                self.name=d[0]
+                self.signature=d[1]
+                self.pagesize=d[2]
+                self.flashsize=d[3]
+                self.eepromsize=d[4]
+                self.bootsection=d[5]
+                # self.eepromstart=d[5]
+                # self.ramstart=d[6]
+                if self.protocol < 4:
+                    self.bladdr = struct.unpack('<H', r[0:2])[0] ; r = r[2:]
+                else:
+                    self.blpages = struct.unpack('B', r[0])[0] ; r = r[1:]
+                    self.bladdr = self.flashsize-self.blpages*self.pagesize
+                self.appcrc = struct.unpack('>H', r[0:2])[0] ; r = r[2:]
+                if self.protocol < 3:
+                    self.appstat = ord(r[0])
+                    self.fuses = r[1:5] ; r = r[5:]
+                else:
+                    self.fuses = r[0:4] ; r = r[4:]
+                self.eeappcrc = self.read_eeprom_appcrc()
+                if self.eeappcrc is None:
+                    self.error = _('could not get EEPROM application CRC')
                     return False
-                self.error = _('CRC = %04X' % crc)
-            #     return False
-            else:
-                self.error = _('can not decode string \'%s\'' % s2hex(r))
-            # return False
+                self.pgmcount = self.read_eeprom_pgmcount()
+                if self.pgmcount is None:
+                    self.error = _('could not get EEPROM programmings count')
+                    return False
+                if self.pgmcount == 0xFFFFFFFF:
+                    self.pgmcount = 0
+                return True
+
+        self.error = _("Unknown signature %s" % signature)
         return False
 
 
-    def set_address(self, address):
+    def rem_set_address(self, address):
         #trace( "%04X" % address )
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
@@ -466,7 +492,7 @@ class Device:
         # self.error = _('write_eeprom: failed at 0x%04X.' % self.curaddr)
 
 
-    def write_eeprom(self, address, data):
+    def rem_write_eeprom(self, address, data):
         if len(data)==0 or len(data)>255:
             return '!'
         ah = (address >>  8) & 0xFF
@@ -483,6 +509,26 @@ class Device:
         return 'T'
 
 
+    def write_eeprom(self, address, data):
+        if len(data)==0 or len(data)>255:
+            return '!'
+        if not self.get_prompt():
+            return False
+        ah = (address >>  8) & 0xFF
+        al = address & 0xFF
+        s = 'E'+chr(al)+chr(ah)+chr(len(data))+data
+        crc = CRC.check(s)
+        s += struct.pack('>H', crc)
+        self.tx(s)
+        r = ""
+        t = time.time() + 1.0
+        while time.time() < t:
+            r += self.rx(1)
+            if self.lastchar=='#':
+                return True
+        return False
+
+
     def write_eeprom_pgmcount(self, n):
         if self.write_eeprom( self.eepromsize-4, struct.pack('>L', n) ):
             self.pgmcount = n
@@ -496,14 +542,10 @@ class Device:
             return True
         return False
 
-
     def run(self):
-        s='X'
-        crc = CRC.check(s)
-        s += struct.pack('>H', crc)
-        t = time.time() + 2.0
-        while time.time() <= t:
-            r = self.execute(s, 1)
-            if r == '\0':
-                return True
-        return False
+        if not self.get_prompt():
+            return False
+        self.ncmds += 1
+        self.tx('X'+struct.pack('>H', CRC.check('X')))
+        self.rx(1)
+        return self.lastchar == '\0'
