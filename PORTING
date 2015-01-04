@@ -1,14 +1,14 @@
 
-Porting HWA to ATmega328
-========================
+Porting HWA to ATmega328/ATmega328P
+===================================
 
-Minimum declarations to be able to compile example/01-blink-soft
-----------------------------------------------------------------
+Stage 1 - Minimum declarations to be able to compile Diabolo and example/01-blink-soft
+--------------------------------------------------------------------------------------
 
 File hwa_atmega328p_1.h:
   Define HW_DEVICE_ATMEGA328P
   Define HW_DEVICE_SIGNATURE
-  Include hwa_atmega328_1.h
+  Include hwa_atmega328x_1.h
 
 File hwa_atmega328p_2.h:
   Include hwa_atmegax8_2.h
@@ -16,7 +16,15 @@ File hwa_atmega328p_2.h:
 File hwa_atmega328_1.h:
   Define HW_DEVICE_ATMEGA328
   Define HW_DEVICE_SIGNATURE
+  Include hwa_atmega328x_1.h
+  Include hwa_atmegax8_eeproms_1.h
+  Include hwa_atmegax8_flashs_1.h
 
+File hwa_atmega328_2.h:
+  Include hwa_atmegax8_2.h
+
+File hwa_atmega328x_1.h:
+  Define HW_DEVICE_ATMEGA328X
   Define device characteristics:
     HW_DEVICE_FLASH_SIZE
     HW_DEVICE_FLASH_PAGE_SIZE
@@ -29,38 +37,39 @@ File hwa_atmega328_1.h:
   Define fuse bytes HW_DEVICE_FUSE_EB, HW_DEVICE_FUSE_HB, HW_DEVICE_FUSE_LB
   Include hwa_atmegax8_1.h
 
-File hwa_atmega328_2.h:
-  Include hwa_atmegax8_2.h
-
 File hwa_atmegax8_1.h (copied from hwa_attinyx4_1.h):
   Define HW_DEVICE_ATMEGAX8
   Define fuse bits and hw_syshz from device configuration
   Include "hwa_atmelavr_1.h"
   Include "hwa_atmegax8_cores_1.h"
   Include "hwa_atmegax8_ios_1.h"
-  Define HWA_DCL as list of HWA_DCL_...
+  Define HWA_DCL void
 
 File hwa_atmegax8_2.h:
   Include hwa_atmelavr_2.h
-  Include hwa_atmegax8_cores_2.h
   Include hwa_atmegax8_ios_2.h
 
 File hwa_atmegax8_cores_1.h (copied from hwa_attinyx4_cores_1.h):
-  Define register hw_core_sreg
-  Define hwa_core_t, HWA_DCL_CORES
-  Define hw_sleep_until_irq
-
-File hwa_atmegax8_cores_2.h (copied from hwa_attinyx4_cores_2.h):
-  Define _hwa_{begin,init,solve,commit}_cores
+  Define registers:
+    hw_core_sreg
+    hw_core_mcusr
+      hw_core_porf
 
 File hwa_atmegax8_ios_1.h (copied from hwa_attinyx4_):
   Define hw_portb, hw_portc, hw_portd
   Define hw_pin_... by names
   Define hw_pin_... by numbers
-  Define hwa_io_t, HWA_DCL_IOS
+  Define struct hwa_io_t
   
 File hwa_atmegax8_ios_2.h (copied from hwa_attinyx4_):
+  Include hwa_atmelavr_ios_2.h
 
-Minimum declarations to be able to compile Diabolo
---------------------------------------------------
+File hwa_atmegax8_eeproms_1.h:
+  Define hw_eeprom0 and its registers
 
+File hwa_atmegax8_flashs_1.h:
+  Define hw_flash0 and its registers:
+    hw_flash_csr
+      hw_flash_spmie
+      ...
+      hw_flash_spmen

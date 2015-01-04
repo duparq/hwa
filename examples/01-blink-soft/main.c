@@ -8,14 +8,6 @@
  *  according to the target name and its declared configuration.
  */
 
-/* #define HW_DEVICE			attiny84, dil */
-/* #define	LED_PIN				hw_pin_3 */
-/* #define HW_DEVICE_CLK_SRC		internal_rc */
-/* #define HW_DEVICE_CLK_HZ		8000000 */
-/* #define HW_DEVICE_CLK_PSC		1 */
-/* #define HW_DEVICE_SELF_PROGRAMMING	enabled */
-/* #define HW_DEVICE_BROWNOUT_DETECTION	2500_2900mV */
-
 #define HW_DEVICE			atmega328p, 32MLF
 #define	LED_PIN				hw_pin_17
 #define HW_DEVICE_BOOT			bootloader
@@ -33,14 +25,6 @@
 
 int main ( )
 {
-  /* hwa_begin_from_reset(); */
-  /* hwa_config( hw_core0, */
-  /* 	      entering_sleep,	enabled, */
-  /* 	      sleep_mode,	idle */
-  /* 	      ); */
-  /* hwa_commit(); */
-  /* hw_sleep_until_irq(); */
-
   hw_config( LED_PIN, direction, output );
   hw_config( LED_PIN,
 	     direction, input,

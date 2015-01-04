@@ -161,17 +161,6 @@
 #  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
 #endif
 
-/* #if !defined HW_DEVICE_SELF_PROGRAMMING */
-/* #  define HW_DEVICE_SELF_PROGRAMMING			enabled */
-/* #endif */
-/* #if HW_IS(HW_DEVICE_SELF_PROGRAMMING, enabled) */
-/* #  define HW_DEVICE_SELFPRGEN				0 */
-/* #elif HW_IS(HW_DEVICE_SELF_PROGRAMMING, disabled) */
-/* #  define HW_DEVICE_SELFPRGEN				1 */
-/* #else */
-/* #  error HW_DEVICE_SELF_PROGRAMMING must be defined as `enabled` or `disabled` (default). */
-/* #endif */
-
 #if !defined HW_DEVICE_EXTERNAL_RESET
 #  define HW_DEVICE_EXTERNAL_RESET			enabled
 #endif
@@ -265,29 +254,8 @@
  */
 #include "hwa_atmelavr_1.h"
 #include "hwa_atmegax8_cores_1.h"		/* id: 100 */
-/* #include "hwa_atmegax8_pcints_1.h"		/\* id: 200 *\/ */
-#include "hwa_atmegax8_watchdogs_1.h"		/* id: 110 */
 #include "hwa_atmegax8_ios_1.h"			/* id: 300 */
-/* #include "hwa_atmegax8_counters_1.h"		/\* id: 400 *\/ */
-/* #include "hwa_atmegax8_pscs_1.h"		/\* id: 500 *\/ */
-/* #include "hwa_atmegax8_usis_1.h"		/\* id: 600 *\/ */
-/* #include "hwa_atmegax8_acmps_1.h"		/\* id: 700 *\/ */
-/* #include "hwa_atmegax8_adcs_1.h"		/\* id: 800 *\/ */
 #include "hwa_atmegax8_eeproms_1.h"		/* id: 1000 */
 #include "hwa_atmegax8_flashs_1.h"		/* id: 1100 */
 
-#if !defined __ASSEMBLER__ 
-
-#define HWA_DCL					\
-  HWA_DCL_CORES ;				\
-  HWA_DCL_IOS ;					\
-
-  /* HWA_DCL_PCINTS ;				\ */
-  /* HWA_DCL_COUNTERS ;				\ */
-  /* HWA_DCL_USIS ;				\ */
-  /* HWA_DCL_ACMPS ;				\ */
-  /* HWA_DCL_ADCS ;				\ */
-  /* HWA_DCL_WATCHDOGS ; */
-
-
-#endif /* !defined __ASSEMBLER__ */
+#define HWA_DCL

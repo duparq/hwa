@@ -10,4 +10,4 @@
 #define HW_DEVICE_ATMEGA328P
 #define HW_DEVICE_SIGNATURE				0x1E,0x95,0x0F
 
-#include "hwa_atmega328_1.h"
+#include "hwa_atmega328x_1.h"
