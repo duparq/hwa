@@ -1,6 +1,7 @@
 
 /* -*- c -*- */
 
+//#include "config.attiny84.h"
 #include "config.atmega328p.h"
 #include <hwa.h>
 

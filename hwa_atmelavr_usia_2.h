@@ -64,9 +64,9 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
   if ( mode == HW_A1(hw_usia_mode_spi_master) ) {
 #if defined HW_DEVICE_ATTINYX4
-    hwa_config(hw_pin_pa4, output);	/* USCK */
-    hwa_config(hw_pin_pa5, output);	/* DO   */
-    hwa_config(hw_pin_pa6, input);	/* DI   */
+    hwa_config(hw_pin_pa4, direction, output);	/* USCK */
+    hwa_config(hw_pin_pa5, direction, output);	/* DO   */
+    hwa_config(hw_pin_pa6, direction, input);	/* DI   */
 #else
     HWA_ERR("sorry, this configuration is not handled yet.");
 #endif

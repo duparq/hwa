@@ -58,7 +58,7 @@
 	.global		swuart_sync_10_1
 	swuart_sync_10_1 = sync_10_1
 
-	.section	.text.sync_10_1,"ax",@progbits
+	;; .section	.text.sync_10_1,"ax",@progbits
 	
 sync_10_1:
 

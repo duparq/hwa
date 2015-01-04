@@ -11,29 +11,32 @@ dasm:
 
 #	Device informations
 #
+#	HW_DEVICE is known to be valid at this stage
+#
+#	The file that has included the definition of HW_DEVICE will also provide
+#	the other definitions we are looking for
+#
 $(OBJDIR)/$(OUT).hwa: $(SOURCES)
-	for f in $^ ; do							\
-	    cat $$f >$$f.hwa.c							;\
-	    echo 'HW_DEVICE_FLASH_SIZE' >>$$f.hwa.c				;\
-	    echo 'HW_DEVICE_FUSE_EB' >>$$f.hwa.c				;\
-	    echo 'HW_DEVICE_FUSE_HB' >>$$f.hwa.c				;\
-	    echo 'HW_DEVICE_FUSE_LB' >>$$f.hwa.c				;\
-            echo 'HW_DEVICE' >>$$f.hwa.c					;\
-	    $(CC) $(CFLAGS) -E $$f.hwa.c -o $(OBJDIR)/$(OUT).hwa 2>/dev/null	;\
-	    rm $$f.hwa.c							;\
-	    HW_DEVICE=$$(tail -1 $(OBJDIR)/$(OUT).hwa)				;\
-	    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then 				\
-		echo "Found HW_DEVICE=\"$$HW_DEVICE\" in $$f"			;\
-		break								;\
-	    fi									;\
+	@echo "Building $@"
+	@mkdir -p $(OBJDIR)
+	@rm -f $@
+	@for f in $^ ; do				\
+	  cat $$f >$$f.hwa.c				;\
+	  echo 'HW_DEVICE_FLASH_SIZE' >>$$f.hwa.c	;\
+	  echo 'HW_DEVICE_FUSE_EB' >>$$f.hwa.c		;\
+	  echo 'HW_DEVICE_FUSE_HB' >>$$f.hwa.c		;\
+	  echo 'HW_DEVICE_FUSE_LB' >>$$f.hwa.c		;\
+          echo 'HW_DEVICE' >>$$f.hwa.c			;\
+	  $(CC) $(CFLAGS) -E $$f.hwa.c >$@		;\
+	  [ "$$HW_DEVICE" != "HW_DEVICE" ] && exit 0	;\
 	done
 
-hwa:	$(OBJDIR)/$(OUT).hwa
-
+#show-fuses:
 show-fuses: $(OBJDIR)/$(OUT).hwa
-	@FUSE_EB=$$(tail -4 $< | head -1 -)			;\
-	FUSE_HB=$$(tail -3 $< | head -1 -)			;\
-	FUSE_LB=$$(tail -2 $< | head -1 -)			;\
+	@[ -f $(OBJDIR)/$(OUT).hwa ] || exit 1
+	@FUSE_EB=$$(tail -4 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
+	FUSE_HB=$$(tail -3 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
+	FUSE_LB=$$(tail -2 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
 	if [ "$$FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then	\
 	    echo FUSE_EB=$$(printf "0x%02X" $$(($$FUSE_EB)))	;\
 	fi							;\

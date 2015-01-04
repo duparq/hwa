@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2014-12-29 16:15:31 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-03 21:43:34 -*-
 
 
 import struct
@@ -65,6 +65,9 @@ def parse_options():
     parser.add_option("-r", "--reset-only", action="store_true",
                       default=False, dest="reset",
                       help="reset the device with RTS and exit")
+    parser.add_option("-t", "--test", action="store_true",
+                      default=False, dest="test",
+                      help="test command")
     (options, args) = parser.parse_args()
     if len(args) == 1:
         options.flash_file = args[0]
@@ -102,21 +105,21 @@ def open_com(options):
     return com
 
 
-#  Application CRC and length
+#  Application CRC and length of application code
 #
 #    The CRC is computed from the end to the beginning of the memory, skipping
-#    the 0xFF bytes at the end and the first 2 bytes (jump to diabolo).
+#    the 0xFF bytes at the end.
+#    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
+#    devices without boot section.
 #
 def appstat ( data ):
     crc = CRC.init()
     for x in range(len(data)-1, -1, -1):
         if data[x] != '\xFF':
             break
-    for i in range(x, 1, -1):
+    for i in range(x, -1, -1):
         crc = CRC.add(crc, data[i])
-    # x += 1
-    x -= 1
-    return crc, x
+    return crc, x+1
 
 
 def run():
@@ -125,6 +128,12 @@ def run():
 
     toburn = None
     options = parse_options()
+
+    #  Check that the target name is provided
+    #
+    # if not options.mcu:
+    #     cerr(_("Device name must be provided with -m or --mcu.\n"))
+    #     return
 
     #  Load file to burn into flash if any
     #
@@ -144,11 +153,18 @@ def run():
             cout(_("%s is void.\n" % options.flash_file))
             return
 
+        #  Overwrite the RESET vector of devices that do not have a
+        #  bootloader section with a rjmp to Diabolo
+        #    BFCE
+        #
+        # if options.mcu.lower == 'attiny84':
+        #toburn = byte0 + byte1 + toburn[2:]
+
         toburn_crc, x = appstat(toburn)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
-               (options.flash_file, x+2, len(toburn), toburn_crc)))
+               (options.flash_file, x, len(toburn), toburn_crc)))
 
-    #  Stop here if just for CRC
+    #  Stop here if Diabolo was launched only for computing the CRC
     #
     if options.crc:
         return
@@ -235,9 +251,9 @@ def run():
     cout(_("  Protocol: %d\n" % device.protocol))
     cout(_("  Signature: %s \"%s\"\n" % (device.signature, device.name)))
     cout(_("  Bootloader: 0x%04X (%d bytes for application)\n" % (device.bladdr, device.bladdr)))
-    cout(_("  Fuses low byte: 0x%02X\n" % ord(device.fuses[0])))
-    cout(_("  Fuses high byte: 0x%02X\n" % ord(device.fuses[3])))
     cout(_("  Fuses ext byte: 0x%02X\n" % ord(device.fuses[2])))
+    cout(_("  Fuses high byte: 0x%02X\n" % ord(device.fuses[3])))
+    cout(_("  Fuses low byte: 0x%02X\n" % ord(device.fuses[0])))
     cout(_("  Fuses lock bits: 0x%02X\n" % ord(device.fuses[1])))
 
     cout("  Application CRC:\n")
@@ -247,7 +263,7 @@ def run():
         cout(_("      status: %02X\n" % device.appstat))
     cout(_("  Programmings: %d\n" % device.pgmcount))
 
-    if not device.protocol in [2,3]:
+    if not device.protocol in [2,3,4]:
         cout(_("\nProtocol not supported\n"))
         return
 
@@ -258,6 +274,23 @@ def run():
             cerr(_("Target mismatch: connected to %s, %s expected.\n" %
                    (device.name, options.mcu)))
             return
+
+    #  Override RESET vector for device without bootsection
+    #    RJMP opcode: 1111 aaaa aaaa aaaa = 0xC000 + Addr
+    #
+    if toburn and not device.bootsection:
+        addr = device.bladdr/2 - 1
+        if addr > 0x0FFF:
+            cerr(_("Can not set RESET vector opcode.\n"))
+            return
+        opcode = 0xC000 + addr
+        byte0 = opcode & 0xFF
+        byte1 = opcode >> 8
+        cout(_("Device without bootsection, RESET vector opcode: %02x %02x\n")
+             % (byte0, byte1))
+        toburn = chr(byte0)+chr(byte1)+toburn[2:]
+        #cout(hexdump(0, toburn)+'\n')
+        #return
 
     #  Load cache for flash data if wanted
     #
@@ -273,7 +306,7 @@ def run():
 
             flash_cache_crc, x = appstat(flash_cache)
             cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
-                   (options.flash_cache, x+2, len(flash_cache), flash_cache_crc)))
+                   (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
             if device.appcrc != flash_cache_crc:
                 cerr(_("flash-cache and application CRC do not match!"))
                 options.read_flash = True
@@ -345,15 +378,15 @@ def run():
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(device.flash), t*1000, len(device.flash)/t, x, crc)))
 
+        if options.hexdump:
+            cout(hexdump(0,device.flash)+"\n")
+
         if crc != device.appcrc:
-            cout(_("Application CRC mismatch!\n"))
-            return
+            cout(_("WARNING: Application CRC mismatch!\n"))
+            #return
 
         if options.flash_cache:
             flash_cache = device.flash
-
-        if options.hexdump:
-            cout(hexdump(0,device.flash)+"\n")
     else:
         device.flash = flash_cache
 
@@ -468,7 +501,21 @@ def run():
         f.close()
         flash_cache_crc, x = appstat(flash_cache)
         cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
-               (options.flash_cache, x+2, len(flash_cache), flash_cache_crc)))
+               (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
+
+
+    #  Test command
+    #
+    if options.test:
+        data = ""
+        for i in range(device.pagesize):
+            data+=chr(i)
+        # cout("Writing:\n")
+        # r = device.write_flash_page(0x800, data);
+        # cout("Result: %s\n" % r)
+
+        cout("Writing eeprom:\n")
+        device.write_eeprom(0, data[:4]);
 
     #  Start application
     #

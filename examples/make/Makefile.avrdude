@@ -21,8 +21,10 @@ erase:
 #
 # burn: $(OBJDIR)/$(OUT).hex
 # 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
-burn: $(OBJDIR)/$(OUT).bin
-	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
+# burn: $(OBJDIR)/$(OUT).bin
+# 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
+burn: $(OBJDIR)/$(OUT).elf
+	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:w:$^
 
 #  Vérifie la programmation
 #

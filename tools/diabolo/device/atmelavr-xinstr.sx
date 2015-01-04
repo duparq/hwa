@@ -116,6 +116,7 @@
 	.endif
 	.endm
 
+
 	;; XSBIC
 	;; 
 	.macro XSBIC reg a b
@@ -124,5 +125,15 @@
 	.else
 	XLD	\reg, \a
 	sbrc	\reg, \b
+	.endif
+	.endm
+
+	;; XJMP
+	;; 
+	.macro XJMP addr
+	.if \addr <= 4096
+	rjmp	\addr
+	.else
+	jmp	\addr
 	.endif
 	.endm

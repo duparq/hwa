@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2014-08-14 12:11:07 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-02 15:48:34 -*-
 
 
 def rem_hexdump(address, data):
@@ -40,6 +40,8 @@ def hexdump(address, data):
 
 
 def s2hex(data):
+    if data is None:
+        return ""
     s = ""
     for c in data:
         s += ' %02X' % ord(c)

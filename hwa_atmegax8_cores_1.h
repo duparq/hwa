@@ -18,6 +18,12 @@
 /*	Class regs		class, rw, ra, rwm, rfm
  */
 #define hw_core_sreg		crg, 8, 0x5F, 0xFF, 0x00
+#if defined HW_DEVICE_ATMEGA48
+#  define hw_core_sph		crg, 8, 0x5E, 0x03, 0x00
+#else
+#  define hw_core_sph		crg, 8, 0x5E, 0x07, 0x00
+#endif
+#define hw_core_spl		crg, 8, 0x5D, 0xFF, 0x00
 #define hw_core_smcr		crg, 8, 0x53, 0x0F, 0x00
 /* #define hw_core_gimsk		crg, 8, 0x5B, 0x70, 0x00 */
 /* #define hw_core_gifr		crg, 8, 0x5A, 0x70, 0x70 */

@@ -17,11 +17,11 @@
 #include "hwa_attinyx4_cores_1.h"		/* id: 100 */
 #include "hwa_attinyx4_pcints_1.h"		/* id: 200 */
 #include "hwa_attinyx4_ios_1.h"			/* id: 300 */
-#include "hwa_attinyx4_counters_1.h"		/* id: 400 */
-#include "hwa_attinyx4_pscs_1.h"		/* id: 500 */
-#include "hwa_attinyx4_usis_1.h"		/* id: 600 */
-#include "hwa_attinyx4_acmps_1.h"		/* id: 700 */
-#include "hwa_attinyx4_adcs_1.h"		/* id: 800 */
+/* #include "hwa_attinyx4_counters_1.h"		/\* id: 400 *\/ */
+/* #include "hwa_attinyx4_pscs_1.h"		/\* id: 500 *\/ */
+/* #include "hwa_attinyx4_usis_1.h"		/\* id: 600 *\/ */
+/* #include "hwa_attinyx4_acmps_1.h"		/\* id: 700 *\/ */
+/* #include "hwa_attinyx4_adcs_1.h"		/\* id: 800 *\/ */
 #include "hwa_attinyx4_watchdogs_1.h"		/* id: 900 */
 #include "hwa_attinyx4_eeproms_1.h"		/* id: 1000 */
 #include "hwa_attinyx4_flashs_1.h"		/* id: 1100 */
@@ -258,7 +258,7 @@
 
 
 #define HW_DEVICE_FUSE_EB			\
-  HW_DEVICE_SELFPRGEN
+  0xFE | HW_DEVICE_SELFPRGEN
 
 #define HW_DEVICE_FUSE_HB			\
   HW_DEVICE_RSTDISBL<<7 |			\
@@ -282,11 +282,12 @@
   HWA_DCL_CORES ;				\
   HWA_DCL_IOS ;					\
   HWA_DCL_PCINTS ;				\
-  HWA_DCL_COUNTERS ;				\
-  HWA_DCL_USIS ;				\
-  HWA_DCL_ACMPS ;				\
-  HWA_DCL_ADCS ;				\
   HWA_DCL_WATCHDOGS ;
+
+  /* HWA_DCL_COUNTERS ;				\ */
+  /* HWA_DCL_USIS ;				\ */
+  /* HWA_DCL_ACMPS ;				\ */
+  /* HWA_DCL_ADCS ;				\ */
 
 #if 1
 #define hw_sleep_until_irq()						\

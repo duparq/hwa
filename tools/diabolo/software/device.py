@@ -21,16 +21,16 @@ class Device:
 
     #  Known devices
     #
-    #  Name, signature, pagesize, flashsize, eepromsize, eepromstart, ramstart
+    #  Name, signature, pagesize, flashsize, eepromsize, bootsection
     #
     dtbl = (
-        ( 'ATtiny44',   '1E9207',  64,  4096,  256, 0x00810000, 0x00800060 ),
-        ( 'ATtiny84',   '1E930C',  64,  8192,  512, 0x00810000, 0x00800060 ),
-        ( 'ATtiny45',   '1E9206',  64,  4096,  256, 0x00810000, 0x00800060 ),
-        ( 'ATmega328P', '1E950F', 128, 32768, 1024, 0x00810000, 0x00800100 ),
-        ( 'ATmega48',   '1E9205',  64,  4096,  256, 0x00810000, 0x00800100 ),
-        ( 'ATmega48P',  '1E920A',  64,  4096,  256, 0x00810000, 0x00800100 ),
-        ( 'ATtiny85',   '1E920B',  64,  8192,  512, 0x00810000, 0x00800060 ),
+        ( 'ATtiny44',   '1E9207',  64,  4096,  256, False ),
+        ( 'ATtiny84',   '1E930C',  64,  8192,  512, False ),
+        ( 'ATtiny45',   '1E9206',  64,  4096,  256, False ),
+        ( 'ATmega328P', '1E950F', 128, 32768, 1024, True ),
+        ( 'ATmega48',   '1E9205',  64,  4096,  256, False ),
+        ( 'ATmega48P',  '1E920A',  64,  4096,  256, False ),
+        ( 'ATtiny85',   '1E920B',  64,  8192,  512, False ),
         )
 
     #  Create the new device
@@ -49,8 +49,8 @@ class Device:
         self.pagesize= None
         self.flashsize= None
         self.eepromsize = None
-        self.eepromstart = None
-        self.ramstart = None
+        # self.eepromstart = None
+        # self.ramstart = None
 
         self.protocol = 0		# Bootloader protocol
         self.bladdr = 0			# Bootloader address
@@ -185,11 +185,11 @@ class Device:
                 crc = CRC.check('i'+r[:-1])
                 if crc == 0:
                     self.protocol = ord(r[0])
-                    if self.protocol != 2 and self.protocol != 3:
-                        self.error = _('protocol #%d not supported' % protocol)
+                    if self.protocol < 2 or self.protocol > 4:
+                        self.error = _('protocol #%d not supported' % self.protocol)
                         return False
 
-                    signature=s2hex(r[1:4]).replace(' ','')
+                    signature=s2hex(r[1:4]).replace(' ','') ; r = r[4:]
                     for d in Device.dtbl:
                         if d[1]==signature:
                             self.name=d[0]
@@ -197,15 +197,20 @@ class Device:
                             self.pagesize=d[2]
                             self.flashsize=d[3]
                             self.eepromsize=d[4]
-                            self.eepromstart=d[5]
-                            self.ramstart=d[6]
-                            self.bladdr = struct.unpack('<H', r[4:6])[0]
-                            self.appcrc = struct.unpack('>H', r[6:8])[0]
-                            if self.protocol < 3:
-                                self.appstat = ord(r[8])
-                                self.fuses = r[9:13]
+                            self.bootsection=d[5]
+                            # self.eepromstart=d[5]
+                            # self.ramstart=d[6]
+                            if self.protocol < 4:
+                                self.bladdr = struct.unpack('<H', r[0:2])[0] ; r = r[2:]
                             else:
-                                self.fuses = r[8:12]
+                                self.blpages = struct.unpack('B', r[0])[0] ; r = r[1:]
+                                self.bladdr = self.flashsize-self.blpages*self.pagesize
+                            self.appcrc = struct.unpack('>H', r[0:2])[0] ; r = r[2:]
+                            if self.protocol < 3:
+                                self.appstat = ord(r[0])
+                                self.fuses = r[1:5] ; r = r[5:]
+                            else:
+                                self.fuses = r[0:4] ; r = r[4:]
                             self.eeappcrc = self.read_eeprom_appcrc()
                             if self.eeappcrc is None:
                                 self.error = _('could not get EEPROM application CRC')
@@ -246,35 +251,52 @@ class Device:
     def read_flash_page(self, address):
         t = time.time() + 1.0
         while time.time() <= t:
-            if self.curaddr != address:
-                self.set_address(address)
-            else:
-                r = self.execute('f', self.pagesize+2+1)
-                if len(r)==self.pagesize+2+1 and r[-1]=='#':
-                    self.curaddr += self.pagesize
-                    if CRC.check('f'+r[:-1]) == 0:
-                        return r[:-3]
+            if self.protocol < 3:
+                if self.curaddr != address:
+                    self.set_address(address)
                 else:
-                    self.curaddr = -1
+                    r = self.execute('f', self.pagesize+2+1)
+                    if len(r)==self.pagesize+2+1 and r[-1]=='#':
+                        self.curaddr += self.pagesize
+                        if CRC.check('f'+r[:-1]) == 0:
+                            return r[:-3]
+                    else:
+                        self.curaddr = -1
+            else:
+                ah = (address >>  8) & 0xFF
+                al = address & 0xFF
+                s = 'f'+chr(al)+chr(ah)
+                r = self.execute(s, self.pagesize+2+1)
+                if len(r)==self.pagesize+2+1 and r[-1]=='#':
+                    if CRC.check(s+r[:-1]) == 0:
+                        return r[:-3]
         return None
 
 
     def read_eeprom(self, address, n):
         t = time.time() + 1.0
         while time.time() <= t:
-            if self.curaddr != address:
-                self.set_address(address)
+            if self.protocol < 3:
+                if self.curaddr != address:
+                    self.set_address(address)
+                else:
+                    s = 'e'+chr(n)
+                    r = self.execute( s, n+3 )
+                    if len(r)==n+3 and r[-1]=='#':
+                        self.curaddr += n
+                        if CRC.check(s+r[:-1]) == 0:
+                            return r[0:-3]
+                    else:
+                        self.curaddr = -1
             else:
-                s = 'e'+chr(n)
+                ah = (address >>  8) & 0xFF
+                al = address & 0xFF
+                s = 'e'+chr(al)+chr(ah)+chr(n)
                 r = self.execute( s, n+3 )
                 if len(r)==n+3 and r[-1]=='#':
-                    self.curaddr += n
                     if CRC.check(s+r[:-1]) == 0:
                         return r[0:-3]
-                else:
-                    self.curaddr = -1
         return None
-
 
     def read_eeprom_appcrc(self):
         crc = self.read_eeprom( self.eepromsize-8, 2 )
@@ -290,7 +312,7 @@ class Device:
         return pcount
 
 
-    def write_flash_page(self, address, data):
+    def write_flash_page_p3(self, address, data):
         if len(data) != self.pagesize:
             self.error = _('got %d bytes of data for flash page write, expected %d' %
                            (len(data), self.pagesize))
@@ -365,8 +387,66 @@ class Device:
         trace("Timeout")
         return 'T'
 
+    def write_flash_page(self, address, data):
+        if self.protocol < 4:
+            return self.write_flash_page_p3(address, data)
 
-    def write_eeprom(self, address, data):
+        if address >= self.bladdr:
+            return 'A'
+
+        if address % self.pagesize != 0:
+            return 'A'
+
+        if len(data) != self.pagesize:
+            self.error = _('got %d bytes of data for flash page write, expected %d' %
+                           (len(data), self.pagesize))
+            return 'L'
+
+        #  Do not write a page known to be left unchanged
+        #
+        if self.flash and self.flash[address:address+self.pagesize] == data:
+            return '-'
+
+        ah = (address >>  8) & 0xFF
+        al = address & 0xFF
+        s = 'F'+chr(al)+chr(ah)+data
+        crc = CRC.check(s)
+        s += struct.pack('>H', crc)
+
+        t = time.time() + 1.0
+        while time.time() < t:
+            r = self.execute(s, 1+1)
+            if len(r)==2 and r[-1]=='#':
+                x = ord(r[-2])
+                if x & 0xF0 == 0:
+                    #
+                    #  No error, update the known content of the flash
+                    #
+                    if self.flash:
+                        self.flash = self.flash[:address] \
+                            + data \
+                            + self.flash[address+self.pagesize:]
+                    #
+                    #  Return a code of what has been done
+                    #
+                    self.flash_changed = True
+                    if x == 0x01:
+                        return '*'	# Erased
+                    if x == 0x02:
+                        return 'w'	# Programmed
+                    if x == 0x03:
+                        return 'W'	# Erased + Programmed
+                trace("Code: %02X" % x)
+                if x == 0x80:
+                    return 'C'		# CRC error
+                if x & 0x10:
+                    return '!'		# Programming failed
+                return '<%02X>' % x	# Unknown error
+        trace("Timeout")
+        return 'T'
+
+
+    def write_eeprom_p3(self, address, data):
         s = 'E'+chr(len(data))+data
         crc = CRC.check(s)
         s += struct.pack('>H', crc)
@@ -384,6 +464,23 @@ class Device:
                     #     return True
         return False
         # self.error = _('write_eeprom: failed at 0x%04X.' % self.curaddr)
+
+
+    def write_eeprom(self, address, data):
+        if len(data)==0 or len(data)>255:
+            return '!'
+        ah = (address >>  8) & 0xFF
+        al = address & 0xFF
+        s = 'E'+chr(al)+chr(ah)+chr(len(data))+data
+        crc = CRC.check(s)
+        s += struct.pack('>H', crc)
+
+        t = time.time() + 1.0
+        while time.time() < t:
+            r = self.execute(s, 1)
+            if len(r)==1 and r[-1]=='#':
+                return ''
+        return 'T'
 
 
     def write_eeprom_pgmcount(self, n):
@@ -407,6 +504,6 @@ class Device:
         t = time.time() + 2.0
         while time.time() <= t:
             r = self.execute(s, 1)
-            if r == "#":
+            if r == '\0':
                 return True
         return False

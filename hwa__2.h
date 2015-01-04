@@ -14,7 +14,7 @@
  *  Use hw/hwa_config(...) to configure an instance of a class that supports
  *  this method.
  */
-#define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__)
+#define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
 /** @copydoc hw_config(...) */
 #define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__)
 
@@ -92,7 +92,7 @@
  *
  *  Method for classes that support toggling, such as bits or ios.
  */
-#define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__)
+#define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__,)
 #define hwa_toggle(...)			HW_MTHD(hwa_toggle, __VA_ARGS__)
 
 

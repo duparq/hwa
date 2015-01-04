@@ -25,9 +25,12 @@
  */
 #define hw_flash_csr		crg,  8, 0x57, 0x1F, 0x00
 
-#define hw_flash_rsig		cb1, csr, 1, 5
-#define hw_flash_ctpb		cb1, csr, 1, 4
-#define hw_flash_rflb		cb1, csr, 1, 3
+#define hw_flash_sigrd		cb1, csr, 1, 5
+#define hw_flash_rsig		cb1, csr, 1, 5	/* old definition */
+#define hw_flash_rwwsre		cb1, csr, 1, 4
+#define hw_flash_ctpb		cb1, csr, 1, 4	/* old definition */
+#define hw_flash_blbset		cb1, csr, 1, 3
+#define hw_flash_rflb		cb1, csr, 1, 3	/* old definition */
 #define hw_flash_pgwrt		cb1, csr, 1, 2
 #define hw_flash_pgers		cb1, csr, 1, 1
 #define hw_flash_spmen		cb1, csr, 1, 0

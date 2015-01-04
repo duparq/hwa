@@ -24,6 +24,8 @@
 /*	Class regs		class, rw, ra, rwm, rfm
  */
 #define hw_core_sreg		crg, 8, 0x5F, 0xFF, 0x00
+#define hw_core_sph		crg, 8, 0x5E, 0x03, 0x00
+#define hw_core_spl		crg, 8, 0x5D, 0xFF, 0x00
 #define hw_core_gimsk		crg, 8, 0x5B, 0x70, 0x00
 #define hw_core_gifr		crg, 8, 0x5A, 0x70, 0x70
 #define hw_core_mcucr		crg, 8, 0x55, 0xFF, 0x00
@@ -40,6 +42,11 @@
 #define hw_core_sm		cb1, mcucr, 2, 3
 #define hw_core_bodse		cb1, mcucr, 1, 2
 #define hw_core_isc0		cb1, mcucr, 2, 0
+
+#define hw_core_wdrf		cb1, mcusr, 1, 3
+#define hw_core_borf		cb1, mcusr, 1, 2
+#define hw_core_extrf		cb1, mcusr, 1, 1
+#define hw_core_porf		cb1, mcusr, 1, 0
 
 #define hw_core_int0		cb1, gimsk, 1, 6
 #define hw_core_pcie1		cb1, gimsk, 1, 5

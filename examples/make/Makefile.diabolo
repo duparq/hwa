@@ -13,7 +13,10 @@ burn:	$(OBJDIR)/$(OUT).bin
 diabolo:
 	diabolo.py $(DIABOLO_OPTS)
 
+reset:
+	diabolo.py --reset
+
 # crc:	$(OBJDIR)/$(OUT).bin
 # 	diabolo.py -c $(OBJDIR)/$(OUT).bin
 
-.PHONY: erase burn diabolo crc
+.PHONY: erase burn diabolo reset

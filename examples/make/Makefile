@@ -26,29 +26,29 @@ OUT		= out
 OBJDIR		= build
 
 
+#	Check that we have the list of source files
+#
 ifeq (,$(SOURCES))
 $(error Please define SOURCES)
 endif
 
-#	Retrieve target device informations from source files
+
+#	Retrieve the name of the target device from source files
 #
 ifeq (,$(MCU))
   MCU = $(shell								\
   mkdir -p $(OBJDIR)							;\
   for f in $(SOURCES) ; do						\
-    DST=$$f.hwa.c							;\
-    cat $$f >"$$DST"							;\
-    echo 'HW_DEVICE_FLASH_SIZE' >>"$$DST"				;\
-    echo 'HW_DEVICE_FUSE_EB' >>"$$DST"					;\
-    echo 'HW_DEVICE_FUSE_HB' >>"$$DST"					;\
-    echo 'HW_DEVICE_FUSE_LB' >>"$$DST"					;\
-    echo 'HW_DEVICE' >>"$$DST"						;\
-    $(CC) -I$(HWA) -E $$DST >$(OBJDIR)/$(OUT).hwa 2>/dev/null		;\
-    rm "$$DST" >/dev/null 2>&1					;\
-    HW_DEVICE=$$(tail -1 $(OBJDIR)/$(OUT).hwa 2>/dev/null)		;\
+    SRC="$$f.hwa.c"							;\
+    DST="$$f.hwa.x"							;\
+    cat "$$f" >"$$SRC"							;\
+    echo 'HW_DEVICE' >>"$$SRC"						;\
+    $(CC) -I$(HWA) -E "$$SRC" >"$$DST" 2>/dev/null			;\
+    HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)				;\
+    rm -f "$$SRC" "$$DST"						;\
     if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then				\
       echo $$HW_DEVICE							;\
-      break								;\
+      exit 0								;\
     fi									;\
   done)
   comma := ,
