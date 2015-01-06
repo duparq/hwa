@@ -17,8 +17,6 @@ File hwa_atmega328_1.h:
   Define HW_DEVICE_ATMEGA328
   Define HW_DEVICE_SIGNATURE
   Include hwa_atmega328x_1.h
-  Include hwa_atmegax8_eeproms_1.h
-  Include hwa_atmegax8_flashs_1.h
 
 File hwa_atmega328_2.h:
   Include hwa_atmegax8_2.h
@@ -40,9 +38,11 @@ File hwa_atmega328x_1.h:
 File hwa_atmegax8_1.h (copied from hwa_attinyx4_1.h):
   Define HW_DEVICE_ATMEGAX8
   Define fuse bits and hw_syshz from device configuration
-  Include "hwa_atmelavr_1.h"
-  Include "hwa_atmegax8_cores_1.h"
-  Include "hwa_atmegax8_ios_1.h"
+  Include hwa_atmelavr_1.h
+  Include hwa_atmegax8_cores_1.h
+  Include hwa_atmegax8_ios_1.h
+  Include hwa_atmegax8_eeproms_1.h
+  Include hwa_atmegax8_flashs_1.h
   Define HWA_DCL void
 
 File hwa_atmegax8_2.h:
