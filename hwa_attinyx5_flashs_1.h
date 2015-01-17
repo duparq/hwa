@@ -5,11 +5,6 @@
  */
 
 
-/*
- *	ATtinyX4 flash memory
- */
-
-
 /*	Class & methods
  */
 #define hw_class_flash
@@ -34,7 +29,3 @@
 #define hw_flash_pgwrt		cb1, csr, 1, 2
 #define hw_flash_pgers		cb1, csr, 1, 1
 #define hw_flash_spmen		cb1, csr, 1, 0
-
-/*
- *	No HWA declaration.
- */

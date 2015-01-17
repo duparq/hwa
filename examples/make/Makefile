@@ -29,34 +29,37 @@ OBJDIR		= build
 #	Check that we have the list of source files
 #
 ifeq (,$(SOURCES))
-$(error Please define SOURCES)
+  $(error Please define SOURCES)
 endif
 
 
 #	Retrieve the name of the target device from source files
 #
 ifeq (,$(MCU))
-  MCU = $(shell								\
-  mkdir -p $(OBJDIR)							;\
-  for f in $(SOURCES) ; do						\
-    SRC="$$f.hwa.c"							;\
-    DST="$$f.hwa.x"							;\
-    cat "$$f" >"$$SRC"							;\
-    echo 'HW_DEVICE' >>"$$SRC"						;\
-    $(CC) -I$(HWA) -E "$$SRC" >"$$DST" 2>/dev/null			;\
-    HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)				;\
-    rm -f "$$SRC" "$$DST"						;\
-    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then				\
-      echo $$HW_DEVICE							;\
-      exit 0								;\
-    fi									;\
+  MCU = $(shell							\
+  mkdir -p $(OBJDIR)						;\
+  for f in $(SOURCES) ; do					\
+    SRC=".hwa.c"						;\
+    DST=".hwa.1"						;\
+    ERR=".hwa.2"						;\
+    cat "$$f" >"$$SRC"						;\
+    echo 'HW_DEVICE' >>"$$SRC"					;\
+    $(CC) -I$(HWA) -E "$$SRC" >"$$DST" || exit 1		;\
+    HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)			;\
+    rm -f "$$SRC" "$$DST" "$$ERR"				;\
+    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then			\
+      echo $$HW_DEVICE						;\
+      exit 0							;\
+    fi								;\
   done)
-  comma := ,
-  MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
+  ifeq (,$(wildcard .hwa.2))
+    comma := ,
+    MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
+  endif
 endif
 
 ifeq (,$(MCU))
-$(error Please define HW_DEVICE in one of the source files)
+  $(error HW_DEVICE not defined or preprocessing errors)
 endif
 
 FLASHSZ = $(shell \

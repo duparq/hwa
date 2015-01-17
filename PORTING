@@ -5,6 +5,9 @@ Porting HWA to ATmega328/ATmega328P
 Stage 1 - Minimum declarations to be able to compile Diabolo and example/01-blink-soft
 --------------------------------------------------------------------------------------
 
+File make/Makefile.atmega328
+File make/Makefile.atmega328p
+
 File hwa_atmega328p_1.h:
   Define HW_DEVICE_ATMEGA328P
   Define HW_DEVICE_SIGNATURE

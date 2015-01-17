@@ -2,6 +2,6 @@
 #	-*- makefile -*-
 
 PARTNO	=	t85
-FLASHSZ	=	0x2000
 
-include Makefile.attinyX5
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(CWD)Makefile.atmelavr

@@ -326,23 +326,23 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
  * \hideinitializer
  */
 
-HW_INLINE void _hwa_begin_all(hwa_t*) ;		/* defined in device-specific files */
-HW_INLINE void _hwa_init_all(hwa_t*) ;		/* defined in device-specific files */
+//HW_INLINE void _hwa_begin_all(hwa_t*) ;		/* defined in device-specific files */
+//HW_INLINE void _hwa_init_all(hwa_t*) ;		/* defined in device-specific files */
 
-HW_INLINE void __hwa_begin( hwa_t *hwa )
-{
-  if (0) { HWA_ERR("you may have forgotten to turn optimizations on."); }
-  _hwa_begin_all(hwa) ;
-}
+/* HW_INLINE void __hwa_begin( hwa_t *hwa ) */
+/* { */
+/*   if (0) { HWA_ERR("you may have forgotten to turn optimizations on."); } */
+/*   _hwa_begin_all(hwa) ; */
+/* } */
 
 
 #define hwa_begin()							\
-  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; __hwa_begin(hwa) ;		\
+  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; _hwa_begin(hwa) ;		\
   uint8_t hwa_commit = 0 /* Will warn if hwa_commit() is not called */
 
 
 #define hwa_begin_from_reset()						\
-  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; __hwa_begin(hwa) ;		\
+  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; _hwa_begin(hwa) ;		\
   uint8_t hwa_commit = 0 ; /* Will warn if hwa_commit() is not called */ \
   _hwa_init_all(hwa) ; hwa_nocommit()
 

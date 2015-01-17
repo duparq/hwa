@@ -65,9 +65,9 @@
 
 /*	Pins by numbers
  */
-#define hw_is_dil_dil		, 1
+#define hw_is_14pdip_14pdip		, 1
 
-#if HW_IS(dil,HW_A1(HW_DEVICE))
+#if HW_IS(14pdip,HW_A1(HW_DEVICE))
 #
 #  define hw_pin_2			hw_pin_pb0
 #  define hw_pin_3			hw_pin_pb1
@@ -82,6 +82,8 @@
 #  define hw_pin_12			hw_pin_pa1
 #  define hw_pin_13			hw_pin_pa0
 #
+#elif !HW_IS(,HW_A1(HW_DEVICE))
+#  error Package type not recognized
 #endif
 
 

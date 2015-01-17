@@ -31,7 +31,7 @@
 	;;   Use R22/R23 instead of R24/R25 for delay -> R24 holds the byte to tx/rx
 
 
-#if !defined HW_DEVICE_ATTINYX4 && !defined HW_DEVICE_ATMEGAX8
+#if !defined HW_DEVICE_ATTINYX4 && !defined HW_DEVICE_ATMEGAX8 && !defined HW_DEVICE_ATTINYX5
 #  error Device is not supported
 #endif
 
