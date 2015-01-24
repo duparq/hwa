@@ -10,11 +10,6 @@
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
-/**\brief	Reset watchdog timer
- */
-#define _hw_clear_wdog(c,n,i,a)		__asm__( "wdr":: )
-
-
 /*	Enable/disable interrupts
  */
 #define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)

@@ -92,6 +92,9 @@ size:	$(OBJDIR)/$(OUT).elf
 	$(SIZE) $^
 	@diabolo.py --crc $(OBJDIR)/$(OUT).bin | cut -d',' -f3
 
+
+#	Size of binary output file
+#
 ifneq ($(strip $(FLASHSZ)),)
   PADTO = --pad-to $(FLASHSZ)
 else
@@ -119,7 +122,7 @@ endif
 
 #	Compile and link
 #
-$(OBJECTS): | $(OBJDIR)		# Create directory if needed
+$(OBJECTS): | $(OBJDIR) $(OBJDIR)/$(OUT).hwa		# Create directory if needed
 
 $(OBJDIR):
 	@mkdir $(OBJDIR)
@@ -176,6 +179,7 @@ clean:
 		-name '*~' 		\
 		-o -name '*.cp.*'	\
 		-o -name '*.pyc'	\
+		-o -name '*.hwa.c'	\
 		')' -exec rm {} ';'
 
 

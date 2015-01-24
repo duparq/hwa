@@ -62,13 +62,6 @@ ifeq (,$(MCU))
   $(error HW_DEVICE not defined or preprocessing errors)
 endif
 
-FLASHSZ = $(shell \
-	V=$$(tail -5 $(OBJDIR)/$(OUT).hwa 2>/dev/null | head -1 -)	;\
-	if [ "$$V" != "HW_DEVICE_FLASH_SIZE" ] ; then			\
-	  echo $$V							;\
-	fi								;\
-	done)
-
 #	Chip programming
 #
 ifeq (,$(PROG_SW))
@@ -85,7 +78,9 @@ endif
 
 #	Default target
 #
-all:	deps lst crc
+all:	deps hwa lst crc
+
+hwa: $(OBJDIR)/$(OUT).hwa
 
 doc:
 	(cd $(CWD)../.. && make doc)

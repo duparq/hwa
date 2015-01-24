@@ -64,6 +64,7 @@
 	;; Hardware registers
 	;;
 #define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
+#define AP_EXTRF   hw_ap(hw_reg(hw_core0, extrf))
 
 	SPMCSR	   = hw_addr(hw_reg(hw_flash0, csr))
 	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
@@ -252,7 +253,8 @@
 	;;
 	;; SP points to RAMEND after RESET then no initialization is required
 	;;
-reset:	XSBIS	R24, AP_PORF		; Start immediately the application
+;; reset:	XSBIS	R24, AP_PORF		; Start immediately the application
+reset:	XSBIS	R24, AP_EXTRF		; Start immediately the application
 app:	rjmp	FLASHSIZE+APPSTART	; if the reset is not caused by power-on
 
 	DBGI

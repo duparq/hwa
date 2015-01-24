@@ -5,9 +5,10 @@ MMCU		= -mmcu=$(MCU)
 
 ODFLAGS		= -h -S
 
-dasm:
-	avr-objdump -m avr:5 -b binary -D build/out.bin
 
+#	Compile and link
+#
+#$(OBJECTS): | $(OBJDIR) $(OBJDIR)/$(OUT).hwa		# Create directory if needed
 
 #	Device informations
 #
@@ -27,11 +28,11 @@ $(OBJDIR)/$(OUT).hwa: $(SOURCES)
 	  echo 'HW_DEVICE_FUSE_HB' >>$$f.hwa.c		;\
 	  echo 'HW_DEVICE_FUSE_LB' >>$$f.hwa.c		;\
           echo 'HW_DEVICE' >>$$f.hwa.c			;\
-	  $(CC) $(CFLAGS) -E $$f.hwa.c >$@		;\
+	  $(CC) $(CFLAGS) -E $$f.hwa.c | tail -5 >$@	;\
 	  [ "$$HW_DEVICE" != "HW_DEVICE" ] && exit 0	;\
 	done
 
-#show-fuses:
+
 show-fuses: $(OBJDIR)/$(OUT).hwa
 	@[ -f $(OBJDIR)/$(OUT).hwa ] || exit 1
 	@FUSE_EB=$$(tail -4 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
@@ -46,6 +47,21 @@ show-fuses: $(OBJDIR)/$(OUT).hwa
 	if [ "$$FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then	\
 	    echo FUSE_LB=$$(printf "0x%02X" $$(($$FUSE_LB)))	;\
 	fi
+
+
+#	Size of binary output file
+#
+FLASHSZ = $(shell \
+	V=$$(tail -5 $(OBJDIR)/$(OUT).hwa 2>/dev/null | head -1 -)	;\
+	if [ "$$V" != "HW_DEVICE_FLASH_SIZE" ] ; then			\
+	  echo $$V							;\
+	fi								;\
+	done)
+
+
+dasm:
+	avr-objdump -m avr:5 -b binary -D build/out.bin
+
 
 crc:	$(OBJDIR)/$(OUT).bin
 	diabolo.py --mcu=$(MCU) --crc $(OBJDIR)/$(OUT).bin

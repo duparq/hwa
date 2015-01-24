@@ -311,8 +311,8 @@ typedef union {
   };
 } _hw_ad10a_status_t ;
 
-#define hw_def_hw_status_ad10a		, _hw_status_ad10a
-#define _hw_status_ad10a(c,n,i,a)	_hw_ad10a_status( _hw_read_reg(c,n,i,a, sra) )
+#define hw_def_hw_stat_ad10a		, _hw_stat_ad10a
+#define _hw_stat_ad10a(c,n,i,a)	_hw_ad10a_status( _hw_read_reg(c,n,i,a, sra) )
 
 HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
 {

@@ -27,7 +27,7 @@
 /* #define HW_DEVICE_BROWNOUT_DETECTION	4100_4500mV */
 
 /* #define HW_DEVICE			atmega328p, 32MLF */
-/* #define	LED_PIN				hw_pin_17 */
+/* #define LED_PIN				hw_pin_17 */
 /* #define HW_DEVICE_BOOT			bootloader */
 /* #define HW_DEVICE_BOOTSECTION_SIZE	1024 */
 /* #define HW_DEVICE_STARTUP_DELAYS	16KCK_14CK_64ms */
@@ -44,9 +44,6 @@
 int main ( )
 {
   hw_config( LED_PIN, direction, output );
-  hw_config( LED_PIN,
-	     direction, input,
-	     pullup, 	on );
 
   for(;;) {
     hw_toggle( LED_PIN );

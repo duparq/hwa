@@ -113,5 +113,19 @@
 #define _hwa_turnirq_0(...)		__VA_ARGS__
 #define _hwa_turnirq_1(...)		_hwa_turn_irq(__VA_ARGS__)
 
+/*	Clear IRQ flag
+ */
+#define hw_def_hw_clear_irq		, _hw_clear_irq
+
+#define _hw_clear_irq( irq,v, n,ie,if, ... )	\
+  HW_TX(_hw_write_reg( hw_##n, if, 1 ), __VA_ARGS__)
+
+/*	Short for hw_clear( hw_irq(...), ... )
+ */
+#define hw_clear_irq(...)		_hw_clearirq_2(_hw_irqx(__VA_ARGS__,))
+#define _hw_clearirq_2(...)		HW_G2(_hw_clearirq,HW_IS(irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_clearirq_0(...)		__VA_ARGS__
+#define _hw_clearirq_1(...)		_hw_clear_irq(__VA_ARGS__)
+
 
 #endif /* !defined __ASSEMBLER__ */

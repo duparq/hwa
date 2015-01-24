@@ -64,6 +64,8 @@ class Device:
         self.flash = None		# Flash memory content
         self.flash_changed = False	# Need to change CRC in EEPROM if true
 
+        self.reset_duration = 0
+
 
     #  Application CRC and length of application code
     #
@@ -115,7 +117,8 @@ class Device:
         #self.com.set_RTS(True)		# Assert the RESET pin
         self.com.set_DTR(True)		# Assert the RESET pin
         self.com.set_BRK(True)		# Force the device to stay in Diabolo
-        time.sleep(0.01)
+        #time.sleep(0.01)
+        time.sleep(self.reset_duration)
         #self.com.set_RTS(False)		# Release RESET
         self.com.set_DTR(False)		# Release RESET
         time.sleep(0.5)

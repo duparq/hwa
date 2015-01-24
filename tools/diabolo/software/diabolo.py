@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-04 14:19:16 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-24 12:36:53 -*-
 
 
 import struct
@@ -64,10 +64,13 @@ def parse_options():
                       help="compute firmware crc")
     parser.add_option("-r", "--reset-only", action="store_true",
                       default=False, dest="reset",
-                      help="reset the device with RTS and exit")
-    parser.add_option("-t", "--test", action="store_true",
-                      default=False, dest="test",
-                      help="test command")
+                      help="reset the device with DTR and exit")
+    parser.add_option("-t", "--reset-duration", type="float",
+                      default=0.01, dest="reset_duration",
+                      help="how long RTS is set low for reset (only for standard devices)")
+    # parser.add_option("-t", "--test", action="store_true",
+    #                   default=False, dest="test",
+    #                   help="test command")
     (options, args) = parser.parse_args()
     if len(args) == 1:
         options.flash_file = args[0]
@@ -195,10 +198,8 @@ def run():
     #  Only reset the device ?
     #
     if options.reset:
-        # com.set_RTS(True)
         com.set_DTR(True)
-        time.sleep(0.01)
-        # com.set_RTS(False)
+        time.sleep(options.reset_duration)
         com.set_DTR(False)
         return
 
@@ -240,6 +241,7 @@ def run():
     else:
         cout(_("Standard device\n"))
         device = Device(com)
+        device.reset_duration = options.reset_duration
         if not device.connect():
             cerr(_("Could not connect.\n"))
             return
@@ -531,16 +533,16 @@ def run():
 
     #  Test command
     #
-    if options.test:
-        data = ""
-        for i in range(device.pagesize):
-            data+=chr(i)
-        # cout("Writing:\n")
-        # r = device.write_flash_page(0x800, data);
-        # cout("Result: %s\n" % r)
+    # if options.test:
+    #     data = ""
+    #     for i in range(device.pagesize):
+    #         data+=chr(i)
+    #     # cout("Writing:\n")
+    #     # r = device.write_flash_page(0x800, data);
+    #     # cout("Result: %s\n" % r)
 
-        cout("Writing eeprom:\n")
-        device.write_eeprom(0, data[:4]);
+    #     cout("Writing eeprom:\n")
+    #     device.write_eeprom(0, data[:4]);
 
     #  Start application
     #

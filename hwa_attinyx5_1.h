@@ -281,5 +281,9 @@
 #include "hwa_attinyx5_ios_1.h"			/* id: 100 */
 #include "hwa_attinyx5_eeproms_1.h"		/* id: 100 */
 #include "hwa_attinyx5_flashs_1.h"		/* id: 100 */
+#include "hwa_attinyx5_watchdogs_1.h"		/* id: 900 */
 
-#define HWA_DCL
+#define HWA_DCL					\
+  HWA_DCL_CORES ;				\
+  HWA_DCL_IOS ;					\
+  HWA_DCL_WATCHDOGS ;

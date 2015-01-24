@@ -2,7 +2,7 @@
 /*	Blink a LED at ~15 Hz using timer overflow and compare-match interrupts
  */
 
-#define HW_DEVICE		attiny84, dil
+#define HW_DEVICE		attiny84, 14pdip
 
 #define	LED_PIN			hw_pin_7
 //#define PERIOD			0.2

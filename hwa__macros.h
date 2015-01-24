@@ -102,6 +102,7 @@
 #define _HW_MTHD1_0_1(f,...)	__VA_ARGS__
 #define _HW_MTHD2_1(f,...)	HW_A1(HW_G3(hw_def,f,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_MTHD2_0(f,...)	HW_ERR("`"#f "` is not a method of class `" HW_QUOTE(__VA_ARGS__) "`.")
+#define _HW_MTHD(f,...)		HW_A1(HW_G3(hw_def,f,__VA_ARGS__))(__VA_ARGS__)
 
 
 /*	Generic instruction (no specialization)
@@ -148,6 +149,7 @@
 /*	hw_addr(...): address of something (method)
  */
 #define hw_addr(...)		HW_MTHD(hw_addr, __VA_ARGS__)
+#define _hw_addr(...)		_HW_MTHD(hw_addr, __VA_ARGS__)
 
 #define hw_def_hw_addr_bits1	, _hw_addr_bits1
 
@@ -161,11 +163,17 @@
 
 
 /*	hw_reg(...): memory definition of an instance's bits (generic)
+ *	_hw_reg(...): id. Internal use only, no argument checking
+ *	_hw_creg(...): memory definition of a class' bits (generic).
+ *			Internal use only, no argument checking
  *
  *	No need to use a specialization. hw_reg() can be applied to every
  *	declared instance whatever its class.
  */
 #define hw_reg(...)		HW_GNRC(_hw_reg_3, __VA_ARGS__)
+#define _hw_reg(...)		_hw_reg_3(__VA_ARGS__)
+#define _hw_creg(c,r)		_hw_reg_4(c,,,r,hw_##c##_##r)
+
 #define _hw_reg_3(c,n,i,a,r)	_hw_reg_4(c,n,a,r,hw_##c##_##r)
 #define _hw_reg_4(...)		_hw_reg_5(__VA_ARGS__)
 #define _hw_reg_5(c,n,a,r,...)						\
@@ -206,20 +214,6 @@
 #define _hw_reg_irg_3(c,n,a,r, x,...)		_hw_reg_##x(c,n,a,r,__VA_ARGS__)
 
 
-/*	_hw_reg(...): memory definition of an instance's bits (generic)
- *
- *		Internal use only, no argument checking
- */
-#define _hw_reg(...)		_hw_reg_3(__VA_ARGS__)
-
-
-/*	_hw_creg(...): memory definition of a class' bits (generic)
- *
- *		Internal use only, no argument checking
- */
-#define _hw_creg(c,r)		_hw_reg_4(c,,,r,hw_##c##_##r)
-
-
 /*	hw_bn(...): number of bits of something (method)
  */
 #define hw_bn(...)		HW_MTHD(hw_bn, __VA_ARGS__)
@@ -232,6 +226,7 @@
 /*	hw_bp(...): position of least significant bit of something (method)
  */
 #define hw_bp(...)		HW_MTHD(hw_bp, __VA_ARGS__)
+#define _hw_bp(...)		_HW_MTHD(hw_bp, __VA_ARGS__)
 
 #define hw_def_hw_bp_bits1	, _hw_bp_bits1
 

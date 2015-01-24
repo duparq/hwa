@@ -5,6 +5,12 @@
  */
 
 
+HW_INLINE void hwa_check_optimizations ( uint8_t x )
+{
+  if (x) { HWA_ERR("you may have forgotten to turn optimizations on."); }
+}
+
+
 /** \file
  *  \brief	Definitions for C code production
  */
@@ -16,15 +22,25 @@
  */
 #define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
 /** @copydoc hw_config(...) */
-#define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__)
+#define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
 
 
 /*	hw_clear(...): clear something (method)
- *
- *  @hideinitializer
  */
-#define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__)
-#define hwa_clear(...)			HW_MTHD(hwa_clear, __VA_ARGS__)
+#define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__,)
+#define hwa_clear(...)			HW_MTHD(hwa_clear, __VA_ARGS__,)
+
+
+/*	hw_reset(...): reset something (method)
+ */
+#define hw_reset(...)			HW_MTHD(hw_reset, __VA_ARGS__,)
+#define hwa_reset(...)			HW_MTHD(hwa_reset, __VA_ARGS__,)
+
+
+/*	hw/hwa_power(...): power something on/off (method)
+ */
+#define hw_power(...)			HW_MTHD(hw_power, __VA_ARGS__,)
+#define hwa_power(...)			HW_MTHD(hwa_power, __VA_ARGS__,)
 
 
 /*	hw_lock_to_zero(...): clear something and keep it at 0 (mehod)
@@ -81,9 +97,11 @@
 #define hwa_release(...)		HW_MTHD(hwa_release, __VA_ARGS__)
 
 
-/*	hw_status(...): status of something (method)
+/*	hw_stat_t(...): structure of status of something (method)
+ *	hw_stat(...): status of something (method)
  */
-#define hw_status(...)			HW_MTHD(hw_status, __VA_ARGS__)
+#define hw_stat_t(...)		HW_MTHD(hw_stat_t, __VA_ARGS__,)
+#define hw_stat(...)			HW_MTHD(hw_stat, __VA_ARGS__)
 
 
 /*	hw/hwa_toggle(...): toggle something, probably an io (method)
@@ -326,28 +344,20 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
  * \hideinitializer
  */
 
-//HW_INLINE void _hwa_begin_all(hwa_t*) ;		/* defined in device-specific files */
-//HW_INLINE void _hwa_init_all(hwa_t*) ;		/* defined in device-specific files */
-
-/* HW_INLINE void __hwa_begin( hwa_t *hwa ) */
-/* { */
-/*   if (0) { HWA_ERR("you may have forgotten to turn optimizations on."); } */
-/*   _hwa_begin_all(hwa) ; */
-/* } */
-
-
 #define hwa_begin()							\
-  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; _hwa_begin(hwa) ;		\
+  hwa_check_optimizations(0);						\
+  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
+  _hwa_begin(hwa) ;							\
   uint8_t hwa_commit = 0 /* Will warn if hwa_commit() is not called */
 
 
 #define hwa_begin_from_reset()						\
-  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ; _hwa_begin(hwa) ;		\
-  uint8_t hwa_commit = 0 ; /* Will warn if hwa_commit() is not called */ \
-  _hwa_init_all(hwa) ; hwa_nocommit()
-
-
-#define hwa_init_all()		_hwa_init_all(hwa)
+  hwa_check_optimizations(0);						\
+  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
+  _hwa_begin(hwa) ;							\
+  _hwa_init(hwa) ;							\
+  hwa_nocommit() ;							\
+  uint8_t hwa_commit = 0
 
 
 /** \brief	Commit configuration to hardware.
@@ -363,7 +373,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
   do {							\
     uint8_t foo __attribute__((unused)) = hwa_commit ;	\
     hwa->commit = 1 ;					\
-    _hwa_commit_all(hwa);				\
+    _hwa_commit(hwa);					\
   } while(0)
 
 
@@ -377,7 +387,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 #define hwa_nocommit()				\
   do {						\
     hwa->commit = 0 ;				\
-    _hwa_commit_all(hwa);			\
+    _hwa_commit(hwa);				\
   } while(0)
 
 
