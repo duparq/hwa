@@ -16,7 +16,6 @@ int main ( )
   	      action,		irq );
   hwa_commit();
 
-
   for(;;) {
     if ( hw_stat( hw_watchdog0 ).irq ) {
     /* hw_status_t( hw_watchdog0 ) s ; */
