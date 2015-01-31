@@ -74,7 +74,7 @@
  */
 #if HW_DEVICE_WDTON == 0
 #  define _hwa_turn_wdog_off(c,n,i,a)					\
-  HW_ERR( "Watchdog can not be turned off because FUSE bit WDTON is "	\
+  HW_ERR( "watchdog can not be turned off because FUSE bit WDTON is "	\
 	  "programmed." )
 #else
 #  define _hwa_turn_wdog_off(c,n,i,a)		\
@@ -174,7 +174,7 @@ HW_INLINE void _hwa_docfwdog( hwa_t *hwa, uint8_t timeout, uint8_t action )
 {
   if ( timeout != 0xFF ) {
 #if HW_DEVICE_WDTON == 0
-  HW_ERR("Operation is not handled yet: changing WDP when fuse WDTON is programmed.");
+  HW_ERR("changing WDP when fuse WDTON is programmed is not handled yet.");
 #else
     _hwa_write_reg( hw_watchdog0, wdp, timeout );
 #endif

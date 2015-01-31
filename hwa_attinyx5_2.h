@@ -12,9 +12,9 @@
 
 /*	Available sleep modes
  */
-#define hw_core_sm_idle			, 0
-#define hw_core_sm_adc_noise_reduction	, 1
-#define hw_core_sm_power_down		, 2
+/* #define hw_core_sm_idle			, 0 */
+/* #define hw_core_sm_adc_noise_reduction	, 1 */
+/* #define hw_core_sm_power_down		, 2 */
 
 
 HW_INLINE void _hwa_begin( hwa_t *hwa )
@@ -74,7 +74,9 @@ HW_INLINE void _hwa_commit( hwa_t *hwa )
   if ( hwa->watchdog0.state == 0 ) {
     /*
      *	Complete the turning off of the watchdog.
-     *  WDCE and WDE have already been set, we just need to clear them.
+     *
+     *  WDCE and WDE have already been set by the commit of csr above, we just
+     *  need to clear them and commit csr again.
      */
     _hwa_write_reg( hw_watchdog0, wdie, 0 );
     _hwa_write_reg( hw_watchdog0, wdce, 0 );

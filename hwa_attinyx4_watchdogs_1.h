@@ -27,21 +27,15 @@
 #define hw_wdog_wdp			cb2, csr, 1, 5, 3, csr, 3, 0, 0
 #define hw_wdog_wdce			cb1, csr, 1, 4
 #define hw_wdog_wde			cb1, csr, 1, 3
-#define hw_wdog_wdcee			cb1, csr, 2, 3 /* convenience for disabling */
-//#define hw_wdog_wdeie			cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* for config */
+#define hw_wdog_wdifie			cb1, csr, 2, 6 /* convenient for clearing irq */
+#define hw_wdog_wdall			cb1, csr, 7, 0 /* convenient for turning wd off */
+
 
 #if !defined __ASSEMBLER__
 
-/*	Watchdog class methods
- */
-#define hw_def_hw_turn_wdog		, _hw_turn_wdog
-#define hw_def_hwa_turn_wdog		, _hwa_turn_wdog
-#define hw_def_hw_clear_wdog		, _hw_clear_wdog
-#define hw_def_hwa_clear_wdog		, _hwa_clear_wdog
-#define hw_def_hwa_config_wdog		, _hwa_config_wdog
-
 typedef struct {
-  hwa_r8_t csr ;
+  uint8_t	state ;
+  hwa_r8_t	csr ;
 } hwa_wdog_t ;
 
 #define HWA_DCL_WATCHDOGS	hwa_wdog_t watchdog0

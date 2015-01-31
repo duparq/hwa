@@ -93,6 +93,8 @@
 #define hw_pin_pd6			io, pin_pd6, 327, hw_portd, 1, 6
 #define hw_pin_pd7			io, pin_pd7, 328, hw_portd, 1, 7
 
+#define hw_pin_rxd			hw_pin_pd0
+#define hw_pin_txd			hw_pin_pd1
 
 /*	Pins by numbers
  */
@@ -163,10 +165,6 @@
 #
 #  define hw_pin_1			hw_pin_pd3
 #  define hw_pin_2			hw_pin_pd4
-#  define hw_pin_3			hw_pin_
-#  define hw_pin_4			hw_pin_
-#  define hw_pin_5			hw_pin_
-#  define hw_pin_6			hw_pin_
 #  define hw_pin_7			hw_pin_pb6
 #  define hw_pin_8			hw_pin_pb7
 #  define hw_pin_9			hw_pin_pd5
@@ -178,10 +176,7 @@
 #  define hw_pin_15			hw_pin_pb3
 #  define hw_pin_16			hw_pin_pb4
 #  define hw_pin_17			hw_pin_pb5
-#  define hw_pin_18			hw_pin_
 #  define hw_pin_19			hw_pin_adc6
-#  define hw_pin_20			hw_pin_
-#  define hw_pin_21			hw_pin_
 #  define hw_pin_22			hw_pin_adc7
 #  define hw_pin_23			hw_pin_pc0
 #  define hw_pin_24			hw_pin_pc1
@@ -204,6 +199,6 @@ typedef struct {
   hwa_r8_t ddr ;
 } hwa_io_t ;
 
-//#define HWA_DCL_IOS			hwa_io_t portb, portc, portd
+#define HWA_DCL_IOS			hwa_io_t portb, portc, portd
 
 #endif /* !defined __ASSEMBLER__ */

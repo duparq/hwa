@@ -47,6 +47,7 @@
 #define hw_core_borf		cb1, mcusr, 1, 2
 #define hw_core_extrf		cb1, mcusr, 1, 1
 #define hw_core_porf		cb1, mcusr, 1, 0
+#define hw_core_allrf		cb1, mcusr, 4, 0	/* convenient */
 
 #define hw_core_int0		cb1, gimsk, 1, 6
 #define hw_core_pcie1		cb1, gimsk, 1, 5

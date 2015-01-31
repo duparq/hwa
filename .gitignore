@@ -2,6 +2,7 @@
 *#
 *~
 *.cp.*
+*.hwa.*
 *.o
 *.pyc
 build/

@@ -222,40 +222,39 @@
 #ifndef HW_DEVICE_CLK_SRC
 #  define HW_DEVICE_CLK_SRC				rc_8MHz
 #endif
-
-#if HW_IS(HW_DEVICE_CLK_SRC, external)
+#if HW_IS(external,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				0
 #  define HW_DEVICE_CKSEL0				0
-#elif HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
+#elif HW_IS(rc_pll_16MHz,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				0
 #  define HW_DEVICE_CKSEL0				1
 #  define hw_syshz_base					16000000
-#elif HW_IS(HW_DEVICE_CLK_SRC, rc_8MHz)
+#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				1
 #  define HW_DEVICE_CKSEL0				0
 #  define hw_syshz_base					8000000
-#elif HW_IS(HW_DEVICE_CLK_SRC, rc_6400kHz)
+#elif HW_IS(rc_6400kHz,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				1
 #  define HW_DEVICE_CKSEL0				1
 #  define hw_syshz_base					6400000
-#elif HW_IS(HW_DEVICE_CLK_SRC, rc_128kHz)
+#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				2
 #  define HW_DEVICE_CKSEL0				0
 #  define hw_syshz_base					128000
-#elif HW_IS(HW_DEVICE_CLK_SRC, xosc)
-#  ifndef HW_DEVICE_CLK_HZ
-#    error HW_DEVICE_CLK_HZ must be defined
+#elif HW_IS(xosc,HW_DEVICE_CLK_SRC)
+#  ifndef HW_DEVICE_CLK_SRC_HZ
+#    error HW_DEVICE_CLK_SRC_HZ must be defined
 #  else
-#    define hw_syshz_base				HW_DEVICE_CLK_HZ
-#    if HW_DEVICE_CLK_HZ < 400000 /* Assume values other than 32768 are acceptable */
+#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
+#    if HW_DEVICE_CLK_SRC_HZ < 400000 /* Assume values other than 32768 are acceptable */
 #      define HW_DEVICE_CKSEL31				3
 #      define HW_DEVICE_CKSEL0				0
 #    else
-#      if HW_DEVICE_CLK_HZ < 900000
+#      if HW_DEVICE_CLK_SRC_HZ < 900000
 #        define HW_DEVICE_CKSEL31			4
-#      elif HW_DEVICE_CLK_HZ < 3000000
+#      elif HW_DEVICE_CLK_SRC_HZ < 3000000
 #        define HW_DEVICE_CKSEL31			5
-#      elif HW_DEVICE_CLK_HZ < 8000000
+#      elif HW_DEVICE_CLK_SRC_HZ < 8000000
 #        define HW_DEVICE_CKSEL31			6
 #      else
 #        define HW_DEVICE_CKSEL31			7
@@ -283,7 +282,11 @@
 #include "hwa_attinyx5_flashs_1.h"		/* id: 100 */
 #include "hwa_attinyx5_watchdogs_1.h"		/* id: 900 */
 
+#if !defined __ASSEMBLER__ 
+
 #define HWA_DCL					\
   HWA_DCL_CORES ;				\
   HWA_DCL_IOS ;					\
   HWA_DCL_WATCHDOGS ;
+
+#endif /* !defined __ASSEMBLER__ */

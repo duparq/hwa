@@ -11,28 +11,52 @@
 
 #define HW_DEVICE_ATTINYX4
 
-/*	The include order and ids follows that of the datasheet
- */
-#include "hwa_atmelavr_1.h"
-#include "hwa_attinyx4_cores_1.h"		/* id: 100 */
-#include "hwa_attinyx4_pcints_1.h"		/* id: 200 */
-#include "hwa_attinyx4_ios_1.h"			/* id: 300 */
-/* #include "hwa_attinyx4_counters_1.h"		/\* id: 400 *\/ */
-/* #include "hwa_attinyx4_pscs_1.h"		/\* id: 500 *\/ */
-/* #include "hwa_attinyx4_usis_1.h"		/\* id: 600 *\/ */
-/* #include "hwa_attinyx4_acmps_1.h"		/\* id: 700 *\/ */
-/* #include "hwa_attinyx4_adcs_1.h"		/\* id: 800 *\/ */
-#include "hwa_attinyx4_watchdogs_1.h"		/* id: 900 */
-#include "hwa_attinyx4_eeproms_1.h"		/* id: 1000 */
-#include "hwa_attinyx4_flashs_1.h"		/* id: 1100 */
-
 
 /*	Clocking
  */
-#define hw_is_internal_rc_internal_rc			, 1
-#define hw_is_internal_watchdog_internal_watchdog	, 1
-#define hw_is_external_xo_external_xo			, 1
 #define hw_is_external_external				, 1
+#define hw_is_rc_8MHz_rc_8MHz				, 1
+#define hw_is_rc_128kHz_rc_128kHz			, 1
+#define hw_is_xosc_xosc					, 1
+
+#ifndef HW_DEVICE_CLK_SRC
+#  define HW_DEVICE_CLK_SRC				internal_rc
+#endif
+
+#if HW_IS(external,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				0
+#  define HW_DEVICE_CKSEL0				0
+#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				1
+#  define HW_DEVICE_CKSEL0				0
+#  define hw_syshz_base					8000000
+#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				2
+#  define HW_DEVICE_CKSEL0				0
+#  define hw_syshz_base					128000
+#elif HW_IS(xosc, HW_DEVICE_CLK_SRC)
+#  ifndef HW_DEVICE_CLK_SRC_HZ
+#    error HW_DEVICE_CLK_SRC_HZ must be defined
+#  else
+#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
+#    if HW_DEVICE_CLK_SRC_HZ < 400000 /* Assume values other than 32768 are acceptable */
+#      define HW_DEVICE_CKSEL31				3
+#      define HW_DEVICE_CKSEL0				0
+#    else
+#      if HW_DEVICE_CLK_SRC_HZ < 900000
+#        define HW_DEVICE_CKSEL31			4
+#      elif HW_DEVICE_CLK_SRC_HZ < 3000000
+#        define HW_DEVICE_CKSEL31			5
+#      elif HW_DEVICE_CLK_SRC_HZ < 8000000
+#        define HW_DEVICE_CKSEL31			6
+#      else
+#        define HW_DEVICE_CKSEL31			7
+#      endif
+#    endif
+#  endif
+#else
+#  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, or `xosc`.
+#endif
 
 #define hw_is_6CK_14CK_6CK_14CK				, 1
 #define hw_is_6CK_14CK_4ms_6CK_14CK_4ms			, 1
@@ -48,46 +72,6 @@
 #define hw_is_16KCK_14CK_16KCK_14CK			, 1
 #define hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
 #define hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
-
-
-#ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				internal_rc
-#endif
-
-#if HW_IS(HW_DEVICE_CLK_SRC, external)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
-#elif HW_IS(HW_DEVICE_CLK_SRC, internal_rc)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					8000000
-#elif HW_IS(HW_DEVICE_CLK_SRC, internal_watchdog)
-#  define HW_DEVICE_CKSEL31				2
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					128000
-#elif HW_IS(HW_DEVICE_CLK_SRC, external_xo)
-#  ifndef HW_DEVICE_CLK_HZ
-#    error HW_DEVICE_CLK_HZ must be defined
-#  else
-#    define hw_syshz_base				HW_DEVICE_CLK_HZ
-#    if HW_DEVICE_CLK_HZ < 400000 /* Assume values other than 32768 are acceptable */
-#      define HW_DEVICE_CKSEL31				3
-#      define HW_DEVICE_CKSEL0				0
-#    else
-#      if HW_DEVICE_CLK_HZ < 900000
-#        define HW_DEVICE_CKSEL31			4
-#      elif HW_DEVICE_CLK_HZ < 3000000
-#        define HW_DEVICE_CKSEL31			5
-#      elif HW_DEVICE_CLK_HZ < 8000000
-#        define HW_DEVICE_CKSEL31			6
-#      else
-#        define HW_DEVICE_CKSEL31			7
-#      endif
-#    endif
-#  endif
-#else
-#  error HW_DEVICE_CLK_SRC must be defined as one of `internal_rc`, `internal_watchdog`, `external_xo`, or `external`.
-#endif
 
 /*	SUT
  */
@@ -274,6 +258,22 @@
   HW_DEVICE_SUT10<<4 |				\
   HW_DEVICE_CKSEL31<<1 |			\
   HW_DEVICE_CKSEL0
+
+
+/*	The include order and ids follows that of the datasheet
+ */
+#include "hwa_atmelavr_1.h"
+#include "hwa_attinyx4_cores_1.h"		/* id: 100 */
+#include "hwa_attinyx4_pcints_1.h"		/* id: 200 */
+#include "hwa_attinyx4_ios_1.h"			/* id: 300 */
+/* #include "hwa_attinyx4_counters_1.h"		/\* id: 400 *\/ */
+/* #include "hwa_attinyx4_pscs_1.h"		/\* id: 500 *\/ */
+/* #include "hwa_attinyx4_usis_1.h"		/\* id: 600 *\/ */
+/* #include "hwa_attinyx4_acmps_1.h"		/\* id: 700 *\/ */
+/* #include "hwa_attinyx4_adcs_1.h"		/\* id: 800 *\/ */
+#include "hwa_attinyx4_watchdogs_1.h"		/* id: 900 */
+#include "hwa_attinyx4_eeproms_1.h"		/* id: 1000 */
+#include "hwa_attinyx4_flashs_1.h"		/* id: 1100 */
 
 
 #if !defined __ASSEMBLER__ 

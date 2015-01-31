@@ -33,6 +33,7 @@
 //#define hw_wdog_wdcee			cb1, csr, 2, 3 /* convenient for disabling */
 //#define hw_wdog_wdeie			cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* for config */
 
+
 #if !defined __ASSEMBLER__
 
 typedef struct {
@@ -40,6 +41,6 @@ typedef struct {
   hwa_r8_t 	csr ;
 } hwa_wdog_t ;
 
-#define HWA_DCL_WATCHDOGS	hwa_wdog_t watchdog0
+#define HWA_DCL_WATCHDOGS		hwa_wdog_t watchdog0
 
 #endif /* !defined __ASSEMBLER__ */

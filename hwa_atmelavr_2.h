@@ -324,9 +324,9 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 
 /*	ISR
  */
-#define hw_israttr_interruptible		, __attribute__((interrupt))
-#define hw_israttr_non_interruptible		, 
-#define hw_israttr_naked			, __attribute__((naked))
+#define hw_israttr_isr_interruptible		, __attribute__((interrupt))
+#define hw_israttr_isr_non_interruptible	, 
+#define hw_israttr_isr_naked			, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
@@ -341,4 +341,7 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   void __vector_##vector (void)
 
 
-#define hw_reti()  __asm__ __volatile__("reti\n":::)
+#define hw_asm(...)	__asm__ __volatile__(__VA_ARGS__)
+//#define hw_reti()	__asm__ __volatile__("reti\n":::)
+#define hw_reti()	hw_asm("reti\n")
+#define hw_sleep()	hw_asm("sleep\n")

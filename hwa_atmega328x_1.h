@@ -31,13 +31,16 @@
 #elif HW_DEVICE_BOOTSECTION_SIZE == 4096
 #  define HW_DEVICE_BOOTSZ				0
 #else
-#  error HW_DEVICE_BOOTSECTION_SIZE must be defined as `512`, `1024`, `2048`, or `4096` (default).
+#  error HW_DEVICE_BOOTSECTION_SIZE must be defined as `512`, `1024`, `2048`,\
+  or `4096` (default).
 #endif
 
 /*  Default: 0xFF
+ *	FIXME: there's a problem with avrdude reading/writing unprogrammed
+ *	fuses of extended byte as 0 instead of 1.
  */
 #define HW_DEVICE_FUSE_EB			\
-  0xF8 |					\
+  /* 0xF8 | */					\
   HW_DEVICE_BODLEVEL
 
 /*  Default: 0xD9

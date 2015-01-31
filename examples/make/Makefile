@@ -35,22 +35,43 @@ endif
 
 #	Retrieve the name of the target device from source files
 #
+# ifeq (,$(MCU))
+#   MCU = $(shell							\
+#   mkdir -p $(OBJDIR)						;\
+#   for f in $(SOURCES) ; do					\
+#     SRC=".hwa.c"						;\
+#     DST=".hwa.1"						;\
+#     ERR=".hwa.2"						;\
+#     cat "$$f" >"$$SRC"						;\
+#     echo 'HW_DEVICE' >>"$$SRC"					;\
+#     $(CC) -I$(HWA) -E "$$SRC" >"$$DST" || exit 1		;\
+#     HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)			;\
+#     rm -f "$$SRC" "$$DST" "$$ERR"				;\
+#     if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then			\
+#       echo $$HW_DEVICE						;\
+#       exit 0							;\
+#     fi								;\
+#   done)
+#   ifeq (,$(wildcard .hwa.2))
+#     comma := ,
+#     MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
+#   endif
+# endif
+
 ifeq (,$(MCU))
-  MCU = $(shell							\
-  mkdir -p $(OBJDIR)						;\
-  for f in $(SOURCES) ; do					\
-    SRC=".hwa.c"						;\
-    DST=".hwa.1"						;\
-    ERR=".hwa.2"						;\
-    cat "$$f" >"$$SRC"						;\
-    echo 'HW_DEVICE' >>"$$SRC"					;\
-    $(CC) -I$(HWA) -E "$$SRC" >"$$DST" || exit 1		;\
-    HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)			;\
-    rm -f "$$SRC" "$$DST" "$$ERR"				;\
-    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then			\
-      echo $$HW_DEVICE						;\
-      exit 0							;\
-    fi								;\
+  SRC=".hwa.c"
+  DST=".hwa.d"
+  ERR=".hwa.e"
+  MCU = $(shell								\
+  echo 'HW_DEVICE' >"$(SRC)"						;\
+  mkdir -p $(OBJDIR)							;\
+  for f in $(SOURCES) ; do						\
+    $(CC) -I$(HWA) -E -imacros "$$f" "$(SRC)" >"$(DST)" 2>"$(ERR)" || exit 1	;\
+    HW_DEVICE=$$(tail -1 "$(DST)" 2>/dev/null)				;\
+    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then				\
+      echo $$HW_DEVICE							;\
+      exit 0								;\
+    fi									;\
   done)
   ifeq (,$(wildcard .hwa.2))
     comma := ,

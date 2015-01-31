@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2014-07-06 23:30:35 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-31 19:09:51 -*-
 
 # FT232RL :	 1 TXD
 # 		 3 RTS (-> Reset)

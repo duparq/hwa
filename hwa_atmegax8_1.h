@@ -9,11 +9,58 @@
 
 /*  Fuses for clocking
  */
-#define hw_is_internal_rc_internal_rc				, 1
-#define hw_is_internal_watchdog_internal_watchdog		, 1
-#define hw_is_external_low_power_xo_external_low_power_xo	, 1
-#define hw_is_external_full_swing_xo_external_full_swing_xo	, 1
-#define hw_is_external_external					, 1
+#define hw_is_external_external				, 1
+#define hw_is_rc_8MHz_rc_8MHz				, 1
+#define hw_is_rc_128kHz_rc_128kHz			, 1
+#define hw_is_low_power_xosc_low_power_xosc		, 1
+#define hw_is_full_swing_xosc_full_swing_xosc		, 1
+
+
+#ifndef HW_DEVICE_CLK_SRC
+#  define HW_DEVICE_CLK_SRC				internal_rc
+#endif
+#if HW_IS(external,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				0
+#  define HW_DEVICE_CKSEL0				0
+#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				1
+#  define HW_DEVICE_CKSEL0				0
+#  define hw_syshz_base					8000000
+#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				1
+#  define HW_DEVICE_CKSEL0				1
+#  define hw_syshz_base					128000
+#elif HW_IS(HW_DEVICE_CLK_SRC, low_power_xosc)
+#  ifndef HW_DEVICE_CLK_SRC_HZ
+#    error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the \
+  crystal used for clocking
+#  else
+#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
+#    if HW_DEVICE_CLK_SRC_HZ < 400000 /* Assume values other than 32768 are acceptable */
+#      define HW_DEVICE_CKSEL31				2
+#      define HW_DEVICE_CKSEL0				0
+#    else
+#      if HW_DEVICE_CLK_SRC_HZ < 900000
+#        define HW_DEVICE_CKSEL31			4
+#      elif HW_DEVICE_CLK_SRC_HZ < 3000000
+#        define HW_DEVICE_CKSEL31			5
+#      elif HW_DEVICE_CLK_SRC_HZ < 8000000
+#        define HW_DEVICE_CKSEL31			6
+#      else
+#        define HW_DEVICE_CKSEL31			7
+#      endif
+#    endif
+#  endif
+#elif HW_IS(HW_DEVICE_CLK_SRC, full_swing_xosc)
+#  ifndef HW_DEVICE_CLK_SRC_HZ
+#    error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the crystal used for clocking
+#  else
+#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
+#    define HW_DEVICE_CKSEL31				3
+#  endif
+#else
+#  error HW_DEVICE_CLK_SRC must be defined as one of `internal_rc`, `internal_watchdog`, `external_low_power_xo`, `external_full_swing_xo`, or `external`.
+#endif
 
 #define hw_is_4CK_4CK					, 1
 #define hw_is_4CK_4ms_4CK_4ms				, 1
@@ -32,52 +79,6 @@
 #define hw_is_16KCK_14CK_16KCK_14CK			, 1
 #define hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
 #define hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
-
-
-#ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				internal_rc
-#endif
-#if HW_IS(HW_DEVICE_CLK_SRC, external)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
-#elif HW_IS(HW_DEVICE_CLK_SRC, internal_rc)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					8000000
-#elif HW_IS(HW_DEVICE_CLK_SRC, internal_watchdog)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				1
-#  define hw_syshz_base					128000
-#elif HW_IS(HW_DEVICE_CLK_SRC, external_low_power_xo)
-#  ifndef HW_DEVICE_CLK_HZ
-#    error HW_DEVICE_CLK_HZ must be defined as the frequency of the crystal used for clocking
-#  else
-#    define hw_syshz_base				HW_DEVICE_CLK_HZ
-#    if HW_DEVICE_CLK_HZ < 400000 /* Assume values other than 32768 are acceptable */
-#      define HW_DEVICE_CKSEL31				2
-#      define HW_DEVICE_CKSEL0				0
-#    else
-#      if HW_DEVICE_CLK_HZ < 900000
-#        define HW_DEVICE_CKSEL31			4
-#      elif HW_DEVICE_CLK_HZ < 3000000
-#        define HW_DEVICE_CKSEL31			5
-#      elif HW_DEVICE_CLK_HZ < 8000000
-#        define HW_DEVICE_CKSEL31			6
-#      else
-#        define HW_DEVICE_CKSEL31			7
-#      endif
-#    endif
-#  endif
-#elif HW_IS(HW_DEVICE_CLK_SRC, external_full_swing_xo)
-#  ifndef HW_DEVICE_CLK_HZ
-#    error HW_DEVICE_CLK_HZ must be defined as the frequency of the crystal used for clocking
-#  else
-#    define hw_syshz_base				HW_DEVICE_CLK_HZ
-#    define HW_DEVICE_CKSEL31				3
-#  endif
-#else
-#  error HW_DEVICE_CLK_SRC must be defined as one of `internal_rc`, `internal_watchdog`, `external_low_power_xo`, `external_full_swing_xo`, or `external`.
-#endif
 
 /*	SUT
  */
@@ -255,7 +256,15 @@
 #include "hwa_atmelavr_1.h"
 #include "hwa_atmegax8_cores_1.h"		/* id: 100 */
 #include "hwa_atmegax8_ios_1.h"			/* id: 300 */
+#include "hwa_atmegax8_watchdogs_1.h"		/* id: 900 */
 #include "hwa_atmegax8_eeproms_1.h"		/* id: 1000 */
 #include "hwa_atmegax8_flashs_1.h"		/* id: 1100 */
 
-#define HWA_DCL
+#if !defined __ASSEMBLER__ 
+
+#define HWA_DCL					\
+  HWA_DCL_CORES ;				\
+  HWA_DCL_IOS ;					\
+  HWA_DCL_WATCHDOGS ;
+
+#endif /* !defined __ASSEMBLER__ */

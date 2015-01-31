@@ -3,7 +3,8 @@
  *	servicing) and status flag
  */
 
-#include "config.attiny85.h"
+//#include "config.attiny85.h"
+#include "config.nanodccduino.h"
 #include <hwa.h>
 
 

@@ -26,9 +26,39 @@
 	CODE_ERS  = (1<<0)	;         Erased
 	CODE_OK = 0		; Success
 
+	;; Constants
+	;;
+	PROTOCOL   = 4
+	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE  ; from HWA
+	FLASHSIZE  = HW_DEVICE_FLASH_SIZE       ;
+	RAMSTART   = HW_DEVICE_RAM_START        ;
+	RAMEND     = HW_DEVICE_RAM_START+HW_DEVICE_RAM_SIZE-1
+	SIGNATURE0 = HW_A0(HW_DEVICE_SIGNATURE) ;
+	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
+	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
 
-	;; TODO:
-	;;   Use R22/R23 instead of R24/R25 for delay -> R24 holds the byte to tx/rx
+#if !defined HW_DEVICE_BOOTRST
+	;;
+	;; Device without boot section: allocate enough pages
+	;; for Diabolo at end of flash memory
+	;;
+	NBLPAGES  = 10
+#else
+	;; Diabolo in boot section
+	;;
+	NBLPAGES  = HW_DEVICE_BOOTSECTION_SIZE / HW_DEVICE_FLASH_PAGE_SIZE
+#endif
+	APPSTART  = HW_DEVICE_APP_START
+	BOOTSTART = FLASHSIZE - NBLPAGES*PAGESIZE
+
+
+	;; Position of data in EEPROM
+	;;
+	;;   App CRC is stored MSB first in EEPROM because it must be
+	;;   sent to the CRC algorithm in this order for checking
+	;; 
+	EEPCNT = HW_DEVICE_EEPROM_SIZE-4 ; 32 bit programmings count (MSB first)
+	EECRC  = EEPCNT-4		 ; 16 bits application CRC (MSB first)
 
 
 #if !defined HW_DEVICE_ATTINYX4 && !defined HW_DEVICE_ATMEGAX8 && !defined HW_DEVICE_ATTINYX5
@@ -36,6 +66,9 @@
 #endif
 
 	;; Register affectation
+	;;
+	;; TODO:
+	;;   Use R22/R23 instead of R24/R25 for delay -> R24 holds the byte to tx/rx
 	;;
 	;; R1:R0      value written into flash page buffer
 	;; R3:R2      CRC of application
@@ -56,15 +89,14 @@
 	;; R31:R30    Z: flash address counter (LPM/SPM)
 
 
-	;; Macros for extended instructions
-	;; 
-	.include "atmelavr-xinstr.sx"
-
-
 	;; Hardware registers
 	;;
-#define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
-#define AP_EXTRF   hw_ap(hw_reg(hw_core0, extrf))
+;; #define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
+;; #define AP_EXTRF   hw_ap(hw_reg(hw_core0, extrf))
+
+	MCUSR      = hw_addr(hw_reg(hw_core0, mcusr))
+	 BP_EXTRF  = hw_bp(hw_reg(hw_core0, extrf))
+	 BP_PORF   = hw_bp(hw_reg(hw_core0, porf))
 
 	SPMCSR	   = hw_addr(hw_reg(hw_flash0, csr))
 	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
@@ -111,118 +143,8 @@
 #  define DBG1
 #endif
 
-	;; Constants
-	;;
-	PROTOCOL   = 4
-	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE  ; from HWA
-	FLASHSIZE  = HW_DEVICE_FLASH_SIZE       ;
-	RAMSTART   = HW_DEVICE_RAM_START        ;
-	RAMEND     = HW_DEVICE_RAM_START+HW_DEVICE_RAM_SIZE-1
-	SIGNATURE0 = HW_A0(HW_DEVICE_SIGNATURE) ;
-	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
-	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
-
-
-#if !defined HW_DEVICE_BOOTRST
-	;;
-	;; Device without boot section: allocate enough pages
-	;; for Diabolo at end of flash memory
-	;;
-	NBLPAGES  = 10
-#else
-	;; Diabolo in boot section
-	;;
-	NBLPAGES  = HW_DEVICE_BOOTSECTION_SIZE / HW_DEVICE_FLASH_PAGE_SIZE
-#endif
-	APPSTART  = HW_DEVICE_APP_START
-	BOOTSTART = FLASHSIZE - NBLPAGES*PAGESIZE
-
-
-	;; Position of data in EEPROM
-	;;
-	;;   App CRC is stored MSB first in EEPROM because it must be
-	;;   sent to the CRC algorithm in this order for checking
-	;; 
-	EEPCNT = HW_DEVICE_EEPROM_SIZE-4 ; 32 bit programmings count (MSB first)
-	EECRC  = EEPCNT-4		 ; 16 bits application CRC (MSB first)
-
-
-	;; Change MCU speed macros
-	;;
-#if defined XSPEED
-	.macro SPEED1 reg
-	ldi	\reg, 0xFF	; Highest clock speed
-	XST	OSCCAL, \reg
-	.endm
-	.macro SPEED0
-	XST	OSCCAL, R9	; Revert to factory MCU clock speed
-	.endm
-#else
-	.macro SPEED1 reg
-	.endm
-	.macro SPEED0
-	.endm
-#endif
-
-
-	;; Macros for flash memory programming
-	;;
-#if !defined HW_DEVICE_BOOTRST
-	;;
-	;; Device without boot section: the MCU is halted when the
-	;; flash memory is busy, no need to wait for readiness
-	;;
-	.macro	FLASH_CLRBF
-	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN
-	XST	SPMCSR, R21
-	spm
-	.endm
-
-	.macro	FLASH_LDBYTE
-	ldi	R21, 1<<BP_SPMEN
-	XST	SPMCSR, R21
-	spm
-	.endm
-
-	.macro	FLASH_PGERS
-	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
-	XST	SPMCSR, R21
-	spm
-	.endm
-
-	.macro	FLASH_PGWRT
-	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
-	XST	SPMCSR, R21
-	spm
-	.endm
-
-#  define FLASH_ERWWS
-
-#else
-	;; Device with boot section: wait the completion of SPM operation
-	;;
-#  define FLASH_CLRBF
-
-	.macro	FLASH_LDBYTE
-	ldi	R21, 1<<BP_SPMEN
-	rcall	dospm
-	.endm
-
-	.macro	FLASH_PGERS
-	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
-	rcall	dospm
-	.endm
-
-	.macro	FLASH_PGWRT
-	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
-	rcall	dospm
-	.endm
-
-	.macro	FLASH_ERWWS
-	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN ; Re-enable RWW section
-	rcall	dospm
-	.endm
-#endif
+#include "atmelavr-xinstr.sx"		// Macros for extended instructions
+#include "diabolo-macros.sx"		// Macros for diabolo
 
 
 	;; /********************************/
@@ -252,10 +174,15 @@
 	;;   entry point at the end of flash memory
 	;;
 	;; SP points to RAMEND after RESET then no initialization is required
-	;;
-;; reset:	XSBIS	R24, AP_PORF		; Start immediately the application
-reset:	XSBIS	R24, AP_EXTRF		; Start immediately the application
-app:	rjmp	FLASHSIZE+APPSTART	; if the reset is not caused by power-on
+
+	;; Start the application if the reset was not caused by power-on or by
+	;; the reset pin
+	;; 
+reset:	XLD	R16, MCUSR
+	andi	R16, (1<<BP_EXTRF) | (1<<BP_PORF)
+	brne	1f
+app:	rjmp	FLASHSIZE+APPSTART
+1:
 
 	DBGI
 	DBG1

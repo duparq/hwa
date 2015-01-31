@@ -64,7 +64,7 @@
   HW_G2(_hwa_cfio_vdirection, HW_IS(,hw_cfio_direction_##__VA_ARGS__))(n,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio_vdirection_1(n,bn,bp,v,...)			\
-  _hwa_write_r8( &hwa->n.port, 0xFF,0, bn,bp, (HW_A1(hw_cfio_direction_##v)?(1U<<bn)-1:0));	\
+  _hwa_write_r8( &hwa->n.ddr, 0xFF,0, bn,bp, (HW_A1(hw_cfio_direction_##v)?(1U<<bn)-1:0));	\
   HW_G2(_hwa_cfio_xpullup, HW_IS(pullup,__VA_ARGS__))(n,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio_vdirection_0(n,bn,bp,v,...)			\
@@ -80,7 +80,7 @@
   HW_G2(_hwa_cfio_vpullup, HW_IS(,hw_state_##__VA_ARGS__))(n,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio_vpullup_1(n,bn,bp,v,...)			\
-  _hwa_write_r8( &hwa->n.ddr, 0xFF,0, bn,bp, (HW_A1(hw_state_##v)?(1U<<bn)-1:0) );\
+  _hwa_write_r8( &hwa->n.port, 0xFF,0, bn,bp, (HW_A1(hw_state_##v)?(1U<<bn)-1:0) );\
   HW_TX(,__VA_ARGS__)
 
 #define _hwa_cfio_vpullup_0(n,bn,bp,v,...)			\

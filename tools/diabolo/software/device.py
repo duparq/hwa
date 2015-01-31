@@ -64,6 +64,7 @@ class Device:
         self.flash = None		# Flash memory content
         self.flash_changed = False	# Need to change CRC in EEPROM if true
 
+        self.reset_pin = None
         self.reset_duration = 0
 
 
@@ -74,14 +75,14 @@ class Device:
     #    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
     #    devices without boot section.
     #
-    def appstat ( data ):
-        crc = CRC.init()
-        for x in range(len(data)-1, -1, -1):
-            if data[x] != '\xFF':
-                break
-        for i in range(x, -1, -1):
-            crc = CRC.add(crc, data[i])
-        return crc, x+1
+    # def appstat ( data ):
+    #     crc = CRC.init()
+    #     for x in range(len(data)-1, -1, -1):
+    #         if data[x] != '\xFF':
+    #             break
+    #     for i in range(x, -1, -1):
+    #         crc = CRC.add(crc, data[i])
+    #     return crc, x+1
 
 
     #  Receive data
@@ -109,18 +110,26 @@ class Device:
     def txbrk ( self ):
         self.com.brk()
 
+    def reset(self):
+        if not self.reset_pin or self.reset_pin == "none":
+            return
+        cout(_("Resetting device using signal %s for %.2f s.\n" %
+               (self.reset_pin, self.reset_duration)))
+        if self.reset_pin == "DTR":
+            self.com.set_DTR(True)		# Assert the RESET pin
+            time.sleep(self.reset_duration)
+            self.com.set_DTR(False)		# Release RESET
+        elif self.reset_pin == "RTS":
+            self.com.set_RTS(True)		# Assert the RESET pin
+            time.sleep(self.reset_duration)
+            self.com.set_RTS(False)		# Release RESET
+
 
     #  Establish the communication with the device
     #
     def connect(self):
-        # RTS (reset) is asserted as the com is opened
-        #self.com.set_RTS(True)		# Assert the RESET pin
-        self.com.set_DTR(True)		# Assert the RESET pin
-        self.com.set_BRK(True)		# Force the device to stay in Diabolo
-        #time.sleep(0.01)
-        time.sleep(self.reset_duration)
-        #self.com.set_RTS(False)		# Release RESET
-        self.com.set_DTR(False)		# Release RESET
+        self.com.set_BRK(True)		# Force the device to stay in Diabolo after reset
+        self.reset()
         time.sleep(0.5)
         self.com.set_BRK(False)		# Release the BRK signal
         return self.get_prompt()
@@ -444,7 +453,21 @@ class Device:
 
         t = time.time() + 1.0
         while time.time() < t:
-            r = self.execute(s, 1+1)
+            if 0:
+                r = self.execute(s, 1+1)
+            else:
+                r = ""
+                self.ncmds += 1
+                if not self.get_prompt():
+                    return 'T'
+                self.lastchar = None
+                self.tx(s)
+                while len(r) < 2:
+                    r += self.rx(1)
+                if self.lastchar!='#':
+                    dbg("CMDFAIL: %s -> %s\n" % (s2hex(cmdstr), s2hex(r)))
+                    self.ncmdfails += 1
+
             if len(r)==2 and r[-1]=='#':
                 x = ord(r[-2])
                 if x & 0xF0 == 0:

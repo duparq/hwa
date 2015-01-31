@@ -18,11 +18,5 @@
 #define HW_DEVICE_WATCHDOG_ALWAYS_ON	no
 #define HW_DEVICE_CLOCK_OUTPUT		disabled
 
-#define	PIN_LED				hw_pin_pb5
-
-/*	Settings for Diabolo
- */
-#define DIABOLO_RX			hw_pin_rxd
-#define DIABOLO_TX			hw_pin_txd
-#define DIABOLO_BPS			230400
-#define DIABOLO_RESET_SIGNAL		DTR
+#define PIN_RXD				hw_pin_rxd
+#define PIN_TXD				hw_pin_txd

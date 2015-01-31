@@ -3,7 +3,8 @@
 
 //#include "config.attiny84.h"
 //#include "config.atmega328p.h"
-#include "config.attiny85.h"
+//#include "config.attiny85.h"
+#include "config.nanodccduino.h"
 #include <hwa.h>
 
 #if defined HW_DEVICE_ATMELAVR

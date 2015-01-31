@@ -28,14 +28,22 @@
 
 /*	Pins				class, name, id, controller, bn, bp
  */
-#define hw_port_b			io, port_b,  309, hw_portb, 8, 0
+#define hw_port_b			io, port_b,  309, hw_portb, 6, 0
 #define hw_pin_pb0			io, pin_pb0, 301, hw_portb, 1, 0
 #define hw_pin_pb1			io, pin_pb1, 302, hw_portb, 1, 1
 #define hw_pin_pb2			io, pin_pb2, 303, hw_portb, 1, 2
+#if !HW_IS(external,HW_DEVICE_CLK_SRC)		\
+  && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
 #define hw_pin_pb3			io, pin_pb3, 304, hw_portb, 1, 3
+#endif
+#if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT)	\
+  && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
 #define hw_pin_pb4			io, pin_pb4, 305, hw_portb, 1, 4
-#define hw_pin_pb5			io, pin_pb5, 306, hw_portb, 1, 5
-
+#endif
+#if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET)	\
+  && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
+#  define hw_pin_pb5			io, pin_pb5, 306, hw_portb, 1, 5
+#endif
 
 /*	Pins by numbers
  */
@@ -46,7 +54,9 @@
 #define hw_is_20mlf_20mlf		, 1
 
 
-#if HW_IS(8pdip,HW_A1(HW_DEVICE)) || HW_IS(8soic,HW_A1(HW_DEVICE)) || HW_IS(8tssop,HW_A1(HW_DEVICE))
+#if HW_IS(8pdip,HW_A1(HW_DEVICE))		\
+  || HW_IS(8soic,HW_A1(HW_DEVICE))		\
+  || HW_IS(8tssop,HW_A1(HW_DEVICE))
 #
 #  define hw_pin_1			hw_pin_pb5
 #  define hw_pin_2			hw_pin_pb3
@@ -55,7 +65,8 @@
 #  define hw_pin_6			hw_pin_pb1
 #  define hw_pin_7			hw_pin_pb2
 #
-#elif HW_IS(20qfn,HW_A1(HW_DEVICE)) || HW_IS(20mlf,HW_A1(HW_DEVICE))
+#elif HW_IS(20qfn,HW_A1(HW_DEVICE))		\
+  || HW_IS(20mlf,HW_A1(HW_DEVICE))
 #
 #  define hw_pin_1			hw_pin_pb5
 #  define hw_pin_2			hw_pin_pb3

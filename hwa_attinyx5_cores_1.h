@@ -21,10 +21,10 @@
 #define hw_core_sreg		crg, 8, 0x5F, 0xFF, 0x00
 #define hw_core_sph		crg, 8, 0x5E, 0x03, 0x00
 #define hw_core_spl		crg, 8, 0x5D, 0xFF, 0x00
-#define hw_core_gimsk		crg, 8, 0x5B, 0x70, 0x00
+#define hw_core_gimsk		crg, 8, 0x5B, 0x60, 0x00
 #define  hw_core_int0		 cb1, gimsk, 1, 6
 #define  hw_core_pcie		 cb1, gimsk, 1, 5
-#define hw_core_gifr		crg, 8, 0x5A, 0x70, 0x70
+#define hw_core_gifr		crg, 8, 0x5A, 0x60, 0x60
 #define  hw_core_intf0		 cb1, gifr, 1, 6
 #define  hw_core_pcif		 cb1, gifr, 1, 5
 #define hw_core_mcucr		crg, 8, 0x55, 0xFF, 0x00
@@ -84,7 +84,7 @@
 			 : [mcucr] "I" (hw_addr(hw_reg(hw_core0, mcucr))-0x20),	\
 			   [se] "I" (1<<hw_bp(hw_reg(hw_core0, se))));	\
   } while(0)
-#else
+#elif 0
 #define hw_sleep()						\
   __asm__ __volatile__("    sleep          "	"\n\t" :::)
 #endif

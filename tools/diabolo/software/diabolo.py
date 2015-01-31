@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-24 12:36:53 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-01-31 18:35:13 -*-
 
 
 import struct
@@ -64,7 +64,10 @@ def parse_options():
                       help="compute firmware crc")
     parser.add_option("-r", "--reset-only", action="store_true",
                       default=False, dest="reset",
-                      help="reset the device with DTR and exit")
+                      help="reset the device and exit")
+    parser.add_option("--reset-pin", metavar="PIN", type="string",
+                      default="DTR", dest="reset_pin",
+                      help="RS232 signal used to reset the device")
     parser.add_option("-t", "--reset-duration", type="float",
                       default=0.01, dest="reset_duration",
                       help="how long RTS is set low for reset (only for standard devices)")
@@ -81,11 +84,16 @@ def parse_options():
 #
 #    The CRC is computed from the end to the beginning of the memory, skipping
 #    the 0xFF bytes at the end.
-#    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
-#    devices without boot section.
 #
-def appstat ( data, end ):
+#    For devices without boot section, 'end' should be 1 so that the first two
+#    bytes of reset vector (rjmp to Diabolo) are not computed.
+#
+def appstat ( data, bootsection ):
     crc = CRC.init()
+    if not bootsection:
+        end = 1
+    else:
+        end = -1
     for x in range(len(data)-1, end, -1):
         if data[x] != '\xFF':
             break
@@ -141,6 +149,19 @@ def run():
     #  Load file to burn into flash if any
     #
     if options.flash_file:
+        if not options.mcu:
+            cerr("Device name?\n");
+            return
+
+        device = None
+        for d in Device.dtbl:
+            if d[0].lower() == options.mcu.lower():
+                device = d
+                break
+        if not device:
+            cerr("Unrecognized device name.\n");
+            return
+
         if not os.path.isfile(options.flash_file):
             cerr(_("File %s does not exist.\n" % options.flash_file))
             return
@@ -163,21 +184,8 @@ def run():
         # if options.mcu.lower == 'attiny84':
         #toburn = byte0 + byte1 + toburn[2:]
 
-        device = None
-        for d in Device.dtbl:
-            if d[0].lower() == options.mcu.lower():
-                device = d
-                break
-        if not device:
-            cerr("Device name?\n");
-            return
-
-        if device[5]:
-            end = -1
-        else:
-            end = 1
-        toburn_crc, x = appstat(toburn, end)
-        cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
+        toburn_crc, x = appstat(toburn, device[5])
+        cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
                (options.flash_file, x, len(toburn), toburn_crc)))
 
     #  Stop here if Diabolo was launched only for computing the CRC
@@ -241,6 +249,7 @@ def run():
     else:
         cout(_("Standard device\n"))
         device = Device(com)
+        device.reset_pin = options.reset_pin
         device.reset_duration = options.reset_duration
         if not device.connect():
             cerr(_("Could not connect.\n"))
@@ -319,12 +328,8 @@ def run():
             flash_cache = f.read()
             f.close()
 
-            if device.bootsection:
-                end = -1
-            else:
-                end = 1
-            flash_cache_crc, x = appstat(flash_cache, end)
-            cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
+            flash_cache_crc, x = appstat(flash_cache, device.bootsection)
+            cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
                    (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
             if device.appcrc != flash_cache_crc:
                 cerr(_("flash-cache and application CRC do not match!"))
@@ -522,12 +527,8 @@ def run():
         f = open(options.flash_cache, 'wb')
         f.write(flash_cache)
         f.close()
-        if device.bootsection:
-            end = -1
-        else:
-            end = 1
-        flash_cache_crc, x = appstat(flash_cache,end)
-        cout(_("%s: %d / %d bytes for application, CRC=0x%04X.\n" %
+        flash_cache_crc, x = appstat(flash_cache,device.bootsection)
+        cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
                (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
 
 

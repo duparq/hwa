@@ -1,0 +1,79 @@
+
+	;; -*- asm -*-
+
+	;; Change MCU speed macros
+	;;
+#if defined XSPEED
+	.macro SPEED1 reg
+	ldi	\reg, 0xFF	; Highest clock speed
+	XST	OSCCAL, \reg
+	.endm
+	.macro SPEED0
+	XST	OSCCAL, R9	; Revert to factory MCU clock speed
+	.endm
+#else
+	.macro SPEED1 reg
+	.endm
+	.macro SPEED0
+	.endm
+#endif
+
+
+	;; Macros for flash memory programming
+	;;
+#if !defined HW_DEVICE_BOOTRST
+	;;
+	;; Device without boot section: the MCU is halted when the
+	;; flash memory is busy, no need to wait for readiness
+	;;
+	.macro	FLASH_CLRBF
+	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN
+	XST	SPMCSR, R21
+	spm
+	.endm
+
+	.macro	FLASH_LDBYTE
+	ldi	R21, 1<<BP_SPMEN
+	XST	SPMCSR, R21
+	spm
+	.endm
+
+	.macro	FLASH_PGERS
+	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
+	XST	SPMCSR, R21
+	spm
+	.endm
+
+	.macro	FLASH_PGWRT
+	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
+	XST	SPMCSR, R21
+	spm
+	.endm
+
+#  define FLASH_ERWWS
+
+#else
+	;; Device with boot section: wait the completion of SPM operation
+	;;
+#  define FLASH_CLRBF
+
+	.macro	FLASH_LDBYTE
+	ldi	R21, 1<<BP_SPMEN
+	rcall	dospm
+	.endm
+
+	.macro	FLASH_PGERS
+	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
+	rcall	dospm
+	.endm
+
+	.macro	FLASH_PGWRT
+	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
+	rcall	dospm
+	.endm
+
+	.macro	FLASH_ERWWS
+	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN ; Re-enable RWW section
+	rcall	dospm
+	.endm
+#endif
