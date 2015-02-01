@@ -2,18 +2,19 @@
 /*	Device-specific hardware acess definitions.
  */
 
+#define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
+
+#define hw_reti()			hw_asm("reti")
+#define hw_sleep()			hw_asm("sleep")
+#define hw_enable_interrupts()		hw_asm("sei")
+#define hw_disable_interrupts()		hw_asm("cli")
+
 
 /**\brief	Software loop of \c n system clock cycles.
  * \todo	Only works with compile time constants
  * \hideinitializer
  */
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
-
-
-/*	Enable/disable interrupts
- */
-#define hw_enable_interrupts()		__asm__ __volatile__ ("sei" ::)
-#define hw_disable_interrupts()		__asm__ __volatile__ ("cli" ::)
 
 
 #define HW_ATOMIC(...)				\
@@ -187,63 +188,69 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
 				intptr_t ra, uint8_t rwm, uint8_t rfm, _Bool commit )
 {
+  if ( !commit ) {
+    r->ovalue = (r->ovalue & r->omask & ~r->mmask) | (r->mvalue & r->mmask) ;
+    r->omask |= r->mmask ;
+    r->mmask = 0 ;
+    return ;
+  }
+
   volatile uint8_t *p = (volatile uint8_t *)ra ;
 
-  /*  Compute the mask of bits to be committed (do not commit bits untouched
-   *  since last commit).
-   *
-   *  hwa_write does not permit r->mmask to extand beyond rwm but _hwa_set does.
+  /*  Mask of bits to be written:
+   *    =     bits that are writeable (rwm)
+   *      AND that must be modified (mmask)
    */
-  /*  Mask of bits to be written (toggled or unknown bits)
-   */
-  uint8_t wm = rwm & r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
+  uint8_t wm = rwm & r->mmask ;
 
   if ( wm ) {
-
-    if ( commit && (uintptr_t)p < 0x40 &&
-	 (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
-	  wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80 ) ) {
     /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  Mask of bits that must be written and that will actually be modified
+     */
+    uint8_t wm1 = wm & ((r->ovalue ^ r->mvalue) | ~r->omask);
+
+    if ( (uintptr_t)p < 0x40 &&
+	 (wm1==0x01 || wm1==0x02 || wm1==0x04 || wm1==0x08 ||
+	  wm1==0x10 || wm1==0x20 || wm1==0x40 || wm1==0x80 ) ) {
+    /*
+     *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
      *  sbi/cbi
      */
-      if ( wm & r->mvalue )
-	*p |= wm ;
+      if ( wm1 & r->mvalue )
+	*p |= wm1 ;
       else
-	*p &= ~wm ;
-      r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
-      r->mmask &= ~wm ;
-      r->omask |= wm ;
+	*p &= ~wm1 ;
+      r->ovalue = (r->ovalue & ~wm1) | (r->mvalue & wm1) ;
+      r->omask |= wm1 ;
+      r->mmask = 0 ;
       return ;
     }
 
     /*	Mask of bits to be read
-     *	  = bits that are writeable and not to be modified and not flags
+     *	  =     bits that are not to be modified (mmask)
+     *      AND not flags (rfm)
+     *      AND that are not known (omask)
      */
-    uint8_t rm = rwm & ~r->mmask & ~r->omask & ~rfm ;
+    uint8_t rm = ~r->mmask & ~rfm & ~r->omask ;
 
     /*  Read only if needed: something to read, commit required
      */
-    if ( rm && commit ) {
+    if ( rm )
       r->ovalue = *p ;
-      r->omask = rwm & ~rfm ;
-    }
 
-    /*  Compute value
+    /*  Compute new value
      */
-    r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
 
-    /*  Write value if needed: something to write, commit required
+    /*  Write value if needed: something to write
      */
-    if ( wm && commit )
-      *p = r->ovalue ;
-    r->ovalue &= ~rfm ;
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
   }
 
   r->omask |= r->mmask ;
-  r->omask &= ~rfm ;
   r->mmask = 0 ;
 }
+
 
 HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r,
 				 intptr_t ra, uint16_t rwm, uint16_t rfm, _Bool commit )
@@ -339,9 +346,3 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 #define _hw_isr_(vector, ...)						\
   HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
   void __vector_##vector (void)
-
-
-#define hw_asm(...)	__asm__ __volatile__(__VA_ARGS__)
-//#define hw_reti()	__asm__ __volatile__("reti\n":::)
-#define hw_reti()	hw_asm("reti\n")
-#define hw_sleep()	hw_asm("sleep\n")
