@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-31 18:35:13 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-05 19:23:27 -*-
 
 
-import struct
-# import com
+#import struct
+import sys
+
 from com import Com
 from utils import s2hex, hexdump
 import time
@@ -12,72 +13,73 @@ from crc_ccitt import CRC
 from device import Device
 from cscont import CsCont
 from csmod import CsMod
+from parse import get_args
 
 
-def parse_options():
-    from optparse import OptionParser
-    parser = OptionParser(usage="usage: %prog [options] [firmware]")
-    parser.add_option("-d", "--dev", metavar="DEV", type="string",
-                      default="/dev/ttyUSB0", dest="comdev", 
-                      help="set com device (default /dev/ttyUSB0)")
-    parser.add_option("-b", "--bps", metavar="BPS", type="int",
-                      default=115200, dest="combps", 
-                      help="set com speed (default 115200)")
-    parser.add_option("-1", "--one-wire", action="store_true",
-                      default=True, dest="onewire",
-                      help="RX/TX on the same communication wire")
-    parser.add_option("-2", "--two-wires", action="store_false",
-                      default=True, dest="onewire",
-                      help="RX/TX on separate communication wires")
-    parser.add_option("-m", "--mcu", metavar="MCU", type="string",
-                      default=None, dest="mcu",
-                      help="target microcontroller")
-    parser.add_option("--read-flash", action="store_true",
-                      default=False, dest="read_flash",
-                      help="Force reading of flash memory")
-    parser.add_option("--full", action="store_true",
-                      default=False, dest="full",
-                      help="process full content (include bootloader code)")
-    parser.add_option("--hexdump", action="store_true",
-                      default=False, dest="hexdump",
-                      help="Hexdump read content")
-    parser.add_option("--flash-file", metavar="FILE", type="string",
-                      default=None, dest="flash_file",
-                      help="binary or hex file to burn into flash")
-    parser.add_option("--flash-cache", metavar="FILE", type="string",
-                      dest="flash_cache",
-                      help="binary file used to store flash content")
-    parser.add_option("-F", "--erase-flash", action="store_true",
-                      default=False, dest="erase_flash",
-                      help="Erase flash memory")
-    parser.add_option("--dump-eeprom", action="store_true",
-                      default=False, dest="dump_eeprom",
-                      help="Dump content of EEPROM memory")
-    # parser.add_option("-x", "--run", metavar="FILE", type="string",
-    #                   dest="run_cmd",
-    #                   help="command to start when the 'run' button is pressed")
-    parser.add_option("--carspy", metavar="MODULE", type="int", default=-1,
-                      dest="carspy",
-                      help="address (0..30) of Carspy module to access (0 for carspy controller)")
-    parser.add_option("-c", "--crc", action="store_true",
-                      default=False, dest="crc",
-                      help="compute firmware crc")
-    parser.add_option("-r", "--reset-only", action="store_true",
-                      default=False, dest="reset",
-                      help="reset the device and exit")
-    parser.add_option("--reset-pin", metavar="PIN", type="string",
-                      default="DTR", dest="reset_pin",
-                      help="RS232 signal used to reset the device")
-    parser.add_option("-t", "--reset-duration", type="float",
-                      default=0.01, dest="reset_duration",
-                      help="how long RTS is set low for reset (only for standard devices)")
-    # parser.add_option("-t", "--test", action="store_true",
-    #                   default=False, dest="test",
-    #                   help="test command")
-    (options, args) = parser.parse_args()
-    if len(args) == 1:
-        options.flash_file = args[0]
-    return options
+# def parse_options():
+#     from optparse import OptionParser
+#     parser = OptionParser(usage="usage: %prog [options] [firmware]")
+#     parser.add_option("-d", "--dev", metavar="DEV", type="string",
+#                       default="/dev/ttyUSB0", dest="comdev", 
+#                       help="set com device (default /dev/ttyUSB0)")
+#     parser.add_option("-b", "--bps", metavar="BPS", type="int",
+#                       default=115200, dest="combps", 
+#                       help="set com speed (default 115200)")
+#     parser.add_option("-1", "--one-wire", action="store_true",
+#                       default=True, dest="onewire",
+#                       help="RX/TX on the same communication wire")
+#     parser.add_option("-2", "--two-wires", action="store_false",
+#                       default=True, dest="onewire",
+#                       help="RX/TX on separate communication wires")
+#     parser.add_option("-m", "--mcu", metavar="MCU", type="string",
+#                       default=None, dest="mcu",
+#                       help="target microcontroller")
+#     parser.add_option("--read-flash", action="store_true",
+#                       default=False, dest="read_flash",
+#                       help="Force reading of flash memory")
+#     parser.add_option("--full", action="store_true",
+#                       default=False, dest="full",
+#                       help="process full content (include bootloader code)")
+#     parser.add_option("--hexdump", action="store_true",
+#                       default=False, dest="hexdump",
+#                       help="Hexdump read content")
+#     parser.add_option("--flash-file", metavar="FILE", type="string",
+#                       default=None, dest="flash_file",
+#                       help="binary or hex file to burn into flash")
+#     parser.add_option("--flash-cache", metavar="FILE", type="string",
+#                       dest="flash_cache",
+#                       help="binary file used to store flash content")
+#     parser.add_option("-F", "--erase-flash", action="store_true",
+#                       default=False, dest="erase_flash",
+#                       help="Erase flash memory")
+#     parser.add_option("--dump-eeprom", action="store_true",
+#                       default=False, dest="dump_eeprom",
+#                       help="Dump content of EEPROM memory")
+#     # parser.add_option("-x", "--run", metavar="FILE", type="string",
+#     #                   dest="run_cmd",
+#     #                   help="command to start when the 'run' button is pressed")
+#     parser.add_option("--carspy", metavar="MODULE", type="int", default=-1,
+#                       dest="carspy",
+#                       help="address (0..30) of Carspy module to access (0 for carspy controller)")
+#     parser.add_option("-c", "--crc", action="store_true",
+#                       default=False, dest="crc",
+#                       help="compute firmware crc")
+#     parser.add_option("-r", "--reset-only", action="store_true",
+#                       default=False, dest="reset",
+#                       help="reset the device and exit")
+#     parser.add_option("--reset-pin", metavar="PIN", type="string",
+#                       default="DTR", dest="reset_pin",
+#                       help="RS232 signal used to reset the device")
+#     parser.add_option("-t", "--reset-duration", type="float",
+#                       default=0.01, dest="reset_duration",
+#                       help="how long RTS is set low for reset (only for standard devices)")
+#     # parser.add_option("-t", "--test", action="store_true",
+#     #                   default=False, dest="test",
+#     #                   help="test command")
+#     (options, args) = parser.parse_args()
+#     if len(args) == 1:
+#         options.flash_file = args[0]
+#     return options
 
 
 #  Application CRC and length of application code
@@ -105,32 +107,32 @@ def appstat ( data, bootsection ):
 #  Open the communication device
 #    Return the com device if OK, None otherwise
 #
-def open_com(options):
-    # trace()
+# def open_com(options):
+#     # trace()
 
-    # import os, stat
-    # if stat.S_ISFIFO(os.stat(self.options.comdev).st_mode):
-    #     cout( "File: %s is a FIFO\n" % self.options.comdev )
-    # elif stat.S_ISSOCK(os.stat(self.options.comdev).st_mode):
-    #     cout( "File: %s is a SOCKET\n" % self.options.comdev )
+#     # import os, stat
+#     # if stat.S_ISFIFO(os.stat(self.options.comdev).st_mode):
+#     #     cout( "File: %s is a FIFO\n" % self.options.comdev )
+#     # elif stat.S_ISSOCK(os.stat(self.options.comdev).st_mode):
+#     #     cout( "File: %s is a SOCKET\n" % self.options.comdev )
 
-    com = Com( options.comdev, options.combps )
-    # if com == None:
-    #     cerr(_("Can not get serial port\n"))
-    #     return None
+#     com = Com( options.comdev, options.combps )
+#     # if com == None:
+#     #     cerr(_("Can not get serial port\n"))
+#     #     return None
 
-    try:
-        com.open()
-    except ValueError:
-        cerr(_("Value error\n"))
-    if not com.is_open():
-        cerr(_("Can not open serial port\n"))
-        return None
+#     try:
+#         com.open()
+#     except ValueError:
+#         cerr(_("Value error\n"))
+#     if not com.is_open():
+#         cerr(_("Can not open serial port\n"))
+#         return None
 
-    com.onewire = options.onewire
-    #com.set_timeout( max( 0.01, 20.0/options.combps) )
-    #com.setTimeout( 40.0/options.combps )
-    return com
+#     com.onewire = options.onewire
+#     #com.set_timeout( max( 0.01, 20.0/options.combps) )
+#     #com.setTimeout( 40.0/options.combps )
+#     return com
 
 
 def run():
@@ -138,7 +140,10 @@ def run():
     import os.path
 
     toburn = None
-    options = parse_options()
+    #options = parse_options()
+    options = get_args()
+
+    print options
 
     #  Check that the target name is provided
     #
@@ -148,33 +153,33 @@ def run():
 
     #  Load file to burn into flash if any
     #
-    if options.flash_file:
-        if not options.mcu:
-            cerr("Device name?\n");
-            return
+    if options.filename:
+        # if not options.mcu:
+        #     cerr("Target device must be provided.\n");
+        #     return
 
-        device = None
-        for d in Device.dtbl:
-            if d[0].lower() == options.mcu.lower():
-                device = d
-                break
-        if not device:
-            cerr("Unrecognized device name.\n");
-            return
+        # device = None
+        # for d in Device.dtbl:
+        #     if d[0].lower() == options.mcu.lower():
+        #         device = d
+        #         break
+        # if not device:
+        #     cerr("Unrecognized device name.\n");
+            # return
 
-        if not os.path.isfile(options.flash_file):
-            cerr(_("File %s does not exist.\n" % options.flash_file))
+        if not os.path.isfile(options.filename):
+            cerr(_("File %s does not exist.\n" % options.filename))
             return
-        if not options.flash_file.endswith('.bin'):
+        if not options.filename.endswith('.bin'):
             cerr(_("File format not handled."))
             return
 
-        f = open(options.flash_file, 'rb')
+        f = open(options.filename, 'rb')
         toburn = f.read()
         f.close()
 
         if len(toburn)==0:
-            cout(_("%s is void.\n" % options.flash_file))
+            cout(_("%s is void.\n" % options.filename))
             return
 
         #  Overwrite the RESET vector of devices that do not have a
@@ -184,37 +189,84 @@ def run():
         # if options.mcu.lower == 'attiny84':
         #toburn = byte0 + byte1 + toburn[2:]
 
-        toburn_crc, x = appstat(toburn, device[5])
-        cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
-               (options.flash_file, x, len(toburn), toburn_crc)))
+        # toburn_crc, x = appstat(toburn, device[5])
+        # cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
+        #        (options.filename, x, len(toburn), toburn_crc)))
 
-    #  Stop here if Diabolo was launched only for computing the CRC
+    #  Compute a CRC?
     #
     if options.crc:
-        return
+        if not toburn:
+            cerr(_("Input file is required for CRC computation.\n"))
+            sys.exit(1)
+        if not options.mcu:
+            cerr(_("Target device is required for CRC computation.\n"))
+            sys.exit(1)
+        for d in Device.dtbl:
+            if d[0].lower() == options.mcu.lower():
+                crc, x = appstat(toburn, d[5])
+                cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
+                       (options.filename, x, len(toburn), crc)))
+                return
+        cerr("Unrecognized device name.\n");
+        sys.exit(1)
+
+    #  Check that file and device match
+    #
+    if options.filename and options.device:
+        toburn_crc, x = appstat(toburn, device[5])
+        cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
+               (options.filename, x, len(toburn), toburn_crc)))
 
     #  Open the communication interface
     #
     if options.carspy >= 0:
-        options.combps = 230400
-    com = open_com(options)
-    if not com:
-        cout(_("Could not open %s\n" % options.comdev))
-        return
-    cout(_("Interface: %s (%d bps)\n" % (options.comdev, options.combps)))
-
-    #  Only reset the device ?
-    #
-    if options.reset:
-        com.set_DTR(True)
-        time.sleep(options.reset_duration)
-        com.set_DTR(False)
-        return
+        options.bps = 230400
+    com = Com(options.tty, options.bps, options.wires)
+    cout(_("Interface: %s (%d bps)\n" % (options.tty, options.bps)))
 
     #  Reach proper device
     #
-    if options.carspy >= 0:
-        options.combps = 230400
+    if options.carspy==-1:
+        cout(_("Standard device\n"))
+        device = Device(com)
+        device.reset_signal = options.reset
+        device.reset_length = options.reset_length
+
+        #  Detect how many wires are used for rx/tx
+        #    This must be done with the device in reset state
+        #
+        # if com.wires == 0:
+        #     cout(_("Tty wires:"))
+        #     device.set_reset(True)
+        #     time.sleep(0.1)
+        #     com.serial.write('?')
+        #     r = com.serial.read(10)
+        #     device.set_reset(False)
+        #     trace(s2hex(r))
+        #     if r==None or r=='' or r=='!':
+        #         wires = 2
+        #     elif r=='?' or r == '?!':
+        #         wires = 1
+        #     else:
+        #         raise Exception("Can not handle reply: \"%s\" %s." % (r,s2hex(r)))
+        #     com.wires = wires
+        #     cout(" %d\n" % com.wires)
+
+        if options.reset_and_quit:
+            device.reset()
+            return
+
+        if not device.connect():
+            cerr(_("Could not connect.\n"))
+            return
+
+        cout(_("Connected to device \n"))
+
+    else:
+        #
+        #  Carspy controller or module
+        #
         device = CsCont(com)
         if not device.connect():
             cout(_("  No carspy controller found. Already running Diabolo?\n\n"))
@@ -246,15 +298,13 @@ def run():
                         cout(_("      Could not launch Diabolo!\n"))
                         return
                     cout(_("      Diabolo launched.\n\n"))
-    else:
-        cout(_("Standard device\n"))
-        device = Device(com)
-        device.reset_pin = options.reset_pin
-        device.reset_duration = options.reset_duration
-        if not device.connect():
-            cerr(_("Could not connect.\n"))
-            return
-        cout(_("Connected to device \n"))
+
+    #  Check that file and device match
+    #
+    # if options.filename and options.device:
+    #     toburn_crc, x = appstat(toburn, device[5])
+    #     cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
+    #            (options.filename, x, len(toburn), toburn_crc)))
 
     #  Get Diabolo prompt
     #
@@ -318,20 +368,20 @@ def run():
 
     #  Load cache for flash data if wanted
     #
-    flash_cache = None
-    if options.flash_cache:
-        if os.path.isfile(options.flash_cache):
-            if not options.flash_cache.endswith('.bin'):
+    cache = None
+    if options.cachename:
+        if os.path.isfile(options.cachename):
+            if not options.cachename.endswith('.bin'):
                 cerr(_("File format not handled."))
                 return
-            f = open(options.flash_cache, 'rb')
-            flash_cache = f.read()
+            f = open(options.cachename, 'rb')
+            cache = f.read()
             f.close()
 
-            flash_cache_crc, x = appstat(flash_cache, device.bootsection)
+            cache_crc, x = appstat(cache, device.bootsection)
             cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
-                   (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
-            if device.appcrc != flash_cache_crc:
+                   (options.cachename, x, len(cache), cache_crc)))
+            if device.appcrc != cache_crc:
                 cerr(_("flash-cache and application CRC do not match!"))
                 options.read_flash = True
         else:
@@ -339,7 +389,7 @@ def run():
 
     #  Dump content of EEPROM
     #
-    if options.dump_eeprom:
+    if options.read_eeprom:
         t = time.time()
         cout("\nReading EEPROM:")
         s=''
@@ -359,7 +409,8 @@ def run():
             s += p
         t = time.time()-t
         cout(_("\nRead %d bytes in %d ms (%d Bps).\n" % (len(s), t*1000, len(s)/t)))
-        cout(hexdump(0,s)+"\n")
+        if (options.hexdump):
+            cout(hexdump(0,s)+"\n")
 
 
     #  Read flash memory if needed
@@ -398,11 +449,7 @@ def run():
             s += p
         device.flash = s
         t = time.time()-t
-        if device.bootsection:
-            end = -1
-        else:
-            end = 1
-        crc, x = appstat(device.flash[:device.bladdr],end)
+        crc, x = appstat(device.flash[:device.bladdr],device.bootsection)
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(device.flash), t*1000, len(device.flash)/t, x, crc)))
 
@@ -413,14 +460,14 @@ def run():
             cout(_("WARNING: Application CRC mismatch!\n"))
             #return
 
-        if options.flash_cache:
-            flash_cache = device.flash
+        if options.cachename:
+            cache = device.flash
     else:
-        device.flash = flash_cache
+        device.flash = cache
 
     #  Erase flash
     #
-    if options.erase_flash:
+    if options.clear_flash:
         if toburn:
             cerr(_("Can not erase flash when data are to be burned!\n"))
             return
@@ -506,31 +553,24 @@ def run():
 
         if x_restart:
             cout(_("Reset device's Diabolo\n"))
-            device.tx('!') # Send an unkown command to force CRC computation
-            #time.sleep(0.2)
-            #device.tx('\n')
-            #device.rx(1)
+            device.tx('!') # Send a bad command to force CRC re-computation
             device.get_prompt()
             device.identify()
-            # device.display()
             cout("  Application CRC:\n")
             cout(_("    computed: 0x%04X\n" % device.appcrc))
             cout(_("      stored: 0x%04X\n" % device.eeappcrc))
             cout(_("  Programmings: %d\n" % device.pgmcount))
 
-        if options.flash_cache and flash_cache:
-            flash_cache = toburn
+        if options.cachename and cache:
+            cache = toburn
 
     #  Update cache
     #
-    if options.flash_cache and flash_cache:
-        f = open(options.flash_cache, 'wb')
-        f.write(flash_cache)
+    if options.cachename and cache:
+        f = open(options.cachename, 'wb')
+        f.write(cache)
         f.close()
-        flash_cache_crc, x = appstat(flash_cache,device.bootsection)
-        cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
-               (options.flash_cache, x, len(flash_cache), flash_cache_crc)))
-
+        cout(_("Stored %d bytes in %s." % (len(cache), options.cachename)))
 
     #  Test command
     #
@@ -550,7 +590,7 @@ def run():
     if device.appcrc == device.eeappcrc and \
             device.appcrc != 0xFFFF:
         if device.run():
-            cout("Device launched its application\n")
+            cout("Application started.\n")
         else:
             cout("Run failed.\n")
 

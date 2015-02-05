@@ -64,25 +64,8 @@ class Device:
         self.flash = None		# Flash memory content
         self.flash_changed = False	# Need to change CRC in EEPROM if true
 
-        self.reset_pin = None
-        self.reset_duration = 0
-
-
-    #  Application CRC and length of application code
-    #
-    #    The CRC is computed from the end to the beginning of the memory, skipping
-    #    the 0xFF bytes at the end.
-    #    The first two bytes of reset vector (rjmp to Diabolo) are not computed for
-    #    devices without boot section.
-    #
-    # def appstat ( data ):
-    #     crc = CRC.init()
-    #     for x in range(len(data)-1, -1, -1):
-    #         if data[x] != '\xFF':
-    #             break
-    #     for i in range(x, -1, -1):
-    #         crc = CRC.add(crc, data[i])
-    #     return crc, x+1
+        self.reset_signal = 'DTR'	# TTY signal used to reset the target
+        self.reset_length = 0.01	# Reset pulse duration
 
 
     #  Receive data
@@ -110,28 +93,44 @@ class Device:
     def txbrk ( self ):
         self.com.brk()
 
+
+    def set_reset(self, state):
+        if self.reset_signal == "dtr":
+            self.com.set_DTR(state)
+        elif self.reset_signal == "rts":
+            self.com.set_RTS(state)
+        else:
+            raise Exception("No signal to drive reset.")
+
+
+    #  Reset the device
+    #  Note: DTR is asserted as the com is opened
+    #
     def reset(self):
-        if not self.reset_pin or self.reset_pin == "none":
-            return
         cout(_("Resetting device using signal %s for %.2f s.\n" %
-               (self.reset_pin, self.reset_duration)))
-        if self.reset_pin == "DTR":
-            self.com.set_DTR(True)		# Assert the RESET pin
-            time.sleep(self.reset_duration)
-            self.com.set_DTR(False)		# Release RESET
-        elif self.reset_pin == "RTS":
-            self.com.set_RTS(True)		# Assert the RESET pin
-            time.sleep(self.reset_duration)
-            self.com.set_RTS(False)		# Release RESET
+               (self.reset_signal.upper(), self.reset_length)))
+        self.set_reset(True)
+        time.sleep(self.reset_length)
+        self.set_reset(False)
 
 
     #  Establish the communication with the device
+    #    Pull TX down by sending a break
+    #    Reset the device
+    #    Keep TX down to force the device to stay in Diabolo after reset
+    #    Flush the RX buffer:
+    #      RX is not pulled-up while reset is asserted through RTS/DTR. This
+    #      causes reception of weird bytes we need to remove
+    #    Detect wires if needed
+    #    Get the prompt
     #
     def connect(self):
-        self.com.set_BRK(True)		# Force the device to stay in Diabolo after reset
+        self.com.set_BRK(True)
         self.reset()
         time.sleep(0.5)
-        self.com.set_BRK(False)		# Release the BRK signal
+        self.com.set_BRK(False)
+        while self.com.rx(1): pass
+        self.com.detect_wires()
         return self.get_prompt()
 
 
@@ -154,10 +153,7 @@ class Device:
         #
         # cout("Resync: %s\n" % self.lastchar)
         self.nresyncs += 1
-        # self.com.flush()
-        # self.com.flushInput()
-        # self.com.flushOutput()
-        self.com.flush()
+        #self.com.flush()
 
         if 1:
             for i in range(64):
@@ -215,7 +211,7 @@ class Device:
         self.lastchar = None
         self.tx('i')
         while self.lastchar != '#' and time.time() <= t:
-            r += self.rx(100)
+            r += self.rx(1)
 
         if self.lastchar != '#':
             self.error = _('can not decode string \'%s\'' % s2hex(r))

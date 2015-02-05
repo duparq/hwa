@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-31 19:09:51 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-05 18:52:06 -*-
 
 # FT232RL :	 1 TXD
 # 		 3 RTS (-> Reset)
@@ -21,74 +21,105 @@ def dbg(s):
     pass
 
 
-#  Renvoie la liste les périphériques disponibles
-#    Ne touche pas à avoid.
-#
-def listports(avoid=None):
-    ports=[]
-    names=[]
-    for n in range(8):
-        d = '/dev/ttyUSB%d' % n
-        names.append(d)
-    for n in range(8):
-        d = serial.device(n)
-        names.append(d)
-    for name in names:
-        try:
-            if name != avoid:
-                com=serial.Serial(name)
-                com.open()
-                com.close()
-            ports.append(name)
-        except:
-            pass
-    return ports
-
-
 #  Com is a derivation of 'serial'
 #
 class Com:
-    def __init__(self, port, baud):
+    def __init__(self, port, baud, wires):
         # trace(port)
         self.baud = baud
         self.port = port
+        self.wires = wires
         self.serial = None
-        self.onewire = False
         self.lastchar = None
         self.txbuf = ""
         self.rxbuf = ""
         self.lock = threading.Lock()
         self.rxevent = threading.Event()
         self.receiving = False
+        self.error = ""
+
+        try:
+            self.open()
+        except ValueError:
+            cerr(_("Value error\n"))
+        if not self.is_open():
+            raise Exception(self.error)
+
+
+    #  Receiver thread
+    #    self.serial has a timeout so that self.alive is regularly checked
+    #
+    def __receiver_task(self):
+        self.flush()
+        # while self.serial.read(1) != None:
+        #     pass
+        while self.alive:
+            r = self.serial.read(1)
+            # trace(s2hex(r))
+            if r:
+                self.receiving = True
+                with self.lock:
+                    if self.txbuf:
+                        s = self.txbuf[0]
+                        self.txbuf = self.txbuf[1:]
+                        if r != s:
+                            cerr("  Echo mismatch: %02X != %02X\n" % (ord(r), ord(s)))
+                        # else:
+                        #     dbg("  Echo match: %02X\n" % ord(r))
+                    else:
+                        self.rxbuf += r
+                        # dbg("RXBUF: %s\n" % s2hex(self.rxbuf))
+            else:
+                self.receiving = False
+            self.rxevent.set()
+
 
     #  Open preferred or first serial port
     #
     def open(self):
         port = self.port
         if not port:
-            ports=listports()
+            ports=Com.listports()
             if ports:
                 port=ports[0]
-        if port:
+        if not port:
+            raise Exception("No tty port to open")
+
+        self.serial = serial.serial_for_url(port, self.baud)
+        self.btimeout = max(0.01, 20.0/self.baud)
+        self.serial.timeout = self.btimeout
+
+        # Start receiver thread
+        #
+        self.alive = True
+        self.receiver = threading.Thread(target=self.__receiver_task)
+        self.receiver.setDaemon(1)
+        self.receiver.start()
+
+
+    #  List of available ttys among /dev/ttyUSB0..7 and /dev/stty0..7,
+    #  excluding the 'avoid' one
+    #
+    def listports(avoid=None):
+        ports=[]
+        names=[]
+        for n in range(8):
+            d = '/dev/ttyUSB%d' % n
+            names.append(d)
+        for n in range(8):
+            d = serial.device(n)
+            names.append(d)
+        for name in names:
             try:
-                self.serial = serial.serial_for_url(port, self.baud)
-                #self.serial = serial.serial_for_url(port, self.baud, do_not_open=True)
-                #self.serial.setDTR(False)
-                #self.serial.open()
-                # dbg(_("Openned serial port %s at %d bps\n" % (self.port, self.baudrate)))
-                self.btimeout = max(0.01, 20.0/self.baud)
-                self.serial.timeout = self.btimeout
-                # self.serial.timeout = 20.0/self.baud
-                #
-                # Start receiver thread
-                #
-                self.alive = True
-                self.receiver = threading.Thread(target=self.receive)
-                self.receiver.setDaemon(1)
-                self.receiver.start()
-                return True
-            except serial.SerialException, e:
-                return False
+                if name != avoid:
+                    com=serial.Serial(name)
+                    com.open()
+                    com.close()
+                ports.append(name)
+            except:
+                pass
+        return ports
+
 
     def close(self):
         # self.serial.close()
@@ -98,28 +129,20 @@ class Com:
         self.receiver.join()
         dbg("JOINED\n")
 
-    #  Receiver thread
-    #    self.serial has a timeout so that self.alive is regularly checked
-    #
-    def receive(self):
-        while self.alive:
-            r = self.serial.read(1)
-            if r:
-                self.receiving = True
-                with self.lock:
-                    if self.txbuf:
-                        s = self.txbuf[0]
-                        self.txbuf = self.txbuf[1:]
-                        if r != s:
-                            dbg("  Echo mismatch: %02X != %02X\n" % (ord(r), ord(s)))
-                        # else:
-                        #     dbg("  Echo match: %02X\n" % ord(r))
-                    else:
-                        self.rxbuf += r
-                        # dbg("RXBUF: %s\n" % s2hex(self.rxbuf))
+
+    def detect_wires(self):
+        if self.wires == 0:
+            cout(_("Tty wires:"))
+            self.tx('?')
+            r = self.rx(2)
+            if r==None or r=='' or r=='!':
+                self.wires = 2
+            elif r=='?' or r == '?!':
+                self.wires = 1
             else:
-                self.receiving = False
-            self.rxevent.set()
+                raise Exception("Can not handle reply: \"%s\" %s." % (r,s2hex(r)))
+            cout(" %d\n" % self.wires)
+
 
     def is_open(self):
         return self.serial and self.serial.isOpen()
@@ -139,6 +162,8 @@ class Com:
         self.serial.flushInput()
         self.txbuf = ""
         self.rxbuf = ""
+        # while self.rx(1):
+        #     pass
 
     #  Emet un BREAK (10 bits à 0)
     #
@@ -158,11 +183,11 @@ class Com:
     def tx(self, s):
         # t = time.time()
         # dbg("TX: %s\n" % s2hex(s))
-        if self.onewire:
+        if self.wires==1:
             with self.lock:
                 self.txbuf += s
         self.serial.write(s)
-        if self.onewire:
+        if self.wires==1:
             while len(self.txbuf):
                 self.rxevent.wait()
                 self.rxevent.clear()
@@ -174,7 +199,7 @@ class Com:
     #  Receive n bytes or until there's a timeout
     #
     def rx(self, n):
-        if n ==0 or len(self.rxbuf) < n:
+        if n==0 or len(self.rxbuf) < n:
             #
             #  Wait an rxevent or a timeout
             #
