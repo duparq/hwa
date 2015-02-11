@@ -4,13 +4,13 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/*	Watchdog class methods
+
+/*	Watchdog class methods declared for derived classes
+ *
+ *	hw/hwa_turn_wdog
+ *	hw/hwa_reset_wdog
+ *	hw_stat_wdog
  */
-#define hw_def_hw_turn_wdog		, _hw_turn_wdog
-#define hw_def_hwa_turn_wdog		, _hwa_turn_wdog
-#define hw_def_hw_reset_wdog		, _hw_wdreset
-#define hw_def_hwa_config_wdog		, _hwa_cfwdog
-#define hw_def_hw_stat_wdog		, _hw_stat_wdog
 
 
 /*	Turn watchdog on/off (synchronous)
@@ -65,26 +65,8 @@
 #define _hwa_turn_wdog_on(c,n,i,a)		\
   _hwa_write_reg(c,n,i,a,wde,1)
 
-
-/*	Turning the watchdog off requires that WDRF is 0 then:
- *	  1. WDCE and WDE must be set to 1 in the same operation
- *	  2. WDE must be set to 0 within 4 cycles after 1.
- *
- *	The timed sequence is completed at commit time.
- */
-#if HW_DEVICE_WDTON == 0
-#  define _hwa_turn_wdog_off(c,n,i,a)					\
-  HW_ERR( "watchdog can not be turned off because FUSE bit WDTON is "	\
-	  "programmed." )
-#else
-#  define _hwa_turn_wdog_off(c,n,i,a)		\
-  do {						\
-      _hw_write_reg( hw_core0, allrf, 0 );	\
-      _hwa_write_reg( c,n,i,a, wdce, 1 );	\
-      _hwa_write_reg( c,n,i,a, wde, 1 );	\
-      hwa->watchdog0.state = 0 ;		\
-  } while(0)
-#endif
+#define _hwa_turn_wdog_off(c,n,i,a)			\
+  hwa->watchdog0.action = HW_A1(hw_wdog_action_none)
 
 
 /*  Clear (reset) watchdog or just the irq flag
@@ -129,70 +111,35 @@
 #define hw_wdog_action_irq_or_reset	, 3
 
 
-#define _hwa_cfwdog(c,n,i,a, ...)		\
-  do {						\
-    uint8_t timeout=0xFF, action=0xFF ;		\
-    _hwa_cfwdog_timeout(n,__VA_ARGS__)		\
-      }while(0)
+#define _hwa_cfwdog(c,n,i,a, ...)	_hwa_cfwdog_timeout(n,__VA_ARGS__)
 
 /*    Optionnal argument `timeout`
  */
 #define _hwa_cfwdog_timeout(n,kw,...)					\
-  HW_G2(_hwa_cfwdog_xtimeout,HW_IS(timeout,kw))(n,kw,__VA_ARGS__)
+    HW_G2(_hwa_cfwdog_xtimeout,HW_IS(timeout,kw))(n,kw,__VA_ARGS__)
 #define _hwa_cfwdog_xtimeout_0(...)	_hwa_cfwdog_action(__VA_ARGS__)
 #define _hwa_cfwdog_xtimeout_1(n,kw,...)				\
-  HW_G2(_hwa_cfwdog_vtimeout,HW_IS(,hw_wdog_timeout_##__VA_ARGS__))(n,__VA_ARGS__)
+    HW_G2(_hwa_cfwdog_vtimeout,HW_IS(,hw_wdog_timeout_##__VA_ARGS__))(n,__VA_ARGS__)
 #define _hwa_cfwdog_vtimeout_0(n,v,...)					\
-  HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, `500ms`, `1s`, " \
-	 "`2s`, `4s` or `8s` but not `" #v "`.")
+    HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, `500ms`, `1s`, " \
+	   "`2s`, `4s` or `8s` but not `" #v "`.")
 #define _hwa_cfwdog_vtimeout_1(n,v,...)		\
-  timeout = HW_A1(hw_wdog_timeout_##v);		\
-  _hwa_cfwdog_action(n,__VA_ARGS__)
+  hwa->n.timeout = HW_A1(hw_wdog_timeout_##v);	\
+  _hwa_cfwdog_action(n,__VA_ARGS__);
 
 /*    Mandatory argument `action`
  */
 #define _hwa_cfwdog_action(n,kw,...)				\
   HW_G2(_hwa_cfwdog_xaction,HW_IS(action,kw))(n,kw,__VA_ARGS__)
 #define _hwa_cfwdog_xaction_0(n,kw,...)				\
-  HW_ERR("expected `action` instead of `" HW_QUOTE(kw) "`.")
+    HW_ERR("expected `action` instead of `" HW_QUOTE(kw) "`.")
 #define _hwa_cfwdog_xaction_1(n,kw,v,...)				\
   HW_G2(_hwa_cfwdog_vaction,HW_IS(,hw_wdog_action_##v))(n,v,__VA_ARGS__)
 #define _hwa_cfwdog_vaction_0(n,v,...)					\
   HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #v "`.")
-/* #define _hwa_cfwdog_vaction_1(n,v,...)		\ */
-/*   HW_TX(action = HW_A1(hw_wdog_action_##v); _hwa_docfwdog( hwa, timeout, action );, \ */
-/* 	__VA_ARGS__) */
 #define _hwa_cfwdog_vaction_1(n,v,...)		\
-  action = HW_A1(hw_wdog_action_##v);		\
-  _hwa_docfwdog( hwa, timeout, action );	\
-  HW_TX(,__VA_ARGS__)
-
-
-/*  Process the configuration of the watchdog
- */
-HW_INLINE void _hwa_docfwdog( hwa_t *hwa, uint8_t timeout, uint8_t action )
-{
-  if ( timeout != 0xFF ) {
-#if HW_DEVICE_WDTON == 0
-  HW_ERR("changing WDP when fuse WDTON is programmed is not handled yet.");
-#else
-    _hwa_write_reg( hw_watchdog0, wdp, timeout );
-#endif
-  }
-  if ( action == HW_A1(hw_wdog_action_none) ) {
-    /*
-     *  Turn the watchdog off. This requires a special sequence, so we do it
-     *  here instead of using the registers cache.
-     *
-     *	FIXME: that should be done in _hwa_commit_watchdogs()
-     */
-    //    _hw_turn_wdog_off(,,,);
-  }
-  else if ( action != 0xFF ) {
-    _hwa_write_reg( hw_watchdog0, wde,  (action&0x02)>>1 );
-    _hwa_write_reg( hw_watchdog0, wdie, (action&0x01) );
-  }
-}
+    hwa->n.action = HW_A1(hw_wdog_action_##v);	\
+    HW_TX(,__VA_ARGS__)
 
 
 /*  Watchdog status
@@ -215,8 +162,8 @@ typedef union {
 
 #define _hw_wdog_stt(c,n,i,a,...)	HW_TX(_hw_wdog_stat_t, __VA_ARGS__)
 
+#define _hw_stat_wdog(c,n,i,a)		_hw_wdog_stat( _hw_read_reg(c,n,i,a, csr) )
 
-#define _hw_stat_wdog(c,n,i,a)	_hw_wdog_stat( _hw_read_reg(c,n,i,a, csr) )
 
 HW_INLINE _hw_wdog_stat_t _hw_wdog_stat( uint8_t byte )
 {

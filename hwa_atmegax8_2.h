@@ -8,6 +8,7 @@
 #include "hwa_atmelavr_core.h"
 #include "hwa_atmelavr_ios_2.h"
 #include "hwa_atmelavr_wdog.h"
+#include "hwa_atmelavr_wdogB.h"
 
 
 HW_INLINE void _hwa_begin ( hwa_t *hwa )
@@ -30,7 +31,8 @@ HW_INLINE void _hwa_begin ( hwa_t *hwa )
   _hwa_begin_reg( hw_portd, port );
   _hwa_begin_reg( hw_portd, ddr  );
 
-  hwa->watchdog0.state = 0xFF ;		/* 0xFF == state unchanged */
+  hwa->watchdog0.action = 0xFF ;		/* 0xFF == unchanged */
+  hwa->watchdog0.timeout = 0xFF ;		/* 0xFF == unchanged */
   _hwa_begin_reg( hw_watchdog0, csr );
 }
 
@@ -40,7 +42,7 @@ HW_INLINE void _hwa_init ( hwa_t *hwa )
   _hwa_set_r8( &hwa->core0.osccal, 0x00 );
   _hwa_set_r8( &hwa->core0.prr,    0x00 );
   _hwa_set_r8( &hwa->core0.mcucr,  0x00 );
-  _hwa_set_r8( &hwa->core0.mcusr,  0x00 );
+  //  _hwa_set_r8( &hwa->core0.mcusr,  0x00 );
   _hwa_set_r8( &hwa->core0.smcr,   0x00 );
   _hwa_set_r8( &hwa->core0.gpior2, 0x00 );
   _hwa_set_r8( &hwa->core0.gpior1, 0x00 );
@@ -79,19 +81,5 @@ HW_INLINE void _hwa_commit ( hwa_t *hwa )
   _hwa_commit_reg( hw_portd, port, hwa->commit );
   _hwa_commit_reg( hw_portd, ddr,  hwa->commit );
 
-  _hwa_commit_reg( hw_watchdog0, csr, hwa->commit );
-  if ( hwa->watchdog0.state == 0 ) {
-    /*
-     *	Complete the turning off of the watchdog.
-     *
-     *  WDCE and WDE have already been set by the commit of csr above, we just
-     *  need to clear them and commit csr again.
-     */
-    _hwa_write_reg( hw_watchdog0, wdie, 0 );
-    _hwa_write_reg( hw_watchdog0, wdce, 0 );
-    _hwa_write_reg( hw_watchdog0, wde, 0 );
-    _hwa_write_reg( hw_watchdog0, wdp, 0 );
-    _hwa_commit_reg( hw_watchdog0, csr, hwa->commit );
-    hwa->watchdog0.state = 0xFF ; /* State unchanged */
-  }
+  _hwa_commit_wdogB( hwa, &hwa->watchdog0 );
 }

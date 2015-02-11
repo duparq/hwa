@@ -7,12 +7,12 @@
 
 /*	Class & methods
  */
-#define hw_class_wdog
-#define _hw_pop_wdog(c,n,i,a,...)	__VA_ARGS__
+#define hw_class_wdogB
+#define _hw_pop_wdogB(c,n,i,a,...)	__VA_ARGS__
 
 /*	Instance			class, name, id, address
  */
-#define hw_watchdog0			wdog, watchdog0, 109, 0
+#define hw_watchdog0			wdogB, watchdog0, 109, 0
 
 /*	Interrupts			class, vector, controller, enable bit, flag bit
  */
@@ -20,23 +20,24 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw_wdog_csr			crg, 8, 0x60, 0xFF, 0x80
-#define  hw_wdog_wdif			 cb1, csr, 1, 7
-#define  hw_wdog_wdie			 cb1, csr, 1, 6
-#define  hw_wdog_wdp			 cb2, csr, 1, 5, 3, csr, 3, 0, 0
-#define  hw_wdog_wdce			 cb1, csr, 1, 4
-#define  hw_wdog_wde			 cb1, csr, 1, 3
-#define  hw_wdog_wdifie			 cb1, csr, 2, 6 /* convenient for clearing irq */
-#define  hw_wdog_wdall			 cb1, csr, 7, 0 /* convenient for turning wd off */
+#define hw_wdogB_csr			crg, 8, 0x60, 0xFF, 0x80
+#define  hw_wdogB_wdif			 cb1, csr, 1, 7
+#define  hw_wdogB_wdie			 cb1, csr, 1, 6
+#define  hw_wdogB_wdp			 cb2, csr, 1, 5, 3, csr, 3, 0, 0
+#define  hw_wdogB_wdce			 cb1, csr, 1, 4
+#define  hw_wdogB_wde			 cb1, csr, 1, 3
+
+#define  hw_wdogB_wdifie		 cb1, csr, 2, 6 /* convenient for clearing irq */
+#define  hw_wdogB_wdall			 cb1, csr, 7, 0 /* convenient for turning wd off */
 
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  uint8_t	state ;
+  uint8_t	action, timeout ;
   hwa_r8_t 	csr ;
-} hwa_wdog_t ;
+} hwa_wdogB_t ;
 
-#define HWA_DCL_WATCHDOGS		hwa_wdog_t watchdog0
+#define HWA_DCL_WATCHDOGS		hwa_wdogB_t watchdog0
 
 #endif /* !defined __ASSEMBLER__ */

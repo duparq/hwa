@@ -127,5 +127,17 @@
 #define _hw_clearirq_0(...)		__VA_ARGS__
 #define _hw_clearirq_1(...)		_hw_clear_irq(__VA_ARGS__)
 
+#define hw_def_hwa_clear_irq		, _hwa_clear_irq
+
+#define _hwa_clear_irq( irq,v, n,ie,if, ... )	\
+  HW_TX(_hwa_write_reg( hw_##n, if, 1 ), __VA_ARGS__)
+
+/*	Short for hw_clear( hw_irq(...), ... )
+ */
+#define hwa_clear_irq(...)		_hwa_clearirq_2(_hw_irqx(__VA_ARGS__,))
+#define _hwa_clearirq_2(...)		HW_G2(_hwa_clearirq,HW_IS(irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_clearirq_0(...)		__VA_ARGS__
+#define _hwa_clearirq_1(...)		_hwa_clear_irq(__VA_ARGS__)
+
 
 #endif /* !defined __ASSEMBLER__ */
