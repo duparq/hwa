@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-02-05 18:52:06 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-05 22:33:34 -*-
 
 # FT232RL :	 1 TXD
 # 		 3 RTS (-> Reset)
@@ -86,7 +86,8 @@ class Com:
             raise Exception("No tty port to open")
 
         self.serial = serial.serial_for_url(port, self.baud)
-        self.btimeout = max(0.01, 20.0/self.baud)
+        #self.btimeout = max(0.01, 20.0/self.baud)
+        self.btimeout = max(0.01, 11.0/self.baud)
         self.serial.timeout = self.btimeout
 
         # Start receiver thread

@@ -145,39 +145,23 @@ class Device:
             self.nresumes += 1
             self.tx('\n')
             self.rx(1)
-
         if self.lastchar == '#':
             return True
 
         #  Resynchronize
         #
-        # cout("Resync: %s\n" % self.lastchar)
         self.nresyncs += 1
-        #self.com.flush()
-
-        if 1:
-            for i in range(64):
-                if i%2 == 0:
-                    self.txbrk()
-                else:
-                    self.tx('\xFF')
+        for i in range(64):
+            if i%2 == 0:
+                self.txbrk()
+            else:
+                self.tx('\xFF')
+            r = self.rx(0)
+            if r.endswith('!'):
+                self.tx('\n')
                 r = self.rx(0)
-                if r.endswith('!'):
-                    self.tx('\n')
-                    r = self.rx(0)
-                if r.endswith('#'):
-                    return True
-        else:
-            for i in range(10):
-                if i%2 == 0:
-                    self.txbrk()
-                else:
-                    self.tx('\xFF')
-                r = self.rx(0)
-                cout("%d: %s\n" % (i, s2hex(r)))
-                time.sleep(0.5)
-
-        #cerr(_("Device did not synchronize.\n"))
+            if r.endswith('#'):
+                return True
         return False
 
 
@@ -484,7 +468,8 @@ class Device:
                         return 'w'	# Programmed
                     if x == 0x03:
                         return 'W'	# Erased + Programmed
-                trace("Code: %02X" % x)
+                trace("\nError code: %02X in programming flash page at 0x%04X" %
+                      (x,address))
                 if x == 0x80:
                     return 'C'		# CRC error
                 if x & 0x10:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-02-04 15:36:18 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-09 20:51:58 -*-
 
 import sys
 
@@ -46,7 +46,7 @@ def get_args():
     group.add_argument('--clear-eeprom', help="clear eeprom memory", action='store_true')
     group.add_argument('--verify-eeprom', help="verify eeprom memory", action='store_true')
 
-    parser.add_argument('--cachename', help="name of cache file")
+    parser.add_argument('--cache', help="name of cache file")
     parser.add_argument('--full', help="read full content (Diabolo code included)",
                         action='store_true')
     parser.add_argument('--hexdump', help="hexdump content", action='store_true')

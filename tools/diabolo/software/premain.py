@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2012-02-08 09:27:21 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-07 12:21:31 -*-
 
 import sys
 import platform
@@ -26,10 +26,13 @@ def trace(arg=""):
     cout(_(s))
 
 
+#  Print error message and exit with error code 1
+#
 def die(s):
     sys.stderr.write('Fatal: '+s+'\n')
-    sys.stdin.readline()
+    #sys.stdin.readline()
     sys.exit(1)
+
 
 def msg(*args):
     global msgtime
