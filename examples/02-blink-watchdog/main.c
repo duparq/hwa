@@ -1,10 +1,11 @@
 
-/*	Blink a LED at ~2 Hz using watchdog interrupt requests (without
- *	servicing) and status flag
+/*	Blink a LED at ~2 Hz using watchdog interrupt requests (not
+ *	serviced) and status flag
  */
 
+#include "config.attiny84.h"
 //#include "config.attiny85.h"
-#include "config.nanodccduino.h"
+//#include "config.nanodccduino.h"
 #include <hwa.h>
 
 

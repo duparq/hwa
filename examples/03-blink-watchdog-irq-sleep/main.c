@@ -1,8 +1,10 @@
 
-/*	Blink a LED at ~2 Hz using watchdog interrupts and sleep mode
+/*	Blink a LED at ~2 Hz for 10 times, using watchdog interrupts and sleep
+ *	mode
  */
 
 //#include "config.attiny84.h"
+//#include "config.attiny85.h"
 #include "config.nanodccduino.h"
 #include <hwa.h>
 
@@ -70,11 +72,19 @@ int main ( )
        *  set to 'irq_or_reset'. If WDIE is not set, the next time-out will
        *  trigger a reset.
        */
-      hwa_begin();
+      /* hwa_begin(); */
+      /* hwa_clear_irq( hw_watchdog0 ); */
       hwa_config( hw_watchdog0,
       		  timeout,      250ms,
       		  action,       irq_or_reset );
       hwa_commit();
+
+      /* hwa_begin(); */
+      /* hwa_write_reg( hw_watchdog0, wdie, 0 ); */
+      /* hwa_nocommit(); */
+      /* hwa_clear_irq( hw_watchdog0 ); */
+      /* hwa_write_reg( hw_watchdog0, wdie, 1 ); */
+      /* hwa_commit(); */
     }
   }
 
