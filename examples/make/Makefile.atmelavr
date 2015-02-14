@@ -1,67 +1,27 @@
+
 #	-*- makefile -*-
 
 ARCH		= avr-
-MMCU		= -mmcu=$(MCU)
+MMCU		= -mmcu=$(DEVICE)
 
 ODFLAGS		= -h -S
 
 
-#	Compile and link
+#  Show fuse values
 #
-#$(OBJECTS): | $(OBJDIR) $(OBJDIR)/$(OUT).hwa		# Create directory if needed
-
-#	Device informations
+#	Values are double-quoted then they must be echoed.
 #
-#	HW_DEVICE is known to be valid at this stage
-#
-#	The file that has included the definition of HW_DEVICE will also provide
-#	the other definitions we are looking for
-#
-$(OBJDIR)/$(OUT).hwa: $(SOURCES)
-	@echo "Building $@"
-	@mkdir -p $(OBJDIR)
-	@rm -f $@
-	@for f in $^ ; do				\
-	  cat $$f >$$f.hwa.c				;\
-	  echo 'HW_DEVICE_FLASH_SIZE' >>$$f.hwa.c	;\
-	  echo 'HW_DEVICE_FUSE_EB' >>$$f.hwa.c		;\
-	  echo 'HW_DEVICE_FUSE_HB' >>$$f.hwa.c		;\
-	  echo 'HW_DEVICE_FUSE_LB' >>$$f.hwa.c		;\
-          echo 'HW_DEVICE' >>$$f.hwa.c			;\
-	  $(CC) $(CFLAGS) -E $$f.hwa.c | tail -5 >$@	;\
-	  [ "$$HW_DEVICE" != "HW_DEVICE" ] && exit 0	;\
-	done
-
-
-show-fuses: $(OBJDIR)/$(OUT).hwa
-	@[ -f $(OBJDIR)/$(OUT).hwa ] || exit 1
-	@FUSE_EB=$$(tail -4 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
-	FUSE_HB=$$(tail -3 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
-	FUSE_LB=$$(tail -2 $(OBJDIR)/$(OUT).hwa | head -1 -)	;\
-	if [ "$$FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then	\
-	    echo FUSE_EB=$$(printf "0x%02X" $$(($$FUSE_EB)))	;\
-	fi							;\
-	if [ "$$FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then	\
-	    echo FUSE_HB=$$(printf "0x%02X" $$(($$FUSE_HB)))	;\
-	fi							;\
-	if [ "$$FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then	\
-	    echo FUSE_LB=$$(printf "0x%02X" $$(($$FUSE_LB)))	;\
-	fi
-
-
-#	Size of binary output file
-#
-FLASHSZ = $(shell \
-	V=$$(tail -5 $(OBJDIR)/$(OUT).hwa 2>/dev/null | head -1 -)	;\
-	if [ "$$V" != "HW_DEVICE_FLASH_SIZE" ] ; then			\
-	  echo $$V							;\
-	fi								;\
-	done)
-
+show-fuses: $(INC_HWA)
+#	@echo "RULE: $@: $^"
+	@printf "FUSE_EB=0x%02X  FUSE_HB=0x%02X  FUSE_LB=0x%02X\n" \
+		$$(($$(echo $(DEVICE_FUSE_EB)))) \
+		$$(($$(echo $(DEVICE_FUSE_HB)))) \
+		$$(($$(echo $(DEVICE_FUSE_LB))))
 
 dasm:
-	avr-objdump -m avr:5 -b binary -D build/out.bin
+	avr-objdump -m avr:5 -b binary -D $(OBJDIR)/$(OUT).bin
 
 
 crc:	$(OBJDIR)/$(OUT).bin
-	diabolo.py --mcu=$(MCU) --crc $(OBJDIR)/$(OUT).bin
+#	@echo -n "CRC: "
+	@diabolo.py --mcu=$(DEVICE) --crc $(OBJDIR)/$(OUT).bin -q

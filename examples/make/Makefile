@@ -1,112 +1,166 @@
 
+#	-*- makefile -*-
+
+#  No need to go beyond without a list of source files
+#
+ifeq (,$(SOURCES))
+  $(error SOURCES not defined)
+endif
+
+
+#  Directory from where make was started
+#
 CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
 
-#	HWA source path
-#
-HWA		= 	$(abspath $(CWD)../..)
-INCLUDES	+= 	-I$(HWA)
+.SUFFIXES:
+.SUFFIXES: .c .o
+SHELL		= /bin/sh
 
-#	SWUART source path
-#
-SWUART		= 	$(abspath $(CWD)../swuart-src)
-INCLUDES	+= 	-I$(SWUART)
 
+#  HWA source path and other related include directories
+#
+HWA		=  $(abspath $(CWD)../..)
+INCLUDES	+= -I$(HWA) -I$(HWA)/swuart-src -I$(HWA)/examples
 
 #	Toolchain path
 #
 # PATH		:= $(HOME)/dev/gcc-toolchains/4.7.0/bin:$(PATH)
 
-#	Output basename
+#	Output basename and directory
 #
 OUT		= out
-
-#	Build directory
-#
 OBJDIR		= build
 
-
-#	Check that we have the list of source files
+#  Dependencies
 #
-ifeq (,$(SOURCES))
-  $(error Please define SOURCES)
-endif
+DEPS		 = $(SOURCES:.c=.d)
+DEPS		:= $(DEPS:.sx=.d)
+DEPS		:= $(addprefix $(OBJDIR)/,$(DEPS))
 
-
-#	Retrieve the name of the target device from source files
+#  Definitions from sources
 #
-# ifeq (,$(MCU))
-#   MCU = $(shell							\
-#   mkdir -p $(OBJDIR)						;\
-#   for f in $(SOURCES) ; do					\
-#     SRC=".hwa.c"						;\
-#     DST=".hwa.1"						;\
-#     ERR=".hwa.2"						;\
-#     cat "$$f" >"$$SRC"						;\
-#     echo 'HW_DEVICE' >>"$$SRC"					;\
-#     $(CC) -I$(HWA) -E "$$SRC" >"$$DST" || exit 1		;\
-#     HW_DEVICE=$$(tail -1 "$$DST" 2>/dev/null)			;\
-#     rm -f "$$SRC" "$$DST" "$$ERR"				;\
-#     if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then			\
-#       echo $$HW_DEVICE						;\
-#       exit 0							;\
-#     fi								;\
-#   done)
-#   ifeq (,$(wildcard .hwa.2))
-#     comma := ,
-#     MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
-#   endif
-# endif
-
-ifeq (,$(MCU))
-  SRC=".hwa.c"
-  DST=".hwa.d"
-  ERR=".hwa.e"
-  MCU = $(shell								\
-  echo 'HW_DEVICE' >"$(SRC)"						;\
-  mkdir -p $(OBJDIR)							;\
-  for f in $(SOURCES) ; do						\
-    $(CC) -I$(HWA) -E -imacros "$$f" "$(SRC)" >"$(DST)" 2>"$(ERR)" || exit 1	;\
-    HW_DEVICE=$$(tail -1 "$(DST)" 2>/dev/null)				;\
-    if [ "$$HW_DEVICE" != "HW_DEVICE" ] ; then				\
-      echo $$HW_DEVICE							;\
-      exit 0								;\
-    fi									;\
-  done)
-  ifeq (,$(wildcard .hwa.2))
-    comma := ,
-    MCU := $(strip $(firstword $(subst $(comma), ,$(MCU))))
-  endif
-endif
-
-ifeq (,$(MCU))
-  $(error HW_DEVICE not defined or preprocessing errors)
-endif
-
-#	Chip programming
-#
-ifeq (,$(PROG_SW))
-PROG_SW		=	diabolo
-#DIABOLO_OPTS	+=	--read-flash	# programming will be faster
-#DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
-#DIABOLO_OPTS	+=	--mcu=$(MCU)
-else
-PROG_SW		=	avrdude
-PROG_HW		=	usbasp
-endif
-
+INC_HWA		= $(OBJDIR)/$(OUT).hwa
+INC_HWA_C	= $(INC_HWA).c
 
 
 #	Default target
 #
-all:	deps hwa lst crc
+.PHONY: all
+all:	bin lst crc
 
-hwa: $(OBJDIR)/$(OUT).hwa
 
+#  Get DEVICE informations from definitions in source files
+#
+#	Build a .c file that will retrieve the informations we're looking for.
+#
+#	Double quotes are required for complex values for make to not show an
+#	error message when it reads it.
+#
+$(INC_HWA_C):
+	@echo "RULE: $@"
+	@mkdir -p $(OBJDIR)
+	@echo 'DEVICE=HW_A0(HW_DEVICE)' >$@
+	@echo 'DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE' >>$@
+	@echo 'DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)' >>$@
+	@echo 'DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)' >>$@
+	@echo 'DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)' >>$@
+#
+#	Let CC compile this .c file with the symbols defined in each source file
+#	in turn until DEVICE is found. Store the informations in a file.
+#
+$(INC_HWA): $(DEPS) $(INC_HWA_C) $(SOURCES)
+	@echo "RULE: $@: $^"
+	@set -e ; for f in  $(SOURCES) ; do				\
+	  $(CC) $(CFLAGS) -E -imacros "$$f" $(INC_HWA_C) >$@	;\
+	  . $@							;\
+	  test "$$DEVICE" = HW_DEVICE || break			;\
+	done
+#
+#	Include the definitions about DEVICE
+#
+-include $(INC_HWA)
+
+
+ifneq (,$(MAKE_RESTARTS))
+  ifeq (HW_DEVICE,$(DEVICE))
+    $(error "HW_DEVICE not defined (or preprocessing errors)")
+  endif
+endif
+
+
+#  Dependencies
+#
+#	Build one dependency files for each source file
+#
+$(OBJDIR)/%.d: %.c
+	@echo "RULE: $@: $^"
+	@mkdir -p $(OBJDIR)
+	@set -e; rm -f $@; \
+	$(CC) -M $(INCLUDES) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+$(OBJDIR)/%.d: %.sx
+	@echo "RULE: $@: $^"
+	@mkdir -p $(OBJDIR)
+	@set -e; rm -f $@; \
+	$(CC) -M $(INCLUDES) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+#
+#	Load dependencies
+#
+-include $(DEPS)
+
+
+#  Chip programmer
+#
+ifeq (,$(PROG_SW))
+  PROG_SW	=	diabolo
+else
+  PROG_SW	=	avrdude
+  PROG_HW	=	usbasp
+endif
+
+
+#  Documentation
+#
+.PHONY: doc
 doc:
 	(cd $(CWD)../.. && make doc)
 
 
-#	Common makefile
+#  Common makefile
 #
 include $(CWD)Makefile.in
+
+# ifneq ($(DEVICE),HW_DEVICE)
+#   include $(CWD)Makefile.in
+# endif
+
+
+#	Clean
+#
+.PHONY: clean
+clean:
+	@echo "RULE: $@"
+	@rm -rf $(OBJDIR)
+	@find . '(' 			\
+		-name '*~' 		\
+		-o -name '*.cp.*'	\
+		-o -name '*.pyc'	\
+		-o -name '*.hwa.c'	\
+		')' -exec rm {} ';'
+
+
+#	Archive
+#
+tarball: clean
+	SRC=$$(basename $$PWD)					;\
+	DST=$$SRC.tar.bz2					;\
+	tar -cvO --exclude=trash --exclude=$$DST		\
+		../$$SRC | bzip2 >$$DST
+
+
+deps:	$(DEPS)

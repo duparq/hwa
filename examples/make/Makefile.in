@@ -3,7 +3,7 @@ CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
 #  Device-specific Makefile
 #
-include $(CWD)Makefile.$(MCU)
+-include $(CWD)Makefile.$(DEVICE)
 
 #  Software-program-specific Makefile
 #
@@ -79,24 +79,28 @@ ODUMPFLAGS	= -h -S
 
 #	Build object files list from source files list
 #
-OBJECTS		:=	$(SOURCES:.c=.$(MCU).o)
-OBJECTS		:=	$(OBJECTS:.sx=.$(MCU).o)
-OBJECTS		:=	$(addprefix $(OBJDIR)/,$(OBJECTS))
+OBJECTS		 = $(SOURCES:.c=.$(DEVICE).o)
+OBJECTS		:= $(OBJECTS:.sx=.$(DEVICE).o)
+OBJECTS		:= $(addprefix $(OBJDIR)/,$(OBJECTS))
 
 
 hex:	$(OBJDIR)/$(OUT).hex
 bin:	$(OBJDIR)/$(OUT).bin
 lst:	$(OBJDIR)/$(OUT).lst
 
-size:	$(OBJDIR)/$(OUT).elf
+
+#  Compute size (and CRC) of the generated binary
+#
+.PHONY: size
+size:	$(OBJDIR)/$(OUT).bin
 	$(SIZE) $^
 	@diabolo.py --crc $(OBJDIR)/$(OUT).bin | cut -d',' -f3
 
 
-#	Size of binary output file
+#  PADTO is used to fill unused flash memory space with 0xFF bytes
 #
-ifneq ($(strip $(FLASHSZ)),)
-  PADTO = --pad-to $(FLASHSZ)
+ifneq ($(strip $(DEVICE_FLASH_SIZE)),)
+  PADTO = --pad-to $(DEVICE_FLASH_SIZE)
 else
   PADTO =
 endif
@@ -122,22 +126,26 @@ endif
 
 #	Compile and link
 #
-$(OBJECTS): | $(OBJDIR) $(OBJDIR)/$(OUT).hwa		# Create directory if needed
+$(OBJECTS): | $(OBJDIR) $(INC_HWA)		# Create directory if needed
 
 $(OBJDIR):
 	@mkdir $(OBJDIR)
 
 
-$(OBJDIR)/%.$(MCU).o : %.c Makefile
+$(OBJDIR)/%.$(DEVICE).o : %.c
+	@echo "RULE: $@: $^"
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.o : %.c Makefile
+$(OBJDIR)/%.o : %.c
+	@echo "RULE: $@: $^"
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.$(MCU).o : %.s Makefile
+$(OBJDIR)/%.$(DEVICE).o : %.s
+	@echo "RULE: $@: $^"
 	$(AS) $(AFLAGS) $< -o $@
 
-$(OBJDIR)/%.o : %.s Makefile
+$(OBJDIR)/%.o : %.s
+	@echo "RULE: $@: $^"
 	$(AS) $(AFLAGS) $< -o $@
 
 # $(OBJDIR)/%.$(MCU).o : %.sx Makefile
@@ -145,7 +153,8 @@ $(OBJDIR)/%.o : %.s Makefile
 # $(OBJDIR)/%.o : %.sx Makefile
 # 	$(CC) $(AFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.$(MCU).o : %.cp.sx
+$(OBJDIR)/%.$(DEVICE).o : %.cp.sx
+	@echo "RULE: $@: $^"
 	$(CC) $(AFLAGS) -c $< -o $@
 
 # $(OBJDIR)/%.$(MCU).o : %.sx
@@ -155,7 +164,8 @@ $(OBJDIR)/%.$(MCU).o : %.cp.sx
 # 	if grep '\.fail' $< ; then exit1 ; else exit 0 ; fi
 # 	$(AS) $(AFLAGS) -o $@ $<
 
-$(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT) Makefile
+$(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
+	@echo "RULE: $@: $^"
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 
@@ -169,57 +179,3 @@ $(OBJDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT) Makefile
 
 %.lst : %.elf
 	$(ODUMP) $(ODUMPFLAGS) $^ >$@
-
-
-#	Clean
-#
-clean:
-	rm -rf $(OBJDIR)
-	find . '(' 			\
-		-name '*~' 		\
-		-o -name '*.cp.*'	\
-		-o -name '*.pyc'	\
-		-o -name '*.hwa.c'	\
-		')' -exec rm {} ';'
-
-
-#	Archive
-#
-tarball: clean
-	SRC=$$(basename $$PWD)					;\
-	DST=$$SRC.tar.bz2					;\
-	tar -cvO --exclude=trash --exclude=$$DST		\
-		../$$SRC | bzip2 >$$DST
-
-
-#	Dependencies
-#
-DEPS	= $(OBJDIR)/$(OUT).$(MCU).deps
-
-deps:	$(DEPS)
-
-$(DEPS): $(SOURCES)
-	@echo Rebuilding deps for $(SOURCES) 			;\
-	mkdir -p $(dir $@)					;\
-	>$@							;\
-	for s in $(SOURCES) ; do 		\
-	  $(CC) -MM $(DEFINES) $(MMCU) 		\
-	    -MT $(OBJDIR)/$(notdir $${s%.*}.$(MCU).o) $(INCLUDES) $$s >>$@ ;\
-	done
-
--include $(DEPS)
-
-
-.PHONY: deps clean size
-
-
-# $(OBJDIR)/%.$(MCU).d: %.c
-# 	set -e; rm -f $@;					\
-# 	$(CC) -MM $(DEFINES) $(MMCU) $< > $@.$$$$;		\
-# 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@;	\
-# 	rm -f $@.$$$$
-
-# DEPS	:=	$(SOURCES:.c=.$(MCU).d)
-# DEPS	:=	$(addprefix $(OBJDIR)/,$(DEPS))
-
-# include $(DEPS)

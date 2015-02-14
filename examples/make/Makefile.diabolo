@@ -1,25 +1,51 @@
+
 #	-*- makefile -*-
 
-PATH:=$(CWD)../../tools/diabolo/software:$(PATH)
+PATH:=$(HWA)/tools/diabolo/software:$(PATH)
 
-DIABOLO_OPTS	+=	--flash-cache=build/flash-cache.bin # even faster
-DIABOLO_OPTS	+=	--mcu=$(MCU)
+INC_DIABOLO	= $(OBJDIR)/$(OUT).diabolo
 
+
+#  Extract Diabolo parameters from sources
+#
+$(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
+	@echo "RULE: $@: $^"
+	@mkdir -p $(OBJDIR)
+	@>$@
+	@for f in $(SOURCES) ; do \
+	  if $(CC) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
+	    awk -F"[ ,]" '{print $$2 "=" $$3}' $@.tmp >$@ 				;\
+	    break									;\
+	  fi ;\
+	done
+#	@rm -f $@.tmp
+
+-include $(INC_DIABOLO)
+
+
+#  Diabolo options
+#
+DIABOLO_OPTS	 = --mcu=$(DEVICE)
+
+ifneq (,$(DIABOLO_BPS))
+   DIABOLO_OPTS	+= --bps=$(DIABOLO_BPS)		# From sources
+endif
+
+.PHONY: erase
 erase:
 	diabolo.py $(DIABOLO_OPTS)	\
 		--erase-flash
 
+.PHONY: burn
 burn:	$(OBJDIR)/$(OUT).bin
-	diabolo.py $(DIABOLO_OPTS)	\
-		--flash-file $^
+	diabolo.py $(DIABOLO_OPTS)		\
+		--burn-flash $^			\
+		--cache=build/flash-cache.bin
 
-diabolo:
+.PHONY: diabolo
+diabolo: $(INC_DIABOLO)
 	diabolo.py $(DIABOLO_OPTS)
 
+.PHONY: reset
 reset:
 	diabolo.py --reset
-
-# crc:	$(OBJDIR)/$(OUT).bin
-# 	diabolo.py -c $(OBJDIR)/$(OUT).bin
-
-.PHONY: erase burn diabolo reset
