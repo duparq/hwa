@@ -113,15 +113,15 @@
 #define AP_EEPE	   hw_ap(hw_reg(hw_eeprom0, pe))
 #define AP_EERE	   hw_ap(hw_reg(hw_eeprom0, re))
 
-	;; Communication pins: PIN_RXD and PIN_TXD can be the same
+	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
-	RXDPORT	   = hw_addr(hw_reg(hw_sup(PIN_RXD), port))
-	RXDPIN	   = hw_addr(hw_reg(hw_sup(PIN_RXD), pin))
-	RXDDR	   = hw_addr(hw_reg(hw_sup(PIN_RXD), ddr))
-	 BP_RXD	   = hw_bp(PIN_RXD)
-	TXDPORT	   = hw_addr(hw_reg(hw_sup(PIN_TXD), port))
-	TXDDR	   = hw_addr(hw_reg(hw_sup(PIN_TXD), ddr))
-	 BP_TXD	   = hw_bp(PIN_TXD)
+	RXDPORT	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), port))
+	RXDPIN	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), pin))
+	RXDDR	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), ddr))
+	 BP_RXD	   = hw_bp(DIABOLO_PIN_RX)
+	TXDPORT	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_TX), port))
+	TXDDR	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_TX), ddr))
+	 BP_TXD	   = hw_bp(DIABOLO_PIN_TX)
 
 	;; Debug pin
 	;;
@@ -240,7 +240,7 @@ sync:
 
 	;; Initialize TXD pin if separate from RXD
 	;;
-#if hw_id(PIN_RXD) != hw_id(PIN_TXD)
+#if hw_id(DIABOLO_PIN_RX) != hw_id(DIABOLO_PIN_TX)
 	sbi	TXDPORT, BP_TXD
 	sbi	TXDDR, BP_TXD
 #endif
@@ -466,7 +466,7 @@ xX:	cpi	R24, 'X'
 	;;
 	;; Deinitialize TXD pin if not the same as RXD
 	;; 
-#if hw_id(PIN_RXD) != hw_id(PIN_TXD)
+#if hw_id(DIABOLO_PIN_RX) != hw_id(DIABOLO_PIN_TX)
 	ldi	R24, 0
 	XST	TXDDR, R24
 	XST	TXDPORT, R24
@@ -565,7 +565,7 @@ obytecrc:
 	;;						R24, R25, R26, R27
 	;;
 obyte:
-#if hw_id(PIN_RXD) == hw_id(PIN_TXD)
+#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
 	sbi	TXDPORT, BP_TXD	; Set RXD/TXD as output high
 	sbi	TXDDR, BP_TXD	;
 #endif
@@ -584,7 +584,7 @@ obyte:
 	lsr	R27		; [1]	|	Next bit
 	dec	R26		; [1]	|
 	brne	2b		; [2]	|=4	Repeat until last bit
-#if hw_id(PIN_RXD) == hw_id(PIN_TXD)
+#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
 	cbi	TXDDR, BP_TXD	;
 	cbi	TXDPORT, BP_TXD	; Release TXD
 #endif

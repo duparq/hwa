@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-02-09 20:51:58 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-14 16:35:36 -*-
 
 import sys
 
@@ -32,7 +32,7 @@ def get_args():
     #  Actions
     #
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-q', '--reset-and-quit', help="only reset the device",
+    group.add_argument('-x', '--reset-and-exit', help="only reset the device",
                        action='store_true')
     group.add_argument('-c', '--crc', help="only compute the CRC of given file",
                        action='store_true')
@@ -46,11 +46,14 @@ def get_args():
     group.add_argument('--clear-eeprom', help="clear eeprom memory", action='store_true')
     group.add_argument('--verify-eeprom', help="verify eeprom memory", action='store_true')
 
+    #  Options
+    #
     parser.add_argument('--cache', help="name of cache file")
     parser.add_argument('--full', help="read full content (Diabolo code included)",
                         action='store_true')
     parser.add_argument('--hexdump', help="hexdump content", action='store_true')
-
+    parser.add_argument('-q', '--quiet', help="do not write on standard output "
+                        "if not necessary", action='store_true')
     #  Files
     #
     parser.add_argument('filename', nargs='?')

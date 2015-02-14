@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-02-11 17:43:59 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-14 17:05:06 -*-
 
 
 import sys
@@ -16,85 +16,6 @@ from csmod import CsMod
 from parse import get_args
 
 
-#  Load a file
-#
-def read_file(filename):
-    if not os.path.isfile(filename):
-        die(_("File %s does not exist.\n" % filename))
-    if not filename.endswith('.bin'):
-        die(_("File format not handled."))
-    f = open(filename, 'rb')
-    data = f.read()
-    f.close()
-    if len(data)==0:
-        cout(_("%s is void.\n" % filename))
-    else:
-        cout(_("Loaded %d bytes from %s.\n" % (len(data), filename)))
-    return data
-
-
-#  Write a binary file
-#
-def write_file(filename, data):
-    f = open(filename, 'wb')
-    f.write(data)
-    f.close()
-    cout(_("Stored %d bytes into %s.\n" % (len(data), filename)))
-
-
-#  Get the device object
-#
-def get_device(options):
-    #
-    #  Open the communication interface
-    #
-    if options.carspy >= 0:
-        options.bps = 230400
-    com = Com(options.tty, options.bps, options.wires)
-    cout(_("Interface: %s (%d bps)\n" % (options.tty, options.bps)))
-    #
-    #  Reach proper device
-    #
-    if options.carspy==-1:
-        cout(_("Standard device\n"))
-        device = Device(com)
-        device.reset_signal = options.reset
-        device.reset_length = options.reset_length
-        return device
-    #
-    #  Carspy controller or module
-    #
-    device = CsCont(com)
-    if not device.connect():
-        cout(_("  No carspy controller found. Already running Diabolo?\n\n"))
-        device = Device(com)
-        if options.carspy > 0:
-            return device
-    else:
-        cout(_("  Found Carspy controller: "))
-        if not device.identify():
-            die(_("could not identify!\n"))
-        cout(_("reference %04X, firmware %04X\n" % (device.ref, device.crc)))
-        if options.carspy == 0:
-            if not device.diabolo():
-                die(_("    Could not launch Diabolo!\n"))
-            cout(_("    Diabolo launched.\n\n"))
-            device = Device(com)
-        else:
-            device = CsMod(com, options.carspy)
-            if not device.connect():
-                cout(_("    Carspy module %d not found. Already running Diabolo?\n\n"
-                       % options.carspy))
-                # return
-            else:
-                cout(_("    Found Carspy module %d:" % options.carspy))
-                cout(_("reference %04X, firmware %04X\n" % (device.ref, device.crc)))
-                if not device.diabolo():
-                    die(_("      Could not launch Diabolo!\n"))
-                cout(_("      Diabolo launched.\n\n"))
-    return device
-
-
 #  Compute application CRC and length of application code
 #
 #    The CRC is computed from the end to the beginning of the memory, skipping
@@ -104,6 +25,7 @@ def get_device(options):
 #    bytes of reset vector (rjmp to Diabolo) are not computed.
 #
 def appstat ( data, bootsection ):
+    # trace("bootsection = " + str(bootsection) )
     crc = CRC.init()
     if not bootsection:
         end = 1
@@ -122,6 +44,85 @@ class Diabolo:
         self.options = options
         self.device = None
         self.mcu = None
+
+
+    #  Read a binary file
+    #
+    def read_file(self, filename):
+        if not os.path.isfile(filename):
+            die(_("File %s does not exist.\n" % filename))
+        if not filename.endswith('.bin'):
+            die(_("File format not handled."))
+        f = open(filename, 'rb')
+        data = f.read()
+        f.close()
+        if len(data)==0:
+            cout(_("%s is void.\n" % filename))
+        else:
+            cout(_("Loaded %d bytes from %s.\n" % (len(data), filename)))
+        return data
+
+
+    #  Write a binary file
+    #
+    def write_file(self, filename, data):
+        f = open(filename, 'wb')
+        f.write(data)
+        f.close()
+        cout(_("Stored %d bytes into %s.\n" % (len(data), filename)))
+
+
+    #  Get the device object
+    #
+    def get_device(self, options):
+        #
+        #  Open the communication interface
+        #
+        if options.carspy >= 0:
+            options.bps = 230400
+        com = Com(options.tty, options.bps, options.wires)
+        cout(_("Interface: %s (%d bps)\n" % (options.tty, options.bps)))
+        #
+        #  Reach proper device
+        #
+        if options.carspy==-1:
+            cout(_("Standard device\n"))
+            self.device = Device(com)
+            self.device.reset_signal = options.reset
+            self.device.reset_length = options.reset_length
+            return
+        #
+        #  Carspy controller or module
+        #
+        self.device = CsCont(com)
+        if not device.connect():
+            cout(_("  No carspy controller found. Already running Diabolo?\n\n"))
+            self.device = Device(com)
+            if options.carspy > 0:
+                return
+        else:
+            cout(_("  Found Carspy controller: "))
+            if not self.device.identify():
+                die(_("could not identify!\n"))
+            cout(_("reference %04X, firmware %04X\n" % (self.device.ref, self.device.crc)))
+            if options.carspy == 0:
+                if not self.device.diabolo():
+                    die(_("    Could not launch Diabolo!\n"))
+                cout(_("    Diabolo launched.\n\n"))
+                self.device = Device(com)
+            else:
+                self.device = CsMod(com, options.carspy)
+                if not self.device.connect():
+                    cout(_("    Carspy module %d not found. Already running Diabolo?\n\n"
+                           % options.carspy))
+                    # return
+                else:
+                    cout(_("    Found Carspy module %d:" % options.carspy))
+                    cout(_("reference %04X, firmware %04X\n" % (self.device.ref, self.device.crc)))
+                    if not self.device.diabolo():
+                        die(_("      Could not launch Diabolo!\n"))
+                    cout(_("      Diabolo launched.\n\n"))
+
 
     #  Read flash memory
     #
@@ -156,7 +157,7 @@ class Diabolo:
             flushout()
             s += p
         t = time.time()-t
-        crc, x = appstat(s[:self.device.bladdr],self.device.bootsection)
+        crc, x = appstat(s[:self.device.bladdr], self.device.bootsection)
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(s), t*1000, len(s)/t, x, crc)))
         return s
@@ -272,19 +273,19 @@ class Diabolo:
             if not device:
                 die(_("Unrecognized device name.\n"));
 
-            data = read_file(self.options.filename)
-            crc, x = appstat(data, d[5])
-            cout(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
-                   (self.options.filename, x, len(data), crc)))
+            data = self.read_file(self.options.filename)
+            crc, x = appstat(data, device[5])
+            sys.stdout.write(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
+                               (self.options.filename, x, len(data), crc)))
             return
 
         #  Get the proper device
         #
-        self.device = get_device(self.options)
+        self.get_device(self.options)
 
         #  Just reset the device and quit?
         #
-        if self.options.reset_and_quit:
+        if self.options.reset_and_exit:
             self.device.reset()
             return
 
@@ -338,9 +339,9 @@ class Diabolo:
         if self.options.read_flash:
             data = self.read_flash()
             if self.options.hexdump:
-                cout(hexdump(0,data)+"\n")
+                sys.stdout.write(hexdump(0,data)+"\n")
             if self.options.cache:
-                write_file(self.options.cache, data)
+                self.write_file(self.options.cache, data)
             #return
 
         #  Read eeprom memory?
@@ -348,9 +349,9 @@ class Diabolo:
         if self.options.read_eeprom:
             data = self.read_eeprom()
             if self.options.hexdump:
-                cout(hexdump(0,data)+"\n")
+                sys.stdout.write(hexdump(0,data)+"\n")
             if self.options.cache:
-                write_file(self.options.cache, data)
+                self.write_file(self.options.cache, data)
             #return
 
         #  Erase flash memory?
@@ -366,7 +367,7 @@ class Diabolo:
             cache = None
             if self.options.cache:
                 if os.path.isfile(self.options.cache):
-                    cache = read_file(self.options.cache)
+                    cache = self.read_file(self.options.cache)
                     cache_crc, x = appstat(cache[:self.device.bladdr],
                                                 self.device.bootsection)
                     if self.device.appcrc != cache_crc:
@@ -379,7 +380,7 @@ class Diabolo:
                 cache = self.read_flash()
             cache_crc, x = appstat(cache[:self.device.bladdr],
                                         self.device.bootsection)
-            flash = read_file(self.options.filename)
+            flash = self.read_file(self.options.filename)
 
         #  Program flash memory
         #
@@ -431,7 +432,7 @@ class Diabolo:
             #  Update flash cache
             #
             if self.options.cache:
-                write_file(self.options.cache, flash)
+                self.write_file(self.options.cache, flash)
 
         #  Start application
         #
@@ -455,9 +456,14 @@ class Diabolo:
 
 if __name__ == "__main__":
     import premain
+    import __builtin__
     try:
         options = get_args()
+        if options.quiet:
+            __builtin__.__dict__['cout'] = id
         #print options
         Diabolo(options).run()
     except KeyboardInterrupt:
         cout("\n")
+    except Exception, e:
+        cerr(str(e)+'\n')

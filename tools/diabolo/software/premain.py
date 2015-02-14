@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-02-07 12:21:31 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-02-14 17:04:08 -*-
 
 import sys
 import platform
@@ -49,7 +49,6 @@ __builtin__.__dict__['cout'] = sys.stdout.write
 __builtin__.__dict__['flushout'] = sys.stdout.flush
 __builtin__.__dict__['cerr'] = sys.stderr.write
 __builtin__.__dict__['dbg'] = id
-#__builtin__.__dict__['dbg'] = cout
 __builtin__.__dict__['trace'] = trace
 __builtin__.__dict__['die'] = die
 __builtin__.__dict__['msg'] = msg
