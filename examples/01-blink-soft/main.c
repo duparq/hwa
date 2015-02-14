@@ -10,8 +10,10 @@
 
 //#include "config.attiny84.h"
 //#include "config.attiny85.h"
-#include "config.nanodccduino.h"
+#include "boards/nanodccduino.h"
 #include <hwa.h>
+
+//#undef HW_DEVICE
 
 #define PERIOD				0.5
 

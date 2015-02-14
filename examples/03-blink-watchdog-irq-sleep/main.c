@@ -3,9 +3,9 @@
  *	mode
  */
 
-//#include "config.attiny84.h"
-//#include "config.attiny85.h"
-#include "config.nanodccduino.h"
+//#include "boards/attiny84.h"
+//#include "boards/attiny85.h"
+#include "boards/nanodccduino.h"
 #include <hwa.h>
 
 

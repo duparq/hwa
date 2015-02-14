@@ -22,7 +22,7 @@
 
 /*	Settings for Diabolo
  */
-#define DIABOLO_RX			hw_pin_rxd
-#define DIABOLO_TX			hw_pin_txd
+#define DIABOLO_PIN_RX			hw_pin_rxd
+#define DIABOLO_PIN_TX			hw_pin_txd
 #define DIABOLO_BPS			230400
 #define DIABOLO_RESET_SIGNAL		DTR
