@@ -17,7 +17,7 @@
 
 
 #ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				internal_rc
+#  define HW_DEVICE_CLK_SRC				rc_8MHz
 #endif
 #if HW_IS(external,HW_DEVICE_CLK_SRC)
 #  define HW_DEVICE_CKSEL31				0
