@@ -1,11 +1,7 @@
 
 #	-*- makefile -*-
 
-ARCH		= avr-
-MMCU		= -mmcu=$(DEVICE)
-
-ODFLAGS		= -h -S
-
+#$(warning "INCLUDE: Makefile.atmelavr")
 
 #  Show fuse values
 #
@@ -19,9 +15,12 @@ show-fuses: $(INC_HWA)
 		$$(($$(echo $(DEVICE_FUSE_LB))))
 
 dasm:
-	avr-objdump -m avr:5 -b binary -D $(OBJDIR)/$(OUT).bin
+	avr-objdump -m avr:5 -b binary -D $(OUTDIR)/$(OUT).bin
 
 
-crc:	$(OBJDIR)/$(OUT).bin
+#  Diabolo's CRC of the generated binary
+#
+.PHONY: crc
+crc:	$(OUTDIR)/$(OUT).bin
 #	@echo -n "CRC: "
-	@diabolo.py --mcu=$(DEVICE) --crc $(OBJDIR)/$(OUT).bin -q
+	@diabolo.py --mcu=$(DEVICE) --crc $(OUTDIR)/$(OUT).bin -q

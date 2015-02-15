@@ -1,16 +1,19 @@
 
 #	-*- makefile -*-
 
+#$(warning "RESTART: $(MAKE_RESTARTS) $(DEVICE)")
+
+
+#  Directory of this Makefile
+#
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+
+
 #  No need to go beyond without a list of source files
 #
 ifeq (,$(SOURCES))
   $(error SOURCES not defined)
 endif
-
-
-#  Directory from where make was started
-#
-CWD := $(dir $(lastword $(MAKEFILE_LIST)))
 
 
 .SUFFIXES:
@@ -23,31 +26,35 @@ SHELL		= /bin/sh
 HWA		=  $(abspath $(CWD)../..)
 INCLUDES	+= -I$(HWA) -I$(HWA)/swuart-src -I$(HWA)/examples
 
-#	Toolchain path
-#
-# PATH		:= $(HOME)/dev/gcc-toolchains/4.7.0/bin:$(PATH)
 
 #	Output basename and directory
 #
 OUT		= out
-OBJDIR		= build
+OUTDIR		= build
 
-#  Dependencies
-#
-DEPS		 = $(SOURCES:.c=.d)
-DEPS		:= $(DEPS:.sx=.d)
-DEPS		:= $(addprefix $(OBJDIR)/,$(DEPS))
 
 #  Definitions from sources
 #
-INC_HWA		= $(OBJDIR)/$(OUT).hwa
-INC_HWA_C	= $(INC_HWA).c
+INC_HWA		= $(OUTDIR)/$(OUT).hwa
 
 
-#	Default target
+#  Include the definitions about DEVICE (may rebuild INC_HWA)
 #
-.PHONY: all
-all:	bin lst crc
+-include $(INC_HWA)
+
+
+#  DEVICE could not be determined. Stop here.
+#
+ifeq (HW_DEVICE,$(DEVICE))
+  $(error "HW_DEVICE not defined (or preprocessing errors)")
+endif
+
+
+#  DEVICE is known, include Makefile.2
+#
+ifneq (,$(DEVICE))
+  include $(CWD)Makefile.inc
+endif
 
 
 #  Get DEVICE informations from definitions in source files
@@ -57,95 +64,35 @@ all:	bin lst crc
 #	Double quotes are required for complex values for make to not show an
 #	error message when it reads it.
 #
-$(INC_HWA_C):
+$(INC_HWA).c:
 	@echo "RULE: $@"
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OUTDIR)
 	@echo 'DEVICE=HW_A0(HW_DEVICE)' >$@
+	@echo 'DEVICE_VENDOR=HW_DEVICE_VENDOR' >>$@
+	@echo 'DEVICE_ARCH=HW_DEVICE_ARCH' >>$@
 	@echo 'DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE' >>$@
 	@echo 'DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)' >>$@
 	@echo 'DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)' >>$@
 	@echo 'DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)' >>$@
 #
-#	Let CC compile this .c file with the symbols defined in each source file
+#	Let CPP process this .c file with the symbols defined in each source file
 #	in turn until DEVICE is found. Store the informations in a file.
 #
-$(INC_HWA): $(DEPS) $(INC_HWA_C) $(SOURCES)
+$(INC_HWA): $(SOURCES) $(INC_HWA).c
 	@echo "RULE: $@: $^"
-	@set -e ; for f in  $(SOURCES) ; do				\
-	  $(CC) $(CFLAGS) -E -imacros "$$f" $(INC_HWA_C) >$@	;\
+	@set -e ; for f in  $(SOURCES) ; do			\
+	  $(CPP) $(INCLUDES) -E -imacros "$$f" $(INC_HWA).c >$@	;\
 	  . $@							;\
 	  test "$$DEVICE" = HW_DEVICE || break			;\
 	done
-#
-#	Include the definitions about DEVICE
-#
--include $(INC_HWA)
 
 
-ifneq (,$(MAKE_RESTARTS))
-  ifeq (HW_DEVICE,$(DEVICE))
-    $(error "HW_DEVICE not defined (or preprocessing errors)")
-  endif
-endif
-
-
-#  Dependencies
-#
-#	Build one dependency files for each source file
-#
-$(OBJDIR)/%.d: %.c
-	@echo "RULE: $@: $^"
-	@mkdir -p $(OBJDIR)
-	@set -e; rm -f $@; \
-	$(CC) -M $(INCLUDES) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
-
-$(OBJDIR)/%.d: %.sx
-	@echo "RULE: $@: $^"
-	@mkdir -p $(OBJDIR)
-	@set -e; rm -f $@; \
-	$(CC) -M $(INCLUDES) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
-#
-#	Load dependencies
-#
--include $(DEPS)
-
-
-#  Chip programmer
-#
-ifeq (,$(PROG_SW))
-  PROG_SW	=	diabolo
-else
-  PROG_SW	=	avrdude
-  PROG_HW	=	usbasp
-endif
-
-
-#  Documentation
-#
-.PHONY: doc
-doc:
-	(cd $(CWD)../.. && make doc)
-
-
-#  Common makefile
-#
-include $(CWD)Makefile.in
-
-# ifneq ($(DEVICE),HW_DEVICE)
-#   include $(CWD)Makefile.in
-# endif
-
-
-#	Clean
+#  Clean
 #
 .PHONY: clean
 clean:
 	@echo "RULE: $@"
-	@rm -rf $(OBJDIR)
+	@rm -rf $(OUTDIR)
 	@find . '(' 			\
 		-name '*~' 		\
 		-o -name '*.cp.*'	\
@@ -154,13 +101,11 @@ clean:
 		')' -exec rm {} ';'
 
 
-#	Archive
+#  Archive the source directory
 #
+.PHONY: tarball
 tarball: clean
 	SRC=$$(basename $$PWD)					;\
 	DST=$$SRC.tar.bz2					;\
 	tar -cvO --exclude=trash --exclude=$$DST		\
 		../$$SRC | bzip2 >$$DST
-
-
-deps:	$(DEPS)

@@ -3,14 +3,14 @@
 
 PATH:=$(HWA)/tools/diabolo/software:$(PATH)
 
-INC_DIABOLO	= $(OBJDIR)/$(OUT).diabolo
+INC_DIABOLO	= $(OUTDIR)/$(OUT).diabolo
 
 
 #  Extract Diabolo parameters from sources
 #
 $(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
 	@echo "RULE: $@: $^"
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OUTDIR)
 	@>$@
 	@for f in $(SOURCES) ; do \
 	  if $(CC) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
@@ -37,7 +37,7 @@ erase:
 		--erase-flash
 
 .PHONY: burn
-burn:	$(OBJDIR)/$(OUT).bin
+burn:	$(OUTDIR)/$(OUT).bin
 	diabolo.py $(DIABOLO_OPTS)		\
 		--burn-flash $^			\
 		--cache=build/flash-cache.bin

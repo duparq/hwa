@@ -1,62 +1,91 @@
+
 #	-*- makefile -*-
-#	-*- coding: utf-8 -*-
 
-OPTIONS	= -v
 
+#  Programming hardware must be known
+#
 ifeq (,$(PROG_HW))
-$(error PROG_HW is not defined)
+  $(error PROG_HW is not defined)
 endif
 
-#  Reset le microcontrôleur (permet de tester la liaison)
-#
-reset:
-	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS)
 
-#  Efface le microcontrôleur
+#  Get the partno parameter from the DEVICE name
 #
+#	List of devices known: "DEVICE = PARTNO"
+#	Remove spaces
+#	Extract the one that matches DEVICE
+#
+$(OUTDIR)/$(OUT).avrdude: $(INC_HWA)
+	avrdude -c usbasp -p \? 2>&1 \
+	| sed -r -e 's/( )+//g'\
+	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
+
+#ifneq (,$(MAKE_RESTARTS))
+-include $(OUTDIR)/$(OUT).avrdude
+#endif
+
+
+#  Reset the microcontroller (link checking)
+#
+.PHONY: reset
+reset:
+	avrdude -p $(PARTNO) -c $(PROG_HW) -v
+
+
+#  Erase flash memory
+#
+.PHONY: erase
 erase:
 	avrdude -p $(PARTNO) -c $(PROG_HW) -e
 
-#  Programme le microcontrôleur
+
+#  Program flash memory
 #
-# burn: $(OBJDIR)/$(OUT).hex
-# 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
-# burn: $(OBJDIR)/$(OUT).bin
-# 	avrdude -p $(PARTNO) -c $(PROG_HW) -y -e -U flash:w:$^
-burn: $(OBJDIR)/$(OUT).elf
+.PHONY: burn
+burn: $(OUTDIR)/$(OUT).elf
 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:w:$^
 
-#  Vérifie la programmation
+
+#  Check programming
 #
-# verify: $(OBJDIR)/$(OUT).hex
-# 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
-verify: $(OBJDIR)/$(OUT).elf
+.PHONY: verify
+verify: $(OUTDIR)/$(OUT).elf
 	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
 
-#  Récupère le contenu de la flash
+
+#  Read flash memory
 #
+.PHONY: read-flash
 read-flash:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U flash:r:$(OBJDIR)/flash.bin:r
+		-U flash:r:$(OUTDIR)/flash.bin:r
 
-#  Récupère le contenu eeprom
+
+#  Read eeprom
 #
+.PHONY: read-eeprom
 read-eeprom:
 	avrdude -p $(PARTNO) -c $(PROG_HW)\
-		-U eeprom:r:$(OBJDIR)/eeprom.bin:r
+		-U eeprom:r:$(OUTDIR)/eeprom.bin:r
 
-#  Lit/programme les fusibles
+
+#  Read fuses
 #
+.PHONY: read-fuses
 read-fuses:
-	avrdude -p $(PARTNO) -c $(PROG_HW) $(OPTIONS) \
+	avrdude -p $(PARTNO) -c $(PROG_HW) -v \
 		-U efuse:r:-:h		\
 		-U hfuse:r:-:h		\
 		-U lfuse:r:-:h		\
 		-U lock:r:-:h		\
 		-U calibration:r:-:h	\
-		2>/dev/null >$(OBJDIR)/fuses.hex
+		2>/dev/null >$(OUTDIR)/fuses.hex
 
-write-fuses: $(OBJDIR)/$(OUT).hwa
+
+#  Write fuses
+#
+.PHONY: write-fuses
+write-fuses: $(OUTDIR)/$(OUT).hwa
 	@FUSE_EB=$$(tail -4 $< | head -1 -)					;\
 	FUSE_HB=$$(tail -3 $< | head -1 -)					;\
 	FUSE_LB=$$(tail -2 $< | head -1 -)					;\
@@ -71,5 +100,3 @@ write-fuses: $(OBJDIR)/$(OUT).hwa
 	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m" $$(($$FUSE_LB)))	;\
 	fi									;\
 	avrdude -p $(PARTNO) -c $(PROG_HW) $$FUSES
-
-.PHONY:	reset erase burn verify read-flash read-eeprom read-fuses write-fuses
