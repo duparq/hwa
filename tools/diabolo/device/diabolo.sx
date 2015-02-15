@@ -1,14 +1,14 @@
 
 /* -*- c -*- */
 
-//#include "config.attiny84.h"
-//#include "config.atmega328p.h"
-//#include "config.attiny85.h"
+//#include "boards/attiny84.h"
+//#include "boards/attiny85.h"
+//#include "boards/arduino-pro-mini.h"
 #include "boards/nanodccduino.h"
 #include <hwa.h>
 
 #if defined HW_DEVICE_ATMELAVR
 #  include "diabolo-atmelavr.sx"
 #else
-#  error Device other than Atmel AVR is not supported
+#  error Device other than Atmel AVR is not supported yet
 #endif
