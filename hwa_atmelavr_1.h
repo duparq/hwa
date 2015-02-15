@@ -8,6 +8,8 @@
 /** \brief	Target device is an Atmel AVR.
  */
 #define HW_DEVICE_ATMELAVR
+#define HW_DEVICE_VENDOR		atmel
+#define HW_DEVICE_ARCH			avr
 
 
 /*	Keywords
@@ -32,7 +34,9 @@
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
 #endif
 
-/*	HW_ISR(...): address of ISR
+/*	_hw_isr_(...): address (vector) of ISR
+ *
+ *	FIXME: should name it _vector(...)
  */
 #if defined __ASSEMBLER__
 #  define _hw_isr_(vector, ...)				__vector_##vector
