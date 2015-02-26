@@ -12,7 +12,7 @@
 #define HW_DEVICE_ARCH			avr
 
 
-/*	Keywords
+/*  Keywords
  */
 #define hw_is_bottom_bottom		, 1
 #define hw_is_clock_clock		, 1
@@ -26,7 +26,9 @@
 #define hw_is_update_update		, 1
 
 
-/*	hw_addr(...) : address of a memory definition
+/*  hw_addr(...) : address of a memory definition
+ *
+ *	C and assembler address differ!
  */
 #if defined __ASSEMBLER__
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
@@ -34,7 +36,7 @@
 #  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
 #endif
 
-/*	_hw_isr_(...): address (vector) of ISR
+/*  _hw_isr_(...): address (vector) of ISR
  *
  *	FIXME: should name it _vector(...)
  */

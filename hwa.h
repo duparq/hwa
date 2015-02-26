@@ -97,42 +97,25 @@
  */
 typedef struct hwa_r8_t
 {
-  intptr_t	ra ;		/*!< Address of hardware register.		*/
-  uint8_t	riv ;		/*!< Value after system reset (initial value).	*/
-  uint8_t	rwm ;		/*!< Writeable bits mask.			*/
-  uint8_t	rfm ;		/*!< Flags bits mask.				*/
+  intptr_t	a ;		/*!< Address of hardware register.		*/
   uint8_t	mmask ;		/*!< Modified bits mask.			*/
   uint8_t	mvalue ;	/*!< Modified value mask.			*/
   uint8_t	omask ;		/*!< Hardware known bits mask.			*/
   uint8_t	ovalue ;	/*!< Hardware known value mask.			*/
 } hwa_r8_t ;
 
-/** \brief	16-bit HWA register.
- *
- *	Structure used by hwa_ prefixed functions to handle one 16-bit hardware register.
- */
 typedef struct hwa_r16_t
 {
-  intptr_t	ra ;		/*!< Address of hardware register.		*/
-  uint16_t	riv ;		/*!< Value after system reset (initial value).	*/
-  uint16_t	rwm ;		/*!< Writeable bits mask.			*/
-  uint16_t	rfm ;		/*!< Flags bits mask.				*/
+  intptr_t	a ;		/*!< Address of hardware register.		*/
   uint16_t	mmask ;		/*!< Modified bits mask.			*/
   uint16_t	mvalue ;	/*!< Modified value mask.			*/
   uint16_t	omask ;		/*!< Hardware known bits mask.			*/
   uint16_t	ovalue ;	/*!< Hardware known value mask.			*/
 } hwa_r16_t ;
 
-/** \brief	32-bit HWA register.
- *
- *	Structure used by hwa_ prefixed functions to handle one 32-bit hardware register.
- */
-typedef struct hwa_r32_t
+typedef struct rem_hwa_r32_t
 {
-  intptr_t	ra ;		/*!< Address of hardware register.		*/
-  uint32_t	riv ;		/*!< Value after system reset (initial value).	*/
-  uint32_t	rwm ;		/*!< Writeable bits mask.			*/
-  uint32_t	rfm ;		/*!< Flags bits mask.				*/
+  intptr_t	a ;		/*!< Address of hardware register.		*/
   uint32_t	mmask ;		/*!< Modified bits mask.			*/
   uint32_t	mvalue ;	/*!< Modified value mask.			*/
   uint32_t	omask ;		/*!< Hardware known bits mask.			*/

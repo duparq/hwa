@@ -11,18 +11,17 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 }
 
 
-/** \file
- *  \brief	Definitions for C code production
+/*	Definitions that produce C code
  */
 
-/** @brief	Configure something (method)
- *
- *  Use hw/hwa_config(...) to configure an instance of a class that supports
- *  this method.
+/*  	hw/hwa_config(...): configure something (method)
  */
 #define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
-/** @copydoc hw_config(...) */
 #define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
+/*
+ *  The same for internal use: no checkings
+ */
+#define _hwa_config(...)		_HW_MTHD(hwa_config, __VA_ARGS__,)
 
 
 /*	hw_clear(...): clear something (method)
@@ -97,18 +96,14 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 #define hwa_release(...)		HW_MTHD(hwa_release, __VA_ARGS__)
 
 
-/*	hw_stat_t(...): structure of status of something (method)
- *	hw_stat(...): status of something (method)
+/*	hw_stat_t(...): structure holding the status of something (method)
+ *	hw_stat(...): get the status of something (method)
  */
-#define hw_stat_t(...)		HW_MTHD(hw_stat_t, __VA_ARGS__,)
+#define hw_stat_t(...)			HW_MTHD(hw_stat_t, __VA_ARGS__,)
 #define hw_stat(...)			HW_MTHD(hw_stat, __VA_ARGS__)
 
 
 /*	hw/hwa_toggle(...): toggle something, probably an io (method)
- */
-/** @brief	Toggles something
- *
- *  Method for classes that support toggling, such as bits or ios.
  */
 #define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__,)
 #define hwa_toggle(...)			HW_MTHD(hwa_toggle, __VA_ARGS__)
@@ -185,45 +180,73 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 #define _hwa_write_reg_3(...)		_hwa_write_reg_4(__VA_ARGS__)
 #define _hwa_write_reg_4(x,...)		_hwa_write_##x(x,__VA_ARGS__)
 
-/*	Write register in hwa_t struct. Internal use only, no argument checking!
+/*	Write register in hwa_t struct. Internal use only, no argument checking
  */
-#define _hwa_write_p(...)		_hwa_write_p_2(__VA_ARGS__)
-#define _hwa_write_p_2(p, ...)	\
-  HW_G2(_hwa_write_p_xfn, HW_IS(,hw_def_hwa_write_p_##__VA_ARGS__))(p, __VA_ARGS__)
-#define _hwa_write_p_xfn_1(p, t,...)	HW_A1(hw_def_hwa_write_p_##t)(p,t,__VA_ARGS__)
-#define _hwa_write_p_xfn_0(p, ...)	HW_G2(_hwa_write_p, HW_IS(0,__VA_ARGS__))(p,__VA_ARGS__)
-#define _hwa_write_p_0(...)	\
-    HW_ERR("can not process hwa_write_p(" HW_QUOTE(__VA_ARGS__) ",...).")
-#define _hwa_write_p_1(...)		__VA_ARGS__
+#define _hwa_write_pcr(p,c,r,v)		_hwa_wrpcr_2(p,c,r,hw_##c##_##r,v)
+#define _hwa_wrpcr_2(...)		_hwa_wrpcr_3(__VA_ARGS__)
+#define _hwa_wrpcr_3(p,c,r, t,...)	_hwa_wrpcr_##t(p,c,r,__VA_ARGS__)
 
-#define hw_def_hwa_write_p_bits1	, _hwa_write_p_bits1
-#define hw_def_hwa_write_p_bits2	, _hwa_write_p_bits2
+#define _hwa_wrpcr_cb1(p,c0,r0, r,bn,bp,v)  _hwa_wrpcr1(&p->r,hw_##c0##_##r,bn,bp,v)
+#define _hwa_wrpcr1(...)		_hwa_wrpcr2(__VA_ARGS__)
+#define _hwa_wrpcr2(p,t, ...)		_hwa_wrpcr_##t(p,__VA_ARGS__)
 
-#define _hwa_write_p_bits1(p, bits1, cn,ca,			\
-			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1, v)	\
-  _hwa_write_r##rw1( &p->rn1, rwm1,rfm1, rbn1,rbp1, v )
+#define _hwa_wrpcr_cb2(p,c,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, v)\
+  _hwa_wrpcrcb2_2(p, _hw_reg_cb2(c,,,r, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2), v)
 
-#define _hwa_write_p_bits2(p, bits2, cn,ca,				\
+#define _hwa_wrpcrcb2_2(...)		_hwa_wrpcrcb2_3(__VA_ARGS__)
+#define _hwa_wrpcrcb2_3(p, bits2, cn,ca,				\
 			  rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
 			  rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
   do { _hwa_write_r##rw1(&p->rn1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_r##rw2(&p->rn2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0)
+  
+#define _hwa_wrpcr_crg(p,rw,ra,rwm,rfm, bn,bp, v)	\
+  _hwa_write_r##rw( p, rwm,rfm, bn,bp,v)
+
+#define _hwa_wrpcr_irg(p,c0,r0, c,n,i,a, r, v)  _hwa_wrpcrirg_2(n,c,hw_##c##_##r,v)
+#define _hwa_wrpcrirg_2(...)	_hwa_wrpcrirg_3(__VA_ARGS__)
+
+#define _hwa_wrpcrirg_3(n,c,t,...)	_hwa_wrpcrirg_##t(n,c,__VA_ARGS__)
+
+#define _hwa_wrpcrirg_cb1(n,c,r,bn,bp,v)  _hwa_wrpcrirgcb1_2(&hwa->n.r,hw_##c##_##r,bn,bp,v)
+
+#define _hwa_wrpcrirgcb1_2(...)		_hwa_wrpcrirgcb1_3(__VA_ARGS__)
+#define _hwa_wrpcrirgcb1_3(p,t,...)	_hwa_wrpcr_##t(p,__VA_ARGS__)
 
 
-/** \brief	Initializes an HWA register.
- *
- *  \param r		pointer on the hwa register.
- */
-HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r )
+#define _hwa_begin(...)			_hwa_begin_2(__VA_ARGS__)
+#define _hwa_begin_2(c,n,i,a)		__hwa_begin_##c(&hwa->n,a)
+
+
+#define _hwa_init(...)			_hwa_init_2(__VA_ARGS__)
+#define _hwa_init_2(c,n,i,a)		__hwa_init_##c(&hwa->n)
+
+
+#define _hwa_solve(...)			_hwa_solve_2(__VA_ARGS__)
+#define _hwa_solve_2(c,n,i,a)		__hwa_solve_##c(hwa,&hwa->n)
+
+
+#define _hwa_commit(...)		_hwa_commit_2(__VA_ARGS__)
+#define _hwa_commit_2(c,n,i,a)		__hwa_commit_##c(hwa,&hwa->n)
+
+
+#define _hwa_begin_pacr(p,a,c,r)	_hwa_begin_pacr_2(p,a,c,r,hw_##c##_##r)
+#define _hwa_begin_pacr_2(...)		_hwa_begin_pacr_3(__VA_ARGS__)
+#define _hwa_begin_pacr_3(p,a,c,r, rt,rw,ra,rwm,rfm)	_hwa_begin_r##rw(&p->r,a+ra)
+
+
+HW_INLINE void _hwa_begin_r8 ( hwa_r8_t *r, intptr_t a )
 {
+  r->a		= a ;
   r->mmask	= 0 ;
   r->mvalue	= 0 ;
   r->omask	= 0 ;
   r->ovalue	= 0 ;
 }
 
-HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r )
+HW_INLINE void _hwa_begin_r16 ( hwa_r16_t *r, intptr_t a )
 {
+  r->a		= a ;
   r->mmask	= 0 ;
   r->mvalue	= 0 ;
   r->omask	= 0 ;
@@ -331,7 +354,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 #define _hwa_begin_reg(...)			_hwa_begin_reg_2(__VA_ARGS__)
 #define _hwa_begin_reg_2(c,n,i,a, r)		_hwa_begin_reg_3(n,a,r, hw_##c##_##r)
 #define _hwa_begin_reg_3(...)			_hwa_begin_reg_4(__VA_ARGS__)
-#define _hwa_begin_reg_4(n,a,r, rt,rw, ... )	_hwa_begin_r##rw( &hwa->n.r )
+#define _hwa_begin_reg_4(n,a,r, rt,rw,ra, ... )	_hwa_begin_r##rw( &hwa->n.r, a+ra )
 
 
 /** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
@@ -347,17 +370,17 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 #define hwa_begin()							\
   hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
-  _hwa_begin(hwa) ;							\
-  uint8_t hwa_commit = 0 /* Will warn if hwa_commit() is not called */
+  _hwa_begin_all(hwa) ;							\
+  uint8_t hwa_xcommit = 0 /* Will warn if hwa_commit() is not called */
 
 
 #define hwa_begin_from_reset()						\
   hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
-  _hwa_begin(hwa) ;							\
-  _hwa_init(hwa) ;							\
+  _hwa_begin_all(hwa) ;							\
+  _hwa_init_all(hwa) ;							\
   hwa_nocommit() ;							\
-  uint8_t hwa_commit = 0
+  uint8_t hwa_xcommit = 0
 
 
 /** \brief	Commit configuration to hardware.
@@ -365,15 +388,15 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
  *	Solve the constraints imposed by the developer, then do the required
  *	hardware register writes.
  *
- *	Calls _hwa_commit_all() that must be defined in hwa_ \e HW_DEVICE _l2.h.
+ *	Calls _hwa_commit() that must be defined in hwa_ \e HW_DEVICE _l2.h.
  *
  * \hideinitializer
  */
 #define hwa_commit()					\
   do {							\
-    uint8_t foo __attribute__((unused)) = hwa_commit ;	\
+    uint8_t foo __attribute__((unused)) = hwa_xcommit ;	\
     hwa->commit = 1 ;					\
-    _hwa_commit(hwa);					\
+    _hwa_commit_all(hwa);				\
   } while(0)
 
 
@@ -387,7 +410,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 #define hwa_nocommit()				\
   do {						\
     hwa->commit = 0 ;				\
-    _hwa_commit(hwa);				\
+    _hwa_commit_all(hwa);			\
   } while(0)
 
 
@@ -395,7 +418,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 #define _hwa_commit_reg_2(c,n,i,a, r, co)	_hwa_commit_reg_3(n,a,r, hw_##c##_##r, co)
 #define _hwa_commit_reg_3(...)			_hwa_commit_reg_4(__VA_ARGS__)
 #define _hwa_commit_reg_4(n,a,r, rt,rw,ra,rwm,rfm, co )	\
-  _hwa_commit_r##rw( &hwa->n.r, ra,rwm,rfm, co )
+  _hwa_commit_r##rw( &hwa->n.r,rwm,rfm, co )
 
 
 /*	Include device-specific declarations

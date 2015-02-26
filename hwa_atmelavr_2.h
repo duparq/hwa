@@ -1,4 +1,3 @@
-
 /*	Device-specific hardware acess definitions.
  */
 
@@ -15,6 +14,12 @@
  * \hideinitializer
  */
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
+
+
+/*	Built-in version of strcmp
+ */
+#define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
+
 
 
 #define HW_ATOMIC(...)				\
@@ -183,10 +188,9 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
  *
  *  - bit-set or bit-clear:	1 instruction
  *  - load-immediate / store:	2 instructions
- *  - load / modify / store:	3 instructions
+ *  - load / modify / store:	3 instructions or more
  */
-HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
-				intptr_t ra, uint8_t rwm, uint8_t rfm, _Bool commit )
+HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool commit )
 {
   if ( !commit ) {
     r->ovalue = (r->ovalue & r->omask & ~r->mmask) | (r->mvalue & r->mmask) ;
@@ -195,33 +199,29 @@ HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
     return ;
   }
 
-  volatile uint8_t *p = (volatile uint8_t *)ra ;
+  volatile uint8_t *p = (volatile uint8_t *)r->a ;
 
   /*  Mask of bits to be written:
    *    =     bits that are writeable (rwm)
-   *      AND that must be modified (mmask)
+   *      AND that has been written (mmask)
+   *      AND that really need to be modified (ovalue != mvalue)
    */
-  uint8_t wm = rwm & r->mmask ;
+  uint8_t wm = rwm & r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
 
   if ( wm ) {
-    /*
-     *  Mask of bits that must be written and that will actually be modified
-     */
-    uint8_t wm1 = wm & ((r->ovalue ^ r->mvalue) | ~r->omask);
-
     if ( (uintptr_t)p < 0x40 &&
-	 (wm1==0x01 || wm1==0x02 || wm1==0x04 || wm1==0x08 ||
-	  wm1==0x10 || wm1==0x20 || wm1==0x40 || wm1==0x80 ) ) {
-    /*
-     *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
-     *  sbi/cbi
-     */
-      if ( wm1 & r->mvalue )
-	*p |= wm1 ;
+	 (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
+	  wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80 ) ) {
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
       else
-	*p &= ~wm1 ;
-      r->ovalue = (r->ovalue & ~wm1) | (r->mvalue & wm1) ;
-      r->omask |= wm1 ;
+	*p &= ~wm ; /* cbi */
+      r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
+      r->omask |= wm ;
       r->mmask = 0 ;
       return ;
     }
@@ -230,10 +230,11 @@ HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
      *	  =     bits that are not to be modified (mmask)
      *      AND not flags (rfm)
      *      AND that are not known (omask)
+     *      AND that are writeable (rwm)
      */
-    uint8_t rm = ~r->mmask & ~rfm & ~r->omask ;
+    uint8_t rm = ~r->mmask & ~rfm & ~r->omask & rwm ;
 
-    /*  Read only if needed: something to read, commit required
+    /*  Read only if needed
      */
     if ( rm )
       r->ovalue = *p ;
@@ -242,7 +243,7 @@ HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
      */
     r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
 
-    /*  Write value if needed: something to write
+    /*  Write new value
      */
     *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
   }
@@ -252,26 +253,36 @@ HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r,
 }
 
 
-HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r,
-				 intptr_t ra, uint16_t rwm, uint16_t rfm, _Bool commit )
+HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool commit )
 {
-  volatile uint16_t *p = (volatile uint16_t *)ra ;
-  uint16_t wm = r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
-  if ( wm ) {
-    /* Do not check for sbi/cbi for 16-bit access as 8-bit AVRs do not have
-       16-bit configuration registers */
-    uint16_t rm = rwm & ~r->mmask & ~r->omask & ~rfm ;
-    if ( rm && commit ) {
-      r->ovalue = *p ;
-      r->omask = rwm & ~rfm ;
-    }
-    r->ovalue = (r->ovalue & ~wm) | (r->mvalue & wm) ;
-    if ( wm && commit )
-      *p = r->ovalue ;
-    r->ovalue &= ~rfm ;
+  if ( !commit ) {
+    r->ovalue = (r->ovalue & r->omask & ~r->mmask) | (r->mvalue & r->mmask) ;
+    r->omask |= r->mmask ;
+    r->mmask = 0 ;
+    return ;
   }
+
+  volatile uint16_t *p = (volatile uint16_t *)r->a ;
+
+  uint16_t wm = rwm & r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
+
+  if ( wm ) {
+    /*
+     * Do not check for sbi/cbi for 16-bit access as since 8-bit AVRs do not
+     * have 16-bit configuration registers, it is unlikely that it would be
+     * useful.
+     */
+    uint16_t rm = ~r->mmask & ~rfm & ~r->omask & rwm ;
+
+    if ( rm )
+      r->ovalue = *p ;
+
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  }
+
   r->omask |= r->mmask ;
-  r->omask &= ~rfm ;
   r->mmask = 0 ;
 }
 
@@ -346,3 +357,22 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 #define _hw_isr_(vector, ...)						\
   HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
   void __vector_##vector (void)
+
+
+#define _hwa_commit_pcr(p,c,r)		_hwa_copcr_2(p,c,r, hw_##c##_##r)
+#define _hwa_copcr_2(...)		_hwa_copcr_3(__VA_ARGS__)
+#define _hwa_copcr_3(p,c,r,t,...)	_hwa_copcr_##t(p,c,r,__VA_ARGS__)
+
+#define _hwa_copcr_crg(p,c,r, rw,ra,rwm,rfm)	_hwa_commit_r##rw(&p->r,rwm,rfm,hwa->commit)
+
+#define _hwa_copcr_irg(p,c0,r0, c,n,i,a,r)\
+  _hwa_copcrirg_2(p,c0,r0, c,n,i,a,r, hw_##c##_##r)
+
+#define _hwa_copcrirg_2(...)		_hwa_copcrirg_3(__VA_ARGS__)
+#define _hwa_copcrirg_3(p,c0,r0, c,n,i,a,r, t,...) _hwa_copcrirg_##t((&hwa->n),c,__VA_ARGS__)
+
+#define _hwa_copcrirg_cb1(p,c,n,bn,bp)	_hwa_copcrirgcb1_2(&p->n,hw_##c##_##n)
+
+#define _hwa_copcrirgcb1_2(...)	_hwa_copcrirgcb1_3(__VA_ARGS__)
+#define _hwa_copcrirgcb1_3(p,rt,rw,ra,rwm,rfm)\
+  _hwa_commit_r##rw(p,rwm,rfm,hwa->commit)

@@ -102,6 +102,9 @@
 #define _HW_MTHD1_0_1(f,...)	__VA_ARGS__
 #define _HW_MTHD2_1(f,...)	HW_A1(HW_G3(hw_def,f,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_MTHD2_0(f,...)	HW_ERR("`"#f "` is not a method of class `" HW_QUOTE(__VA_ARGS__) "`.")
+/*
+ *  The same for internal use: no checkings
+ */
 #define _HW_MTHD(f,...)		HW_A1(HW_G3(hw_def,f,__VA_ARGS__))(__VA_ARGS__)
 
 
