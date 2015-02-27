@@ -1,14 +1,18 @@
 
 #	-*- makefile -*-
 
-PATH:=$(HWA)/tools/diabolo/software:$(PATH)
+#$(warning "INCLUDE: Makefile.diabolo")
+
+PATH		:= $(HWA)/examples/diabolo/software:$(PATH)
 
 INC_DIABOLO	= $(OUTDIR)/$(OUT).diabolo
 
 
 #  Extract Diabolo parameters from sources
 #
-$(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
+#$(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
+#build/out.diabolo: $(INC_HWA) $(DEPS) $(SOURCES)
+build/out.diabolo: $(SOURCES)
 	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@>$@
@@ -20,8 +24,9 @@ $(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
 	done
 #	@rm -f $@.tmp
 
--include $(INC_DIABOLO)
+#$(warning "INC_DIABOLO: $(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)")
 
+-include $(INC_DIABOLO)
 
 #  Diabolo options
 #
@@ -37,9 +42,9 @@ erase:
 		--erase-flash
 
 .PHONY: burn
-burn:	$(OUTDIR)/$(OUT).bin
+burn:	$(OUTDIR)/$(OUT).bin $(INC_DIABOLO)
 	diabolo.py $(DIABOLO_OPTS)		\
-		--burn-flash $^			\
+		--burn-flash $<			\
 		--cache=build/flash-cache.bin
 
 .PHONY: diabolo

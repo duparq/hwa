@@ -9,7 +9,7 @@
 #	Default target
 #
 .PHONY: all
-all:	$(INC_HWA) bin lst size crc
+all:	$(INC_HWA) deps bin lst size crc
 
 hex:	$(OUTDIR)/$(OUT).hex
 bin:	$(OUTDIR)/$(OUT).bin
@@ -20,19 +20,28 @@ lst:	$(OUTDIR)/$(OUT).lst
 #
 #	Build one dependency files for each source file
 #
-DEPS		 = $(SOURCES:.c=.d)
-DEPS		:= $(DEPS:.sx=.d)
+DEPS		 = $(SOURCES:.c=.$(DEVICE).d)
+DEPS		:= $(DEPS:.sx=.$(DEVICE).d)
 DEPS		:= $(addprefix $(OUTDIR)/,$(DEPS))
 
 deps:	$(DEPS)
 
-$(OUTDIR)/%.d: %.c
+
+# ifneq (,$(DEVICE))
+$(OUTDIR)/%.$(DEVICE).d: %.c
 	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
 	$(CC) -M $(INCLUDES) $< > $@.tmp; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.tmp > $@; \
+	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.$(DEVICE).o $@ : ,g' < $@.tmp > $@; \
 	rm -f $@.tmp
+
+# set -e; rm -f build/main0.d; \
+# 	avr-gcc -M -I/home/indy/dev/hwa-dev -I/home/indy/dev/hwa-dev/swuart-src -I/home/indy/dev/hwa-dev/examples main0.c > build/main0.d.tmp; \
+# 	sed 's,\(main0\)\.o[ :]*,\1.o build/main0.d : ,g' < build/main0.d.tmp > build/main0.d; \
+# 	rm -f build/main0.d.tmp
+# endif
+
 
 $(OUTDIR)/%.d: %.sx
 	@echo "RULE: $@: $^"
@@ -166,7 +175,7 @@ OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
 #	Compile and link
 #
-$(OBJECTS): | $(OUTDIR) $(INC_HWA)		# Create directory if needed
+$(OBJECTS): | $(OUTDIR) $(INC_HWA) $(DEPS)		# Create directory if needed
 
 $(OUTDIR):
 	@mkdir $(OUTDIR)

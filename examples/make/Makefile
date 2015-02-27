@@ -24,7 +24,8 @@ SHELL		= /bin/sh
 #  HWA source path and other related include directories
 #
 HWA		=  $(abspath $(CWD)../..)
-INCLUDES	+= -I$(HWA) -I$(HWA)/swuart-src -I$(HWA)/examples
+#INCLUDES	+= -I$(HWA) -I$(HWA)/swuart-src -I$(HWA)/examples
+INCLUDES	+= -I$(HWA) -I$(HWA)/examples
 
 
 #	Output basename and directory
@@ -67,13 +68,14 @@ endif
 $(INC_HWA).c:
 	@echo "RULE: $@"
 	@mkdir -p $(OUTDIR)
-	@echo 'DEVICE=HW_A0(HW_DEVICE)' >$@
-	@echo 'DEVICE_VENDOR=HW_DEVICE_VENDOR' >>$@
-	@echo 'DEVICE_ARCH=HW_DEVICE_ARCH' >>$@
-	@echo 'DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE' >>$@
-	@echo 'DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)' >>$@
-	@echo 'DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)' >>$@
-	@echo 'DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)' >>$@
+	@echo \
+	'DEVICE=HW_DEVICE\n'\
+	'DEVICE_VENDOR=HW_DEVICE_VENDOR\n'\
+	'DEVICE_ARCH=HW_DEVICE_ARCH\n'\
+	'DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE\n'\
+	'DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)\n'\
+	'DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)\n'\
+	'DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)\n' >$@
 #
 #	Let CPP process this .c file with the symbols defined in each source file
 #	in turn until DEVICE is found. Store the informations in a file.
