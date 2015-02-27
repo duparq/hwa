@@ -256,15 +256,17 @@
 #include "hwa_atmelavr_1.h"
 #include "hwa_atmegax8_cores_1.h"		/* id: 100 */
 #include "hwa_atmegax8_ios_1.h"			/* id: 300 */
+#include "hwa_atmegax8_counters_1.h"		/* id: 400 */
+#include "hwa_atmegax8_acmps_1.h"		/* id: 700 */
 #include "hwa_atmegax8_watchdogs_1.h"		/* id: 900 */
 #include "hwa_atmegax8_eeproms_1.h"		/* id: 1000 */
 #include "hwa_atmegax8_flashs_1.h"		/* id: 1100 */
 
-#if !defined __ASSEMBLER__ 
 
 #define HWA_DCL					\
-  HWA_DCL_CORES ;				\
-  HWA_DCL_IOS ;					\
-  HWA_DCL_WATCHDOGS ;
-
-#endif /* !defined __ASSEMBLER__ */
+  hwa_coreb_t	core0 ;				\
+  hwa_io8a_t	portb, portc, portd ;		\
+  hwa_wdogb_t	watchdog0 ;			\
+  hwa_acmpa_t	acmp0 ;				\
+  hwa_c8a_t	counter0 ;			\
+  hwa_c16a_t	counter1 ;

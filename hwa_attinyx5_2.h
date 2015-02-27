@@ -5,72 +5,69 @@
  */
 
 #include "hwa_atmelavr_2.h"
-#include "hwa_atmelavr_core.h"
-#include "hwa_atmelavr_ios_2.h"
-#include "hwa_atmelavr_wdog.h"
-#include "hwa_atmelavr_wdogA.h"
+#include "hwa_atmelavr__corea_2.h"
+#include "hwa_atmelavr__io_2.h"
+#include "hwa_atmelavr__wdoga_2.h"
+#include "hwa_atmelavr__c8a_2.h"
 
 
-/*	Available sleep modes
+
+HW_INLINE void _hwa_begin_all( hwa_t *hwa )
+{
+  _hwa_begin( hw_core0 );
+  _hwa_begin( hw_portb );
+  _hwa_begin( hw_watchdog0 );
+
+  _hwa_begin_reg( hw_shared0, timsk );
+  _hwa_begin_reg( hw_shared0, tifr );
+  _hwa_begin( hw_counter0 );
+}
+
+
+HW_INLINE void _hwa_init_all( hwa_t *hwa )
+{
+  _hwa_init( hw_core0 );
+  _hwa_init( hw_portb );
+  _hwa_init( hw_watchdog0 );
+
+  _hwa_set_r8( &hwa->shared0.timsk, 0x00 );
+  _hwa_set_r8( &hwa->shared0.tifr,  0x00 );
+  _hwa_init( hw_counter0 );
+}
+
+
+HW_INLINE void _hwa_commit_all( hwa_t *hwa )
+{
+  _hwa_solve( hw_counter0 );
+
+  _hwa_commit( hw_core0 );
+  _hwa_commit( hw_watchdog0 );
+  _hwa_commit( hw_portb );
+  _hwa_commit_reg( hw_shared0, timsk, hwa->commit );
+  _hwa_commit_reg( hw_shared0, tifr,  hwa->commit );
+  _hwa_commit( hw_counter0 );
+}
+
+
+/*	Status of hw_counter0
  */
-/* #define hw_core_sm_idle			, 0 */
-/* #define hw_core_sm_adc_noise_reduction	, 1 */
-/* #define hw_core_sm_power_down		, 2 */
+typedef union {
+  uint8_t         byte ;
+  struct {
+    unsigned int  _0       : 1 ;
+    unsigned int  overflow : 1 ;
+    unsigned int  _2       : 1 ;
+    unsigned int  output1  : 1 ;
+    unsigned int  output0  : 1 ;
+    unsigned int  _567     : 3 ;
+  };
+} _hw_c8a_stat_t ;
 
+#define _hw_stat_c8a(c,n,i,a)		_hw_c8a_stat( _hw_read_reg(hw_shared0, tifr) )
 
-HW_INLINE void _hwa_begin( hwa_t *hwa )
+HW_INLINE _hw_c8a_stat_t _hw_c8a_stat( uint8_t byte )
 {
-  _hwa_begin_reg( hw_core0, gimsk  );
-  _hwa_begin_reg( hw_core0, gifr   );
-  _hwa_begin_reg( hw_core0, mcucr  );
-  _hwa_begin_reg( hw_core0, mcusr  );
-  _hwa_begin_reg( hw_core0, osccal );
-  _hwa_begin_reg( hw_core0, gpior2 );
-  _hwa_begin_reg( hw_core0, gpior1 );
-  _hwa_begin_reg( hw_core0, gpior0 );
-  _hwa_begin_reg( hw_core0, prr    );
-
-  _hwa_begin_reg( hw_portb, port );
-  _hwa_begin_reg( hw_portb, ddr  );
-
-  hwa->watchdog0.action = 0xFF ;		/* 0xFF == unchanged */
-  hwa->watchdog0.timeout = 0xFF ;		/* 0xFF == unchanged */
-  _hwa_begin_reg( hw_watchdog0, csr );
-}
-
-HW_INLINE void _hwa_init( hwa_t *hwa )
-{
-  _hwa_set_r8( &hwa->core0.gimsk,  0x00 );
-  _hwa_set_r8( &hwa->core0.gifr,   0x00 );
-  _hwa_set_r8( &hwa->core0.mcucr,  0x00 );
-  //  _hwa_set_r8( &hwa->core0.mcusr,  0x00 );
-  _hwa_set_r8( &hwa->core0.osccal, 0x00 );
-  _hwa_set_r8( &hwa->core0.gpior2, 0x00 );
-  _hwa_set_r8( &hwa->core0.gpior1, 0x00 );
-  _hwa_set_r8( &hwa->core0.gpior0, 0x00 );
-  _hwa_set_r8( &hwa->core0.prr,    0x00 );
-
-  _hwa_set_r8( &hwa->portb.port, 0x00 );
-  _hwa_set_r8( &hwa->portb.ddr,  0x00 );
-
-  _hwa_set_r8( &hwa->watchdog0.csr, 0x00 );
-}
-
-
-HW_INLINE void _hwa_commit( hwa_t *hwa )
-{
-  _hwa_commit_reg( hw_core0, gimsk,  hwa->commit );
-  _hwa_commit_reg( hw_core0, gifr,   hwa->commit );
-  _hwa_commit_reg( hw_core0, mcucr,  hwa->commit );
-  _hwa_commit_reg( hw_core0, mcusr,  hwa->commit );
-  _hwa_commit_reg( hw_core0, osccal, hwa->commit );
-  _hwa_commit_reg( hw_core0, gpior2, hwa->commit );
-  _hwa_commit_reg( hw_core0, gpior1, hwa->commit );
-  _hwa_commit_reg( hw_core0, gpior0, hwa->commit );
-  _hwa_commit_reg( hw_core0, prr,    hwa->commit );
-
-  _hwa_commit_reg( hw_portb, port, hwa->commit );
-  _hwa_commit_reg( hw_portb, ddr,  hwa->commit );
-
-  _hwa_commit_wdogA( hwa, &hwa->watchdog0 );
+  _hw_c8a_stat_t	st ;
+  st.byte = byte ;
+  return st ;
 }

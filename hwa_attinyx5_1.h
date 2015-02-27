@@ -266,9 +266,9 @@
 #endif
 
 #define HW_DEVICE_FUSE_LB			\
-  HW_DEVICE_CKDIV8<<7 |				\
-  HW_DEVICE_CKOUT<<6 |				\
-  HW_DEVICE_SUT10<<4 |				\
+  HW_DEVICE_CKDIV8<<7  |			\
+  HW_DEVICE_CKOUT<<6   |			\
+  HW_DEVICE_SUT10<<4   |			\
   HW_DEVICE_CKSEL31<<1 |			\
   HW_DEVICE_CKSEL0
 
@@ -281,12 +281,49 @@
 #include "hwa_attinyx5_eeproms_1.h"		/* id: 100 */
 #include "hwa_attinyx5_flashs_1.h"		/* id: 100 */
 #include "hwa_attinyx5_watchdogs_1.h"		/* id: 900 */
+#include "hwa_attinyx5_counters_1.h"
 
-#if !defined __ASSEMBLER__ 
+
+/*  Instance that holds shared registers
+ */
+#define hw_shared0			_shared, shared0, 0, 0
+
+/*  Class registers			class, rw, ra, rwm, rfm
+ */
+#define hw__shared_gtccr		crg, 8, 0x2C, 0x81, 0x00
+#define hw__shared_timsk		crg, 8, 0x59, 0x7E, 0x00
+#define hw__shared_tifr			crg, 8, 0x58, 0x7E, 0x7E
+
+#define hw__shared_ocie1a		cb1, timsk, 1, 6
+#define hw__shared_ocie1b		cb1, timsk, 1, 5
+#define hw__shared_ocie0a		cb1, timsk, 1, 4
+#define hw__shared_ocie0b		cb1, timsk, 1, 3
+#define hw__shared_oie1			cb1, timsk, 1, 2
+#define hw__shared_oie0			cb1, timsk, 1, 1
+
+#define hw__shared_ocf1a		cb1, tifr, 1, 6
+#define hw__shared_ocf1b		cb1, tifr, 1, 5
+#define hw__shared_ocf0a		cb1, tifr, 1, 4
+#define hw__shared_ocf0b		cb1, tifr, 1, 3
+#define hw__shared_ov1			cb1, tifr, 1, 2
+#define hw__shared_ov0			cb1, tifr, 1, 1
+
+
+#ifndef __ASSEMBLER__
+
+
+typedef struct {
+  hwa_r8_t	gtccr ;
+  hwa_r8_t	timsk ;
+  hwa_r8_t	tifr ;
+} hwa_shared_t ;
+
 
 #define HWA_DCL					\
-  HWA_DCL_CORES ;				\
-  HWA_DCL_IOS ;					\
-  HWA_DCL_WATCHDOGS ;
+  hwa_corea_t	core0 ;				\
+  hwa_io6a_t	portb ;				\
+  hwa_wdoga_t	watchdog0 ;			\
+  hwa_shared_t	shared0 ;			\
+  hwa_c8a_t	counter0 ;			\
 
-#endif /* !defined __ASSEMBLER__ */
+#endif

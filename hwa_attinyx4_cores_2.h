@@ -5,6 +5,9 @@
  */
 
 
+#error
+
+
 HW_INLINE void _hwa_begin_cores ( hwa_t *hwa )
 {
   _hwa_begin_reg( hw_core0, gimsk  );
@@ -62,8 +65,8 @@ HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
 #define hw_power_usi0		prusi
 #define hw_power_adc0		pradc
 
-#define hw_def_hw_turn_c8a	, _hw_turn_power
-#define hw_def_hw_turn_c16a	, _hw_turn_power
+#define hw_def_hw_turn__c8a	, _hw_turn_power
+#define hw_def_hw_turn__c16a	, _hw_turn_power
 #define hw_def_hw_turn_usia	, _hw_turn_power
 #define hw_def_hw_turn_ad10a	, _hw_turn_power
 
@@ -75,8 +78,8 @@ HW_INLINE void _hwa_commit_cores ( hwa_t *hwa )
   _hw_write_reg(hw_core0, hw_power_##n, (HW_A1(hw_state_##vstate)==0))
 
 
-#define hw_def_hwa_turn_c8a	, _hwa_turn_power
-#define hw_def_hwa_turn_c16a	, _hwa_turn_power
+#define hw_def_hwa_turn__c8a	, _hwa_turn_power
+#define hw_def_hwa_turn__c16a	, _hwa_turn_power
 #define hw_def_hwa_turn_usia	, _hwa_turn_power
 #define hw_def_hwa_turn_ad10a	, _hwa_turn_power
 

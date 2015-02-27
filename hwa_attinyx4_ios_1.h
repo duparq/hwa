@@ -4,70 +4,51 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/*
- *	IO: General-Purpose Inputs & Outputs
- */
+#include "hwa_atmelavr__io_1.h"
+//#include "hwa_atmelavr__io8a_1.h"
 
-#include "hwa_atmelavr_ios_1.h"
+#define HWA_DCL_IOS			hwa_io8a_t porta, portb
 
-
-/*	Class & method
- */
-#define hw_class_porta
-#define _hw_pop_porta(c,n,i,a,...)	__VA_ARGS__
 
 /*	Instances			class, name, id, address
  */
-#define hw_porta			porta, porta, 300, 0
+#define hw_porta			_io8a, porta, 300, 0x39
+#define hw_portb			_io8a, portb, 310, 0x36
 
-/*	Class regs			class, rw, ra, rwm, rfm
+
+/*  Pins				class, name, id, controller, bn, bp
  */
-#define hw_porta_port			crg, 8, 0x3B, 0xFF, 0x00
-#define hw_porta_ddr			crg, 8, 0x3A, 0xFF, 0x00
-#define hw_porta_pin			crg, 8, 0x39, 0xFF, 0x00
+#define hw_pin_pa0			_io, pin_pa0, 301, hw_porta, 1, 0
+#define hw_pin_pa1			_io, pin_pa1, 302, hw_porta, 1, 1
+#define hw_pin_pa2			_io, pin_pa2, 303, hw_porta, 1, 2
+#define hw_pin_pa3			_io, pin_pa3, 304, hw_porta, 1, 3
+#define hw_pin_pa4			_io, pin_pa4, 305, hw_porta, 1, 4
+#define hw_pin_pa5			_io, pin_pa5, 306, hw_porta, 1, 5
+#define hw_pin_pa6			_io, pin_pa6, 307, hw_porta, 1, 6
+#define hw_pin_pa7			_io, pin_pa7, 308, hw_porta, 1, 7
+#define hw_port_a			_io, port_a,  309, hw_porta, 8, 0
 
-/*	Pins				class, name, id, controller, bn, bp
- */
-#define hw_port_a			io, port_a,  309, hw_porta, 8, 0
-#define hw_pin_pa0			io, pin_pa0, 301, hw_porta, 1, 0
-#define hw_pin_pa1			io, pin_pa1, 302, hw_porta, 1, 1
-#define hw_pin_pa2			io, pin_pa2, 303, hw_porta, 1, 2
-#define hw_pin_pa3			io, pin_pa3, 304, hw_porta, 1, 3
-#define hw_pin_pa4			io, pin_pa4, 305, hw_porta, 1, 4
-#define hw_pin_pa5			io, pin_pa5, 306, hw_porta, 1, 5
-#define hw_pin_pa6			io, pin_pa6, 307, hw_porta, 1, 6
-#define hw_pin_pa7			io, pin_pa7, 308, hw_porta, 1, 7
-
-
-/*	Class & methods
- */
-#define hw_class_portb
-#define _hw_pop_portb(c,n,i,a,...)	__VA_ARGS__
-
-/*	Instances			class, name, id, address
- */
-#define hw_portb			portb, portb, 310, 0
-
-/*	Class regs			class, rw, ra, rwm, rfm
- */
-#define hw_portb_port			crg, 8, 0x38, 0x0F, 0x00
-#define hw_portb_ddr			crg, 8, 0x37, 0x0F, 0x00
-#define hw_portb_pin			crg, 8, 0x36, 0x0F, 0x00
-
-/*	Pins				class, name, id, controller, bn, bp
- */
-#define hw_port_b			io, port_b,  319, hw_portb, 4, 0
-#define hw_pin_pb0			io, pin_pb0, 311, hw_portb, 1, 0
-#define hw_pin_pb1			io, pin_pb1, 312, hw_portb, 1, 1
-#define hw_pin_pb2			io, pin_pb2, 313, hw_portb, 1, 2
-#define hw_pin_pb3			io, pin_pb3, 314, hw_portb, 1, 3
+#if !HW_IS(external,HW_DEVICE_CLK_SRC)		\
+  && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
+#  define hw_pin_pb0			_io, pin_pb0, 311, hw_portb, 1, 0
+#endif
+#define hw_pin_pb1			_io, pin_pb1, 312, hw_portb, 1, 1
+#if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT)	\
+  && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
+#  define hw_pin_pb2			_io, pin_pb2, 313, hw_portb, 1, 2
+#endif
+#if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET)	\
+  && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
+#  define hw_pin_pb3			_io, pin_pb3, 314, hw_portb, 1, 3
+#endif
+#define hw_port_b			_io, port_b,  319, hw_portb, 4, 0
 
 
 /*	Pins by numbers
  */
 #define hw_is_14pdip_14pdip		, 1
 
-#if HW_IS(14pdip,HW_A1(HW_DEVICE))
+#if HW_IS(14pdip,HW_DEVICE_PACKAGE)
 #
 #  define hw_pin_2			hw_pin_pb0
 #  define hw_pin_3			hw_pin_pb1
@@ -82,18 +63,6 @@
 #  define hw_pin_12			hw_pin_pa1
 #  define hw_pin_13			hw_pin_pa0
 #
-#elif !HW_IS(,HW_A1(HW_DEVICE))
+#elif !HW_IS(,HW_DEVICE_PACKAGE)
 #  error Package type not recognized
 #endif
-
-
-#if !defined __ASSEMBLER__
-
-typedef struct {
-  hwa_r8_t port ;
-  hwa_r8_t ddr ;
-} hwa_io_t ;
-
-#define HWA_DCL_IOS			hwa_io_t porta, portb
-
-#endif /* !defined __ASSEMBLER__ */
