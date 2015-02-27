@@ -1,10 +1,10 @@
 
 /* -*- c -*- */
 
-//#include "boards/attiny84.h"
-//#include "boards/attiny85.h"
-//#include "boards/arduino-pro-mini.h"
-#include "boards/nanodccduino.h"
+//#include "targets/attiny84.h"
+//#include "targets/attiny85.h"
+//#include "targets/arduino_pro_mini.h"
+#include "targets/nanodccduino.h"
 #include <hwa.h>
 
 #if defined HW_DEVICE_ATMELAVR
