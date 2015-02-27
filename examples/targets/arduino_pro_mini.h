@@ -2,7 +2,8 @@
 /*	These are mostly the values as the board was shipped, except
  *	the bootsection size which is 1024 instead of 2048.
  */
-#define HW_DEVICE			atmega328p, 32MLF
+#define HW_DEVICE			atmega328p
+#define HW_DEVICE_PACKAGE		32mlf
 #define HW_DEVICE_BOOT			bootloader
 #define HW_DEVICE_BOOTSECTION_SIZE	1024
 
@@ -21,8 +22,8 @@
 /*	Settings for Diabolo
  */
 #define DIABOLO_PIN_RX			hw_pin_rxd
-#define DIABOLO_PIN_TX			hw_pin_txd
-#define DIABOLO_BPS			230400
+#define DIABOLO_PIN_TX			hw_pin_rxd
+#define DIABOLO_BPS			115200
 #define DIABOLO_RESET_SIGNAL		DTR
 
 #define	PIN_LED				hw_pin_pb5

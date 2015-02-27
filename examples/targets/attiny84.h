@@ -1,7 +1,8 @@
 
 /*	Device configuration
  */
-#define HW_DEVICE			attiny84, 14pdip
+#define HW_DEVICE			attiny84
+#define HW_DEVICE_PACKAGE		14pdip
 #define HW_DEVICE_CLK_SRC		rc_8MHz
 #define HW_DEVICE_CLK_PSC		1
 #define HW_DEVICE_EXTERNAL_RESET	enabled

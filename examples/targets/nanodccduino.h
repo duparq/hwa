@@ -2,7 +2,8 @@
 /*	These are mostly the values as the board was shipped, except
  *	the bootsection size which is 1024 instead of 2048.
  */
-#define HW_DEVICE			atmega328p, 32MLF
+#define HW_DEVICE			atmega328p
+#define HW_DEVICE_PACKAGE		32mlf
 #define HW_DEVICE_BOOT			bootloader
 #define HW_DEVICE_BOOTSECTION_SIZE	1024
 
