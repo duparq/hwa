@@ -11,9 +11,9 @@
  *					   hw_counter0		hw_counter1
  *					   bytes:CRC		bytes:CRC
  */
-//#include "targets/attiny84.h"		// 116:0x5653		118:0x2CBB
+#include "targets/attiny84.h"		// 116:0x5653		118:0x2CBB
 //#include "targets/attiny85.h"		// 112:0xE1C9
-#include "targets/nanodccduino.h"	// 188:0x929D		204:0x6670
+//#include "targets/nanodccduino.h"	// 188:0x929D		204:0x6670
 #include <hwa.h>
 
 
@@ -28,9 +28,9 @@
 
 /*  The counter
  */
-#define COUNTER			hw_counter1
+#define COUNTER			hw_counter0
 #define CLKDIV			64
-#define OUTPUT			output0
+#define COMPARE			compare0
 #define PERIOD			0.5
 
 
@@ -53,9 +53,13 @@ int main ( )
 	      top,       max,
 	      );
 
-  /*  Configure the compare unit (output) to match when 0.001 s has elapsed
+  /* hwa_config( hw_sub(COUNTER,COMPARE), */
+  /* 	      update,    at_bottom, */
+  /* 	      output,    set_at_bottom_clear_on_match ); */
+
+  /*  Configure the compare unit to match when 0.001 s has elapsed
    */
-  hwa_write( hw_sub(COUNTER,OUTPUT), 0.001 * hw_syshz / CLKDIV );
+  hwa_write( hw_sub(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
 
   /*  Write all this into the hardware
    */
@@ -67,9 +71,9 @@ int main ( )
      *  When a compare-match occurs, clear the counter, clear the flag and count
      *  the elapsed millisecond
      */
-    if ( hw_stat(COUNTER).OUTPUT ) {
+    if ( hw_stat(COUNTER).COMPARE ) {
       hw_clear( COUNTER );
-      hw_clear_irq( COUNTER, OUTPUT );
+      hw_clear_irq( COUNTER, COMPARE );
       n++ ;
       if ( n >= (uint8_t)(PERIOD/0.001/2.0+0.5) ) {
 	/*

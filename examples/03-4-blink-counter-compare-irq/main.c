@@ -1,5 +1,5 @@
 
-/*	Blink a LED using a counter overflow flag
+/*	Blink a LED using a counter compare interrupt
  *
  *  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
@@ -7,13 +7,13 @@
  */
 
 
-/*	Target				Results (pin_7, 64, loop_up, 0.5 s)
+/*	Target				Results (pin_7, 64, loop_up, compare0, 0.5 s)
  *					   hw_counter0		hw_counter1
  *					   bytes:CRC		bytes:CRC
  */
-//#include "targets/attiny84.h"		// 118:0x91C2		118:0x30CE
-//#include "targets/attiny85.h"		// 114:0x48A0		-
-#include "targets/nanodccduino.h"	// 190:0x0FAC		202:0xB3C3
+//#include "targets/attiny84.h"		// 144:0x4D5C		148:0x3B2D
+#include "targets/attiny85.h"		// 140:0x2963		-
+//#include "targets/nanodccduino.h"	// 222:0x8316		238:0xF8A3
 #include <hwa.h>
 
 
@@ -31,7 +31,23 @@
 #define COUNTER			hw_counter0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
+#define COMPARE			compare0
 #define PERIOD			0.5
+
+
+/*  Service the compare-match IRQ
+ */
+HW_ISR( COUNTER, COMPARE )
+{
+  hw_clear( COUNTER );
+
+  static uint8_t n ;
+  n++ ;
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+    n = 0 ;
+    hw_toggle( PIN_LED );
+  }
+}
 
 
 int main ( )
@@ -44,36 +60,35 @@ int main ( )
    */
   hwa_config( PIN_LED, direction, output );
 
-  /*  Configure the counter to overflow every 0.001 s.
-   *  The compare unit `output0` (OCxA) is used to store the top value.
-   *  Unless otherwise stated, the overflow will occur at top in `loop_up`
-   *  counting mode, at bottom in `loop_updown` counting mode.
+  /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
+   */
+  hwa_config( hw_core0,
+  	      sleep,      enabled,
+  	      sleep_mode, idle );
+
+  /*  Configure the compare unit to match every 0.001 s.
    */
   hwa_config( COUNTER,
 	      clock,     HW_G2(syshz_div, CLKDIV),
 	      countmode, COUNTMODE,
 	      bottom,    0,
-	      top,       compare0,
-	      overflow,  at_top,
+	      top,       max
 	      );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV / 2 );
-  else
-    hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV );
+    hwa_write( hw_sub(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV / 2 );
+  else /* loop_up */
+    hwa_write( hw_sub(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV );
+
+  /*  Enable compare IRQ
+   */
+  hwa_turn_irq( COUNTER, COMPARE, on );
 
   /*  Write all this into the hardware
    */
   hwa_commit();
 
-  static uint8_t n ;
-  for(;;) {
-    if ( hw_stat(COUNTER).overflow ) {
-      hw_clear_irq( COUNTER, overflow );
-      n++ ;
-      if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
-	n = 0 ;
-	hw_toggle( PIN_LED );
-      }
-    }
-  }
+  hw_enable_interrupts();
+
+  for(;;)
+    hw_sleep();
 }
