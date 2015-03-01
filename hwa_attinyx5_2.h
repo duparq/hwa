@@ -40,6 +40,15 @@ HW_INLINE void _hwa_commit_all( hwa_t *hwa )
 {
   _hwa_solve( hw_counter0 );
 
+  /*  Used compare outputs must be configured as i/o outputs
+   */
+  if ( hwa->counter0.compare0_output != 0xFF
+       && hwa->counter0.compare0_output != HW_A1(hw_ocu_output_disconnected) )
+    _hwa_config( hw_pin_pb0, direction, output );
+  if ( hwa->counter0.compare1_output != 0xFF
+       && hwa->counter0.compare1_output != HW_A1(hw_ocu_output_disconnected) )
+    _hwa_config( hw_pin_pb1, direction, output );
+
   _hwa_commit( hw_core0 );
   _hwa_commit( hw_watchdog0 );
   _hwa_commit( hw_portb );
@@ -57,8 +66,8 @@ typedef union {
     unsigned int  _0       : 1 ;
     unsigned int  overflow : 1 ;
     unsigned int  _2       : 1 ;
-    unsigned int  output1  : 1 ;
-    unsigned int  output0  : 1 ;
+    unsigned int  compare1  : 1 ;
+    unsigned int  compare0  : 1 ;
     unsigned int  _567     : 3 ;
   };
 } _hw_c8a_stat_t ;

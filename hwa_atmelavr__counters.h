@@ -21,8 +21,8 @@
 #define hw_counter_overflow_at_top		, 1
 #define hw_counter_overflow_at_max		, 2
 
-#define hw_counter_update_immediately		, 0
-#define hw_counter_update_at_bottom		, 1
-#define hw_counter_update_at_top		, 2
+/* #define hw_counter_update_immediately		, 0 */
+/* #define hw_counter_update_at_bottom		, 1 */
+/* #define hw_counter_update_at_top		, 2 */
 
 #endif

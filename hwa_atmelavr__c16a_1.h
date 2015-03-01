@@ -22,7 +22,9 @@
 /*  Registers
  */
 #define hw__c16a_coma			cb1, ccra, 2, 6
+#define hw__c16a_com0			cb1, ccra, 2, 6
 #define hw__c16a_comb			cb1, ccra, 2, 4
+#define hw__c16a_com1			cb1, ccra, 2, 4
 
 #define hw__c16a_icnc			cb1, ccrb, 1, 7
 #define hw__c16a_ices			cb1, ccrb, 1, 6
@@ -55,24 +57,26 @@ typedef struct {
   hwa_r16_t	count ;
   union {
     hwa_r16_t	ocra ;
-    hwa_r16_t	output0 ;
+    hwa_r16_t	compare0 ;
   };
   union {
     hwa_r16_t	ocrb ;
-    hwa_r16_t	output1 ;
+    hwa_r16_t	compare1 ;
   };
   union {
     hwa_r16_t	icr ;
-    hwa_r16_t	input0 ;
+    hwa_r16_t	capture0 ;
   };
   hwa_r8_t	imsk ;
   hwa_r8_t	ifr ;
 
   /*  Registers for high-level configuration
    */
-  uint8_t	clock, countmode, top, update, overflow ;
-  uint8_t	output0_mode ;
-  uint8_t	output1_mode ;
+  uint8_t	clock, countmode, top, overflow ;
+  uint8_t	compare0_update ;
+  uint8_t	compare0_output ;
+  uint8_t	compare1_update ;
+  uint8_t	compare1_output ;
   uint8_t	icr_input, icr_edge, icr_filter ;
 
 } hwa_c16a_t ;

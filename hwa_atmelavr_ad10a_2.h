@@ -33,7 +33,7 @@
 #define hw_ad10a_trigger_counter0_overflow	, 1, 4
 #define hw_ad10a_trigger_counter1_output1	, 1, 5
 #define hw_ad10a_trigger_counter1_overflow	, 1, 6
-#define hw_ad10a_trigger_counter1_input0	, 1, 7
+#define hw_ad10a_trigger_counter1_capture0	, 1, 7
 
 #define hw_ad10a_vref_vcc			, 0	/* , refs */
 #define hw_ad10a_vref_pin_aref			, 1

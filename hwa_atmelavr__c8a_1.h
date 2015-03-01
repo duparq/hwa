@@ -13,6 +13,9 @@
  */
 
 
+#include "hwa_atmelavr__ocua_1.h"
+
+
 /*  Class & methods
  */
 #define hw_class__c8a
@@ -56,11 +59,11 @@ typedef struct {
   hwa_r8_t 	count ;
   union {
     hwa_r8_t	ocra ;
-    hwa_r8_t	output0 ;
+    hwa_r8_t	compare0 ;
   };
   union {
     hwa_r8_t	ocrb ;
-    hwa_r8_t	output1 ;
+    hwa_r8_t	compare1 ;
   };
 #ifndef HW_DEVICE_ATTINYX5
   hwa_r8_t 	imsk ;
@@ -69,9 +72,10 @@ typedef struct {
 
   /*  Registers for high-level configuration
    */
-  uint8_t	clock, countmode, top, update, overflow ;
-  uint8_t	output0_mode ;
-  uint8_t	output1_mode ;
+  uint8_t	clock, countmode, top, overflow ;
+  uint8_t	compare0_update, compare0_output ;
+  uint8_t	compare1_update, compare1_output ;
+  /* hwa_ocua_t	compare0, compare1 ; */
 
 } hwa_c8a_t ;
 
