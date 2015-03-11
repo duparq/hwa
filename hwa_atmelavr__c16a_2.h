@@ -12,15 +12,15 @@
 
 HW_INLINE void __hwa_begin__c16a ( hwa_c16a_t *p, intptr_t a )
 {
-  _hwa_begin_pacr( p, a, _c16a, ccra  );
-  _hwa_begin_pacr( p, a, _c16a, ccrb  );
-  _hwa_begin_pacr( p, a, _c16a, ccrc  );
-  _hwa_begin_pacr( p, a, _c16a, count );
-  _hwa_begin_pacr( p, a, _c16a, icr   );
-  _hwa_begin_pacr( p, a, _c16a, ocra  );
-  _hwa_begin_pacr( p, a, _c16a, ocrb  );
-  _hwa_begin_pacr( p, a, _c16a, imsk  );
-  _hwa_begin_pacr( p, a, _c16a, ifr   );
+  _hwa_begin_reg_p( p, a, _c16a, ccra  );
+  _hwa_begin_reg_p( p, a, _c16a, ccrb  );
+  _hwa_begin_reg_p( p, a, _c16a, ccrc  );
+  _hwa_begin_reg_p( p, a, _c16a, count );
+  _hwa_begin_reg_p( p, a, _c16a, icr   );
+  _hwa_begin_reg_p( p, a, _c16a, ocra  );
+  _hwa_begin_reg_p( p, a, _c16a, ocrb  );
+  _hwa_begin_reg_p( p, a, _c16a, imsk  );
+  _hwa_begin_reg_p( p, a, _c16a, ifr   );
 
   p->clock           = 0xFF ;
   p->countmode       = 0xFF ;
@@ -52,15 +52,15 @@ HW_INLINE void __hwa_init__c16a ( hwa_c16a_t *p )
 
 HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 {
-  _hwa_commit_pcr( p, _c16a, ccra  );
-  _hwa_commit_pcr( p, _c16a, ccrb  );
-  _hwa_commit_pcr( p, _c16a, ccrc  );
-  _hwa_commit_pcr( p, _c16a, count );
-  _hwa_commit_pcr( p, _c16a, icr   );
-  _hwa_commit_pcr( p, _c16a, ocra  );
-  _hwa_commit_pcr( p, _c16a, ocrb  );
-  _hwa_commit_pcr( p, _c16a, imsk  );
-  _hwa_commit_pcr( p, _c16a, ifr   );
+  _hwa_commit_reg_p( p, _c16a, ccra  );
+  _hwa_commit_reg_p( p, _c16a, ccrb  );
+  _hwa_commit_reg_p( p, _c16a, ccrc  );
+  _hwa_commit_reg_p( p, _c16a, count );
+  _hwa_commit_reg_p( p, _c16a, icr   );
+  _hwa_commit_reg_p( p, _c16a, ocra  );
+  _hwa_commit_reg_p( p, _c16a, ocrb  );
+  _hwa_commit_reg_p( p, _c16a, imsk  );
+  _hwa_commit_reg_p( p, _c16a, ifr   );
 }
 
 
@@ -90,7 +90,7 @@ HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 
 /*	Configure counter unit
  */
-#define hw_def_hwa_config__c16a		, _hwa_config__c16a
+#define hw_mthd_hwa_config__c16a		, _hwa_config__c16a
 
 #define _hwa_config__c16a(c,n,i,a, ...)					\
   do { HW_G2(_hwa_config__c16a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
@@ -173,7 +173,7 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
   /*  Clock setting
    */
-  _hwa_write_pcr( p, _c16a, cs, p->clock );
+  _hwa_write_creg( p, _c16a, cs, p->clock );
 
 
   /*  Default config for overflow
@@ -289,7 +289,7 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
     }
       
   if (wgm != 0xFF)
-    _hwa_write_pcr( p, _c16a, wgm, wgm );
+    _hwa_write_creg( p, _c16a, wgm, wgm );
   else {
     HWA_ERR("WGM value could not be solved for _c16a class counter.");
     return ;
@@ -312,7 +312,7 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
     else
       mode = 3 ;
 
-    _hwa_write_pcr( p, _c16a, coma, mode );
+    _hwa_write_creg( p, _c16a, coma, mode );
   }
 
   /*  Solve the configuration of compare output B
@@ -332,15 +332,15 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
     else
       mode = 3 ;
 
-    _hwa_write_pcr( p, _c16a, comb, mode );
+    _hwa_write_creg( p, _c16a, comb, mode );
   }
 
   /*	Solve the configuration of the capture input
    */
   if ( p->icr_input != 0xFF ) {
-    _hwa_write_pcr( p, _c16a, acic, p->icr_input-1 );
-    _hwa_write_pcr( p, _c16a, ices, p->icr_edge-1 );
-    _hwa_write_pcr( p, _c16a, icnc, p->icr_filter );
+    _hwa_write_creg( p, _c16a, acic, p->icr_input-1 );
+    _hwa_write_creg( p, _c16a, ices, p->icr_edge-1 );
+    _hwa_write_creg( p, _c16a, icnc, p->icr_filter );
   }
 
 
@@ -479,19 +479,19 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
 /*	Read/write the 'count' register of a _c16a counter
  */
-#define hw_def_hw_read__c16a		, _hw_read_c16a
+#define hw_mthd_hw_read__c16a		, _hw_read_c16a
 #define _hw_read_c16a(c,n,i,a,...)	HW_TX(_hw_read_reg(c,n,i,a,count),__VA_ARGS__)
 
-#define hw_def_hw_write__c16a		, _hw_write_c16a
+#define hw_mthd_hw_write__c16a		, _hw_write_c16a
 #define _hw_write_c16a(c,n,i,a,v)	_hw_write_reg(c,n,i,a,count,v)
 
-#define hw_def_hwa_write__c16a		, _hwa_write_c16a
+#define hw_mthd_hwa_write__c16a		, _hwa_write_c16a
 #define _hwa_write_c16a(c,n,i,a,v)	_hwa_write_reg(c,n,i,a,count,v)
 
-#define hw_def_hw_clear__c16a		, _hw_clear_c16a
+#define hw_mthd_hw_clear__c16a		, _hw_clear_c16a
 #define _hw_clear_c16a(c,n,i,a,...)	HW_TX(_hw_write_reg(c,n,i,a,count,0),__VA_ARGS__)
 
-#define hw_def_hwa_clear__c16a		, _hwa_clear_c16a
+#define hw_mthd_hwa_clear__c16a		, _hwa_clear_c16a
 #define _hwa_clear_c16a(c,n,i,a)	_hwa_write_reg(c,n,i,a,count,0)
 
 
@@ -502,8 +502,8 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
  *
  *	The only flag that is available is the irq flag.
  */
-#define hw_def_hw_stat__c16a		, _hw_stat_c16a
-#define hw_def_hw_stat_t__c16a		, _hw_statt_c16a
+#define hw_mthd_hw_stat__c16a		, _hw_stat_c16a
+#define hw_mthd_hw_stat_t__c16a		, _hw_statt_c16a
 
 #define _hw_statt_c16a(c,n,i,a,...)	HW_TX(_hw_c16a_stat_t, __VA_ARGS__)
 

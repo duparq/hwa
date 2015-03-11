@@ -7,7 +7,7 @@
 
 /*	Configuration
  */
-#define hw_def_hwa_config_usia		, _hwa_cfusia
+#define hw_mthd_hwa_config_usia		, _hwa_cfusia
 
 #define hw_usia_mode_disconnected	, 1
 #define hw_usia_mode_spi_master		, 2
@@ -88,7 +88,7 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
 /*	Configuration of USI as SPI master with software clock
  */
-#define hw_def_hwa_config_usia_spimaster_swclk		, _hwa_cfspimswclk
+#define hw_mthd_hwa_config_usia_spimaster_swclk		, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(c,n,i, usin)		\
   _hwa_docfspimswclk(hwa, &hwa->usin)
@@ -107,7 +107,7 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 }
 
 
-#define hw_def_hw_write_usia_spimaster_swclk	, _hw_write_usia_spimaster_swclk
+#define hw_mthd_hw_write_usia_spimaster_swclk	, _hw_write_usia_spimaster_swclk
 
 #define _hw_write_usia_spimaster_swclk(c,n,i, usin, v)	\
   do {							\
@@ -120,12 +120,12 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
   }while(0)
 
 
-#define hw_def_hw_read_usia_spimaster_swclk	, _hw_read_usia
+#define hw_mthd_hw_read_usia_spimaster_swclk	, _hw_read_usia
 
 
 /*	Configuration of USI as SPI master with counter0_overflow clock
  */
-#define hw_def_hwa_config_usia_spimaster_c0clk		, _hwa_cfspimc0clk
+#define hw_mthd_hwa_config_usia_spimaster_c0clk		, _hwa_cfspimc0clk
 
 #define _hwa_cfspimc0clk(c,n,i, usin)		\
   _hwa_docfspimswclk(hwa, &hwa->usin)
@@ -146,10 +146,10 @@ HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
 }
 
 
-#define hw_def_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
+#define hw_mthd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
 #define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
   _hw_write_reg(hw_##usin, dr, v )
 
 
-#define hw_def_hw_read_usia_spimaster_c0clk	, _hw_read_usia
+#define hw_mthd_hw_read_usia_spimaster_c0clk	, _hw_read_usia

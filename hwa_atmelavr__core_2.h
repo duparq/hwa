@@ -38,38 +38,49 @@
 /* #define hw_awaker_watchdog		, 2 */
 
 
-#define _hwa_config_core(c,n,i,a,...)					\
+/*	hwa_config( core,
+ *
+ *                  [sleep,   enabled,
+ *                          | disabled,]
+ *
+ *                  [sleep_mode,   idle
+ *	                         | adc_noise_reduction
+ *	                         | power_down
+ *	                         | standby]		);
+ *
+ *
+ *  _hwa_config_core( core0,101, 0,sleep, enabled, sleep_mode, power_down,)
+ */
+#define _hwa_config_core(p,i,a,...)					\
   do {									\
-    uint8_t sleep = 0xFF ;						\
-    uint8_t sleep_mode = 0xFF ;						\
-    HW_G2(_hwa_cfcore_xsleep, HW_IS(sleep,__VA_ARGS__))(__VA_ARGS__);	\
+    HW_G2(_hwa_cfcore_xsleep, HW_IS(sleep,__VA_ARGS__))(p,__VA_ARGS__);	\
   } while(0)
 
-#define _hwa_cfcore_xsleep_0(...)					\
-  HW_ERR("expected `sleep`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
+#define _hwa_cfcore_xsleep_0(p,...)					\
+  HW_G2(_hwa_cfcore_xsleepmode, HW_IS(sleep_mode,__VA_ARGS__))(p,__VA_ARGS__)
+  //  HW_ERR("expected `sleep`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
 
-#define _hwa_cfcore_xsleep_1(kw,...)					\
-  HW_G2(_hwa_cfcore_vsleep, HW_IS(,hw_state_##__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_cfcore_xsleep_1(p,kw,...)					\
+  HW_G2(_hwa_cfcore_vsleep, HW_IS(,hw_state_##__VA_ARGS__))(p,__VA_ARGS__)
 
-#define _hwa_cfcore_vsleep_0(...)					\
+#define _hwa_cfcore_vsleep_0(p,...)					\
   HW_ERR("expected `enabled` or `disabled`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
 
-#define _hwa_cfcore_vsleep_1(v,...)					\
-  sleep = HW_A1(hw_state_##v);						\
-  _hwa_write_reg(hw_core0, se, sleep );					\
-  HW_G2(_hwa_cfcore_xsleepmode, HW_IS(sleep_mode,__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_cfcore_vsleep_1(p,v,...)					\
+  _hwa_write_reg( p, se, HW_A1(hw_state_##v) );			\
+  HW_G2(_hwa_cfcore_xsleepmode, HW_IS(sleep_mode,__VA_ARGS__))(p,__VA_ARGS__)
 
-#define _hwa_cfcore_xsleepmode_0(...)	_hwa_cfcore_end(__VA_ARGS__)
+#define _hwa_cfcore_xsleepmode_0(p,...)	_hwa_cfcore_end(__VA_ARGS__)
 
-#define _hwa_cfcore_xsleepmode_1(kw,...)				\
-  HW_G2(_hwa_cfcore_vsleepmode, HW_IS(,hw_sleepmode_##__VA_ARGS__))(__VA_ARGS__)
+#define _hwa_cfcore_xsleepmode_1(p,kw,...)				\
+  HW_G2(_hwa_cfcore_vsleepmode, HW_IS(,hw_sleepmode_##__VA_ARGS__))(p,__VA_ARGS__)
 
-#define _hwa_cfcore_vsleepmode_0(v,...)					\
+#define _hwa_cfcore_vsleepmode_0(p,...)					\
   HW_ERR("`sleep_mode` can be `idle`, `adc_noise_reduction`, or "	\
-	 "`power_down`, but not `" HW_QUOTE(v) "`.")
+	 "`power_down`, but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
-#define _hwa_cfcore_vsleepmode_1(v,...)		\
-  sleep_mode = HW_A1(hw_sleepmode_##v);		\
+#define _hwa_cfcore_vsleepmode_1(p,v,...)	\
+  _hwa_write_reg( p, sm, HW_A1(hw_sleepmode_##v) );	\
   _hwa_cfcore_end(__VA_ARGS__)
 
 /*   HW_G2(_hwa_cfcore_xawaker1, HW_IS(awaker,__VA_ARGS__))(__VA_ARGS__) */
@@ -90,8 +101,7 @@
 /*   _hwa_cfcore_end(__VA_ARGS__) */
 
 #define _hwa_cfcore_end(...)			\
-  if ( sleep == 1 )				\
-    HW_TX(_hwa_write_reg(hw_core0, sm, sleep_mode),__VA_ARGS__)
+  HW_TX(,__VA_ARGS__)
 
 
 /*	Core status
@@ -120,11 +130,12 @@ typedef union {
 } _hw_core_stat_t ;
 
 
-#define hw_def_hw_stat_t__core		, _hw_core_stat_t
-#define _hw_core_stat_t(c,n,i,a,...)	HW_TX(_hw_core_stat_t, __VA_ARGS__)
+#define hw_mthd_hw_stat_t__core		, _hw_core_stat_t
+#define x_hw_core_stat_t(c,n,i,a,...)	HW_TX(_hw_core_stat_t, __VA_ARGS__)
 
 
-#define _hw_stat_core(c,n,i,a)		_hw_core_stat(_hw_read_reg(c,n,i,a, mcusr))
+//_hw_stat_core(core0,101, 0,)
+#define _hw_stat_core(p,i,a,...)	HW_TX(_hw_core_stat(_hw_read_reg(p, mcusr)),__VA_ARGS__)
 
 HW_INLINE _hw_core_stat_t _hw_core_stat( uint8_t byte )
 {
@@ -136,5 +147,5 @@ HW_INLINE _hw_core_stat_t _hw_core_stat( uint8_t byte )
 
 /*  Clear the core status
  */
-#define _hwa_clear_core(c,n,i,a,...)\
-  _hwa_write_reg( c,n,i,a, allrf, 0 )
+#define _hwa_clear_core(p,i,a,...)\
+  _hwa_write_reg( p, allrf, 0 )

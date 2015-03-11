@@ -22,13 +22,13 @@
  *  definitions, then pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED		pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
+#define COUNTER			counter0
 #define CLKDIV			64
 #define COMPARE			compare0
 #define PERIOD			0.5

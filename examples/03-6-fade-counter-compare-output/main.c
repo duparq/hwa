@@ -22,15 +22,15 @@
  *					   hw_counter0		hw_counter1
  *					   bytes:CRC		bytes:CRC
  */
-//#include "targets/attiny84.h"		// 188:0x35C1		198:0xA553
+#include "targets/attiny84.h"		// 188:0x35C1		198:0xA553
 //#include "targets/attiny85.h"		// 184:0xA55D		-
-#include "targets/nanodccduino.h"	// 264:0x17F7		286:0x5C01
+//#include "targets/nanodccduino.h"	// 264:0x17F7		286:0x5C01
 #include <hwa.h>
 
 
 /*  The counter
  */
-#define PWM			hw_counter0_compare0
+#define PWM			counter0_compare0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
 
@@ -41,7 +41,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa_config( core0,
   	      sleep,      enabled,
   	      sleep_mode, idle );
 

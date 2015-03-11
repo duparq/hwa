@@ -1,0 +1,5 @@
+
+#	-*- Makefile -*-
+
+all:
+#	cat main.c | grep -v '#include \"' | sed -e 's/define PIN_LED/

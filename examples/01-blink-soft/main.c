@@ -7,9 +7,9 @@
  */
 
 
-/*	Target				Result (PIN_LED=hw_pin_7)
+/*	Target				Result (hw_pin_7, 0.5s)
  */
-#include "targets/attiny84.h"		// 80 /8192 application bytes, CRC=0xE80B
+#include "targets/attiny84.h"		// 80:0xE80B
 //#include "targets/attiny85.h"		// 76 /8192 application bytes, CRC=0x3950
 //#include "targets/nanodccduino.h"	// 156 /32768 application bytes, CRC=0xE183
 #include <hwa.h>
@@ -20,7 +20,7 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED		pin_7
 #endif
 
 
@@ -40,3 +40,10 @@ int main ( )
     hw_delay_cycles( PERIOD/2 * hw_syshz );
   }
 }
+
+
+/* hwa_config( pin_pb2, direction, output ); */
+
+/* hwa_write( foo, foo ); */
+
+/* hwa_write( core0, foo ); */

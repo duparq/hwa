@@ -14,14 +14,14 @@
 
 HW_INLINE void __hwa_begin__c8a ( hwa_c8a_t *p, intptr_t a )
 {
-  _hwa_begin_pacr( p, a, _c8a, ccra  );
-  _hwa_begin_pacr( p, a, _c8a, ccrb  );
-  _hwa_begin_pacr( p, a, _c8a, count );
-  _hwa_begin_pacr( p, a, _c8a, ocra  );
-  _hwa_begin_pacr( p, a, _c8a, ocrb  );
+  _hwa_begin_reg_p( p, a, _c8a, ccra  );
+  _hwa_begin_reg_p( p, a, _c8a, ccrb  );
+  _hwa_begin_reg_p( p, a, _c8a, count );
+  _hwa_begin_reg_p( p, a, _c8a, ocra  );
+  _hwa_begin_reg_p( p, a, _c8a, ocrb  );
 #ifndef HW_DEVICE_ATTINYX5
-  _hwa_begin_pacr( p, a, _c8a, imsk  );
-  _hwa_begin_pacr( p, a, _c8a, ifr   );
+  _hwa_begin_reg_p( p, a, _c8a, imsk  );
+  _hwa_begin_reg_p( p, a, _c8a, ifr   );
 #endif
 
   p->clock           = 0xFF ;
@@ -51,14 +51,14 @@ HW_INLINE void __hwa_init__c8a ( hwa_c8a_t *p )
 
 HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 {
-  _hwa_commit_pcr( p, _c8a, ccra  );
-  _hwa_commit_pcr( p, _c8a, ccrb  );
-  _hwa_commit_pcr( p, _c8a, count );
-  _hwa_commit_pcr( p, _c8a, ocra  );
-  _hwa_commit_pcr( p, _c8a, ocrb  );
+  _hwa_commit_reg_p( p, _c8a, ccra  );
+  _hwa_commit_reg_p( p, _c8a, ccrb  );
+  _hwa_commit_reg_p( p, _c8a, count );
+  _hwa_commit_reg_p( p, _c8a, ocra  );
+  _hwa_commit_reg_p( p, _c8a, ocrb  );
 #ifndef HW_DEVICE_ATTINYX5
-  _hwa_commit_pcr( p, _c8a, imsk  );
-  _hwa_commit_pcr( p, _c8a, ifr   );
+  _hwa_commit_reg_p( p, _c8a, imsk  );
+  _hwa_commit_reg_p( p, _c8a, ifr   );
 #endif
 }
 
@@ -99,10 +99,10 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  *	                       | at_top,
  *	                       | at_max,]	)
  */
-#define hw_def_hwa_config__c8a			, _hwa_cfc8a
+#define hw_mthd_hwa_config__c8a			, _hwa_cfc8a
 
-#define _hwa_cfc8a(c,n,i,a, ...)					\
-  do { HW_G2(_hwa_cfc8a_xclock,HW_IS(clock,__VA_ARGS__))(n,__VA_ARGS__,) } while(0)
+#define _hwa_cfc8a(p,i,a, ...)						\
+  do { HW_G2(_hwa_cfc8a_xclock,HW_IS(clock,__VA_ARGS__))(p,__VA_ARGS__) } while(0)
 
 #define _hwa_cfc8a_xclock_0(n,...)					\
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
@@ -198,7 +198,7 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
 
   /*	Clock selection
    */
-  _hwa_write_pcr( p, _c8a, cs, p->clock );
+  _hwa_write_creg( p, _c8a, cs, p->clock );
 
 
   /*  Default config for overflow
@@ -280,7 +280,7 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
     return ;
   }
 
-  _hwa_write_pcr(p, _c8a, wgm, wgm);
+  _hwa_write_creg(p, _c8a, wgm, wgm);
 
 
   /*	Solve the configuration of compare output A
@@ -300,7 +300,7 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
     else
       mode = 3 ;
 
-    _hwa_write_pcr(p, _c8a, coma, mode );
+    _hwa_write_creg(p, _c8a, coma, mode );
   }
 
   /*	Solve the configuration of compare output B
@@ -320,7 +320,7 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
     else
       mode = 3 ;
 
-    _hwa_write_pcr(p, _c8a, comb, mode );
+    _hwa_write_creg(p, _c8a, comb, mode );
   }
 
 
@@ -455,20 +455,20 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
 
 /*	Read/write the 'count' register of a _c8a counter
  */
-#define hw_def_hw_read__c8a		, _hw_read_c8a
-#define _hw_read_c8a(c,n,i,a,...)	HW_TX(_hw_read_reg(c,n,i,a,count),__VA_ARGS__)
+#define hw_mthd_hw_read__c8a		, _hw_read_c8a
+#define _hw_read_c8a(p,i,a,...)		HW_TX(_hw_read_reg(p,count),__VA_ARGS__)
 
-#define hw_def_hw_write__c8a		, _hw_write_c8a
-#define _hw_write_c8a(c,n,i,a,v)	_hw_write_reg(c,n,i,a,count,v)
+#define hw_mthd_hw_write__c8a		, _hw_write_c8a
+#define _hw_write_c8a(p,i,a,v)		_hw_write_reg(p,count,v)
 
-#define hw_def_hwa_write__c8a		, _hwa_write_c8a
-#define _hwa_write_c8a(c,n,i,a,v)	_hwa_write_reg(c,n,i,a,count,v)
+#define hw_mthd_hwa_write__c8a		, _hwa_write_c8a
+#define _hwa_write_c8a(p,i,a,v)		_hwa_write_reg(p,count,v)
 
-#define hw_def_hw_clear__c8a		, _hw_clear_c8a
-#define _hw_clear_c8a(c,n,i,a,...)	HW_TX(_hw_write_reg(c,n,i,a,count,0),__VA_ARGS__)
+#define hw_mthd_hw_clear__c8a		, _hw_clear_c8a
+#define _hw_clear_c8a(p,i,a,...)	HW_TX(_hw_write_reg(p,count,0),__VA_ARGS__)
 
-#define hw_def_hwa_clear__c8a		, _hwa_clear_c8a
-#define _hwa_clear_c8a(c,n,i,a)		_hwa_write_reg(c,n,i,a,count,0)
+#define hw_mthd_hwa_clear__c8a		, _hwa_clear_c8a
+#define _hwa_clear_c8a(p,i,a,...)	HW_TX(_hwa_write_reg(p,count,0),__VA_ARGS__)
 
 
 /*  Status
@@ -478,10 +478,10 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
  *
  *	The only flag that is available is the irq flag.
  */
-#define hw_def_hw_stat__c8a		, _hw_stat_c8a
-#define hw_def_hw_stat_t__c8a		, _hw_statt_c8a
+#define hw_mthd_hw_stat__c8a		, _hw_stat_c8a
+#define hw_mthd_hw_stat_t__c8a		, _hw_statt_c8a
 
-#define _hw_statt_c8a(c,n,i,a,...)	HW_TX(_hw_c8a_stat_t, __VA_ARGS__)
+#define _hw_statt_c8a(p,i,a,...)	HW_TX(_hw_c8a_stat_t, __VA_ARGS__)
 
 #ifndef HW_DEVICE_ATTINYX5
 
@@ -489,13 +489,13 @@ HW_INLINE void __hwa_solve__c8a ( hwa_t *hwa __attribute__((unused)), hwa_c8a_t 
     uint8_t         byte ;
     struct {
       unsigned int  overflow : 1 ;
-      unsigned int  compare0  : 1 ;
-      unsigned int  compare1  : 1 ;
+      unsigned int  compare0 : 1 ;
+      unsigned int  compare1 : 1 ;
       unsigned int  __3to7   : 5 ;
     };
   } _hw_c8a_stat_t ;
 
-#define _hw_stat_c8a(c,n,i,a)		_hw_c8a_stat( _hw_read_reg(c,n,i,a, ifr) )
+#define _hw_stat_c8a(p,i,a,...)		HW_TX(_hw_c8a_stat(_hw_read_reg(p, ifr)),__VA_ARGS__)
 
 HW_INLINE _hw_c8a_stat_t _hw_c8a_stat( uint8_t byte )
 {

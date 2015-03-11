@@ -16,12 +16,13 @@
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
-/*	Built-in version of strcmp
+/*	True if strings s0 and s1 are equal
  */
 #define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
 
 
-
+/*	Execute a block with interrupts disabled
+ */
 #define HW_ATOMIC(...)				\
   do{						\
     uint8_t s = hw_read_reg(hw_core0,sreg);	\
@@ -181,6 +182,19 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 }
 
 
+/*	Commit register r of class c pointed by p
+ */
+#define _hwa_commit_reg_p(p,c,r)	_hwa_corp_2(_hw_creg(c,r), p)
+#define _hwa_corp_2(...)		_hwa_corp_3(__VA_ARGS__)
+#define _hwa_corp_3(t,...)		_hwa_corp_##t(__VA_ARGS__)
+
+#define _hwa_corp__m1(_0,_1,rn,rw,ra,rwm,rfm, bn,bp, p)	\
+  _hwa_commit_r##rw(&p->rn,rwm,rfm,hwa->commit)
+
+#define _hwa_corp__m1x(p,_1,rn,rw,ra,rwm,rfm, bn,bp, p0)	\
+  _hwa_commit_r##rw(&hwa->p.rn,rwm,rfm,hwa->commit)
+
+
 /**  \brief Commits an HWA register
  *
  *  The code is meant to produce the best machine code among (verified on Atmel
@@ -287,6 +301,7 @@ HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool
 }
 
 
+
 /** \brief	Read from one hardware register.
  *
  *  \param p	address of register.
@@ -325,10 +340,10 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   uint16_t m = (1UL<<rbn)-1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_reg(hw_core0,sreg);
+    uint8_t s = _hw_read_reg(core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
-    _hw_write_reg(hw_core0,sreg,s);
+    _hw_write_reg(core0,sreg,s);
     uint8_t hb = *ph ;
     v = (hb << 8) | lb ;
   }
@@ -357,22 +372,3 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 #define _hw_isr_(vector, ...)						\
   HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
   void __vector_##vector (void)
-
-
-#define _hwa_commit_pcr(p,c,r)		_hwa_copcr_2(p,c,r, hw_##c##_##r)
-#define _hwa_copcr_2(...)		_hwa_copcr_3(__VA_ARGS__)
-#define _hwa_copcr_3(p,c,r,t,...)	_hwa_copcr_##t(p,c,r,__VA_ARGS__)
-
-#define _hwa_copcr_crg(p,c,r, rw,ra,rwm,rfm)	_hwa_commit_r##rw(&p->r,rwm,rfm,hwa->commit)
-
-#define _hwa_copcr_irg(p,c0,r0, c,n,i,a,r)\
-  _hwa_copcrirg_2(p,c0,r0, c,n,i,a,r, hw_##c##_##r)
-
-#define _hwa_copcrirg_2(...)		_hwa_copcrirg_3(__VA_ARGS__)
-#define _hwa_copcrirg_3(p,c0,r0, c,n,i,a,r, t,...) _hwa_copcrirg_##t((&hwa->n),c,__VA_ARGS__)
-
-#define _hwa_copcrirg_cb1(p,c,n,bn,bp)	_hwa_copcrirgcb1_2(&p->n,hw_##c##_##n)
-
-#define _hwa_copcrirgcb1_2(...)	_hwa_copcrirgcb1_3(__VA_ARGS__)
-#define _hwa_copcrirgcb1_3(p,rt,rw,ra,rwm,rfm)\
-  _hwa_commit_r##rw(p,rwm,rfm,hwa->commit)

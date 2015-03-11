@@ -54,18 +54,19 @@
 
 /*	Turn watchdog on/off (asynchronous)
  */
-#define _hwa_turn_wdog(c,n,i,a, ...)					\
-  HW_G2(_hwa_turn_wdog, HW_IS(,hw_state_##__VA_ARGS__))(c,n,i,a,__VA_ARGS__,)
-#define _hwa_turn_wdog_0(c,n,i,a, v, ...)			\
+#define _hwa_turn_wdog(p,i,a, ...)					\
+  HW_G2(_hwa_turn_wdog, HW_IS(,hw_state_##__VA_ARGS__))(p,i,a,__VA_ARGS__,)
+#define _hwa_turn_wdog_0(p,i,a, v, ...)			\
   HW_ERR("expected `on` or `off`, got `" #v "` instead.")
-#define _hwa_turn_wdog_1(c,n,i,a, v, ...)	\
-  HW_G2(_hwa_turn_wdog, v)(c,n,i,a)		\
+#define _hwa_turn_wdog_1(p,i,a, v, ...)	\
+  HW_G2(_hwa_turn_wdog, v)(p,i,a)		\
   HW_TX(,__VA_ARGS__)
 
-#define _hwa_turn_wdog_on(c,n,i,a)		\
-  _hwa_write_reg(c,n,i,a,wde,1)
+#define _hwa_turn_wdog_on(p,i,a)		\
+  _hwa_write_reg(p,wde,1)
 
-#define _hwa_turn_wdog_off(c,n,i,a)			\
+#define _hwa_turn_wdog_off(p,i,a)			\
+  /* This will be completed when committing */		\
   hwa->watchdog0.action = HW_A1(hw_wdog_action_none)
 
 
@@ -111,7 +112,8 @@
 #define hw_wdog_action_irq_or_reset	, 3
 
 
-#define _hwa_cfwdog(c,n,i,a, ...)	_hwa_cfwdog_timeout(n,__VA_ARGS__)
+//#define _hwa_cfwdog(c,n,i,a, ...)	_hwa_cfwdog_timeout(n,__VA_ARGS__)
+#define _hwa_cfwdog(n,i,a, ...)		do { _hwa_cfwdog_timeout(n,__VA_ARGS__) }while(0)
 
 /*    Optionnal argument `timeout`
  */
@@ -158,8 +160,8 @@ typedef union {
 } _hw_wdog_stat_t ;
 
 
-#define _hw_statt_wdog(c,n,i,a,...)	HW_TX(_hw_wdog_stat_t, __VA_ARGS__)
-#define _hw_stat_wdog(c,n,i,a)		_hw_wdog_stat( _hw_read_reg(c,n,i,a, csr) )
+#define _hw_statt_wdog(p,i,a,...)	HW_TX(_hw_wdog_stat_t, __VA_ARGS__)
+#define _hw_stat_wdog(p,i,a,...)	HW_TX(_hw_wdog_stat(_hw_read_reg(p,csr)), __VA_ARGS__)
 
 
 HW_INLINE _hw_wdog_stat_t _hw_wdog_stat( uint8_t byte )

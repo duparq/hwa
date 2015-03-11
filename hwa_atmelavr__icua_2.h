@@ -15,7 +15,7 @@
 
 /*	Change the configuration of a capture unit
  */
-#define hw_def_hw_config__icua		, _hw_cficua
+#define hw_mthd_hw_config__icua		, _hw_cficua
 
 #define _hw_cficua(c,n,i,cn,...)	_hw_cficua_2(cn,_hw_pop_icu(c,n,i,cn,__VA_ARGS__))
 #define _hw_cficua_2(...)		_hw_cficua_3(__VA_ARGS__)
@@ -38,7 +38,7 @@
 
 /*	Configure a capture unit
  */
-#define hw_def_hwa_config__icua		, _hwa_cficua
+#define hw_mthd_hwa_config__icua		, _hwa_cficua
 
 #define _hwa_cficua(c,n,i,cn,chn, ...)	_hwa_cficua_2(cn,chn,_hw_pop_icu(c,n,i,cn,chn, __VA_ARGS__))
 #define _hwa_cficua_2(...)		_hwa_cficua_3(__VA_ARGS__)
@@ -87,12 +87,12 @@
 
 /*		Read the capture register of an icu
  */
-#define hw_def_hw_read__icua			, _hw_read_icua
+#define hw_mthd_hw_read__icua			, _hw_read_icua
 #define _hw_read_icua(c,n,i,cn,...)		_hw_read_icua_2(hw_##cn,icr)
 #define _hw_read_icua_2(...)			_hw_read_reg(__VA_ARGS__)
 
 
 /*		Definition of the io pin associated to an icu
  */
-#define hw_def_hw_io__icua			, _hw_io_icua
+#define hw_mthd_hw_io__icua			, _hw_io_icua
 #define _hw_io_icua(c,n,i,cn,icn,ion)		hw_##ion

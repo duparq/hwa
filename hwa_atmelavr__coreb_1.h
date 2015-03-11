@@ -15,7 +15,7 @@
 /*	Class & methods
  */
 #define hw_class__coreb
-#define _hw_pop__coreb(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop__coreb(p,i,a,...)	__VA_ARGS__
 
 #if !defined __ASSEMBLER__
 

@@ -11,7 +11,7 @@
 
 
 #define hw_class__ocua
-#define _hw_pop__ocua(c,n,i,cn,chn,ion,...)	__VA_ARGS__
+#define _hw_pop__ocua(p,i,cn,chn,ion,...)	__VA_ARGS__
 
 
 #if !defined __ASSEMBLER__

@@ -17,7 +17,7 @@
 #define hw_class_ad10a
 #define _hw_pop_ad10a(c,n,i,a,...)	__VA_ARGS__
 
-#define hw_def_hw_bn_ad10a		, _hw_bn_ad10a
+#define hw_mthd_hw_bn_ad10a		, _hw_bn_ad10a
 #define _hw_bn_ad10a(c,n,i,a)		10
 
 

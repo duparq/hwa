@@ -11,9 +11,9 @@
  *					   hw_counter0		hw_counter1
  *					   bytes:CRC		bytes:CRC
  */
-//#include "targets/attiny84.h"		// 118:0x91C2		118:0x30CE
+#include "targets/attiny84.h"		// 118:0x91C2		118:0x30CE
 //#include "targets/attiny85.h"		// 114:0x48A0		-
-#include "targets/nanodccduino.h"	// 190:0x0FAC		202:0xB3C3
+//#include "targets/nanodccduino.h"	// 190:0x0FAC		202:0xB3C3
 #include <hwa.h>
 
 
@@ -22,13 +22,13 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED		pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
+#define COUNTER			counter0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
 #define PERIOD			0.5

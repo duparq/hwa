@@ -57,26 +57,26 @@
 
 /*	Read the ADC
  */
-#define hw_def_hw_read_ad10a		, _hw_read_ad10a
+#define hw_mthd_hw_read_ad10a		, _hw_read_ad10a
 #define _hw_read_ad10a(c,n,i,a)		_hw_read_reg(c,n,i,a, adc)
 
-#define hw_def_hw_atomic_read_ad10a	, _hw_atomic_read_ad10a
+#define hw_mthd_hw_atomic_read_ad10a	, _hw_atomic_read_ad10a
 #define _hw_atomic_read_ad10a(c,n,i,a)	_hw_atomic_read_reg(c,n,i,a, adc)
 
 
 /*	Trigger the ADC
  */
-#define hw_def_hw_trigger_ad10a		, _hw_trigger_ad10a
+#define hw_mthd_hw_trigger_ad10a		, _hw_trigger_ad10a
 #define _hw_trigger_ad10a(c,n,i,a)	_hw_write_reg(c,n,i,a, sc, 1 )
 
-#define hw_def_hwa_trigger_ad10a	, _hwa_trigger_ad10a
+#define hw_mthd_hwa_trigger_ad10a	, _hwa_trigger_ad10a
 #define _hwa_trigger_ad10a(c,n,i,a)	_hwa_write_r8( &hwa->n.sra, 0xFF,0, 1, 6, 1 );
 //#define _hwa_trigger_ad10a(c,n,i,a)	_hwa_write_reg(c,n,i,a, sc, 1 )
 
 
 /*	Configure the ADC
  */
-#define hw_def_hwa_config_ad10a		, _hwa_cfad10a
+#define hw_mthd_hwa_config_ad10a		, _hwa_cfad10a
 #define _hwa_cfad10a(c,n,i,a,...)					\
   do {									\
     uint8_t gain __attribute__((unused)) = 1 ;				\
@@ -311,7 +311,7 @@ typedef union {
   };
 } _hw_ad10a_status_t ;
 
-#define hw_def_hw_stat_ad10a		, _hw_stat_ad10a
+#define hw_mthd_hw_stat_ad10a		, _hw_stat_ad10a
 #define _hw_stat_ad10a(c,n,i,a)	_hw_ad10a_status( _hw_read_reg(c,n,i,a, sra) )
 
 HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
@@ -326,7 +326,7 @@ HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
  */
 #define hw_class_adpin
 
-#define hw_def_hwa_config_adpin		, _hwa_config_adpin
+#define hw_mthd_hwa_config_adpin		, _hwa_config_adpin
 #define _hwa_config_adpin(c,n,i,bp, mode)		\
   HW_G2(_hwa_config_adpin, HW_IS(input,mode))(n,bp)
 #define _hwa_config_adpin_0(n,...)			\

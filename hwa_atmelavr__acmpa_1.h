@@ -12,16 +12,16 @@
 /*	Class & methods
  */
 #define hw_class__acmpa
-#define _hw_pop__acmpa(c,n,i,a,...)	__VA_ARGS__
+#define _hw_pop__acmpa(p,i,a,...)	__VA_ARGS__
 
 
-#define hw__acmpa_acd			cb1, csr, 1, 7
-#define hw__acmpa_acbg			cb1, csr, 1, 6
-#define hw__acmpa_aco			cb1, csr, 1, 5
-#define hw__acmpa_aci			cb1, csr, 1, 4
-#define hw__acmpa_acie			cb1, csr, 1, 3
-#define hw__acmpa_acic			cb1, csr, 1, 2
-#define hw__acmpa_acis			cb1, csr, 2, 0
+#define hw__acmpa_acd			_cb1, csr, 1, 7
+#define hw__acmpa_acbg			_cb1, csr, 1, 6
+#define hw__acmpa_aco			_cb1, csr, 1, 5
+#define hw__acmpa_aci			_cb1, csr, 1, 4
+#define hw__acmpa_acie			_cb1, csr, 1, 3
+#define hw__acmpa_acic			_cb1, csr, 1, 2
+#define hw__acmpa_acis			_cb1, csr, 2, 0
 
 
 #if !defined __ASSEMBLER__

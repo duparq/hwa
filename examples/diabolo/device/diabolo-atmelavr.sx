@@ -91,27 +91,27 @@
 
 	;; Hardware registers
 	;;
-;; #define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
-;; #define AP_EXTRF   hw_ap(hw_reg(hw_core0, extrf))
+// #define AP_PORF    hw_ap(hw_reg(core0, porf))
+// #define AP_EXTRF   hw_ap(hw_reg(core0, extrf))
 
-	MCUSR      = hw_addr(hw_reg(hw_core0, mcusr))
-	 BP_EXTRF  = hw_bp(hw_reg(hw_core0, extrf))
-	 BP_PORF   = hw_bp(hw_reg(hw_core0, porf))
+	MCUSR      = hw_addr(hw_reg(core0, mcusr))
+	 BP_EXTRF  = hw_bp(hw_reg(core0, extrf))
+	 BP_PORF   = hw_bp(hw_reg(core0, porf))
 
-	SPMCSR	   = hw_addr(hw_reg(hw_flash0, csr))
-	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
-	 BP_BLBSET = hw_bp(hw_reg(hw_flash0, blbset))
-	 BP_PGWRT  = hw_bp(hw_reg(hw_flash0, pgwrt))
-	 BP_PGERS  = hw_bp(hw_reg(hw_flash0, pgers))
-	 BP_SPMEN  = hw_bp(hw_reg(hw_flash0, spmen))
+	SPMCSR	   = hw_addr(hw_reg(flash0, csr))
+	 BP_RWWSRE = hw_bp(hw_reg(flash0, rwwsre))
+	 BP_BLBSET = hw_bp(hw_reg(flash0, blbset))
+	 BP_PGWRT  = hw_bp(hw_reg(flash0, pgwrt))
+	 BP_PGERS  = hw_bp(hw_reg(flash0, pgers))
+	 BP_SPMEN  = hw_bp(hw_reg(flash0, spmen))
 
-	EEARL	   = hw_addr(hw_reg(hw_eeprom0, arl))
-	EEARH	   = hw_addr(hw_reg(hw_eeprom0, arh))
-	EEDR	   = hw_addr(hw_reg(hw_eeprom0, dr))
-	EECR	   = hw_addr(hw_reg(hw_eeprom0, cr))
-#define AP_EEMPE   hw_ap(hw_reg(hw_eeprom0, mpe))
-#define AP_EEPE	   hw_ap(hw_reg(hw_eeprom0, pe))
-#define AP_EERE	   hw_ap(hw_reg(hw_eeprom0, re))
+	EEARL	   = hw_addr(hw_reg(eeprom0, arl))
+	EEARH	   = hw_addr(hw_reg(eeprom0, arh))
+	EEDR	   = hw_addr(hw_reg(eeprom0, dr))
+	EECR	   = hw_addr(hw_reg(eeprom0, cr))
+#define AP_EEMPE   hw_ap(hw_reg(eeprom0, mpe))
+#define AP_EEPE	   hw_ap(hw_reg(eeprom0, pe))
+#define AP_EERE	   hw_ap(hw_reg(eeprom0, re))
 
 	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;

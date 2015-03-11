@@ -31,9 +31,9 @@
  *	C and assembler address differ!
  */
 #if defined __ASSEMBLER__
-#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
+#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra-0x20)
 #else
-#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
+#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra)
 #endif
 
 /*  _hw_isr_(...): address (vector) of ISR
@@ -41,5 +41,5 @@
  *	FIXME: should name it _vector(...)
  */
 #if defined __ASSEMBLER__
-#  define _hw_isr_(vector, ...)				__vector_##vector
+#  define _hw_isr_(vector, ...)			__vector_##vector
 #endif

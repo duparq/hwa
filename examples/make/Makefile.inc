@@ -36,6 +36,14 @@ $(OUTDIR)/%.$(DEVICE).d: %.c
 	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.$(DEVICE).o $@ : ,g' < $@.tmp > $@; \
 	rm -f $@.tmp
 
+$(OUTDIR)/%.$(DEVICE).d: %.sx
+	@echo "RULE: $@: $^"
+	@mkdir -p $(OUTDIR)
+	@set -e; rm -f $@; \
+	$(CC) -M $(INCLUDES) $< > $@.tmp; \
+	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.$(DEVICE).o $@ : ,g' < $@.tmp > $@; \
+	rm -f $@.tmp
+
 # set -e; rm -f build/main0.d; \
 # 	avr-gcc -M -I/home/indy/dev/hwa-dev -I/home/indy/dev/hwa-dev/swuart-src -I/home/indy/dev/hwa-dev/examples main0.c > build/main0.d.tmp; \
 # 	sed 's,\(main0\)\.o[ :]*,\1.o build/main0.d : ,g' < build/main0.d.tmp > build/main0.d; \

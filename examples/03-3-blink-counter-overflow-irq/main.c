@@ -11,8 +11,8 @@
  *					   hw_counter0		hw_counter1
  *					   bytes:CRC		bytes:CRC
  */
-//#include "targets/attiny84.h"		// 146:0x8161		148:0x1D4A
-#include "targets/attiny85.h"		// 142:0x9B16		-
+#include "targets/attiny84.h"		// 146:0x8161		148:0x1D4A
+//#include "targets/attiny85.h"		// 142:0x9B16		-
 //#include "targets/nanodccduino.h"	// 222:0x1E8B		234:0x84B9
 #include <hwa.h>
 
@@ -22,13 +22,13 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED		pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
+#define COUNTER			counter0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
 #define PERIOD			0.5
@@ -59,7 +59,7 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa_config( core0,
   	      sleep,      enabled,
   	      sleep_mode, idle );
 

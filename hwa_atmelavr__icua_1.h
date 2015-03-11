@@ -14,4 +14,4 @@
 /*	Capture units
  */
 #define hw_class__icua
-#define _hw_pop__icua(c,n,i,cn,chn,ion,...)	__VA_ARGS__
+#define _hw_pop__icua(p,i,cn,chn,ion,...)	__VA_ARGS__
