@@ -38,11 +38,11 @@
 
 /*	Pins by numbers
  */
-#define hw_is_8pdip_8pdip		, 1
-#define hw_is_8soic_8soic		, 1
-#define hw_is_8tssop_8tssop		, 1
-#define hw_is_20qfn_20qfn		, 1
-#define hw_is_20mlf_20mlf		, 1
+#define _hw_is_8pdip_8pdip		, 1
+#define _hw_is_8soic_8soic		, 1
+#define _hw_is_8tssop_8tssop		, 1
+#define _hw_is_20qfn_20qfn		, 1
+#define _hw_is_20mlf_20mlf		, 1
 
 
 #if HW_IS(8pdip,HW_DEVICE_PACKAGE)		\

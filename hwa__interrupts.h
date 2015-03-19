@@ -6,8 +6,8 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#define hw_class__irq
-#define hw_is__irq__irq			, 1
+#define _hw_class__irq
+#define _hw_is__irq__irq			, 1
 
 #define hw_mthd_hw_turn_irq		, _hw_turn_irq
 #define hw_mthd_hw_turn__irq		, _hw_turn_irq
@@ -39,11 +39,11 @@
 #define _hw_irqx(...)			HW_G2(_hw_irqx2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqx2_1(...)		__VA_ARGS__
 #define _hw_irqx2_0(p,...)						\
-  HW_G2(_hw_irqx3, HW_IS(_irq,hw_irq_##p##_##__VA_ARGS__))(p,__VA_ARGS__)
-#define _hw_irqx3_1(p,...)		hw_irq_##p##_##__VA_ARGS__
+  HW_G2(_hw_irqx3, HW_IS(_irq,_hw_irq_##p##_##__VA_ARGS__))(p,__VA_ARGS__)
+#define _hw_irqx3_1(p,...)		_hw_irq_##p##_##__VA_ARGS__
 #define _hw_irqx3_0(p,...)					\
-  HW_G2(_hw_irqx4, HW_IS(_irq,hw_irq_##p))(p,__VA_ARGS__)
-#define _hw_irqx4_1(p,...)		hw_irq_##p, __VA_ARGS__
+  HW_G2(_hw_irqx4, HW_IS(_irq,_hw_irq_##p))(p,__VA_ARGS__)
+#define _hw_irqx4_1(p,...)		_hw_irq_##p, __VA_ARGS__
 #define _hw_irqx4_0(p,...)		HW_G2(_hw_irqx5,HW_ISOBJ(p))(p,__VA_ARGS__)
 #define _hw_irqx5_0(p,...)		HW_ERR("`"#p"` is not a HWA object.")
 #define _hw_irqx5_1(p,...)		HW_ERR("`"#p"` has no IRQ `` or `" \

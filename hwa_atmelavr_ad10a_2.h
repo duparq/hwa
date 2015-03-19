@@ -7,15 +7,15 @@
 
 /*	Symbols
  */
-#define hw_is_trigger_trigger			, 1
-#define hw_is_vref_vref				, 1
-#define hw_is_align_align			, 1
-#define hw_is_polarity_polarity			, 1
-#define hw_is_input_mode_input_mode		, 1
-#define hw_is_input_input			, 1
-#define hw_is_gain_gain				, 1
-#define hw_is_positive_input_positive_input	, 1
-#define hw_is_negative_input_negative_input	, 1
+#define _hw_is_trigger_trigger			, 1
+#define _hw_is_vref_vref				, 1
+#define _hw_is_align_align			, 1
+#define _hw_is_polarity_polarity			, 1
+#define _hw_is_input_mode_input_mode		, 1
+#define _hw_is_input_input			, 1
+#define _hw_is_gain_gain				, 1
+#define _hw_is_positive_input_positive_input	, 1
+#define _hw_is_negative_input_negative_input	, 1
 
 #define hw_ad10a_clock_syshz_div_2		, 1	/* , ps */
 #define hw_ad10a_clock_syshz_div_4		, 2
@@ -324,7 +324,7 @@ HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
 
 /*	Class & methods
  */
-#define hw_class_adpin
+#define _hw_class_adpin
 
 #define hw_mthd_hwa_config_adpin		, _hwa_config_adpin
 #define _hwa_config_adpin(c,n,i,bp, mode)		\

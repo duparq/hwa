@@ -9,11 +9,11 @@
 
 /*  Fuses for clocking
  */
-#define hw_is_external_external				, 1
-#define hw_is_rc_8MHz_rc_8MHz				, 1
-#define hw_is_rc_128kHz_rc_128kHz			, 1
-#define hw_is_low_power_xosc_low_power_xosc		, 1
-#define hw_is_full_swing_xosc_full_swing_xosc		, 1
+#define _hw_is_external_external				, 1
+#define _hw_is_rc_8MHz_rc_8MHz				, 1
+#define _hw_is_rc_128kHz_rc_128kHz			, 1
+#define _hw_is_low_power_xosc_low_power_xosc		, 1
+#define _hw_is_full_swing_xosc_full_swing_xosc		, 1
 
 
 #ifndef HW_DEVICE_CLK_SRC
@@ -62,23 +62,23 @@
 #  error HW_DEVICE_CLK_SRC must be defined as one of `internal_rc`, `internal_watchdog`, `external_low_power_xo`, `external_full_swing_xo`, or `external`.
 #endif
 
-#define hw_is_4CK_4CK					, 1
-#define hw_is_4CK_4ms_4CK_4ms				, 1
-#define hw_is_4CK_64ms_4CK_64ms				, 1
-#define hw_is_6CK_14CK_6CK_14CK				, 1
-#define hw_is_6CK_14CK_4ms_6CK_14CK_4ms			, 1
-#define hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
-#define hw_is_1KCK_4ms_1KCK_4ms				, 1
-#define hw_is_1KCK_64ms_1KCK_64ms			, 1
-#define hw_is_32KCK_64ms_32KCK_64ms			, 1
-#define hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
-#define hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
-#define hw_is_1KCK_14CK_1KCK_14CK			, 1
-#define hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
-#define hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
-#define hw_is_16KCK_14CK_16KCK_14CK			, 1
-#define hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
-#define hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
+#define _hw_is_4CK_4CK					, 1
+#define _hw_is_4CK_4ms_4CK_4ms				, 1
+#define _hw_is_4CK_64ms_4CK_64ms				, 1
+#define _hw_is_6CK_14CK_6CK_14CK				, 1
+#define _hw_is_6CK_14CK_4ms_6CK_14CK_4ms			, 1
+#define _hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
+#define _hw_is_1KCK_4ms_1KCK_4ms				, 1
+#define _hw_is_1KCK_64ms_1KCK_64ms			, 1
+#define _hw_is_32KCK_64ms_32KCK_64ms			, 1
+#define _hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
+#define _hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
+#define _hw_is_1KCK_14CK_1KCK_14CK			, 1
+#define _hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
+#define _hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
+#define _hw_is_16KCK_14CK_16KCK_14CK			, 1
+#define _hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
+#define _hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
 
 /*	SUT
  */
@@ -217,9 +217,9 @@
 #  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
 #endif
 
-#define hw_is_1700_2000mV_1700_2000mV			, 1
-#define hw_is_2500_2900mV_2500_2900mV			, 1
-#define hw_is_4100_4500mV_4100_4500mV			, 1
+#define _hw_is_1700_2000mV_1700_2000mV			, 1
+#define _hw_is_2500_2900mV_2500_2900mV			, 1
+#define _hw_is_4100_4500mV_4100_4500mV			, 1
 
 #if !defined HW_DEVICE_BROWNOUT_DETECTION
 #  define HW_DEVICE_BROWNOUT_DETECTION			off
@@ -236,8 +236,8 @@
 #  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
 #endif
 
-#define hw_is_application_application			, 1
-#define hw_is_bootloader_bootloader			, 1
+#define _hw_is_application_application			, 1
+#define _hw_is_bootloader_bootloader			, 1
 
 #if !defined HW_DEVICE_BOOT
 #  define HW_DEVICE_BOOT				application

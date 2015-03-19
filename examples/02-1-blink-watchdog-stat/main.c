@@ -20,7 +20,7 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		pin_7
+#  define PIN_LED		hw_pin_7
 #endif
 
 
@@ -36,7 +36,7 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ periodically
    */
-  hwa_config( watchdog0,
+  hwa_config( hw_watchdog0,
   	      timeout,		125ms,
   	      action,		irq );
 
@@ -49,10 +49,10 @@ int main ( )
      *  Check the status of the watchdog. As soon as the IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    hw_stat_t( watchdog0 ) stat ;
-    stat = hw_stat( watchdog0 ) ;
+    hw_stat_t( hw_watchdog0 ) stat ;
+    stat = hw_stat( hw_watchdog0 ) ;
     if ( stat.irq ) {
-      hw_clear_irq( watchdog0 );
+      hw_clear_irq( hw_watchdog0 );
       hw_toggle( PIN_LED );
     }
   }

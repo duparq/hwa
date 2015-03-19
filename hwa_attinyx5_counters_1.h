@@ -20,26 +20,26 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw__c8a_ccra			crg, 8, 0x4A, 0xF3, 0x00
-#define hw__c8a_ccrb			crg, 8, 0x53, 0xCF, 0x00
-#define hw__c8a_count			crg, 8, 0x52, 0xFF, 0x00
-#define hw__c8a_ocra			crg, 8, 0x49, 0xFF, 0x00
-#define hw__c8a_compare0			crg, 8, 0x49, 0xFF, 0x00
-#define hw__c8a_ocrb			crg, 8, 0x48, 0xFF, 0x00
-#define hw__c8a_compare1			crg, 8, 0x48, 0xFF, 0x00
-//#define hw__c8a_imsk			crg, 8, 0x59, 0x07, 0x00 /* shared */
-//#define hw__c8a_ifr			crg, 8, 0x58, 0x07, 0x07 /* shared */
+#define _hw__c8a_ccra			crg, 8, 0x4A, 0xF3, 0x00
+#define _hw__c8a_ccrb			crg, 8, 0x53, 0xCF, 0x00
+#define _hw__c8a_count			crg, 8, 0x52, 0xFF, 0x00
+#define _hw__c8a_ocra			crg, 8, 0x49, 0xFF, 0x00
+#define _hw__c8a_compare0			crg, 8, 0x49, 0xFF, 0x00
+#define _hw__c8a_ocrb			crg, 8, 0x48, 0xFF, 0x00
+#define _hw__c8a_compare1			crg, 8, 0x48, 0xFF, 0x00
+//#define _hw__c8a_imsk			crg, 8, 0x59, 0x07, 0x00 /* shared */
+//#define _hw__c8a_ifr			crg, 8, 0x58, 0x07, 0x07 /* shared */
 
 
 /*	Registers
  */
-#define hw__c8a_ocieb			irg, hw_shared0, ocie0b
-#define hw__c8a_ociea			irg, hw_shared0, ocie0a
-#define hw__c8a_oie			irg, hw_shared0, oie0
+#define _hw__c8a_ocieb			irg, hw_shared0, ocie0b
+#define _hw__c8a_ociea			irg, hw_shared0, ocie0a
+#define _hw__c8a_oie			irg, hw_shared0, oie0
 
-#define hw__c8a_ocfb			irg, hw_shared0, ocf0b
-#define hw__c8a_ocfa			irg, hw_shared0, ocf0a
-#define hw__c8a_ov			irg, hw_shared0, ov0
+#define _hw__c8a_ocfb			irg, hw_shared0, ocf0b
+#define _hw__c8a_ocfa			irg, hw_shared0, ocf0a
+#define _hw__c8a_ov			irg, hw_shared0, ov0
 
 
 /*	Counter0 compare output units

@@ -340,10 +340,10 @@ HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   uint16_t m = (1UL<<rbn)-1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_reg(core0,sreg);
+    uint8_t s = _hw_read_reg(hw_core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
-    _hw_write_reg(core0,sreg,s);
+    _hw_write_reg(hw_core0,sreg,s);
     uint8_t hb = *ph ;
     v = (hb << 8) | lb ;
   }

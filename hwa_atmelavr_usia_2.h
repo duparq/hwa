@@ -20,7 +20,7 @@
 #define hw_usia_clock_external_rising	, 2
 #define hw_usia_clock_external_falling	, 3
 
-#define hw_is_mode_mode			, 1
+#define _hw_is_mode_mode			, 1
 
 #define _hwa_cfusia(c,n,i,a,...)					\
   do {									\

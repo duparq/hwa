@@ -85,9 +85,9 @@
 #  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
 #endif
 
-#define hw_is_1700_2000mV_1700_2000mV			, 1
-#define hw_is_2500_2900mV_2500_2900mV			, 1
-#define hw_is_4100_4500mV_4100_4500mV			, 1
+#define _hw_is_1700_2000mV_1700_2000mV			, 1
+#define _hw_is_2500_2900mV_2500_2900mV			, 1
+#define _hw_is_4100_4500mV_4100_4500mV			, 1
 
 #if !defined HW_DEVICE_BROWNOUT_DETECTION
 #  define HW_DEVICE_BROWNOUT_DETECTION			off
@@ -139,20 +139,20 @@
 #  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
 #endif
 
-#define hw_is_6CK_14CK_6CK_14CK				, 1
-#define hw_is_6CK_14CK_4ms_6CK_14CK_4ms			, 1
-#define hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
-#define hw_is_1KCK_4ms_1KCK_4ms				, 1
-#define hw_is_1KCK_64ms_1KCK_64ms			, 1
-#define hw_is_32KCK_64ms_32KCK_64ms			, 1
-#define hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
-#define hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
-#define hw_is_1KCK_14CK_1KCK_14CK			, 1
-#define hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
-#define hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
-#define hw_is_16KCK_14CK_16KCK_14CK			, 1
-#define hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
-#define hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
+#define _hw_is_6CK_14CK_6CK_14CK				, 1
+#define _hw_is_6CK_14CK_4ms_6CK_14CK_4ms			, 1
+#define _hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
+#define _hw_is_1KCK_4ms_1KCK_4ms				, 1
+#define _hw_is_1KCK_64ms_1KCK_64ms			, 1
+#define _hw_is_32KCK_64ms_32KCK_64ms			, 1
+#define _hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
+#define _hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
+#define _hw_is_1KCK_14CK_1KCK_14CK			, 1
+#define _hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
+#define _hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
+#define _hw_is_16KCK_14CK_16KCK_14CK			, 1
+#define _hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
+#define _hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
 
 /*	SUT
  */
@@ -211,12 +211,12 @@
 #  define HW_DEVICE_SUT10				2
 #endif
 
-#define hw_is_external_external				, 1
-#define hw_is_rc_8MHz_rc_8MHz				, 1
-#define hw_is_rc_6400kHz_rc_6400kHz			, 1
-#define hw_is_rc_pll_16MHz_rc_pll_16MHz			, 1
-#define hw_is_rc_128kHz_rc_128kHz			, 1
-#define hw_is_xosc_xosc					, 1
+#define _hw_is_external_external				, 1
+#define _hw_is_rc_8MHz_rc_8MHz				, 1
+#define _hw_is_rc_6400kHz_rc_6400kHz			, 1
+#define _hw_is_rc_pll_16MHz_rc_pll_16MHz			, 1
+#define _hw_is_rc_128kHz_rc_128kHz			, 1
+#define _hw_is_xosc_xosc					, 1
 
 
 #ifndef HW_DEVICE_CLK_SRC
@@ -290,23 +290,23 @@
 
 /*  Class registers			class, rw, ra, rwm, rfm
  */
-#define hw__shared_gtccr		crg, 8, 0x2C, 0x81, 0x00
-#define hw__shared_timsk		crg, 8, 0x59, 0x7E, 0x00
-#define hw__shared_tifr			crg, 8, 0x58, 0x7E, 0x7E
+#define _hw__shared_gtccr		crg, 8, 0x2C, 0x81, 0x00
+#define _hw__shared_timsk		crg, 8, 0x59, 0x7E, 0x00
+#define _hw__shared_tifr			crg, 8, 0x58, 0x7E, 0x7E
 
-#define hw__shared_ocie1a		cb1, timsk, 1, 6
-#define hw__shared_ocie1b		cb1, timsk, 1, 5
-#define hw__shared_ocie0a		cb1, timsk, 1, 4
-#define hw__shared_ocie0b		cb1, timsk, 1, 3
-#define hw__shared_oie1			cb1, timsk, 1, 2
-#define hw__shared_oie0			cb1, timsk, 1, 1
+#define _hw__shared_ocie1a		cb1, timsk, 1, 6
+#define _hw__shared_ocie1b		cb1, timsk, 1, 5
+#define _hw__shared_ocie0a		cb1, timsk, 1, 4
+#define _hw__shared_ocie0b		cb1, timsk, 1, 3
+#define _hw__shared_oie1			cb1, timsk, 1, 2
+#define _hw__shared_oie0			cb1, timsk, 1, 1
 
-#define hw__shared_ocf1a		cb1, tifr, 1, 6
-#define hw__shared_ocf1b		cb1, tifr, 1, 5
-#define hw__shared_ocf0a		cb1, tifr, 1, 4
-#define hw__shared_ocf0b		cb1, tifr, 1, 3
-#define hw__shared_ov1			cb1, tifr, 1, 2
-#define hw__shared_ov0			cb1, tifr, 1, 1
+#define _hw__shared_ocf1a		cb1, tifr, 1, 6
+#define _hw__shared_ocf1b		cb1, tifr, 1, 5
+#define _hw__shared_ocf0a		cb1, tifr, 1, 4
+#define _hw__shared_ocf0b		cb1, tifr, 1, 3
+#define _hw__shared_ov1			cb1, tifr, 1, 2
+#define _hw__shared_ov0			cb1, tifr, 1, 1
 
 
 #ifndef __ASSEMBLER__

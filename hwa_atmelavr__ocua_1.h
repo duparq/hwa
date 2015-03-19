@@ -10,7 +10,7 @@
  */
 
 
-#define hw_class__ocua
+#define _hw_class__ocua
 #define _hw_pop__ocua(p,i,cn,chn,ion,...)	__VA_ARGS__
 
 

@@ -7,7 +7,7 @@
 
 /*	Class & methods
  */
-#define hw_class_flash
+#define _hw_class_flash
 #define _hw_pop_flash(c,n,i,a,...)	__VA_ARGS__
 
 

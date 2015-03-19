@@ -20,7 +20,7 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		pin_7
+#  define PIN_LED		hw_pin_7
 #endif
 
 
@@ -47,3 +47,7 @@ int main ( )
 /* hwa_write( foo, foo ); */
 
 /* hwa_write( core0, foo ); */
+
+/* _hwa_write_creg( p, _wdoga, wdrf, 0 ); */
+
+/* _hw_creg(_wdoga, wdrf); */

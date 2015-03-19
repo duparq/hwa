@@ -16,5 +16,5 @@
 
 /*  Class & methods
  */
-#define hw_class__wdoga
-#define _hw_pop__wdoga(p,i,a,...)	__VA_ARGS__
+#define _hw_class__wdoga
+//#define _hw_pop__wdoga(p,i,a,...)	__VA_ARGS__

@@ -67,7 +67,7 @@
 
 #define _hwa_turn_wdog_off(p,i,a)			\
   /* This will be completed when committing */		\
-  hwa->watchdog0.action = HW_A1(hw_wdog_action_none)
+  hwa->hw_watchdog0.action = HW_A1(hw_wdog_action_none)
 
 
 /*  Clear (reset) watchdog or just the irq flag
@@ -93,7 +93,7 @@
 
 /*	Configure watchdog
  */
-#define hw_is_timeout_timeout		, 1
+#define _hw_is_timeout_timeout		, 1
 #define hw_wdog_timeout_16ms		, 0
 #define hw_wdog_timeout_32ms		, 1
 #define hw_wdog_timeout_64ms		, 2
@@ -105,7 +105,7 @@
 #define hw_wdog_timeout_4s		, 8
 #define hw_wdog_timeout_8s		, 9
 
-#define hw_is_action_action		, 1
+#define _hw_is_action_action		, 1
 #define hw_wdog_action_none		, 0
 #define hw_wdog_action_irq		, 1
 #define hw_wdog_action_reset		, 2

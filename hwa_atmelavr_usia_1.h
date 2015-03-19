@@ -14,8 +14,8 @@
 
 /*	Class
  */
-#define hw_class_usia
-#define hw_class_usia_spimaster_swclk
+#define _hw_class_usia
+#define _hw_class_usia_spimaster_swclk
 
 
 /*	Methods

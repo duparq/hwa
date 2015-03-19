@@ -10,8 +10,8 @@
  */
 
 
-#define hw_is_update_update			, 1
-#define hw_is_output_output			, 1
+#define _hw_is_update_update			, 1
+#define _hw_is_output_output			, 1
 
 #define hw_ocu_update_immediately		, 0
 #define hw_ocu_update_at_bottom			, 1
@@ -44,7 +44,7 @@
  *
  *	Note: there is no checking against the counter configuration.
  */
-#define hw_is_disconnected_disconnected		, 1
+#define _hw_is_disconnected_disconnected		, 1
 
 #define hw_mthd_hw_config__ocua		, _hw_cfocua
 

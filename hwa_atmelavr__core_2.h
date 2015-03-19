@@ -19,14 +19,14 @@
  *	TODO: use a list of wake-up sources instead (or in addition)?
  */
 
-#define hw_is_sleep_sleep			, 1
-#define hw_is_sleep_mode_sleep_mode		, 1
+#define _hw_is_sleep_sleep			, 1
+#define _hw_is_sleep_mode_sleep_mode		, 1
 #define hw_sleepmode_idle			, 0
 #define hw_sleepmode_adc_noise_reduction	, 1
 #define hw_sleepmode_power_down			, 2
 #define hw_sleepmode_standby			, 3
 
-/* #define hw_is_awaker_awaker		, 1 */
+/* #define _hw_is_awaker_awaker		, 1 */
 /* #define hw_awaker_io			, 0 */
 /* #define hw_awaker_int0_edge		, 0 */
 /* #define hw_awaker_adc			, 1 */

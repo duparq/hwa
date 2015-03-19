@@ -7,14 +7,6 @@
  */
 
 
-/*  	hw/hwa_config(...): configure something (method)
- */
-#define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
-#define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
-
-//#define _hwa_config(...)		_HW_MTHD(_hwa_config, __VA_ARGS__,)
-
-
 /*	hw_read(...): read something (method)
  */
 #define hw_read(...)			HW_MTHD(hw_read, __VA_ARGS__)
@@ -36,6 +28,14 @@
 #define _hwa_write_reg(p,m,v)		_HW_SPEC(_hwa_write, _hw_reg(p,m),v)
 
 #define _hwa_write_creg(p,c,m,v)	_HW_SPEC(_hwa_writep, _hw_creg(c,m),p,v)
+
+
+/*  	hw/hwa_config(...): configure something (method)
+ */
+#define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
+#define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
+
+//#define _hwa_config(...)		_HW_MTHD(_hwa_config, __VA_ARGS__,)
 
 
 /*	hw_clear(...): clear something (method)
@@ -232,27 +232,27 @@
 /*   do { _hwa_write_r##rw1(&p->r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \ */
 /*       _hwa_write_r##rw2(&p->r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); } while(0) */
 
-#define _hwa_begin(n)			_hwa_begin_2(n, hw_##n)
+#define _hwa_begin(p)			_hwa_begin_2(p, _##p)
 #define _hwa_begin_2(...)		_hwa_begin_3(__VA_ARGS__)
-#define _hwa_begin_3(n,c,i,a)		__hwa_begin_##c(&hwa->n,a)
+#define _hwa_begin_3(p,c,i,a)		__hwa_begin_##c(&hwa->p,a)
 
 
-#define _hwa_init(n)			_hwa_init_2(n, hw_##n)
+#define _hwa_init(n)			_hwa_init_2(n, _##n)
 #define _hwa_init_2(...)		_hwa_init_3(__VA_ARGS__)
 #define _hwa_init_3(n,c,i,a)		__hwa_init_##c(&hwa->n)
 
 
-#define _hwa_solve(n)			_hwa_solve_2(n, hw_##n)
+#define _hwa_solve(n)			_hwa_solve_2(n, _##n)
 #define _hwa_solve_2(...)		_hwa_solve_3(__VA_ARGS__)
 #define _hwa_solve_3(n,c,i,a)		__hwa_solve_##c(hwa, &hwa->n)
 
 
-#define _hwa_commit(n)			_hwa_commit_2(n, hw_##n)
+#define _hwa_commit(n)			_hwa_commit_2(n, _##n)
 #define _hwa_commit_2(...)		_hwa_commit_3(__VA_ARGS__)
 #define _hwa_commit_3(n,c,i,a)		__hwa_commit_##c(hwa,&hwa->n)
 
 
-#define _hwa_begin_reg_p(p,a,c,r)		_hwa_berp_2(p,a,c,r,hw_##c##_##r)
+#define _hwa_begin_reg_p(p,a,c,r)		_hwa_berp_2(p,a,c,r,_hw_##c##_##r)
 #define _hwa_berp_2(...)			_hwa_berp_3(__VA_ARGS__)
 #define _hwa_berp_3(p,a,c,r, rt,rw,ra,rwm,rfm)	_hwa_begin_r##rw(&p->r,a+ra)
 
@@ -374,7 +374,7 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
  * \hideinitializer
  */
 #define _hwa_begin_reg(...)			_hwa_begin_reg_2(__VA_ARGS__)
-#define _hwa_begin_reg_2(n,c,i,a, r)		_hwa_begin_reg_3(n,a,r, hw_##c##_##r)
+#define _hwa_begin_reg_2(n,c,i,a, r)		_hwa_begin_reg_3(n,a,r, _hw_##c##_##r)
 #define _hwa_begin_reg_3(...)			_hwa_begin_reg_4(__VA_ARGS__)
 #define _hwa_begin_reg_4(n,a,r, rt,rw,ra, ... )	_hwa_begin_r##rw( &hwa->n.r, a+ra )
 
@@ -442,7 +442,7 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 
 
 #define _hwa_commit_reg(...)			_hwa_commit_reg_2(__VA_ARGS__)
-#define _hwa_commit_reg_2(n,c,i,a, r, co)	_hwa_commit_reg_3(n,a,r, hw_##c##_##r, co)
+#define _hwa_commit_reg_2(n,c,i,a, r, co)	_hwa_commit_reg_3(n,a,r, _hw_##c##_##r, co)
 #define _hwa_commit_reg_3(...)			_hwa_commit_reg_4(__VA_ARGS__)
 #define _hwa_commit_reg_4(n,a,r, rt,rw,ra,rwm,rfm, co )	\
   _hwa_commit_r##rw( &hwa->n.r,rwm,rfm, co )

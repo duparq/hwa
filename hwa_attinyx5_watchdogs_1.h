@@ -20,16 +20,16 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw__wdoga_csr			crg, 8, 0x41, 0xFF, 0x80
+#define _hw__wdoga_csr			crg, 8, 0x41, 0xFF, 0x80
 
-#define hw__wdoga_wdif			cb1, csr, 1, 7
-#define hw__wdoga_wdie			cb1, csr, 1, 6
-#define hw__wdoga_wdp			cb2, csr, 1, 5, 3, csr, 3, 0, 0
-#define hw__wdoga_wdce			cb1, csr, 1, 4
-#define hw__wdoga_wde			cb1, csr, 1, 3
+#define _hw__wdoga_wdif			cb1, csr, 1, 7
+#define _hw__wdoga_wdie			cb1, csr, 1, 6
+#define _hw__wdoga_wdp			cb2, csr, 1, 5, 3, csr, 3, 0, 0
+#define _hw__wdoga_wdce			cb1, csr, 1, 4
+#define _hw__wdoga_wde			cb1, csr, 1, 3
 
-#define hw__wdoga_wdeie			cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
-#define hw__wdoga_wdifie		cb1, csr, 2, 6 /* convenient for clearing irq */
-#define hw__wdoga_wdall			cb1, csr, 7, 0 /* convenient for turning wd off */
+#define _hw__wdoga_wdeie			cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
+#define _hw__wdoga_wdifie		cb1, csr, 2, 6 /* convenient for clearing irq */
+#define _hw__wdoga_wdall			cb1, csr, 7, 0 /* convenient for turning wd off */
 
-#define hw__wdoga_wdrf			irg, hw_core0, wdrf /* convenient */
+#define _hw__wdoga_wdrf			irg, hw_core0, wdrf /* convenient */

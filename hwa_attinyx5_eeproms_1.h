@@ -7,7 +7,7 @@
 
 /*	Class & methods
  */
-#define hw_class_eeprom
+#define _hw_class_eeprom
 #define _hw_pop_eeprom(c,n,i,a,...)	__VA_ARGS__
 
 

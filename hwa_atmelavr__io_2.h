@@ -40,11 +40,11 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 #define hw_mthd_hw_toggle__dio		, _hw_toggle_dio
 
 
-#define hw_is_direction_direction	, 1
+#define _hw_is_direction_direction	, 1
 #define hw_cfdio_direction_input	, 0
 #define hw_cfdio_direction_output	, 1
 
-#define hw_is_pullup_pullup		, 1
+#define _hw_is_pullup_pullup		, 1
 
 
 /*	Config io (synchronous)
@@ -123,7 +123,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 /*	Read _dio
  */
 #define _hw_read_dio(io,ion,ioid, c,n,i,a, bn,bp)	\
-  _hw_read_dio_2(n,a,hw_##c##_pin, bn,bp)
+  _hw_read_dio_2(n,a,_hw_##c##_pin, bn,bp)
 #define _hw_read_dio_2(...)	_hw_read_dio_3(__VA_ARGS__)
 #define _hw_read_dio_3(n,a, reg,rw,ra,rwm,rfm, bn,bp)	\
   _hw_read_r8(a+ra,bn,bp)

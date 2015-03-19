@@ -25,7 +25,7 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		pin_7
+#  define PIN_LED		hw_pin_7
 #endif
 
 
@@ -36,7 +36,7 @@
  *    'reti' instruction ourselves since otherwise avr-gcc does some register
  *    initializations even though none is used.
  */
-HW_ISR( watchdog0, isr_naked )
+HW_ISR( hw_watchdog0, isr_naked )
 {
   hw_asm("reti\n");
 }
@@ -55,18 +55,18 @@ int main ( )
   /*  Have the CPU enter power_down mode when the 'sleep' instruction is
    *  executed and make it wake up as a watchdog interrupt occurs.
    */
-  hwa_config( core0,
+  hwa_config( hw_core0,
   	      sleep,      enabled,
   	      sleep_mode, power_down );
 
   /*  Go into sleep definitely if the watchdog triggered a reset.
    */
-  if ( hw_stat( core0 ).reset_by_watchdog ) {
-    hwa_clear( core0 );
+  if ( hw_stat( hw_core0 ).reset_by_watchdog ) {
+    hwa_clear( hw_core0 );
 
     /*  When the device is reset by the watchdog, the watchdog remains enabled!
      */
-    hwa_turn( watchdog0, off );
+    hwa_turn( hw_watchdog0, off );
     hwa_commit();
     hw_sleep();
     for (;;)			/* This should */
@@ -77,7 +77,7 @@ int main ( )
    *  up), first setting its flag, then resetting the device unless it has been
    *  reconfigured.
    */
-  hwa_config( watchdog0,
+  hwa_config( hw_watchdog0,
   	      timeout,      250ms,
   	      action,       irq_or_reset );
 
@@ -97,7 +97,7 @@ int main ( )
     /*  When watchdog action is 'irq_or_reset', it is automatically reset by
      *	hardware to 'reset' after a time-out.
      */
-    hwa_config( watchdog0,
+    hwa_config( hw_watchdog0,
 		timeout,      250ms,
 		action,       reset );
     hwa_nocommit();
@@ -110,7 +110,7 @@ int main ( )
       /*  Set again watchdog action to 'irq_or_reset' so that the device is not
        *  reset when the next time-out occurs.
        */
-      hwa_config( watchdog0,
+      hwa_config( hw_watchdog0,
       		  timeout,      250ms,
       		  action,       irq_or_reset );
       hwa_commit();

@@ -30,7 +30,7 @@
 
 /*  The counter
  */
-#define PWM			counter0_compare0
+#define PWM			hw_counter0_compare0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
 
@@ -41,7 +41,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( core0,
+  hwa_config( hw_core0,
   	      sleep,      enabled,
   	      sleep_mode, idle );
 

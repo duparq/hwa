@@ -16,4 +16,4 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */				        
-#define hw__acmpa_csr			crg, 8, 0x28, 0xDF, 0x10
+#define _hw__acmpa_csr			crg, 8, 0x28, 0xDF, 0x10

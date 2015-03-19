@@ -22,13 +22,13 @@
  *  pin numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		pin_7
+#  define PIN_LED		hw_pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			counter0
+#define COUNTER			hw_counter0
 #define CLKDIV			64
 #define COUNTMODE		loop_up
 #define COMPARE			compare0
@@ -62,7 +62,7 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( core0,
+  hwa_config( hw_core0,
   	      sleep,      enabled,
   	      sleep_mode, idle );
 

@@ -18,8 +18,8 @@
 
 /*  Class & methods
  */
-#define hw_class__c8a
-#define _hw_pop__c8a(p,i,a,...)		__VA_ARGS__
+#define _hw_class__c8a
+//#define _hw_pop__c8a(p,i,a,...)		__VA_ARGS__
 
 #define hw_mthd_hw_bn__c8a		, _hw_bn_c8a
 #define _hw_bn_c8a(p,i,a)		8
@@ -27,24 +27,24 @@
 
 /*  Registers
  */
-#define hw__c8a_coma			_cb1, ccra, 2, 6
-#define hw__c8a_com0			_cb1, ccra, 2, 6 /* convenient */
-#define hw__c8a_comb			_cb1, ccra, 2, 4
-#define hw__c8a_com1			_cb1, ccra, 2, 4 /* convenient */
-#define hw__c8a_wgm			_cb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define _hw__c8a_coma			_cb1, ccra, 2, 6
+#define _hw__c8a_com0			_cb1, ccra, 2, 6 /* convenient */
+#define _hw__c8a_comb			_cb1, ccra, 2, 4
+#define _hw__c8a_com1			_cb1, ccra, 2, 4 /* convenient */
+#define _hw__c8a_wgm			_cb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 
-#define hw__c8a_foca			_cb1, ccrb, 1, 7
-#define hw__c8a_focb			_cb1, ccrb, 1, 6
-#define hw__c8a_cs			_cb1, ccrb, 3, 0
+#define _hw__c8a_foca			_cb1, ccrb, 1, 7
+#define _hw__c8a_focb			_cb1, ccrb, 1, 6
+#define _hw__c8a_cs			_cb1, ccrb, 3, 0
 
 #ifndef HW_DEVICE_ATTINYX5
-#define hw__c8a_ocieb			_cb1, imsk, 1, 2
-#define hw__c8a_ociea			_cb1, imsk, 1, 1
-#define hw__c8a_oie			_cb1, imsk, 1, 0
+#define _hw__c8a_ocieb			_cb1, imsk, 1, 2
+#define _hw__c8a_ociea			_cb1, imsk, 1, 1
+#define _hw__c8a_oie			_cb1, imsk, 1, 0
 
-#define hw__c8a_ocfb			_cb1, ifr, 1, 2
-#define hw__c8a_ocfa			_cb1, ifr, 1, 1
-#define hw__c8a_ov			_cb1, ifr, 1, 0
+#define _hw__c8a_ocfb			_cb1, ifr, 1, 2
+#define _hw__c8a_ocfa			_cb1, ifr, 1, 1
+#define _hw__c8a_ov			_cb1, ifr, 1, 0
 #endif
 
 

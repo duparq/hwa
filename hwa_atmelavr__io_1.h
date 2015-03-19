@@ -9,14 +9,14 @@
 
 /*  _io8a port
  */
-#define hw_class__io8a
+#define _hw_class__io8a
 #define _hw_pop__io8a(p,i,a,...)	__VA_ARGS__
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw__io8a_port			_crg, 8, 0x02, 0xFF, 0x00
-#define hw__io8a_ddr			_crg, 8, 0x01, 0xFF, 0x00
-#define hw__io8a_pin			_crg, 8, 0x00, 0xFF, 0x00
+#define _hw__io8a_port			_crg, 8, 0x02, 0xFF, 0x00
+#define _hw__io8a_ddr			_crg, 8, 0x01, 0xFF, 0x00
+#define _hw__io8a_pin			_crg, 8, 0x00, 0xFF, 0x00
 
 #if !defined __ASSEMBLER__
 
@@ -30,22 +30,22 @@ typedef struct {
 
 /*  _io6a port
  */
-#define hw_class__io6a
+#define _hw_class__io6a
 #define _hw_pop__io6a(c,n,i,a,...)	__VA_ARGS__
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define hw__io6a_port			_crg, 8, 0x02, 0x3F, 0x00
-#define hw__io6a_ddr			_crg, 8, 0x01, 0x3F, 0x00
-#define hw__io6a_pin			_crg, 8, 0x00, 0x3F, 0x00
+#define _hw__io6a_port			_crg, 8, 0x02, 0x3F, 0x00
+#define _hw__io6a_ddr			_crg, 8, 0x01, 0x3F, 0x00
+#define _hw__io6a_pin			_crg, 8, 0x00, 0x3F, 0x00
 
 #define hwa_io6a_t			hwa_io8a_t
 
 
 /*  i/o pins
  */
-//#define hw_class__io
-#define hw_class__dio
+//#define _hw_class__io
+#define _hw_class__dio
 
 #define hw_mthd_hw_sup__dio			, _hw_sup_dio
 //#define _hw_sup_io(c,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca

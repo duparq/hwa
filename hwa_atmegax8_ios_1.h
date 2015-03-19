@@ -58,10 +58,10 @@
 
 /*	Pins by numbers
  */
-#define hw_is_dil_dil			, 1
-#define hw_is_28pdip_28pdip		, 1
-#define hw_is_28mlf_28mlf		, 1
-#define hw_is_32mlf_32mlf		, 1
+#define _hw_is_dil_dil			, 1
+#define _hw_is_28pdip_28pdip		, 1
+#define _hw_is_28mlf_28mlf		, 1
+#define _hw_is_32mlf_32mlf		, 1
 
 
 #if HW_IS(dil,HW_DEVICE_PACKAGE) || HW_IS(28pdip,HW_DEVICE_PACKAGE)
