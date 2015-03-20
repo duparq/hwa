@@ -53,11 +53,11 @@ extern char hw_error ;
 
 
 /*  Produce an error message: expand to x if it is already is an error,
- *  otherwise expand to HW_ERR(y).
+ *  otherwise expand to y.
  */
 #define HW_PE(...)		_HW_PE_2(__VA_ARGS__)
 #define _HW_PE_2(x, y)		HW_G2(_HW_PE,HW_IS(hw_error,x))(x, y)
-#define _HW_PE_0(x, y)		HW_ERR(y)
+#define _HW_PE_0(x, y)		y
 #define _HW_PE_1(x, y)		x
 
 
@@ -159,7 +159,7 @@ extern char hw_error ;
 /* #define _HW_MTHD6_0(f,p,...)	HW_G2(_HW_MTHD7,HW_IS(hw_error,p))(f,p,__VA_ARGS__) */
 /* #define _HW_MTHD7_1(f,p,...)	p */
 /* #define _HW_MTHD7_0(f,p,...)	HW_ERR("`"#p"` is not a HWA object.") */
-#define _HW_MTHD6_0(f,p,...)	HW_PE(p, "`"#p"` is not a HWA object.")
+#define _HW_MTHD6_0(f,p,...)	HW_PE(p, HW_ERR("`"#p"` is not a HWA object."))
 
 #else
 /*
@@ -220,7 +220,7 @@ extern char hw_error ;
 #define _HW_GNRC_2(...)		_HW_GNRC_3(__VA_ARGS__)
 #define _HW_GNRC_3(f,p,c,...)	HW_G2(_HW_GNRC,HW_IS(,_hw_class_##c))(f,p,c,__VA_ARGS__)
 #define _HW_GNRC_1(f,p,c,...)	f(c,p,__VA_ARGS__)
-#define _HW_GNRC_0(f,p,...)	HW_PE(p, "`"#p"` is not a HWA object.")
+#define _HW_GNRC_0(f,p,...)	HW_PE(p, HW_ERR("`"#p"` is not a HWA object."))
 
 
 /*  1 if argument is the name of a HWA object, 0 if not
@@ -274,7 +274,7 @@ extern char hw_error ;
 #define _hw_reg_5(t,...)		HW_G2(_hw_reg, HW_IS(,hw_hasbits_##t))(t,__VA_ARGS__)
 #define _hw_reg_1(t,...)		_hw_x##t(__VA_ARGS__)
 //#define _hw_reg_0(t,p,c,a,r)		HW_ERR("`"#p"` has no register named `"#r"`.")
-#define _hw_reg_0(t,p,c,a,r)		HW_PE(p, "`"#p"` has no register named `"#r"`.")
+#define _hw_reg_0(t,p,c,a,r)		HW_PE(p, HW_ERR("`"#p"` has no register named `"#r"`."))
 
 #define _hw_reg(p,m)			_hw__reg_2(p,_##p,m)
 #define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
