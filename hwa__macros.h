@@ -266,14 +266,17 @@ extern char hw_error ;
 
 
 /*	hw_reg(p,m): memory definition of register bits 'm' of object 'p'
+ *
+ *	HW_GNRC expands the definition of the object p or produces an error.
+ *	First, assume there is no error and try to get the definition of the
+ *	register, handle errors at last.
  */
 #define hw_reg(...)			HW_GNRC(_hw_reg_3,__VA_ARGS__)
 #define _hw_reg_2(...)			_hw_reg_3(__VA_ARGS__)
-#define _hw_reg_3(c,p,i,a,...)		_hw_reg_4(HW_G3(hw,c,__VA_ARGS__),p,c,a,__VA_ARGS__)
+#define _hw_reg_3(c,p,i,a,...)		_hw_reg_4(HW_G3(_hw,c,__VA_ARGS__),p,c,a,__VA_ARGS__)
 #define _hw_reg_4(...)			_hw_reg_5(__VA_ARGS__)
 #define _hw_reg_5(t,...)		HW_G2(_hw_reg, HW_IS(,hw_hasbits_##t))(t,__VA_ARGS__)
 #define _hw_reg_1(t,...)		_hw_x##t(__VA_ARGS__)
-//#define _hw_reg_0(t,p,c,a,r)		HW_ERR("`"#p"` has no register named `"#r"`.")
 #define _hw_reg_0(t,p,c,a,r)		HW_PE(p, HW_ERR("`"#p"` has no register named `"#r"`."))
 
 #define _hw_reg(p,m)			_hw__reg_2(p,_##p,m)

@@ -382,7 +382,6 @@
 
 #include "hwa_atmelavr__wdoga_1.h"
 
-
 /*	Instance			class, id, address
  */
 #define _hw_watchdog0			_wdoga, 901, 0
@@ -508,30 +507,25 @@
  *									       *
  *******************************************************************************/
 
-/*	Class & methods
+#include "hwa_atmelavr__eeproma_1.h"
+
+/*	Instance	        	class, id, address
  */
-#define _hw_class__eeprom
-//#define _hw_pop_eeprom(c,n,i,a,...)	__VA_ARGS__
-
-
-/*	Instance	        	class, name, id, address
- */
-#define _hw_eeprom0			_eeprom, 1000, 0
-
+#define _hw_eeprom0			_eeproma, 1000, 0
 
 /*	Class regs			class, rw, ra, rwm, rfm
  */
-#define _hw__eeprom_arh			_crg,  8, 0x3F,   0x01, 0x00
-#define _hw__eeprom_arl			_crg,  8, 0x3E,   0xFF, 0x00
-#define _hw__eeprom_ar			_crg, 16, 0x3E, 0x01FF, 0x00
-#define _hw__eeprom_dr			_crg,  8, 0x3D,   0xFF, 0x00
-#define _hw__eeprom_cr			_crg,  8, 0x3C,   0x3F, 0x00
+#define _hw__eeproma_arh		_crg,  8, 0x3F,   0x01, 0x00
+#define _hw__eeproma_arl		_crg,  8, 0x3E,   0xFF, 0x00
+#define _hw__eeproma_ar			_crg, 16, 0x3E, 0x01FF, 0x00
+#define _hw__eeproma_dr			_crg,  8, 0x3D,   0xFF, 0x00
+#define _hw__eeproma_cr			_crg,  8, 0x3C,   0x3F, 0x00
 
-#define _hw__eeprom_pm			_cb1, cr, 2, 4
-#define _hw__eeprom_rie			_cb1, cr, 1, 3
-#define _hw__eeprom_mpe			_cb1, cr, 1, 2
-#define _hw__eeprom_pe			_cb1, cr, 1, 1
-#define _hw__eeprom_re			_cb1, cr, 1, 0
+#define _hw__eeproma_pm			_cb1, cr, 2, 4
+#define _hw__eeproma_rie		_cb1, cr, 1, 3
+#define _hw__eeproma_mpe		_cb1, cr, 1, 2
+#define _hw__eeproma_pe			_cb1, cr, 1, 1
+#define _hw__eeproma_re			_cb1, cr, 1, 0
 
 
 /*******************************************************************************
@@ -540,30 +534,25 @@
  *									       *
  *******************************************************************************/
 
-/*	Class & methods
+#include "hwa_atmelavr__flasha_1.h"
+
+/*	Instance	                class, id, address
  */
-#define _hw_class__flash
-//#define _hw_pop_flash(c,n,i,a,...)	__VA_ARGS__
-
-
-/*	Instance	                class, name, id, address
- */
-#define _hw_flash0			_flash, 1100, 0
-
+#define _hw_flash0			_flasha, 1100, 0
 
 /*	Class regs			class, rw, ra, rwm, rfm
  */
-#define _hw__flash_csr			_crg,  8, 0x57, 0x3F, 0x00
+#define _hw__flasha_csr			_crg,  8, 0x57, 0x3F, 0x00
 
-#define _hw__flash_sigrd		_cb1, csr, 1, 5
-#define _hw__flash_rsig			_cb1, csr, 1, 5	/* old definition */
-#define _hw__flash_rwwsre		_cb1, csr, 1, 4
-#define _hw__flash_ctpb			_cb1, csr, 1, 4	/* old definition */
-#define _hw__flash_blbset		_cb1, csr, 1, 3
-#define _hw__flash_rflb			_cb1, csr, 1, 3	/* old definition */
-#define _hw__flash_pgwrt		_cb1, csr, 1, 2
-#define _hw__flash_pgers		_cb1, csr, 1, 1
-#define _hw__flash_spmen		_cb1, csr, 1, 0
+#define _hw__flasha_sigrd		_cb1, csr, 1, 5
+#define _hw__flasha_rsig		_cb1, csr, 1, 5	/* old definition */
+#define _hw__flasha_rwwsre		_cb1, csr, 1, 4
+#define _hw__flasha_ctpb		_cb1, csr, 1, 4	/* old definition */
+#define _hw__flasha_blbset		_cb1, csr, 1, 3
+#define _hw__flasha_rflb		_cb1, csr, 1, 3	/* old definition */
+#define _hw__flasha_pgwrt		_cb1, csr, 1, 2
+#define _hw__flasha_pgers		_cb1, csr, 1, 1
+#define _hw__flasha_spmen		_cb1, csr, 1, 0
 
 
 /*******************************************************************************
