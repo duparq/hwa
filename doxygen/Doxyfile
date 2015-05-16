@@ -113,7 +113,8 @@ INPUT                  = README.md \
 		       	 doxygen/hwa_developing.md  \
 		       	 doxygen/atmelavr_devices.md \
 			 devices/		     \
-			 atmel/
+			 atmel/			     \
+			 examples/
 
 
 INPUT_ENCODING         = UTF-8
