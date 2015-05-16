@@ -112,13 +112,15 @@ INPUT                  = README.md \
 		       	 doxygen/hwa_license.md \
 		       	 doxygen/hwa_developing.md  \
 		       	 doxygen/atmelavr_devices.md \
-			 .
+			 devices/		     \
+			 atmel/
+
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.h \
                          *.md
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
