@@ -10,39 +10,51 @@
  */
 
 
-/*  Class & methods
+/**
+ * @page atmelavr_c16a _c16a
+ *
+ * A class `_c16a` object is a 16-bit counter/timer with two compare units and
+ * waveform generators and one capture unit.
  */
-#define hw_class__c16a
-#define _hw_pop__c16a(c,n,i,a,...)	__VA_ARGS__
+#define _hw_class__c16a
 
-#define hw_def_hw_bn__c16a		, _hw_bn__c16a
-#define _hw_bn__c16a(c,n,i,a)		16
+
+/**
+ * @page atmelavr_c16a
+ * @par Number of bits of the counting register
+ *
+ * @code
+ * #if hw_bn( COUNTER ) != 16
+ * #  error You must choose a 16-bit counter!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_bn__c16a		, _hw_bn_c16a
+#define _hw_bn_c16a(p,i,a,...)		HW_TX(16, __VA_ARGS__)
 
 
 /*  Registers
  */
-#define hw__c16a_coma			cb1, ccra, 2, 6
-#define hw__c16a_com0			cb1, ccra, 2, 6
-#define hw__c16a_comb			cb1, ccra, 2, 4
-#define hw__c16a_com1			cb1, ccra, 2, 4
+#define _hw__c16a_compare0_mode		_cb1, ccra, 2, 6	/* COMA */
+#define _hw__c16a_compare1_mode		_cb1, ccra, 2, 4	/* COMB */
 
-#define hw__c16a_icnc			cb1, ccrb, 1, 7
-#define hw__c16a_ices			cb1, ccrb, 1, 6
-#define hw__c16a_cs			cb1, ccrb, 3, 0
-#define hw__c16a_wgm			cb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+#define _hw__c16a_icnc			_cb1, ccrb, 1, 7
+#define _hw__c16a_ices			_cb1, ccrb, 1, 6
+#define _hw__c16a_cs			_cb1, ccrb, 3, 0
+#define _hw__c16a_wgm			_cb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
 
-#define hw__c16a_foca			cb1, ccrc, 1, 7
-#define hw__c16a_focb			cb1, ccrc, 1, 6
+#define _hw__c16a_foca			_cb1, ccrc, 1, 7
+#define _hw__c16a_focb			_cb1, ccrc, 1, 6
 
-#define hw__c16a_icie			cb1, imsk, 1, 5
-#define hw__c16a_ocieb			cb1, imsk, 1, 2
-#define hw__c16a_ociea			cb1, imsk, 1, 1
-#define hw__c16a_oie			cb1, imsk, 1, 0
+#define _hw__c16a_icie			_cb1, imsk, 1, 5
+#define _hw__c16a_ocieb			_cb1, imsk, 1, 2
+#define _hw__c16a_ociea			_cb1, imsk, 1, 1
+#define _hw__c16a_oie			_cb1, imsk, 1, 0
 
-#define hw__c16a_icf			cb1, ifr, 1, 5
-#define hw__c16a_ocfb			cb1, ifr, 1, 2
-#define hw__c16a_ocfa			cb1, ifr, 1, 1
-#define hw__c16a_ov			cb1, ifr, 1, 0
+#define _hw__c16a_icf			_cb1, ifr, 1, 5
+#define _hw__c16a_ocfb			_cb1, ifr, 1, 2
+#define _hw__c16a_ocfa			_cb1, ifr, 1, 1
+#define _hw__c16a_ov			_cb1, ifr, 1, 0
 
 
 #ifndef __ASSEMBLER__
@@ -55,29 +67,32 @@ typedef struct {
   hwa_r8_t	ccrb ;
   hwa_r8_t	ccrc ;
   hwa_r16_t	count ;
-  union {
-    hwa_r16_t	ocra ;
-    hwa_r16_t	compare0 ;
-  };
-  union {
-    hwa_r16_t	ocrb ;
-    hwa_r16_t	compare1 ;
-  };
-  union {
-    hwa_r16_t	icr ;
-    hwa_r16_t	capture0 ;
-  };
+  hwa_r16_t	compare0 ;
+  hwa_r16_t	compare1 ;
+  hwa_r16_t	capture0 ;
   hwa_r8_t	imsk ;
   hwa_r8_t	ifr ;
 
-  /*  Registers for high-level configuration
+  /*  Registers used for high-level configuration
    */
-  uint8_t	clock, countmode, top, overflow ;
-  uint8_t	compare0_update ;
-  uint8_t	compare0_output ;
-  uint8_t	compare1_update ;
-  uint8_t	compare1_output ;
-  uint8_t	icr_input, icr_edge, icr_filter ;
+  struct {
+    uint8_t	clock, countmode, top, overflow ;
+    struct {
+      uint8_t	update, output ;
+    } compare0 ;
+    struct {
+      uint8_t	update, output ;
+    } compare1 ;
+    struct {
+      uint8_t	input, edge, filter ;
+    } capture0 ;
+  } config ;
+
+  /*  Registers used for configuration resolution
+   */
+  struct {
+    uint8_t	cs, wgm, coma, comb, acic, ices, icnc ;
+  } solved ;
 
 } hwa_c16a_t ;
 

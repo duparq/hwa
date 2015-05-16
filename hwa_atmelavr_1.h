@@ -14,16 +14,16 @@
 
 /*  Keywords
  */
-#define hw_is_bottom_bottom		, 1
-#define hw_is_clock_clock		, 1
-#define hw_is_countmode_countmode	, 1
-#define hw_is_edge_edge			, 1
-#define hw_is_filter_filter		, 1
-#define hw_is_input_input		, 1
-#define hw_is_ocu_ocu			, 1
-#define hw_is_overflow_overflow		, 1
-#define hw_is_top_top			, 1
-#define hw_is_update_update		, 1
+#define _hw_is_bottom_bottom		, 1
+#define _hw_is_clock_clock		, 1
+#define _hw_is_countmode_countmode	, 1
+#define _hw_is_edge_edge			, 1
+#define _hw_is_filter_filter		, 1
+#define _hw_is_input_input		, 1
+#define _hw_is_ocu_ocu			, 1
+#define _hw_is_overflow_overflow		, 1
+#define _hw_is_top_top			, 1
+#define _hw_is_update_update		, 1
 
 
 /*  hw_addr(...) : address of a memory definition
@@ -31,15 +31,18 @@
  *	C and assembler address differ!
  */
 #if defined __ASSEMBLER__
-#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra-0x20)
+#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra-0x20)
+#  define _hw_ra__crg(a,rw,ra,...)		(a+ra-0x20)
 #else
-#  define _hw_addr_bits1(cc,cn,ca, rn,rw,ra,...)	(ca+ra)
+#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra)
+#  define _hw_ra__crg(a,rw,ra,...)		(a+ra)
 #endif
+
 
 /*  _hw_isr_(...): address (vector) of ISR
  *
  *	FIXME: should name it _vector(...)
  */
 #if defined __ASSEMBLER__
-#  define _hw_isr_(vector, ...)				__vector_##vector
+#  define _hw_isr_(vector, ...)			__vector_##vector
 #endif

@@ -1,5 +1,19 @@
 
-/*	Device configuration
+/*	A single Atmel AVR ATtiny84 without any external component except a
+ *	USB/Serial adapter.
+ *
+ *	The serial communication uses 1 wire for RX/TX. The AVR communication
+ *	pin is connected to the RXD pin of the serial adapter and a 1k resistor
+ *	is connected between the RXD and TXD pins.
+ *
+ *	Install Diabolo with avrdude/usbasp:
+ *
+ *	USBASP	1	MOSI	7   DEVICE
+ *		2	VCC	1
+ *		4	GND	14
+ *		5	RST	4
+ *		7	SCK	9
+ *		9	MISO	8
  */
 #define HW_DEVICE			attiny84
 #define HW_DEVICE_PACKAGE		14pdip

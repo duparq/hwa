@@ -13,7 +13,7 @@ INC_DIABOLO	= $(OUTDIR)/$(OUT).diabolo
 #$(INC_DIABOLO): $(INC_HWA) $(DEPS) $(SOURCES)
 #build/out.diabolo: $(INC_HWA) $(DEPS) $(SOURCES)
 build/out.diabolo: $(SOURCES)
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@>$@
 	@for f in $(SOURCES) ; do \
@@ -41,8 +41,8 @@ erase:
 	diabolo.py $(DIABOLO_OPTS)	\
 		--erase-flash
 
-.PHONY: burn
-burn:	$(OUTDIR)/$(OUT).bin $(INC_DIABOLO)
+.PHONY: install
+install: $(OUTDIR)/$(OUT).bin $(INC_DIABOLO) $(OUTDIR)/$(OUT).lst
 	diabolo.py $(DIABOLO_OPTS)		\
 		--burn-flash $<			\
 		--cache=build/flash-cache.bin

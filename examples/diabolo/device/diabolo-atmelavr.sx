@@ -91,8 +91,8 @@
 
 	;; Hardware registers
 	;;
-;; #define AP_PORF    hw_ap(hw_reg(hw_core0, porf))
-;; #define AP_EXTRF   hw_ap(hw_reg(hw_core0, extrf))
+// #define AP_PORF    hw_ap(hw_reg(core0, porf))
+// #define AP_EXTRF   hw_ap(hw_reg(core0, extrf))
 
 	MCUSR      = hw_addr(hw_reg(hw_core0, mcusr))
 	 BP_EXTRF  = hw_bp(hw_reg(hw_core0, extrf))
@@ -356,8 +356,8 @@ xF:	cpi	R24, 'F'
 	;;
 	;; Erase page at address Z
 	;;
-	FLASH_PGERS		; Erase page
-	FLASH_ERWWS		; Re-enable RWW section if device has a bootsection
+	FLASH_PGERS r21		; Erase page
+	FLASH_ERWWS r21		; Re-enable RWW section if device has a bootsection
 	;;
 	;; Copy data bytes from RAM to flash page buffer
 	;; 
@@ -365,7 +365,7 @@ xF:	cpi	R24, 'F'
 	;; PGWRT or ERWWS operations but for devices without boot section, no
 	;; ERWWS operation is performed and PGWRT is not performed on virgin pages.
 	;;
-	FLASH_CLRBF
+	FLASH_CLRBF r21
 	movw	R28, R4		; Y = RAMSTART (where the data bytes are stored)
 	ldi	R20, PAGESIZE/2
 	ldi	R23, 0xFF
@@ -373,7 +373,7 @@ xF:	cpi	R24, 'F'
 	ld	R1, Y+
 	and	R23, R0
 	and	R23, R1
-	FLASH_LDBYTE		; Load byte to be programmed at address Z
+	FLASH_LDBYTE r21	; Load byte to be programmed at address Z
 	adiw	R30, 2
 	dec	R20
 	brne	2b
@@ -385,8 +385,8 @@ xF:	cpi	R24, 'F'
 	ori	R24, CODE_WRT
 	subi	R30, lo8(PAGESIZE) ; Reset Z to the address of the page to write
 	sbci	R31, hi8(PAGESIZE)
-	FLASH_PGWRT		; Write page
-	FLASH_ERWWS		; Re-enable RWW section if device has a bootsection
+	FLASH_PGWRT r21		; Write page
+	FLASH_ERWWS r21		; Re-enable RWW section if device has a bootsection
 	;;
 	;; Verify written data
 	;;
@@ -429,13 +429,14 @@ xE:	cpi	R24, 'E'
 	brne	abort		; Abort if error
 	;;
 	;; Program the data
+	;;   Assume EECR is 0, programming mode is 'Erase & write'
 	;;
 	SPEED0			; Factory clock speed
 	;;
 	movw	R28, R4		; Y = RAMSTART
-2:	ldi	R24, 0		; Command: erase & write
-	XST	EECR, R24
-	XST	EEARL, R30	; Address
+;; 2:	ldi	R24, 0		; Command: erase & write
+;; 	XST	EECR, R24
+2:	XST	EEARL, R30	; Address
 	XST	EEARH, R31
 	ld	R24, Y+		; Byte value
 	XST	EEDR, R24

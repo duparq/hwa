@@ -18,5 +18,5 @@
 
 /*  Class & methods
  */
-#define hw_class__wdogb
-#define _hw_pop__wdogb(c,n,i,a,...)	__VA_ARGS__
+#define _hw_class__wdogb
+//#define _hw_pop__wdogb(p,i,a,...)	__VA_ARGS__

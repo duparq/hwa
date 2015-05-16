@@ -13,42 +13,51 @@
  */
 
 
-#include "hwa_atmelavr__ocua_1.h"
-
-
-/*  Class & methods
+/**
+ * @page atmelavr_c8a _c8a
+ *
+ * A class `_c8a` object is an 8-bit counter/timer with two compare units and
+ * waveform generators.
+ *
  */
-#define hw_class__c8a
-#define _hw_pop__c8a(c,n,i,a,...)	__VA_ARGS__
-
-#define hw_def_hw_bn__c8a		, _hw_bn_c8a
-#define _hw_bn_c8a(c,n,i,a)		8
+#define _hw_class__c8a
 
 
-/*  Registers
+/**
+ * @page atmelavr_c8a
+ * @par Name of a compare unit
+ * 
+ * The compare units (class @ref atmelavr_ocua) are named `compare0` and
+ * `compare1`, corresponding to `OCRxA` and `OCRxB` registers in Atmel
+ * terminology.
+ *
+ * @code
+ * #define COUNTER	hw_counter0
+ * #define COMPARE	hw_sub(COUNTER, compare0)
+ *
+ * #if hw_id(COMPARE)==0
+ * #  error This counter has no compare unit!
+ * #endif
+ * @endcode
  */
-#define hw__c8a_coma			cb1, ccra, 2, 6
-#define hw__c8a_com0			cb1, ccra, 2, 6 /* convenient */
-#define hw__c8a_comb			cb1, ccra, 2, 4
-#define hw__c8a_com1			cb1, ccra, 2, 4 /* convenient */
-#define hw__c8a_wgm			cb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 
-#define hw__c8a_foca			cb1, ccrb, 1, 7
-#define hw__c8a_focb			cb1, ccrb, 1, 6
-#define hw__c8a_cs			cb1, ccrb, 3, 0
 
-#ifndef HW_DEVICE_ATTINYX5
-#define hw__c8a_ocieb			cb1, imsk, 1, 2
-#define hw__c8a_ociea			cb1, imsk, 1, 1
-#define hw__c8a_oie			cb1, imsk, 1, 0
-
-#define hw__c8a_ocfb			cb1, ifr, 1, 2
-#define hw__c8a_ocfa			cb1, ifr, 1, 1
-#define hw__c8a_ov			cb1, ifr, 1, 0
-#endif
+/**
+ * @page atmelavr_c8a
+ * @par Number of bits of the counting register
+ *
+ * @code
+ * #if hw_bn( COUNTER ) != 16
+ * #  error You must choose a 16-bit counter!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_bn__c8a		, _hw_bn_c8a
+#define _hw_bn_c8a(p,i,a,...)		HW_TX(8, __VA_ARGS__)
 
 
 #if !defined __ASSEMBLER__
+
 
 typedef struct {
 
@@ -57,25 +66,30 @@ typedef struct {
   hwa_r8_t 	ccra ;
   hwa_r8_t 	ccrb ;
   hwa_r8_t 	count ;
-  union {
-    hwa_r8_t	ocra ;
-    hwa_r8_t	compare0 ;
-  };
-  union {
-    hwa_r8_t	ocrb ;
-    hwa_r8_t	compare1 ;
-  };
+  hwa_r8_t	compare0 ;
+  hwa_r8_t	compare1 ;
 #ifndef HW_DEVICE_ATTINYX5
   hwa_r8_t 	imsk ;
   hwa_r8_t 	ifr ;
 #endif
 
-  /*  Registers for high-level configuration
+  /*  Registers used for high-level configuration
    */
-  uint8_t	clock, countmode, top, overflow ;
-  uint8_t	compare0_update, compare0_output ;
-  uint8_t	compare1_update, compare1_output ;
-  /* hwa_ocua_t	compare0, compare1 ; */
+  struct {
+    uint8_t	clock, countmode, top, overflow ;
+    struct {
+      uint8_t	update, output ;
+    } compare0 ;
+    struct {
+      uint8_t	update, output ;
+    } compare1 ;
+  } config ;
+
+  /*  Registers used for configuration resolution
+   */
+  struct {
+    uint8_t	cs, wgm, coma, comb ;
+  } solved ;
 
 } hwa_c8a_t ;
 

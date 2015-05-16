@@ -1,0 +1,48 @@
+
+	;; -*- asm -*-
+
+	;; .macro enable_start reg
+	;; XCF	\reg, START_IF
+	;; XSB	\reg, START_IE
+	;; .endm
+	.macro _enable_start reg if_ra if_bp ie_ra ie_bp
+	XCF	\reg, \if_ra, \if_bp
+	XSB	\reg, \ie_ra, \ie_bp
+	.endm
+
+#define enable_start(r)	_enable_match r, START_IF, START_IE
+
+	;; .macro disable_start reg
+	;; XCB	\reg, START_IE
+	;; .endm
+
+#define disable_start(r)	XCB	r, START_IE
+
+	;; Enable counter compare-match (triggered to send/receive bit)
+	;; 
+	;; .macro enable_match reg
+	;; XCF	\reg, MATCH_IF
+	;; XSBA	\reg, MATCH_IE
+	;; .endm
+	.macro _enable_match reg if_ra if_bp ie_ra ie_bp
+	XCF	\reg, \if_ra, \if_bp
+	XSBA	\reg, \ie_ra, \ie_bp
+	.endm
+
+#define enable_match(r)	_enable_match r, MATCH_IF, MATCH_IE
+
+
+	;; Disable counter compare-match
+	;; 
+	;; .macro disable_match reg
+	;; XCBA	\reg, MATCH_IE
+	;; .endm
+#define disable_match(r)	XCBA	r, MATCH_IE
+
+	;; Is the compare-match flag set?
+	;; 
+	.macro test_match_if reg
+	XLD	\reg, MATCH_IF_RA	;
+	andi	\reg, 1<<MATCH_IF_BP	;
+	CYCLES=CYCLES+1
+	.endm

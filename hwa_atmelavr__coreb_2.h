@@ -7,24 +7,24 @@
 
 #include "hwa_atmelavr__core_2.h"
 
-//#define hw_def_hw_config__coreb		, _hw_config_coreb
-#define hw_def_hwa_config__coreb	, _hwa_config_core
-#define hw_def_hw_stat__coreb		, _hw_stat_core
-#define hw_def_hwa_clear__coreb		, _hwa_clear_core
+//#define _hw_mthd_hw_config__coreb		, _hw_config_coreb
+#define _hw_mthd_hwa_config__coreb	, _hwa_config_core
+#define _hw_mthd_hw_stat__coreb		, _hw_stat_core
+#define _hw_mthd_hwa_clear__coreb		, _hwa_clear_core
 
 
 HW_INLINE void __hwa_begin__coreb ( hwa_coreb_t *p, intptr_t a )
 {
-  _hwa_begin_pacr( p, a, _coreb, eimsk  );
-  _hwa_begin_pacr( p, a, _coreb, eifr   );
-  _hwa_begin_pacr( p, a, _coreb, mcucr  );
-  _hwa_begin_pacr( p, a, _coreb, mcusr  );
-  _hwa_begin_pacr( p, a, _coreb, smcr   );
-  _hwa_begin_pacr( p, a, _coreb, osccal );
-  _hwa_begin_pacr( p, a, _coreb, gpior2 );
-  _hwa_begin_pacr( p, a, _coreb, gpior1 );
-  _hwa_begin_pacr( p, a, _coreb, gpior0 );
-  _hwa_begin_pacr( p, a, _coreb, prr    );
+  _hwa_begin_reg_p( p, a, _coreb, eimsk  );
+  _hwa_begin_reg_p( p, a, _coreb, eifr   );
+  _hwa_begin_reg_p( p, a, _coreb, mcucr  );
+  _hwa_begin_reg_p( p, a, _coreb, mcusr  );
+  _hwa_begin_reg_p( p, a, _coreb, smcr   );
+  _hwa_begin_reg_p( p, a, _coreb, osccal );
+  _hwa_begin_reg_p( p, a, _coreb, gpior2 );
+  _hwa_begin_reg_p( p, a, _coreb, gpior1 );
+  _hwa_begin_reg_p( p, a, _coreb, gpior0 );
+  _hwa_begin_reg_p( p, a, _coreb, prr    );
 }
 
 
@@ -45,14 +45,14 @@ HW_INLINE void __hwa_init__coreb ( hwa_coreb_t *p )
 
 HW_INLINE void __hwa_commit__coreb ( hwa_t *hwa, hwa_coreb_t *p )
 {
-  _hwa_commit_pcr( p, _coreb, eimsk  );
-  _hwa_commit_pcr( p, _coreb, eifr   );
-  _hwa_commit_pcr( p, _coreb, mcucr  );
-  _hwa_commit_pcr( p, _coreb, mcusr  );
-  _hwa_commit_pcr( p, _coreb, smcr   );
-  _hwa_commit_pcr( p, _coreb, osccal );
-  _hwa_commit_pcr( p, _coreb, gpior2 );
-  _hwa_commit_pcr( p, _coreb, gpior1 );
-  _hwa_commit_pcr( p, _coreb, gpior0 );
-  _hwa_commit_pcr( p, _coreb, prr    );
+  _hwa_commit_reg_p( p, _coreb, eimsk  );
+  _hwa_commit_reg_p( p, _coreb, eifr   );
+  _hwa_commit_reg_p( p, _coreb, mcucr  );
+  _hwa_commit_reg_p( p, _coreb, mcusr  );
+  _hwa_commit_reg_p( p, _coreb, smcr   );
+  _hwa_commit_reg_p( p, _coreb, osccal );
+  _hwa_commit_reg_p( p, _coreb, gpior2 );
+  _hwa_commit_reg_p( p, _coreb, gpior1 );
+  _hwa_commit_reg_p( p, _coreb, gpior0 );
+  _hwa_commit_reg_p( p, _coreb, prr    );
 }

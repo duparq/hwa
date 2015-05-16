@@ -24,7 +24,6 @@ SHELL		= /bin/sh
 #  HWA source path and other related include directories
 #
 HWA		=  $(abspath $(CWD)../..)
-#INCLUDES	+= -I$(HWA) -I$(HWA)/swuart-src -I$(HWA)/examples
 INCLUDES	+= -I$(HWA) -I$(HWA)/examples
 
 
@@ -51,7 +50,7 @@ ifeq (HW_DEVICE,$(DEVICE))
 endif
 
 
-#  DEVICE is known, include Makefile.2
+#  DEVICE is known, include Makefile.inc
 #
 ifneq (,$(DEVICE))
   include $(CWD)Makefile.inc
@@ -66,7 +65,7 @@ endif
 #	error message when it reads it.
 #
 $(INC_HWA).c:
-	@echo "RULE: $@"
+#	@echo "RULE: $@"
 	@mkdir -p $(OUTDIR)
 	@echo \
 	'DEVICE=HW_DEVICE\n'\
@@ -81,19 +80,89 @@ $(INC_HWA).c:
 #	in turn until DEVICE is found. Store the informations in a file.
 #
 $(INC_HWA): $(SOURCES) $(INC_HWA).c
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@set -e ; for f in  $(SOURCES) ; do			\
-	  $(CPP) $(INCLUDES) -E -imacros "$$f" $(INC_HWA).c >$@	;\
+	  $(CPP) $(INCLUDES) -imacros "$$f" $(INC_HWA).c | grep '^DEVICE' >$@	;\
 	  . $@							;\
 	  test "$$DEVICE" = HW_DEVICE || break			;\
 	done
+
+
+#	Put the configuration parameters that affect the application code into
+#	a file that will be used later to check CRC correspondance. This helps
+#	detecting application code modification after the HWA core is modified.
+#
+CFG	= $(OUTDIR)/$(OUT).config
+
+
+#  Create a C source file holding the configuration of a project
+#  Prefix symbols with '_' that will be removed after compiling.
+#
+$(CFG).c: $(SOURCES)
+#	@echo "RULE: $@: $^  CONFIG=$(CONFIG)"
+	@set -e					;\
+	if [ -z "$(CONFIG)" ] ; then		\
+	  echo FAIL: no config			;\
+	  exit 1				;\
+	fi					;\
+	>$@					;\
+	for c in $(CONFIG)			;\
+	  do echo _$$c=$$c >>$@			;\
+	done
+
+
+#  List of files from which we want to extract the definitions
+#
+IMACROS = $(foreach S, $(SOURCES),-imacros $S)
+
+
+#  Process configuration source
+#
+$(CFG): $(CFG).c
+#	@echo "RULE: $@: $^  IMACROS=$(IMACROS)"
+	@$(CPP) $(INCLUDES) $(IMACROS) $< | grep '^_.*' | sed -e 's/_//' >$@
+
+
+#  Validate a project: store configuration, size and CRC
+#
+.PHONY: validate
+validate: $(CFG) $(OUTDIR)/$(OUT).bin
+#	@echo RULE: $@: $^
+	@set -e										;\
+	S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
+	O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/out.bin)			;\
+	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/out.bin)			;\
+	rm -f .valid-$(DEVICE)-$$S_CRC-*						;\
+	cp $(CFG) .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC				;\
+	echo Validation: .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC
+
+
+#  Check that the CRC is unchanged for a given configuration
+#
+.PHONY: check
+check: $(CFG) $(OUTDIR)/$(OUT).bin
+#	@echo RULE: $@: $^  IMACROS=$(IMACROS)
+	@set -e										;\
+	S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
+	O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/out.bin)			;\
+	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/out.bin)			;\
+	if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
+	  echo passed									;\
+	else										\
+	  if test -f .valid-$(DEVICE)-$$S_CRC-* ; then					\
+	    echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
+	  else										\
+	    echo "FAIL: no validation found (.valid-$(DEVICE)-$$S_CRC-*)"	;\
+	  fi										;\
+	  exit 1									;\
+	fi
 
 
 #  Clean
 #
 .PHONY: clean
 clean:
-	@echo "RULE: $@"
+#	@echo "RULE: $@"
 	@rm -rf $(OUTDIR)
 	@find . '(' 			\
 		-name '*~' 		\

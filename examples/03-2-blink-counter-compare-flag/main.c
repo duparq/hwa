@@ -7,19 +7,17 @@
  */
 
 
-/*	Target				Results (pin_7, 64, output0, 0.5 s)
- *					   hw_counter0		hw_counter1
- *					   bytes:CRC		bytes:CRC
+/*	Target
  */
-#include "targets/attiny84.h"		// 116:0x5653		118:0x2CBB
+#include "targets/attiny84.h"		// 116 bytes
 //#include "targets/attiny85.h"		// 112:0xE1C9
 //#include "targets/nanodccduino.h"	// 188:0x929D		204:0x6670
 #include <hwa.h>
 
 
-/*  Define the pin at which the LED is connected (already done for Arduino
- *  targets). The the package of the device is defined in the target
- *  definitions, then pin numbers can be used as well as pin names.
+/*  The pin at which the LED is connected (already done for Arduino
+ *  targets). The target also defines the package of the device, then pin
+ *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
 #  define PIN_LED		hw_pin_7
@@ -36,7 +34,8 @@
 
 int main ( )
 {
-  /*  Create a HWA context with RESET values
+  /*  Create a HWA context to collect the hardware configuration
+   *  Preload this context with RESET values
    */
   hwa_begin_from_reset();
 
@@ -53,15 +52,11 @@ int main ( )
 	      top,       max,
 	      );
 
-  /* hwa_config( hw_sub(COUNTER,COMPARE), */
-  /* 	      update,    at_bottom, */
-  /* 	      output,    set_at_bottom_clear_on_match ); */
-
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */
   hwa_write( hw_sub(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
 
-  /*  Write all this into the hardware
+  /*  Write this configuration into the hardware
    */
   hwa_commit();
 

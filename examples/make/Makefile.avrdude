@@ -11,9 +11,9 @@ endif
 
 #  Get the partno parameter from the DEVICE name
 #
-#	List of devices known: "DEVICE = PARTNO"
+#	List avrdude known devices: "DEVICE = PARTNO"
 #	Remove spaces
-#	Extract the one that matches DEVICE
+#	Extract the matching device name
 #
 $(OUTDIR)/$(OUT).avrdude: $(INC_HWA)
 	avrdude -c usbasp -p \? 2>&1 \
@@ -85,18 +85,17 @@ read-fuses:
 #  Write fuses
 #
 .PHONY: write-fuses
-write-fuses: $(OUTDIR)/$(OUT).hwa
-	@FUSE_EB=$$(tail -4 $< | head -1 -)					;\
-	FUSE_HB=$$(tail -3 $< | head -1 -)					;\
-	FUSE_LB=$$(tail -2 $< | head -1 -)					;\
-	FUSES=""								;\
-	if [ "$$FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then			\
-	    FUSES=$$(printf " -U efuse:w:0x%02X:m " $$(($$FUSE_EB)))		;\
-	fi									;\
-	if [ "$$FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then			\
-	    FUSES=$${FUSES}$$(printf " -U hfuse:w:0x%02X:m" $$(($$FUSE_HB)))	;\
-	fi									;\
-	if [ "$$FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then			\
-	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m" $$(($$FUSE_LB)))	;\
-	fi									;\
+write-fuses: $(INC_HWA)
+	@\
+	. $<										;\
+	FUSES=""									;\
+	if [ "$$DEVICE_FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then				\
+	    FUSES=$$(printf " -U efuse:w:0x%02X:m " $$(($$DEVICE_FUSE_EB)))		;\
+	fi										;\
+	if [ "$$DEVICE_FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then				\
+	    FUSES=$${FUSES}$$(printf " -U hfuse:w:0x%02X:m" $$(($$DEVICE_FUSE_HB)))	;\
+	fi										;\
+	if [ "$$DEVICE_FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then				\
+	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m" $$(($$DEVICE_FUSE_LB)))	;\
+	fi										;\
 	avrdude -p $(PARTNO) -c $(PROG_HW) $$FUSES

@@ -5,46 +5,49 @@
  */
 
 
-/*	Atmel AVR core model 'a'
+/** @file
+ *  @brief: Definitions for Atmel AVR core model 'a' that do not produce C code
  *
  *	Used in: ATtinyX4
  *		 ATtinyX5
+ *
  */
 
 
-/*  Class & methods
+/**
+ * @page atmelavr_corea _corea
+ * A class `_corea` object is a core of the device.
  */
-#define hw_class__corea
-#define _hw_pop__corea(c,n,i,a,...)	__VA_ARGS__
+#define _hw_class__corea
 
 
 /*  Register definitions
  */
-#define hw__corea_bods		cb1, mcucr, 1, 7
-#define hw__corea_pud		cb1, mcucr, 1, 6
-#define hw__corea_se		cb1, mcucr, 1, 5
-#define hw__corea_sm		cb1, mcucr, 2, 3
-#define hw__corea_bodse		cb1, mcucr, 1, 2
-#define hw__corea_isc0		cb1, mcucr, 2, 0
+#define _hw__corea_bods		_cb1, mcucr, 1, 7
+#define _hw__corea_pud		_cb1, mcucr, 1, 6
+#define _hw__corea_se		_cb1, mcucr, 1, 5
+#define _hw__corea_sm		_cb1, mcucr, 2, 3
+#define _hw__corea_bodse	_cb1, mcucr, 1, 2
+#define _hw__corea_isc0		_cb1, mcucr, 2, 0
 
-#define hw__corea_wdrf		cb1, mcusr, 1, 3
-#define hw__corea_borf		cb1, mcusr, 1, 2
-#define hw__corea_extrf		cb1, mcusr, 1, 1
-#define hw__corea_porf		cb1, mcusr, 1, 0
-#define hw__corea_allrf		cb1, mcusr, 4, 0	/* convenient */
+#define _hw__corea_wdrf		_cb1, mcusr, 1, 3
+#define _hw__corea_borf		_cb1, mcusr, 1, 2
+#define _hw__corea_extrf	_cb1, mcusr, 1, 1
+#define _hw__corea_porf		_cb1, mcusr, 1, 0
+#define _hw__corea_allrf	_cb1, mcusr, 4, 0	/* convenient */
 
-#define hw__corea_int0		cb1, gimsk, 1, 6
-#define hw__corea_pcie1		cb1, gimsk, 1, 5
-#define hw__corea_pcie0		cb1, gimsk, 1, 4
+#define _hw__corea_int0		_cb1, gimsk, 1, 6
+#define _hw__corea_pcie1	_cb1, gimsk, 1, 5
+#define _hw__corea_pcie0	_cb1, gimsk, 1, 4
 
-#define hw__corea_intf0		cb1, gifr, 1, 6
-#define hw__corea_pcif1		cb1, gifr, 1, 5
-#define hw__corea_pcif0		cb1, gifr, 1, 4
+#define _hw__corea_intf0	_cb1, gifr, 1, 6
+#define _hw__corea_pcif1	_cb1, gifr, 1, 5
+#define _hw__corea_pcif0	_cb1, gifr, 1, 4
 
-#define hw__corea_prtim1	cb1, prr, 1, 3
-#define hw__corea_prtim0	cb1, prr, 1, 2
-#define hw__corea_prusi		cb1, prr, 1, 1
-#define hw__corea_pradc		cb1, prr, 1, 0
+#define _hw__corea_prtim1	_cb1, prr, 1, 3
+#define _hw__corea_prtim0	_cb1, prr, 1, 2
+#define _hw__corea_prusi	_cb1, prr, 1, 1
+#define _hw__corea_pradc	_cb1, prr, 1, 0
 
 
 #if !defined __ASSEMBLER__

@@ -3,4 +3,10 @@
 #
 SOURCES		=	main.c
 
+CONFIG		=	HW_DEVICE	\
+			hw_syshz	\
+			PWM		\
+			CLKDIV		\
+			COUNTMODE
+
 include ../make/Makefile

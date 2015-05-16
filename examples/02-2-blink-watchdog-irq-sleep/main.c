@@ -7,44 +7,45 @@
  */
 
 
-/*	Target			Result (hw_pin_7, 250ms)
- *
- *	attiny84		134 bytes, CRC=0xFEF2
- *	attiny85		130 bytes, CRC=0x3858
- *	arduino_pro_mini/	
- *	  nanodccduino		232 bytes, CRC=0xC6AA
+/*	Target
  */
-//#include "targets/attiny84.h"
-#include "targets/attiny85.h"
+#include <targets/attiny84.h>		// 134 bytes
+//#include "targets/attiny85.h"
 //#include "targets/nanodccduino.h"
 #include <hwa.h>
 
 
-/*  Define the pin at which the LED is connected (already done for Arduino
- *  targets). The target definitions also define the package of the device, then
- *  pin numbers can be used as well as pin names.
+/*  The pin at which the LED is connected (already done for Arduino
+ *  targets). The target also defines the package of the device, then pin
+ *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
 #  define PIN_LED		hw_pin_7
 #endif
 
 
+/*  Watchdog timeout
+ */
+#define TIMEOUT			250ms
+
+
 /*  Watchdog timeout interrupt
  *
- *    The IRQ awakes the MCU but the ISR itself does nothing. Then we can spare
- *    a few bytes of program memory declaring the ISR 'naked' and inserting the
- *    'reti' instruction ourselves since otherwise avr-gcc does some register
- *    initializations even though none is used.
+ *    The IRQ awakes the MCU but the ISR itself does nothing. We can spare a few
+ *    bytes of program memory declaring the ISR 'naked' and inserting the 'reti'
+ *    instruction ourselves (otherwise avr-gcc does some register
+ *    initializations even though none is used).
  */
-HW_ISR( hw_watchdog0, isr_naked )
+HW_ISR( hw_wdog0, isr_naked )
 {
-  hw_asm("reti\n");
+  hw_asm("reti");
 }
 
 
 int main ( )
 {
-  /*  Load the HWA context with RESET values
+  /*  Create a HWA context to collect the hardware configuration
+   *  Preload this context with RESET values
    */
   hwa_begin_from_reset();
 
@@ -66,22 +67,22 @@ int main ( )
 
     /*  When the device is reset by the watchdog, the watchdog remains enabled!
      */
-    hwa_turn( hw_watchdog0, off );
+    hwa_turn( hw_wdog0, off );
     hwa_commit();
     hw_sleep();
     for (;;)			/* This should */
       hw_toggle( PIN_LED );	/* not happen  */
   }
 
-  /*  Configure the watchdog to time-out every 250 ms (this will wake the CPU
+  /*  Configure the watchdog to time-out every TIMEOUT (this will wake the CPU
    *  up), first setting its flag, then resetting the device unless it has been
    *  reconfigured.
    */
-  hwa_config( hw_watchdog0,
-  	      timeout,      250ms,
+  hwa_config( hw_wdog0,
+  	      timeout,      TIMEOUT,
   	      action,       irq_or_reset );
 
-  /*  Write all this into the hardware
+  /*  Write this configuration into the hardware
    */
   hwa_commit();
 
@@ -94,25 +95,19 @@ int main ( )
   for(;;) {
     hw_sleep();
 
-    /*  When watchdog action is 'irq_or_reset', it is automatically reset by
-     *	hardware to 'reset' after a time-out.
+    /*  When watchdog action is 'irq_or_reset', IRQ is automatically disabled by
+     *	hardware after a timeout so that next timeout will reset the device.
      */
-    hwa_config( hw_watchdog0,
-		timeout,      250ms,
-		action,       reset );
-    hwa_nocommit();
+    hwa_turn_irq( hw_wdog0, off );
+    hwa_nocommit();	/* do not write the context */
 
     hw_toggle( PIN_LED );
     count++ ;
     if ( count < 19 ) {
-      // hwa_clear_irq( hw_watchdog0 );
-
-      /*  Set again watchdog action to 'irq_or_reset' so that the device is not
-       *  reset when the next time-out occurs.
+      /*
+       *  Re-enable the watchdog IRQ.
        */
-      hwa_config( hw_watchdog0,
-      		  timeout,      250ms,
-      		  action,       irq_or_reset );
+      hwa_turn_irq( hw_wdog0, on );
       hwa_commit();
     }
   }
