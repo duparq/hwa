@@ -8,7 +8,6 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "counters.h"
 #include "ocua_2.h"
 
 
@@ -126,6 +125,11 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 #define hw_c8a_clock_ext_rising			, 6
 #define hw_c8a_clock_ext_falling		, 7
 
+#define hw_c8a_overflow_at_bottom		, 0
+#define hw_c8a_overflow_at_top			, 1
+#define hw_c8a_overflow_at_max			, 2
+
+
 #define _hwa_config_c8a(p,i,a, ...)						\
   do { HW_G2(_hwa_cfc8a_xclock,HW_IS(clock,__VA_ARGS__))(p,__VA_ARGS__) } while(0)
 
@@ -197,7 +201,7 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
   HW_G2(_hwa_cfc8a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_cfc8a_xoverflow_1(n,overflow,...)				\
-  HW_G2(_hwa_cfc8a_voverflow, HW_IS(,hw_counter_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
+  HW_G2(_hwa_cfc8a_voverflow, HW_IS(,hw_c8a_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_cfc8a_voverflow_0(n,overflow,...)			\
   HW_ERR("optionnal parameter `overflow` can be `at_bottom`, "	\
@@ -205,10 +209,10 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 
 #define _hwa_cfc8a_voverflow_1(n,voverflow,...)				\
   if ( hwa->n.config.countmode == HW_A1(hw_c8a_countmode_loop_up)		\
-       && HW_A1(hw_counter_overflow_##voverflow) == HW_A1(hw_counter_overflow_at_bottom) ) \
+       && HW_A1(hw_c8a_overflow_##voverflow) == HW_A1(hw_c8a_overflow_at_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `at_bottom` "	\
 	    "when countmode is `loop_up`.");				\
-  HW_TX(hwa->n.config.overflow = HW_A1(hw_counter_overflow_##voverflow); ,__VA_ARGS__)
+  HW_TX(hwa->n.config.overflow = HW_A1(hw_c8a_overflow_##voverflow); ,__VA_ARGS__)
 
 #define _hwa_cfc8a_xoverflow_0(n,...)		\
   HW_TX(,__VA_ARGS__)
@@ -242,9 +246,9 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
   uint8_t overflow = p->config.overflow ;
   if ( overflow == 0xFF && p->config.top == HW_A1(hw_c8a_top_compare0) ) {
     if ( p->config.countmode == HW_A1(hw_c8a_countmode_loop_up) )
-      overflow = HW_A1(hw_counter_overflow_at_top);
+      overflow = HW_A1(hw_c8a_overflow_at_top);
     else /* if ( p->config.countmode == HW_A1(hw_c8a_countmode_loop_up) ) */
-      overflow = HW_A1(hw_counter_overflow_at_bottom);
+      overflow = HW_A1(hw_c8a_overflow_at_bottom);
   }
 
 
@@ -295,7 +299,7 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
        *  code.
        */
       if ( compare_update == HW_A1(hw_ocu_update_at_bottom )
-	   || overflow == HW_A1(hw_counter_overflow_at_top)
+	   || overflow == HW_A1(hw_c8a_overflow_at_top)
 	   || p->config.compare0.output == HW_A1(hw_ocu_output_clear_at_bottom_set_on_match)
 	   || p->config.compare0.output == HW_A1(hw_ocu_output_set_at_bottom_clear_on_match)
 	   || p->config.compare1.output == HW_A1(hw_ocu_output_clear_at_bottom_set_on_match)
@@ -475,16 +479,16 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
      */
     if ( overflow != 0xFF ) {
       if ( wgm==7 ) {
-	if ( overflow != HW_A1(hw_counter_overflow_at_top) )
+	if ( overflow != HW_A1(hw_c8a_overflow_at_top) )
 	  HWA_ERR("optionnal parameter 'overflow' of class _c8a counter must be "
 		  "'at_top'.");
       }
       else if ( (wgm==1 || wgm==5) ) {
-	if ( overflow != HW_A1(hw_counter_overflow_at_bottom) )
+	if ( overflow != HW_A1(hw_c8a_overflow_at_bottom) )
 	  HWA_ERR("optionnal parameter 'overflow' of class _c8a counter must be "
 		  "'at_bottom'.");
       }
-      else if ( overflow != HW_A1(hw_counter_overflow_at_max) )
+      else if ( overflow != HW_A1(hw_c8a_overflow_at_max) )
 	HWA_ERR("optionnal parameter 'overflow' of class _c8a counter must be "
 		"'at_max'.");
     }

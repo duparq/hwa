@@ -1,4 +1,7 @@
 
+#ifndef _HW_OCUA2_H_
+#define _HW_OCUA2_H_
+
 /*	Atmel AVR 8-bit timer-counter compare unit version 'a'
  *
  *	Used in: ATtinyX4 OC0A	hw_counter0_compare0
@@ -193,3 +196,5 @@
  * @page atmelavr_ocua
  * <br>
  */
+
+#endif /* ifndef _HW_OCUA2_H_ */
