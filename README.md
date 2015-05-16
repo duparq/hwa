@@ -23,7 +23,9 @@ Examples
 --------
 
 The `examples/` directory contains a few examples aimed at illustrating various
-capabilities of HWA, currently only for a few Atmel AVR devices.
+features of HWA, currently only for Atmel ATtiny44 and ATtiny84 devices
+(ATtinyx5 and ATmegax8 should be available soon as they were already supported
+before HWA was last rewritten).
 
 As a first check, you can run `make tests` in the HWA base directory to check
 that all examples compile without error. You'll need a properly configured
@@ -39,8 +41,8 @@ targets I use: configuration of the microcontroller (fuses...), configuration of
 the Diabolo bootloader, LED pins used on Arduino boards...
 
 If you want to run one of these examples on a microcontroller in which you
-previously installed Diabolo, you just have to connect your USB-UART adapter and
-run `make install`.
+previously installed Diabolo (see below), you just have to connect your USB-UART
+adapter and run `make install`.
 
 If you prefer to use another programming method, you'll find the machine code to
 be programmed in the `build/out.bin` file. In the Makefile, you can define
