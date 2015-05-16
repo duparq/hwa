@@ -36,19 +36,19 @@
  * 
  */
 
-#include "hwa_atmelavr_1.h"
+#include "atmel/avr/1.h"
 
-#include "hwa_atmelavr__corea_1.h"
-#include "hwa_atmelavr__io_1.h"
-#include "hwa_atmelavr__pcica_1.h"
-#include "hwa_atmelavr__wdoga_1.h"
-#include "hwa_atmelavr__c8a_1.h"
-#include "hwa_atmelavr__c16a_1.h"
-#include "hwa_atmelavr__ocua_1.h"
-#include "hwa_atmelavr__icua_1.h"
-#include "hwa_atmelavr__usia_1.h"
-#include "hwa_atmelavr__acmpa_1.h"
-#include "hwa_atmelavr__ad10a_1.h"
+#include "atmel/avr/corea_1.h"
+#include "atmel/avr/io_1.h"
+#include "atmel/avr/pcica_1.h"
+#include "atmel/avr/wdoga_1.h"
+#include "atmel/avr/c8a_1.h"
+#include "atmel/avr/c16a_1.h"
+#include "atmel/avr/ocua_1.h"
+#include "atmel/avr/icua_1.h"
+#include "atmel/avr/usia_1.h"
+#include "atmel/avr/acmpa_1.h"
+#include "atmel/avr/ad10a_1.h"
 
 /**
  * @page atmelavr_attinyx4

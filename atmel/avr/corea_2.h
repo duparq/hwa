@@ -32,7 +32,7 @@
 #define corex		corea
 #define atmelavr_corex	atmelavr_corea
 
-#include "hwa_atmelavr__corex_2.h"
+#include "corex_2.h"
 
 /*	Class methods
  */

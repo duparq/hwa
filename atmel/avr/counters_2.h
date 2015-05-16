@@ -11,10 +11,6 @@
  *	HWA common declarations to all Atmel AVR counter-timers
  */
 
-/* #include "hwa_atmelavr__ocua_2.h" */
-/* #include "hwa_atmelavr__icua_2.h" */
-
-
 /*	Parameters for counter units
  */
 #define hw_counter_overflow_at_bottom		, 0

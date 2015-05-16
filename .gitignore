@@ -7,9 +7,8 @@
 *.pyc
 build/
 doxygen/html/
-exclude/
+private/
 projects/
 trash/
-keep/
 MEMO*
 TODO*

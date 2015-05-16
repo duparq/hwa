@@ -6,15 +6,13 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr__wdog_1.h"
+#include "wdog_1.h"
 
-
-/*  HWA struct
- */
-#define hwa_wdoga_t			hwa_wdog_t
-
-
-/*  Class & methods
+/**
+ * @page atmelavr_wdoga _wdoga
+ *
+ * A class `_wdoga` object is a watchdog timer
  */
 #define _hw_class__wdoga
-//#define _hw_pop__wdoga(p,i,a,...)	__VA_ARGS__
+
+#define hwa_wdoga_t			hwa_wdog_t

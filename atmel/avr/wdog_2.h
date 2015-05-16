@@ -6,7 +6,7 @@
 
 
 /**
- * @page atmelavr_wdoga _wdoga
+ * @page atmelavr_wdoga
  * @par Configure a watchdog timer
  *
  * @code

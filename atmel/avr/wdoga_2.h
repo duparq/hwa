@@ -9,7 +9,7 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr__wdog_2.h"
+#include "wdog_2.h"
 
 #define hwa_wdoga_t			hwa_wdog_t
 

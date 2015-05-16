@@ -30,8 +30,8 @@
 #  error "HW_DEVICE not defined."
 #endif
 
-#include "hwa__macros.h"
-#include "hwa__interrupts.h"
+#include "hwa_macros.h"
+#include "hwa_interrupts.h"
 
 
 #if !defined __ASSEMBLER__
@@ -117,7 +117,7 @@ typedef struct rem_hwa_r32_t
 
 /*	Include device-specific declarations
  */
-#include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_1.h)
+#include HW_QUOTE(devices/HW_G2(hwa,HW_DEVICE)_1.h)
 
 
 #if !defined __ASSEMBLER__
@@ -137,7 +137,7 @@ typedef struct {
 } hwa_t ;
 
 struct hwa_t ;
-#  include "hwa__2.h"
+#  include "hwa_2.h"
 #endif /* !defined __ASSEMBLER__ */
 
 #endif /* !defined _HWA_H_ */

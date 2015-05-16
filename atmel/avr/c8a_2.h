@@ -8,8 +8,8 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr__counters.h"
-#include "hwa_atmelavr__ocua_2.h"
+#include "counters.h"
+#include "ocua_2.h"
 
 
 HW_INLINE void __hwa_begin__c8a ( hwa_c8a_t *p, intptr_t a )
