@@ -1,5 +1,5 @@
 
-HWA	{#mainpage}
+HWA
 ===
 
 `HWA`<sup>(*)</sup> is a hardware abstraction tool for programming
@@ -51,10 +51,8 @@ be programmed in the `build/out.bin` file. In the Makefile, you can define
 `PROG_SW` and `PROG_HW` with the names of your programming tools to override the
 default Diabolo. For example:
 
-@code
-PROG_SW = avrdude
-PROG_HW = usbasp
-@endcode
+    PROG_SW = avrdude
+    PROG_HW = usbasp
 
 You'll have to provide a specific makefile if you use neither Diabolo nor
 avrdude. Look at the `examples/make/` directory.
