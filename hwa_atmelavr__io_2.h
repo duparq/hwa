@@ -31,12 +31,12 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 #define __hwa_commit__io6a		__hwa_commit__io8a
 
 
-#define _hw_mthd_hw_config__dio		, _hw_cfdio
-#define _hw_mthd_hwa_config__dio	, _hwa_cfdio
-#define _hw_mthd_hw_read__dio		, _hw_read_dio
-#define _hw_mthd_hw_write__dio		, _hw_write_dio
-#define _hw_mthd_hwa_write__dio		, _hwa_write_dio
-#define _hw_mthd_hw_toggle__dio		, _hw_toggle_dio
+#define _hw_mthd_hw_config__pin1		, _hw_cfdio
+#define _hw_mthd_hwa_config__pin1	, _hwa_cfdio
+#define _hw_mthd_hw_read__pin1		, _hw_read_pin1
+#define _hw_mthd_hw_write__pin1		, _hw_write_pin1
+#define _hw_mthd_hwa_write__pin1		, _hwa_write_pin1
+#define _hw_mthd_hw_toggle__pin1		, _hw_toggle_pin1
 
 
 #define _hw_is_mode_mode		, 1
@@ -170,7 +170,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
  * uint8_t p = hw_read( PIN );
  * @endcode
  */
-#define _hw_read_dio(p,i, pn,bn,bp)	_hw_rddio_2(_##pn,bn,bp)
+#define _hw_read_pin1(p,i, pn,bn,bp)	_hw_rddio_2(_##pn,bn,bp)
 #define _hw_rddio_2(...)		_hw_rddio_3(__VA_ARGS__)
 #define _hw_rddio_3(c,i,a,bn,bp)	_hw_rddio_4(a,bn,bp,_hw_##c##_##port)
 #define _hw_rddio_4(...)		_hw_rddio_5(__VA_ARGS__)
@@ -186,14 +186,14 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
  * hw_write( PIN, 1 );
  * @endcode
  */
-#define _hw_write_dio(p,i, pn,bn,bp, v,...)	HW_TX(_hw_wrdio_2(_##pn,bn,bp,v),__VA_ARGS__)
+#define _hw_write_pin1(p,i, pn,bn,bp, v,...)	HW_TX(_hw_wrdio_2(_##pn,bn,bp,v),__VA_ARGS__)
 #define _hw_wrdio_2(...)		_hw_wrdio_3(__VA_ARGS__)
 #define _hw_wrdio_3(c,i,a,bn,bp,v)	_hw_wrdio_4(a,bn,bp,v,_hw_##c##_##port)
 #define _hw_wrdio_4(...)		_hw_wrdio_5(__VA_ARGS__)
 #define _hw_wrdio_5(a,bn,bp,v, rt,rw,ra,rwm,rfm)	\
   _hw_write_r8(a+ra,rwm,rfm,bn,bp,v)
 
-#define _hwa_write_dio(p,i, pn,bn,bp, v, ...)		\
+#define _hwa_write_pin1(p,i, pn,bn,bp, v, ...)		\
   HW_TX(_hwa_write_r8(&hwa->pn.port, 0xFF,0x00, bn,bp, v),__VA_ARGS__)
 
 
@@ -205,8 +205,8 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
  * hw_toggle( PIN );
  * @endcode
  */
-#define _hw_toggle_dio(p,i, port,...)			\
-  _hw_toggle_dio_2(_hw_reg(port,pin),__VA_ARGS__)
-#define _hw_toggle_dio_2(...)	_hw_toggle_dio_3(__VA_ARGS__)
-#define _hw_toggle_dio_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
+#define _hw_toggle_pin1(p,i, port,...)			\
+  _hw_toggle_pin1_2(_hw_reg(port,pin),__VA_ARGS__)
+#define _hw_toggle_pin1_2(...)	_hw_toggle_pin1_3(__VA_ARGS__)
+#define _hw_toggle_pin1_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
   HW_TX(_hw_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)

@@ -36,11 +36,11 @@ HW_INLINE void __hwa_commit__pcica ( hwa_t *hwa, hwa_pcica_t *p )
 #define _hw_mthd_hw_write__pcica		, _hw_write_pcica
 #define _hw_mthd_hw_turn__pcica			, _hw_turn_pcica
 
-#define _hw_is__dio__dio			, 1
+#define _hw_is__pin1__pin1			, 1
 
 /* #define _hw_write_pcica( p,i,a, pn, v, ...)	HW_TX(_hw_write_pcica_2(p,pn,_##pn,v),__VA_ARGS__) */
 /* #define _hw_write_pcica_2(...)		_hw_write_pcica_3(__VA_ARGS__) */
-/* #define _hw_write_pcica_3(p,pn,x,...)	HW_G2(_hw_write_pcica,HW_IS(_dio,x))(p,pn,__VA_ARGS__) */
+/* #define _hw_write_pcica_3(p,pn,x,...)	HW_G2(_hw_write_pcica,HW_IS(_pin1,x))(p,pn,__VA_ARGS__) */
 /* #define _hw_write_pcica_1(p,pn,ioi,iop,iobn,iobp,v) _hw_write_reg(p,pn, v) */
 
 

@@ -43,14 +43,14 @@ typedef struct {
 
 
 /**
- * @page atmelavr_dio _dio
- * A class `_dio` object is an i/o pin.
+ * @page atmelavr_pin1 _pin1
+ * A class `_pin1` object is an i/o pin.
  */
-#define _hw_class__dio
+#define _hw_class__pin1
 
 
 /**
- * @page atmelavr_dio
+ * @page atmelavr_pin1
  * @par Get the name of the port owning the pin
  * @code
  * #define PA0		hw_pin_pa0
@@ -60,12 +60,12 @@ typedef struct {
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_sup__dio			, _hw_sup_dio
-#define _hw_sup_dio(n,i, cn,bn,bp,...)		cn
+#define _hw_mthd_hw_sup__pin1			, _hw_sup_pin1
+#define _hw_sup_pin1(n,i, cn,bn,bp,...)		cn
 
 
 /**
- * @page atmelavr_dio
+ * @page atmelavr_pin1
  * @par Get the number of bits of the pin
  * Of course, this should be 1.
  * @code
@@ -74,12 +74,12 @@ typedef struct {
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__dio			, _hw_bn_dio
-#define _hw_bn_dio(c,id,cn,bn,bp,...)		bn
+#define _hw_mthd_hw_bn__pin1			, _hw_bn_pin1
+#define _hw_bn_pin1(c,id,cn,bn,bp,...)		bn
 
 
 /**
- * @page atmelavr_dio
+ * @page atmelavr_pin1
  * @par Get the position of the pin in the port
  * @code
  * #if hw_id(hw_pin_pa3) && (hw_bp(hw_pin_pa3) != 3)
@@ -87,12 +87,12 @@ typedef struct {
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bp__dio			, _hw_bp_dio
-#define _hw_bp_dio(p,i, cn,bn,bp,...)		bp
+#define _hw_mthd_hw_bp__pin1			, _hw_bp_pin1
+#define _hw_bp_pin1(p,i, cn,bn,bp,...)		bp
 
 
 /**
- * @page atmelavr_dio
+ * @page atmelavr_pin1
  * @par Get the name of the i/o pin
  * @code
  * #if hw_id(hw_io(hw_pin_mosi)) != hw_id(hw_pin_pa6)
@@ -100,5 +100,5 @@ typedef struct {
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_io__dio			, _hw_io_dio
-#define _hw_io_dio(p,i,cn,bn,bp,...)		p
+#define _hw_mthd_hw_io__pin1			, _hw_io_pin1
+#define _hw_io_pin1(p,i,cn,bn,bp,...)		p

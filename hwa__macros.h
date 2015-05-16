@@ -331,8 +331,8 @@ extern char hw_error ;
  *  `_m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
  *             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
  */
-/*  FIXME: fails without HW_ERR if p is a _dio:
- *  	_hw_reg_3(_dio,hw_pin_pa6,307, hw_porta, 1, 6,port)
+/*  FIXME: fails without HW_ERR if p is a _pin1:
+ *  	_hw_reg_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
  *  -> Should hw_reg() be a method?
  */
 #define hw_reg(o,m)			HW_GNRC(_hw_reg_3,o,m)

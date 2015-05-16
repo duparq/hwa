@@ -458,19 +458,19 @@
  * Atmel name | HWA name   | 14pdid #  | Class
  * -----------|:-----------|:----------|:----------
  * Port A     | hw_port_a  |           | @ref atmelavr_io8a
- * PA0	      | hw_pin_pa0 | hw_pin_13 | @ref atmelavr_dio
- * PA1	      | hw_pin_pa1 | hw_pin_12 | @ref atmelavr_dio
- * PA2	      | hw_pin_pa2 | hw_pin_11 | @ref atmelavr_dio
- * PA3	      | hw_pin_pa3 | hw_pin_10 | @ref atmelavr_dio
- * PA4	      | hw_pin_pa4 | hw_pin_9  | @ref atmelavr_dio
- * PA5	      | hw_pin_pa5 | hw_pin_8  | @ref atmelavr_dio
- * PA6	      | hw_pin_pa6 | hw_pin_7  | @ref atmelavr_dio
- * PA7	      | hw_pin_pa7 | hw_pin_6  | @ref atmelavr_dio
+ * PA0	      | hw_pin_pa0 | hw_pin_13 | @ref atmelavr_pin1
+ * PA1	      | hw_pin_pa1 | hw_pin_12 | @ref atmelavr_pin1
+ * PA2	      | hw_pin_pa2 | hw_pin_11 | @ref atmelavr_pin1
+ * PA3	      | hw_pin_pa3 | hw_pin_10 | @ref atmelavr_pin1
+ * PA4	      | hw_pin_pa4 | hw_pin_9  | @ref atmelavr_pin1
+ * PA5	      | hw_pin_pa5 | hw_pin_8  | @ref atmelavr_pin1
+ * PA6	      | hw_pin_pa6 | hw_pin_7  | @ref atmelavr_pin1
+ * PA7	      | hw_pin_pa7 | hw_pin_6  | @ref atmelavr_pin1
  * Port B     | hw_port_b  |           | @ref atmelavr_io8a
- * PB0	      | hw_pin_pb0 | hw_pin_2  | @ref atmelavr_dio
- * PB1	      | hw_pin_pb1 | hw_pin_3  | @ref atmelavr_dio
- * PB2	      | hw_pin_pb2 | hw_pin_5  | @ref atmelavr_dio
- * PB3	      | hw_pin_pb3 | hw_pin_4  | @ref atmelavr_dio
+ * PB0	      | hw_pin_pb0 | hw_pin_2  | @ref atmelavr_pin1
+ * PB1	      | hw_pin_pb1 | hw_pin_3  | @ref atmelavr_pin1
+ * PB2	      | hw_pin_pb2 | hw_pin_5  | @ref atmelavr_pin1
+ * PB3	      | hw_pin_pb3 | hw_pin_4  | @ref atmelavr_pin1
  * 
  * Pin numbers `hw_pin_2` to `hw_pin_13` can be used if `HW_DEVICE_PACKAGE` is
  * defined as '14pdip'.
@@ -479,24 +479,24 @@
 
 /*  Pins				class, id, controller, bn, bp
  */
-#define _hw_pin_pa0			_dio, 301, hw_porta, 1, 0
-#define _hw_pin_pa1			_dio, 302, hw_porta, 1, 1
-#define _hw_pin_pa2			_dio, 303, hw_porta, 1, 2
-#define _hw_pin_pa3			_dio, 304, hw_porta, 1, 3
-#define _hw_pin_pa4			_dio, 305, hw_porta, 1, 4
-#define _hw_pin_pa5			_dio, 306, hw_porta, 1, 5
-#define _hw_pin_pa6			_dio, 307, hw_porta, 1, 6
-#define _hw_pin_pa7			_dio, 308, hw_porta, 1, 7
+#define _hw_pin_pa0			_pin1, 301, hw_porta, 1, 0
+#define _hw_pin_pa1			_pin1, 302, hw_porta, 1, 1
+#define _hw_pin_pa2			_pin1, 303, hw_porta, 1, 2
+#define _hw_pin_pa3			_pin1, 304, hw_porta, 1, 3
+#define _hw_pin_pa4			_pin1, 305, hw_porta, 1, 4
+#define _hw_pin_pa5			_pin1, 306, hw_porta, 1, 5
+#define _hw_pin_pa6			_pin1, 307, hw_porta, 1, 6
+#define _hw_pin_pa7			_pin1, 308, hw_porta, 1, 7
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb0			_dio, 11, hw_portb, 1, 0
+#  define _hw_pin_pb0			_pin1, 11, hw_portb, 1, 0
 #endif
-#define _hw_pin_pb1			_dio, 12, hw_portb, 1, 1
+#define _hw_pin_pb1			_pin1, 12, hw_portb, 1, 1
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb2			_dio, 13, hw_portb, 1, 2
+#  define _hw_pin_pb2			_pin1, 13, hw_portb, 1, 2
 #endif
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET) && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
-#  define _hw_pin_pb3			_dio, 14, hw_portb, 1, 3
+#  define _hw_pin_pb3			_pin1, 14, hw_portb, 1, 3
 #endif
 
 /*  Analog input pins (with Digital Input Disable bits, stored in register `did`
@@ -698,9 +698,9 @@
  *									       *
  *******************************************************************************/
 
-#define _hw_pin_usck			_dio, 305, hw_porta, 1, 4	/* hw_pin_pa4 */
-#define _hw_pin_do			_dio, 306, hw_porta, 1, 5	/* hw_pin_pa5 */
-#define _hw_pin_di			_dio, 307, hw_porta, 1, 6	/* hw_pin_pa6 */
+#define _hw_pin_usck			_pin1, 305, hw_porta, 1, 4	/* hw_pin_pa4 */
+#define _hw_pin_do			_pin1, 306, hw_porta, 1, 5	/* hw_pin_pa5 */
+#define _hw_pin_di			_pin1, 307, hw_porta, 1, 6	/* hw_pin_pa6 */
 
 /*	Instance			class, id, address
  */				        
