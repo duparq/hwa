@@ -522,5 +522,5 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
  */
 #ifndef DOXYGEN
 //#  include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_2.h)
-#  include HW_QUOTE(devices/HW_G2(hwa,HW_DEVICE)_2.h)
+#  include HW_QUOTE(devices/HW_G2(HW_DEVICE,2).h)
 #endif

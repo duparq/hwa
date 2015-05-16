@@ -117,7 +117,7 @@ typedef struct rem_hwa_r32_t
 
 /*	Include device-specific declarations
  */
-#include HW_QUOTE(devices/HW_G2(hwa,HW_DEVICE)_1.h)
+#include HW_QUOTE(devices/HW_G2(HW_DEVICE,1).h)
 
 
 #if !defined __ASSEMBLER__

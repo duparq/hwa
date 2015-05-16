@@ -19,6 +19,9 @@
  */
 #define HW_DEVICE_ATTINYX4
 
+#define HW_DEVICE_RAM_START		0x0060
+#define HW_DEVICE_APP_START		0x0022
+
 
 /**
  * @page atmelavr_attinyx4

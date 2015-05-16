@@ -4,4 +4,4 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_attinyx4_2.h"
+#include "attinyx4_2.h"

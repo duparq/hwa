@@ -7,19 +7,14 @@ clean:
 		-o -name '*.pyc'	\
 		')' -exec rm -rf {} ';'
 	@find . -name 'build' -prune -exec rm -rf {} ';'
+	@rm -rf doxygen/html
 
 
 #  Remove all produced files + check data
 #
 .PHONY: superclean
-superclean:
-	@find . '(' 			\
-		-name '*~' 		\
-		-o -name '*.cp.*'	\
-		-o -name '*.pyc'	\
-		-o -name '.valid-*'	\
-		')' -exec rm -rf {} ';'
-	@find . -name 'build' -prune -exec rm -rf {} ';'
+superclean: clean
+	@find . -name '.valid-*' -exec rm -rf {} ';'
 
 
 #  Produce HTML documentation
