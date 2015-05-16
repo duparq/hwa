@@ -1,0 +1,231 @@
+
+/**		-*- asm -*-
+ * @file
+ * @brief	Implements software UARTS hw_swuart0 hw_swuart1
+ */
+
+#include <hwa.h>
+
+#include "xinstr.sx"
+#include "swuarta_macros.sx"
+
+
+/*	hw_swuart0
+ */
+#if defined HW_SWUART0_PIN_TX || defined HW_SWUART0_PIN_RX
+#  if !defined HW_SWUART0_COUNTER
+#    error HW_SWUART0_COUNTER is not defined
+#  endif
+#  if !defined HW_SWUART0_COUNTER_CLK_DIV
+#    error HW_SWUART0_COUNTER_CLK_DIV is not defined
+#  endif
+#  if !defined HW_SWUART0_COUNTER_COMP
+#    error HW_SWUART0_COUNTER_COMP is not defined
+#  endif
+#  if defined HW_SWUART0_PIN_TX
+#    define PIN_TX    HW_SWUART0_PIN_TX
+#  endif
+#  if defined HW_SWUART0_PIN_RX
+#    define PIN_RX    HW_SWUART0_PIN_RX
+#  endif
+#  if defined HW_SWUART0_PIN_DBG
+#    define PIN_DBG   HW_SWUART0_PIN_DBG
+#  endif
+#  if defined HW_SWUART0_AUTOSYNC
+#    define AUTOSYNC HW_SWUART0_AUTOSYNC
+#  endif
+#  if defined HW_SWUART0_CALLBACK
+#    define CALLBACK	HW_SWUART0_CALLBACK
+#  endif
+#  if defined HW_SWUART0_CALLBACK_PTR
+#    define CALLBACK_PTR	HW_SWUART0_CALLBACK_PTR
+#  endif
+#  define HW_COUNTER	HW_SWUART0_COUNTER
+#  define CLK_DIV	HW_SWUART0_COUNTER_CLK_DIV
+#  define HW_COUNTER_COMP	HW_SWUART0_COUNTER_COMP
+#  define COUNT_BN	hw_bn(HW_COUNTER)
+#  if defined HW_SWUART0_COMP_BN
+#    define COMP_BN	HW_SWUART0_COMP_BN
+#  else
+#    define COMP_BN	COUNT_BN
+#  endif
+#  if COUNT_BN != COMP_BN
+#    error COUNT_BN != COMP_BN is not handled yet
+#  endif
+
+#  define SWUART	hw_swuart0
+
+	;; Globals
+	;;
+	.global	_hw_swuart0_data
+	.global	__hw_swuart0_dt0
+	.global	__hw_swuart0_dtn
+
+	.global	_hw_swuart0_getbyte
+	.global	_hw_swuart0_putbyte
+	.global	_hw_swuart0_reset
+
+#define wait_ready	_hw_swuart0_wait_ready
+#define reset		_hw_swuart0_reset
+#define getbyte		_hw_swuart0_getbyte
+#define putbyte		_hw_swuart0_putbyte
+
+#define dtn		__hw_swuart0_dtn
+#define dt0		__hw_swuart0_dt0
+#define data		_hw_swuart0_data
+#define shift		_hw_swuart0_shift
+#define nbit		_hw_swuart0_nbit
+
+
+	;; Internals
+	;; 
+#define st99		_hw_swuart0_st99
+#define next		_hw_swuart0_next
+#define L31S30		_hw_swuart0_L31S30
+#define L31S		_hw_swuart0_L31S
+#define rxeof		_hw_swuart0_rxeof
+#define tx		_hw_swuart0_tx
+#define tx1		_hw_swuart0_tx1
+#define tx0		_hw_swuart0_tx0
+#define txn		_hw_swuart0_txn
+#define txeof		_hw_swuart0_txeof
+#define putbits		_hw_swuart0_putbits
+#define wait_rxidle	_hw_swuart0_wait_rxidle
+#define sync		_hw_swuart0_sync
+#define brk		_hw_swuart0_brk
+
+	;; Status is stored in SFR
+	;; 
+	stat = _hw_ra(hw_core0, gpior0)
+
+#  include "swuarta.sx"
+#endif
+
+
+#undef PIN_TX
+#undef PIN_RX
+#undef CHECK_START_EDGE
+#undef PIN_DBG
+#undef AUTOSYNC
+#undef CALLBACK
+#undef CALLBACK_PTR
+#undef HW_COUNTER
+#undef CLK_DIV
+#undef HW_COUNTER_COMP
+#undef COUNT_BN
+#undef COMP_BN
+#undef SWUART
+#undef wait_ready
+#undef reset
+#undef getbyte
+#undef putbyte
+#undef dtn
+#undef dt0
+#undef data
+#undef shift
+#undef nbit
+#undef st99
+#undef next
+#undef L31S30
+#undef L31S
+#undef rxeof
+#undef tx
+#undef tx1
+#undef tx0
+#undef txn
+#undef txeof
+#undef putbits
+#undef wait_rxidle
+#undef sync
+#undef brk
+
+/*	hw_swuart1
+ */
+#if defined HW_SWUART1_PIN_TX || defined HW_SWUART1_PIN_RX
+#  if !defined HW_SWUART1_COUNTER
+#    error HW_SWUART1_COUNTER is not defined
+#  endif
+#  if !defined HW_SWUART1_COUNTER_CLK_DIV
+#    error HW_SWUART1_COUNTER_CLK_DIV is not defined
+#  endif
+#  if !defined HW_SWUART1_COUNTER_COMP
+#    error HW_SWUART1_COUNTER_COMP is not defined
+#  endif
+#  if defined HW_SWUART1_PIN_TX
+#    define PIN_TX    HW_SWUART1_PIN_TX
+#  endif
+#  if defined HW_SWUART1_PIN_RX
+#    define PIN_RX    HW_SWUART1_PIN_RX
+#  endif
+#  if defined HW_SWUART1_PIN_DBG
+#    define PIN_DBG   HW_SWUART1_PIN_DBG
+#  endif
+#  if defined HW_SWUART1_AUTOSYNC
+#    define AUTOSYNC HW_SWUART1_AUTOSYNC
+#  endif
+#  if defined HW_SWUART1_CALLBACK
+#    define CALLBACK	HW_SWUART1_CALLBACK
+#  endif
+#  if defined HW_SWUART1_CALLBACK_PTR
+#    define CALLBACK_PTR	HW_SWUART1_CALLBACK_PTR
+#  endif
+#  define HW_COUNTER	HW_SWUART1_COUNTER
+#  define CLK_DIV	HW_SWUART1_COUNTER_CLK_DIV
+#  define HW_COUNTER_COMP	HW_SWUART1_COUNTER_COMP
+#  define COUNT_BN	hw_bn(HW_COUNTER)
+#  if defined HW_SWUART1_COMP_BN
+#    define COMP_BN	HW_SWUART1_COMP_BN
+#  else
+#    define COMP_BN	COUNT_BN
+#  endif
+#  if COUNT_BN != COMP_BN
+#    error COUNT_BN != COMP_BN is not handled yet
+#  endif
+
+#  define SWUART	hw_swuart1
+
+	;; Globals
+	;;
+	.global	_hw_swuart1_data
+	.global	__hw_swuart1_dt0
+	.global	__hw_swuart1_dtn
+
+	.global	_hw_swuart1_getbyte
+	.global	_hw_swuart1_putbyte
+	.global	_hw_swuart1_reset
+
+#define wait_ready	_hw_swuart1_wait_ready
+#define reset		_hw_swuart1_reset
+#define getbyte		_hw_swuart1_getbyte
+#define putbyte		_hw_swuart1_putbyte
+
+#define dtn		__hw_swuart1_dtn
+#define dt0		__hw_swuart1_dt0
+#define data		_hw_swuart1_data
+#define shift		_hw_swuart1_shift
+#define nbit		_hw_swuart1_nbit
+
+
+	;; Internals
+	;; 
+#define st99		_hw_swuart1_st99
+#define next		_hw_swuart1_next
+#define L31S30		_hw_swuart1_L31S30
+#define L31S		_hw_swuart1_L31S
+#define rxeof		_hw_swuart1_rxeof
+#define tx		_hw_swuart1_tx
+#define tx1		_hw_swuart1_tx1
+#define tx0		_hw_swuart1_tx0
+#define txn		_hw_swuart1_txn
+#define txeof		_hw_swuart1_txeof
+#define putbits		_hw_swuart1_putbits
+#define wait_rxidle	_hw_swuart1_wait_rxidle
+#define sync		_hw_swuart1_sync
+#define brk		_hw_swuart1_brk
+
+	;; Status is stored in SFR
+	;; 
+	stat = _hw_ra(hw_core0, gpior1)
+
+#  include "swuarta.sx"
+#endif

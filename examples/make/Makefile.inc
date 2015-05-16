@@ -9,7 +9,7 @@
 #	Default target
 #
 .PHONY: all
-all:	$(INC_HWA) deps bin lst size crc
+all:	$(INC_HWA) deps bin lst size stat
 
 hex:	$(OUTDIR)/$(OUT).hex
 bin:	$(OUTDIR)/$(OUT).bin
@@ -20,16 +20,16 @@ lst:	$(OUTDIR)/$(OUT).lst
 #
 #	Build one dependency files for each source file
 #
-DEPS		 = $(SOURCES:.c=.$(DEVICE).d)
-DEPS		:= $(DEPS:.sx=.$(DEVICE).d)
-DEPS		:= $(addprefix $(OUTDIR)/,$(DEPS))
+DEPS	 = $(SOURCES:.c=.$(DEVICE).d)
+DEPS	:= $(DEPS:.sx=.$(DEVICE).d)
+DEPS	:= $(addprefix $(OUTDIR)/,$(DEPS))
 
 deps:	$(DEPS)
 
 
 # ifneq (,$(DEVICE))
 $(OUTDIR)/%.$(DEVICE).d: %.c
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
 	$(CC) -M $(INCLUDES) $< > $@.tmp; \
@@ -37,7 +37,7 @@ $(OUTDIR)/%.$(DEVICE).d: %.c
 	rm -f $@.tmp
 
 $(OUTDIR)/%.$(DEVICE).d: %.sx
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
 	$(CC) -M $(INCLUDES) $< > $@.tmp; \
@@ -52,7 +52,7 @@ $(OUTDIR)/%.$(DEVICE).d: %.sx
 
 
 $(OUTDIR)/%.d: %.sx
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
 	$(CC) -M $(INCLUDES) $< > $@.tmp; \
@@ -129,6 +129,7 @@ CFLAGS		+= -Os
 #CFLAGS		+= -O3
 CFLAGS		+= $(DEFINES)
 CFLAGS		+= $(INCLUDES)
+#CFLAGS		+= -save-temps
 
 AFLAGS		+= -mmcu=$(DEVICE)
 AFLAGS		+= -Wall
@@ -174,8 +175,9 @@ OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
 %.cp.sx: %.sx
 	$(CPP) $(AFLAGS) $< >$@
-	if grep '\.fail' $@ ; then exit 1 ; fi
-	if grep '#error' $@ ; then exit 1 ; fi
+	if grep 'hw_error ; \.fail' $@ ; then exit 1 ; fi
+#	if grep '\.fail' $@ ; then exit 1 ; fi
+#	if grep '#error' $@ ; then exit 1 ; fi
 
 %.s : %.c
 	$(CC) -mmcu=$(DEVICE) -std=c99 -Wall -Wextra -Os -c -g -S $< -o $@
@@ -190,19 +192,19 @@ $(OUTDIR):
 
 
 $(OUTDIR)/%.$(DEVICE).o : %.c
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUTDIR)/%.o : %.c
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUTDIR)/%.$(DEVICE).o : %.s
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(AS) $(AFLAGS) $< -o $@
 
 $(OUTDIR)/%.o : %.s
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(AS) $(AFLAGS) $< -o $@
 
 # $(OUTDIR)/%.$(MCU).o : %.sx Makefile
@@ -211,7 +213,7 @@ $(OUTDIR)/%.o : %.s
 # 	$(CC) $(AFLAGS) -c $< -o $@
 
 $(OUTDIR)/%.$(DEVICE).o : %.cp.sx
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(CC) $(AFLAGS) -c $< -o $@
 
 # $(OUTDIR)/%.$(MCU).o : %.sx
@@ -222,7 +224,7 @@ $(OUTDIR)/%.$(DEVICE).o : %.cp.sx
 # 	$(AS) $(AFLAGS) -o $@ $<
 
 $(OUTDIR)/$(OUT).elf : $(OBJECTS) $(LDSCRIPT)
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 

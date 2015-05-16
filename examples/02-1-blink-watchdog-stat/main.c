@@ -6,27 +6,32 @@
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target				Result (hw_pin_7, 250ms)
+/*	Target
  */
-#include "targets/attiny84.h"		// 78 bytes, CRC=0x0280
+#include "targets/attiny84.h"		// 78 bytes
 //#include "targets/attiny85.h"		// 74 /8192 application bytes, CRC=0x244E
 //#include "targets/nanodccduino.h"	// 168 /32768 application bytes, CRC=0x8FF8
 #include <hwa.h>
 
 
-/*  Define the pin at which the LED is connected (already done for Arduino
- *  targets). The target definitions also define the package of the device, then
- *  pin numbers can be used as well as pin names.
+/*  The pin at which the LED is connected (already done for Arduino
+ *  targets). The target also defines the package of the device, then pin
+ *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
 #  define PIN_LED		hw_pin_7
 #endif
 
 
+/*  Watchdog timeout
+ */
+#define TIMEOUT			250ms
+
+
 int main ( )
 {
-  /*  Load the HWA context with RESET values
+  /*  Create a HWA context to collect the hardware configuration
+   *  Preload this context with RESET values
    */
   hwa_begin_from_reset();
 
@@ -36,8 +41,8 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ periodically
    */
-  hwa_config( hw_watchdog0,
-  	      timeout,		125ms,
+  hwa_config( hw_wdog0,
+  	      timeout,		TIMEOUT,
   	      action,		irq );
 
   /*  Write this configuration into the hardware
@@ -49,10 +54,10 @@ int main ( )
      *  Check the status of the watchdog. As soon as the IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    hw_stat_t( hw_watchdog0 ) stat ;
-    stat = hw_stat( hw_watchdog0 ) ;
+    hw_stat_t( hw_wdog0 ) stat ;
+    stat = hw_stat( hw_wdog0 ) ;
     if ( stat.irq ) {
-      hw_clear_irq( hw_watchdog0 );
+      hw_clear_irq( hw_wdog0 );
       hw_toggle( PIN_LED );
     }
   }

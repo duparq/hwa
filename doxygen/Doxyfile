@@ -107,24 +107,13 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = . \
-		       	   README.md \
-		       	   doxygen/hwa_using.md \
-		       	   doxygen/hwa_devices.md \
-		       	   doxygen/atmelavr/hwa_atmelavr.md \
-		       	   doxygen/atmelavr/hwa_atmelavr_ad10a.md \
-		       	   doxygen/atmelavr/hwa_atmelavr_c8a.md \
-		       	   doxygen/atmelavr/hwa_atmelavr_c16a.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4_core.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4_ios.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4_pcic.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4_pwr.md \
-		       	   doxygen/atmelavr/attinyx4/hwa_attinyx4_prescaler.md \
-		       	   doxygen/hwa_developing.dox \
-		       	   doxygen/hwa_examples.dox \
-		       	   doxygen/hwa_license.md \
-		       	   examples/01-blink-soft/main.c
+INPUT                  = README.md \
+		       	 doxygen/using.md \
+		       	 doxygen/hwa_license.md \
+		       	 doxygen/hwa_developing.md  \
+		       	 doxygen/atmelavr_devices.md \
+			 .
+
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.h \

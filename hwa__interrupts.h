@@ -9,14 +9,14 @@
 #define _hw_class__irq
 #define _hw_is__irq__irq			, 1
 
-#define hw_mthd_hw_turn_irq		, _hw_turn_irq
-#define hw_mthd_hw_turn__irq		, _hw_turn_irq
-#define hw_mthd_hwa_turn_irq		, _hwa_turn_irq
-#define hw_mthd_hwa_turn__irq		, _hwa_turn_irq
-#define hw_mthd_hw_clear_irq		, _hw_clear_irq
-#define hw_mthd_hw_clear__irq		, _hw_clear_irq
-#define hw_mthd_hwa_clear_irq		, _hwa_clear_irq
-#define hw_mthd_hwa_clear__irq		, _hwa_clear_irq
+//#define _hw_mthd_hw_turn_irq		, _hw_turn_irq
+#define _hw_mthd_hw_turn__irq		, _hw_turn_irq
+//#define _hw_mthd_hwa_turn_irq		, _hwa_turn_irq
+#define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
+//#define _hw_mthd_hw_clear_irq		, _hw_clear_irq
+#define _hw_mthd_hw_clear__irq		, _hw_clear_irq
+//#define _hw_mthd_hwa_clear_irq		, _hwa_clear_irq
+#define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
 
 
 /*	Definition of an interrupt, no extra parameter allowed
@@ -34,9 +34,29 @@
 /* #define _hw_irq0_0(p,...)		HW_ERR("neither `` or `" HW_QUOTE(__VA_ARGS__) \ */
 /* 					       "` is an IRQ name for `" #p "`.") */
 
+/*  Controller of an IRQ
+ */
+#define _hw_mthd_hw_sup__irq		, _hw_sup_irq
+//_hw_sup_irq(3, hw_pcic0, pcie8, pcif8,)
+#define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
+
+
+/*	Definition of an interrupt, no extra parameter allowed
+ */
+#define hw_irq(...)			_hw_irq2(__VA_ARGS__,,)
+#define _hw_irq2(p,c,...)	HW_G2(_hw_irq3,				\
+				      HW_IS(_irq,_hw_irq_##p##_##c))(p,c,__VA_ARGS__)
+#define _hw_irq3_1(p,c,...)		_hw_irq_##p##_##c
+#define _hw_irq3_0(p,...)	HW_G2(_hw_irq4, HW_IS(_irq,_hw_irq_##p))(p,__VA_ARGS__)
+#define _hw_irq4_1(p,...)		_hw_irq_##p, __VA_ARGS__
+#define _hw_irq4_0(p,...)		HW_G2(_hw_irq5,HW_ISOBJ(p))(p,__VA_ARGS__)
+#define _hw_irq5_0(p,...)		HW_ERR("`"#p"` is not a HWA object.")
+#define _hw_irq5_1(p,...)		HW_ERR("`"#p"` has no IRQ `` or `" \
+					       HW_QUOTE(__VA_ARGS__)"`.")
+
 /*	Definition of an interrupt, extra arguments allowed and returned
  */
-#define _hw_irqx(...)			HW_G2(_hw_irqx2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define hw_irqx(...)			HW_G2(_hw_irqx2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqx2_1(...)		__VA_ARGS__
 #define _hw_irqx2_0(p,...)						\
   HW_G2(_hw_irqx3, HW_IS(_irq,_hw_irq_##p##_##__VA_ARGS__))(p,__VA_ARGS__)
@@ -52,16 +72,16 @@
 
 /*	Definition of an irq-enable bit
  */
-#define hw_irqe(...)			_hw_irqe_2(hw_irq(__VA_ARGS__))
+#define hw_irqe(...)			_hw_irqe_2(hw_irqx(__VA_ARGS__))
 #define _hw_irqe_2(...)			HW_G2(_hw_irqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqe_0(...)			__VA_ARGS__
-#define _hw_irqe_1(t,v,p,e,f)		_hw_xpr(p,e)
+#define _hw_irqe_1(t,v,p,e,f)		_hw_reg(p,e)
 //#define _hw_irqe_1(t,v,p,e,f)		p,e
 
 
 /*	Definition of an irq-flag bit
  */
-#define hw_irqf(...)			_hw_irqf_2(hw_irq(__VA_ARGS__))
+#define hw_irqf(...)			_hw_irqf_2(hw_irqx(__VA_ARGS__))
 #define _hw_irqf_2(...)			HW_G2(_hw_irqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqf_0(...)			__VA_ARGS__
 #define _hw_irqf_1(t,v,p,e,f)		_hw_reg(p,f)
@@ -69,7 +89,7 @@
 
 /*	Declaration of an ISR, up to 2 attributes allowed
  */
-#define HW_ISR(...)			_hw_isr_2(_hw_irqx(__VA_ARGS__,))
+#define HW_ISR(...)			_hw_isr_2(hw_irqx(__VA_ARGS__,))
 #define _hw_isr_2(...)			HW_G2(_hw_isr2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_isr2_0(...)			HW_ERRFN(__VA_ARGS__)
 #define _hw_isr2_1(irq,v,n,e,f,...)	HW_G2(_hw_isr_a1, HW_IS(,__VA_ARGS__))(__VA_ARGS__, v)
@@ -111,12 +131,12 @@
 
 /*	Short for hw/hwa_turn( hw_irq(...), ... )
  */
-#define hw_turn_irq(...)		_hw_turnirq_2(_hw_irqx(__VA_ARGS__,))
+#define hw_turn_irq(...)		_hw_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_turnirq_2(...)		HW_G2(_hw_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_turnirq_0(...)		__VA_ARGS__
 #define _hw_turnirq_1(t,...)		_hw_turn_irq(__VA_ARGS__)
 
-#define hwa_turn_irq(...)		_hwa_turnirq_2(_hw_irqx(__VA_ARGS__,))
+#define hwa_turn_irq(...)		_hwa_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_turnirq_2(...)		HW_G2(_hwa_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hwa_turnirq_0(...)		__VA_ARGS__
 #define _hwa_turnirq_1(t,...)		_hwa_turn_irq(__VA_ARGS__)
@@ -130,12 +150,12 @@
 
 /*	Short for hw/hwa_clear( hw_irq(...), ... )
  */
-#define hw_clear_irq(...)		_hw_clearirq_2(_hw_irqx(__VA_ARGS__,))
+#define hw_clear_irq(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_clearirq_2(...)		HW_G2(_hw_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_clearirq_0(...)		__VA_ARGS__
 #define _hw_clearirq_1(t,...)		_hw_clear_irq(__VA_ARGS__)
 
-#define hwa_clear_irq(...)		_hwa_clearirq_2(_hw_irqx(__VA_ARGS__,))
+#define hwa_clear_irq(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_clearirq_2(...)		HW_G2(_hwa_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hwa_clearirq_0(...)		__VA_ARGS__
 #define _hwa_clearirq_1(t,...)		_hwa_clear_irq(__VA_ARGS__)

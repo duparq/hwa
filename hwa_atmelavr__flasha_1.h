@@ -8,14 +8,13 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Class & methods
+/**
+ * @page atmelavr_flasha _flasha
+ *
+ * A class `_flasha` object is an FLASH memory.
  */
 #define _hw_class__flasha
 
 
-#if !defined __ASSEMBLER__
-
-typedef struct { hwa_r8_t csr ; } hwa_flasha_t ;
-
-#endif
+/*  No HWA context required
+ */

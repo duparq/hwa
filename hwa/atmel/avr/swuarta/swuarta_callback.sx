@@ -1,0 +1,95 @@
+
+	;; -*- asm -*-
+
+#error Check before use
+
+#if defined CALLBACK
+	.global	HW_SWUART0_CALLBACK
+	cb = HW_SWUART0_CALLBACK
+#endif
+
+#if defined CALLBACK_PTR
+	.global	CALLBACK_PTR
+	cbptr = CALLBACK_PTR
+#else
+	CALLBACK_PTR = 0
+#endif
+
+	.if CALLBACK_PTR
+cbptr:	.word	0		; C callback function (called after rx/tx done)
+	.endif
+
+
+	;; Call the handler from its pointer if not NULL
+	;;
+	.if CALLBACK_PTR
+	.section	.text.callback,"ax",@progbits
+callback:
+	push	R30
+	lds	R30, cbptr+0
+	lds	R31, cbptr+1
+	push	R0
+	mov	R0, R30
+	or	R0, R31
+	breq	1f
+	push	R1
+	eor	R1, R1
+	push	R18
+	push	R19
+	push	R20
+	push	R21
+	push	R22
+	push	R23
+	push	R24
+	push	R25
+	push	R26
+	push	R27
+	icall
+	pop	R27
+	pop	R26
+	pop	R25
+	pop	R24
+	pop	R23
+	pop	R22
+	pop	R21
+	pop	R20
+	pop	R19
+	pop	R18
+	pop	R1
+1:	pop	R0
+	rjmp	L31S30
+	.endif
+
+
+	.if CALLBACK
+	.section	.text.callback,"ax",@progbits
+callback:
+	push	R30
+	push	R0
+	push	R1
+	eor	R1, R1
+	push	R18
+	push	R19
+	push	R20
+	push	R21
+	push	R22
+	push	R23
+	push	R24
+	push	R25
+	push	R26
+	push	R27
+	rcall	cb
+	pop	R27
+	pop	R26
+	pop	R25
+	pop	R24
+	pop	R23
+	pop	R22
+	pop	R21
+	pop	R20
+	pop	R19
+	pop	R18
+	pop	R1
+	pop	R0
+	rjmp	L31S30
+	.endif

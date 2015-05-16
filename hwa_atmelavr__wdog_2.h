@@ -5,15 +5,130 @@
  */
 
 
-/*	Watchdog class methods declared for derived classes
+/**
+ * @page atmelavr_wdoga _wdoga
+ * @par Configure a watchdog timer
  *
- *	hw/hwa_turn_wdog
- *	hw/hwa_reset_wdog
- *	hw_stat_wdog
+ * @code
+ * hwa_config( hw_wdog0,
+ *
+ *            [timeout,   16ms
+ *                      | 32ms
+ *                      | 64ms
+ *                      | 125ms
+ *                      | 250ms
+ *                      | 500ms
+ *                      | 1s
+ *                      | 2s
+ *                      | 4s
+ *                      | 8s,]
+ *
+ *             action,    none
+ *                      | irq
+ *                      | reset
+ *                      | irq_or_reset,
+ *            );
+ * @endcode
+ *
+ * When `action` is `irq_or_reset` the watchdog IRQ is enabled. It is disabled
+ * by hardware after a timeout occurs. Then, if you do not re-enable the IRQ
+ * before a new timeout occurs, the device will be reset.
  */
+/**
+ * @page atmelavr_wdogb _wdogb
+ * @par Configure a watchdog timer
+ *
+ * @code
+ * hwa_config( hw_wdog0,
+ *
+ *            [timeout,   16ms
+ *                      | 32ms
+ *                      | 64ms
+ *                      | 125ms
+ *                      | 250ms
+ *                      | 500ms
+ *                      | 1s
+ *                      | 2s
+ *                      | 4s
+ *                      | 8s,]
+ *
+ *             action,    none
+ *                      | irq
+ *                      | reset
+ *                      | irq_or_reset,
+ *            );
+ * @endcode
+ *
+ * When `action` is `irq_or_reset` the watchdog IRQ is enabled. It is disabled
+ * by hardware after a timeout occurs. Then, if you do not re-enable the IRQ
+ * before a new timeout occurs, the device will be reset.
+ */
+#define _hw_is_timeout_timeout		, 1
+#define hw_wdog_timeout_16ms		, 0
+#define hw_wdog_timeout_32ms		, 1
+#define hw_wdog_timeout_64ms		, 2
+#define hw_wdog_timeout_125ms		, 3
+#define hw_wdog_timeout_250ms		, 4
+#define hw_wdog_timeout_500ms		, 5
+#define hw_wdog_timeout_1s		, 6
+#define hw_wdog_timeout_2s		, 7
+#define hw_wdog_timeout_4s		, 8
+#define hw_wdog_timeout_8s		, 9
+
+#define _hw_is_action_action		, 1
+#define hw_wdog_action_none		, 0
+#define hw_wdog_action_irq		, 1
+#define hw_wdog_action_reset		, 2
+#define hw_wdog_action_irq_or_reset	, 3
+
+#define _hwa_cfwdog(n,i,a, ...)		do { _hwa_cfwdog_timeout(n,__VA_ARGS__) }while(0)
+
+/*    Optionnal argument `timeout`
+ */
+#define _hwa_cfwdog_timeout(n,kw,...)					\
+    HW_G2(_hwa_cfwdog_xtimeout,HW_IS(timeout,kw))(n,kw,__VA_ARGS__)
+#define _hwa_cfwdog_xtimeout_0(...)	_hwa_cfwdog_action(__VA_ARGS__)
+#define _hwa_cfwdog_xtimeout_1(n,kw,...)				\
+    HW_G2(_hwa_cfwdog_vtimeout,HW_IS(,hw_wdog_timeout_##__VA_ARGS__))(n,__VA_ARGS__)
+#define _hwa_cfwdog_vtimeout_0(n,v,...)					\
+    HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, `500ms`, `1s`, " \
+	   "`2s`, `4s` or `8s` but not `" #v "`.")
+#define _hwa_cfwdog_vtimeout_1(n,v,...)		\
+  hwa->n.timeout = HW_A1(hw_wdog_timeout_##v);	\
+  _hwa_cfwdog_action(n,__VA_ARGS__);
+
+/*    Mandatory argument `action`
+ */
+#define _hwa_cfwdog_action(n,kw,...)				\
+  HW_G2(_hwa_cfwdog_xaction,HW_IS(action,kw))(n,kw,__VA_ARGS__)
+#define _hwa_cfwdog_xaction_0(n,kw,...)				\
+    HW_ERR("expected `action` instead of `" HW_QUOTE(kw) "`.")
+#define _hwa_cfwdog_xaction_1(n,kw,v,...)				\
+  HW_G2(_hwa_cfwdog_vaction,HW_IS(,hw_wdog_action_##v))(n,v,__VA_ARGS__)
+#define _hwa_cfwdog_vaction_0(n,v,...)					\
+  HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #v "`.")
+#define _hwa_cfwdog_vaction_1(n,v,...)		\
+    hwa->n.action = HW_A1(hw_wdog_action_##v);	\
+    HW_TX(,__VA_ARGS__)
 
 
-/*	Turn watchdog on/off (synchronous)
+/**
+ * @page atmelavr_wdoga
+ * @par Turn watchdog on/off
+ *
+ * @code
+ * hw/hwa_turn( hw_wdog0,   on
+ *                        | off );
+ * @endcode
+ */
+/**
+ * @page atmelavr_wdogb
+ * @par Turn watchdog on/off
+ *
+ * @code
+ * hw/hwa_turn( hw_wdog0,   on
+ *                        | off );
+ * @endcode
  */
 #define _hw_turn_wdog(c,n,i,a, vstate)					\
   HW_G2(_hw_turn_wdog, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
@@ -67,95 +182,59 @@
 
 #define _hwa_turn_wdog_off(p,i,a)			\
   /* This will be completed when committing */		\
-  hwa->hw_watchdog0.action = HW_A1(hw_wdog_action_none)
+  hwa->hw_wdog0.action = HW_A1(hw_wdog_action_none)
 
 
-/*  Clear (reset) watchdog or just the irq flag
+/**
+ * @page atmelavr_wdoga
+ * @par Clear watchdog timer
  *
- *	hw_clear( hw_watchdog0 ) resets the watchdog timer
- *	hw_clear( hw_watchdog0, irq ) clears the watchdog irq and sets WDIE
- *	hw_clear_irq( hw_watchdog0 ) only clears the watchdog irq flag
+ * This issues a `wdr` instruction:
+ * @code
+ * hw_clear( hw_wdog0 );
+ * @endcode
+ */
+/**
+ * @page atmelavr_wdogb
+ * @par Clear watchdog timer
  *
- *	WDIE is cleared by hardware after a timeout occurs then it must be set
- *	again to 1 when the interrupt flag is cleared. Otherwise the device will
- *	be RESET at the next timeout.
+ * This issues a `wdr` instruction:
+ * @code
+ * hw_clear( hw_wdog0 );
+ * @endcode
  */
-#define _hw_clwdog(c,n,i,a,...)						\
-  HW_G2(_hw_clwdog_xirq,HW_IS(irq,__VA_ARGS__))(c,n,i,a,__VA_ARGS__)
-
-#define _hw_clwdog_xirq_0(c,n,i,a,...)		\
-  HW_TX(__asm__( "wdr":: ) ,__VA_ARGS__)
-
-#define _hw_clwdog_xirq_1(c,n,i,a,irq,...)			\
-  HW_TX(_hw_write_reg_2(c,n,i,a, wdifie, 3) ,__VA_ARGS__)
+#define _hw_clwdog(c,n,i,a,...)		HW_TX(__asm__( "wdr":: ) ,__VA_ARGS__)
 
 
-
-/*	Configure watchdog
- */
-#define _hw_is_timeout_timeout		, 1
-#define hw_wdog_timeout_16ms		, 0
-#define hw_wdog_timeout_32ms		, 1
-#define hw_wdog_timeout_64ms		, 2
-#define hw_wdog_timeout_125ms		, 3
-#define hw_wdog_timeout_250ms		, 4
-#define hw_wdog_timeout_500ms		, 5
-#define hw_wdog_timeout_1s		, 6
-#define hw_wdog_timeout_2s		, 7
-#define hw_wdog_timeout_4s		, 8
-#define hw_wdog_timeout_8s		, 9
-
-#define _hw_is_action_action		, 1
-#define hw_wdog_action_none		, 0
-#define hw_wdog_action_irq		, 1
-#define hw_wdog_action_reset		, 2
-#define hw_wdog_action_irq_or_reset	, 3
-
-
-//#define _hwa_cfwdog(c,n,i,a, ...)	_hwa_cfwdog_timeout(n,__VA_ARGS__)
-#define _hwa_cfwdog(n,i,a, ...)		do { _hwa_cfwdog_timeout(n,__VA_ARGS__) }while(0)
-
-/*    Optionnal argument `timeout`
- */
-#define _hwa_cfwdog_timeout(n,kw,...)					\
-    HW_G2(_hwa_cfwdog_xtimeout,HW_IS(timeout,kw))(n,kw,__VA_ARGS__)
-#define _hwa_cfwdog_xtimeout_0(...)	_hwa_cfwdog_action(__VA_ARGS__)
-#define _hwa_cfwdog_xtimeout_1(n,kw,...)				\
-    HW_G2(_hwa_cfwdog_vtimeout,HW_IS(,hw_wdog_timeout_##__VA_ARGS__))(n,__VA_ARGS__)
-#define _hwa_cfwdog_vtimeout_0(n,v,...)					\
-    HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, `500ms`, `1s`, " \
-	   "`2s`, `4s` or `8s` but not `" #v "`.")
-#define _hwa_cfwdog_vtimeout_1(n,v,...)		\
-  hwa->n.timeout = HW_A1(hw_wdog_timeout_##v);	\
-  _hwa_cfwdog_action(n,__VA_ARGS__);
-
-/*    Mandatory argument `action`
- */
-#define _hwa_cfwdog_action(n,kw,...)				\
-  HW_G2(_hwa_cfwdog_xaction,HW_IS(action,kw))(n,kw,__VA_ARGS__)
-#define _hwa_cfwdog_xaction_0(n,kw,...)				\
-    HW_ERR("expected `action` instead of `" HW_QUOTE(kw) "`.")
-#define _hwa_cfwdog_xaction_1(n,kw,v,...)				\
-  HW_G2(_hwa_cfwdog_vaction,HW_IS(,hw_wdog_action_##v))(n,v,__VA_ARGS__)
-#define _hwa_cfwdog_vaction_0(n,v,...)					\
-  HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #v "`.")
-#define _hwa_cfwdog_vaction_1(n,v,...)		\
-    hwa->n.action = HW_A1(hw_wdog_action_##v);	\
-    HW_TX(,__VA_ARGS__)
-
-
-/*  Watchdog status
+/**
+ * @page atmelavr_wdoga
+ * @par Watchdog status
  *
- *	hw_stat_t(...) declares the structure that holds the status
- *	hw_stat(...) reads and returns the status
+ * The only flag that is available is the irq flag.
  *
- *	The only flag that is available is the irq flag.
+ * @code
+ * hw_stat_t( hw_wdog0 ) st = hw_stat( hw_wdog0 );
+ * if ( st.irq )
+ *   hw_toggle( hw_pin_pa0 );
+ * @endcode
+ */
+/**
+ * @page atmelavr_wdogb
+ * @par Watchdog status
+ *
+ * The only flag that is available is the irq flag.
+ *
+ * @code
+ * hw_stat_t( hw_wdog0 ) st = hw_stat( hw_wdog0 );
+ * if ( st.irq )
+ *   hw_toggle( hw_pin_pa0 );
+ * @endcode
  */
 typedef union {
   uint8_t         byte ;
   struct {
-    unsigned int  __0to6a : 7 ;
-    unsigned int  irq     : 1 ;
+    unsigned int  __0_6 : 7 ;
+    unsigned int  irq   : 1 ;
   };
 } _hw_wdog_stat_t ;
 

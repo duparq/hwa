@@ -16,12 +16,12 @@
 
 /*  Class methods
  */
-#define hw_mthd_hw_turn__wdogb		, _hw_turn_wdog
-#define hw_mthd_hwa_turn__wdogb		, _hwa_turn_wdog
-#define hw_mthd_hw_reset__wdogb		, _hw_wdreset
-#define hw_mthd_hwa_config__wdogb	, _hwa_cfwdog
-#define hw_mthd_hw_stat__wdogb		, _hw_stat_wdog
-#define hw_mthd_hw_stat_t__wdogb		, _hw_statt_wdog
+#define _hw_mthd_hw_turn__wdogb		, _hw_turn_wdog
+#define _hw_mthd_hwa_turn__wdogb	, _hwa_turn_wdog
+#define _hw_mthd_hw_reset__wdogb	, _hw_wdreset
+#define _hw_mthd_hwa_config__wdogb	, _hwa_cfwdog
+#define _hw_mthd_hw_stat__wdogb		, _hw_stat_wdog
+#define _hw_mthd_hw_stat_t__wdogb	, _hw_statt_wdog
 
 
 HW_INLINE void __hwa_begin__wdogb ( hwa_wdogb_t *p, intptr_t address )

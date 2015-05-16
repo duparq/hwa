@@ -26,34 +26,46 @@
 	;; Device without boot section: the MCU is halted when the
 	;; flash memory is busy, no need to wait for readiness
 	;;
-	.macro	FLASH_CLRBF
-	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN
-	XST	SPMCSR, R21
+	.macro	FLASH_CLRBF reg
+	ldi	\reg, 1<<BP_RWWSRE | 1<<BP_SPMEN
+	XST	SPMCSR, \reg
 	spm
 	.endm
 
-	.macro	FLASH_LDBYTE
-	ldi	R21, 1<<BP_SPMEN
-	XST	SPMCSR, R21
+	;; .macro	FLASH_LDBYTE
+	;; ldi	R21, 1<<BP_SPMEN
+	;; XST	SPMCSR, R21
+	;; spm
+	;; .endm
+
+	.macro	FLASH_LDBYTE reg
+	.if	SPMCSR < 0x20
+	sbi	SPMCSR, BP_SPMEN
+	.else
+	ldi	\reg, 1<<BP_SPMEN
+	XST	SPMCSR, \reg
+	.endif
 	spm
 	.endm
 
-	.macro	FLASH_PGERS
-	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
-	XST	SPMCSR, R21
+	.macro	FLASH_PGERS reg
+	ldi	\reg, 1<<BP_PGERS | 1<<BP_SPMEN
+	XST	SPMCSR, \reg
 	spm
 	.endm
 
-	.macro	FLASH_PGWRT
-	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
-	XST	SPMCSR, R21
+	.macro	FLASH_PGWRT reg
+	ldi	\reg, 1<<BP_PGWRT | 1<<BP_SPMEN
+	XST	SPMCSR, \reg
 	spm
 	.endm
 
-#  define FLASH_ERWWS
+	.macro	FLASH_ERWWS reg
+	.endm
 
 #else
-	;; Device with boot section: wait the completion of SPM operation
+	;; Device with boot section: the MCU is not halted when programming a
+	;; page in the RWW section, must wait the completion of SPM operation
 	;;
 #  define FLASH_CLRBF
 

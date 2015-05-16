@@ -4,15 +4,41 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr__core_2.h"
+
+/** @page atmelavr_corea
+ *  @par Configuring the core
+ *
+ *  @code
+ *  hwa_config( CORE,
+ *
+ *              [sleep,        enabled,
+ *                           | disabled,]
+ *
+ *              [sleep_mode,   idle
+ *                           | adc_noise_reduction
+ *                           | power_down
+ *                           | standby]             );
+ *  @endcode
+ */
+
+/** @page atmelavr_corea
+ *  @par Entering sleep
+ *
+ *  @code
+ *  hw_sleep();
+ *  @endcode
+ */
+
+#define corex		corea
+#define atmelavr_corex	atmelavr_corea
+
+#include "hwa_atmelavr__corex_2.h"
 
 /*	Class methods
  */
-//#define hw_mthd_hw_config__corea		, _hw_config_corea
-#define hw_mthd_hwa_config__corea	, _hwa_config_core
-#define hw_mthd_hw_stat__corea		, _hw_stat_core
-//#define hw_mthd_hw_clear__coreb		, _hw_clear_coreb
-#define hw_mthd_hwa_clear__corea		, _hwa_clear_core
+#define _hw_mthd_hwa_config__corea	, _hwa_config_core
+#define _hw_mthd_hw_stat__corea		, _hw_stat_core
+#define _hw_mthd_hwa_clear__corea	, _hwa_clear_core
 
 
 HW_INLINE void __hwa_begin__corea ( hwa_corea_t *p, intptr_t a )

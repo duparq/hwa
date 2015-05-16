@@ -1,5 +1,14 @@
-/*	Device-specific hardware acess definitions.
+
+/* This file is part of the HWA project.
+ * Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ * All rights reserved. Read LICENSE.TXT for details.
  */
+
+
+/*	Device-specific hardware access definitions.
+ */
+
+#define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
 
 #define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
 
@@ -48,7 +57,7 @@
 HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 			      uint8_t bn, uint8_t bp, uint8_t v )
 {
-#if !defined HWA_NO_CHECK_ACCESS
+#if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
     HWA_ERR("invalid access");
 #endif
@@ -81,7 +90,7 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
        (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
 	wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80) ) {
     /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM addresses < 0x20): use
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
      *  sbi/cbi
      */
     if ( v )
@@ -108,7 +117,19 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       /*
        *  Read-modify-write
        */
+#if 0
+      /*
+       *  FIXME: hw_write_reg(hw_counter1, ices, 1) produces an extra
+       *  'andi reg, 0x9F' though bit 5 is not writeable and should not be reset.
+       */
       *p = (*p & rm) | (v & wm) ;
+#else
+      /*  FIX
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+#endif
     }
   }
 }
@@ -120,8 +141,10 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 			      uint8_t bn, uint8_t bp, uint16_t v )
 {
+#if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
     HWA_ERR("invalid access");
+#endif
 
   if ( bn == 0 )
     HWA_ERR("no bit to be changed?");
@@ -188,11 +211,11 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 #define _hwa_corp_2(...)		_hwa_corp_3(__VA_ARGS__)
 #define _hwa_corp_3(t,...)		_hwa_corp_##t(__VA_ARGS__)
 
-#define _hwa_corp__m1(_0,_1,rn,rw,ra,rwm,rfm, bn,bp, p)	\
-  _hwa_commit_r##rw(&p->rn,rwm,rfm,hwa->commit)
+#define _hwa_corp__m1(_0,_1,r,rw,ra,rwm,rfm, bn,bp, p)	\
+  _hwa_commit_r##rw(&((p)->r),rwm,rfm,hwa->commit)
 
-#define _hwa_corp__m1x(p,_1,rn,rw,ra,rwm,rfm, bn,bp, p0)	\
-  _hwa_commit_r##rw(&hwa->p.rn,rwm,rfm,hwa->commit)
+#define _hwa_corp__m1x(p,_1,r,rw,ra,rwm,rfm, bn,bp, p0)	\
+  _hwa_commit_r##rw(&hwa->p.r,rwm,rfm,hwa->commit)
 
 
 /**  \brief Commits an HWA register

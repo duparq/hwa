@@ -1,6 +1,13 @@
 
-/*	These are mostly the values as the board was shipped, except
- *	the bootsection size which is 1024 instead of 2048.
+/*	These are mostly the values as the board was shipped, except the
+ *	bootsection size which is now 1024 for Diabolo instead of 2048.
+ *
+ *	USBASP	1	MOSI	D11   BOARD
+ *		2	VCC	5V
+ *		4	GND	GND
+ *		5	RST	RST
+ *		7	SCK	D13
+ *		9	MISO	D12
  */
 #define HW_DEVICE			atmega328p
 #define HW_DEVICE_PACKAGE		32mlf

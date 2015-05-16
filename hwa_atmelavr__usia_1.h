@@ -4,31 +4,26 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*
- *	Atmel AVR universal serial interface model 'a'
+/**
+ * @page atmelavr_usia _usia
  *
- *	Used in:	ATtinyX4
+ * A class `_usia` object is an USI.
  */
+#define _hw_class__usia
 
 
-/*	Class
+/**
+ * @page atmelavr_usia_spimaster_swclk _usia_spimaster_swclk
+ *
+ * A class `_usia_spimaster_swclk` object is an SPI master clocked by software.
  */
-#define _hw_class_usia
-#define _hw_class_usia_spimaster_swclk
-
-
-/*	Methods
- */
-#define _hw_pop_usia(c,n,i,a,...)		__VA_ARGS__
+#define _hw_class__usia_spimaster_swclk
 
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
   hwa_r8_t cr ;
-  hwa_r8_t sr ;
-  hwa_r8_t dr ;
 } hwa_usia_t ;
 
 #endif

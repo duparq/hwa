@@ -20,7 +20,7 @@ dasm:
 
 #  Diabolo's CRC of the generated binary
 #
-.PHONY: crc
-crc:	$(OUTDIR)/$(OUT).bin
+.PHONY: stat
+stat:	$(OUTDIR)/$(OUT).bin
 #	@echo -n "CRC: "
-	@diabolo.py --mcu=$(DEVICE) --crc $(OUTDIR)/$(OUT).bin -q
+	@diabolo.py --mcu=$(DEVICE) --stat $(OUTDIR)/$(OUT).bin -q

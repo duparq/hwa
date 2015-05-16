@@ -6,11 +6,11 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*  _io8a port
+/**
+ * @page atmelavr_io8a _io8a
+ * A class `_io8a` object is an i/o port.
  */
 #define _hw_class__io8a
-#define _hw_pop__io8a(p,i,a,...)	__VA_ARGS__
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
@@ -42,23 +42,63 @@ typedef struct {
 #define hwa_io6a_t			hwa_io8a_t
 
 
-/*  i/o pins
+/**
+ * @page atmelavr_dio _dio
+ * A class `_dio` object is an i/o pin.
  */
-//#define _hw_class__io
 #define _hw_class__dio
 
-#define hw_mthd_hw_sup__dio			, _hw_sup_dio
-//#define _hw_sup_io(c,n,i, cc,cn,ci,ca, ...)	cc,cn,ci,ca
-#define _hw_sup_dio(n,i, cn,bn,bp,...)		HW_TX(cn, __VA_ARGS__)
 
-#define hw_mthd_hw_bn__dio			, _hw_bn_dio
-//#define _hw_bn_io(c,n,i, cc,cn,ci,ca, bn,bp)	bn
-//#define _hw_bn_io(c,n,i, cc,cn,ci,ca, bn,bp,...)	HW_TX(bn,__VA_ARGS__)
-#define _hw_bn_dio(c,id,cn,bn,bp)		bn
+/**
+ * @page atmelavr_dio
+ * @par Get the name of the port owning the pin
+ * @code
+ * #define PA0		hw_pin_pa0
+ * #define PORTA	hw_porta
+ * #if hw_id(hw_sup(PA0)) != hw_id(PORTA)
+ * #  HWA is damaged!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_sup__dio			, _hw_sup_dio
+#define _hw_sup_dio(n,i, cn,bn,bp,...)		cn
 
-#define hw_mthd_hw_bp__dio			, _hw_bp_dio
-//#define _hw_bp_io(c,n,i, cc,cn,ci,ca, bn,bp)	bp
-#define _hw_bp_dio(n,i, cn,bn,bp, ...)		HW_TX(bp, __VA_ARGS__)
 
-#define hw_mthd_hw_io__dio			, _hw_io_dio
-#define _hw_io_dio(...)				__VA_ARGS__
+/**
+ * @page atmelavr_dio
+ * @par Get the number of bits of the pin
+ * Of course, this should be 1.
+ * @code
+ * #if hw_id(hw_pin_pa3) && (hw_bn(hw_pin_pa3) != 1)
+ * #  HWA is damaged!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_bn__dio			, _hw_bn_dio
+#define _hw_bn_dio(c,id,cn,bn,bp,...)		bn
+
+
+/**
+ * @page atmelavr_dio
+ * @par Get the position of the pin in the port
+ * @code
+ * #if hw_id(hw_pin_pa3) && (hw_bp(hw_pin_pa3) != 3)
+ * #  HWA is damaged!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_bp__dio			, _hw_bp_dio
+#define _hw_bp_dio(p,i, cn,bn,bp,...)		bp
+
+
+/**
+ * @page atmelavr_dio
+ * @par Get the name of the i/o pin
+ * @code
+ * #if hw_id(hw_io(hw_pin_mosi)) != hw_id(hw_pin_pa6)
+ * #  error MOSI and PA6 are not the same pin
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_io__dio			, _hw_io_dio
+#define _hw_io_dio(p,i,cn,bn,bp,...)		p

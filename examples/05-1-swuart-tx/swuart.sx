@@ -1,0 +1,7 @@
+
+	;; -*- asm -*-
+
+//#define SWUART_COMPUTE_CYCLES
+
+#include "config.h"
+#include <hwa/swuart.sx>

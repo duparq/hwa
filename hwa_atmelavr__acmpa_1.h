@@ -9,10 +9,12 @@
  */
 
 
-/*	Class & methods
+/**
+ * @page atmelavr_acmpa _acmpa
+ *
+ * A class `_acmpa` object is an analog comparator.
  */
 #define _hw_class__acmpa
-//#define _hw_pop__acmpa(p,i,a,...)	__VA_ARGS__
 
 
 #define _hw__acmpa_acd			_cb1, csr, 1, 7

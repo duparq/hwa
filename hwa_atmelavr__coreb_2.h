@@ -7,10 +7,10 @@
 
 #include "hwa_atmelavr__core_2.h"
 
-//#define hw_mthd_hw_config__coreb		, _hw_config_coreb
-#define hw_mthd_hwa_config__coreb	, _hwa_config_core
-#define hw_mthd_hw_stat__coreb		, _hw_stat_core
-#define hw_mthd_hwa_clear__coreb		, _hwa_clear_core
+//#define _hw_mthd_hw_config__coreb		, _hw_config_coreb
+#define _hw_mthd_hwa_config__coreb	, _hwa_config_core
+#define _hw_mthd_hw_stat__coreb		, _hw_stat_core
+#define _hw_mthd_hwa_clear__coreb		, _hwa_clear_core
 
 
 HW_INLINE void __hwa_begin__coreb ( hwa_coreb_t *p, intptr_t a )

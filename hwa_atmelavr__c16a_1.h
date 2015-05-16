@@ -10,21 +10,33 @@
  */
 
 
-/*  Class & methods
+/**
+ * @page atmelavr_c16a _c16a
+ *
+ * A class `_c16a` object is a 16-bit counter/timer with two compare units and
+ * waveform generators and one capture unit.
  */
 #define _hw_class__c16a
-//#define _hw_pop__c16a(p,i,a,...)	__VA_ARGS__
 
-#define hw_mthd_hw_bn__c16a		, _hw_bn__c16a
-#define _hw_bn__c16a(p,i,a)		16
+
+/**
+ * @page atmelavr_c16a
+ * @par Number of bits of the counting register
+ *
+ * @code
+ * #if hw_bn( COUNTER ) != 16
+ * #  error You must choose a 16-bit counter!
+ * #endif
+ * @endcode
+ */
+#define _hw_mthd_hw_bn__c16a		, _hw_bn_c16a
+#define _hw_bn_c16a(p,i,a,...)		HW_TX(16, __VA_ARGS__)
 
 
 /*  Registers
  */
-#define _hw__c16a_coma			_cb1, ccra, 2, 6
-#define _hw__c16a_com0			_cb1, ccra, 2, 6
-#define _hw__c16a_comb			_cb1, ccra, 2, 4
-#define _hw__c16a_com1			_cb1, ccra, 2, 4
+#define _hw__c16a_compare0_mode		_cb1, ccra, 2, 6	/* COMA */
+#define _hw__c16a_compare1_mode		_cb1, ccra, 2, 4	/* COMB */
 
 #define _hw__c16a_icnc			_cb1, ccrb, 1, 7
 #define _hw__c16a_ices			_cb1, ccrb, 1, 6
@@ -55,29 +67,32 @@ typedef struct {
   hwa_r8_t	ccrb ;
   hwa_r8_t	ccrc ;
   hwa_r16_t	count ;
-  union {
-    hwa_r16_t	ocra ;
-    hwa_r16_t	compare0 ;
-  };
-  union {
-    hwa_r16_t	ocrb ;
-    hwa_r16_t	compare1 ;
-  };
-  union {
-    hwa_r16_t	icr ;
-    hwa_r16_t	capture0 ;
-  };
+  hwa_r16_t	compare0 ;
+  hwa_r16_t	compare1 ;
+  hwa_r16_t	capture0 ;
   hwa_r8_t	imsk ;
   hwa_r8_t	ifr ;
 
-  /*  Registers for high-level configuration
+  /*  Registers used for high-level configuration
    */
-  uint8_t	clock, countmode, top, overflow ;
-  uint8_t	compare0_update ;
-  uint8_t	compare0_output ;
-  uint8_t	compare1_update ;
-  uint8_t	compare1_output ;
-  uint8_t	icr_input, icr_edge, icr_filter ;
+  struct {
+    uint8_t	clock, countmode, top, overflow ;
+    struct {
+      uint8_t	update, output ;
+    } compare0 ;
+    struct {
+      uint8_t	update, output ;
+    } compare1 ;
+    struct {
+      uint8_t	input, edge, filter ;
+    } capture0 ;
+  } config ;
+
+  /*  Registers used for configuration resolution
+   */
+  struct {
+    uint8_t	cs, wgm, coma, comb, acic, ices, icnc ;
+  } solved ;
 
 } hwa_c16a_t ;
 

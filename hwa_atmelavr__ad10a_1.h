@@ -1,24 +1,37 @@
 
-/* This file is part of the HWA project.
+/*
+ *	Atmel AVR 10-bit analog-digital converter model 'a'
+ *
+ *	Used in:	ATtinyX4
+ *
+ * This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
 
-/*
- *	Atmel AVR 10-bit analog-digital converter model 'a'
+/**
+ * @page atmelavr_ad10a _ad10a
  *
- *	Used in:	ATtinyX4
+ * A class `_ad10a` object is a 10-bit analog to digital converter.
  */
+#define _hw_class__ad10a
 
 
-/*	Class & methods
+/**
+ * @page atmelavr_ad10a
+ * @par Number of bits of the conversion register
+ *
+ * @code
+ * #define ADC		hw_adc0
+ *
+ * #if hw_bn( ADC ) < 10
+ * #  error At least 10-bit ADC is required!
+ * #endif
+ * @endcode
  */
-#define _hw_class_ad10a
-#define _hw_pop_ad10a(c,n,i,a,...)	__VA_ARGS__
-
-#define hw_mthd_hw_bn_ad10a		, _hw_bn_ad10a
-#define _hw_bn_ad10a(c,n,i,a)		10
+#define _hw_mthd_hw_bn__ad10a		, _hw_bn_ad10a
+#define _hw_bn_ad10a(p,i,a,_)		10
 
 
 #if !defined __ASSEMBLER__

@@ -1,0 +1,5 @@
+HW_DEVICE=attiny84
+hw_syshz=8000000
+PWM=hw_counter0_compare0
+CLKDIV=64
+COUNTMODE=loop_up

@@ -5,41 +5,29 @@
  */
 
 
-/*
- * @page dev
+/** @file
+ * @brief	`hwa.h` is the main include file of HWA.
+ *
+ * `hwa.h` is included from the application source after `HW_DEVICE` has been
+ * defined with the name od the target device. `hwa.h` is responsible for
+ * including all that is necessary in order to use HWA for the target device.
  *
  * HWA definitions are split in two parts:
  *
- * @list @item The first part (files ending with _1.h ) contains the
- * definitions that do not produce C code (can be used for assembler) and the
- * definitions related to the building of the HWA cache structure.
+ * - The first part (files ending with `_1.h` ) contains the definitions that do
+ *   not produce C code (can be used for assembler) and the definitions
+ *   related to the building of the HWA context.
  *
- * @item The second part (files ending with _2.h) contains the definitions that
- * produce C code or make use of the HWA cache structure.
- */
-
-
-/** @file
- * @brief	HWA global include file
+ * - The second part (files ending with `_2.h`) contains the definitions that
+ *   produce C code or make use of the HWA context.
  */
 
 #ifndef _HWA_H_
 #define _HWA_H_
 
-/** @brief	Target.
- */
 
 #ifndef HW_DEVICE
 #  error "HW_DEVICE not defined."
-#endif
-
-/**
- * @brief	Set crystal system oscillator frequency to 0 if none specified.
- * @ingroup	global
- * @hideinitializer
- */
-#ifndef HW_XSOHZ
-#  define HW_XSOHZ	0
 #endif
 
 #include "hwa__macros.h"
@@ -50,7 +38,8 @@
 
 #include <stdint.h>
 
-/** brief	Storage class of HWA functions.
+
+/*  Storage class of HWA functions.
  *
  *  HWA function-like macros MUST be injected inside their callers and not leave
  *  any trace elsewhere, i.e. they must be strictly equivalent to macros,
@@ -62,7 +51,7 @@
  *  However, it seems that the 'static' keyword prevents the function to be
  *  inlined unless the 'always_inline' attribute is specified.
  *
- *  __attribute__((always_inline)) triggers a warning if gcc fails to inline the
+ *  `__attribute__((always_inline))` triggers a warning if gcc fails to inline the
  *  function.
  */
 #define HW_INLINE		static inline __attribute__((always_inline))
@@ -75,12 +64,11 @@
 #endif
 
 
-/*	HWA_ERR(msg): run-time error
- */
-/** brief	Run-time error
+/** @brief	Run-time error.
  *
- * \ingroup macro
- * \hideinitializer
+ *  Trigger an error after code generation.
+ *
+ * @hideinitializer
  */
 #define HWA_ERR(msg)		_HWA_ERR_2(msg, __COUNTER__)
 #define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
@@ -91,9 +79,10 @@
   } while(0)
 
 
-/** \brief	8-bit HWA register.
+/** @brief	8-bit HWA context register.
  *
- *	Structure used by hwa_ prefixed functions to handle one 8-bit hardware register.
+ *  Structure used by `hwa_` prefixed functions to handle one 8-bit hardware
+ *  register.
  */
 typedef struct hwa_r8_t
 {
@@ -128,24 +117,23 @@ typedef struct rem_hwa_r32_t
 
 /*	Include device-specific declarations
  */
-#ifdef DOXYGEN
-#  include "hwa_device_1.h"
-#else
-#  include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_1.h)
-#endif
+#include HW_QUOTE(HW_G2(hwa,HW_DEVICE)_1.h)
 
 
 #if !defined __ASSEMBLER__
 
-/** \brief	The hwa struct.
+/*  The HWA context.
  *
- * This structure is instanciated by hwa_begin() and used by all hwa_...(...)
- * functions to bufferize hardware accesses.
+ *  This structure is instanciated by `hwa_begin()` and used by all
+ *  `hwa_...(...)` functions to bufferize hardware accesses.
+ *
+ *  It is populated by expanding the `HWA_DCL` symbol that is defined in the
+ *  target-specific files.
  */
 
 typedef struct {
-  uint8_t	commit ;	/*!< 1 if commit actually writes hard registers	*/
-  HWA_DCL			/*!< Include device-specific declarations	*/
+  uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
+  HWA_DCL			/*!< Include device-specific declarations		*/
 } hwa_t ;
 
 struct hwa_t ;

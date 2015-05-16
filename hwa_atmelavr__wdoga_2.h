@@ -1,8 +1,8 @@
 
 /*	Atmel AVR watchdog model 'a'
  *
- *	Used in: ATtinyX4 (WDOG)	hw_watchdog0
- *		 ATtinyX5 (WDOG)	hw_watchdog0
+ *	Used in: ATtinyX4 (WDOG)	hw_wdog0
+ *		 ATtinyX5 (WDOG)	hw_wdog0
  *
  * This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
@@ -16,12 +16,12 @@
 
 /*	Watchdog class methods
  */
-#define hw_mthd_hw_turn__wdoga		, _hw_turn_wdog
-#define hw_mthd_hwa_turn__wdoga		, _hwa_turn_wdog
-#define hw_mthd_hw_reset__wdoga		, _hw_wdreset
-#define hw_mthd_hwa_config__wdoga	, _hwa_cfwdog
-#define hw_mthd_hw_stat__wdoga		, _hw_stat_wdog
-#define hw_mthd_hw_stat_t__wdoga		, _hw_statt_wdog
+#define _hw_mthd_hw_turn__wdoga		, _hw_turn_wdog
+#define _hw_mthd_hwa_turn__wdoga	, _hwa_turn_wdog
+#define _hw_mthd_hw_reset__wdoga	, _hw_wdreset
+#define _hw_mthd_hwa_config__wdoga	, _hwa_cfwdog
+#define _hw_mthd_hw_stat__wdoga		, _hw_stat_wdog
+#define _hw_mthd_hw_stat_t__wdoga	, _hw_statt_wdog
 
 
 HW_INLINE void __hwa_begin__wdoga ( hwa_wdoga_t *p, intptr_t address )

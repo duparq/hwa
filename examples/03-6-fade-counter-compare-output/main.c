@@ -3,13 +3,13 @@
  *
  *	Changes versus method 1:
  *
- *        * we define PWM as hw_counterX_compareY and use hw_sup(...) to
- *          retrieve the definition of the counter
+ *        * define PWM as hw_counterX_compareY and use hw_sup(...) to
+ *          retrieve the name of the counter
  *
- *        * we use a HWA context in the ISR and the couple
+ *        * use a HWA context in the ISR and the couple
  *          hwa_nocommit() / hwa_commit() to write the changes to the hardware
  *
- *        * we use a seperate function to store the hardware configuration
+ *        * use a seperate function to store the hardware configuration
  *          into a HWA context
  *
  *  This file is part of the HWA project.
@@ -18,11 +18,9 @@
  */
 
 
-/*	Target				Results (64, loop_up, compare0)
- *					   hw_counter0		hw_counter1
- *					   bytes:CRC		bytes:CRC
+/*	Target
  */
-#include "targets/attiny84.h"		// 188:0x35C1		198:0xA553
+#include "targets/attiny84.h"		// 188 bytes
 //#include "targets/attiny85.h"		// 184:0xA55D		-
 //#include "targets/nanodccduino.h"	// 264:0x17F7		286:0x5C01
 #include <hwa.h>
@@ -35,7 +33,7 @@
 #define COUNTMODE		loop_up
 
 
-/*  Load a HWA context with the hardware configuration
+/*  Store the hardware configuration into a HWA context
  */
 HW_INLINE void setup_hardware ( hwa_t *hwa )
 {
@@ -53,6 +51,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 	      bottom,    0,
 	      top,       fixed_0xFF
 	      );
+
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_config( PWM, output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
@@ -64,8 +63,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 }
 
 
-/*  Service the counter overflow IRQ:
- *    compute the next value of the compare unit
+/*  Service the counter overflow IRQ: compute the next value of the compare unit
  *
  *    Phase 0: increase duty cycle from 0 to 255
  *    Phase 1: decrease duty cycle from 255 to 0 (use ~duty)
@@ -91,6 +89,9 @@ HW_ISR( hw_sup(PWM), overflow )
      *	the compare unit as it can not provide pulses of less than 1 cycle.
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
+
+      /*  Start from the hardawre configuration used at initialization
+       */
       hwa_begin_from_reset();
       setup_hardware( hwa );
 
@@ -121,15 +122,16 @@ HW_ISR( hw_sup(PWM), overflow )
 
 int main ( )
 {
-  /*  Create a HWA context and load it with RESET values
+  /*  Create a HWA context to collect the hardware configuration
+   *  Preload this context with RESET values
    */
   hwa_begin_from_reset();
 
-  /*  Load the HWA context with the hardware config
+  /*  Store the hardware configuration into the HWA context
    */
   setup_hardware( hwa );
 
-  /*  Write the configuration into the hardware
+  /*  Write this configuration into the hardware
    */
   hwa_commit();
 
