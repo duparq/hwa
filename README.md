@@ -16,12 +16,7 @@ compilation stages and a cache mechanism combined to the compiler's optimizers
 help HWA produce machine code free of any penalty, either in terms of size,
 execution speed or memory used.
 
-\htmlonly
-<div align='center'>
-<embed src="hwa_intro_en.svg" width="800px" type="image/svg+xml"/>
-</div>
-\endhtmlonly
-
+<img src="hwa_intro_en.svg" width="800px" />
 
 Examples
 --------
@@ -101,7 +96,7 @@ WARNING: this project is subject to heavy changes of the code-base, including
 project-wide name changes.
 
 Because I do this as a hobby in my spare time, sometimes not touching it for
-several weeks, the development pace of HWA is as much irregular than the road I
+several weeks, the development pace of HWA is as much irregular as the road I
 follow. Besides, I have many things to learn about Doxygen, git or just about
 project management.
 
