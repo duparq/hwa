@@ -11,12 +11,12 @@ programmer to focus on the result rather than the values that must be written
 into registers with the hope that it will lead to source codes easier to read,
 easier to maintain, and easier to port between different targets.
 
-HWA is not a runtime library. It is implemented at the preprocessing and
-compilation stages and a cache mechanism combined to the compiler's optimizers
-help HWA produce machine code free of any penalty, either in terms of size,
-execution speed or memory used.
+HWA is not a library. It is implemented at the preprocessing and compilation
+levels and a cache mechanism combined to the compiler's optimizers help HWA
+produce machine code free of any penalty, either in terms of size, execution
+speed or memory used.
 
-![](hwa_intro_en.jpeg)
+![](doxygen/hwa_intro_en.jpeg)
 
 
 Examples

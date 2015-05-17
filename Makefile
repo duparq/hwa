@@ -1,4 +1,7 @@
 
+all: checks
+
+
 .PHONY:clean
 clean:
 	@find . '(' 			\
