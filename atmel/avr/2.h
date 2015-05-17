@@ -34,10 +34,10 @@
  */
 #define HW_ATOMIC(...)				\
   do{						\
-    uint8_t s = hw_read_reg(hw_core0,sreg);	\
+    uint8_t s = _hw_read_reg(hw_core0,sreg);	\
     hw_disable_interrupts();			\
-    __VA_ARGS__ ;				\
-    hw_write_reg(hw_core0,sreg,s) ;		\
+    { __VA_ARGS__ }				\
+    _hw_write_reg(hw_core0,sreg,s) ;		\
   }while(0)
 
 
