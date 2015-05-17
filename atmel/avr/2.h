@@ -41,7 +41,14 @@
   }while(0)
 
 
-/** \brief	Write one hardware register.
+/*
+ *  FIXME: there is something strange here: why does _hw_write_r8 do almost the
+ *  same things as does _hw_commit_r8? How could the fix below solve the problem
+ *  from here? All that should be looked after carefully again...
+ *  Simplifications in sight!
+ */
+/**
+ * @brief	Write one hardware register.
  *
  *	Write the value into the rbn consecutive bits starting at pos rbp into
  *	the hard register at address p. Trying to write 1s into non-writeable
@@ -53,7 +60,6 @@
  *  \param rbp	position of the least significant bit conderned in the register.
  *  \param v	value to write.
  */
-
 HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 			      uint8_t bn, uint8_t bp, uint8_t v )
 {
