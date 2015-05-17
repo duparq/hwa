@@ -2,33 +2,27 @@
 /*	TCS3200 color detector
  *
  *	The detector drives 4 LED connected to PIN_OUT0..3 according to one of
- *	the 16 preprogrammed colors it has recognized.
+ *	the 16 color regions it has been taught.
  *
  *	Host applications provided:
  *
- *	  ./sample.py      show real-time sampling and store samples them into a file
+ *	  ./tcs3200.py     * show status of device (threshold and regions)
+ *	                   * show real-time sampling, store samples into a file
+ *	                   * define a region in the device
+ *	                   * set the value of the maximum period (minimum light
+ *	                     level) on the clear channel that enables sampling
+ *	                     (0..65535)
  *
- *	  ./display.py     display (3D) the samples contained in the provided files
+ *	  ./display.py     display (3D) the samples contained
+ *	                   in the provided files
  *
- *	  ./regions.py     list defined regions in the device
+ *	Use the same counter as SWUART to compute the period of the TCS3200
+ *	output signal.
  *
- *	  ./set_region     define a regions that the device should recognize
- *
- *	  ./threshold      give the value of the maximum period (minimum light
- *	                   level) on the clear channel that enables sampling 
- *
- *	  ./set_threshold  set the value of the maximum period (minimum light
- *	                   level) on the clear channel that enables sampling
- *	                   (0..65535)
- *
- *	The timer used by the SWUART is also used to compute the period of
- *	the TCS3200 output signal.
- *
- *	With S0=0 and S1=1, frequency is below 12 kHz, so period is over 83 µs.
- *
- *	With hw_syshz=8 MHz, this gives periods >660 counter units. As the
- *	counter has 16 bits, the lowest period it can measure is about 122 Hz.
- *	Experience shows that it is enough.
+ *	With S0=0 and S1=1, output frequency of the TCS is below 12 kHz, so
+ *	period is over 83 µs. With hw_syshz=8 MHz, this gives periods >660
+ *	counter units. As the counter has 16 bits, the lowest period it can
+ *	measure is about 122 Hz. Experience shows that it is enough.
  *
  *  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
@@ -48,13 +42,21 @@
 #  define PIN_LED	hw_pin_7
 #endif
 
+
+/*  Channel selection pins
+ */
 #define PIN_TCS3200_S2	hw_pin_5
 #define PIN_TCS3200_S3	hw_pin_3
 
-#define PIN_OUT0	hw_pin_8
-#define PIN_OUT1	hw_pin_9
-#define PIN_OUT2	hw_pin_10
-#define PIN_OUT3	hw_pin_11
+
+/*  Define `PIN_OUTS` as 4 consecutive i/o pins PA5,PA4,PA3,PA2 (14pdip: 8..11)
+ */
+#define _PIN_OUTS	_pin1, 0, hw_porta, 4, 2
+
+/* #define PIN_OUT0	hw_pin_11 */
+/* #define PIN_OUT1	hw_pin_10 */
+/* #define PIN_OUT2	hw_pin_9 */
+/* #define PIN_OUT3	hw_pin_8 */
 
 
 /*  Maximum period (minimum light level) required
@@ -240,10 +242,12 @@ main ( )
   hwa_write( PIN_TCS3200_S2, 0 );
   hwa_write( PIN_TCS3200_S3, 0 );
 
-  hwa_config( PIN_OUT0, direction, output );
-  hwa_config( PIN_OUT1, direction, output );
-  hwa_config( PIN_OUT2, direction, output );
-  hwa_config( PIN_OUT3, direction, output );
+  hwa_config( PIN_OUTS, direction, output );
+
+  /* hwa_config( PIN_OUT0, direction, output ); */
+  /* hwa_config( PIN_OUT1, direction, output ); */
+  /* hwa_config( PIN_OUT2, direction, output ); */
+  /* hwa_config( PIN_OUT3, direction, output ); */
 
   hwa_commit();
 
@@ -312,10 +316,12 @@ main ( )
 	/*
 	 *  Region found, produce the result
 	 */
-	hw_write( PIN_OUT0, (r.result & 0x01) != 0 );
-	hw_write( PIN_OUT1, (r.result & 0x02) != 0 );
-	hw_write( PIN_OUT2, (r.result & 0x04) != 0 );
-	hw_write( PIN_OUT3, (r.result & 0x08) != 0 );
+	hw_write( PIN_OUTS, r.result & 0x0F );
+
+	/* hw_write( PIN_OUT0, (r.result & 0x01) != 0 ); */
+	/* hw_write( PIN_OUT1, (r.result & 0x02) != 0 ); */
+	/* hw_write( PIN_OUT2, (r.result & 0x04) != 0 ); */
+	/* hw_write( PIN_OUT3, (r.result & 0x08) != 0 ); */
       }
       else {
 	/*
@@ -323,10 +329,12 @@ main ( )
 	 */
 	rn = 0xFF ;
 
-	hw_write( PIN_OUT0, 0 );
-	hw_write( PIN_OUT1, 0 );
-	hw_write( PIN_OUT2, 0 );
-	hw_write( PIN_OUT3, 0 );
+	hw_write( PIN_OUTS, 0 );
+
+	/* hw_write( PIN_OUT0, 0 ); */
+	/* hw_write( PIN_OUT1, 0 ); */
+	/* hw_write( PIN_OUT2, 0 ); */
+	/* hw_write( PIN_OUT3, 0 ); */
       }
     }
     else {
@@ -339,10 +347,12 @@ main ( )
       pgreen = 0 ;
       pblue  = 0 ;
 
-      hw_write( PIN_OUT0, 0 );
-      hw_write( PIN_OUT1, 0 );
-      hw_write( PIN_OUT2, 0 );
-      hw_write( PIN_OUT3, 0 );
+      hw_write( PIN_OUTS, 0 );
+
+      /* hw_write( PIN_OUT0, 0 ); */
+      /* hw_write( PIN_OUT1, 0 ); */
+      /* hw_write( PIN_OUT2, 0 ); */
+      /* hw_write( PIN_OUT3, 0 ); */
     }
 
     if ( hw_stat(UART).rxc ) {
