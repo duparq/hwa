@@ -16,7 +16,7 @@ levels and a cache mechanism combined to the compiler's optimizers help HWA
 produce machine code free of any penalty, either in terms of size, execution
 speed or memory used.
 
-![](doxygen/hwa_intro_en.jpeg)
+![](doxygen/hwa_principle.jpeg)
 
 
 Examples
