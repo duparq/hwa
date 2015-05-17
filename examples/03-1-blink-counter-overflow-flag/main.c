@@ -52,8 +52,7 @@ int main ( )
 	      clock,     HW_G2(syshz_div, CLKDIV),
 	      countmode, COUNTMODE,
 	      bottom,    0,
-	      top,       compare0,
-	      overflow,  at_top,
+	      top,       compare0
 	      );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV / 2 );

@@ -107,29 +107,3 @@ int main ( )
   for(;;)
     hw_sleep();
 }
-
-
-/* _hw_x... -> faire retourner le nom du sous-registre
- */
-
-//  hwa->hw_counter0->cs.r = (hwa_r8_t*)hwa->hw_counter0.
-
-#define _hwa_begin_m8(on,m)		_hwa_begin_m8_2( _##on,on,m )
-#define _hwa_begin_m8_2(...)		_hwa_begin_m8_3(__VA_ARGS__)
-//_hwa_begin_m8_2( _c8a, 400, 0,hw_counter0,cs );
-#define _hwa_begin_m8_3(c,i,a,on,m)	_hwa_begin_m8_4(m,_hw_##c##_##m,on,c,a)
-#define _hwa_begin_m8_4(...)		_hwa_begin_m8_5(__VA_ARGS__)
-
-#define _hwa_begin_m8_5(m,t,...)	HW_G2(_hwa_begin_m8,HW_IS(,hw_hasbits_##t))(m,t,__VA_ARGS__)
-
-#define _hwa_begin_m8_1(m,t,...)	_HW_SPEC(_hwa_begin, _hw_x##t(__VA_ARGS__,m), m)
-
-//_hwa_begin__m1(hw_counter0,0, ccrb,8,0x53,0xCF,0x00, 3,0);
-
-//_hwa_begin__m1(hw_counter0,0, ccrb,8,0x53,0xCF,0x00, 3,0, cs);
-#define _hwa_begin__m1(on,a, rn,rw,ra,rwm,rfm, bn, bp, m)	\
-  hwa->on.m.r = (hwa_r8_t*)&hwa->on.rn
-
-
-
-//_hwa_begin_m8( hw_counter0, cs );
