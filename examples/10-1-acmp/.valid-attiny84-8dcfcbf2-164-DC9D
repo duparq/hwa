@@ -1,0 +1,10 @@
+HW_DEVICE=attiny84
+hw_syshz=8000000
+PIN_LED=hw_pin_pa6
+INPUT_POS=bandgap
+INPUT_NEG=hw_pin_pa7
+EDGE=falling
+COUNTER=hw_counter0
+COUNTER_CLK_DIV=64
+COMPARE=compare0
+PERIOD=0.001
