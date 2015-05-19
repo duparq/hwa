@@ -49,7 +49,7 @@ Pin numbers (`hw_pin_1`...) can be used if `HW_DEVICE_PACKAGE` is defined:
 
 @code
 #define HW_DEVICE          attiny44
-#define HW_DEVICE_PACKAGE  dil
+#define HW_DEVICE_PACKAGE  14pdip
 @endcode
 
 Most HWA instructions are generic and accept objects of various classes as first
@@ -83,7 +83,8 @@ Instructions that do not act on hardware
 ---------------------------------------
 
 HWA provides a few instructions that give informations about objects without
-accessing the hardware. These instructions can be used in assembler programming.
+accessing the hardware. Most of these instructions can be used in assembler
+programming.
 
 
 Instruction      | Result
@@ -132,7 +133,7 @@ to enable, disable or clear an interrupt request or for declaring an interrupt
 service routine (ISR).
 
 You obtain the definition of an interrupt with the instruction `hw_irq(
-controller [, interrupt_name] )`.
+object [, interrupt_name] )`.
 
 Use the `hw/hwa_turn(...)` or `hw/hwa_turn_irq(...)` instruction to
 enable/disable an interrupt request:
