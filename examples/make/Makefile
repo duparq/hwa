@@ -130,8 +130,8 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin
 #	@echo RULE: $@: $^
 	@set -e										;\
 	S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
-	O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/out.bin)			;\
-	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/out.bin)			;\
+	O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)			;\
+	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
 	rm -f .valid-$(DEVICE)-$$S_CRC-*						;\
 	cp $(CFG) .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC				;\
 	echo Validation: .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC
@@ -140,21 +140,24 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin
 #  Check that the CRC is unchanged for a given configuration
 #
 .PHONY: check
-check: $(CFG) $(OUTDIR)/$(OUT).bin
-#	@echo RULE: $@: $^  IMACROS=$(IMACROS)
-	@set -e										;\
-	S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
-	O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/out.bin)			;\
-	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/out.bin)			;\
-	if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
-	  echo passed									;\
-	else										\
-	  if test -f .valid-$(DEVICE)-$$S_CRC-* ; then					\
-	    echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
+check: $(CFG)
+	if make $(OUTDIR)/$(OUT).bin ; then						\
+	  S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
+	  O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
+	  O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
+	  if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
+	    echo passed									;\
 	  else										\
-	    echo "FAIL: no validation found (.valid-$(DEVICE)-$$S_CRC-*)"	;\
+	    if test -f .valid-$(DEVICE)-$$S_CRC-* ; then				\
+	      echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
+	    else									\
+	      echo "FAIL: no validation found (.valid-$(DEVICE)-$$S_CRC-*)"		;\
+	    fi										;\
+	    exit 1									;\
 	  fi										;\
-	  exit 1									;\
+	else										\
+	  echo "make FAILED"								;\
+	  exit1										;\
 	fi
 
 
