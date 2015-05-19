@@ -86,9 +86,9 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  *
  *            [bottom,      0, ]
  *
- *             top,         fixed_0xFF
+ *            [top,         fixed_0xFF
  *                        | max
- *                        | compare0,
+ *                        | compare0,]
  *
  *            [overflow,    at_bottom
  *                        | at_top
@@ -173,8 +173,8 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 #define _hwa_cfc8a_xbottom_0(n,...)				\
   HW_G2(_hwa_cfc8a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define _hwa_cfc8a_xtop_0(n,...)				\
-  HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
+/* #define _hwa_cfc8a_xtop_0(n,...)				\ */
+/*   HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.") */
 
 #define _hwa_cfc8a_xtop_1(n,_top_,...)					\
   HW_G2(_hwa_cfc8a_vtop,HW_IS(,hw_c8a_top_##__VA_ARGS__))(n,__VA_ARGS__)
@@ -185,6 +185,9 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 
 #define _hwa_cfc8a_vtop_1(n,ztop,...)					\
   hwa->n.config.top = HW_A1(hw_c8a_top_##ztop);				\
+  _hwa_cfc8a_xtop_0(n,__VA_ARGS__)
+
+#define _hwa_cfc8a_xtop_0(n,...)					\
   HW_G2(_hwa_cfc8a_xuc,HW_IS(update,__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_cfc8a_xuc_1(n,uc,...)					\
@@ -240,6 +243,11 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
   /*	Clock selection
    */
   p->solved.cs = p->config.clock ;
+
+  /*  Default config for top
+   */
+  if ( p->config.top == 0xFF )
+    p->config.top = HW_A1(hw_c8a_top_max);
 
   /*  Default config for overflow
    */

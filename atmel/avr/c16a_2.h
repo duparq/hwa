@@ -90,13 +90,13 @@ HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
  *
  *            [bottom,      0, ]
  *
- *             top,         fixed_0xFF
+ *            [top,         fixed_0xFF
  *                        | fixed_0x1FF
  *                        | fixed_0x3FF
  *                        | fixed_0xFFFF
  *                        | max
  *                        | compare0
- *                        | capture0,
+ *                        | capture0,]
  *
  *            [overflow,    at_bottom
  *                        | at_top
@@ -189,20 +189,23 @@ HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 #define _hwa_config__c16a_xbottom_0(n,...)				\
   HW_G2(_hwa_config__c16a_xtop,HW_IS(top,__VA_ARGS__))(n,__VA_ARGS__)
 
-#define _hwa_config__c16a_xtop_0(n,...)				\
-  HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.")
-
 #define _hwa_config__c16a_xtop_1(n,kw,...)				\
   HW_G2(_hwa_config__c16a_vtop,HW_IS(,hw_c16a_top_##__VA_ARGS__))(n,__VA_ARGS__)
 
 #define _hwa_config__c16a_vtop_0(n,...)					\
   HW_ERR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, "	\
-	 "`fixed_0xFFFF`, `capture0`, or `compare0`,"			\
+	 "`fixed_0xFFFF`, `max`, `capture0`, or `compare0`,"		\
 	 " but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define _hwa_config__c16a_vtop_1(n,v,...)				\
   hwa->n.config.top = HW_A1(hw_c16a_top_##v);					\
   HW_G2(_hwa_config__c16a_xoverflow,HW_IS(overflow,__VA_ARGS__))(n,__VA_ARGS__)
+
+/* #define _hwa_config__c16a_xtop_0(n,...)				\ */
+/*   HW_ERR("expected `top` instead of `" #__VA_ARGS__ "`.") */
+
+#define _hwa_config__c16a_xtop_0(o,...)				\
+  HW_G2(_hwa_config__c16a_xoverflow,HW_IS(overflow,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_config__c16a_xoverflow_1(n,kw,...)				\
     HW_G2(_hwa_config__c16a_voverflow, HW_IS(,hw_c16a_overflow_##__VA_ARGS__))(n,__VA_ARGS__)
@@ -237,6 +240,10 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
    */
   p->solved.cs = p->config.clock ;
 
+  /*  Default config for top
+   */
+  if ( p->config.top == 0xFF )
+    p->config.top = HW_A1(hw_c16a_top_max);
 
   /*  Default config for overflow
    */
@@ -561,10 +568,10 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
  * @endcode
  */
 #define _hw_mthd_hw_write__c16a		, _hw_write_c16a
-#define _hw_write_c16a(p,i,a,v,...)	HW_TX(_hw_write_reg(p,count,v),__VA_ARGS__)
+#define _hw_write_c16a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,count,v),__VA_ARGS__)
 
-#define _hw_mthd_hwa_write__c16a		, _hwa_write_c16a
-#define _hwa_write_c16a(c,n,i,a,v)	_hwa_write_reg(c,n,i,a,count,v)
+#define _hw_mthd_hwa_write__c16a	, _hwa_write_c16a
+#define _hwa_write_c16a(o,i,a,v)	_hwa_write_reg(o,count,v)
 
 
 /**
@@ -578,10 +585,10 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
  * Note: this does not reset the prescaler.
  */
 #define _hw_mthd_hw_clear__c16a		, _hw_clear_c16a
-#define _hw_clear_c16a(c,n,i,a,...)	HW_TX(_hw_write_reg(c,n,i,a,count,0),__VA_ARGS__)
+#define _hw_clear_c16a(o,i,a,...)	HW_TX(_hw_write_reg(o,count,0),__VA_ARGS__)
 
-#define _hw_mthd_hwa_clear__c16a		, _hwa_clear_c16a
-#define _hwa_clear_c16a(c,n,i,a)	_hwa_write_reg(c,n,i,a,count,0)
+#define _hw_mthd_hwa_clear__c16a	, _hwa_clear_c16a
+#define _hwa_clear_c16a(o,i,a)		_hwa_write_reg(o,count,0)
 
 
 /**
