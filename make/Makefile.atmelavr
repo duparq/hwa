@@ -1,0 +1,18 @@
+
+#	-*- makefile -*-
+
+#$(warning "INCLUDE: Makefile.atmelavr")
+
+#  Show fuse values
+#
+#	Values are double-quoted then they must be echoed.
+#
+show-fuses: $(INC_HWA)
+#	@echo "RULE: $@: $^"
+	@printf "FUSE_EB=0x%02X  FUSE_HB=0x%02X  FUSE_LB=0x%02X\n" \
+		$$(($$(echo $(DEVICE_FUSE_EB)))) \
+		$$(($$(echo $(DEVICE_FUSE_HB)))) \
+		$$(($$(echo $(DEVICE_FUSE_LB))))
+
+dasm:
+	avr-objdump -m avr:5 -b binary -D $(OUTDIR)/$(OUT).bin
