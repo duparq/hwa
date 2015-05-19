@@ -5,8 +5,9 @@
 *.hwa.*
 *.o
 *.pyc
+*.i
+*.s
 build/
-doxygen/html/
 private/
 projects/
 trash/

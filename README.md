@@ -60,7 +60,8 @@ Documentation
 -------------
 
 Run `make doc` in the HWA base directory to build the documentation in HTML
-format. You'll start with the `doxygen/html/index.html` page.
+format. You'll start with the [doxygen/html/index.html](doxygen/html/index.html)
+page.
 
 
 Diabolo

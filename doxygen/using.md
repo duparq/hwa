@@ -3,7 +3,7 @@ Using HWA {#using}
 =========
 
 First of all, in order to use the HWA facilities, the symbol `HW_DEVICE` must be
-defined with the name of the device before `hwa.h` is included:
+defined with the name of the target device before `hwa.h` is included:
 
 @code
 #define HW_DEVICE	attiny44
@@ -52,10 +52,11 @@ Pin numbers (`hw_pin_1`...) can be used if `HW_DEVICE_PACKAGE` is defined:
 #define HW_DEVICE_PACKAGE  dil
 @endcode
 
-Most HWA instructions are generic and accept various class objects as first
-parameter. This allows writing less verbose code that is also easier to port
-between different controllers or different devices. Several instructions accept
-a variable length list of parameters consisting of key/value pairs.
+Most HWA instructions are generic and accept objects of various classes as first
+parameter. This allows writing less verbose code and makes it easier to replace
+an object by another, or port the code to a different target device. Several
+instructions accept a variable length list of parameters consisting of key/value
+pairs.
 
 
 Instructions that act on hardware
@@ -63,18 +64,18 @@ Instructions that act on hardware
 
 Synchronous           | Asynchronous        | Action
 ----------------------|---------------------|--------
-`hw_config(...)`      | `hwa_config(...)`   | Configure something
-`hw_clear(...)`       | `hwa_clear(...)`    | Clear something: a prescaler, an interrupt flag...
-`hw_read(...)`        |                     | Read something: a controller, a pin...
+`hw_config(...)`      | `hwa_config(...)`   | Configure an object.
+`hw_clear(...)`       | `hwa_clear(...)`    | Clear an object.
+`hw_read(...)`        |                     | Read an object.
 `hw_read_reg(...)`    |                     | Short for `hw_read(hw_reg(...))`
-`hw_atomic_read(...)` |                     | Disable interrupts while reading something
-`hw_status(...)`      |                     | Get the status of a controller
-`hw_release(...)`     | `hwa_release(...)`  | Release something: a prescaler...
-`hw_toggle(...)`      | `hwa_toggle(...)`   | Toggle something: an output pin...
-`hw_trigger(...)`     | `hwa_trigger(...)`  | Trigger something: an ADC conversion, a PWM output...
-`hw_turn(...)`        | `hwa_turn(...)`     | Turn something on/off: a controller, an IRQ...
-`hw_turn_irq(...)`    | `hwa_turn_irq(...)` | Enable/disable an IRQ
-`hw_write(...)`       | `hwa_write(...)`    | Write something: into a controller, a register, an output pin...
+`hw_atomic_read(...)` |                     | Disable interrupts while reading an object.
+`hw_stat(...)`        |                     | Get the status of an object.
+`hw_toggle(...)`      | `hwa_toggle(...)`   | Toggle an object (probably an output pin).
+`hw_trigger(...)`     | `hwa_trigger(...)`  | Trigger an object (A/D converter, compare unit...)
+`hw_turn(...)`        | `hwa_turn(...)`     | Turn on object on/off.
+`hw_turn_irq(...)`    | `hwa_turn_irq(...)` | Enable/disable an IRQ.
+`hw_stat_irq(...)`    |                     | Get the status of an IRQ flag.
+`hw_write(...)`       | `hwa_write(...)`    | Write something into an object.
 `hw_write_reg(...)`   | `hwa_write_reg(...)`| Short for `hwa_write(hw_reg(...), value)`
 
 
@@ -87,14 +88,14 @@ accessing the hardware. These instructions can be used in assembler programming.
 
 Instruction      | Result
 -----------------|--------
-`hw_addr(...)`   | Address of a register, a group of bits...
+`hw_reg(...)`    | Definition of a register (a set of bits) of an object.
+`hw_rt(...)`     | Type of one object's register (uint8_t, uint16_t...)
+`hw_addr(...)`   | Address (of a register, group of bits...).
+`hw_bn(...)`     | Number of bits (of a register, group of bits, counter...)
+`hw_bp(...)`     | Position of least significant bit of a group of bits.
 `hw_ap(...)`     | Address, position of the least significant bit (for assembler programming)
-`hw_reg(...)`    | Register (a set of bits) of an object
-`hw_bn(...)`     | Number of bits of a register, group of bits, counter...
-`hw_bp(...)`     | Position of least significant bit of a group of bits
 `hw_id(...)`     | Id of an object
-`hw_io(...)`     | I/O associated to something
-`hw_name(...)`   | Name of an object
+`hw_io(...)`     | I/O name associated to an object
 `hw_sub(...)`    | Sub (relative) object of an object
 `hw_sup(...)`    | Parent object of an object
 
@@ -108,27 +109,27 @@ Errors
 Macro            | Result
 -----------------|--------
 `HW_ERR(msg)`    | Produce an error message at preprocessing time
-`HWA_ERR(msg)`   | Produce an error message after the code generation is finished if the optimizer did not discard this code
+`HWA_ERR(msg)`   | Produce an error message after the code generation is finished
 
 
 List processing
 ---------------
 
-Macro        | Result
------------- |--------
-`HW_A0(...)` | The first argument (after expansion)
-`HW_A1(...)` | The second argument (after expansion)
-`HW_A2(...)` | The third argument (after expansion)
-`HW_G2(...)` | The first two arguments glued with a '_' between (after expansion)
-`HW_G3(...)` | The first three arguments glued with a '_' between (after expansion)
+Macro                 | Result
+----------------------|--------
+`HW_A0(a0,...)`       | Expansion of a0
+`HW_A1(a0,a1,...)`    | Expansion of a1
+`HW_A2(a0,a1,a2,...)` | Expansion of a2
+`HW_G2(a0,a1,...)`    | Expansions of a0 and a1 glued with a '_' between
+`HW_G3(a0,a1,a2,...)` | Expansions of a0, a1, and a2 glued with a '_' between
 
 
 Interrupts
 ==========
 
 Interrupts are HWA objects. The definition of an interrupt is used when you need
-to enable/disable an interrupt request or for declaring an interrupt service
-routine (ISR).
+to enable, disable or clear an interrupt request or for declaring an interrupt
+service routine (ISR).
 
 You obtain the definition of an interrupt with the instruction `hw_irq(
 controller [, interrupt_name] )`.
