@@ -108,36 +108,36 @@
  *									       *
  *******************************************************************************/
 
-#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,     int0,  intf0
-#define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa1_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa2_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa3_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa4_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa5_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa6_change	_irq,  2, hw_pcic0,     irqe0, irqf0
-#define _hw_irq_hw_pin_pa7_change	_irq,  2, hw_pcic0,     irqe0, irqf0
+#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    int0,  intf0
+#define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa1_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa2_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa3_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa4_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa5_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa6_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa7_change	_irq,  2, hw_pcic0,    irqe0, irqf0
 
-#define _hw_irq_hw_pin_pb0_change	_irq,  3, hw_pcic0,     irqe1, irqf1
-#define _hw_irq_hw_pin_pb1_change	_irq,  3, hw_pcic0,     irqe1, irqf1
-#define _hw_irq_hw_pin_pb2_change	_irq,  3, hw_pcic0,     irqe1, irqf1
-#define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,     irqe1, irqf1
+#define _hw_irq_hw_pin_pb0_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb1_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb2_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,    irqe1, irqf1
 
-#define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0, wdie,  wdif
-#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1,  icie,  icf
-#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1,  ociea, ocfa
-#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1,  ocieb, ocfb
-#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1,  oie,   ov
-#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0,  ociea, ocfa
-#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0,  ocieb, ocfb
-#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0,  oie,   ov
-#define _hw_irq_hw_acmp0		_irq, 12, hw_acmp0,     ie,    if
-#define _hw_irq_hw_adc0			_irq, 13, hw_adc0,      ie,    if
-#define _hw_irq_hw_eeprom0		_irq, 14, hw_eeprom0,   sie, /* no irq flag */
-#define _hw_irq_hw_eeprom0_ready	_irq, 14, hw_eeprom0,   sie,
-#define _hw_irq_hw_usi0_start		_irq, 15, hw_usi0,      sie,   sif
-#define _hw_irq_hw_usi0_overflow	_irq, 16, hw_usi0,      oie,   oif
-#define _hw_irq_hw_usi0_txc		_irq, 16, hw_usi0,      oie,   oif
+#define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    wdie,  wdif
+#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1, icie,  icf
+#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1, ociea, ocfa
+#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1, ocieb, ocfb
+#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1, oie,   ov
+#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0, ociea, ocfa
+#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0, ocieb, ocfb
+#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0, oie,   ov
+#define _hw_irq_hw_acmp0		_irq, 12, hw_acmp0,    ie,    if
+#define _hw_irq_hw_adc0			_irq, 13, hw_adc0,     ie,    if
+#define _hw_irq_hw_eeprom0		_irq, 14, hw_eeprom0,  sie, /* no irq flag */
+#define _hw_irq_hw_eeprom0_ready	_irq, 14, hw_eeprom0,  sie,
+#define _hw_irq_hw_usi0_start		_irq, 15, hw_usi0,     sie,   sif
+#define _hw_irq_hw_usi0_overflow	_irq, 16, hw_usi0,     oie,   oif
+#define _hw_irq_hw_usi0_txc		_irq, 16, hw_usi0,     oie,   oif
 
 
 /*******************************************************************************
@@ -492,14 +492,14 @@
 #define _hw_pin_pa7			_pin1, 308, hw_porta, 1, 7
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb0			_pin1, 11, hw_portb, 1, 0
+#  define _hw_pin_pb0			_pin1, 311, hw_portb, 1, 0
 #endif
-#define _hw_pin_pb1			_pin1, 12, hw_portb, 1, 1
+#define _hw_pin_pb1			_pin1, 312, hw_portb, 1, 1
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb2			_pin1, 13, hw_portb, 1, 2
+#  define _hw_pin_pb2			_pin1, 313, hw_portb, 1, 2
 #endif
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET) && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
-#  define _hw_pin_pb3			_pin1, 14, hw_portb, 1, 3
+#  define _hw_pin_pb3			_pin1, 314, hw_portb, 1, 3
 #endif
 
 /*  Analog input pins (with Digital Input Disable bits, stored in register `did`
@@ -513,6 +513,20 @@
 #define _hw_pin_pa5_did			, hw_adc0, did_5
 #define _hw_pin_pa6_did			, hw_adc0, did_6
 #define _hw_pin_pa7_did			, hw_adc0, did_7
+
+/*  Analog input pin names
+ */
+#define hw_pin_adc0			hw_pin_pa0
+#define hw_pin_adc1			hw_pin_pa1
+#define hw_pin_adc2			hw_pin_pa2
+#define hw_pin_adc3			hw_pin_pa3
+#define hw_pin_adc4			hw_pin_pa4
+#define hw_pin_adc5			hw_pin_pa5
+#define hw_pin_adc6			hw_pin_pa6
+#define hw_pin_adc7			hw_pin_pa7
+
+#define hw_pin_ain0			hw_pin_pa1
+#define hw_pin_ain1			hw_pin_pa2
 
 
 /*	Pins by numbers
@@ -755,6 +769,10 @@
 
 #define _hw__acmpa_if			_cb1, csr, 1, 4
 #define _hw__acmpa_ie			_cb1, csr, 1, 3
+
+#define _hw_acmp0_acme			_ext, hw_adc0, me
+#define _hw_acmp0_aden			_ext, hw_adc0, en
+#define _hw_acmp0_admux			_ext, hw_adc0, mux
 
 
 /*******************************************************************************
