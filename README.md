@@ -65,6 +65,9 @@ format. You'll start with the `doxygen/html/index.html` page.
 Alternately you can browse the documentation from [my
 website](http://duparq.free.fr/hwa/index.html).
 
+Currently the documentation gives informations only about using HWA, not on how
+to develop HWA.
+
 
 Diabolo
 -------
@@ -77,9 +80,10 @@ and auto-synchronization so that the baudrate does not have to be hardcoded in
 the project and no crystal is required for the device.
 
 The source code of the device-side of Diabolo is under
-`examples/diabolo/device/diabolo.sx`.
+`examples/atmel/avr/diabolo/device/`.
 
-The host-side Diabolo application is under `examples/diabolo/host/diabolo.py`.
+The host-side Diabolo application is
+`examples/atmel/avr/diabolo/host/diabolo.py`.
 
 
 Swuarta
@@ -91,15 +95,15 @@ also an example of hardware virtualization that you can do with HWA. Swuarta is
 programmed in assembler and you'll find the source code under
 `hwa/atmel/avr/swuarta/`.
 
-In the examples, the swuart uses the same I/O pins as Diabolo so that you will
-not have to touch any wire between programming and executing the example.
+In the examples, the swuart is configured to use the same I/O pins as Diabolo so
+that you will not have to touch any wire between programming and executing the
+example.
 
 
 Status
 ------
 
-WARNING: this project is subject to heavy changes of the code-base, including
-project-wide name changes.
+WARNING: this project is subject to heavy changes of the code-base!
 
 Because I do this as a hobby in my spare time, sometimes not touching it for
 several weeks, the development pace of HWA is as much irregular as the road I
@@ -112,7 +116,7 @@ AVRs took me a lot of time because of the arrangement of the registers in these
 devices. That led me to rewrite HWA several times, as I discovered mistakes in
 the conception, new possibilities with the preprocessor or simply that I could
 make things better (e.g. object-oriented instructions accepting variable-length
-lists of arguments).
+lists of key-value arguments).
 
 
 License
