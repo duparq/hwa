@@ -81,10 +81,12 @@
  */
 #define hwa_write_reg(p,m,v)		HW_MTHD(hwa_write, hw_reg(p,m),v)
 
-#define _hw_write_reg(p,m,v)		_HW_SPEC(_hw_write, _hw_reg(p,m), v)
+//#define _hw_write_reg(p,m,v)		_HW_SPEC(_hw_write, _hw_reg(p,m), v)
+#define _hw_write_reg(p,m,v)		_HW_SPEC(_hw_write, hw_reg(p,m), v)
 #define _hw_write_creg(p,c,m,v)		_HW_SPEC(_hw_writep, _hw_creg(c,m), p,v)
 
-#define _hwa_write_reg(p,m,v)		_HW_SPEC(_hwa_write, _hw_reg(p,m), v)
+//#define _hwa_write_reg(p,m,v)		_HW_SPEC(_hwa_write, _hw_reg(p,m), v)
+#define _hwa_write_reg(p,m,v)		_HW_SPEC(_hwa_write, hw_reg(p,m), v)
 #define _hwa_write_creg(p,c,m,v)	_HW_SPEC(_hwa_writep, _hw_creg(c,m), p,v)
 
 
