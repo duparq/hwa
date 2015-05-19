@@ -52,7 +52,7 @@ validate:
 .PHONY: checks
 checks:
 	@fails=0						;\
-	for i in examples/??-?-* ; do echo -n "$$i: "		;\
+	for i in examples/??-* ; do echo -n "$$i: "		;\
 	cd $$i							;\
 	  if make -s check 2>/dev/null ; then 			\
 	    true						;\

@@ -119,7 +119,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   HW_G2(_hwa_cfdio_vmode_analog, HW_IS(,_##p##_##did))(p,pn,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfdio_vmode_analog_0(p,pn,bn,bp,...)	\
-  HW_ERR("pin does not support analog mode.")
+  HW_ERR("pin `"#p"` does not support analog mode.")
 
 #define _hwa_cfdio_vmode_analog_1(p,pn,bn,bp,...)	\
   _hwa_cfdio_analog2(p,pn,bn,bp,_##p##_##did,__VA_ARGS__)
