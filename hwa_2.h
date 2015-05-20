@@ -246,11 +246,18 @@
 
 #define _hw_write__m1(cn,ca, rn,rw,ra,rwm,rfm, rbn,rbp, v)	\
   _hw_write_r##rw(ca+ra,rwm,rfm,rbn,rbp,v)
-#define _hw_write__m2(cn,ca,					\
-		       rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		       rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
-  do { _hw_write_r##rw1(ca+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
-      _hw_write_r##rw2(ca+ra2,rwm2,rfm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); } while(0)
+#define _hw_write__m2(cn,ca,						\
+		      rn1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+		      rn2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
+  do {									\
+    if ( ra1==ra2 ) {							\
+      HWA_ERR("Hugh!");							\
+    }									\
+    else {								\
+      _hw_write_r##rw1(ca+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
+	_hw_write_r##rw2(ca+ra2,rwm2,rfm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); \
+    }									\
+  } while(0)
 
 #define _hw_writep__m1(_0,_1,r,rw,ra,rwm,rfm, bn,bp, p,v)	\
   _hw_write_r##rw( p->r.a, rwm,rfm, bn,bp,v)

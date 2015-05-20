@@ -1,15 +1,19 @@
 
-/*	Synchronize the software UART
- *	Send a '$' prompt
- *	Infinite loop:
- *	  wait 0.02 s
- *	  send '\r' + 4 hex characters of last ADC result
- *
- *	Test: ./main.py
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @example
+ *
+ *      Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
+ *
+ *      Test application:
+ * @code
+ *      ./main.py
+ * @endcode
+ *
  */
 
 #include "config.h"
@@ -21,19 +25,19 @@
  *    FIXME: using the same counter as for swuart overrides the configuration
  *    without error!
  */
-#define COUNTER			hw_counter0
+#define COUNTER                 hw_counter0
 
 
 /*  Pin used as ADC input
  */
-#define INPUT			hw_pin_8
+#define INPUT                   hw_pin_8
 
 
-#define PIN_LED			hw_pin_7
+#define PIN_LED                 hw_pin_7
 
 
-volatile uint16_t		adc ;	// Last adc value
-volatile uint8_t		x_adc ;	// Set to 1 after adc is written
+volatile uint16_t               adc ;   // Last adc value
+volatile uint8_t                x_adc ; // Set to 1 after adc is written
 
 
 /*  Service counter overflow interrupt:
@@ -76,8 +80,8 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle );
+              sleep,      enabled,
+              sleep_mode, idle );
 
   /*  Configure the counter to overflow every 0.02 s.
    *
@@ -87,23 +91,23 @@ main ( )
    *  mode.
    */
   hwa_config( COUNTER,
-	      clock,     syshz_div_1024,
-	      countmode, loop_up,
-	      bottom,    0,
-	      top,       compare0
-	      );
+              clock,     syshz_div_1024,
+              countmode, loop_up,
+              bottom,    0,
+              top,       compare0
+              );
   hwa_write( hw_sub(COUNTER, compare0), 0.02 * hw_syshz / 1024 );
   hwa_turn_irq( COUNTER, overflow, on );
 
   /*  Configure the ADC (this turns it on)
    */
   hwa_config( hw_adc0,
-  	      clock,   syshz_div_128,
-  	      trigger, manual,
-  	      vref,    vcc,
-  	      align,   right,
-  	      input,   INPUT
-  	      );
+              clock,   syshz_div_128,
+              trigger, manual,
+              vref,    vcc,
+              align,   right,
+              input,   INPUT
+              );
   hwa_turn_irq( hw_adc0, on );
 
   /*  Write this configuration into the hardware
@@ -127,8 +131,8 @@ main ( )
     if ( x_adc ) {
       uint16_t x ;
       do {
-	x_adc = 0 ;
-	x = adc ;
+        x_adc = 0 ;
+        x = adc ;
       } while( x_adc );
       hw_write( UART, (x & 0x00FF)>>0 );
       hw_write( UART, (x & 0xFF00)>>8 );

@@ -6,7 +6,7 @@
 
 
 /**
- * @page atmelavr_icua _icua
+ * @page atmelavr_icua Class _icua: counter/timer capture unit
  *
  * A class `_icua` object is a capture unit.
  *

@@ -213,7 +213,7 @@ HW_INLINE _hw_usia_stat_t _hw_usia_stat( uint8_t byte )
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk _usia_spimaster_swclk
+ * @page atmelavr_usia_spimaster_swclk Class _usia_spimaster_swclk
  * @par Configure the SPI
  *
  * @code

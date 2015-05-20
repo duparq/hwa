@@ -5,7 +5,7 @@
  */
 
 /**
- * @page atmelavr_swuarta _swuarta
+ * @page atmelavr_swuarta Class _swuarta: software-emulated UART
  *
  * Class `_swuarta` implements a software UART for 1 or 2-wire communication
  * with automatic baudrate detection capability.

@@ -7,7 +7,7 @@
 
 /**
  * @page atmelavr_wdoga
- * @par Configure a watchdog timer
+ * @section atmelavr_wdoga_config Configure a watchdog timer
  *
  * @code
  * hwa_config( hw_wdog0,
@@ -36,7 +36,7 @@
  */
 /**
  * @page atmelavr_wdogb _wdogb
- * @par Configure a watchdog timer
+ * @section atmelavr_wdogb_config Configure a watchdog timer
  *
  * @code
  * hwa_config( hw_wdog0,
@@ -114,7 +114,7 @@
 
 /**
  * @page atmelavr_wdoga
- * @par Turn watchdog on/off
+ * @section atmelavr_wdoga_turn Turn watchdog on/off
  *
  * @code
  * hw/hwa_turn( hw_wdog0,   on
@@ -123,7 +123,7 @@
  */
 /**
  * @page atmelavr_wdogb
- * @par Turn watchdog on/off
+ * @section atmelavr_wdogb_turn Turn watchdog on/off
  *
  * @code
  * hw/hwa_turn( hw_wdog0,   on
@@ -187,7 +187,7 @@
 
 /**
  * @page atmelavr_wdoga
- * @par Clear watchdog timer
+ * @section atmelavr_wdoga_clear Clear watchdog timer
  *
  * This issues a `wdr` instruction:
  * @code
@@ -196,7 +196,7 @@
  */
 /**
  * @page atmelavr_wdogb
- * @par Clear watchdog timer
+ * @section atmelavr_wdogb_clear Clear watchdog timer
  *
  * This issues a `wdr` instruction:
  * @code
@@ -208,7 +208,7 @@
 
 /**
  * @page atmelavr_wdoga
- * @par Watchdog status
+ * @section atmelavr_wdoga_stat Watchdog status
  *
  * The only flag that is available is the irq flag.
  *
@@ -220,7 +220,7 @@
  */
 /**
  * @page atmelavr_wdogb
- * @par Watchdog status
+ * @section atmelavr_wdogb_stat Watchdog status
  *
  * The only flag that is available is the irq flag.
  *

@@ -4,6 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ */
 
 HW_INLINE void __hwa_begin__io8a ( hwa_io8a_t *p, intptr_t a )
 {
@@ -51,8 +54,11 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 
 
 /**
- * @page atmelavr_io8a
- * @par Configure the pin
+ * @page atmelavr_pin1
+ * @section atmelavr_pin1_config Configuration
+ *
+ * An i/o pin (or group of pins) is configured using the `hw_config(...)` or
+ * `hwa_config(...)` instruction.
  *
  * @code
  * #define PIN		hw_pin_pa2
@@ -163,8 +169,8 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 
 
 /**
- * @page atmelavr_io8a
- * @par Read a digital i/o pin
+ * @page atmelavr_pin1
+ * @section atmelavr_pin1_read Reading a digital i/o pin
  *
  * @code
  * uint8_t p = hw_read( PIN );
@@ -179,11 +185,11 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 
 
 /**
- * @page atmelavr_io8a
- * @par Write a digital i/o pin
+ * @page atmelavr_pin1
+ * @section atmelavr_pin1_write Writing a digital i/o pin
  *
  * @code
- * hw_write( PIN, 1 );
+ * hw/hwa_write( PIN, 1 );
  * @endcode
  */
 #define _hw_write_pin1(p,i, pn,bn,bp, v,...)	HW_TX(_hw_wrdio_2(_##pn,bn,bp,v),__VA_ARGS__)
@@ -198,8 +204,8 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 
 
 /**
- * @page atmelavr_io8a
- * @par Toggle a digital i/o pin
+ * @page atmelavr_pin1
+ * @section atmelavr_pin1_toggle Toggling a digital i/o pin
  *
  * @code
  * hw_toggle( PIN );

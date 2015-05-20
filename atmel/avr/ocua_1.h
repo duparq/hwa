@@ -11,7 +11,8 @@
 
 
 /**
- * @page atmelavr_ocua _ocua
+ * @page atmelavr_ocua Class _ocua: counter/timer compare unit with waveform
+ * generator
  *
  * A class `_ocua` object is a counter/timer compare unit with waveform
  * generator.

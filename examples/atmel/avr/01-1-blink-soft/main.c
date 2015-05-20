@@ -1,17 +1,20 @@
 
-/*	Blink a LED with a software loop
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Blink a LED with a software loop
+ *
+ *	`hw_syshz` is the CPU clock frequency
  */
-#include <targets/attiny84.h>		// 80 bytes
-//#include "targets/attiny85.h"		// 76 /8192
-//#include <targets/nanodccduino.h>	// 156
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
@@ -20,13 +23,13 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 
 /*  The blinking period
  */
-#define PERIOD			0.5
+#define PERIOD                  0.5
 
 
 int main ( )

@@ -6,7 +6,15 @@
 
 
 /** @page atmelavr_corea
- *  @par Configuring the core
+ *  @section atmelavr_corea_config Configuration
+ *
+ *  You use the `hwa_config(...)` instruction to configure the core of the
+ *  device. Optionnal arguments are:
+ *
+ *  * `sleep`: wether the `hw_sleep()` instruction will put the core in sleep
+ *     mode or not
+ *
+ *  * `sleep_mode`: the sleep mode
  *
  *  @code
  *  hwa_config( CORE,
@@ -22,7 +30,10 @@
  */
 
 /** @page atmelavr_corea
- *  @par Entering sleep
+ *  @section atmelavr_corea_sleep Entering sleep
+ *
+ *  If you enabled it, you put the core in sleep mode with the `hw_sleep()`
+ *  instruction:
  *
  *  @code
  *  hw_sleep();

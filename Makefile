@@ -1,4 +1,8 @@
 
+#  Directory of this Makefile
+#
+CWD := $(dir $(lastword $(MAKEFILE_LIST)))
+
 all: checks
 
 
@@ -24,8 +28,7 @@ superclean: clean
 #
 .PHONY: doc
 doc:
-	@mkdir -p doxygen/html
-	@doxygen doxygen/Doxyfile
+	@cd $(CWD) && mkdir -p doxygen/html && doxygen doxygen/Doxyfile
 #	@cp doxygen/css.css doxygen/html/doxygen.css
 
 #  Compile all the test files

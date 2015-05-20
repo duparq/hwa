@@ -1,17 +1,19 @@
 
-/*	Blink a LED 10 times using the watchdog IRQ
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Blink a LED 10 times using watchdog IRQ and reset
  */
-#include <targets/attiny84.h>		// 134 bytes
-//#include "targets/attiny85.h"
-//#include "targets/nanodccduino.h"
+
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
@@ -20,13 +22,13 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 
 /*  Watchdog timeout
  */
-#define TIMEOUT			250ms
+#define TIMEOUT                 250ms
 
 
 /*  Watchdog timeout interrupt
@@ -57,8 +59,8 @@ int main ( )
    *  executed and make it wake up as a watchdog interrupt occurs.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, power_down );
+              sleep,      enabled,
+              sleep_mode, power_down );
 
   /*  Go into sleep definitely if the watchdog triggered a reset.
    */
@@ -70,8 +72,8 @@ int main ( )
     hwa_turn( hw_wdog0, off );
     hwa_commit();
     hw_sleep();
-    for (;;)			/* This should */
-      hw_toggle( PIN_LED );	/* not happen  */
+    for (;;)                    /* This should */
+      hw_toggle( PIN_LED );     /* not happen  */
   }
 
   /*  Configure the watchdog to time-out every TIMEOUT (this will wake the CPU
@@ -79,8 +81,8 @@ int main ( )
    *  reconfigured.
    */
   hwa_config( hw_wdog0,
-  	      timeout,      TIMEOUT,
-  	      action,       irq_or_reset );
+              timeout,      TIMEOUT,
+              action,       irq_or_reset );
 
   /*  Write this configuration into the hardware
    */
@@ -96,10 +98,10 @@ int main ( )
     hw_sleep();
 
     /*  When watchdog action is 'irq_or_reset', IRQ is automatically disabled by
-     *	hardware after a timeout so that next timeout will reset the device.
+     *  hardware after a timeout so that next timeout will reset the device.
      */
     hwa_turn_irq( hw_wdog0, off );
-    hwa_nocommit();	/* do not write the context */
+    hwa_nocommit();     /* do not write the context */
 
     hw_toggle( PIN_LED );
     count++ ;

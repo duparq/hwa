@@ -7,7 +7,7 @@
 /**
  * @example
  *
- *      Blink a LED using the watchdog flag
+ *      Blink a LED using the watchdog IRQ
  */
 
 /*      Target
@@ -25,15 +25,20 @@
 #endif
 
 
-/*  Watchdog timeout
+/*  Service watchdog IRQ
  */
-#define TIMEOUT                 250ms
+HW_ISR( hw_wdog0 )
+{
+  /*  Blink the LED
+   */
+  hw_toggle( PIN_LED );
+}
 
 
 int main ( )
 {
-  /*  Create a HWA context to collect the hardware configuration
-   *  Preload this context with RESET values
+  /*  Create a HWA context preloaded with RESET values to
+   *  collect the hardware configuration
    */
   hwa_begin_from_reset();
 
@@ -41,28 +46,32 @@ int main ( )
    */
   hwa_config( PIN_LED, direction, output );
 
-  /*  Configure the watchdog to trigger an IRQ periodically
+  /*  Configure the watchdog to trigger an IRQ every 125ms
    */
   hwa_config( hw_wdog0,
-              timeout,          TIMEOUT,
-              action,           irq );
+              timeout,          125ms,
+              action,           irq
+              );
+
+  /*  Configure the core to enter idle mode when asked to sleep
+   */
+  hwa_config( hw_core0,
+              sleep,      enabled,
+              sleep_mode, idle
+              );
 
   /*  Write this configuration into the hardware
    */
   hwa_commit();
 
-  for(;;) {
-    /*
-     *  Check the status of the watchdog. As soon as the IRQ flag is set, clear
-     *  it and toggle the LED.
-     */
-    hw_stat_t( hw_wdog0 ) stat ;
-    stat = hw_stat( hw_wdog0 ) ;
-    if ( stat.irq ) {
-      hw_clear_irq( hw_wdog0 );
-      hw_toggle( PIN_LED );
-    }
-  }
+  /*  Enable interrupts
+   */
+  hw_enable_interrupts();
+
+  /*  Sleep between interrupts
+   */
+  for(;;)
+    hw_sleep();
     
   return 0 ;
 }

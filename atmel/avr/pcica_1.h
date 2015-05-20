@@ -8,7 +8,7 @@
 
 
 /**
- * @page atmelavr_pcica _pcica
+ * @page atmelavr_pcica Class _pcica: pin change interrupt controller
  *
  * A class `_pcica` object is an pin change interrupt controller.
  */

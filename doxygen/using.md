@@ -1,5 +1,5 @@
 
-Using HWA {#using}
+Using HWA
 =========
 
 First of all, in order to use the HWA facilities, the symbol `HW_DEVICE` must be
@@ -32,6 +32,66 @@ content of the cache the machine code to produce.
 The `hwa_nocommit()` instruction can be used to put the cache in a known state
 without producing machine code. This can be used to make HWA produce code that
 modifies a known configuration.
+
+@code
+#define HW_DEVICE               attiny44
+#define HW_DEVICE_PACKAGE       14pdip
+#include <hwa.h>
+
+#define PIN_LED         hw_pin_7
+
+/*  Service watchdog IRQ
+ */
+HW_ISR( hw_wdog0 )
+{
+  /*  Blink the LED
+   */
+  hw_toggle( PIN_LED );
+}
+
+
+int main ( )
+{
+  /*  Create a HWA context preloaded with RESET values to
+   *  collect the hardware configuration
+   */
+  hwa_begin_from_reset();
+
+  /*  Configure the LED pin as digital output
+   */
+  hwa_config( PIN_LED, direction, output );
+
+  /*  Configure the watchdog to trigger an IRQ every 125ms
+   */
+  hwa_config( hw_wdog0,
+              timeout,          125ms,
+              action,           irq
+              );
+
+  /*  Configure the core to enter idle mode when asked to sleep
+   */
+  hwa_config( hw_core0,
+              sleep,      enabled,
+              sleep_mode, idle
+              );
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  /*  Enable interrupts
+   */
+  hw_enable_interrupts();
+
+  /*  Sleep between interrupts
+   */
+  for(;;)
+    hw_sleep();
+    
+  return 0 ;
+}
+@endcode
+
 
 
 Object names
@@ -187,8 +247,4 @@ HW_ISR( hw_counter0, overflow, isr_naked )
 }
 @endcode
 
-
-See also
-========
-
-* @subpage atmelavr_devices
+<br>

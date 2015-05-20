@@ -66,9 +66,9 @@ $(OUTDIR)/%.d: %.sx
 
 #  Documentation
 #
-.PHONY: doc
-doc:
-	(cd $(CWD)../.. && make doc)
+#.PHONY: doc
+#doc:
+#	(cd $(CWD)../.. && make doc)
 
 
 #  Device-specific Makefile

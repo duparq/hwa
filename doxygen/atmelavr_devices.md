@@ -1,4 +1,6 @@
 
 @page atmelavr_devices Atmel AVR devices
 
-* @subpage atmelavr_attinyx4
+Currently supported Atmel AVR devices are:
+
+* @subpage attinyx4

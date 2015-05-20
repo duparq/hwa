@@ -107,14 +107,17 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = README.md \
-		       	 doxygen/using.md \
-		       	 doxygen/hwa_license.md \
-		       	 doxygen/hwa_developing.md  \
-		       	 doxygen/atmelavr_devices.md \
-			 devices/		     \
-			 atmel/			     \
-			 examples/
+INPUT                  = README.md				\
+		       	 doxygen/using.md			\
+		       	 doxygen/atmelavr_devices.md		\
+		       	 doxygen/atmelavr_classes.md		\
+			 devices/attinyx4_1.h			\
+			 devices/attinyx4_2.h			\
+			 atmel/avr/wdoga_1.h			\
+			 atmel/avr/wdogb_1.h			\
+			 atmel/					\
+			 examples/				\
+		       	 doxygen/hwa_license.md
 
 
 INPUT_ENCODING         = UTF-8
@@ -124,7 +127,7 @@ FILE_PATTERNS          = *.c \
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = 
+EXCLUDE_PATTERNS       = build/*
 EXCLUDE_SYMBOLS        = 
 EXAMPLE_PATH           = examples
 EXAMPLE_PATTERNS       = *
@@ -132,7 +135,7 @@ EXAMPLE_RECURSIVE      = YES
 IMAGE_PATH             = doxygen
 INPUT_FILTER           = 
 FILTER_PATTERNS        = 
-FILTER_SOURCE_FILES    = NO
+FILTER_SOURCE_FILES    = YES
 FILTER_SOURCE_PATTERNS = 
 USE_MDFILE_AS_MAINPAGE = README.md
 #---------------------------------------------------------------------------

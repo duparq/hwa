@@ -4,18 +4,17 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/** @file
- *  @brief: Definitions for Atmel AVR core model 'a' that do not produce C code
+/**
+ * @file
+ * @brief Definitions for Atmel AVR core model 'a' that do not produce C code
  *
  *	Used in: ATtinyX4
  *		 ATtinyX5
  *
  */
 
-
 /**
- * @page atmelavr_corea _corea
+ * @page atmelavr_corea Class _corea: core of the device
  * A class `_corea` object is a core of the device.
  */
 #define _hw_class__corea

@@ -1,17 +1,19 @@
 
-/*	Blink a LED using a counter overflow interrupt
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Blink a LED using a counter overflow interrupt
  */
-#include "targets/attiny84.h"		// 146 bytes
-//#include "targets/attiny85.h"		// 142:0x9B16		-
-//#include "targets/nanodccduino.h"	// 222:0x1E8B		234:0x84B9
+
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
@@ -20,16 +22,16 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
-#define CLKDIV			64
-#define COUNTMODE		loop_up
-#define PERIOD			0.5
+#define COUNTER                 hw_counter0
+#define CLKDIV                  64
+#define COUNTMODE               loop_up
+#define PERIOD                  0.5
 
 
 /*  Service the counter overflow IRQ
@@ -59,8 +61,8 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle );
+              sleep,      enabled,
+              sleep_mode, idle );
 
   /*  Configure the counter to overflow every 0.001 s.
    *
@@ -70,11 +72,11 @@ int main ( )
    *  mode.
    */
   hwa_config( COUNTER,
-	      clock,     HW_G2(syshz_div, CLKDIV),
-	      countmode, COUNTMODE,
-	      bottom,    0,
-	      top,       compare0
-	      );
+              clock,     HW_G2(syshz_div, CLKDIV),
+              countmode, COUNTMODE,
+              bottom,    0,
+              top,       compare0
+              );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV / 2 );
   else

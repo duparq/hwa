@@ -7,7 +7,7 @@
  */
 
 /**
- * @page atmelavr_io8a _io8a
+ * @page atmelavr_io8a Class _io8a: i/o port
  * A class `_io8a` object is an i/o port.
  */
 #define _hw_class__io8a
@@ -43,15 +43,21 @@ typedef struct {
 
 
 /**
- * @page atmelavr_pin1 _pin1
- * A class `_pin1` object is an i/o pin.
+ * @page atmelavr_pin1 Class _pin1: i/o definition
+ *
+ * A class `_pin1` object is an i/o definition. This can be a single pin or a
+ * group of consecutive pins.
  */
 #define _hw_class__pin1
 
 
 /**
  * @page atmelavr_pin1
- * @par Get the name of the port owning the pin
+ * @section atmelavr_pin1_sup Getting the name of the port owning the pin
+ *
+ * Note: this triggers an error if the pin definition is spread accross
+ * different ports.
+ *
  * @code
  * #define PA0		hw_pin_pa0
  * #define PORTA	hw_porta
@@ -66,8 +72,13 @@ typedef struct {
 
 /**
  * @page atmelavr_pin1
- * @par Get the number of bits of the pin
- * Of course, this should be 1.
+ * @section atmelavr_pin1_bn Getting the number of bits of a pin definition
+ *
+ * This is 1 for single pins, but can be greater for groups of consecutive pins.
+ *
+ * Note: this triggers an error if the pin definition contains more than one
+ * group.
+ *
  * @code
  * #if hw_id(hw_pin_pa3) && (hw_bn(hw_pin_pa3) != 1)
  * #  HWA is damaged!
@@ -80,7 +91,14 @@ typedef struct {
 
 /**
  * @page atmelavr_pin1
- * @par Get the position of the pin in the port
+ * @section atmelavr_pin1_bp Getting the position of the pin in the port
+ *
+ * For a group of consecutive pins, this gives the position of the least
+ * significant bit.
+ *
+ * Note: this triggers an error if the pin definition contains more than one
+ * group.
+ *
  * @code
  * #if hw_id(hw_pin_pa3) && (hw_bp(hw_pin_pa3) != 3)
  * #  HWA is damaged!
@@ -93,10 +111,21 @@ typedef struct {
 
 /**
  * @page atmelavr_pin1
- * @par Get the name of the i/o pin
+ * @section atmelavr_pin1_io Getting the name of the i/o pin
+ *
+ * This is useful for example to check wether two pin names are in fact the same
+ * pin, or to get the i/o pin associated to an object (compare output of a
+ * counter...).
+ *
  * @code
  * #if hw_id(hw_io(hw_pin_mosi)) != hw_id(hw_pin_pa6)
  * #  error MOSI and PA6 are not the same pin
+ * #endif
+ * @endcode
+ *
+ * @code
+ * #if hw_id(hw_io(hw_sub(hw_counter0,compare0))) != hw_id(hw_pin_6)
+ * #  error OC0A is not on pin 6
  * #endif
  * @endcode
  */

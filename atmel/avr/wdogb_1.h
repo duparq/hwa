@@ -10,6 +10,9 @@
 
 #include "hwa_atmelavr__wdog_1.h"
 
+/**
+ * @page atmelavr_wdogb Class _wdogb: watchdog timer
+ */
 
 /*  HWA struct
  */

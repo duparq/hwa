@@ -1,15 +1,23 @@
 
-/*	Synchronize the software UART
+/*  This file is part of the HWA project.
+ *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @example
+ *
+ *	Synchronize the software UART
  *	Send the application '$' prompt
  *	Infinite loop:
  *	  Wait for: c + al + ah + n + '\n'
  *	  IF c=='f' THEN read n bytes from Flash address al:ah
  *        IF c=='F' THEN write n at Flash address al:ah
  *
- *	Test: ./main.py --help
- *	      ./main.py read 0 1024
- *	      ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING
- *	                                 # THE APPLICATION OR THE BOOTLOADER!
+ *	Test application: @code
+ *	     ./main.py --help
+ *	     ./main.py read 0 1024
+ *	     ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING THE APPLICATION OR THE BOOTLOADER! @endcode
  *
  *	Note: if you installed Diabolo, writing into the Flash memory below
  *	Diabolo will corrupt the application CRC and Diabolo will not start the
@@ -17,11 +25,9 @@
  *	be modified without changing the CRC). If the application does not
  *	start, you can still dump the Flash content with:
  *
- *		diabolo --read-flash --hexdump
- *
- *  This file is part of the HWA project.
- *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
- *  All rights reserved. Read LICENSE.TXT for details.
+ *	@code
+ *		diabolo.py --read-flash --hexdump
+ *	@endcode
  */
 
 #include "config.h"

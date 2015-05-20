@@ -5,158 +5,55 @@
  */
 
 /**
- * @page atmelavr_attinyx4 Atmel AVR ATtiny24 ATtiny44 ATtiny84
- * @par Device definition
+ * @page attinyx4 ATtiny24 ATtiny44 ATtiny84
+ * @section attinyx4_target Target device
  *
- * You must define `HW_DEVICE` according to the name of your target before
- * including `hwa.h`. Optionnaly, other symbols can also be defined to
- * describe the target more precisely.
+ * You must define `HW_DEVICE` according to the name of your target device
+ * before including `hwa.h`.
+ *
+ * Optionnaly, you can define `HW_DEVICE_PACKAGE` if you want to use pin numbers
+ * as well as pin names.
  *
  * Symbol               | Valid values | Comments
- * ---------------------|--------------|:-----------
+ * :--------------------|--------------|:-----------
  * `HW_DEVICE`          | `attiny24`<br>`attiny44`<br>`attiny84` | Name of the device
- * `HW_DEVICE_PACKAGE`  | `14pdip`     | Packaging of the device. This gives the possibility to use pins named by their number.
+ * `HW_DEVICE_PACKAGE`  | `14pdip`     | Packaging of the device.
  */
-#define HW_DEVICE_ATTINYX4
+#define _hw_is_14pdip_14pdip		, 1
 
-#define HW_DEVICE_RAM_START		0x0060
-#define HW_DEVICE_APP_START		0x0022
+/*  FIXME: error directive does not expand symbols, use pragma message to
+ *  display the wrong definition?
+ */
+#if defined HW_DEVICE_PACKAGE && !HW_IS(14pdip,HW_DEVICE_PACKAGE)
+#  error HWA: package can be `14pdip`
+#endif
 
 
 /**
- * @page atmelavr_attinyx4
- * @par Symbols
+ * @page attinyx4
+ * @section attinyx4_fuses Fuses
  *
- * HWA defines a few symbols:
- * 
- * Symbol               | Definition
- * ---------------------|-----------
- * `HW_DEVICE_ATTINYX4` | Void
- * `HW_DEVICE_ATMELAVR` | Void
- * `HW_FLASHSIZE`       | Size of the flash memory in bytes
- * `HW_EEPROMSIZE`      | Size of the eeprom memory in bytes
- * `HW_RAMSIZE`         | Size of the ram memory in bytes
- * 
- */
-
-#include "atmel/avr/1.h"
-
-#include "atmel/avr/corea_1.h"
-#include "atmel/avr/io_1.h"
-#include "atmel/avr/pcica_1.h"
-#include "atmel/avr/wdoga_1.h"
-#include "atmel/avr/c8a_1.h"
-#include "atmel/avr/c16a_1.h"
-#include "atmel/avr/ocua_1.h"
-#include "atmel/avr/icua_1.h"
-#include "atmel/avr/usia_1.h"
-#include "atmel/avr/acmpa_1.h"
-#include "atmel/avr/ad10a_1.h"
-
-/**
- * @page atmelavr_attinyx4
- * @par Objects
- * 
- * Name                   | Class                 | Comments
- * -----------------------|-----------------------|:--------------------------------------
- * `hw_core0`             | @ref atmelavr_corea   | The core
- * `hw_porta`             | @ref atmelavr_io8a    | General purpose I/O port A (PORTA)
- * `hw_portb`             | @ref atmelavr_io8a    | General purpose I/O port B (PORTB)
- * `hw_wdog0`         | @ref atmelavr_wdoga   | Watchdog (WDG)
- * `hw_counter0`          | @ref atmelavr_c8a     | 8-bit counter-timer (T0)
- * `hw_counter0_compare0` | @ref atmelavr_ocua    | Compare unit 0 of hw_counter0 (OC0A)
- * `hw_counter0_compare1` | @ref atmelavr_ocua    | Compare unit 1 of hw_counter0 (OC0B)
- * `hw_counter1`          | @ref atmelavr_c16a    | 16-bit counter-timer (T1)
- * `hw_counter1_compare0` | @ref atmelavr_ocua    | Compare unit 0 of hw_counter0 (OC1A)
- * `hw_counter1_compare1` | @ref atmelavr_ocua    | Compare unit 1 of hw_counter0 (OC1B)
- * `hw_counter1_capture0` | @ref atmelavr_icua    | Capture unit 0 of hw_counter0 (ICP)
- * `hw_psc0`              | @ref atmelavr_psca    | hw_counter0/hw_counter1 prescaler (PSC0)
- * `hw_usi0`              | @ref atmelavr_usia    | Universal Serial Interface
- * `hw_acmp0`             | @ref atmelavr_acmpa   | Analog Comparator
- * `hw_adc0`              | @ref atmelavr_ad10a   | 10-bit Analog to Digital Converter
- * `hw_eeprom0`           | @ref atmelavr_eeproma | Eeprom memory
- * `hw_flash0`            | @ref atmelavr_flasha  | Flash memory
- * 
- * A few additionnal objects are defined for convenience.
- * 
- * Name                   | Class                 | Comments
- * -----------------------|-----------------------|:--------------------------------------
- * `hw_spimaster0_swclk`  | @ref atmelavr_usia_spimaster_swclk | Universal Serial Interface used as SPI master and clocked by software
- * `hw_swuart0`           | @ref atmelavr_swuarta | Software UART
- * `hw_swuart1`           | @ref atmelavr_swuarta | Software UART
+ * Optionnaly, fuses symbols can be defined to describe the target more
+ * precisely. If the fuses are not defined, HWA will define the fuse bytes from
+ * the default values.
  *
- * <br>
- */
-
-
-#define HWA_DCL					\
-  hwa_corea_t	hw_core0 ;			\
-  hwa_io8a_t	hw_porta ;			\
-  hwa_io8a_t	hw_portb ;			\
-  hwa_pcica_t	hw_pcic0 ;			\
-  hwa_wdoga_t	hw_wdog0 ;			\
-  hwa_c8a_t	hw_counter0 ;			\
-  hwa_c16a_t	hw_counter1 ;			\
-  hwa_usia_t	hw_usi0 ;			\
-  hwa_acmpa_t	hw_acmp0 ;			\
-  hwa_ad10a_t	hw_adc0 ;
-
-
-/*******************************************************************************
- *									       *
- *	Interrupts							       *
- *									       *
- *******************************************************************************/
-
-#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    int0,  intf0
-#define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa1_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa2_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa3_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa4_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa5_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa6_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-#define _hw_irq_hw_pin_pa7_change	_irq,  2, hw_pcic0,    irqe0, irqf0
-
-#define _hw_irq_hw_pin_pb0_change	_irq,  3, hw_pcic0,    irqe1, irqf1
-#define _hw_irq_hw_pin_pb1_change	_irq,  3, hw_pcic0,    irqe1, irqf1
-#define _hw_irq_hw_pin_pb2_change	_irq,  3, hw_pcic0,    irqe1, irqf1
-#define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,    irqe1, irqf1
-
-#define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    wdie,  wdif
-#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1, icie,  icf
-#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1, ociea, ocfa
-#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1, ocieb, ocfb
-#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1, oie,   ov
-#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0, ociea, ocfa
-#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0, ocieb, ocfb
-#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0, oie,   ov
-#define _hw_irq_hw_acmp0		_irq, 12, hw_acmp0,    ie,    if
-#define _hw_irq_hw_adc0			_irq, 13, hw_adc0,     ie,    if
-#define _hw_irq_hw_eeprom0		_irq, 14, hw_eeprom0,  sie, /* no irq flag */
-#define _hw_irq_hw_eeprom0_ready	_irq, 14, hw_eeprom0,  sie,
-#define _hw_irq_hw_usi0_start		_irq, 15, hw_usi0,     sie,   sif
-#define _hw_irq_hw_usi0_overflow	_irq, 16, hw_usi0,     oie,   oif
-#define _hw_irq_hw_usi0_txc		_irq, 16, hw_usi0,     oie,   oif
-
-
-/*******************************************************************************
- *									       *
- *	Fuses								       *
- *									       *
- *******************************************************************************/
-/**
- * @page atmelavr_attinyx4
- * @par Fuses
+ * @subsection attinyx4_fuses_clocking Clocking
  *
- * Clocking
+ * The device can be clocked from an external signal (`external`), from an
+ * internal RC oscillator (`rc_8MHz` or `rc_128kHz`), or from a crystal
+ * oscillator (`xosc`).
+ *
+ * ATtixyx4 devices allow 1/8 prescaling of the clock frequency.
+ *
+ * The clock frequency of the device must be defined for `external` and `xosc`
+ * sources. This will permit HWA to compute the system frequency `hw_syshz`.
  *
  * Symbol                 | Valid values | Comments
- * -----------------------|--------------|:-----------
- * `HW_DEVICE_CLK_SRC`    | `external`<br>`rc_8MHz`<br>`rc_128kHz`<br>`xosc` | Source clock
- * `HW_DEVICE_CLK_SRC_HZ` | Integer     | Crystal frequency for `xosc` clock source
+ * :----------------------|--------------|:-----------
+ * `HW_DEVICE_CLK_SRC`    | `external`<br>`rc_8MHz`<br>`rc_128kHz`<br>`xosc` | Source clock.
+ * `HW_DEVICE_CLK_SRC_HZ` | Integer     | Clock frequency for `external` and `xosc` clock source
  * `HW_DEVICE_CLK_PSC`    | `8`<br>`1`  | Clock prescaler
-*/
+ */
 #define _hw_is_external_external			, 1
 #define _hw_is_rc_8MHz_rc_8MHz				, 1
 #define _hw_is_rc_128kHz_rc_128kHz			, 1
@@ -201,7 +98,6 @@
 #  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, or `xosc`.
 #endif
 
-
 #if !defined HW_DEVICE_CLK_PSC
 #  define HW_DEVICE_CLK_PSC				8
 #endif
@@ -217,9 +113,8 @@
 
 
 /**
- * @page atmelavr_attinyx4
- *
- * Startup delays
+ * @page attinyx4
+ * @subsection attinyx4_fuses_sut Startup delays
  *
  * Symbol               | Valid values | Comments
  * ---------------------|--------------|:-----------
@@ -296,9 +191,23 @@
 #endif
 
 
+
 /**
- * @page atmelavr_attinyx4
-*/
+ * @page attinyx4
+ * @subsection attinyx4_fuses_other Other fuses
+ *
+ * Symbol                 | Valid values | Comments
+ * :----------------------|--------------|:-----------
+ * `HW_DEVICE_EXTERNAL_RESET`    |`enabled`<br>`disabled`|Wether the device can be reset via its RESET pin
+ * `HW_DEVICE_SELF_PROGRAMMING`  |`enabled`<br>`disabled`|Wether the device can write into its Flash program memory
+ * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Wether the device can be programmed via the SPI
+ * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Wether the EEPROM memory is erased when a chip erase occurs
+ * `HW_DEVICE_DEBUG_WIRE`        |`disabled`<br>`enabled`|Wether the Debug Wire is operationnal
+ * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`          |Wether the watchdog is always running
+ * `HW_DEVICE_CLOCK_OUTPUT`      |`disabled`<br>`enabled`|Wether the device outputs its clock
+ * `HW_DEVICE_BROWNOUT_DETECTION`|`2500_2900mV`<br>`1700_2000mV`<br>`4100_4500mV`|Brown-out detection level
+ *
+ */
 #if !defined HW_DEVICE_CLOCK_OUTPUT
 #  define HW_DEVICE_CLOCK_OUTPUT			disabled
 #endif
@@ -396,6 +305,33 @@
 #endif
 
 
+/**
+ * @page attinyx4
+ * @section attinyx4_hwa_computed_symbols HWA-computed symbols
+ *
+ * From the above declarations, HWA computes the following symbols:
+ * 
+ * Symbol                      | Definition
+ * :---------------------------|:----------
+ * `HW_DEVICE_ATTINYX4`        | Void
+ * `HW_DEVICE_ATMELAVR`        | Void
+ * `HW_DEVICE_SIGNATURE`       | List of 3 hexadecimal values of device signature
+ * `HW_DEVICE_FLASH_SIZE`      | Size of the flash memory in bytes
+ * `HW_DEVICE_FLASH_PAGE_SIZE` | Size of the flash memory pages in bytes
+ * `HW_DEVICE_EEPROM_SIZE`     | Size of the eeprom memory in bytes
+ * `HW_DEVICE_EEPROM_PAGE_SIZE`| Size of the eeprom memory pages in bytes
+ * `HW_DEVICE_RAM_SIZE`        | Size of the ram memory in bytes
+ * `HW_DEVICE_RAM_START`       | Start address of RAM memory: 0x0060
+ * `HW_DEVICE_APP_START`       | Start address of application (after interrupt vectors): 0x0022
+ * `HW_DEVICE_FUSE_EB`         | Fuse extended byte
+ * `HW_DEVICE_FUSE_HB`         | Fuse high byte
+ * `HW_DEVICE_FUSE_LB`         | Fuse low byte
+ */
+#define HW_DEVICE_ATTINYX4
+#define HW_DEVICE_RAM_START		0x0060
+#define HW_DEVICE_APP_START		0x0022
+
+
 #define HW_DEVICE_FUSE_EB			\
   0xFE | HW_DEVICE_SELFPRGEN
 
@@ -415,70 +351,157 @@
   HW_DEVICE_CKSEL0
 
 
-/*******************************************************************************
- *									       *
- *	Core								       *
- *									       *
- *******************************************************************************/
-
-
-/*	Instance			class, id, address
+/**
+ * @page attinyx4
+ * @section attinyx4_object Supported objects
+ *
+ * HWA provides the following objects to the ATtinyx4 family:
+ * 
+ * Object name            | Class                 | Comments
+ * :----------------------|-----------------------|:--------------------------------------
+ * `hw_core0`             | @ref atmelavr_corea "corea" | The core
+ * `hw_porta`             | @ref atmelavr_io8a "io8a"   | General purpose I/O port A (PORTA)
+ * `hw_portb`             | @ref atmelavr_io8a "io8a"   | General purpose I/O port B (PORTB)
+ * `hw_wdog0`             | @ref atmelavr_wdoga "wdoga" | Watchdog (WDG)
+ * `hw_counter0`          | @ref atmelavr_c8a "c8a"     | 8-bit counter-timer (T0)
+ * `hw_counter0_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter0 (OC0A)
+ * `hw_counter0_compare1` | @ref atmelavr_ocua "ocua"   | Compare unit 1 of hw_counter0 (OC0B)
+ * `hw_counter1`          | @ref atmelavr_c16a "c16a"   | 16-bit counter-timer (T1)
+ * `hw_counter1_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter0 (OC1A)
+ * `hw_counter1_compare1` | @ref atmelavr_ocua "ocua"    | Compare unit 1 of hw_counter0 (OC1B)
+ * `hw_counter1_capture0` | @ref atmelavr_icua "icua"    | Capture unit 0 of hw_counter0 (ICP)
+ * `hw_psc0`              | @ref atmelavr_psca "psca"    | hw_counter0/hw_counter1 prescaler (PSC0)
+ * `hw_usi0`              | @ref atmelavr_usia "usia"    | Universal Serial Interface
+ * `hw_acmp0`             | @ref atmelavr_acmpa "acmpa"  | Analog Comparator
+ * `hw_adc0`              | @ref atmelavr_ad10a "ad10a"  | 10-bit Analog to Digital Converter
+ * `hw_eeprom0`           | @ref atmelavr_eeproma "eeproma" | Eeprom memory
+ * `hw_flash0`            | @ref atmelavr_flasha "flasha"   | Flash memory
+ * 
+ * A few additionnal objects are also provided for convenience:
+ * 
+ * Name                   | Class                 | Comments
+ * :----------------------|-----------------------|:--------------------------------------
+ * `hw_spimaster0_swclk`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
+ * `hw_swuart0`           | @ref atmelavr_swuarta "swuarta" | Software UART
+ * `hw_swuart1`           | @ref atmelavr_swuarta "swuarta" | Software UART
  */
-#define _hw_core0			_corea, 101, 0
+#include "atmel/avr/1.h"
+#include "atmel/avr/corea_1.h"
+#include "atmel/avr/io_1.h"
+#include "atmel/avr/pcica_1.h"
+#include "atmel/avr/wdoga_1.h"
+#include "atmel/avr/c8a_1.h"
+#include "atmel/avr/c16a_1.h"
+#include "atmel/avr/psca_1.h"
+#include "atmel/avr/ocua_1.h"
+#include "atmel/avr/icua_1.h"
+#include "atmel/avr/usia_1.h"
+#include "atmel/avr/acmpa_1.h"
+#include "atmel/avr/ad10a_1.h"
 
-/*	Class regs			class, rw, ra, rwm, rfm
+#define HWA_DCL					\
+  hwa_corea_t	hw_core0 ;			\
+  hwa_io8a_t	hw_porta ;			\
+  hwa_io8a_t	hw_portb ;			\
+  hwa_pcica_t	hw_pcic0 ;			\
+  hwa_wdoga_t	hw_wdog0 ;			\
+  hwa_c8a_t	hw_counter0 ;			\
+  hwa_c16a_t	hw_counter1 ;			\
+  hwa_usia_t	hw_usi0 ;			\
+  hwa_acmpa_t	hw_acmp0 ;			\
+  hwa_ad10a_t	hw_adc0 ;
+
+
+/**
+ * @page attinyx4
+ * @section attinyx4_interrupts Interrupts
+ *
+ * HWA provides the following objects to the ATtinyx4 family:
+ * 
+ * Interrupt definition   | Atmel label     | Comments
+ * :----------------------|-----------------|------------------------
+ * `hw_core0,int0`        | INT0            | External interrupt INT0
+ * `hw_pin_*,change`      | PCINT0 / PCINT1 | Pin-change interrupt
+ * `hw_wdog0`             | WDT             | Watchdog timeout
+ * `hw_counter1,capture0` | TIM1_CAPT       | Capture event on counter 1
+ * `hw_counter1,compare0` | TIM1_COMPA      | Compare-match A on counter 1
+ * `hw_counter1,compare1` | TIM1_COMPB      | Compare-match B on counter 1
+ * `hw_counter1,overflow` | TIM1_OVF        | Counter 1 overflow
+ * `hw_counter0,compare0` | TIM0_COMPA      | Compare-match A on counter 0
+ * `hw_counter0,compare1` | TIM0_COMPB      | Compare-match B on counter 0
+ * `hw_counter0,overflow` | TIM0_OVF        | Counter 0 overflow
+ * `hw_acmp0`             | ANA_COMP        | Analog comparator
+ * `hw_adc0`              | ADC             | ADC conversion complete
+ * `hw_eeprom0`           | EE_RDY          | EEPROM ready
+ * `hw_eeprom0,ready`     | EE_RDY          | EEPROM ready
+ * `hw_usi0,start`        | USI_STR         | USI start
+ * `hw_usi0,overflow`     | USI_OVF         | USI overflow
+ * `hw_usi0,txc`          | USI_OVF         | USI overflow (transmit completed)
  */
-#define _hw__corea_sreg			_crg, 8, 0x5F, 0xFF, 0x00
-#define _hw__corea_sph			_crg, 8, 0x5E, 0x03, 0x00
-#define _hw__corea_spl			_crg, 8, 0x5D, 0xFF, 0x00
-#define _hw__corea_gimsk		_crg, 8, 0x5B, 0x70, 0x00
-#define _hw__corea_gifr			_crg, 8, 0x5A, 0x70, 0x70
-#define _hw__corea_mcucr		_crg, 8, 0x55, 0xFF, 0x00
-#define _hw__corea_mcusr		_crg, 8, 0x54, 0x0F, 0x00
-#define _hw__corea_osccal		_crg, 8, 0x51, 0xFF, 0x00
-#define _hw__corea_gpior2		_crg, 8, 0x35, 0xFF, 0x00
-#define _hw__corea_gpior1		_crg, 8, 0x34, 0xFF, 0x00
-#define _hw__corea_gpior0		_crg, 8, 0x33, 0xFF, 0x00
-#define _hw__corea_prr			_crg, 8, 0x20, 0x0F, 0x00
+#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    int0,  intf0
+#define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa1_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa2_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa3_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa4_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa5_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa6_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+#define _hw_irq_hw_pin_pa7_change	_irq,  2, hw_pcic0,    irqe0, irqf0
+
+#define _hw_irq_hw_pin_pb0_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb1_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb2_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+#define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,    irqe1, irqf1
+
+#define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    wdie,  wdif
+#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1, icie,  icf
+#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1, ociea, ocfa
+#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1, ocieb, ocfb
+#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1, oie,   ov
+#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0, ociea, ocfa
+#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0, ocieb, ocfb
+#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0, oie,   ov
+#define _hw_irq_hw_acmp0		_irq, 12, hw_acmp0,    ie,    if
+#define _hw_irq_hw_adc0			_irq, 13, hw_adc0,     ie,    if
+#define _hw_irq_hw_eeprom0		_irq, 14, hw_eeprom0,  sie, /* no irq flag */
+#define _hw_irq_hw_eeprom0_ready	_irq, 14, hw_eeprom0,  sie,
+#define _hw_irq_hw_usi0_start		_irq, 15, hw_usi0,     sie,   sif
+#define _hw_irq_hw_usi0_overflow	_irq, 16, hw_usi0,     oie,   oif
+#define _hw_irq_hw_usi0_txc		_irq, 16, hw_usi0,     oie,   oif
 
 
-/*******************************************************************************
- *									       *
- *	Ports & pins							       *
- *									       *
- *******************************************************************************/
-
+/**
+ * @page attinyx4
+ * @section attinyx4_pins Ports and pins
+ *
+ * Some of the pins `hw_pin_pb0`..`hw_pin_pb3` may not be available depending on
+ * the fuses configuration.
+ * 
+ * Pin numbers `hw_pin_2`..`hw_pin_13` can be used if `HW_DEVICE_PACKAGE` is
+ * defined as '14pdip'.
+ *
+ * HWA name     | 14pdid      | Class                     | Atmel name
+ * -------------|-------------|---------------------------|-----------
+ * `hw_port_a`  |             | @ref atmelavr_io8a "io8a" | -
+ * `hw_pin_pa0` | `hw_pin_13` | @ref atmelavr_pin1 "pin"  | PA0       
+ * `hw_pin_pa1` | `hw_pin_12` | @ref atmelavr_pin1 "pin"  | PA1       
+ * `hw_pin_pa2` | `hw_pin_11` | @ref atmelavr_pin1 "pin"  | PA2       
+ * `hw_pin_pa3` | `hw_pin_10` | @ref atmelavr_pin1 "pin"  | PA3       
+ * `hw_pin_pa4` | `hw_pin_9`  | @ref atmelavr_pin1 "pin"  | PA4       
+ * `hw_pin_pa5` | `hw_pin_8`  | @ref atmelavr_pin1 "pin"  | PA5       
+ * `hw_pin_pa6` | `hw_pin_7`  | @ref atmelavr_pin1 "pin"  | PA6       
+ * `hw_pin_pa7` | `hw_pin_6`  | @ref atmelavr_pin1 "pin"  | PA7       
+ * `hw_port_b`  |             | @ref atmelavr_io8a "io8a" | -
+ * `hw_pin_pb0` | `hw_pin_2`  | @ref atmelavr_pin1 "pin"  | PB0       
+ * `hw_pin_pb1` | `hw_pin_3`  | @ref atmelavr_pin1 "pin"  | PB1       
+ * `hw_pin_pb2` | `hw_pin_5`  | @ref atmelavr_pin1 "pin"  | PB2       
+ * `hw_pin_pb3` | `hw_pin_4`  | @ref atmelavr_pin1 "pin"  | PB3       
+ *
+ */
 /*	Instances			class, id, address
  */
 #define _hw_porta			_io8a, 300, 0x39
 #define _hw_portb			_io8a, 310, 0x36
-
-
-/**
- * @page atmelavr_attinyx4
- * @par Ports and pins
- *
- * Atmel name | HWA name   | 14pdid #  | Class
- * -----------|:-----------|:----------|:----------
- * Port A     | hw_port_a  |           | @ref atmelavr_io8a
- * PA0	      | hw_pin_pa0 | hw_pin_13 | @ref atmelavr_pin1
- * PA1	      | hw_pin_pa1 | hw_pin_12 | @ref atmelavr_pin1
- * PA2	      | hw_pin_pa2 | hw_pin_11 | @ref atmelavr_pin1
- * PA3	      | hw_pin_pa3 | hw_pin_10 | @ref atmelavr_pin1
- * PA4	      | hw_pin_pa4 | hw_pin_9  | @ref atmelavr_pin1
- * PA5	      | hw_pin_pa5 | hw_pin_8  | @ref atmelavr_pin1
- * PA6	      | hw_pin_pa6 | hw_pin_7  | @ref atmelavr_pin1
- * PA7	      | hw_pin_pa7 | hw_pin_6  | @ref atmelavr_pin1
- * Port B     | hw_port_b  |           | @ref atmelavr_io8a
- * PB0	      | hw_pin_pb0 | hw_pin_2  | @ref atmelavr_pin1
- * PB1	      | hw_pin_pb1 | hw_pin_3  | @ref atmelavr_pin1
- * PB2	      | hw_pin_pb2 | hw_pin_5  | @ref atmelavr_pin1
- * PB3	      | hw_pin_pb3 | hw_pin_4  | @ref atmelavr_pin1
- * 
- * Pin numbers `hw_pin_2` to `hw_pin_13` can be used if `HW_DEVICE_PACKAGE` is
- * defined as '14pdip'.
- * 
- */
 
 /*  Pins				class, id, controller, bn, bp
  */
@@ -490,6 +513,7 @@
 #define _hw_pin_pa5			_pin1, 306, hw_porta, 1, 5
 #define _hw_pin_pa6			_pin1, 307, hw_porta, 1, 6
 #define _hw_pin_pa7			_pin1, 308, hw_porta, 1, 7
+#define _hw_port_a			_pin1, 309, hw_porta, 8, 0
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
 #  define _hw_pin_pb0			_pin1, 311, hw_portb, 1, 0
@@ -531,8 +555,6 @@
 
 /*	Pins by numbers
  */
-#define _hw_is_14pdip_14pdip		, 1
-
 #if HW_IS(14pdip,HW_DEVICE_PACKAGE)
 #
 #  define hw_pin_2			hw_pin_pb0
@@ -548,9 +570,34 @@
 #  define hw_pin_12			hw_pin_pa1
 #  define hw_pin_13			hw_pin_pa0
 #
-#elif !HW_IS(,HW_DEVICE_PACKAGE)
-#  error Package can be `14pdip` but not `HW_DEVICE_PACKAGE`
 #endif
+
+
+/*******************************************************************************
+ *									       *
+ *	Core								       *
+ *									       *
+ *******************************************************************************/
+
+/*	Instance			class, id, address
+ */
+#define _hw_core0			_corea, 101, 0
+
+/*	Class regs			class, rw, ra, rwm, rfm
+ */
+#define _hw__corea_sreg			_crg, 8, 0x5F, 0xFF, 0x00
+#define _hw__corea_sph			_crg, 8, 0x5E, 0x03, 0x00
+#define _hw__corea_spl			_crg, 8, 0x5D, 0xFF, 0x00
+#define _hw__corea_gimsk		_crg, 8, 0x5B, 0x70, 0x00
+#define _hw__corea_gifr			_crg, 8, 0x5A, 0x70, 0x70
+#define _hw__corea_mcucr		_crg, 8, 0x55, 0xFF, 0x00
+#define _hw__corea_mcusr		_crg, 8, 0x54, 0x0F, 0x00
+#define _hw__corea_osccal		_crg, 8, 0x51, 0xFF, 0x00
+#define _hw__corea_gpior2		_crg, 8, 0x35, 0xFF, 0x00
+#define _hw__corea_gpior1		_crg, 8, 0x34, 0xFF, 0x00
+#define _hw__corea_gpior0		_crg, 8, 0x33, 0xFF, 0x00
+#define _hw__corea_prr			_crg, 8, 0x20, 0x0F, 0x00
+
 
 
 /*******************************************************************************
@@ -666,6 +713,10 @@
 #define _hw_counter0_compare0		_ocua, 401, hw_counter0, compare0, pin_pb2
 #define _hw_counter0_compare1		_ocua, 402, hw_counter0, compare1, pin_pa7
 
+/*	Counter0 prescaler
+ */
+#define hw_counter0_prescaler0		hw_psc0
+
 
 /*******************************************************************************
  *									       *
@@ -707,6 +758,29 @@
 /*	Counter1 input capture unit	class, id, counter, reg, io
  */
 #define _hw_counter1_capture0		_icua, 413, hw_counter1, capture0, pin_pa7 /* dil#6 */
+
+/*	Counter1 prescaler
+ */
+#define hw_counter1_prescaler0		hw_psc0
+
+
+/*******************************************************************************
+ *									       *
+ *	Counter-timer prescaler						       *
+ *									       *
+ *******************************************************************************/
+
+/*	Instance			class, id, address
+ */				        
+#define _hw_psc0			_psca, 500, 0
+
+/*	Object registers		class, rw, ra, rwm, rfm
+ */
+#define _hw_psc0_cr			_crg, 8, 0x43, 0x81, 0x00
+
+#define _hw_psc0_psr			_ob1, cr, 1, 0
+#define _hw_psc0_tsm			_ob1, cr, 1, 7
+#define _hw_psc0_tsmpsr			_ob2, cr, 1, 7, 1, cr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -984,9 +1058,9 @@
 
 
 /**
- * @page atmelavr_attinyx4
+ * @page attinyx4
  *
- * @par Power Management
+ * @section attinyx4_pwr Power Management
  *
  * The following controllers can be turned on/off with the `hw/hwa_turn(...)`
  * instruction to manage power consumption of the device:
@@ -995,6 +1069,7 @@
  * * `hw_counter1`
  * * `hw_usi0`
  * * `hw_adc0`
+ * * `hw_acmp0`
  *
  * @code
  * hw/hwa_turn( OBJECT, on | off );
@@ -1002,6 +1077,6 @@
  */
 
 /**
- * @page atmelavr_attinyx4
+ * @page attinyx4
  * <br>
  */

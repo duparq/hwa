@@ -12,7 +12,7 @@
 
 
 /**
- * @page atmelavr_eeproma _eeproma
+ * @page atmelavr_eeproma Class _eeproma: EEPROM memory
  *
  * A class `_eeproma` object is an EEPROM memory.
  */

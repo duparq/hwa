@@ -11,7 +11,7 @@
 
 
 /**
- * @page atmelavr_ad10a _ad10a
+ * @page atmelavr_ad10a Class _ad10a: 10-bit analog to digital converter
  *
  * A class `_ad10a` object is a 10-bit analog to digital converter.
  */

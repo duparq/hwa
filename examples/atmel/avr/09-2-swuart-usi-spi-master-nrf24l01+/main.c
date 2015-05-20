@@ -1,27 +1,40 @@
 
-/*	A simple interface between software UART and USI configured as SPI
- *	master. This is a variant of the previous example, showing how using
- *	hw_spimaster0 instead of hw_usi0 can simplify the application.
- *
- *	Test: ./main.py
- *
- *	The host displays the values of the registers of an nRF24L01+
- *	connected to USI. It should be 0x08 for the config register and
- *	0x3F for the EN_AA register.
- *
- *      nRF24L01+ module pinout:
- *
- *		Gnd  [1](2)  Vcc
- *	 Gnd <- CE   (3)(4)  CSN  -> 
- *	 SCL <-	SCK  (5)(6)  MOSI -> MISO
- *	MOSI <-	MISO (7)(8)  IRQ
- *
- *	NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of
- *	the MCU (considered as a slave regarding the pin names).
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+@example
+
+	A simple interface between software UART and USI configured as SPI
+	master. This is a variant of the previous example, showing how using
+	`hw_spimaster0_swclk` instead of `hw_usi0` can simplify the application.
+
+	Test application: `./main.py`
+
+	The host displays the values of the registers of an nRF24L01+
+	connected to USI. It should be 0x08 for the config register and
+	0x3F for the EN_AA register.
+
+@par nRF24L01+ module pinout:
+@verbatim
+	        Gnd  [1](2)  Vcc
+	 Gnd <- CE   (3)(4)  CSN  -> 
+	 SCL <- SCK  (5)(6)  MOSI -> MISO
+	MOSI <- MISO (7)(8)  IRQ
+@endverbatim
+
+NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
+(considered as a slave regarding the pin names).
+
+@par targets/attiny84.h
+@include targets/attiny84.h
+
+@par config.h
+@include config.h
+
+@par Main file
  */
 
 #include "config.h"
@@ -29,8 +42,8 @@
 
 /*	SPI master (over USI) with software-managed clocking handled by HWA
  */
-#define SPI				hw_spimaster0_swclk
-#define NRF_CSN				hw_pin_6
+#define SPI             hw_spimaster0_swclk
+#define NRF_CSN         hw_pin_6
 
 
 int

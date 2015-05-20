@@ -1,25 +1,25 @@
 
-/*	Send a '.' on TXD every 0.1s.
- *
- *	Test: ./main.py -b <BAUDRATE>
- *
- *	This can fail if the system frequency is not known precisely enough.
- *
- *	Tested to work with:
- *	  ATtiny84 rc_8MHz, 115200 bps, hw_counter0 compare0 (296:509F)
- *	                    115200 bps, hw_counter1 compare0 (296:AE62)
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @example
+ *
+ *      Send a '.' on TXD every 0.1s.
+ *
+ *      Test application: @code ./main.py -b <BAUDRATE> @endcode
+ *
+ *      Note: this can fail if the system frequency is not known precisely
+ *      enough.
+ */
 
 #include "config.h"
 #include <hwa.h>
 
 
-#define BAUDRATE	115200
+#define BAUDRATE        115200
 
 
 int

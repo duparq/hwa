@@ -14,7 +14,7 @@
 
 
 /**
- * @page atmelavr_c8a _c8a
+ * @page atmelavr_c8a Class _c8a: 8-bit counter/timer
  *
  * A class `_c8a` object is an 8-bit counter/timer with two compare units and
  * waveform generators.

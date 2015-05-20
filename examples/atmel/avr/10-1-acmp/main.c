@@ -1,9 +1,16 @@
 
-/*	Turn a LED on for 1 ms each time the analog comparator detects an edge
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @example
+ *
+ * Turn a LED on for 1 ms each time the analog comparator detects an edge
+ *
+ * @par targets/attiny84.h
+ * @include targets/attiny84.h
  */
 
 
@@ -32,6 +39,7 @@
 #define INPUT_NEG		hw_pin_6
 
 /*  The analog comparator output edge that will trigger an IRQ
+ *    This can be `falling`, `rising` or `both`
  */
 #define EDGE			falling
 
@@ -50,7 +58,10 @@
 #define CPERIOD			PERIOD * hw_syshz / COUNTER_CLK_DIV
 
 
-/*  Service counter-compare0 IRQ: turn the LED off and disable this interrupt
+/*  Service counter-compare0 IRQ:
+ *    disable this IRQ
+ *    turn the LED off
+ *    turn analog comparator IRQ on
  */
 HW_ISR( COUNTER, COMPARE )
 {
@@ -62,17 +73,21 @@ HW_ISR( COUNTER, COMPARE )
 
 
 /*  Service analog comparator interrupt:
- *    turn this IRQ off
+ *    disable this IRQ off
  *    turn the LED on
  *    program a compare-match IRQ to occur in 1ms.
+ *      (maybe reset the prescaler)
  */
 HW_ISR( hw_acmp0 )
 {
   hw_turn_irq( hw_acmp0, off );
   hw_write( PIN_LED, 1 );
-  /* if ( COUNTER_CLK_DIV > 1 ) */
-  /*   hw_clear( hw_sub(COUNTER,prescaler0) ); */
-  hw_clear( COUNTER );
+  if ( COUNTER_CLK_DIV > 1 ) {
+    hw_turn(hw_sub(COUNTER,prescaler0), off);
+    hw_clear( COUNTER );
+    hw_turn(hw_sub(COUNTER,prescaler0), on);
+  }
+  else
   hw_clear_irq( COUNTER, COMPARE );
   hw_turn_irq( COUNTER, COMPARE, on );
 }

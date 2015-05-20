@@ -1,17 +1,19 @@
 
-/*	Blink a LED using a counter compare-match flag
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Blink a LED using a counter compare-match flag
  */
-#include "targets/attiny84.h"		// 116 bytes
-//#include "targets/attiny85.h"		// 112:0xE1C9
-//#include "targets/nanodccduino.h"	// 188:0x929D		204:0x6670
+
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
@@ -20,16 +22,16 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
-#define CLKDIV			64
-#define COMPARE			compare0
-#define PERIOD			0.5
+#define COUNTER                 hw_counter0
+#define CLKDIV                  64
+#define COMPARE                 compare0
+#define PERIOD                  0.5
 
 
 int main ( )
@@ -46,11 +48,11 @@ int main ( )
   /*  Configure the counter to count from 0 to its max and loop
    */
   hwa_config( COUNTER,
-	      clock,     HW_G2(syshz_div, CLKDIV),
-	      countmode, loop_up,
-	      bottom,    0,
-	      top,       max,
-	      );
+              clock,     HW_G2(syshz_div, CLKDIV),
+              countmode, loop_up,
+              bottom,    0,
+              top,       max,
+              );
 
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */
@@ -71,11 +73,11 @@ int main ( )
       hw_clear_irq( COUNTER, COMPARE );
       n++ ;
       if ( n >= (uint8_t)(PERIOD/0.001/2.0+0.5) ) {
-	/*
-	 *  Toggle the LED when a half period has elapsed
-	 */
-	n = 0 ;
-	hw_toggle( PIN_LED );
+        /*
+         *  Toggle the LED when a half period has elapsed
+         */
+        n = 0 ;
+        hw_toggle( PIN_LED );
       }
     }
   }

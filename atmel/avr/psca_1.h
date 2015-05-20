@@ -1,5 +1,5 @@
 
-/*	Atmel AVR pin change interrupt controller model 'a'
+/*	Atmel AVR counter-timer prescaler model 'a'
  *
  * This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
@@ -8,7 +8,7 @@
 
 
 /**
- * @page atmelavr_psca _psca
+ * @page atmelavr_psca Class _psca: counter-timer prescaler
  *
  * A class `_psca` object is a counter-timer prescaler.
  */

@@ -1,36 +1,37 @@
 
-/*	Fade a LED connected to a counter compare output (method 2)
- *
- *	Changes versus method 1:
- *
- *        * define PWM as hw_counterX_compareY and use hw_sup(...) to
- *          retrieve the name of the counter
- *
- *        * use a HWA context in the ISR and the couple
- *          hwa_nocommit() / hwa_commit() to write the changes to the hardware
- *
- *        * use a seperate function to store the hardware configuration
- *          into a HWA context
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Fade a LED connected to a counter compare output (method 2)
+ *
+ *      Changes versus method 1:
+ *
+ *        * define PWM as `hw_counterX_compareY` and use `hw_sup(...)` to
+ *          retrieve the name of the counter
+ *
+ *        * use a HWA context in the ISR and the couple `hwa_nocommit()` /
+ *          `hwa_commit()` to write the changes to the hardware
+ *
+ *        * use a seperate function to store the hardware configuration
+ *          into a HWA context
  */
-#include "targets/attiny84.h"		// 188 bytes
-//#include "targets/attiny85.h"		// 184:0xA55D		-
-//#include "targets/nanodccduino.h"	// 264:0x17F7		286:0x5C01
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
 /*  The counter
  */
-#define PWM			hw_counter0_compare0
-#define CLKDIV			64
-#define COUNTMODE		loop_up
+#define PWM                     hw_counter0_compare0
+#define CLKDIV                  64
+#define COUNTMODE               loop_up
 
 
 /*  Store the hardware configuration into a HWA context
@@ -40,17 +41,17 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle );
+              sleep,      enabled,
+              sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa_config( hw_sup(PWM),
-	      clock,     HW_G2(syshz_div, CLKDIV),
-	      countmode, COUNTMODE,
-	      bottom,    0,
-	      top,       fixed_0xFF
-	      );
+              clock,     HW_G2(syshz_div, CLKDIV),
+              countmode, COUNTMODE,
+              bottom,    0,
+              top,       fixed_0xFF
+              );
 
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_config( PWM, output, clear_on_match_up_set_on_match_down );
@@ -72,8 +73,8 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
  */
 HW_ISR( hw_sup(PWM), overflow )
 {
-  static uint8_t	duty ;
-  static uint8_t	phase ;
+  static uint8_t        duty ;
+  static uint8_t        phase ;
 
   if ( phase == 0 )
     hw_write( PWM, duty );
@@ -86,7 +87,7 @@ HW_ISR( hw_sup(PWM), overflow )
     phase = (phase + 1) & 3 ;
 
     /*  In 'loop_up' counting mode, we must disconnect/reconnect the output of
-     *	the compare unit as it can not provide pulses of less than 1 cycle.
+     *  the compare unit as it can not provide pulses of less than 1 cycle.
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
 
@@ -96,24 +97,24 @@ HW_ISR( hw_sup(PWM), overflow )
       setup_hardware( hwa );
 
       if ( phase == 2 ) {
-	/*
-	 *  Change the compare output config from 'set_at_bottom_clear_on_match'
-	 *  to 'disconnected'
-	 */
-	hwa_config( PWM, output, set_at_bottom_clear_on_match );
-	hwa_nocommit();
-	hwa_config( PWM, output, disconnected );
-	hwa_commit();
+        /*
+         *  Change the compare output config from 'set_at_bottom_clear_on_match'
+         *  to 'disconnected'
+         */
+        hwa_config( PWM, output, set_at_bottom_clear_on_match );
+        hwa_nocommit();
+        hwa_config( PWM, output, disconnected );
+        hwa_commit();
       }
       else if ( phase == 0 ) {
-	/*
-	 *  Change the compare output config from 'disconnected' to
-	 *  'set_at_bottom_clear_on_match'
-	 */
-	hwa_config( PWM, output, disconnected );
-	hwa_nocommit();
-	hwa_config( PWM, output, set_at_bottom_clear_on_match );
-	hwa_commit();
+        /*
+         *  Change the compare output config from 'disconnected' to
+         *  'set_at_bottom_clear_on_match'
+         */
+        hwa_config( PWM, output, disconnected );
+        hwa_nocommit();
+        hwa_config( PWM, output, set_at_bottom_clear_on_match );
+        hwa_commit();
       }
     }
   }

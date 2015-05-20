@@ -9,7 +9,7 @@
  */
 
 /**
- * @page atmelavr_flasha _flasha
+ * @page atmelavr_flasha Class _flasha: FLASH memory
  *
  * A class `_flasha` object is an FLASH memory.
  */

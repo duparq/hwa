@@ -24,22 +24,6 @@
 /* #define hw_awaker_watchdog		, 2 */
 
 
-/** @page atmelavr_corex _corex
- *  @par Configuring the core
- *
- *  @code
- *  hwa_config( CORE,
- *
- *              [sleep,        enabled,
- *                           | disabled,]
- *
- *              [sleep_mode,   idle
- *                           | adc_noise_reduction
- *                           | power_down
- *                           | standby]             );
- *  @endcode
- */
-
 /*  TODO: use a list of wake-up sources instead (or in addition)?
  */
 #define _hwa_config_core(p,i,a,...)					\
@@ -95,8 +79,8 @@
 
 
 /**
- * @page atmelavr_corex
- * @par Get the status of the core
+ * @page atmelavr_corea
+ * @section atmelavr_corea_stat Getting the status of the core
  *
  * Available flags are (alternate names between brackets):
  * * porf  (reset_by_power_on)  : set if reset was caused by power-on
@@ -146,8 +130,8 @@ HW_INLINE _hw_core_stat_t _hw_core_stat( uint8_t byte )
 
 
 /**
- * @page atmelavr_corex
- * @par Clear the status of the core
+ * @page atmelavr_corea
+ * @section atmelavr_corea_clear Clearing the status of the core
  *
  * @code
  * hwa_clear( hw_core0 );

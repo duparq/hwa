@@ -1,32 +1,44 @@
 
-/*	TCS3200 color detector
- *
- *	The detector drives 4 LED connected to PIN_OUT0..3 according to one of
- *	the 16 color regions it has been taught.
- *
- *	Host applications provided:
- *
- *	  ./tcs3200.py     * show status of device (threshold and regions)
- *	                   * show real-time sampling, store samples into a file
- *	                   * define a region in the device
- *	                   * set the value of the maximum period (minimum light
- *	                     level) on the clear channel that enables sampling
- *	                     (0..65535)
- *
- *	  ./display.py     display (3D) the samples contained
- *	                   in the provided files
- *
- *	Use the same counter as SWUART to compute the period of the TCS3200
- *	output signal.
- *
- *	With S0=0 and S1=1, output frequency of the TCS is below 12 kHz, so
- *	period is over 83 µs. With hw_syshz=8 MHz, this gives periods >660
- *	counter units. As the counter has 16 bits, the lowest period it can
- *	measure is about 122 Hz. Experience shows that it is enough.
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @example
+ *
+ * TCS3200 color detector
+ *
+ * The microcontroller drives 4 LED connected to PIN_OUT0..3 according to one of
+ * the 16 color regions it has been taught. It can also communicate with the
+ * host through two host applications:
+ *
+ * `./tcs3200.py` to:
+ *     - show status of device (threshold and regions)
+ *
+ *     - show real-time sampling and store samples into a file
+ *
+ *     - define a region in the device
+ *
+ *     - set the value of the maximum period (minimum light level) on the
+ *       clear channel that enables sampling (0..65535)
+ *
+ * `./display.py` to display (3D) the samples contained
+ *                in the provided files
+ *
+ * The same counter as the SWUART is used to compute the period of the TCS3200
+ * output signal.
+ *
+ * With S0=0 and S1=1, output frequency of the TCS is below 12 kHz, so
+ * period is over 83 µs. With hw_syshz=8 MHz, this gives periods >660
+ * counter units. As the counter has 16 bits, the lowest period it can
+ * measure is about 122 Hz. Experience shows that it is enough.
+ *
+ * @par targets/attiny84.h
+ * @include targets/attiny84.h
+ *
+ * @par config.h
+ * @include config.h
  */
 
 #include "config.h"

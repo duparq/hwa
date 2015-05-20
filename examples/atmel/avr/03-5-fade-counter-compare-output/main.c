@@ -1,28 +1,30 @@
 
-/*	Fade a LED connected to a counter compare output (method 1)
- *
- *	Note: see method 2 in the next example.
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Fade a LED connected to a counter compare output (method 1)
+ *
+ *      Note: see method 2 in the next example.
  */
-#include "targets/attiny84.h"	     // 192 bytes
-//#include "targets/attiny85.h"	     // 188:0x8F4B	-	   	-	  
-//#include "targets/nanodccduino.h"    // 268:0x2D65 (D6)	294:0xDF1A 	280:0xAC79 (D11)
+
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
 /*  The counter
  */
-#define COUNTER			hw_counter0
-#define CLKDIV			64
-#define COUNTMODE		loop_up
-#define COMPARE			compare0
+#define COUNTER                 hw_counter0
+#define CLKDIV                  64
+#define COUNTMODE               loop_up
+#define COMPARE                 compare0
 
 
 /*  Service the counter overflow IRQ:
@@ -35,8 +37,8 @@
  */
 HW_ISR( COUNTER, overflow )
 {
-  static uint8_t	duty ;
-  static uint8_t	phase ;
+  static uint8_t        duty ;
+  static uint8_t        phase ;
 
   if ( phase == 0 )
     hw_write( hw_sub(COUNTER,COMPARE), duty );
@@ -49,7 +51,7 @@ HW_ISR( COUNTER, overflow )
     phase = (phase + 1) & 3 ;
 
     /*  In 'loop_up' counting mode, we must disconnect/reconnect the output of
-     *	the compare unit as it can not provide pulses of less than 1 cycle.
+     *  the compare unit as it can not provide pulses of less than 1 cycle.
      *
      *  Note that the configuration of the counter is not known here, so there
      *  is only loose checking against the arguments provided and the generated
@@ -58,9 +60,9 @@ HW_ISR( COUNTER, overflow )
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
       if ( phase == 2 )
-	hw_config( hw_sub(COUNTER,COMPARE), output, disconnected );
+        hw_config( hw_sub(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-	hw_config( hw_sub(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+        hw_config( hw_sub(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
     }
   }
 }
@@ -76,23 +78,23 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle );
+              sleep,      enabled,
+              sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa_config( COUNTER,
-	      clock,     HW_G2(syshz_div, CLKDIV),
-	      countmode, COUNTMODE,
-	      bottom,    0,
-	      top,       fixed_0xFF
-	      );
+              clock,     HW_G2(syshz_div, CLKDIV),
+              countmode, COUNTMODE,
+              bottom,    0,
+              top,       fixed_0xFF
+              );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_config( hw_sub(COUNTER,COMPARE),
-		output, clear_on_match_up_set_on_match_down );
+                output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
     hwa_config( hw_sub(COUNTER,COMPARE),
-		output, set_at_bottom_clear_on_match );
+                output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ
    */

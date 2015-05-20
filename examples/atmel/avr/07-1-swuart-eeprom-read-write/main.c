@@ -1,18 +1,20 @@
 
-/*	Synchronize the software UART
- *	Send a '$' prompt
- *	Infinite loop:
- *	  Wait for: c + al + ah + n + '\n'
- *	  IF c=='e' THEN read n bytes from EEPROM address al:ah
- *        IF c=='E' THEN write n at EEPROM address al:ah
- *
- *	Test: ./main.py --help
- *	      ./main.py read 0 512
- *	      ./main.py write 0x01F0 0x55
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @example
+ *
+ *	Read/write bytes of EEPROM memory
+ *
+ *	Test application:
+ * @code
+ *	./main.py --help
+ *	./main.py read 0 512
+ *	./main.py write 0x01F0 0x55
+ * @endcode
  */
 
 #include "config.h"

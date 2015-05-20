@@ -1,15 +1,18 @@
 
-/*	Atmel AVR watchdog model 'a'
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @file
+ * @brief Atmel AVR watchdog model 'a'
  */
 
 #include "wdog_1.h"
 
 /**
- * @page atmelavr_wdoga _wdoga
+ * @page atmelavr_wdoga Class _wdoga: watchdog timer
  *
  * A class `_wdoga` object is a watchdog timer
  */

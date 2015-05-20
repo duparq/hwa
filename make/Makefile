@@ -144,7 +144,7 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin
 #
 .PHONY: check
 check: $(CFG)
-	if make $(OUTDIR)/$(OUT).bin ; then						\
+	@if make $(OUTDIR)/$(OUT).bin >/dev/null 2>&1 ; then				\
 	  S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
 	  O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
 	  O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
@@ -186,3 +186,9 @@ tarball: clean
 	DST=$$SRC.tar.bz2					;\
 	tar -cvO --exclude=trash --exclude=$$DST		\
 		../$$SRC | bzip2 >$$DST
+
+#  Produce HTML documentation
+#
+.PHONY: doc
+doc:
+	@cd $(CWD).. && mkdir -p doxygen/html && doxygen doxygen/Doxyfile

@@ -11,7 +11,7 @@
 
 
 /**
- * @page atmelavr_c16a _c16a
+ * @page atmelavr_c16a Class _c16a: 16-bit counter/timer
  *
  * A class `_c16a` object is a 16-bit counter/timer with two compare units and
  * waveform generators and one capture unit.

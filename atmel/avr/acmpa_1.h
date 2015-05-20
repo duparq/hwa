@@ -1,16 +1,20 @@
 
-/*	Atmel AVR 8-bit analog comparator model 'a'
- *
- *	Used in:	ATtinyX4 acmp0
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Definitions for Atmel AVR analog comparator 'a' that do not produce C code
+ *
+ *	Used in: ATtinyX4
+ *
+ */
+
 
 /**
- * @page atmelavr_acmpa _acmpa
+ * @page atmelavr_acmpa Class _acmpa: analog comparator
  *
  * A class `_acmpa` object is an analog comparator.
  */

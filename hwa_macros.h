@@ -306,6 +306,7 @@ extern char hw_error ;
 #define hw_hasbits__cb2
 #define hw_hasbits__ext
 #define hw_hasbits__ob1
+#define hw_hasbits__ob2
 
 
 /**
@@ -396,6 +397,15 @@ extern char hw_error ;
 #define _hw_xob1__crg(rw,ra,rwm,rfm, bn,bp,o,c,a,r)	\
   _m1, o,a, r,rw,ra,rwm,rfm, bn,bp
 
+
+/*  Memory definition of two groups of consecutive bits in one object register
+ *	-> _m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
+ *	             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
+ */
+//_hw_x_ob2(cr, 1, 7, 1, cr, 1, 0, 0,hw_psc0,_psca,0,tsmpsr)
+#define _hw_x_ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
+  _hw_xcb2_2(r1,_##o##_##r1,rbn1,rbp1,vbp1,				\
+	     r2,_##o##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
 
 
 /*  Memory definition of two groups of consecutive bits in one or two class
@@ -551,7 +561,7 @@ extern char hw_error ;
 
 #define _hw_sub_0(p,x)		HW_PE(p, HW_G2(_hw_sub0,HW_ISOBJ(p))(p,x))
 #define _hw_sub0_0(p,x)		HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_sub0_1(p,x)		HW_ERR("`"#p"` has no sub `"#x"`."))
+#define _hw_sub0_1(p,x)		HW_ERR("`"#p"` has no object `"#x"`."))
 
 
 /*	hw_sup(...): definition of the controller associated to an instance (method)

@@ -1,22 +1,24 @@
 
-/*	Fade a LED according to the ADC conversion
- *
- *	Can also be used to drive a servo (brown->ground, red->+6V,
- *	yellow->pwm). In that case, it is recommended to use a separated power
- *	supply for the servo as USB RS232 modules may not provide enough
- *	current.
- *
- *  This file is part of the HWA project.
+/*  This file is part of the HWA project.
  *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Target
+/**
+ * @example
+ *
+ *      Fade a LED according to ADC conversion
+ *
+ *      This can also be used to drive a servo (brown->ground, red->+6V,
+ *      yellow->pwm). In that case, it is recommended to use a separated power
+ *      supply for the servo as USB RS232 modules may not provide enough
+ *      current.
  */
-#include <targets/attiny84.h>		// 
-//#include "targets/attiny85.h"		// 
-//#include "targets/nanodccduino.h"	// 
+
+
+/*      Target
+ */
+#include <targets/attiny84.h>
 #include <hwa.h>
 
 
@@ -25,39 +27,42 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 
-#define PWM_PERIOD		0.020000	/* 50 Hz */
-#define PWM_TMIN		0
-#define PWM_TMAX		PWM_PERIOD
-/* #define PWM_TMIN		0.000300	/\*  300 µs min *\/ */
-/* #define PWM_TMAX		0.003000	/\* 3000 µs max *\/ */
+#define PWM_PERIOD              0.020000        /* 50 Hz */
+#define PWM_TMIN                0
+#define PWM_TMAX                PWM_PERIOD
+
+/*  Timings for servo
+ */
+/* #define PWM_TMIN             0.000300        /\*  300 µs min *\/ */
+/* #define PWM_TMAX             0.003000        /\* 3000 µs max *\/ */
 
 
-#define INPUT			hw_pin_13
+#define INPUT                   hw_pin_13
 
-/* #define COUNTER			hw_counter0 */
-/* #define COUNTER_CLK_DIV		1024 */
-#define COUNTER			hw_counter1
-#define COUNTER_CLK_DIV		8
+/* #define COUNTER                      hw_counter0 */
+/* #define COUNTER_CLK_DIV              1024 */
+#define COUNTER                 hw_counter1
+#define COUNTER_CLK_DIV         8
 
-#define ADC_CLK_DIV		128	/* T=~13*128/8=208 µs @8MHz */
+#define ADC_CLK_DIV             128     /* T=~13*128/8=208 µs @8MHz */
 
 
 /*  Range of duty value, top value
  */
-#define count_t			hw_rt(COUNTER,count)
-#define COMPARE_MIN		(count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
-#define COMPARE_MAX		(count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
-#define COUNT_TOP		(uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
+#define count_t                 hw_rt(COUNTER,count)
+#define COMPARE_MIN             (count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
+#define COMPARE_MAX             (count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
+#define COUNT_TOP               (uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
 
 
 /*  Value to store in the compare unit (must be the same size as the count
  *  register)
  */
-static volatile count_t		duty ;
+static volatile count_t         duty ;
 
 
 /*  Service ADC "conversion completed" IRQ: compute duty
@@ -71,8 +76,8 @@ HW_ISR( hw_adc0, isr_interruptible )
 
   /*  Low-pass filter
    */
-  const uint8_t			ns = 32 ;	/* # of samples   */
-  static uint16_t		lpf ;		/* sum of samples */
+  const uint8_t                 ns = 32 ;       /* # of samples   */
+  static uint16_t               lpf ;           /* sum of samples */
 
   lpf = lpf - (lpf + ns/2)/ns + adc ;
 
@@ -97,7 +102,7 @@ HW_ISR( hw_adc0, isr_interruptible )
 }
 
 
-/*  Service counter-overflow IRQ: turn the LED on and manage the compare IRQ
+/*  Service counter-overflow IRQ: turn the LED on and enable the compare IRQ
  *  that turns it off
  */
 HW_ISR( COUNTER, overflow, isr_non_interruptible )
@@ -121,13 +126,13 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
 
 
 /*  Service compare-match IRQ: turn the LED off
+ *
+ *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
+ *  spare a few bytes with a naked ISR.
  */
 #if hw_addr(hw_reg(hw_sup(PIN_LED), port)) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
 {
-  /*  If the address of the port register is < 0x40 (assembler 0x20)
-   *  we can spare a few bytes with a naked ISR.
-   */
   hw_write( PIN_LED, 0 );
   hw_asm("reti");
 }
@@ -149,23 +154,23 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle
-	      );
+              sleep,      enabled,
+              sleep_mode, idle
+              );
 
   /*  Configure LED pin
    */
   hwa_config( PIN_LED,
-	      direction, output
-	      );
+              direction, output
+              );
 
   /*  Configure INPUT pin in analog mode (disable digital input buffer)
    */
   hwa_config( INPUT,
-	      mode,      analog,
-	      direction, input,
-	      pullup,    on
-	      );
+              mode,      analog,
+              direction, input,
+              pullup,    on
+              );
 
   /*  Check that the counter can handle the top value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
@@ -177,12 +182,12 @@ int main ( )
    *  The overflow ISR manages the compare IRQ
    */
   hwa_config( COUNTER,
-	      clock,     HW_G2(syshz_div, COUNTER_CLK_DIV),
-	      countmode, loop_up,
-	      bottom,    0,
-	      top,       compare0,
-	      overflow,  at_top,
-	      );
+              clock,     HW_G2(syshz_div, COUNTER_CLK_DIV),
+              countmode, loop_up,
+              bottom,    0,
+              top,       compare0,
+              overflow,  at_top,
+              );
   hwa_write( hw_sub(COUNTER, compare0), COUNT_TOP );
   hwa_turn_irq( COUNTER, overflow, on );
 
@@ -190,12 +195,12 @@ int main ( )
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
   hwa_config( hw_adc0,
-  	      clock,   HW_G2(syshz_div, ADC_CLK_DIV),
-  	      trigger, manual,
-  	      vref,    vcc,
-  	      align,   right,
-  	      input,   INPUT,
-  	      );
+              clock,   HW_G2(syshz_div, ADC_CLK_DIV),
+              trigger, manual,
+              vref,    vcc,
+              align,   right,
+              input,   INPUT,
+              );
   hwa_turn_irq( hw_adc0, on );
   hwa_trigger( hw_adc0 );
 
