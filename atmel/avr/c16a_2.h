@@ -1,16 +1,14 @@
 
-/*	Atmel AVR 16-bit timer-counter model 'a'
- *
- *	Used in:	ATtinyX4 counter1
- *			ATmegaX8 counter1 ?
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "ocua_2.h"
-
+/*	Atmel AVR 16-bit timer-counter model 'a'
+ *
+ *	Used in:	ATtinyX4 counter1
+ *			ATmegaX8 counter1 ?
+ */
 
 HW_INLINE void __hwa_begin__c16a ( hwa_c16a_t *p, intptr_t a )
 {
@@ -68,53 +66,53 @@ HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 
 /**
  * @page atmelavr_c16a
- * @par Configure the counter
+ * @section atmelavr_c16a_config Configuring the counter
+ *
+ * Note: if `overflow` is not stated, HWA will select an acceptable value
+ * according to the configuration of the comparison units found in the HWA
+ * context. If `overflow` is stated, HWA will check the validity of its value.
  *
  * @code
- * #define COUNTER	hw_counter0
- *
  * hwa_config( COUNTER,
  *
- *             clock,       none
- *                        | syshz
- *                        | syshz_div_1
- *                        | syshz_div_8
- *                        | syshz_div_64
- *                        | syshz_div_256
- *                        | syshz_div_1024
- *                        | syshz_ext_rising
- *                        | syshz_ext_falling,
+ *             /*  How the counter is clocked
+ *              */
+ *             clock,       none                // No clock, the counter is stopped
+ *                        | syshz               // CPU clock, frequency
+ *                        | syshz_div_1         // CPU clock, frequency
+ *                        | syshz_div_8         // CPU clock, frequency / 8
+ *                        | syshz_div_64        // CPU clock, frequency / 64
+ *                        | syshz_div_256       // CPU clock, frequency / 256
+ *                        | syshz_div_1024      // CPU clock, frequency / 1024
+ *                        | syshz_ext_rising    // External input, rising edge
+ *                        | syshz_ext_falling,  // External input, falling edge
  *
- *             countmode,   loop_up
- *                        | loop_updown,
+ *             /*  How does this counter count
+ *              */
+ *             countmode,   loop_up             // Count up and loop
+ *                        | loop_updown,        // Count up and down alternately
  *
+ *             /*  Class _c16a counters count from 0
+ *              */
  *            [bottom,      0, ]
  *
- *            [top,         fixed_0xFF
- *                        | fixed_0x1FF
- *                        | fixed_0x3FF
- *                        | fixed_0xFFFF
- *                        | max
- *                        | compare0
- *                        | capture0,]
+ *             /*  The maximum value the counter reaches (the default is `max`)
+ *              */
+ *            [top,         fixed_0xFF          // Hardware fixed value 0x00FF
+ *                        | fixed_0x1FF         // Hardware fixed value 0x01FF
+ *                        | fixed_0x3FF         // Hardware fixed value 0x03FF
+ *                        | fixed_0xFFFF        // Hardware fixed value 0xFFFF
+ *                        | max                 // Hardware fixed value 0xFFFF
+ *                        | compare0            // Value stored in the compare0 unit
+ *                        | capture0,]          // Value stored in the capture0 unit
  *
- *            [overflow,    at_bottom
- *                        | at_top
- *                        | at_max ]
+ *             /*  When the overflow flag is set
+ *              */
+ *            [overflow,    at_bottom           // When the counter resets to bottom
+ *                        | at_top              // When the counter reaches the top value
+ *                        | at_max ]            // When the counter reaches its max value
  *           );
  * @endcode
- *
- * `top` determines the maximum value the counter can reach before overflowing.
- * If `top` is `compare0`, the counter counts from 0 to the value stored in the
- * compare unit 0 (register OCRxA in Atmel terminology).
- * If `top` is `capture0`, the counter counts from 0 to the value stored in the
- * capture unit (register ICRxA in Atmel terminology).
- *
- * Optionnal parameter `overflow` tells when the overflow interrupt request will
- * be thrown.  If `overflow` is not stated, HWA will select an acceptable value
- * according to the configuration of the comparison units. If `overflow` is
- * stated, HWA will check its value.
- *
  */
 #define hw_c16a_countmode_loop_up		, 1
 #define hw_c16a_countmode_loop_updown		, 2
@@ -549,7 +547,7 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
 /**
  * @page atmelavr_c16a
- * @par Get the value of the counter
+ * @section atmelavr_c16a_read Getting the value of the counter
  *
  * @code
  * hw_read( COUNTER );
@@ -561,10 +559,13 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
 /**
  * @page atmelavr_c16a
- * @par Set the value of the counter
+ * @section atmelavr_c16a_write Setting the value of the counter
  *
  * @code
  * hw/hwa_write( COUNTER, 42 );
+ * @endcode
+ * @code
+ * hw/hwa_write_reg( COUNTER, count, 42 );
  * @endcode
  */
 #define _hw_mthd_hw_write__c16a		, _hw_write_c16a
@@ -576,13 +577,16 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
 /**
  * @page atmelavr_c16a
- * @par Reset (set to 0) the value of the counter
+ * @section atmelavr_c16a_clear Clearing the counter (setting the value to 0)
+ *
+ * Note: this does not reset the prescaler.
  *
  * @code
  * hw/hwa_clear( COUNTER );
  * @endcode
- *
- * Note: this does not reset the prescaler.
+ * @code
+ * hw/hwa_write_reg( COUNTER, count, 0 );
+ * @endcode
  */
 #define _hw_mthd_hw_clear__c16a		, _hw_clear_c16a
 #define _hw_clear_c16a(o,i,a,...)	HW_TX(_hw_write_reg(o,count,0),__VA_ARGS__)
@@ -593,7 +597,7 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
 
 /**
  * @page atmelavr_c16a
- * @par Get the status of the counter
+ * @section atmelavr_c16a_stat Getting the status of the counter
  *
  * Available flags are:
  * * overflow
@@ -605,9 +609,26 @@ HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_
  * trigger.
  *
  * @code
+ * /*  Create a structure to receive the counter status
+ *  */
  * hw_stat_t(COUNTER) st ;
+ *
+ * /*  Copy the counter status to the structure
+ *  */
  * st = hw_stat( COUNTER );
+ *
+ * /*  Process the overflow flag
+ *  */
  * if ( st.overflow ) {
+ *   hw_clear_irq( COUNTER, overflow );
+ *   n_overflows++ ;
+ * }
+ * @endcode
+ *
+ * @code
+ * /*  Process the overflow flag
+ *  */
+ * if ( hw_stat( COUNTER ).overflow ) {
  *   hw_clear_irq( COUNTER, overflow );
  *   n_overflows++ ;
  * }

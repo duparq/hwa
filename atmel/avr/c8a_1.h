@@ -1,4 +1,9 @@
 
+/* This file is part of the HWA project.
+ * Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
+
 /*	Atmel AVR 8-bit timer-counter model 'a'
  *
  *	Used in:	ATtinyX4 counter0
@@ -6,10 +11,6 @@
  *			ATmegaX8 counter0
  *
  *	Note: ATtinyX5 has a different cabling of masks and flags.
- *
- * This file is part of the HWA project.
- * Copyright (c) Christophe Duparquet <duparq at free dot fr>
- * All rights reserved. Read LICENSE.TXT for details.
  */
 
 
@@ -25,30 +26,31 @@
 
 /**
  * @page atmelavr_c8a
- * @par Name of a compare unit
+ * @section atmelavr_c8a_macros Instructions that do not produce code
+ * @subsection atmelavr_c8a_sub Name of a compare unit
  * 
- * The compare units (class @ref atmelavr_ocua) are named `compare0` and
+ * The compare units (class @ref atmelavr_ocua "_ocua") are named `compare0` and
  * `compare1`, corresponding to `OCRxA` and `OCRxB` registers in Atmel
  * terminology.
  *
- * @code
- * #define COUNTER	hw_counter0
- * #define COMPARE	hw_sub(COUNTER, compare0)
+ * The `hw_sub(...)` instruction retrieves the compare unit name of a counter:
  *
- * #if hw_id(COMPARE)==0
- * #  error This counter has no compare unit!
+ * @code
+ * #if hw_id( hw_sub(hw_counter0, compare0) ) == 0
+ * #  error This counter has no compare0 unit !
  * #endif
  * @endcode
  */
 
-
 /**
  * @page atmelavr_c8a
- * @par Number of bits of the counting register
+ * @subsection atmelavr_c8a_bn Number of bits of the counting register
+ *
+ * The `hw_bn(...)` instruction retrieves the number of bits of a counter:
  *
  * @code
- * #if hw_bn( COUNTER ) != 16
- * #  error You must choose a 16-bit counter!
+ * #if hw_bn( COUNTER ) != 8
+ * #  error You must choose a 8-bit counter!
  * #endif
  * @endcode
  */

@@ -1,18 +1,18 @@
 
-/*	Atmel AVR 8-bit timer-counter compare unit version 'a'
- *
- *	Used in: ATtinyX4 OC0A	hw_counter0_compare0
- *		 	  OC0B	hw_counter0_compare1
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/*	Atmel AVR 8-bit timer-counter compare unit version 'a'
+ *
+ *	Used in: ATtinyX4 OC0A	hw_counter0_compare0
+ *		 	  OC0B	hw_counter0_compare1
+ */
+
 
 /**
- * @page atmelavr_ocua Class _ocua: counter/timer compare unit with waveform
- * generator
+ * @page atmelavr_ocua Class _ocua: counter/timer compare unit with waveform generator
  *
  * A class `_ocua` object is a counter/timer compare unit with waveform
  * generator.
@@ -23,15 +23,14 @@
 
 /**
  * @page atmelavr_ocua
+ * @section atmelavr_ocua_macros Instructions that do not produce code
+ * @subsection atmelavr_ocua_sup Name of the related counter
  *
- * @par Name of the related counter
+ * The `hw_sup(...)` instruction retrieves the name of the counter of the compare unit:
  *
  * @code
- * #define COMPARE	hw_counter0_compare0
- * #define COUNTER	hw_sup( COMPARE ) 
- *
- * #if hw_bn(COUNTER) != 16
- * #  error Only 16-bit counter is supported!
+ * #if hw_id( hw_sup(hw_counter0_compare0) ) != hw_id( hw_counter0 )
+ * #  error Houston, we have a problem
  * #endif
  * @endcode
  */
@@ -42,15 +41,11 @@
 /**
  * @page atmelavr_ocua
  *
- * @par Name of the related i/o pin
+ * @subsection atmelavr_ocua_io Name of the related i/o pin
  *
  * @code
- * #define COUNTER	hw_counter0
- * #define COMPARE	hw_sub( COUNTER, compare0 )
- * #define OUTPUT	hw_io( COMPARE )
- *
- * #if hw_id(OUTPUT) == hw_id(hw_pin_mosi)
- * #  error OUTPUT pin is in conflict with pin MOSI
+ * #if hw_id( hw_io(hw_counter0_compare0) != hw_id(hw_pin_mosi)
+ * #  error Pin OC0A is in conflict with pin MOSI
  * #endif
  * @endcode
  */

@@ -9,6 +9,7 @@
 #include "atmel/avr/io_2.h"
 #include "atmel/avr/pcica_2.h"
 #include "atmel/avr/wdoga_2.h"
+#include "atmel/avr/ocua_2.h"
 #include "atmel/avr/c8a_2.h"
 #include "atmel/avr/c16a_2.h"
 #include "atmel/avr/psca_2.h"

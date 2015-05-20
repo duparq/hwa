@@ -1,22 +1,21 @@
 
-#ifndef _HW_OCUA2_H_
-#define _HW_OCUA2_H_
+/* This file is part of the HWA project.
+ * Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
 
 /*	Atmel AVR 8-bit timer-counter compare unit version 'a'
  *
  *	Used in: ATtinyX4 OC0A	hw_counter0_compare0
  *		 	  OC0B	hw_counter0_compare1
- *
- * This file is part of the HWA project.
- * Copyright (c) Christophe Duparquet <duparq at free dot fr>
- * All rights reserved. Read LICENSE.TXT for details.
  */
-
 
 /**
  * @page atmelavr_ocua
+ * @section atmelavr_ocua_config Configuring the compare unit output (synchronous)
  *
- * @par Configure the compare unit output
+ * Note: `hw_config(...)` does not perform any checking against the counter
+ * configuration.
  *
  * @code
  * hw_config( COMPARE,
@@ -31,9 +30,6 @@
  *                    | set_on_match_up_clear_on_match_down
  *           );
  * @endcode
- *
- * Note: there is no checking against the counter configuration.
- *
  */
 #define _hw_is_update_update			, 1
 #define _hw_is_output_output			, 1
@@ -82,8 +78,13 @@
 
 /**
  * @page atmelavr_ocua
+ * @section atmelavr_ocua_configa Configuring the compare unit (asynchronous)
  *
- * @par Configure the compare unit
+ * Optionnal arguments are:
+ *
+ *	* `update`: when the shadow register is copied to the compare register
+ *
+ *	* `output`: the behavior of the related output pin
  *
  * @code
  * hwa_config( COMPARE,
@@ -149,8 +150,7 @@
 
 /**
  * @page atmelavr_ocua
- *
- * @par Set the compare value
+ * @section atmelavr_ocua_write Setting the compare value
  *
  * @code
  * hw/hwa_write( COMPARE, 42 );
@@ -165,8 +165,7 @@
 
 /**
  * @page atmelavr_ocua
- *
- * @par Get the compare value
+ * @section atmelavr_ocua_read Reading the compare value
  *
  * @code
  * uint16_t ocr = hw_read( COMPARE );
@@ -178,8 +177,7 @@
 
 /**
  * @page atmelavr_ocua
- *
- * @par Trigger a compare event
+ * @section atmelavr_ocua_trigger Trigger a compare event
  *
  * @code
  * hw/hwa_trigger( COMPARE );
@@ -196,5 +194,3 @@
  * @page atmelavr_ocua
  * <br>
  */
-
-#endif /* ifndef _HW_OCUA2_H_ */
