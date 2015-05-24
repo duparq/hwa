@@ -55,7 +55,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 
 /**
  * @page atmelavr_pin1
- * @section atmelavr_pin1_config Configuration
+ * @section atmelavr_pin1_config Configuring i/o pins
  *
  * An i/o pin (or group of pins) is configured using the `hw_config(...)` or
  * `hwa_config(...)` instruction.
@@ -63,19 +63,16 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
  * @code
  * #define PIN		hw_pin_pa2
  *
- * hw/hwa_config( PIN,
+ * hw_config( PIN,
  *
- *               [mode,        analog,
- *                           | digital,]
+ *            [direction,   input,
+ *                        | output,]
  *
- *                direction,   input,
- *                           | output,
- *
- *               [pullup,      on,
- *                           | off] );
+ *            [pullup,      on,
+ *                        | off] );
  * @endcode
  */
-#define _hw_cfdio( p,i, pn,bn,bp, ...)					\
+#define _hw_cfdio( p,i, pn,bn,bp, ...)				\
   do {									\
     HW_G2(_hw_cfdio_xdirection, HW_IS(direction,__VA_ARGS__))(pn,bn,bp,__VA_ARGS__) \
       } while(0)
@@ -106,6 +103,24 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 #define _hw_cfdio_vpullup_0(pn,bn,bp,v,...)			\
   HW_ERR("`pullup` must be `on` or `off`, not `" HW_QUOTE(v) "`.");
 
+
+/**
+ * @page atmelavr_pin1
+ * @code
+ * #define PIN		hw_pin_pa2
+ *
+ * hwa_config( PIN,
+ *
+ *            [mode,        analog,
+ *                        | digital,]
+ *
+ *            [direction,   input,
+ *                        | output,]
+ *
+ *            [pullup,      on,
+ *                        | off] );
+ * @endcode
+ */
 
 #define _hwa_cfdio( p,i, pn,bn,bp, ...)					\
   do {									\

@@ -45,7 +45,7 @@ HW_INLINE void __hwa_commit__pcica ( hwa_t *hwa, hwa_pcica_t *p )
 
 /**
  * @page atmelavr_pcica
- * @section atmelavr_pcica_select Select the pins that are monitored
+ * @section atmelavr_pcica_select Selecting the pins that are monitored
  *
  * @code
  * hw_write( hw_pcic0, hw_pin_pa2, 1 );
@@ -60,3 +60,24 @@ HW_INLINE void __hwa_commit__pcica ( hwa_t *hwa, hwa_pcica_t *p )
 #define _hw_turn_pcica( p,i,a, pn, v, ...)	HW_TX(_hw_turn_pcica_2(p,pn,v),__VA_ARGS__)
 #define _hw_turn_pcica_2(p,pn,v)		HW_G2(_hw_turn_pcica,HW_IS(,hw_state_##v))(p,pn,v)
 #define _hw_turn_pcica_1(p,pn,v)		hw_write_reg(p,pn,HW_A1(hw_state_##v))
+
+
+/**
+ * @page atmelavr_pcica
+ * @section atmelavr_pcica_turnirq Interrupts
+ *
+ * Use the `hw_turn_irq(...)` or `hwa_turn_irq(...)` instruction to enable or
+ * disable a pin change IRQ.
+ *
+ * @code
+ * hw_turn_irq( hw_pcic0, hw_pin_pa2, on );	// Enable IRQ on PA2 change
+ * hw_turn_irq( hw_pcic0, hw_pin_pb1, off );	// Disable IRQ on PB1 change
+ * @endcode
+ *
+ * @code
+ * HW_ISR( hw_pcic0, hw_pin_pa2 )
+ * {
+ *	// Service PA2 change interrupt
+ * }
+ * @endcode
+ */

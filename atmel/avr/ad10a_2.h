@@ -34,9 +34,10 @@ HW_INLINE void __hwa_commit__ad10a ( hwa_t *hwa, hwa_ad10a_t *p )
 
 /**
  * @page atmelavr_ad10a
- * @par Configure (single-end mode)
+ * @section atmelavr_ad10a_config1 Configuring the ADC in single-end mode
  *
- * Note: the ADC is turned off by default. Configuring the ADC will automatically turn it on.
+ * Note: the ADC is turned off by default. Configuring the ADC will
+ * automatically turn it on.
  *
  * @code
  * hwa_config( ADC,
@@ -82,8 +83,7 @@ HW_INLINE void __hwa_commit__ad10a ( hwa_t *hwa, hwa_ad10a_t *p )
  *           );
  * @endcode
  *
- * @par Configure (differential mode)
- *
+ * @section atmelavr_ad10a_config2 Configuring the ADC in differential mode
  * @code
  * hwa_config( ADC,
  * 
@@ -402,7 +402,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /**
  * @page atmelavr_ad10a
- * @par Turn the ADC on / off
+ * @section atmelavr_ad10a_turn Turning the ADC on / off
  *
  * @code
  * hw/hwa_turn( ADC, on | off );
@@ -430,7 +430,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /**
  * @page atmelavr_ad10a
- * @par Read the result of conversion
+ * @section atmelavr_ad10a_read Reading the result of conversion
  *
  * @code
  * uint16_t adc = hw_read( ADC );
@@ -445,7 +445,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /**
  * @page atmelavr_ad10a
- * @par Start a conversion
+ * @section atmelavr_ad10a_trigger Starting a conversion
  *
  * @code
  * hw/hwa_trigger( ADC );
@@ -460,16 +460,11 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /**
  * @page atmelavr_ad10a
- * @par Get the status of the converter
+ * @section atmelavr_ad10a_stat Getting the status of the converter
  *
  * Available flags are:
- * * irq
- * * busy
- *
- * The `irq` flag corresponds to the interrupt request the converter can
- * trigger after a new data is available.
- *
- * The `busy` flag indicates that a conversion is in progress.
+ * * `irq`: the IRQ flag
+ * * `busy`: a conversion is in progress
  *
  * @code
  * hw_stat_t(ADC) st ;

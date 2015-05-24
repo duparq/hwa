@@ -20,7 +20,9 @@
 
 /**
  * @page atmelavr_ad10a
- * @par Number of bits of the conversion register
+ * @section atmelavr_ad10a_bn Number of bits of the conversion register
+ *
+ * The `hw_bn(...)` instruction retrieves the number of bits of the ADC.
  *
  * @code
  * #define ADC		hw_adc0

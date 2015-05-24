@@ -7,7 +7,10 @@
 
 /**
  * @page atmelavr_icua
- * @par Configure the unit
+ * @section atmelavr_icua_config Configuring the capture unit
+ *
+ * Note: currently, only `edge` configuration is implemented for the synchronous
+ * method.
  *
  * @code
  * hw_config( CAPTURE,
@@ -22,24 +25,6 @@
  *                    | off ]
  *           );
  * @endcode
- *
- * Note: currently, only `edge` configuration is implemented for the synchronous
- * method.
- *
- * @code
- * hwa_config( CAPTURE,
- *
- *             input,    pin_icp
- *                     | hw_acmp0,
- *
- *             edge,     falling
- *                     | rising,
- *
- *            [filter,   on
- *                     | off ]
- *           );
- * @endcode
- *
  */
 #define _hw_mthd_hw_config__icua		, _hw_cficua
 
@@ -70,6 +55,22 @@
 
 
 
+/**
+ * @page atmelavr_icua
+ * @code
+ * hwa_config( CAPTURE,
+ *
+ *             input,    pin_icp
+ *                     | hw_acmp0,
+ *
+ *             edge,     falling
+ *                     | rising,
+ *
+ *            [filter,   on
+ *                     | off ]
+ *           );
+ * @endcode
+ */
 #define _hw_mthd_hwa_config__icua		, _hwa_cficua
 
 #define _hwa_cficua(p,i,cn,icn,ion,...)					\
@@ -117,7 +118,13 @@
   HW_TX(,__VA_ARGS__)
 
 
-/*	Read the capture register of an icu
+/**
+ * @page atmelavr_icua
+ * @section atmelavr_icua_read Reading the capture unit
+ *
+ * @code
+ * uint16_t capture = hw_read( CAPTURE );
+ * @endcode
  */
 #define _hw_mthd_hw_read__icua			, _hw_read_icua
 #define _hw_read_icua(p,i,cn,icn,ion,...)	HW_TX( _hw_read_reg(cn,icn), __VA_ARGS__ )

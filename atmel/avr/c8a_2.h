@@ -71,8 +71,8 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  * @code
  * hwa_config( COUNTER,
  *
- *             /*  How the counter is clocked
- *              */
+ *             //  How the counter is clocked
+ *             //
  *             clock,       none                // No clock, the counter is stopped
  *                        | syshz               // CPU clock, frequency
  *                        | syshz_div_1         // CPU clock, frequency
@@ -83,23 +83,23 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  *                        | syshz_ext_rising    // External input, rising edge
  *                        | syshz_ext_falling,  // External input, falling edge
  *
- *             /*  How does this counter count
- *              */
+ *             //  How does this counter count
+ *             //
  *             countmode,   loop_up             // Count up and loop
  *                        | loop_updown,        // Count up and down alternately
  *
- *             /*  Class _c8a counters count from 0
- *              */
+ *             //  Class _c8a counters count from 0
+ *             //
  *            [bottom,      0, ]
  *
- *             /*  The maximum value the counter reaches (the default is `max`)
- *              */
+ *             //  The maximum value the counter reaches (the default is `max`)
+ *             //
  *            [top,         fixed_0xFF          // Hardware fixed value 0x00FF
  *                        | max                 // Hardware fixed value 0xFFFF
  *                        | compare0,]          // Value stored in the compare0 unit
  *
- *             /*  When the overflow flag is set
- *              */
+ *             //  When the overflow flag is set
+ *             //
  *            [overflow,    at_bottom           // When the counter resets to bottom
  *                        | at_top              // When the counter reaches the top value
  *                        | at_max ]            // When the counter reaches its max value
@@ -567,16 +567,16 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
  * trigger.
  *
  * @code
- * /*  Create a structure to receive the counter status
- *  */
+ * //  Create a structure to receive the counter status
+ * //
  * hw_stat_t(COUNTER) st ;
  *
- * /*  Copy the counter status to the structure
- *  */
+ * //  Copy the counter status to the structure
+ * //
  * st = hw_stat( COUNTER );
  *
- * /*  Process the overflow flag
- *  */
+ * //  Process the overflow flag
+ * //
  * if ( st.overflow ) {
  *   hw_clear_irq( COUNTER, overflow );
  *   n_overflows++ ;
@@ -584,8 +584,8 @@ HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
  * @endcode
  *
  * @code
- * /*  Process the overflow flag
- *  */
+ * //  Process the overflow flag
+ * //
  * if ( hw_stat( COUNTER ).overflow ) {
  *   hw_clear_irq( COUNTER, overflow );
  *   n_overflows++ ;

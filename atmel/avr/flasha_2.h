@@ -7,7 +7,7 @@
 
 /**
  * @page atmelavr_flasha
- * @par Read one byte
+ * @section atmelavr_flasha_read1 Reading one byte from Flash memory
  *
  * @code
  * uint8_t byte = hw_read( FLASH, addr ); // Read byte at address addr
@@ -16,10 +16,6 @@
 #define _hw_mthd_hw_read__flasha		, _hw_read_flasha
 #define _hw_read_flasha(p,i,a,addr,...)		HW_TX( _hw_flashardbyte(addr), __VA_ARGS__)
 
-
-/**
- * @brief Store into dst count bytes read from Flash memory address addr
- */
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 {
   uint8_t r ;
@@ -35,12 +31,12 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 
 /**
  * @page atmelavr_flasha
- * @par Store into dst count bytes read from Flash memory address addr
+ * @section atmelavr_flasha_readx Reading multiple bytes Flash memory
  *
  * @code
  * uint8_t dst[10];
  * uint8_t count = sizeof(dst);
- * hw_read_bytes( FLASH, dst, addr, count );
+ * hw_read_bytes( FLASH, dst, addr, count ); // Copy count bytes from Flash address addr to dst
  * @endcode
  */
 
@@ -68,8 +64,29 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 }
 
 
-/*
- * @brief Method `command` for class _flasha
+/**
+ * @page atmelavr_flasha
+ *
+ * @section atmelavr_flasha_loadpage Writing the Flash page buffer
+ * This is achieved through the `hw_command(...)` instruction:
+ * @code
+ * uint8_t page[HW_DEVICE_FLASH_PAGE_SIZE] ;
+ * hw_command( hw_flash0, load_page, page );
+ * @endcode
+ *
+ * @section atmelavr_flasha_erasepage Erasing one page of Flash memory
+ * This is achieved through the `hw_command(...)` instruction:
+ * @code
+ * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
+ * hw_command( hw_flash0, erase_page, zpage );
+ * @endcode
+ *
+ * @section atmelavr_flasha_writepage Writing the page buffer into Flash memory
+ * This is achieved through the `hw_command(...)` instruction:
+ * @code
+ * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
+ * hw_command( hw_flash0, write_page, zpage );
+ * @endcode
  *
  * This handles commands that _flasha objects can execute:
  * * load_page
@@ -81,7 +98,6 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 #define _hw_flasha_command_load_page		, load_page
 #define _hw_flasha_command_write_page		, write_page
 #define _hw_flasha_command_erase_page		, erase_page
-
 
 
 #define _hw_command_flasha(p,i,a,...)					\

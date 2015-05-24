@@ -7,7 +7,7 @@
 
 /**
  * @page atmelavr_eeproma _eeproma
- * @par Read one byte
+ * @section atmelavr_eeproma_read1 Reading one byte from EEPROM
  * @code
  * uint8_t byte = hw_read( hw_eeprom0, 0x42 );  // read byte at address 0x42
  * @endcode
@@ -35,7 +35,7 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
 
 /**
  * @page atmelavr_eeproma _eeproma
- * @par Read multiple bytes
+ * @section atmelavr_eeproma_readx Reading multiple bytes from EEPROM
  * @code
  * uint8_t bytes[42] ;
  * hw_read_bytes( hw_eeprom0, &bytes, sizeof(bytes) );
@@ -66,7 +66,7 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
 
 /**
  * @page atmelavr_eeproma _eeproma
- * @par Write one byte
+ * @section atmelavr_eeproma_write1 Writing one byte into EEPROM
  * @code
  * hw_write( hw_eeprom0, 0x42, 42 );  // Write 42 at address 0x42
  * @endcode
@@ -98,7 +98,7 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
 
 /**
  * @page atmelavr_eeproma _eeproma
- * @par Write multiple bytes
+ * @section atmelavr_eeproma_writex Writing multiple bytes into EEPROM
  * @code
  * extern uint8_t bytes[42] ;
  * hw_write_bytes( hw_eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100

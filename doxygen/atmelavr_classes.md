@@ -1,6 +1,8 @@
 
-@page atmelavr_classes Atmel AVR object classes
+Atmel AVR object classes {#atmelavr_classes}
+========================
 
+These are the classes HWA provides for Atmel AVR devices:
 * @subpage atmelavr_pin1
 * @subpage atmelavr_io8a
 * @subpage atmelavr_pcica

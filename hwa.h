@@ -5,7 +5,8 @@
  */
 
 
-/** @file
+/**
+ * @file
  * @brief	`hwa.h` is the main include file of HWA.
  *
  * `hwa.h` is included from the application source after `HW_DEVICE` has been

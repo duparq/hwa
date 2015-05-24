@@ -32,7 +32,7 @@ NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
 @include targets/attiny84.h
 
 @par config.h
-@include config.h
+@include ./config.h
 
 @par Main file
  */

@@ -16,8 +16,10 @@
 
 /**
  * @page atmelavr_icua
+ * @section atmelavr_icua_sup Name of the related counter
  *
- * @par Name of the related counter
+ * The `hw_sup(...)` instruction retrieves the name of the counter related to
+ * the capture unit.
  *
  * @code
  * #define CAPTURE	hw_counter0_capture0
@@ -34,8 +36,10 @@
 
 /**
  * @page atmelavr_icua
+ * @section atmelavr_icua_io Name of the related i/o pin
  *
- * @par Name of the related i/o pin
+ * The `hw_io(...)` instruction retrieves the name of i/o pin related to the
+ * capture unit.
  *
  * @code
  * #define COUNTER	hw_counter0

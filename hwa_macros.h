@@ -4,8 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/** @file
- *  @brief General purpose macro definitions usable in C or assembler source code.
+/**
+ * @file
+ * @brief General purpose macro definitions usable in C or assembler source code.
  *
  *  Upper case definitions process arbitrary lists of arguments.
  *

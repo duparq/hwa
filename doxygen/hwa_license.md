@@ -1,5 +1,5 @@
 
-License {#license}
+License		{#license}
 =======
 
 All of this is supposed to be Free Software and can be used in both free and

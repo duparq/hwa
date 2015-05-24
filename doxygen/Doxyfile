@@ -8,7 +8,7 @@ PROJECT_NAME           = HWA
 PROJECT_NUMBER         = 
 PROJECT_BRIEF          = "HardWare Abstractor"
 PROJECT_LOGO           = 
-OUTPUT_DIRECTORY       = /home/indy/dev/hwa/doxygen/html
+OUTPUT_DIRECTORY       = doxygen/html
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
@@ -27,7 +27,7 @@ ABBREVIATE_BRIEF       = "The $name class" \
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = 
+STRIP_FROM_PATH        = ../
 STRIP_FROM_INC_PATH    = 
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = NO
@@ -115,29 +115,36 @@ INPUT                  = README.md				\
 			 devices/attinyx4_2.h			\
 			 atmel/avr/wdoga_1.h			\
 			 atmel/avr/wdogb_1.h			\
-			 atmel/					\
-			 examples/				\
-		       	 doxygen/hwa_license.md
-
+			 atmel/avr/				\
+			 examples/atmel/avr/targets/README.md				\
+			 examples/atmel/avr/targets/					\
+			 examples/atmel/avr/diabolo/					\
+			 examples/atmel/avr/						\
+			 hwa/								\
+			 hwa.h hwa_2.h hwa_macros.h hwa_interrupts.h hwa.c		\
+		       	 doxygen/hwa_license.md						\
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.h \
-                         *.md
+			 *.sx \
+			 *.py \
+                         *.md \
+			 Makefile
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = build/*
 EXCLUDE_SYMBOLS        = 
-EXAMPLE_PATH           = examples
-EXAMPLE_PATTERNS       = *
+EXAMPLE_PATH           = examples/atmel/avr/
+EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = YES
 IMAGE_PATH             = doxygen
 INPUT_FILTER           = 
 FILTER_PATTERNS        = 
-FILTER_SOURCE_FILES    = YES
+FILTER_SOURCE_FILES    = NO
 FILTER_SOURCE_PATTERNS = 
-USE_MDFILE_AS_MAINPAGE = README.md
+USE_MDFILE_AS_MAINPAGE = ./README.md
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
 #---------------------------------------------------------------------------
@@ -163,7 +170,7 @@ GENERATE_HTML          = YES
 HTML_OUTPUT            = .
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            = 
-HTML_FOOTER            = doxygen/footer.html
+HTML_FOOTER            = 
 HTML_STYLESHEET        = 
 HTML_EXTRA_STYLESHEET  = doxygen/extrastylesheet.css
 HTML_EXTRA_FILES       = 

@@ -69,37 +69,6 @@ Currently the documentation gives informations only about using HWA, not on how
 to develop HWA.
 
 
-Diabolo
--------
-
-Diabolo is a bootloader (Diabolo Is A BOot LOader) that I developped using HWA
-for assembler programming. It is fast, as the host side uses a cache mecanism to
-determine pages that have to be programmed. It is not too big: ~640 bytes. It is
-very convenient since it can use 1 or 2-wire serial lines with auto-detection
-and auto-synchronization so that the baudrate does not have to be hardcoded in
-the project and no crystal is required for the device.
-
-The source code of the device-side of Diabolo is under
-`examples/atmel/avr/diabolo/device/`.
-
-The host-side Diabolo application is
-`examples/atmel/avr/diabolo/host/diabolo.py`.
-
-
-Swuarta
--------
-
-Swuarta is a software UART for Atmel AVR devices. It is used in the examples so
-that the same code can be written, the device having an UART or not. This is
-also an example of hardware virtualization that you can do with HWA. Swuarta is
-programmed in assembler and you'll find the source code under
-`hwa/atmel/avr/swuarta/`.
-
-In the examples, the swuart is configured to use the same I/O pins as Diabolo so
-that you will not have to touch any wire between programming and executing the
-example.
-
-
 Status
 ------
 
@@ -122,7 +91,7 @@ lists of key-value arguments).
 License
 -------
 
-HWA is free software. See the @ref license page for license information.
+HWA is free software. See the license page for license information.
 
 <sup>(*)</sup>: <i>"Wah! a statement or exclamation, in several languages that
 shows pleasure, appreciation and surprise."</i> -- Wikipedia.

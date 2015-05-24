@@ -25,24 +25,26 @@ HW_INLINE void __hwa_commit__usia ( hwa_t *hwa, hwa_usia_t *p )
 
 /**
  * @page atmelavr_usia
- * @par Configure the USI
+ * @section atmelavr_usia_config Configuring the USI
  *
  * @code
- * #define USI		hw_usi0
+ * hwa_config( USI,
  *
- * hw_config( USI,
+ *             //  How the USI behaves
+ *             //
+ *             mode,    disconnected          // The USI is disabled
+ *                    | spi_master            // The USI acts as a SPI master
+ *                    | spi_slave             // The USI acts as a SPI slave
+ *                    | 2wire_master          // The USI acts as a I²C master
+ *                    | 2wire_slave,          // The USI acts as a I²C slave
  *
- *            mode,    disconnected
- *                   | spi_master
- *                   | spi_slave
- *                   | 2wire_master
- *                   | 2wire_slave,
- *
- *            clock,   software
- *                   | hw_counter0_compare
- *                   | external_rising
- *                   | external_falling
- *           );
+ *             //  How is it clocked
+ *             //
+ *             clock,   software              // Clocked by software
+ *                    | hw_counter0_compare   // Clocked by compare unit A of counter 0
+ *                    | external_rising       // Clocked by external source rising edge
+ *                    | external_falling      // Clocked by external source falling edge
+ *            );
  * @endcode
  */
 #define _hw_mthd_hwa_config__usia	, _hwa_cfusia
@@ -119,12 +121,10 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
 /**
  * @page atmelavr_usia
- * @par Read one byte from USI
+ * @section atmelavr_usia_read Getting the last received byte
  *
  * @code
- * #define USI		hw_usi0
- *
- * uint8_t byte = hw_read( USI );
+ * uint8_t byte = hw_read( hw_usi0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__usia		, _hw_rdusia
@@ -137,13 +137,10 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
 /**
  * @page atmelavr_usia
- * @par Send a byte over the USI
+ * @section atmelavr_usia_write Sending one byte
  *
  * @code
- * #define USI		hw_usi0
- *
- * uint8_t byte = '\n';
- * hw_write( USI, byte );
+ * hw_write( hw_usi0, 'A' );
  * @endcode
  */
 #define _hw_mthd_hw_write__usia		, _hw_wrusia
@@ -153,7 +150,7 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
 
 /**
  * @page atmelavr_usia
- * @par Status
+ * @section atmelavr_usia_stat Getting the status
  *
  * @code
  * uint8_t byte ;
@@ -196,25 +193,23 @@ HW_INLINE _hw_usia_stat_t _hw_usia_stat( uint8_t byte )
 
 /**
  * @page atmelavr_usia
- * @par Clocking
+ * @section atmelavr_usia_trigger Clocking
+ *
+ * FIXME: 2 types of clocking should be handled. Look at the datasheet.
  *
  * @code
- * #define USI		hw_usi0
- *
- * uint8_t byte = hw_trigger( USI );
+ * hw_trigger( hw_usi0 );
  * @endcode
  */
-/*  FIXME: 2 types of clocking should be handled. Look at the datasheet.
- */
-#define _hw_mthd_hw_trigger__usia		, _hw_tgusia
+#define _hw_mthd_hw_trigger__usia	, _hw_tgusia
 
 #define _hw_tgusia(o,i,a,...)		HW_TX( _hw_write_reg(o,tc,1),__VA_ARGS__ )
 
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk Class _usia_spimaster_swclk
- * @par Configure the SPI
+ * @page atmelavr_usia_spimaster_swclk
+ * @section atmelavr_usia_spimaster_swclk_config Configuring the SPI
  *
  * @code
  * #define SPI		hw_spimaster0_swclk
@@ -240,7 +235,7 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 
 /**
  * @page atmelavr_usia_spimaster_swclk
- * @par Receive a byte from the SPI
+ * @section atmelavr_usia_spimaster_swclk_read Getting the last received byte
  *
  * @code
  * #define SPI		hw_spimaster0_swclk
@@ -255,13 +250,10 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
 
 /**
  * @page atmelavr_usia_spimaster_swclk
- * @par Send a byte over the SPI
+ * @section atmelavr_usia_spimaster_swclk_write Sending one byte
  *
  * @code
- * #define SPI		hw_spimaster0_swclk
- *
- * uint8_t byte = '\n';
- * hw_write( SPI, byte );
+ * hw_write( hw_spimaster0_swclk, 'A' );
  * @endcode
  */
 #define _hw_mthd_hw_write__usia_spimaster_swclk		, _hw_wrspimswclk

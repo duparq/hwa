@@ -43,10 +43,10 @@ typedef struct {
 
 
 /**
- * @page atmelavr_pin1 Class _pin1: i/o definition
+ * @page atmelavr_pin1 Class _pin1: i/o pin definition
  *
  * A class `_pin1` object is an i/o definition. This can be a single pin or a
- * group of consecutive pins.
+ * group of consecutive pins inside the same port.
  */
 #define _hw_class__pin1
 

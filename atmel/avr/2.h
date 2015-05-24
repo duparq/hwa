@@ -4,8 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Device-specific hardware access definitions.
+/**
+ * @file
+ * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
 #define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
@@ -18,19 +19,23 @@
 #define hw_disable_interrupts()		hw_asm("cli")
 
 
-/**\brief	Software loop of \c n system clock cycles.
- * \todo	Only works with compile time constants
- * \hideinitializer
+/**
+ * @brief Software loop of \c n system clock cycles.
+ * @todo  Only works with compile time constants
+ * @hideinitializer
  */
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
-/*	True if strings s0 and s1 are equal
+/**
+ * @brief	True if strings s0 and s1 are equal
  */
 #define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
 
 
-/*	Execute a block with interrupts disabled
+/**
+ * @brief Execute a block with interrupts disabled
+ * @hideinitializer
  */
 #define HW_ATOMIC(...)				\
   do{						\
@@ -48,17 +53,18 @@
  *  Simplifications in sight!
  */
 /**
- * @brief	Write one hardware register.
+ * @brief  Write one hardware register.
  *
- *	Write the value into the rbn consecutive bits starting at pos rbp into
- *	the hard register at address p. Trying to write 1s into non-writeable
- *	bits triggers an error.
+ *  Write the value into the rbn consecutive bits starting at pos rbp into
+ *  the hard register at address p. Trying to write 1s into non-writeable
+ *  bits triggers an error.
  *
- *  \param p	address of register.
- *  \param rwm	writeable bits mask of the register.
- *  \param rbn	number of consecutive bits conderned.
- *  \param rbp	position of the least significant bit conderned in the register.
- *  \param v	value to write.
+ * @param ra	address of register.
+ * @param rwm	writeable bits mask of the register.
+ * @param rfm	flag bits mask of the register.
+ * @param bn	number of consecutive bits conderned.
+ * @param bp	position of the least significant bit conderned in the register.
+ * @param v	value to write.
  */
 HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 			      uint8_t bn, uint8_t bp, uint8_t v )
@@ -331,12 +337,13 @@ HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool
 
 
 
-/** \brief	Read from one hardware register.
+/**
+ * @brief Read from one hardware register.
  *
- *  \param p	address of register.
- *  \param rbn	number of consecutive bits conderned.
- *  \param rbp	position of the least significant bit conderned in the register.
- *  \return	the value of the rbn consecutive bits at position rbp in the register.
+ * @param ra	address of register.
+ * @param rbn	number of consecutive bits conderned.
+ * @param rbp	position of the least significant bit conderned in the register.
+ * @return	the value of the rbn consecutive bits at position rbp in the register.
  */
 HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {

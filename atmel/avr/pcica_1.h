@@ -10,7 +10,11 @@
 /**
  * @page atmelavr_pcica Class _pcica: pin change interrupt controller
  *
- * A class `_pcica` object is an pin change interrupt controller.
+ * A class `_pcica` object is a pin change interrupt controller.
+ *
+ * This class implements a global pin change controller that manages any of the
+ * pins that have this feature. This is a single object though it can trigger
+ * different IRQs.
  */
 #define _hw_class__pcica
 

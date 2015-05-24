@@ -22,8 +22,8 @@
 
 
 /**
- * @page atmelavr_swuarta _swuarta
- * @par Compile-time configuration
+ * @page atmelavr_swuarta
+ * @section atmelavr_swuarta_hardconf Compile-time configuration
  *
  * Note: the naming of these symbols will change in the future to suit HWA
  * object-oriented style better.
@@ -66,7 +66,7 @@
 
 /**
  * @page atmelavr_swuarta
- * @par Run-time configuration
+ * @section atmelavr_swuarta_config Configuring the UART
  *
  * @code
  * hwa_config(  UART,
@@ -171,7 +171,7 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 
 /**
  * @page atmelavr_swuarta
- * @par Read one byte from UART
+ * @section atmelavr_swuarta_read Reading one byte from UART
  *
  * @code
  * uint8_t byte = hw_read( UART );
@@ -186,7 +186,7 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
 
 /**
  * @page atmelavr_swuarta
- * @par Write one byte into UART
+ * @section atmelavr_swuarta_write Writing one byte into UART
  *
  * @code
  * hw_write( UART, '#' );
@@ -201,7 +201,15 @@ extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
 
 /**
  * @page atmelavr_swuarta
- * @par Get the status of the UART
+ * @section atmelavr_swuarta_stat Getting the status of the UART
+ *
+ * The UART status contains the following flags:
+ *
+ * * stop: the state of the received stop bit
+ * * idle: the UART is ready for RX or TX
+ * * rxc: receiving complete (stop bit sampled)
+ * * txc: transmission complete (stop bit sent)
+ * * synced: the UART is synchronized
  *
  * @code
  * uint8_t byte ;
@@ -232,10 +240,10 @@ typedef struct {
 
 /**
  * @page atmelavr_swuarta
- * @par Reset the UART
+ * @section atmelavr_swuarta_reset Resetting the UART
  *
- * This will abort any transmission or reception. If the UART has automatic
- * baudrate detection, the UART will resynchronize.
+ * Resetting the UART will abort any transmission or reception. If the UART has automatic
+ * baudrate detection, the UART will first resynchronize.
  *
  * @code
  * hw_reset( UART );
@@ -250,30 +258,12 @@ extern void					_hw_swuart1_reset ( ) ;
 #if defined HW_SWUART0_COUNTER
 extern hw_rt(HW_SWUART0_COUNTER,count)		__hw_swuart0_dtn ;
 extern hw_rt(HW_SWUART0_COUNTER,count)		__hw_swuart0_dt0 ;
-/* #if hw_bn(HW_SWUART0_COUNTER) == 8 */
-/* extern uint8_t	__hw_swuart0_dtn ; */
-/* extern uint8_t	__hw_swuart0_dt0 ; */
-/* #elif hw_bn(HW_SWUART0_COUNTER) == 16 */
-/* extern uint16_t	__hw_swuart0_dtn ; */
-/* extern uint16_t	__hw_swuart0_dt0 ; */
-/* #else */
-/* #  error "hw_bn(HW_SWUART0_COUNTER) must be 8 or 16" */
-/* #endif */
 #endif
 
 
 #if defined HW_SWUART1_COUNTER
 extern hw_rt(HW_SWUART1_COUNTER,count)		__hw_swuart1_dtn ;
 extern hw_rt(HW_SWUART1_COUNTER,count)		__hw_swuart1_dt0 ;
-/* #if hw_bn(HW_SWUART1_COUNTER) == 8 */
-/* extern uint8_t	__hw_swuart1_dtn ; */
-/* extern uint8_t	__hw_swuart1_dt0 ; */
-/* #elif hw_bn(HW_SWUART1_COUNTER) == 16 */
-/* extern uint16_t	__hw_swuart1_dtn ; */
-/* extern uint16_t	__hw_swuart1_dt0 ; */
-/* #else */
-/* #  error "hw_bn(HW_SWUART1_COUNTER) must be 8 or 16" */
-/* #endif */
 #endif
 
 /**

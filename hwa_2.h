@@ -192,6 +192,9 @@
 
 /**
  * @brief Turn an object on/off (method)
+ * Syntax:
+ * * `hw_turn( object, [...], on | off );`
+ * * `hwa_turn( object, [...], on | off );`
  * @hideinitializer
  */
 #define hw_turn(...)			HW_MTHD(hw_turn, __VA_ARGS__,)
@@ -442,14 +445,8 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r,
 
 
 /** 
- * @addtogroup dev
- * \brief	Initialize an HWA register
- *
- *  \param c	class of the register.
- *  \param i	instance of the register.
- *  \param r	name of the register.
- *
- * \hideinitializer
+ * @brief	Initialize an HWA register
+ * @hideinitializer
  */
 #define _hwa_begin_reg(...)			_hwa_begin_reg_2(__VA_ARGS__)
 #define _hwa_begin_reg_2(n,c,i,a, r)		_hwa_begin_reg_3(n,a,r, _hw_##c##_##r)
@@ -463,14 +460,20 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 }
 
 
-/** \brief	Begin an HWA session. Allows the use of the hwa_...(...) functions.
+/** 
+ * @brief Instanciate an hwa_t structure named 'hwa' that virtualizes the hardware
+ * @hideinitializer
+ */
+
+/**
+ * @brief Begin an HWA session. Allows the use of the hwa_...(...) functions.
  *
- *	Instanciate an hwa_t structure named 'hwa' that virtualizes the
- *	hardware. Nothing is done on the hardware until hwa_commit() is called.
+ * Instanciate an hwa_t structure named 'hwa' that virtualizes the
+ * hardware. Nothing is done on the hardware until hwa_commit() is called.
  *
- *	Calls hwa_begin_all() that must be defined in hwa_<device>_2.h.
+ * Calls hwa_begin_all() that must be defined in hwa_<device>_2.h.
  *
- * \hideinitializer
+ * @hideinitializer
  */
 #define hwa_begin()							\
   hwa_check_optimizations(0);						\
@@ -491,10 +494,10 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 /**
  * @brief  Commit configuration to hardware.
  *
- * Solve the configuration stored into the cache then do the required hardware
- * register writes.
+ * Solve the configuration stored into the HWA context, then do the required
+ * hardware register writes.
  *
- * Calls `_hwa_commit_all()` that must be defined in hwa_<i>{HW_DEVICE}</i>__2.h.
+ * Calls `_hwa_commit_all()` that must be defined `in devices/hwa_HW_DEVICE_2.h`.
  *
  * @hideinitializer
  */
@@ -509,9 +512,8 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 /**
  * @brief  Same as hwa_commit() but do not write into hardware.
  *
- * This is used to put the cache in a known state before modify it
+ * This is used to put the HWA context in a known state before modifying it.
  *
- * @hideinitializer
  */
 #define hwa_nocommit()				\
   do {						\

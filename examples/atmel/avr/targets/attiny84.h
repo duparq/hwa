@@ -1,19 +1,31 @@
 
-/*      A single Atmel AVR ATtiny84 without any external component except a
- *      USB/Serial adapter.
+/*  This file is part of the HWA project.
+ *  Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @page targets
+ * @section targets_attiny84 attiny84
  *
- *      The serial communication uses 1 wire for RX/TX. The AVR communication
- *      pin is connected to the RXD pin of the serial adapter and a 1k resistor
- *      is connected between the RXD and TXD pins.
+ * A single Atmel AVR ATtiny84 without any external component except a
+ * USB/Serial adapter.
  *
- *      Install Diabolo with avrdude/usbasp:
+ * The serial communication uses 1 wire for RX/TX. The AVR communication
+ * pin is connected to the RXD pin of the serial adapter and a 1k resistor
+ * is connected between the RXD and TXD pins (it could be replaced by a
+ * diode, Schottky preferably).
  *
- *      USBASP  1       MOSI    7   DEVICE
- *              2       VCC     1
- *              4       GND     14
- *              5       RST     4
- *              7       SCK     9
- *              9       MISO    8
+ * Install Diabolo with avrdude/usbasp:
+ *
+ *      USBASP -> 1  MOSI  7  <- DEVICE
+ *                2  VCC   1
+ *                4  GND   14
+ *                5  RST   4
+ *                7  SCK   9
+ *                9  MISO  8
+ *
+ * @include attiny84.h
  */
 #define HW_DEVICE                       attiny84
 #define HW_DEVICE_PACKAGE               14pdip

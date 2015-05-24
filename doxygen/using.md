@@ -1,8 +1,8 @@
 
-Using HWA
+Using HWA {#using}
 =========
 
-First of all, in order to use the HWA facilities, the symbol `HW_DEVICE` must be
+First of all, in order to use HWA, the symbol `HW_DEVICE` must be
 defined with the name of the target device before `hwa.h` is included:
 
 @code

@@ -9,9 +9,9 @@
  */
 
 /**
- * @page atmelavr_flasha Class _flasha: FLASH memory
+ * @page atmelavr_flasha Class _flasha: Flash memory
  *
- * A class `_flasha` object is an FLASH memory.
+ * A class `_flasha` object is a Flash memory.
  */
 #define _hw_class__flasha
 

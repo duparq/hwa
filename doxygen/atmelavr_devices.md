@@ -1,5 +1,6 @@
 
-@page atmelavr_devices Atmel AVR devices
+Atmel AVR devices {#atmelavr_devices}
+=================
 
 Currently supported Atmel AVR devices are:
 
