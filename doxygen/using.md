@@ -26,13 +26,14 @@ Synchronous instructions produce an immediate action.
 
 Asynchronous instructions can only be used after an `hwa_begin()` or
 `hwa_begin_from_reset()` instruction. Their action is memorized into the HWA
-cache.  When the `hwa_commit()` instruction is met, HWA determines from the
-content of the cache the machine code to produce.
+context.  When the `hwa_commit()` instruction is met, HWA determines from the
+context the machine code to produce.
 
-The `hwa_nocommit()` instruction can be used to put the cache in a known state
+The `hwa_nocommit()` instruction can be used to put the context in a known state
 without producing machine code. This can be used to make HWA produce code that
 modifies a known configuration.
 
+@par An example:
 @code
 #define HW_DEVICE               attiny44
 #define HW_DEVICE_PACKAGE       14pdip

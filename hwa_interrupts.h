@@ -1,11 +1,18 @@
 
-/*	Interrupts
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) Christophe Duparquet <duparq at free dot fr>
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Interrupts
+ *
+ * This file contains all that is relative to interrupts.
+ */
+
+/*  Interrupt requests are objects of class _irq
+ */
 #define _hw_class__irq
 #define _hw_is__irq__irq			, 1
 
@@ -15,8 +22,12 @@
 #define _hw_mthd_hw_sup__irq			, _hw_sup_irq
 #define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
 
-
-/*	Definition of an interrupt, no extra parameter allowed
+/**
+ * @ingroup public
+ * @brief Get an IRQ object
+ *
+ * Syntax: `hw_irq( object [, irq_name] )`
+ * @hideinitializer
  */
 #define hw_irq(...)		_hw_irq2(__VA_ARGS__,,)
 #define _hw_irq2(p,c,...)	HW_G2(_hw_irq3,				\
@@ -45,7 +56,14 @@
 				       HW_QUOTE(__VA_ARGS__)"`.")
 
 
-/*	Definition of an irq-enable bit
+/**
+ * @ingroup public
+ * @brief Definition of the enable bit of an IRQ
+ *
+ * Syntax 1: `hw_irqe( object [, irq_name] )`
+ *
+ * Syntax 2: `hw_irqe( hw_irq(object [, irq_name]) )`
+ * @hideinitializer
  */
 #define hw_irqe(...)		_hw_irqe_2(hw_irqx(__VA_ARGS__))
 #define _hw_irqe_2(...)		HW_G2(_hw_irqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -53,7 +71,14 @@
 #define _hw_irqe_1(t,v,p,e,f)	_hw_reg(p,e)
 
 
-/*	Definition of an irq-flag bit
+/**
+ * @ingroup public
+ * @brief Definition of the flag bit of an IRQ
+ *
+ * Syntax 1: `hw_irqf( object [, irq_name] )`
+ *
+ * Syntax 2: `hw_irqf( hw_irq(object [, irq_name]) )`
+ * @hideinitializer
  */
 #define hw_irqf(...)		_hw_irqf_2(hw_irqx(__VA_ARGS__))
 #define _hw_irqf_2(...)		HW_G2(_hw_irqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -61,7 +86,40 @@
 #define _hw_irqf_1(t,v,p,e,f)	_hw_reg(p,f)
 
 
-/*	Declaration of an ISR, up to 2 attributes allowed
+/**
+ * @ingroup public
+ * @brief Declaration of an ISR
+ *
+ * The `HW_ISR(...)` instruction accepts 2 optionnal arguments after the
+ * definition of the IRQ:
+ *
+ * @li `isr_naked`: ask the compiler to not initialize any register. You have to
+ *   put the `reti` instruction yourself.
+ * @li `isr_interruptible`: ask the compiler to enable the interrupts as soon as
+ *   possible.
+ * @li `isr_non_interruptible`: can be use to assert that the interrupts are not
+ *   enabled.
+ *
+ * Syntax 1:
+ * @code
+ * HW_ISR( object [, irq_name] [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
+ * {
+ *    ... // Service the ISR
+ *
+ *    [ hw_reti(); ]
+ * }
+ * @endcode
+ *
+ * Syntax 2:
+ * @code
+ * HW_ISR( hw_irq(object [, irq_name]) [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
+ * {
+ *    ... // Service the ISR
+ *
+ *    [ hw_reti(); ]
+ * }
+ * @endcode
+ * @hideinitializer
  */
 #define HW_ISR(...)			_hw_isr_2(hw_irqx(__VA_ARGS__,))
 #define _hw_isr_2(...)			HW_G2(_hw_isr2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -86,11 +144,13 @@
 
 #if !defined __ASSEMBLER__
 
+
+#define _hw_mthd_hw_turn__irq		, _hw_turn_irq
 /**
- * @brief	Turn irq on/off (synchronous)
+ * @ingroup private
+ * @brief  Turn an IRQ on/off
  * @hideinitializer
  */
-#define _hw_mthd_hw_turn__irq		, _hw_turn_irq
 #define _hw_turn_irq(v,p,e,f, ...)					\
   HW_G2(_hw_turn_irq_vstate, HW_IS(,hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
 #define _hw_turn_irq_vstate_0(p,e, ...)					\
@@ -98,11 +158,13 @@
 #define _hw_turn_irq_vstate_1(p,e,v, ...)				\
     HW_TX(_hw_write_reg( p,e, HW_A1(hw_state_##v)), __VA_ARGS__)
 
+
+#define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
 /**
- * @brief	Turn irq on/off (asynchronous)
+ * @ingroup private
+ * @brief  Turn an IRQ on/off
  * @hideinitializer
  */
-#define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
 #define _hwa_turn_irq(v,p,e,f, ...)					\
   HW_G2(_hwa_turn_irq_vstate, HW_IS(,hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
 #define _hwa_turn_irq_vstate_0(p,e, ...)				\
@@ -112,10 +174,11 @@
 
 
 /**
- * @brief	Turn irq on/off (synchronous)
+ * @ingroup public
+ * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
- * Short for hw_turn( hw_irq(...), ... )
+ * Short for `hw_turn( hw_irq(...), ... )`
  */
 #define hw_turn_irq(...)		_hw_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_turnirq_2(...)		HW_G2(_hw_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -124,10 +187,13 @@
 
 
 /**
- * @brief	Turn irq on/off (asynchronous)
+ * @ingroup public
+ * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
- * Short for hwa_turn( hw_irq(...), ... )
+ * Short for `hwa_turn( hw_irq(...), on | off )`
+ *
+ * Syntax: `hwa_turn_irq( object [, irq_name], on | off );`
  */
 #define hwa_turn_irq(...)		_hwa_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_turnirq_2(...)		HW_G2(_hwa_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -136,7 +202,8 @@
 
 
 /**
- * @brief	Clear irq flag (synchronous)
+ * @ingroup private
+ * @brief  Clear an IRQ flag
  * @hideinitializer
  */
 #define _hw_mthd_hw_clear__irq		, _hw_clear_irq
@@ -144,7 +211,8 @@
 
 
 /**
- * @brief	Clear irq flag (asynchronous)
+ * @ingroup private
+ * @brief  Clear irq flag
  * @hideinitializer
  */
 #define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
@@ -152,10 +220,13 @@
 
 
 /**
- * @brief	Clear irq flag (synchronous)
+ * @ingroup public
+ * @brief	Clear an IRQ flag
  * @hideinitializer
  *
- * Short for hw_clear( hw_irq(...), ... )
+ * Short for `hw_clear( hw_irq(...), ... )`
+ *
+ * Syntax: `hw_clear_irq( object [, irq_name] );`
  */
 #define hw_clear_irq(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_clearirq_2(...)		HW_G2(_hw_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -164,10 +235,13 @@
 
 
 /**
- * @brief	Clear irq flag (asynchronous)
+ * @ingroup public
+ * @brief	Clear an IRQ flag
  * @hideinitializer
  *
- * Short for hwa_clear( hw_irq(...), ... )
+ * Short for `hwa_clear( hw_irq(...), ... )`
+ *
+ * Syntax: `hwa_clear_irq( object [, irq_name] );`
  */
 #define hwa_clear_irq(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_clearirq_2(...)		HW_G2(_hwa_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -176,6 +250,7 @@
 
 
 /**
+ * @ingroup private
  * @brief	Stat irq flag
  * @hideinitializer
  */
@@ -184,12 +259,17 @@
 
 
 /**
- * @brief	Stat irq flag (synchronous)
- * @hideinitializer
+ * FIXME: replace that with hw_read( hw_irqe(...) | hw_irqf(...) ) 
  *
- * Short for hw_stat( hw_irq(...), ... )
+ * ingroup public
+ * brief	Stat an IRQ flag
+ * hideinitializer
+ *
+ * Short for `hw_stat( hw_irq(...), ... )`
+ *
+ * Syntax: `hw_stat_irq( object [, irq_name] );`
  */
-#define hw_stat_irq(...)		_hw_statirq_2(hw_irqx(__VA_ARGS__,))
+#define rem_hw_stat_irq(...)		_hw_statirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_statirq_2(...)		HW_G2(_hw_statirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_statirq_0(...)		__VA_ARGS__
 #define _hw_statirq_1(t,...)		_hw_stat_irq(__VA_ARGS__)

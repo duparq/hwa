@@ -4,6 +4,16 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @defgroup public HWA instructions
+ * HWA instructions you use in your application.
+ */
+
+/**
+ * @defgroup private HWA internal instructions
+ * These instruction are intended for internal use.
+ * There is not argument checking, and no error processing.
+ */
 
 /**
  * @file

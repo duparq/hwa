@@ -2,7 +2,7 @@
 HWA
 ===
 
-`HWA`<sup>(*)</sup> is a hardware abstraction tool for programming
+HWA <sup>(*)</sup> is a hardware abstraction tool for programming
 microcontrollers in C language. A few features of HWA are useful for programming
 in assembler too.
 
