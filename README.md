@@ -20,7 +20,7 @@ speed or memory used.
 
 
 Examples
---------
+========
 
 The `examples/` directory contains a few examples aimed at illustrating various
 features of HWA, currently only for Atmel ATtiny44 and ATtiny84 devices
@@ -57,7 +57,7 @@ avrdude. Look at the `examples/make/` directory.
 
 
 Documentation
--------------
+=============
 
 Run `make doc` in the HWA base directory to build the documentation in HTML
 format. You'll start with the `doxygen/html/index.html` page.
@@ -70,7 +70,7 @@ to develop HWA.
 
 
 Status
-------
+======
 
 WARNING: this project is subject to heavy changes of the code-base!
 
@@ -89,9 +89,11 @@ lists of key-value arguments).
 
 
 License
--------
+=======
 
 HWA is free software. See the license page for license information.
+
+<hr>
 
 <sup>(*)</sup>: <i>"Wah! a statement or exclamation, in several languages that
 shows pleasure, appreciation and surprise."</i> -- Wikipedia.
