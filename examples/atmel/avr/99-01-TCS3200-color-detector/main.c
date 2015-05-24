@@ -117,14 +117,14 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
   /*  Prepare to capture date of the next rising edge
    */
   hw_config( hw_sub(COUNTER, CAPTURE), edge, rising );
-  hw_clear_irq( COUNTER, CAPTURE );
+  hw_clear_irqf( COUNTER, CAPTURE );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
   hw_read(COUNTER);
   hw_write( hw_sub(COUNTER, COMPARE), hw_read(COUNTER) );
-  hw_clear_irq( COUNTER, COMPARE );
+  hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
     /*
@@ -144,10 +144,10 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
   /*  Now wait for the falling edge
    */
   hw_config( hw_sub(COUNTER, CAPTURE), edge, falling );
-  hw_clear_irq( COUNTER, CAPTURE );
+  hw_clear_irqf( COUNTER, CAPTURE );
 
   hw_write( hw_sub(COUNTER, COMPARE), t );
-  hw_clear_irq( COUNTER, COMPARE );
+  hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
     if ( hw_stat(COUNTER).CAPTURE )

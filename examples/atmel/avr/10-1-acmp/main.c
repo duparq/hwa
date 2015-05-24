@@ -67,7 +67,7 @@ HW_ISR( COUNTER, COMPARE )
 {
   hw_turn_irq( COUNTER, COMPARE, off );
   hw_write( PIN_LED, 0 );
-  hw_clear_irq( hw_acmp0 );
+  hw_clear_irqf( hw_acmp0 );
   hw_turn_irq( hw_acmp0, on );
 }
 
@@ -88,7 +88,7 @@ HW_ISR( hw_acmp0 )
     hw_turn(hw_sub(COUNTER,prescaler0), on);
   }
   else
-  hw_clear_irq( COUNTER, COMPARE );
+  hw_clear_irqf( COUNTER, COMPARE );
   hw_turn_irq( COUNTER, COMPARE, on );
 }
 

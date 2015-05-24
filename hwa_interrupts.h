@@ -175,6 +175,32 @@
 
 /**
  * @ingroup public
+ * @brief  Read an IRQ enable bit
+ *
+ * Syntax: `hw_read_irqe( object [, irq_name] )`
+ * @hideinitializer
+ */
+#define hw_read_irqe(...)		_hw_readirqe_2(hw_irq(__VA_ARGS__))
+#define _hw_readirqe_2(...)		HW_G2(_hw_readirqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_readirqe_0(...)		__VA_ARGS__
+#define _hw_readirqe_1(t,v,o,e,f,...)	_hw_read_reg(o,e)
+
+
+/**
+ * @ingroup public
+ * @brief  Read an IRQ flag bit
+ *
+ * Syntax: `hw_read_irqf( object [, irq_name] )`
+ * @hideinitializer
+ */
+#define hw_read_irqf(...)		_hw_readirqf_2(hw_irq(__VA_ARGS__))
+#define _hw_readirqf_2(...)		HW_G2(_hw_readirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_readirqf_0(...)		__VA_ARGS__
+#define _hw_readirqf_1(t,v,o,e,f,...)	_hw_read_reg(o,f)
+
+
+/**
+ * @ingroup public
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
@@ -224,7 +250,17 @@
  * @brief	Clear an IRQ flag
  * @hideinitializer
  *
- * Short for `hw_clear( hw_irq(...), ... )`
+ * Syntax: `hw_clear_irqf( object [, irq_name] );`
+ */
+#define hw_clear_irqf(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
+
+
+/**
+ * @ingroup public
+ * @brief	Clear an IRQ flag
+ * @hideinitializer
+ *
+ * Short for `hw_clear( hw_irq(...) )`
  *
  * Syntax: `hw_clear_irq( object [, irq_name] );`
  */
@@ -239,7 +275,16 @@
  * @brief	Clear an IRQ flag
  * @hideinitializer
  *
- * Short for `hwa_clear( hw_irq(...), ... )`
+ * Syntax: `hwa_clear_irqf( object [, irq_name] );`
+ */
+#define hwa_clear_irqf(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
+
+/**
+ * @ingroup public
+ * @brief	Clear an IRQ flag
+ * @hideinitializer
+ *
+ * Short for `hwa_clear( hw_irq(...) )`
  *
  * Syntax: `hwa_clear_irq( object [, irq_name] );`
  */
@@ -256,22 +301,5 @@
  */
 #define _hw_mthd_hw_stat__irq		, _hw_stat_irq
 #define _hw_stat_irq(v,o,e,f, ... )	HW_TX((_hw_read_reg(o,e)==1), __VA_ARGS__)
-
-
-/**
- * FIXME: replace that with hw_read( hw_irqe(...) | hw_irqf(...) ) 
- *
- * ingroup public
- * brief	Stat an IRQ flag
- * hideinitializer
- *
- * Short for `hw_stat( hw_irq(...), ... )`
- *
- * Syntax: `hw_stat_irq( object [, irq_name] );`
- */
-#define rem_hw_stat_irq(...)		_hw_statirq_2(hw_irqx(__VA_ARGS__,))
-#define _hw_statirq_2(...)		HW_G2(_hw_statirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_statirq_0(...)		__VA_ARGS__
-#define _hw_statirq_1(t,...)		_hw_stat_irq(__VA_ARGS__)
 
 #endif /* !defined __ASSEMBLER__ */

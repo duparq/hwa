@@ -53,13 +53,11 @@ int main ( )
 
   for(;;) {
     /*
-     *  Check the status of the watchdog. As soon as the IRQ flag is set, clear
+     *  As soon as the watchdog IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    hw_stat_t( hw_wdog0 ) stat ;
-    stat = hw_stat( hw_wdog0 ) ;
-    if ( stat.irq ) {
-      hw_clear_irq( hw_wdog0 );
+    if ( hw_read_irqf(hw_wdog0) ) {
+      hw_clear_irqf( hw_wdog0 );
       hw_toggle( PIN_LED );
     }
   }

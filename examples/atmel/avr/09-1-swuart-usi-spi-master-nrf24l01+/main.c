@@ -50,7 +50,7 @@ NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
 static void write_usi ( char c )
 {
   hw_write( USI, c );
-  hw_clear_irq( USI, txc );
+  hw_clear_irqf( USI, txc );
   do {
     hw_trigger( USI );
     // hw_delay_cycles( 50e-6 * hw_syshz );

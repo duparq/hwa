@@ -70,7 +70,7 @@ int main ( )
      */
     if ( hw_stat(COUNTER).COMPARE ) {
       hw_clear( COUNTER );
-      hw_clear_irq( COUNTER, COMPARE );
+      hw_clear_irqf( COUNTER, COMPARE );
       n++ ;
       if ( n >= (uint8_t)(PERIOD/0.001/2.0+0.5) ) {
         /*

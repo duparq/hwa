@@ -109,7 +109,7 @@ HW_INLINE void _hw_swuart0_config ( hwa_t *hwa __attribute__((unused)) )
    */
 #if defined HW_SWUART0_PIN_RX
   hwa_config( HW_SWUART0_PIN_RX, direction, input );
-  hwa_clear_irq( HW_SWUART0_PIN_RX, change );
+  hwa_clear_irqf( HW_SWUART0_PIN_RX, change );
   hwa_turn_irq( HW_SWUART0_PIN_RX, change, on );
   hwa_write_reg( hw_pcic0, HW_SWUART0_PIN_RX, 1 );
 #endif
@@ -146,7 +146,7 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
    */
 #if defined HW_SWUART1_PIN_RX
   hwa_config(HW_SWUART1_PIN_RX, direction, input);
-  hwa_clear_irq(HW_SWUART1_PIN_RX, change);
+  hwa_clear_irqf(HW_SWUART1_PIN_RX, change);
   hwa_turn_irq(HW_SWUART1_PIN_RX, change, on);
   hwa_write_reg( hw_pcic0, HW_SWUART1_PIN_RX, 1 );
 #endif

@@ -68,7 +68,7 @@ int main ( )
   static uint8_t n ;
   for(;;) {
     if ( hw_stat(COUNTER).overflow ) {
-      hw_clear_irq( COUNTER, overflow );
+      hw_clear_irqf( COUNTER, overflow );
       n++ ;
       if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
         n = 0 ;
