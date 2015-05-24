@@ -15,7 +15,7 @@ each supported device.
 
 
 Instructions
-------------
+============
 
 HWA uses two kinds of instructions:
 
@@ -94,9 +94,50 @@ int main ( )
 @endcode
 
 
+Instructions that act on hardware
+---------------------------------
+
+Synchronous           | Asynchronous        | Action
+----------------------|---------------------|--------
+`hw_config(...)`      | `hwa_config(...)`   | Configure an object.
+`hw_clear(...)`       | `hwa_clear(...)`    | Clear an object.
+`hw_read(...)`        |                     | Read an object.
+`hw_read_reg(...)`    |                     | Short for `hw_read(hw_reg(...))`
+`hw_atomic_read(...)` |                     | Disable interrupts while reading an object.
+`hw_stat(...)`        |                     | Get the status of an object.
+`hw_toggle(...)`      | `hwa_toggle(...)`   | Toggle an object (probably an output pin).
+`hw_trigger(...)`     | `hwa_trigger(...)`  | Trigger an object (A/D converter, compare unit...)
+`hw_turn(...)`        | `hwa_turn(...)`     | Turn on object on/off.
+`hw_turn_irq(...)`    | `hwa_turn_irq(...)` | Enable/disable an IRQ.
+`hw_stat_irq(...)`    |                     | Get the status of an IRQ flag.
+`hw_write(...)`       | `hwa_write(...)`    | Write something into an object.
+`hw_write_reg(...)`   | `hwa_write_reg(...)`| Short for `hwa_write(hw_reg(...), value)`
+
+
+Instructions that do not act on hardware
+----------------------------------------
+
+HWA provides a few instructions that give informations about objects without
+accessing the hardware. Most of these instructions can be used in assembler
+programming.
+
+
+Instruction      | Result
+-----------------|--------
+`hw_reg(...)`    | Definition of a register (a set of bits) of an object.
+`hw_rt(...)`     | Type of one object's register (uint8_t, uint16_t...)
+`hw_addr(...)`   | Address (of a register, group of bits...).
+`hw_bn(...)`     | Number of bits (of a register, group of bits, counter...)
+`hw_bp(...)`     | Position of least significant bit of a group of bits.
+`hw_ap(...)`     | Address, position of the least significant bit (for assembler programming)
+`hw_id(...)`     | Id of an object
+`hw_io(...)`     | I/O name associated to an object
+`hw_sub(...)`    | Sub (relative) object of an object
+`hw_sup(...)`    | Parent object of an object
+
 
 Object names
-------------
+============
 
 Almost all instructions use an object name as first argument. All object names
 are lower cased.
@@ -118,48 +159,6 @@ parameter. This allows writing less verbose code and makes it easier to replace
 an object by another, or port the code to a different target device. Several
 instructions accept a variable length list of parameters consisting of key/value
 pairs.
-
-
-Instructions that act on hardware
---------------------------------
-
-Synchronous           | Asynchronous        | Action
-----------------------|---------------------|--------
-`hw_config(...)`      | `hwa_config(...)`   | Configure an object.
-`hw_clear(...)`       | `hwa_clear(...)`    | Clear an object.
-`hw_read(...)`        |                     | Read an object.
-`hw_read_reg(...)`    |                     | Short for `hw_read(hw_reg(...))`
-`hw_atomic_read(...)` |                     | Disable interrupts while reading an object.
-`hw_stat(...)`        |                     | Get the status of an object.
-`hw_toggle(...)`      | `hwa_toggle(...)`   | Toggle an object (probably an output pin).
-`hw_trigger(...)`     | `hwa_trigger(...)`  | Trigger an object (A/D converter, compare unit...)
-`hw_turn(...)`        | `hwa_turn(...)`     | Turn on object on/off.
-`hw_turn_irq(...)`    | `hwa_turn_irq(...)` | Enable/disable an IRQ.
-`hw_stat_irq(...)`    |                     | Get the status of an IRQ flag.
-`hw_write(...)`       | `hwa_write(...)`    | Write something into an object.
-`hw_write_reg(...)`   | `hwa_write_reg(...)`| Short for `hwa_write(hw_reg(...), value)`
-
-
-Instructions that do not act on hardware
----------------------------------------
-
-HWA provides a few instructions that give informations about objects without
-accessing the hardware. Most of these instructions can be used in assembler
-programming.
-
-
-Instruction      | Result
------------------|--------
-`hw_reg(...)`    | Definition of a register (a set of bits) of an object.
-`hw_rt(...)`     | Type of one object's register (uint8_t, uint16_t...)
-`hw_addr(...)`   | Address (of a register, group of bits...).
-`hw_bn(...)`     | Number of bits (of a register, group of bits, counter...)
-`hw_bp(...)`     | Position of least significant bit of a group of bits.
-`hw_ap(...)`     | Address, position of the least significant bit (for assembler programming)
-`hw_id(...)`     | Id of an object
-`hw_io(...)`     | I/O name associated to an object
-`hw_sub(...)`    | Sub (relative) object of an object
-`hw_sup(...)`    | Parent object of an object
 
 
 General purpose macros

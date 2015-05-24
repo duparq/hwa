@@ -117,7 +117,7 @@
  * @subsection attinyx4_fuses_sut Startup delays
  *
  * Symbol               | Valid values | Comments
- * ---------------------|--------------|:-----------
+ * :--------------------|--------------|:-----------
  * `HW_DEVICE_STARTUP_DELAYS` | `6CK_14CK`<br>`6CK_14CK_4ms`<br>`6CK_14CK_64ms`<br>`1KCK_4ms`<br>`1KCK_64ms`<br>`32KCK_64ms`<br>`258CK_14CK_4ms`<br>`258CK_14CK_64ms`<br>`1KCK_14CK`<br>`1KCK_14CK_4ms`<br>`1KCK_14CK_64ms`<br>`16KCK_14CK`<br>`16KCK_14CK_4ms`<br>`16KCK_14CK_64ms` | Valid values depend on the clocking configuration
 */
 #define _hw_is_6CK_14CK_6CK_14CK			, 1
