@@ -24,8 +24,8 @@ class Device:
     #  Name, signature, pagesize, flashsize, eepromsize, bootsection
     #
     dtbl = (
-        ( 'ATtiny44a',  '1E9207',  64,  4096,  256, False ),
-        ( 'ATtiny84a',  '1E930C',  64,  8192,  512, False ),
+        ( 'ATtiny44',   '1E9207',  64,  4096,  256, False ),
+        ( 'ATtiny84',   '1E930C',  64,  8192,  512, False ),
         ( 'ATtiny45',   '1E9206',  64,  4096,  256, False ),
         ( 'ATtiny85',   '1E930B',  64,  8192,  512, False ),
         ( 'ATmega328P', '1E950F', 128, 32768, 1024, True ),

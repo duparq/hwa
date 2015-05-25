@@ -7,7 +7,9 @@
 /**
  * @example
  *
- *  Blink a LED using a counter compare interrupt
+ * @brief Blink a LED using a counter compare interrupt
+ *
+ *  LLLL
  */
 
 

@@ -9,6 +9,10 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Definitions for class _ad10a
+ */
 
 /**
  * @page atmelavr_ad10a Class _ad10a: 10-bit analog to digital converter

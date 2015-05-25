@@ -2,16 +2,14 @@
 Using HWA {#using}
 =========
 
-First of all, in order to use HWA, the symbol `HW_DEVICE` must be
-defined with the name of the target device before `hwa.h` is included:
+First of all, in order to use HWA, you must include the header file
+corresponding to your device:
 
 @code
-#define HW_DEVICE	attiny44
-#include <hwa.h>
+#include <hwa/attiny44a_pu.h>
 @endcode
 
-See the device-specific documentation for the `HW_DEVICE` definition to use with
-each supported device.
+This header is included from the `hwa/include/` directory.
 
 
 Object names

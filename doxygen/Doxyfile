@@ -109,8 +109,6 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = README.md				\
 		       	 doxygen/using.md			\
-		       	 doxygen/atmelavr_devices.md		\
-		       	 doxygen/atmelavr_classes.md		\
 			 include/				\
 			 devices/attinyx4_1.h			\
 			 devices/attinyx4_2.h			\
@@ -133,9 +131,9 @@ FILE_PATTERNS          = *.c \
                          *.md \
 			 Makefile
 RECURSIVE              = YES
-EXCLUDE                = 
+EXCLUDE                = build
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = build/*
+EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
 EXAMPLE_PATH           = examples/atmel/avr/
 EXAMPLE_PATTERNS       = 

@@ -34,10 +34,8 @@
  * @include attiny85.h
  */
 
-/*      Device configuration
+/*  Device configuration
  */
-#define HW_DEVICE                       attiny85_20pu
-//#define HW_DEVICE_PACKAGE               8pdip
 #define HW_DEVICE_CLK_SRC               rc_8MHz
 #define HW_DEVICE_CLK_PSC               1
 #define HW_DEVICE_EXTERNAL_RESET        enabled
@@ -47,9 +45,13 @@
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 #define HW_DEVICE_BROWNOUT_DETECTION    2500_2900mV
 
-/*      Settings for Diabolo
+/*  Settings for Diabolo
  */
 #define DIABOLO_PIN_RX                  hw_pin_2
 #define DIABOLO_PIN_TX                  hw_pin_2
 #define DIABOLO_BPS                     115200
 #define DIABOLO_RESET_SIGNAL            DTR
+
+/*  Include HWA header
+ */
+#include <hwa/attiny85_20pu.h>

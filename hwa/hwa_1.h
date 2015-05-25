@@ -17,19 +17,19 @@
 
 /**
  * @file
- * @brief	`hwa.h` is the main include file of HWA.
+ * @brief  This is the main include file of HWA.
  *
- * `hwa.h` is included from the application source after `HW_DEVICE` has been
- * defined with the name od the target device. `hwa.h` is responsible for
- * including all that is necessary in order to use HWA for the target device.
+ * This file is included from the application source after `HW_DEVICE` has been
+ * defined with the name od the target device. It includes all that is necessary
+ * to use HWA with the target device.
  *
  * HWA definitions are split in two parts:
  *
- * - The first part (files ending with `_1.h` ) contains the definitions that do
+ * * The first part (files ending with `_1.h` ) contains the definitions that do
  *   not produce C code (can be used for assembler) and the definitions
  *   related to the building of the HWA context.
  *
- * - The second part (files ending with `_2.h`) contains the definitions that
+ * * The second part (files ending with `_2.h`) contains the definitions that
  *   produce C code or make use of the HWA context.
  */
 

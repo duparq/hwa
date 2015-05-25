@@ -4,7 +4,6 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#define HW_DEVICE_GCC			attiny84
 #define HW_DEVICE_SIGNATURE		0x1E,0x93,0x0C
 #define HW_DEVICE_FLASH_SIZE		8192
 #define HW_DEVICE_FLASH_PAGE_SIZE	64

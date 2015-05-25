@@ -4,7 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#define HW_DEVICE		attiny84a
+/*  ATTINY84A has the same signature as ATTINY84
+ */
+#define HW_DEVICE		attiny84
 #define HW_DEVICE_PACKAGE	14pdip
 
 #include "../../hwa/hwa_1.h"

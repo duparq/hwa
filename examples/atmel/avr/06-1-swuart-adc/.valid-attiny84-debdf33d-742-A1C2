@@ -1,10 +1,11 @@
-HW_DEVICE=attiny84a
+HW_DEVICE=attiny84
 hw_syshz=8000000
 HW_SWUART0_PIN_RX=hw_pin_pb0
 HW_SWUART0_PIN_TX=hw_pin_pb0
+HW_SWUART0_AUTOSYNC=5_1
 HW_SWUART0_COUNTER=hw_counter1
 HW_SWUART0_COUNTER_CLK_DIV=1
 HW_SWUART0_COUNTER_COMP=compare0
-UART=hw_swuart0
-USI=hw_usi0
-NRF_CSN=hw_pin_pa7
+COUNTER=hw_counter0
+INPUT=hw_pin_pa5
+PIN_LED=hw_pin_pa6

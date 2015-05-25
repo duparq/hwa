@@ -1,6 +1,5 @@
 
-Predefined HWA boards		{#boards}
-=====================
+Predefined boards		{#boards}
+=================
 
-HWA defines a few boards used to compile the examples.
-
+HWA comes with the definitions of a few boards used to compile the examples.

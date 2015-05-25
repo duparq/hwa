@@ -1,4 +1,3 @@
-HW_DEVICE=attiny84a
+HW_DEVICE=attiny84
 hw_syshz=8000000
 PIN_LED=hw_pin_pa6
-PERIOD=0.5

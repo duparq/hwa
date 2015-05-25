@@ -4,8 +4,13 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Definitions specific to Atmel AVR devices that do not produce C code
+ */
 
-/** \brief	Target device is an Atmel AVR.
+
+/*  Target device is an Atmel AVR.
  */
 #define HW_DEVICE_ATMELAVR
 #define HW_DEVICE_VENDOR		atmel

@@ -5,357 +5,15 @@
  */
 
 /**
- * @page attinyx4 ATtiny24 ATtiny44 ATtiny84
- * @section attinyx4_target Target device
+ * @page attinyx4 ATtiny24/44/84
  *
- * You must define `HW_DEVICE` according to the name of your target device
- * before including `hwa.h`.
+ * @section attinyx4_includes Including the proper header file
  *
- * Optionnaly, you can define `HW_DEVICE_PACKAGE` if you want to use pin numbers
- * as well as pin names.
+ * You can include:
+ * * `<hwa/attiny84a_pu.h>`
  *
- * Symbol               | Valid values | Comments
- * :--------------------|--------------|:-----------
- * `HW_DEVICE`          | `attiny24`<br>`attiny44`<br>`attiny84` | Name of the device
- * `HW_DEVICE_PACKAGE`  | `14pdip`     | Packaging of the device.
- */
-#define _hw_is_14pdip_14pdip		, 1
-
-/*  FIXME: error directive does not expand symbols, use pragma message to
- *  display the wrong definition?
- */
-#if defined HW_DEVICE_PACKAGE && !HW_IS(14pdip,HW_DEVICE_PACKAGE)
-#  error HWA: package can be `14pdip`
-#endif
-
-
-/**
- * @page attinyx4
- * @section attinyx4_fuses Fuses
  *
- * Optionnaly, fuses symbols can be defined to describe the target more
- * precisely. If the fuses are not defined, HWA will define the fuse bytes from
- * the default values.
- *
- * @subsection attinyx4_fuses_clocking Clocking
- *
- * The device can be clocked from an external signal (`external`), from an
- * internal RC oscillator (`rc_8MHz` or `rc_128kHz`), or from a crystal
- * oscillator (`xosc`).
- *
- * ATtixyx4 devices allow 1/8 prescaling of the clock frequency.
- *
- * The clock frequency of the device must be defined for `external` and `xosc`
- * sources. This will permit HWA to compute the system frequency `hw_syshz`.
- *
- * Symbol                 | Valid values | Comments
- * :----------------------|--------------|:-----------
- * `HW_DEVICE_CLK_SRC`    | `external`<br>`rc_8MHz`<br>`rc_128kHz`<br>`xosc` | Source clock.
- * `HW_DEVICE_CLK_SRC_HZ` | Integer     | Clock frequency for `external` and `xosc` clock source
- * `HW_DEVICE_CLK_PSC`    | `8`<br>`1`  | Clock prescaler
- */
-#define _hw_is_external_external			, 1
-#define _hw_is_rc_8MHz_rc_8MHz				, 1
-#define _hw_is_rc_128kHz_rc_128kHz			, 1
-#define _hw_is_xosc_xosc				, 1
-
-#ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				internal_rc
-#endif
-
-#if HW_IS(external,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
-#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					8000000
-#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				2
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					128000
-#elif HW_IS(xosc, HW_DEVICE_CLK_SRC)
-#  ifndef HW_DEVICE_CLK_SRC_HZ
-#    error HW_DEVICE_CLK_SRC_HZ must be defined
-#  else
-#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
-#    if HW_DEVICE_CLK_SRC_HZ < 400000 /* Assume values other than 32768 are acceptable */
-#      define HW_DEVICE_CKSEL31				3
-#      define HW_DEVICE_CKSEL0				0
-#    else
-#      if HW_DEVICE_CLK_SRC_HZ < 900000
-#        define HW_DEVICE_CKSEL31			4
-#      elif HW_DEVICE_CLK_SRC_HZ < 3000000
-#        define HW_DEVICE_CKSEL31			5
-#      elif HW_DEVICE_CLK_SRC_HZ < 8000000
-#        define HW_DEVICE_CKSEL31			6
-#      else
-#        define HW_DEVICE_CKSEL31			7
-#      endif
-#    endif
-#  endif
-#else
-#  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, or `xosc`.
-#endif
-
-#if !defined HW_DEVICE_CLK_PSC
-#  define HW_DEVICE_CLK_PSC				8
-#endif
-#if HW_DEVICE_CLK_PSC == 8
-#  define HW_DEVICE_CKDIV8				0
-#  define hw_syshz					hw_syshz_base/8
-#elif HW_DEVICE_CLK_PSC == 1
-#  define HW_DEVICE_CKDIV8				1
-#  define hw_syshz					hw_syshz_base
-#else
-#  error HW_DEVICE_CLK_PSC must be defined as one of `8` or `1`.
-#endif
-
-
-/**
- * @page attinyx4
- * @subsection attinyx4_fuses_sut Startup delays
- *
- * Symbol               | Valid values | Comments
- * :--------------------|--------------|:-----------
- * `HW_DEVICE_STARTUP_DELAYS` | `6CK_14CK`<br>`6CK_14CK_4ms`<br>`6CK_14CK_64ms`<br>`1KCK_4ms`<br>`1KCK_64ms`<br>`32KCK_64ms`<br>`258CK_14CK_4ms`<br>`258CK_14CK_64ms`<br>`1KCK_14CK`<br>`1KCK_14CK_4ms`<br>`1KCK_14CK_64ms`<br>`16KCK_14CK`<br>`16KCK_14CK_4ms`<br>`16KCK_14CK_64ms` | Valid values depend on the clocking configuration
-*/
-#define _hw_is_6CK_14CK_6CK_14CK			, 1
-#define _hw_is_6CK_14CK_4ms_6CK_14CK_4ms		, 1
-#define _hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
-#define _hw_is_1KCK_4ms_1KCK_4ms			, 1
-#define _hw_is_1KCK_64ms_1KCK_64ms			, 1
-#define _hw_is_32KCK_64ms_32KCK_64ms			, 1
-#define _hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
-#define _hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
-#define _hw_is_1KCK_14CK_1KCK_14CK			, 1
-#define _hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
-#define _hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
-#define _hw_is_16KCK_14CK_16KCK_14CK			, 1
-#define _hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
-#define _hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
-
-#if defined HW_DEVICE_STARTUP_DELAYS
-#  if HW_DEVICE_CKSEL31 < 3
-#    define HW_DEVICE_CKSEL0				0
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK)
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_4ms)
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_64ms)
-#      define HW_DEVICE_SUT10				2
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
-#    endif
-#  elif HW_DEVICE_CKSEL31 == 3
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_4ms)
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_64ms)
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 32KCK_64ms)
-#      define HW_DEVICE_SUT10				2
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
-#    endif
-#  else
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				2
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				3
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				2
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				3
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `258CK_14CK_4ms`, `258CK_14CK_64ms`, `1KCK_14CK`, `1KCK_14CK_4ms`, `1KCK_14CK_64ms`, `16KCK_14CK`, `16KCK_14CK_4ms`, or `16KCK_14CK_64ms`.
-#    endif
-#  endif
-#else
-#  define HW_DEVICE_SUT10				2
-#endif
-
-
-
-/**
- * @page attinyx4
- * @subsection attinyx4_fuses_other Other fuses
- *
- * Symbol                 | Valid values | Comments
- * :----------------------|--------------|:-----------
- * `HW_DEVICE_EXTERNAL_RESET`    |`enabled`<br>`disabled`|Wether the device can be reset via its RESET pin
- * `HW_DEVICE_SELF_PROGRAMMING`  |`enabled`<br>`disabled`|Wether the device can write into its Flash program memory
- * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Wether the device can be programmed via the SPI
- * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Wether the EEPROM memory is erased when a chip erase occurs
- * `HW_DEVICE_DEBUG_WIRE`        |`disabled`<br>`enabled`|Wether the Debug Wire is operationnal
- * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`          |Wether the watchdog is always running
- * `HW_DEVICE_CLOCK_OUTPUT`      |`disabled`<br>`enabled`|Wether the device outputs its clock
- * `HW_DEVICE_BROWNOUT_DETECTION`|`2500_2900mV`<br>`1700_2000mV`<br>`4100_4500mV`|Brown-out detection level
- *
- */
-#if !defined HW_DEVICE_CLOCK_OUTPUT
-#  define HW_DEVICE_CLOCK_OUTPUT			disabled
-#endif
-#if HW_IS(HW_DEVICE_CLOCK_OUTPUT, enabled)
-#  define HW_DEVICE_CKOUT				0
-#elif HW_IS(HW_DEVICE_CLOCK_OUTPUT, disabled)
-#  define HW_DEVICE_CKOUT				1
-#else
-#  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_SELF_PROGRAMMING
-#  define HW_DEVICE_SELF_PROGRAMMING			enabled
-#endif
-#if HW_IS(HW_DEVICE_SELF_PROGRAMMING, enabled)
-#  define HW_DEVICE_SELFPRGEN				0
-#elif HW_IS(HW_DEVICE_SELF_PROGRAMMING, disabled)
-#  define HW_DEVICE_SELFPRGEN				1
-#else
-#  error HW_DEVICE_SELF_PROGRAMMING must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_EXTERNAL_RESET
-#  define HW_DEVICE_EXTERNAL_RESET			enabled
-#endif
-#if HW_IS(HW_DEVICE_EXTERNAL_RESET, enabled)
-#  define HW_DEVICE_RSTDISBL				1
-#elif HW_IS(HW_DEVICE_EXTERNAL_RESET, disabled)
-#  define HW_DEVICE_RSTDISBL				0
-#else
-#  error HW_DEVICE_EXTERNAL_RESET must be defined as `enabled` (default) or `disabled`.
-#endif
-
-#if !defined HW_DEVICE_DEBUG_WIRE
-#  define HW_DEVICE_DEBUG_WIRE				disabled
-#endif
-#if HW_IS(HW_DEVICE_DEBUG_WIRE, enabled)
-#  define HW_DEVICE_DWEN				0
-#elif HW_IS(HW_DEVICE_DEBUG_WIRE, disabled)
-#  define HW_DEVICE_DWEN				1
-#else
-#  error HW_DEVICE_DEBUG_WIRE must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_SERIAL_PROGRAMMING
-#  define HW_DEVICE_SERIAL_PROGRAMMING			enabled
-#endif
-#if HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, enabled)
-#  define HW_DEVICE_SPIEN				0
-#elif HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, disabled)
-#  define HW_DEVICE_SPIEN				1
-#else
-#  error HW_DEVICE_SERIAL_PROGRAMMING must be defined as `enabled` (default) or `disabled`.
-#endif
-
-#if !defined HW_DEVICE_WATCHDOG_ALWAYS_ON
-#  define HW_DEVICE_WATCHDOG_ALWAYS_ON			no
-#endif
-#if HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, yes)
-#  define HW_DEVICE_WDTON				0
-#elif HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, no)
-#  define HW_DEVICE_WDTON				1
-#else
-#  error HW_DEVICE_WATCHDOG_ALWAYS_ON must be defined as `yes` or `no` (default).
-#endif
-
-#if !defined HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE
-#  define HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE	no
-#endif
-#if HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, yes)
-#  define HW_DEVICE_EESAVE				0
-#elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, no)
-#  define HW_DEVICE_EESAVE				1
-#else
-#  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
-#endif
-
-#define _hw_is_1700_2000mV_1700_2000mV			, 1
-#define _hw_is_2500_2900mV_2500_2900mV			, 1
-#define _hw_is_4100_4500mV_4100_4500mV			, 1
-
-#if !defined HW_DEVICE_BROWNOUT_DETECTION
-#  define HW_DEVICE_BROWNOUT_DETECTION			off
-#endif
-#if HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 1700_2000mV)
-#  define HW_DEVICE_BODLEVEL				6
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 2500_2900mV)
-#  define HW_DEVICE_BODLEVEL				5
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 4100_4500mV)
-#  define HW_DEVICE_BODLEVEL				4
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, off)
-#  define HW_DEVICE_BODLEVEL				7
-#else
-#  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
-#endif
-
-
-/**
- * @page attinyx4
- * @section attinyx4_hwa_computed_symbols HWA-computed symbols
- *
- * From the above declarations, HWA computes the following symbols:
- * 
- * Symbol                      | Definition
- * :---------------------------|:----------
- * `HW_DEVICE_ATTINYX4`        | Void
- * `HW_DEVICE_ATMELAVR`        | Void
- * `HW_DEVICE_SIGNATURE`       | List of 3 hexadecimal values of device signature
- * `HW_DEVICE_FLASH_SIZE`      | Size of the flash memory in bytes
- * `HW_DEVICE_FLASH_PAGE_SIZE` | Size of the flash memory pages in bytes
- * `HW_DEVICE_EEPROM_SIZE`     | Size of the eeprom memory in bytes
- * `HW_DEVICE_EEPROM_PAGE_SIZE`| Size of the eeprom memory pages in bytes
- * `HW_DEVICE_RAM_SIZE`        | Size of the ram memory in bytes
- * `HW_DEVICE_RAM_START`       | Start address of RAM memory: 0x0060
- * `HW_DEVICE_APP_START`       | Start address of application (after interrupt vectors): 0x0022
- * `HW_DEVICE_FUSE_EB`         | Fuse extended byte
- * `HW_DEVICE_FUSE_HB`         | Fuse high byte
- * `HW_DEVICE_FUSE_LB`         | Fuse low byte
- */
-#define HW_DEVICE_ATTINYX4
-#define HW_DEVICE_RAM_START		0x0060
-#define HW_DEVICE_APP_START		0x0022
-
-
-#define HW_DEVICE_FUSE_EB			\
-  0xFE | HW_DEVICE_SELFPRGEN
-
-#define HW_DEVICE_FUSE_HB			\
-  HW_DEVICE_RSTDISBL<<7 |			\
-  HW_DEVICE_DWEN<<6 |				\
-  HW_DEVICE_SPIEN<<5 |				\
-  HW_DEVICE_WDTON<<4 |				\
-  HW_DEVICE_EESAVE<<3 |				\
-  HW_DEVICE_BODLEVEL
-
-#define HW_DEVICE_FUSE_LB			\
-  HW_DEVICE_CKDIV8<<7 |				\
-  HW_DEVICE_CKOUT<<6 |				\
-  HW_DEVICE_SUT10<<4 |				\
-  HW_DEVICE_CKSEL31<<1 |			\
-  HW_DEVICE_CKSEL0
-
-
-/**
- * @page attinyx4
  * @section attinyx4_object Supported objects
- *
- * HWA provides the following objects to the ATtinyx4 family:
  * 
  * Object name            | Class                 | Comments
  * :----------------------|-----------------------|:--------------------------------------
@@ -415,8 +73,6 @@
 /**
  * @page attinyx4
  * @section attinyx4_interrupts Interrupts
- *
- * HWA provides the following objects to the ATtinyx4 family:
  * 
  * Interrupt definition   | Atmel label     | Comments
  * :----------------------|-----------------|------------------------
@@ -476,9 +132,6 @@
  *
  * Some of the pins `hw_pin_pb0`..`hw_pin_pb3` may not be available depending on
  * the fuses configuration.
- * 
- * Pin numbers `hw_pin_2`..`hw_pin_13` can be used if `HW_DEVICE_PACKAGE` is
- * defined as '14pdip'.
  *
  * HWA name     | 14pdid      | Class                     | Atmel name
  * -------------|-------------|---------------------------|-----------
@@ -503,7 +156,7 @@
 #define _hw_porta			_io8a, 300, 0x39
 #define _hw_portb			_io8a, 310, 0x36
 
-/*  Pins				class, id, controller, bn, bp
+/*  Pins				class, id, peripheral, bn, bp
  */
 #define _hw_pin_pa0			_pin1, 301, hw_porta, 1, 0
 #define _hw_pin_pa1			_pin1, 302, hw_porta, 1, 1
@@ -555,6 +208,8 @@
 
 /*	Pins by numbers
  */
+#define _hw_is_14pdip_14pdip		, 1
+
 #if HW_IS(14pdip,HW_DEVICE_PACKAGE)
 #
 #  define hw_pin_2			hw_pin_pb0
@@ -1062,7 +717,7 @@
  *
  * @section attinyx4_pwr Power Management
  *
- * The following controllers can be turned on/off with the `hw/hwa_turn(...)`
+ * The following peripherals can be turned on/off with the `hw/hwa_turn(...)`
  * instruction to manage power consumption of the device:
  *
  * * `hw_counter0`
@@ -1072,9 +727,339 @@
  * * `hw_acmp0`
  *
  * @code
- * hw/hwa_turn( OBJECT, on | off );
+ * hw_turn( hw_counter0, off );
  * @endcode
  */
+
+
+
+/**
+ * @page attinyx4
+ *
+ * @section attinyx4_target Target definition
+ *
+ * The inclusion of the device-specific header leads to the definition of the
+ * following symbols:
+ *
+ * Symbol               | Possible values | Comments
+ * :--------------------|--------------|:-----------
+ * `HW_DEVICE`          | `attiny24`<br>`attiny44`<br>`attiny84` | Name of the device
+ * `HW_DEVICE_PACKAGE`  | `14pdip`     | Packaging of the device.
+ */
+
+/**
+ * @page attinyx4
+ * @section attinyx4_fuses Defining the fuse values
+ *
+ * Optionnaly, before including the device-specific header, fuse symbols can be
+ * defined to describe the target more precisely. If these symbols are not
+ * defined by the user, HWA will define them from the default values.
+ *
+ * @subsection attinyx4_fuses_clocking Clocking
+ *
+ * Symbol                |Valid values | Comments
+ * :---------------------|-------------|:-----------
+ * `HW_DEVICE_CLK_SRC`   |`external`<br>`rc_8MHz`<br>`rc_128kHz`<br>`xosc`|External source on pin CLKI<br>Internal RC oscillator<br>Internal RC oscillator<br>Crystal oscillator between pins XTAL1 and XTAL2
+ * `HW_DEVICE_CLK_SRC_HZ`|Integer     | Clock frequency for `external` and `xosc` clock source
+ * `HW_DEVICE_CLK_PSC`   |`8`<br>`1`  |Clock divided by 8<br>Clock not divided
+ */
+#define _hw_is_external_external			, 1
+#define _hw_is_rc_8MHz_rc_8MHz				, 1
+#define _hw_is_rc_128kHz_rc_128kHz			, 1
+#define _hw_is_xosc_xosc				, 1
+
+#ifndef HW_DEVICE_CLK_SRC
+#  define HW_DEVICE_CLK_SRC				internal_rc
+#endif
+
+#if HW_IS(external,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				0
+#  define HW_DEVICE_CKSEL0				0
+#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				1
+#  define HW_DEVICE_CKSEL0				0
+#  define hw_syshz_base					8000000
+#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
+#  define HW_DEVICE_CKSEL31				2
+#  define HW_DEVICE_CKSEL0				0
+#  define hw_syshz_base					128000
+#elif HW_IS(xosc, HW_DEVICE_CLK_SRC)
+#  ifndef HW_DEVICE_CLK_SRC_HZ
+#    error HW_DEVICE_CLK_SRC_HZ must be defined
+#  else
+#    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
+#    if HW_DEVICE_CLK_SRC_HZ < 400000 /* Assume values other than 32768 are acceptable */
+#      define HW_DEVICE_CKSEL31				3
+#      define HW_DEVICE_CKSEL0				0
+#    else
+#      if HW_DEVICE_CLK_SRC_HZ < 900000
+#        define HW_DEVICE_CKSEL31			4
+#      elif HW_DEVICE_CLK_SRC_HZ < 3000000
+#        define HW_DEVICE_CKSEL31			5
+#      elif HW_DEVICE_CLK_SRC_HZ < 8000000
+#        define HW_DEVICE_CKSEL31			6
+#      else
+#        define HW_DEVICE_CKSEL31			7
+#      endif
+#    endif
+#  endif
+#else
+#  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, or `xosc`.
+#endif
+
+#if !defined HW_DEVICE_CLK_PSC
+#  define HW_DEVICE_CLK_PSC				8
+#endif
+#if HW_DEVICE_CLK_PSC == 8
+#  define HW_DEVICE_CKDIV8				0
+#  define hw_syshz					hw_syshz_base/8
+#elif HW_DEVICE_CLK_PSC == 1
+#  define HW_DEVICE_CKDIV8				1
+#  define hw_syshz					hw_syshz_base
+#else
+#  error HW_DEVICE_CLK_PSC must be defined as one of `8` or `1`.
+#endif
+
+
+/**
+ * @page attinyx4
+ * @subsection attinyx4_fuses_sut Startup delays
+ *
+ * Symbol               | Valid values | Comments
+ * :--------------------|--------------|:-----------
+ * `HW_DEVICE_STARTUP_DELAYS` | `6CK_14CK`<br>`6CK_14CK_4ms`<br>`6CK_14CK_64ms`<br>`1KCK_4ms`<br>`1KCK_64ms`<br>`32KCK_64ms`<br>`258CK_14CK_4ms`<br>`258CK_14CK_64ms`<br>`1KCK_14CK`<br>`1KCK_14CK_4ms`<br>`1KCK_14CK_64ms`<br>`16KCK_14CK`<br>`16KCK_14CK_4ms`<br>`16KCK_14CK_64ms` | Valid values depend on the clocking configuration
+*/
+#define _hw_is_6CK_14CK_6CK_14CK			, 1
+#define _hw_is_6CK_14CK_4ms_6CK_14CK_4ms		, 1
+#define _hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
+#define _hw_is_1KCK_4ms_1KCK_4ms			, 1
+#define _hw_is_1KCK_64ms_1KCK_64ms			, 1
+#define _hw_is_32KCK_64ms_32KCK_64ms			, 1
+#define _hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
+#define _hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
+#define _hw_is_1KCK_14CK_1KCK_14CK			, 1
+#define _hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
+#define _hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
+#define _hw_is_16KCK_14CK_16KCK_14CK			, 1
+#define _hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
+#define _hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
+
+#if defined HW_DEVICE_STARTUP_DELAYS
+#  if HW_DEVICE_CKSEL31 < 3
+#    define HW_DEVICE_CKSEL0				0
+#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK)
+#      define HW_DEVICE_SUT10				0
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_4ms)
+#      define HW_DEVICE_SUT10				1
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_64ms)
+#      define HW_DEVICE_SUT10				2
+#    else
+#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
+#    endif
+#  elif HW_DEVICE_CKSEL31 == 3
+#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_4ms)
+#      define HW_DEVICE_SUT10				0
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_64ms)
+#      define HW_DEVICE_SUT10				1
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 32KCK_64ms)
+#      define HW_DEVICE_SUT10				2
+#    else
+#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
+#    endif
+#  else
+#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_4ms)
+#      define HW_DEVICE_CKSEL0				0
+#      define HW_DEVICE_SUT10				0
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_64ms)
+#      define HW_DEVICE_CKSEL0				0
+#      define HW_DEVICE_SUT10				1
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK)
+#      define HW_DEVICE_CKSEL0				0
+#      define HW_DEVICE_SUT10				2
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_4ms)
+#      define HW_DEVICE_CKSEL0				0
+#      define HW_DEVICE_SUT10				3
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_64ms)
+#      define HW_DEVICE_CKSEL0				1
+#      define HW_DEVICE_SUT10				0
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK)
+#      define HW_DEVICE_CKSEL0				1
+#      define HW_DEVICE_SUT10				1
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_4ms)
+#      define HW_DEVICE_CKSEL0				1
+#      define HW_DEVICE_SUT10				2
+#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_64ms)
+#      define HW_DEVICE_CKSEL0				1
+#      define HW_DEVICE_SUT10				3
+#    else
+#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `258CK_14CK_4ms`, `258CK_14CK_64ms`, `1KCK_14CK`, `1KCK_14CK_4ms`, `1KCK_14CK_64ms`, `16KCK_14CK`, `16KCK_14CK_4ms`, or `16KCK_14CK_64ms`.
+#    endif
+#  endif
+#else
+#  define HW_DEVICE_SUT10				2
+#endif
+
+
+
+/**
+ * @page attinyx4
+ * @subsection attinyx4_fuses_other Other fuses
+ *
+ * Symbol                 | Valid values | Comments
+ * :----------------------|--------------|:-----------
+ * `HW_DEVICE_EXTERNAL_RESET`    |`enabled`<br>`disabled`|Wether the device can be reset via its RESET pin
+ * `HW_DEVICE_SELF_PROGRAMMING`  |`enabled`<br>`disabled`|Wether the device can write into its Flash program memory
+ * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Wether the device can be programmed via the SPI
+ * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Wether the EEPROM memory is erased when a chip erase occurs
+ * `HW_DEVICE_DEBUG_WIRE`        |`disabled`<br>`enabled`|Wether the Debug Wire is operationnal
+ * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`          |Wether the watchdog is always running
+ * `HW_DEVICE_CLOCK_OUTPUT`      |`disabled`<br>`enabled`|Wether the device outputs its clock
+ * `HW_DEVICE_BROWNOUT_DETECTION`|`2500_2900mV`<br>`1700_2000mV`<br>`4100_4500mV`|Brown-out detection level
+ *
+ */
+#if !defined HW_DEVICE_CLOCK_OUTPUT
+#  define HW_DEVICE_CLOCK_OUTPUT			disabled
+#endif
+#if HW_IS(HW_DEVICE_CLOCK_OUTPUT, enabled)
+#  define HW_DEVICE_CKOUT				0
+#elif HW_IS(HW_DEVICE_CLOCK_OUTPUT, disabled)
+#  define HW_DEVICE_CKOUT				1
+#else
+#  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
+#endif
+
+#if !defined HW_DEVICE_SELF_PROGRAMMING
+#  define HW_DEVICE_SELF_PROGRAMMING			enabled
+#endif
+#if HW_IS(HW_DEVICE_SELF_PROGRAMMING, enabled)
+#  define HW_DEVICE_SELFPRGEN				0
+#elif HW_IS(HW_DEVICE_SELF_PROGRAMMING, disabled)
+#  define HW_DEVICE_SELFPRGEN				1
+#else
+#  error HW_DEVICE_SELF_PROGRAMMING must be defined as `enabled` or `disabled` (default).
+#endif
+
+#if !defined HW_DEVICE_EXTERNAL_RESET
+#  define HW_DEVICE_EXTERNAL_RESET			enabled
+#endif
+#if HW_IS(HW_DEVICE_EXTERNAL_RESET, enabled)
+#  define HW_DEVICE_RSTDISBL				1
+#elif HW_IS(HW_DEVICE_EXTERNAL_RESET, disabled)
+#  define HW_DEVICE_RSTDISBL				0
+#else
+#  error HW_DEVICE_EXTERNAL_RESET must be defined as `enabled` (default) or `disabled`.
+#endif
+
+#if !defined HW_DEVICE_DEBUG_WIRE
+#  define HW_DEVICE_DEBUG_WIRE				disabled
+#endif
+#if HW_IS(HW_DEVICE_DEBUG_WIRE, enabled)
+#  define HW_DEVICE_DWEN				0
+#elif HW_IS(HW_DEVICE_DEBUG_WIRE, disabled)
+#  define HW_DEVICE_DWEN				1
+#else
+#  error HW_DEVICE_DEBUG_WIRE must be defined as `enabled` or `disabled` (default).
+#endif
+
+#if !defined HW_DEVICE_SERIAL_PROGRAMMING
+#  define HW_DEVICE_SERIAL_PROGRAMMING			enabled
+#endif
+#if HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, enabled)
+#  define HW_DEVICE_SPIEN				0
+#elif HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, disabled)
+#  define HW_DEVICE_SPIEN				1
+#else
+#  error HW_DEVICE_SERIAL_PROGRAMMING must be defined as `enabled` (default) or `disabled`.
+#endif
+
+#if !defined HW_DEVICE_WATCHDOG_ALWAYS_ON
+#  define HW_DEVICE_WATCHDOG_ALWAYS_ON			no
+#endif
+#if HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, yes)
+#  define HW_DEVICE_WDTON				0
+#elif HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, no)
+#  define HW_DEVICE_WDTON				1
+#else
+#  error HW_DEVICE_WATCHDOG_ALWAYS_ON must be defined as `yes` or `no` (default).
+#endif
+
+#if !defined HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE
+#  define HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE	no
+#endif
+#if HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, yes)
+#  define HW_DEVICE_EESAVE				0
+#elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, no)
+#  define HW_DEVICE_EESAVE				1
+#else
+#  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
+#endif
+
+#define _hw_is_1700_2000mV_1700_2000mV			, 1
+#define _hw_is_2500_2900mV_2500_2900mV			, 1
+#define _hw_is_4100_4500mV_4100_4500mV			, 1
+
+#if !defined HW_DEVICE_BROWNOUT_DETECTION
+#  define HW_DEVICE_BROWNOUT_DETECTION			off
+#endif
+#if HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 1700_2000mV)
+#  define HW_DEVICE_BODLEVEL				6
+#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 2500_2900mV)
+#  define HW_DEVICE_BODLEVEL				5
+#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 4100_4500mV)
+#  define HW_DEVICE_BODLEVEL				4
+#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, off)
+#  define HW_DEVICE_BODLEVEL				7
+#else
+#  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
+#endif
+
+
+/**
+ * @page attinyx4
+ * @section attinyx4_computed_symbols Computed symbols
+ *
+ * From the above declarations, HWA computes the following symbols:
+ * 
+ * Symbol                      | Definition
+ * :---------------------------|:----------
+ * `HW_DEVICE_ATTINYX4`        | Void
+ * `HW_DEVICE_ATMELAVR`        | Void
+ * `HW_DEVICE_SIGNATURE`       | List of 3 hexadecimal values of device signature
+ * `HW_DEVICE_FLASH_SIZE`      | Size of the flash memory in bytes
+ * `HW_DEVICE_FLASH_PAGE_SIZE` | Size of the flash memory pages in bytes
+ * `HW_DEVICE_EEPROM_SIZE`     | Size of the eeprom memory in bytes
+ * `HW_DEVICE_EEPROM_PAGE_SIZE`| Size of the eeprom memory pages in bytes
+ * `HW_DEVICE_RAM_SIZE`        | Size of the ram memory in bytes
+ * `HW_DEVICE_RAM_START`       | Start address of RAM memory: 0x0060
+ * `HW_DEVICE_APP_START`       | Start address of application (after interrupt vectors): 0x0022
+ * `HW_DEVICE_FUSE_EB`         | Fuse extended byte
+ * `HW_DEVICE_FUSE_HB`         | Fuse high byte
+ * `HW_DEVICE_FUSE_LB`         | Fuse low byte
+ */
+#define HW_DEVICE_ATTINYX4
+#define HW_DEVICE_RAM_START		0x0060
+#define HW_DEVICE_APP_START		0x0022
+
+
+#define HW_DEVICE_FUSE_EB			\
+  0xFE | HW_DEVICE_SELFPRGEN
+
+#define HW_DEVICE_FUSE_HB			\
+  HW_DEVICE_RSTDISBL<<7 |			\
+  HW_DEVICE_DWEN<<6 |				\
+  HW_DEVICE_SPIEN<<5 |				\
+  HW_DEVICE_WDTON<<4 |				\
+  HW_DEVICE_EESAVE<<3 |				\
+  HW_DEVICE_BODLEVEL
+
+#define HW_DEVICE_FUSE_LB			\
+  HW_DEVICE_CKDIV8<<7 |				\
+  HW_DEVICE_CKOUT<<6 |				\
+  HW_DEVICE_SUT10<<4 |				\
+  HW_DEVICE_CKSEL31<<1 |			\
+  HW_DEVICE_CKSEL0
+
+
 
 /**
  * @page attinyx4

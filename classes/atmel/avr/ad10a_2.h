@@ -4,6 +4,11 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Definitions for class _ad10a
+ */
+
 
 HW_INLINE void __hwa_begin__ad10a ( hwa_ad10a_t *p, intptr_t a )
 {

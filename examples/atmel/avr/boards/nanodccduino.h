@@ -35,8 +35,6 @@
 /*  These are mostly the values as the board is shipped, except
  *  the bootsection size which is 1024 instead of 2048.
  */
-#define HW_DEVICE                       atmega328p_au
-//#define HW_DEVICE_PACKAGE               32mlf
 #define HW_DEVICE_BOOT                  bootloader
 #define HW_DEVICE_BOOTSECTION_SIZE      1024
 
@@ -52,7 +50,7 @@
 #define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 
-/*      Settings for Diabolo
+/*  Settings for Diabolo
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_txd
@@ -60,3 +58,7 @@
 #define DIABOLO_RESET_SIGNAL            DTR
 
 #define PIN_LED                         hw_pin_pb5
+
+/*  Include HWA header
+ */
+#include <hwa/atmega328p_au.h>
