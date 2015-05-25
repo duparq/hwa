@@ -58,8 +58,7 @@ modifies a known configuration.
 
 @par An example:
 @code
-#define HW_DEVICE               attiny44a_pu
-#include <hwa.h>
+#include <hwa/attiny84a_pu.h>
 
 #define PIN_LED                 hw_pin_7
 

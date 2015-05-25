@@ -22,8 +22,6 @@ size, execution speed or memory used.
 Examples
 ========
 
-See @ref examples .
-
 The `examples/` directory contains a few examples aimed at illustrating various
 features of HWA, currently only for Atmel ATtiny44 and ATtiny84 devices
 (ATtinyx5 and ATmegax8 should be available soon as they were already supported

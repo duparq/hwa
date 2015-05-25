@@ -10,6 +10,7 @@
  * @section attinyx4_includes Including the proper header file
  *
  * You can include:
+ * * `<hwa/attiny44a_pu.h>`
  * * `<hwa/attiny84a_pu.h>`
  *
  *
