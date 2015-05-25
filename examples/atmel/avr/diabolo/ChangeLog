@@ -1,4 +1,4 @@
-2014-12-30  Christophe Duparquet  <duparq at free dot fr>
+2014-12-30  Christophe Duparquet .
 
 	* device/diabolo-atmelavr.sx (pflash):
 		Removed virginity & equality checking

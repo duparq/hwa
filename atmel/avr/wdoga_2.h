@@ -5,7 +5,7 @@
  *		 ATtinyX5 (WDOG)	hw_wdog0
  *
  * This file is part of the HWA project.
- * Copyright (c) Christophe Duparquet <duparq at free dot fr>
+ * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 

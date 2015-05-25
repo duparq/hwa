@@ -6,7 +6,7 @@
  * Used in: ATtinyX4 hw_eeprom0
  *
  * This file is part of the HWA project.
- * Copyright (c) Christophe Duparquet (duparq at free dot fr)
+ * Copyright (c) 2012,2015 Christophe Duparquet (duparq at free dot fr)
  * All rights reserved. Read LICENSE.TXT for details.
  */
 

@@ -6,7 +6,7 @@ All of this is supposed to be Free Software and can be used in both free and
 proprietary applications.
 
 *******************************************************************************
-Copyright (c) Christophe Duparquet \<duparq free fr\> All rights reserved.
+Copyright (c) 2012,2015 Christophe Duparquet. All rights reserved.
 
    Redistribution and use are permitted provided that the following conditions
    are met:

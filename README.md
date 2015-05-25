@@ -91,7 +91,8 @@ lists of key-value arguments).
 License
 =======
 
-HWA is free software. See the license page for license information.
+HWA is free software. See the @ref license "license" page for license
+information.
 
 <hr>
 

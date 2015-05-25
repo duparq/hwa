@@ -2,7 +2,7 @@
 /*  Atmel AVR i/o pin class _io
  *
  * This file is part of the HWA project.
- * Copyright (c) Christophe Duparquet <duparq free fr>
+ * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
