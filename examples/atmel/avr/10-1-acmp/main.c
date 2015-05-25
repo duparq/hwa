@@ -81,12 +81,15 @@ HW_ISR( hw_acmp0 )
 {
   hw_turn_irq( hw_acmp0, off );
   hw_write( PIN_LED, 1 );
-  if ( COUNTER_CLK_DIV > 1 ) {
+
+  if ( COUNTER_CLK_DIV > 1 )
     hw_turn(hw_sub(COUNTER,prescaler0), off);
-    hw_clear( COUNTER );
+
+  hw_clear( COUNTER );
+
+  if ( COUNTER_CLK_DIV > 1 )
     hw_turn(hw_sub(COUNTER,prescaler0), on);
-  }
-  else
+
   hw_clear_irqf( COUNTER, COMPARE );
   hw_turn_irq( COUNTER, COMPARE, on );
 }

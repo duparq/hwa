@@ -26,9 +26,9 @@
  * `hw_counter0_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter0 (OC0A)
  * `hw_counter0_compare1` | @ref atmelavr_ocua "ocua"   | Compare unit 1 of hw_counter0 (OC0B)
  * `hw_counter1`          | @ref atmelavr_c16a "c16a"   | 16-bit counter-timer (T1)
- * `hw_counter1_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter0 (OC1A)
- * `hw_counter1_compare1` | @ref atmelavr_ocua "ocua"    | Compare unit 1 of hw_counter0 (OC1B)
- * `hw_counter1_capture0` | @ref atmelavr_icua "icua"    | Capture unit 0 of hw_counter0 (ICP)
+ * `hw_counter1_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter1 (OC1A)
+ * `hw_counter1_compare1` | @ref atmelavr_ocua "ocua"    | Compare unit 1 of hw_counter1 (OC1B)
+ * `hw_counter1_capture0` | @ref atmelavr_icua "icua"    | Capture unit 0 of hw_counter1 (ICP)
  * `hw_psc0`              | @ref atmelavr_psca "psca"    | hw_counter0/hw_counter1 prescaler (PSC0)
  * `hw_usi0`              | @ref atmelavr_usia "usia"    | Universal Serial Interface
  * `hw_acmp0`             | @ref atmelavr_acmpa "acmpa"  | Analog Comparator
