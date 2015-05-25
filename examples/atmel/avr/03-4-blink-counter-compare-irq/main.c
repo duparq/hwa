@@ -7,18 +7,17 @@
 /**
  * @example
  *
- *      Blink a LED using a counter compare interrupt
+ *  Blink a LED using a counter compare interrupt
  */
 
 
-/*      Target
+/*  Include the board definition (includes hwa.h)
  */
-#include <targets/attiny84.h>
-#include <hwa.h>
+#include <boards/attiny84.h>
 
 
-/*  The pin at which the LED is connected (already done for Arduino
- *  targets). The target also defines the package of the device, then pin
+/*  The pin at which the LED is connected (already defined for Arduino
+ *  boards). The target also defines the package of the device, then pin
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED

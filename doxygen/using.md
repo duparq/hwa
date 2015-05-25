@@ -14,10 +14,35 @@ See the device-specific documentation for the `HW_DEVICE` definition to use with
 each supported device.
 
 
+Object names
+============
+
+All the peripheral features of a device are held by HWA objects providing
+methods.
+
+All object names are lower cased, begin with `hw_` and end with a number:
+ * `hw_counter0`, `hw_counter1`...
+ * `hw_adc0`...
+ * `hw_uart0` ...
+
+I/O pin names always begin with `hw_pin_`:
+ * `hw_pin_pa0`, `hw_pin_pb4`...
+ * `hw_pin_2`...
+
+Pins named by their number can be used when HWA has been told how the device is
+packaged.
+
+
 Instructions
 ============
 
-HWA uses two kinds of instructions:
+Most HWA instructions are generic and accept objects of various classes as first
+parameter. This allows writing less verbose code and makes it easier to replace
+an object by another, or to port the code to a different device. Several
+instructions accept a variable length list of parameters consisting of key/value
+pairs.
+
+There are two kinds of instructions:
 
 * synchronous instructions, with `hw_` prefix
 * asynchronous instructions, with `hwa_` prefix
@@ -35,11 +60,10 @@ modifies a known configuration.
 
 @par An example:
 @code
-#define HW_DEVICE               attiny44
-#define HW_DEVICE_PACKAGE       14pdip
+#define HW_DEVICE               attiny44a_pu
 #include <hwa.h>
 
-#define PIN_LED         hw_pin_7
+#define PIN_LED                 hw_pin_7
 
 /*  Service watchdog IRQ
  */
@@ -134,31 +158,6 @@ Instruction      | Result
 `hw_io(...)`     | I/O name associated to an object
 `hw_sub(...)`    | Sub (relative) object of an object
 `hw_sup(...)`    | Parent object of an object
-
-
-Object names
-============
-
-Almost all instructions use an object name as first argument. All object names
-are lower cased.
-
-Object names always begin with `hw_` and always end with a number: `hw_counter1`,
-`hw_uart0`, `hw_pcic2`...
-
-Pin names always begin with `hw_pin_`: `hw_pin_pa0`, `hw_pin_pb4`...
-
-Pin numbers (`hw_pin_1`...) can be used if `HW_DEVICE_PACKAGE` is defined:
-
-@code
-#define HW_DEVICE          attiny44
-#define HW_DEVICE_PACKAGE  14pdip
-@endcode
-
-Most HWA instructions are generic and accept objects of various classes as first
-parameter. This allows writing less verbose code and makes it easier to replace
-an object by another, or port the code to a different target device. Several
-instructions accept a variable length list of parameters consisting of key/value
-pairs.
 
 
 General purpose macros

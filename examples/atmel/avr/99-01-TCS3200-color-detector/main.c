@@ -34,15 +34,16 @@
  * counter units. As the counter has 16 bits, the lowest period it can
  * measure is about 122 Hz. Experience shows that it is enough.
  *
- * @par targets/attiny84.h
- * @include targets/attiny84.h
+ * @par boards/attiny84.h
+ * @include boards/attiny84.h
  *
  * @par config.h
  * @include config.h
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
 
 #define UART            hw_swuart0
 

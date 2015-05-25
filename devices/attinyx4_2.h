@@ -4,22 +4,22 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "atmel/avr/2.h"
-#include "atmel/avr/corea_2.h"
-#include "atmel/avr/io_2.h"
-#include "atmel/avr/pcica_2.h"
-#include "atmel/avr/wdoga_2.h"
-#include "atmel/avr/ocua_2.h"
-#include "atmel/avr/c8a_2.h"
-#include "atmel/avr/c16a_2.h"
-#include "atmel/avr/psca_2.h"
-#include "atmel/avr/icua_2.h"
-#include "atmel/avr/usia_2.h"
-#include "atmel/avr/acmpa_2.h"
-#include "atmel/avr/ad10a_2.h"
-#include "atmel/avr/eeproma_2.h"
-#include "atmel/avr/flasha_2.h"
-#include "atmel/avr/swuarta_2.h"
+#include "../classes/atmel/avr/2.h"
+#include "../classes/atmel/avr/corea_2.h"
+#include "../classes/atmel/avr/io_2.h"
+#include "../classes/atmel/avr/pcica_2.h"
+#include "../classes/atmel/avr/wdoga_2.h"
+#include "../classes/atmel/avr/ocua_2.h"
+#include "../classes/atmel/avr/c8a_2.h"
+#include "../classes/atmel/avr/c16a_2.h"
+#include "../classes/atmel/avr/psca_2.h"
+#include "../classes/atmel/avr/icua_2.h"
+#include "../classes/atmel/avr/usia_2.h"
+#include "../classes/atmel/avr/acmpa_2.h"
+#include "../classes/atmel/avr/ad10a_2.h"
+#include "../classes/atmel/avr/eeproma_2.h"
+#include "../classes/atmel/avr/flasha_2.h"
+#include "../classes/atmel/avr/swuarta_2.h"
 
 
 HW_INLINE void _hwa_begin_all( hwa_t *hwa )

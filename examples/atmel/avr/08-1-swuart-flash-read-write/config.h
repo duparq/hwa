@@ -1,8 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <targets/attiny84.h>
-
 #define HW_SWUART0_PIN_TX		DIABOLO_PIN_TX
 #define HW_SWUART0_PIN_RX		DIABOLO_PIN_RX
 #define HW_SWUART0_AUTOSYNC		5_1
@@ -11,5 +9,7 @@
 #define HW_SWUART0_COUNTER_COMP		compare0
 
 #define UART				hw_swuart0
+
+#include <boards/attiny84.h>
 
 #endif

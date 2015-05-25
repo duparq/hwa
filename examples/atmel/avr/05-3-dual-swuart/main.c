@@ -22,8 +22,9 @@
  *      `hw_counter1` with OSCCAL=0xFF).
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
 
 #if !defined PIN_LED
 # define PIN_LED                hw_pin_7

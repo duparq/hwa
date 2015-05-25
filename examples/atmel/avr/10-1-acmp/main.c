@@ -7,21 +7,20 @@
 /**
  * @example
  *
- * Turn a LED on for 1 ms each time the analog comparator detects an edge
+ *  Turn a LED on for 1 ms each time the analog comparator detects an edge
  *
- * @par targets/attiny84.h
- * @include targets/attiny84.h
+ * @par boards/attiny84.h
+ * @include boards/attiny84.h
  */
 
 
-/*	Target
+/*  Include the board definition (includes hwa.h)
  */
-#include <targets/attiny84.h>
-#include <hwa.h>
+#include <boards/attiny84.h>
 
 
-/*  The pin at which the LED is connected (already done for Arduino
- *  targets). The target also defines the package of the device, then pin
+/*  The pin at which the LED is connected (already defined for Arduino
+ *  boards). The target also defines the package of the device, then pin
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED

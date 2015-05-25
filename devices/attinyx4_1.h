@@ -385,19 +385,19 @@
  * `hw_swuart0`           | @ref atmelavr_swuarta "swuarta" | Software UART
  * `hw_swuart1`           | @ref atmelavr_swuarta "swuarta" | Software UART
  */
-#include "atmel/avr/1.h"
-#include "atmel/avr/corea_1.h"
-#include "atmel/avr/io_1.h"
-#include "atmel/avr/pcica_1.h"
-#include "atmel/avr/wdoga_1.h"
-#include "atmel/avr/c8a_1.h"
-#include "atmel/avr/c16a_1.h"
-#include "atmel/avr/psca_1.h"
-#include "atmel/avr/ocua_1.h"
-#include "atmel/avr/icua_1.h"
-#include "atmel/avr/usia_1.h"
-#include "atmel/avr/acmpa_1.h"
-#include "atmel/avr/ad10a_1.h"
+#include "../classes/atmel/avr/1.h"
+#include "../classes/atmel/avr/corea_1.h"
+#include "../classes/atmel/avr/io_1.h"
+#include "../classes/atmel/avr/pcica_1.h"
+#include "../classes/atmel/avr/wdoga_1.h"
+#include "../classes/atmel/avr/c8a_1.h"
+#include "../classes/atmel/avr/c16a_1.h"
+#include "../classes/atmel/avr/psca_1.h"
+#include "../classes/atmel/avr/ocua_1.h"
+#include "../classes/atmel/avr/icua_1.h"
+#include "../classes/atmel/avr/usia_1.h"
+#include "../classes/atmel/avr/acmpa_1.h"
+#include "../classes/atmel/avr/ad10a_1.h"
 
 #define HWA_DCL					\
   hwa_corea_t	hw_core0 ;			\

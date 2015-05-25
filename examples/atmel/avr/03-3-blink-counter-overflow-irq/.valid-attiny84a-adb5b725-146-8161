@@ -1,0 +1,7 @@
+HW_DEVICE=attiny84a
+hw_syshz=8000000
+PIN_LED=hw_pin_pa6
+COUNTER=hw_counter0
+CLKDIV=64
+COUNTMODE=loop_up
+PERIOD=0.5

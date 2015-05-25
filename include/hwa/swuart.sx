@@ -1,0 +1,18 @@
+
+	;; -*- asm -*-
+
+/* This file is part of the HWA project.
+ * Copyright (c) 2012,2015 Christophe Duparquet.
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @file
+ * @brief Include the implementation of the software uarts.
+ *
+ * This file must be included in your project sources if you want to use the HWA
+ * software UART.
+ */
+
+#include "../../hwa/hwa_1.h"
+#include HW_QUOTE(../../hwa/HW_DEVICE_VENDOR/HW_DEVICE_ARCH/swuarta/hw_swuarts.sx)

@@ -7,16 +7,15 @@
 /**
  * @example
  *
- *      Fade a LED connected to a counter compare output (method 1)
+ * Fade a LED connected to a counter compare output (method 1)
  *
- *      Note: see method 2 in the next example.
+ * Note: see method 2 in the next example.
  */
 
 
-/*      Target
+/*  Include the board definition (includes hwa.h)
  */
-#include <targets/attiny84.h>
-#include <hwa.h>
+#include <boards/attiny84.h>
 
 
 /*  The counter

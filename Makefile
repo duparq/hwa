@@ -35,7 +35,7 @@ doc:
 #
 .PHONY: tests
 tests:
-	@for i in examples/??-?-* ; do echo $$i: 	; \
+	@for i in examples/atmel/avr/??-* ; do echo $$i: 	; \
 	(cd $$i ; if make 2>/dev/null |grep bytes ; then true ; else echo failed ; fi ) ;\
 	 echo ; done
 
@@ -44,8 +44,8 @@ tests:
 #
 .PHONY: validate
 validate:
-	@for i in examples/??-?-* ; do echo $$i		;\
-	(cd $$i ; make -s validate )			;\
+	@for i in examples/atmel/avr/??-* ; do echo $$i		;\
+	(cd $$i ; make -s validate )				;\
 	done
 
 

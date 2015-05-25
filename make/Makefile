@@ -23,11 +23,8 @@ SHELL		= /bin/sh
 
 #  HWA source path and other related include directories
 #
-#HWA		=  $(abspath $(CWD)../..)
-#INCLUDES	+= -I$(HWA) -I$(HWA)/examples
-
 HWA		=  $(abspath $(CWD)..)
-INCLUDES	+= -I$(HWA) -I$(HWA)/examples/atmel/avr
+INCLUDES	+= -I$(HWA)/include -I$(HWA)/examples/atmel/avr
 
 
 #	Output basename and directory

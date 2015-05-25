@@ -12,8 +12,10 @@
  *      Test application: @code ./main.py @endcode
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
+
 
 #if !defined PIN_LED
 #  define PIN_LED               hw_pin_7

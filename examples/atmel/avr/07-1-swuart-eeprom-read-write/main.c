@@ -17,8 +17,9 @@
  * @endcode
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
 
 
 /*  Process received bytes. Valid sequences are:

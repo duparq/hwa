@@ -111,18 +111,19 @@ INPUT                  = README.md				\
 		       	 doxygen/using.md			\
 		       	 doxygen/atmelavr_devices.md		\
 		       	 doxygen/atmelavr_classes.md		\
+			 include/				\
 			 devices/attinyx4_1.h			\
 			 devices/attinyx4_2.h			\
-			 atmel/avr/wdoga_1.h			\
-			 atmel/avr/wdogb_1.h			\
-			 atmel/avr/				\
-			 examples/atmel/avr/targets/README.md				\
-			 examples/atmel/avr/targets/					\
-			 examples/atmel/avr/diabolo/					\
-			 examples/atmel/avr/						\
-			 hwa/								\
-			 hwa.h hwa_2.h hwa_macros.h hwa_interrupts.h hwa.c		\
-		       	 doxygen/hwa_license.md						\
+			 devices/				\
+			 classes/atmel/avr/wdoga_1.h		\
+			 classes/atmel/avr/wdogb_1.h		\
+			 classes/				\
+			 examples/atmel/avr/boards/README.md	\
+			 examples/atmel/avr/boards/		\
+			 examples/atmel/avr/diabolo/		\
+			 examples/atmel/avr/			\
+			 hwa/					\
+		       	 doxygen/hwa_license.md			\
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \

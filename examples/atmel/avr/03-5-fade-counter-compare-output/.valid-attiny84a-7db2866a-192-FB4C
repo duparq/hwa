@@ -1,0 +1,6 @@
+HW_DEVICE=attiny84a
+hw_syshz=8000000
+COUNTER=hw_counter0
+CLKDIV=64
+COUNTMODE=loop_up
+COMPARE=compare0

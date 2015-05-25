@@ -28,8 +28,8 @@
 NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
 (considered as a slave regarding the pin names).
 
-@par targets/attiny84.h
-@include targets/attiny84.h
+@par boards/attiny84.h
+@include boards/attiny84.h
 
 @par config.h
 @include ./config.h
@@ -37,10 +37,11 @@ NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
 @par Main file
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
 
-/*	SPI master (over USI) with software-managed clocking handled by HWA
+/*  SPI master (over USI) with software-managed clocking handled by HWA
  */
 #define SPI             hw_spimaster0_swclk
 #define NRF_CSN         hw_pin_6

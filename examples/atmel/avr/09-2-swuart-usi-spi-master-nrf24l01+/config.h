@@ -1,8 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <targets/attiny84.h>
-
 /*
  *  NOTE: do not leave the RX pin floating. Fix-it to high level through 10 kohm.
  */
@@ -14,5 +12,7 @@
 #define HW_SWUART0_COUNTER_COMP         compare0
 
 #define UART                            hw_swuart0
+
+#include <boards/attiny84.h>
 
 #endif

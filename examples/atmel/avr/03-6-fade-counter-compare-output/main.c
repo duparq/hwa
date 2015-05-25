@@ -7,24 +7,23 @@
 /**
  * @example
  *
- *      Fade a LED connected to a counter compare output (method 2)
+ * Fade a LED connected to a counter compare output (method 2)
  *
- *      Changes versus method 1:
+ * Changes versus method 1:
  *
- *        * define PWM as `hw_counterX_compareY` and use `hw_sup(...)` to
- *          retrieve the name of the counter
+ *   * define PWM as `hw_counterX_compareY` and use `hw_sup(...)` to
+ *     retrieve the name of the counter
  *
- *        * use a HWA context in the ISR and the couple `hwa_nocommit()` /
- *          `hwa_commit()` to write the changes to the hardware
+ *   * use a HWA context in the ISR and the couple `hwa_nocommit()` /
+ *     `hwa_commit()` to write the changes to the hardware
  *
- *        * use a seperate function to store the hardware configuration
- *          into a HWA context
+ *   * use a seperate function to store the hardware configuration
+ *     into a HWA context
  */
 
-/*      Target
+/*  Include the board definition (includes hwa.h)
  */
-#include <targets/attiny84.h>
-#include <hwa.h>
+#include <boards/attiny84.h>
 
 
 /*  The counter

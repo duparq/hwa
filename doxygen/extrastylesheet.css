@@ -33,6 +33,17 @@ div.fragment {
     background-color: #EFF7FF;
 }
 
+
+pre.fragment {
+    margin-left: 40px;
+    margin-right: 40px;
+    background-color: #E3E3E3;
+}
+
 .memitem.glow {
-         box-shadow: 0 0 15px black;
+         /* box-shadow: 0 0 15px black; */
+}
+
+h1.glow, h2.glow, h3.glow, h4.glow, h5.glow, h6.glow {
+    text-shadow: 0 0 15px black ;
 }

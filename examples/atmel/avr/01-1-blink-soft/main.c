@@ -7,19 +7,16 @@
 /**
  * @example
  *
- *      Blink a LED with a software loop
- *
- *	`hw_syshz` is the CPU clock frequency
+ *  Blink a LED with a software loop
  */
 
-/*      Target
+/*  Include the board definition (includes hwa.h)
  */
-#include <targets/attiny84.h>
-#include <hwa.h>
+#include <boards/attiny84.h>
 
 
-/*  The pin at which the LED is connected (already done for Arduino
- *  targets). The target also defines the package of the device, then pin
+/*  The pin at which the LED is connected (already defined for Arduino
+ *  boards). The target also defines the package of the device, then pin
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
@@ -40,6 +37,6 @@ int main ( )
 
   for(;;) {
     hw_toggle( PIN_LED );
-    hw_delay_cycles( PERIOD/2 * hw_syshz );
+    hw_delay_cycles( PERIOD/2 * hw_syshz );  // `hw_syshz` is the CPU clock frequency
   }
 }

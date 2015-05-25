@@ -1,5 +1,0 @@
-
-	;; -*- asm -*-
-
-#include <hwa.h>
-#include HW_QUOTE(HW_DEVICE_VENDOR/HW_DEVICE_ARCH/swuarta/hw_swuarts.sx)

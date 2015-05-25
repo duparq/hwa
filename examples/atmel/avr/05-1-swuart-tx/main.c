@@ -15,8 +15,9 @@
  *      enough.
  */
 
+/*  Include the configuration (includes hwa.h)
+ */
 #include "config.h"
-#include <hwa.h>
 
 
 #define BAUDRATE        115200

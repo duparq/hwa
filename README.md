@@ -12,15 +12,17 @@ into registers with the hope that it will lead to source codes easier to read,
 easier to maintain, and easier to port between different targets.
 
 HWA is not a library. It is implemented at the preprocessing and compilation
-levels and a cache mechanism combined to the compiler's optimizers help HWA
-produce machine code free of any penalty, either in terms of size, execution
-speed or memory used.
+levels and a cache mechanism (the HWA context) combined to the compiler's
+optimizers help HWA produce machine code free of any penalty, either in terms of
+size, execution speed or memory used.
 
 ![](doxygen/hwa_principle.jpeg)
 
 
 Examples
 ========
+
+See @ref examples .
 
 The `examples/` directory contains a few examples aimed at illustrating various
 features of HWA, currently only for Atmel ATtiny44 and ATtiny84 devices
@@ -33,11 +35,11 @@ avr-gcc toolchain for that (avr-libc is not required). You can also run `make
 checks` to verify that the generated code is the same that I obtained.
 
 The `main.c` file of each example gives informations about what it does and how
-you can test it. A Python application is provided with the examples that can
+you can test it. A Python application is provided with the examples that need to
 communicate with the host.
 
-Files stored in the `examples/targets/` directory contain definitions for the
-targets I use: configuration of the microcontroller (fuses...), configuration of
+Files stored in the `examples/boards/` directory contain definitions for the
+boards I use: configuration of the microcontroller (fuses...), configuration of
 the Diabolo bootloader, LED pins used on Arduino boards...
 
 If you want to run one of these examples on a microcontroller in which you

@@ -1,3 +1,0 @@
-HW_DEVICE=attiny84
-hw_syshz=8000000
-PIN_LED=hw_pin_pa6
