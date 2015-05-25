@@ -7,12 +7,13 @@
 /**
  * @page attinyx4 ATtiny24/44/84
  *
+ * See also: @ref atmelavr "HWA definitions common to all Atmel AVRs"
+ *
  * @section attinyx4_includes Including the proper header file
  *
  * You can include:
  * * `<hwa/attiny44a_pu.h>`
  * * `<hwa/attiny84a_pu.h>`
- *
  *
  * @section attinyx4_object Supported objects
  * 
@@ -44,7 +45,7 @@
  * `hw_swuart0`           | @ref atmelavr_swuarta "swuarta" | Software UART
  * `hw_swuart1`           | @ref atmelavr_swuarta "swuarta" | Software UART
  */
-#include "../classes/atmel/avr/1.h"
+#include "../hwa/atmel/avr/1.h"
 #include "../classes/atmel/avr/corea_1.h"
 #include "../classes/atmel/avr/io_1.h"
 #include "../classes/atmel/avr/pcica_1.h"
@@ -807,6 +808,7 @@
 #else
 #  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, or `xosc`.
 #endif
+
 
 #if !defined HW_DEVICE_CLK_PSC
 #  define HW_DEVICE_CLK_PSC				8

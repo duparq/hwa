@@ -9,16 +9,47 @@
  * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
-#define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
+/**
+ * @page atmelavr
+ * @section atmelavr_hw_specials Special instructions
+ *
+ * * @ref hw_asm() "hw_asm(...)"
+ * * @ref hw_reti()
+ * * @ref hw_sleep()
+ * * @ref hw_enable_interrupts()
+ * * @ref hw_disable_interrupts()
+ */
 
+/**
+ * @brief Insert inline assembler code
+ */
 #define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
 
+/**
+ * @brief Return from a naked interrupt service routine.
+ */
 #define hw_reti()			hw_asm("reti")
+
+/**
+ * @brief The `sleep` instruction.
+ */
 #define hw_sleep()			hw_asm("sleep")
+
+/**
+ * @brief Allow program interruption.
+ */
 #define hw_enable_interrupts()		hw_asm("sei")
+
+/**
+ * @brief Prevent program interruption.
+ */
 #define hw_disable_interrupts()		hw_asm("cli")
 
 
+/**
+ * @page atmelavr
+ * * @ref hw_delay_cycles()
+ */
 /**
  * @brief Software loop of \c n system clock cycles.
  * @todo  Only works with compile time constants
@@ -28,11 +59,19 @@
 
 
 /**
+ * @page atmelavr
+ * * @ref hw_streq()
+ */
+/**
  * @brief	True if strings s0 and s1 are equal
  */
 #define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
 
 
+/**
+ * @page atmelavr
+ * * @ref HW_ATOMIC()
+ */
 /**
  * @brief Execute a block with interrupts disabled
  * @hideinitializer
@@ -44,6 +83,17 @@
     { __VA_ARGS__ }				\
     _hw_write_reg(hw_core0,sreg,s) ;		\
   }while(0)
+
+
+/**
+ * @page atmelavr
+ * @section atmelavr_mem Memory segments
+ * `HW_MEM_EEPROM` lets you put data in the EEPROM memory segment:
+ * @code
+ * static uint16_t HW_MEM_EEPROM numbers[16] ;  // 16 16-bit numbers in EEPROM
+ * @endcode
+ */
+#define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
 
 
 /*

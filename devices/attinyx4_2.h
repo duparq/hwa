@@ -4,7 +4,7 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "../classes/atmel/avr/2.h"
+#include "../hwa/atmel/avr/2.h"
 #include "../classes/atmel/avr/corea_2.h"
 #include "../classes/atmel/avr/io_2.h"
 #include "../classes/atmel/avr/pcica_2.h"

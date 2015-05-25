@@ -116,6 +116,8 @@ INPUT                  = README.md				\
 			 classes/atmel/avr/wdoga_1.h		\
 			 classes/atmel/avr/wdogb_1.h		\
 			 classes/				\
+			 hwa/atmel/avr/1.h			\
+			 hwa/atmel/avr/2.h			\
 			 examples/atmel/avr/boards/README.md	\
 			 examples/atmel/avr/boards/		\
 			 examples/atmel/avr/diabolo/		\

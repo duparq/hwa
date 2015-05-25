@@ -6,15 +6,57 @@
 
 /**
  * @file
- * @brief Definitions specific to Atmel AVR devices that do not produce C code
+ * @brief Definitions common to all Atmel AVR devices that do not produce C code
  */
 
+/**
+ * @page atmelavr Atmel AVR common definitions
+ */
 
-/*  Target device is an Atmel AVR.
+/**
+ * @page atmelavr
+ * @section atmelavr_hw_device HW_DEVICE_ common definitions
+ *
+ * The following symbols are defined for all the Atmel AVR devices:
+ * * @ref HW_DEVICE
+ * * @ref HW_DEVICE_PACKAGE
+ * * @ref HW_DEVICE_ATMELAVR
+ * * @ref HW_DEVICE_VENDOR
+ * * @ref HW_DEVICE_ARCH
+ * * @ref hw_syshz
+ */
+#if defined DOXYGEN
+/**
+ * @brief The name of the device
+ */
+#  define HW_DEVICE	<device_name>
+/**
+ * @brief The packaging of the device
+ */
+#  define HW_DEVICE_PACKAGE	<device_package>
+#endif
+
+/**
+ * @brief Defined for all Atmel AVR devices
  */
 #define HW_DEVICE_ATMELAVR
+
+/**
+ * @brief Name of the vendor
+ */
 #define HW_DEVICE_VENDOR		atmel
+
+/**
+ * @brief Architecture name
+ */
 #define HW_DEVICE_ARCH			avr
+
+/**
+ * @brief The CPU clock frequency.
+ */
+#if defined DOXYGEN
+#  define hw_syshz	<cpu cycles per second>
+#endif
 
 
 /*  Keywords
