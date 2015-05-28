@@ -35,17 +35,17 @@
  * :------|:--------|:-------
  * `hw_swuart0_pin_tx`          | hw_pin_pa0                   | Pin used for TXD
  * `hw_swuart0_pin_rx`          | hw_pin_5                     | Pin used for RXD
- * `hw_swuart0_autosync`        | 5_1<br>10_1                  | Synchronization method
+ * `hw_swuart0_autosync`        | sync_5_1<br>sync_10_1        | Synchronization method
  * `hw_swuart0_counter`         | hw_counter0<br>hw_counter1   | Counter used
  * `hw_swuart0_counter_clk_div` | 1<br>8                       | Counter clock division (of `hw_syshz`)
  * `hw_swuart0_counter_compare` | compare0<br>compare1         | Compare unit used for bit timing
  * `hw_swuart0_pin_dbg`         | hw_pin_6                     | Pin used for debugging
  *
- * If `HW_SWUART0_PIN_TX` and `HW_SWUART0_PIN_TX` are the same, the UART will revert to
+ * If `hw_swuart0_pin_tx` and `hw_swuart0_pin_tx` are the same, the UART will revert to
  * RX mode after transmission is completed and transmission will be delayed
  * until reception is completed.<br>
  *
- * Pin-change IRQs associated to `HW_SWUART0_PIN_TX` are serviced by the UART. This
+ * Pin-change IRQs associated to `hw_swuart0_pin_tx` are serviced by the UART. This
  * implies that the same pin-change vector can not be used by the application.
  *
  * `hw_swuart0_pin_dbg` is usefull only for debugging the implementation of the UART
@@ -53,12 +53,12 @@
  *
  * @par Automatic baudrate detection
  *
- * * The `5_1` method waits for a sequence of 5 low-level bits followed by 1
- *   low-level bit. The ASCII character 'A' will do that.
+ * * The `sync_5_1` method waits for a sequence of 5 low-level bits followed by
+ *   1 low-level bit. The ASCII character 'A' will do that.
  *
- * * The `10_1` method waits for a sequence of 10 low-level bits followed by 1
- *   low-level bit. This is done by sending a break byte of 10 low-level bits
- *   followed by a 0xFF byte.
+ * * The `sync_10_1` method waits for a sequence of 10 low-level bits followed
+ *   by 1 low-level bit. This is done by sending a break byte of 10 low-level
+ *   bits followed by a 0xFF byte.
  *
  * Leave `hw_swuart0_autosync` undefined if you do not need this feature.
  */
