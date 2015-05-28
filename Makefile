@@ -29,7 +29,7 @@ superclean: clean
 .PHONY: doc
 doc:
 	@cd $(CWD) && mkdir -p doxygen/html && doxygen doxygen/Doxyfile
-#	@cp doxygen/css.css doxygen/html/doxygen.css
+	@rm -f doxygen/html/*.tmp
 
 #  Compile all the test files
 #

@@ -607,111 +607,34 @@
  *									       *
  *******************************************************************************/
 
-#if defined HW_SWUART0_PIN_RX || defined HW_SWUART0_PIN_TX
 #define _hw_class__swuarta
 
 /*	Instance	                class, id, address
  */
+#if defined hw_swuart0_pin_rx || defined hw_swuart0_pin_tx
+
 #define _hw_swuart0			_swuarta, 1200, 0
-#define _hw_swuart1			_swuarta, 1210, 0
-
-
-/* #if hw_bn(HW_SWUART0_COUNTER) == 8 */
-/* #  define _hw_swuart0_dtn		_crg,  8, (intptr_t)&__hw_swuart0_dtn, 0xFF, 0x00 */
-/* #  define _hw_swuart0_dt0		_crg,  8, (intptr_t)&__hw_swuart0_dt0, 0xFF, 0x00 */
-/* #  define _hw_swuart1_dtn		_crg,  8, (intptr_t)&__hw_swuart1_dtn, 0xFF, 0x00 */
-/* #  define _hw_swuart1_dt0		_crg,  8, (intptr_t)&__hw_swuart1_dt0, 0xFF, 0x00 */
-/* #endif */
-/* #if hw_bn(HW_SWUART0_COUNTER) == 16 */
-/* #  define _hw_swuart0_dtn		_crg, 16, (intptr_t)&__hw_swuart0_dtn, 0xFFFF, 0x0000 */
-/* #  define _hw_swuart0_dt0		_crg, 16, (intptr_t)&__hw_swuart0_dt0, 0xFFFF, 0x0000 */
-/* #  define _hw_swuart1_dtn		_crg, 16, (intptr_t)&__hw_swuart1_dtn, 0xFFFF, 0x0000 */
-/* #  define _hw_swuart1_dt0		_crg, 16, (intptr_t)&__hw_swuart1_dt0, 0xFFFF, 0x0000 */
-/* #endif */
-
-#define _hw_swuart0_dtn _crg, hw_bn(HW_SWUART0_COUNTER), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#define _hw_swuart0_dt0	_crg, hw_bn(HW_SWUART0_COUNTER), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#define _hw_swuart0__st			_hw_ra(hw_core0, gpior0)
+#define _hw_swuart0_dtn _crg, hw_bn(hw_swuart0_counter), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#define _hw_swuart0_dt0	_crg, hw_bn(hw_swuart0_counter), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#define _hw_swuart0__st	_hw_ra(hw_core0, gpior0)
 
 #define _hw_swuart0_sr			_crg, 8, _hw_ra(hw_core0, gpior0), 0xFF, 0x00
 #define _hw_swuart0_synced		_ob1, sr, 1, 0
 
+#endif /* defined hw_swuart0_pin_rx || defined hw_swuart0_pin_tx */
 
-#define _hw_swuart1_dtn	_crg, hw_bn(HW_SWUART1_COUNTER), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#define _hw_swuart1_dt0	_crg, hw_bn(HW_SWUART1_COUNTER), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#if defined hw_swuart1_pin_rx || defined hw_swuart1_pin_tx
 
-#define _hw_swuart1__st			_hw_ra(hw_core0, gpior1)
+#define _hw_swuart1			_swuarta, 1210, 0
+
+#define _hw_swuart1_dtn	_crg, hw_bn(hw_swuart1_counter), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#define _hw_swuart1_dt0	_crg, hw_bn(hw_swuart1_counter), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#define _hw_swuart1__st	_hw_ra(hw_core0, gpior1)
 
 #define _hw_swuart1_sr			_crg, 8, _hw_ra(hw_core0, gpior1), 0xFF, 0x00
 #define _hw_swuart1_synced		_ob1, sr, 1, 0
 
-
-/*	Class regs			class, rw, ra, rwm, rfm
- */
-#if 1
-#if hw_bn(HW_SWUART0_COUNTER) == 8
-//#define _hw__swuarta_dtn		_crg,  8, (intptr_t)&_hw_swuart0_dtn,   0xFF, 0x00
-//#define _hw__swuarta_dt0		_crg,  8, (intptr_t)&_hw_swuart0_dt0,   0xFF, 0x00
-#endif
-#if hw_bn(HW_SWUART0_COUNTER) == 16
-//#define _hw__swuarta_dtn		_crg, 16, (intptr_t)&_hw_swuart0_dtn,   0xFFFF, 0x0000
-//#define _hw__swuarta_dt0		_crg, 16, (intptr_t)&_hw_swuart0_dt0,   0xFFFF, 0x0000
-#endif
-
-/* #define _hw__swuarta_st			_crg,  8, swuart_st,      0xFF,   0x00 */
-
-/* #ifndef swuart_st */
-/* #  define swuart_st			_hw_ra(hw_core0, gpior0) */
-/* #endif */
-
-#else
-
-#define _hw__swuarta_dtn		_ird
-#define _hw__swuarta_dt0		_ird
-#define _hw__swuarta_match		_ird
-#define _hw__swuarta_shift		_ird
-#define _hw__swuarta_nbit		_ird
-#define _hw__swuarta_data		_ird
-#define _hw__swuarta_st			_ird
-
-#define _hw__swuarta_st_stop		_cb1, st, 1, 0
-#define _hw__swuarta_st_idle		_cb1, st, 1, 1
-#define _hw__swuarta_st_rxc		_cb1, st, 1, 2
-#define _hw__swuarta_st_txc		_cb1, st, 1, 3
-#define _hw__swuarta_st_rxtx		_cb1, st, 1, 4
-#define _hw__swuarta_st_wbtx		_cb1, st, 1, 5
-#define _hw__swuarta_st_synced		_cb1, st, 1, 6
-
-#if !defined __ASSEMBLER__
-#  define HW_IPTR(x)	(intptr_t)&x
-#else
-#  define HW_IPTR(x)	x
-#endif
-
-#define _hw_swuart0_dtn			_crg, 16, HW_IPTR(swuart_dtn),   0xFFFF, 0x0000
-#define _hw_swuart0_dt0			_crg, 16, HW_IPTR(swuart_dt0),   0xFFFF, 0x0000
-#define _hw_swuart0_match		_crg, 16, HW_IPTR(swuart_match), 0xFFFF, 0x0000
-#define _hw_swuart0_shift		_crg,  8, HW_IPTR(swuart_shift),   0xFF,   0x00
-#define _hw_swuart0_nbit		_crg,  8, HW_IPTR(swuart_nbit),    0xFF,   0x00
-#define _hw_swuart0_data		_crg,  8, HW_IPTR(swuart_data),    0xFF,   0x00
-#define _hw_swuart0_st			_crg,  8, HW_IPTR(swuart_st),      0xFF,   0x00
-//#define _hw_swuart0_st			_crg,  8, __hw_swuart0_st,             0xFF,   0x00
-//#define _hw_swuart0_st			_xia, hw_core0, gpior0
-
-#define _hw_swuart0_dtn			_crg, 16, HW_IPTR(swuart_dtn),   0xFFFF, 0x0000
-#define _hw_swuart0_dt0			_crg, 16, HW_IPTR(swuart_dt0),   0xFFFF, 0x0000
-#define _hw_swuart0_match		_crg, 16, HW_IPTR(swuart_match), 0xFFFF, 0x0000
-#define _hw_swuart0_shift		_crg,  8, HW_IPTR(swuart_shift),   0xFF,   0x00
-#define _hw_swuart0_nbit		_crg,  8, HW_IPTR(swuart_nbit),    0xFF,   0x00
-#define _hw_swuart0_data		_crg,  8, HW_IPTR(swuart_data),    0xFF,   0x00
-#define _hw_swuart0_st			_crg,  8, HW_IPTR(swuart_st),      0xFF,   0x00
-
-
-/* #ifndef __hw_swuart0_st */
-/* #  define __hw_swuart0_st		_hw_ra(hw_core0, gpior0) */
-/* #endif */
-#endif
-#endif
+#endif /* defined hw_swuart1_pin_rx || defined hw_swuart1_pin_tx */
 
 
 /**

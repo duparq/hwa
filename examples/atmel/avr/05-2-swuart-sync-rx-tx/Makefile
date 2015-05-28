@@ -6,11 +6,11 @@ SOURCES		=	main.c	\
 
 CONFIG		=	HW_DEVICE			\
 			hw_syshz			\
-			HW_SWUART0_PIN_RX		\
-			HW_SWUART0_PIN_TX		\
-			HW_SWUART0_COUNTER		\
-			HW_SWUART0_COUNTER_CLK_DIV	\
-			HW_SWUART0_COUNTER_COMP		\
+			hw_swuart0_pin_rx		\
+			hw_swuart0_pin_tx		\
+			hw_swuart0_counter		\
+			hw_swuart0_counter_clk_div	\
+			hw_swuart0_counter_compare	\
 			PIN_LED				\
 			UART				\
 			OSCCAL
@@ -23,5 +23,5 @@ include ../../../../make/Makefile
 #
 sync:
 	@mkdir -p build
-	@echo 'SYNC=HW_SWUART0_AUTOSYNC\n' >build/sync.c
+	@echo 'SYNC=hw_swuart0_autosync\n' >build/sync.c
 	@$(CPP) $(INCLUDES) -imacros "config.h" build/sync.c | grep '^SYNC='>build/sync

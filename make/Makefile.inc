@@ -133,6 +133,7 @@ CFLAGS		+= $(INCLUDES)
 
 AFLAGS		+= -mmcu=$(DEVICE)
 AFLAGS		+= -Wall
+AFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
 #AFLAGS		+= -Wextra
 AFLAGS		+= $(DEFINES)
 AFLAGS		+= $(INCLUDES)
@@ -164,7 +165,7 @@ OBJECTS		:= $(OBJECTS:.sx=.$(DEVICE).o)
 OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
 
-#	Preprocess
+#	Preprocessor output
 #
 %.cp.c: %.c
 	$(CPP) $(CFLAGS) $< >$@

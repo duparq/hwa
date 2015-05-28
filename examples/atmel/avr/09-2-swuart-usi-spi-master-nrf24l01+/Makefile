@@ -6,11 +6,11 @@ SOURCES		=	main.c	\
 
 CONFIG		=	HW_DEVICE			\
 			hw_syshz			\
-			HW_SWUART0_PIN_RX		\
-			HW_SWUART0_PIN_TX		\
-			HW_SWUART0_COUNTER		\
-			HW_SWUART0_COUNTER_CLK_DIV	\
-			HW_SWUART0_COUNTER_COMP		\
+			hw_swuart0_pin_rx		\
+			hw_swuart0_pin_tx		\
+			hw_swuart0_counter		\
+			hw_swuart0_counter_clk_div	\
+			hw_swuart0_counter_compare	\
 			UART				\
 			SPI				\
 			NRF_CSN

@@ -33,13 +33,13 @@
  *
  * Symbol | Example | Comment
  * :------|:--------|:-------
- * `HW_SWUART0_PIN_TX`          | hw_pin_pa0                   | Pin used for TXD
- * `HW_SWUART0_PIN_RX`          | hw_pin_5                     | Pin used for RXD
- * `HW_SWUART0_AUTOSYNC`        | 5_1<br>10_1                  | Synchronization method
- * `HW_SWUART0_COUNTER`         | hw_counter0<br>hw_counter1   | Counter used
- * `HW_SWUART0_COUNTER_CLK_DIV` | 1<br>8                       | Counter clock division (of `hw_syshz`)
- * `HW_SWUART0_COUNTER_MATCH`   | compare0<br>compare1         | Compare unit used for bit timing
- * `HW_SWUART0_PIN_DBG`         | hw_pin_6                     | Pin used for debugging
+ * `hw_swuart0_pin_tx`          | hw_pin_pa0                   | Pin used for TXD
+ * `hw_swuart0_pin_rx`          | hw_pin_5                     | Pin used for RXD
+ * `hw_swuart0_autosync`        | 5_1<br>10_1                  | Synchronization method
+ * `hw_swuart0_counter`         | hw_counter0<br>hw_counter1   | Counter used
+ * `hw_swuart0_counter_clk_div` | 1<br>8                       | Counter clock division (of `hw_syshz`)
+ * `hw_swuart0_counter_compare` | compare0<br>compare1         | Compare unit used for bit timing
+ * `hw_swuart0_pin_dbg`         | hw_pin_6                     | Pin used for debugging
  *
  * If `HW_SWUART0_PIN_TX` and `HW_SWUART0_PIN_TX` are the same, the UART will revert to
  * RX mode after transmission is completed and transmission will be delayed
@@ -48,7 +48,7 @@
  * Pin-change IRQs associated to `HW_SWUART0_PIN_TX` are serviced by the UART. This
  * implies that the same pin-change vector can not be used by the application.
  *
- * `HW_SWUART0_PIN_DBG` is usefull only for debugging the implementation of the UART
+ * `hw_swuart0_pin_dbg` is usefull only for debugging the implementation of the UART
  * and should be left undefined.
  *
  * @par Automatic baudrate detection
@@ -60,7 +60,7 @@
  *   low-level bit. This is done by sending a break byte of 10 low-level bits
  *   followed by a 0xFF byte.
  *
- * Leave `HW_SWUART0_AUTOSYNC` undefined if you do not need this feature.
+ * Leave `hw_swuart0_autosync` undefined if you do not need this feature.
  */
 
 
@@ -98,35 +98,35 @@ HW_INLINE void _hw_swuart0_config ( hwa_t *hwa __attribute__((unused)) )
 {
   /*  Counter
    */
-#if defined HW_SWUART0_COUNTER
-  hwa_config( HW_SWUART0_COUNTER,
-	      clock,     HW_G2(syshz_div, HW_SWUART0_COUNTER_CLK_DIV),
+#if defined hw_swuart0_counter
+  hwa_config( hw_swuart0_counter,
+	      clock,     HW_G2(syshz_div, hw_swuart0_counter_clk_div),
 	      countmode, loop_up,
 	      top,       max );
 #endif
 
   /*  RX pin
    */
-#if defined HW_SWUART0_PIN_RX
-  hwa_config( HW_SWUART0_PIN_RX, direction, input );
-  hwa_clear_irqf( HW_SWUART0_PIN_RX, change );
-  hwa_turn_irq( HW_SWUART0_PIN_RX, change, on );
-  hwa_write_reg( hw_pcic0, HW_SWUART0_PIN_RX, 1 );
+#if defined hw_swuart0_pin_rx
+  hwa_config( hw_swuart0_pin_rx, direction, input );
+  hwa_clear_irqf( hw_swuart0_pin_rx, change );
+  hwa_turn_irq( hw_swuart0_pin_rx, change, on );
+  hwa_write_reg( hw_pcic0, hw_swuart0_pin_rx, 1 );
 #endif
 
   /*  TX pin
    *
    *	Configure TX pin as state 1 output unless the pin is also used for RX.
    */
-#if defined HW_SWUART0_PIN_TX && hw_id(HW_SWUART0_PIN_TX) != hw_id(HW_SWUART0_PIN_RX)
-  hwa_config( HW_SWUART0_PIN_TX, direction, output );
-  hwa_write( HW_SWUART0_PIN_TX, 1 );
+#if defined hw_swuart0_pin_tx && hw_id(hw_swuart0_pin_tx) != hw_id(hw_swuart0_pin_rx)
+  hwa_config( hw_swuart0_pin_tx, direction, output );
+  hwa_write( hw_swuart0_pin_tx, 1 );
 #endif
 
   /*	DBG pin
    */
-#if defined HW_SWUART0_PIN_DBG
-  hwa_config( HW_SWUART0_PIN_DBG, direction, output );
+#if defined hw_swuart0_pin_dbg
+  hwa_config( hw_swuart0_pin_dbg, direction, output );
 #endif
 }
 
@@ -135,35 +135,35 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 {
   /*  Counter
    */
-#if defined HW_SWUART1_COUNTER
-  hwa_config( HW_SWUART1_COUNTER,
-	      clock,     HW_G2(syshz_div, HW_SWUART1_COUNTER_CLK_DIV),
+#if defined hw_swuart1_counter
+  hwa_config( hw_swuart1_counter,
+	      clock,     HW_G2(syshz_div, hw_swuart1_counter_clk_div),
 	      countmode, loop_up,
 	      top,       max );
 #endif
 
   /*  RX pin
    */
-#if defined HW_SWUART1_PIN_RX
-  hwa_config(HW_SWUART1_PIN_RX, direction, input);
-  hwa_clear_irqf(HW_SWUART1_PIN_RX, change);
-  hwa_turn_irq(HW_SWUART1_PIN_RX, change, on);
-  hwa_write_reg( hw_pcic0, HW_SWUART1_PIN_RX, 1 );
+#if defined hw_swuart1_pin_rx
+  hwa_config(hw_swuart1_pin_rx, direction, input);
+  hwa_clear_irqf(hw_swuart1_pin_rx, change);
+  hwa_turn_irq(hw_swuart1_pin_rx, change, on);
+  hwa_write_reg( hw_pcic0, hw_swuart1_pin_rx, 1 );
 #endif
 
   /*  TX pin
    *
    *	Configure TX pin as state 1 output unless the pin is also used for RX.
    */
-#if defined HW_SWUART1_PIN_TX && hw_id(HW_SWUART1_PIN_TX) != hw_id(HW_SWUART1_PIN_RX)
-  hwa_config(HW_SWUART1_PIN_TX, direction, output);
-  hwa_write(HW_SWUART1_PIN_TX, 1);
+#if defined hw_swuart1_pin_tx && hw_id(hw_swuart1_pin_tx) != hw_id(hw_swuart1_pin_rx)
+  hwa_config(hw_swuart1_pin_tx, direction, output);
+  hwa_write(hw_swuart1_pin_tx, 1);
 #endif
 
   /*	DBG pin
    */
-#if defined HW_SWUART1_PIN_DBG
-  hwa_config( HW_SWUART1_PIN_DBG, direction, output );
+#if defined hw_swuart1_pin_dbg
+  hwa_config( hw_swuart1_pin_dbg, direction, output );
 #endif
 }
 
@@ -178,7 +178,7 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
  * @endcode
  */
 #define _hw_mthd_hw_read__swuarta	, _hw_swuarta_read
-#define _hw_swuarta_read(p,i,a,...)	HW_TX(_##p##_getbyte(),__VA_ARGS__)
+#define _hw_swuarta_read(o,i,a,...)	HW_TX(_##o##_getbyte(),__VA_ARGS__)
 
 extern uint8_t				_hw_swuart0_getbyte ( ) ;
 extern uint8_t				_hw_swuart1_getbyte ( ) ;
@@ -193,7 +193,7 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
  * @endcode
  */
 #define _hw_mthd_hw_write__swuarta	, _hw_swuarta_write
-#define _hw_swuarta_write(p,i,a,b,...)	HW_TX(_##p##_putbyte(b),__VA_ARGS__)
+#define _hw_swuarta_write(o,i,a,v,...)	HW_TX(_##o##_putbyte(v),__VA_ARGS__)
 
 extern void				_hw_swuart0_putbyte ( uint8_t byte ) ;
 extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
@@ -255,15 +255,15 @@ typedef struct {
 extern void					_hw_swuart0_reset ( ) ;
 extern void					_hw_swuart1_reset ( ) ;
 
-#if defined HW_SWUART0_COUNTER
-extern hw_rt(HW_SWUART0_COUNTER,count)		__hw_swuart0_dtn ;
-extern hw_rt(HW_SWUART0_COUNTER,count)		__hw_swuart0_dt0 ;
+#if defined hw_swuart0_counter
+extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dtn ;
+extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dt0 ;
 #endif
 
 
-#if defined HW_SWUART1_COUNTER
-extern hw_rt(HW_SWUART1_COUNTER,count)		__hw_swuart1_dtn ;
-extern hw_rt(HW_SWUART1_COUNTER,count)		__hw_swuart1_dt0 ;
+#if defined hw_swuart1_counter
+extern hw_rt(hw_swuart1_counter,count)		__hw_swuart1_dtn ;
+extern hw_rt(hw_swuart1_counter,count)		__hw_swuart1_dt0 ;
 #endif
 
 /**

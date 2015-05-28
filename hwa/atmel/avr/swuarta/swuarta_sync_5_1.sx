@@ -20,8 +20,9 @@
 	;; Start date is stored in r25:r24
 	;; r26 and SREG are pushed
 	;;
-	.section	.text.sync,"ax",@progbits
-sync:	sbic	RXDPIN, RXDBIT
+	.section	.text.HW_G3(,hw_swuart,sync),"ax",@progbits
+HW_G3(,hw_swuart,sync):
+	sbic	RXDPIN, RXDBIT
 	rjmp	2f
 
 	;; Falling edge
@@ -41,7 +42,7 @@ sync:	sbic	RXDPIN, RXDBIT
 	lds	r26, dtn+1
 	sts	dt0+1, r26
 #	endif
-	rjmp	st99 /* done */
+	rjmp	HW_G3(,hw_swuart,st99) /* done */
 
 
 	;; Rising edge
@@ -141,7 +142,7 @@ sync:	sbic	RXDPIN, RXDBIT
 	;;
 	;;	Add 16 cycles (better sooner than later!)
 	;;
-	DELAY=(CY_STSEI+CY_RXSEI+16)/HW_SWUART0_COUNTER_CLK_DIV
+	DELAY=(CY_STSEI+CY_RXSEI+16)/HW_G2(hw_swuart,counter_clk_div)
 
 #	if COUNT_BN == 8
 	lds	r24, dtn+0
@@ -208,4 +209,4 @@ sync:	sbic	RXDPIN, RXDBIT
 #	endif
 	pop	r28
 
-	rjmp	st99
+	rjmp	HW_G3(,hw_swuart,st99)

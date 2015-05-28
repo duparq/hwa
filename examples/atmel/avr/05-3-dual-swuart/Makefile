@@ -6,18 +6,18 @@ SOURCES		=	main.c	\
 
 CONFIG		=	HW_DEVICE			\
 			hw_syshz			\
-			HW_SWUART0_PIN_RX		\
-			HW_SWUART0_PIN_TX		\
-			HW_SWUART0_AUTOSYNC		\
-			HW_SWUART0_COUNTER		\
-			HW_SWUART0_COUNTER_CLK_DIV	\
-			HW_SWUART0_COUNTER_COMP		\
-			HW_SWUART1_PIN_RX		\
-			HW_SWUART1_PIN_TX		\
-			HW_SWUART1_AUTOSYNC		\
-			HW_SWUART1_COUNTER		\
-			HW_SWUART1_COUNTER_CLK_DIV	\
-			HW_SWUART1_COUNTER_COMP		\
+			hw_swuart0_pin_rx		\
+			hw_swuart0_pin_tx		\
+			hw_swuart0_autosync		\
+			hw_swuart0_counter		\
+			hw_swuart0_counter_clk_div	\
+			hw_swuart0_counter_compare	\
+			hw_swuart1_pin_rx		\
+			hw_swuart1_pin_tx		\
+			hw_swuart1_autosync		\
+			hw_swuart1_counter		\
+			hw_swuart1_counter_clk_div	\
+			hw_swuart1_counter_compare	\
 			PIN_LED
 
 include ../../../../make/Makefile
@@ -27,5 +27,5 @@ include ../../../../make/Makefile
 #
 sync:
 	@mkdir -p build
-	@echo 'SYNC=HW_SWUART0_AUTOSYNC\n' >build/sync.c
+	@echo 'SYNC=hw_swuart0_autosync\n' >build/sync.c
 	@$(CPP) $(INCLUDES) -imacros "config.h" build/sync.c | grep '^SYNC='>build/sync

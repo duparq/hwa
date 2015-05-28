@@ -1,10 +1,10 @@
 HW_DEVICE=attiny84
 hw_syshz=8000000
-HW_SWUART0_PIN_RX=hw_pin_pb0
-HW_SWUART0_PIN_TX=hw_pin_pb0
-HW_SWUART0_COUNTER=hw_counter1
-HW_SWUART0_COUNTER_CLK_DIV=1
-HW_SWUART0_COUNTER_COMP=compare0
+hw_swuart0_pin_rx=hw_pin_pb0
+hw_swuart0_pin_tx=hw_pin_pb0
+hw_swuart0_counter=hw_counter1
+hw_swuart0_counter_clk_div=1
+hw_swuart0_counter_compare=compare0
 UART=hw_swuart0
 COUNTER=hw_counter1
 CAPTURE=capture0

@@ -117,7 +117,7 @@ class Application:
 
         if method=="10_1":
             self.sync = self.sync_10_1
-        elif method=="5_1":
+        elif method=="sync_5_1":
             self.sync = self.sync_5_1
         else:
             cout("Sync method '%s' not supported.\n" % method)

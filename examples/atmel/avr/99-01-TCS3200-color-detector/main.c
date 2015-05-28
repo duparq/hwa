@@ -47,7 +47,7 @@
 
 #define UART            hw_swuart0
 
-#define COUNTER         HW_SWUART0_COUNTER
+#define COUNTER         hw_swuart0_counter
 #define CAPTURE         capture0
 #define COMPARE         compare1
 
