@@ -51,7 +51,6 @@
  * 
  * Name                   | Class                 | Comments
  * :----------------------|-----------------------|:--------------------------------------
- * `hw_spimaster0_swclk`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
  * `hw_swuart0`           | @ref atmelavr_swuarta "swuarta" | Software UART
  * `hw_swuart1`           | @ref atmelavr_swuarta "swuarta" | Software UART
  */

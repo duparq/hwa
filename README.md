@@ -23,9 +23,9 @@ Examples
 ========
 
 The `examples/` directory contains a few examples aimed at illustrating various
-features of HWA, currently only for Atmel ATtiny44 and ATtiny84 devices
-(ATtinyx5 and ATmegax8 should be available soon as they were already supported
-before HWA was last rewritten).
+features of HWA, currently only for Atmel ATtiny44/84 and ATmega328P devices
+(ATtinyx5 should be available soon as it was supported before HWA was last
+rewritten).
 
 As a first check, you can run `make tests` in the HWA base directory to check
 that all examples compile without error. You'll need a properly configured
