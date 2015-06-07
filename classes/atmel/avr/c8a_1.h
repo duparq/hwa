@@ -4,15 +4,9 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/*	Atmel AVR 8-bit timer-counter model 'a'
- *
- *	Used in:	ATtinyX4 counter0
- *			ATtinyX5 counter0
- *			ATmegaX8 counter0
- *
- *	Note: ATtinyX5 has a different cabling of masks and flags.
+/**
+ * @file
  */
-
 
 /**
  * @page atmelavr_c8a Class _c8a: 8-bit counter/timer
@@ -20,9 +14,16 @@
  * A class `_c8a` object is an 8-bit counter/timer with two compare units and
  * waveform generators.
  *
+ * It is used in:
+ * * ATtinyX4 counter0
+ * * ATtinyX5 counter0
+ * * ATmegaX8 counter0
  */
 #define _hw_class__c8a
 
+/*
+ *	Note: ATtinyX5 has a different cabling of masks and flags.
+ */
 
 /**
  * @page atmelavr_c8a

@@ -5,6 +5,11 @@
  */
 
 /**
+ * @file
+ * @brief Declarations for ATtiny24/44/84 that do not produce C code
+ */
+
+/**
  * @page attinyx4 ATtiny24/44/84
  *
  * See also: @ref atmelavr "HWA definitions common to all Atmel AVRs"
@@ -17,25 +22,26 @@
  *
  * @section attinyx4_object Supported objects
  * 
- * Object name            | Class                 | Comments
- * :----------------------|-----------------------|:--------------------------------------
- * `hw_core0`             | @ref atmelavr_corea "corea" | The core
- * `hw_porta`             | @ref atmelavr_io8a "io8a"   | General purpose I/O port A (PORTA)
- * `hw_portb`             | @ref atmelavr_io8a "io8a"   | General purpose I/O port B (PORTB)
- * `hw_wdog0`             | @ref atmelavr_wdoga "wdoga" | Watchdog (WDG)
- * `hw_counter0`          | @ref atmelavr_c8a "c8a"     | 8-bit counter-timer (T0)
- * `hw_counter0_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter0 (OC0A)
- * `hw_counter0_compare1` | @ref atmelavr_ocua "ocua"   | Compare unit 1 of hw_counter0 (OC0B)
- * `hw_counter1`          | @ref atmelavr_c16a "c16a"   | 16-bit counter-timer (T1)
- * `hw_counter1_compare0` | @ref atmelavr_ocua "ocua"   | Compare unit 0 of hw_counter1 (OC1A)
- * `hw_counter1_compare1` | @ref atmelavr_ocua "ocua"    | Compare unit 1 of hw_counter1 (OC1B)
- * `hw_counter1_capture0` | @ref atmelavr_icua "icua"    | Capture unit 0 of hw_counter1 (ICP)
- * `hw_psc0`              | @ref atmelavr_psca "psca"    | hw_counter0/hw_counter1 prescaler (PSC0)
- * `hw_usi0`              | @ref atmelavr_usia "usia"    | Universal Serial Interface
- * `hw_acmp0`             | @ref atmelavr_acmpa "acmpa"  | Analog Comparator
- * `hw_adc0`              | @ref atmelavr_ad10a "ad10a"  | 10-bit Analog to Digital Converter
- * `hw_eeprom0`           | @ref atmelavr_eeproma "eeproma" | Eeprom memory
- * `hw_flash0`            | @ref atmelavr_flasha "flasha"   | Flash memory
+ * Object name           |Class                 | Comments
+ * :---------------------|----------------------|:--------------------------------------
+ * `hw_core0`            |@ref atmelavr_corea "_corea"| The core
+ * `hw_porta`            |@ref atmelavr_io8a "_io8a"  | General purpose I/O port A (PORTA)
+ * `hw_portb`            |@ref atmelavr_io8a "_io8a"  | General purpose I/O port B (PORTB)
+ * `hw_pcic0`            |@ref atmelavr_pcica "_pcica"| Pin change interrupt controller
+ * `hw_wdog0`            |@ref atmelavr_wdoga "_wdoga"| Watchdog (WDG)
+ * `hw_counter0`         |@ref atmelavr_c8a "_c8a"    | 8-bit counter-timer (T0)
+ * `hw_counter0_compare0`|@ref atmelavr_ocua "_ocua"  | Compare unit 0 of hw_counter0 (OC0A)
+ * `hw_counter0_compare1`|@ref atmelavr_ocua "_ocua"  | Compare unit 1 of hw_counter0 (OC0B)
+ * `hw_counter1`         |@ref atmelavr_c16a "_c16a"  | 16-bit counter-timer (T1)
+ * `hw_counter1_compare0`|@ref atmelavr_ocua "_ocua"  | Compare unit 0 of hw_counter1 (OC1A)
+ * `hw_counter1_compare1`|@ref atmelavr_ocua "_ocua"  | Compare unit 1 of hw_counter1 (OC1B)
+ * `hw_counter1_capture0`|@ref atmelavr_icua "_icua"  | Capture unit 0 of hw_counter1 (ICP)
+ * `hw_psc0`             |@ref atmelavr_psca "_psca"  | hw_counter0/hw_counter1 prescaler (PSC0)
+ * `hw_usi0`             |@ref atmelavr_usia "_usia"  | Universal Serial Interface
+ * `hw_acmp0`            |@ref atmelavr_acmpa "_acmpa"| Analog Comparator
+ * `hw_adc0`             |@ref atmelavr_ad10a "_ad10a"| 10-bit Analog to Digital Converter
+ * `hw_eeprom0`          |@ref atmelavr_eeproma "_eeproma"| Eeprom memory
+ * `hw_flash0`           |@ref atmelavr_flasha "_flasha"  | Flash memory
  * 
  * A few additionnal objects are also provided for convenience:
  * 
@@ -59,6 +65,9 @@
 #include "../classes/atmel/avr/acmpa_1.h"
 #include "../classes/atmel/avr/ad10a_1.h"
 
+
+/*  Build the context
+ */
 #define HWA_DCL					\
   hwa_corea_t	hw_core0 ;			\
   hwa_io8a_t	hw_porta ;			\
@@ -76,25 +85,25 @@
  * @page attinyx4
  * @section attinyx4_interrupts Interrupts
  * 
- * Interrupt definition   | Atmel label     | Comments
- * :----------------------|-----------------|------------------------
- * `hw_core0,int0`        | INT0            | External interrupt INT0
- * `hw_pin_*,change`      | PCINT0 / PCINT1 | Pin-change interrupt
- * `hw_wdog0`             | WDT             | Watchdog timeout
- * `hw_counter1,capture0` | TIM1_CAPT       | Capture event on counter 1
- * `hw_counter1,compare0` | TIM1_COMPA      | Compare-match A on counter 1
- * `hw_counter1,compare1` | TIM1_COMPB      | Compare-match B on counter 1
- * `hw_counter1,overflow` | TIM1_OVF        | Counter 1 overflow
- * `hw_counter0,compare0` | TIM0_COMPA      | Compare-match A on counter 0
- * `hw_counter0,compare1` | TIM0_COMPB      | Compare-match B on counter 0
- * `hw_counter0,overflow` | TIM0_OVF        | Counter 0 overflow
- * `hw_acmp0`             | ANA_COMP        | Analog comparator
- * `hw_adc0`              | ADC             | ADC conversion complete
- * `hw_eeprom0`           | EE_RDY          | EEPROM ready
- * `hw_eeprom0,ready`     | EE_RDY          | EEPROM ready
- * `hw_usi0,start`        | USI_STR         | USI start
- * `hw_usi0,overflow`     | USI_OVF         | USI overflow
- * `hw_usi0,txc`          | USI_OVF         | USI overflow (transmit completed)
+ * Interrupt name         | Atmel label | Comments
+ * :----------------------|-------------|------------------------
+ * `hw_core0,int0`        | INT0        | External interrupt INT0
+ * `hw_pin_*,change`      | PCINT0/1    | Pin-change interrupt
+ * `hw_wdog0`             | WDT         | Watchdog timeout
+ * `hw_counter1,capture0` | TIM1_CAPT   | Capture event on counter 1
+ * `hw_counter1,compare0` | TIM1_COMPA  | Compare-match A on counter 1
+ * `hw_counter1,compare1` | TIM1_COMPB  | Compare-match B on counter 1
+ * `hw_counter1,overflow` | TIM1_OVF    | Counter 1 overflow
+ * `hw_counter0,compare0` | TIM0_COMPA  | Compare-match A on counter 0
+ * `hw_counter0,compare1` | TIM0_COMPB  | Compare-match B on counter 0
+ * `hw_counter0,overflow` | TIM0_OVF    | Counter 0 overflow
+ * `hw_acmp0`             | ANA_COMP    | Analog comparator
+ * `hw_adc0`              | ADC         | ADC conversion complete
+ * `hw_eeprom0`           | EE_RDY      | EEPROM ready
+ * `hw_eeprom0,ready`     | EE_RDY      | EEPROM ready
+ * `hw_usi0,start`        | USI_STR     | USI start
+ * `hw_usi0,overflow`     | USI_OVF     | USI overflow
+ * `hw_usi0,txc`          | USI_OVF     | USI overflow (transmit completed)
  */
 #define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    int0,  intf0
 #define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,    irqe0, irqf0
@@ -112,13 +121,13 @@
 #define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,    irqe1, irqf1
 
 #define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    wdie,  wdif
-#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1, icie,  icf
-#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1, ociea, ocfa
-#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1, ocieb, ocfb
-#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1, oie,   ov
-#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0, ociea, ocfa
-#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0, ocieb, ocfb
-#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0, oie,   ov
+#define _hw_irq_hw_counter1_capture0	_irq,  5, hw_counter1, ieic,  ific
+#define _hw_irq_hw_counter1_compare0	_irq,  6, hw_counter1, iecm0, ifcm0
+#define _hw_irq_hw_counter1_compare1	_irq,  7, hw_counter1, iecm1, ifcm1
+#define _hw_irq_hw_counter1_overflow	_irq,  8, hw_counter1, ieov,  ifov
+#define _hw_irq_hw_counter0_compare0	_irq,  9, hw_counter0, iecm0, ifcm0
+#define _hw_irq_hw_counter0_compare1	_irq, 10, hw_counter0, iecm1, ifcm1
+#define _hw_irq_hw_counter0_overflow	_irq, 11, hw_counter0, ieov,  ifov
 #define _hw_irq_hw_acmp0		_irq, 12, hw_acmp0,    ie,    if
 #define _hw_irq_hw_adc0			_irq, 13, hw_adc0,     ie,    if
 #define _hw_irq_hw_eeprom0		_irq, 14, hw_eeprom0,  sie, /* no irq flag */
@@ -135,7 +144,7 @@
  * Some of the pins `hw_pin_pb0`..`hw_pin_pb3` may not be available depending on
  * the fuses configuration.
  *
- * HWA name     | 14pdid      | Class                     | Atmel name
+ * HWA name     | 14pdip      | Class                     | Atmel name
  * -------------|-------------|---------------------------|-----------
  * `hw_port_a`  |             | @ref atmelavr_io8a "io8a" | -
  * `hw_pin_pa0` | `hw_pin_13` | @ref atmelavr_pin1 "pin"  | PA0       
@@ -332,21 +341,15 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-//#define _hw__c8a_ocrb			_crg, 8, 0x5C, 0xFF, 0x00
 #define _hw__c8a_compare1		_crg, 8, 0x5C, 0xFF, 0x00	/* OCRB */
 #define _hw__c8a_imsk			_crg, 8, 0x59, 0x07, 0x00
 #define _hw__c8a_ifr			_crg, 8, 0x58, 0x07, 0x07
-//#define _hw__c8a_ocra			_crg, 8, 0x56, 0xFF, 0x00
 #define _hw__c8a_compare0		_crg, 8, 0x56, 0xFF, 0x00	/* OCRA */
 #define _hw__c8a_ccrb			_crg, 8, 0x53, 0xCF, 0x00
 #define _hw__c8a_count			_crg, 8, 0x52, 0xFF, 0x00
 #define _hw__c8a_ccra			_crg, 8, 0x50, 0xF3, 0x00
 
-//#define _hw__c8a_coma			_cb1, ccra, 2, 6
-//#define _hw__c8a_com0			_cb1, ccra, 2, 6 /* convenient */
 #define _hw__c8a_compare0_mode		_cb1, ccra, 2, 6 /* COMA */
-//#define _hw__c8a_comb			_cb1, ccra, 2, 4
-//#define _hw__c8a_com1			_cb1, ccra, 2, 4 /* convenient */
 #define _hw__c8a_compare1_mode		_cb1, ccra, 2, 6 /* COMB */
 #define _hw__c8a_wgm			_cb2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 
@@ -354,21 +357,21 @@
 #define _hw__c8a_focb			_cb1, ccrb, 1, 6
 #define _hw__c8a_cs			_cb1, ccrb, 3, 0
 
-#define _hw__c8a_ocieb			_cb1, imsk, 1, 2
-#define _hw__c8a_ociea			_cb1, imsk, 1, 1
-#define _hw__c8a_oie			_cb1, imsk, 1, 0
+#define _hw__c8a_iecm1			_cb1, imsk, 1, 2
+#define _hw__c8a_iecm0			_cb1, imsk, 1, 1
+#define _hw__c8a_ieov			_cb1, imsk, 1, 0
 
-#define _hw__c8a_ocfb			_cb1, ifr, 1, 2
-#define _hw__c8a_ocfa			_cb1, ifr, 1, 1
-#define _hw__c8a_ov			_cb1, ifr, 1, 0
+#define _hw__c8a_ifcm1			_cb1, ifr, 1, 2
+#define _hw__c8a_ifcm0			_cb1, ifr, 1, 1
+#define _hw__c8a_ifov			_cb1, ifr, 1, 0
 
 
 /*	Counter0 compare output units
  *
  *	Instance			class, id, counter, ocn, ion
  */
-#define _hw_counter0_compare0		_ocua, 401, hw_counter0, compare0, pin_pb2
-#define _hw_counter0_compare1		_ocua, 402, hw_counter0, compare1, pin_pa7
+#define _hw_counter0_compare0		_ocua, 401, hw_counter0, compare0, hw_pin_pb2
+#define _hw_counter0_compare1		_ocua, 402, hw_counter0, compare1, hw_pin_pa7
 
 /*	Counter0 prescaler
  */
@@ -391,17 +394,9 @@
 #define _hw__c16a_ccrb			_crg,  8, 0x4E,   0xDF,   0x00
 #define _hw__c16a_ccrc			_crg,  8, 0x42,   0xC0,   0x00
 #define _hw__c16a_count			_crg, 16, 0x4C, 0xFFFF, 0x0000
-/* #define _hw__c16a_countl		_crg,  8, 0x4C,   0xFF,   0x00 */
-/* #define _hw__c16a_counth		_crg,  8, 0x4D,   0xFF,   0x00 */
 #define _hw__c16a_compare0		_crg, 16, 0x4A, 0xFFFF, 0x0000	/* OCRA */
-/* #define _hw__c16a_ocral			_crg,  8, 0x4A,   0xFF,   0x00 */
-/* #define _hw__c16a_ocrah			_crg,  8, 0x4B,   0xFF,   0x00 */
 #define _hw__c16a_compare1		_crg, 16, 0x48, 0xFFFF, 0x0000	/* OCRB */
-/* #define _hw__c16a_ocrbl			_crg,  8, 0x48,   0xFF,   0x00 */
-/* #define _hw__c16a_ocrbh			_crg,  8, 0x49,   0xFF,   0x00 */
 #define _hw__c16a_capture0		_crg, 16, 0x44, 0xFFFF, 0x0000	/* ICR */
-/* #define _hw__c16a_icrl			_crg,  8, 0x44,   0xFF,   0x00 */
-/* #define _hw__c16a_icrh			_crg,  8, 0x45,   0xFF,   0x00 */
 #define _hw__c16a_imsk			_crg,  8, 0x2C,   0x27,   0x00
 #define _hw__c16a_ifr			_crg,  8, 0x2B,   0x27,   0x27
 
@@ -409,12 +404,12 @@
 
 /*	Counter1 compare output units	class, id, counter, channel, io
  */
-#define _hw_counter1_compare0		_ocua, 411, hw_counter1, compare0, pin_pa6 /* dil#7 */
-#define _hw_counter1_compare1		_ocua, 412, hw_counter1, compare1, pin_pa5 /* dil#8 */
+#define _hw_counter1_compare0		_ocua, 411, hw_counter1, compare0, hw_pin_pa6 /* dil#7 */
+#define _hw_counter1_compare1		_ocua, 412, hw_counter1, compare1, hw_pin_pa5 /* dil#8 */
 
 /*	Counter1 input capture unit	class, id, counter, reg, io
  */
-#define _hw_counter1_capture0		_icua, 413, hw_counter1, capture0, pin_pa7 /* dil#6 */
+#define _hw_counter1_capture0		_icua, 413, hw_counter1, capture0, hw_pin_pa7 /* dil#6 */
 
 /*	Counter1 prescaler
  */
@@ -433,11 +428,11 @@
 
 /*	Object registers		class, rw, ra, rwm, rfm
  */
-#define _hw_psc0_cr			_crg, 8, 0x43, 0x81, 0x00
+#define _hw__psca_cr			_crg, 8, 0x43, 0x81, 0x00
 
-#define _hw_psc0_psr			_ob1, cr, 1, 0
-#define _hw_psc0_tsm			_ob1, cr, 1, 7
-#define _hw_psc0_tsmpsr			_ob2, cr, 1, 7, 1, cr, 1, 0, 0
+#define _hw__psca_psr			_cb1, cr, 1, 0
+#define _hw__psca_tsm			_cb1, cr, 1, 7
+#define _hw__psca_tsmpsr		_cb2, cr, 1, 7, 1, cr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -623,6 +618,8 @@
 
 #endif /* defined hw_swuart0_pin_rx || defined hw_swuart0_pin_tx */
 
+/*	Instance	                class, id, address
+ */
 #if defined hw_swuart1_pin_rx || defined hw_swuart1_pin_tx
 
 #define _hw_swuart1			_swuarta, 1210, 0
@@ -833,13 +830,13 @@
  *
  * Symbol                 | Valid values | Comments
  * :----------------------|--------------|:-----------
- * `HW_DEVICE_EXTERNAL_RESET`    |`enabled`<br>`disabled`|Wether the device can be reset via its RESET pin
- * `HW_DEVICE_SELF_PROGRAMMING`  |`enabled`<br>`disabled`|Wether the device can write into its Flash program memory
- * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Wether the device can be programmed via the SPI
- * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Wether the EEPROM memory is erased when a chip erase occurs
- * `HW_DEVICE_DEBUG_WIRE`        |`disabled`<br>`enabled`|Wether the Debug Wire is operationnal
- * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`          |Wether the watchdog is always running
- * `HW_DEVICE_CLOCK_OUTPUT`      |`disabled`<br>`enabled`|Wether the device outputs its clock
+ * `HW_DEVICE_EXTERNAL_RESET`    |`enabled`<br>`disabled`|Whether the device can be reset via its RESET pin
+ * `HW_DEVICE_SELF_PROGRAMMING`  |`enabled`<br>`disabled`|Whether the device can write into its Flash program memory
+ * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Whether the device can be programmed via the SPI
+ * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Whether the EEPROM memory is erased when a chip erase occurs
+ * `HW_DEVICE_DEBUG_WIRE`        |`disabled`<br>`enabled`|Whether the Debug Wire is operationnal
+ * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`          |Whether the watchdog is always running
+ * `HW_DEVICE_CLOCK_OUTPUT`      |`disabled`<br>`enabled`|Whether the device outputs its clock
  * `HW_DEVICE_BROWNOUT_DETECTION`|`2500_2900mV`<br>`1700_2000mV`<br>`4100_4500mV`|Brown-out detection level
  *
  */

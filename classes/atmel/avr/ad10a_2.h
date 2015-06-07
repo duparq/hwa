@@ -59,11 +59,11 @@ HW_INLINE void __hwa_commit__ad10a ( hwa_t *hwa, hwa_ad10a_t *p )
  *                         | auto
  *                         | hw_acmp0
  *                         | hw_int0
- *                         | hw_counter0_output0
+ *                         | hw_counter0_compare0
  *                         | hw_counter0_overflow
- *                         | hw_counter1_output1
+ *                         | hw_counter1_compare1
  *                         | hw_counter1_overflow
- *                         | hw_counter1_input0,
+ *                         | hw_counter1_capture,
  * 
  *             vref,         vcc
  *                         | pin_aref
@@ -104,11 +104,11 @@ HW_INLINE void __hwa_commit__ad10a ( hwa_t *hwa, hwa_ad10a_t *p )
  *                             | auto
  *                             | hw_acmp0
  *                             | hw_int0
- *                             | hw_counter0_output0
+ *                             | hw_counter0_compare0
  *                             | hw_counter0_overflow
- *                             | hw_counter1_output1
+ *                             | hw_counter1_compare1
  *                             | hw_counter1_overflow
- *                             | hw_counter1_input0,
+ *                             | hw_counter1_capture,
  * 
  *             vref,             vcc
  *                             | pin_aref

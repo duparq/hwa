@@ -4,13 +4,46 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/** @page atmelavr_coreb
+ *  @section atmelavr_coreb_config Configuration
+ *
+ *  You use the `hwa_config(...)` instruction to configure the core of the
+ *  device. Optionnal arguments are:
+ *
+ *  * `sleep`: whether the `hw_sleep()` instruction will put the core in sleep
+ *     mode or not
+ *
+ *  * `sleep_mode`: the sleep mode
+ *
+ *  @code
+ *  hwa_config( CORE,
+ *
+ *              [sleep,        enabled,
+ *                           | disabled,]
+ *
+ *              [sleep_mode,   idle
+ *                           | adc_noise_reduction
+ *                           | power_down
+ *                           | standby]             );
+ *  @endcode
+ */
 
-#include "hwa_atmelavr__core_2.h"
+/** @page atmelavr_coreb
+ *  @section atmelavr_coreb_sleep Entering sleep
+ *
+ *  If you enabled it, you put the core in sleep mode with the `hw_sleep()`
+ *  instruction:
+ *
+ *  @code
+ *  hw_sleep();
+ *  @endcode
+ */
 
-//#define _hw_mthd_hw_config__coreb		, _hw_config_coreb
+#include "corex_2.h"
+
 #define _hw_mthd_hwa_config__coreb	, _hwa_config_core
 #define _hw_mthd_hw_stat__coreb		, _hw_stat_core
-#define _hw_mthd_hwa_clear__coreb		, _hwa_clear_core
+#define _hw_mthd_hwa_clear__coreb	, _hwa_clear_core
 
 
 HW_INLINE void __hwa_begin__coreb ( hwa_coreb_t *p, intptr_t a )

@@ -1,9 +1,8 @@
 
-/**		-*- asm -*-
- * @file
- * @brief	Implements software UARTS hw_swuart0 hw_swuart1
- */
-
+/*	-*- c -*-
+ *
+ *	Implements software UARTS hw_swuart0 hw_swuart1
+ */	
 
 #include "xinstr.sx"
 #include "swuarta_macros.sx"

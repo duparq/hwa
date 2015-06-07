@@ -4,23 +4,22 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/*	Atmel AVR core model 'a'
+/**
+ * @file
+ * @brief Definitions for Atmel AVR core model 'b' that do not produce C code
  *
- *	Used in: ATtinyX4
- *		 ATtinyX5
+ *	Used in: ATmegaX8
  */
 
-
-/*	Class & methods
+/**
+ * @page atmelavr_coreb Class _coreb: core of the device
+ * A class `_coreb` object is a core of the device.
  */
 #define _hw_class__coreb
-//#define _hw_pop__coreb(p,i,a,...)	__VA_ARGS__
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  /* hwa_r8_t sreg ; */
   hwa_r8_t eimsk ;
   hwa_r8_t eifr ;
   hwa_r8_t mcucr ;

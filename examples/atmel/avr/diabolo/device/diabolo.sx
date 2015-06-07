@@ -5,7 +5,6 @@
 //#include <boards/attiny85.h>
 //#include <boards/arduino_pro_mini.h>
 //#include <boards/nanodccduino.h>
-#include <hwa.h>
 
 #if defined HW_DEVICE_ATMELAVR
 #  include "diabolo-atmelavr.sx"

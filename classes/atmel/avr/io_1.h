@@ -53,6 +53,27 @@ typedef struct {
 
 /**
  * @page atmelavr_pin1
+ * @section atmelavr_pin1_def Creating a pin definition (for developers)
+ *
+ * A `_pin1` class pin definition named `mypin` is created with:
+ *
+ *     #define _hw_pin_mypin	      	 _pin1, id, port, bn, bp
+ *
+ * where:
+ *
+ * * `id` is a unique number identifying the object
+ *
+ * * `port` is the name of the port object holding the pin, e.g.: hw_porta
+ *
+ * * `bn` is the number of consecutive bits the pin definition contains
+ *
+ * * `bp` is the position of the least significant bit of the pin definition in the port
+ *
+ */
+
+
+/**
+ * @page atmelavr_pin1
  * @section atmelavr_pin1_sup Getting the name of the port owning the pin
  *
  * Note: this triggers an error if the pin definition is spread accross
@@ -60,7 +81,7 @@ typedef struct {
  *
  * @code
  * #define PA0		hw_pin_pa0
- * #define PORTA	hw_porta
+ * #define PORTA	hw_port_a
  * #if hw_id(hw_sup(PA0)) != hw_id(PORTA)
  * #  HWA is damaged!
  * #endif
@@ -113,7 +134,7 @@ typedef struct {
  * @page atmelavr_pin1
  * @section atmelavr_pin1_io Getting the name of the i/o pin
  *
- * This is useful for example to check wether two pin names are in fact the same
+ * This is useful for example to check whether two pin names are in fact the same
  * pin, or to get the i/o pin associated to an object (compare output of a
  * counter...).
  *

@@ -4,9 +4,8 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/*	Atmel AVR 8-bit timer-counter model 'a'
- *
- *	Used in: ATtinyX4 (TIM0)	hw_counter0
+/**
+ * @file
  */
 
 HW_INLINE void __hwa_begin__c8a ( hwa_c8a_t *p, intptr_t a )
@@ -95,7 +94,7 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  *             //  The maximum value the counter reaches (the default is `max`)
  *             //
  *            [top,         fixed_0xFF          // Hardware fixed value 0x00FF
- *                        | max                 // Hardware fixed value 0xFFFF
+ *                        | max                 // Hardware fixed value 0x00FF
  *                        | compare0,]          // Value stored in the compare0 unit
  *
  *             //  When the overflow flag is set
@@ -154,8 +153,8 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 #define _hwa_cfc8a_xmode_1(n,_countmode_,...)				\
   HW_G2(_hwa_cfc8a_vmode,HW_IS(,hw_c8a_countmode_##__VA_ARGS__))(n,__VA_ARGS__)
 
-#define _hwa_cfc8a_vmode_0(n,...)					\
-  HW_ERR( "`" HW_QUOTE(__VA_ARGS__) "` is not a valid mode option.")
+#define _hwa_cfc8a_vmode_0(n,v,...)					\
+  HW_ERR("`mode` can be `loop_up`, or `loo_updown`, but not `" #v "`.")
 
 #define _hwa_cfc8a_vmode_1(n,vmode,...)					\
   hwa->n.config.countmode = HW_A1(hw_c8a_countmode_##vmode);			\

@@ -5,41 +5,40 @@
  */
 
 /**
-@example
-
-	A simple interface between software UART and USI configured as SPI
-	master. This is a variant of the previous example, showing how using
-	`hw_spimaster0_swclk` instead of `hw_usi0` can simplify the application.
-
-	Test application: `./main.py`
-
-	The host displays the values of the registers of an nRF24L01+
-	connected to USI. It should be 0x08 for the config register and
-	0x3F for the EN_AA register.
-
-@par nRF24L01+ module pinout:
-@verbatim
-	        Gnd  [1](2)  Vcc
-	 Gnd <- CE   (3)(4)  CSN  -> 
-	 SCL <- SCK  (5)(6)  MOSI -> MISO
-	MOSI <- MISO (7)(8)  IRQ
-@endverbatim
-
-NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
-(considered as a slave regarding the pin names).
-
-@par boards/attiny84.h
-@include boards/attiny84.h
-
-@par config.h
-@include ./config.h
-
-@par Main file
+ * @example
+ * 
+ *  A simple interface between software UART and USI configured as SPI
+ *  master. This is a variant of the previous example, showing how using
+ *  `hw_spimaster0_swclk` instead of `hw_usi0` can simplify the application.
+ * 
+ *  Test application: `./main.py`
+ * 
+ *  The host displays the values of the registers of an nRF24L01+
+ *  connected to USI. It should be 0x08 for the config register and
+ *  0x3F for the EN_AA register.
+ * 
+ * @par nRF24L01+ module wiring:
+ *
+ *              Gnd  [1](2)  Vcc
+ *       Gnd <- CE   (3)(4)  CSN  -> 
+ *       SCL <- SCK  (5)(6)  MOSI -> MISO
+ *      MOSI <- MISO (7)(8)  IRQ
+ * 
+ * NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
+ * (considered as a slave regarding the pin names).
+ * 
+ * @par boards/attiny84.h
+ * @include boards/attiny84.h
+ * 
+ * @par config.h
+ * @include 09-2-swuart-usi-spi-master-nrf24l01+/config.h
+ * 
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
+
 #include "config.h"
+
 
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
@@ -95,40 +94,40 @@ main ( )
        */
       uint8_t ntx = hw_read( UART );
       if ( ntx < 1 || ntx > 33 )
-	goto error ;
+        goto error ;
 
       /*  Number of bytes to send back to talker
        */
       uint8_t nrx = hw_read( UART );
       if ( nrx > 32 )
-	goto error ;
+        goto error ;
 
       /*  Select SPI slave and send data
        */
       hw_write( NRF_CSN, 0 );
       while ( ntx-- ) {
-	c = hw_read( UART );
-	hw_write( SPI, c );
+        c = hw_read( UART );
+        hw_write( SPI, c );
       }
 
       /*  Send reply to talker and deselect SPI slave
        */
       while ( nrx-- ) {
-	hw_write( SPI, 0 );
-	c = hw_read( SPI );
-	hw_write( UART, c );
+        hw_write( SPI, 0 );
+        c = hw_read( SPI );
+        hw_write( UART, c );
       }
       hw_write( NRF_CSN, 1 );
     }
     else {
       /*
        *  First byte of command must be '='. Send '!' as error indicator and
-       *  wait for '\n' as error aknowledgement.
+       *  wait for '\n' as error acknowledgement.
        */
       do {
       error:
-	hw_write( UART, '!' );
-	c = hw_read( UART );
+        hw_write( UART, '!' );
+        c = hw_read( UART );
       } while ( c != '\n' ) ;
     }
   }

@@ -2,3 +2,102 @@ HW_DEVICE=attiny84
 hw_syshz=8000000
 PIN_LED=hw_pin_pa6
 TIMEOUT=250ms
+
+
+build/out.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000004e  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  0000004e  000000c2  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .stab         00000ed0  00000000  00000000  000000c4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      0000210f  00000000  00000000  00000f94  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .comment      00000011  00000000  00000000  000030a3  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	17 c0       	rjmp	.+46     	; 0x32 <__bad_interrupt>
+   4:	16 c0       	rjmp	.+44     	; 0x32 <__bad_interrupt>
+   6:	15 c0       	rjmp	.+42     	; 0x32 <__bad_interrupt>
+   8:	14 c0       	rjmp	.+40     	; 0x32 <__bad_interrupt>
+   a:	13 c0       	rjmp	.+38     	; 0x32 <__bad_interrupt>
+   c:	12 c0       	rjmp	.+36     	; 0x32 <__bad_interrupt>
+   e:	11 c0       	rjmp	.+34     	; 0x32 <__bad_interrupt>
+  10:	10 c0       	rjmp	.+32     	; 0x32 <__bad_interrupt>
+  12:	0f c0       	rjmp	.+30     	; 0x32 <__bad_interrupt>
+  14:	0e c0       	rjmp	.+28     	; 0x32 <__bad_interrupt>
+  16:	0d c0       	rjmp	.+26     	; 0x32 <__bad_interrupt>
+  18:	0c c0       	rjmp	.+24     	; 0x32 <__bad_interrupt>
+  1a:	0b c0       	rjmp	.+22     	; 0x32 <__bad_interrupt>
+  1c:	0a c0       	rjmp	.+20     	; 0x32 <__bad_interrupt>
+  1e:	09 c0       	rjmp	.+18     	; 0x32 <__bad_interrupt>
+  20:	08 c0       	rjmp	.+16     	; 0x32 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+  2e:	02 d0       	rcall	.+4      	; 0x34 <main>
+  30:	0c c0       	rjmp	.+24     	; 0x4a <_exit>
+
+00000032 <__bad_interrupt>:
+  32:	e6 cf       	rjmp	.-52     	; 0x0 <__vectors>
+
+00000034 <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  34:	84 e4       	ldi	r24, 0x44	; 68
+  36:	81 bd       	out	0x21, r24	; 33
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  38:	d6 9a       	sbi	0x1a, 6	; 26
+  for(;;) {
+    /*
+     *  As soon as the watchdog IRQ flag is set, clear
+     *  it and toggle the LED.
+     */
+    if ( hw_read_irqf(hw_wdog0) ) {
+  3a:	01 b4       	in	r0, 0x21	; 33
+  3c:	07 fe       	sbrs	r0, 7
+  3e:	fd cf       	rjmp	.-6      	; 0x3a <main+0x6>
+#else
+      /*  FIX
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+  40:	81 b5       	in	r24, 0x21	; 33
+  42:	80 68       	ori	r24, 0x80	; 128
+  44:	81 bd       	out	0x21, r24	; 33
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  46:	ce 9a       	sbi	0x19, 6	; 25
+  48:	f8 cf       	rjmp	.-16     	; 0x3a <main+0x6>
+
+0000004a <_exit>:
+  4a:	f8 94       	cli
+
+0000004c <__stop_program>:
+  4c:	ff cf       	rjmp	.-2      	; 0x4c <__stop_program>

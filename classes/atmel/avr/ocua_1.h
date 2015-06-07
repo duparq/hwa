@@ -50,7 +50,7 @@
  * @endcode
  */
 #define _hw_mthd_hw_io__ocua			, _hw_io_ocu
-#define _hw_io_ocu(p,i,cn,ch,ion,...)		HW_TX(hw_##ion, __VA_ARGS__)
+#define _hw_io_ocu(p,i,cn,ch,ion,...)		HW_TX(ion, __VA_ARGS__)
 
 
 /*  Compare units are defined in their related counter.

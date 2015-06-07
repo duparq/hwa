@@ -46,11 +46,17 @@
 extern char hw_error ;
 #  define HW_ERR(msg)		hw_error ; _Static_assert(0, "HWA: " msg)
 
-/*	Encapsulate the result of HW_ERR inside a fake function numberred
+/*  Encapsulate the result of HW_ERR inside a fake function numberred
  */
-#define HW_ERRFN(...)		_HW_ERRFN_2(__COUNTER__, __VA_ARGS__)
-#define _HW_ERRFN_2(...)		_HW_ERRFN_3(__VA_ARGS__)
-#define _HW_ERRFN_3(n,...)	void hw_err##n() { uint8_t x = __VA_ARGS__ ; } void hw_err##n##_()
+/* #define HW_ERRFN(...)		_HW_ERRFN_2(__COUNTER__, __VA_ARGS__) */
+/* #define _HW_ERRFN_2(...)	_HW_ERRFN_3(__VA_ARGS__) */
+/* #define _HW_ERRFN_3(n,...)	void hw_err##n() { uint8_t x = __VA_ARGS__ ; } void hw_err##n##_() */
+
+/*  Emit an error (when not inside a function)
+ */
+#define HW_ERROR(...)		_HW_ERROR_2(__COUNTER__, __VA_ARGS__)
+#define _HW_ERROR_2(...)	_HW_ERROR_3(__VA_ARGS__)
+#define _HW_ERROR_3(n,...)	void hw_err_##n() { _Static_assert(0, "HWA: " #__VA_ARGS__) ; }
 
 #endif
 
@@ -399,6 +405,20 @@ extern char hw_error ;
   _m1, o,a, r,rw,ra,rwm,rfm, bn,bp
 
 
+/*  ob1 -> ext
+ */
+//_hw_write__hw_xob1__ext(hw_psc0, cr,1,1,hw_psc1,_psca,0,cr)(1);
+#define _hw_xob1__ext(xo,xr,bn,bp, o,c,a,r)	_hw_xob1ext2(_##xo##_##xr,bn,bp,xo,xr)
+//_hw_write__hw_xob1ext_2(_crg, 8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
+#define _hw_xob1ext2(...)		_hw_xob1ext3(__VA_ARGS__)
+#define _hw_xob1ext3(t,...)		HW_G2(_hw_xob1ext3,HW_IS(,_hw_class_##t))(t,__VA_ARGS__)
+//_hw_xob1ext_1(8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
+#define _hw_xob1ext3_1(t,...)		_hw_xob1ext_##t(__VA_ARGS__)
+//_hw_xob1ext__crg(8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
+#define _hw_xob1ext__crg(rw,ra,rwm,rfm, bn,bp, o, r)	\
+  _m1, o,0, r,rw,ra,rwm,rfm, bn,bp
+
+
 /*  Memory definition of two groups of consecutive bits in one object register
  *	-> _m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
  *	             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
@@ -469,7 +489,7 @@ extern char hw_error ;
 
 
 /**
- * @brief  Address of an object's register (internal use)
+ * @brief  Position of the lsb of a register (internal use)
  * @hideinitializer
 */
 #define _hw_rbp(p,m)			_hw__rbp_2(p,_##p,m)
@@ -480,6 +500,8 @@ extern char hw_error ;
 #define _hw__rbp_6(...)			_hw__rbp_7(__VA_ARGS__)
 #define _hw__rbp_7(t,...)		_hw_bp_##t(__VA_ARGS__)
 
+#define _hw_bp(...)			_hw__bp_1(__VA_ARGS__)
+#define _hw__bp_1(t,...)		_hw_bp_##t(__VA_ARGS__)
 
 /*	hw_ap(...): address, position of least significant bit (method)
  */

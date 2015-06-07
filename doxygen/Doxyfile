@@ -107,28 +107,32 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = README.md				\
-		       	 doxygen/using.md			\
-			 include/				\
-			 devices/attinyx4_1.h			\
-			 devices/attinyx4_2.h			\
-			 devices/				\
-			 classes/atmel/avr/wdoga_1.h		\
-			 classes/atmel/avr/wdogb_1.h		\
-			 classes/				\
-			 hwa/atmel/avr/1.h			\
-			 hwa/atmel/avr/2.h			\
-			 examples/atmel/avr/boards/README.md	\
-			 examples/atmel/avr/boards/		\
-			 examples/atmel/avr/diabolo/		\
-			 examples/atmel/avr/			\
-			 hwa/					\
-		       	 doxygen/hwa_license.md			\
+INPUT                  = README.md					\
+		       	 doxygen/using.md				\
+			 include/					\
+			 devices/attinyx4_1.h				\
+			 devices/attinyx4_2.h				\
+			 devices/					\
+			 classes/atmel/avr/wdoga_1.h			\
+			 classes/atmel/avr/wdogb_1.h			\
+			 classes/					\
+			 hwa/atmel/avr/1.h				\
+			 hwa/atmel/avr/2.h				\
+		       	 doxygen/porting.md				\
+			 examples/atmel/avr/boards/README.md		\
+			 examples/atmel/avr/boards/attiny84.h		\
+			 examples/atmel/avr/boards/attiny85.h		\
+			 examples/atmel/avr/boards/arduino_pro_mini.h	\
+			 examples/atmel/avr/boards/nanodccduino.h	\
+			 examples/atmel/avr/boards/			\
+			 examples/atmel/avr/diabolo/			\
+			 examples/atmel/avr/				\
+			 hwa/						\
+		       	 doxygen/hwa_license.md				\
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.h \
-			 *.sx \
 			 *.py \
                          *.md \
 			 Makefile

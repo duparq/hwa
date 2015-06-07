@@ -7,13 +7,18 @@
 /**
  * @example
  *
- *      Reply to incoming 'A' from the SWUART with swuart timings dtn & dt0.
+ *  Reply to incoming 'A' with software UART registers dtn & dt0.
  *
- *      Test application: @code ./main.py @endcode
+ *  Test application:
+ *
+ *      ./main.py
+ *
+ * @par config.h
+ * @include 05-2-swuart-sync-rx-tx/config.h
+ *
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
 #include "config.h"
 
 
@@ -74,8 +79,8 @@ main ( )
    *    process incomming commands until error
    */
   for(;;) {
-    /*
-     *  Resynchronize UART
+
+    /*  Signal UART desynchronization
      */
     hw_write( PIN_LED, 1 );
 
@@ -89,6 +94,8 @@ main ( )
       hw_sleep();
     hw_write( UART, '$');
 
+    /*  Signal UART synchronization
+     */
     hw_write( PIN_LED, 0 );
 
     /*  Process commands
@@ -106,7 +113,7 @@ main ( )
       if ( byte=='A' ) {
         hw_write( PIN_LED, 1 );
         /*
-         *  Known command: reply with values of UART timings
+         *  Known command: reply with values of UART registers dtn, dt0
          */
         uint16_t dt ;
 
@@ -119,6 +126,7 @@ main ( )
         hw_write( UART, (dt>>8) & 0xFF );
 
         hw_write( UART,'$');
+
         hw_write( PIN_LED, 0 );
       }
       else {

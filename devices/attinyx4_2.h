@@ -122,10 +122,6 @@ HW_INLINE void _hwa_commit_all( hwa_t *hwa )
   _hwa_commit( hw_portb );
 
   _hwa_commit( hw_pcic0 );
-  /* _hwa_commit_r8( hwa, &hwa->hw_pcic0.msk ); */
-  /* _hwa_commit_r8( hwa, &hwa->hw_pcic1.msk ); */
-  /* _hwa_commit_reg_p( &hwa->hw_pcic0, _pcica0, msk ); */
-  /* _hwa_commit_reg_p( &hwa->hw_pcic1, _pcica1, msk ); */
 
   _hwa_commit( hw_counter0 );
   _hwa_commit( hw_counter1 );

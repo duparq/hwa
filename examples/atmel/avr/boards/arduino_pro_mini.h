@@ -31,11 +31,13 @@
  *                7  SCK   13
  *                9  MISO  12
  *
+ * @par  arduino_pro_mini.h
  * @include arduino_pro_mini.h
+ * <br>
  */
 
-/*  These are mostly the values as the board is shipped, except
- *  the bootsection size which is 1024 instead of 2048.
+/*  These are mostly the values as the board is shipped, except the bootsection
+ *  size which is 1024 with Diabolo instead of 2048 with the Arduino bootloader.
  */
 #define HW_DEVICE_BOOT                  bootloader
 #define HW_DEVICE_BOOTSECTION_SIZE      1024
@@ -56,8 +58,10 @@
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-#define DIABOLO_BPS                     115200
+#define DIABOLO_BPS                     115200          // Default transfer rate
 #define DIABOLO_RESET_SIGNAL            DTR
+
+#define ARDUINO
 
 #define PIN_LED                         hw_pin_pb5
 

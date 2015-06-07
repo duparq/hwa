@@ -1,17 +1,15 @@
 
-/*	Atmel AVR watchdog model 'b'
- *
- *	This is the same as model 'a' with a different method for changing the
- *	configuration.
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "hwa_atmelavr__wdog_2.h"
+/**
+ * @file
+ * @brief Atmel AVR watchdog model 'b'
+ */
 
-#define hwa_wdogb_t			hwa_wdog_t
+#include "wdog_2.h"
 
 
 /*  Class methods
@@ -55,11 +53,11 @@ HW_INLINE void __hwa_commit__wdogb ( hwa_t *hwa, hwa_wdogb_t *p )
       _hwa_write_creg( p, _wdogb, wdrf, 0 );
       _hwa_commit_reg_p( p, _wdogb, wdrf );
 
-      _hwa_write_creg( p, _wdogb, wdif, 1 );
+      _hwa_write_creg( p, _wdogb, if, 1 );
       _hwa_write_creg( p, _wdogb, wdce, 1 );
       _hwa_write_creg( p, _wdogb, wde,  1 );
       _hwa_commit_reg_p( p, _wdogb, csr );
-      _hwa_write_creg( p, _wdogb, wdie, 0 );
+      _hwa_write_creg( p, _wdogb, ie, 0 );
       _hwa_write_creg( p, _wdogb, wdce, 0 );
       _hwa_write_creg( p, _wdogb, wde, 0 );
       _hwa_write_creg( p, _wdogb, wdp, 0 );

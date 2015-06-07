@@ -7,15 +7,17 @@
 /**
  * @example
  *
- * @brief Blink a LED using a counter compare interrupt
- *
- *  LLLL
+ *  Blink a LED using a counter compare interrupt
  */
 
 
-/*  Include the board definition (includes hwa.h)
+/*  Include the target board (and device) definitions
  */
-#include <boards/attiny84.h>
+#if !defined BOARD_H
+#  define BOARD_H                       <boards/attiny84.h>
+#endif
+
+#include BOARD_H
 
 
 /*  The pin at which the LED is connected (already defined for Arduino

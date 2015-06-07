@@ -9,7 +9,8 @@
  *
  * @section boards_attiny85 Attiny85
  *
- * A ATTINY85-20PU on a breadboard with a USB/Serial adapter. No crystal.
+ * This is a single ATTINY85-20PU on a breadboard with a USB/Serial adapter. No
+ * crystal.
  *
  * The serial communication uses 1 wire for RX/TX. The AVR communication
  * pin is connected to the RXD pin of the serial adapter and a 1k resistor
@@ -31,7 +32,9 @@
  *                7  SCK   7
  *                9  MISO  6
  *
+ * @par attiny85.h
  * @include attiny85.h
+ * <br>
  */
 
 /*  Device configuration
@@ -49,7 +52,7 @@
  */
 #define DIABOLO_PIN_RX                  hw_pin_2
 #define DIABOLO_PIN_TX                  hw_pin_2
-#define DIABOLO_BPS                     115200
+#define DIABOLO_BPS                     115200          // Default transfer rate
 #define DIABOLO_RESET_SIGNAL            DTR
 
 /*  Include HWA header

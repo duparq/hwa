@@ -7,20 +7,34 @@
 /**
  * @example
  *
- *      Send a '.' on TXD every 0.1s.
+ *  Send a '.' on TXD every 0.1s. Can use hardware UART as well as software
+ *  UART.
  *
- *      Test application: @code ./main.py -b <BAUDRATE> @endcode
+ *  Test application:
  *
- *      Note: this can fail if the system frequency is not known precisely
- *      enough.
+ *      ./main.py -b <BAUDRATE>
+ *
+ *  Note: this can fail if the system frequency is not known precisely
+ *  enough (if using an internal RC oscillator for example).
+ *
+ * @par config.h
+ * @include 05-1-swuart-tx//config.h
+ *
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
 #include "config.h"
 
+/*  The UART and its baudrate
+ *  Use software UART hw_swuart0 for devices that do not have a hardware UART
+ */
+#if hw_id(hw_uart0) != 0
+#  define UART                  hw_uart0
+#else
+#  define UART                  hw_swuart0
+#endif
 
-#define BAUDRATE        115200
+#define BPS                     115200
 
 
 int
@@ -31,9 +45,14 @@ main ( )
    */
   hwa_begin_from_reset();
 
-  /*  Configure the software UART
+  /*  Configure the UART
    */
-  hwa_config( hw_swuart0, baudrate, BAUDRATE );
+  hwa_config( UART,
+              bps,      BPS,
+              databits, 8,
+              parity,   none,
+              stopbits, 1,
+              );
 
   /*  Write this configuration into the hardware
    */
@@ -47,8 +66,8 @@ main ( )
      */
     hw_delay_cycles( 0.1 * hw_syshz );
 
-    /*  Send '.'
+    /*  Send a '.'
      */
-    hw_write( hw_swuart0, '.');
+    hw_write( UART, '.');
   }
 }

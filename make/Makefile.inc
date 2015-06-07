@@ -2,7 +2,7 @@
 #	-*- makefile -*-
 
 #	This makefile is included after DEVICE has been set
-#	There are all the rule to build the binary
+#	There are all the rules required to build the binary
 
 #$(warning "INCLUDE: Makefile.inc")
 
@@ -32,7 +32,7 @@ $(OUTDIR)/%.$(DEVICE).d: %.c
 #	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
-	$(CC) -M $(INCLUDES) $< > $@.tmp; \
+	$(CC) -M $(INCLUDES) $(DEFINES) $< > $@.tmp; \
 	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.$(DEVICE).o $@ : ,g' < $@.tmp > $@; \
 	rm -f $@.tmp
 
@@ -40,7 +40,7 @@ $(OUTDIR)/%.$(DEVICE).d: %.sx
 #	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
-	$(CC) -M $(INCLUDES) $< > $@.tmp; \
+	$(CC) -M $(INCLUDES) $(DEFINES) $< > $@.tmp; \
 	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.$(DEVICE).o $@ : ,g' < $@.tmp > $@; \
 	rm -f $@.tmp
 
@@ -55,7 +55,7 @@ $(OUTDIR)/%.d: %.sx
 #	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
 	@set -e; rm -f $@; \
-	$(CC) -M $(INCLUDES) $< > $@.tmp; \
+	$(CC) -M $(INCLUDES) $(DEFINES) $< > $@.tmp; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.tmp > $@; \
 	rm -f $@.tmp
 #
@@ -247,7 +247,7 @@ endif
 	$(OBJCOPY) --gap-fill=0xFF -R .eeprom -O ihex $^ $@
 
 %.lst : %.elf
-	$(ODUMP) $(ODUMPFLAGS) $^ >$@
+	LANG=C $(ODUMP) $(ODUMPFLAGS) $^ >$@
 
 #  Size of the generated binary
 #

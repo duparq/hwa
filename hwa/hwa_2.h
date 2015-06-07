@@ -11,10 +11,7 @@
 
 /**
  * @ingroup public
- * @brief Begin a HWA session. Allows the use of the `hwa_...(...)`
- * instructions.
- *
- * Create a HWA context to memorize what the `hwa_...(...)` instructions do.
+ * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
  * @hideinitializer
@@ -31,10 +28,7 @@
 
 /**
  * @ingroup public
- * @brief Begin a HWA session. Allows the use of the `hwa_...(...)`
- * instructions.
- *
- * Create a HWA context to memorize what the `hwa_...(...)` instructions do.
+ * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
  *
  * The context is initialized with the values the registers have after a
  * system reset.

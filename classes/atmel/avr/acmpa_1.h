@@ -6,10 +6,6 @@
 
 /**
  * @file
- * @brief Definitions for Atmel AVR analog comparator 'a' that do not produce C code
- *
- *	Used in: ATtinyX4
- *
  */
 
 
@@ -17,6 +13,8 @@
  * @page atmelavr_acmpa Class _acmpa: analog comparator
  *
  * A class `_acmpa` object is an analog comparator.
+ *
+ * Used in: ATtinyX4
  */
 #define _hw_class__acmpa
 

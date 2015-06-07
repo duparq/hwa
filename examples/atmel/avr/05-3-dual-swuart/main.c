@@ -7,23 +7,28 @@
 /**
  * @example
  *
- *      Dual software UARTs, echo what is received from one to both. The first
- *      UART that synchronizes sets the other up.
+ *  Dual software UARTs, echo what is received from one to both. The first
+ *  UART that synchronizes sets the other up.
  *
- *      Test application: @code ./main.py -b BAUDRATE @endcode
+ *  Test application:
  *
- *      This circuit is totally reversible, the LED shows when one UART
- *      resynchronizes.
+ *      ./main.py -b BAUDRATE
  *
- *      Notes:
- *      1. Do not leave an RX pin floating.
- *      2. Choose a moderate baudrate so that the CPU has the time to service
- *      interrupts in a relatively reasonable time (19200 bps seems OK for
- *      `hw_counter1` with OSCCAL=0xFF).
+ *  This circuit is totally reversible, the LED shows when one UART
+ *  resynchronizes.
+ *
+ *  Notes:
+ *  1. Do not leave an RX pin floating.
+ *  2. Choose a moderate baudrate so that the CPU has the time to service
+ *  interrupts in a relatively reasonable time (19200 bps seems OK for
+ *  `hw_counter1` with internal 8 MHz RC oscilltor and OSCCAL=0xFF).
+ *
+ * @par config.h
+ * @include 05-3-dual-swuart/config.h
+ *
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
 #include "config.h"
 
 #if !defined PIN_LED

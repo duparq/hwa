@@ -11,14 +11,17 @@
  *
  *      This can also be used to drive a servo (brown->ground, red->+6V,
  *      yellow->pwm). In that case, it is recommended to use a separated power
- *      supply for the servo as USB RS232 modules may not provide enough
+ *      supply for the servo as an USB RS232 module may not provide enough
  *      current.
  */
 
-
-/*  Include the board definition (includes hwa.h)
+/*  Include the target board definitions (includes hwa.h)
  */
-#include <boards/attiny84.h>
+#if !defined BOARD_H
+#  define BOARD_H               <boards/attiny84.h>
+#endif
+
+#include BOARD_H
 
 
 /*  The pin at which the LED is connected (already defined for Arduino
@@ -30,32 +33,41 @@
 #endif
 
 
-#define PWM_PERIOD              0.020000        /* 50 Hz */
-#define PWM_TMIN                0
-#define PWM_TMAX                PWM_PERIOD
-
-/*  Timings for servo
+/*  The counter used for PWM
  */
-/* #define PWM_TMIN             0.000300        /\*  300 µs min *\/ */
-/* #define PWM_TMAX             0.003000        /\* 3000 µs max *\/ */
-
-
-#define INPUT                   hw_pin_13
-
-/* #define COUNTER                      hw_counter0 */
-/* #define COUNTER_CLK_DIV              1024 */
 #define COUNTER                 hw_counter1
 #define COUNTER_CLK_DIV         8
 
+
+/*  PWM timings
+ */
+#define PWM_PERIOD              0.020000        /* 50 Hz */
+#define PWM_TMIN                0               /* set to 0.000300 for servo */
+#define PWM_TMAX                PWM_PERIOD      /* set to 0.003000 for servo */
+
+
+/*  The analog input pin
+ */
+#if defined HW_DEVICE_ATTINYX4
+#  define INPUT                 hw_pin_13
+#elif defined ARDUINO
+#  define INPUT                 PIN_A0
+#else
+#  define INPUT                 hw_pin_adc0
+#endif
+
+
+/*  Clock divider for the ADC
+ */
 #define ADC_CLK_DIV             128     /* T=~13*128/8=208 µs @8MHz */
 
 
-/*  Range of duty value, top value
+/*  Top value and range of duty value according to PWM timings
  */
 #define count_t                 hw_rt(COUNTER,count)
+#define COUNT_TOP               (uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
 #define COMPARE_MIN             (count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
 #define COMPARE_MAX             (count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
-#define COUNT_TOP               (uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
 
 
 /*  Value to store in the compare unit (must be the same size as the count
@@ -65,7 +77,7 @@ static volatile count_t         duty ;
 
 
 /*  Service ADC "conversion completed" IRQ: compute duty
- *  Make the ISR interruptible so that counter IRQ are services promptly.
+ *  Make the ISR interruptible so that counter IRQs are serviced promptly.
  */
 HW_ISR( hw_adc0, isr_interruptible )
 {
@@ -76,14 +88,14 @@ HW_ISR( hw_adc0, isr_interruptible )
   /*  Low-pass filter
    */
   const uint8_t                 ns = 32 ;       /* # of samples   */
-  static uint16_t               lpf ;           /* sum of samples */
+  static uint16_t               lpfsum ;        /* sum of samples */
 
-  lpf = lpf - (lpf + ns/2)/ns + adc ;
+  lpfsum = lpfsum - (lpfsum + ns/2)/ns + adc ;
 
-  /*  Compute duty in the range [COMPARE_MIN .. COMPARE_MAX] from lpf in the
+  /*  Compute duty in the range [COMPARE_MIN .. COMPARE_MAX] from lpfsum in the
    *  range [0..ns*1023]
    */
-  uint32_t tmp32 = lpf ;
+  uint32_t tmp32 = lpfsum ;
   tmp32 = (tmp32 * (COMPARE_MAX-COMPARE_MIN) + ns*1023/2) / (ns*1023) + COMPARE_MIN ;
 
   count_t tmp = tmp32 ;
@@ -127,7 +139,7 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
 /*  Service compare-match IRQ: turn the LED off
  *
  *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
- *  spare a few bytes with a naked ISR.
+ *  spare a few bytes and have a faster code with a naked ISR.
  */
 #if hw_addr(hw_reg(hw_sup(PIN_LED), port)) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
@@ -178,7 +190,7 @@ int main ( )
     HWA_ERR("PWM_COUNTER can not afford PWM_PERIOD.") ;
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
-   *  The overflow ISR manages the compare IRQ
+   *  The counter overflow ISR manages the compare IRQ
    */
   hwa_config( COUNTER,
               clock,     HW_G2(syshz_div, COUNTER_CLK_DIV),

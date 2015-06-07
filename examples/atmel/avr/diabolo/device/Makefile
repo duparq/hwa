@@ -12,6 +12,6 @@ PROG_HW		=	usbasp
 
 include ../../../../../make/Makefile
 
-$(warning "PATH: $(PATH)")
+# $(warning "PATH: $(PATH)")
 
 install: burn write-fuses

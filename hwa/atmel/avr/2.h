@@ -96,12 +96,6 @@
 #define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
 
 
-/*
- *  FIXME: there is something strange here: why does _hw_write_r8 do almost the
- *  same things as does _hw_commit_r8? How can the fix below solve the problem
- *  from here? All that should be looked after carefully again...
- *  Simplifications in sight!
- */
 /**
  * @brief  Write one hardware register.
  *
@@ -187,6 +181,12 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       *p = (*p & rm) | (v & wm) ;
 #else
       /*  FIX
+       */
+      /*
+       *  FIXME: there is something strange here: why does _hw_write_r8 do almost the
+       *  same things as does _hw_commit_r8? How can the fix below solve the problem
+       *  from here? All that should be looked after carefully again...
+       *  Simplifications in sight!
        */
       uint8_t sm = wm & v ;     /* what has to be set     */
       uint8_t cm = wm & (~v) ;  /* what has to be cleared */

@@ -1,0 +1,224 @@
+HW_DEVICE=attiny84
+hw_syshz=8000000
+hw_swuart0_pin_tx=hw_pin_pb0
+hw_swuart0_counter=hw_counter0
+hw_swuart0_counter_clk_div=1
+hw_swuart0_counter_compare=compare0
+BAUDRATE=BAUDRATE
+
+
+build/out.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000010e  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  0000010e  000001a2  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000005  00800060  00800060  000001a2  2**0
+                  ALLOC
+  3 .stab         00000ee8  00000000  00000000  000001a4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00002115  00000000  00000000  0000108c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .comment      00000011  00000000  00000000  000031a1  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
+   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	18 c0       	rjmp	.+48     	; 0x44 <__vector_9>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_clear_bss>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+
+00000036 <.do_clear_bss_loop>:
+  36:	1d 92       	st	X+, r1
+
+00000038 <.do_clear_bss_start>:
+  38:	a5 36       	cpi	r26, 0x65	; 101
+  3a:	b1 07       	cpc	r27, r17
+  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
+  3e:	2f d0       	rcall	.+94     	; 0x9e <main>
+  40:	64 c0       	rjmp	.+200    	; 0x10a <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <__vector_9>:
+  44:	ff 93       	push	r31
+  46:	ff b7       	in	r31, 0x3f	; 63
+  48:	ff 93       	push	r31
+  4a:	0b c0       	rjmp	.+22     	; 0x62 <_hw_swuart0_tx>
+
+0000004c <_hw_swuart0_next>:
+  4c:	ef 93       	push	r30
+  4e:	e6 b7       	in	r30, 0x36	; 54
+  50:	f0 91 64 00 	lds	r31, 0x0064
+  54:	ef 0f       	add	r30, r31
+  56:	e6 bf       	out	0x36, r30	; 54
+  58:	ef 91       	pop	r30
+  5a:	ff 91       	pop	r31
+  5c:	ff bf       	out	0x3f, r31	; 63
+  5e:	ff 91       	pop	r31
+  60:	18 95       	reti
+
+00000062 <_hw_swuart0_tx>:
+  62:	f0 91 61 00 	lds	r31, 0x0061
+  66:	f6 95       	lsr	r31
+  68:	18 f4       	brcc	.+6      	; 0x70 <_hw_swuart0_tx0>
+
+0000006a <_hw_swuart0_tx1>:
+  6a:	78 94       	sei
+  6c:	c0 9a       	sbi	0x18, 0	; 24
+  6e:	02 c0       	rjmp	.+4      	; 0x74 <_hw_swuart0_txn>
+
+00000070 <_hw_swuart0_tx0>:
+  70:	78 94       	sei
+  72:	c0 98       	cbi	0x18, 0	; 24
+
+00000074 <_hw_swuart0_txn>:
+  74:	f0 93 61 00 	sts	0x0061, r31
+  78:	f0 91 62 00 	lds	r31, 0x0062
+  7c:	f1 50       	subi	r31, 0x01	; 1
+  7e:	f0 93 62 00 	sts	0x0062, r31
+  82:	2a f0       	brmi	.+10     	; 0x8e <_hw_swuart0_txeof>
+  84:	19 f4       	brne	.+6      	; 0x8c <_hw_swuart0_txn+0x18>
+  86:	f3 e0       	ldi	r31, 0x03	; 3
+  88:	f0 93 61 00 	sts	0x0061, r31
+  8c:	df cf       	rjmp	.-66     	; 0x4c <_hw_swuart0_next>
+
+0000008e <_hw_swuart0_txeof>:
+  8e:	9d 9a       	sbi	0x13, 5	; 19
+  90:	f8 94       	cli
+  92:	f9 b7       	in	r31, 0x39	; 57
+  94:	fd 7f       	andi	r31, 0xFD	; 253
+  96:	78 94       	sei
+  98:	f9 bf       	out	0x39, r31	; 57
+  9a:	9b 9a       	sbi	0x13, 3	; 19
+  9c:	d7 cf       	rjmp	.-82     	; 0x4c <_hw_swuart0_next>
+
+0000009e <main>:
+   */
+  hwa_begin_from_reset();
+
+  /*  Configure the UART
+   */
+  hwa_config( UART,
+  9e:	85 e4       	ldi	r24, 0x45	; 69
+  a0:	80 93 64 00 	sts	0x0064, r24
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  a4:	c0 9a       	sbi	0x18, 0	; 24
+  a6:	b8 9a       	sbi	0x17, 0	; 23
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  a8:	81 e0       	ldi	r24, 0x01	; 1
+  aa:	83 bf       	out	0x33, r24	; 51
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  ac:	78 94       	sei
+
+  for(;;) {
+
+    /*  Wait for 0.1s
+     */
+    hw_delay_cycles( 0.1 * hw_syshz );
+  ae:	2f ef       	ldi	r18, 0xFF	; 255
+  b0:	80 e7       	ldi	r24, 0x70	; 112
+  b2:	92 e0       	ldi	r25, 0x02	; 2
+  b4:	21 50       	subi	r18, 0x01	; 1
+  b6:	80 40       	sbci	r24, 0x00	; 0
+  b8:	90 40       	sbci	r25, 0x00	; 0
+  ba:	e1 f7       	brne	.-8      	; 0xb4 <main+0x16>
+  bc:	00 c0       	rjmp	.+0      	; 0xbe <main+0x20>
+  be:	00 00       	nop
+
+    /*  Send a '.'
+     */
+    hw_write( UART, '.');
+  c0:	8e e2       	ldi	r24, 0x2E	; 46
+  c2:	01 d0       	rcall	.+2      	; 0xc6 <_hw_swuart0_putbyte>
+  c4:	f4 cf       	rjmp	.-24     	; 0xae <main+0x10>
+
+000000c6 <_hw_swuart0_putbyte>:
+  c6:	98 e0       	ldi	r25, 0x08	; 8
+
+000000c8 <_hw_swuart0_putbits>:
+  c8:	1c d0       	rcall	.+56     	; 0x102 <_hw_swuart0_wait_ready>
+  ca:	9d 9b       	sbis	0x13, 5	; 19
+  cc:	03 c0       	rjmp	.+6      	; 0xd4 <_hw_swuart0_putbits+0xc>
+  ce:	a8 b7       	in	r26, 0x38	; 56
+  d0:	a1 ff       	sbrs	r26, 1
+  d2:	fd cf       	rjmp	.-6      	; 0xce <_hw_swuart0_putbits+0x6>
+  d4:	80 93 61 00 	sts	0x0061, r24
+  d8:	83 e5       	ldi	r24, 0x53	; 83
+  da:	83 bb       	out	0x13, r24	; 19
+  dc:	90 93 62 00 	sts	0x0062, r25
+  e0:	f8 94       	cli
+  e2:	82 b7       	in	r24, 0x32	; 50
+  e4:	78 94       	sei
+  e6:	c0 98       	cbi	0x18, 0	; 24
+  e8:	90 91 64 00 	lds	r25, 0x0064
+  ec:	93 51       	subi	r25, 0x13	; 19
+  ee:	89 0f       	add	r24, r25
+  f0:	86 bf       	out	0x36, r24	; 54
+  f2:	82 e0       	ldi	r24, 0x02	; 2
+  f4:	88 bf       	out	0x38, r24	; 56
+  f6:	f8 94       	cli
+  f8:	89 b7       	in	r24, 0x39	; 57
+  fa:	82 60       	ori	r24, 0x02	; 2
+  fc:	78 94       	sei
+  fe:	89 bf       	out	0x39, r24	; 57
+ 100:	08 95       	ret
+
+00000102 <_hw_swuart0_wait_ready>:
+ 102:	a9 b7       	in	r26, 0x39	; 57
+ 104:	a1 fd       	sbrc	r26, 1
+ 106:	fd cf       	rjmp	.-6      	; 0x102 <_hw_swuart0_wait_ready>
+ 108:	08 95       	ret
+
+0000010a <_exit>:
+ 10a:	f8 94       	cli
+
+0000010c <__stop_program>:
+ 10c:	ff cf       	rjmp	.-2      	; 0x10c <__stop_program>

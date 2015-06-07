@@ -1,11 +1,14 @@
 
-/*	Atmel AVR counter-timer prescaler model 'a'
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ *
+ * Atmel AVR counter-timer prescaler model 'a'
+ */
 
 /**
  * @page atmelavr_psca Class _psca: counter-timer prescaler

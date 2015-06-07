@@ -8,7 +8,7 @@
  * @page atmelavr_swuarta Class _swuarta: software-emulated UART
  *
  * Class `_swuarta` implements a software UART for 1 or 2-wire communication
- * with automatic baudrate detection capability.
+ * with automatic transfer rate detection capability.
  *
  * `_swuarta` can work with an 8 or 16-bit counter. It can use any pin that
  * provides a pin-change interrupt.
@@ -64,45 +64,17 @@
  */
 
 
-/**
- * @page atmelavr_swuarta
- * @section atmelavr_swuarta_config Configuring the UART
- *
- * @code
- * hwa_config(  UART,
- *             [baudrate, BAUDRATE ]
- *           );
- * @endcode
+/*  Configure the hardware for hw_swuart0
  */
-#define _hw_mthd_hwa_config__swuarta	, _hwa_swuarta_config
-//#define _hwa_swuarta_config(p,i,a,...)	HW_TX(_swuart_configure(hwa),__VA_ARGS__)
-
-
-#define _hw_cfswuarta_baudrate
-
-
-#define _hwa_swuarta_config(p,i,a,...)					\
-  do {									\
-    _##p##_config( hwa );							\
-    HW_G2(_hwa_cfswuarta_xbaud, HW_IS(,_hw_cfswuarta_##__VA_ARGS__))(p,__VA_ARGS__) \
-  } while(0)
-
-#define _hwa_cfswuarta_xbaud_1(p,kw,v,...)		\
-  __##p##_##dtn = hw_syshz / v ;			\
-  HW_TX(,__VA_ARGS__)
-
-#define _hwa_cfswuarta_xbaud_0(p,...)	HW_TX(,__VA_ARGS__)
-
-
 HW_INLINE void _hw_swuart0_config ( hwa_t *hwa __attribute__((unused)) )
 {
   /*  Counter
    */
 #if defined hw_swuart0_counter
   hwa_config( hw_swuart0_counter,
-	      clock,     HW_G2(syshz_div, hw_swuart0_counter_clk_div),
-	      countmode, loop_up,
-	      top,       max );
+  	      clock,     HW_G2(syshz_div, hw_swuart0_counter_clk_div),
+  	      countmode, loop_up,
+  	      top,       max );
 #endif
 
   /*  RX pin
@@ -131,6 +103,8 @@ HW_INLINE void _hw_swuart0_config ( hwa_t *hwa __attribute__((unused)) )
 }
 
 
+/*  Configure the hardware for hw_swuart0
+ */
 HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 {
   /*  Counter
@@ -167,6 +141,146 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 #endif
 }
 
+
+/**
+ * @page atmelavr_swuarta
+ * @section atmelavr_swuarta_config Configuring the UART
+ *
+ * @code
+ * hwa_config( hw_swuart0,
+ *
+ *             //  Transfer rate in bits per second
+ *             //
+ *           [ bps,         BPS, ]
+ *
+ *             //  Number of data bits in frame. Must be `8`.
+ *             //
+ *           [ databits,    8, ]
+ *
+ *             //  Parity. Must be `none`.
+ *             //
+ *           [ parity,      none, ]
+ *
+ *             //  Number of stop bits in frame. Must be `1`.
+ *             //
+ *           [ stopbits,    1, ]
+ *
+ *             //  Whether the UART can receive. Default is `enabled`.
+ *             //
+ *           [ receiver,    enabled | disabled, ]
+ *
+ *             //  Whether the UART can transmit. Must be `enabled`.
+ *             //
+ *           [ transmitter, enabled, ]
+ *
+ *           );
+ * @endcode
+ */
+#define _hw_mthd_hwa_config__swuarta		, _hwa_cfswuarta
+
+#define _hw_is_bps_bps				, 1
+#define _hw_is_databits_databits		, 1
+#define _hw_is_parity_parity			, 1
+#define _hw_is_stopbits_stopbits		, 1
+#define _hw_is_receiver_receiver		, 1
+#define _hw_is_transmitter_transmitter		, 1
+
+#define _hw_swuarta_csz_8			, 0
+
+#define _hw_swuarta_pm_none			, 0
+
+#define _hw_swuarta_sbs_1			, 0
+
+
+#define _hwa_cfswuarta(o,i,a,...)					\
+  do {									\
+    _##o##_config( hwa ); /* configure the counter and i/o */		\
+      HW_G2(_hwa_cfswuarta_kbps, HW_IS(bps,__VA_ARGS__))(o,__VA_ARGS__,) \
+	} while(0)
+
+/*  Process arg `bps`
+ */
+#define _hwa_cfswuarta_kbps_1(o,k,v,...)	\
+  __##o##_##dtn = (hw_syshz + v/2) / v ;	\
+  _hwa_cfswuarta_kbps_0(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kbps_0(o,k,...)					\
+  HW_G2(_hwa_cfswuarta_kdatabits, HW_IS(databits,k))(o,k,__VA_ARGS__)
+
+/*  Process arg `databits`
+ */
+#define _hwa_cfswuarta_kdatabits_1(o,k,v,...)				\
+  HW_G2(_hwa_cfswuarta_vdatabits, HW_IS(,_hw_swuarta_csz_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfswuarta_vdatabits_0(o,v,...)		\
+  HW_ERR("`databits` must be `8`, but not `" #v "`.")
+
+#define _hwa_cfswuarta_vdatabits_1(o,v,...)	\
+  _hwa_cfswuarta_kdatabits_0(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kdatabits_0(o,k,...)				\
+  HW_G2(_hwa_cfswuarta_kparity, HW_IS(parity,k))(o,k,__VA_ARGS__)
+
+/*  Process arg `parity`
+ */
+#define _hwa_cfswuarta_kparity_1(o,k,v,...)				\
+  HW_G2(_hwa_cfswuarta_vparity, HW_IS(,_hw_swuarta_pm_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfswuarta_vparity_0(o,v,...)		\
+  HW_ERR("`parity` must be `none`, but not `" #v "`.")
+
+#define _hwa_cfswuarta_vparity_1(o,v,...)	\
+  _hwa_cfswuarta_kparity_0(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kparity_0(o,k,...)				\
+  HW_G2(_hwa_cfswuarta_kstopbits, HW_IS(stopbits,k))(o,k,__VA_ARGS__)
+
+/*  Process arg `stopbits`
+ */
+#define _hwa_cfswuarta_kstopbits_1(o,k,v,...)				\
+  HW_G2(_hwa_cfswuarta_vstopbits, HW_IS(,_hw_swuarta_sbs_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfswuarta_vstopbits_0(o,v,...)		\
+  HW_ERR("`stopbits` must be `1`, but not `" #v "`.")
+
+#define _hwa_cfswuarta_vstopbits_1(o,v,...)	\
+  _hwa_cfswuarta_kstopbits_0(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kstopbits_0(o,k,...)				\
+  HW_G2(_hwa_cfswuarta_kreceiver, HW_IS(receiver,k))(o,k,__VA_ARGS__)
+
+/*  Process arg `receiver`
+ */
+#define _hwa_cfswuarta_kreceiver_1(o,k,v,...)				\
+  HW_G2(_hwa_cfswuarta_vreceiver, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfswuarta_vreceiver_0(o,v,...)				\
+  HW_ERR("`receiver` can be `enabled`, or `disabled`, but not `" #v "`.")
+
+#define _hwa_cfswuarta_vreceiver_1(o,v,...)		\
+  _hwa_turn_irq(HW_G2(o,pin_rx),change,hw_state_##v));	\
+  _hwa_cfswuarta_kreceiver_0(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kreceiver_0(o,k,...)				\
+  HW_G2(_hwa_cfswuarta_ktransmitter, HW_IS(transmitter,k))(o,k,__VA_ARGS__)
+
+/*  Process arg `transmitter`
+ */
+#define _hwa_cfswuarta_ktransmitter_1(o,k,v,...)			\
+    HW_G2(_hwa_cfswuarta_vtransmitter, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfswuarta_vtransmitter_0(o,v,...)				\
+  HW_ERR("`transmitter` can be `enabled`, or `disabled`, but not `" #v "`.")
+
+#define _hwa_cfswuarta_vtransmitter_1(o,v,...)	\
+  hwa->o.config.txen = HW_A1(hw_state_##v);	\
+  _hwa_cfswuarta_end(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_ktransmitter_0(o,...)	\
+  _hwa_cfswuarta_end(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_end(o,...)		\
+  HW_TX(,__VA_ARGS__)
 
 
 /**
@@ -213,10 +327,10 @@ extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
  *
  * @code
  * uint8_t byte ;
- * hw_stat_t( UART ) st ;       // Structure of UART status
- * st = hw_stat( UART );        // Read the status
- * if ( st.rxc )                // Reception complete?
- *   byte = hw_read( UART );
+ * hw_stat_t( hw_swuart0 ) st ;   // Structure of UART status
+ * st = hw_stat( hw_swuart0 );    // Read the status
+ * if ( st.rxc )                  // Reception complete?
+ *   byte = hw_read( hw_swuart0 );
  * @endcode
  */
 typedef struct {
@@ -228,14 +342,14 @@ typedef struct {
   unsigned int	wbtx    : 1 ;
   unsigned int	synced  : 1 ;
   unsigned int  __7     : 1 ;
-} swuart_status_t ;
+} _hw_swuarta_stat_t ;
 
-#define _hw_mthd_hw_stat_t__swuarta	, _hw_swuarta_stat_t
-#define _hw_swuarta_stat_t(p,i,a,...)	HW_TX( swuart_status_t, __VA_ARGS__)
+#define _hw_mthd_hw_stat_t__swuarta	, _hw_sttswuarta
+#define _hw_sttswuarta(p,i,a,...)	HW_TX( _hw_swuarta_stat_t, __VA_ARGS__)
 
-#define _hw_mthd_hw_stat__swuarta	, _hw_swuarta_stat
-//#define _hw_swuarta_stat(p,i,a,...)	HW_TX( (*(volatile swuart_status_t*)swuart_st), __VA_ARGS__)
-#define _hw_swuarta_stat(p,i,a,...)	HW_TX( (*(volatile swuart_status_t*)_##p##__st), __VA_ARGS__)
+#define _hw_mthd_hw_stat__swuarta	, _hw_stswuarta
+#define _hw_stswuarta(p,i,a,...)					\
+  HW_TX( (*(volatile _hw_swuarta_stat_t*)_##p##__st), __VA_ARGS__)
 
 
 /**
@@ -259,7 +373,6 @@ extern void					_hw_swuart1_reset ( ) ;
 extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dtn ;
 extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dt0 ;
 #endif
-
 
 #if defined hw_swuart1_counter
 extern hw_rt(hw_swuart1_counter,count)		__hw_swuart1_dtn ;

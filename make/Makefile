@@ -16,6 +16,14 @@ ifeq (,$(SOURCES))
 endif
 
 
+#  Define a symbol BOARD that can be used to override the default
+#  target device in the examples
+#
+ifneq (,$(BOARD))
+  DEFINES += -DBOARD_H=\<boards/$(BOARD).h\>
+endif
+
+
 .SUFFIXES:
 .SUFFIXES: .c .o
 SHELL		= /bin/sh
@@ -43,14 +51,14 @@ INC_HWA		= $(OUTDIR)/$(OUT).hwa
 -include $(INC_HWA)
 
 
-#  DEVICE could not be determined. Stop here.
+#  Stop here if DEVICE could not be determined
 #
 ifeq (HW_DEVICE,$(DEVICE))
   $(error "HW_DEVICE not defined (or preprocessing errors)")
 endif
 
 
-#  DEVICE is known, include Makefile.inc
+#  Once the DEVICE is known, we can include Makefile.inc
 #
 ifneq (,$(DEVICE))
   include $(CWD)Makefile.inc
@@ -61,8 +69,8 @@ endif
 #
 #	Build a .c file that will retrieve the informations we're looking for.
 #
-#	Double quotes are required for complex values for make to not show an
-#	error message when it reads it.
+#	Quoting with HW_QUOTE is required for make to not show an error message
+#	when it reads complex values.
 #
 $(INC_HWA).c:
 #	@echo "RULE: $@"
@@ -82,7 +90,7 @@ $(INC_HWA).c:
 $(INC_HWA): $(SOURCES) $(INC_HWA).c
 #	@echo "RULE: $@: $^"
 	@set -e ; for f in  $(SOURCES) ; do			\
-	  $(CPP) $(INCLUDES) -imacros "$$f" $(INC_HWA).c | grep '^DEVICE' >$@	;\
+	  $(CPP) $(INCLUDES) $(DEFINES) -imacros "$$f" $(INC_HWA).c | grep '^DEVICE' >$@ ;\
 	  . $@							;\
 	  test "$$DEVICE" = HW_DEVICE || break			;\
 	done
@@ -120,13 +128,13 @@ IMACROS = $(foreach S, $(SOURCES),-imacros $S)
 #
 $(CFG): $(CFG).c
 #	@echo "RULE: $@: $^  IMACROS=$(IMACROS)"
-	@$(CPP) $(INCLUDES) $(IMACROS) $< | grep '^_.*' | sed -e 's/_//' >$@
+	@$(CPP) $(INCLUDES) $(DEFINES) $(IMACROS) $< | grep '^_.*' | sed -e 's/_//' >$@
 
 
 #  Validate a project: store configuration, size and CRC
 #
 .PHONY: validate
-validate: $(CFG) $(OUTDIR)/$(OUT).bin
+validate: $(CFG) $(OUTDIR)/$(OUT).bin $(OUTDIR)/$(OUT).lst
 #	@echo RULE: $@: $^
 	@set -e										;\
 	S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
@@ -134,13 +142,15 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin
 	O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
 	rm -f .valid-$(DEVICE)-$$S_CRC-*						;\
 	cp $(CFG) .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC				;\
+	echo >>.valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC				;\
+	cat $(OUTDIR)/$(OUT).lst >>.valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC		;\
 	echo Validation: .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC
 
 
 #  Check that the CRC is unchanged for a given configuration
 #
 .PHONY: check
-check: $(CFG)
+rem_check: $(CFG)
 	@if make $(OUTDIR)/$(OUT).bin >/dev/null 2>&1 ; then				\
 	  S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
 	  O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
@@ -150,14 +160,34 @@ check: $(CFG)
 	  else										\
 	    if test -f .valid-$(DEVICE)-$$S_CRC-* ; then				\
 	      echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
+	      exit 1									;\
 	    else									\
-	      echo "FAIL: no validation found (.valid-$(DEVICE)-$$S_CRC-*)"		;\
+	      echo "not tested"								;\
 	    fi										;\
-	    exit 1									;\
 	  fi										;\
 	else										\
 	  echo "make FAILED"								;\
 	  exit1										;\
+	fi
+
+check: $(CFG)
+	@S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
+	if test -f .valid-$(DEVICE)-$$S_CRC-* ; then					\
+	  if make $(OUTDIR)/$(OUT).bin >/dev/null 2>&1 ; then				\
+	    O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
+	    O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
+	    if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
+	      echo passed								;\
+	    else									\
+	      echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
+	      exit 1									;\
+	    fi										;\
+	  else										\
+	    echo "make FAILED"								;\
+	    exit1									;\
+	  fi										;\
+	else										\
+	  echo "no validation data"							;\
 	fi
 
 

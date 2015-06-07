@@ -7,54 +7,61 @@
 /**
  * @example
  *
- *	Synchronize the software UART
- *	Send the application '$' prompt
- *	Infinite loop:
- *	  Wait for: c + al + ah + n + '\n'
- *	  IF c=='f' THEN read n bytes from Flash address al:ah
- *        IF c=='F' THEN write n at Flash address al:ah
+ * Process read/write commands on the Flash memory. Algorithm:
  *
- *	Test application: @code
- *	     ./main.py --help
- *	     ./main.py read 0 1024
- *	     ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING THE APPLICATION OR THE BOOTLOADER! @endcode
+ *     Synchronize the software UART.
+ *     Send the application '$' prompt
+ *     Infinite loop:
+ *       Wait for: c + al + ah + n + '\n'
+ *       IF c=='f' THEN read n bytes from Flash address al:ah
+ *       IF c=='F' THEN write n at Flash address al:ah
  *
- *	Note: if you installed Diabolo, writing into the Flash memory below
- *	Diabolo will corrupt the application CRC and Diabolo will not start the
- *	application anymore after RESET (only a few 0xFF bytes above Diabolo can
- *	be modified without changing the CRC). If the application does not
- *	start, you can still dump the Flash content with:
+ *  Test application:
  *
- *	@code
- *		diabolo.py --read-flash --hexdump
- *	@endcode
+ *      ./main.py --help
+ *      ./main.py read 0 1024
+ *      ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING THE APPLICATION OR THE BOOTLOADER!
+ *
+ *  Note: if you have Diabolo installed, writing into the Flash memory below
+ *  Diabolo will corrupt the application CRC and Diabolo will not start the
+ *  application anymore after RESET. Oonly a few 0xFF bytes above Diabolo can be
+ *  modified without changing the CRC. If the application does not start, you
+ *  can still dump the Flash content with:
+ *
+ *      diabolo.py --read-flash --hexdump
+ *
+ *  FIXME: the Diabolo host application should help repairing the CRC.
+ *
+ * @par config.h
+ * @include 08-1-swuart-flash-read-write/config.h
+ *
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
 #include "config.h"
 
 
 /*  Process received bytes. Valid sequences are:
  *
- *  'f'+al+ah+n+'\n'	Read n bytes of eeprom from address al:ah
- *  'F'+al+ah+v+'\n'	Write v in eeprom at address al:ah
+ *  'f'+al+ah+n+'\n'    Read n bytes of Flash from address al:ah
+ *  'F'+al+ah+v+'\n'    Write v in Flash at address al:ah
  */
 static void process ( uint8_t byte )
 {
-  static uint8_t	bcount = 0 ;
+  static uint8_t        bcount = 0 ;
   static union {
-    uint8_t		buf[4] ;
+    uint8_t             buf[4] ;
     struct {
-      uint8_t		cmd ;
-      intptr_t		addr ;
-      uint8_t		n ;
+      uint8_t           cmd ;
+      //      intptr_t          addr ;
+      uint16_t          addr ;
+      uint8_t           n ;
     } ;
   } buf ;
 
   /*  Buffer for one Flash page
    */
-  static uint8_t	page[HW_DEVICE_FLASH_PAGE_SIZE] ;
+  static uint8_t        page[HW_DEVICE_FLASH_PAGE_SIZE] ;
 
   if ( bcount == 0 ) {
     buf.cmd = byte ;
@@ -64,40 +71,40 @@ static void process ( uint8_t byte )
   else {
     bcount = 0 ;
     if ( byte == '\n'
-	 && buf.addr < HW_DEVICE_FLASH_SIZE ) {
+         && buf.addr < HW_DEVICE_FLASH_SIZE ) {
       if ( buf.cmd == 'F' ) {
-	/*
-	 *  Write data
-	 */
-	uint8_t  zbyte = buf.addr & (HW_DEVICE_FLASH_PAGE_SIZE-1) ;
-	intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
+        /*
+         *  Write data
+         */
+        uint8_t  zbyte = buf.addr & (HW_DEVICE_FLASH_PAGE_SIZE-1) ;
+        intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
 
-	/*  Get the content of the page to be modified and make the required
-	 *  change
-	 */
-	hw_read_bytes( hw_flash0, page, zpage, sizeof(page) );
-	page[ zbyte ] = buf.n ;
+        /*  Get the content of the page to be modified and make the required
+         *  change
+         */
+        hw_read_bytes( hw_flash0, page, zpage, sizeof(page) );
+        page[ zbyte ] = buf.n ;
 
-	/*  Process the reprogramming of the page. Some more checkings could be
-	 *  done in order to not erase or program blank pages.
-	 */
-	hw_command( hw_flash0, load_page, page );
-	hw_command( hw_flash0, erase_page, zpage );
-	hw_command( hw_flash0, write_page, zpage );
+        /*  Process the reprogramming of the page. Some more checkings could be
+         *  done in order to not erase or program blank pages.
+         */
+        hw_command( hw_flash0, load_page, page );
+        hw_command( hw_flash0, erase_page, zpage );
+        hw_command( hw_flash0, write_page, zpage );
 
-	hw_write( UART, '$');
-	return ;
+        hw_write( UART, '$');
+        return ;
       }
       else if ( buf.cmd == 'f' ) {
-	/*
-	 *  Read data
-	 */
-	while ( buf.n-- ) {
-	  uint8_t byte = hw_read( hw_flash0, buf.addr++ );
-	  hw_write( UART,  byte );
-	}
-	hw_write( UART, '$');
-	return ;
+        /*
+         *  Read data
+         */
+        while ( buf.n-- ) {
+          uint8_t byte = hw_read( hw_flash0, buf.addr++ );
+          hw_write( UART,  byte );
+        }
+        hw_write( UART, '$');
+        return ;
       }
     }
     hw_write( UART, '!');
@@ -121,8 +128,8 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle );
+              sleep,      enabled,
+              sleep_mode, idle );
 
   /*  Write this configuration into the hardware
    */

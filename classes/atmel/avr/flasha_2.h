@@ -10,11 +10,11 @@
  * @section atmelavr_flasha_read1 Reading one byte from Flash memory
  *
  * @code
- * uint8_t byte = hw_read( FLASH, addr ); // Read byte at address addr
+ * uint8_t byte = hw_read( hw_flash0, addr ); // Read byte at address addr
  * @endcode
  */
 #define _hw_mthd_hw_read__flasha		, _hw_read_flasha
-#define _hw_read_flasha(p,i,a,addr,...)		HW_TX( _hw_flashardbyte(addr), __VA_ARGS__)
+#define _hw_read_flasha(o,i,a,addr,...)		HW_TX( _hw_flashardbyte(addr), __VA_ARGS__)
 
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 {
@@ -36,13 +36,13 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
  * @code
  * uint8_t dst[10];
  * uint8_t count = sizeof(dst);
- * hw_read_bytes( FLASH, dst, addr, count ); // Copy count bytes from Flash address addr to dst
+ * hw_read_bytes( hw_flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
  * @endcode
  */
 
 #define _hw_mthd_hw_read_bytes__flasha		, _hw_read_bytes_flasha
 
-#define _hw_read_bytes_flasha(p,i,a,dst,addr,n,...)	\
+#define _hw_read_bytes_flasha(o,i,a,dst,addr,n,...)	\
   HW_TX( _hw_flashardbytes(dst,addr,n), __VA_ARGS__)
 
 /**
@@ -100,14 +100,14 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 #define _hw_flasha_command_erase_page		, erase_page
 
 
-#define _hw_command_flasha(p,i,a,...)					\
-  HW_G2(_hw_flasha,HW_IS(,_hw_flasha_command_##__VA_ARGS__))(p,__VA_ARGS__)
+#define _hw_command_flasha(o,i,a,...)					\
+  HW_G2(_hw_flasha,HW_IS(,_hw_flasha_command_##__VA_ARGS__))(o,__VA_ARGS__)
 
-#define _hw_flasha_1(p,cmd,...)			_hw_flasha_##cmd(p,__VA_ARGS__)
+#define _hw_flasha_1(o,cmd,...)			_hw_flasha_##cmd(o,__VA_ARGS__)
 
-#define _hw_flasha_load_page(p,src,...)		HW_TX(_hw_flasha_ldpgbf(p,src),__VA_ARGS__)
-#define _hw_flasha_erase_page(p,ptr,...)	HW_TX(_hw_flasha_pgers(p,ptr),__VA_ARGS__)
-#define _hw_flasha_write_page(p,ptr,...)	HW_TX(_hw_flasha_pgwrt(p,ptr),__VA_ARGS__)
+#define _hw_flasha_load_page(o,src,...)		HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
+#define _hw_flasha_erase_page(o,ptr,...)	HW_TX(_hw_flasha_pgers(o,ptr),__VA_ARGS__)
+#define _hw_flasha_write_page(o,ptr,...)	HW_TX(_hw_flasha_pgwrt(o,ptr),__VA_ARGS__)
 
 
 #if !defined HW_DEVICE_BOOTRST
@@ -115,57 +115,17 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  * Device without boot section: the MCU is halted when the flash memory is
  * busy, no need to wait for readiness
  */
-
-/**
- * @page atmelavr_flasha
- * @par Clear page buffer
- *
- * @code
- * hw_command( FLASH, clear_page_buffer );
- * @endcode
- */
-#define rem_hw_flasha_clrbf(p)						\
-  _hw_write_reg( p, csr, 1<<_hw_rbp(p, rwwsre) | 1<<_hw_rbp(p, spmen) )
-
-
-/**
- * @page atmelavr_flasha
- * @par Erase page
- *
- * @code
- * intptr_t ptr = page_address ;
- * hw_command( FLASH, erase_page, ptr );
- * @endcode
- */
-#define _hw_flasha_pgers(p, ptr)					\
+#define _hw_flasha_pgers(o, ptr)					\
   do {									\
-    _hw_write_reg( p, csr, 1<<_hw_rbp(p, pgers) | 1<<_hw_rbp(p, spmen) ); \
+    _hw_write_reg( o, csr, 1<<_hw_rbp(o, pgers) | 1<<_hw_rbp(o, spmen) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
 
-
-/**
- * @page atmelavr_flasha
- * @par Write page buffer into Flash memory
- *
- * @code
- * intptr_t ptr = page_address ;
- * hw_command( FLASH, write_page, ptr );
- * @endcode
- */
-#define _hw_flasha_pgwrt(p, ptr)					\
+#define _hw_flasha_pgwrt(o, ptr)					\
   do {									\
-    _hw_write_reg( p, csr, 1<<_hw_rbp(p, pgwrt) | 1<<_hw_rbp(p, spmen) ); \
+    _hw_write_reg( o, csr, 1<<_hw_rbp(o, pgwrt) | 1<<_hw_rbp(o, spmen) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
-
-#else
-/*
- * Device with boot section: the MCU is not halted when programming a page in
- * the RWW section, must wait the completion of SPM operation
- */
-#  error
-#endif
 
 
 /**
@@ -179,11 +139,11 @@ HW_INLINE void _hw_flasha_spm( intptr_t ptr )
 }
 
 
-#define _hw_flasha_ldpgbf(p, src)				\
+#define _hw_flasha_ldpgbf(o, src)				\
   do {								\
-    hw_asm("CSR = " HW_QUOTE(_hw_ra(p, csr)-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(_hw_rbp(p, rwwsre)) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(_hw_rbp(p, spmen)) "\n"	\
+    hw_asm("CSR = " HW_QUOTE(_hw_ra(o, csr)-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_QUOTE(_hw_rbp(o, rwwsre)) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(_hw_rbp(o, spmen)) "\n"	\
 	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
     __hw_flasha_ldpgbf( src );					\
@@ -243,6 +203,129 @@ HW_INLINE void __hw_flasha_ldpgbf( void *src )
 	 "r30", "r31"
 	 );
 }
+
+#else
+/*
+ * Device with boot section: the MCU is not halted when programming a page in
+ * the RWW section, must wait the completion of the last SPM operation
+ */
+#define _hw_flasha_pgers(o, ptr)					\
+  do {									\
+    hw_asm("wdr");							\
+    __hw_flasha_dospm( _hw_ra(o,csr), ptr, 1<<_hw_rbp(o, pgers) | 1<<_hw_rbp(o, spmen) ); \
+  }while(0)
+
+#define _hw_flasha_pgwrt(o, ptr)					\
+  do {									\
+    hw_asm("wdr");							\
+    __hw_flasha_dospm( _hw_ra(o,csr), ptr, 1<<_hw_rbp(o, pgwrt) | 1<<_hw_rbp(o, spmen) ); \
+  }while(0)
+
+/**
+ */
+HW_INLINE void __hw_flasha_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
+{
+  if ( csr-0x20 < 0x20 ) {
+    hw_asm("    out	CSR, %[r1]				\n"
+	   "    spm						\n"
+	   "1:  sbic    CSR, BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "    spm						\n"
+	   "1:  sbic    CSR, BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   : [r1] "=r" (cmd)
+	   : "z" (ptr) :
+	   );
+  }
+  else if ( csr-0x20 < 0x40 ) {
+    hw_asm("    out	CSR, %[r1]				\n"
+	   "    spm						\n"
+	   "1:  in      %[r1], CSR				\n"
+	   "    sbrc    %[r1], BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "    spm						\n"
+	   "1:  in      %[r1], CSR				\n"
+	   "    sbrc    %[r1], BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   : [r1] "=r" (cmd)
+	   : "0" (cmd), "z" (ptr) :
+	   );
+  }
+  else {
+    hw_asm("    sts	CSR+0x20, %[r1]				\n"
+	   "    spm						\n"
+	   "1:  lds     %[r1], CSR+0x20				\n"
+	   "    sbrc    %[r1], BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "    spm						\n"
+	   "1:  lds     %[r1], CSR+0x20				\n"
+	   "    sbrc    %[r1], BP_SPMEN				\n"
+	   "    rjmp	1b					\n"
+	   : [r1] "=r" (cmd)
+	   : "z" (ptr) :
+	   );
+  }
+}
+
+
+#define _hw_flasha_ldpgbf(o, src)				\
+  do {								\
+    hw_asm("CSR = " HW_QUOTE(_hw_ra(o, csr)-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_QUOTE(_hw_rbp(o, rwwsre)) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(_hw_rbp(o, spmen)) "\n"	\
+	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
+	   );							\
+    __hw_flasha_ldpgbf( src );					\
+  }while(0)
+
+
+/**
+ * @brief Load page buffer with data from src
+ */
+HW_INLINE void __hw_flasha_ldpgbf( void *src )
+{
+  uint8_t r1 ;
+
+#if HW_DEVICE_FLASH_PAGE_SIZE > 256
+#  error
+#endif
+
+  hw_asm(/*  Load page buffer
+	  */
+	 "    clr   r30				\n"
+	 "    clr   r31				\n"
+	 "1:  ld    r0, %a2+			\n"
+	 "    ld    r1, %a2+			\n"
+
+	 "    .if CSR < 0x20			\n"
+	 "    sbi	CSR, BP_SPMEN		\n"
+	 "    .else				\n"
+	 "    ldi	%[r1], 1<<BP_SPMEN	\n"
+	 "    .if CSR < 0x40			\n"
+	 "    out	CSR, %[r1]		\n"
+	 "    .else				\n"
+	 "    sts	CSR+0x20, %[r1]	\n"
+	 "    .endif				\n"
+	 "    .endif				\n"
+	 "    spm				\n"
+
+	 "    adiw  r30, 2			\n"
+	 "    cpi   r30, PGSIZE			\n"
+	 "    brne  1b				\n"
+	 :
+	 [r1] "=r" (r1),
+	 "=e" (src)
+	 :
+	 "1" (src)
+	 :
+	 "r0", "r1",
+	 "r30", "r31"
+	 );
+}
+#endif /* !defined HW_DEVICE_BOOTRST */
 
 
 #if 0	/* Alternate version */

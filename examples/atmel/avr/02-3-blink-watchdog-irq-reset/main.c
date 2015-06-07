@@ -10,10 +10,13 @@
  *  Blink a LED 10 times using watchdog IRQ and reset
  */
 
-
-/*  Include the board definition (includes hwa.h)
+/*  Include the target board definitions (includes hwa.h)
  */
-#include <boards/attiny84.h>
+#if defined BOARD_H
+#  include BOARD_H
+#else
+#  include <boards/attiny84.h>
+#endif
 
 
 /*  The pin at which the LED is connected (already defined for Arduino

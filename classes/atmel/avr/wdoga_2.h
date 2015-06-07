@@ -1,12 +1,13 @@
 
+/* This file is part of the HWA project.
+ * Copyright (c) 2012,2015 Christophe Duparquet.
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
+
 /*	Atmel AVR watchdog model 'a'
  *
  *	Used in: ATtinyX4 (WDOG)	hw_wdog0
  *		 ATtinyX5 (WDOG)	hw_wdog0
- *
- * This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
- * All rights reserved. Read LICENSE.TXT for details.
  */
 
 #include "wdog_2.h"

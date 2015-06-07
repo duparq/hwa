@@ -41,8 +41,7 @@
  * @include config.h
  */
 
-/*  Include the configuration (includes hwa.h)
- */
+
 #include "config.h"
 
 #define UART            hw_swuart0

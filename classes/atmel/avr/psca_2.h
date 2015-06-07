@@ -1,4 +1,14 @@
 
+/* This file is part of the HWA project.
+ * Copyright (c) 2012,2015 Christophe Duparquet.
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @file
+ *
+ * Atmel AVR counter-timer prescaler model 'a'
+ */
 
 /**
  * @page atmelavr_psca
@@ -37,5 +47,8 @@
 #define _hw_turnpsca_0(o,v)		HW_ERR("expected `on` or `off` but not `"#v"`.")
 #define _hw_turnpsca_1(o,v)		HW_G2(_hw_turnpsca_1,HW_A1(hw_state_##v))(o)
 //#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,tsmpsr,3)
-#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,cr,0x81) /* FIXME: need a reg def */
+//#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,cr,0x81) /* FIXME: need a reg def */
+#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,cr,		\
+						      (1U<<_hw_bp(_hw_reg(o,tsm)))| \
+						      (1U<<_hw_bp(_hw_reg(o,psr))))
 #define _hw_turnpsca_1_1(o)		_hw_write_reg(o,tsm,0)

@@ -1,11 +1,12 @@
 
+/*  This file is part of the HWA project.
+ *  Copyright (c) 2012,2015 Christophe Duparquet.
+ *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
 /*	Atmel AVR pin change interrupt controller model 'a'
  *
  *	Used in: ATtinyX4
- *
- * This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
- * All rights reserved. Read LICENSE.TXT for details.
  */
 
 

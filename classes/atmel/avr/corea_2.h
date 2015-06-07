@@ -11,7 +11,7 @@
  *  You use the `hwa_config(...)` instruction to configure the core of the
  *  device. Optionnal arguments are:
  *
- *  * `sleep`: wether the `hw_sleep()` instruction will put the core in sleep
+ *  * `sleep`: whether the `hw_sleep()` instruction will put the core in sleep
  *     mode or not
  *
  *  * `sleep_mode`: the sleep mode

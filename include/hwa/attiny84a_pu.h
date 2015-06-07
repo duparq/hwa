@@ -4,6 +4,11 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief ATtiny84A-PU header file
+ */
+
 /*  ATTINY84A has the same signature as ATTINY84
  */
 #define HW_DEVICE		attiny84

@@ -4,9 +4,6 @@
 
 errors = 0
 
-# def auto_int(x):
-#     return int(x,0)
-
 
 class Application:
     def __init__(self):
@@ -48,11 +45,6 @@ class Application:
     def tx ( self, data ):
         self.lastchar=None
         self.com.tx(data)
-        #  Atmel devices need about 50 cycles to compute the CRC between each
-        #  received byte
-        # for d in data:
-        #     self.com.tx(d)
-        #     time.sleep(0.000005)
 
     #  Transmit 10 bits low
     #
@@ -105,6 +97,8 @@ class Application:
             cout('.')
             flushout()
             self.tx('A')
+            if self.com.wires==2:
+                time.sleep(0.01)
             r = self.rx(10)
             if len(r)==1:
                 cout(' OK (0x%02X) after %d bytes sent.\n' % (ord(r[0]), i+1))
@@ -145,12 +139,6 @@ class Application:
         #
         time.sleep(0.1)
 
-        #  Get prompt
-        #
-        # if not self.get_prompt('$'):
-        #     die(_("Could not get the application prompt.\n"))
-        # cout('Application prompt: $\n')
-
         if not self.sync():
             die(_("Could not get the application prompt.\n"))
         cout('Application prompt: \n')
@@ -164,25 +152,29 @@ class Application:
             if n==20:
                 n=0
                 self.tx('x')
-                # self.get_prompt('$')
                 if not self.sync():
                     die(_("Could not get the application prompt.\n"))
                 continue
             self.tx('A')
+            if self.com.wires==2:
+                #
+                # Give some time for the data to arrive
+                #
+                # time.sleep(max(0.002,5*12.0/self.options.bps))
+                time.sleep(0.01)
             r = self.rx(5)
             if len(r) != 5 or r[-1]!='$':
-                # die("Could not get dt.\n")
                 cout("ERROR: %d bytes received: %s\n" % (len(r), s2hex(r)))
                 errors += 1
                 self.rx(10)
-                self.tx('x')
             else:
                 n+=1
                 dtn, dt0 = struct.unpack('<HH', r[0:4])
                 cout("dt0=%d dtn=%d\n" % (dt0, dtn) )
 
             tick += 0.05
-            time.sleep( tick - time.time() )
+            if tick > time.time():
+                time.sleep( tick - time.time() )
         self.com.close()
 
 

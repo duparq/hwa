@@ -5,7 +5,6 @@
 	;; 
 	;; Note: gcc call-used registers: 18..27, 30, 31
 
-
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
 #if hw_id(HW_G2(hw_swuart,pin_tx))
@@ -231,7 +230,7 @@ HW_ISR(HW_G2(hw_swuart,pin_rx),change):
 	CYCLES=CYCLES+2
 
 	.if DBG_RXSTART2
-	cbi	DBGPORT, DBGBIT	; [2]
+	sbi	DBGPORT, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
 
@@ -332,14 +331,13 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 	CYCLES=CYCLES+2
 	CY_TX0=CYCLES
 #	else
-#  	  error "swuarta without RX pin is not handled"
+#  	  error "swuarta without TX pin is not handled"
 #	endif
 
 #	if hw_id(HW_G2(hw_swuart,pin_rx))
 	;; Receiving
 	;;
 	.if DBG_RXBIT
-	;; sbi	DBGPORT, DBGBIT	; [2]
 	sbi	DBGPIN, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
@@ -348,8 +346,6 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 	in	R31, RXDPIN	; [1]		and enable interrupts
 	CYCLES=CYCLES+2
 	CY_RXSEI=CYCLES
-
-	;; TBITRX1=CYCLES		; Elapsed cycles between interrupt and bit sampling
 
 	bst	R31, RXDBIT	; [1]		Store RXD bit to T
 	lds	R31, shift	; [2]		Store T to shift register
@@ -372,7 +368,7 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 	;; nbit==0: all data bits received
 	;; 
 	.if DBG_RXDATA
-	sbi	DBGPIN, DBGBIT	; [2]
+	cbi	DBGPORT, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
 	;;
@@ -440,7 +436,7 @@ HW_G3(,hw_swuart,next):
 HW_G3(,hw_swuart,rxeof):
 	CY_RXEOF=CYCLES
 	.if DBG_RXEOF
-	sbi	DBGPORT, DBGBIT	; [2]
+	cbi	DBGPORT, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
 

@@ -32,12 +32,6 @@
 	spm
 	.endm
 
-	;; .macro	FLASH_LDBYTE
-	;; ldi	R21, 1<<BP_SPMEN
-	;; XST	SPMCSR, R21
-	;; spm
-	;; .endm
-
 	.macro	FLASH_LDBYTE reg
 	.if	SPMCSR < 0x20
 	sbi	SPMCSR, BP_SPMEN
@@ -67,25 +61,26 @@
 	;; Device with boot section: the MCU is not halted when programming a
 	;; page in the RWW section, must wait the completion of SPM operation
 	;;
-#  define FLASH_CLRBF
+	.macro	FLASH_CLRBF reg
+	.endm
 
-	.macro	FLASH_LDBYTE
-	ldi	R21, 1<<BP_SPMEN
+	.macro	FLASH_LDBYTE reg
+	ldi	\reg, 1<<BP_SPMEN
 	rcall	dospm
 	.endm
 
-	.macro	FLASH_PGERS
-	ldi	R21, 1<<BP_PGERS | 1<<BP_SPMEN
+	.macro	FLASH_PGERS reg
+	ldi	\reg, 1<<BP_PGERS | 1<<BP_SPMEN
 	rcall	dospm
 	.endm
 
-	.macro	FLASH_PGWRT
-	ldi	R21, 1<<BP_PGWRT | 1<<BP_SPMEN
+	.macro	FLASH_PGWRT reg
+	ldi	\reg, 1<<BP_PGWRT | 1<<BP_SPMEN
 	rcall	dospm
 	.endm
 
-	.macro	FLASH_ERWWS
-	ldi	R21, 1<<BP_RWWSRE | 1<<BP_SPMEN ; Re-enable RWW section
+	.macro	FLASH_ERWWS reg
+	ldi	\reg, 1<<BP_RWWSRE | 1<<BP_SPMEN ; Re-enable RWW section
 	rcall	dospm
 	.endm
 #endif

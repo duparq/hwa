@@ -13,9 +13,13 @@
  */
 
 
-/*  Include the board definition (includes hwa.h)
+/*  Include the target board (and device) definitions
  */
-#include <boards/attiny84.h>
+#if !defined BOARD_H
+#  define BOARD_H                       <boards/attiny84.h>
+#endif
+
+#include BOARD_H
 
 
 /*  The counter

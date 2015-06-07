@@ -7,21 +7,22 @@
 /**
  * @example
  *
- *      Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
+ *  Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
  *
- *      Test application:
- * @code
+ *  Test application:
+ *
  *      ./main.py
- * @endcode
  *
+ * @par config.h
+ * @include 06-1-swuart-adc/config.h
+ *
+ * @par main.c
  */
 
-/*  Include the configuration (includes hwa.h)
- */
 #include "config.h"
 
 
-/*  Counter 
+/*  The counter used to schedule the ADC conversions
  *
  *    FIXME: using the same counter as for swuart overrides the configuration
  *    without error!
@@ -31,11 +32,15 @@
 
 /*  Pin used as ADC input
  */
-#define INPUT                   hw_pin_8
+#if defined ARDUINO
+#  define INPUT                 PIN_A0
+#else
+#  define INPUT                 hw_pin_8
+#endif
 
-
-#define PIN_LED                 hw_pin_7
-
+#if !defined PIN_LED
+#  define PIN_LED               hw_pin_7
+#endif
 
 volatile uint16_t               adc ;   // Last adc value
 volatile uint8_t                x_adc ; // Set to 1 after adc is written
@@ -51,8 +56,8 @@ HW_ISR( COUNTER, overflow )
 }
 
 
-/*  Service adc conversion interrupt:
- *    get adc result, stop the ADC, signal new data is ready
+/*  Service ADC conversion interrupt:
+ *    get ADC result, stop the ADC, signal new data ready
  */
 HW_ISR( hw_adc0 )
 {
@@ -84,20 +89,23 @@ main ( )
               sleep,      enabled,
               sleep_mode, idle );
 
-  /*  Configure the counter to overflow every 0.02 s.
+  /*  Configure the counter to overflow every ~0.02 s.
    *
    *  The compare unit `compare0` (OCRxA) is used to store the top value.
    *  Unless otherwise stated, the overflow will be automatically set to occur
    *  at top in `loop_up` counting mode, and at bottom in `loop_updown` counting
    *  mode.
+   *
+   *  We use the loop_updown counting mode so that an 8-bit counter can handle
+   *  the delay at 16 MHz.
    */
   hwa_config( COUNTER,
               clock,     syshz_div_1024,
-              countmode, loop_up,
+              countmode, loop_updown,
               bottom,    0,
               top,       compare0
               );
-  hwa_write( hw_sub(COUNTER, compare0), 0.02 * hw_syshz / 1024 );
+  hwa_write( hw_sub(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
   hwa_turn_irq( COUNTER, overflow, on );
 
   /*  Configure the ADC (this turns it on)

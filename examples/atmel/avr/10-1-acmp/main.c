@@ -7,16 +7,18 @@
 /**
  * @example
  *
- *  Turn a LED on for 1 ms each time the analog comparator detects an edge
+ *  Turn a LED on for 1 ms each time the analog comparator toggles.
  *
- * @par boards/attiny84.h
- * @include boards/attiny84.h
  */
 
 
-/*  Include the board definition (includes hwa.h)
+/*  Include the target board (and device) definitions
  */
-#include <boards/attiny84.h>
+#if !defined BOARD_H
+#  define BOARD_H               <boards/attiny84.h>
+#endif
+
+#include BOARD_H
 
 
 /*  The pin at which the LED is connected (already defined for Arduino
@@ -24,37 +26,41 @@
  *  numbers can be used as well as pin names.
  */
 #ifndef PIN_LED
-#  define PIN_LED		hw_pin_7
+#  define PIN_LED               hw_pin_7
 #endif
 
 /*  The analog comparator positive input
  *    This can be `bandgap` or `hw_pin_ain0` (or synonym)
  */
-#define INPUT_POS		bandgap
+#define INPUT_POS               bandgap
 
 /*  The analog comparator negative input
  *    This can be any analog input pin
  */
-#define INPUT_NEG		hw_pin_6
+#if defined HW_DEVICE_ATTINYX4
+#  define INPUT_NEG             hw_pin_6
+#elif defined HW_DEVICE_ATMEGAX8
+#  define INPUT_NEG             hw_pin_19
+#endif
 
 /*  The analog comparator output edge that will trigger an IRQ
  *    This can be `falling`, `rising` or `both`
  */
-#define EDGE			falling
+#define EDGE                    falling
 
 /*  The counter used to produce the LED pulse
  */
-#define COUNTER			hw_counter0
-#define COUNTER_CLK_DIV		64
-#define COMPARE			compare0
+#define COUNTER                 hw_counter0
+#define COUNTER_CLK_DIV         64
+#define COMPARE                 compare0
 
 /*  The time the LED is turned on in seconds
  */
-#define PERIOD			0.001
+#define PERIOD                  0.001
 
 /*  The time the LED is turned on in counter units
  */
-#define CPERIOD			PERIOD * hw_syshz / COUNTER_CLK_DIV
+#define CPERIOD                 PERIOD * hw_syshz / COUNTER_CLK_DIV
 
 
 /*  Service counter-compare0 IRQ:
@@ -105,9 +111,9 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-  	      sleep,      enabled,
-  	      sleep_mode, idle
-	      );
+              sleep,      enabled,
+              sleep_mode, idle
+              );
 
   /*  Configure LED pin
    */
@@ -118,17 +124,17 @@ int main ( )
    */
 #if hw_id( hw_io(INPUT_POS) )
   hwa_config( INPUT_POS,
-	      mode,      analog,
-	      direction, input
-	      );
+              mode,      analog,
+              direction, input
+              );
 #endif
 
   /*  Configure INPUT_NEG pin in analog mode (disable digital input buffer)
    */
   hwa_config( INPUT_NEG,
-	      mode,      analog,
-	      direction, input
-	      );
+              mode,      analog,
+              direction, input
+              );
 
   /*  Check that the counter can handle the PERIOD value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
@@ -139,9 +145,9 @@ int main ( )
   /*  Configure the counter to count from 0 to max
    */
   hwa_config( COUNTER,
-	      clock,     HW_G2(syshz_div, COUNTER_CLK_DIV),
-	      countmode, loop_up
-	      );
+              clock,     HW_G2(syshz_div, COUNTER_CLK_DIV),
+              countmode, loop_up
+              );
 
   /*  Prepare the compare value for the PIN_LED pulse
    */
@@ -150,10 +156,10 @@ int main ( )
   /*  Configure the analog comparator
    */
   hwa_config( hw_acmp0,
-  	      edge,           EDGE,
-  	      positive_input, INPUT_POS,
-  	      negative_input, INPUT_NEG
-  	      );
+              edge,           EDGE,
+              positive_input, bandgap,
+              negative_input, INPUT_NEG
+              );
   hwa_turn_irq( hw_acmp0, on );
 
   /*  Write this configuration into the hardware

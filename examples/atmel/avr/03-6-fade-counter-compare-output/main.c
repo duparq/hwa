@@ -23,12 +23,13 @@
 
 /*  Include the board definition (includes hwa.h)
  */
-#include <boards/attiny84.h>
+//#include <boards/attiny84.h>
+#include <boards/nanodccduino.h>
 
 
 /*  The counter
  */
-#define PWM                     hw_counter0_compare0
+#define PWM                     hw_counter2_compare0
 #define CLKDIV                  64
 #define COUNTMODE               loop_up
 

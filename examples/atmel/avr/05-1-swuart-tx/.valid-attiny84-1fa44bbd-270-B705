@@ -1,7 +1,0 @@
-HW_DEVICE=attiny84
-hw_syshz=8000000
-hw_swuart0_pin_tx=hw_pin_pb0
-hw_swuart0_counter=hw_counter0
-hw_swuart0_counter_clk_div=1
-hw_swuart0_counter_compare=compare0
-BAUDRATE=115200

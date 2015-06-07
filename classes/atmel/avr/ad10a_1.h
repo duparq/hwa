@@ -1,17 +1,11 @@
 
-/*
- *	Atmel AVR 10-bit analog-digital converter model 'a'
- *
- *	Used in:	ATtinyX4
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
 /**
  * @file
- * @brief Definitions for class _ad10a
  */
 
 /**

@@ -34,12 +34,12 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
 #define __hwa_commit__io6a		__hwa_commit__io8a
 
 
-#define _hw_mthd_hw_config__pin1		, _hw_cfdio
+#define _hw_mthd_hw_config__pin1	, _hw_cfdio
 #define _hw_mthd_hwa_config__pin1	, _hwa_cfdio
 #define _hw_mthd_hw_read__pin1		, _hw_read_pin1
 #define _hw_mthd_hw_write__pin1		, _hw_write_pin1
-#define _hw_mthd_hwa_write__pin1		, _hwa_write_pin1
-#define _hw_mthd_hw_toggle__pin1		, _hw_toggle_pin1
+#define _hw_mthd_hwa_write__pin1	, _hwa_write_pin1
+#define _hw_mthd_hw_toggle__pin1	, _hw_toggle_pin1
 
 
 #define _hw_is_mode_mode		, 1
@@ -85,7 +85,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   _hw_write_bits(_hw_reg(pn,ddr),bn,bp, (HW_A1(hw_cfdio_direction_##v)?(1U<<bn)-1:0)); \
 
 #define _hw_cfdio_vdirection_0(pn,bn,bp,v,...)			\
-  HW_ERR("`direction` must be `input` or `output`, not `" HW_QUOTE(v) "`.")
+  HW_ERR("`direction` can be `input` or `output`, but not `" HW_QUOTE(v) "`.")
 
 #define _hw_cfdio_xdirection_0(pn,bn,bp,...)			\
   HW_G2(_hw_cfdio_xpullup, HW_IS(pullup,__VA_ARGS__))(pn,bn,bp,__VA_ARGS__)
@@ -101,7 +101,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   HW_TX(,__VA_ARGS__)
 
 #define _hw_cfdio_vpullup_0(pn,bn,bp,v,...)			\
-  HW_ERR("`pullup` must be `on` or `off`, not `" HW_QUOTE(v) "`.");
+  HW_ERR("`pullup` can be `on` or `off`, but not `" HW_QUOTE(v) "`.");
 
 
 /**
@@ -131,7 +131,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   HW_G2(_hwa_cfdio_vmode, HW_IS(,hw_cfdio_mode_##__VA_ARGS__))(p,pn,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfdio_vmode_0(p,pn,bn,bp,v,...)				\
-  HW_ERR("`mode` must be `analog` or `digital`, not `" HW_QUOTE(v) "`.")
+  HW_ERR("`mode` can be `analog` or `digital`, but not `" HW_QUOTE(v) "`.")
 
 #define _hwa_cfdio_vmode_1(p,pn,bn,bp,v,...)				\
   HW_G2(_hwa_cfdio_vmode, v)(p,pn,bn,bp,__VA_ARGS__)
@@ -164,7 +164,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   HW_G2(_hwa_cfdio_xpullup, HW_IS(pullup,__VA_ARGS__))(p,pn,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfdio_vdirection_0(p,pn,bn,bp,v,...)			\
-  HW_ERR("`direction` must be `input` or `output`, not `" HW_QUOTE(v) "`.")
+  HW_ERR("`direction` can be `input` or `output`, but not `" HW_QUOTE(v) "`.")
 
 #define _hwa_cfdio_xdirection_0(p,pn,bn,bp,...)			\
   HW_G2(_hwa_cfdio_xpullup, HW_IS(pullup,__VA_ARGS__))(p,pn,bn,bp,__VA_ARGS__)
@@ -180,7 +180,7 @@ HW_INLINE void __hwa_commit__io8a ( hwa_t *hwa, hwa_io8a_t *p )
   HW_TX(,__VA_ARGS__)
 
 #define _hwa_cfdio_vpullup_0(p,pn,bn,bp,v,...)				\
-  HW_ERR("`pullup` must be `on` or `off`, not `" HW_QUOTE(v) "`.")
+  HW_ERR("`pullup` can be `on` or `off`, but not `" HW_QUOTE(v) "`.")
 
 
 /**
