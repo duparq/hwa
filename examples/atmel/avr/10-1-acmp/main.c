@@ -7,8 +7,16 @@
 /**
  * @example
  *
- *  Turn a LED on for 1 ms each time the analog comparator toggles.
+ * @par Turn a LED on for 1 ms each time the analog comparator output toggles.
  *
+ * Symbols:
+ *
+ * * `BOARD_H` is the name of the target board header file. It can be defined at
+ * compile time via the command line. For example, `make BOARD=nanodccduino`
+ * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref boards for the
+ * board definitions provided with HWA.
+ *
+ * @par main.c
  */
 
 
@@ -20,14 +28,6 @@
 
 #include BOARD_H
 
-
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
 
 /*  The analog comparator positive input
  *    This can be `bandgap` or `hw_pin_ain0` (or synonym)

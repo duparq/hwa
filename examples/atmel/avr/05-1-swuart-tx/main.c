@@ -7,15 +7,15 @@
 /**
  * @example
  *
- *  Send a '.' on TXD every 0.1s. Can use hardware UART as well as software
- *  UART.
+ * Send a '.' on TXD every 0.1s. Can use hardware UART as well as software
+ * UART.
  *
- *  Test application:
+ * Test application:
  *
- *      ./main.py -b <BAUDRATE>
+ *     ./main.py -b <BAUDRATE>
  *
- *  Note: this can fail if the system frequency is not known precisely
- *  enough (if using an internal RC oscillator for example).
+ * Note: this can fail if the system frequency is not known precisely
+ * enough (if using an internal RC oscillator for example).
  *
  * @par config.h
  * @include 05-1-swuart-tx//config.h

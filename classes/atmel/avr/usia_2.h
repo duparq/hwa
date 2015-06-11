@@ -5,19 +5,19 @@
  */
 
 
-HW_INLINE void __hwa_begin__usia ( hwa_usia_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__usia ( hwa_usia_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _usia, cr );
 }
 
 
-HW_INLINE void __hwa_init__usia ( hwa_usia_t *p )
+HW_INLINE void _hwa_init_p__usia ( hwa_usia_t *p )
 {
-  _hwa_set_r8( &p->cr, 0x00 );
+  _hwa_set__r8( &p->cr, 0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__usia ( hwa_t *hwa, hwa_usia_t *p )
+HW_INLINE void _hwa_commit_p__usia ( hwa_t *hwa, hwa_usia_t *p )
 {
   _hwa_commit_reg_p( p, _usia, cr );
 }
@@ -107,14 +107,14 @@ HW_INLINE void _hwa_docfusia( hwa_t *hwa, hwa_usia_t *p, uint8_t mode, uint8_t c
     hwa_config(hw_pin_do,   direction, output);
     hwa_config(hw_pin_di,   direction, input);
 
-    _hwa_write_creg( p, _usia, wm,  1 );
-    _hwa_write_creg( p, _usia, cs,  2 );
-    _hwa_write_creg( p, _usia, clk, 1 );
+    _hwa_write_reg_p( p, _usia, wm,  1 );
+    _hwa_write_reg_p( p, _usia, cs,  2 );
+    _hwa_write_reg_p( p, _usia, clk, 1 );
   }
   else {
-    _hwa_write_creg( p, _usia, wm,  1 );
-    _hwa_write_creg( p, _usia, cs,  2 );
-    _hwa_write_creg( p, _usia, clk, 0 );
+    _hwa_write_reg_p( p, _usia, wm,  1 );
+    _hwa_write_reg_p( p, _usia, cs,  2 );
+    _hwa_write_reg_p( p, _usia, clk, 0 );
   }
 }
 
@@ -227,9 +227,9 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
   hwa_config(hw_pin_usck, direction, output);
   hwa_config(hw_pin_do,   direction, output);
 
-  _hwa_write_creg( p, _usia, wm,  1 );
-  _hwa_write_creg( p, _usia, cs,  2 );
-  _hwa_write_creg( p, _usia, clk, 1 );
+  _hwa_write_reg_p( p, _usia, wm,  1 );
+  _hwa_write_reg_p( p, _usia, cs,  2 );
+  _hwa_write_reg_p( p, _usia, clk, 1 );
 }
 
 
@@ -284,9 +284,9 @@ HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
   hwa_config(hw_pin_do,   direction, output);
   hwa_config(hw_pin_di,   direction, input);
 
-  _hwa_write_creg( p, _usia, wm,  1 );
-  _hwa_write_creg( p, _usia, cs,  1 );
-  _hwa_write_creg( p, _usia, clk, 0 );
+  _hwa_write_reg_p( p, _usia, wm,  1 );
+  _hwa_write_reg_p( p, _usia, cs,  1 );
+  _hwa_write_reg_p( p, _usia, clk, 0 );
 }
 
 

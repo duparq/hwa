@@ -64,7 +64,7 @@
 
 /*  Top value and range of duty value according to PWM timings
  */
-#define count_t                 hw_rt(COUNTER,count)
+#define count_t                 hw_uint_t(COUNTER,count)
 #define COUNT_TOP               (uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
 #define COMPARE_MIN             (count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
 #define COMPARE_MAX             (count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)

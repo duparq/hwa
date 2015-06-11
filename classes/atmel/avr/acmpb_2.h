@@ -9,19 +9,19 @@
  * @file
  */
 
-HW_INLINE void __hwa_begin__acmpb ( hwa_acmpb_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__acmpb ( hwa_acmpb_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _acmpb, csr  );
   _hwa_begin_reg_p( p, a, _acmpb, did  );
 }
 
-HW_INLINE void __hwa_init__acmpb ( hwa_acmpb_t *p )
+HW_INLINE void _hwa_init_p__acmpb ( hwa_acmpb_t *p )
 {
-  _hwa_set_r8(  &p->csr,  0x00 );
-  _hwa_set_r8(  &p->did,  0x00 );
+  _hwa_set__r8(  &p->csr,  0x00 );
+  _hwa_set__r8(  &p->did,  0x00 );
 }
 
-HW_INLINE void __hwa_commit__acmpb ( hwa_t *hwa, hwa_acmpb_t *p )
+HW_INLINE void _hwa_commit_p__acmpb ( hwa_t *hwa, hwa_acmpb_t *p )
 {
   _hwa_commit_reg_p( p, _acmpb, csr );
   _hwa_commit_reg_p( p, _acmpb, did );
@@ -122,10 +122,10 @@ HW_INLINE void __hwa_commit__acmpb ( hwa_t *hwa, hwa_acmpb_t *p )
 #define _hw_mthd_hw_turn__acmpb			, _hw_turnacmpb
 
 #define _hw_turnacmpb(o,i,a,...)		\
-  HW_G2(_hw_turnacmpb_vstate,HW_IS(,_hw_state_##__VA_ARGS__))
+  HW_G2(_hw_turnacmpb_vstate,HW_IS(,__hw_state_##__VA_ARGS__))
 
 #define _hw_turnacmpb_vstate_1(o,i,a,v,...)	\
-  HW_TX( _hw_write_reg(o,acd,(HW_A1(_hw_state_##v)==0)), __VA_ARGS__ )
+  HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
 
 #define _hw_turnacmpb_vstate_0(o,i,a,v,...)	\
   HW_ERR("object `" #o "` of class `_acmpb` can be turned `on` or `off`, but not `" #v "`.")

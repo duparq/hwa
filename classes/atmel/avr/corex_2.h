@@ -35,13 +35,13 @@
   HW_G2(_hwa_cfcore_xsleepmode, HW_IS(sleep_mode,__VA_ARGS__))(p,__VA_ARGS__)
 
 #define _hwa_cfcore_xsleep_1(p,kw,...)					\
-  HW_G2(_hwa_cfcore_vsleep, HW_IS(,hw_state_##__VA_ARGS__))(p,__VA_ARGS__)
+  HW_G2(_hwa_cfcore_vsleep, HW_IS(,_hw_state_##__VA_ARGS__))(p,__VA_ARGS__)
 
 #define _hwa_cfcore_vsleep_0(p,...)					\
   HW_ERR("expected `enabled` or `disabled`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
 
 #define _hwa_cfcore_vsleep_1(p,v,...)					\
-  _hwa_write_reg( p, se, HW_A1(hw_state_##v) );			\
+  _hwa_write_reg( p, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcore_xsleepmode, HW_IS(sleep_mode,__VA_ARGS__))(p,__VA_ARGS__)
 
 #define _hwa_cfcore_xsleepmode_0(p,...)	_hwa_cfcore_end(__VA_ARGS__)

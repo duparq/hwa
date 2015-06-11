@@ -14,21 +14,21 @@
  *  or class name.
  */
 
-#define hw_state_on			, 1
-#define hw_state_off			, 0
-#define hw_state_yes			, 1
-#define hw_state_no			, 0
-#define hw_state_enabled		, 1
-#define hw_state_disabled		, 0
+#define _hw_state_on			, 1
+#define _hw_state_off			, 0
+#define _hw_state_yes			, 1
+#define _hw_state_no			, 0
+#define _hw_state_enabled		, 1
+#define _hw_state_disabled		, 0
 
 /*  HWA classes
  */
-#define _hw_class__crg
+#define _hw_class__r8
+#define _hw_class__r16
 #define _hw_class__cb1
 #define _hw_class__cb2
 #define _hw_class__irq
 #define _hw_class__m1
-#define _hw_class__m1x
 #define _hw_class__m2
 
 #define _hw_is_hw_error_hw_error	, 1, /* one more comma to remove '; StaticAssert(...)' */
@@ -46,11 +46,6 @@
 extern char hw_error ;
 #  define HW_ERR(msg)		hw_error ; _Static_assert(0, "HWA: " msg)
 
-/*  Encapsulate the result of HW_ERR inside a fake function numberred
- */
-/* #define HW_ERRFN(...)		_HW_ERRFN_2(__COUNTER__, __VA_ARGS__) */
-/* #define _HW_ERRFN_2(...)	_HW_ERRFN_3(__VA_ARGS__) */
-/* #define _HW_ERRFN_3(n,...)	void hw_err##n() { uint8_t x = __VA_ARGS__ ; } void hw_err##n##_() */
 
 /*  Emit an error (when not inside a function)
  */
@@ -68,15 +63,6 @@ extern char hw_error ;
 #define _HW_PE_2(x, y)		HW_G2(_HW_PE,HW_IS(hw_error,x))(x, y)
 #define _HW_PE_0(x, y)		y
 #define _HW_PE_1(x, y)		x
-
-
-/*  If x is an error, expand it. Otherwize expand 
- *  otherwise expand to y.
- */
-/* #define HW_PEOC(...)		_HW_PEOC_2(__VA_ARGS__) */
-/* #define _HW_PEOC_2(x,...)	HW_G2(_HW_PEOC,HW_IS(hw_error,x))(x,__VA_ARGS__) */
-/* #define _HW_PEOC_1(x,...)	x */
-/* #define _HW_PEOC_0(x,...)	x,__VA_ARGS__ */
 
 
 /** \brief	Element a0 of the list a0,...
@@ -99,9 +85,6 @@ extern char hw_error ;
 #define HW_A2(...)		_HW_A2_2(__VA_ARGS__,,,)
 #define _HW_A2_2(a0,a1,a2,...)	a2
 
-/* #define HW_A3(...)		_HW_A3_2(__VA_ARGS__,,,,) */
-/* #define _HW_A3_2(a0,a1,a2,a3,...)	a3 */
-
 
 /** \brief	Glue the first two arguments
  *  @hideinitializer
@@ -121,7 +104,6 @@ extern char hw_error ;
  */
 #define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)	HW_A1(_hw_is_##x##_##y,0)
-//#define _hw_is_0_0			, 1,	/* one more comma to remove '; StaticAssert(...)' */
 #define _hw_is_0_0			, 1
 #define _hw_is__			, 1
 #define _hw_is_enabled_enabled		, 1
@@ -160,100 +142,60 @@ extern char hw_error ;
  *  object starting with its class (as returned by instructions such as
  *  hw_sup(...).
  *
- *  If a class c of an object p has a method f, _hw_mthd_f_c is defined as `, fm`
- *  where fm is the definition of f. fm is called with the definition of p after
- *  having replaced the p's class name with the p's name.
+ *  If a class c of an object o has a method f, _hw_mthd_f_c is defined as `, fm`
+ *  where fm is the definition of f. fm is called with the definition of o after
+ *  having replaced the class name of o with o's name.
  *
  *  If HW_A0(_hw_mthd_f_c) is not ``, there is no method f for class c. Then try
  *  to determine the reason:
  *
- *    * p is not a HWA object
+ *    * o is not a HWA object
  *    * c has no method f
- *    * p is an error
+ *    * o is already an error
  *
  *  Note: an extra void argument must be added for single argument instructions
- *  in order to avoid a warning at compilation.
+ *  in order to avoid a warning at compilation. FIXME: could it be done here?
  */
-#if 1
-
-/* Assume the argument is the name of an object, expand its definition to get its class */
 #define HW_MTHD(...)		_HW_MTHD1(__VA_ARGS__)
-#define _HW_MTHD1(f,p,...)	_HW_MTHD2(f,p,_##p,__VA_ARGS__) /* FIXME: this can append a void argument to the list. May be it should be appended above so that there is always this last void argument? */
-//#define _HW_MTHD1(f,...)	_HW_MTHD2(f,HW_A0(__VA_ARGS),_##__VA_ARGS__,__VA_ARGS__)
+
+/*  Get the definition of the object o (assuming the object exists)
+ */
+#define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,o,_##o,__VA_ARGS__)
 #define _HW_MTHD2(...)		_HW_MTHD3(__VA_ARGS__)
 
-/* Is there a method f for assumed object p of class c? */
-// MCUSR = x_HW_MTHD4_0(_hw_addr,_m1,_hw__m1,core0,0, mcusr,8,0x54,0x0F,0x00, 8,0)
-#define _HW_MTHD3(f,p,c,...)	HW_G2(_HW_MTHD4, HW_IS(,_hw_mthd_##f##_##c))(f,p,c,__VA_ARGS__)
-#define _HW_MTHD4_1(f,p,c,...)	HW_A1(_hw_mthd_##f##_##c)(p,__VA_ARGS__)
+/*  Is there a method f for object o of class c?
+ */
+#define _HW_MTHD3(f,o,c,...)	HW_G2(_HW_MTHD4, HW_IS(,_hw_mthd_##f##_##c))(f,o,c,__VA_ARGS__)
+#define _HW_MTHD4_1(f,o,c,...)	HW_A1(_hw_mthd_##f##_##c)(o,__VA_ARGS__)
 
-/* No method f for assumed object p of class c. Is p an object? */
-//  BP_EXTRF = x_HW_MTHD5_0(hw_bp,_m1,_hw__m1,core0,0, mcusr,8,0x54,0x0F,0x00, 1,1)
-#define _HW_MTHD4_0(f,p,c,...)	HW_G2(_HW_MTHD5, HW_IS(,_hw_class_##c))(f,p,c,__VA_ARGS__)
-#define _HW_MTHD5_1(f,p,c,...)	HW_ERR("object `"#p"` of class `"#c"` has no method `"#f"`.")
+/* No method f for object o of class c. Is o an object?
+ */
+#define _HW_MTHD4_0(f,o,c,...)	HW_G2(_HW_MTHD5, HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
+#define _HW_MTHD5_1(f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no method `"#f"`.")
 
-/* p is not an object. Is it a class name? */
-//  BP_EXTRF = x_HW_MTHD6_1(hw_bp,_m1,_hw__m1,core0,0, mcusr,8,0x54,0x0F,0x00, 1,1)
-#define _HW_MTHD5_0(f,p,...)	HW_G2(_HW_MTHD6,HW_IS(,_hw_class_##p))(f,p,__VA_ARGS__)
-//#define _HW_MTHD6_1(f,p,pp,...)	f##_##p(__VA_ARGS__)
-/* Is there a method f for class c? */
-#define _HW_MTHD6_1(f,p,pp,...)	HW_G2(_HW_MTHD8, HW_IS(,_hw_mthd_##f##_##p))(f,p,__VA_ARGS__)
-//  BP_EXTRF = _HW_MTHD8_0(hw_bp,_m1,core0,0, mcusr,8,0x54,0x0F,0x00, 1,1)
+/* o is not an object. Is it a class name?
+ */
+#define _HW_MTHD5_0(f,o,...)	HW_G2(_HW_MTHD6,HW_IS(,_hw_class_##o))(f,o,__VA_ARGS__)
+
+/* Is there a method f for class c?
+ */
+#define _HW_MTHD6_1(f,o,oo,...)	HW_G2(_HW_MTHD8, HW_IS(,_hw_mthd_##f##_##o))(f,o,__VA_ARGS__)
 #define _HW_MTHD8_0(f,c,...)	HW_ERR("class `"#c"` has no method `"#f"`.")
 #define _HW_MTHD8_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
 
-/* p is not an object and not a class name. Is it an error? */
-/* #define _HW_MTHD6_0(f,p,...)	HW_G2(_HW_MTHD7,HW_IS(hw_error,p))(f,p,__VA_ARGS__) */
-/* #define _HW_MTHD7_1(f,p,...)	p */
-/* #define _HW_MTHD7_0(f,p,...)	HW_ERR("`"#p"` is not a HWA object.") */
-#define _HW_MTHD6_0(f,p,...)	HW_PE(p, HW_ERR("`"#p"` is not a HWA object."))
-
-#else
-/*
- *  This version first assumes that the arguments start with a definition (class
- *  name first)
+/* o is not an object and not a class name. Propagate or trigger an error.
  */
-/* Is the argument a definition starting with a class name? */
-#define HW_MTHD(f,...)		HW_G2(_HW_MTHD2,HW_IS(,_hw_class_##__VA_ARGS__))(f,__VA_ARGS__)
-
-/* Is f a method of the class? */
-#define _HW_MTHD2_1(f,c,...)	HW_G2(_HW_MTHD3, HW_IS(,_hw_mthd_##f##_##c))(f,c,__VA_ARGS__)
-#define _HW_MTHD3_0(f,c,p,...)	HW_ERR("object `"#p"` of class `"#c"` has no method `"#f"`.")
-#define _HW_MTHD3_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
-
-/* Assume the argument is the name of an object, expand its definition to get its class */
-#define _HW_MTHD2_0(f,p,...)	_HW_MTHD4(f,p,_##p,__VA_ARGS__)
-#define _HW_MTHD4(...)		_HW_MTHD5(__VA_ARGS__)
-
-/* Is there a method f for assumed object p of class c? */
-#define _HW_MTHD5(f,p,c,...)	HW_G2(_HW_MTHD5,HW_IS(,_hw_mthd_##f##_##c))(f,p,c,__VA_ARGS__)
-#define _HW_MTHD5_1(f,p,c,...)	HW_A1(_hw_mthd_##f##_##c)(c,p,__VA_ARGS__)
-
-/* No method f for assumed object p of class c. Is p an object? */
-#define _HW_MTHD5_0(f,p,c,...)	HW_G2(_HW_MTHD6, HW_IS(,_hw_class_##c))(f,p,c,__VA_ARGS__)
-#define _HW_MTHD6_1(f,p,c,...)	HW_ERR("object `"#p"` of class `"#c"` has no method `"#f"`.")
-
-/* p is not an object. Is it an error? */
-#define _HW_MTHD6_0(f,p,pp,...)	HW_G2(_HW_MTHD7,HW_IS(hw_error,p))(f,p,STOP,__VA_ARGS__)
-#define _HW_MTHD7_1(f,x,...)	x
-#define _HW_MTHD7_0(f,p,...)	HW_ERR("`"#p"` is not a HWA object.")
-
-#endif
+#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_ERR("`"#o"` is not a HWA object."))
 
 
-/*
- *  The same for internal use: no checkings
- */
-//#define _HW_MTHD(f,...)		HW_A1(HW_G3(__hw_mthd,f,__VA_ARGS__))(__VA_ARGS__)
-
-
-/*  Specialize instruction f for type t: _HW_SPEC(f,t,...) -> f_t(...)
+/**
+ * @brief Specialize instruction `f` for class `c`: _HW_SPEC(f,t,...) -> f_c(...)
  *
- *	Arguments must start with a class name that is to be appenned to the
- *	function name.
+ *  Arguments must start with a class name that is to be appended to the
+ *  function name.
  */
 #define _HW_SPEC(...)		_HW_SPEC_2(__VA_ARGS__)
-#define _HW_SPEC_2(f,t,...)	f##_##t(__VA_ARGS__)
+#define _HW_SPEC_2(f,c,...)	f##_##c(__VA_ARGS__)
 
 
 /**
@@ -285,8 +227,7 @@ extern char hw_error ;
 
 
 /**
- * @brief `result` if the next element is void, the remaining elements
- *  otherwise.
+ * @brief `result` if the next element is void, an error otherwise.
  * @hideinitializer
  *
  * This is used to help detecting and propagating errors, or ensuring that
@@ -308,12 +249,14 @@ extern char hw_error ;
 
 /*  Define wich classes are hardware bits
  */
-#define hw_hasbits__crg
+#define hw_hasbits__r8
+#define hw_hasbits__r16
 #define hw_hasbits__cb1
 #define hw_hasbits__cb2
-#define hw_hasbits__ext
+//#define hw_hasbits__ext
 #define hw_hasbits__ob1
 #define hw_hasbits__ob2
+#define hw_hasbits__xob1
 
 
 /**
@@ -331,262 +274,256 @@ extern char hw_error ;
  *
  *  Successful results can be:
  *
- *  `_m1, p,a, r,rw,ra,rwm,rfm, bn,bp`
+ *  `_m1, o,a, r,rc,ra,rwm,rfm, bn,bp`
  *
- *  `_m1x, p,a, r,rw,ra,rwm,rfm, bn,bp`  // same as _m1, resulting from the
- *                                       // expansion of a register of another instance
- *
- *  `_m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
- *             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
+ *  `_m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
+ *             r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
  */
 /*  FIXME: fails without HW_ERR if p is a _pin1:
  *  	_hw_reg_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
  *  -> Should hw_reg() be a method?
  */
-#define hw_reg(o,m)			HW_GNRC(_hw_reg_3,o,m)
+#define hw_reg(o,r)			HW_GNRC(_hw_reg_3,o,r)
 #define _hw_reg_2(...)			_hw_reg_3(__VA_ARGS__)
-#define _hw_reg_3(c,o,i,a,m)		_hw_reg_4(_hw_##c##_##m,o,c,a,m)
+#define _hw_reg_3(c,o,i,a,r)		_hw_reg_4(_hw_##c##_##r,o,c,a,r)
 #define _hw_reg_4(...)			_hw_reg_5(__VA_ARGS__)
 #define _hw_reg_5(t,...)		HW_G2(_hw_reg, HW_IS(,hw_hasbits_##t))(t,__VA_ARGS__)
-#define _hw_reg_1(t,...)		_hw_x##t(__VA_ARGS__)
-//#define _hw_reg_0(t,p,c,a,m)		HW_PE(p, HW_ERR("`"#p"` has no attribute `"#m"`."))
-
-/*  m is not a class member, is it an object member?
- */
-#define _hw_reg_0(t,o,c,a,m)		_hw_reg_6(_##o##_##m,o,c,a,m)
+#define _hw_reg_1(t,...)		_hw_x_##t(__VA_ARGS__)
+#define _hw_reg_0(t,o,c,a,r)		_hw_reg_6(_##o##_##r,o,c,a,r)
 #define _hw_reg_6(...)			_hw_reg_7(__VA_ARGS__)
 #define _hw_reg_7(t,...)		HW_G2(_hw_reg_7, HW_IS(,hw_hasbits_##t))(t,__VA_ARGS__)
-#define _hw_reg_7_1(t,...)		_hw_x##t(__VA_ARGS__)
-#define _hw_reg_7_0(t,o,c,a,m)		HW_PE(o, HW_ERR("`"#o"` has no attribute `"#m"`."))
-
-
-#define _hw_reg(p,m)			_hw__reg_2(p,_##p,m)
-#define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
-#define _hw__reg_3(p,c,i,a,m)		_hw__reg_4(_hw_##c##_##m,p,c,a,m)
-#define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
-#define _hw__reg_5(t,...)		_hw_x##t(__VA_ARGS__)
+#define _hw_reg_7_1(t,...)		_hw_x_##t(__VA_ARGS__)
+#define x_hw_reg_7_0(t,o,c,a,r)		HW_PE(o, HW_ERR("`"#o"` has no attribute `"#r"`."))
 
 
 /**
- * @brief Memory definition of register `m` of object of class `c`.
+ * @brief Memory definition of a register (internal use, no error checking)
+ */
+#define _hw_reg(o,r)			_hw__reg_2(o,_##o,r)
+#define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
+#define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_##c##_##r,o,c,a,r)
+#define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
+#define _hw__reg_5(t,...)		HW_G2(_hw__reg, HW_IS(,hw_hasbits_##t))(t,__VA_ARGS__)
+#define _hw__reg_1(t,...)		_hw_x_##t(__VA_ARGS__)
+#define _hw__reg_0(t,o,c,a,r)		_hw__reg_6(_##o##_##r,o,c,a,r)
+#define _hw__reg_6(...)			_hw__reg_1(__VA_ARGS__)
+
+
+/**
+ * @brief Memory definition of register `m` of an object of class `c` pointed by
+ * p.
+ *
  * @hideinitializer
  */
-#define _hw_creg(c,m)			_hw__creg_4(_hw_##c##_##m,_,c,_,m)
-#define _hw__creg_4(...)		_hw__creg_5(__VA_ARGS__)
-#define _hw__creg_5(t,...)		_hw_x##t(__VA_ARGS__)
+#define _hw_reg_p(p,c,m)		_hw_reg_p_4(_hw_##c##_##m,p,c,m)
+#define _hw_reg_p_4(...)		_hw_reg_p_5(__VA_ARGS__)
+#define _hw_reg_p_5(t,...)		_hw_xp_##t(__VA_ARGS__)
 
 
-/*  Memory definition of a class register
- *	-> _m1, p,a, r,rw,ra,rwm,rfm, bn,bp
+/*  Memory definition of a hardware register
+ *	-> _m1, p,a, r,rc,ra,rwm,rfm, bn,bp
  */
-#define _hw_x_crg(rw,ra,rwm,rfm, p,c,a,r)	\
-  _m1, p,a, r,rw,ra,rwm,rfm, rw,0
+#define _hw_x__r8(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r, _r8, ra,rwm,rfm,  8,0
+#define _hw_x__r16(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r,_r16, ra,rwm,rfm, 16,0
 
 
 /*  Memory definition of a group of consecutive bits in one class register
- *	-> _m1, p,a, r,rw,ra,rwm,rfm, bn,bp
+ *	-> _m1, p,a, r,rc,ra,rwm,rfm, bn,bp
  */
-#define _hw_x_cb1(r,bn,bp, p,c,a,m)	_hw_xcb1_2(_hw_##c##_##r,bn,bp,p,c,a,r)
-#define _hw_xcb1_2(...)			_hw_xcb1_3(__VA_ARGS__)
-#define _hw_xcb1_3(t,...)		_hw_xcb1_##t(__VA_ARGS__)
-#define _hw_xcb1__crg(rw,ra,rwm,rfm, bn,bp,p,c,a,r)	\
-  _m1, p,a, r,rw,ra,rwm,rfm, bn,bp
+#define _hw_x__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xcb1, _hw_##c##_##r,bn,bp,o,r)
+#define _hw_xcb1__r8(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
+#define _hw_xcb1__r16(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r16,ra,rwm,rfm, bn,bp
 
 
-//_hw_x_ob1(sr, 1, 0,hw_swuart1,_swuarta,0,synced);
+/*  Memory definition of two groups of consecutive bits in one or two class
+ *  registers
+ *	-> _m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
+ *	             r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
+ */
+#define _hw_x__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
+  _hw_xcb2_2( r1,_hw_##c##_##r1,rbn1,rbp1,vbp1,				\
+	      r2,_hw_##c##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
+#define _hw_xcb2_2(...)		_hw_xcb2_3(__VA_ARGS__)
+#define _hw_xcb2_3( r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+		    r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, o,c,a,m )	\
+  _m2, o,a,								\
+    r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
+    r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
+
 
 /*  Memory definition of a group of consecutive bits in one object register
- *	-> _m1, p,a, r,rw,ra,rwm,rfm, bn,bp
+ *	-> _m1, p,a, r,rc,ra,rwm,rfm, bn,bp
  */
-#define _hw_x_ob1(r,bn,bp, o,c,a,m)	_hw_xob1_2(_##o##_##r,bn,bp,o,c,a,r)
-#define _hw_xob1_2(...)			_hw_xob1_3(__VA_ARGS__)
-#define _hw_xob1_3(t,...)		_hw_xob1_##t(__VA_ARGS__)
-#define _hw_xob1__crg(rw,ra,rwm,rfm, bn,bp,o,c,a,r)	\
-  _m1, o,a, r,rw,ra,rwm,rfm, bn,bp
+#define _hw_x__ob1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xob1, _##o##_##r,bn,bp,o,r)
+#define _hw_xob1__r8(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
 
 
-/*  ob1 -> ext
+/**
+ * @brief Expand the memory definition of one group of consecutive bits to be
+ * found in a another object `to` hardware register `tr`.
  */
-//_hw_write__hw_xob1__ext(hw_psc0, cr,1,1,hw_psc1,_psca,0,cr)(1);
-#define _hw_xob1__ext(xo,xr,bn,bp, o,c,a,r)	_hw_xob1ext2(_##xo##_##xr,bn,bp,xo,xr)
-//_hw_write__hw_xob1ext_2(_crg, 8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
-#define _hw_xob1ext2(...)		_hw_xob1ext3(__VA_ARGS__)
-#define _hw_xob1ext3(t,...)		HW_G2(_hw_xob1ext3,HW_IS(,_hw_class_##t))(t,__VA_ARGS__)
-//_hw_xob1ext_1(8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
-#define _hw_xob1ext3_1(t,...)		_hw_xob1ext_##t(__VA_ARGS__)
-//_hw_xob1ext__crg(8, 0x43, 0x81, 0x00,1,1,hw_psc0,cr)(1);
-#define _hw_xob1ext__crg(rw,ra,rwm,rfm, bn,bp, o, r)	\
-  _m1, o,0, r,rw,ra,rwm,rfm, bn,bp
+/*  NOTE: we do not get the address of `to` and consider it is 0.
+ */
+#define _hw_x__xob1(to,tr,bn,bp, o,c,a,m)	_HW_SPEC(_hw_xxob1, _##to##_##tr,bn,bp,to,tr)
+#define _hw_xxob1__r8(ra,rwm,rfm, bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
+
+
+/**
+ * @brief Expand the memory definition of one hardware register of another
+ * object
+ */
+#define _hw_xp__r8(ra,rwm,rfm, p,c,r)		_m1_p, &p->r,_r8,rwm,rfm,8,0
+#define _hw_xp__r16(ra,rwm,rfm, p,c,r)		_m1_p, &p->r,_r16,rwm,rfm,16,0
+
+
+/**
+ * @brief Expand the memory definition of one group of consecutive bits to be
+ * found in a another object `o` hardware register `r` pointed by `p`
+ */
+#define _hw_xp__xob1(o,r,bn,bp, p,c,m)		_HW_SPEC(_hw_xpob1, _##o##_##r,bn,bp,&hwa->o.r)
+#define _hw_xpob1__r8(ra,rwm,rfm, bn,bp,p)	_m1_p, p,_r8,rwm,rfm,bn,bp
+
+/**
+ * @brief Expand the memory definition of one group of consecutive bits in the
+ * object pointed by `p`
+ */
+#define _hw_xp__cb1(r,bn,bp, p,c,m)		_HW_SPEC(_hw_xpcb1, _hw_##c##_##r,bn,bp,&p->r)
+#define _hw_xpcb1__r8(ra,rwm,rfm, bn,bp,p)	_m1_p, p,_r8,rwm,rfm,bn,bp
+
+
+/**
+ * @brief Expand the memory definition of two groups of consecutive bits in the
+ * object pointed by `p`
+ */
+#define _hw_xp__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, p,c,m)		\
+  _hw_xpcb2_2( &p->r1,_hw_##c##_##r1,rbn1,rbp1,vbp1,			\
+		&p->r2,_hw_##c##_##r2,rbn2,rbp2,vbp2 )
+#define _hw_xpcb2_2(...)			_hw_xpcb2_3(__VA_ARGS__)
+#define _hw_xpcb2_3( p1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+		     p2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2 )		\
+  _m2_p, p1,rc1,rwm1,rfm1,rbn1,rbp1,vbp1, p2,rc2,rwm2,rfm2,rbn2,rbp2,vbp2
 
 
 /*  Memory definition of two groups of consecutive bits in one object register
  *	-> _m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
  *	             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
  */
-//_hw_x_ob2(cr, 1, 7, 1, cr, 1, 0, 0,hw_psc0,_psca,0,tsmpsr)
 #define _hw_x_ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
   _hw_xcb2_2(r1,_##o##_##r1,rbn1,rbp1,vbp1,				\
 	     r2,_##o##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
 
 
-/*  Memory definition of two groups of consecutive bits in one or two class
- *  registers
- *	-> _m2, p,a, r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
- *	             r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
- */
-#define _hw_x_cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, p,c,a,m)	\
-  _hw_xcb2_2( r1,_hw_##c##_##r1,rbn1,rbp1,vbp1,			\
-	      r2,_hw_##c##_##r2,rbn2,rbp2,vbp2, p,c,a,m)
-#define _hw_xcb2_2(...)		_hw_xcb2_3(__VA_ARGS__)
-#define _hw_xcb2_3( r1,rc1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		    r2,rc2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, p,c,a,m ) \
-  _m2, p,a,								\
-    r1,rw1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
-    r2,rw2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
-
-
-/*  Memory definition of one instance register bits
- */
-#define _hw_x_ext(p,r, p0,c0,a0,r0)	_hw_xext_2(_##p,p,r)
-#define _hw_xext_2(...)			_hw_xext_3(__VA_ARGS__)
-#define _hw_xext_3(c,i,a,p,r)		_hw_xext_4(_hw_##c##_##r,p,c,a,r)
-#define _hw_xext_4(...)			_hw_xext_5(__VA_ARGS__)
-#define _hw_xext_5(t,...)		_hw_xext_##t(__VA_ARGS__)
-
-/*  Memory definition of a group of consecutive bits in one instance register
- *	-> _m1x, p,a, r,rw,ra,rwm,rfm, bn,bp
- */
-#define _hw_xext__cb1(r,bn,bp, p,c,a,m)	_hw_xextcb1_2(_hw_##c##_##r,bn,bp,p,c,a,r)
-#define _hw_xextcb1_2(...)		_hw_xextcb1_3(__VA_ARGS__)
-#define _hw_xextcb1_3(rc,rw,ra,rwm,rfm, bn,bp,p,c,a,r)	\
-  _m1x, p,a, r,rw,ra,rwm,rfm, bn,bp
-
-
 /**
- * @brief  hw_addr(...): address of something (method)
+ * @brief  hw_addr(...): address of an object
  * @hideinitializer
- *
- * This is defined in the vendor-specific file since the adress can be different
- * between compiler and assembler.
+ */
+/* This is defined in the vendor-specific file since the address can be
+ * different between C and assembler.
  */
 #define hw_addr(...)			HW_MTHD(hw_addr, __VA_ARGS__)
 
 #define _hw_mthd_hw_addr__m1		, _hw_addr__m1
-#define _hw_mthd_hw_addr__m1x		, _hw_addr__m1
 
 
 /**
  * @brief  Address of an object's register (internal use)
  * @hideinitializer
 */
-#define _hw_ra(p,m)			_hw__ra_2(p,_##p,m)
-#define _hw__ra_2(...)			_hw__ra_3(__VA_ARGS__)
-#define _hw__ra_3(p,c,i,a,m)		_hw__ra_4(_hw_##c##_##m,p,c,a,m)
-#define _hw__ra_4(...)			_hw__ra_5(__VA_ARGS__)
-#define _hw__ra_5(t,...)		_hw__ra_6(_hw_x##t(__VA_ARGS__))
-#define _hw__ra_6(...)			_hw__ra_7(__VA_ARGS__)
-#define _hw__ra_7(t,...)		_hw_addr_##t(__VA_ARGS__)
+#define _hw_ra(o,r)			_HW_SPEC(_hw_ra, _hw_reg(o,r))
+
+
+/*	hw_ap(...): address, position of least significant bit (method)
+ */
+#define hw_ap(...)			HW_MTHD(hw_ap, __VA_ARGS__)
+
+#define _hw_mthd_hw_ap__m1		, _hw_ap__m1
+#define _hw_ap__m1(...)			_hw_addr__m1(__VA_ARGS__), _hw_bp__m1(__VA_ARGS__)
+
+
+/**
+ * @brief  Number of bits of an object
+ * @hideinitializer
+ */
+#define hw_bn(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
+
+#define _hw_mthd_hw_bn__m1		, _hw_bn__m1
+
+#define _hw_bn__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
+
+
+/**
+ * @brief  Number of bits of an object's register (internal use)
+ * @hideinitializer
+ */
+#define _hw_rbn(o,r)					_HW_SPEC(_hw_rbn,_hw_reg(o,r))
+#define _hw_rbn__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
+
+
+/*	hw_bp(...): position of least significant bit of something (method)
+ */
+#define hw_bp(...)					HW_MTHD(hw_bp, __VA_ARGS__)
+
+#define _hw_mthd_hw_bp__m1				, _hw_bp__m1
+
+#define _hw_bp__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)		bp
 
 
 /**
  * @brief  Position of the lsb of a register (internal use)
  * @hideinitializer
 */
-#define _hw_rbp(p,m)			_hw__rbp_2(p,_##p,m)
-#define _hw__rbp_2(...)			_hw__rbp_3(__VA_ARGS__)
-#define _hw__rbp_3(p,c,i,a,m)		_hw__rbp_4(_hw_##c##_##m,p,c,a,m)
-#define _hw__rbp_4(...)			_hw__rbp_5(__VA_ARGS__)
-#define _hw__rbp_5(t,...)		_hw__rbp_6(_hw_x##t(__VA_ARGS__))
-#define _hw__rbp_6(...)			_hw__rbp_7(__VA_ARGS__)
-#define _hw__rbp_7(t,...)		_hw_bp_##t(__VA_ARGS__)
-
-#define _hw_bp(...)			_hw__bp_1(__VA_ARGS__)
-#define _hw__bp_1(t,...)		_hw_bp_##t(__VA_ARGS__)
-
-/*	hw_ap(...): address, position of least significant bit (method)
- */
-#define hw_ap(...)		HW_MTHD(hw_ap, __VA_ARGS__)
-
-#define _hw_mthd_hw_ap__m1	, _hw_ap__m1
-#define _hw_ap__m1(...)		_hw_addr__m1(__VA_ARGS__), _hw_bp__m1(__VA_ARGS__)
-
-//_m1x, hw_core0,0, gimsk,8,0x5B,0x70,0x00, 1,5
-#define _hw_mthd_hw_ap__m1x	, _hw_ap__m1
-//#define _hw_ap__m1x(...)	_hw_addr__m1(__VA_ARGS__), _hw_bp__m1(__VA_ARGS__)
-
-
-/*	hw_bn(...): number of bits of something (method)
- */
-#define hw_bn(...)		HW_MTHD(hw_bn, __VA_ARGS__,)
-
-//#define _hw_mthd_hw_bn__m1	, _hw_bn__m1
-
-//#define _hw_bn__m1(t, n,c, rn,rw,ra,rwm,rfm, bn,bp)	bn
-
-
-/*	hw_bp(...): position of least significant bit of something (method)
- */
-#define hw_bp(...)		HW_MTHD(hw_bp, __VA_ARGS__)
-//#define _hw_bp(...)		_HW_MTHD(_hw_bp, __VA_ARGS__)
-
-#define _hw_mthd_hw_bp__m1	, _hw_bp__m1
-#define _hw_mthd_hw_bp__m1x	, _hw_bp__m1
-
-#define _hw_bp__m1(p,a, r,rw,ra,rwm,rfm, bn,bp)	bp
+#define _hw_rbp(o,r)					_HW_SPEC(_hw_rbp,_hw_reg(o,r))
+#define _hw_rbp__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
 
 
 /**
- * @brief Register type of an object (method)
+ * @brief uint_t type type of an object's hardware register (method)
  * Expands to `uint8_t`, `uint16_t`...
  * @hideinitializer
  */
-#define hw_rt(o,m)		HW_G2(_hw_rt,HW_ISOBJ(o))(o,m)
-#define _hw_rt_0(o,m)		HW_ERR("`" #o "` is not a HWA object.")
-#define _hw_rt_1(o,m)		_hw_rt_2(hw_reg(o,m))
-#define _hw_rt_2(...)		_hw_rt_3(__VA_ARGS__,)
-#define _hw_rt_3(x,...)		HW_PE(x,_hw_rt_##x(__VA_ARGS__))
-#define _hw_rt__m1(o,a,rn,rw,...)	uint##rw##_t
+#define hw_uint_t(o,r)					_HW_SPEC(_hw_uintt,hw_reg(o,r))
+#define _hw_uintt__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	uint##bn##_t
 
 
-/*	hw_id(...): id of an instance (generic)
- *
- *	Do not use HW_GNRC(), return 0 if instance does not exist
+/**
+ * @brief Class of an object's register (internal use)
+ * @hideinitializer
  */
-/* #define hw_id(...)		_hw_id_2(__VA_ARGS__) */
-/* #define _hw_id_2(...)		HW_G2(_hw_id, HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__) */
-/* #define _hw_id_0(...)		0	/\* instance does not exist *\/ */
-/* #define _hw_id_1(n,c,i,...)	i */
-
-#define hw_id(p)		HW_G2(_hw_id,HW_ISOBJ(p))(p)
-#define _hw_id_1(p)		HW_A1(_##p)
-#define _hw_id_0(p)		0
+#define _hw_rc(o,r)					_HW_SPEC(_hw_rc,_hw_reg(o,r))
+#define _hw_rc__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)		rc
 
 
-/*	hw_io(...): definition of the io associated to an instance, or the io itself (method)
+/**
+ * @brief ID of an object. 0 if the object does not exist.
+ * @hideinitializer
  */
-//#define hw_io(...)		HW_MTHD(hw_io, __VA_ARGS__)
-#define hw_io(p)		HW_MTHD(hw_io, p,)
+#define hw_id(o)			HW_G2(_hw_id,HW_ISOBJ(o))(o)
+#define _hw_id_1(o)			HW_A1(_##o)
+#define _hw_id_0(o)			0
 
-/*	hw_sub(...): name of the sub module of a controller
+
+/**
+ * @brief Definition of the i/o associated to an object, or the io itself
+ * @hideinitializer
  */
-/* #define hw_sub(p,x)		HW_GNRC(_hw_sub,p,x) */
-/* #define _hw_sub(c,p,i,a, x)	HW_G2(_hw_sub,HW_ISOBJ(p##_##x))(p,x) */
-/* #define _hw_sub_0(p,x)		HW_ERR("`"#p"` has no sub `"#x"`.") */
-/* #define _hw_sub_1(p,x)		p##_##x */
-
-/* #define hw_sub(...)		_hw_sub_2(__VA_ARGS__,,) */
-/* #define _hw_sub_2(p,x,...)	HW_G2(_hw_sub,HW_ISOBJ(p##_##x))(p,x,__VA_ARGS__) */
-/* #define _hw_sub_1(p,x,...)	HW_TX(p##_##x, __VA_ARGS__) */
-
-#define hw_sub(p,x)		_hw_sub_2(p,x)
-#define _hw_sub_2(p,x)		HW_G2(_hw_sub,HW_ISOBJ(p##_##x))(p,x)
-#define _hw_sub_1(p,x)		p##_##x
-
-#define _hw_sub_0(p,x)		HW_PE(p, HW_G2(_hw_sub0,HW_ISOBJ(p))(p,x))
-#define _hw_sub0_0(p,x)		HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_sub0_1(p,x)		HW_ERR("`"#p"` has no object `"#x"`."))
+#define hw_io(o)			HW_MTHD(hw_io, o,)
 
 
-/*	hw_sup(...): definition of the controller associated to an instance (method)
+/**
+ * @brief Name of an object of a peripheral
+ * @hideinitializer
  */
-#define hw_sup(p)		HW_MTHD(hw_sup, p,)
+#define hw_sub(o,x)			_hw_sub_2(o,x)
+#define _hw_sub_2(o,x)			HW_G2(_hw_sub,HW_ISOBJ(o##_##x))(o,x)
+#define _hw_sub_1(o,x)			o##_##x
+
+#define _hw_sub_0(o,x)			HW_PE(o, HW_G2(_hw_sub0,HW_ISOBJ(o))(o,x))
+#define _hw_sub0_0(o,x)			HW_ERR("`"#o"` is not a HWA object.")
+#define _hw_sub0_1(o,x)			HW_ERR("`"#o"` has no object `"#x"`."))
+
+
+/**
+ * @brief  Definition of the peripheral associated to an object (method)
+ * @hideinitializer
+ */
+#define hw_sup(o)			HW_MTHD(hw_sup, o,)

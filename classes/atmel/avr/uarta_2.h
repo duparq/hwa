@@ -143,13 +143,13 @@
 /*  Process arg `receiver`
  */
 #define _hwa_cfuarta_kreceiver_1(o,k,v,...)				\
-  HW_G2(_hwa_cfuarta_vreceiver, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfuarta_vreceiver, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vreceiver_0(o,v,...)			\
   HW_ERR("`receiver` can be `enabled`, or `disabled`, but not `" #v "`.")
 
 #define _hwa_cfuarta_vreceiver_1(o,v,...)	\
-    hwa->o.config.rxen = HW_A1(hw_state_##v);	\
+    hwa->o.config.rxen = HW_A1(_hw_state_##v);	\
     _hwa_cfuarta_kreceiver_0(o,__VA_ARGS__)
 
 #define _hwa_cfuarta_kreceiver_0(o,k,...)				\
@@ -158,13 +158,13 @@
 /*  Process arg `transmitter`
  */
 #define _hwa_cfuarta_ktransmitter_1(o,k,v,...)				\
-  HW_G2(_hwa_cfuarta_vtransmitter, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfuarta_vtransmitter, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vtransmitter_0(o,v,...)				\
   HW_ERR("`transmitter` can be `enabled`, or `disabled`, but not `" #v "`.")
 
 #define _hwa_cfuarta_vtransmitter_1(o,v,...)	\
-  hwa->o.config.txen = HW_A1(hw_state_##v);	\
+  hwa->o.config.txen = HW_A1(_hw_state_##v);	\
   _hwa_cfuarta_end(o,__VA_ARGS__)
 
 #define _hwa_cfuarta_ktransmitter_0(o,...)	\
@@ -273,7 +273,7 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
 }
 
 
-HW_INLINE void __hwa_begin__uarta ( hwa_uarta_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__uarta ( hwa_uarta_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _uarta, ubrr );
   _hwa_begin_reg_p( p, a, _uarta, dr   );
@@ -282,13 +282,13 @@ HW_INLINE void __hwa_begin__uarta ( hwa_uarta_t *p, intptr_t a )
   _hwa_begin_reg_p( p, a, _uarta, csrc );
 }
 
-HW_INLINE void __hwa_init__uarta ( hwa_uarta_t *p )
+HW_INLINE void _hwa_init_p__uarta ( hwa_uarta_t *p )
 {
-  _hwa_set_r16( &p->ubrr, 0x0000 );
-  _hwa_set_r8( &p->dr,    0x00   );
-  _hwa_set_r8( &p->csra,  0x20   );
-  _hwa_set_r8( &p->csrb,  0x00   );
-  _hwa_set_r8( &p->csrc,  0x06   );
+  _hwa_set__r16( &p->ubrr, 0x0000 );
+  _hwa_set__r8( &p->dr,    0x00   );
+  _hwa_set__r8( &p->csra,  0x20   );
+  _hwa_set__r8( &p->csrb,  0x00   );
+  _hwa_set__r8( &p->csrc,  0x06   );
 
   p->config.brr  = 0 ;
   p->config.u2x  = 0 ;
@@ -299,7 +299,7 @@ HW_INLINE void __hwa_init__uarta ( hwa_uarta_t *p )
   p->config.txen = 1 ;
 }
 
-HW_INLINE void __hwa_commit__uarta ( hwa_t *hwa, hwa_uarta_t *p )
+HW_INLINE void _hwa_commit_p__uarta ( hwa_t *hwa, hwa_uarta_t *p )
 {
   _hwa_commit_reg_p( p, _uarta, ubrr );
   _hwa_commit_reg_p( p, _uarta, dr   );

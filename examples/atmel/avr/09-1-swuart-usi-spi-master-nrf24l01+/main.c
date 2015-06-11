@@ -7,31 +7,35 @@
 /**
  * @example
  * 
- * A simple interface between software UART and USI configured as SPI
- * master.
- * 
- * Test application: `./main.py`
- * 
- * The host displays the values of the registers of an nRF24L01+
- * connected to USI. It should be 0x08 for the config register and
- * 0x3F for the EN_AA register.
+ * @par A simple interface between software UART and USI configured as SPI master.
  * 
  * @par nRF24L01+ module wiring
  *
- *                 Gnd  [1](2)  Vcc
- *          Gnd <- CE   (3)(4)  CSN  -> 
- *          SCL <- SCK  (5)(6)  MOSI -> MISO
- *         MOSI <- MISO (7)(8)  IRQ
- *
+ *             Gnd  [1](2)  Vcc
+ *      Gnd <- CE   (3)(4)  CSN  -> 
+ *      SCL <- SCK  (5)(6)  MOSI -> MISO
+ *     MOSI <- MISO (7)(8)  IRQ
  * 
  * NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
  * (considered as a slave regarding the pin names).
  * 
- * @par boards/attiny84.h
- * @include boards/attiny84.h
+ * @par Test application
+ *
+ *     ./main.py
+ * 
+ * should display the values of the registers of an nRF24L01+ connected to
+ * USI. It should be 0x08 for the config register and 0x3F for the EN_AA
+ * register.
  * 
  * @par config.h
  * @include 09-1-swuart-usi-spi-master-nrf24l01+/config.h
+ * 
+ * Symbols:
+ *
+ * * `BOARD_H` is the name of the target board header file. It can be defined at
+ * compile time via the command line. For example, `make BOARD=nanodccduino`
+ * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref boards for the
+ * board definitions provided with HWA.
  * 
  * @par main.c
  **/

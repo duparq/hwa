@@ -22,7 +22,7 @@
 #define _hw_mthd_hw_stat_t__wdogb	, _hw_statt_wdog
 
 
-HW_INLINE void __hwa_begin__wdogb ( hwa_wdogb_t *p, intptr_t address )
+HW_INLINE void _hwa_begin_p__wdogb ( hwa_wdogb_t *p, intptr_t address )
 {
   p->action = 0xFF ;
   p->timeout = 0xFF ;
@@ -30,13 +30,13 @@ HW_INLINE void __hwa_begin__wdogb ( hwa_wdogb_t *p, intptr_t address )
 }
 
 
-HW_INLINE void __hwa_init__wdogb ( hwa_wdogb_t *p )
+HW_INLINE void _hwa_init_p__wdogb ( hwa_wdogb_t *p )
 {
-  _hwa_set_r8( &p->csr, 0x00 );
+  _hwa_set__r8( &p->csr, 0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__wdogb ( hwa_t *hwa, hwa_wdogb_t *p )
+HW_INLINE void _hwa_commit_p__wdogb ( hwa_t *hwa, hwa_wdogb_t *p )
 {
   if ( p->action != 0xFF ) {
     if ( p->action == HW_A1(hw_wdog_action_none) ) {
@@ -50,30 +50,30 @@ HW_INLINE void __hwa_commit__wdogb ( hwa_t *hwa, hwa_wdogb_t *p )
       HW_ERR( "watchdog can not be turned off because FUSE bit WDTON is " \
 	      "programmed." );
 #endif
-      _hwa_write_creg( p, _wdogb, wdrf, 0 );
+      _hwa_write_reg_p( p, _wdogb, wdrf, 0 );
       _hwa_commit_reg_p( p, _wdogb, wdrf );
 
-      _hwa_write_creg( p, _wdogb, if, 1 );
-      _hwa_write_creg( p, _wdogb, wdce, 1 );
-      _hwa_write_creg( p, _wdogb, wde,  1 );
+      _hwa_write_reg_p( p, _wdogb, if, 1 );
+      _hwa_write_reg_p( p, _wdogb, wdce, 1 );
+      _hwa_write_reg_p( p, _wdogb, wde,  1 );
       _hwa_commit_reg_p( p, _wdogb, csr );
-      _hwa_write_creg( p, _wdogb, ie, 0 );
-      _hwa_write_creg( p, _wdogb, wdce, 0 );
-      _hwa_write_creg( p, _wdogb, wde, 0 );
-      _hwa_write_creg( p, _wdogb, wdp, 0 );
+      _hwa_write_reg_p( p, _wdogb, ie, 0 );
+      _hwa_write_reg_p( p, _wdogb, wdce, 0 );
+      _hwa_write_reg_p( p, _wdogb, wde, 0 );
+      _hwa_write_reg_p( p, _wdogb, wdp, 0 );
     }
     else {
       /*
        *  Configure the watchdog
        */
-      //      _hwa_write_creg( p, _wdogb, wdif, 1 );
-      _hwa_write_creg( p, _wdogb, wdce, 1 );
-      _hwa_write_creg( p, _wdogb, wde,  1 );
+      //      _hwa_write_reg_p( p, _wdogb, wdif, 1 );
+      _hwa_write_reg_p( p, _wdogb, wdce, 1 );
+      _hwa_write_reg_p( p, _wdogb, wde,  1 );
       _hwa_commit_reg_p( p, _wdogb, csr );
-      _hwa_write_creg( p, _wdogb, wdce, 0 );
-      _hwa_write_creg( p, _wdogb, wdeie, p->action );
+      _hwa_write_reg_p( p, _wdogb, wdce, 0 );
+      _hwa_write_reg_p( p, _wdogb, wdeie, p->action );
       if ( p->timeout != 0xFF )
-      	_hwa_write_creg( p, _wdogb, wdp, p->timeout );
+      	_hwa_write_reg_p( p, _wdogb, wdp, p->timeout );
     }
     /* p->action = 0xFF ; */
     /* p->timeout = 0xFF ; */

@@ -14,9 +14,9 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__io8a_port			_crg, 8, 0x02, 0xFF, 0x00
-#define _hw__io8a_ddr			_crg, 8, 0x01, 0xFF, 0x00
-#define _hw__io8a_pin			_crg, 8, 0x00, 0xFF, 0x00
+#define _hw__io8a_port			_r8, 0x02, 0xFF, 0x00
+#define _hw__io8a_ddr			_r8, 0x01, 0xFF, 0x00
+#define _hw__io8a_pin			_r8, 0x00, 0xFF, 0x00
 
 #if !defined __ASSEMBLER__
 
@@ -35,9 +35,9 @@ typedef struct {
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__io6a_port			_crg, 8, 0x02, 0x3F, 0x00
-#define _hw__io6a_ddr			_crg, 8, 0x01, 0x3F, 0x00
-#define _hw__io6a_pin			_crg, 8, 0x00, 0x3F, 0x00
+#define _hw__io6a_port			_r8, 0x02, 0x3F, 0x00
+#define _hw__io6a_ddr			_r8, 0x01, 0x3F, 0x00
+#define _hw__io6a_pin			_r8, 0x00, 0x3F, 0x00
 
 #define hwa_io6a_t			hwa_io8a_t
 

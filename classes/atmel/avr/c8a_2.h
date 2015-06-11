@@ -8,7 +8,7 @@
  * @file
  */
 
-HW_INLINE void __hwa_begin__c8a ( hwa_c8a_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__c8a ( hwa_c8a_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _c8a, ccra  );
   _hwa_begin_reg_p( p, a, _c8a, ccrb  );
@@ -31,21 +31,21 @@ HW_INLINE void __hwa_begin__c8a ( hwa_c8a_t *p, intptr_t a )
 }
 
 
-HW_INLINE void __hwa_init__c8a ( hwa_c8a_t *p )
+HW_INLINE void _hwa_init_p__c8a ( hwa_c8a_t *p )
 {
-  _hwa_set_r8( &p->ccra,     0x00 );
-  _hwa_set_r8( &p->ccrb,     0x00 );
-  _hwa_set_r8( &p->count,    0x00 );
-  _hwa_set_r8( &p->compare0, 0x00 );
-  _hwa_set_r8( &p->compare1, 0x00 );
+  _hwa_set__r8( &p->ccra,     0x00 );
+  _hwa_set__r8( &p->ccrb,     0x00 );
+  _hwa_set__r8( &p->count,    0x00 );
+  _hwa_set__r8( &p->compare0, 0x00 );
+  _hwa_set__r8( &p->compare1, 0x00 );
 #ifndef HW_DEVICE_ATTINYX5
-  _hwa_set_r8( &p->imsk,     0x00 );
-  _hwa_set_r8( &p->ifr,      0x00 );
+  _hwa_set__r8( &p->imsk,     0x00 );
+  _hwa_set__r8( &p->ifr,      0x00 );
 #endif
 }
 
 
-HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
+HW_INLINE void _hwa_commit_p__c8a ( hwa_t *hwa, hwa_c8a_t *p )
 {
   _hwa_commit_reg_p( p, _c8a, ccra  );
   _hwa_commit_reg_p( p, _c8a, ccrb  );
@@ -227,7 +227,7 @@ HW_INLINE void __hwa_commit__c8a ( hwa_t *hwa, hwa_c8a_t *p )
  *  function at device level which knows the register mapping of the counter
  *  that is used.
  */
-/* HW_INLINE void __hwa_solve__c8a ( hwa_t* hwa __attribute__((unused)), */
+/* HW_INLINE void _hwa_solve__c8a ( hwa_t* hwa __attribute__((unused)), */
 /* 				  hwa_c8a_t *p ) */
 HW_INLINE void _hwa_solve_c8a ( hwa_c8a_t *p )
 {

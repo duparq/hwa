@@ -41,7 +41,6 @@
  * `hw_counter2_compare1` | @ref atmelavr_ocua "_ocua"   | Compare unit 1 of hw_counter2 (OC2B)
  * `hw_psc0`              | @ref atmelavr_psca "_psca"   | hw_counter0/hw_counter1 prescaler (PSC0)
  * `hw_uart0`             | @ref atmelavr_uarta "_uarta" | Universal Asynchronous Receiver Transmitter
- * `hw_usi0`              |     | Universal Serial Interface
  * `hw_acmp0`             | @ref atmelavr_acmpb "acmpb"  | Analog Comparator
  * `hw_adc0`              | @ref atmelavr_ad10b "ad10b"  | 10-bit Analog to Digital Converter
  * `hw_eeprom0`           | @ref atmelavr_eeproma "eeproma" | Eeprom memory
@@ -67,8 +66,6 @@
 #include "../classes/atmel/avr/c8b_1.h"
 #include "../classes/atmel/avr/c16a_1.h"
 #include "../classes/atmel/avr/uarta_1.h"
-/* #include "../classes/atmel/avr/usia_1.h" */
-#include "../classes/atmel/avr/admuxb_1.h"
 #include "../classes/atmel/avr/acmpb_1.h"
 #include "../classes/atmel/avr/ad10b_1.h"
 
@@ -365,8 +362,8 @@
 #
 #  define hw_pin_1			hw_pin_pd3
 #  define hw_pin_2			hw_pin_pd4
-#  define hw_pin_3			hw_pin_
-#  define hw_pin_4			hw_pin_
+/* #  define hw_pin_3			hw_pin_ */
+/* #  define hw_pin_4			hw_pin_ */
 #  define hw_pin_5			hw_pin_pb6
 #  define hw_pin_6			hw_pin_pb7
 #  define hw_pin_7			hw_pin_pd5
@@ -378,9 +375,9 @@
 #  define hw_pin_13			hw_pin_pb3
 #  define hw_pin_14			hw_pin_pb4
 #  define hw_pin_15			hw_pin_pb5
-#  define hw_pin_16			hw_pin_
-#  define hw_pin_17			hw_pin_
-#  define hw_pin_18			hw_pin_
+/* #  define hw_pin_16			hw_pin_ */
+/* #  define hw_pin_17			hw_pin_ */
+/* #  define hw_pin_18			hw_pin_ */
 #  define hw_pin_19			hw_pin_pc0
 #  define hw_pin_20			hw_pin_pc1
 #  define hw_pin_21			hw_pin_pc2
@@ -435,19 +432,19 @@
 
 /*	Class regs			class, rw, ra, rwm, rfm
  */
-#define _hw__coreb_osccal		_crg, 8, 0x66, 0xFF, 0x00
-#define _hw__coreb_prr			_crg, 8, 0x64, 0xEF, 0x00
-#define _hw__coreb_sreg			_crg, 8, 0x5F, 0xFF, 0x00
-#define _hw__coreb_sph			_crg, 8, 0x5E, 0x03, 0x00
-#define _hw__coreb_spl			_crg, 8, 0x5D, 0xFF, 0x00
-#define _hw__coreb_mcucr		_crg, 8, 0x55, 0x73, 0x00
-#define _hw__coreb_mcusr		_crg, 8, 0x54, 0x0F, 0x00
-#define _hw__coreb_smcr			_crg, 8, 0x53, 0x0F, 0x00
-#define _hw__coreb_gpior2		_crg, 8, 0x4B, 0xFF, 0x00
-#define _hw__coreb_gpior1		_crg, 8, 0x4A, 0xFF, 0x00
-#define _hw__coreb_gpior0		_crg, 8, 0x3E, 0xFF, 0x00
-#define _hw__coreb_eimsk		_crg, 8, 0x3D, 0x03, 0x00
-#define _hw__coreb_eifr			_crg, 8, 0x3C, 0x03, 0x03
+#define _hw__coreb_osccal		_r8, 0x66, 0xFF, 0x00
+#define _hw__coreb_prr			_r8, 0x64, 0xEF, 0x00
+#define _hw__coreb_sreg			_r8, 0x5F, 0xFF, 0x00
+#define _hw__coreb_sph			_r8, 0x5E, 0x03, 0x00
+#define _hw__coreb_spl			_r8, 0x5D, 0xFF, 0x00
+#define _hw__coreb_mcucr		_r8, 0x55, 0x73, 0x00
+#define _hw__coreb_mcusr		_r8, 0x54, 0x0F, 0x00
+#define _hw__coreb_smcr			_r8, 0x53, 0x0F, 0x00
+#define _hw__coreb_gpior2		_r8, 0x4B, 0xFF, 0x00
+#define _hw__coreb_gpior1		_r8, 0x4A, 0xFF, 0x00
+#define _hw__coreb_gpior0		_r8, 0x3E, 0xFF, 0x00
+#define _hw__coreb_eimsk		_r8, 0x3D, 0x03, 0x00
+#define _hw__coreb_eifr			_r8, 0x3C, 0x03, 0x03
 
 #define _hw__coreb_bods			_cb1, mcucr, 1, 6
 #define _hw__coreb_bodse		_cb1, mcucr, 1, 5
@@ -478,6 +475,10 @@
 #define _hw__coreb_prusart		_cb1, prr, 1, 1
 #define _hw__coreb_pradc		_cb1, prr, 1, 0
 
+/*	Object regs
+ */
+#define _hw_core0_mcusr			_r8, 0x54, 0x0F, 0x00
+
 
 /*******************************************************************************
  *									       *
@@ -485,51 +486,53 @@
  *									       *
  *******************************************************************************/
 
-/*	Instance			class, id, address
+/*	Object				class, id, address
  */
 #define _hw_pcic0			_pcicb, 350, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Object hardware registers	rc, ra, rwm, rfm
  */
-#define _hw__pcicb_msk2			_crg, 8, 0x6D, 0xFF, 0x00
-#define _hw__pcicb_msk1			_crg, 8, 0x6C, 0x7F, 0x00
-#define _hw__pcicb_msk0			_crg, 8, 0x6B, 0xFF, 0x00
-#define _hw__pcicb_cr			_crg, 8, 0x68, 0x07, 0x00
-#define _hw__pcicb_fr			_crg, 8, 0x3B, 0x07, 0x07
+#define _hw_pcic0_msk2			_r8, 0x6D, 0xFF, 0x00
+#define _hw_pcic0_msk1			_r8, 0x6C, 0x7F, 0x00
+#define _hw_pcic0_msk0			_r8, 0x6B, 0xFF, 0x00
+#define _hw_pcic0_cr			_r8, 0x68, 0x07, 0x00
+#define _hw_pcic0_fr			_r8, 0x3B, 0x07, 0x07
 
-#define _hw__pcicb_ie2			_cb1, cr, 1, 2
-#define _hw__pcicb_ie1			_cb1, cr, 1, 1
-#define _hw__pcicb_ie0			_cb1, cr, 1, 0
+/*	Object bits
+ */
+#define _hw_pcic0_ie2			_ob1, cr, 1, 2
+#define _hw_pcic0_ie1			_ob1, cr, 1, 1
+#define _hw_pcic0_ie0			_ob1, cr, 1, 0
 
-#define _hw__pcicb_if2			_cb1, fr, 1, 2
-#define _hw__pcicb_if1			_cb1, fr, 1, 1
-#define _hw__pcicb_if0			_cb1, fr, 1, 0
+#define _hw_pcic0_if2			_ob1, fr, 1, 2
+#define _hw_pcic0_if1			_ob1, fr, 1, 1
+#define _hw_pcic0_if0			_ob1, fr, 1, 0
 
-#define _hw__pcicb_hw_pin_pb0		_cb1, msk0, 1, 0
-#define _hw__pcicb_hw_pin_pb1		_cb1, msk0, 1, 1
-#define _hw__pcicb_hw_pin_pb2		_cb1, msk0, 1, 2
-#define _hw__pcicb_hw_pin_pb3		_cb1, msk0, 1, 3
-#define _hw__pcicb_hw_pin_pb4		_cb1, msk0, 1, 4
-#define _hw__pcicb_hw_pin_pb5		_cb1, msk0, 1, 5
-#define _hw__pcicb_hw_pin_pb6		_cb1, msk0, 1, 6
-#define _hw__pcicb_hw_pin_pb7		_cb1, msk0, 1, 7
+#define _hw_pcic0_hw_pin_pb0		_ob1, msk0, 1, 0
+#define _hw_pcic0_hw_pin_pb1		_ob1, msk0, 1, 1
+#define _hw_pcic0_hw_pin_pb2		_ob1, msk0, 1, 2
+#define _hw_pcic0_hw_pin_pb3		_ob1, msk0, 1, 3
+#define _hw_pcic0_hw_pin_pb4		_ob1, msk0, 1, 4
+#define _hw_pcic0_hw_pin_pb5		_ob1, msk0, 1, 5
+#define _hw_pcic0_hw_pin_pb6		_ob1, msk0, 1, 6
+#define _hw_pcic0_hw_pin_pb7		_ob1, msk0, 1, 7
 
-#define _hw__pcicb_hw_pin_pc0		_cb1, msk1, 1, 0
-#define _hw__pcicb_hw_pin_pc1		_cb1, msk1, 1, 1
-#define _hw__pcicb_hw_pin_pc2		_cb1, msk1, 1, 2
-#define _hw__pcicb_hw_pin_pc3		_cb1, msk1, 1, 3
-#define _hw__pcicb_hw_pin_pc4		_cb1, msk1, 1, 4
-#define _hw__pcicb_hw_pin_pc5		_cb1, msk1, 1, 5
-#define _hw__pcicb_hw_pin_pc6		_cb1, msk1, 1, 6
+#define _hw_pcic0_hw_pin_pc0		_ob1, msk1, 1, 0
+#define _hw_pcic0_hw_pin_pc1		_ob1, msk1, 1, 1
+#define _hw_pcic0_hw_pin_pc2		_ob1, msk1, 1, 2
+#define _hw_pcic0_hw_pin_pc3		_ob1, msk1, 1, 3
+#define _hw_pcic0_hw_pin_pc4		_ob1, msk1, 1, 4
+#define _hw_pcic0_hw_pin_pc5		_ob1, msk1, 1, 5
+#define _hw_pcic0_hw_pin_pc6		_ob1, msk1, 1, 6
 
-#define _hw__pcicb_hw_pin_pd0		_cb1, msk2, 1, 0
-#define _hw__pcicb_hw_pin_pd1		_cb1, msk2, 1, 1
-#define _hw__pcicb_hw_pin_pd2		_cb1, msk2, 1, 2
-#define _hw__pcicb_hw_pin_pd3		_cb1, msk2, 1, 3
-#define _hw__pcicb_hw_pin_pd4		_cb1, msk2, 1, 4
-#define _hw__pcicb_hw_pin_pd5		_cb1, msk2, 1, 5
-#define _hw__pcicb_hw_pin_pd6		_cb1, msk2, 1, 6
-#define _hw__pcicb_hw_pin_pd7		_cb1, msk2, 1, 7
+#define _hw_pcic0_hw_pin_pd0		_ob1, msk2, 1, 0
+#define _hw_pcic0_hw_pin_pd1		_ob1, msk2, 1, 1
+#define _hw_pcic0_hw_pin_pd2		_ob1, msk2, 1, 2
+#define _hw_pcic0_hw_pin_pd3		_ob1, msk2, 1, 3
+#define _hw_pcic0_hw_pin_pd4		_ob1, msk2, 1, 4
+#define _hw_pcic0_hw_pin_pd5		_ob1, msk2, 1, 5
+#define _hw_pcic0_hw_pin_pd6		_ob1, msk2, 1, 6
+#define _hw_pcic0_hw_pin_pd7		_ob1, msk2, 1, 7
 
 
 /*******************************************************************************
@@ -544,7 +547,7 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__wdogb_csr			_crg, 8, 0x60, 0xFF, 0x80
+#define _hw__wdogb_csr			_r8, 0x60, 0xFF, 0x80
 
 #define _hw__wdogb_if			_cb1, csr, 1, 7
 #define _hw__wdogb_ie			_cb1, csr, 1, 6
@@ -556,7 +559,7 @@
 #define _hw__wdogb_wdifie		_cb1, csr, 2, 6 /* convenient for clearing irq */
 #define _hw__wdogb_wdall		_cb1, csr, 7, 0 /* convenient for turning wd off */
 
-#define _hw__wdogb_wdrf			_ext, hw_core0, wdrf /* convenient */
+#define _hw__wdogb_wdrf			_xob1, hw_core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -573,15 +576,15 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__c8a_ccra			_crg, 8, 0x44, 0xF3, 0x00
-#define _hw__c8a_ccrb			_crg, 8, 0x45, 0xCF, 0x00
-#define _hw__c8a_count			_crg, 8, 0x46, 0xFF, 0x00
-#define _hw__c8a_ocra			_crg, 8, 0x47, 0xFF, 0x00
-#define _hw__c8a_compare0		_crg, 8, 0x47, 0xFF, 0x00
-#define _hw__c8a_ocrb			_crg, 8, 0x48, 0xFF, 0x00
-#define _hw__c8a_compare1		_crg, 8, 0x48, 0xFF, 0x00
-#define _hw__c8a_imsk			_crg, 8, 0x6E, 0x07, 0x00
-#define _hw__c8a_ifr			_crg, 8, 0x35, 0x07, 0x07
+#define _hw__c8a_ccra			_r8, 0x44, 0xF3, 0x00
+#define _hw__c8a_ccrb			_r8, 0x45, 0xCF, 0x00
+#define _hw__c8a_count			_r8, 0x46, 0xFF, 0x00
+#define _hw__c8a_ocra			_r8, 0x47, 0xFF, 0x00
+#define _hw__c8a_compare0		_r8, 0x47, 0xFF, 0x00
+#define _hw__c8a_ocrb			_r8, 0x48, 0xFF, 0x00
+#define _hw__c8a_compare1		_r8, 0x48, 0xFF, 0x00
+#define _hw__c8a_imsk			_r8, 0x6E, 0x07, 0x00
+#define _hw__c8a_ifr			_r8, 0x35, 0x07, 0x07
 
 #define _hw__c8a_compare0_mode		_cb1, ccra, 2, 6
 #define _hw__c8a_compare1_mode		_cb1, ccra, 2, 4
@@ -621,17 +624,17 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__c16a_ccra			_crg,  8, 0x80, 0xF3,   0x00
-#define _hw__c16a_ccrb			_crg,  8, 0x81, 0xDF,   0x00
-#define _hw__c16a_ccrc			_crg,  8, 0x82, 0xC0,   0x00
-#define _hw__c16a_count			_crg, 16, 0x84, 0xFFFF, 0x0000
-#define _hw__c16a_compare0		_crg, 16, 0x88, 0xFFFF, 0x0000
-#define _hw__c16a_compare1		_crg, 16, 0x8A, 0xFFFF, 0x0000
-#define _hw__c16a_capture0		_crg, 16, 0x86, 0xFFFF, 0x0000
-#define _hw__c16a_imsk			_crg,  8, 0x6F, 0x27,   0x00
-#define _hw__c16a_ifr			_crg,  8, 0x36, 0x27,   0x27
+#define _hw__c16a_ccra			_r8,  0x80, 0xF3,   0x00
+#define _hw__c16a_ccrb			_r8,  0x81, 0xDF,   0x00
+#define _hw__c16a_ccrc			_r8,  0x82, 0xC0,   0x00
+#define _hw__c16a_count			_r16, 0x84, 0xFFFF, 0x0000
+#define _hw__c16a_compare0		_r16, 0x88, 0xFFFF, 0x0000
+#define _hw__c16a_compare1		_r16, 0x8A, 0xFFFF, 0x0000
+#define _hw__c16a_capture0		_r16, 0x86, 0xFFFF, 0x0000
+#define _hw__c16a_imsk			_r8,  0x6F, 0x27,   0x00
+#define _hw__c16a_ifr			_r8,  0x36, 0x27,   0x27
 
-#define _hw__c16a_acic			_ext, hw_acmp0, acic
+#define _hw__c16a_acic			_xob1, hw_acmp0, csr, 1, 2
 
 /*	Counter1 compare units		class, id, counter, channel, io
  */
@@ -659,16 +662,16 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */
-#define _hw__c8b_ccra			_crg, 8, 0xB0, 0xF3, 0x00
-#define _hw__c8b_ccrb			_crg, 8, 0xB1, 0xCF, 0x00
-#define _hw__c8b_count			_crg, 8, 0xB2, 0xFF, 0x00
-#define _hw__c8b_ocra			_crg, 8, 0xB3, 0xFF, 0x00
-#define _hw__c8b_compare0		_crg, 8, 0xB3, 0xFF, 0x00
-#define _hw__c8b_ocrb			_crg, 8, 0xB4, 0xFF, 0x00
-#define _hw__c8b_compare1		_crg, 8, 0xB4, 0xFF, 0x00
-#define _hw__c8b_imsk			_crg, 8, 0x70, 0x07, 0x00
-#define _hw__c8b_ifr			_crg, 8, 0x37, 0x07, 0x07
-#define _hw__c8b_assr			_crg, 8, 0xB6, 0x60, 0x00
+#define _hw__c8b_ccra			_r8, 0xB0, 0xF3, 0x00
+#define _hw__c8b_ccrb			_r8, 0xB1, 0xCF, 0x00
+#define _hw__c8b_count			_r8, 0xB2, 0xFF, 0x00
+#define _hw__c8b_ocra			_r8, 0xB3, 0xFF, 0x00
+#define _hw__c8b_compare0		_r8, 0xB3, 0xFF, 0x00
+#define _hw__c8b_ocrb			_r8, 0xB4, 0xFF, 0x00
+#define _hw__c8b_compare1		_r8, 0xB4, 0xFF, 0x00
+#define _hw__c8b_imsk			_r8, 0x70, 0x07, 0x00
+#define _hw__c8b_ifr			_r8, 0x37, 0x07, 0x07
+#define _hw__c8b_assr			_r8, 0xB6, 0x60, 0x00
 
 #define _hw__c8b_compare0_mode		_cb1, ccra, 2, 6
 #define _hw__c8b_compare1_mode		_cb1, ccra, 2, 4
@@ -686,7 +689,7 @@
 #define _hw__c8b_ifcm0			_cb1, ifr, 1, 1
 #define _hw__c8b_ifov			_cb1, ifr, 1, 0
 
-#define _hw__c8b_psrasy			_ext, hw_core0, psrasy /* convenient */
+//#define _hw__c8b_psrasy			_xob1, hw_core0, psrasy /* convenient */
 
 /*	Counter2 compare units		class, id, counter, channel, io
  */
@@ -710,7 +713,7 @@
 
 /*	Object registers		class, rw, ra, rwm, rfm
  */
-#define _hw__psca_cr			_crg, 8, 0x43, 0x81, 0x00
+#define _hw__psca_cr			_r8, 0x43, 0x81, 0x00
 
 #define _hw__psca_tsm			_cb1, cr, 1, 7
 #define _hw__psca_psrasy		_cb1, cr, 1, 1
@@ -732,8 +735,8 @@
 
 /*	Object registers		class, rw, ra, rwm, rfm
  */
-#define _hw_psc1_psr			_ext, hw_psc0, psrasy
-#define _hw_psc1_tsm			_ext, hw_psc0, tsm
+//#define _hw_psc1_psr			_xob1, hw_psc0, psrasy
+//#define _hw_psc1_tsm			_xob1, hw_psc0, tsm
 
 
 /*******************************************************************************
@@ -742,16 +745,20 @@
  *									       *
  *******************************************************************************/
 
+/*	Object
+ */
 #define _hw_uart0			_uarta, 600, 0xC0
 
-/*	Object registers		class, rw, ra, rwm, rfm
+/*	Class hardware registers	rc, ra, rwm, rfm
  */
-#define _hw__uarta_dr			_crg,  8, 0x06, 0xFF,   0x00
-#define _hw__uarta_ubrr			_crg, 16, 0x04, 0x0FFF, 0x0000
-#define _hw__uarta_csrc			_crg,  8, 0x02, 0xFF,   0x00
-#define _hw__uarta_csrb			_crg,  8, 0x01, 0xFD,   0x00
-#define _hw__uarta_csra			_crg,  8, 0x00, 0x43,   0x40
+#define _hw__uarta_dr			_r8,  0x06, 0xFF,   0x00
+#define _hw__uarta_ubrr			_r16, 0x04, 0x0FFF, 0x0000
+#define _hw__uarta_csrc			_r8,  0x02, 0xFF,   0x00
+#define _hw__uarta_csrb			_r8,  0x01, 0xFD,   0x00
+#define _hw__uarta_csra			_r8,  0x00, 0x43,   0x40
 
+/*	Class bits
+ */
 #define _hw__uarta_brr			_cb1, ubrr, 12, 0
 
 #define _hw__uarta_ifrxc		_cb1, csra, 1, 7
@@ -791,18 +798,22 @@
 
 /*	Class registers			class, rw, ra, rwm, rfm
  */				        
-#define _hw__acmpb_csr			_crg, 8, 0x50, 0xDF, 0x10
-#define _hw__acmpb_did			_crg, 8, 0x7F, 0x03, 0x00
+#define _hw__acmpb_csr			_r8, 0x50, 0xDF, 0x10
+#define _hw__acmpb_did			_r8, 0x7F, 0x03, 0x00
 
 #define _hw__acmpb_if			_cb1, csr, 1, 4
 #define _hw__acmpb_ie			_cb1, csr, 1, 3
 
-#define _hw__acmpb_acme			_ext, hw_adc0, me
-#define _hw__acmpb_aden			_ext, hw_adc0, en
-#define _hw__acmpb_admux		_ext, hw_adc0, mux
+#define _hw__acmpb_acme			_xob1, hw_adc0, srb,   1, 6
+#define _hw__acmpb_aden			_xob1, hw_adc0, sra,   1, 7
+#define _hw__acmpb_admux		_xob1, hw_adc0, admux, 4, 0
 
 #define _hw__acmpb_did_0		_cb1, did, 1, 0
 #define _hw__acmpb_did_1		_cb1, did, 1, 1
+
+/*	Object registers		class, rw, ra, rwm, rfm
+ */				        
+#define _hw_acmp0_csr			_r8, 0x50, 0xDF, 0x10
 
 
 /*******************************************************************************
@@ -813,13 +824,13 @@
 
 #define _hw_adc0			_ad10b, 720, 0
 
-#define _hw__ad10b_admux		_crg,  8, 0x7C,   0xEF,   0x00
-#define _hw__ad10b_sra			_crg,  8, 0x7A,   0xFF,   0x10
-#define _hw__ad10b_adc			_crg, 16, 0x78, 0x0000, 0x0000
-#define _hw__ad10b_adch			_crg,  8, 0x79,   0x00,   0x00
-#define _hw__ad10b_adcl			_crg,  8, 0x78,   0x00,   0x00
-#define _hw__ad10b_srb			_crg,  8, 0x7B,   0x47,   0x00
-#define _hw__ad10b_did			_crg,  8, 0x7E,   0x3F,   0x00 /* port C */
+#define _hw__ad10b_admux		_r8,  0x7C,   0xEF,   0x00
+#define _hw__ad10b_sra			_r8,  0x7A,   0xFF,   0x10
+#define _hw__ad10b_adc			_r16, 0x78, 0x0000, 0x0000
+#define _hw__ad10b_adch			_r8,  0x79,   0x00,   0x00
+#define _hw__ad10b_adcl			_r8,  0x78,   0x00,   0x00
+#define _hw__ad10b_srb			_r8,  0x7B,   0x47,   0x00
+#define _hw__ad10b_did			_r8,  0x7E,   0x3F,   0x00 /* port C */
 
 #define _hw__ad10b_refs			_cb1, admux, 2, 6
 #define _hw__ad10b_lar			_cb1, admux, 1, 5
@@ -859,11 +870,11 @@
 
 /*	Class regs			class, rw, ra, rwm, rfm
  */
-#define _hw__eeproma_arh		_crg,  8, 0x42,   0x03, 0x00
-#define _hw__eeproma_arl		_crg,  8, 0x41,   0xFF, 0x00
-#define _hw__eeproma_ar			_crg, 16, 0x41, 0x03FF, 0x00
-#define _hw__eeproma_dr			_crg,  8, 0x40,   0xFF, 0x00
-#define _hw__eeproma_cr			_crg,  8, 0x3F,   0x3F, 0x00
+#define _hw__eeproma_arh		_r8,  0x42,   0x03, 0x00
+#define _hw__eeproma_arl		_r8,  0x41,   0xFF, 0x00
+#define _hw__eeproma_ar			_r16, 0x41, 0x03FF, 0x00
+#define _hw__eeproma_dr			_r8,  0x40,   0xFF, 0x00
+#define _hw__eeproma_cr			_r8,  0x3F,   0x3F, 0x00
 
 #define _hw__eeproma_pm			_cb1, cr, 2, 4
 #define _hw__eeproma_rie		_cb1, cr, 1, 3
@@ -887,7 +898,7 @@
 
 /*	Class regs			class, rw, ra, rwm, rfm
  */
-#define _hw__flasha_csr			_crg, 8, 0x57, 0xBF, 0x00
+#define _hw__flasha_csr			_r8, 0x57, 0xBF, 0x00
 
 #define _hw__flasha_spmie		_cb1, csr, 1, 7
 #define _hw__flasha_rwwsb		_cb1, csr, 1, 6
@@ -907,34 +918,29 @@
 
 #define _hw_class__swuarta
 
-/*	Instance	                class, id, address
- */
 #if defined hw_swuart0_pin_rx || defined hw_swuart0_pin_tx
-
-#define _hw_swuart0			_swuarta, 1200, 0
-#define _hw_swuart0_dtn _crg, hw_bn(hw_swuart0_counter), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#define _hw_swuart0_dt0	_crg, hw_bn(hw_swuart0_counter), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#define _hw_swuart0__st	_hw_ra(hw_core0, gpior0)
-
-#define _hw_swuart0_sr			_crg, 8, _hw_ra(hw_core0, gpior0), 0xFF, 0x00
-#define _hw_swuart0_synced		_ob1, sr, 1, 0
-
-#endif /* defined hw_swuart0_pin_rx || defined hw_swuart0_pin_tx */
-
-/*	Instance	                class, id, address
+/*
+ *	Object hw_swuart0
  */
+#define _hw_swuart0			_swuarta, 1200, 0
+#define _hw_swuart0_dtn _hw_rc(hw_swuart0_counter,count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#define _hw_swuart0_dt0	_hw_rc(hw_swuart0_counter,count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#define _hw_swuart0__st			_hw_ra(hw_core0, gpior0)
+#define _hw_swuart0_sr			_hw_core0_gpior0
+#define _hw_swuart0_synced		_ob1, sr, 1, 0
+#endif
+
 #if defined hw_swuart1_pin_rx || defined hw_swuart1_pin_tx
-
+/*
+ *	Object hw_swuart1
+ */
 #define _hw_swuart1			_swuarta, 1210, 0
-
-#define _hw_swuart1_dtn	_crg, hw_bn(hw_swuart1_counter), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#define _hw_swuart1_dt0	_crg, hw_bn(hw_swuart1_counter), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#define _hw_swuart1__st	_hw_ra(hw_core0, gpior1)
-
-#define _hw_swuart1_sr			_crg, 8, _hw_ra(hw_core0, gpior1), 0xFF, 0x00
+#define _hw_swuart1_dtn _hw_rc(hw_swuart1_counter,count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#define _hw_swuart1_dt0	_hw_rc(hw_swuart1_counter,count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#define _hw_swuart1__st			_hw_ra(hw_core0, gpior1)
+#define _hw_swuart1_sr			_hw_core0_gpior1
 #define _hw_swuart1_synced		_ob1, sr, 1, 0
-
-#endif /* defined hw_swuart1_pin_rx || defined hw_swuart1_pin_tx */
+#endif
 
 
 /**
@@ -1207,6 +1213,11 @@
 #define _hw_is_application_application			, 1
 #define _hw_is_bootloader_bootloader			, 1
 
+/**
+ * @def HW_DEVICE_BOOT
+ * @brief Whether the device starts the bootloader (in the boot Flash) or the application.
+ * @hideinitializer
+ */
 #if !defined HW_DEVICE_BOOT
 #  define HW_DEVICE_BOOT				application
 #endif

@@ -7,7 +7,9 @@
 /**
  * @example
  *
- * Process read/write commands on the Flash memory. Algorithm:
+ * @par Process read/write commands on the Flash memory.
+ *
+ * Algorithm:
  *
  *     Synchronize the software UART.
  *     Send the application '$' prompt
@@ -16,12 +18,11 @@
  *       IF c=='f' THEN read n bytes from Flash address al:ah
  *       IF c=='F' THEN write n at Flash address al:ah
  *
- *  Test application:
+ * @par Test application
  *
  *      ./main.py --help
  *      ./main.py read 0 1024
  *      ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING THE APPLICATION OR THE BOOTLOADER!
- *
  *  Note: if you have Diabolo installed, writing into the Flash memory below
  *  Diabolo will corrupt the application CRC and Diabolo will not start the
  *  application anymore after RESET. Oonly a few 0xFF bytes above Diabolo can be
@@ -34,6 +35,13 @@
  *
  * @par config.h
  * @include 08-1-swuart-flash-read-write/config.h
+ * 
+ * Symbols:
+ *
+ * * `BOARD_H` is the name of the target board header file. It can be defined at
+ * compile time via the command line. For example, `make BOARD=nanodccduino`
+ * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref boards for the
+ * board definitions provided with HWA.
  *
  * @par main.c
  */

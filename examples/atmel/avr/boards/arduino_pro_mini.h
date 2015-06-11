@@ -16,13 +16,15 @@
  * to the RXD pin of the serial adapter and a 1k resistor is connected between
  * the RXD and TXD pins (it could be replaced by a diode, Schottky preferably).
  *
+ * @par Serial adapter wiring
+ *
  *     BOARD -> RXD : RXD <- Serial Adapter
  *                  : TXD
  *              RST : DTR
  *              GND : GND
  *              VCC : VCC
  *
- * To install Diabolo with avrdude/usbasp:
+ * @par USBASP wiring
  *
  *      USBASP -> 1  MOSI  11  <- BOARD
  *                2  VCC   VCC
@@ -54,17 +56,21 @@
 #define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 
-/*  Settings for Diabolo
+/*  Settings for the Diabolo bootloader
+ *    BPS and RESET_SIGNAL are only used by `make` to provide
+ *    settings to the Diabolo application on the host.
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-#define DIABOLO_BPS                     115200          // Default transfer rate
+#define DIABOLO_BPS                     230400
 #define DIABOLO_RESET_SIGNAL            DTR
 
+/*  Board pins
+ */
 #define ARDUINO
 
 #define PIN_LED                         hw_pin_pb5
 
-/*  Include HWA header
+/*  Include HWA definitions
  */
 #include <hwa/atmega328p_au.h>

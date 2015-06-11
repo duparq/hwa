@@ -9,7 +9,7 @@
  */
 
 
-HW_INLINE void __hwa_begin__ad10b ( hwa_ad10b_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__ad10b ( hwa_ad10b_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _ad10b, admux );
   _hwa_begin_reg_p( p, a, _ad10b, sra   );
@@ -18,16 +18,16 @@ HW_INLINE void __hwa_begin__ad10b ( hwa_ad10b_t *p, intptr_t a )
 }
 
 
-HW_INLINE void __hwa_init__ad10b ( hwa_ad10b_t *p )
+HW_INLINE void _hwa_init_p__ad10b ( hwa_ad10b_t *p )
 {
-  _hwa_set_r8( &p->admux, 0x00 );
-  _hwa_set_r8( &p->sra,   0x00 );
-  _hwa_set_r8( &p->srb,   0x00 );
-  _hwa_set_r8( &p->did,   0x00 );
+  _hwa_set__r8( &p->admux, 0x00 );
+  _hwa_set__r8( &p->sra,   0x00 );
+  _hwa_set__r8( &p->srb,   0x00 );
+  _hwa_set__r8( &p->did,   0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__ad10b ( hwa_t *hwa, hwa_ad10b_t *p )
+HW_INLINE void _hwa_commit_p__ad10b ( hwa_t *hwa, hwa_ad10b_t *p )
 {
   _hwa_commit_reg_p( p, _ad10b, admux );
   _hwa_commit_reg_p( p, _ad10b, sra   );
@@ -223,11 +223,11 @@ HW_INLINE void __hwa_commit__ad10b ( hwa_t *hwa, hwa_ad10b_t *p )
 #define _hw_mthd_hw_turn__ad10b		, _hw_turn_ad10b
 
 #define _hw_turn_ad10b(o,i,a, ...)					\
-  HW_G2(_hw_turn_ad10b, HW_IS(,hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
+  HW_G2(_hw_turn_ad10b, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_turn_ad10b_0(o,v, ...)			\
   HW_ERR("expected `on` or `off`, not `" #v "`.")
 #define _hw_turn_ad10b_1(o,v, ...)				\
-  HW_TX(_hw_write_reg(o, en, HW_A1(hw_state_##v)),__VA_ARGS__)
+  HW_TX(_hw_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 
 
 /**
@@ -240,11 +240,11 @@ HW_INLINE void __hwa_commit__ad10b ( hwa_t *hwa, hwa_ad10b_t *p )
 #define _hw_mthd_hwa_turn__ad10b	, _hwa_turn_ad10b
 
 #define _hwa_turn_ad10b(o,i,a, ...)					\
-  HW_G2(_hwa_turn_ad10b, HW_IS(,hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
+  HW_G2(_hwa_turn_ad10b, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
 #define _hwa_turn_ad10b_0(o,v, ...)			\
   HW_ERR("expected `on` or `off`, got `" #v "` instead.")
 #define _hwa_turn_ad10b_1(o,v, ...)			\
-  HW_TX(_hwa_write_reg(o, en, HW_A1(hw_state_##v)),__VA_ARGS__)
+  HW_TX(_hwa_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 
 
 /**

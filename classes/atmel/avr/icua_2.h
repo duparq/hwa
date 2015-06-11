@@ -108,13 +108,13 @@
   HW_TX(,__VA_ARGS__)
 
 #define _hwa_cficua_xfilter_1(cn,icn,kw,...)				\
-  HW_G2(_hwa_cficua_vfilter,HW_IS(,hw_state_##__VA_ARGS__))(cn,icn,__VA_ARGS__)
+  HW_G2(_hwa_cficua_vfilter,HW_IS(,_hw_state_##__VA_ARGS__))(cn,icn,__VA_ARGS__)
 
 #define _hwa_cficua_vfilter_0(cn,icn,...)					\
   HW_ERR( "optionnal parameter `filter` can be `on` or `off` but not `" HW_QUOTE(__VA_ARGS__) "`.")
 
 #define _hwa_cficua_vfilter_1(cn,icn,v,...)		\
-  hwa->cn.config.icn.filter = HW_A1(hw_state_##v);		\
+  hwa->cn.config.icn.filter = HW_A1(_hw_state_##v);		\
   HW_TX(,__VA_ARGS__)
 
 

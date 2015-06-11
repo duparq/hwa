@@ -167,14 +167,17 @@ OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
 #	Preprocessor output
 #
-%.cp.c: %.c
+FORCE:
+%.cp.c: %.c FORCE
 	$(CPP) $(CFLAGS) $< >$@
 #	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
 
-%.cp.s: %.s
+FORCE:
+%.cp.s: %.s FORCE
 	$(CPP) $(AFLAGS) $< >$@
 
-%.cp.sx: %.sx
+FORCE:
+%.cp.sx: %.sx FORCE
 	$(CPP) $(AFLAGS) $< >$@
 	if grep 'hw_error ; \.fail' $@ ; then exit 1 ; fi
 #	if grep '\.fail' $@ ; then exit 1 ; fi

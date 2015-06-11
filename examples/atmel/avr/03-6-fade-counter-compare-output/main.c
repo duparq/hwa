@@ -21,15 +21,19 @@
  *     into a HWA context
  */
 
-/*  Include the board definition (includes hwa.h)
+
+/*  Set a default target board
  */
-//#include <boards/attiny84.h>
-#include <boards/nanodccduino.h>
+#if !defined BOARD_H
+#  define BOARD_H               <boards/attiny84.h>
+#endif
+
+#include BOARD_H
 
 
 /*  The counter
  */
-#define PWM                     hw_counter2_compare0
+#define PWM                     hw_counter0_compare0
 #define CLKDIV                  64
 #define COUNTMODE               loop_up
 

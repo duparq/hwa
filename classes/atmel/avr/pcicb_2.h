@@ -8,34 +8,56 @@
  * @file
  */
 
-HW_INLINE void __hwa_begin__pcicb ( hwa_pcicb_t *p, intptr_t address )
-{
-  _hwa_begin_reg_p( p, address, _pcicb, fr   );
-  _hwa_begin_reg_p( p, address, _pcicb, cr   );
-  _hwa_begin_reg_p( p, address, _pcicb, msk0 );
-  _hwa_begin_reg_p( p, address, _pcicb, msk1 );
-  _hwa_begin_reg_p( p, address, _pcicb, msk2 );
-}
+#define _hwa_begin__pcicb(i,a,o)		\
+  _hwa_begin_reg( o, a, fr   );			\
+  _hwa_begin_reg( o, a, cr   );			\
+  _hwa_begin_reg( o, a, msk0 );			\
+  _hwa_begin_reg( o, a, msk1 );			\
+  _hwa_begin_reg( o, a, msk2 );
+
+#define _hwa_init__pcicb(i,a,o)			\
+  _hwa_init_reg( o, fr,   0 );			\
+  _hwa_init_reg( o, cr,   0 );			\
+  _hwa_init_reg( o, msk0, 0 );			\
+  _hwa_init_reg( o, msk1, 0 );			\
+  _hwa_init_reg( o, msk2, 0 );
+
+#define _hwa_commit__pcicb(i,a,o)		\
+  _hwa_commit_reg( o, fr   );			\
+  _hwa_commit_reg( o, cr   );			\
+  _hwa_commit_reg( o, msk0 );			\
+  _hwa_commit_reg( o, msk1 );			\
+  _hwa_commit_reg( o, msk2 );
 
 
-HW_INLINE void __hwa_init__pcicb ( hwa_pcicb_t *p )
-{
-  _hwa_set_r8( &p->fr,   0x00 );
-  _hwa_set_r8( &p->cr,   0x00 );
-  _hwa_set_r8( &p->msk0, 0x00 );
-  _hwa_set_r8( &p->msk1, 0x00 );
-  _hwa_set_r8( &p->msk2, 0x00 );
-}
+/* HW_INLINE void _hwa_begin_p__pcicb ( hwa_pcicb_t *p, intptr_t address ) */
+/* { */
+/*   _hwa_begin_reg_p( p, address, _pcicb, fr   ); */
+/*   _hwa_begin_reg_p( p, address, _pcicb, cr   ); */
+/*   _hwa_begin_reg_p( p, address, _pcicb, msk0 ); */
+/*   _hwa_begin_reg_p( p, address, _pcicb, msk1 ); */
+/*   _hwa_begin_reg_p( p, address, _pcicb, msk2 ); */
+/* } */
 
 
-HW_INLINE void __hwa_commit__pcicb ( hwa_t *hwa, hwa_pcicb_t *p )
-{
-  _hwa_commit_reg_p( p, _pcicb, fr   );
-  _hwa_commit_reg_p( p, _pcicb, cr   );
-  _hwa_commit_reg_p( p, _pcicb, msk0 );
-  _hwa_commit_reg_p( p, _pcicb, msk1 );
-  _hwa_commit_reg_p( p, _pcicb, msk2 );
-}
+/* HW_INLINE void _hwa_init_p__pcicb ( hwa_pcicb_t *p ) */
+/* { */
+/*   _hwa_set__r8( &p->fr,   0x00 ); */
+/*   _hwa_set__r8( &p->cr,   0x00 ); */
+/*   _hwa_set__r8( &p->msk0, 0x00 ); */
+/*   _hwa_set__r8( &p->msk1, 0x00 ); */
+/*   _hwa_set__r8( &p->msk2, 0x00 ); */
+/* } */
+
+
+/* HW_INLINE void _hwa_commit_p__pcicb ( hwa_t *hwa, hwa_pcicb_t *p ) */
+/* { */
+/*   _hwa_commit_reg_p( p, _pcicb, fr   ); */
+/*   _hwa_commit_reg_p( p, _pcicb, cr   ); */
+/*   _hwa_commit_reg_p( p, _pcicb, msk0 ); */
+/*   _hwa_commit_reg_p( p, _pcicb, msk1 ); */
+/*   _hwa_commit_reg_p( p, _pcicb, msk2 ); */
+/* } */
 
 
 /**
@@ -61,8 +83,8 @@ HW_INLINE void __hwa_commit__pcicb ( hwa_t *hwa, hwa_pcicb_t *p )
 #define _hw_mthd_hw_turn__pcicb			, _hw_turn_pcicb
 
 #define _hw_turn_pcicb( p,i,a, pn, v, ...)	HW_TX(_hw_turn_pcicb_2(p,pn,v),__VA_ARGS__)
-#define _hw_turn_pcicb_2(p,pn,v)		HW_G2(_hw_turn_pcicb,HW_IS(,hw_state_##v))(p,pn,v)
-#define _hw_turn_pcicb_1(p,pn,v)		hw_write_reg(p,pn,HW_A1(hw_state_##v))
+#define _hw_turn_pcicb_2(p,pn,v)		HW_G2(_hw_turn_pcicb,HW_IS(,_hw_state_##v))(p,pn,v)
+#define _hw_turn_pcicb_1(p,pn,v)		hw_write_reg(p,pn,HW_A1(_hw_state_##v))
 
 
 /**

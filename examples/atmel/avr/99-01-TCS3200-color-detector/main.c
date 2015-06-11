@@ -50,10 +50,6 @@
 #define CAPTURE         capture0
 #define COMPARE         compare1
 
-#if !defined PIN_LED
-#  define PIN_LED       hw_pin_7
-#endif
-
 
 /*  Channel selection pins
  */

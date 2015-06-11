@@ -46,7 +46,7 @@
 #define _hw_mthd_hwa_clear__coreb	, _hwa_clear_core
 
 
-HW_INLINE void __hwa_begin__coreb ( hwa_coreb_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__coreb ( hwa_coreb_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _coreb, eimsk  );
   _hwa_begin_reg_p( p, a, _coreb, eifr   );
@@ -61,22 +61,22 @@ HW_INLINE void __hwa_begin__coreb ( hwa_coreb_t *p, intptr_t a )
 }
 
 
-HW_INLINE void __hwa_init__coreb ( hwa_coreb_t *p )
+HW_INLINE void _hwa_init_p__coreb ( hwa_coreb_t *p )
 {
-  _hwa_set_r8( &p->eimsk,  0x00 );
-  _hwa_set_r8( &p->eifr,   0x00 );
-  _hwa_set_r8( &p->mcucr,  0x00 );
+  _hwa_set__r8( &p->eimsk,  0x00 );
+  _hwa_set__r8( &p->eifr,   0x00 );
+  _hwa_set__r8( &p->mcucr,  0x00 );
   //  mcusr is not initialized as its status is not known after RESET
-  _hwa_set_r8( &p->smcr,   0x00 );
-  _hwa_set_r8( &p->osccal, 0x00 );
-  _hwa_set_r8( &p->gpior2, 0x00 );
-  _hwa_set_r8( &p->gpior1, 0x00 );
-  _hwa_set_r8( &p->gpior0, 0x00 );
-  _hwa_set_r8( &p->prr,    0x00 );
+  _hwa_set__r8( &p->smcr,   0x00 );
+  _hwa_set__r8( &p->osccal, 0x00 );
+  _hwa_set__r8( &p->gpior2, 0x00 );
+  _hwa_set__r8( &p->gpior1, 0x00 );
+  _hwa_set__r8( &p->gpior0, 0x00 );
+  _hwa_set__r8( &p->prr,    0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__coreb ( hwa_t *hwa, hwa_coreb_t *p )
+HW_INLINE void _hwa_commit_p__coreb ( hwa_t *hwa, hwa_coreb_t *p )
 {
   _hwa_commit_reg_p( p, _coreb, eimsk  );
   _hwa_commit_reg_p( p, _coreb, eifr   );

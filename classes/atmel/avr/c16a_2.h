@@ -10,7 +10,7 @@
  *			ATmegaX8 counter1 ?
  */
 
-HW_INLINE void __hwa_begin__c16a ( hwa_c16a_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__c16a ( hwa_c16a_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _c16a, ccra     );
   _hwa_begin_reg_p( p, a, _c16a, ccrb     );
@@ -36,21 +36,21 @@ HW_INLINE void __hwa_begin__c16a ( hwa_c16a_t *p, intptr_t a )
 }
 
 
-HW_INLINE void __hwa_init__c16a ( hwa_c16a_t *p )
+HW_INLINE void _hwa_init_p__c16a ( hwa_c16a_t *p )
 {
-  _hwa_set_r8(  &p->ccra,  0x00 );
-  _hwa_set_r8(  &p->ccrb,  0x00 );
-  _hwa_set_r8(  &p->ccrc,  0x00 );
-  _hwa_set_r16( &p->count, 0x00 );
-  _hwa_set_r16( &p->capture0,   0x00 );
-  _hwa_set_r16( &p->compare0,  0x00 );
-  _hwa_set_r16( &p->compare1,  0x00 );
-  _hwa_set_r8(  &p->imsk,  0x00 );
-  _hwa_set_r8(  &p->ifr,   0x00 );
+  _hwa_set__r8(  &p->ccra,  0x00 );
+  _hwa_set__r8(  &p->ccrb,  0x00 );
+  _hwa_set__r8(  &p->ccrc,  0x00 );
+  _hwa_set__r16( &p->count, 0x00 );
+  _hwa_set__r16( &p->capture0,   0x00 );
+  _hwa_set__r16( &p->compare0,  0x00 );
+  _hwa_set__r16( &p->compare1,  0x00 );
+  _hwa_set__r8(  &p->imsk,  0x00 );
+  _hwa_set__r8(  &p->ifr,   0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
+HW_INLINE void _hwa_commit_p__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 {
   _hwa_commit_reg_p( p, _c16a, ccra  );
   _hwa_commit_reg_p( p, _c16a, ccrb  );
@@ -221,7 +221,7 @@ HW_INLINE void __hwa_commit__c16a ( hwa_t *hwa, hwa_c16a_t *p )
 
 /*	Solve the configuration of the counter with its compare and capture units
  */
-HW_INLINE void __hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_t *p )
+HW_INLINE void _hwa_solve__c16a ( hwa_t *hwa __attribute__((unused)), hwa_c16a_t *p )
 {
   p->solved.cs   = 0xFF ;
   p->solved.wgm  = 0xFF ;

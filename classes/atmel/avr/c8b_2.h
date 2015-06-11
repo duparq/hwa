@@ -9,7 +9,7 @@
  */
 
 
-HW_INLINE void __hwa_begin__c8b ( hwa_c8b_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__c8b ( hwa_c8b_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _c8b, ccra     );
   _hwa_begin_reg_p( p, a, _c8b, ccrb     );
@@ -31,20 +31,20 @@ HW_INLINE void __hwa_begin__c8b ( hwa_c8b_t *p, intptr_t a )
 }
 
 
-HW_INLINE void __hwa_init__c8b ( hwa_c8b_t *p )
+HW_INLINE void _hwa_init_p__c8b ( hwa_c8b_t *p )
 {
-  _hwa_set_r8( &p->ccra,     0x00 );
-  _hwa_set_r8( &p->ccrb,     0x00 );
-  _hwa_set_r8( &p->count,    0x00 );
-  _hwa_set_r8( &p->compare0, 0x00 );
-  _hwa_set_r8( &p->compare1, 0x00 );
-  _hwa_set_r8( &p->imsk,     0x00 );
-  _hwa_set_r8( &p->ifr,      0x00 );
-  _hwa_set_r8( &p->assr,     0x00 );
+  _hwa_set__r8( &p->ccra,     0x00 );
+  _hwa_set__r8( &p->ccrb,     0x00 );
+  _hwa_set__r8( &p->count,    0x00 );
+  _hwa_set__r8( &p->compare0, 0x00 );
+  _hwa_set__r8( &p->compare1, 0x00 );
+  _hwa_set__r8( &p->imsk,     0x00 );
+  _hwa_set__r8( &p->ifr,      0x00 );
+  _hwa_set__r8( &p->assr,     0x00 );
 }
 
 
-HW_INLINE void __hwa_commit__c8b ( hwa_t *hwa, hwa_c8b_t *p )
+HW_INLINE void _hwa_commit_p__c8b ( hwa_t *hwa, hwa_c8b_t *p )
 {
   _hwa_commit_reg_p( p, _c8b, ccra     );
   _hwa_commit_reg_p( p, _c8b, ccrb     );
@@ -207,7 +207,7 @@ HW_INLINE void __hwa_commit__c8b ( hwa_t *hwa, hwa_c8b_t *p )
 /*  Solve the configuration of the counter and its compare and capture units
  *
  *  Except the structure hwa_c8b_t, this is exactly the same as
- *  __hwa_solve__c8b.
+ *  _hwa_solve__c8b.
  *
  *  Alternatively, computed values to be written into hardware registers could
  *  be stored in a 'solved' structure. They would be written by the 'commit'

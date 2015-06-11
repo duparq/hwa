@@ -41,14 +41,13 @@
  * @endcode
  */
 #define _hw_mthd_hw_turn__psca		, _hw_psca_turn
-#define _hw_psca_turn(o,i,a,v,...)	HW_TX(HW_G2(_hw_turnpsca,HW_IS(,hw_state_##v))(o,v), \
+#define _hw_psca_turn(o,i,a,v,...)	HW_TX(HW_G2(_hw_turnpsca,	\
+						    HW_IS(,_hw_state_##v))(o,v), \
 					      __VA_ARGS__)
 
 #define _hw_turnpsca_0(o,v)		HW_ERR("expected `on` or `off` but not `"#v"`.")
-#define _hw_turnpsca_1(o,v)		HW_G2(_hw_turnpsca_1,HW_A1(hw_state_##v))(o)
-//#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,tsmpsr,3)
-//#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,cr,0x81) /* FIXME: need a reg def */
+#define _hw_turnpsca_1(o,v)		HW_G2(_hw_turnpsca_1,HW_A1(_hw_state_##v))(o)
 #define _hw_turnpsca_1_0(o)		_hw_write_reg(o,cr,		\
-						      (1U<<_hw_bp(_hw_reg(o,tsm)))| \
-						      (1U<<_hw_bp(_hw_reg(o,psr))))
+						      (1U<<_hw_rbp(o,tsm))| \
+						      (1U<<_hw_rbp(o,psr)))
 #define _hw_turnpsca_1_1(o)		_hw_write_reg(o,tsm,0)

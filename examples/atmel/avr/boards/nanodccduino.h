@@ -12,6 +12,8 @@
  * This is an Arduino clone with a MEGA328P-AU microcontroller, a 16 MHz crystal
  * and a CH340 USB/Serial adapter.
  *
+ * @par Serial adapter wiring
+ *
  * The CH340 does not work on my board. Then I use an external USB/Serial
  * adapter:
  *
@@ -20,7 +22,8 @@
  *               5V : DTR
  *              GND : GND
  *
- * Wiring for USBASP:
+ *
+ * @par USBASP wiring
  *
  *      USBASP -> 1  MOSI  D11 <- BOARD
  *                2  VCC   5V
@@ -52,13 +55,17 @@
 #define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 
-/*  Settings for Diabolo
+/*  Settings for the Diabolo bootloader
+ *    BPS and RESET_SIGNAL are only used by `make` to provide
+ *    settings to the Diabolo application on the host.
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_txd
-#define DIABOLO_BPS                     230400          // Default transfer rate
+#define DIABOLO_BPS                     230400
 #define DIABOLO_RESET_SIGNAL            DTR
 
+/*  Board pins
+ */
 #define ARDUINO
 
 #define PIN_D3                          hw_pin_pd3      // OC2B INT1
@@ -72,6 +79,6 @@
 
 #define PIN_LED                         hw_pin_pb5
 
-/*  Device
+/*  Include HWA definitions
  */
 #include <hwa/atmega328p_au.h>

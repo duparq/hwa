@@ -9,17 +9,17 @@
  * @file
  */
 
-HW_INLINE void __hwa_begin__acmpa ( hwa_acmpa_t *p, intptr_t a )
+HW_INLINE void _hwa_begin_p__acmpa ( hwa_acmpa_t *p, intptr_t a )
 {
   _hwa_begin_reg_p( p, a, _acmpa, csr  );
 }
 
-HW_INLINE void __hwa_init__acmpa ( hwa_acmpa_t *p )
+HW_INLINE void _hwa_init_p__acmpa ( hwa_acmpa_t *p )
 {
-  _hwa_set_r8(  &p->csr,  0x00 );
+  _hwa_set__r8(  &p->csr,  0x00 );
 }
 
-HW_INLINE void __hwa_commit__acmpa ( hwa_t *hwa, hwa_acmpa_t *p )
+HW_INLINE void _hwa_commit_p__acmpa ( hwa_t *hwa, hwa_acmpa_t *p )
 {
   _hwa_commit_reg_p( p, _acmpa, csr );
 }
@@ -140,10 +140,10 @@ HW_INLINE void __hwa_commit__acmpa ( hwa_t *hwa, hwa_acmpa_t *p )
 #define _hw_mthd_hw_turn__acmpa			, _hw_turnacmpa
 
 #define _hw_turnacmpa(o,i,a,...)		\
-  HW_G2(_hw_turnacmpa_vstate,HW_IS(,_hw_state_##__VA_ARGS__))
+  HW_G2(_hw_turnacmpa_vstate,HW_IS(,__hw_state_##__VA_ARGS__))
 
 #define _hw_turnacmpa_vstate_1(o,i,a,v,...)	\
-  HW_TX( _hw_write_reg(o,acd,(HW_A1(_hw_state_##v)==0)), __VA_ARGS__ )
+  HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
 
 #define _hw_turnacmpa_vstate_0(o,i,a,v,...)	\
   HW_ERR("object `" #o "` of class `_acmpa` can be turned `on` or `off`, but not `" #v "`.")

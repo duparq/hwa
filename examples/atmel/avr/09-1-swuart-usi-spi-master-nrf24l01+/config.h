@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 /*
- *  NOTE: do not leave the RX pin floating. Fix-it to high level through 10 kohm.
+ *  NOTE: do not leave the RX pin floating. Fix-it to high level through 10 kohms.
  */
 #define hw_swuart0_pin_tx               DIABOLO_PIN_TX
 #define hw_swuart0_pin_rx               DIABOLO_PIN_RX

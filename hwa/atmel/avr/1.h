@@ -78,11 +78,11 @@
  *	C and assembler address differ!
  */
 #if defined __ASSEMBLER__
-#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra-0x20)
-#  define _hw_ra__crg(a,rw,ra,...)		(a+ra-0x20)
+#  define _hw_addr__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
+#  define _hw_ra__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
 #else
-#  define _hw_addr__m1(p,a, r,rw,ra,...)	(a+ra)
-#  define _hw_ra__crg(a,rw,ra,...)		(a+ra)
+#  define _hw_addr__m1(o,a,r,rc,ra,...)		(a+ra)
+#  define _hw_ra__m1(o,a,r,rc,ra,...)		(a+ra)
 #endif
 
 

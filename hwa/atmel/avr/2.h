@@ -110,7 +110,7 @@
  * @param bp	position of the least significant bit conderned in the register.
  * @param v	value to write.
  */
-HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
+HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 			      uint8_t bn, uint8_t bp, uint8_t v )
 {
 #if defined HWA_CHECK_ACCESS
@@ -183,7 +183,7 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       /*  FIX
        */
       /*
-       *  FIXME: there is something strange here: why does _hw_write_r8 do almost the
+       *  FIXME: there is something strange here: why does _hw_write__r8 do almost the
        *  same things as does _hw_commit_r8? How can the fix below solve the problem
        *  from here? All that should be looked after carefully again...
        *  Simplifications in sight!
@@ -200,7 +200,7 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
  *	sbi/cbi against 2 independent bytes
  */
 
-HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
+HW_INLINE void _hw_write__r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 			      uint8_t bn, uint8_t bp, uint16_t v )
 {
 #if defined HWA_CHECK_ACCESS
@@ -269,15 +269,11 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 
 /*	Commit register r of class c pointed by p
  */
-#define _hwa_commit_reg_p(p,c,r)	_hwa_corp_2(_hw_creg(c,r), p)
+#define _hwa_commit_reg_p(p,c,r)	_hwa_corp_2(_hw_reg_p(p,c,r))
 #define _hwa_corp_2(...)		_hwa_corp_3(__VA_ARGS__)
 #define _hwa_corp_3(t,...)		_hwa_corp_##t(__VA_ARGS__)
 
-#define _hwa_corp__m1(_0,_1,r,rw,ra,rwm,rfm, bn,bp, p)	\
-  _hwa_commit_r##rw(&((p)->r),rwm,rfm,hwa->commit)
-
-#define _hwa_corp__m1x(p,_1,r,rw,ra,rwm,rfm, bn,bp, p0)	\
-  _hwa_commit_r##rw(&hwa->p.r,rwm,rfm,hwa->commit)
+#define _hwa_corp__m1_p(p,rc,rwm,rfm, bn,bp)	_hwa_commit_##rc(p,rwm,rfm,hwa->commit)
 
 
 /**  \brief Commits an HWA register
@@ -289,7 +285,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
  *  - load-immediate / store:	2 instructions
  *  - load / modify / store:	3 instructions or more
  */
-HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool commit )
+HW_INLINE void _hwa_commit__r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool commit )
 {
   if ( !commit ) {
     r->ovalue = (r->ovalue & r->omask & ~r->mmask) | (r->mvalue & r->mmask) ;
@@ -352,7 +348,7 @@ HW_INLINE void _hwa_commit_r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool com
 }
 
 
-HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool commit )
+HW_INLINE void _hwa_commit__r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool commit )
 {
   if ( !commit ) {
     r->ovalue = (r->ovalue & r->omask & ~r->mmask) | (r->mvalue & r->mmask) ;
@@ -395,14 +391,14 @@ HW_INLINE void _hwa_commit_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Bool
  * @param rbp	position of the least significant bit conderned in the register.
  * @return	the value of the rbn consecutive bits at position rbp in the register.
  */
-HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+HW_INLINE uint8_t _hw_read__r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   uint8_t m = (1U<<rbn)-1 ;
   volatile uint8_t *p = (volatile uint8_t *)ra ;
   return ((*p)>>rbp) & m ;
 }
 
-HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   uint16_t m = (1UL<<rbn)-1 ;
   volatile uint16_t *p = (volatile uint16_t *)ra ;
@@ -416,9 +412,9 @@ HW_INLINE uint16_t _hw_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
  *	the execution of the next opcode guaranteed as if the SEI instruction
  *	was used?
  */
-#define _hw_atomic_read_r8		_hw_read_r8
+#define _hw_atomic_read__r8		_hw_read__r8
 
-HW_INLINE uint16_t _hw_atomic_read_r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
   volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;

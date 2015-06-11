@@ -62,8 +62,8 @@ Documentation
 Run `make doc` in the HWA base directory to build the documentation in HTML
 format. You'll start with the `doxygen/html/index.html` page.
 
-Alternately you can browse the documentation from [my
-website](http://duparq.free.fr/hwa/index.html).
+Alternately you can browse the documentation from
+[here](http://duparq.free.fr/hwa/index.html).
 
 Currently the documentation gives informations only about using HWA, not on how
 to develop HWA.

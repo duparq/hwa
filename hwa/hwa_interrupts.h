@@ -152,11 +152,11 @@
  * @hideinitializer
  */
 #define _hw_turn_irq(v,p,e,f, ...)					\
-  HW_G2(_hw_turn_irq_vstate, HW_IS(,hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
+  HW_G2(_hw_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
 #define _hw_turn_irq_vstate_0(p,e, ...)					\
   HW_ERR("expected `on` or `off`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
 #define _hw_turn_irq_vstate_1(p,e,v, ...)				\
-    HW_TX(_hw_write_reg( p,e, HW_A1(hw_state_##v)), __VA_ARGS__)
+    HW_TX(_hw_write_reg( p,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
 #define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
@@ -166,11 +166,11 @@
  * @hideinitializer
  */
 #define _hwa_turn_irq(v,p,e,f, ...)					\
-  HW_G2(_hwa_turn_irq_vstate, HW_IS(,hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
+  HW_G2(_hwa_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
 #define _hwa_turn_irq_vstate_0(p,e, ...)				\
   HW_ERR("expected `on` or `off`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
 #define _hwa_turn_irq_vstate_1(p,e,v, ...)			\
-  HW_TX(_hwa_write_reg(p,e, HW_A1(hw_state_##v)), __VA_ARGS__)
+  HW_TX(_hwa_write_reg(p,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
 /**

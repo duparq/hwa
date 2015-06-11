@@ -7,14 +7,23 @@
 /**
  * @example
  *
- *  Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
+ * @par Transmit ADC conversion results through software UART
  *
- *  Test application:
+ * Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
+ *
+ * @par Test application
  *
  *      ./main.py
  *
  * @par config.h
  * @include 06-1-swuart-adc/config.h
+ * 
+ * Symbols:
+ *
+ * * `BOARD_H` is the name of the target board header file. It can be defined at
+ * compile time via the command line. For example, `make BOARD=nanodccduino`
+ * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref boards for the
+ * board definitions provided with HWA.
  *
  * @par main.c
  */

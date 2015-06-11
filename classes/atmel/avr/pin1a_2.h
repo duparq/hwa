@@ -87,7 +87,7 @@
   HW_G2(_hwa_cfaip_kpullup, HW_IS(pullup,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfaip_kpullup_1(o,k,...)			\
-  HW_G2(_hwa_cfaip_vpullup, HW_IS(,hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
+  HW_G2(_hwa_cfaip_vpullup, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfaip_vpullup_1(o,...)			\
   HW_ERR("`pullup` must be `off`, not `" HW_QUOTE(__VA_ARGS__) "`.")

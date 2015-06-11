@@ -21,7 +21,6 @@
 #include "../classes/atmel/avr/c16a_2.h"
 #include "../classes/atmel/avr/psca_2.h"
 #include "../classes/atmel/avr/uarta_2.h"
-/* #include "../classes/atmel/avr/usia_2.h" */
 #include "../classes/atmel/avr/admuxb_2.h"
 #include "../classes/atmel/avr/acmpb_2.h"
 #include "../classes/atmel/avr/ad10b_2.h"
@@ -32,35 +31,35 @@
 
 HW_INLINE void _hwa_begin_all( hwa_t *hwa )
 {
-  _hwa_begin( hw_core0 );
-  _hwa_begin( hw_portb );
-  _hwa_begin( hw_portc );
-  _hwa_begin( hw_portd );
+  _hwa_begin_p( hw_core0 );
+  _hwa_begin_p( hw_portb );
+  _hwa_begin_p( hw_portc );
+  _hwa_begin_p( hw_portd );
   _hwa_begin( hw_pcic0 );
-  _hwa_begin( hw_wdog0 );
-  _hwa_begin( hw_counter0 );
-  _hwa_begin( hw_counter1 );
-  _hwa_begin( hw_counter2 );
-  _hwa_begin( hw_uart0 );
-  _hwa_begin( hw_adc0 );
-  _hwa_begin( hw_acmp0 );
+  _hwa_begin_p( hw_wdog0 );
+  _hwa_begin_p( hw_counter0 );
+  _hwa_begin_p( hw_counter1 );
+  _hwa_begin_p( hw_counter2 );
+  _hwa_begin_p( hw_uart0 );
+  _hwa_begin_p( hw_adc0 );
+  _hwa_begin_p( hw_acmp0 );
 }
 
 
 HW_INLINE void _hwa_init_all( hwa_t *hwa )
 {
-  _hwa_init( hw_core0 );
-  _hwa_init( hw_portb );
-  _hwa_init( hw_portc );
-  _hwa_init( hw_portd );
+  _hwa_init_p( hw_core0 );
+  _hwa_init_p( hw_portb );
+  _hwa_init_p( hw_portc );
+  _hwa_init_p( hw_portd );
   _hwa_init( hw_pcic0 );
-  _hwa_init( hw_wdog0 );
-  _hwa_init( hw_counter0 );
-  _hwa_init( hw_counter1 );
-  _hwa_init( hw_counter2 );
-  _hwa_init( hw_uart0 );
-  _hwa_init( hw_adc0 );
-  _hwa_init( hw_acmp0 );
+  _hwa_init_p( hw_wdog0 );
+  _hwa_init_p( hw_counter0 );
+  _hwa_init_p( hw_counter1 );
+  _hwa_init_p( hw_counter2 );
+  _hwa_init_p( hw_uart0 );
+  _hwa_init_p( hw_adc0 );
+  _hwa_init_p( hw_acmp0 );
 }
 
 
@@ -71,7 +70,7 @@ HW_INLINE void _hwa_commit_all( hwa_t *hwa )
    *  The configuration values are written here since the solve function only
    *  has the address of the counter and does not know its name.
    *
-   *  _hw_creg(...) could be used as well though it can not access registers of
+   *  _reg_p(...) could be used as well though it can not access registers of
    *  another object.
    */
   _hwa_solve_c8a( &hwa->hw_counter0 );
@@ -133,16 +132,16 @@ HW_INLINE void _hwa_commit_all( hwa_t *hwa )
        && hwa->hw_counter2.config.compare1.output != HW_A1(hw_ocu_output_disconnected) )
     hwa_config( hw_pin_oc2b, direction, output );
 
-  _hwa_commit( hw_core0 );
-  _hwa_commit( hw_wdog0 );
-  _hwa_commit( hw_portb );
-  _hwa_commit( hw_portc );
-  _hwa_commit( hw_portd );
+  _hwa_commit_p( hw_core0 );
+  _hwa_commit_p( hw_wdog0 );
+  _hwa_commit_p( hw_portb );
+  _hwa_commit_p( hw_portc );
+  _hwa_commit_p( hw_portd );
   _hwa_commit( hw_pcic0 );
-  _hwa_commit( hw_counter0 );
-  _hwa_commit( hw_counter1 );
-  _hwa_commit( hw_counter2 );
-  _hwa_commit( hw_uart0 );
-  _hwa_commit( hw_adc0 );
-  _hwa_commit( hw_acmp0 );
+  _hwa_commit_p( hw_counter0 );
+  _hwa_commit_p( hw_counter1 );
+  _hwa_commit_p( hw_counter2 );
+  _hwa_commit_p( hw_uart0 );
+  _hwa_commit_p( hw_adc0 );
+  _hwa_commit_p( hw_acmp0 );
 }

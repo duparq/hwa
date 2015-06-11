@@ -7,25 +7,36 @@
 /**
  * @example
  *
- *  Blink a LED using the watchdog flag
+ * @par Blink a LED using the watchdog flag
+ *
+ * This program configures the LED pin as a digital output and the watchdog to
+ * trigger an IRQ periodically. Then, in an infinite loop, when the watchdog IRQ
+ * flag is set, it clears it and toggles the LED state.
+ *
+ * A HWA context is used to gather the configuration and write it into the
+ * hardware registers at once with the most efficient code.
+ *
+ * Symbols:
+ *
+ * * `BOARD_H` is the name of the target board header file. It can be defined at
+ * compile time via the command line. For example, `make BOARD=nanodccduino`
+ * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref boards for the
+ * board definitions provided with HWA.
+ *
+ * * `PIN_LED` is the definition of the pin at which a LED is connected. It is
+ * defined in the target board header file.
+ *
+ * * `TIMEOUT` is the watchdog timeout period.
  */
 
-/*  Include the target board definitions (includes hwa.h)
+
+/*  Set a default target board
  */
-#if defined BOARD_H
-#  include BOARD_H
-#else
-#  include <boards/attiny84.h>
+#if !defined BOARD_H
+#  define BOARD_H               <boards/attiny84.h>
 #endif
 
-
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
+#include BOARD_H
 
 
 /*  Watchdog timeout

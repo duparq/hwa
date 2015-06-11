@@ -131,7 +131,7 @@
  * @endcode
  */
 #define _hw_turn_wdog(c,n,i,a, vstate)					\
-  HW_G2(_hw_turn_wdog, HW_IS(,hw_state_##vstate))(c,n,i,a,vstate)
+  HW_G2(_hw_turn_wdog, HW_IS(,_hw_state_##vstate))(c,n,i,a,vstate)
 #define _hw_turn_wdog_0(c,n,i,a, vstate)			\
   HW_ERR("expected `on` or `off`, got `" #vstate "` instead.")
 #define _hw_turn_wdog_1(c,n,i,a, vstate)	\
@@ -170,7 +170,7 @@
 /*	Turn watchdog on/off (asynchronous)
  */
 #define _hwa_turn_wdog(p,i,a, ...)					\
-  HW_G2(_hwa_turn_wdog, HW_IS(,hw_state_##__VA_ARGS__))(p,i,a,__VA_ARGS__,)
+  HW_G2(_hwa_turn_wdog, HW_IS(,_hw_state_##__VA_ARGS__))(p,i,a,__VA_ARGS__,)
 #define _hwa_turn_wdog_0(p,i,a, v, ...)			\
   HW_ERR("expected `on` or `off`, got `" #v "` instead.")
 #define _hwa_turn_wdog_1(p,i,a, v, ...)	\

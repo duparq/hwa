@@ -252,13 +252,13 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 /*  Process arg `receiver`
  */
 #define _hwa_cfswuarta_kreceiver_1(o,k,v,...)				\
-  HW_G2(_hwa_cfswuarta_vreceiver, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfswuarta_vreceiver, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfswuarta_vreceiver_0(o,v,...)				\
   HW_ERR("`receiver` can be `enabled`, or `disabled`, but not `" #v "`.")
 
 #define _hwa_cfswuarta_vreceiver_1(o,v,...)		\
-  _hwa_turn_irq(HW_G2(o,pin_rx),change,hw_state_##v));	\
+  _hwa_turn_irq(HW_G2(o,pin_rx),change,_hw_state_##v));	\
   _hwa_cfswuarta_kreceiver_0(o,__VA_ARGS__)
 
 #define _hwa_cfswuarta_kreceiver_0(o,k,...)				\
@@ -267,13 +267,13 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
 /*  Process arg `transmitter`
  */
 #define _hwa_cfswuarta_ktransmitter_1(o,k,v,...)			\
-    HW_G2(_hwa_cfswuarta_vtransmitter, HW_IS(,hw_state_##v))(o,v,__VA_ARGS__)
+    HW_G2(_hwa_cfswuarta_vtransmitter, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfswuarta_vtransmitter_0(o,v,...)				\
   HW_ERR("`transmitter` can be `enabled`, or `disabled`, but not `" #v "`.")
 
 #define _hwa_cfswuarta_vtransmitter_1(o,v,...)	\
-  hwa->o.config.txen = HW_A1(hw_state_##v);	\
+  hwa->o.config.txen = HW_A1(_hw_state_##v);	\
   _hwa_cfswuarta_end(o,__VA_ARGS__)
 
 #define _hwa_cfswuarta_ktransmitter_0(o,...)	\
@@ -370,13 +370,13 @@ extern void					_hw_swuart0_reset ( ) ;
 extern void					_hw_swuart1_reset ( ) ;
 
 #if defined hw_swuart0_counter
-extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dtn ;
-extern hw_rt(hw_swuart0_counter,count)		__hw_swuart0_dt0 ;
+extern hw_uint_t(hw_swuart0_counter,count)	__hw_swuart0_dtn ;
+extern hw_uint_t(hw_swuart0_counter,count)	__hw_swuart0_dt0 ;
 #endif
 
 #if defined hw_swuart1_counter
-extern hw_rt(hw_swuart1_counter,count)		__hw_swuart1_dtn ;
-extern hw_rt(hw_swuart1_counter,count)		__hw_swuart1_dt0 ;
+extern hw_uint_t(hw_swuart1_counter,count)	__hw_swuart1_dtn ;
+extern hw_uint_t(hw_swuart1_counter,count)	__hw_swuart1_dt0 ;
 #endif
 
 /**
