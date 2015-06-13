@@ -6,7 +6,6 @@
 
 /**
  * @file
- * @brief Atmel AVR watchdog model 'b'
  */
 
 #include "wdog_2.h"

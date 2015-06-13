@@ -430,7 +430,7 @@
  */
 #define _hw_core0			_coreb, 101, 0
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__coreb_osccal		_r8, 0x66, 0xFF, 0x00
 #define _hw__coreb_prr			_r8, 0x64, 0xEF, 0x00
@@ -490,7 +490,7 @@
  */
 #define _hw_pcic0			_pcicb, 350, 0
 
-/*	Object hardware registers	rc, ra, rwm, rfm
+/*	Object hardware registers	class, address, write mask, flags mask
  */
 #define _hw_pcic0_msk2			_r8, 0x6D, 0xFF, 0x00
 #define _hw_pcic0_msk1			_r8, 0x6C, 0x7F, 0x00
@@ -545,7 +545,7 @@
  */
 #define _hw_wdog0			_wdogb, 109, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__wdogb_csr			_r8, 0x60, 0xFF, 0x80
 
@@ -574,7 +574,7 @@
  */
 #define _hw_counter0			_c8a, 400, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__c8a_ccra			_r8, 0x44, 0xF3, 0x00
 #define _hw__c8a_ccrb			_r8, 0x45, 0xCF, 0x00
@@ -622,7 +622,7 @@
  */
 #define _hw_counter1			_c16a, 410, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__c16a_ccra			_r8,  0x80, 0xF3,   0x00
 #define _hw__c16a_ccrb			_r8,  0x81, 0xDF,   0x00
@@ -660,7 +660,7 @@
  */
 #define _hw_counter2			_c8b, 420, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__c8b_ccra			_r8, 0xB0, 0xF3, 0x00
 #define _hw__c8b_ccrb			_r8, 0xB1, 0xCF, 0x00
@@ -711,13 +711,13 @@
  */				        
 #define _hw_psc0			_psca, 500, 0
 
-/*	Object registers		class, rw, ra, rwm, rfm
+/*	Object registers		class, address, write mask, flags mask
  */
-#define _hw__psca_cr			_r8, 0x43, 0x81, 0x00
+#define _hw_psc0_cr			_r8, 0x43, 0x81, 0x00
 
-#define _hw__psca_tsm			_cb1, cr, 1, 7
-#define _hw__psca_psrasy		_cb1, cr, 1, 1
-#define _hw__psca_psr			_cb1, cr, 1, 0
+#define _hw_psc0_tsm			_cb1, cr, 1, 7
+//#define _hw_psc0_psrasy			_cb1, cr, 1, 1
+#define _hw_psc0_psr			_cb1, cr, 1, 0
 //#define _hw_psc0_tsmpsr			_ob2, cr, 1, 7, 1, cr, 1, 0, 0
 
 
@@ -733,10 +733,10 @@
  */				        
 #define _hw_psc1			_psca, 510, 0
 
-/*	Object registers		class, rw, ra, rwm, rfm
+/*	Object registers		class, address, write mask, flags mask
  */
-//#define _hw_psc1_psr			_xob1, hw_psc0, psrasy
-//#define _hw_psc1_tsm			_xob1, hw_psc0, tsm
+#define _hw_psc1_psr			_xob1, hw_psc0, cr, 1, 1
+#define _hw_psc1_tsm			_xob1, hw_psc0, tsm
 
 
 /*******************************************************************************
@@ -749,7 +749,7 @@
  */
 #define _hw_uart0			_uarta, 600, 0xC0
 
-/*	Class hardware registers	rc, ra, rwm, rfm
+/*	Class hardware registers	class, address, write mask, flags mask
  */
 #define _hw__uarta_dr			_r8,  0x06, 0xFF,   0x00
 #define _hw__uarta_ubrr			_r16, 0x04, 0x0FFF, 0x0000
@@ -796,7 +796,7 @@
  */				        
 #define _hw_acmp0			_acmpb, 710, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */				        
 #define _hw__acmpb_csr			_r8, 0x50, 0xDF, 0x10
 #define _hw__acmpb_did			_r8, 0x7F, 0x03, 0x00
@@ -811,7 +811,7 @@
 #define _hw__acmpb_did_0		_cb1, did, 1, 0
 #define _hw__acmpb_did_1		_cb1, did, 1, 1
 
-/*	Object registers		class, rw, ra, rwm, rfm
+/*	Object registers		class, address, write mask, flags mask
  */				        
 #define _hw_acmp0_csr			_r8, 0x50, 0xDF, 0x10
 
@@ -868,7 +868,7 @@
  */
 #define _hw_eeprom0			_eeproma, 1000, 0
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__eeproma_arh		_r8,  0x42,   0x03, 0x00
 #define _hw__eeproma_arl		_r8,  0x41,   0xFF, 0x00
@@ -896,7 +896,7 @@
 #define _hw_flash0			_flasha, 1100, 0
 
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__flasha_csr			_r8, 0x57, 0xBF, 0x00
 

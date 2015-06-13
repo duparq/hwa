@@ -109,6 +109,10 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = README.md					\
 		       	 doxygen/using.md				\
+		       	 doxygen/using_header.md			\
+		       	 doxygen/using_objects.md			\
+		       	 doxygen/using_instructions.md			\
+		       	 doxygen/using_interrupts.md			\
 			 include/					\
 			 devices/attinyx4_1.h				\
 			 devices/attinyx4_2.h				\
@@ -116,9 +120,7 @@ INPUT                  = README.md					\
 			 classes/atmel/avr/wdoga_1.h			\
 			 classes/atmel/avr/wdogb_1.h			\
 			 classes/					\
-			 hwa/atmel/avr/1.h				\
-			 hwa/atmel/avr/2.h				\
-		       	 doxygen/porting.md				\
+			 hwa/atmel/avr/README.md			\
 			 examples/atmel/avr/boards/README.md		\
 			 examples/atmel/avr/boards/attiny84.h		\
 			 examples/atmel/avr/boards/attiny85.h		\
@@ -128,6 +130,7 @@ INPUT                  = README.md					\
 			 examples/atmel/avr/diabolo/			\
 			 examples/atmel/avr/				\
 			 hwa/						\
+		       	 doxygen/porting.md				\
 		       	 doxygen/hwa_license.md				\
 
 INPUT_ENCODING         = UTF-8

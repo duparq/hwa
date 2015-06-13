@@ -6,8 +6,6 @@
 
 /**
  * @file
- *
- * Atmel AVR counter-timer prescaler model 'a'
  */
 
 /**

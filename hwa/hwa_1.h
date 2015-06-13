@@ -5,8 +5,31 @@
  */
 
 /**
- * @defgroup public HWA instructions
- * HWA instructions you use in your application.
+ * @defgroup public_obj_instructions Instructions related to one object configuration
+ *
+ * These instructions receive an object as first argument and lead to
+ * a modification of the hardware configuration.
+ */
+
+/**
+ * @defgroup public_gen_instructions Instructions related to general hardware configuration
+ *
+ * These instructions lead to a modification of the hardware configuration that
+ * is not related to a specific object.
+ */
+
+/**
+ * @defgroup public_obj_macros Instructions providing informations about objects
+ *
+ * These instructions provide informations about an object without accessing the
+ * hardware.
+ */
+
+/**
+ * @defgroup public_gen_macros General purpose macros
+ *
+ * These instructions act on various types of arguments and do not access the
+ * hardware.
  */
 
 /**
@@ -36,10 +59,9 @@
 #ifndef _HWA_H_
 #define _HWA_H_
 
-
-#ifndef HW_DEVICE
-#  error "HW_DEVICE not defined."
-#endif
+/* #ifndef HW_DEVICE */
+/* #  error "HW_DEVICE not defined." */
+/* #endif */
 
 #include "hwa_macros.h"
 #include "hwa_interrupts.h"
@@ -75,10 +97,9 @@
 #endif
 
 
-/** @brief	Run-time error.
- *
- *  Trigger an error after code generation.
- *
+/**
+ * @ingroup public_gen_macros
+ * @brief Trigger an error after code generation.
  * @hideinitializer
  */
 #define HWA_ERR(msg)		_HWA_ERR_2(msg, __COUNTER__)
@@ -90,10 +111,11 @@
   } while(0)
 
 
-/** @brief	8-bit HWA context register.
+/**
+ * @brief 8-bit HWA context register.
  *
- *  Structure used by `hwa_` prefixed functions to handle one 8-bit hardware
- *  register.
+ * This structure is used in the HWA context to store one 8-bit hardware
+ * register.
  */
 typedef struct hwa_r8_t
 {
@@ -104,6 +126,13 @@ typedef struct hwa_r8_t
   uint8_t	ovalue ;	/*!< Hardware known value mask.			*/
 } hwa_r8_t ;
 
+
+/**
+ * @brief 16-bit HWA context register.
+ *
+ * This structure is used in the HWA context to store one 16-bit hardware
+ * register.
+ */
 typedef struct hwa_r16_t
 {
   intptr_t	a ;		/*!< Address of hardware register.		*/

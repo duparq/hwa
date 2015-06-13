@@ -8,16 +8,16 @@
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
 #if hw_id(HW_G2(hw_swuart,pin_tx))
-	TXDPORT   = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), port))
-	TXDPIN    = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), pin))
-	TXDDR     = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), ddr))
+	TXDPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), port)
+	TXDPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), pin)
+	TXDDR     = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), ddr)
 	TXDBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_tx)))
 #endif
 
 #if hw_id(HW_G2(hw_swuart,pin_rx))
-	RXDPORT   = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), port))
-	RXDPIN    = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), pin))
-	RXDDR     = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), ddr))
+	RXDPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), port)
+	RXDPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), pin)
+	RXDDR     = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), ddr)
 	RXDBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_rx)))
 #endif
 
@@ -37,9 +37,9 @@
 	;; 
 #if hw_id(HW_G2(hw_swuart,pin_dbg))
 	DBG       = 1
-	DBGPORT   = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), port))
-	DBGPIN    = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), pin))
-	DBGDDR    = hw_addr(hw_reg(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), ddr))
+	DBGPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), port)
+	DBGPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), pin)
+	DBGDDR    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), ddr)
 	DBGBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_dbg)))
 #else
 	DBG       = 0
@@ -72,11 +72,11 @@
 
 	;; Counter registers
 	;;
-	count   = hw_addr(hw_reg(HW_G2(hw_swuart,counter), count))
-	comp	= hw_addr(hw_reg(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
+	count   = hw_ra(HW_G2(hw_swuart,counter), count)
+	comp	= hw_ra(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare))
 
 #undef COUNT_BN
-#define COUNT_BN hw_bn(HW_G2(hw_swuart,counter))
+#define COUNT_BN 	hw_bn(HW_G2(hw_swuart,counter))
 
 #define MATCH_IF_RA	hw_addr(hw_irqf(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
 #define MATCH_IF_BP	hw_bp(hw_irqf(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
@@ -88,7 +88,7 @@
 
 	;; Hardware registers
 	;;
-#define	SREG hw_addr(hw_reg(hw_core0, sreg))
+#define	SREG		hw_ra(hw_core0, sreg)
 
 	;; FIXME: should use hw_ap
 	;;

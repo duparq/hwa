@@ -6,14 +6,13 @@
 
 /**
  * @file
- * @brief Atmel AVR watchdog model 'b'
  */
 
 #include "wdog_1.h"
 
 
 /**
- * @page atmelavr_wdogb Class _wdoga: watchdog timer
+ * @page atmelavr_wdogb Class _wdogb: watchdog timer
  *
  * A class `_wdogb` object is a watchdog timer.
  *

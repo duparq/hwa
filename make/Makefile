@@ -147,29 +147,9 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin $(OUTDIR)/$(OUT).lst
 	echo Validation: .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC
 
 
-#  Check that the CRC is unchanged for a given configuration
+#  Check that the CRC is still the same for a given configuration
 #
 .PHONY: check
-rem_check: $(CFG)
-	@if make $(OUTDIR)/$(OUT).bin >/dev/null 2>&1 ; then				\
-	  S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
-	  O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
-	  O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
-	  if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
-	    echo passed									;\
-	  else										\
-	    if test -f .valid-$(DEVICE)-$$S_CRC-* ; then				\
-	      echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
-	      exit 1									;\
-	    else									\
-	      echo "not tested"								;\
-	    fi										;\
-	  fi										;\
-	else										\
-	  echo "make FAILED"								;\
-	  exit1										;\
-	fi
-
 check: $(CFG)
 	@S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
 	if test -f .valid-$(DEVICE)-$$S_CRC-* ; then					\

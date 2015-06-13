@@ -249,7 +249,7 @@
  */
 #define _hw_core0			_corea, 101, 0
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__corea_sreg			_r8, 0x5F, 0xFF, 0x00
 #define _hw__corea_sph			_r8, 0x5E, 0x03, 0x00
@@ -285,7 +285,7 @@
  */
 #define _hw_pcic0			_pcica, 350, 0
 
-/*	Object hardware registers	rc, ra, rwm, rfm
+/*	Object hardware registers	class, address, write mask, flags mask
  */
 #define _hw_pcic0_msk1			_r8, 0x40, 0x0F, 0x00
 #define _hw_pcic0_msk0			_r8, 0x32, 0xFF, 0x00
@@ -323,7 +323,7 @@
  */
 #define _hw_wdog0			_wdoga, 901, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__wdoga_csr			_r8, 0x41, 0xFF, 0x80
 
@@ -350,7 +350,7 @@
  */
 #define _hw_counter0			_c8a, 400, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__c8a_compare1		_r8, 0x5C, 0xFF, 0x00	/* OCRB */
 #define _hw__c8a_imsk			_r8, 0x59, 0x07, 0x00
@@ -399,7 +399,7 @@
  */
 #define _hw_counter1			_c16a, 410, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */
 #define _hw__c16a_ccra			_r8,  0x4F,   0xF3,   0x00
 #define _hw__c16a_ccrb			_r8,  0x4E,   0xDF,   0x00
@@ -438,13 +438,13 @@
  */				        
 #define _hw_psc0			_psca, 500, 0
 
-/*	Object registers		class, rw, ra, rwm, rfm
+/*	Object registers		class, address, write mask, flags mask
  */
-#define _hw__psca_cr			_r8, 0x43, 0x81, 0x00
+#define _hw_psc0_cr			_r8, 0x43, 0x81, 0x00
 
-#define _hw__psca_psr			_cb1, cr, 1, 0
-#define _hw__psca_tsm			_cb1, cr, 1, 7
-#define _hw__psca_tsmpsr		_cb2, cr, 1, 7, 1, cr, 1, 0, 0
+#define _hw_psc0_psr			_ob1, cr, 1, 0
+#define _hw_psc0_tsm			_ob1, cr, 1, 7
+#define _hw_psc0_tsmpsr			_ob2, cr, 1, 7, 1, cr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -461,7 +461,7 @@
  */				        
 #define _hw_usi0			_usia, 600, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */				        
 #define _hw__usia_cr			_r8, 0x2D, 0xFF, 0x00
 #define _hw__usia_sr			_r8, 0x2E, 0xFF, 0xE0
@@ -484,11 +484,11 @@
 
 /*	USI used as SPI master with software clock
  */
-#define _hw_spimaster0_swclk		_usia_spimaster_swclk, 602, hw_usi0
+#define _hw_spimaster_swclk0		_usia_spimaster_swclk, 602, hw_usi0
 
 /*	USI used as SPI master with counter0 overflow clock
  */
-#define _hw_spimaster0_c0clk		_usia_spimaster_c0clk, 603, hw_usi0
+#define _hw_spimaster_c0clk0		_usia_spimaster_c0clk, 603, hw_usi0
 
 
 /*******************************************************************************
@@ -501,7 +501,7 @@
  */				        
 #define _hw_acmp0			_acmpa, 700, 0
 
-/*	Class registers			class, rw, ra, rwm, rfm
+/*	Class registers			class, address, write mask, flags mask
  */				        
 #define _hw__acmpa_csr			_r8, 0x28, 0xDF, 0x10
 
@@ -576,7 +576,7 @@
  */
 #define _hw_eeprom0			_eeproma, 1000, 0
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__eeproma_arh		_r8,  0x3F,   0x01, 0x00
 #define _hw__eeproma_arl		_r8,  0x3E,   0xFF, 0x00
@@ -603,7 +603,7 @@
  */
 #define _hw_flash0			_flasha, 1100, 0
 
-/*	Class regs			class, rw, ra, rwm, rfm
+/*	Class regs			class, address, write mask, flags mask
  */
 #define _hw__flasha_csr			_r8,  0x57, 0x3F, 0x00
 

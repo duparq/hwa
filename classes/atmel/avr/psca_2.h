@@ -6,26 +6,32 @@
 
 /**
  * @file
- *
- * Atmel AVR counter-timer prescaler model 'a'
  */
 
 /**
  * @page atmelavr_psca
  * @section atmelavr_psca_reset Resetting the prescaler
- * You can use `clear` or `reset` to reset a prescaler.
+ *
  * @code
- * hw_clear( PRESCALER );
- * @endcode
- * @code
- * hw_reset( PRESCALER );
+ * hw_clear( hw_psc0 );
  * @endcode
  */
 #define _hw_mthd_hw_clear__psca		, _hw_psca_clear
+
 #define _hw_psca_clear(o,i,a,...)	HW_TX(_hw_clrpsca(o),__VA_ARGS__)
+
 #define _hw_clrpsca(o)			_hw_write_reg(o,psr,1)
 
+
+/**
+ * @page atmelavr_psca
+ *
+ * @code
+ * hw_reset( hw_psc0 );
+ * @endcode
+ */
 #define _hw_mthd_hw_reset__psca		, _hw_psca_clear
+
 
 
 /**

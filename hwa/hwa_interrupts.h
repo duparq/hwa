@@ -23,7 +23,6 @@
 #define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
 
 /**
- * @ingroup public
  * @brief Get an IRQ object
  *
  * Syntax: `hw_irq( object [, irq_name] )`
@@ -57,7 +56,6 @@
 
 
 /**
- * @ingroup public
  * @brief Definition of the enable bit of an IRQ
  *
  * Syntax 1: `hw_irqe( object [, irq_name] )`
@@ -72,7 +70,6 @@
 
 
 /**
- * @ingroup public
  * @brief Definition of the flag bit of an IRQ
  *
  * Syntax 1: `hw_irqf( object [, irq_name] )`
@@ -87,11 +84,11 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Declaration of an ISR
  *
  * The `HW_ISR(...)` instruction accepts 2 optionnal arguments after the
- * definition of the IRQ:
+ * designation of the IRQ:
  *
  * @li `isr_naked`: ask the compiler to not initialize any register. You have to
  *   put the `reti` instruction yourself.
@@ -100,19 +97,8 @@
  * @li `isr_non_interruptible`: can be use to assert that the interrupts are not
  *   enabled.
  *
- * Syntax 1:
  * @code
  * HW_ISR( object [, irq_name] [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
- * {
- *    ... // Service the ISR
- *
- *    [ hw_reti(); ]
- * }
- * @endcode
- *
- * Syntax 2:
- * @code
- * HW_ISR( hw_irq(object [, irq_name]) [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
  * {
  *    ... // Service the ISR
  *
@@ -174,37 +160,49 @@
 
 
 /**
- * @ingroup public
- * @brief  Read an IRQ enable bit
+ * @ingroup public_obj_instructions
+ * @brief  Stat an IRQ enable bit
  *
- * Syntax: `hw_read_irqe( object [, irq_name] )`
+ * Get the state of the IRQ enable bit.
+ *
+ * @code
+ * hw_stat_irqe( hw_counter0, overflow )
+ * @endcode
  * @hideinitializer
  */
-#define hw_read_irqe(...)		_hw_readirqe_2(hw_irq(__VA_ARGS__))
-#define _hw_readirqe_2(...)		HW_G2(_hw_readirqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_readirqe_0(...)		__VA_ARGS__
-#define _hw_readirqe_1(t,v,o,e,f,...)	_hw_read_reg(o,e)
+#define hw_stat_irqe(...)		_hw_statirqe_2(hw_irq(__VA_ARGS__))
+#define _hw_statirqe_2(...)		HW_G2(_hw_statirqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_statirqe_0(...)		__VA_ARGS__
+#define _hw_statirqe_1(t,v,o,e,f,...)	_hw_read_reg(o,e)
 
 
 /**
- * @ingroup public
- * @brief  Read an IRQ flag bit
+ * @ingroup public_obj_instructions
+ * @brief  Stat an IRQ flag bit
  *
- * Syntax: `hw_read_irqf( object [, irq_name] )`
+ * Get the state of the IRQ flag bit.
+ *
+ * @code
+ * hw_stat_irqf( hw_counter0, overflow )
+ * @endcode
  * @hideinitializer
  */
-#define hw_read_irqf(...)		_hw_readirqf_2(hw_irq(__VA_ARGS__))
-#define _hw_readirqf_2(...)		HW_G2(_hw_readirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_readirqf_0(...)		__VA_ARGS__
-#define _hw_readirqf_1(t,v,o,e,f,...)	_hw_read_reg(o,f)
+#define hw_stat_irqf(...)		_hw_statirqf_2(hw_irq(__VA_ARGS__))
+#define _hw_statirqf_2(...)		HW_G2(_hw_statirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_statirqf_0(...)		__VA_ARGS__
+#define _hw_statirqf_1(t,v,o,e,f,...)	_hw_read_reg(o,f)
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
- * Short for `hw_turn( hw_irq(...), ... )`
+ * Enable or disable an IRQ by setting the IRQ enable bit to 0 or 1.
+ *
+ * @code
+ * hw_turn_irq( hw_counter0, overflow, on );
+ * @endcode
  */
 #define hw_turn_irq(...)		_hw_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_turnirq_2(...)		HW_G2(_hw_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -213,13 +211,15 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
- * Short for `hwa_turn( hw_irq(...), on | off )`
+ * Enable or disable an IRQ by setting the IRQ enable bit to 0 or 1.
  *
- * Syntax: `hwa_turn_irq( object [, irq_name], on | off );`
+ * @code
+ * hw_turn_irq( hw_counter0, overflow, on );
+ * @endcode
  */
 #define hwa_turn_irq(...)		_hwa_turnirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_turnirq_2(...)		HW_G2(_hwa_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -246,23 +246,23 @@
 
 
 /**
- * @ingroup public
- * @brief	Clear an IRQ flag
+ * @ingroup public_obj_instructions
+ * @brief Clear an IRQ flag
  * @hideinitializer
  *
- * Syntax: `hw_clear_irqf( object [, irq_name] );`
+ * This is a synonym for hw_clear_irq()
  */
 #define hw_clear_irqf(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
 
 
 /**
- * @ingroup public
- * @brief	Clear an IRQ flag
+ * @ingroup public_obj_instructions
+ * @brief Clear an IRQ flag
  * @hideinitializer
  *
- * Short for `hw_clear( hw_irq(...) )`
- *
- * Syntax: `hw_clear_irq( object [, irq_name] );`
+ * @code
+ * hw_clear_irq( hw_counter0, overflow );
+ * @endcode
  */
 #define hw_clear_irq(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hw_clearirq_2(...)		HW_G2(_hw_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
@@ -271,22 +271,22 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief	Clear an IRQ flag
  * @hideinitializer
  *
- * Syntax: `hwa_clear_irqf( object [, irq_name] );`
+ * This is a synonym for hwa_clear_irq()
  */
 #define hwa_clear_irqf(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
 
 /**
- * @ingroup public
- * @brief	Clear an IRQ flag
+ * @ingroup public_obj_instructions
+ * @brief Clear an IRQ flag
  * @hideinitializer
  *
- * Short for `hwa_clear( hw_irq(...) )`
- *
- * Syntax: `hwa_clear_irq( object [, irq_name] );`
+ * @code
+ * hwa_clear_irq( hw_counter0, overflow );
+ * @endcode
  */
 #define hwa_clear_irq(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
 #define _hwa_clearirq_2(...)		HW_G2(_hwa_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)

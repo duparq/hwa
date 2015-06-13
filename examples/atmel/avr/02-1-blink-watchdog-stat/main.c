@@ -70,7 +70,7 @@ int main ( )
      *  As soon as the watchdog IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    if ( hw_read_irqf(hw_wdog0) ) {
+    if ( hw_stat_irqf(hw_wdog0) ) {
       hw_clear_irqf( hw_wdog0 );
       hw_toggle( PIN_LED );
     }

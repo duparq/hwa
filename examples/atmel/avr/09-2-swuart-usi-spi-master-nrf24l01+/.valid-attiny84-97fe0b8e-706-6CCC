@@ -6,7 +6,7 @@ hw_swuart0_counter=hw_counter1
 hw_swuart0_counter_clk_div=1
 hw_swuart0_counter_compare=compare0
 UART=hw_swuart0
-SPI=hw_spimaster0_swclk
+SPI=hw_spimaster_swclk0
 NRF_CSN=hw_pin_pa7
 
 
@@ -334,7 +334,7 @@ Disassembly of section .text:
  196:	76 9b       	sbis	0x0e, 6	; 14
  198:	fd cf       	rjmp	.-6      	; 0x194 <main+0x4e>
  */
-HW_INLINE uint8_t _hw_read_r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+HW_INLINE uint8_t _hw_read__r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
   uint8_t m = (1U<<rbn)-1 ;
   volatile uint8_t *p = (volatile uint8_t *)ra ;

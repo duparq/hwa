@@ -10,14 +10,14 @@
  */
 
 /**
- * @ingroup public
+ * @ingroup public_gen_instructions
  * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
  * @hideinitializer
  */
 /*
- * Calls hwa_begin_all() that must be defined in hwa_<device>_2.h.
+ * Expands _hwa_begin_all() that must be defined in hwa_<device>_2.h.
  */
 #define hwa_begin()							\
   hwa_check_optimizations(0);						\
@@ -27,7 +27,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_gen_instructions
  * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
  *
  * The context is initialized with the values the registers have after a
@@ -46,7 +46,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_gen_instructions
  * @brief  Commit configuration to hardware.
  *
  * Solve the configuration stored into the HWA context, then do the required
@@ -65,7 +65,7 @@
   } while(0)
 
 /**
- * @ingroup public
+ * @ingroup public_gen_instructions
  * @brief  Same as hwa_commit() but do not write into hardware.
  *
  * This is used to put the HWA context in a known state before modifying it.
@@ -80,7 +80,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Read from an object (method)
  *
  * Syntax: `hw_read( object [,...] );`
@@ -91,7 +91,7 @@
 #define hw_read(...)			HW_MTHD(hw_read, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Read multiple bytes from an object (method)
  *
  * Syntax: `hw_read_bytes( object [,...] );`
@@ -100,7 +100,7 @@
 #define hw_read_bytes(...)		HW_MTHD(hw_read_bytes, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Read one register of an object (method)
  *
  * Syntax: `hw_read_reg( object, register );`
@@ -109,7 +109,7 @@
 #define hw_read_reg(...)		HW_MTHD(hw_read, hw_reg(__VA_ARGS__))
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Read from an object with interrupts disabled (method)
  *
  * Syntax: `hw_atomic_read( object [,...] );`
@@ -140,7 +140,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Write into an object (method)
  *
  * Syntax: `hw_write( object [,...], value );`
@@ -151,7 +151,7 @@
 #define hw_write(...)			HW_MTHD(hw_write, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Write into an object (method)
  *
  * Syntax: `hwa_write( object [,...], value );`
@@ -160,7 +160,7 @@
 #define hwa_write(...)			HW_MTHD(hwa_write, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Write multiple bytes into an object (method)
  *
  * Syntax: `hw_write_bytes( object, ... );`
@@ -169,7 +169,7 @@
 #define hw_write_bytes(...)		HW_MTHD(hw_write_bytes, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Write into one register of an object (method)
  *
  * Syntax: `hw_write_reg( object, register, value );`
@@ -178,7 +178,7 @@
 #define hw_write_reg(p,m,v)		HW_MTHD(hw_write, hw_reg(p,m),v)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Write into one register of an object (method)
  *
  * Syntax: `hwa_write( object, register, value );`
@@ -226,7 +226,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Make an object execute one of its special commands (method)
  *
  * Syntax: `hw_command( object, command [,...] );`
@@ -236,7 +236,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Configure an object (method)
  *
  * Syntax: `hw_config( object, ... );`
@@ -245,7 +245,7 @@
 #define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Configure an object (method)
  *
  * Syntax: `hwa_config( object, ... );`
@@ -254,7 +254,7 @@
 #define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Clear an object (method)
  *
  * Syntax: `hw_clear( object [,...] );`
@@ -263,7 +263,7 @@
 #define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Clear an object (method)
  *
  * Syntax: `hwa_clear( object [,...] );`
@@ -273,7 +273,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Reset an object (method)
  *
  * Syntax: `hw_reset( object [,...] );`
@@ -282,7 +282,7 @@
 #define hw_reset(...)			HW_MTHD(hw_reset, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Reset an object (method)
  *
  * Syntax: `hwa_reset( object [,...] );`
@@ -292,7 +292,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Power an object on/off (method)
  *
  * Syntax: `hw_power( object, on | off );`
@@ -301,7 +301,7 @@
 #define hw_power(...)			HW_MTHD(hw_power, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Power an object on/off (method)
  *
  * Syntax: `hwa_power( object, on | off );`
@@ -310,20 +310,8 @@
 #define hwa_power(...)			HW_MTHD(hwa_power, __VA_ARGS__,)
 
 
-/*	hw_lock_to_zero(...): clear something and keep it at 0 (mehod)
- */
-#define hw_lock_to_zero(...)		HW_MTHD(hw_lock_to_zero, __VA_ARGS__)
-#define hwa_lock_to_zero(...)		HW_MTHD(hwa_lock_to_zero, __VA_ARGS__)
-
-
-/*	hw/hwa_release(...): release something (method)
- */
-#define hw_release(...)			HW_MTHD(hw_release, __VA_ARGS__)
-#define hwa_release(...)		HW_MTHD(hwa_release, __VA_ARGS__)
-
-
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Type of the status of an object (method)
  *
  * Syntax: `hw_stat_t( object );`
@@ -333,7 +321,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Read the status of an object (method)
  *
  * Syntax: `hw_stat( object [,...] );`
@@ -343,7 +331,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Toggle an object, probably an i/o pin (method)
  *
  * Syntax: `hw_toggle( object [,...] );`
@@ -352,7 +340,7 @@
 #define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Toggle an object, probably an i/o pin (method)
  *
  * Syntax: `hwa_toggle( object [,...] );`
@@ -362,7 +350,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Turn an object on/off (method)
  *
  * Syntax: `hw_turn( object [,...], on | off );`
@@ -371,7 +359,7 @@
 #define hw_turn(...)			HW_MTHD(hw_turn, __VA_ARGS__,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Turn an object on/off (method)
  *
  * Syntax: `hwa_turn( object [,...], on | off );`
@@ -381,7 +369,7 @@
 
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Trigger an object (method)
  *
  * Syntax: `hw_trigger( object );`
@@ -390,7 +378,7 @@
 #define hw_trigger(p)			HW_MTHD(hw_trigger, p,)
 
 /**
- * @ingroup public
+ * @ingroup public_obj_instructions
  * @brief Trigger an object (method)
  *
  * Syntax: `hwa_trigger( object );`

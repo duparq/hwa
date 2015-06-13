@@ -24,15 +24,6 @@
 #include BOARD_H
 
 
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
-
-
 /*  The counter used for PWM
  */
 #define COUNTER                 hw_counter1
@@ -141,7 +132,8 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
  *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
  *  spare a few bytes and have a faster code with a naked ISR.
  */
-#if hw_addr(hw_reg(hw_sup(PIN_LED), port)) < 0x40
+//#if hw_addr(hw_reg(hw_sup(PIN_LED), port)) < 0x40
+#if hw_ra(hw_sup(PIN_LED), port) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
 {
   hw_write( PIN_LED, 0 );

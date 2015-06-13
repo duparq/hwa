@@ -17,7 +17,7 @@ clean:
 	@rm -rf doxygen/html
 
 
-#  Remove all produced files + check data
+#  Remove all produced files + examples validation data
 #
 .PHONY: superclean
 superclean: clean
@@ -25,22 +25,24 @@ superclean: clean
 
 
 #  Produce HTML documentation
+#    This target is used for 'make doc' from the classes/ directories
 #
 .PHONY: doc
 doc:
 	@cd $(CWD) && mkdir -p doxygen/html && doxygen doxygen/Doxyfile
 	@rm -f doxygen/html/*.tmp
 
-#  Compile all the test files
+
+#  Compile all the examples
 #
-.PHONY: tests
-tests:
+.PHONY: examples
+examples:
 	@for i in examples/atmel/avr/??-* ; do echo $$i: 	; \
 	(cd $$i ; if make 2>/dev/null |grep bytes ; then true ; else echo failed ; fi ) ;\
 	 echo ; done
 
 
-#  Validate all the test files
+#  Validate all the examples
 #
 .PHONY: validate
 validate:
@@ -49,7 +51,7 @@ validate:
 	done
 
 
-#  Check that all the test machine codes have the same CRC for the same
+#  Check that all the examples machine codes have the same CRC for the same
 #  configuration
 #
 .PHONY: checks

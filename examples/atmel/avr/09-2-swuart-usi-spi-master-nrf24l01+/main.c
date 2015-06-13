@@ -49,7 +49,7 @@
 
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
-#define SPI             hw_spimaster0_swclk
+#define SPI             hw_spimaster_swclk0
 #define NRF_CSN         hw_pin_6
 
 

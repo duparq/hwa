@@ -40,14 +40,27 @@
 #  define HW_ERR(msg)		hw_error ; .fail "HWA: " msg
 #  define HW_ERRFN(...)		.fail __VA_ARGS__
 #else
-/*
- *  avr-gcc ignores the GCC error pragma
+
+/**
+ * @ingroup public_gen_macros
+ * @brief Emit an error at preprocessing stage
+ * @hideinitializer
  */
-extern char hw_error ;
+/*  avr-gcc ignores the GCC error pragma
+ */
 #  define HW_ERR(msg)		hw_error ; _Static_assert(0, "HWA: " msg)
 
+/*  Avoid the emitting of an additionnal warning when HW_ERR is emittied.
+ */
+extern char hw_error ;
 
-/*  Emit an error (when not inside a function)
+/**
+ * @ingroup public_gen_macros
+ * @brief Emit an error at preprocessing stage (when not inside a function)
+ *
+ * Encapsulat the error into a fake function.
+ *
+ * @hideinitializer
  */
 #define HW_ERROR(...)		_HW_ERROR_2(__COUNTER__, __VA_ARGS__)
 #define _HW_ERROR_2(...)	_HW_ERROR_3(__VA_ARGS__)
@@ -65,36 +78,46 @@ extern char hw_error ;
 #define _HW_PE_1(x, y)		x
 
 
-/** \brief	Element a0 of the list a0,...
- *  @hideinitializer
+/**
+ * @ingroup public_gen_macros
+ * @brief Element a0 of the list a0,...
+ * @hideinitializer
  */
 #define HW_A0(...)		_HW_A0_2(__VA_ARGS__,)
 #define _HW_A0_2(a0,...)	a0
 
 
-/** \brief	Element a1 of the list a0,a1,...
- *  @hideinitializer
+/**
+ * @ingroup public_gen_macros
+ * @brief Element a1 of the list a0,a1,...
+ * @hideinitializer
  */
 #define HW_A1(...)		_HW_A1_2(__VA_ARGS__,,)
 #define _HW_A1_2(a0,a1,...)	a1
 
 
-/** \brief	Element a2 of the list a0,a1,a2,...
- *  @hideinitializer
+/**
+ * @ingroup public_gen_macros
+ * @brief Element a2 of the list a0,a1,a2,...
+ * @hideinitializer
  */
 #define HW_A2(...)		_HW_A2_2(__VA_ARGS__,,,)
 #define _HW_A2_2(a0,a1,a2,...)	a2
 
 
-/** \brief	Glue the first two arguments
- *  @hideinitializer
+/**
+ * @ingroup public_gen_macros
+ * @brief Glue the first two arguments with a '_' between them
+ * @hideinitializer
  */
 #define HW_G2(...)		_HW_G2_(__VA_ARGS__,,)
 #define _HW_G2_(a,b,...)	a##_##b
 
 
-/** \brief	Glue the first three arguments
- *  @hideinitializer
+/**
+ * @ingroup public_gen_macros
+ * @brief Glue the first three arguments with a '_' between them
+ * @hideinitializer
  */
 #define HW_G3(...)		_HW_G3_(__VA_ARGS__,,,)
 #define _HW_G3_(a,b,c,...)	a##_##b##_##c
@@ -219,6 +242,7 @@ extern char hw_error ;
 
 
 /**
+ * @ingroup public_gen_macros
  * @brief `1` if the first element is the name of a HWA object, `0` if not.
  * @hideinitializer
  */
@@ -240,7 +264,8 @@ extern char hw_error ;
 
 
 /**
- * @brief C string from the first element in the list
+ * @ingroup public_gen_macros
+ * @brief Build a C string from the first element in the list
  * @hideinitializer
  */
 #define HW_QUOTE(...)		_HW_QUOTE_2(__VA_ARGS__,)
@@ -253,31 +278,59 @@ extern char hw_error ;
 #define hw_hasbits__r16
 #define hw_hasbits__cb1
 #define hw_hasbits__cb2
-//#define hw_hasbits__ext
 #define hw_hasbits__ob1
 #define hw_hasbits__ob2
 #define hw_hasbits__xob1
 
 
 /**
- * @brief Memory definition of register `m` of object `p`.
+ * @ingroup public_obj_macros
+ * @brief Definition of the register of an object
  * @hideinitializer
  *
- *  The word 'register' here stands for 'set of bits' (may be sprayed over 2
- *  hardware registers).
+ * The word _register_ here stands for "set of bits" that may be sprayed over 2
+ * hardware registers.
  *
- *  This is a generic instruction that can be applied to every declared instance
- *  whatever its class. `HW_GNRC` expands the definition of object `p` or
- *  produces an error.
+ * Successful results can be:
  *
- *  Errors are processed at last.
+ *  * `_m1, o,a, r,rc,ra,rwm,rfm, rbn,rbp`
  *
- *  Successful results can be:
+ *  * `_m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
+ *               r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
  *
- *  `_m1, o,a, r,rc,ra,rwm,rfm, bn,bp`
+ * with:
  *
- *  `_m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
- *             r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
+ *  * '`_m1`': class of one group of consecutive bits in one hardware register
+ *
+ *  * '`_m2`': class of a set of bits made of two groups of consecutive bits in
+ *           one or two hardware registers
+ *
+ *  * `o`: the object name
+ *
+ *  * `a`: the base address of the object
+ *
+ *  * `r`: the name of the hardware register
+ *
+ *  * `rc`: the class of the hardware register
+ *
+ *  * `ra`: the address of the hardware register relative to the address of the object
+ *
+ *  * `rwm`: the mask of bits that are writeable
+ *
+ *  * `rfm`: the mask of flag bits (bits that are reset by writing 1 in them)
+ *
+ *  * `rbn`: the number of consecutive bits concerned
+ *
+ *  * `rbp`: the position of the least significant bit of the group in the hardware register
+ *
+ *  * `vbp`: the position of the least significant bit of the group in the value
+ *
+ */
+/* This is a generic instruction that can be applied to every declared instance
+ * whatever its class. `HW_GNRC` expands the definition of object `p` or
+ * produces an error.
+ *
+ * Errors are processed at last.
  */
 /*  FIXME: fails without HW_ERR if p is a _pin1:
  *  	_hw_reg_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
@@ -414,37 +467,54 @@ extern char hw_error ;
 
 
 /**
- * @brief  hw_addr(...): address of an object
+ * @ingroup public_obj_macros
+ * @brief Address of a register
  * @hideinitializer
  */
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
-#define hw_addr(...)			HW_MTHD(hw_addr, __VA_ARGS__)
+#define hw_addr(r)			HW_MTHD(hw_addr, r)
 
 #define _hw_mthd_hw_addr__m1		, _hw_addr__m1
 
 
 /**
+ * @ingroup public_obj_macros
+ * @brief  Address of an object's register
+ * @hideinitializer
+ */
+/* This is defined in the vendor-specific file since the address can be
+ * different between C and assembler.
+ */
+#define hw_ra(o,r)			_HW_SPEC(_hw_ra, hw_reg(o,r))
+
+
+/**
  * @brief  Address of an object's register (internal use)
  * @hideinitializer
-*/
-#define _hw_ra(o,r)			_HW_SPEC(_hw_ra, _hw_reg(o,r))
-
-
-/*	hw_ap(...): address, position of least significant bit (method)
  */
-#define hw_ap(...)			HW_MTHD(hw_ap, __VA_ARGS__)
+#define _hw_ra(o,r)			_HW_SPEC(_hw__ra, _hw_reg(o,r))
+
+
+/**
+ * @ingroup public_obj_macros
+ * @brief Address and position of the least significant bit of an object
+ * @hideinitializer
+ */
+#define hw_ap(r)			HW_MTHD(hw_ap, r)
 
 #define _hw_mthd_hw_ap__m1		, _hw_ap__m1
 #define _hw_ap__m1(...)			_hw_addr__m1(__VA_ARGS__), _hw_bp__m1(__VA_ARGS__)
 
 
 /**
- * @brief  Number of bits of an object
+ * @ingroup public_obj_macros
+ * @brief Number of bits of an object
  * @hideinitializer
  */
-#define hw_bn(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
+//#define hw_bn(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
+#define hw_bn(o)			HW_MTHD(hw_bn, o)
 
 #define _hw_mthd_hw_bn__m1		, _hw_bn__m1
 
@@ -459,9 +529,13 @@ extern char hw_error ;
 #define _hw_rbn__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
 
 
-/*	hw_bp(...): position of least significant bit of something (method)
+/**
+ * @ingroup public_obj_macros
+ * @brief Position of least significant bit of an object
+ * @hideinitializer
  */
-#define hw_bp(...)					HW_MTHD(hw_bp, __VA_ARGS__)
+//#define hw_bp(...)					HW_MTHD(hw_bp, __VA_ARGS__)
+#define hw_bp(o)					HW_MTHD(hw_bp, o)
 
 #define _hw_mthd_hw_bp__m1				, _hw_bp__m1
 
@@ -471,14 +545,14 @@ extern char hw_error ;
 /**
  * @brief  Position of the lsb of a register (internal use)
  * @hideinitializer
-*/
+ */
 #define _hw_rbp(o,r)					_HW_SPEC(_hw_rbp,_hw_reg(o,r))
 #define _hw_rbp__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
 
 
 /**
- * @brief uint_t type type of an object's hardware register (method)
- * Expands to `uint8_t`, `uint16_t`...
+ * @ingroup public_obj_macros
+ * @brief Integer type of an object's hardware register (`uint8_t`, `uint16_t`...)
  * @hideinitializer
  */
 #define hw_uint_t(o,r)					_HW_SPEC(_hw_uintt,hw_reg(o,r))
@@ -494,6 +568,7 @@ extern char hw_error ;
 
 
 /**
+ * @ingroup public_obj_macros
  * @brief ID of an object. 0 if the object does not exist.
  * @hideinitializer
  */
@@ -503,6 +578,7 @@ extern char hw_error ;
 
 
 /**
+ * @ingroup public_obj_macros
  * @brief Definition of the i/o associated to an object, or the io itself
  * @hideinitializer
  */
@@ -510,7 +586,8 @@ extern char hw_error ;
 
 
 /**
- * @brief Name of an object of a peripheral
+ * @ingroup public_obj_macros
+ * @brief Name of a related object
  * @hideinitializer
  */
 #define hw_sub(o,x)			_hw_sub_2(o,x)
@@ -523,7 +600,8 @@ extern char hw_error ;
 
 
 /**
- * @brief  Definition of the peripheral associated to an object (method)
+ * @ingroup public_obj_macros
+ * @brief Name of the "parent" of an object
  * @hideinitializer
  */
 #define hw_sup(o)			HW_MTHD(hw_sup, o,)

@@ -10,52 +10,49 @@
  */
 
 /**
- * @page atmelavr Atmel AVR common definitions
+ * @defgroup public_gen_instructions_atmelavr Instructions related to hardware modification for Atmel AVR devices
+ *
+ * These instructions lead to a modification of the hardware configuration that
+ * is not related to a specific object.
  */
 
-/**
- * @page atmelavr
- * @section atmelavr_hw_device HW_DEVICE_ common definitions
- *
- * The following symbols are defined for all the Atmel AVR devices:
- * * @ref HW_DEVICE
- * * @ref HW_DEVICE_PACKAGE
- * * @ref HW_DEVICE_ATMELAVR
- * * @ref HW_DEVICE_VENDOR
- * * @ref HW_DEVICE_ARCH
- * * @ref hw_syshz
- */
 #if defined DOXYGEN
 /**
+ * @ingroup public_gen_macros
  * @brief The name of the device
  */
-#  define HW_DEVICE	<device_name>
+#  define HW_DEVICE		<device_name>
 /**
+ * @ingroup public_gen_macros
  * @brief The packaging of the device
  */
 #  define HW_DEVICE_PACKAGE	<device_package>
 #endif
 
 /**
- * @brief Defined for all Atmel AVR devices
+ * @ingroup public_gen_macros
+ * @brief This symbol is defined for all Atmel AVR devices
  */
 #define HW_DEVICE_ATMELAVR
 
 /**
+ * @ingroup public_gen_macros
  * @brief Name of the vendor
  */
-#define HW_DEVICE_VENDOR		atmel
+#define HW_DEVICE_VENDOR	atmel
 
 /**
+ * @ingroup public_gen_macros
  * @brief Architecture name
  */
-#define HW_DEVICE_ARCH			avr
+#define HW_DEVICE_ARCH		avr
 
 /**
+ * @ingroup public_gen_macros
  * @brief The CPU clock frequency.
  */
 #if defined DOXYGEN
-#  define hw_syshz	<cpu cycles per second>
+#  define hw_syshz		<cpu cycles per second>
 #endif
 
 
@@ -64,11 +61,11 @@
 #define _hw_is_bottom_bottom		, 1
 #define _hw_is_clock_clock		, 1
 #define _hw_is_countmode_countmode	, 1
-#define _hw_is_edge_edge			, 1
+#define _hw_is_edge_edge		, 1
 #define _hw_is_filter_filter		, 1
 #define _hw_is_input_input		, 1
 #define _hw_is_ocu_ocu			, 1
-#define _hw_is_overflow_overflow		, 1
+#define _hw_is_overflow_overflow	, 1
 #define _hw_is_top_top			, 1
 #define _hw_is_update_update		, 1
 
@@ -79,9 +76,11 @@
  */
 #if defined __ASSEMBLER__
 #  define _hw_addr__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
+#  define _hw__ra__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
 #  define _hw_ra__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
 #else
 #  define _hw_addr__m1(o,a,r,rc,ra,...)		(a+ra)
+#  define _hw__ra__m1(o,a,r,rc,ra,...)		(a+ra)
 #  define _hw_ra__m1(o,a,r,rc,ra,...)		(a+ra)
 #endif
 
