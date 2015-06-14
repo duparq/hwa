@@ -56,13 +56,6 @@
  *   produce C code or make use of the HWA context.
  */
 
-#ifndef _HWA_H_
-#define _HWA_H_
-
-/* #ifndef HW_DEVICE */
-/* #  error "HW_DEVICE not defined." */
-/* #endif */
-
 #include "hwa_macros.h"
 #include "hwa_interrupts.h"
 
@@ -153,31 +146,3 @@ typedef struct rem_hwa_r32_t
 
 
 #endif /* !defined __ASSEMBLER__ */
-
-
-/*	Include device-specific declarations
- */
-#include HW_QUOTE(../devices/HW_G2(HW_DEVICE,1).h)
-
-
-#if !defined __ASSEMBLER__
-
-/*  The HWA context.
- *
- *  This structure is instanciated by `hwa_begin()` and used by all
- *  `hwa_...(...)` functions to bufferize hardware accesses.
- *
- *  It is populated by expanding the `HWA_DCL` symbol that is defined in the
- *  target-specific files.
- */
-
-typedef struct {
-  uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
-  HWA_DCL			/*!< Include device-specific declarations		*/
-} hwa_t ;
-
-struct hwa_t ;
-#  include "hwa_2.h"
-#endif /* !defined __ASSEMBLER__ */
-
-#endif /* !defined _HWA_H_ */

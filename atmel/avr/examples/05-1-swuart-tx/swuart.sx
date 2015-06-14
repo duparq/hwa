@@ -1,0 +1,11 @@
+
+	;; -*- asm -*-
+
+/**
+ * @file
+ * @brief  Include the implementation of the software uarts
+ */
+//#define SWUART_COMPUTE_CYCLES
+
+#include "config.h"
+#include <atmel/avr/swuart.sx>

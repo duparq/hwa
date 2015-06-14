@@ -3,7 +3,7 @@
 
 #$(warning "INCLUDE: Makefile.diabolo")
 
-PATH		:= $(HWA)/examples/atmel/avr/diabolo/host:$(PATH)
+PATH		:= $(HWA)/atmel/avr/examples/diabolo/host:$(PATH)
 
 INC_DIABOLO	= $(OUTDIR)/$(OUT).diabolo
 

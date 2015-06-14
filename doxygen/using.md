@@ -2,12 +2,12 @@
 Using HWA {#using}
 =========
 
-@subpage using_header
+You'll on the required informations for using HWA in the following pages:
 
-@subpage using_instructions
+ * @subpage using_header
+ * @subpage using_instructions
+ * @subpage using_peripherals
+ * @subpage using_interrupts
 
-@subpage using_objects
-
-@subpage using_interrupts
-
-<br>
+The <a href="examples.html">examples provided with HWA</a> page gives a list of
+examples projects that illustrate the usage of the HWA facilities.

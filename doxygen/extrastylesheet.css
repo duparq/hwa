@@ -23,6 +23,13 @@ h2 {
     color: #555;
 }
 
+h3 {
+    font-size: 100%;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    color: #666;
+}
+
 div.contents {
     max-width: 1024px;
 }

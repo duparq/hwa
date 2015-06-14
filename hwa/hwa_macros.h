@@ -58,7 +58,7 @@ extern char hw_error ;
  * @ingroup public_gen_macros
  * @brief Emit an error at preprocessing stage (when not inside a function)
  *
- * Encapsulat the error into a fake function.
+ * Encapsulate the error into a fake function.
  *
  * @hideinitializer
  */

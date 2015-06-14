@@ -8,52 +8,15 @@ in assembler too.
 
 HWA provides a set of object-oriented generic instructions that allow the
 programmer to focus on the result rather than the values that must be written
-into registers with the hope that it will lead to source codes easier to read,
-easier to maintain, and easier to port between different targets.
+into registers with the hope that it leads to source code easier to read, easier
+to maintain, and easier to port between different targets.
 
 HWA is not a library. It is implemented at the preprocessing and compilation
-levels and a cache mechanism (the HWA context) combined to the compiler's
-optimizers help HWA produce machine code free of any penalty, either in terms of
-size, execution speed or memory used.
+levels and a cache mechanism (the _HWA context_) combined to the compiler's
+optimizers help HWA produce a machine code free of any penalty, either in terms
+of size, execution speed or memory used.
 
 ![](doxygen/hwa_principle.jpeg)
-
-
-Examples
-========
-
-The `examples/` directory contains a few examples aimed at illustrating various
-features of HWA, currently only for Atmel ATtiny44/84 and ATmega328P devices
-(ATtinyx5 should be available soon as it was supported before HWA was last
-rewritten).
-
-As a first check, you can run `make tests` in the HWA base directory to check
-that all examples compile without error. You'll need a properly configured
-avr-gcc toolchain for that (avr-libc is not required). You can also run `make
-checks` to verify that the generated code is the same that I obtained.
-
-The `main.c` file of each example gives informations about what it does and how
-you can test it. A Python application is provided with the examples that need to
-communicate with the host.
-
-Files stored in the `examples/boards/` directory contain definitions for the
-boards I use: configuration of the microcontroller (fuses...), configuration of
-the Diabolo bootloader, LED pins used on Arduino boards...
-
-If you want to run one of these examples on a microcontroller in which you
-previously installed Diabolo (see below), you just have to connect your USB-UART
-adapter and run `make install`.
-
-If you prefer to use another programming method, you'll find the machine code to
-be programmed in the `build/out.bin` file. In the Makefile, you can define
-`PROG_SW` and `PROG_HW` with the names of your programming tools to override the
-default Diabolo. For example:
-
-    PROG_SW = avrdude
-    PROG_HW = usbasp
-
-You'll have to provide a specific makefile if you use neither Diabolo nor
-avrdude. Look at the `examples/make/` directory.
 
 
 Documentation
@@ -65,8 +28,49 @@ format. You'll start with the `doxygen/html/index.html` page.
 Alternately you can browse the documentation from [this
 website](http://duparq.free.fr/hwa/index.html).
 
-Currently the documentation gives informations only about using HWA, not on how
-to develop HWA.
+Currently the documentation gives primarily informations about using HWA, not
+much on how HWA works internally.
+
+
+Examples
+========
+
+The `atmel/avr/examples/` directory contains a few examples aimed at
+illustrating various features of HWA, currently only for Atmel ATtiny44/84 and
+ATmega328P devices (ATtinyx5 should be available soon as it was supported before
+HWA was last rewritten).
+
+As a first check, you can run `make` in the HWA base directory to verify that
+all examples compile without error and that the generated code is correct (there
+are validation files that make this verification automatically). You'll need a
+properly configured avr-gcc toolchain for that (avr-libc is not required). By
+default, the target device is an ATtiny84. If you want to verify that the
+examples compile for the ATmega328p device as used on some Arduino boards, you
+can run `make clean` then `make BOARD=nanodccduino`.
+
+The `main.c` file of each example gives informations about what it does and how
+you can test it. A Python application is provided with the examples that need to
+communicate with the host.
+
+Files stored in the `examples/boards/` directory contain the definitions of
+various boards used to verify the correctness of the code produced by HWA:
+configuration of the microcontroller (fuses...), configuration of the Diabolo
+bootloader, LED pins used on Arduino boards...
+
+If you want to run one of these examples on a microcontroller in which you
+previously installed the Diabolo bootloader, you just have to connect your
+USB-UART adapter and run `make install`.
+
+If you prefer to use another programming method, you'll find the machine code to
+be programmed in the `build/out.bin` file. In the Makefile, you can define
+`PROG_SW` and `PROG_HW` with the names of your programming tools to override the
+default Diabolo. For example:
+
+    PROG_SW = avrdude
+    PROG_HW = usbasp
+
+You'll have to provide a specific makefile if you use neither Diabolo nor
+avrdude. Look at the `examples/make/` directory.
 
 
 Status

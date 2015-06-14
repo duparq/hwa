@@ -1,5 +1,0 @@
-
-	;; -*- asm -*-
-
-#include "config.h"
-#include <hwa/swuart.sx>

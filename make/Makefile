@@ -32,7 +32,7 @@ SHELL		= /bin/sh
 #  HWA source path and other related include directories
 #
 HWA		=  $(abspath $(CWD)..)
-INCLUDES	+= -I$(HWA)/include -I$(HWA)/examples/atmel/avr
+INCLUDES	+= -I$(HWA)/include -I$(HWA)/atmel/avr/examples
 
 
 #	Output basename and directory
@@ -152,12 +152,16 @@ validate: $(CFG) $(OUTDIR)/$(OUT).bin $(OUTDIR)/$(OUT).lst
 .PHONY: check
 check: $(CFG)
 	@S_CRC=$$( crc32 $(CFG) | awk '{print $1}' )					;\
+	if [ "$$S_CRC" = "00000000" ] ; then						\
+	  echo "CRC generation failed"							;\
+	  exit 1									;\
+	fi										;\
 	if test -f .valid-$(DEVICE)-$$S_CRC-* ; then					\
 	  if make $(OUTDIR)/$(OUT).bin >/dev/null 2>&1 ; then				\
 	    O_CRC=$$(diabolo.py -q -m $(DEVICE) --crc $(OUTDIR)/$(OUT).bin)		;\
 	    O_SIZE=$$(diabolo.py -q -m $(DEVICE) --size $(OUTDIR)/$(OUT).bin)		;\
 	    if test -f .valid-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC ; then			\
-	      echo passed								;\
+	      echo success								;\
 	    else									\
 	      echo FAIL: .valid-$(DEVICE)-$$S_CRC-* / $$O_SIZE-$$O_CRC			;\
 	      exit 1									;\

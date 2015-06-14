@@ -1,4 +1,0 @@
-
-include ../Makefile
-
-all:	doc

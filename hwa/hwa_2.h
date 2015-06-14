@@ -716,10 +716,3 @@ HW_INLINE void hwa_check_optimizations ( uint8_t x )
 {
   if (x) { HWA_ERR("you may have forgotten to turn optimizations on."); }
 }
-
-
-/*	Include device-specific declarations
- */
-#ifndef DOXYGEN
-#  include HW_QUOTE(../devices/HW_G2(HW_DEVICE,2).h)
-#endif

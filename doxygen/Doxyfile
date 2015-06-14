@@ -110,28 +110,27 @@ WARN_LOGFILE           =
 INPUT                  = README.md					\
 		       	 doxygen/using.md				\
 		       	 doxygen/using_header.md			\
-		       	 doxygen/using_objects.md			\
 		       	 doxygen/using_instructions.md			\
+		       	 doxygen/using_peripherals.md			\
 		       	 doxygen/using_interrupts.md			\
 			 include/					\
-			 devices/attinyx4_1.h				\
-			 devices/attinyx4_2.h				\
-			 devices/					\
-			 classes/atmel/avr/wdoga_1.h			\
-			 classes/atmel/avr/wdogb_1.h			\
-			 classes/					\
-			 hwa/atmel/avr/README.md			\
-			 examples/atmel/avr/boards/README.md		\
-			 examples/atmel/avr/boards/attiny84.h		\
-			 examples/atmel/avr/boards/attiny85.h		\
-			 examples/atmel/avr/boards/arduino_pro_mini.h	\
-			 examples/atmel/avr/boards/nanodccduino.h	\
-			 examples/atmel/avr/boards/			\
-			 examples/atmel/avr/diabolo/			\
-			 examples/atmel/avr/				\
+			 atmel/avr/devices/				\
+			 atmel/avr/classes/wdoga_1.h			\
+			 atmel/avr/classes/wdogb_1.h			\
+			 atmel/avr/classes/				\
+			 atmel/avr/README.md				\
+			 atmel/avr/examples/boards/README.md		\
+			 atmel/avr/examples/boards/attiny84.h		\
+			 atmel/avr/examples/boards/attiny85.h		\
+			 atmel/avr/examples/boards/arduino_pro_mini.h	\
+			 atmel/avr/examples/boards/nanodccduino.h	\
+			 atmel/avr/examples/diabolo/			\
+			 atmel/avr/swuarta/				\
+			 atmel/avr/examples/				\
+			 atmel/avr/examples/boards/			\
 			 hwa/						\
 		       	 doxygen/porting.md				\
-		       	 doxygen/hwa_license.md				\
+		       	 doxygen/hwa_license.md
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
@@ -144,7 +143,7 @@ EXCLUDE                = build
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
-EXAMPLE_PATH           = examples/atmel/avr/
+EXAMPLE_PATH           = atmel/avr/examples/
 EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = YES
 IMAGE_PATH             = doxygen

@@ -26,7 +26,7 @@ Interrupt service routines are declared with the HW_ISR() statement:
 @code
 HW_ISR( hw_counter1, overflow )
 {
-  // code to handle the overflow of the counting register
+  // code to handle the overflow of the timer-counter1
 }
 @endcode
 
@@ -37,13 +37,21 @@ HW_ISR( hw_watchdog0 )
 }
 @endcode
 
-HW_ISR() accepts two optionnal parameters:
+HW_ISR() accepts a few optionnal parameters:
+
+ * `isr_naked` makes the ISR have a naked body. In that case you'll have to end
+   you ISR code with the hw_reti() instruction.
 
  * `isr_interruptible` makes the ISR interruptible (the interrupts are
    re-enabled as soon as the ISR is executed);
 
- * `isr_naked` makes the ISR have a naked body. In that case you'll have to end
-   you ISR code with the hw_reti() instruction.
+ * `isr_noninterruptible` makes the ISR non-interruptible (the interrupts are
+   disabled as soon as the ISR is executed);
+
+Depending on the target device, these parameters may or may not produce
+code. For example, `isr_noninterruptible` will not produce code for the Atmel
+AVR devices since these targets automatically disable the interrupts when they
+enter an ISR.
 
 For example, if you are sure that your ISR will not alter any register:
 
