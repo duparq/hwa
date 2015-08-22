@@ -6,22 +6,33 @@
 
 /**
  * @file
+ * @brief Watchdog timer
  */
-
-#include "wdog_1.h"
-
 
 /**
  * @page atmelavr_wdogb Class _wdogb: watchdog timer
  *
  * A class `_wdogb` object is a watchdog timer.
  *
- * This is the sama as the `_wdoga` with a different method for changing the
- * configuration.
+ * It is identical to the class @ref atmelavr_wdoga "_wdoga" except that it uses
+ * a different method for applying changes to the configuration.
+ *
+ * It is used in:
+ *
+ * * @ref atmegax8 : `hw_wdog0`
  */
 #define _hw_class__wdogb
 
 
-/*  Context
- */
-#define hwa_wdogb_t			hwa_wdog_t
+#if !defined __ASSEMBLER__
+
+typedef struct {
+  hwa_r8_t 	csr ;
+
+  struct {
+    uint8_t	action, timeout ;
+  } config ;
+
+} hwa_wdogb_t ;
+
+#endif

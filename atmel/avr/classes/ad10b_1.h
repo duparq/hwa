@@ -6,10 +6,7 @@
 
 /**
  * @file
- *
- * Atmel AVR 10-bit analog-digital converter model 'b'
- *
- * Used in:	ATmegaX8
+ * @brief A/D converter
  */
 
 /**
@@ -18,31 +15,36 @@
  * A class `_ad10b` object is an analog to digital converter with the following
  * features:
  *
- * * 10-bit resolution, left or right adustement
- * * internal 1100 mV bandgap, AVCC, or external voltage reference
- * * 0..VREF input voltage range
- * * 2..128 system clock prescaler
- * * 13 cycles conversion time (25 cycles for the first conversion)
- * * single conversion mode, free-running, and 7 auto trigger sources
+ * * 10-bit resolution, left or right adustement of the result
+ * * 8 multilexed single-ended input channels (6 available on PDIP packages)
+ * * Temperature sensor input channel
+ * * 0..Vcc input voltage range
+ * * Internal 1,1 V bandgap, AVcc, or external voltage reference
+ * * Single conversion mode, free-running, and 7 auto trigger sources
+ * * 65-260 μs Conversion Time (3.8-15.4 ksps). A complete normal conversion
+ *   takes 13 clock cycles, 13.5 in the auto-trigger mode, and 25 for the
+ *   initial conversion.
  *
- * This ADC shares the analog multiplexer output with the analog comparator. But
- * since the ADC must be turned off for the analog comparator to use the analog
- * multiplexer output, we can consider that these two peripheral have each his
- * own multiplexer and not create a HWA object.
+ * __Note__: the ADC and the analog comparator share the output of the analog
+ * multiplexer. When the ADC is enabled, the analog comparator can not use the
+ * analog multiplexer output. Thus, HWA implements these peripherals as if each
+ * has his own analog multiplexer.
+ *
+ * It is used in:
+ *
+ *  * @ref atmegax8 : `hw_adc0`
  */
 #define _hw_class__ad10b
 
 
 /**
  * @page atmelavr_ad10b
- * @section atmelavr_ad10b_bn Number of bits of the conversion register
+ * @par Instructions that do not produce C code
  *
- * The `hw_bn(...)` instruction retrieves the number of bits of the ADC.
+ * The `hw_bn()` instruction retrieves the number of bits of an ADC:
  *
  * @code
- * #define ADC		hw_adc0
- *
- * #if hw_bn( ADC ) < 10
+ * #if hw_bn( ADC_NAME ) < 10
  * #  error At least 10-bit ADC is required!
  * #endif
  * @endcode
@@ -51,13 +53,22 @@
 #define _hw_bn_ad10b(o,i,a,...)		HW_TX(10,__VA_ARGS__)
 
 
+/**
+ * @page atmelavr_ad10b
+ * @par Interrupts
+ *
+ * Class `_ad10b` objects can trigger the following IRQs:
+ *
+ *  * `ADC_NAME`: conversion completed
+ */
+
+
 #if !defined __ASSEMBLER__
 
 typedef struct {
   hwa_r8_t admux ;
   hwa_r8_t sra ;
   hwa_r8_t srb ;
-  hwa_r8_t did ;
 } hwa_ad10b_t ;
 
 #endif

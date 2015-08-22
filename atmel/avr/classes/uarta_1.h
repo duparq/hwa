@@ -6,6 +6,7 @@
 
 /**
  * @file
+ * @brief UART
  */
 
 /**
@@ -14,17 +15,17 @@
  * A class `_uarta` object is a UART.
  *
  * It is used in:
- *  * ATmega48/88/168/328
+ *
+ *  * @ref atmegax8 : `hw_uart0`
  */
 #define _hw_class__uarta
-
 
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
   hwa_r16_t     ubrr ;
-  hwa_r8_t      csra, csrb, csrc, dr ;
+  hwa_r8_t      csra, csrb, csrc/* , dr */ ;
 
   struct {
     uint16_t	brr ;

@@ -6,24 +6,37 @@
 
 /**
  * @file
+ * @brief Analog Comparator
  */
-
 
 /**
  * @page atmelavr_acmpa Class _acmpa: analog comparator
  *
  * A class `_acmpa` object is an analog comparator.
  *
- * Used in: ATtinyX4
+ * It is used in:
+ *
+ * * @ref attinyx4 : `hw_acmp0`
+ * * @ref atmegax8 : `hw_acmp0`
  */
 #define _hw_class__acmpa
 
+/**
+ * @page atmelavr_acmpa
+ * @par Interrupts
+ *
+ * Class `_acmpa` objects can trigger the following IRQs:
+ *
+ *  * `OBJECT_NAME`: comparator output event
+ */
 
+/*	Class logical registers
+ */
 #define _hw__acmpa_acd			_cb1, csr, 1, 7
 #define _hw__acmpa_acbg			_cb1, csr, 1, 6
 #define _hw__acmpa_aco			_cb1, csr, 1, 5
-#define _hw__acmpa_aci			_cb1, csr, 1, 4
-#define _hw__acmpa_acie			_cb1, csr, 1, 3
+#define _hw__acmpa_if			_cb1, csr, 1, 4
+#define _hw__acmpa_ie			_cb1, csr, 1, 3
 #define _hw__acmpa_acic			_cb1, csr, 1, 2
 #define _hw__acmpa_acis			_cb1, csr, 2, 0
 

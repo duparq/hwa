@@ -6,27 +6,27 @@
 
 /**
  * @file
- * @brief Definitions for Atmel AVR core model 'b' that do not produce C code
- *
- *	Used in: ATmegaX8
+ * @brief Core
  */
 
 /**
  * @page atmelavr_coreb Class _coreb: core of the device
+ *
  * A class `_coreb` object is a core of the device.
+ *
+ * It is used in:
+ *
+ * * @ref atmegax8 : `hw_core0`
  */
 #define _hw_class__coreb
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r8_t eimsk ;
-  hwa_r8_t eifr ;
   hwa_r8_t mcucr ;
   hwa_r8_t mcusr ;
   hwa_r8_t smcr ;
   hwa_r8_t osccal ;
-  hwa_r8_t prr ;
 } hwa_coreb_t ;
 
 #endif

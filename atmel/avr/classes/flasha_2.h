@@ -4,10 +4,16 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Flash memory
+ */
 
 /**
  * @page atmelavr_flasha
- * @section atmelavr_flasha_read1 Reading one byte from Flash memory
+ * @section atmelavr_eeproma_read Read operations
+ *
+ * The `hw_read()` instruction reads one byte at given memory address:
  *
  * @code
  * uint8_t byte = hw_read( hw_flash0, addr ); // Read byte at address addr
@@ -31,7 +37,9 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 
 /**
  * @page atmelavr_flasha
- * @section atmelavr_flasha_readx Reading multiple bytes Flash memory
+ *
+ * The `hw_read_bytes()` instruction reads multiple bytes from given memory
+ * address:
  *
  * @code
  * uint8_t dst[10];
@@ -66,46 +74,55 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 
 /**
  * @page atmelavr_flasha
+ * @section atmelavr_eeproma_write Write operations
  *
- * @section atmelavr_flasha_loadpage Writing the Flash page buffer
- * This is achieved through the `hw_command(...)` instruction:
+ * Write operations on Flash memory require a special procedure:
+ *
+ *  1. Load a page buffer with the content to be
+ *     written. `HW_DEVICE_FLASH_PAGE_SIZE` gives the page buffer size.
+ *
+ *  2. Erase the page to be programmed.
+ *
+ *  3. Program the page with the content of the page buffer.
+ *
+ *  Steps 1 & 2 can be done in any order.
+ *
+ * The `hw_command()` instruction can perform these 3 operations on the
+ * Flash memory:
+ *
+ *  * `load_buffer` : loads the page buffer
+ *
  * @code
  * uint8_t page[HW_DEVICE_FLASH_PAGE_SIZE] ;
- * hw_command( hw_flash0, load_page, page );
+ * hw_command( hw_flash0, load_buffer, page );  // Store page[] into the memory page buffer
  * @endcode
  *
- * @section atmelavr_flasha_erasepage Erasing one page of Flash memory
- * This is achieved through the `hw_command(...)` instruction:
+ *  * `erase_page` : erase a memory page
+ *
  * @code
  * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
- * hw_command( hw_flash0, erase_page, zpage );
+ * hw_command( hw_flash0, erase_page, zpage );  // Erase memory page at address buf.addr
  * @endcode
  *
- * @section atmelavr_flasha_writepage Writing the page buffer into Flash memory
- * This is achieved through the `hw_command(...)` instruction:
+ *  * `write_page` : write a memory page with the content of the buffer
+ *
  * @code
  * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
- * hw_command( hw_flash0, write_page, zpage );
+ * hw_command( hw_flash0, write_page, zpage );  // Program page buffer at memory address buf.addr
  * @endcode
- *
- * This handles commands that _flasha objects can execute:
- * * load_page
- * * erase_page
- * * write_page
  */
 #define _hw_mthd_hw_command__flasha		, _hw_command_flasha
 
-#define _hw_flasha_command_load_page		, load_page
+#define _hw_flasha_command_load_buffer		, load_buffer
 #define _hw_flasha_command_write_page		, write_page
 #define _hw_flasha_command_erase_page		, erase_page
-
 
 #define _hw_command_flasha(o,i,a,...)					\
   HW_G2(_hw_flasha,HW_IS(,_hw_flasha_command_##__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hw_flasha_1(o,cmd,...)			_hw_flasha_##cmd(o,__VA_ARGS__)
 
-#define _hw_flasha_load_page(o,src,...)		HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
+#define _hw_flasha_load_buffer(o,src,...)	HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
 #define _hw_flasha_erase_page(o,ptr,...)	HW_TX(_hw_flasha_pgers(o,ptr),__VA_ARGS__)
 #define _hw_flasha_write_page(o,ptr,...)	HW_TX(_hw_flasha_pgwrt(o,ptr),__VA_ARGS__)
 
@@ -375,3 +392,8 @@ HW_INLINE void __hw_flasha_ldpgbf( intptr_t dst, void *src )
 	 );
 }
 #endif
+
+/**
+ * @page atmelavr_flasha
+ * <br>
+ */

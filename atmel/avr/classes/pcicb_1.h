@@ -1,11 +1,13 @@
 
-/*	Atmel AVR pin change interrupt controller model 'a'
- *
- * This file is part of the HWA project.
+/* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Pin-change interrupt controller
+ */
 
 /**
  * @page atmelavr_pcicb Class _pcicb: pin change interrupt controller

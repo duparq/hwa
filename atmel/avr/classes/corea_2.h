@@ -4,92 +4,187 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-
-/** @page atmelavr_corea
- *  @section atmelavr_corea_config Configuration
- *
- *  You use the `hwa_config(...)` instruction to configure the core of the
- *  device. Optionnal arguments are:
- *
- *  * `sleep`: whether the `hw_sleep()` instruction will put the core in sleep
- *     mode or not
- *
- *  * `sleep_mode`: the sleep mode
- *
- *  @code
- *  hwa_config( CORE,
- *
- *              [sleep,        enabled,
- *                           | disabled,]
- *
- *              [sleep_mode,   idle
- *                           | adc_noise_reduction
- *                           | power_down
- *                           | standby]             );
- *  @endcode
+/**
+ * @file
+ * @brief Core
  */
 
-/** @page atmelavr_corea
- *  @section atmelavr_corea_sleep Entering sleep
+/**
+ * @page atmelavr_corea
+ * @section atmelavr_corea_config Configuration
  *
- *  If you enabled it, you put the core in sleep mode with the `hw_sleep()`
- *  instruction:
+ * @code
+ * hwa_config( OBJECT_NAME,
  *
- *  @code
- *  hw_sleep();
- *  @endcode
+ *             //  Whether the `hw_sleep()` instruction will put the core in
+ *             //  sleep mode or not
+ *             //
+ *           [ sleep,        enabled,
+ *                         | disabled, ]
+ *
+ *             //  Wanted sleep mode
+ *             //
+ *           [ sleep_mode,   idle
+ *                         | adc_noise_reduction
+ *                         | power_down
+ *                         | standby             ]
+ *             );
+ * @endcode
+ */
+#define _hw_mthd_hwa_config__corea	, _hwa_cfcorea
+
+/*  TODO: use a list of wake-up sources instead (or in addition)?
  */
 
-#define corex		corea
-#define atmelavr_corex	atmelavr_corea
-
-#include "corex_2.h"
-
-/*	Class methods
+/*	Optionnal parameter `sleep`
  */
-#define _hw_mthd_hwa_config__corea	, _hwa_config_core
-#define _hw_mthd_hw_stat__corea		, _hw_stat_core
-#define _hw_mthd_hwa_clear__corea	, _hwa_clear_core
+#define _hw_is_sleep_sleep			, 1
+
+#define _hwa_cfcorea(o,i,a,...)					\
+  do {									\
+      HW_G2(_hwa_cfcorea_ksleep, HW_IS(sleep,__VA_ARGS__))(o,__VA_ARGS__,,); \
+  } while(0)
+
+#define _hwa_cfcorea_ksleep_0(o,v,...)					\
+  HW_G2(_hwa_cfcorea_ksleepmode, HW_IS(sleep_mode,v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfcorea_ksleep_1(o,k,v,...)				\
+  HW_G2(_hwa_cfcorea_vsleep, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfcorea_vsleep_0(o,v,...)					\
+  HW_ERR("`sleep` can be `enabled` or `disabled`, but not `" #v "`.")
+
+#define _hwa_cfcorea_vsleep_1(o,v,k,...)				\
+  _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
+  HW_G2(_hwa_cfcorea_ksleepmode, HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
+
+/*	Optionnal parameter `sleep_mode`
+ */
+#define _hw_is_sleep_mode_sleep_mode		, 1
+#define hw_sleepmode_idle			, 0
+#define hw_sleepmode_adc_noise_reduction	, 1
+#define hw_sleepmode_power_down			, 2
+#define hw_sleepmode_standby			, 3
+
+#define _hwa_cfcorea_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
+
+#define _hwa_cfcorea_ksleepmode_1(o,k,v,...)				\
+  HW_G2(_hwa_cfcorea_vsleepmode, HW_IS(,hw_sleepmode_##v))(o,v,__VA_ARGS__)
+
+#define _hwa_cfcorea_vsleepmode_0(o,v,...)				\
+  HW_ERR("`sleep_mode` can be `idle`, `adc_noise_reduction`, or "	\
+	 "`power_down`, but not `" #v "`.")
+
+#define _hwa_cfcorea_vsleepmode_1(o,v,...)		\
+  _hwa_write_reg( o, sm, HW_A1(hw_sleepmode_##v) );	\
+  HW_EOL(__VA_ARGS__)
 
 
-HW_INLINE void _hwa_begin_p__corea ( hwa_corea_t *p, intptr_t a )
+/**
+ * @page atmelavr_corea
+ * @section atmelavr_corea_sleep Sleep
+ *
+ * If enabled, the `hw_sleep()` instruction puts the core into sleeping mode:
+ *
+ * @code
+ * hw_sleep();
+ * @endcode
+ */
+
+
+/**
+ * @page atmelavr_corea
+ * @section atmelavr_corea_stat Status
+ *
+ * The `hw_stat()` instruction returns the status flags of the core in a
+ * structure whose typename is given by the `hw_stat_t()` instruction. Available
+ * flags are:
+ *
+ * * `porf`  or `reset_by_power_on`  : 1 if reset was caused by power-on
+ * * `extrf` or `reset_by_reset_pin` : 1 if reset was caused by external pin RESET
+ * * `borf`  or `reset_by_brown_out` : 1 if reset was caused by brown-out detection
+ * * `wdrf`  or `reset_by_watchdog`  : 1 if reset was caused by watchdog
+ *
+ * @code
+ * hw_stat_t( OBJECT_NAME ) st ;
+ * st = hw_stat( OBJECT_NAME );
+ * if ( st.wdrf ) {
+ *   n_wdresets++ ;    // Increment watchdog resets count
+ * }
+ * @endcode
+ */
+#define _hw_mthd_hw_stat__corea		, _hw_stat_corea
+
+/*  FIXME: intf0 should be there
+ */
+typedef union {
+  uint8_t	  byte ;
+  struct {
+    unsigned int porf	: 1 ;
+    unsigned int extrf	: 1 ;
+    unsigned int borf	: 1 ;
+    unsigned int wdrf	: 1 ;
+    unsigned int __4to7 : 4 ;
+  };
+  struct {
+    unsigned int reset_by_power_on  : 1 ;
+    unsigned int reset_by_reset_pin : 1 ;
+    unsigned int reset_by_brown_out : 1 ;
+    unsigned int reset_by_watchdog  : 1 ;
+    unsigned int __4to7_2	    : 4 ;
+  };
+} _hw_corea_stat_t ;
+
+
+#define _hw_stat_corea(o,i,a,...)	HW_TX(_hw_corea_stat(_hw_read_reg(o, mcusr)),__VA_ARGS__)
+
+HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 {
-  _hwa_begin_reg_p( p, a, _corea, gimsk  );
-  _hwa_begin_reg_p( p, a, _corea, gifr   );
-  _hwa_begin_reg_p( p, a, _corea, mcucr  );
-  _hwa_begin_reg_p( p, a, _corea, mcusr  );
-  _hwa_begin_reg_p( p, a, _corea, osccal );
-  _hwa_begin_reg_p( p, a, _corea, gpior2 );
-  _hwa_begin_reg_p( p, a, _corea, gpior1 );
-  _hwa_begin_reg_p( p, a, _corea, gpior0 );
-  _hwa_begin_reg_p( p, a, _corea, prr    );
+  _hw_corea_stat_t	st ;
+  st.byte = byte ;
+  return st ;
 }
 
 
+/**
+ * @page atmelavr_corea
+ *
+ * The `hw_clear()` instruction clears the status flags all at once:
+ *
+ * @code
+ * hwa_clear( hw_core0 );
+ * @endcode
+ */
+#define _hw_mthd_hwa_clear__corea	, _hwa_clear_corea
 
-HW_INLINE void _hwa_init_p__corea ( hwa_corea_t *p )
-{
-  _hwa_set__r8( &p->gimsk,  0x00 );
-  _hwa_set__r8( &p->gifr,   0x00 );
-  _hwa_set__r8( &p->mcucr,  0x00 );
-  //  mcusr is not initialized as its status is not known after RESET
-  _hwa_set__r8( &p->osccal, 0x00 );
-  _hwa_set__r8( &p->gpior2, 0x00 );
-  _hwa_set__r8( &p->gpior1, 0x00 );
-  _hwa_set__r8( &p->gpior0, 0x00 );
-  _hwa_set__r8( &p->prr,    0x00 );
-}
+#define _hwa_clear_corea(o,i,a,_)	_hwa_write_reg( o, allrf, 0 )
 
 
-HW_INLINE void _hwa_commit_p__corea ( hwa_t *hwa, hwa_corea_t *p )
-{
-  _hwa_commit_reg_p( p, _corea, gimsk  );
-  _hwa_commit_reg_p( p, _corea, gifr   );
-  _hwa_commit_reg_p( p, _corea, mcucr  );
-  _hwa_commit_reg_p( p, _corea, mcusr  );
-  _hwa_commit_reg_p( p, _corea, osccal );
-  _hwa_commit_reg_p( p, _corea, gpior2 );
-  _hwa_commit_reg_p( p, _corea, gpior1 );
-  _hwa_commit_reg_p( p, _corea, gpior0 );
-  _hwa_commit_reg_p( p, _corea, prr    );
-}
+
+/*******************************************************************************
+ *									       *
+ *	Context management						       *
+ *									       *
+ *******************************************************************************/
+
+#define _hwa_create__corea(o,i,a)		\
+  _hwa_create_reg( o, mcucr  );			\
+  _hwa_create_reg( o, mcusr  );			\
+  _hwa_create_reg( o, osccal )
+
+/*  mcusr is not initialized as its status is not known after RESET
+ */
+#define _hwa_init__corea(o,i,a)			\
+  _hwa_init_reg( o, mcucr,  0x00 );		\
+  _hwa_init_reg( o, osccal, 0x00 )
+
+#define _hwa_commit__corea(o,i,a)		\
+  _hwa_commit_reg( o, mcucr  );			\
+  _hwa_commit_reg( o, mcusr  );			\
+  _hwa_commit_reg( o, osccal )
+
+
+/**
+ * @page atmelavr_corea
+ * <br>
+ */

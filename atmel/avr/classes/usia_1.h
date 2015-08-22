@@ -5,6 +5,11 @@
  */
 
 /**
+ * @file
+ * @brief Universal Serial Interface
+ */
+
+/**
  * @page atmelavr_usia Class _usia: Universal Serial Interface
  *
  * A class `_usia` object is an USI.

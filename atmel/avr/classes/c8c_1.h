@@ -10,27 +10,30 @@
  */
 
 /**
- * @page atmelavr_c8a Class _c8a: 8-bit counter/timer
+ * @page atmelavr_c8c Class _c8c: 8-bit counter/timer
  *
- * A class `_c8a` object is an 8-bit counting unit that has 3 relative objects:
+ * A class `_c8c` object is an 8-bit counting unit. It has the following @ref
+ * relatives "relatives":
  *
- *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `hw_rel( COUNTER_NAME, prescaler )`
+ *  * one `prescaler` of class @ref atmelavr_psca "_psca"
  *
- *  * two compare units with waveform generators, of class @ref atmelavr_oc8a "_oc8a":
- *    * `hw_rel( COUNTER_NAME, compare0 )` and <br>
- *      `hw_rel( COUNTER_NAME, compare1 )`
+ *  * two compare units with waveform generators: `compare0` and `compare1`, of
+ *    class @ref atmelavr_oc8a "_oc8a"
+ *
+ * __Note: currently, this class is not fully implemented. It lacks asynchronous
+ * clocking possibilities.__
+ *
+ * The only difference between this class and the `_c8a` class is the different
+ * clocking possibilities.
  *
  * It is used in:
  *
- *  * @ref attinyx4 : `hw_counter0`
- *  * @ref attinyx5 : `hw_counter0`
- *  * @ref atmegax8 : `hw_counter0`
+ *  * @ref atmegax8 : `hw_counter2`
  */
-#define _hw_class__c8a
+#define _hw_class__c8c
 
 /**
- * @page atmelavr_c8a
+ * @page atmelavr_c8c
  * @par Instructions that do not produce C code
  *
  * The `hw_bn()` instruction retrieves the number of bits of the counting register:
@@ -41,14 +44,14 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__c8a		, _hw_bn_c8a
-#define _hw_bn_c8a(o,i,a,...)		8
+#define _hw_mthd_hw_bn__c8c		, _hw_bn_c8c
+#define _hw_bn_c8c(o,i,a,...)		8
 
 /**
- * @page atmelavr_c8a
+ * @page atmelavr_c8c
  * @par Interrupts
  *
- * Class `_c8a` objects can trigger the following IRQs:
+ * Class `_c8c` objects can trigger the following IRQs:
  *
  *  * `COUNTER_NAME` or `COUNTER_NAME,overflow`: counter overflow
  */
@@ -79,6 +82,6 @@ typedef struct {
     uint8_t	cs, wgm ;
   } solved ;
 
-} hwa_c8a_t ;
+} hwa_c8c_t ;
 
 #endif

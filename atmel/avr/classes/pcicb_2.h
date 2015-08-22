@@ -6,37 +6,38 @@
 
 /**
  * @file
+ * @brief Pin-change interrupt controller
  */
 
-#define _hwa_begin__pcicb(i,a,o)		\
-  _hwa_begin_reg( o, a, fr   );			\
-  _hwa_begin_reg( o, a, cr   );			\
-  _hwa_begin_reg( o, a, msk0 );			\
-  _hwa_begin_reg( o, a, msk1 );			\
-  _hwa_begin_reg( o, a, msk2 );
+#define _hwa_create__pcicb(o,i,a)		\
+  _hwa_create_reg( o, fr   );			\
+  _hwa_create_reg( o, cr   );			\
+  _hwa_create_reg( o, msk0 );			\
+  _hwa_create_reg( o, msk1 );			\
+  _hwa_create_reg( o, msk2 )
 
-#define _hwa_init__pcicb(i,a,o)			\
+#define _hwa_init__pcicb(o,i,a)			\
   _hwa_init_reg( o, fr,   0 );			\
   _hwa_init_reg( o, cr,   0 );			\
   _hwa_init_reg( o, msk0, 0 );			\
   _hwa_init_reg( o, msk1, 0 );			\
-  _hwa_init_reg( o, msk2, 0 );
+  _hwa_init_reg( o, msk2, 0 )
 
-#define _hwa_commit__pcicb(i,a,o)		\
+#define _hwa_commit__pcicb(o,i,a)		\
   _hwa_commit_reg( o, fr   );			\
   _hwa_commit_reg( o, cr   );			\
   _hwa_commit_reg( o, msk0 );			\
   _hwa_commit_reg( o, msk1 );			\
-  _hwa_commit_reg( o, msk2 );
+  _hwa_commit_reg( o, msk2 )
 
 
 /* HW_INLINE void _hwa_begin_p__pcicb ( hwa_pcicb_t *p, intptr_t address ) */
 /* { */
-/*   _hwa_begin_reg_p( p, address, _pcicb, fr   ); */
-/*   _hwa_begin_reg_p( p, address, _pcicb, cr   ); */
-/*   _hwa_begin_reg_p( p, address, _pcicb, msk0 ); */
-/*   _hwa_begin_reg_p( p, address, _pcicb, msk1 ); */
-/*   _hwa_begin_reg_p( p, address, _pcicb, msk2 ); */
+/*   _hwa_create_reg_p( p, address, _pcicb, fr   ); */
+/*   _hwa_create_reg_p( p, address, _pcicb, cr   ); */
+/*   _hwa_create_reg_p( p, address, _pcicb, msk0 ); */
+/*   _hwa_create_reg_p( p, address, _pcicb, msk1 ); */
+/*   _hwa_create_reg_p( p, address, _pcicb, msk2 ); */
 /* } */
 
 

@@ -4,28 +4,32 @@
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ */
+
 /*	Atmel AVR pin change interrupt controller model 'a'
  *
  *	Used in: ATtinyX4
  */
 
-#define _hwa_begin__pcica(i,a,o)		\
-  _hwa_begin_reg( o, a, msk0 );			\
-  _hwa_begin_reg( o, a, msk1 );
+#define _hwa_create__pcica(o,i,a)		\
+  _hwa_create_reg( o, msk0 );			\
+  _hwa_create_reg( o, msk1 );
 
-#define _hwa_init__pcica(i,a,o)		\
+#define _hwa_init__pcica(o,i,a)		\
   _hwa_init_reg( o, msk0, 0x00 );		\
   _hwa_init_reg( o, msk1, 0x00 );
 
-#define _hwa_commit__pcica(i,a,o)		\
+#define _hwa_commit__pcica(o,i,a)		\
   _hwa_commit_reg( o, msk0 );			\
   _hwa_commit_reg( o, msk1 );
 
 
 /* HW_INLINE void _hwa_begin_p__pcica ( hwa_pcica_t *p, intptr_t address ) */
 /* { */
-/*   _hwa_begin_reg_p( p, address, _pcica, msk0 ); */
-/*   _hwa_begin_reg_p( p, address, _pcica, msk1 ); */
+/*   _hwa_create_reg_p( p, address, _pcica, msk0 ); */
+/*   _hwa_create_reg_p( p, address, _pcica, msk1 ); */
 /* } */
 
 

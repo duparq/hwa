@@ -6,16 +6,31 @@
 
 /**
  * @file
- * @brief Atmel AVR watchdog model 'a'
+ * @brief Watchdog timer
  */
-
-#include "wdog_1.h"
 
 /**
  * @page atmelavr_wdoga Class _wdoga: watchdog timer
  *
- * A class `_wdoga` object is a watchdog timer
+ * A class `_wdiga` object is a watchdog timer.
+ *
+ * It is used in:
+ *
+ * * @ref attinyx4 : `hw_wdog0`
+ * * @ref attinyx5 : `hw_wdog0`
  */
 #define _hw_class__wdoga
 
-#define hwa_wdoga_t			hwa_wdog_t
+
+#if !defined __ASSEMBLER__
+
+typedef struct {
+  hwa_r8_t 	csr ;
+
+  struct {
+    uint8_t	action, timeout ;
+  } config ;
+
+} hwa_wdoga_t ;
+
+#endif
