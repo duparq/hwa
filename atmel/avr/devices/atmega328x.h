@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief  Common definitions for ATmega328 / ATmega328P
+ * @brief  ATmega328(P)
  *
  *  Differences between versions:
  *    brown-out detector can be disabled by software in P versions
@@ -32,8 +32,7 @@
 #elif HW_DEVICE_BOOTSECTION_SIZE == 4096
 #  define HW_DEVICE_BOOTSZ				0
 #else
-#  error HW_DEVICE_BOOTSECTION_SIZE must be defined as `512`, `1024`, `2048`,\
-  or `4096` (default).
+#  error HW_DEVICE_BOOTSECTION_SIZE must be `512`, `1024`, `2048`, or `4096` (default).
 #endif
 
 /*  Default: 0xFF
