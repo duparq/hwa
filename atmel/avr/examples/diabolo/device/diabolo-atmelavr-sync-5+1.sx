@@ -1,0 +1,113 @@
+
+	;; -*- asm -*-
+
+	;; Determines baudrate by measuring the low-level durations of 5 bits
+	;; low / 1 bit low sequence (ASCII 'A').
+
+	;; Returns the number of 'syshz' cycles of 1 bit (R25:R24)
+	;;
+	;; Measures are done with units of 5 cycles. This means that the longest
+	;; low-level duration must be < 327675 cycles.
+	;;
+	;; This routine can not synchronize at speeds below syshz*5/327675 bps
+	;; using 5 low-level bits characters.
+	;;
+	;; FT232R seems to have a bug under Linux-3.0: at 1 kbps, random
+	;; duration of 10 bits low!
+	;;
+	;; CH340/CH341 parity bit is buggy under Linux 3.13.0-61
+	;; 
+	;; GCC call-used registers: R18..R27, R30, R31 (these registers can be
+	;; used freely by the callee)
+	
+	;; Algo:
+	;;   Measure consecutive low-level durations: say t1 and t2.
+	;;   When 4.75×t2 <= t1 <= 5.25×t2, synchronization is done
+	;;   and R15:R14 contains the bit duration (baudrate) in CPU cycles.
+	;;
+	;; Durations are measured in units of 5 cycles, so duration of 5 bits
+	;; in 5 cycle units gives the duration of 1 bit in CPU cycles.
+
+	;; .global		swuart_sync_5_1
+	;; swuart_sync_5_1 = sync_5_1
+
+	;; .section	.text.sync_10_1,"ax",@progbits
+	
+;; sync_5_1:
+
+	DBG1
+
+	;; Init last measure to 0
+	;; 
+	ldi	R24, 0
+	ldi	R25, 0
+
+	;; Shift measures
+	;; 
+1:	movw	R18, R24	;		t1 = t2
+	ldi	R24, 0		;		t2 = 0
+	ldi	R25, 0		;
+	
+	;; Measure next low-level duration in t2 (R25:R24)
+	;;
+
+2:	sbis	RXDPIN, BP_RXD	;		Wait RXD == 1
+	rjmp	2b		;
+
+2:	sbic	RXDPIN, BP_RXD	; [1/2]		Wait RXD == 0
+	rjmp	2b		; [2]
+
+	DBG0
+
+2:	adiw	R24, 1		; [2]	|	Compute low level duration
+	sbis	RXDPIN, BP_RXD	; [1/2]	|	in 5 CPU cycles units
+	rjmp	2b		; [2]	|= 5
+
+	DBG1
+
+	;; Compute R27:R26 = 5×t2
+	;; 
+	movw	R26, R24	; R27:R26 = t2
+	lsl	R26		;
+	rol	R27		; R27:R26 = 2×t2
+	lsl	R26		;
+	rol	R27		; R27:R26 = 4×t2
+	add	R26, R24	;
+	adc	R27, R25	; R27:R26 = 5×t2
+
+	;; Compute R31:R30 = dt
+	;; 
+	movw	R30, R24	; R31:R30 = t2
+	adiw	R30, 2		; round
+	lsr	R31		;
+	ror	R30		; R31:R30 = t2/2
+	lsr	R31		;
+	ror	R30		; R31:R30 = t2/4
+	
+	;; Compute R27:R26 = 5×t2 - dt
+	;; 
+	sub	R26, R30	;
+	sbc	R27, R31	; R27:R26 = 5×t2 - dt
+
+	;; Check low end
+	;; 
+	cp	R18, R26	; if ( t1 < 5×t2 - dt )
+	cpc	R19, R27	;   then t1 is too low
+	brcs	1b		;   loop to get another sample
+
+	;; Compute R27:R26 = 5×t2 + dt
+	;; 
+	add	R26, R30	;
+	adc	R27, R31	; R27:R26 = 5×t2
+	add	R26, R30	;
+	adc	R27, R31	; R27:R26 = 5×t2 + dt
+
+	;; Check high end
+	;; 
+	cp	R18, R26	; if ( t1 > 5×t2 + dt )
+	cpc	R19, R27	;   then t1 is too high
+	brcc	1b		;   loop to get another sample
+
+	;; Store result
+	;; 
+	movw	R24, R18	; R25:R24 = t1 = bit duration

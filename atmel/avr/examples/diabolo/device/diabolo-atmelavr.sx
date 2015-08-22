@@ -67,14 +67,12 @@
 
 	;; Register affectation
 	;;
-	;; TODO:
-	;;   Use R22/R23 instead of R24/R25 for delay -> R24 holds the byte to tx/rx
-	;;
 	;; R1:R0      value written into flash page buffer
 	;; R3:R2      CRC of application
 	;; R5:R4      RAMSTART (used to store incomming data)
 	;; R9         OSCCAL value at reset if XSPEED defined
 	;; R11:R10    CRC 16 bits (CCITT) of last transfered packet
+	;; R13:R12    UART 1.5 bit duration in cycles
 	;; R15:R14    UART bit duration in cycles
 	;; R16        general usage
 	;; R17        FF if all application bytes are FF, general usage
@@ -85,59 +83,59 @@
 	;; R22        UART bits counter
 	;; R23        UART received byte buffer
 	;; R24        UART rx/tx byte
+	;; R27:R26    delay routine
 	;; R29:R28    Y: RAM address, Z backup
 	;; R31:R30    Z: flash address counter (LPM/SPM)
 
 
 	;; Hardware registers
 	;;
-// #define AP_PORF    hw_ap(hw_reg(core0, porf))
-// #define AP_EXTRF   hw_ap(hw_reg(core0, extrf))
-
-	MCUSR      = hw_addr(hw_reg(hw_core0, mcusr))
+	MCUSR      = hw_ra(hw_core0, mcusr)
 	 BP_EXTRF  = hw_bp(hw_reg(hw_core0, extrf))
 	 BP_PORF   = hw_bp(hw_reg(hw_core0, porf))
 
-	SPMCSR	   = hw_addr(hw_reg(hw_flash0, csr))
+	SPMCSR	   = hw_ra(hw_flash0, csr)
 	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
 	 BP_BLBSET = hw_bp(hw_reg(hw_flash0, blbset))
 	 BP_PGWRT  = hw_bp(hw_reg(hw_flash0, pgwrt))
 	 BP_PGERS  = hw_bp(hw_reg(hw_flash0, pgers))
 	 BP_SPMEN  = hw_bp(hw_reg(hw_flash0, spmen))
 
-	EEARL	   = hw_addr(hw_reg(hw_eeprom0, arl))
-	EEARH	   = hw_addr(hw_reg(hw_eeprom0, arh))
-	EEDR	   = hw_addr(hw_reg(hw_eeprom0, dr))
-	EECR	   = hw_addr(hw_reg(hw_eeprom0, cr))
+	EEARL	   = hw_ra(hw_eeprom0, ar)+0
+	EEARH	   = hw_ra(hw_eeprom0, ar)+1
+	EEDR	   = hw_ra(hw_eeprom0, dr)
+	EECR	   = hw_ra(hw_eeprom0, cr)
 #define AP_EEMPE   hw_ap(hw_reg(hw_eeprom0, mpe))
 #define AP_EEPE	   hw_ap(hw_reg(hw_eeprom0, pe))
 #define AP_EERE	   hw_ap(hw_reg(hw_eeprom0, re))
 
 	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
-	RXDPORT	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), port))
-	RXDPIN	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), pin))
-	RXDDR	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_RX), ddr))
+	RXDPORT	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), port)
+	RXDPIN	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), pin)
+	RXDDR	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), ddr)
 	 BP_RXD	   = hw_bp(DIABOLO_PIN_RX)
-	TXDPORT	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_TX), port))
-	TXDDR	   = hw_addr(hw_reg(hw_sup(DIABOLO_PIN_TX), ddr))
+	TXDPORT	   = hw_ra(hw_rel(DIABOLO_PIN_TX,port), port)
+	TXDDR	   = hw_ra(hw_rel(DIABOLO_PIN_TX,port), ddr)
 	 BP_TXD	   = hw_bp(DIABOLO_PIN_TX)
 
 	;; Debug pin
 	;;
-#if defined PIN_DBG
+#if defined DIABOLO_PIN_DBG
 
-	DBGPORT   = hw_addr(hw_reg(hw_sup(PIN_DBG), port))
-	DBGPIN    = hw_addr(hw_reg(hw_sup(PIN_DBG), pin))
-	DBGDDR    = hw_addr(hw_reg(hw_sup(PIN_DBG), ddr))
-	DBGBIT    = hw_bp(PIN_DBG)
+	DBGPORT   = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), port)
+	DBGPIN    = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), pin)
+	DBGDDR    = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), ddr)
+	DBGBIT    = hw_bp(DIABOLO_PIN_DBG)
 
-#  define DBGI	sbi	DBGDDR, DBGBIT
+#  define DBGDDR1	sbi	DBGDDR, DBGBIT
+#  define DBGDDR0	cbi	DBGDDR, DBGBIT
 #  define DBGT	sbi	DBGPIN, DBGBIT
 #  define DBG0	cbi	DBGPORT, DBGBIT
 #  define DBG1	sbi	DBGPORT, DBGBIT
 #else
-#  define DBGI
+#  define DBGDDR1
+#  define DBGDDR0
 #  define DBGT
 #  define DBG0
 #  define DBG1
@@ -167,7 +165,7 @@
 	rjmp	reset
 #endif
 
-	.org BOOTSTART, 0xFF	; Fill unused space with 0xFF
+	.org BOOTSTART, 0xFF		; Fill unused space with 0xFF
 
 	;; This point is reached only just after a RESET
 	;;   If the application wants to start Diabolo, it must jump to the
@@ -181,10 +179,11 @@
 reset:	XLD	R16, MCUSR
 	andi	R16, (1<<BP_EXTRF) | (1<<BP_PORF)
 	brne	1f
-app:	rjmp	FLASHSIZE+APPSTART
+app:	DBGDDR0
+	rjmp	FLASHSIZE+APPSTART
 1:
 
-	DBGI
+	DBGDDR1
 	DBG1
 #if defined XSPEED
 	XLD	R9, OSCCAL		; Store factory clock speed
@@ -222,14 +221,26 @@ init:	DBG1
 	;;   Store it in R15:R14
 	;;
 sync:
-#include "diabolo-atmelavr-sync-10-1.sx"
-	movw	R14, R24
+#if DIABOLO_SYNC == 11
+#  include "diabolo-atmelavr-sync-10+1.sx"
+#elif DIABOLO_SYNC == 6
+#  include "diabolo-atmelavr-sync-5+1.sx"
+#else
+#  error DIABOLO_SYNC not recognized
+#endif
+
+	movw	R14, R24	; Store 1 bit time
+	lsr	R25
+	ror	R24
+	add	R24, R14
+	adc	R25, R15
+	movw	R12, R24	; Store 1.5 bit time
 
 	;; Wait end of byte and 1 more byte
 	;; If RXD goes low, re-sync
 	;;
 	ldi	R20, 20		; 20 bits
-2:	movw	R24, R14	;
+2:	movw	R26, R14	;
 	rcall	delay		;
 	dec	R20		;
 	sbic	RXDPIN, BP_RXD	; if RXD is low
@@ -255,8 +266,8 @@ error:	ldi	R24, '!'
 
 	;; Dialog:
 	;;   send prompt '#'
-	;;   wait for a character command
-	;;   process command
+	;;   wait for a command character
+	;;   process the command
 	;;
 prompt:	ldi	R24, '#'	; 0x23
 	rcall	obyte
@@ -380,11 +391,11 @@ xF:	cpi	R24, 'F'
 	;;
 	;; Program the page
 	;;
-	cpi	R23, 0xFF
-	breq	2f		   ; No need to program a virgin page
-	ori	R24, CODE_WRT
 	subi	R30, lo8(PAGESIZE) ; Reset Z to the address of the page to write
 	sbci	R31, hi8(PAGESIZE)
+	cpi	R23, 0xFF
+	breq	2f		; No need to program a virgin page
+	ori	R24, CODE_WRT
 	FLASH_PGWRT r21		; Write page
 	FLASH_ERWWS r21		; Re-enable RWW section if device has a bootsection
 	;;
@@ -483,11 +494,11 @@ xX:	cpi	R24, 'X'
 x:	rcall	stat
 	rjmp	error
 
-	;; Delay R25:R24 + 6 cycles			(R24, R25)
-	;; 3 + 4 (n/4-1) + 3 + 4 = 6 + n
-	;; 
+
+	;; Delay 10 + 4 * floor(R27:R26 / 4) cycles
+	;;
 delay:				; [3] rcall
-	sbiw	R24, 4		; [2]   |
+	sbiw	R26, 4		; [2]   |
 	brcc	delay		; [2/1] |= 4
 	ret			; [4]
 
@@ -495,32 +506,38 @@ delay:				; [3] rcall
 	;; Receive one byte in R24			R22, R23, R24, R25
 	;; 						R10, R11, R18, R19
 	;;
-ibyte:	ldi 	R22, 9		; 8 data bits + 1 stop bit
+	;; ibytes returns 35 cycles after the stop bit has been sampled.
+	;;
+ibyte:
+	DBG1
+;; ibyte:	ldi 	R22, 9		; 8 data bits + 1 stop bit
+#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
+	cbi	TXDDR, BP_TXD	;
+	cbi	TXDPORT, BP_TXD	; Release TXD
+#endif
 2:	sbis	RXDPIN, BP_RXD	;	Wait RXD == 1
 	rjmp	2b
-2:	sbic 	RXDPIN, BP_RXD	; [1/2] Wait RXD == 0
-	rjmp 	2b		; [2]
+3:	sbic 	RXDPIN, BP_RXD	; [1/2] Wait RXD == 0
+	rjmp 	3b		; [2]   |=2
 
-	movw	R24, R14	; [1]	|	Delay 1+1/2 bit (skip start)
-	lsr	R25		; [1]	|
-	ror	R24		; [1]	|
-	add	R24, R14	; [1]	|
-	adc	R25, R15	; [1]	|
-	sbiw	R24, 7+6	; [2]	|=7
+	ldi 	R22, 8		; [1]	|	8 data bits (stop bit discarded)
+	movw	R26, R12	; [1]	|	Delay 1.5 bit (skip start)
+	sbiw	R26, 4+10	; [2]	|=4
 	rcall	delay
 
-2:	XLD	R24, RXDPIN	; [1]	|	Sample one bit in T
+4:	in	R24, RXDPIN	; [1]	|	Sample one bit in T
 	bst	R24, BP_RXD	; [1]	|
-	dec 	R22		; [1]   |
-	breq 	1f		; [1/2] |	IF last THEN break
 	lsr 	R23		; [1]   |	Store T into byte buffer
 	bld	R23, 7		; [1]	|
-	movw	R24, R14	; [1]	|
-	sbiw	R24, 9+4+6+2	; [2]	|=9	FIXME: +4 ?
+	dec 	R22		; [1]   |
+	breq 	1f		; [1/2] |	Exit loop after last bit
+	movw	R26, R14	; [1]	|
+	sbiw	R26, 9+10+2	; [2]	|=9	Wait next bit
 	rcall	delay
-	rjmp 	2b		; [2]   	Next bit
-;; 2:	brtc	sync		; [1]		Stop bit == 0 -> resynchronise/restart
-1:	mov	R24, R23	; [1]		Store received byte in R24
+	rjmp 	4b		; [2]   |=2   	Loop for next bit
+
+1:	DBG0
+	mov	R24, R23	; [1]		Store received byte in R24
 
 	;; Update CRC (R11:R10) with byte R24
 	;; 						R10, R11, R18, R19
@@ -555,7 +572,6 @@ crcadd:				; [4] (call)
 	eor	R11, R19	; [1]
 	ret			; [4]=30
 
-
 	;; Send one byte (R24, destroyed)
 	;; Update CRC (initialized at 0xFFFF after prompt)
 	;;
@@ -566,29 +582,36 @@ obytecrc:
 	;;						R24, R25, R26, R27
 	;;
 obyte:
+	;; mov	R27, R24
 #if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
+	;;
+	;; Delay 1.5 bit time between RX and TX on the same wire
+	;; 
+	;; RX routine exits after sampling the 8th data bit and discards the
+	;; stop bit. The sampling is done in the middle of the 8th bit, then it
+	;; remains 1.5 bit time to the end of the stop bit.
+	;;
+	sbic	TXDDR, BP_TXD
+	rjmp	1f
+	movw	R26, R12
+	rcall	delay
 	sbi	TXDPORT, BP_TXD	; Set RXD/TXD as output high
 	sbi	TXDDR, BP_TXD	;
 #endif
-	ldi	R26, 10		; nbits = 1 start + 8 data + 1 stop
-	mov	R27, R24
-	com	R27		; Complement byte (optimization)
+1:	ldi	R22, 10		; nbits = 1 start + 8 data + 1 stop
+	com	R24		; Complement byte (optimization)
 	sec			; Load start bit
 2:	brcc	3f		; [1/2]	|	IF CARRY
 	cbi	TXDPORT, BP_TXD	; [1]   |	THEN send '0'
 	rjmp	4f		; [2]	|
 3:	sbi	TXDPORT, BP_TXD	; [1]   |	ELSE send '1'
 	nop			; [1]	|
-4:	movw	R24, R14	; [1]	|
-	sbiw	R24, 7+2+6+4	; [2]	|=7	FIXME: +2 ?
+4:	movw	R26, R14	; [1]	|
+	sbiw	R26, 7+10+4	; [2]	|=7
 	rcall	delay
-	lsr	R27		; [1]	|	Next bit
-	dec	R26		; [1]	|
+	lsr	R24		; [1]	|	Next bit -> carry
+	dec	R22		; [1]	|
 	brne	2b		; [2]	|=4	Repeat until last bit
-#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
-	cbi	TXDDR, BP_TXD	;
-	cbi	TXDPORT, BP_TXD	; Release TXD
-#endif
 	ret
 
 	;; Execute SPM instruction after setting SPMCSR with R21 value
@@ -656,8 +679,7 @@ stat:	rcall	crci
 	ldi	R30, lo8(EECRC)	; Z = address of CRC stored in EEPROM
 	ldi	R31, hi8(EECRC)
 	rcall	eerd		; Read one byte of EEPROM and update CRC
-				; Read one byte of EEPROM and update CRC
-				; Return
+	; the following reads next byte of EEPROM, updates the CRC and returns
 
 
 	;; Read EEPROM: R24 = *(Z++)

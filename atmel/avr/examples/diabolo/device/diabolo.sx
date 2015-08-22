@@ -1,13 +1,27 @@
 
 /* -*- c -*- */
 
-#include <boards/attiny84.h>
-//#include <boards/attiny85.h>
-//#include <boards/arduino_pro_mini.h>
-//#include <boards/nanodccduino.h>
+/**
+ * @file
+ * @brief Diabolo main source file
+ */
 
+//#define PIN_DBG		PIN_LED
+
+/*  Set a default target board
+ */
+/* #if !defined BOARD_H */
+/* #  define BOARD_H               <boards/attiny84.h> */
+/* #endif */
+
+/*  Include board (and HWA device) definition
+ */
+#include BOARD_H
+
+/*  Include the diabolo bootloader source code
+ */
 #if defined HW_DEVICE_ATMELAVR
 #  include "diabolo-atmelavr.sx"
 #else
-#  error Device other than Atmel AVR is not supported yet
+#  error Devices other than Atmel AVR are not supported yet
 #endif

@@ -1,50 +1,45 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-05-15 16:14:22 -*-
+# -*- coding: utf-8 -*-
 
+    #  Atmel devices can need up to 50 cycles (~6.25 µs @ 8MHz) to process the
+    #  first received byte and 30 cycles to process the followings. This must be
+    #  done between the sampling of the stop bit and the next start condition,
+    #  i.e. in 1.5 bit time since the CRC computation begins after sampling the
+    #  last data bit.
+    #
+    #  At 115200 bps, the elapsed time between the middle of the last data bit
+    #  and the next start bit is 13 µs. That should be enough.
+    #
+    #  It seems that pyserial's `interCharTimeout` is not implemented.
+    #
+    #  Adding one stop bit could also do the job but reconfiguring the serial
+    #  port takes much more time than a small sleep.
 
 import sys
 import os.path
 
-from com import Com
-from utils import s2hex, hexdump
-import time
+sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../../python"))
+
+import premain
+import __builtin__
+
+from utils import hexdump
 
 from crc_ccitt import CRC
-from device import Device
-from cscont import CsCont
-from csmod import CsMod
-from parse import get_args
+
+import struct
+import time
+import devices
+import xserial
 
 
-#  Compute application CRC and length of application code
-#
-#    The CRC is computed from the end to the beginning of the memory, skipping
-#    the 0xFF bytes at the end.
-#
-#    For devices without boot section, 'end' should be 1 so that the first two
-#    bytes of reset vector (rjmp to Diabolo) are not computed.
-#
-def appstat ( data, bootsection ):
-    # trace("bootsection = " + str(bootsection) )
-    crc = CRC.init()
-    if not bootsection:
-        end = 1
-    else:
-        end = -1
-    for x in range(len(data)-1, end, -1):
-        if data[x] != '\xFF':
-            break
-    for i in range(x, end, -1):
-        crc = CRC.add(crc, data[i])
-    return crc, x+1
-
-
-class Diabolo:
+class Application:
     def __init__(self, options):
         self.options = options
-        self.device = None
         self.mcu = None
-
+        self.serial = None
+        self.device = None
+        self.curaddr = -1		# Current memory address
 
     #  Read a binary file
     #
@@ -72,62 +67,10 @@ class Diabolo:
         cout(_("Stored %d bytes into %s.\n" % (len(data), filename)))
 
 
-    #  Get the device object
-    #
-    def get_device(self, options):
-        #
-        #  Open the communication interface
-        #
-        if options.carspy >= 0:
-            options.bps = 230400
-        com = Com(options.tty, options.bps, options.wires)
-        cout(_("Interface: %s (%d bps)\n" % (options.tty, options.bps)))
-        #
-        #  Reach proper device
-        #
-        if options.carspy==-1:
-            cout(_("Standard device\n"))
-            self.device = Device(com)
-            self.device.reset_signal = options.reset
-            self.device.reset_length = options.reset_length
-            return
-        #
-        #  Carspy controller or module
-        #
-        self.device = CsCont(com)
-        if not device.connect():
-            cout(_("  No carspy controller found. Already running Diabolo?\n\n"))
-            self.device = Device(com)
-            if options.carspy > 0:
-                return
-        else:
-            cout(_("  Found Carspy controller: "))
-            if not self.device.identify():
-                die(_("could not identify!\n"))
-            cout(_("reference %04X, firmware %04X\n" % (self.device.ref, self.device.crc)))
-            if options.carspy == 0:
-                if not self.device.diabolo():
-                    die(_("    Could not launch Diabolo!\n"))
-                cout(_("    Diabolo launched.\n\n"))
-                self.device = Device(com)
-            else:
-                self.device = CsMod(com, options.carspy)
-                if not self.device.connect():
-                    cout(_("    Carspy module %d not found. Already running Diabolo?\n\n"
-                           % options.carspy))
-                    # return
-                else:
-                    cout(_("    Found Carspy module %d:" % options.carspy))
-                    cout(_("reference %04X, firmware %04X\n" % (self.device.ref, self.device.crc)))
-                    if not self.device.diabolo():
-                        die(_("      Could not launch Diabolo!\n"))
-                    cout(_("      Diabolo launched.\n\n"))
-
-
     #  Read flash memory
     #
     def read_flash(self):
-        t = time.time()
+        t = timer()
         cout("\nReading flash:")
         s=''
         vp = '\xFF'*self.device.pagesize
@@ -156,8 +99,9 @@ class Diabolo:
                     p = vp		# Do not store Diabolo code in cache file
             flushout()
             s += p
-        t = time.time()-t
-        crc, x = appstat(s[:self.device.bladdr], self.device.bootsection)
+        t = timer()-t
+        # crc, x = appstat(s[:self.device.bladdr], self.device.bootsection)
+        x, crc = self.device.appstat(s)
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(s), t*1000, len(s)/t, x, crc)))
         return s
@@ -166,7 +110,7 @@ class Diabolo:
     #  Write flash memory
     #
     def write_flash(self, data, cache):
-        t = time.time()
+        t = timer()
         pg = 0
         col = 0
         redo = []
@@ -181,10 +125,13 @@ class Diabolo:
             if cache \
                and data[a:a+self.device.pagesize] != cache[a:a+self.device.pagesize]:
                 r = self.device.write_flash_page(a, data[a:a+self.device.pagesize])
+                if r == 'C':
+                    cout(_(" CRC! "))
+                    redo.append(a)
                 if r == 'T':
                     cout(_(" Timeout!\n"))
                     return
-                if r == 'P':
+                if r == 'P': # should be '!'
                     redo.append(a)
                 if r != '-':
                     pg += 1
@@ -222,7 +169,7 @@ class Diabolo:
             cout("\n")
 
         #cout("\n")
-        t = time.time()-t
+        t = timer()-t
         if pg:
             cout(_("Programmed %d pages (%d bytes) in %d ms (%d Bps).\n" %\
                    (pg, pg*self.device.pagesize, t*1000, pg*self.device.pagesize/t)))
@@ -232,7 +179,7 @@ class Diabolo:
     #  Read eeprom memory
     #
     def read_eeprom(self):
-        t = time.time()
+        t = timer()
         cout("\nReading EEPROM:")
         s=''
         col=0
@@ -242,14 +189,14 @@ class Diabolo:
             col += 1
             if col==64:
                 col=0
-            p = self.device.read_eeprom(a,64)
+            p = self.device.read_eeprom_bytes(a,64)
             if p == None:
                 cerr(_("\nRead failed at 0x%04X.\n" % a))
                 return False
             cout('.')
             flushout()
             s += p
-        t = time.time()-t
+        t = timer()-t
         cout(_("\nRead %d bytes in %d ms (%d Bps).\n" % (len(s), t*1000, len(s)/t)))
         return s
 
@@ -257,7 +204,7 @@ class Diabolo:
     def run(self):
         flash = None			# Data to burn into flash
 
-        start_time = time.time()
+        start_time = timer()
 
         #  Compute a CRC?
         #
@@ -266,15 +213,14 @@ class Diabolo:
                 die(_("Input file is required for CRC computation.\n"))
             if not self.options.mcu:
                 die(_("Target device is required for CRC computation.\n"))
-            device = None
-            for d in Device.dtbl:
-                if d[0].lower() == self.options.mcu.lower():
-                    device = d
-            if not device:
-                die(_("Unrecognized device name.\n"));
+
+            try:
+                self.device = devices.devices[self.options.mcu.lower()]()
+            except:
+                die(_("\"%s\": no such device.\n" % self.options.mcu.lower()));
 
             data = self.read_file(self.options.filename)
-            crc, x = appstat(data, device[5])
+            x, crc = self.device.appstat(data)
             if self.options.stat:
                 sys.stdout.write(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
                                    (self.options.filename, x, len(data), crc)))
@@ -284,55 +230,65 @@ class Diabolo:
                 sys.stdout.write("%d\n" % x )
             return
 
-        #  Get the proper device
+
+        #  Compute a CRC32?
         #
-        self.get_device(self.options)
+        if self.options.crc32:
+            if not self.options.filename:
+                die(_("Input file is required for CRC32 computation.\n"))
+
+            import binascii
+            s = open(self.options.filename,'rb').read()
+            crc32 = binascii.crc32(s)
+            sys.stdout.write("%08x\n" % (crc32 & 0xFFFFFFFF))
+            return
+
+        #  List available ttys?
+        #
+        if self.options.tty == "list":
+            ttys = xserial.list()
+            cout(_("Available ttys:\n" + str(ttys)))
+            return
+
+        #  Open the communication channel
+        #
+        try:
+            self.xserial = xserial.get_serial(self.options)
+            # if self.options.threaded_timed:
+            #     self.xserial = xserial.ThreadedTimed(self.options)
+            # elif self.options.threaded_event:
+            #     self.xserial = xserial.ThreadedEvent(self.options)
+            # else:
+            #     self.xserial = xserial.XSerial(self.options)
+        except xserial.serial.SerialException, e:
+            die(str(e))
+
+        #  Reset the device connected to the serial interface
+        #
+        self.xserial.reset_device()
 
         #  Just reset the device and quit?
         #
         if self.options.reset_and_exit:
-            self.device.reset()
             return
 
-        #  Connect to the device
+        #  This is the best moment for detecting how many wires are used for the
+        #  serial communication
         #
-        if not self.device.connect():
-            die(_("Could not connect.\n"))
-        cout(_("Connected to device \n"))
+        self.xserial.detect_wires()
 
-        #  Get Diabolo prompt
+        #  We can now send synchronization sequences
         #
-        if not self.device.get_prompt():
-            die(_("Could not get prompt: %s.\n" % self.device.error))
+        try:
+            self.xserial.sync()
+        except Exception, e:
+            die(_("Synchronization failed."))
 
         #  Identify device
         #
-        while self.device.com.rx(1): pass # flush
-        if not self.device.identify():
-            die(_("Could not identify: %s.\n" % self.device.error))
-
-        #  Display device informations
-        #
-        # display(device)
-        cout("Device identification:\n")
-        cout(_("  Protocol: %d\n" % self.device.protocol))
-        cout(_("  Signature: %s \"%s\"\n" %
-               (self.device.signature, self.device.name)))
-        cout(_("  Bootloader: 0x%04X (%d bytes for application)\n" %
-               (self.device.bladdr, self.device.bladdr)))
-        cout(_("  Fuses ext byte: 0x%02X\n" % ord(self.device.fuses[2])))
-        cout(_("  Fuses high byte: 0x%02X\n" % ord(self.device.fuses[3])))
-        cout(_("  Fuses low byte: 0x%02X\n" % ord(self.device.fuses[0])))
-        cout(_("  Fuses lock bits: 0x%02X\n" % ord(self.device.fuses[1])))
-        cout(_("  Application CRC:\n"))
-        cout(_("    computed: 0x%04X\n" % self.device.appcrc))
-        cout(_("      stored: 0x%04X\n" % self.device.eeappcrc))
-        if self.device.protocol < 3:
-            cout(_("      status: %02X\n" % self.device.appstat))
-        cout(_("  Programmings: %d\n" % self.device.pgmcount))
-
-        if not self.device.protocol in [2,3,4]:
-            die(_("\nProtocol not supported\n"))
+        self.device = devices.get_device(self.xserial)
+        cout(_("Connected to device (protocol %d):\n" % self.device.protocol))
+        cout(self.device.str(self.options.show_fuses, self.options.decode_fuses))
 
         #  Check target name
         #
@@ -374,18 +330,21 @@ class Diabolo:
             if self.options.cache:
                 if os.path.isfile(self.options.cache):
                     cache = self.read_file(self.options.cache)
-                    cache_crc, x = appstat(cache[:self.device.bladdr],
-                                                self.device.bootsection)
-                    if self.device.appcrc != cache_crc:
-                        cout(_("Cache CRC does not match device CRC. Dropping cache data.\n"))
+                    if len(cache)<self.device.bladdr:
+                        cout(_("Wrong cache size. Dropping cache data.\n"))
                         cache = None
+                    else:
+                        x, cache_crc = self.device.appstat(cache)
+                        if self.device.appcrc != cache_crc:
+                            cout(_("Cache CRC (%04X) does not match device CRC. "\
+                                   "Dropping cache data.\n" % cache_crc))
+                            cache = None
                 else:
                     cout(_("Cache file does not exist yet, reading flash"
                            " memory is required.\n"))
             if cache == None:
                 cache = self.read_flash()
-            cache_crc, x = appstat(cache[:self.device.bladdr],
-                                        self.device.bootsection)
+            x, cache_crc = self.device.appstat(cache)
             flash = self.read_file(self.options.filename)
 
         #  Program flash memory
@@ -403,73 +362,144 @@ class Diabolo:
                 byte0 = opcode & 0xFF
                 byte1 = opcode >> 8
                 cout(_("Device without bootsection, "
-                       "changed RESET vector opcode: %02x %02x\n")
+                       "setting RESET vector to computed opcode: %02x %02x\n")
                      % (byte0, byte1))
                 flash = chr(byte0)+chr(byte1)+flash[2:]
 
-            flash_crc, x = appstat(flash[:self.device.bladdr],
-                                       self.device.bootsection)
+            x, flash_crc = self.device.appstat(flash)
             if flash_crc == cache_crc:
-                cout(_("Cache and data CRC match. Nothing to do.\n"))
+                cout(_("Cache and data CRC match, nothing to program in Flash memory.\n"))
+                if self.device.eeappcrc != flash_crc:
+                    self.device.write_eeprom_appcrc(flash_crc)
+                    cout(_("Updated application CRC in EEPROM: 0x%04X\n" % flash_crc))
+                x_restart = True
             else:
                 self.write_flash(flash,cache)
 
             x_restart = False
             if self.device.flash_changed:
+                # trace()
                 self.device.write_eeprom_pgmcount(self.device.pgmcount+1)
                 cout(_("Set program count to %d\n" % self.device.pgmcount))
                 x_restart = True
 
             if self.device.eeappcrc != flash_crc:
+                # trace()
                 self.device.write_eeprom_appcrc(flash_crc)
-                cout(_("Set stored application CRC to 0x%04X\n" % flash_crc))
+                cout(_("Stored application CRC in EEPROM: 0x%04X\n" % flash_crc))
                 x_restart = True
 
             if x_restart:
+                # trace()
                 #cout(_("Reset device's Diabolo\n"))
-                self.device.tx('!') # Send a bad command to force CRC re-computation
-                self.device.get_prompt()
-                self.device.identify()
+                self.device.resume()
+                self.xserial.tx('*') # Send a bad command to force CRC re-computation
+                #
+                #  Wait up to 1 s for CRC computation (~50 cycles/byte)
+                #
+                t = timer()+1.0
+                while timer() < t and not self.xserial.rx(1): pass
+                if timer() >= t:
+                    raise Exception("timeout waiting CRC recomputation")
+                if self.xserial.lastchar != '!':
+                    raise Exception("unexpected reply (0x%02X) to '*' command" % ord(c))
+                self.xserial.tx('\n') # Resume
+                self.xserial.rx(1)
+                self.device = self.device.identify()
                 cout("  Application CRC:\n")
                 cout(_("    computed: 0x%04X\n" % self.device.appcrc))
-                cout(_("      stored: 0x%04X\n" % self.device.eeappcrc))
+                cout(_("      EEPROM: 0x%04X\n" % self.device.eeappcrc))
                 cout(_("  Programmings: %d\n" % self.device.pgmcount))
+                        
 
             #  Update flash cache
             #
             if self.options.cache:
+                # trace()
                 self.write_file(self.options.cache, flash)
 
         #  Start application
         #
         if self.device.appcrc == self.device.eeappcrc \
            and self.device.appcrc != 0xFFFF:
-            #
-            #  FIXME: with --read-flash --hexdump, device.run fails.
-            #         device.identify makes it succeed. Why?
-            #
-            self.device.identify()
-            if self.device.run():
-                cout("Application started.\n")
+            if self.device.start_application():
+                cout("Target started its application.\n")
             else:
-                cout("Run failed.\n")
+                cout("ERROR: target did not start its application.\n")
 
-        self.device.com.close()
-        cout(_("%d commands, %d fails, %d resumes, %d resyncs, total time: %.1f s.\n" % 
-               (self.device.ncmds, self.device.ncmdfails, self.device.nresumes,
-                self.device.nresyncs, time.time()-start_time+0.05)))
+        self.xserial.close()
+
+        if self.options.diag:
+            cout(_("%d commands, %d fails, %d resumes, %d crc errors, total time: %.1f s.\n" % 
+                   (self.device.ncmds, self.device.ncmdfails, self.device.nresumes,
+                    self.device.ncrcerrors, timer()-start_time+0.05)))
 
 
-if __name__ == "__main__":
-    import premain
-    import __builtin__
-    try:
-        options = get_args()
-        if options.quiet:
-            __builtin__.__dict__['cout'] = id
-        #print options
-        Diabolo(options).run()
-    except KeyboardInterrupt:
-        cout("\n")
-    except Exception, e:
-        cerr(str(e)+'\n')
+#  Create command line arguments parser
+#
+import argparse
+parser = argparse.ArgumentParser()
+
+#  Arguments about serial port
+#
+xserial.add_arguments(parser)
+
+#  Target options
+#
+parser.add_argument('-m', '--mcu', help="target device")
+
+#  Actions
+#
+group = parser.add_mutually_exclusive_group()
+group.add_argument('-x', '--reset-and-exit',
+                   help="only reset the device, do not try to connect.",
+                   action='store_true')
+group.add_argument('--stat', help="size and CRC of the application",
+                   action='store_true')
+group.add_argument('-c', '--crc', help="CRC of the application",
+                   action='store_true')
+group.add_argument('-s', '--size', help="size of the application",
+                   action='store_true')
+group.add_argument('--crc32', help="CRC32 of file", action='store_true')
+group.add_argument('--read-flash', help="read flash memory", action='store_true')
+group.add_argument('--burn-flash', help="burn flash memory", action='store_true')
+group.add_argument('--clear-flash', help="clear flash memory", action='store_true')
+group.add_argument('--verify-flash', help="verify flash memory", action='store_true')
+
+group.add_argument('--read-eeprom', help="read eeprom memory", action='store_true')
+group.add_argument('--burn-eeprom', help="burn eeprom memory", action='store_true')
+group.add_argument('--clear-eeprom', help="clear eeprom memory", action='store_true')
+group.add_argument('--verify-eeprom', help="verify eeprom memory", action='store_true')
+
+#  Options
+#
+parser.add_argument('--cache', help="name of cache file")
+parser.add_argument('--full', help="read full content (Diabolo code included)",
+                    action='store_true')
+parser.add_argument('--hexdump', help="hexdump content", action='store_true')
+
+parser.add_argument('-q', '--quiet', help="do not write on standard output "
+                    "if not necessary", action='store_true')
+parser.add_argument('--diag', help="display diagnostic values",
+                    action='store_true')
+parser.add_argument('--debug', help="print debugging messages",
+                    action='store_true')
+parser.add_argument('--show-fuses', help="show fuse values", action='store_true')
+parser.add_argument('--decode-fuses', help="decode fuse values", action='store_true')
+
+
+#  Files
+#
+parser.add_argument('filename', nargs='?')
+
+args = parser.parse_args()
+
+if args.quiet:
+    __builtin__.__dict__['cout'] = id
+
+if args.debug:
+    __builtin__.__dict__['dbg'] = cout
+
+enable_trace()
+
+Application(args).run()

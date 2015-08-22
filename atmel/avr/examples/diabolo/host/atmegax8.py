@@ -3,20 +3,18 @@
 
 import devices
 
-class device(devices.Device):
-    def __init__(self):
-        devices.Device.__init__(self,'ATmega328P','1E950F',128,32768,1024,True)
+class atmegax8(devices.Device):
 
-    def s_fuse_eb(self):
-        fuse = ord(self.fuses[2])
+    def s_fuse_eb(self,fuses):
+        fuse = ord(fuses[2])
         bod = fuse & 0x07
         s_bod = { 4: "4100_4500mV", 5: "2500_2900mV", 6: "1700_2000mV", 7: "off" }
         s =  _("  Fuses ext byte: 0x%02X\n" % fuse)
         s += _("    BROWNOUT_DETECTION: %s\n" % s_bod[bod])
         return s
 
-    def s_fuse_hb(self):
-        fuse = ord(self.fuses[3])
+    def s_fuse_hb(self,fuses):
+        fuse = ord(fuses[3])
         rstdsbl = (fuse & 0x80)>>7
         dwen    = (fuse & 0x40)>>6
         spien   = (fuse & 0x20)>>5
@@ -43,8 +41,8 @@ class device(devices.Device):
         s += _("    BOOT:               %s\n" % s_boot[boot])
         return s
 
-    def s_fuse_lb(self):
-        fuse = ord(self.fuses[0])
+    def s_fuse_lb(self,fuses):
+        fuse = ord(fuses[0])
         ckdiv8  = (fuse & 0x80)>>7 ; s_ckdiv8 = { 0: "8", 1: "1" }
         ckout   = (fuse & 0x40)>>6 ; s_ckout = { 0: "enabled", 1: "disabled" }
         sut     = (fuse & 0x30)>>4 ; 
@@ -115,8 +113,8 @@ class device(devices.Device):
         s += _("    STARTUP_DELAYS: %s\n" % s_xsut[xsut])
         return s
 
-    def s_fuse_lk(self):
-        fuse = ord(self.fuses[1])
+    def s_fuse_lk(self,fuses):
+        fuse = ord(fuses[1])
         blb1x = (fuse & 0x30) >> 4
         blb0x = (fuse & 0x0C) >> 2
         lbx   = (fuse & 0x03)
@@ -145,3 +143,24 @@ class device(devices.Device):
         s += _("    APPLICATION: %s\n" % s_blb0x[blb0x] )
         s += _("    MEMORY:      %s\n" % s_lbx[lbx] )
         return s
+
+
+class atmega48(atmegax8):
+    def __init__(self):
+        atmegax8.__init__(self,'ATmega48','1E9205',64,4096,256,False)
+
+devices.devices['1E9205'] = atmega48
+
+class atmega48p(atmegax8):
+    def __init__(self):
+        atmegax8.__init__(self,'ATmega48P','1E920A',64,4096,256,False)
+
+devices.devices['1E920A'] = atmega48p
+
+class atmega328p(atmegax8):
+    def __init__(self):
+        atmegax8.__init__(self,'ATmega328P','1E950F',128,32768,1024,True)
+
+devices.devices['1E950F'] = atmega328p
+devices.devices['atmega328p'] = atmega328p
+devices.devices['atmega328pa'] = atmega328p

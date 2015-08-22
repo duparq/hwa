@@ -62,6 +62,8 @@
 	
 sync_10_1:
 
+	DBG1
+
 	;; Init last measure to 0
 	;; 
 	ldi	R24, 0
@@ -74,16 +76,21 @@ sync_10_1:
 	ldi	R25, 0		;
 	
 	;; Measure next low-level duration in t2 (R25:R24)
-	;; 
+	;;
+
 2:	sbis	RXDPIN, BP_RXD	;		Wait RXD == 1
 	rjmp	2b		;
 
 2:	sbic	RXDPIN, BP_RXD	; [1/2]		Wait RXD == 0
 	rjmp	2b		; [2]
 
+	DBG0
+
 2:	adiw	R24, 1		; [2]	|	Compute low level duration
 	sbis	RXDPIN, BP_RXD	; [1/2]	|	in 5 CPU cycles units
 	rjmp	2b		; [2]	|= 5
+
+	DBG1
 
 	;; Compute R27:R26 = 10×t2
 	;; 
