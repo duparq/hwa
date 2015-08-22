@@ -2,9 +2,7 @@
 HWA
 ===
 
-[TOC]
-
-Introduction {#intro}
+Introduction
 ============
 
 HWA<sup><a href="#hwa">*</a></sup> is a hardware abstraction tool for
@@ -35,7 +33,7 @@ quickly to the solution.
 ![](doxygen/hwa_principle.jpeg)
 
 
-Documentation {#make_doc}
+Documentation
 =============
 
 You can browse a ready-made documentation from [this web
@@ -47,12 +45,12 @@ below). You then just need to run `make` in the HWA base directory. You'll start
 with the `doxygen/html/index.html` page.
 
 
-Examples {#examples}
+Examples
 ========
 
 The `atmel/avr/examples/` directory contains example projects aimed at
-illustrating various features of HWA for @ref attinyx4 "Atmel ATtiny44/84",
-@ref atmegax8 "ATmega328P" and @ref attinyx5 "ATtiny45/85" devices.
+illustrating various features of HWA for the Atmel ATtiny44/84, ATmega328P and
+ATtiny45/85 devices.
 
 The `main.c` file of each example project gives informations about what it does
 and how you can test it. A Python application, usually named `main.py`, is
@@ -63,7 +61,7 @@ A build system is also provided, that uses GNU Make and a few other GNU
 utilities.
 
 
-Toolchain {#toolchain}
+Toolchain
 ---------
 
 To be able to compile the example projects, you need a properly configured
@@ -113,7 +111,7 @@ __Note__: until now, I have only tried such a setup with a VirtualBoxed Windows
 XP and it is _very_ slow.
 
 
-Compiling an example {#make}
+Compiling an example
 --------------------
 
 As a first compiling test, you can run `make` in the `examples/01-1-blink-soft/`
@@ -130,7 +128,7 @@ compile for any board:
     make BOARD="nanodccduino"
 
 
-Running an example {#make_install}
+Running an example
 ------------------
 
 If you want to run one of the examples on a microcontroller on which you
@@ -153,7 +151,7 @@ You have to provide a specific makefile if you use neither Diabolo nor
 avrdude. Look at the `examples/make/` directory.
 
 
-Compiling all the examples at once {#make_all_examples}
+Compiling all the examples at once
 ----------------------------------
 
 You can run `make all-examples` in the `examples/` directory to verify that most
@@ -167,7 +165,7 @@ examples can be inadequate for other boards and fail to compile. This is not a
 bug!
 
 
-Checking the validity of the produced code without programming a device {#check}
+Checking the validity of the produced code without programming a device
 -----------------------------------------------------------------------
 
 If you installed Python, you can run `make check-all-examples` in the
@@ -189,26 +187,25 @@ included in the validation file is then usefull to see if the variations in the
 produced code result of modifications in the HWA core.
 
 
-Status {#status}
+Status
 ======
 
 __WARNING!__ The development of HWA is very chaotic and this project is subject
 to heavy changes of the code-base.
 
 
-Feedback {#feedback}
+Feedback
 ========
 
 Feedbacks will be greatly appreciated. For any bug report, question or if you
 think you have an idea that would enhance HWA, please use my gmail address
-(duparq) and put HWA in the oject.
+(duparq) and put HWA in the object.
 
 
-License {#zlicense}
+License
 =======
 
-HWA is free software. See the @ref license "license" page for license
-information.
+HWA is free software. See the "license" page for license information.
 
 <hr>
 
