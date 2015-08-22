@@ -12,7 +12,7 @@
 #include "../../../hwa/hwa_1.h"
 
 /**
- * @defgroup public_gen_instructions_atmelavr Instructions related to hardware modification for Atmel AVR devices
+ * @defgroup public_gen_instructions_atmelavr Instructions for Atmel AVR devices that are not related to a speficic object
  *
  * These instructions lead to a modification of the hardware configuration that
  * is not related to a specific object.
@@ -21,40 +21,40 @@
 #if defined DOXYGEN
 /**
  * @ingroup public_gen_macros
- * @brief The name of the device
+ * @brief The name of the device as used by the compiler
  */
-#  define HW_DEVICE		<device_name>
+#  define HW_DEVICE
 /**
  * @ingroup public_gen_macros
- * @brief The packaging of the device
+ * @brief Defined if the packaging of the device is device_package
  */
-#  define HW_DEVICE_PACKAGE	<device_package>
+#  define HW_DEVICE_PACKAGE_device_package
 #endif
 
 /**
  * @ingroup public_gen_macros_atmelavr
- * @brief This symbol is defined for all Atmel AVR devices
+ * @brief Defined for all Atmel AVR devices
  */
 #define HW_DEVICE_ATMELAVR
 
 /**
  * @ingroup public_gen_macros_atmelavr
- * @brief Name of the vendor
+ * @brief Defined as `atmel` for all Atmel devices
  */
 #define HW_DEVICE_VENDOR	atmel
 
 /**
  * @ingroup public_gen_macros_atmelavr
- * @brief Architecture name
+ * @brief Defined as `avr` for all Atmel AVR devices
  */
 #define HW_DEVICE_ARCH		avr
 
 /**
  * @ingroup public_gen_macros_atmelavr
- * @brief The CPU clock frequency.
+ * @brief Expands to the CPU clock frequency (cpu cycles per second).
  */
 #if defined DOXYGEN
-#  define hw_syshz		<cpu cycles per second>
+#  define hw_syshz
 #endif
 
 

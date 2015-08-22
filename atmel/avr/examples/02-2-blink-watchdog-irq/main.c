@@ -10,22 +10,12 @@
  *  Blink a LED using the watchdog IRQ
  */
 
-/*  Include the target board definitions (includes hwa.h)
- */
-#if defined BOARD_H
-#  include BOARD_H
-#else
-#  include <boards/attiny84.h>
-#endif
+#include BOARD_H
 
 
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
+/*  Watchdog timeout
  */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
+#define TIMEOUT                 250ms
 
 
 /*  Service watchdog IRQ
@@ -49,10 +39,10 @@ int main ( )
    */
   hwa_config( PIN_LED, direction, output );
 
-  /*  Configure the watchdog to trigger an IRQ every 125ms
+  /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
   hwa_config( hw_wdog0,
-              timeout,          125ms,
+              timeout,          TIMEOUT,
               action,           irq
               );
 

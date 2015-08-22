@@ -46,7 +46,7 @@
 
 #define UART            hw_swuart0
 
-#define COUNTER         hw_swuart0_counter
+#define COUNTER         hw_rel(hw_swuart0_compare,counter)
 #define CAPTURE         capture0
 #define COMPARE         compare1
 
@@ -57,12 +57,12 @@
 #define PIN_TCS3200_S3  hw_pin_3
 
 
-/*  Create a `PIN_OUTS` object consisting of 4 consecutive i/o pins
+/*  Create a `PIN_OUTS` object consisting of the 4 consecutive I/O pins
  *  PA5,PA4,PA3,PA2 (14pdip: 8..11)
  *
  *                      class, id, parent, #of bits, position of lsb
  */
-#define _PIN_OUTS       _pin1, 0, hw_porta, 4, 2
+#define _PIN_OUTS       _io1a, 0, hw_porta, 4, 2
 
 
 /*  Maximum period (minimum light level) required
@@ -112,46 +112,46 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Prepare to capture date of the next rising edge
    */
-  hw_config( hw_sub(COUNTER, CAPTURE), edge, rising );
+  hw_config( hw_rel(COUNTER, CAPTURE), edge, rising );
   hw_clear_irqf( COUNTER, CAPTURE );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
   hw_read(COUNTER);
-  hw_write( hw_sub(COUNTER, COMPARE), hw_read(COUNTER) );
+  hw_write( hw_rel(COUNTER, COMPARE), hw_read(COUNTER) );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
     /*
      *  Rising edge occured: continue below
      */
-    if ( hw_stat(COUNTER).CAPTURE ) {
-      t = hw_read( hw_sub(COUNTER, CAPTURE) ) ;
+    if ( hw_stat_irqf(COUNTER, CAPTURE) ) {
+      t = hw_read( hw_rel(COUNTER, CAPTURE) ) ;
       break ;
     }
     /*
      *  Compare-match occured: signal period is too long
      */
-    if ( hw_stat(COUNTER).COMPARE )
+    if ( hw_stat_irqf(COUNTER, COMPARE) )
       return 0xFFFF ;
   }
 
   /*  Now wait for the falling edge
    */
-  hw_config( hw_sub(COUNTER, CAPTURE), edge, falling );
+  hw_config( hw_rel(COUNTER, CAPTURE), edge, falling );
   hw_clear_irqf( COUNTER, CAPTURE );
 
-  hw_write( hw_sub(COUNTER, COMPARE), t );
+  hw_write( hw_rel(COUNTER, COMPARE), t );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
-    if ( hw_stat(COUNTER).CAPTURE )
+    if ( hw_stat_irqf(COUNTER, CAPTURE) )
       /*
        *  Return the half-period
        */
-      return hw_read( hw_sub(COUNTER, CAPTURE) ) - t ;
-    if ( hw_stat(COUNTER).COMPARE )
+      return hw_read( hw_rel(COUNTER, CAPTURE) ) - t ;
+    if ( hw_stat_irqf(COUNTER, COMPARE) )
       /*
        *  Half-period is too long
        */
@@ -239,7 +239,7 @@ main ( )
 
   /*  Capture used to compute the TCS output period
    */
-  hwa_config( hw_sub(COUNTER,CAPTURE),
+  hwa_config( hw_rel(COUNTER,CAPTURE),
               input,   pin_icp,
               edge,    rising );
 

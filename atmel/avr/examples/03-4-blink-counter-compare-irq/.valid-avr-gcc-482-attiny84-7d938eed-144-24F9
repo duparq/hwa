@@ -1,0 +1,178 @@
+HW_DEVICE=attiny84
+hw_syshz=8000000
+PIN_LED=hw_pin_pa6
+COUNTER=hw_counter0
+CLKDIV=64
+COUNTMODE=loop_up
+COMPARE=compare0
+PERIOD=0.5
+
+
+build/out.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000090  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00000090  00000124  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000001  00800060  00800060  00000124  2**0
+                  ALLOC
+  3 .stab         00000f54  00000000  00000000  00000124  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00001ef2  00000000  00000000  00001078  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .comment      00000011  00000000  00000000  00002f6a  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
+   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	18 c0       	rjmp	.+48     	; 0x44 <__vector_9>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_clear_bss>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+
+00000036 <.do_clear_bss_loop>:
+  36:	1d 92       	st	X+, r1
+
+00000038 <.do_clear_bss_start>:
+  38:	a1 36       	cpi	r26, 0x61	; 97
+  3a:	b1 07       	cpc	r27, r17
+  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
+  3e:	1a d0       	rcall	.+52     	; 0x74 <main>
+  40:	25 c0       	rjmp	.+74     	; 0x8c <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <__vector_9>:
+
+
+/*  Service the compare-match IRQ
+ */
+HW_ISR( COUNTER, COMPARE )
+{
+  44:	1f 92       	push	r1
+  46:	0f 92       	push	r0
+  48:	0f b6       	in	r0, 0x3f	; 63
+  4a:	0f 92       	push	r0
+  4c:	11 24       	eor	r1, r1
+  4e:	8f 93       	push	r24
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+  50:	12 be       	out	0x32, r1	; 50
+  hw_clear( COUNTER );
+
+  static uint8_t n ;
+  n++ ;
+  52:	80 91 60 00 	lds	r24, 0x0060
+  56:	8f 5f       	subi	r24, 0xFF	; 255
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+  58:	89 3f       	cpi	r24, 0xF9	; 249
+  5a:	18 f4       	brcc	.+6      	; 0x62 <__vector_9+0x1e>
+HW_ISR( COUNTER, COMPARE )
+{
+  hw_clear( COUNTER );
+
+  static uint8_t n ;
+  n++ ;
+  5c:	80 93 60 00 	sts	0x0060, r24
+  60:	03 c0       	rjmp	.+6      	; 0x68 <__vector_9+0x24>
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+    n = 0 ;
+  62:	10 92 60 00 	sts	0x0060, r1
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  66:	ce 9a       	sbi	0x19, 6	; 25
+    hw_toggle( PIN_LED );
+  }
+}
+  68:	8f 91       	pop	r24
+  6a:	0f 90       	pop	r0
+  6c:	0f be       	out	0x3f, r0	; 63
+  6e:	0f 90       	pop	r0
+  70:	1f 90       	pop	r1
+  72:	18 95       	reti
+
+00000074 <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  74:	80 e2       	ldi	r24, 0x20	; 32
+  76:	85 bf       	out	0x35, r24	; 53
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  78:	d6 9a       	sbi	0x1a, 6	; 26
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  7a:	83 e0       	ldi	r24, 0x03	; 3
+  7c:	83 bf       	out	0x33, r24	; 51
+  7e:	82 e0       	ldi	r24, 0x02	; 2
+  80:	89 bf       	out	0x39, r24	; 57
+  82:	8d e7       	ldi	r24, 0x7D	; 125
+  84:	86 bf       	out	0x36, r24	; 54
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  86:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+  88:	88 95       	sleep
+  8a:	fe cf       	rjmp	.-4      	; 0x88 <main+0x14>
+
+0000008c <_exit>:
+  8c:	f8 94       	cli
+
+0000008e <__stop_program>:
+  8e:	ff cf       	rjmp	.-2      	; 0x8e <__stop_program>

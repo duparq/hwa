@@ -15,10 +15,6 @@
 
 /*  Include the target board (and device) definitions
  */
-#if !defined BOARD_H
-#  define BOARD_H                       <boards/attiny84.h>
-#endif
-
 #include BOARD_H
 
 
@@ -44,9 +40,9 @@ HW_ISR( COUNTER, overflow )
   static uint8_t        phase ;
 
   if ( phase == 0 )
-    hw_write( hw_sub(COUNTER,COMPARE), duty );
+    hw_write( hw_rel(COUNTER,COMPARE), duty );
   else if ( phase == 1 )
-    hw_write( hw_sub(COUNTER,COMPARE), ~duty );
+    hw_write( hw_rel(COUNTER,COMPARE), ~duty );
 
   duty++ ;
 
@@ -63,9 +59,9 @@ HW_ISR( COUNTER, overflow )
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
       if ( phase == 2 )
-        hw_config( hw_sub(COUNTER,COMPARE), output, disconnected );
+        hw_config( hw_rel(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-        hw_config( hw_sub(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+        hw_config( hw_rel(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
     }
   }
 }
@@ -87,16 +83,16 @@ int main ( )
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa_config( COUNTER,
-              clock,     HW_G2(syshz_div, CLKDIV),
+              clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       fixed_0xFF
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_config( hw_sub(COUNTER,COMPARE),
+    hwa_config( hw_rel(COUNTER,COMPARE),
                 output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
-    hwa_config( hw_sub(COUNTER,COMPARE),
+    hwa_config( hw_rel(COUNTER,COMPARE),
                 output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ

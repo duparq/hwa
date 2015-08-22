@@ -10,21 +10,24 @@
 
 	;; Status is stored in SFR
 	;; 
-	__hw_swuart0_stat = _hw_ra(hw_core0, gpior0)
-	__hw_swuart1_stat = _hw_ra(hw_core0, gpior1)
+	__hw_swuart0_stat = _hw_ra(hw_shared, gpior0)
+	__hw_swuart1_stat = _hw_ra(hw_shared, gpior1)
 
 
 /*	hw_swuart0
  */
-#if defined hw_swuart0_pin_tx || defined hw_swuart0_pin_rx
-#  if !defined hw_swuart0_counter
-#    error hw_swuart0_counter is not defined
+#if defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd
+#  if defined hw_swuart0_pin_txd && hw_id(hw_swuart0_pin_txd)==0
+#    error invalid definition of hw_swuart0_pin_txd
 #  endif
-#  if !defined hw_swuart0_counter_clk_div
-#    error hw_swuart0_counter_clk_div is not defined
+#  if defined hw_swuart0_pin_rxd && hw_id(hw_swuart0_pin_rxd)==0
+#    error invalid definition of hw_swuart0_pin_rxd
 #  endif
-#  if !defined hw_swuart0_counter_compare
+#  if !defined hw_swuart0_compare
 #    error hw_swuart0_compare is not defined
+#  endif
+#  if !defined hw_swuart0_clk_div
+#    error hw_swuart0_clk_div is not defined
 #  endif
 #  if defined hw_swuart0_autosync
 #    define AUTOSYNC
@@ -38,15 +41,21 @@
 
 /*	hw_swuart1
  */
-#if defined hw_swuart1_pin_tx || defined hw_swuart1_pin_rx
-#  if !defined hw_swuart1_counter
-#    error hw_swuart1_counter is not defined
+#if defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd
+#  if defined hw_swuart1_pin_txd && hw_id(hw_swuart1_pin_txd)==0
+#    error invalid definition of hw_swuart1_pin_txd
 #  endif
-#  if !defined hw_swuart1_counter_clk_div
-#    error hw_swuart1_counter_clk_div is not defined
+#  if defined hw_swuart1_pin_rxd && hw_id(hw_swuart1_pin_rxd)==0
+#    error invalid definition of hw_swuart1_pin_rxd
 #  endif
-#  if !defined hw_swuart1_counter_compare
+#  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined
+#  endif
+#  if !defined hw_swuart1_clk_div
+#    error hw_swuart1_clk_div is not defined
+#  endif
+#  if defined hw_swuart1_autosync
+#    define AUTOSYNC
 #  endif
 #
 #  define hw_swuart		hw_swuart1

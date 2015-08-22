@@ -18,13 +18,6 @@
  * @par config.h
  * @include 07-1-swuart-eeprom-read-write/config.h
  * 
- * Symbols:
- *
- * * `BOARD_H` is the name of the target board header file. It can be defined at
- * compile time via the command line. For example, `make BOARD=nanodccduino`
- * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref atmelavr_boards for the
- * board definitions provided with HWA.
- *
  * @par main.c
  */
 

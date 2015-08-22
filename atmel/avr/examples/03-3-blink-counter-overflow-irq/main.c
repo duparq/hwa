@@ -10,23 +10,9 @@
  *  Blink a LED using a counter overflow interrupt
  */
 
-
 /*  Include the target board (and device) definitions
  */
-#if !defined BOARD_H
-#  define BOARD_H                       <boards/attiny84.h>
-#endif
-
 #include BOARD_H
-
-
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
 
 
 /*  The counter
@@ -75,15 +61,15 @@ int main ( )
    *  mode.
    */
   hwa_config( COUNTER,
-              clock,     HW_G2(syshz_div, CLKDIV),
+              clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       compare0
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa_write( hw_rel(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV / 2 );
   else
-    hwa_write( hw_sub(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV );
+    hwa_write( hw_rel(COUNTER, compare0), 0.001 * hw_syshz / CLKDIV );
 
   hwa_turn_irq( COUNTER, overflow, on );
 

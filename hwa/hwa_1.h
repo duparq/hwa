@@ -5,24 +5,40 @@
  */
 
 /**
+ * @file
+ * @brief HWA definitions that do not produce C code
+ */
+
+/**
  * @defgroup public_obj_instructions Instructions related to one object configuration
  *
- * These instructions receive an object as first argument and lead to
- * a modification of the hardware configuration.
+ * These instructions receive an object name as first argument and modify the
+ * hardware configuration.
  */
 
 /**
- * @defgroup public_gen_instructions Instructions related to general hardware configuration
- *
- * These instructions lead to a modification of the hardware configuration that
- * is not related to a specific object.
+ * @defgroup public_context_instructions Instructions related to the HWA context
  */
 
 /**
- * @defgroup public_obj_macros Instructions providing informations about objects
+ * @defgroup public_obj_macros Instructions that provide informations about objects
  *
  * These instructions provide informations about an object without accessing the
  * hardware.
+ */
+
+/**
+ * @defgroup public_reg_instructions Instructions related to registers
+ *
+ * These instructions receive an object name as first argument and the name of
+ * one of its hardware or logical registers as a second argument.
+ */
+
+/**
+ * @defgroup public_irq_instructions Instructions related to interrupts
+ *
+ * These instructions receive an interrupt name as first argument (that is an
+ * object name that can be followed by an event name).
  */
 
 /**
@@ -34,26 +50,15 @@
 
 /**
  * @defgroup private HWA internal instructions
+ *
  * These instruction are intended for internal use.
- * There is not argument checking, and no error processing.
+ * There is no argument checking and no error processing.
  */
 
 /**
- * @file
- * @brief  This is the main include file of HWA.
+ * @defgroup private_classes HWA internal classes
  *
- * This file is included from the application source after `HW_DEVICE` has been
- * defined with the name od the target device. It includes all that is necessary
- * to use HWA with the target device.
- *
- * HWA definitions are split in two parts:
- *
- * * The first part (files ending with `_1.h` ) contains the definitions that do
- *   not produce C code (can be used for assembler) and the definitions
- *   related to the building of the HWA context.
- *
- * * The second part (files ending with `_2.h`) contains the definitions that
- *   produce C code or make use of the HWA context.
+ * These classes are defined to be used internally by HWA.
  */
 
 #include "hwa_macros.h"

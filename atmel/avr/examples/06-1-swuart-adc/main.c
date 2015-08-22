@@ -13,18 +13,21 @@
  *
  * @par Test application
  *
+ * Display the ADC result on the command line:
+ *
  *      ./main.py
+ *
+ * You can add a low-pass filtering with the `--lpf` option.
+ *
+ * Display the ADC result on a graphical dial (requires wxPython):
+ *
+ *      ./main.py --gfx
+ *
+ * ![Dial](dial.jpeg)
  *
  * @par config.h
  * @include 06-1-swuart-adc/config.h
  * 
- * Symbols:
- *
- * * `BOARD_H` is the name of the target board header file. It can be defined at
- * compile time via the command line. For example, `make BOARD=nanodccduino`
- * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref atmelavr_boards
- * for the board definitions provided with HWA.
- *
  * @par main.c
  */
 
@@ -37,19 +40,6 @@
  *    without error!
  */
 #define COUNTER                 hw_counter0
-
-
-/*  Pin used as ADC input
- */
-#if defined ARDUINO
-#  define INPUT                 PIN_A0
-#else
-#  define INPUT                 hw_pin_8
-#endif
-
-#if !defined PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
 
 volatile uint16_t               adc ;   // Last adc value
 volatile uint8_t                x_adc ; // Set to 1 after adc is written
@@ -109,22 +99,22 @@ main ( )
    *  the delay at 16 MHz.
    */
   hwa_config( COUNTER,
-              clock,     syshz_div_1024,
+              clock,     prescaler_output(1024),
               countmode, loop_updown,
               bottom,    0,
               top,       compare0
               );
-  hwa_write( hw_sub(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
+  hwa_write( hw_rel(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
   hwa_turn_irq( COUNTER, overflow, on );
 
   /*  Configure the ADC (this turns it on)
    */
   hwa_config( hw_adc0,
-              clock,   syshz_div_128,
+              clock,   sysclk_div(128),
               trigger, manual,
               vref,    vcc,
               align,   right,
-              input,   INPUT
+	      input,   PIN_ANALOG_INPUT
               );
   hwa_turn_irq( hw_adc0, on );
 

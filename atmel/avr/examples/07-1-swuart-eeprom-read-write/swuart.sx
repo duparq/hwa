@@ -2,4 +2,4 @@
 	;; -*- asm -*-
 
 #include "config.h"
-#include <atmel/avr/swuart.sx>
+#include <hwa/swuart.sx>

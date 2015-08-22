@@ -7,33 +7,26 @@
 /**
  * @example
  *
- * Fade a LED connected to a counter compare output (method 2)
+ * Fade a LED connected to a counter compare output (method 2).
  *
  * Changes versus method 1:
  *
- *   * define PWM as `hw_counterX_compareY` and use `hw_sup(...)` to
- *     retrieve the name of the counter
+ *   * define PWM as `hw_ocXY` and use `hw_rel()` to retrieve the name of the
+ *     counter;
  *
  *   * use a HWA context in the ISR and the couple `hwa_nocommit()` /
- *     `hwa_commit()` to write the changes to the hardware
+ *     `hwa_commit()` to write the changes to the hardware;
  *
  *   * use a seperate function to store the hardware configuration
- *     into a HWA context
+ *     into a HWA context.
  */
-
-
-/*  Set a default target board
- */
-#if !defined BOARD_H
-#  define BOARD_H               <boards/attiny84.h>
-#endif
 
 #include BOARD_H
 
 
 /*  The counter
  */
-#define PWM                     hw_counter0_compare0
+#define PWM                     hw_oc00
 #define CLKDIV                  64
 #define COUNTMODE               loop_up
 
@@ -50,8 +43,8 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 
   /*  Configure the counter to count between 0 and 0xFF
    */
-  hwa_config( hw_sup(PWM),
-              clock,     HW_G2(syshz_div, CLKDIV),
+  hwa_config( hw_rel(PWM,counter),
+              clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       fixed_0xFF
@@ -64,7 +57,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
 
   /*  Enable overflow IRQ
    */
-  hwa_turn_irq( hw_sup(PWM), overflow, on );
+  hwa_turn_irq( hw_rel(PWM,counter), overflow, on );
 }
 
 
@@ -75,7 +68,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( hw_sup(PWM), overflow )
+HW_ISR( hw_rel(PWM,counter), overflow )
 {
   static uint8_t        duty ;
   static uint8_t        phase ;
@@ -145,3 +138,6 @@ int main ( )
   for(;;)
     hw_sleep();
 }
+
+
+//_hwa_begreg( hw_portb, port );

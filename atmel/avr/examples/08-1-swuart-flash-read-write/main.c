@@ -36,13 +36,6 @@
  * @par config.h
  * @include 08-1-swuart-flash-read-write/config.h
  * 
- * Symbols:
- *
- * * `BOARD_H` is the name of the target board header file. It can be defined at
- * compile time via the command line. For example, `make BOARD=nanodccduino`
- * will define `BOARD_H` as `<boards/nanodccduino.h>`. See @ref atmelavr_boards for the
- * board definitions provided with HWA.
- *
  * @par main.c
  */
 
@@ -96,7 +89,7 @@ static void process ( uint8_t byte )
         /*  Process the reprogramming of the page. Some more checkings could be
          *  done in order to not erase or program blank pages.
          */
-        hw_command( hw_flash0, load_page, page );
+        hw_command( hw_flash0, load_buffer, page );
         hw_command( hw_flash0, erase_page, zpage );
         hw_command( hw_flash0, write_page, zpage );
 
@@ -154,8 +147,7 @@ main ( )
   for(;;) {
     /*
      *  Main loop:
-     *    put the MCU into sleep mode, an interrupt we awake it
-     *    process incomming bytes
+     *    put the MCU into sleep mode, an interrupt will awake it
      */
     hw_sleep();
     if ( hw_stat(UART).rxc ) {

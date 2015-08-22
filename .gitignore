@@ -9,8 +9,10 @@
 *.s
 /doxygen/html
 build/
+/python/pyserial-2.7/
 private/
 projects/
 trash/
+windows/
 MEMO*
 TODO*

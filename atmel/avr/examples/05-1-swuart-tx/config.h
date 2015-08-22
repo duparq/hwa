@@ -1,20 +1,30 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-/*  The configuration of the software UART must be defined before including the
- *  HWA header
+/*  The UART and its baudrate
+ *  Use software UART hw_swuart0 for devices that do not have a hardware UART
  */
-#define hw_swuart0_pin_tx               DIABOLO_PIN_TX
-#define hw_swuart0_counter              hw_counter0
-#define hw_swuart0_counter_clk_div      1
-#define hw_swuart0_counter_compare      compare0
+#define UART				hw_swuart0
+#define BPS				115200
 
-/*  Include the target board (and device) definitions
+/*  The configuration of the software UART must be defined before the
+ *  HWA header is included
  */
-#if !defined BOARD_H
-#  define BOARD_H                       <boards/attiny84.h>
-#endif
+#define hw_swuart0_pin_txd		DIABOLO_PIN_TX
+#define hw_swuart0_compare		hw_counter0compare0
+#define hw_swuart0_clk_div		1
 
+/*  Include target board + device + HWA definitions
+ */
 #include BOARD_H
+
+/*  Remove definitions for hw_swuart0 if it is not the chosen UART to avoid
+ *  including useless code
+ */
+#if hw_id(UART) != hw_id(hw_swuart0)
+#  undef hw_swuart0_pin_txd
+#  undef hw_swuart0_compare
+#  undef hw_swuart0_clk_div
+#endif
 
 #endif

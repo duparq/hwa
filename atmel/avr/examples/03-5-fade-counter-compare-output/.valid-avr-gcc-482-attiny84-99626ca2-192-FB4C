@@ -1,0 +1,205 @@
+HW_DEVICE=attiny84
+hw_syshz=8000000
+COUNTER=hw_counter0
+CLKDIV=64
+COUNTMODE=loop_up
+COMPARE=compare0
+
+
+build/out.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000c0  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  000000c0  00000154  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000002  00800060  00800060  00000154  2**0
+                  ALLOC
+  3 .stab         00000fa8  00000000  00000000  00000154  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      00002059  00000000  00000000  000010fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .comment      00000011  00000000  00000000  00003155  2**0
+                  CONTENTS, READONLY
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
+   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	16 c0       	rjmp	.+44     	; 0x44 <__vector_11>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_clear_bss>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+
+00000036 <.do_clear_bss_loop>:
+  36:	1d 92       	st	X+, r1
+
+00000038 <.do_clear_bss_start>:
+  38:	a2 36       	cpi	r26, 0x62	; 98
+  3a:	b1 07       	cpc	r27, r17
+  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
+  3e:	32 d0       	rcall	.+100    	; 0xa4 <main>
+  40:	3d c0       	rjmp	.+122    	; 0xbc <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <__vector_11>:
+ *    Phase 1: decrease duty cycle from 255 to 0 (use ~duty)
+ *    Phase 2: off
+ *    Phase 3: off
+ */
+HW_ISR( COUNTER, overflow )
+{
+  44:	1f 92       	push	r1
+  46:	0f 92       	push	r0
+  48:	0f b6       	in	r0, 0x3f	; 63
+  4a:	0f 92       	push	r0
+  4c:	11 24       	eor	r1, r1
+  4e:	8f 93       	push	r24
+  50:	9f 93       	push	r25
+  static uint8_t        duty ;
+  static uint8_t        phase ;
+
+  if ( phase == 0 )
+  52:	90 91 61 00 	lds	r25, 0x0061
+  56:	80 91 60 00 	lds	r24, 0x0060
+  5a:	99 23       	and	r25, r25
+  5c:	19 f0       	breq	.+6      	; 0x64 <__vector_11+0x20>
+    hw_write( hw_sub(COUNTER,COMPARE), duty );
+  else if ( phase == 1 )
+  5e:	91 30       	cpi	r25, 0x01	; 1
+  60:	11 f4       	brne	.+4      	; 0x66 <__vector_11+0x22>
+    hw_write( hw_sub(COUNTER,COMPARE), ~duty );
+  62:	80 95       	com	r24
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+  64:	86 bf       	out	0x36, r24	; 54
+
+  duty++ ;
+  66:	80 91 60 00 	lds	r24, 0x0060
+  6a:	8f 5f       	subi	r24, 0xFF	; 255
+  6c:	80 93 60 00 	sts	0x0060, r24
+
+  if ( duty==0 ) {
+  70:	81 11       	cpse	r24, r1
+  72:	11 c0       	rjmp	.+34     	; 0x96 <__vector_11+0x52>
+    phase = (phase + 1) & 3 ;
+  74:	80 91 61 00 	lds	r24, 0x0061
+  78:	8f 5f       	subi	r24, 0xFF	; 255
+  7a:	83 70       	andi	r24, 0x03	; 3
+  7c:	80 93 61 00 	sts	0x0061, r24
+     *  is only loose checking against the arguments provided and the generated
+     *  code will probably have to read the hardware to retrieve unknown bit
+     *  values.
+     */
+    if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
+      if ( phase == 2 )
+  80:	82 30       	cpi	r24, 0x02	; 2
+  82:	19 f4       	brne	.+6      	; 0x8a <__vector_11+0x46>
+       *  from here? All that should be looked after carefully again...
+       *  Simplifications in sight!
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+  84:	80 b7       	in	r24, 0x30	; 48
+  86:	8f 73       	andi	r24, 0x3F	; 63
+  88:	05 c0       	rjmp	.+10     	; 0x94 <__vector_11+0x50>
+        hw_config( hw_sub(COUNTER,COMPARE), output, disconnected );
+      else if ( phase == 0 )
+  8a:	81 11       	cpse	r24, r1
+  8c:	04 c0       	rjmp	.+8      	; 0x96 <__vector_11+0x52>
+  8e:	80 b7       	in	r24, 0x30	; 48
+  90:	8f 7b       	andi	r24, 0xBF	; 191
+  92:	80 68       	ori	r24, 0x80	; 128
+  94:	80 bf       	out	0x30, r24	; 48
+        hw_config( hw_sub(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+    }
+  }
+}
+  96:	9f 91       	pop	r25
+  98:	8f 91       	pop	r24
+  9a:	0f 90       	pop	r0
+  9c:	0f be       	out	0x3f, r0	; 63
+  9e:	0f 90       	pop	r0
+  a0:	1f 90       	pop	r1
+  a2:	18 95       	reti
+
+000000a4 <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  a4:	80 e2       	ldi	r24, 0x20	; 32
+  a6:	85 bf       	out	0x35, r24	; 53
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  a8:	ba 9a       	sbi	0x17, 2	; 23
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  aa:	83 e8       	ldi	r24, 0x83	; 131
+  ac:	80 bf       	out	0x30, r24	; 48
+  ae:	83 e0       	ldi	r24, 0x03	; 3
+  b0:	83 bf       	out	0x33, r24	; 51
+  b2:	81 e0       	ldi	r24, 0x01	; 1
+  b4:	89 bf       	out	0x39, r24	; 57
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  b6:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+  b8:	88 95       	sleep
+  ba:	fe cf       	rjmp	.-4      	; 0xb8 <main+0x14>
+
+000000bc <_exit>:
+  bc:	f8 94       	cli
+
+000000be <__stop_program>:
+  be:	ff cf       	rjmp	.-2      	; 0xbe <__stop_program>

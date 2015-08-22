@@ -7,40 +7,40 @@
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if hw_id(HW_G2(hw_swuart,pin_tx))
-	TXDPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), port)
-	TXDPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), pin)
-	TXDDR     = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_tx))), ddr)
-	TXDBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_tx)))
+#if hw_id(hw_rel(hw_swuart,_pin_txd))
+	TXDPORT   = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_txd),port), port)
+	TXDPIN    = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_txd),port), pin)
+	TXDDR     = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_txd),port), ddr)
+	TXDBIT    = hw_bp(hw_rel(hw_swuart,_pin_txd))
 #endif
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
-	RXDPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), port)
-	RXDPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), pin)
-	RXDDR     = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_rx))), ddr)
-	RXDBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_rx)))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
+	RXDPORT   = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_rxd),port), port)
+	RXDPIN    = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_rxd),port), pin)
+	RXDDR     = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_rxd),port), ddr)
+	RXDBIT    = hw_bp(hw_rel(hw_swuart,_pin_rxd))
 #endif
 
 	;; Wether we need to check the edge that triggers the start condition
 	;;
-#if hw_id(HW_G2(hw_swuart,pin_rx)) == hw_id(hw_pin_int0) \
- || hw_id(HW_G2(hw_swuart,pin_rx)) == hw_id(hw_pin_ain1)
+#if hw_id(hw_rel(hw_swuart,_pin_rxd)) == hw_id(hw_pin_int0) \
+ || hw_id(hw_rel(hw_swuart,_pin_rxd)) == hw_id(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
 #endif
 
-	CLK_DIV = HW_G2(hw_swuart,counter_clk_div)
+	CLK_DIV = HW_G2(hw_swuart,clk_div)
 
 
 	;; Debugging options
 	;; 
-#if hw_id(HW_G2(hw_swuart,pin_dbg))
+#if hw_id(hw_rel(hw_swuart,_pin_dbg))
 	DBG       = 1
-	DBGPORT   = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), port)
-	DBGPIN    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), pin)
-	DBGDDR    = hw_ra(hw_sup(hw_io(HW_G2(hw_swuart,pin_dbg))), ddr)
-	DBGBIT    = hw_bp(hw_io(HW_G2(hw_swuart,pin_dbg)))
+	DBGPORT   = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_dbg),port), port)
+	DBGPIN    = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_dbg),port), pin)
+	DBGDR     = hw_ra(hw_rel(hw_rel(hw_swuart,_pin_dbg),port), ddr)
+	DBGBIT    = hw_bp(hw_rel(hw_swuart,_pin_dbg))
 #else
 	DBG       = 0
 #endif
@@ -70,21 +70,24 @@
 	DBG_WAITREADY = DBG && 0
 
 
+#define COMPARE		hw_rel(hw_swuart,_compare)
+#define COUNTER		hw_rel(COMPARE,counter)
+
 	;; Counter registers
 	;;
-	count   = hw_ra(HW_G2(hw_swuart,counter), count)
-	comp	= hw_ra(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare))
+	count   = hw_ra(COUNTER, count)
+	comp	= hw_ra(COMPARE, reg)
 
 #undef COUNT_BN
-#define COUNT_BN 	hw_bn(HW_G2(hw_swuart,counter))
+#define COUNT_BN 	hw_bn(COUNTER)
 
-#define MATCH_IF_RA	hw_addr(hw_irqf(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
-#define MATCH_IF_BP	hw_bp(hw_irqf(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
-#define MATCH_IF	hw_ap(hw_irqf(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
+#define MATCH_IF_RA	hw_addr(hw_irqf(COMPARE))
+#define MATCH_IF_BP	hw_bp(hw_irqf(COMPARE))
+#define MATCH_IF	hw_ap(hw_irqf(COMPARE))
 
-#define MATCH_IE_RA	hw_addr(hw_irqe(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
-#define MATCH_IE_BP	hw_bp(hw_irqe(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
-#define MATCH_IE	hw_ap(hw_irqe(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)))
+#define MATCH_IE_RA	hw_addr(hw_irqe(COMPARE))
+#define MATCH_IE_BP	hw_bp(hw_irqe(COMPARE))
+#define MATCH_IE	hw_ap(hw_irqe(COMPARE))
 
 	;; Hardware registers
 	;;
@@ -105,21 +108,21 @@
 
 #else
 
-#define F_STOP   hw_ap(hw_reg(hw_swuart0, st_stop))	// Stop bit value
-#define F_IDLE   hw_ap(hw_reg(hw_swuart0, st_idle))	// Idle bit (always 1)
-#define F_RXC    hw_ap(hw_reg(hw_swuart0, st_rxc))	// RX queue not empty (stop bit sampled)
-#define F_TXC    hw_ap(hw_reg(hw_swuart0, st_txc))	// TX complete
+#define F_STOP   hw_ap(hw_reg(hw_swuart, st_stop))	// Stop bit value
+#define F_IDLE   hw_ap(hw_reg(hw_swuart, st_idle))	// Idle bit (always 1)
+#define F_RXC    hw_ap(hw_reg(hw_swuart, st_rxc))	// RX queue not empty (stop bit sampled)
+#define F_TXC    hw_ap(hw_reg(hw_swuart, st_txc))	// TX complete
 
-#define F_RXTX   hw_ap(hw_reg(hw_swuart0, st_rxtx))	// 0==RX, 1==TX
-#define F_WBTX   hw_ap(hw_reg(hw_swuart0, st_wbtx))	// 1: wait one match before tx
-#define F_SYNCED hw_ap(hw_reg(hw_swuart0, st_synced))	// 0: swuart needs to be synced
+#define F_RXTX   hw_ap(hw_reg(hw_swuart, st_rxtx))	// 0==RX, 1==TX
+#define F_WBTX   hw_ap(hw_reg(hw_swuart, st_wbtx))	// 1: wait one match before tx
+#define F_SYNCED hw_ap(hw_reg(hw_swuart, st_synced))	// 0: swuart needs to be synced
 
 #endif
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
-#  define START_IE	hw_ap(hw_irqe(HW_G2(hw_swuart,pin_rx), change))
-#  define START_IF	hw_ap(hw_irqf(HW_G2(hw_swuart,pin_rx), change))
-#endif /* defined PIN_RX */
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
+#  define START_IE	hw_ap(hw_irqe(hw_rel(hw_swuart,_pin_rxd), change))
+#  define START_IF	hw_ap(hw_irqf(hw_rel(hw_swuart,_pin_rxd), change))
+#endif /* defined PINRX */
 
 
 	.section .bss
@@ -154,14 +157,14 @@ HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
 
 	.section .text
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
 
 	;; Start condition (falling edge on RXD)
 	;;
 	;; Priority is to get the date of the start condition and re-enable
 	;; interrupts as soon as possible.
 	;;
-	;; Edge checking is not a priority since catching a rising edge
+	;; Edge checking is not a high priority since catching a rising edge
 	;; would happen only when UART is out of sync.
 	;;
 	;; Interrupts are disabled for CY_STSEI cycles (until sampling
@@ -171,8 +174,8 @@ HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
 	;;
 	;; Look at the end of this file for CY_ values.
 	;;
-	.global HW_ISR(HW_G2(hw_swuart,pin_rx),change)
-HW_ISR(HW_G2(hw_swuart,pin_rx),change):
+	.global HW_ISR(hw_rel(hw_swuart,_pin_rxd),change)
+HW_ISR(hw_rel(hw_swuart,_pin_rxd),change):
 	CYCLES=4		; [4] <- call
 
 	.if DBG_RXSTART1
@@ -289,20 +292,24 @@ HW_G3(,hw_swuart,st99):
 	CYCLES=CYCLES+4
 	CY_START=CYCLES
 
-#endif /* defined PIN_RX */
+#endif /* defined PINRX */
 
 
 	;; ISR Bit: send/receive one bit
 	;;
 	;; The priority is to re-enable interrupts as quickly as possible.
-	;; 
+	;;
+	;; The next bit date is computed early as the processing of the end of
+	;; frame can take a little longer than for a normal data bit and the
+	;; next date can expire before the end of the processing.
+	;;
 	;; RX: all interrupts blocked for 20 cycles
 	;;     received bit sampled 20 cycles after interrupt
 	;; TX: all interrupts blocked for --- cycles
 	;;     bit sent --- cycles after interrupt
 	;;
-	.global HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare))
-HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
+	.global HW_ISR(COMPARE)
+HW_ISR(COMPARE):
 
 	CYCLES=4			; [4]		<- call
 
@@ -315,15 +322,39 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 	push	R31		; [2]
 	in	R31, SREG	; [1]
 	push	R31		; [2]
-	CYCLES=CYCLES+5
+	push	R30		; [2]	Used for next compare date
+	CYCLES=CYCLES+7
 
 	.if DBG_BIT
 	sbi	DBGPIN, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
 
-#	if hw_id(HW_G2(hw_swuart,pin_tx))
-#	  if hw_id(HW_G2(hw_swuart,pin_rx))
+	;;  Compute next bit date
+	;;
+#	if COUNT_BN==8
+	XLD	R30, comp	; [2]
+	lds	R31, dtn	; [2]
+	add	R30, R31	; [1]
+	XST	comp, R30
+	CYCLES=CYCLES+9
+#	endif
+#	if COUNT_BN==16
+	lds	R30, dtn+0	; [2]
+	lds	R31, dtn+1	; [2]
+	push	R29		; [2]
+	XLD	R29, comp+0
+	add	R30, R29	; [1]
+	XLD	R29, comp+1
+	adc	R31, R29	; [1]
+	pop	R29		; [2]
+	XST	comp+1, R31
+	XST	comp+0, R30
+	CYCLES=CYCLES+12
+#	endif
+
+#	if hw_id(hw_rel(hw_swuart,_pin_txd))
+#	  if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	CY_RX0=CYCLES+1
 	XSBIC	R31, F_RXTX		; [ ]		TX or RX?
 #	  endif
@@ -334,7 +365,7 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 #  	  error "swuarta without TX pin is not handled"
 #	endif
 
-#	if hw_id(HW_G2(hw_swuart,pin_rx))
+#	if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	;; Receiving
 	;;
 	.if DBG_RXBIT
@@ -361,7 +392,7 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 
 	brmi	HW_G3(,hw_swuart,rxeof)	; [1/2]		nbit < 0
 	CY_RXEOF0=CYCLES+2
-	brne	HW_G3(,hw_swuart,next)	; [1/2]		nbit > 0
+	brne	HW_G3(,hw_swuart,cmpend); [1/2]		nbit > 0
 	CY_RXNXT0=CYCLES+3
 	CYCLES=CYCLES+2
 
@@ -377,43 +408,15 @@ HW_ISR(HW_G2(hw_swuart,counter), HW_G2(hw_swuart,counter_compare)):
 	lds	R31, shift	; [2]
 	sts	data, R31	; [2]
 	CYCLES=CYCLES+4
-#	endif /* defined PIN_RX */
+#	endif /* defined PINRX */
 	;; CY_RX3=CYCLES
 
-
-	;; Compute the date of next data bit and set the compare register
-	;; accordingly
+	;; Return from compare ISR
 	;;
-HW_G3(,hw_swuart,next):
+HW_G3(,hw_swuart,cmpend):
 	CY_NEXT=CYCLES
 
-#	if COUNT_BN==8
-	push	R30		; [2]
-	XLD	R30, comp	; [2]
-	lds	R31, dtn	; [2]
-	add	R30, R31	; [1]
-	XST	comp, R30
-	CYCLES=CYCLES+9
-#	endif
-
-#	if COUNT_BN==16
-	push	R30		; [2]
-	lds	R30, dtn+0	; [2]
-	lds	R31, dtn+1	; [2]
-	push	R29		; [2]
-	XLD	R29, comp+0
-	add	R30, R29	; [1]
-	XLD	R29, comp+1
-	adc	R31, R29	; [1]
-	pop	R29		; [2]
-	XST	comp+1, R31
-	XST	comp+0, R30
-	CYCLES=CYCLES+12
-#	endif
-
-;; HW_G3(,hw_swuart,L31S30):	; FIXME: useless?
 	pop	R30		; [2]
-;; HW_G3(,hw_swuart,L31S):	; FIXME: useless?
 	pop	R31		; [2]		Leave ISR
 	out	SREG, R31	; [1]
 	pop	R31		; [2]
@@ -429,7 +432,7 @@ HW_G3(,hw_swuart,next):
 	CY_NEXT=CYCLES-CY_NEXT
 
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	;;
 	;; Stop bit has been sampled
 	;;
@@ -441,7 +444,7 @@ HW_G3(,hw_swuart,rxeof):
 	.endif
 
 	;; Status = RXC + WBTX + SYNCED + STOP bit value
-	;;  If SYNCED is 0, RXC is not set since there is no byte received
+	;;  If SYNCED was 0 do not set RXC since received byte is not data
 	;;
 	XLD	r31, stat			; [ ]
 	bld	r31, HW_A1(F_STOP)		; [1]	Stop bit value
@@ -462,15 +465,14 @@ HW_G3(,hw_swuart,rxeof):
 	rcall	HW_G3(,hw_swuart,callback)
 #	endif
 
-	rjmp	HW_G3(,hw_swuart,next)	; [2]	Compute next bit date for idle detection
-					;	before tx
+	rjmp	HW_G3(,hw_swuart,cmpend)	; [2]
 	CYCLES=CYCLES+2
 	CY_RXEOF=CYCLES-CY_RXEOF
 
-#endif /* defined PIN_RX */
+#endif /* defined PINRX */
 
 	
-#if hw_id(HW_G2(hw_swuart,pin_tx))
+#if hw_id(hw_rel(hw_swuart,_pin_txd))
 	;;
 	;;  ISR to send one bit of data, stop, or idle
 	;;
@@ -513,9 +515,9 @@ HW_G3(,hw_swuart,txn):
 	CY_TXNXT0=CYCLES+4
 	CYCLES=CYCLES+1
 
-	ldi	R31, 0x03	; [1]		nbit==0: load stop and idle bits
+	ldi	R31, 0x03	; [1]		nbit==0: load stop and idle state bits
 	sts	shift, R31	; [2]
-1:	rjmp	HW_G3(,hw_swuart,next)	; [2]
+1:	rjmp	HW_G3(,hw_swuart,cmpend) ; [2]
 	CYCLES=CYCLES+5
 	CY_TXB0=CYCLES
 
@@ -531,18 +533,15 @@ HW_G3(,hw_swuart,txeof):
 	XSB	R31, F_WBTX	; [ ]	Need to wait one more match before next TX can start
 	disable_match(R31)	; [ ]		nbit==-2: sending idle bit, tx done
 
-#	if hw_id(HW_G2(hw_swuart,pin_tx)) == hw_id(HW_G2(hw_swuart,pin_rx))
+#	if hw_id(hw_rel(hw_swuart,_pin_txd)) == hw_id(hw_rel(hw_swuart,_pin_rxd))
 	cbi	TXDDR, TXDBIT	; [2]		Release TXD
 	cbi	TXDPORT, TXDBIT	; [2]
 	CYCLES=CYCLES+4
 #	endif
 
-	;; ldi	R31, 1<<ST_TXC	; [1]		Status = tx completed
-	;; sts	status, R31	; [2]
-	;; CYCLES=CYCLES+3
-	XSB	R31, F_TXC	;		Status = tx completed
+	XSB	R31, F_TXC	; [ ]		Status = tx completed
 
-#	if hw_id(HW_G2(hw_swuart,pin_rx))
+#	if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	XCB	R31, F_RXTX	; [ ]		Mode = RX
 	enable_start(R31)	; [ ]
 #	endif
@@ -552,20 +551,18 @@ HW_G3(,hw_swuart,txeof):
 	CYCLES=CYCLES+2
 	.endif
 
-	;; Fixme: should compute 'next' before calling callback
-	;; 
 #	if HW_G2(hw_swuart,callback)
 	rjmp	HW_G3(,hw_swuart,callback)	; [ ]
-#	else
-	rjmp	HW_G3(,hw_swuart,next)	; [2]	Compute last match (after stop bit is sent)
 #	endif
+
+	rjmp	HW_G3(,hw_swuart,cmpend)	; [2]
 	CYCLES=CYCLES+2
 	CY_TXEOF=CYCLES-CY_TXEOF
 
-#endif /* defined PIN_TX */
+#endif /* defined PINTX */
 
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
 
 	;; Return last received byte or wait until a byte is received and return
 	;; it.
@@ -597,10 +594,10 @@ HW_G3(,hw_swuart,getbyte):
 	cbi	DBGPORT, DBGBIT
 	.endif
 	ret
-#endif /* defined PIN_RX */
+#endif /* defined PINRX */
 
 
-#if hw_id(HW_G2(hw_swuart,pin_tx))
+#if hw_id(hw_rel(hw_swuart,_pin_txd))
 
 	;; Send one byte (R24)
 	;;
@@ -628,7 +625,7 @@ HW_G3(,hw_swuart,putbits):
 	rjmp	2b
 1:
 
-#	if hw_id(HW_G2(hw_swuart,pin_rx))
+#	if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	disable_start(R26)
 #	endif
 
@@ -638,7 +635,7 @@ HW_G3(,hw_swuart,putbits):
 	XST	stat, R24	;
 	sts	nbit, R25	;	Store # of data bits to send
 
-#	if hw_id(HW_G2(hw_swuart,pin_tx)) == hw_id(HW_G2(hw_swuart,pin_rx))
+#	if hw_id(hw_rel(hw_swuart,_pin_txd)) == hw_id(hw_rel(hw_swuart,_pin_rxd))
 	sbi	TXDPORT, TXDBIT	; 	Configure RX/TX pin as output
 	sbi	TXDDR, TXDBIT	;
 #	endif
@@ -689,7 +686,7 @@ HW_G3(,hw_swuart,brk):
 	subi	R25, 1
 	rjmp	putbits
 
-#endif /* defined PIN_TX */
+#endif /* defined PINTX */
 
 
 	;; Wait until rx/tx completed, i.e. match interrupt disabled
@@ -709,7 +706,7 @@ HW_G3(,hw_swuart,wait_ready):
 	ret
 
 
-#if hw_id(HW_G2(hw_swuart,pin_rx))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
 
 	;; Wait RX idle for at least (R24) bits
 	;; 
@@ -760,7 +757,7 @@ HW_G3(,hw_swuart,wait_rxidle):
 
 	ret
 
-#endif /* defined PIN_RX */
+#endif /* defined PINRX */
 
 
 	;; Put the synchronization code here since it
@@ -790,11 +787,10 @@ HW_G3(,hw_swuart,reset):
 	sts	dt0+0, r24
 	sts	dt0+1, r24
 #endif	
-#if hw_id(HW_G2(hw_swuart,pin_rx))
+#if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	enable_start(r24)
 #endif
 	ret
-
 
 	;; .fail	CY_STSEI			; 11
 

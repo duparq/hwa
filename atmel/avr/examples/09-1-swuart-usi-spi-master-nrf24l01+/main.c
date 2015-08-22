@@ -11,21 +11,34 @@
  * 
  * @par nRF24L01+ module wiring
  *
- *             Gnd  [1](2)  Vcc
- *      Gnd <- CE   (3)(4)  CSN  -> 
- *      SCL <- SCK  (5)(6)  MOSI -> MISO
- *     MOSI <- MISO (7)(8)  IRQ
+ *                   Gnd  [1](2)  Vcc
+ *            Gnd <- CE   (3)(4)  CSN  -> 
+ *            SCL <- SCK  (5)(6)  MOSI -> DO or MOSI
+ *     MISO or DI <- MISO (7)(8)  IRQ
  * 
- * NOTE: pin MISO, output of the nRF, has to be connected to pin MOSI of the MCU
- * (considered as a slave regarding the pin names).
- * 
+ * __Note__: for devices that use an USI to emulate an SPI interface, the MCU is
+ * considered a slave regarding the SPI pin names. Pin MISO, output of the nRF,
+ * has to be connected to pin MOSI/DI of the MCU, and pin MOSI, input of the
+ * nRF, has to be connected to pin MISO/DO of the MCU.
+ *
  * @par Test application
  *
  *     ./main.py
  * 
- * should display the values of the registers of an nRF24L01+ connected to
- * USI. It should be 0x08 for the config register and 0x3F for the EN_AA
- * register.
+ * should display:
+ *
+ *     Register CONFIG    : 0x00 = 08
+ *     Register EN_AA     : 0x01 = 3F
+ *     Register EN_RX_ADDR: 0x02 = 03
+ *     Register SETUP_AW  : 0x03 = 03
+ *     Register SETUP_RETR: 0x04 = 03
+ *     Register RF_CH     : 0x05 = 02
+ *     Register RF_SETUP  : 0x06 = 0F
+ *     Register STATUS    : 0x07 = 0E
+ *     Register RX_ADDR_P0: 0x0A = E7 E7 E7 E7 E7
+ *     Register RX_ADDR_P1: 0x0B = C2 C2 C2 C2 C2
+ *     Register DYNPD     : 0x1C = 00
+ *     Register FEATURE   : 0x1D = 00
  * 
  * @par config.h
  * @include 09-1-swuart-usi-spi-master-nrf24l01+/config.h
@@ -42,9 +55,13 @@
 
 #include "config.h"
 
-#define USI             hw_usi0
-#define NRF_CSN         hw_pin_6
-
+#if defined ARDUINO
+#  define USI		hw_spi0
+#  define NRF_CSN	PIN_D2
+#else
+#  define USI		hw_usi0
+#  define NRF_CSN	hw_pin_3
+#endif
 
 /*  We need a device with an USI
  */
@@ -64,7 +81,7 @@ static void write_usi ( char c )
     hw_trigger( USI );
     // hw_delay_cycles( 50e-6 * hw_syshz );
   }
-  while ( !hw_stat(USI).txc );
+  while ( !hw_stat_irqf(USI,txc) );
 }
 
 
@@ -83,8 +100,8 @@ main ( )
   /*  Configure the USI as SPI master clocked by software
    */
   hwa_config( USI,
-              mode,  spi_master,
-              clock, software );
+	      mode,  spi_master,
+	      clock, software );
 
   /*  Configure nRF CSN pin
    */
@@ -105,14 +122,14 @@ main ( )
    */
   for(;;) {
 
-    /*  Prompt
+    /*	Prompt
      */
     hw_write( UART, '$' );
 
-    /*  The host sends commands starting with '=' and followed by:
-     *    * the number of bytes to send to SPI slave (1 byte)
-     *    * the number of bytes to read (1 byte)
-     *    * the bytes to send
+    /*	The host sends commands starting with '=' and followed by:
+     *	  * the number of bytes to send to SPI slave (1 byte)
+     *	  * the number of bytes to read (1 byte)
+     *	  * the bytes to send
      */
     uint8_t c = hw_read( UART );
     if ( c == '=' ) {
@@ -121,28 +138,28 @@ main ( )
        */
       uint8_t ntx = hw_read( UART );
       if ( ntx < 1 || ntx > 33 )
-        goto error ;
+	goto error ;
 
       /*  Number of bytes to send back to talker
        */
       uint8_t nrx = hw_read( UART );
       if ( nrx > 32 )
-        goto error ;
+	goto error ;
 
       /*  Select SPI slave and send data
        */
       hw_write( NRF_CSN, 0 );
       while ( ntx-- ) {
-        c = hw_read( UART );
-        write_usi( c );
+	c = hw_read( UART );
+	write_usi( c );
       }
 
-      /*  Send reply to talker and deselect SPI slave
+      /*  Send reply to host and deselect SPI slave
        */
       while ( nrx-- ) {
-        write_usi( 0 );
-        c = hw_read( USI );
-        hw_write( UART, c );
+	write_usi( 0 );
+	c = hw_read( USI );
+	hw_write( UART, c );
       }
       hw_write( NRF_CSN, 1 );
     }
@@ -153,8 +170,8 @@ main ( )
        */
       do {
       error:
-        hw_write( UART, '!' );
-        c = hw_read( UART );
+	hw_write( UART, '!' );
+	c = hw_read( UART );
       } while ( c != '\n' ) ;
     }
   }

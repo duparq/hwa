@@ -1,22 +1,22 @@
 
-HWA header file {#using_header}
-===============
+Device header file {#using_header}
+==================
 
 In order to use the HWA facilities, you must first include the header file
 corresponding to your device:
 
 @code
-#include <atmel/avr/attiny44a_pu.h>
+#include <hwa/attiny44a_pu.h>
 @endcode
 
 The header file is searched in the `include/` directory of HWA.
 
 @par Configuration fuses
 
-If your device can be configured via fuses, you can define the configuration
-through the definition of symbols prefixed with `HW_DEVICE_` before including
-the HWA header, otherwise HWA will revert to factory default values for
-undefined fuses:
+If your device has configuration fuses (e.g. Atmel AVR), you can set their
+values through the definition of symbols prefixed with `HW_DEVICE_` __before
+including the device header__. HWA sets undefined fuses with factory default
+values:
 
 @code
 #define HW_DEVICE_CLK_SRC               rc_8MHz

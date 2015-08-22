@@ -1,0 +1,97 @@
+
+/*  This file is part of the HWA project.
+ *  Copyright (c) 2012,2015 Christophe Duparquet.
+ *  All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @file
+ */
+
+/**
+ * @page atmelavr_boards
+ *
+ * @section boards_arduino_pro_mini Arduino Pro Mini
+ *
+ * This is an Arduino clone board with a MEGA328P-AU microcontroller and a 16
+ * MHz crystal.
+ *
+ * The serial communication uses 1 wire for RX/TX. The board RX pin is connected
+ * to the RXD pin of the serial adapter and a 1k resistor is connected between
+ * the RXD and TXD pins. Alternately, RX can be tied to VCC through a 1k
+ * resistor and a Schottky diode connected between TXD (anode) and RXD
+ * (cathode).
+ *
+ * @par Serial adapter wiring
+ *
+ *     BOARD -> RXD : RXD <- Serial Adapter
+ *                  : TXD
+ *              RST : DTR
+ *              GND : GND
+ *              VCC : VCC
+ *
+ * @par USBASP wiring
+ *
+ *      USBASP -> 1  MOSI  11  <- BOARD
+ *                2  VCC   VCC
+ *                4  GND   GND
+ *                5  RST   RST
+ *                7  SCK   13
+ *                9  MISO  12
+ *
+ * @par  arduino_pro_mini.h
+ * @include arduino-pro-mini.h
+ * <br>
+ */
+
+/*  These are mostly the values as the board is shipped, except the bootsection
+ *  size which is 1024 with Diabolo instead of 2048 with the Arduino bootloader.
+ */
+#define HW_DEVICE_BOOT                  bootloader
+#define HW_DEVICE_BOOTSECTION_SIZE      1024
+
+#define HW_DEVICE_CLK_SRC               low_power_xosc
+#define HW_DEVICE_CLK_SRC_HZ            16000000
+#define HW_DEVICE_CLK_PSC               1
+#define HW_DEVICE_STARTUP_DELAYS        16KCK_14CK_64ms
+#define HW_DEVICE_BROWNOUT_DETECTION    4100_4500mV
+#define HW_DEVICE_SELF_PROGRAMMING      enabled
+
+#define HW_DEVICE_EXTERNAL_RESET        enabled
+#define HW_DEVICE_DEBUG_WIRE            disabled
+#define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
+#define HW_DEVICE_CLOCK_OUTPUT          disabled
+
+/*  Settings for the Diabolo bootloader
+ *    BPS and RESET_SIGNAL are only used by `make` to provide
+ *    settings to the Diabolo application on the host.
+ */
+#define DIABOLO_PIN_RX                  hw_pin_rxd
+#define DIABOLO_PIN_TX                  hw_pin_rxd
+#define DIABOLO_BPS                     230400
+#define DIABOLO_RESET_SIGNAL            DTR
+#define DIABOLO_CHAR_DELAY		0
+/*  Board pins
+ */
+#define ARDUINO
+
+#define PIN_D2				hw_pin_pd2	// INT0
+#define PIN_D3				hw_pin_pd3	// OC2B INT1
+#define PIN_D4				hw_pin_pd4	//      T0
+#define PIN_D5				hw_pin_pd5	// OC0B T1
+#define PIN_D6				hw_pin_pd6	// OC0A AIN0
+#define PIN_D7				hw_pin_pd7	//      AIN1
+#define PIN_D8				hw_pin_pb0	// ICP1
+#define PIN_D9				hw_pin_pb1	// OC1A
+#define PIN_D10				hw_pin_pb2	// OC1B
+#define PIN_D11				hw_pin_pb3	// OC2A MOSI
+#define PIN_D12				hw_pin_pb4
+#define PIN_D13				hw_pin_pb5
+
+#define PIN_ANALOG_INPUT		hw_pin_adc0
+
+#define PIN_LED				hw_pin_pb5
+
+/*  Include HWA definitions
+ */
+#include <hwa/atmega328p_au.h>

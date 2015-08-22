@@ -3,10 +3,13 @@
 
 import sys
 import os.path
-sys.path.insert(1,os.path.normpath(sys.path[0]+"../../python"))
+sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../python"))
+
 import premain
-import application
+from utils import s2hex, hexdump
+import xserial
 import time
+
 import operator
 import pickle
 from utils import s2hex
@@ -17,27 +20,29 @@ def region(string):
     return string
 
 
-class Application(application.Application):
+class Application():
     def __init__(self):
         self.data = {}
-        application.Application.__init__(self)
-        import argparse
-        parser = self.parser
+
+        parser = xserial.ArgumentParser()
         subparsers = parser.add_subparsers(help='sub-command help', dest="command")
 
         #  Stat command
         #
-        parser_stat = subparsers.add_parser('stat', help='sample help')
+        parser_stat = subparsers.add_parser('stat', help='display the status of the device')
 
         #  Sample command
         #
-        parser_sample = subparsers.add_parser('sample', help='sample help')
+        parser_sample = subparsers.add_parser('sample', help='sample data and store them '\
+                                              'to a file if a name is provided')
         parser_sample.add_argument('--threshold',
                                    help="maximum period of the clear channel to "
                                    "validate a sample",
                                    type=int, default="65536")
         parser_sample.add_argument('-o', '--output-file',
                                    help="store data to file" )
+        # parser_sample.add_argument('--gauges', help="show sampled values with graphical gauges",
+        #                            action='store_true')
 
         #  Set-threshold command
         #
@@ -57,17 +62,24 @@ class Application(application.Application):
 
         self.options = parser.parse_args()
 
+        self.serial = xserial.get_serial(self.options)
+        self.serial.reset_device()
+        self.serial.detect_wires()
+        time.sleep(0.2)  # Give Diabolo enough time to compute the CRC of the application
+        self.serial.sync()
+        self.prompt = self.serial.lastchar
+
 
     def get_regions(self):
         #
         #  Send command and wait for reply (the device may be busy processing
         #  the samples)
         #
-        self.tx('r')
+        self.serial.tx('r')
         r=""
         to=time.time()+0.1
         while time.time() < to:
-            c = self.rx(1)
+            c = self.serial.rx(1)
             if c == '\n':
                 rn     = int(r[ 0: 2], 16)
                 radius = int(r[ 2: 4], 16)
@@ -90,9 +102,9 @@ class Application(application.Application):
         #  Send first command byte and wait for reply (the device may be busy
         #  processing the samples)
         #
-        self.tx('R')
+        self.serial.tx('R')
         to=time.time()+1.0
-        while self.rx(1)!=' ' and time.time() < to:
+        while self.serial.rx(1)!=' ' and time.time() < to:
             time.sleep(0.01)
 
         frame = "%02X%02X%02X%02X%02X%02X" \
@@ -101,12 +113,12 @@ class Application(application.Application):
         cout("%s: (%d bytes)" % (frame, len(frame)))
         flushout()
 
-        self.tx(frame+'\n')
+        self.serial.tx(frame+'\n')
 
         to=time.time()+1.0
         r=""
         while time.time()<to:
-            r=self.rx(1)
+            r=self.serial.rx(1)
             if r=='\n' or r=='!':
                 break
 
@@ -125,11 +137,11 @@ class Application(application.Application):
         #  Send command and wait for reply (the device may be busy processing
         #  the samples)
         #
-        self.tx('l')
+        self.serial.tx('l')
         r=""
         to=time.time()+0.1
         while time.time() < to:
-            c = self.rx(1)
+            c = self.serial.rx(1)
             if c == '\n':
                 threshold = int(r[0:4], 16)
                 cout("Threshold=%4d\n" % threshold)
@@ -142,9 +154,9 @@ class Application(application.Application):
         #  Send first command byte and wait for reply (the device may be busy
         #  processing the samples)
         #
-        self.tx('L')
+        self.serial.tx('L')
         to=time.time()+1.0
-        while self.rx(1)!=' ' and time.time() < to:
+        while self.serial.rx(1)!=' ' and time.time() < to:
             time.sleep(0.001)
         if time.time() > to:
             die("Timeout for 'L' command.\n")
@@ -153,11 +165,11 @@ class Application(application.Application):
         cout("%s: (%d bytes)" % (frame, len(frame)))
         flushout()
 
-        self.tx(frame+'\n')
+        self.serial.tx(frame+'\n')
         r=""
         to=time.time()+1.0
         while time.time()<to:
-            r=self.rx(1)
+            r=self.serial.rx(1)
             if r=='\n' or r=='!':
                 break
 
@@ -177,10 +189,10 @@ class Application(application.Application):
             #
             # Ask for a sample
             #
-            self.tx('s')
+            self.serial.tx('s')
             r=""
             while True:
-                c = self.rx(1)
+                c = self.serial.rx(1)
                 if c == '\n':
                     break
                 r += c
@@ -248,7 +260,7 @@ class Application(application.Application):
 
     def run(self):
         try:
-            self.connect( self.sync_5_1 )
+            #self.connect( self.sync_5_1 )
 
             if self.options.command=='stat':
                 self.get_threshold()
@@ -286,7 +298,7 @@ class Application(application.Application):
                 cout("No sample collected.\n")
             print self.options
         finally:
-            self.com.close()
+            self.serial.close()
 
 
 if __name__ == "__main__":

@@ -13,20 +13,7 @@
 
 /*  Include the target board (and device) definitions
  */
-#if !defined BOARD_H
-#  define BOARD_H                       <boards/attiny84.h>
-#endif
-
 #include BOARD_H
-
-
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
 
 
 /*  The counter
@@ -42,7 +29,7 @@
  */
 HW_ISR( COUNTER, COMPARE )
 {
-  hw_clear( COUNTER );
+  hw_write( COUNTER, 0 );
 
   static uint8_t n ;
   n++ ;
@@ -73,15 +60,15 @@ int main ( )
   /*  Configure the compare unit to match every 0.001 s.
    */
   hwa_config( COUNTER,
-              clock,     HW_G2(syshz_div, CLKDIV),
+              clock,     HW_G2(prescaler_output, CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       max
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_sub(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa_write( hw_rel(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV / 2 );
   else /* loop_up */
-    hwa_write( hw_sub(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV );
+    hwa_write( hw_rel(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV );
 
   /*  Enable compare IRQ
    */

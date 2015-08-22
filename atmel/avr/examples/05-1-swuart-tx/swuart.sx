@@ -8,4 +8,4 @@
 //#define SWUART_COMPUTE_CYCLES
 
 #include "config.h"
-#include <atmel/avr/swuart.sx>
+#include <hwa/swuart.sx>

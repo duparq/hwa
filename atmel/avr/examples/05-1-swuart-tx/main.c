@@ -25,18 +25,6 @@
 
 #include "config.h"
 
-/*  The UART and its baudrate
- *  Use software UART hw_swuart0 for devices that do not have a hardware UART
- */
-#if hw_id(hw_uart0) != 0
-#  define UART                  hw_uart0
-#else
-#  define UART                  hw_swuart0
-#endif
-
-#define BPS                     115200
-
-
 int
 main ( )
 {
@@ -48,11 +36,11 @@ main ( )
   /*  Configure the UART
    */
   hwa_config( UART,
-              bps,      BPS,
-              databits, 8,
-              parity,   none,
-              stopbits, 1,
-              );
+	      bps,	BPS,
+	      databits, 8,
+	      parity,	none,
+	      stopbits, 1,
+	      );
 
   /*  Write this configuration into the hardware
    */
@@ -62,11 +50,11 @@ main ( )
 
   for(;;) {
 
-    /*  Wait for 0.1s
+    /*	Wait for 0.1s
      */
     hw_delay_cycles( 0.1 * hw_syshz );
 
-    /*  Send a '.'
+    /*	Send a '.'
      */
     hw_write( UART, '.');
   }

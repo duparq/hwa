@@ -21,20 +21,7 @@
 
 #include "config.h"
 
-
-#if !defined PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
-
 #define UART                    hw_swuart0
-
-
-/*  We can change the system clock frequency if we do not use
- *  a crystal oscillator
- */
-#if !defined HW_DEVICE_CLK_SRC_HZ
-// #  define OSCCAL     0xFF
-#endif
 
 
 int
@@ -59,10 +46,11 @@ main ( )
               sleep,      enabled,
               sleep_mode, idle );
 
-  /*  Change the frequency of the RC oscillator
+  /*  We can change the system clock frequency if we do not use
+   *  a crystal oscillator
    */
-#if defined OSCCAL
-  hwa_write_reg( hw_core0, osccal, OSCCAL );
+#if !defined HW_DEVICE_CLK_SRC_HZ
+  //  hwa_write_reg( hw_core0, osccal, 0xFF );
 #endif
 
   /*  Write this configuration into the hardware

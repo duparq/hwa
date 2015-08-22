@@ -15,10 +15,18 @@
  * This is totally reversible, the LED shows when one UART resynchronizes.
  *
  * Notes:
- * 1. Do not leave an RX pin floating.
+ *
+ * 1. Do not leave an RX pin floating!
+ *
  * 2. Choose a moderate baudrate so that the CPU has the time to service
- * interrupts in a relatively reasonable time (19200 bps seems OK for
- * `hw_counter1` with internal 8 MHz RC oscilltor and OSCCAL=0xFF).
+ * interrupts in a relatively reasonable time (115200 bps seems OK for
+ * `hw_counter1` with internal 8 MHz RC oscilltor and OSCCAL=0xFF or the 16 MHz
+ * Nanodccduino).
+ *
+ * 3. CH340 USB/Serial adapter does not send parity bits under Linux (though no
+ * error is triggered). Then, the software UART never resynchronizes (it works
+ * in a Windows XP VirtualBoxed under Linux, so there must be a bug in the Linux
+ * driver).
  *
  * @par Test application
  *
@@ -32,10 +40,18 @@
 
 #include "config.h"
 
+#if defined HW_DEVICE_ATTINYX5
+#  error ATtinyX5 devices are not supported because the same pin-change interrupt controller can not be used for 2 different software UARTS
+#endif
+
 
 int
 main ( )
 {
+  /*  Increase the frequency of the RC oscillator to the max
+   */
+  hw_write_reg( hw_core0, osccal, 0xFF );
+
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
@@ -54,10 +70,6 @@ main ( )
               sleep,      enabled,
               sleep_mode, idle );
 
-  /*  Increase the frequency of the RC oscillator to the max
-   */
-  hwa_write_reg( hw_core0, osccal, 0xFF );
-
   /*  Write this configuration into the hardware
    */
   hwa_commit();
@@ -67,13 +79,12 @@ main ( )
   hw_enable_interrupts();
 
 
-  /*  Main loop:
-   *    synchronize UART
-   *    process incomming commands until error
+  /*  Main loop
    */
   for(;;) {
     /*
-     *  Resynchronize UART
+     *  Wait that one UART resynchronizes and configure the other with the same
+     *  baudrate
      */
     hw_write( PIN_LED, 1 );
 
@@ -86,6 +97,7 @@ main ( )
         hw_write_reg( hw_swuart1, dt0, hw_read_reg( hw_swuart0, dt0 ) );
         hw_write_reg( hw_swuart1, dtn, hw_read_reg( hw_swuart0, dtn ) );
         hw_write_reg( hw_swuart1, synced, 1 );
+        hw_write( hw_swuart1, '$');     /* signal the synchronization */
         break ;
       }
       if ( hw_stat(hw_swuart1).synced ) {
@@ -93,11 +105,15 @@ main ( )
         hw_write_reg( hw_swuart0, dt0, hw_read_reg( hw_swuart1, dt0 ) );
         hw_write_reg( hw_swuart0, dtn, hw_read_reg( hw_swuart1, dtn ) );
         hw_write_reg( hw_swuart0, synced, 1 );
+        hw_write( hw_swuart0, '$');     /* signal the synchronization */
         break ;
       }
     }
     hw_write( PIN_LED, 0 );
 
+    /*
+     *  Send on one UART what has been received from the other
+     */
     for(;;) {
       hw_sleep();
       if ( hw_stat(hw_swuart0).rxc ) {
@@ -105,7 +121,7 @@ main ( )
          *  UART0 -> UART0 + UART1
          */
         if ( hw_stat(hw_swuart0).stop == 0 )
-          break ;       /* null stop -> resynchronize */
+          break ;       /* null stop bit -> resynchronize */
 
         uint8_t byte = hw_read(hw_swuart0);
         hw_write( hw_swuart0, byte );
@@ -116,7 +132,7 @@ main ( )
          *  UART1 -> UART1 + UART0
          */
         if ( hw_stat(hw_swuart1).stop == 0 )
-          break ;       /* null stop -> resynchronize */
+          break ;       /* null stop bit -> resynchronize */
 
         uint8_t byte = hw_read(hw_swuart1);
         hw_write( hw_swuart1, byte );

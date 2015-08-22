@@ -11,22 +11,9 @@
  */
 
 
-/*  Include the target board (and device) definitions
+/*  Set a default target board
  */
-#if !defined BOARD_H
-#  define BOARD_H                       <boards/attiny84.h>
-#endif
-
 #include BOARD_H
-
-
-/*  The pin at which the LED is connected (already defined for Arduino
- *  boards). The target also defines the package of the device, then pin
- *  numbers can be used as well as pin names.
- */
-#ifndef PIN_LED
-#  define PIN_LED               hw_pin_7
-#endif
 
 
 /*  The counter
@@ -51,7 +38,7 @@ int main ( )
   /*  Configure the counter to count from 0 to its max and loop
    */
   hwa_config( COUNTER,
-              clock,     HW_G2(syshz_div, CLKDIV),
+              clock,     HW_G2(prescaler_output, CLKDIV),
               countmode, loop_up,
               bottom,    0,
               top,       max,
@@ -59,7 +46,7 @@ int main ( )
 
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */
-  hwa_write( hw_sub(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
+  hwa_write( hw_rel(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
 
   /*  Write this configuration into the hardware
    */
@@ -71,8 +58,8 @@ int main ( )
      *  When a compare-match occurs, clear the counter, clear the flag and count
      *  the elapsed millisecond
      */
-    if ( hw_stat(COUNTER).COMPARE ) {
-      hw_clear( COUNTER );
+    if ( hw_stat_irqf(COUNTER,COMPARE) ) {
+      hw_write( COUNTER, 0 );
       hw_clear_irqf( COUNTER, COMPARE );
       n++ ;
       if ( n >= (uint8_t)(PERIOD/0.001/2.0+0.5) ) {

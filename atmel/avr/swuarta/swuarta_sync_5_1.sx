@@ -1,7 +1,7 @@
 
 	;; -*- asm -*-
 
-	;; HW_SWUART0 auto-synchronization
+	;; Auto-synchronization for software UART
 	;;
 	;; This code is designed to be executed from the START ISR but must be
 	;; included after the cycles computations are done.
@@ -142,7 +142,7 @@ HW_G3(,hw_swuart,sync):
 	;;
 	;;	Add 16 cycles (better sooner than later!)
 	;;
-	DELAY=(CY_STSEI+CY_RXSEI+16)/HW_G2(hw_swuart,counter_clk_div)
+	DELAY=(CY_STSEI+CY_RXSEI+16)/HW_G2(hw_swuart,clk_div)
 
 #	if COUNT_BN == 8
 	lds	r24, dtn+0

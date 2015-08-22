@@ -33,7 +33,8 @@
 				      HW_IS(_irq,_hw_irq_##p##_##c))(p,c,__VA_ARGS__)
 #define _hw_irq3_1(p,c,...)	_hw_irq_##p##_##c
 #define _hw_irq3_0(p,...)	HW_G2(_hw_irq4, HW_IS(_irq,_hw_irq_##p))(p,__VA_ARGS__)
-#define _hw_irq4_1(p,...)	_hw_irq_##p, __VA_ARGS__
+//#define _hw_irq4_1(p,...)	_hw_irq_##p, __VA_ARGS__
+#define _hw_irq4_1(p,...)	_hw_irq_##p
 #define _hw_irq4_0(p,...)	HW_G2(_hw_irq5,HW_ISOBJ(p))(p,__VA_ARGS__)
 #define _hw_irq5_0(p,...)	HW_ERR("`"#p"` is not a HWA object.")
 #define _hw_irq5_1(p,...)	HW_ERR("`"#p"` has no IRQ `` or `" \
@@ -63,7 +64,7 @@
  * Syntax 2: `hw_irqe( hw_irq(object [, irq_name]) )`
  * @hideinitializer
  */
-#define hw_irqe(...)		_hw_irqe_2(hw_irqx(__VA_ARGS__))
+#define hw_irqe(...)		_hw_irqe_2(hw_irq(__VA_ARGS__))
 #define _hw_irqe_2(...)		HW_G2(_hw_irqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqe_0(...)		__VA_ARGS__
 #define _hw_irqe_1(t,v,p,e,f)	_hw_reg(p,e)
@@ -77,14 +78,15 @@
  * Syntax 2: `hw_irqf( hw_irq(object [, irq_name]) )`
  * @hideinitializer
  */
-#define hw_irqf(...)		_hw_irqf_2(hw_irqx(__VA_ARGS__))
+//#define hw_irqf(...)		_hw_irqf_2(hw_irqx(__VA_ARGS__))
+#define hw_irqf(...)		_hw_irqf_2(hw_irq(__VA_ARGS__))
 #define _hw_irqf_2(...)		HW_G2(_hw_irqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _hw_irqf_0(...)		__VA_ARGS__
 #define _hw_irqf_1(t,v,p,e,f)	_hw_reg(p,f)
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief Declaration of an ISR
  *
  * The `HW_ISR(...)` instruction accepts 2 optionnal arguments after the
@@ -160,7 +162,7 @@
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief  Stat an IRQ enable bit
  *
  * Get the state of the IRQ enable bit.
@@ -177,7 +179,7 @@
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief  Stat an IRQ flag bit
  *
  * Get the state of the IRQ flag bit.
@@ -188,13 +190,13 @@
  * @hideinitializer
  */
 #define hw_stat_irqf(...)		_hw_statirqf_2(hw_irq(__VA_ARGS__))
-#define _hw_statirqf_2(...)		HW_G2(_hw_statirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_statirqf_2(...)		HW_G2(_hw_statirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__,)
 #define _hw_statirqf_0(...)		__VA_ARGS__
 #define _hw_statirqf_1(t,v,o,e,f,...)	_hw_read_reg(o,f)
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
@@ -211,7 +213,7 @@
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  *
@@ -232,8 +234,8 @@
  * @brief  Clear an IRQ flag
  * @hideinitializer
  */
-#define _hw_mthd_hw_clear__irq		, _hw_clear_irq
 #define _hw_clear_irq(v,p,e,f, ... )	HW_TX(_hw_write_reg(p,f, 1 ), __VA_ARGS__)
+#define _hw_mthd_hw_clear__irq		, _hw_clear_irq
 
 
 /**
@@ -241,12 +243,12 @@
  * @brief  Clear irq flag
  * @hideinitializer
  */
-#define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
 #define _hwa_clear_irq(v,p,e,f, ... )	HW_TX(_hwa_write_reg(p,f, 1 ), __VA_ARGS__)
+#define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief Clear an IRQ flag
  * @hideinitializer
  *
@@ -256,7 +258,7 @@
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief Clear an IRQ flag
  * @hideinitializer
  *
@@ -271,7 +273,7 @@
 
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief	Clear an IRQ flag
  * @hideinitializer
  *
@@ -280,7 +282,7 @@
 #define hwa_clear_irqf(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
 
 /**
- * @ingroup public_obj_instructions
+ * @ingroup public_irq_instructions
  * @brief Clear an IRQ flag
  * @hideinitializer
  *
@@ -299,7 +301,7 @@
  * @brief	Stat irq flag
  * @hideinitializer
  */
-#define _hw_mthd_hw_stat__irq		, _hw_stat_irq
 #define _hw_stat_irq(v,o,e,f, ... )	HW_TX((_hw_read_reg(o,e)==1), __VA_ARGS__)
+#define _hw_mthd_hw_stat__irq		, _hw_stat_irq
 
 #endif /* !defined __ASSEMBLER__ */
