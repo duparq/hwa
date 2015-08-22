@@ -8,4 +8,4 @@ CONFIG		=	HW_DEVICE	\
 			PIN_LED		\
 			TIMEOUT
 
-include ../../../../make/Makefile
+include ../Makefile

@@ -6,12 +6,12 @@ SOURCES		=	main.c
 CONFIG		=	HW_DEVICE		\
 			hw_syshz		\
 			PIN_LED			\
-			INPUT_POS		\
-			INPUT_NEG		\
+			REFERENCE		\
+			PIN_ANALOG_INPUT	\
 			EDGE			\
 			COUNTER			\
 			COUNTER_CLK_DIV		\
 			COMPARE			\
-			PERIOD
+			ON_TIME
 
-include ../../../../make/Makefile
+include ../Makefile

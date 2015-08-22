@@ -8,11 +8,11 @@ SOURCES		=	main.c		\
 #
 CONFIG		=	HW_DEVICE			\
 			hw_syshz			\
-			hw_swuart0_pin_rx		\
-			hw_swuart0_pin_tx		\
-			hw_swuart0_counter		\
-			hw_swuart0_counter_clk_div	\
-			hw_swuart0_counter_compare	\
+			hw_swuart0_pin_rxd		\
+			hw_swuart0_pin_txd		\
+			hw_swuart0_autosync		\
+			hw_swuart0_compare		\
+			hw_swuart0_clk_div		\
 			UART				\
 			COUNTER				\
 			CAPTURE				\
@@ -27,4 +27,4 @@ CONFIG		=	HW_DEVICE			\
 			PIN_OUT3
 
 
-include ../../../../make/Makefile
+include ../Makefile

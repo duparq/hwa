@@ -9,4 +9,4 @@ CONFIG		=	HW_DEVICE	\
 			CLKDIV		\
 			COUNTMODE
 
-include ../../../../make/Makefile
+include ../Makefile

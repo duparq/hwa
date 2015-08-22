@@ -11,4 +11,4 @@ CONFIG		=	HW_DEVICE	\
 			COUNTMODE	\
 			PERIOD
 
-include ../../../../make/Makefile
+include ../Makefile

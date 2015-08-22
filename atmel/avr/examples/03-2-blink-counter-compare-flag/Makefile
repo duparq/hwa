@@ -11,4 +11,4 @@ CONFIG		=	HW_DEVICE	\
 			COMPARE		\
 			PERIOD
 
-include ../../../../make/Makefile
+include ../Makefile

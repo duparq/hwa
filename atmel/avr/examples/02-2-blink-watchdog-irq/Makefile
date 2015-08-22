@@ -5,6 +5,7 @@ SOURCES		=	main.c
 
 CONFIG		=	HW_DEVICE	\
 			hw_syshz	\
-			PIN_LED
+			PIN_LED		\
+			TIMEOUT
 
-include ../../../../make/Makefile
+include ../Makefile

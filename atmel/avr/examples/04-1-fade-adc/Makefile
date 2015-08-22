@@ -11,9 +11,9 @@ CONFIG		=	HW_DEVICE		\
 			PWM_TMAX		\
 			COMPARE_MIN		\
 			COMPARE_MAX		\
-			INPUT			\
+			PIN_ANALOG_INPUT	\
 			COUNTER			\
 			COUNTER_CLK_DIV		\
 			ADC_CLK_DIV
 
-include ../../../../make/Makefile
+include ../Makefile

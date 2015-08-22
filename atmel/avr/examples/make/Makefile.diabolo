@@ -1,0 +1,71 @@
+
+#	-*- makefile -*-
+
+#$(warning INCLUDE)
+CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
+
+
+#  Extract Diabolo parameters from sources
+#
+ifneq (,$(DEVICE))
+$(OUT).diabolo: $(SOURCES)
+#	@echo "RULE: $@: $^"
+	@mkdir -p $(OUTDIR)
+	@>$@
+	@for f in $(SOURCES) ; do \
+	  if $(CPP) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
+	    awk -F"[ ,]" '{print $$2 "=" $$3}' $@.tmp >$@ 				;\
+	    break									;\
+	  fi ;\
+	done
+#	@rm -f $@.tmp
+
+#-include $(OUT).diabolo
+endif
+
+
+#  Diabolo options
+#
+DIABOLO_OPTS	 += --mcu=$(DEVICE)
+#DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
+#DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
+DIABOLO_OPTS	 += --diag
+
+ifneq (,$(DIABOLO_BPS))
+   DIABOLO_OPTS	+= --bps=$(DIABOLO_BPS)		# From sources
+endif
+
+.PHONY: erase
+erase:
+	$(diabolo) $(DIABOLO_OPTS)	\
+		--erase-flash
+
+.PHONY: install
+rem-install: $(OUT).bin $(OUT).diabolo $(OUT).lst
+	$(diabolo) $(DIABOLO_OPTS)		\
+		--cache=/tmp/diabolo-cache.bin	\
+		--burn-flash $<
+
+#		--cache=build/flash-cache.bin	\
+
+install: $(OUT).bin $(OUT).diabolo $(OUT).hwa
+	@OUTDIR=$(OUTDIR) bash $(CWD)diabolo.sh	\
+		$(DIABOLO_OPTS)			\
+		--cache=/tmp/diabolo-cache.bin	\
+		--burn-flash $<
+
+
+#  Just start Diabolo to identify the device
+#
+.PHONY: diabolo
+diabolo: $(OUT).diabolo
+	@bash $(CWD)diabolo.sh $(DIABOLO_OPTS)
+
+.PHONY: identify
+identify:  $(OUT).diabolo $(OUT).hwa
+	@bash $(CWD)diabolo.sh $(DIABOLO_OPTS)
+
+
+.PHONY: reset
+reset:
+	$(diabolo) --reset

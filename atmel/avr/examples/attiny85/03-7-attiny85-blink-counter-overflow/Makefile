@@ -6,8 +6,9 @@ SOURCES		=	main.c
 CONFIG		=	HW_DEVICE	\
 			hw_syshz	\
 			COUNTER		\
-			CLKDIV		\
-			COUNTMODE	\
-			COMPARE
+			CLOCK_SRC	\
+			CLOCK_PSC	\
+			PWM_HZ		\
+			OUTPUT
 
-include ../Makefile
+include ../../Makefile
