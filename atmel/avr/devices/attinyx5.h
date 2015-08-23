@@ -393,6 +393,7 @@
  * `hw_acmp0`	|@ref atmelavr_acmpb "_acmpb"| Analog Comparator
  * `hw_adc0`	|@ref atmelavr_ad10c "_ad10c"| 10-bit Analog to Digital Converter
  * `hw_core0`	|@ref atmelavr_corea "_corea"| The core
+ * `hw_int0`	|@ref atmelavr_inta "_inta"  | External interrupt INT0
  * `hw_psc0`	|@ref atmelavr_psca "_psca"  | Counter 0 prescaler
  * `hw_counter0`|@ref atmelavr_c8a "_c8a"    | 8-bit counter-timer (T0)
  * `hw_oc00`	|@ref atmelavr_oc8a "_oc8a"    | Compare unit 0 of hw_counter0 (OC0A)
@@ -474,7 +475,7 @@
  * `hw_usi0,start`						| USI_STR     | USI start
  * `hw_wdog0`							| WDT	      | Watchdog timeout
  */
-#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    ie0,   if0
+#define _hw_irq_hw_int0			_irq,  1, hw_core0,    ie,    if
 #define _hw_irq_hw_pcic0		_irq,  2, hw_pcic0,    ie,    if
 #define _hw_irq_hw_counter1_compare0	_irq,  3, hw_oc10,     ie,    if
 #define _hw_irq_hw_oc10			_irq,  3, hw_oc10,     ie,    if
@@ -649,12 +650,9 @@ typedef struct {
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-/* #define _hw_core0_gimsk		   _r8, 0x5B, 0x60, 0x00 */
-/* #define _hw_core0_gifr			_r8, 0x5A, 0x60, 0x60 */
 #define _hw_core0_mcucr			_r8, 0x55, 0xFF, 0x00
 #define _hw_core0_mcusr			_r8, 0x54, 0x0F, 0x00
 #define _hw_core0_osccal		_r8, 0x51, 0xFF, 0x00
-/* #define _hw_core0_prr		   _r8, 0x40, 0x0F, 0x00 */
 
 /*	Object logical registers
  */
@@ -671,16 +669,21 @@ typedef struct {
 #define _hw_core0_porf			_ob1, mcusr, 1, 0
 #define _hw_core0_allrf			_ob1, mcusr, 4, 0	/* convenient */
 
-/* #define _hw_core0_ie0			_ob1, gimsk, 1, 6 */
-#define _hw_core0_ie0			_xob1, hw_shared, gimsk, 1, 6
 
-/* #define _hw_core0_if0			_ob1, gifr, 1, 6 */
-#define _hw_core0_if0			_xob1, hw_shared, gifr, 1, 6
+/*******************************************************************************
+ *									       *
+ *	External interrupt controller					       *
+ *									       *
+ *******************************************************************************/
 
-/* #define _hw_core0_prtim1		_ob1, prr, 1, 3 */
-/* #define _hw_core0_prtim0		_ob1, prr, 1, 2 */
-/* #define _hw_core0_prusi			_ob1, prr, 1, 1 */
-/* #define _hw_core0_pradc			_ob1, prr, 1, 0 */
+/*	Object				class, id, address
+ */
+#include "../classes/inta_1.h"
+#define _hw_int0			_inta, 110, 0
+
+#define _hw_int0_sc			_xob1, hw_core0,  mcucr, 2, 0
+#define _hw_int0_ie			_xob1, hw_shared, gimsk, 1, 6
+#define _hw_int0_if			_xob1, hw_shared, gifr,	 1, 6
 
 
 /*******************************************************************************

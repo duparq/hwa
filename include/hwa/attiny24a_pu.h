@@ -15,7 +15,7 @@
  */
 #define HW_DEVICE			attiny24a_pu
 #define HW_DEVICE_ATTINY24A_PU
-#define HW_DEVICE_PACKAGE		14pdip
+#define HW_DEVICE_PACKAGE_14P3
 
 #include "../../../atmel/avr/devices/attiny24.h"
 

@@ -369,8 +369,8 @@
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
  * `hw_core0`	 | @ref atmelavr_coreb "_coreb" | The core
- * `hw_int0`	 |                              | External interrupt INT0
- * `hw_int1`	 |                              | External interrupt INT1
+ * `hw_int0`	 | @ref atmelavr_inta "_inta"   | External interrupt INT0
+ * `hw_int1`	 | @ref atmelavr_inta "_inta"   | External interrupt INT1
  * `hw_portb`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port B (PORTB)
  * `hw_portc`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port C (PORTC)
  * `hw_portd`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port D (PORTD)
@@ -445,8 +445,8 @@
  * 
  * Interrupt definition                    | Atmel label  | Comments
  * :---------------------------------------|--------------|------------------------
- * `hw_core0,int0`                         | INT0         | External Interrupt Request 0
- * `hw_core0,int1`                         | INT1         | External Interrupt Request 1
+ * `hw_int0`                               | INT0         | External Interrupt Request 0
+ * `hw_int1`                               | INT1         | External Interrupt Request 1
  * `hw_pin_*,change`                       | PCINT0/1/2   | Pin Change Interrupt Request 0/1/2
  * `hw_wdog0`                              | WDT          | Watchdog Time-out Interrupt
  * `hw_oc20`<br>`hw_counter2,compare0`     | TIMER2 COMPA | Timer/Counter2 Compare Match A
@@ -460,9 +460,9 @@
  * `hw_oc01`<br>`hw_counter0,compare1`     | TIMER0 COMPB | Timer/Counter0 Compare Match B
  * `hw_counter0`<br>`hw_counter0,overflow` | TIMER0 OVF   | Timer/Counter0 Overflow
  * `hw_spi0`                               | SPI,STC      | SPI Serial Transfer Complete
- * `hw_uart0,rxc`                         | USART,RXC    | USART Rx Complete
- * `hw_uart0,txqne`                       | USART,UDRE   | USART, Data Register Empty
- * `hw_uart0,txc`                         | USART,TXC    | USART, Tx Complete
+ * `hw_uart0,rxc`                          | USART,RXC    | USART Rx Complete
+ * `hw_uart0,txqne`                        | USART,UDRE   | USART, Data Register Empty
+ * `hw_uart0,txc`                          | USART,TXC    | USART, Tx Complete
  * `hw_adc0`                               | ADC          | ADC conversion complete
  * `hw_eeprom0`                            | EE READY     | EEPROM ready
  * `hw_eeprom0,ready`                      | EE READY     | EEPROM ready
@@ -474,8 +474,8 @@
  * @ingroup atmegax8_interrupts
  * @brief Definition of the interrupts
  */
-#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    ie0, if0
-#define _hw_irq_hw_core0_int1		_irq,  2, hw_core0,    ie1, if1
+#define _hw_irq_hw_int0			_irq,  1, hw_int0,     ie,  if
+#define _hw_irq_hw_int1			_irq,  2, hw_int1,     ie,  if
 #define _hw_irq_hw_pcic0		_irq,  3, hw_pcic0,    ie,  if
 #define _hw_irq_hw_pcic1		_irq,  4, hw_pcic1,    ie,  if
 #define _hw_irq_hw_pcic2		_irq,  5, hw_pcic2,    ie,  if
@@ -558,6 +558,7 @@
  */
 #define _hw_shared_did1			_r8, 0x7F, 0x03, 0x00	/* DID for AIN0/AIN1 */
 #define _hw_shared_did0			_r8, 0x7E, 0x3F, 0x00 	/* DID for PORTC */
+#define _hw_shared_eicr			_r8, 0x69, 0x0F, 0x00
 #define _hw_shared_pcicr		_r8, 0x68, 0x07, 0x00
 #define _hw_shared_prr			_r8, 0x64, 0xEF, 0x00
 #define _hw_shared_gpior2		_r8, 0x4B, 0xFF, 0x00
@@ -577,6 +578,7 @@ typedef struct {
   /*  Hardware registers
    */
   hwa_r8_t	eimsk ;
+  hwa_r8_t	eicr ;
   hwa_r8_t	eifr ;
   hwa_r8_t	gtccr ;
   hwa_r8_t	prr ;
@@ -586,14 +588,6 @@ typedef struct {
   hwa_r8_t	pcifr ;
 } hwa_shared_t ;
 #endif
-
-/*	Object logical registers
- */
-#define _hw_shared_ie1			_ob1, eimsk, 1, 1
-#define _hw_shared_ie0			_ob1, eimsk, 1, 0
-
-#define _hw_shared_if1			_ob1, eifr, 1, 1
-#define _hw_shared_if0			_ob1, eifr, 1, 0
 
 
 /*******************************************************************************
@@ -898,6 +892,34 @@ typedef struct {
 
 #define _hw_core0_sm			_ob1, smcr, 3, 1
 #define _hw_core0_se			_ob1, smcr, 1, 0
+
+
+/*******************************************************************************
+ *									       *
+ *	External interrupt controllers					       *
+ *									       *
+ *******************************************************************************/
+
+/*	Object				class, id, address
+ */
+#include "../classes/inta_1.h"
+#define _hw_int0			_inta, 110, 0
+
+/*	Object logical registers
+ */
+#define _hw_int0_sc			_xob1, hw_shared, eicr,  2, 0
+#define _hw_int0_ie			_xob1, hw_shared, eimsk, 1, 0
+#define _hw_int0_if			_xob1, hw_shared, eifr,  1, 0
+
+/*	Object				class, id, address
+ */
+#define _hw_int1			_inta, 111, 0
+
+/*	Object logical registers
+ */
+#define _hw_int1_sc			_xob1, hw_shared, eicr,  2, 2
+#define _hw_int1_ie			_xob1, hw_shared, eimsk, 1, 1
+#define _hw_int1_if			_xob1, hw_shared, eifr,  1, 1
 
 
 /*******************************************************************************
@@ -1619,6 +1641,7 @@ typedef struct {
 #include "../classes/io1a_2.h"
 #include "../classes/p8a_2.h"
 #include "../classes/coreb_2.h"
+#include "../classes/inta_2.h"
 #include "../classes/pcica_2.h"
 #include "../classes/wdogb_2.h"
 #include "../classes/oc8a_2.h"
@@ -1641,6 +1664,7 @@ HW_INLINE void _hwa_create_context( hwa_t *hwa )
 {
   _hwa_create_reg( hw_shared, eimsk );
   _hwa_create_reg( hw_shared, eifr  );
+  _hwa_create_reg( hw_shared, eicr  );
   _hwa_create_reg( hw_shared, gtccr );
   _hwa_create_reg( hw_shared, prr   );
   _hwa_create_reg( hw_shared, did1  );
@@ -1681,6 +1705,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init_reg( hw_shared, eimsk, 0 );
   _hwa_init_reg( hw_shared, eifr,  0 );
+  _hwa_init_reg( hw_shared, eicr,  0 );
   _hwa_init_reg( hw_shared, gtccr, 0 );
   _hwa_init_reg( hw_shared, prr,   0 );
   _hwa_init_reg( hw_shared, did1,  0 );
@@ -1725,6 +1750,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 
   _hwa_commit_reg( hw_shared, eimsk );
   _hwa_commit_reg( hw_shared, eifr  );
+  _hwa_commit_reg( hw_shared, eicr  );
   _hwa_commit( hw_core0 );
   _hwa_commit_reg( hw_shared, prr   );
   _hwa_commit( hw_wdog0 );

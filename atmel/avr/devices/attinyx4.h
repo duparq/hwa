@@ -364,7 +364,7 @@
  * Object name   |Class                           | Comments
  * :-------------|--------------------------------|:--------------------------------------
  * `hw_core0`    |@ref atmelavr_corea "_corea"    | The core
- * `hw_int0`     |                                | External interrupt INT0
+ * `hw_int0`	 |@ref atmelavr_inta "_inta"      | External interrupt INT0
  * `hw_porta`    |@ref atmelavr_p8a "_p8a"        | General purpose I/O port A (PORTA)
  * `hw_portb`    |@ref atmelavr_p8a "_p8a"        | General purpose I/O port B (PORTB)
  * `hw_pcic0`    |@ref atmelavr_pcica "_pcica"    | Pin change interrupt controller
@@ -433,7 +433,7 @@
  * 
  * Interrupt name	  | Atmel label | Comments
  * :----------------------|-------------|------------------------
- * `hw_core0,int0`	  | INT0	| External interrupt INT0
+ * `hw_int0`	  	  | INT0	| External interrupt INT0
  * `hw_pcic0`	          | PCINT0	| Pin-change interrupt
  * `hw_pcic1`	          | PCINT1	| Pin-change interrupt
  * `hw_wdog0`		  | WDT		| Watchdog timeout
@@ -452,7 +452,7 @@
  * `hw_usi0,overflow`	  | USI_OVF	| USI overflow
  * `hw_usi0,txc`	  | USI_OVF	| USI overflow (transmit completed)
  */
-#define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    ie0, if0
+#define _hw_irq_hw_int0			_irq,  1, hw_core0,    ie,  if
 #define _hw_irq_hw_pcic0		_irq,  2, hw_pcic0,    ie,  if
 #define _hw_irq_hw_pcic1		_irq,  3, hw_pcic1,    ie,  if
 #define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    ie,  if
@@ -519,14 +519,6 @@ typedef struct {
   hwa_r8_t	did ;
 } hwa_shared_t ;
 #endif
-
-/* #define _hw_core0_ie0			_ob1, gimsk, 1, 6 */
-/* #define _hw_core0_if0			_ob1, gifr, 1, 6 */
-
-/* #define _hw_core0_prtim1		_ob1, prr, 1, 3 */
-/* #define _hw_core0_prtim0		_ob1, prr, 1, 2 */
-/* #define _hw_core0_prusi			_ob1, prr, 1, 1 */
-/* #define _hw_core0_pradc			_ob1, prr, 1, 0 */
 
 
 /*******************************************************************************
@@ -697,11 +689,16 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	INT0 interrupt controller					       *
+ *	External interrupt controller					       *
  *									       *
  *******************************************************************************/
 
-#define _hw_int0_isc			_xob1, hw_core0,  mcucr, 2, 0
+/*	Object				class, id, address
+ */
+#include "../classes/inta_1.h"
+#define _hw_int0			_inta, 110, 0
+
+#define _hw_int0_sc			_xob1, hw_core0,  mcucr, 2, 0
 #define _hw_int0_ie			_xob1, hw_shared, gimsk, 1, 6
 #define _hw_int0_if			_xob1, hw_shared, gifr,	 1, 6
 
@@ -727,15 +724,6 @@ typedef struct {
 #define _hw_pcic0_ie			_xob1, hw_shared, gimsk, 1, 4
 #define _hw_pcic0_if			_xob1, hw_shared, gifr,	 1, 4
 
-/* #define _hw_pcic0_ie0			_ob1, msk, 1, 0 */
-/* #define _hw_pcic0_ie1			_ob1, msk, 1, 1 */
-/* #define _hw_pcic0_ie2			_ob1, msk, 1, 2 */
-/* #define _hw_pcic0_ie3			_ob1, msk, 1, 3 */
-/* #define _hw_pcic0_ie4			_ob1, msk, 1, 4 */
-/* #define _hw_pcic0_ie5			_ob1, msk, 1, 5 */
-/* #define _hw_pcic0_ie6			_ob1, msk, 1, 6 */
-/* #define _hw_pcic0_ie7			_ob1, msk, 1, 7 */
-
 /*	Object				class, id, address
  */
 #define _hw_pcic1			_pcica, 351, 0
@@ -748,11 +736,6 @@ typedef struct {
  */
 #define _hw_pcic1_ie			_xob1, hw_shared, gimsk, 1, 5
 #define _hw_pcic1_if			_xob1, hw_shared, gifr,	 1, 5
-
-/* #define _hw_pcic1_ie0			_ob1, msk, 1, 0 */
-/* #define _hw_pcic1_ie1			_ob1, msk, 1, 1 */
-/* #define _hw_pcic1_ie2			_ob1, msk, 1, 2 */
-/* #define _hw_pcic1_ie3			_ob1, msk, 1, 3 */
 
 
 /*******************************************************************************
@@ -778,7 +761,6 @@ typedef struct {
 
 #define _hw__wdoga_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
 #define _hw__wdoga_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
-//#define _hw__wdoga_wdall		_cb1, csr, 7, 0 /* convenient for turning wd off */
 
 #define _hw__wdoga_wdrf			_xob1, hw_core0, mcusr, 1, 3
 
@@ -1103,7 +1085,6 @@ typedef struct {
 #define _hw__ad10a_ps			_cb1, sra, 3, 0
 
 #define _hw__ad10a_bin			_cb1, srb, 1, 7
-//#define _hw__ad10a_me			_cb1, srb, 1, 6	/* ACME */
 #define _hw__ad10a_lar			_cb1, srb, 1, 4
 #define _hw__ad10a_ts			_cb1, srb, 3, 0
 
