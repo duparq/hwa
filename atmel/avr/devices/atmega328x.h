@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief  ATmega328(P)
+ * @brief Atmel AVR ATmega328 / ATmega328P
  *
  *  Differences between versions:
  *    brown-out detector can be disabled by software in P versions

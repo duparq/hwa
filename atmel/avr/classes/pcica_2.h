@@ -6,86 +6,101 @@
 
 /**
  * @file
+ * @brief Pin change interrupt controller
  */
-
-/*	Atmel AVR pin change interrupt controller model 'a'
- *
- *	Used in: ATtinyX4
- */
-
-#define _hwa_create__pcica(o,i,a)		\
-  _hwa_create_reg( o, msk0 );			\
-  _hwa_create_reg( o, msk1 );
-
-#define _hwa_init__pcica(o,i,a)		\
-  _hwa_init_reg( o, msk0, 0x00 );		\
-  _hwa_init_reg( o, msk1, 0x00 );
-
-#define _hwa_commit__pcica(o,i,a)		\
-  _hwa_commit_reg( o, msk0 );			\
-  _hwa_commit_reg( o, msk1 );
-
-
-/* HW_INLINE void _hwa_begin_p__pcica ( hwa_pcica_t *p, intptr_t address ) */
-/* { */
-/*   _hwa_create_reg_p( p, address, _pcica, msk0 ); */
-/*   _hwa_create_reg_p( p, address, _pcica, msk1 ); */
-/* } */
-
-
-/* HW_INLINE void _hwa_init_p__pcica ( hwa_pcica_t *p ) */
-/* { */
-/*   _hwa_set__r8( &p->msk0, 0x00 ); */
-/*   _hwa_set__r8( &p->msk1, 0x00 ); */
-/* } */
-
-
-/* HW_INLINE void _hwa_commit_p__pcica ( hwa_t *hwa, hwa_pcica_t *p ) */
-/* { */
-/*   _hwa_commit_reg_p( p, _pcica, msk0 ); */
-/*   _hwa_commit_reg_p( p, _pcica, msk1 ); */
-/* } */
-
-
-#define _hw_mthd_hw_write__pcica		, _hw_write_pcica
-#define _hw_mthd_hw_turn__pcica			, _hw_turn_pcica
 
 
 /**
  * @page atmelavr_pcica
- * @section atmelavr_pcica_select Changing the pins that are monitored
+ * @section atmelavr_pcica_mon Monitored pins
+ *
+ * The instruction `hw_turn()` or `hwa_turn()` is used to change the pins of a
+ * I/O definition (that can be a single or several pins) that a class `_pcica`
+ * object monitors:
  *
  * @code
- * hw_write( hw_pcic0, hw_pin_pa2, 1 );
- * @endcode
- * @code
- * hw_turn( hw_pcic0, hw_pin_pa2, on );
+ * hw_turn( PCIC_NAME, IO_NAME, on | off);
  * @endcode
  */
-#define _hw_write_pcica( p,i,a, pn, v, ...)	HW_TX(_hw_write_pcica_2(p,pn,v),__VA_ARGS__)
-#define _hw_write_pcica_2(p,pn,v)		hw_write_reg(p,pn,v)
+#define _hw_mthd_hw_turn__pcica			, _hw_tnpcica
+#define _hw_tnpcica( o,i,a, ...)		_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
 
-#define _hw_turn_pcica( p,i,a, pn, v, ...)	HW_TX(_hw_turn_pcica_2(p,pn,v),__VA_ARGS__)
-#define _hw_turn_pcica_2(p,pn,v)		HW_G2(_hw_turn_pcica,HW_IS(,_hw_state_##v))(p,pn,v)
-#define _hw_turn_pcica_1(p,pn,v)		hw_write_reg(p,pn,HW_A1(_hw_state_##v))
+#define _hw_is__io1a__io1a			, 1
 
 
 /**
  * @page atmelavr_pcica
- * @section atmelavr_pcica_turnirq Interrupts
- *
- * Use the `hw_turn_irq(...)` or `hwa_turn_irq(...)` instruction to enable or
- * disable a pin change IRQ.
- *
  * @code
- * hw_turn_irq( hw_pcic0, hw_pin_pa2, on );	// Enable IRQ on PA2 change
- * hw_turn_irq( hw_pcic0, hw_pin_pb1, off );	// Disable IRQ on PB1 change
+ * hwa_turn( PCIC_NAME, IO_NAME, on | off);
  * @endcode
+ */
+#define _hw_mthd_hwa_turn__pcica		, _hwa_tnpcica
+#define _hwa_tnpcica( o,i,a, ...)		_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
+
+/*	Verify that a I/O name is given
+ */
+#define _hwx_tnpcica1(x,o,io,...)	HW_G2(_hwx_tnpcica1,HW_IS(_io1a,_##io))(x,o,io,__VA_ARGS__)
+#define _hwx_tnpcica1_0(x,o,io,...)	HW_ERR("device has no I/O pin named `" #io "`.")
+
+/*	Verify that a state is given
+ */
+#define _hwx_tnpcica1_1(x,o,io,v,...)	HW_G2(_hwx_tnpcica2,HW_IS(,_hw_state_##v))(x,o,io,v,__VA_ARGS__)
+
+#define _hwx_tnpcica2_0(x,o,io,v,...)	HW_ERR("`" #o "` can turn `" #io "` `on` of `off`, but not `" #v "`.")
+#define _hwx_tnpcica2_1(x,o,io,v,...)	HW_TX(_hwx_tnpcica2_2(x,o,_##io,v),__VA_ARGS__)
+#define _hwx_tnpcica2_2(...)			_hwx_tnpcica2_3(__VA_ARGS__)
+//#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg(o,ie##bp,HW_A1(_hw_state_##v))
+#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg_msk(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
+
+
+/**
+ * @page atmelavr_pcica
+ * @section atmelavr_pcica_stat Status
+ *
+ * The pin change IRQ flag and the enable bit can be accessed through
+ * interrupt-related instructions:
  *
  * @code
- * HW_ISR( hw_pcic0, hw_pin_pa2 )
- * {
- *	// Service PA2 change interrupt
+ * if ( hw_stat_irqf( PCIC_NAME ) ) {        // Read pin change flag
+ *   hw_clear_irqf( PCIC_NAME );             // Clear pin change flag
+ *   hw_turn_irq( PCIC_NAME, off );          // Disable pin change IRQ
  * }
  * @endcode
+ */
+
+
+/**
+ * @page atmelavr_pcica
+ * @section Internals
+ *
+ * Though it should not be necessary, the internal registers are accessible
+ * through the @ref public_reg_instructions "register access intructions".
+ *
+ * Class `_pcica` objects have the following hardware registers:
+ *
+ *  * `msk`: mask of monitored pins
+ *
+ * and the following logical registers:
+ *
+ *  * `ie`: pin change IRQ mask
+ *  * `if`: pin change IRQ flag
+ */
+
+
+/*******************************************************************************
+ *                                                                             *
+ *      Context management						       *
+ *                                                                             *
+ *******************************************************************************/
+
+#define _hwa_create__pcica(o,i,a)	_hwa_create_reg( o, msk )
+
+#define _hwa_init__pcica(o,i,a)		_hwa_init_reg( o, msk, 0x00 )
+
+#define _hwa_commit__pcica(o,i,a)	_hwa_commit_reg( o, msk )
+
+
+/**
+ * @page atmelavr_pcica
+ * <br>
  */

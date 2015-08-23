@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief ATmega328P header file
+ * @brief Atmel AVR ATmega328P
  */
 
 /*  Differences between P/non P versions:

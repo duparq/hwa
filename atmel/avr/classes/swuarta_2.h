@@ -6,6 +6,7 @@
 
 /**
  * @file
+ * @brief Software-emulated UART
  */
 
 /**
@@ -85,9 +86,9 @@ HW_INLINE void _hw_swuart0_config ( hwa_t *hwa __attribute__((unused)) )
    */
 #if defined hw_swuart0_pin_rxd
   hwa_config( hw_swuart0_pin_rxd, direction, input );
-  hwa_clear_irqf( hw_swuart0_pin_rxd, change );
-  hwa_turn_irq( hw_swuart0_pin_rxd, change, on );
-  hwa_write_reg( hw_pcic0, hw_swuart0_pin_rxd, 1 );
+  hwa_clear_irqf( hw_rel(hw_swuart0_pin_rxd,pcic) );
+  hwa_turn_irq( hw_rel(hw_swuart0_pin_rxd,pcic), on );
+  hwa_turn( hw_rel(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #endif
 
   /*  TXD pin
@@ -130,10 +131,15 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
   /*  RXD pin
    */
 #if defined hw_swuart1_pin_rxd
-  hwa_config(hw_swuart1_pin_rxd, direction, input);
-  hwa_clear_irqf(hw_swuart1_pin_rxd, change);
-  hwa_turn_irq(hw_swuart1_pin_rxd, change, on);
-  hwa_write_reg( hw_pcic0, hw_swuart1_pin_rxd, 1 );
+  /* hwa_config(hw_swuart1_pin_rxd, direction, input); */
+  /* hwa_clear_irqf(hw_swuart1_pin_rxd, change); */
+  /* hwa_turn_irq(hw_swuart1_pin_rxd, change, on); */
+  /* hwa_write_reg( hw_pcic0, hw_swuart1_pin_rxd, 1 ); */
+
+  hwa_config( hw_swuart1_pin_rxd, direction, input );
+  hwa_clear_irqf( hw_rel(hw_swuart1_pin_rxd,pcic) );
+  hwa_turn_irq( hw_rel(hw_swuart1_pin_rxd,pcic), on );
+  hwa_turn( hw_rel(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #endif
 
   /*  TXD pin

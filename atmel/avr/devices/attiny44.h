@@ -4,6 +4,11 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/**
+ * @file
+ * @brief Atmel AVR ATtiny44
+ */
+
 #define HW_DEVICE_SIGNATURE		0x1E,0x92,0x07
 #define HW_DEVICE_FLASH_SIZE		4096
 #define HW_DEVICE_FLASH_PAGE_SIZE	64

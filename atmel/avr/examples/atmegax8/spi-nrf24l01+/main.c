@@ -12,7 +12,7 @@
  * @par nRF24L01+ module wiring
  *
  *                   Gnd  [1](2)  Vcc
- *            Gnd <- CE   (3)(4)  CSN  -> 
+ *            Gnd <- CE   (3)(4)  CSN  -> SS
  *            SCL <- SCK  (5)(6)  MOSI -> MOSI
  *           MISO <- MISO (7)(8)  IRQ
  *

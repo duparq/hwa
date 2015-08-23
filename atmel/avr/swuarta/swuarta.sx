@@ -120,8 +120,10 @@
 #endif
 
 #if hw_id(hw_rel(hw_swuart,_pin_rxd))
-#  define START_IE	hw_ap(hw_irqe(hw_rel(hw_swuart,_pin_rxd), change))
-#  define START_IF	hw_ap(hw_irqf(hw_rel(hw_swuart,_pin_rxd), change))
+//#  define START_IE	hw_ap(hw_irqe(hw_rel(hw_swuart,_pin_rxd), change))
+#  define START_IE	hw_ap(hw_irqe(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)))
+//#  define START_IF	hw_ap(hw_irqf(hw_rel(hw_swuart,_pin_rxd), change))
+#  define START_IF	hw_ap(hw_irqf(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)))
 #endif /* defined PINRX */
 
 
@@ -174,8 +176,9 @@ HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
 	;;
 	;; Look at the end of this file for CY_ values.
 	;;
-	.global HW_ISR(hw_rel(hw_swuart,_pin_rxd),change)
-HW_ISR(hw_rel(hw_swuart,_pin_rxd),change):
+	.global HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic))
+;; HW_ISR(hw_rel(hw_swuart,_pin_rxd),change):
+HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)):
 	CYCLES=4		; [4] <- call
 
 	.if DBG_RXSTART1

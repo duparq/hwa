@@ -25,9 +25,6 @@ HWA provides the following classes for Atmel AVR devices:
 * @subpage atmelavr_oc8b
 * @subpage atmelavr_p8a
 * @subpage atmelavr_pcica
-* @subpage atmelavr_pcicb
-* @subpage atmelavr_pcicc
-* @subpage atmelavr_pcicd
 * @subpage atmelavr_psca
 * @subpage atmelavr_pscb
 * @subpage atmelavr_swuarta

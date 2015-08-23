@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief ATtiny25/45/85 devices
+ * @brief Atmel AVR ATtiny25/45/85
  */
 
 #include "../hwa_1.h"
@@ -404,7 +404,7 @@
  * `hw_dtg1`	|@ref atmelavr_dtga "_dtga"  | Dead time generator for `hw_counter1` compare outputs
  * `hw_eeprom0` |@ref atmelavr_eeproma "_eeproma"| Eeprom memory
  * `hw_flash0`	|@ref atmelavr_flasha "_flasha"	 | Flash memory
- * `hw_pcic0`	|@ref atmelavr_pcicd "_pcicd"| Pin change interrupt controller
+ * `hw_pcic0`	|@ref atmelavr_pcica "_pcica"| Pin change interrupt controller
  * `hw_portb`	|@ref atmelavr_p8a "_p8a"  | General purpose I/O port B (PORTB)
  * `hw_usi0`	|@ref atmelavr_usia "_usia"  | Universal Serial Interface
  * `hw_wdog0`	|@ref atmelavr_wdoga "_wdoga"| Watchdog (WDG)
@@ -476,12 +476,6 @@
  */
 #define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    ie0,   if0
 #define _hw_irq_hw_pcic0		_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb0_change	_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb1_change	_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb2_change	_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb3_change	_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb4_change	_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_pin_pb5_change	_irq,  2, hw_pcic0,    ie,    if
 #define _hw_irq_hw_counter1_compare0	_irq,  3, hw_oc10,     ie,    if
 #define _hw_irq_hw_oc10			_irq,  3, hw_oc10,     ie,    if
 #define _hw_irq_hw_counter1		_irq,  4, hw_counter1, ie,    if
@@ -615,6 +609,15 @@ typedef struct {
 #define _hw_pin_pb1_did			_xob1, hw_shared, did, 1, 1	/* AIN1 */
 #define _hw_pin_pb0_did			_xob1, hw_shared, did, 1, 0	/* AIN0 */
 
+/*  Relative pin change controllers
+ */
+#define hw_pin_pb0pcic			hw_pcic0
+#define hw_pin_pb1pcic			hw_pcic0
+#define hw_pin_pb2pcic			hw_pcic0
+#define hw_pin_pb3pcic			hw_pcic0
+#define hw_pin_pb4pcic			hw_pcic0
+#define hw_pin_pb5pcic			hw_pcic0
+
 /*  Pin numbers
  */
 #if defined HW_DEVICE_PACKAGE_8P3
@@ -688,26 +691,17 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#include "../classes/pcicd_1.h"
-#define _hw_pcic0			_pcicd, 350, 0
+#include "../classes/pcica_1.h"
+#define _hw_pcic0			_pcica, 350, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_pcic0_msk0			_r8, 0x35, 0x3F, 0x00
+#define _hw_pcic0_msk			_r8, 0x35, 0x3F, 0x00
 
 /*	Object logical registers
  */
-/* #define _hw_pcic0_ie			_xob1, hw_core0, gimsk, 1, 5 */
-/* #define _hw_pcic0_if			_xob1, hw_core0, gifr,	1, 5 */
 #define _hw_pcic0_ie			_xob1, hw_shared, gimsk, 1, 5
 #define _hw_pcic0_if			_xob1, hw_shared, gifr,	 1, 5
-
-#define _hw_pcic0_hw_pin_pb0		_ob1, msk0, 1, 0
-#define _hw_pcic0_hw_pin_pb1		_ob1, msk0, 1, 1
-#define _hw_pcic0_hw_pin_pb2		_ob1, msk0, 1, 2
-#define _hw_pcic0_hw_pin_pb3		_ob1, msk0, 1, 3
-#define _hw_pcic0_hw_pin_pb4		_ob1, msk0, 1, 4
-#define _hw_pcic0_hw_pin_pb5		_ob1, msk0, 1, 5
 
 
 /*******************************************************************************
@@ -1235,7 +1229,7 @@ typedef struct {
 
   hwa_corea_t	hw_core0 ;
   hwa_p8a_t	hw_portb ;
-  hwa_pcicd_t	hw_pcic0 ;
+  hwa_pcica_t	hw_pcic0 ;
   hwa_wdoga_t	hw_wdog0 ;
 
   hwa_oc8a_t	hw_oc00 ;
@@ -1257,7 +1251,7 @@ typedef struct {
 #include "../classes/corea_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p8a_2.h"
-#include "../classes/pcicd_2.h"
+#include "../classes/pcica_2.h"
 #include "../classes/wdoga_2.h"
 #include "../classes/psca_2.h"
 #include "../classes/oc8a_2.h"

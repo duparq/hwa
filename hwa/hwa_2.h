@@ -473,14 +473,30 @@
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
-/*  Write some bits of a memory definition
+/**
+ * @ingroup private
+ * @brief Write some bits of a memory definition
+ * @hideinitializer
  *
  *	_hw_write_bits( mdef, bn, bp, v );
  */
 #define _hw_write_bits(...)		_hw_wrb(__VA_ARGS__)
 #define _hw_wrb(t,...)			_hw_wrb_##t(__VA_ARGS__)
-#define _hw_wrb__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, bn,bp, v)\
-  _hw_write_##rc(a+ra,rwm,rfm,bn,bp,v)
+#define _hw_wrb__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, bn,bp, v)	\
+    _hw_write_##rc(a+ra,rwm,rfm,bn,bp,v)
+
+/**
+ * @ingroup private
+ * @brief Write some bits of a hardware register
+ * @hideinitializer
+ *
+ *	_hwa_write_reg_msk( o, r, m, v );
+ */
+#define _hwa_write_reg_msk(o,r,m,v)	_hwa_wrrm1(_hw_reg(o,r),m,v)
+#define _hwa_wrrm1(...)			_hwa_wrrm2(__VA_ARGS__)
+#define _hwa_wrrm2(t,...)		_hwa_wrrm_##t(__VA_ARGS__)
+#define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
+    _hwa_write_##rc##_msk(&hwa->o.r,rwm,rfm,m,v)
 
 
 /**
@@ -664,7 +680,7 @@ HW_INLINE void _hwa_set__r16 ( hwa_r16_t *r, uint16_t v )
  * @param r	register pointer.
  * @param rwm	writeable bits mask of the register.
  * @param rfm	flag bits mask of the register.
- * @param bn	number of consecutive bits conderned.
+ * @param bn	number of consecutive bits concerned.
  * @param bp	position of the least significant bit in the register.
  * @param v	value to write.
  */
@@ -699,6 +715,46 @@ HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
 }
+
+
+/**
+ * @ingroup private
+ * @brief  Write into one 8-bit context register.
+ *
+ * Write value `v` into `msk` bits of the context register pointed by
+ * `r`. Trying to write `1`s into non-writeable bits triggers an error.
+ *
+ * The mask of modified values `mmask` is set according to `msk` even if
+ * the value is not modified. `_hwa_commit__r8()` will check if the register has
+ * effectively been modified.
+ *
+ * @param r	register pointer.
+ * @param rwm	writeable bits mask of the register.
+ * @param rfm	flag bits mask of the register.
+ * @param msk	mask of bits concerned.
+ * @param v	value to write.
+ */
+HW_INLINE void _hwa_write__r8_msk ( hwa_r8_t *r, 
+				    uint8_t rwm, uint8_t rfm,
+				    uint8_t msk, uint8_t v )
+{
+  if (v & ~msk)
+    HWA_ERR("value overflows the mask.");
+
+  if ((rwm & msk) != msk)
+    HWA_ERR("trying to modify bits that are not writeable.");
+
+  if ((r->mmask & msk) != 0 && (r->mvalue & msk) != v)
+    HWA_ERR("committing is required before setting a new value.");
+
+  if ( msk & rfm )
+    if ( v == 0 )
+      HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+
+  r->mmask |= msk ;
+  r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
+}
+
 
 HW_INLINE void _hwa_write__r16 ( hwa_r16_t *r,
 				uint16_t rwm, uint16_t rfm,

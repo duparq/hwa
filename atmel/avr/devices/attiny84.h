@@ -6,6 +6,7 @@
 
 /**
  * @file
+ * @brief Atmel AVR ATtiny84
  */
 
 #define HW_DEVICE                       attiny84

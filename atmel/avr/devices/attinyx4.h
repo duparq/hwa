@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief ATtiny24/44/84 devices
+ * @brief Atmel AVR ATtiny24/44/84
  */
 
 #include "../hwa_1.h"
@@ -368,6 +368,7 @@
  * `hw_porta`    |@ref atmelavr_p8a "_p8a"        | General purpose I/O port A (PORTA)
  * `hw_portb`    |@ref atmelavr_p8a "_p8a"        | General purpose I/O port B (PORTB)
  * `hw_pcic0`    |@ref atmelavr_pcica "_pcica"    | Pin change interrupt controller
+ * `hw_pcic1`    |@ref atmelavr_pcica "_pcica"    | Pin change interrupt controller
  * `hw_wdog0`    |@ref atmelavr_wdoga "_wdoga"    | Watchdog (WDG)
  * `hw_counter0` |@ref atmelavr_c8a "_c8a"        | 8-bit counter-timer (T0)
  * `hw_psc0`     |@ref atmelavr_psca "_psca"      | hw_counter0/hw_counter1 prescaler (PSC0)
@@ -433,7 +434,8 @@
  * Interrupt name	  | Atmel label | Comments
  * :----------------------|-------------|------------------------
  * `hw_core0,int0`	  | INT0	| External interrupt INT0
- * `hw_pin_*,change`	  | PCINT0/1	| Pin-change interrupt
+ * `hw_pcic0`	          | PCINT0	| Pin-change interrupt
+ * `hw_pcic1`	          | PCINT1	| Pin-change interrupt
  * `hw_wdog0`		  | WDT		| Watchdog timeout
  * `hw_counter1,capture0` | TIM1_CAPT	| Capture event on counter 1
  * `hw_counter1,compare0` | TIM1_COMPA	| Compare-match A on counter 1
@@ -451,20 +453,8 @@
  * `hw_usi0,txc`	  | USI_OVF	| USI overflow (transmit completed)
  */
 #define _hw_irq_hw_core0_int0		_irq,  1, hw_core0,    ie0, if0
-#define _hw_irq_hw_pin_pa0_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa1_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa2_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa3_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa4_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa5_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa6_change	_irq,  2, hw_pcic0,    ie0, if0
-#define _hw_irq_hw_pin_pa7_change	_irq,  2, hw_pcic0,    ie0, if0
-
-#define _hw_irq_hw_pin_pb0_change	_irq,  3, hw_pcic0,    ie1, if1
-#define _hw_irq_hw_pin_pb1_change	_irq,  3, hw_pcic0,    ie1, if1
-#define _hw_irq_hw_pin_pb2_change	_irq,  3, hw_pcic0,    ie1, if1
-#define _hw_irq_hw_pin_pb3_change	_irq,  3, hw_pcic0,    ie1, if1
-
+#define _hw_irq_hw_pcic0		_irq,  2, hw_pcic0,    ie,  if
+#define _hw_irq_hw_pcic1		_irq,  3, hw_pcic1,    ie,  if
 #define _hw_irq_hw_wdog0		_irq,  4, hw_wdog0,    ie,  if
 #define _hw_irq_hw_counter1_capture0	_irq,  5, hw_ic10,     ie,  if
 #define _hw_irq_hw_ic10			_irq,  5, hw_ic10,     ie,  if
@@ -630,6 +620,22 @@ typedef struct {
 #define _hw_pin_pa6_did			_xob1, hw_shared, did, 1, 6
 #define _hw_pin_pa7_did			_xob1, hw_shared, did, 1, 7
 
+/*  Relative pin change controllers
+ */
+#define hw_pin_pa0pcic			hw_pcic0
+#define hw_pin_pa1pcic			hw_pcic0
+#define hw_pin_pa2pcic			hw_pcic0
+#define hw_pin_pa3pcic			hw_pcic0
+#define hw_pin_pa4pcic			hw_pcic0
+#define hw_pin_pa5pcic			hw_pcic0
+#define hw_pin_pa6pcic			hw_pcic0
+#define hw_pin_pa7pcic			hw_pcic0
+
+#define hw_pin_pb0pcic			hw_pcic1
+#define hw_pin_pb1pcic			hw_pcic1
+#define hw_pin_pb2pcic			hw_pcic1
+#define hw_pin_pb3pcic			hw_pcic1
+
 /*	Pins by numbers
  */
 #if defined HW_DEVICE_PACKAGE_14P3
@@ -702,7 +708,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Pin-change interrupt controller					       *
+ *	Pin-change interrupt controllers				       *
  *									       *
  *******************************************************************************/
 
@@ -714,30 +720,39 @@ typedef struct {
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_pcic0_msk1			_r8, 0x40, 0x0F, 0x00
-#define _hw_pcic0_msk0			_r8, 0x32, 0xFF, 0x00
+#define _hw_pcic0_msk			_r8, 0x32, 0xFF, 0x00
 
 /*	Object logical registers
  */
-#define _hw_pcic0_ie0			_xob1, hw_shared, gimsk, 1, 4
-#define _hw_pcic0_if0			_xob1, hw_shared, gifr,	 1, 4
+#define _hw_pcic0_ie			_xob1, hw_shared, gimsk, 1, 4
+#define _hw_pcic0_if			_xob1, hw_shared, gifr,	 1, 4
 
-#define _hw_pcic0_ie1			_xob1, hw_shared, gimsk, 1, 5
-#define _hw_pcic0_if1			_xob1, hw_shared, gifr,	 1, 5
+/* #define _hw_pcic0_ie0			_ob1, msk, 1, 0 */
+/* #define _hw_pcic0_ie1			_ob1, msk, 1, 1 */
+/* #define _hw_pcic0_ie2			_ob1, msk, 1, 2 */
+/* #define _hw_pcic0_ie3			_ob1, msk, 1, 3 */
+/* #define _hw_pcic0_ie4			_ob1, msk, 1, 4 */
+/* #define _hw_pcic0_ie5			_ob1, msk, 1, 5 */
+/* #define _hw_pcic0_ie6			_ob1, msk, 1, 6 */
+/* #define _hw_pcic0_ie7			_ob1, msk, 1, 7 */
 
-#define _hw_pcic0_hw_pin_pa0		_ob1, msk0, 1, 0
-#define _hw_pcic0_hw_pin_pa1		_ob1, msk0, 1, 1
-#define _hw_pcic0_hw_pin_pa2		_ob1, msk0, 1, 2
-#define _hw_pcic0_hw_pin_pa3		_ob1, msk0, 1, 3
-#define _hw_pcic0_hw_pin_pa4		_ob1, msk0, 1, 4
-#define _hw_pcic0_hw_pin_pa5		_ob1, msk0, 1, 5
-#define _hw_pcic0_hw_pin_pa6		_ob1, msk0, 1, 6
-#define _hw_pcic0_hw_pin_pa7		_ob1, msk0, 1, 7
+/*	Object				class, id, address
+ */
+#define _hw_pcic1			_pcica, 351, 0
 
-#define _hw_pcic0_hw_pin_pb0		_ob1, msk1, 1, 0
-#define _hw_pcic0_hw_pin_pb1		_ob1, msk1, 1, 1
-#define _hw_pcic0_hw_pin_pb2		_ob1, msk1, 1, 2
-#define _hw_pcic0_hw_pin_pb3		_ob1, msk1, 1, 3
+/*	Object hardware registers	class, address, write mask, flags mask
+ */
+#define _hw_pcic1_msk			_r8, 0x40, 0x0F, 0x00
+
+/*	Object logical registers
+ */
+#define _hw_pcic1_ie			_xob1, hw_shared, gimsk, 1, 5
+#define _hw_pcic1_if			_xob1, hw_shared, gifr,	 1, 5
+
+/* #define _hw_pcic1_ie0			_ob1, msk, 1, 0 */
+/* #define _hw_pcic1_ie1			_ob1, msk, 1, 1 */
+/* #define _hw_pcic1_ie2			_ob1, msk, 1, 2 */
+/* #define _hw_pcic1_ie3			_ob1, msk, 1, 3 */
 
 
 /*******************************************************************************
@@ -1224,6 +1239,7 @@ typedef struct {
   hwa_p8a_t	hw_porta ;
   hwa_p8a_t	hw_portb ;
   hwa_pcica_t	hw_pcic0 ;
+  hwa_pcica_t	hw_pcic1 ;
   hwa_wdoga_t	hw_wdog0 ;
 
   hwa_oc8a_t	hw_oc00 ;
@@ -1274,6 +1290,7 @@ HW_INLINE void _hwa_create_context( hwa_t *hwa )
   _hwa_create( hw_porta );
   _hwa_create( hw_portb );
   _hwa_create( hw_pcic0 );
+  _hwa_create( hw_pcic1 );
   _hwa_create( hw_wdog0 );
 
   _hwa_create( hw_oc00 );
@@ -1307,6 +1324,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
   _hwa_init( hw_porta );
   _hwa_init( hw_portb );
   _hwa_init( hw_pcic0 );
+  _hwa_init( hw_pcic1 );
   _hwa_init( hw_wdog0 );
 
   _hwa_init( hw_oc00 );
@@ -1326,9 +1344,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
-  _hwa_solve( hw_counter0 );
-
-  /*  Solve the configuration.
+  /*  Solve the configuration of the counters
    *
    *  The configuration values are written here since the solve function only
    *  has the address of the counter and does not know its name.
@@ -1336,50 +1352,8 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
    *  _reg_p(...) could be used as well though it can not access registers of
    *  another object.
    */
-  /* _hwa_solve_c8a( &hwa->hw_counter0 ); */
-  /* if ( hwa->hw_counter0.solved.cs != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter0, cs, hwa->hw_counter0.solved.cs ); */
-  /* if ( hwa->hw_counter0.solved.wgm != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter0, wgm, hwa->hw_counter0.solved.wgm ); */
-  /* if ( hwa->hw_counter0.solved.coma != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter0, compare0_mode, hwa->hw_counter0.solved.coma ); */
-  /* if ( hwa->hw_counter0.solved.comb != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter0, compare1_mode, hwa->hw_counter0.solved.comb ); */
-
-  /* _hwa_solve__c16a( hwa, &hwa->hw_counter1 ); */
+  _hwa_solve( hw_counter0 );
   _hwa_solve( hw_counter1 );
-
-  /* if ( hwa->hw_counter1.solved.cs != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, cs, hwa->hw_counter1.solved.cs ); */
-  /* if ( hwa->hw_counter1.solved.wgm != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, wgm, hwa->hw_counter1.solved.wgm ); */
-  /* if ( hwa->hw_counter1.solved.coma != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, compare0_mode, hwa->hw_counter1.solved.coma ); */
-  /* if ( hwa->hw_counter1.solved.comb != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, compare1_mode, hwa->hw_counter1.solved.comb ); */
-  /* if ( hwa->hw_counter1.solved.acic != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, acic, hwa->hw_counter1.solved.acic ); */
-  /* if ( hwa->hw_counter1.solved.ices != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, ices, hwa->hw_counter1.solved.ices ); */
-  /* if ( hwa->hw_counter1.solved.icnc != 0xFF ) */
-  /*   _hwa_write_reg( hw_counter1, icnc, hwa->hw_counter1.solved.icnc ); */
-
-
-  /* /\*  If used, compare outputs must be configured as i/o outputs */
-  /*  *\/ */
-  /* if ( hwa->hw_counter0.config.compare0.output != 0xFF */
-  /*	  && hwa->hw_counter0.config.compare0.output != HW_A1(hw_ocu_output_disconnected) ) */
-  /*   hwa_config( hw_pin_pb2, direction, output ); */
-  /* if ( hwa->hw_counter0.config.compare1.output != 0xFF */
-  /*	  && hwa->hw_counter0.config.compare1.output != HW_A1(hw_ocu_output_disconnected) ) */
-  /*   hwa_config( hw_pin_pa7, direction, output ); */
-
-  /* if ( hwa->hw_counter1.config.compare0.output != 0xFF */
-  /*	  && hwa->hw_counter1.config.compare0.output != HW_A1(hw_ocu_output_disconnected) ) */
-  /*   hwa_config( hw_pin_pa6, direction, output ); */
-  /* if ( hwa->hw_counter1.config.compare1.output != 0xFF */
-  /*	  && hwa->hw_counter1.config.compare1.output != HW_A1(hw_ocu_output_disconnected) ) */
-  /*   hwa_config( hw_pin_pa5, direction, output ); */
 
   _hwa_commit_reg( hw_shared, gimsk );
   _hwa_commit_reg( hw_shared, gifr  );
@@ -1391,6 +1365,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( hw_portb );
 
   _hwa_commit( hw_pcic0 );
+  _hwa_commit( hw_pcic1 );
 
   _hwa_commit_reg( hw_shared, gtccr );
   _hwa_commit( hw_counter0 );

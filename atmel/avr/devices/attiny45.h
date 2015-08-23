@@ -6,9 +6,9 @@
 
 /**
  * @file
+ * @brief Atmel AVR ATtiny45
  */
 
-/* [snippet] */
 #define HW_DEVICE_ATTINY45
 #define HW_DEVICE_SIGNATURE             0x1E,0x92,0x06
 #define HW_DEVICE_FLASH_SIZE            4096
@@ -18,4 +18,3 @@
 #define HW_DEVICE_RAM_SIZE              256
 
 #include "attinyx5.h"
-/* [snippet] */
