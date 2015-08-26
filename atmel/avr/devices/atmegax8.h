@@ -1425,6 +1425,58 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
+ *	2-wire interface						       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/twia_1.h"
+
+/*	Object
+ */
+#define _hw_twi0			_twia, 610, 0x00
+
+/*	Class hardware registers	class, address, write mask, flags mask
+ */
+#define _hw__twia_br			_r8, 0xB8, 0xFF, 0x00
+#define _hw__twia_cr			_r8, 0xBC, 0xF5, 0x80
+#define _hw__twia_sr			_r8, 0xB9, 0x03, 0x00
+#define _hw__twia_dr			_r8, 0xBB, 0xFF, 0x00
+#define _hw__twia_ar			_r8, 0xBA, 0xFF, 0x00
+#define _hw__twia_amr			_r8, 0xBD, 0xFE, 0x00
+
+/*	Class logical registers
+ */
+#define _hw__twia_if			_cb1, cr, 1, 7		// IRQ flasg
+#define _hw__twia_ack			_cb1, cr, 1, 6		// Enable ACK
+#define _hw__twia_start			_cb1, cr, 1, 5		// Tx START condition
+#define _hw__twia_stop			_cb1, cr, 1, 4		// Tx STOP condition
+#define _hw__twia_collision		_cb1, cr, 1, 3		// Collision flag
+#define _hw__twia_en			_cb1, cr, 1, 2		// Enable TWI (take I/Os)
+#define _hw__twia_ie			_cb1, cr, 1, 0		// Enable IRQs
+
+//#define _hw__twia_ifstart		_cb2, cr, 1, 7, 1, cr, 1, 5, 0	// Convenient
+
+#define _hw__twia_status		_cb1, sr, 5, 3		// Status code
+#define _hw__twia_psc			_cb1, sr, 2, 0		// Prescaler
+
+#define _hw__twia_sla			_cb1, ar, 7, 1		// Slave address
+#define _hw__twia_gce			_cb1, ar, 1, 0		// General Call Enable
+
+#define _hw__twia_slam			_cb1, amr, 7, 1		// Slave address mask
+
+/*	Values for CR
+ */
+#define _hw_twia_cr_ifenstart		0xA4
+#define _hw_twia_cr_ifenstartie		0xA5
+#define _hw_twia_cr_ifen		0x84
+#define _hw_twia_cr_ifenie		0x85
+#define _hw_twia_cr_ifenstop		0x94
+#define _hw_twia_cr_ifenstopie		0x95
+
+
+
+/*******************************************************************************
+ *									       *
  *	hw_acmp0: analog comparator					       *
  *									       *
  *******************************************************************************/
@@ -1632,6 +1684,7 @@ typedef struct {
 
   hwa_spia_t	hw_spi0 ;
   hwa_uarta_t	hw_uart0 ;
+  hwa_twia_t	hw_twi0 ;
   hwa_acmpa_t	hw_acmp0 ;
   hwa_ad10b_t	hw_adc0 ;
 } hwa_t ;
@@ -1653,6 +1706,7 @@ typedef struct {
 #include "../classes/psca_2.h"
 #include "../classes/spia_2.h"
 #include "../classes/uarta_2.h"
+#include "../classes/twia_2.h"
 #include "../classes/acmpa_2.h"
 #include "../classes/ad10b_2.h"
 #include "../classes/eeproma_2.h"
@@ -1696,6 +1750,7 @@ HW_INLINE void _hwa_create_context( hwa_t *hwa )
 
   _hwa_create( hw_spi0 );
   _hwa_create( hw_uart0 );
+  _hwa_create( hw_twi0 );
   _hwa_create( hw_acmp0 );
   _hwa_create( hw_adc0 );
 }
@@ -1737,6 +1792,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 
   _hwa_init( hw_spi0 );
   _hwa_init( hw_uart0 );
+  _hwa_init( hw_twi0 );
   _hwa_init( hw_acmp0 );
   _hwa_init( hw_adc0 );
 }
@@ -1777,8 +1833,9 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( hw_oc20 );
   _hwa_commit( hw_oc21 );
 
-  _hwa_commit( hw_spi0 );
+  _hwa_commit( hw_spi0  );
   _hwa_commit( hw_uart0 );
+  _hwa_commit( hw_twi0  );
   _hwa_commit( hw_acmp0 );
   _hwa_commit_reg( hw_shared, did1  );
   _hwa_commit( hw_adc0 );
