@@ -8,6 +8,7 @@ MFD		:=	$(dir $(firstword $(CWD)))
 
 export SOURCES
 export CONFIG
+export BOARD
 
 
 #  Default target

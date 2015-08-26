@@ -57,7 +57,7 @@
   HW_G2(_hwa_cfuarta_vbps, HW_IS(,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vbps_1(o,v,...)					\
-  HW_ERR("`bps` must be a number.")
+  HW_ERR("value of `bps` must be a number.")
 
 #define _hwa_cfuarta_vbps_0(o,v,...)					\
   uint32_t brr8 = (hw_syshz / 8 + (v/2)) / v ;				\

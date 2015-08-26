@@ -9,14 +9,16 @@ HWA<sup><a href="#hwa">*</a></sup> is a hardware abstraction tool for
 programming microcontrollers in C language. A few features of HWA are useful for
 programming in assembler too.
 
-HWA provides the programmer an object-oriented interface for hardware
-programming that consists of a small set of generic instructions designed to be
-applied on various types of objects that represent the peripherals embedded in a
+HWA provides the programmer with a generic interface for hardware programming,
+based on an [ad hoc
+polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) mechanism, that
+consists of a small set of generic instructions designed to be applied on
+various types of objects that represent the peripheral controllers embedded in a
 microcontroller.
 
 Using these instructions makes the source code easier to read and to port
 between different targets since they describe clearly and concisely their
-effect, instead of manipulating numerical values and store them into registers.
+effect, instead of manipulating numerical values and registers.
 
 HWA is not a library neither is it a programming language such as the
 [Processing](http://processing.org) language used by

@@ -11,7 +11,7 @@
 
 /**
  * @page atmelavr_usia
- * @section atmelavr_usia_config Configuring the USI
+ * @section atmelavr_usia_config Configuration
  *
  * @code
  * hwa_config( USI,
@@ -35,54 +35,56 @@
  */
 #define _hw_mthd_hwa_config__usia	, _hwa_cfusia
 
-#define hw_usia_mode_disconnected	, 1
-#define hw_usia_mode_spi_master		, 2
-#define hw_usia_mode_spi_slave		, 3
-#define hw_usia_mode_twi_master		, 4
-#define hw_usia_mode_twi_slave		, 5
+#define _hw_usia_mode_disconnected	, 1
+#define _hw_usia_mode_spi_master	, 2
+#define _hw_usia_mode_spi_slave		, 3
+#define _hw_usia_mode_twi_master	, 4
+#define _hw_usia_mode_twi_slave		, 5
 
-#define hw_usia_clock_software		, 0
-#define hw_usia_clock_oc0		, 1	/* FIXME: compare or overflow? */
-#define hw_usia_clock_external_rising	, 2
-#define hw_usia_clock_external_falling	, 3
+#define _hw_usia_clock_software		, 0
+#define _hw_usia_clock_oc0		, 1	/* FIXME: compare or overflow? */
+#define _hw_usia_clock_external_rising	, 2
+#define _hw_usia_clock_external_falling	, 3
 
 #define _hw_is_mode_mode		, 1
 
-#define _hwa_cfusia( obj,i,a,... )					\
+/* 	Mandatory argument `mode`
+ */
+#define _hwa_cfusia( o,i,a,... )					\
   do {									\
     uint8_t mode, clock ;						\
-    HW_G2(_hwa_cfusia_xmode, HW_IS(mode,__VA_ARGS__))(obj,__VA_ARGS__,)	\
+    HW_G2(_hwa_cfusia_kmode, HW_IS(mode,__VA_ARGS__))(o,__VA_ARGS__,)	\
       } while(0)
-#define _hwa_cfusia_xmode_0(obj,...)					\
+#define _hwa_cfusia_kmode_0(o,...)					\
   HW_ERR("expected `mode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-#define _hwa_cfusia_xmode_1(obj,kw,...)					\
-  HW_G2(_hwa_cfusia_vmode, HW_IS(,hw_usia_mode_##__VA_ARGS__))(obj,__VA_ARGS__)
-#define _hwa_cfusia_vmode_0(obj,v,...)					\
+#define _hwa_cfusia_kmode_1(o,kw,...)					\
+  HW_G2(_hwa_cfusia_vmode, HW_IS(,_hw_usia_mode_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfusia_vmode_0(o,v,...)					\
   HW_ERR("`mode` can be `spi_master` or `spi_slave` but not`"#v"`.")
-#define _hwa_cfusia_vmode_1(obj,v,...)					\
-  mode = HW_A1(hw_usia_mode_##v);					\
-  HW_G2(_hwa_cfusia_xclock, HW_IS(clock,__VA_ARGS__))(obj,__VA_ARGS__)
+#define _hwa_cfusia_vmode_1(o,v,...)					\
+  mode = HW_A1(_hw_usia_mode_##v);					\
+  HW_G2(_hwa_cfusia_kclock, HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__)
 
-#define _hwa_cfusia_xclock_0(obj,...)					\
+#define _hwa_cfusia_kclock_0(o,...)					\
   HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-#define _hwa_cfusia_xclock_1(obj,kw,...)				\
-  HW_G2(_hwa_cfusia_vclock, HW_IS(,hw_usia_clock_##__VA_ARGS__))(obj,__VA_ARGS__)
-#define _hwa_cfusia_vclock_0(obj,v,...)					\
+#define _hwa_cfusia_kclock_1(o,kw,...)				\
+  HW_G2(_hwa_cfusia_vclock, HW_IS(,_hw_usia_clock_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfusia_vclock_0(o,v,...)					\
   HW_ERR("`clock` can be `software`, `oc0`, `external_rising`, "	\
 	 "or `external_falling` but not`"#v"`.")
 #define _hwa_cfusia_vclock_1(o,v,...)					\
-  clock = HW_A1(hw_usia_clock_##v);					\
+  clock = HW_A1(_hw_usia_clock_##v);					\
   HW_TX(_hwa_docfusia(o,mode,clock),__VA_ARGS__);
 
 #define _hwa_docfusia( o, mode, clock )				\
-  if ( mode != HW_A1(hw_usia_mode_spi_master)			\
-       && mode != HW_A1(hw_usia_mode_spi_slave) )		\
+  if ( mode != HW_A1(_hw_usia_mode_spi_master)			\
+       && mode != HW_A1(_hw_usia_mode_spi_slave) )		\
     HWA_ERR("sorry, desired mode is not supported yet.");	\
-  if ( clock != HW_A1(hw_usia_clock_software) )			\
+  if ( clock != HW_A1(_hw_usia_clock_software) )			\
     HWA_ERR("sorry, desired clock mode is not supported yet.");	\
   _hwa_write_reg( o, wm, 1 );					\
   _hwa_write_reg( o, cs, 2 );					\
-  if ( mode == HW_A1(hw_usia_mode_spi_master) ) {		\
+  if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
     _hwa_config( hw_pin_usck, direction, output );		\
     _hwa_config( hw_pin_do,   direction, output );		\
     _hwa_config( hw_pin_di,   direction, input	);		\
