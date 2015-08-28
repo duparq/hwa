@@ -1444,35 +1444,10 @@ typedef struct {
 #define _hw__twia_ar			_r8, 0xBA, 0xFF, 0x00
 #define _hw__twia_amr			_r8, 0xBD, 0xFE, 0x00
 
-/*	Class logical registers
+/*	Relatives
  */
-#define _hw__twia_if			_cb1, cr, 1, 7		// IRQ flasg
-#define _hw__twia_ack			_cb1, cr, 1, 6		// Enable ACK
-#define _hw__twia_start			_cb1, cr, 1, 5		// Tx START condition
-#define _hw__twia_stop			_cb1, cr, 1, 4		// Tx STOP condition
-#define _hw__twia_collision		_cb1, cr, 1, 3		// Collision flag
-#define _hw__twia_en			_cb1, cr, 1, 2		// Enable TWI (take I/Os)
-#define _hw__twia_ie			_cb1, cr, 1, 0		// Enable IRQs
-
-//#define _hw__twia_ifstart		_cb2, cr, 1, 7, 1, cr, 1, 5, 0	// Convenient
-
-#define _hw__twia_status		_cb1, sr, 5, 3		// Status code
-#define _hw__twia_psc			_cb1, sr, 2, 0		// Prescaler
-
-#define _hw__twia_sla			_cb1, ar, 7, 1		// Slave address
-#define _hw__twia_gce			_cb1, ar, 1, 0		// General Call Enable
-
-#define _hw__twia_slam			_cb1, amr, 7, 1		// Slave address mask
-
-/*	Values for CR
- */
-#define _hw_twia_cr_ifenstart		0xA4
-#define _hw_twia_cr_ifenstartie		0xA5
-#define _hw_twia_cr_ifen		0x84
-#define _hw_twia_cr_ifenie		0x85
-#define _hw_twia_cr_ifenstop		0x94
-#define _hw_twia_cr_ifenstopie		0x95
-
+#define hw_twi0pin_scl			hw_pin_scl
+#define hw_twi0pin_sda			hw_pin_sda
 
 
 /*******************************************************************************

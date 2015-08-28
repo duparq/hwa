@@ -434,8 +434,11 @@
   _hw_write_##rc( ra, rwm,rfm, bn,bp, v )
 
 
-#define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /* Internal use */
-#define _hwa_write_2(x,...)		_hwa_write_##x(x,__VA_ARGS__)
+/* #define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /\* Internal use *\/ */
+/* #define _hwa_write_2(x,...)		_hwa_write_##x(x,__VA_ARGS__) */
+
+#define _hwa_write(...)			_HW_MTHD(hwa_write, __VA_ARGS__,)
+
 
 #define _hwa_write__m1(o,a, r,rc,ra,rwm,rfm, bn,bp, v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )

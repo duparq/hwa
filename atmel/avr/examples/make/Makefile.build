@@ -246,7 +246,7 @@ CFLAGS		+= $(INCLUDES)
 $(OUTDIR)/%.o: %.c
 #	@echo "RULE: $@ : $^"
 	@mkdir -p $(OUTDIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 #  We want .sx files to be preprocessed first
 #
@@ -310,11 +310,13 @@ endif
 
 #  Object dump flags:
 #
-#  -S: source code + disassembly
+#  -d: disassembly
+#  -S: disassembly + source code
 #  -h: section headers
 #
 %.lst: %.elf
-	@$(ODUMP) -S $^ >$@
+#	@$(ODUMP) -S $^ >$@
+	@$(ODUMP) -d $^ >$@
 
 #  Size of the generated binary
 #

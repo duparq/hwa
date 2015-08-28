@@ -13,6 +13,9 @@
  * @page atmelavr_twia
  * @section atmelavr_twia_cf Configuration
  *
+ * @note Configuring the TWI enables it and configures the SCL and SDA pins as
+ * high-level outputs.
+ *
  * @code
  * hw_config( TWI_NAME,
  *
@@ -60,7 +63,14 @@
 /*	Optionnal argument `sclhz`
  */
 #define _hwx_cftwia(x,o,k,...)						\
-  do { HW_G2(_hwx_cftwia_ksclhz, HW_IS(sclhz,k))(x,o,k,__VA_ARGS__) } while(0)
+  do {									\
+    /*  Configure I/Os */						\
+    x##_config( hw_rel(o,pin_scl), direction, output );			\
+    x##_config( hw_rel(o,pin_sda), direction, output );			\
+    x##_write( hw_rel(o,pin_scl), 1 );					\
+    x##_write( hw_rel(o,pin_sda), 1 );					\
+    HW_G2(_hwx_cftwia_ksclhz, HW_IS(sclhz,k))(x,o,k,__VA_ARGS__);	\
+  } while(0)
 
 #define _hwx_cftwia_ksclhz_1(x,o,k,v,...)					\
   HW_G2(_hwx_cftwia_vsclhz, HW_IS(,v))(x,o,v,__VA_ARGS__)
@@ -163,6 +173,13 @@
  * The presence of the optionnal `irq` parameter indicates that the command
  * also enables the IRQ.
  *
+ * @note HWA verifies to some extent the nature of the given parameters. As all
+ * this is implemented using macro definitions, some care must be taken
+ * regarding how the parameters are written in order to avoid strange
+ * behavior. For example, if the DATA parameter is `*ptr`, you must rewrite it
+ * as `(*ptr)` or use a temporary, as the preprocessor can not process the `*`
+ * character.
+ *
  * @code
  * hw_command( TWI_NAME, start [,irq] );                // Transmit START condition
  * hw_command( TWI_NAME, slaw, SLA [,irq] );            // Transmit SLA slave address + write bit
@@ -184,21 +201,7 @@
   do{ HW_G2(_hw_cmtwia_kstart,HW_IS(start,__VA_ARGS__))(o,__VA_ARGS__,,); }while(0)
 
 #define _hw_cmtwia_kstart_1(o,k,i,...)				\
-  HW_G2(_hw_cmtwia_end,HW_IS(,i))(o,ifenstart,i,__VA_ARGS__)
-
-#define _hw_cmtwia_end_1(o,v,k,...)				\
-  HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v), __VA_ARGS__ )
-
-#define _hw_cmtwia_end_0(o,v,k,...)			\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,k))(o,v,k,__VA_ARGS__)
-
-#define _hw_cmtwia_irq_1(o,v,k,...)				\
-  HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v##ie), __VA_ARGS__ )
-
-#define _hw_cmtwia_irq_0(o,v,k,...)		\
-  HW_ERR("unexpected parameter `" #k "`.")
-
-#define _hw_is_irq_irq			, 1
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenstart,i,__VA_ARGS__)
 
 #define _hw_is_start_start		, 1
 
@@ -208,48 +211,119 @@
   HW_G2(_hw_cmtwia_kslaw,HW_IS(slaw,k))(o,k,__VA_ARGS__)
 
 #define _hw_cmtwia_kslaw_1(o,k,v,...)			\
-  HW_G2(_hw_cmtwia_vslaw, HW_IS(,v))(x,o,v,__VA_ARGS__)
+  HW_G2(_hw_cmtwia_vslaw, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
 
 #define _hw_cmtwia_vslaw_1(x,o,v,...)		\
   HW_ERR("slave address must be a number.")
 
 #define _hw_cmtwia_vslaw_0(x,o,v,i,...)				\
-    if ( v < 0 || v > 127 )					\
-      HWA_ERR("slave address must be in the range 0..127.");	\
-    _hw_write_reg(o,dr,v<<1);					\
-    HW_G2(_hw_cmtwia_end,HW_IS(,i))(o,ifen,i,__VA_ARGS__)
+  if ( ((uint8_t)(v)) > 127 )					\
+    HWA_ERR("slave address must be in the range 0..127.");	\
+  _hw_write_reg(o,dr,((v)<<1)+0);				\
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
 
 #define _hw_is_slaw_slaw		, 1
 
-/*	`write`?
+/*	`slar`?
  */
 #define _hw_cmtwia_kslaw_0(o,k,...)				\
+  HW_G2(_hw_cmtwia_kslar,HW_IS(slar,k))(o,k,__VA_ARGS__)
+
+#define _hw_cmtwia_kslar_1(o,k,v,...)			\
+  HW_G2(_hw_cmtwia_vslar, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
+
+#define _hw_cmtwia_vslar_1(x,o,v,...)		\
+  HW_ERR("slave address must be a number.")
+
+#define _hw_cmtwia_vslar_0(x,o,v,i,...)				\
+  if ( ((uint8_t)(v)) > 127 )					\
+    HWA_ERR("slave address must be in the range 0..127.");	\
+  _hw_write_reg(o,dr,((v)<<1)+1);				\
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
+
+#define _hw_is_slar_slar		, 1
+
+/*	`write`?
+ */
+#define _hw_cmtwia_kslar_0(o,k,...)				\
   HW_G2(_hw_cmtwia_kwrite,HW_IS(write,k))(o,k,__VA_ARGS__)
 
-#define _hw_cmtwia_kwrite_1(o,k,v,...)			\
-  HW_G2(_hw_cmtwia_vwrite, HW_IS(,v))(x,o,v,__VA_ARGS__)
+#define _hw_cmtwia_kwrite_1(o,k,v,...)				\
+  HW_G2(_hw_cmtwia_vwrite, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
 
 #define _hw_cmtwia_vwrite_1(x,o,v,...)		\
   HW_ERR("missing write value.")
 
 #define _hw_cmtwia_vwrite_0(x,o,v,i,...)	\
   _hw_write_reg(o,dr,v);			\
-  HW_G2(_hw_cmtwia_end,HW_IS(,i))(o,ifen,i,__VA_ARGS__)
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
 
 #define _hw_is_write_write		, 1
 
-/*	`stop`?
+/*	`read`?
  */
 #define _hw_cmtwia_kwrite_0(o,k,...)				\
+  HW_G2(_hw_cmtwia_kread,HW_IS(read,k))(o,k,__VA_ARGS__)
+
+/*		`ack` or `nack`
+ */
+#define _hw_cmtwia_kread_1(o,k,a,...)				\
+  HW_G2(_hw_cmtwia_kreadkack,HW_IS(ack,a))(o,k,a,__VA_ARGS__)
+
+#define _hw_cmtwia_kreadkack_1(o,k,a,i,...)			\
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenack,i,__VA_ARGS__)
+
+#define _hw_cmtwia_kreadkack_0(o,k,a,...)			\
+  HW_G2(_hw_cmtwia_kreadknack,HW_IS(nack,a))(o,k,a,__VA_ARGS__)
+
+#define _hw_cmtwia_kreadknack_1(o,k,a,i,...)			\
+    HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
+
+#define _hw_cmtwia_kreadknack_0(o,k,a,...)			\
+  HW_ERR("expected `ack` or `nack` instead of `" #a "`.");
+
+#define _hw_is_read_read		, 1
+#define _hw_is_ack_ack			, 1
+#define _hw_is_nack_nack		, 1
+
+/*	`stop`?
+ */
+#define _hw_cmtwia_kread_0(o,k,...)				\
   HW_G2(_hw_cmtwia_kstop,HW_IS(stop,k))(o,k,__VA_ARGS__)
 
-#define _hw_cmtwia_kstop_1(o,k,i,...)					\
-  HW_G2(_hw_cmtwia_end,HW_IS(,i))(o,ifenstop,i,__VA_ARGS__)
+#define _hw_cmtwia_kstop_1(o,k,i,...)				\
+  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenstop,i,__VA_ARGS__)
 
-#define _hw_cmtwia_kstop_0(o,...)		\
-  HW_EOL(__VA_ARGS__)
+#define _hw_cmtwia_kstop_0(o,k,...)				\
+  HW_ERR("command can be `start`, `slaw`, `slar`, `read`, `write`, "	\
+	 "or `stop`, but not `" #k "`.")
 
 #define _hw_is_stop_stop		, 1
+
+/*	`irq` ?
+ */
+#define _hw_cmtwia_irq_0(o,v,...)				\
+  HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v), __VA_ARGS__ )
+
+#define _hw_cmtwia_irq_1(o,v,k,...)				\
+  HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v##ie), __VA_ARGS__ )
+
+#define _hw_is_irq_irq			, 1
+
+
+/**
+ * @page atmelavr_twia
+ * @section atmelavr_twia_data Data
+ *
+ * The `hw_read()` returns the content of the data register.
+ *
+ * @code
+ * uint8_t byte = hw_read( TWI_NAME );
+ * @endcode
+ */
+#define _hw_mthd_hw_read__twia		, _hw_rdtwia
+#define _hw_rdtwia(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__)
+
 
 
 /**

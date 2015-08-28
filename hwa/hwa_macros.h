@@ -194,6 +194,23 @@ extern char hw_error ;
 
 
 /**
+ * @ingroup public_gen_macros
+ * @brief Expands to 1 is the first element of the list is void, 0 otherwise.
+ *
+ * This is a more elaborate verification than `HW_IS(,x)` since it also accepts
+ * x to begin with a left bracket.
+ *
+ * @hideinitializer
+ */
+#define HW_IS_VOID(...)		HW_G2(_HW_IS_VOID_BKT,HW_IS(,_hw_is__bkt __VA_ARGS__))(__VA_ARGS__)
+
+#define _HW_IS_VOID_BKT_1(...)	0
+#define _HW_IS_VOID_BKT_0(...)	HW_IS(,__VA_ARGS__)
+
+#define _hw_is__bkt(...)
+
+
+/**
  * @brief Connect a generic instruction to an object's class method.
  * @hideinitializer
  *

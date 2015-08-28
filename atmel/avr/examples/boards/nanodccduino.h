@@ -88,6 +88,9 @@
 #define PIN_D12				hw_pin_pb4	//      MISO
 #define PIN_D13				hw_pin_pb5	//      SCK
 
+#define PIN_A5				hw_pin_pc5	// SCL
+#define PIN_A4				hw_pin_pc4	// SDA
+
 #define PIN_SS				hw_pin_pb2
 #define PIN_MOSI			hw_pin_pb3
 #define PIN_MISO			hw_pin_pb4
