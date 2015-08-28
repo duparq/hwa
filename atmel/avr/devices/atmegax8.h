@@ -391,7 +391,7 @@
  * `hw_psc0`	 | @ref atmelavr_psca "_psca"	| hw_counter0/hw_counter1 prescaler (PSC0)
  * `hw_spi0`	 | @ref atmelavr_spia "_spia"   | Serial Peripheral Interface
  * `hw_uart0`	 | @ref atmelavr_uarta "_uarta" | Universal Asynchronous Receiver Transmitter
- * `hw_twi0`	 |                              | 2-wire Serial Interface
+ * `hw_twi0`	 | @ref atmelavr_twia "_twia"   | 2-wire Serial Interface
  * `hw_acmp0`	 | @ref atmelavr_acmpa "acmpa"	| Analog Comparator
  * `hw_adc0`	 | @ref atmelavr_ad10b "ad10b"	| 10-bit Analog to Digital Converter
  * `hw_eeprom0`	 | @ref atmelavr_eeproma "eeproma" | Eeprom memory

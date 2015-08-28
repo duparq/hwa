@@ -476,6 +476,11 @@
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
+#define _hw_mthd_hwa_write___xob1	, _hwa__write__xob1
+//  _hwa__write__xob1(_xob1,hw_shared, did, 1, 0, 1,)
+#define _hwa__write__xob1(t,o,r,bn,bp,v,_)	_hwa_write__xob1(t,o,r,bn,bp,v)
+
+
 /**
  * @ingroup private
  * @brief Write some bits of a memory definition
