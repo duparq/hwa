@@ -9,10 +9,8 @@ HWA<sup><a href="#hwa">*</a></sup> is a hardware abstraction tool for
 programming microcontrollers in C language. A few features of HWA are useful for
 programming in assembler too.
 
-HWA provides the programmer with a generic interface for hardware programming,
-based on an [ad hoc
-polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) mechanism, that
-consists of a small set of generic instructions designed to be applied on
+HWA provides the programmer with an object-oriented interface to the hardware
+that consists of a small set of generic instructions designed to be applied on
 various types of objects that represent the peripheral controllers embedded in a
 microcontroller.
 
@@ -20,14 +18,17 @@ Using these instructions makes the source code easier to read and to port
 between different targets since they describe clearly and concisely their
 effect, instead of manipulating numerical values and registers.
 
-HWA is not a library neither is it a programming language such as the
-[Processing](http://processing.org) language used by
-[Arduinos](http://www.arduino.cc). HWA is implemented using standard C macro
+HWA is not a library neither is it a programming language. HWA implements a
+mechanism of [ad hoc
+polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) only using
+standard C language
+([C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29)) macro
 definitions and function-like macros, all processed by the standard
-[C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29)
-preprocessor. Inline functions and a cache mechanism (the _HWA context_)
-combined to the compiler optimizers make the machine code produced using HWA
-free of any penalty, either in terms of size, execution speed or memory used.
+preprocessor, not a C++ compiler such as used for example by
+[Arduinos](http://www.arduino.cc). Inline functions and a cache mechanism (the
+_HWA context_) combined to the compiler's optimizers make the binary code
+produced free of any penalty, either in terms of size, execution speed or memory
+used.
 
 Last, but not least, the error messages HWA produces try to guide the developper
 quickly to the solution.
