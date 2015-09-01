@@ -13,7 +13,7 @@
 
 /**
  * @page atmegax8 ATmega48A/PA/88A/PA/168A/PA/328/P
- * @section attinyx8_device Description
+ * @section atmegax8_device Description
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
@@ -59,7 +59,8 @@
  * `HW_DEVICE_FUSE_LB`	| Fuse low byte
  */
 
-/* Fuse bytes are defined in device-specific header */
+
+/* 	Fuse bytes are defined in device-specific header	*/
 
 
 /**
@@ -137,6 +138,7 @@
 #if !defined HW_DEVICE_CLK_PSC
 #  define HW_DEVICE_CLK_PSC				8
 #endif
+
 #if HW_DEVICE_CLK_PSC == 8
 #  define HW_DEVICE_CKDIV8				0
 #  define hw_syshz					hw_syshz_base/8
@@ -247,6 +249,7 @@
  * `HW_DEVICE_CLOCK_OUTPUT`	 |`enabled`<br><b>`disabled`</b>|Whether the device outputs its clock
  * `HW_DEVICE_BROWNOUT_DETECTION`|<b>`off`</b><br>`1700_2000mV`<br>`2500_2900mV`<br>`4100_4500mV`|Brown-out detection level
  * `HW_DEVICE_BOOT`|<b>`application`</b><br>`bootloader`|Whether the device starts the application or the bootloader after reset
+ * `HW_DEVICE_BOOTSECTION_SIZE`|`512`<br>`1024`<br>`2048`<br><b>`4096`</b>|Size of the boot section
  */
 
 #if !defined HW_DEVICE_CLOCK_OUTPUT
@@ -304,15 +307,15 @@
 #  error HW_DEVICE_WATCHDOG_ALWAYS_ON must be defined as `yes` or `no` (default).
 #endif
 
-#if !defined HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE
-#  define HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE	no
+#if !defined HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE
+#  define HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE	no
 #endif
-#if HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, yes)
+#if HW_IS(HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE, yes)
 #  define HW_DEVICE_EESAVE				0
-#elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, no)
+#elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE, no)
 #  define HW_DEVICE_EESAVE				1
 #else
-#  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
+#  error HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE must be defined as `yes` or `no` (default).
 #endif
 
 #define _hw_is_1700_2000mV_1700_2000mV			, 1
@@ -350,7 +353,7 @@
 #elif HW_IS(HW_DEVICE_BOOT, bootloader)
 #  define HW_DEVICE_BOOTRST				0
 #else
-#  error HW_DEVICE_RESET_VECTOR must be defined as `bootloader` or `application` (default).
+#  error HW_DEVICE_BOOT must be defined as `bootloader` or `application` (default).
 #endif
 
 
@@ -364,7 +367,7 @@
 /**
  * @section atmegax8_object Peripherals
  *
- * __Note__: all the peripherals are not completely implemented yet.
+ * @note All the peripherals are not completely implemented yet.
  *
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
@@ -397,7 +400,7 @@
  * `hw_eeprom0`	 | @ref atmelavr_eeproma "eeproma" | Eeprom memory
  * `hw_flash0`	 | @ref atmelavr_flasha "flasha"   | Flash memory
  *
- * @subsection attinyx4_swobj Software-emulated peripherals
+ * @subsection atmegax8_swobj Software-emulated peripherals
  * 
  * HWA provides the following software-emulated peripherals:
  * 
@@ -407,7 +410,7 @@
  * `hw_swuart0`		  | @ref atmelavr_swuarta "swuarta" | Software UART
  * `hw_swuart1`		  | @ref atmelavr_swuarta "swuarta" | Software UART
  *
- * @subsection attinyx4_objrel Aliases and relations
+ * @subsection atmegax8_objrel Aliases and relations
  *
  * Some objects can be accessed from their relatives or can have more than one
  * name. There are the existing relations between the device's objects and their
@@ -1584,6 +1587,7 @@ typedef struct {
 #define _hw__flasha_pgwrt		_cb1, csr, 1, 2
 #define _hw__flasha_pgers		_cb1, csr, 1, 1
 #define _hw__flasha_spmen		_cb1, csr, 1, 0
+
 
 /*******************************************************************************
  *									       *
