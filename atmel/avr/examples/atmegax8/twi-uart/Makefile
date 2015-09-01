@@ -3,8 +3,9 @@
 #
 SOURCES		=	main.c
 
-BOARD		?= nanodccduino
+BOARD		= 	nanodccduino
 
-CONFIG		=	BOARD
+CONFIG		=	HW_DEVICE			\
+			hw_syshz
 
 include ../../Makefile
