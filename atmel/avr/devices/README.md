@@ -19,3 +19,6 @@ files must be included with something like:
 
  * @subpage atmegax8 :
    - `hwa/atmega328p_au.h`
+
+ * @subpage atmegaxu4 :
+   - `hwa/atmega32u4_mu.h`
