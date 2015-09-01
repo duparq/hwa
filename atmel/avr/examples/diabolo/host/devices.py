@@ -85,10 +85,9 @@ class Device():
             end = 1
         else:
             end = -1
-        if len(data)<self.bladdr:
-            die("file of %d bytes must be padded with 0xFF to at least %d bytes" \
-                % (len(data), self.bladdr))
-        for x in range(self.bladdr-1, end, -1):
+
+        top = min( len(data), self.bladdr )-1
+        for x in range(top, end, -1):
             if data[x] != '\xFF':
                 break
         for i in range(x, end, -1):
@@ -446,3 +445,4 @@ devices = {}
 import attinyx4
 import attinyx5
 import atmegax8
+import atmegaxu4

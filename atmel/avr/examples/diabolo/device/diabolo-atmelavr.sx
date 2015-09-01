@@ -61,10 +61,6 @@
 	EECRC  = EEPCNT-4		 ; 16 bits application CRC (MSB first)
 
 
-#if !defined HW_DEVICE_ATTINYX4 && !defined HW_DEVICE_ATMEGAX8 && !defined HW_DEVICE_ATTINYX5
-#  error Device is not supported
-#endif
-
 	;; Register affectation
 	;;
 	;; R1:R0      value written into flash page buffer

@@ -6,14 +6,6 @@
  * @brief Diabolo main source file
  */
 
-//#define PIN_DBG		PIN_LED
-
-/*  Set a default target board
- */
-/* #if !defined BOARD_H */
-/* #  define BOARD_H               <boards/attiny84.h> */
-/* #endif */
-
 /*  Include board (and HWA device) definition
  */
 #include BOARD_H
