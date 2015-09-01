@@ -14,12 +14,15 @@
  *  or class name.
  */
 
-#define _hw_state_on			, 1
-#define _hw_state_off			, 0
-#define _hw_state_yes			, 1
-#define _hw_state_no			, 0
-#define _hw_state_enabled		, 1
-#define _hw_state_disabled		, 0
+
+/*	State definitions		, positive, negative
+ */
+#define _hw_state_on			, 1, 0
+#define _hw_state_off			, 0, 1
+#define _hw_state_yes			, 1, 0
+#define _hw_state_no			, 0, 1
+#define _hw_state_enabled		, 1, 0
+#define _hw_state_disabled		, 0, 1
 
 /**
  * @ingroup private_classes
