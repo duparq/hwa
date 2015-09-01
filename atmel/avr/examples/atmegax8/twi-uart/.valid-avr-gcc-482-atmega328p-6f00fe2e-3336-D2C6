@@ -1,4 +1,5 @@
-BOARD="BOARD"
+HW_DEVICE="atmega328p"
+hw_syshz="16000000"
 
 build/nanodccduino/out.elf:     file format elf32-avr
 
