@@ -14,50 +14,50 @@ endif
 #	Remove spaces
 #	Extract the matching device name
 #
-ifneq (,$(DEVICE))
-$(OUT).avrdude: $(OUT).hwa
-	@echo "RULE: $@ $<"
-	@avrdude -c usbasp -p \? 2>&1 \
-	| sed -r -e 's/( )+//g'\
-	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
+# ifneq (,$(DEVICE))
+# $(OUT).avrdude: $(OUT).hwa
+# 	@echo "RULE: $@ $<"
+# 	@avrdude -c usbasp -p \? 2>&1 \
+# 	| sed -r -e 's/( )+//g'\
+# 	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
 
--include $(OUT).avrdude
-endif
+# -include $(OUT).avrdude
+# endif
 
 
 #  Reset the microcontroller (link checking)
 #
 .PHONY: reset
 reset:
-	avrdude -p $(PARTNO) -c $(PROG_HW) -v
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -v
 
 
 #  Erase flash memory
 #
 .PHONY: erase
 erase:
-	avrdude -p $(PARTNO) -c $(PROG_HW) -e
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -e
 
 
 #  Program flash memory
 #
 .PHONY: burn
 burn: $(OUT).elf
-	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:w:$^
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -P /dev/ttyACM0 -U flash:w:$^
 
 
 #  Check programming
 #
 .PHONY: verify
 verify: $(OUT).elf
-	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -U flash:v:$^
 
 
 #  Read flash memory
 #
 .PHONY: read-flash
 read-flash:
-	avrdude -p $(PARTNO) -c $(PROG_HW)\
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -P /dev/ttyACM0 \
 		-U flash:r:$(OUTDIR)/flash.bin:r
 
 
@@ -65,7 +65,7 @@ read-flash:
 #
 .PHONY: read-eeprom
 read-eeprom:
-	avrdude -p $(PARTNO) -c $(PROG_HW)\
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW)\
 		-U eeprom:r:$(OUTDIR)/eeprom.bin:r
 
 
@@ -73,7 +73,7 @@ read-eeprom:
 #
 .PHONY: read-fuses
 read-fuses:
-	avrdude -p $(PARTNO) -c $(PROG_HW) -v \
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) -v \
 		-U efuse:r:-:h		\
 		-U hfuse:r:-:h		\
 		-U lfuse:r:-:h		\
@@ -97,4 +97,4 @@ write-fuses: $(INC_HWA)
 	if [ "$$DEVICE_FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then						\
 	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m " $$(($$(echo $(DEVICE_FUSE_LB)))) )	;\
 	fi												;\
-	avrdude -p $(PARTNO) -c $(PROG_HW) $$FUSES
+	avrdude -p $(AVRDUDE_PARTNO) -c $(PROG_HW) $$FUSES

@@ -88,6 +88,13 @@ validate-all-examples:
 	done
 
 
+#  Include board-dependent Makefile if any
+#
+ifneq (,$(BOARD))
+include $(MFD)boards/Makefile.$(BOARD)
+else
+
+
 #  Targets that require BOARD and SOURCES to be defined are found in
 #  Makefile.build
 #
@@ -99,3 +106,5 @@ force: ;
 .DEFAULT:
 #	@echo "DEFAULT: $@"
 	@$(MAKE) -f $(MFD)make/Makefile.build --no-print-directory $@
+
+endif
