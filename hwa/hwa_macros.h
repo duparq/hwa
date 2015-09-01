@@ -83,15 +83,13 @@
 
 
 #if defined __ASSEMBLER__
-/* #  define HW_ERR(msg)		0 ; .fail "HWA: " msg */
-/* hw_error = 0 */
-
-/* #  define HW_ERR(msg)		hw_error ; .fail "HWA: " msg */
-//#define _hw_is_hw_error_hw_error(...)
-
+/*
+ *  Assembler .error directive can not appear in operand position.
+ *  So, emit a hw_error(...) that will be catched by the building process.
+ */
 #  define HW_ERR(msg)		hw_error(__FILE__,__LINE__,"HWA: " msg)
+#  define HW_ERRFN(...)		.error __VA_ARGS__
 
-#  define HW_ERRFN(...)		.fail __VA_ARGS__
 #else
 
 /**

@@ -12,25 +12,28 @@ AVRDUDE_PARTNO	= m32u4
 PROG_HW		?= avr109
 PROG_SW 	?= avrdude
 
-HW_DEVICE_CLK_SRC	= low_power_xosc
-HW_DEVICE_CLK_SRC_HZ	= 16000000UL
-HW_DEVICE_CLK_PSC	= 1
+#  These are mostly the values as the board is shipped, except the bootsection
+#  size which is 1024 with Diabolo instead of 4096 with the Caterina bootloader.
+#
+# HW_DEVICE_CLK_SRC		= low_power_xosc
+# HW_DEVICE_CLK_SRC_HZ		= 16000000UL
+# HW_DEVICE_CLK_PSC		= 1
+# HW_DEVICE_BOOT			= bootloader
+# HW_DEVICE_BOOTSECTION_SIZE	= 1024
 
-DEFINES	+= -DHW_DEVICE_CLK_SRC=$(HW_DEVICE_CLK_SRC)
-DEFINES	+= -DHW_DEVICE_CLK_SRC_HZ=$(HW_DEVICE_CLK_SRC_HZ)
-DEFINES	+= -DHW_DEVICE_CLK_PSC=$(HW_DEVICE_CLK_PSC)
+# DEFINES	+= -DHW_DEVICE_CLK_SRC=$(HW_DEVICE_CLK_SRC)
+# DEFINES	+= -DHW_DEVICE_CLK_SRC_HZ=$(HW_DEVICE_CLK_SRC_HZ)
+# DEFINES	+= -DHW_DEVICE_CLK_PSC=$(HW_DEVICE_CLK_PSC)
+# DEFINES	+= -DHW_DEVICE_BOOT=$(HW_DEVICE_BOOT)
+# DEFINES	+= -DHW_DEVICE_BOOTSECTION_SIZE=$(HW_DEVICE_BOOTSECTION_SIZE)
 
 CWD		+=	$(dir $(lastword $(MAKEFILE_LIST)))
 MFD		:=	$(dir $(firstword $(CWD)))
-
-# $(warning LIST=$(MAKEFILE_LIST))
-# $(warning CWD=$(CWD))
-# $(warning MFD=$(MFD))
 
 #  Include Atmel AVR main Makefile
 #
 include $(MFD)../make/Makefile.32U4
 
-#  Include Avrdude targets
+#  Include chip programming targets
 #
 include $(MFD)../make/Makefile.$(PROG_SW)

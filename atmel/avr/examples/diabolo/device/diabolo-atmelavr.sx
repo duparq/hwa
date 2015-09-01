@@ -37,7 +37,11 @@
 	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
 	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
 
-#if !defined HW_DEVICE_BOOTRST
+	.if PAGESIZE > 256
+	.error "PAGESIZE > 256 is not supported"
+	.endif
+	
+#if !defined HW_DEVICE_FUSE_BOOTRST
 	;;
 	;; Device without boot section: allocate enough pages
 	;; for Diabolo at end of flash memory
@@ -126,9 +130,9 @@
 
 #  define DBGDDR1	sbi	DBGDDR, DBGBIT
 #  define DBGDDR0	cbi	DBGDDR, DBGBIT
-#  define DBGT	sbi	DBGPIN, DBGBIT
-#  define DBG0	cbi	DBGPORT, DBGBIT
-#  define DBG1	sbi	DBGPORT, DBGBIT
+#  define DBGT		sbi	DBGPIN, DBGBIT
+#  define DBG0		cbi	DBGPORT, DBGBIT
+#  define DBG1		sbi	DBGPORT, DBGBIT
 #else
 #  define DBGDDR1
 #  define DBGDDR0
@@ -154,7 +158,7 @@
 	;;
 	.section .init1
 
-#if !defined HW_DEVICE_BOOTRST
+#if !defined HW_DEVICE_FUSE_BOOTRST
 	;; 
 	;; Device without boot section: place a jump to Diabolo in RESET vector
 	;;
@@ -313,7 +317,7 @@ ocrc:	mov	R24, R11	; CRC (msb)
 xf:	cpi	R24, 'f'
 	brne	1f
 	rcall	iaddr		; Get address in Z
-	ldi	R20, PAGESIZE
+	ldi	R20, lo8(PAGESIZE)
 2:	lpm	R24, Z+		; Read flash byte
 	rcall	obytecrc	; Send it
 	dec	R20
@@ -356,7 +360,7 @@ icrc:	rcall	ibyte		; Receive CRC (MSB first)
 xF:	cpi	R24, 'F'
 	brne	1f
 	rcall	iaddr		; Get address and store it in Z
-	ldi	R20, PAGESIZE
+	ldi	R20, lo8(PAGESIZE)
 	rcall	ibuf		; Get R20 bytes + CRC and store them in RAM
 	brne	abort		; Abort if CRC error
 	ldi	R24, CODE_FAIL | CODE_ERS	; Return code in R24
@@ -398,7 +402,7 @@ xF:	cpi	R24, 'F'
 	;; Verify written data
 	;;
 2:	movw	R28, R4		; Y = RAMSTART (where the data bytes are stored)
-	ldi	R20, PAGESIZE
+	ldi	R20, lo8(PAGESIZE)
 2:	ld	R0, Y+
 	lpm	R1, Z+
 	cpse	R0, R1
@@ -612,7 +616,7 @@ obyte:
 
 	;; Execute SPM instruction after setting SPMCSR with R21 value
 	;; 
-#if defined HW_DEVICE_BOOTRST
+#if defined HW_DEVICE_FUSE_BOOTRST
 dospm:  XST	SPMCSR, R21
 	spm
 2:	XSBIC	R21, SPMCSR, BP_SPMEN ; Wait end of SPM instruction
@@ -660,7 +664,7 @@ stat:	rcall	crci
 	;;
 	sbiw	R30, 1		; [2]
 
-#if !defined HW_DEVICE_BOOTRST
+#if !defined HW_DEVICE_FUSE_BOOTRST
 	cpi	R31, 0		; [1]	Do not compute the RESET vector for devices
 	brne	2b		; [2]   without a boot section
 	cpi	R30, 2		; [1]

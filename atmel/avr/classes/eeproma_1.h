@@ -18,5 +18,14 @@
  *  * @ref attinyx4 : `hw_eeprom0`
  *  * @ref attinyx5 : `hw_eeprom0`
  *  * @ref atmegax8 : `hw_eeprom0`
+ *  * @ref atmegaxu4 : `hw_eeprom0`
  */
 #define _hw_class__eeproma
+
+/*	Class logical registers
+ */					
+#define _hw__eeproma_pm			_cb1, cr, 2, 4
+#define _hw__eeproma_rie		_cb1, cr, 1, 3
+#define _hw__eeproma_mpe		_cb1, cr, 1, 2
+#define _hw__eeproma_pe			_cb1, cr, 1, 1
+#define _hw__eeproma_re			_cb1, cr, 1, 0

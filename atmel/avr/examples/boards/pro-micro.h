@@ -19,8 +19,8 @@
  *
  * @par Pin Configuration
  *
- *                       PD3 TX0 o  USB  o RAW
- *                       PD2 RX1 o       o Gnd
+ *                      PD3 TX 0 o  USB  o RAW
+ *                      PD2 RX 1 o       o Gnd
  *                           Gnd o       o RESET
  *                           Gnd o       o Vcc
  *                     SDA PD1 2 o       o A3 PF4 ADC4 TCK
@@ -46,13 +46,36 @@
  * <br>
  */
 
+/*  These are mostly the values as the board is shipped, except the bootsection
+ *  size which is 1024 with Diabolo instead of 2048 with the Arduino bootloader.
+ */
+#define HW_DEVICE_BOOT			bootloader
+#define HW_DEVICE_BOOTSECTION_SIZE	1024
+
+#define HW_DEVICE_CLK_SRC		low_power_xosc
+#define HW_DEVICE_CLK_SRC_HZ		16000000
+#define HW_DEVICE_CLK_PSC		1
+
+#define HW_DEVICE_PIN_HWB		disabled
+#define HW_DEVICE_JTAG			disabled
+
+//#define HW_DEVICE_STARTUP_DELAYS	16KCK_14CK_64ms
+//#define HW_DEVICE_BROWNOUT_DETECTION	4100_4500mV
+//#define HW_DEVICE_SELF_PROGRAMMING	enabled
+
+#define HW_DEVICE_DEBUG_WIRE		disabled
+#define HW_DEVICE_WATCHDOG_ALWAYS_ON	no
+#define HW_DEVICE_CLOCK_OUTPUT		disabled
+
+#define HW_DEVICE_FUSE_EBX		0xC
+
 /*  Settings for the Diabolo bootloader
  *    BPS and RESET_SIGNAL are only used by `make` to provide
  *    settings to the Diabolo application on the host.
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-#define DIABOLO_BPS                     230400
+#define DIABOLO_BPS                     460800
 #define DIABOLO_RESET_SIGNAL            DTR
 #define DIABOLO_CHAR_DELAY		0
 #define DIABOLO_SYNC			5+1
@@ -112,6 +135,7 @@ THIS IS NOT DONE YET
 #endif
 
 
+#define ARDUINO
 
 #define PIN_LED_GREEN			hw_pin_pd5
 #define PIN_LED_YELLOW			hw_pin_pb0

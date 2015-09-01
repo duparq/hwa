@@ -188,11 +188,9 @@ force: ;
 #  .sx files must first be preprocessed in order to catch HWA error messages and
 #  format them for a correct display
 #
-$(OUTDIR)/%.cp.sx %.cp.sx: %.sx
+rem_$(OUTDIR)/%.cp.sx %.cp.sx: %.sx
 	@echo "RULE $@: $^"
 	$(CPP) $(AFLAGS) $< >$@
-
-foo:
 	@awk 'BEGIN { result=0; }{						\
 	  x=match($$0,/hw_error\((.*),(.*),(.*)\)/,gr) ;			\
 	  if (x != 0) {								\
@@ -249,6 +247,11 @@ $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
 	@mkdir -p $(OUTDIR)
 	@$(CC) $(AFLAGS) -c $< -o $@
 
+$(OUTDIR)/%.o: %.sx
+#	@echo "RULE: $@ : $^"
+	@mkdir -p $(OUTDIR)
+	@$(CC) $(AFLAGS) -c $< -o $@
+
 
 ################################################################################
 #									       #
@@ -258,8 +261,6 @@ $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
 
 #  Object files list (from source files list)
 #
-#OBJECTS		 = $(SOURCES:.c=.$(DEVICE).o)
-#OBJECTS		:= $(OBJECTS:.sx=.$(DEVICE).o)
 OBJECTS		 = $(SOURCES:.c=.o)
 OBJECTS		:= $(OBJECTS:.sx=.o)
 OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
@@ -278,8 +279,8 @@ LDFLAGS		+= -Wl,--gc-sections
 #LDFLAGS		+= -lm
 
 $(OUT).elf: $(OBJECTS) $(LDSCRIPT)
-#	@echo "RULE: $@ : $^"
-	@$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
+	@echo "RULE: $@ : $^"
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 
 ################################################################################
@@ -447,18 +448,25 @@ disassemble:
 
 
 #  Show device fuse values
+#    Extract the fuse configuration from the target board header file
 #
 .PHONY: show-fuses
-show-fuses: $(INC_HWA)
+show-fuses: $(OUT).fuses
 #	@echo "RULE: $@: $^"
-	@printf "FUSE_EB=0x%02X  FUSE_HB=0x%02X  FUSE_LB=0x%02X\n" \
-		$$(($$(echo $(DEVICE_FUSE_EB)))) \
-		$$(($$(echo $(DEVICE_FUSE_HB)))) \
-		$$(($$(echo $(DEVICE_FUSE_LB))))
+	@cat $<
 
-# .PHONY: show-device
-# show-device: $(OUT).cfg
 
-.PHONY: echo
-echo:
-	@bash -e echo ECHO
+$(OUT).fuses.c: $(MFD)../boards/$(BOARD).h
+	@mkdir -p $(OUTDIR)
+	@echo "#include <boards/$(BOARD).h>" >$@
+	@echo "DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)" >>$@
+	@echo "DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)" >>$@
+	@echo "DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)" >>$@
+
+$(OUT).fuses: $(OUT).fuses.c
+	@$(CPP) $(INCLUDES) $(DEFINES) -D__ASSEMBLER__ $< | grep "^DEVICE" >$@.tmp
+	@echo "printf \"DEVICE_FUSE_EB=0x%02X\nDEVICE_FUSE_HB=0x%02X\nDEVICE_FUSE_LB=0x%02X\n\"	\
+		\$$((\$${DEVICE_FUSE_EB}))	\
+		\$$((\$${DEVICE_FUSE_HB}))	\
+		\$$((\$${DEVICE_FUSE_LB}))" >>$@.tmp
+	@ . $@.tmp >$@

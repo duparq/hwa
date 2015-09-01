@@ -59,7 +59,12 @@
  * `HW_DEVICE_FUSE_LB`	| Fuse low byte
  */
 
+#if !defined HW_DEVICE_FUSE_EBX
+#  define HW_DEVICE_FUSE_EBX		0xF
+#endif
+
 #define HW_DEVICE_FUSE_EB			\
+  (HW_DEVICE_FUSE_EBX & 0x0F)<<4 |		\
   HW_DEVICE_FUSE_HWBE<<3 |			\
   HW_DEVICE_FUSE_BODLEVEL
 
@@ -96,40 +101,35 @@
 #define _hw_is_low_freq_xosc_low_freq_xosc		, 1
 #define _hw_is_low_power_xosc_low_power_xosc		, 1
 
-/*  If HW_DEVICE_CLK_SRC_HZ is not defined, define it void for hw_syshz_base
- */
-/* #ifndef HW_DEVICE_CLK_SRC_HZ */
-/* #  define HW_DEVICE_CLK_SRC_HZ */
-/* #endif */
 
 #ifndef HW_DEVICE_CLK_SRC
 #  define HW_DEVICE_CLK_SRC				rc_8MHz
 #endif
 
 #if HW_IS(external,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
+#  define HW_DEVICE_FUSE_CKSEL31			0
+#  define HW_DEVICE_FUSE_CKSEL0				0
 #elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
+#  define HW_DEVICE_FUSE_CKSEL31			1
+#  define HW_DEVICE_FUSE_CKSEL0				0
 #  define hw_syshz_base					8000000
 #elif HW_IS(HW_DEVICE_CLK_SRC, low_freq_xosc)
 #  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
-#  define HW_DEVICE_CKSEL31				2
+#  define HW_DEVICE_FUSE_CKSEL31			2
 #
 #elif HW_IS(HW_DEVICE_CLK_SRC, low_power_xosc)
 #  ifndef HW_DEVICE_CLK_SRC_HZ
-#    error HW_DEVICE_CLK_SRC_HZ must be defined
+#    error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the crystal used for clocking
 #  endif
 #  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
 #  if HW_DEVICE_CLK_SRC_HZ < 900000
-#    define HW_DEVICE_CKSEL31				4
+#    define HW_DEVICE_FUSE_CKSEL31			4
 #  elif HW_DEVICE_CLK_SRC_HZ < 3000000
-#    define HW_DEVICE_CKSEL31				5
+#    define HW_DEVICE_FUSE_CKSEL31			5
 #  elif HW_DEVICE_CLK_SRC_HZ < 8000000
-#    define HW_DEVICE_CKSEL31				6
+#    define HW_DEVICE_FUSE_CKSEL31			6
 #  else
-#    define HW_DEVICE_CKSEL31				7
+#    define HW_DEVICE_FUSE_CKSEL31			7
 #  endif
 #else
 #  error HW_DEVICE_CLK_SRC can be `rc_8MHz`, `low_freq_xosc`, `low_power_xosc`, or `external`.
@@ -137,19 +137,19 @@
 
 /*  Check that we have a valid hw_syshz_base
  */
-#if HW_IS(,hw_syshz_base)
-#  error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the crystal used for clocking
-#endif
+/* #if HW_IS(,hw_syshz_base) */
+/* #  error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the crystal used for clocking */
+/* #endif */
 
 #if !defined HW_DEVICE_CLK_PSC
 #  define HW_DEVICE_CLK_PSC				8
 #endif
 
 #if HW_DEVICE_CLK_PSC == 8
-#  define HW_DEVICE_CKDIV8				0
+#  define HW_DEVICE_FUSE_CKDIV8				0
 #  define hw_syshz					hw_syshz_base/8
 #elif HW_DEVICE_CLK_PSC == 1
-#  define HW_DEVICE_CKDIV8				1
+#  define HW_DEVICE_FUSE_CKDIV8				1
 #  define hw_syshz					hw_syshz_base
 #else
 #  HW_ERROR(`HW_DEVICE_CLK_PSC` can be `8`, or `1`, but not HW_DEVICE_CLK_PSC)
@@ -186,57 +186,58 @@
  */
 #if defined HW_DEVICE_STARTUP_DELAYS
 #  if HW_DEVICE_CKSEL31 < 2
-#    define HW_DEVICE_CKSEL0				0
+#    define HW_DEVICE_FUSE_CKSEL0				0
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK)
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_4ms)
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_64ms)
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_SUT10				2
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
 #    endif
 #  elif HW_DEVICE_CKSEL31 == 2
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK)
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK_4ms)
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK_64ms)
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_SUT10				2
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `4CK`, `4CK_4ms`, or `4CK_64ms`.
 #    endif
 #  else
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				2
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				3
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				3
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				2
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				3
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				3
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `258CK_14CK_4ms`, `258CK_14CK_64ms`, `1KCK_14CK`, `1KCK_14CK_4ms`, `1KCK_14CK_64ms`, `16KCK_14CK`, `16KCK_14CK_4ms`, or `16KCK_14CK_64ms`.
 #    endif
 #  endif
 #else
-#  define HW_DEVICE_SUT10				2
+#  define HW_DEVICE_FUSE_SUT10					2
+#  define HW_DEVICE_FUSE_CKSEL0					1
 #endif
 
 
@@ -376,9 +377,9 @@
 #define _hw_is_bootloader_bootloader			, 1
 
 #if HW_IS(HW_DEVICE_BOOT, application)
-#  define HW_DEVICE_BOOTRST				1
+#  define HW_DEVICE_FUSE_BOOTRST			1
 #elif HW_IS(HW_DEVICE_BOOT, bootloader)
-#  define HW_DEVICE_BOOTRST				0
+#  define HW_DEVICE_FUSE_BOOTRST			0
 #else
 #  error HW_DEVICE_BOOT must be defined as `bootloader` or `application` (default).
 #endif
@@ -586,11 +587,38 @@
 #define _hw_portb			_p8a, 300, 0x23
 #define _hw_portc			_p8a, 310, 0x26
 #define _hw_portd			_p8a, 320, 0x29
-#define _hw_porte			_p8a, 320, 0x2C
-#define _hw_portf			_p8a, 320, 0x2F
+#define _hw_porte			_p8a, 330, 0x2C
+#define _hw_portf			_p8a, 340, 0x2F
 
 /*  Pins				class, id, port, bn, bp
  */
+#define _hw_pin_pb0			_io1a, 301, hw_portb, 1, 0
+#define _hw_pin_pb1			_io1a, 302, hw_portb, 1, 1
+#define _hw_pin_pb2			_io1a, 303, hw_portb, 1, 2
+#define _hw_pin_pb3			_io1a, 304, hw_portb, 1, 3
+#define _hw_pin_pb4			_io1a, 305, hw_portb, 1, 4
+#define _hw_pin_pb5			_io1a, 306, hw_portb, 1, 5
+#define _hw_pin_pb6			_io1a, 307, hw_portb, 1, 6
+#define _hw_pin_pb7			_io1a, 308, hw_portb, 1, 7
+
+#define _hw_pin_pd0			_io1a, 321, hw_portd, 1, 0
+#define _hw_pin_pd1			_io1a, 322, hw_portd, 1, 1
+#define _hw_pin_pd2			_io1a, 323, hw_portd, 1, 2
+#define _hw_pin_pd3			_io1a, 324, hw_portd, 1, 3
+#define _hw_pin_pd4			_io1a, 325, hw_portd, 1, 4
+#define _hw_pin_pd5			_io1a, 326, hw_portd, 1, 5
+#define _hw_pin_pd6			_io1a, 327, hw_portd, 1, 6
+#define _hw_pin_pd7			_io1a, 328, hw_portd, 1, 7
+
+/*  Communications
+ */
+#define hw_pin_scl			hw_pin_pd0
+#define hw_pin_sda			hw_pin_pd1
+
+#define hw_pin_txd			hw_pin_pd3
+#define hw_pin_rxd			hw_pin_pd2
+
+#if 0
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT)
 #  define _hw_pin_pb0			_io1a, 301, hw_portb, 1, 0
 #endif
@@ -675,14 +703,6 @@
 
 #define _hw_pin_pd6_did			_xob1, hw_shared, did1, 1, 0	/* AIN0 */
 #define _hw_pin_pd7_did			_xob1, hw_shared, did1, 1, 1	/* AIN1 */
-
-/*  Communications
- */
-#define hw_pin_scl			hw_pin_pc5
-#define hw_pin_sda			hw_pin_pc4
-
-#define hw_pin_txd			hw_pin_pd1
-#define hw_pin_rxd			hw_pin_pd0
 
 /*  Relative pin change controllers
  */
@@ -801,13 +821,47 @@
 #  define hw_pin_32			hw_pin_pd2
 #
 #endif
+#endif
 
+/*******************************************************************************
+ *									       *
+ *	EEPROM memory							       *
+ *									       *
+ *******************************************************************************/
 
+#include "../classes/eeproma_1.h"
+
+/*	Object				class, id, address
+ */					
+#define _hw_eeprom0			_eeproma, 1000, 0
+
+/*	Class hardware registers	class, address, write mask, flags mask
+ */					
+#define _hw__eeproma_ar			_r16, 0x41, 0x03FF, 0x00
+#define _hw__eeproma_dr			_r8,  0x40,   0xFF, 0x00
+#define _hw__eeproma_cr			_r8,  0x3F,   0x3F, 0x00
 
 
 /*******************************************************************************
  *									       *
- *	C O N T E X T							       *
+ *	Flash memory							       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/flasha_1.h"
+
+/*	Object				class, id, address
+ */					
+#define _hw_flash0			_flasha, 1100, 0
+
+/*	Class hardware registers	class, address, write mask, flags mask
+ */					
+#define _hw__flasha_csr			_r8, 0x57, 0xBF, 0x00
+
+
+/*******************************************************************************
+ *									       *
+ *	H W A    C O N T E X T						       *
  *									       *
  *******************************************************************************/
 
