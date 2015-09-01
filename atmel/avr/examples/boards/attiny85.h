@@ -6,6 +6,7 @@
 
 /**
  * @file
+ * @brief Target board definition
  */
 
 /**

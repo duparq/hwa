@@ -6,12 +6,13 @@
 
 /**
  * @file
+ * @brief Target board definition
  */
 
 /**
  * @page atmelavr_boards
  *
- * @section boards_arduino_pro_mini Arduino Pro Mini
+ * @section boards_pro_mini Pro Mini
  *
  * This is an Arduino clone board with a MEGA328P-AU microcontroller and a 16
  * MHz crystal.
@@ -71,6 +72,7 @@
 #define DIABOLO_BPS                     230400
 #define DIABOLO_RESET_SIGNAL            DTR
 #define DIABOLO_CHAR_DELAY		0
+
 /*  Board pins
  */
 #define ARDUINO

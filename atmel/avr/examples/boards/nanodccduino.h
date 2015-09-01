@@ -6,6 +6,7 @@
 
 /**
  * @file
+ * @brief Target board definition
  */
 
 /**
@@ -16,16 +17,8 @@
  * This is an Arduino clone board with a MEGA328P-AU microcontroller, a 16 MHz
  * crystal and a CH340 USB/Serial adapter.
  *
- * @par Serial adapter wiring
- *
- * The CH340 does not work on my board. Then I use an external USB/Serial
- * adapter:
- *
- *     BOARD -> TX1 : RXD <- Serial Adapter
- *		RX0 : TXD
- *		 5V : DTR
- *		GND : GND
- *
+ * @note I've discovered that my Linux driver for CH340/CH341 is buggy and does
+ * not send parity bytes. So, use the 5+1 synchronization sequence.
  *
  * @par USBASP wiring
  *
@@ -65,7 +58,6 @@
  */
 #define DIABOLO_PIN_RX			hw_pin_rxd
 #define DIABOLO_PIN_TX			hw_pin_txd
-//#define DIABOLO_PIN_DBG			PIN_LED
 #define DIABOLO_BPS			230400
 #define DIABOLO_SYNC			5+1
 #define DIABOLO_RESET_SIGNAL		DTR
