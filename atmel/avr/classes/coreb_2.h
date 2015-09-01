@@ -27,7 +27,9 @@
  *           [ sleep_mode,   idle
  *                         | adc_noise_reduction
  *                         | power_down
- *                         | standby             ]
+ *                         | power_save
+ *                         | standby
+ *                         | extended_standby     ]
  *             );
  * @endcode
  */
@@ -82,11 +84,11 @@
 #define _hw_sleepmode_power_down		, 2
 #define _hw_sleepmode_power_save		, 3
 #define _hw_sleepmode_standby			, 6
-#define _hw_sleepmode_external_standby		, 7
+#define _hw_sleepmode_extended_standby		, 7
 
 #define _hwa_cfcoreb_vsleepmode_0(o,v,...)				\
   HW_ERR("`sleep_mode` can be `idle`, `adc_noise_reduction`, `power_down`, " \
-	 "`power_save`, `standby`, or `external_standby`, but not `" #v "`.")
+	 "`power_save`, `standby`, or `extended_standby`, but not `" #v "`.")
 
 #define _hwa_cfcoreb_vsleepmode_1(o,v,...)	\
   HW_TX(_hwa_write_reg( o, sm, HW_A1(_hw_sleepmode_##v)),__VA_ARGS__)
