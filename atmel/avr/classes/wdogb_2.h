@@ -229,7 +229,7 @@
     if ( hwa->o.config.action != 0xFF ) {				\
       if ( hwa->o.config.action == HW_A1(_hw_wdogb_action_none) ) {	\
 	/* Turn it off */						\
-	if ( HW_DEVICE_WDTON == 0 )					\
+	if ( HW_DEVICE_FUSE_WDTON == 0 )				\
 	  HWA_ERR( "watchdog can not be turned off because "		\
 		   "HW_DEVICE_WATCHDOG_ALWAYS_ON is `enabled`." );	\
 	_hwa_write_reg( o, wdrf, 0 );					\
