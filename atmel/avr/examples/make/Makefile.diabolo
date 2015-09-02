@@ -28,7 +28,7 @@ CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
 #
 DIABOLO_OPTS	 += --mcu=$(DEVICE)
 #DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
-#DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
+DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
 DIABOLO_OPTS	 += --diag
 #DIABOLO_OPTS	 += --debug
 
