@@ -147,7 +147,7 @@ class atmegaxu4(devices.Device):
 
 class atmega32u4(atmegaxu4):
     def __init__(self):
-        atmegaxu4.__init__(self,'ATmega32U4','1E9587',256,32768,1024,True)
+        atmegaxu4.__init__(self,'ATmega32U4','1E9587',128,32768,1024,True)
 
 devices.devices['1E9587'] = atmega32u4
 devices.devices['atmega32u4'] = atmega32u4

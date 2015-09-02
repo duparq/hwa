@@ -296,7 +296,7 @@ class Device():
         #trace("i: %s\n" % s2hex(r))
         self.protocol = ord(r[0])
 
-        if self.protocol != 4:
+        if self.protocol != 4 and self.protocol != 5:
             die(_('protocol #%d not supported' % self.protocol))
 
         signature=s2hex(r[1:4]).replace(' ','') ; r = r[4:]
@@ -331,8 +331,10 @@ class Device():
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
         s = 'f'+chr(al)+chr(ah)
-        return self.execute(s, self.pagesize+2+1, timeout=0.5)
-
+        if self.protocol == 4:
+            return self.execute(s, self.pagesize+2+1, timeout=0.5)
+        else: # protocol 5
+            return self.execute(s, 256+2+1, timeout=0.5)
 
     def read_eeprom_bytes(self, address, n):
         ah = (address >>  8) & 0xFF

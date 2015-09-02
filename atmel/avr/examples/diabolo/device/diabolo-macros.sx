@@ -21,7 +21,7 @@
 
 	;; Macros for flash memory programming
 	;;
-#if !defined HW_DEVICE_BOOTRST
+#if !defined HW_DEVICE_FUSE_BOOTRST
 	;;
 	;; Device without boot section: the MCU is halted when the
 	;; flash memory is busy, no need to wait for readiness

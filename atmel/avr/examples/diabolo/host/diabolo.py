@@ -73,9 +73,12 @@ class Application:
         t = timer()
         cout("\nReading flash:")
         s=''
-        vp = '\xFF'*self.device.pagesize
+        if self.device.protocol == 4:
+            vp = '\xFF'*self.device.pagesize
+        else: # protocol 5
+            vp = '\xFF'*256
         col=0
-        for a in range(0, self.device.flashsize, self.device.pagesize):
+        for a in range(0, self.device.flashsize, len(vp)):
             if col==0 :
                 cout('\n')
             col += 1
@@ -128,15 +131,18 @@ class Application:
                 if r == 'C':
                     cout(_(" CRC! "))
                     redo.append(a)
-                if r == 'T':
+                elif r == 'T':
                     cout(_(" Timeout!\n"))
                     return
-                if r == 'P': # should be '!'
+                elif r == 'P': # should be '!'
+                    redo.append(a)
+                elif r == 'L':
+                    redo.append(a)
+                    # cerr(self.device.error+'\n')
+                elif r == '!':
                     redo.append(a)
                 if r != '-':
                     pg += 1
-                if r == 'L':
-                    cerr(self.device.error+'\n')
             else:
                 r = '-'
             cout(r)
@@ -344,8 +350,14 @@ class Application:
                            " memory is required.\n"))
             if cache == None:
                 cache = self.read_flash()
+                if self.options.cache:
+                    self.write_file(self.options.cache, cache)
+
             x, cache_crc = self.device.appstat(cache)
             flash = self.read_file(self.options.filename)
+            if len(flash) < self.device.bladdr:
+                cout(_("Padding data with 0xFF bytes\n"))
+                flash = flash + "\xFF"*(self.device.bladdr - len(flash))
 
         #  Program flash memory
         #

@@ -28,7 +28,7 @@
 
 	;; Constants
 	;;
-	PROTOCOL   = 4
+	PROTOCOL   = 5
 	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE  ; from HWA
 	FLASHSIZE  = HW_DEVICE_FLASH_SIZE       ;
 	RAMSTART   = HW_DEVICE_RAM_START        ;
@@ -313,11 +313,13 @@ ocrc:	mov	R24, R11	; CRC (msb)
 1:
 
 	;; Read flash page: 'f' + addr
-	;; 
+	;; Read 256 bytes of flash: 'f' + addr
+	;;
 xf:	cpi	R24, 'f'
 	brne	1f
 	rcall	iaddr		; Get address in Z
-	ldi	R20, lo8(PAGESIZE)
+	;; ldi	R20, lo8(PAGESIZE)
+	ldi	R20, 0
 2:	lpm	R24, Z+		; Read flash byte
 	rcall	obytecrc	; Send it
 	dec	R20
@@ -379,6 +381,7 @@ xF:	cpi	R24, 'F'
 	FLASH_CLRBF r21
 	movw	R28, R4		; Y = RAMSTART (where the data bytes are stored)
 	ldi	R20, PAGESIZE/2
+
 	ldi	R23, 0xFF
 2:	ld	R0, Y+
 	ld	R1, Y+
