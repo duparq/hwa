@@ -7,21 +7,21 @@ CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
 
 #  Extract Diabolo parameters from sources
 #
-ifneq (,$(DEVICE))
-$(OUT).diabolo: $(SOURCES)
-#	@echo "RULE: $@: $^"
-	@mkdir -p $(OUTDIR)
-	@>$@
-	@for f in $(SOURCES) ; do \
-	  if $(CPP) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
-	    awk -F"[ ,]" '{print $$2 "=" $$3}' $@.tmp >$@ 				;\
-	    break									;\
-	  fi ;\
-	done
-#	@rm -f $@.tmp
+# ifneq (,$(DEVICE))
+# $(OUT).diabolo: $(SOURCES)
+# #	@echo "RULE: $@: $^"
+# 	@mkdir -p $(OUTDIR)
+# 	@>$@
+# 	@for f in $(SOURCES) ; do \
+# 	  if $(CPP) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
+# 	    awk -F"[ ,]" '{print $$2 "=" $$3}' $@.tmp >$@ 				;\
+# 	    break									;\
+# 	  fi ;\
+# 	done
+# #	@rm -f $@.tmp
 
-#-include $(OUT).diabolo
-endif
+# #-include $(OUT).diabolo
+# endif
 
 
 #  Diabolo options
@@ -30,6 +30,8 @@ DIABOLO_OPTS	 += --mcu=$(DEVICE)
 #DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
 #DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
 DIABOLO_OPTS	 += --diag
+#DIABOLO_OPTS	 += --debug
+
 
 ifneq (,$(DIABOLO_BPS))
    DIABOLO_OPTS	+= --bps=$(DIABOLO_BPS)		# From sources
@@ -48,7 +50,15 @@ rem-install: $(OUT).bin $(OUT).diabolo $(OUT).lst
 
 #		--cache=build/flash-cache.bin	\
 
-install: $(OUT).bin $(OUT).diabolo $(OUT).hwa
+.PHONY: install
+install: $(OUT).bin
+	$(diabolo) $(DIABOLO_OPTS)		\
+		--cache=/tmp/diabolo-cache.bin	\
+		--burn-flash $<
+
+
+#install: $(OUT).bin $(OUT).diabolo $(OUT).hwa
+rem2-install: $(OUT).bin
 	@OUTDIR=$(OUTDIR) bash $(CWD)diabolo.sh	\
 		$(DIABOLO_OPTS)			\
 		--cache=/tmp/diabolo-cache.bin	\

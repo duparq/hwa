@@ -75,9 +75,9 @@
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-#define DIABOLO_BPS                     460800
-#define DIABOLO_RESET_SIGNAL            DTR
-#define DIABOLO_CHAR_DELAY		0
+//#define DIABOLO_BPS                     460800
+//#define DIABOLO_RESET_SIGNAL            DTR
+//#define DIABOLO_CHAR_DELAY		0
 #define DIABOLO_SYNC			5+1
 
 #if 0

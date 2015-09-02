@@ -6,11 +6,20 @@
 
 #$(warning INCLUDE)
 
-DEVICE		= atmega32u4
-AVRDUDE_PARTNO	= m32u4
+DEVICE			= atmega32u4
+DEVICE_FLASH_SIZE	= 32768
+AVRDUDE_PARTNO		= m32u4
+#AVRDUDE_HW	?= avr109
 
 PROG_HW		?= avr109
-PROG_SW 	?= avrdude
+#PROG_SW		?= avrdude
+PROG_SW		?= diabolo
+DIABOLO_BPS		= 230400
+DIABOLO_KEEP_TXD_LOW	= 0.129
+DIABOLO_RESET_SIGNAL	= DTR
+#DIABOLO_CHAR_DELAY	= 0
+#DIABOLO_SYNC		= 5+1
+
 
 #  These are mostly the values as the board is shipped, except the bootsection
 #  size which is 1024 with Diabolo instead of 4096 with the Caterina bootloader.

@@ -298,9 +298,11 @@ else
 endif
 
 %.bin: %.elf
+#	@echo "RULE: $@ : $^"
 	@$(OBJCOPY) -R .eeprom -O binary --gap-fill=0xFF $(PADTO) $^ $@
 
 %.hex: %.elf
+#	@echo "RULE: $@ : $^"
 	@$(OBJCOPY) --gap-fill=0xFF -R .eeprom -O ihex $^ $@
 
 #  Object dump flags:

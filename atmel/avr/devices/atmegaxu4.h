@@ -32,9 +32,9 @@
  * `HW_DEVICE`		       |	      |atmega32u4
  * `HW_DEVICE_SIGNATURE`       |              |0x1E,0x95,0x87
  * `HW_DEVICE_FLASH_SIZE`      |     	      |32768
- * `HW_DEVICE_FLASH_PAGE_SIZE` |   	      |256
+ * `HW_DEVICE_FLASH_PAGE_SIZE` |   	      |128
  * `HW_DEVICE_EEPROM_SIZE`     |    	      |1024
- * `HW_DEVICE_EEPROM_PAGE_SIZE`| 	      |8
+ * `HW_DEVICE_EEPROM_PAGE_SIZE`| 	      |4
  * `HW_DEVICE_RAM_SIZE`	       |   	      |2560
  * `HW_DEVICE_RAM_START`       |       	      |0x0100
  * `HW_DEVICE_APP_START`       |      	      |0x00AC
@@ -412,6 +412,7 @@
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
  * `hw_core0`	 | @ref atmelavr_corec "_corec" | The core
+ * `hw_wdog0`	 | @ref atmelavr_wdogb "_wdogb" | Watchdog (WDG)
  * `hw_portb`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port B (PORTB)
  * `hw_portc`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port C (PORTC)
  * `hw_portd`	 | @ref atmelavr_p8a "_p8a"	| General purpose I/O port D (PORTD)
@@ -426,7 +427,6 @@
  * `hw_pcic0`	 | @ref atmelavr_pcica "_pcica" | Pin change interrupt controller
  * `hw_pcic1`	 | @ref atmelavr_pcica "_pcica" | Pin change interrupt controller
  * `hw_pcic2`	 | @ref atmelavr_pcica "_pcica" | Pin change interrupt controller
- * `hw_wdog0`	 | @ref atmelavr_wdogb "_wdogb" | Watchdog (WDG)
  * `hw_counter0` | @ref atmelavr_c8a "_c8a"	| 8-bit counter-timer (T0)
  * `hw_oc00`	 | @ref atmelavr_oc8a "_oc8a"	| Compare unit 0 of hw_counter0 (OC0A)
  * `hw_oc01`	 | @ref atmelavr_oc8a "_oc8a"	| Compare unit 1 of hw_counter0 (OC0B)
@@ -492,6 +492,34 @@
  */
 
 
+/*******************************************************************************
+ *									       *
+ *	Interrupts							       *
+ *									       *
+ *******************************************************************************/
+
+/**
+ * @page atmegaxu4
+ * @section atmegaxu4_interrupts Interrupts
+ * 
+ * Interrupt definition                    | Atmel label  | Comments
+ * :---------------------------------------|--------------|------------------------
+ * `hw_wdog0`                              | WDT          | Watchdog Time-out Interrupt
+ * `hw_eeprom0`                            | EE READY     | EEPROM ready
+ * `hw_eeprom0,ready`                      | EE READY     | EEPROM ready
+ * `hw_flash0`                             | SPM READY    | Store Program Memory Ready
+ */
+/**
+ * @ingroup atmegaxu4_interrupts
+ * @brief Definition of the interrupts
+ */
+/*					_irq, vector-1, object, ie, if
+ */
+#define _hw_irq_hw_wdog0		_irq, 12, hw_wdog0,    ie,  if
+#define _hw_irq_hw_eeprom0		_irq, 30, hw_eeprom0,  ie, /* no irq flag */
+#define _hw_irq_hw_eeprom0_ready	_irq, 30, hw_eeprom0,  ie,
+#define _hw_irq_hw_flash0		_irq, 37, hw_flash0,   ie, if
+
 
 /*******************************************************************************
  *									       *
@@ -530,6 +558,27 @@
 
 #define _hw_core0_sm			_ob1, smcr, 3, 1
 #define _hw_core0_se			_ob1, smcr, 1, 0
+
+
+/*******************************************************************************
+ *									       *
+ *	hw_wdog0: watchdog						       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/wdogb_1.h"
+
+/*	Object				class, id, address
+ */
+#define _hw_wdog0			_wdogb, 109, 0
+
+/*	Class hardware registers	class, address, write mask, flags mask
+ */
+#define _hw__wdogb_csr			_r8, 0x60, 0xFF, 0x80
+
+/*	Class logical registers
+ */
+#define _hw__wdogb_wdrf			_xob1, hw_core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -877,6 +926,7 @@ typedef struct {
   uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
 
   hwa_corec_t	hw_core0 ;
+  hwa_wdogb_t	hw_wdog0 ;
   hwa_p8a_t	hw_portb ;
   hwa_p8a_t	hw_portc ;
   hwa_p8a_t	hw_portd ;
@@ -887,6 +937,7 @@ typedef struct {
 
 #include "../hwa_2.h"
 #include "../classes/corec_2.h"
+#include "../classes/wdogb_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p8a_2.h"
 
@@ -894,6 +945,7 @@ typedef struct {
 HW_INLINE void _hwa_create_context( hwa_t *hwa )
 {
   _hwa_create( hw_core0 );
+  _hwa_create( hw_wdog0 );
   _hwa_create( hw_portb );
   _hwa_create( hw_portc );
   _hwa_create( hw_portd );
@@ -905,6 +957,7 @@ HW_INLINE void _hwa_create_context( hwa_t *hwa )
 HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init( hw_core0 );
+  _hwa_init( hw_wdog0 );
   _hwa_init( hw_portb );
   _hwa_init( hw_portc );
   _hwa_init( hw_portd );
@@ -916,6 +969,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
   _hwa_commit( hw_core0 );
+  _hwa_commit( hw_wdog0 );
   _hwa_commit( hw_portb );
   _hwa_commit( hw_portc );
   _hwa_commit( hw_portd );
