@@ -27,7 +27,7 @@
  *   takes 13 clock cycles, 13.5 in the auto-trigger mode, and 25 for the
  *   initial conversion.
  *
- * __Note__: the ADC and the analog comparator share the output of the analog
+ * @note The ADC and the analog comparator share the output of the analog
  * multiplexer. When the ADC is enabled, the analog comparator can not use the
  * analog multiplexer output. Thus, HWA implements these peripherals as if each
  * has his own analog multiplexer.

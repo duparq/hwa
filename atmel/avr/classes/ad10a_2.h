@@ -9,14 +9,18 @@
  * @brief 10-bit A/D converter
  */
 
+/*	Base class
+ */
+#include "ad10__2.h"
+
 /**
  * @page atmelavr_ad10a
- * @section atmelavr_ad10a_cfg Configuration
+ * @section atmelavr_ad10a_cf Configuration
  *
- * __Note__: the ADC is turned off by default. Configuring the ADC will
- * automatically turn it on.
+ * @note The ADC is turned off by default. Configuring the ADC automatically
+ * turns it on.
  *
- * @subsection atmelavr_ad10a_config1 Configuration in single-end mode
+ * @subsection atmelavr_ad10a_cf1 Single-end mode
  *
  * @code
  * hwa_config( ADC_NAME,
@@ -65,7 +69,7 @@
  *           );
  * @endcode
  *
- * @subsection atmelavr_ad10c_config2 Configuration in differential mode
+ * @subsection atmelavr_ad10c_cf2 Differential mode
  *
  * The differential mode allows the use of the 20x gain stage.
  *
@@ -100,15 +104,6 @@
 
 /*  Mandatory parameter `clock`
  */
-#define _hw_ad10a_clock_sysclk_div_2		, 1	/* , ps */
-#define _hw_ad10a_clock_sysclk_div_4		, 2
-#define _hw_ad10a_clock_sysclk_div_8		, 3
-#define _hw_ad10a_clock_sysclk_div_16		, 4
-#define _hw_ad10a_clock_sysclk_div_32		, 5
-#define _hw_ad10a_clock_sysclk_div_64		, 6
-#define _hw_ad10a_clock_sysclk_div_128		, 7
-#define _hw_ad10a_clock_sysclk_div(x)		HW_G2(_hw_ad10a_clock_sysclk_div,x)
-
 #define _hwa_cfad10a(o,i,a,...)						\
   do {									\
     uint8_t gain __attribute__((unused)) = 1 ;				\
@@ -132,19 +127,17 @@
   _hwa_write_reg(o,ps, HW_A1(_hw_ad10a_clock_##v));			\
   HW_G2(_hwa_cfad10a_ktrigger, HW_IS(trigger,k))(o,k,__VA_ARGS__)
 
+#define _hw_ad10a_clock_sysclk_div_2		, 1	/* , ps */
+#define _hw_ad10a_clock_sysclk_div_4		, 2
+#define _hw_ad10a_clock_sysclk_div_8		, 3
+#define _hw_ad10a_clock_sysclk_div_16		, 4
+#define _hw_ad10a_clock_sysclk_div_32		, 5
+#define _hw_ad10a_clock_sysclk_div_64		, 6
+#define _hw_ad10a_clock_sysclk_div_128		, 7
+#define _hw_ad10a_clock_sysclk_div(x)		HW_G2(_hw_ad10a_clock_sysclk_div,x)
+
 /*  Mandatory parameter `trigger`
  */
-#define _hw_is_trigger_trigger			, 1
-#define _hw_ad10a_trigger_manual		, 0, 0	/* , ate, ts */
-#define _hw_ad10a_trigger_auto			, 1, 0
-#define _hw_ad10a_trigger_hw_acmp0		, 1, 1
-#define _hw_ad10a_trigger_hw_int0		, 1, 2
-#define _hw_ad10a_trigger_hw_counter0_compare0	, 1, 3
-#define _hw_ad10a_trigger_hw_counter0_overflow	, 1, 4
-#define _hw_ad10a_trigger_hw_counter1_compare1	, 1, 5
-#define _hw_ad10a_trigger_hw_counter1_overflow	, 1, 6
-#define _hw_ad10a_trigger_hw_counter1_capture0	, 1, 7
-
 #define _hwa_cfad10a_ktrigger_0(o,k,...)		\
   HW_ERR("expected `trigger` instead of `" #k "`.")
 
@@ -162,13 +155,19 @@
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10a_trigger_##v));		\
   HW_G2(_hwa_cfad10a_kvref, HW_IS(vref,k))(o,k,__VA_ARGS__)
 
+#define _hw_is_trigger_trigger			, 1
+#define _hw_ad10a_trigger_manual		, 0, 0	/* , ate, ts */
+#define _hw_ad10a_trigger_auto			, 1, 0
+#define _hw_ad10a_trigger_hw_acmp0		, 1, 1
+#define _hw_ad10a_trigger_hw_int0		, 1, 2
+#define _hw_ad10a_trigger_hw_counter0_compare0	, 1, 3
+#define _hw_ad10a_trigger_hw_counter0_overflow	, 1, 4
+#define _hw_ad10a_trigger_hw_counter1_compare1	, 1, 5
+#define _hw_ad10a_trigger_hw_counter1_overflow	, 1, 6
+#define _hw_ad10a_trigger_hw_counter1_capture0	, 1, 7
+
 /*  Mandatory parameter `vref`
  */
-#define _hw_is_vref_vref			, 1
-#define _hw_ad10a_vref_vcc			, 0	/* , refs */
-#define _hw_ad10a_vref_pin_aref			, 1
-#define _hw_ad10a_vref_bandgap			, 2
-
 #define _hwa_cfad10a_kvref_0(o,k,...)					\
   HW_ERR("expected `vref` instead of `" #k "`.")
 
@@ -182,12 +181,13 @@
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
   HW_G2(_hwa_cfad10a_kalign, HW_IS(align,k))(o,k,__VA_ARGS__)
 
+#define _hw_is_vref_vref			, 1
+#define _hw_ad10a_vref_vcc			, 0	/* , refs */
+#define _hw_ad10a_vref_pin_aref			, 1
+#define _hw_ad10a_vref_bandgap			, 2
+
 /*  Optionnal parameter `align`
  */
-#define _hw_is_align_align			, 1
-#define _hw_ad10a_align_left			, 1	/* , lar */
-#define _hw_ad10a_align_right			, 0
-
 #define _hwa_cfad10a_kalign_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10a_valign, HW_IS(,_hw_ad10a_align_##v))(o,v,__VA_ARGS__)
 
@@ -201,12 +201,12 @@
 #define _hwa_cfad10a_kalign_0(o,k,...)					\
   HW_G2(_hwa_cfad10a_kpolarity, HW_IS(polarity,k))(o,k,__VA_ARGS__)
 
+#define _hw_is_align_align			, 1
+#define _hw_ad10a_align_left			, 1	/* , lar */
+#define _hw_ad10a_align_right			, 0
+
 /*  Optionnal parameter `polarity`
  */
-#define _hw_is_polarity_polarity		, 1
-#define _hw_ad10a_polarity_unipolar		, 0	/* , bin */
-#define _hw_ad10a_polarity_bipolar		, 1
-
 #define _hwa_cfad10a_kpolarity_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10a_vpolarity, HW_IS(,_hw_ad10a_polarity_##v))(o,v,__VA_ARGS__)
 
@@ -221,6 +221,10 @@
 #define _hwa_cfad10a_kpolarity_0(o,k,...)			\
   HW_G2(_hwa_cfad10a_kgain, HW_IS(gain,k))(o,k,__VA_ARGS__)
 
+#define _hw_is_polarity_polarity		, 1
+#define _hw_ad10a_polarity_unipolar		, 0	/* , bin */
+#define _hw_ad10a_polarity_bipolar		, 1
+
 /*  Optionnal parameter `gain`
  */
 #define _hw_is_gain_gain			, 1
@@ -229,41 +233,48 @@
   gain = (uint8_t)(v) ;							\
   if ( gain != 1 && gain != 20 )					\
     HWA_ERR("optionnal parameter `gain` must be 1 or 20.");		\
-  HW_G2(_hwa_cfad10a_kinput, HW_IS(input,__VA_ARGS__))(o,__VA_ARGS__)
+  HW_G2(_hwa_cfad10a_kpositive_input, HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfad10a_kgain_0(o,k,...)				\
   HW_G2(_hwa_cfad10a_kinput, HW_IS(input,k))(o,k,__VA_ARGS__)
 
-/*  `input` -> single-end mode
+/*  Optionnal parameter `input` -> single-end mode, end of list
  */
-#define _hw_is_input_input			, 1
-#define _hw_ad10a_input_hw_pin_pa0		, 0
-#define _hw_ad10a_input_hw_pin_pa1		, 1
-#define _hw_ad10a_input_hw_pin_pa2		, 2
-#define _hw_ad10a_input_hw_pin_pa3		, 3
-#define _hw_ad10a_input_hw_pin_pa4		, 4
-#define _hw_ad10a_input_hw_pin_pa5		, 5
-#define _hw_ad10a_input_hw_pin_pa6		, 6
-#define _hw_ad10a_input_hw_pin_pa7		, 7
-
 #define _hwa_cfad10a_kinput_1(o,k,v,...)				\
-  HW_G2(_hwa_cfad10a_vinput, HW_IS(,_hw_ad10a_input_##v))(o,v,__VA_ARGS__)
-
-#define _hwa_cfad10a_vinput_0(o,v,...)					\
-  HW_ERR("`input` can be `hw_pin_adc0..7`, `agnd`, `bandgap`, "	\
-	 "or `temperature`, but not `" #v "`.")
-
-#define _hwa_cfad10a_vinput_1(o,v,...)					\
-  HW_TX(_hwa_write_reg(o,mux, HW_A1(_hw_ad10a_input_##v)),__VA_ARGS__)
+  if ( HW_IS(,HW_A0(_hw_ad10a_input_##v)) )				\
+    _hwa_write_reg(o,mux, HW_A1(_hw_ad10a_input_##v,0));		\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc0 ) )		\
+    _hwa_write_reg(o,mux, 0);						\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc1 ) )		\
+    _hwa_write_reg(o,mux, 1);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc2 ) )		\
+    _hwa_write_reg(o,mux, 2);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc3 ) )		\
+    _hwa_write_reg(o,mux, 3);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc4 ) )		\
+    _hwa_write_reg(o,mux, 4);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc5 ) )		\
+    _hwa_write_reg(o,mux, 5);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc6 ) )		\
+    _hwa_write_reg(o,mux, 6);	     					\
+  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc7 ) )		\
+    _hwa_write_reg(o,mux, 7);	     					\
+  else									\
+    HWA_ERR("`input` can be `hw_pin_adc0..7` (or synonyms), "		\
+	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
+  HW_TX(__VA_ARGS__)
 
 #define _hwa_cfad10a_kinput_0(o,k,...)					\
   HW_G2(_hwa_cfad10a_kpositive_input, HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
+#define _hw_is_input_input			, 1
+#define _hw_ad10a_input_bandgap			, 0x21	/* , mux */
+#define _hw_ad10a_input_ground			, 0x20
+#define _hw_ad10a_input_temperature		, 0x22
+
+
 /*  'positive_input' & 'negative_input' for differential mode
  */
-#define _hw_is_positive_input_positive_input	, 1
-#define _hw_is_negative_input_negative_input	, 1
-
 #define _hwa_cfad10a_kpositive_input_0(o,k,...)				\
   HW_ERR("expected `input` or `positive_input` instead of `" #k "`.")
 
@@ -292,6 +303,9 @@
   HW_TX(_hwa_write_reg(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )), \
 	__VA_ARGS__);
 
+#define _hw_is_positive_input_positive_input	, 1
+#define _hw_is_negative_input_negative_input	, 1
+
 
 /*	Check the combination of differential inputs & gain, return the MUX
  *	value.
@@ -301,7 +315,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
   if ( pos==0 ) {
     if ( neg==0 ) {
       if ( gain != 20 )
-	HWA_ERR("parameter `gain` must be set to 20 when pin_adc0 is used for both inputs.");
+	HWA_ERR("parameter `gain` must be 20 when pin_adc0 is used for both inputs.");
       else
 	return 0x23 ;
     }
@@ -384,7 +398,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * The ADC must be turned off for the analog comparator to have access to the
  * analog multiplexer.
  *
- * __Note__: this is not related to power management. Assuming the target device
+ * @note This is not related to power management. Assuming the target device
  * supports it, use `hw_power()` or `hwa_power()` if you want power the ADC
  * on/off.
  *
@@ -392,16 +406,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw_turn( ADC_NAME, on | off );
  * @endcode
  */
-#define _hw_mthd_hw_turn__ad10a		, _hw_turn_ad10a
-
-#define _hw_turn_ad10a(o,i,a,v,...)					\
-  HW_G2(_hw_turn_ad10a, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
-
-#define _hw_turn_ad10a_0(o,v,...)			\
-  HW_ERR("expected `on` or `off`, not `" #v "`.")
-
-#define _hw_turn_ad10a_1(o,v,...)				\
-  HW_TX(_hw_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+#define _hw_mthd_hw_turn__ad10a		, _hw_turn_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -409,16 +414,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa_turn( ADC_NAME, on | off );
  * @endcode
  */
-#define _hw_mthd_hwa_turn__ad10a	, _hwa_turn_ad10a
-
-#define _hwa_turn_ad10a(o,i,a,...)					\
-  HW_G2(_hwa_turn_ad10a, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
-
-#define _hwa_turn_ad10a_0(o,v,...)			\
-  HW_ERR("expected `on` or `off`, got `" #v "` instead.")
-
-#define _hwa_turn_ad10a_1(o,v,...)	\
-  HW_TX(_hwa_write_reg(p, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+#define _hw_mthd_hwa_turn__ad10a	, _hwa_turn_ad10_
 
 
 /**
@@ -429,8 +425,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw_trigger( ADC_NAME );
  * @endcode
  */
-#define _hw_mthd_hw_trigger__ad10a	, _hw_trigger_ad10a
-#define _hw_trigger_ad10a(o,i,a,_)	_hw_write_reg( o, sc, 1 )
+#define _hw_mthd_hw_trigger__ad10a	, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -439,8 +434,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa_trigger( ADC_NAME );
  * @endcode
  */
-#define _hw_mthd_hwa_trigger__ad10a	, _hwa_trigger_ad10a
-#define _hwa_trigger_ad10a(o,i,a,_)	_hwa_write_reg( o, sc, 1 )
+#define _hw_mthd_hwa_trigger__ad10a	, _hwa_trigger_ad10_
 
 
 /**
@@ -450,16 +444,26 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * @code
  * uint16_t adc = hw_read( ADC_NAME );
  * @endcode
+ *
+ * Optionnally, read a single byte:
+ * @code
+ * uint8_t adc = hw_read( ADC_NAME, lo8 | hi8 );
+ * @endcode
  */
-#define _hw_mthd_hw_read__ad10a		, _hw_read_ad10a
-#define _hw_read_ad10a(o,i,a,_)		_hw_read_reg(o, adc)
+#define _hw_mthd_hw_read__ad10a		, _hw_rdad10_
 
-#if 0
-/*  FIXME: usefull?
+
+/**
+ * @page atmelavr_ad10a
+ *
+ * Read the ADC result with interrupts disabled and restore state as soon as
+ * possible:
+ *
+ * @code
+ * uint16_t adc = hw_atomic_read( ADC_NAME );
+ * @endcode
  */
-#define _hw_mthd_hw_atomic_read__ad10a	, _hw_atoread_ad10a
-#define _hw_atoread_ad10a(p,i,a,_)	_hw_atomic_read_reg(p, adc)
-#endif
+#define _hw_mthd_hw_atomic_read__ad10a	, _hw_ardad10_
 
 
 /**
@@ -485,25 +489,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *   hw_trigger( ADC_NAME );
  * @endcode
  */
-typedef union {
-  uint8_t	  byte ;
-  struct {
-    unsigned int  __0_5 : 6 ;
-    unsigned int  busy	: 1 ;
-    unsigned int  __7	: 1 ;
-  };
-} _hw_ad10a_status_t ;
-
-#define _hw_mthd_hw_stat__ad10a		, _hw_stat_ad10a
-#define _hw_stat_ad10a(o,i,a,...)	HW_TX(_hw_ad10a_status(_hw_read_reg(o,sra)), \
-					      __VA_ARGS__)
-
-HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
-{
-  _hw_ad10a_status_t	st ;
-  st.byte = byte ;
-  return st ;
-}
+#define _hw_mthd_hw_stat__ad10a		, _hw_stat_ad10_
 
 
 /*******************************************************************************
@@ -512,20 +498,9 @@ HW_INLINE _hw_ad10a_status_t _hw_ad10a_status( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__ad10a(o,i,a)	\
-  _hwa_create_reg( o, admux );		\
-  _hwa_create_reg( o, sra );		\
-  _hwa_create_reg( o, srb )
-
-#define _hwa_init__ad10a(o,i,a)		\
-  _hwa_init_reg( o, admux, 0x00 );	\
-  _hwa_init_reg( o, sra, 0x00 );	\
-  _hwa_init_reg( o, srb, 0x00 )
-
-#define _hwa_commit__ad10a(o,i,a)	\
-  _hwa_commit_reg( o, admux );		\
-  _hwa_commit_reg( o, sra );		\
-  _hwa_commit_reg( o, srb )
+#define _hwa_create__ad10a(o,i,a)	_hwa_create__ad10_(o)
+#define _hwa_init__ad10a(o,i,a)		_hwa_init__ad10_(o)
+#define _hwa_commit__ad10a(o,i,a)	_hwa_commit__ad10_(o)
 
 
 /**
