@@ -1,0 +1,6 @@
+
+#	-*- Makefile -*-
+
+DIABOLO_BPS		= 230400
+DIABOLO_RESET_SIGNAL	= DTR
+DIABOLO_SYNC		= 5+1

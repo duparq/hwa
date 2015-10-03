@@ -14,6 +14,6 @@
 #define HW_DEVICE_ATMEGA32U4_MU
 #define HW_DEVICE_PACKAGE_44Q
 
-#include "../../../atmel/avr/devices/atmega32u4.h"
+#include "../../atmel/avr/devices/atmega32u4.h"
 
 #endif

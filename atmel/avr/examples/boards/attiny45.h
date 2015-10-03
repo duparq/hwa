@@ -52,12 +52,12 @@
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 #define HW_DEVICE_BROWNOUT_DETECTION    4100_4500mV
 
-/*  Settings for Diabolo
+/*  Settings for building the Diabolo bootloader
+ *  Settings for the Diabolo application are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  hw_pin_2
 #define DIABOLO_PIN_TX                  hw_pin_2
-#define DIABOLO_BPS                     115200          // Default transfer rate
-#define DIABOLO_RESET_SIGNAL            DTR
+#define DIABOLO_SYNC                    5+1
 
 /*  The pin at which the LED is connected. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.

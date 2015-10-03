@@ -2,53 +2,48 @@
 #	-*- makefile -*-
 
 #$(warning INCLUDE)
-CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
+MFD	:=	$(dir $(lastword $(MAKEFILE_LIST)))
 
+-include $(MFD)../boards/Makefile.$(BOARD)
+-include $(MFD)../boards/build/$(BOARD)
 
-#  Extract Diabolo parameters from sources
+#  Compute how long TXD must be held low so that the device has the time to
+#  start (assumes 65 ms + 32KCK) and the bootloader has the time to check the
+#  CRC of the application (30 cycles/byte).
 #
-# ifneq (,$(DEVICE))
-# $(OUT).diabolo: $(SOURCES)
-# #	@echo "RULE: $@: $^"
-# 	@mkdir -p $(OUTDIR)
-# 	@>$@
-# 	@for f in $(SOURCES) ; do \
-# 	  if $(CPP) $(CFLAGS) -dM -E "$$f" | grep '#define DIABOLO_' >$@.tmp ; then	\
-# 	    awk -F"[ ,]" '{print $$2 "=" $$3}' $@.tmp >$@ 				;\
-# 	    break									;\
-# 	  fi ;\
-# 	done
-# #	@rm -f $@.tmp
-
-# #-include $(OUT).diabolo
-# endif
-
+KEEP_TXD_LOW	= \
+	$(shell \
+	SUT=$$(( 65 + (32768+30*$(DEVICE_FLASH_SIZE))*1000/$(DEVICE_SYSHZ) ))	;\
+	i=$$(( $$SUT / 1000 ))							;\
+	t=$$(( $$SUT - 1000 * $$i ))						;\
+	printf "%d.%03d" $$i $$t )
 
 #  Diabolo options
 #
-DIABOLO_OPTS	 += --mcu=$(DEVICE)
+ifneq (,$(DIABOLO_BPS))
+   DIABOLO_OPTS	 += --bps=$(DIABOLO_BPS)
+endif
+
+DIABOLO_OPTS	 += --keep-txd-low=$(KEEP_TXD_LOW)
+
 #DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
-DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
+
+ifneq (,$(DIABOLO_SYNC))
+  DIABOLO_OPTS	 += --sync=$(DIABOLO_SYNC)
+endif
+
+DIABOLO_OPTS	 += --mcu=$(DEVICE)
+
 DIABOLO_OPTS	 += --diag
+
 #DIABOLO_OPTS	 += --debug
 
-
-ifneq (,$(DIABOLO_BPS))
-   DIABOLO_OPTS	+= --bps=$(DIABOLO_BPS)		# From sources
-endif
 
 .PHONY: erase
 erase:
 	$(diabolo) $(DIABOLO_OPTS)	\
 		--erase-flash
 
-.PHONY: install
-rem-install: $(OUT).bin $(OUT).diabolo $(OUT).lst
-	$(diabolo) $(DIABOLO_OPTS)		\
-		--cache=/tmp/diabolo-cache.bin	\
-		--burn-flash $<
-
-#		--cache=build/flash-cache.bin	\
 
 .PHONY: install
 install: $(OUT).bin
@@ -57,23 +52,19 @@ install: $(OUT).bin
 		--burn-flash $<
 
 
-#install: $(OUT).bin $(OUT).diabolo $(OUT).hwa
-rem2-install: $(OUT).bin
-	@OUTDIR=$(OUTDIR) bash $(CWD)diabolo.sh	\
-		$(DIABOLO_OPTS)			\
-		--cache=/tmp/diabolo-cache.bin	\
-		--burn-flash $<
-
-
-#  Just start Diabolo to identify the device
-#
 .PHONY: diabolo
-diabolo: $(OUT).diabolo
-	@bash $(CWD)diabolo.sh $(DIABOLO_OPTS)
+diabolo:
+	$(diabolo) $(DIABOLO_OPTS)
+
 
 .PHONY: identify
-identify:  $(OUT).diabolo $(OUT).hwa
-	@bash $(CWD)diabolo.sh $(DIABOLO_OPTS)
+identify:
+	$(diabolo) $(DIABOLO_OPTS)
+
+
+.PHONY: decode-fuses
+decode-fuses:
+	$(diabolo) $(DIABOLO_OPTS) --decode-fuses
 
 
 .PHONY: reset

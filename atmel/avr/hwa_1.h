@@ -9,7 +9,7 @@
  * @brief Definitions common to all Atmel AVR devices that do not produce C code
  */
 
-#include "../../../hwa/hwa_1.h"
+#include "../../hwa/hwa_1.h"
 
 /**
  * @defgroup public_gen_instructions_atmelavr Instructions for Atmel AVR devices that are not related to a speficic object

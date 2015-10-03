@@ -19,8 +19,8 @@
  *
  * @par Pin Configuration
  *
- *                      PD3 TX 0 o  USB  o RAW
- *                      PD2 RX 1 o       o Gnd
+ *                      TX PD3 0 o  USB  o RAW
+ *                      RX PD2 1 o       o Gnd
  *                           Gnd o       o RESET
  *                           Gnd o       o Vcc
  *                     SDA PD1 2 o       o A3 PF4 ADC4 TCK
@@ -41,8 +41,8 @@
  *                7  SCK  
  *                9  MISO 
  *
- * @par  arduino_pro_micro.h
- * @include arduino-pro-micro.h
+ * @par pro_micro.h
+ * @include boards/pro-micro.h
  * <br>
  */
 
@@ -69,15 +69,11 @@
 
 #define HW_DEVICE_FUSE_EBX		0xC
 
-/*  Settings for the Diabolo bootloader
- *    BPS and RESET_SIGNAL are only used by `make` to provide
- *    settings to the Diabolo application on the host.
+/*  Settings for building the Diabolo bootloader
+ *  Settings for the Diabolo application are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-//#define DIABOLO_BPS                     460800
-//#define DIABOLO_RESET_SIGNAL            DTR
-//#define DIABOLO_CHAR_DELAY		0
 #define DIABOLO_SYNC			5+1
 
 #if 0

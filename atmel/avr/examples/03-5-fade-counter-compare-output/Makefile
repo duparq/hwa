@@ -8,6 +8,7 @@ CONFIG		=	HW_DEVICE	\
 			COUNTER		\
 			CLKDIV		\
 			COUNTMODE	\
-			COMPARE
+			COMPARE		\
+			TOP
 
 include ../Makefile

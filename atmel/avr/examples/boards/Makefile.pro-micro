@@ -1,48 +1,12 @@
 
 #	-*- Makefile -*-
-#
-#	Pro-micro Arduino clone board is preloaded with the Caterina AVR109
-#	compatible bootloader that is supported by Avrdude.
 
-#$(warning INCLUDE)
+#  The pro-micro Arduino clone board is preloaded with the Caterina AVR109
+#  compatible bootloader that is supported by Avrdude.
 
-DEVICE			= atmega32u4
-DEVICE_FLASH_SIZE	= 32768
-AVRDUDE_PARTNO		= m32u4
-#AVRDUDE_HW	?= avr109
+# PROG_HW		?= avr109
+# PROG_SW		?= avrdude
 
-PROG_HW		?= avr109
-#PROG_SW		?= avrdude
-PROG_SW		?= diabolo
 DIABOLO_BPS		= 230400
-DIABOLO_KEEP_TXD_LOW	= 0.129
 DIABOLO_RESET_SIGNAL	= DTR
-#DIABOLO_CHAR_DELAY	= 0
-#DIABOLO_SYNC		= 5+1
-
-
-#  These are mostly the values as the board is shipped, except the bootsection
-#  size which is 1024 with Diabolo instead of 4096 with the Caterina bootloader.
-#
-# HW_DEVICE_CLK_SRC		= low_power_xosc
-# HW_DEVICE_CLK_SRC_HZ		= 16000000UL
-# HW_DEVICE_CLK_PSC		= 1
-# HW_DEVICE_BOOT			= bootloader
-# HW_DEVICE_BOOTSECTION_SIZE	= 1024
-
-# DEFINES	+= -DHW_DEVICE_CLK_SRC=$(HW_DEVICE_CLK_SRC)
-# DEFINES	+= -DHW_DEVICE_CLK_SRC_HZ=$(HW_DEVICE_CLK_SRC_HZ)
-# DEFINES	+= -DHW_DEVICE_CLK_PSC=$(HW_DEVICE_CLK_PSC)
-# DEFINES	+= -DHW_DEVICE_BOOT=$(HW_DEVICE_BOOT)
-# DEFINES	+= -DHW_DEVICE_BOOTSECTION_SIZE=$(HW_DEVICE_BOOTSECTION_SIZE)
-
-CWD		+=	$(dir $(lastword $(MAKEFILE_LIST)))
-MFD		:=	$(dir $(firstword $(CWD)))
-
-#  Include Atmel AVR main Makefile
-#
-include $(MFD)../make/Makefile.32U4
-
-#  Include chip programming targets
-#
-include $(MFD)../make/Makefile.$(PROG_SW)
+DIABOLO_SYNC		= 5+1

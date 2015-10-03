@@ -15,6 +15,6 @@
 #define HW_DEVICE_ATMEGA328P_AU
 #define HW_DEVICE_PACKAGE_32Q
 
-#include "../../../atmel/avr/devices/atmega328p.h"
+#include "../../atmel/avr/devices/atmega328p.h"
 
 #endif

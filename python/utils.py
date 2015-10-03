@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2015-01-02 15:48:34 -*-
+# -*- coding: utf-8 -*- Last modified: 2015-09-23 17:10:55 -*-
 
 
 def rem_hexdump(address, data):
@@ -36,6 +36,8 @@ def hexdump(address, data):
             else:
                 s += line
                 oldline = line
+    if address % 16 != 0:
+        s += line
     return s[1:]
 
 

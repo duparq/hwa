@@ -2,33 +2,21 @@
 
 #  We need to be in the examples/ directory
 #
-# if ! ls ??-* >/dev/null 2>&1 ; then
-#     echo "No example in this directory."
-#     exit 1
-# fi
-if [ $(basename ${PWD}) != "examples" ] ; then
-    echo "No example in this directory."
+if [ $(basename "$PWD") != "examples" ] ; then
+    echo "Not in the examples/ directory!"
     exit 1
 fi
 
-#  We need a board name
+#  If no board name is given, do it for all boards
 #
 BOARDS=${BOARD}
 if [ -z "$BOARDS" ] ; then
-    # BOARD=$(readlink boards/default | sed -e 's/.h//' 2>/dev/null)
-    # if [ -z "$BOARD" ] ; then
-    # 	echo BOARD is not defined and no default board is set
-    # 	exit 1
-    # fi
-    BOARDS="attiny84 attiny85 nanodccduino"
+    BOARDS="attiny84 attiny85 nanodccduino pro-micro"
 fi
 
-
-dirname $0
+#  Directory of this file
+#
 MFD=$(cd $(dirname $0) ; pwd)
-echo ${MFD}
-
-#exit 0
 
 compiled=0 ; passed=0 ; failed=0 ; skipped=0
 for BOARD in ${BOARDS} ; do

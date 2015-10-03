@@ -37,7 +37,7 @@ fi
 #  No need to go further if there is no validation for this device
 #
 if ! ls .valid-*-${HW_DEVICE}-* >/dev/null 2>&1 ; then
-    echo no validation file for ${HW_DEVICE}
+    echo no validation file for device "'"${HW_DEVICE}"'"
     exit 4
 fi
 
@@ -79,6 +79,8 @@ fi
 #
 O_CRC=$(${DIABOLO} -q -m ${HW_DEVICE} --crc ${OUT}.bin)
 O_SIZE=$(${DIABOLO} -q -m ${HW_DEVICE} --size ${OUT}.bin)
+
+# echo "CHECK: " ${HW_DEVICE}-$CFG_CRC-$O_SIZE-$O_CRC
 
 if ls .valid-*-${HW_DEVICE}-$CFG_CRC-$O_SIZE-$O_CRC >/dev/null 2>&1 ; then
     echo success

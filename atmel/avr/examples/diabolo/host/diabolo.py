@@ -228,6 +228,9 @@ class Application:
             data = self.read_file(self.options.filename)
             x, crc = self.device.appstat(data)
             if self.options.stat:
+                #
+                #  Use sys.stdout.write instead of cout to bypass '--quiet'
+                #
                 sys.stdout.write(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
                                    (self.options.filename, x, len(data), crc)))
             elif self.options.crc:

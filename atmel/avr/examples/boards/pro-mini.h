@@ -40,8 +40,8 @@
  *                7  SCK   13
  *                9  MISO  12
  *
- * @par  arduino_pro_mini.h
- * @include arduino-pro-mini.h
+ * @par pro_mini.h
+ * @include boards/pro-mini.h
  * <br>
  */
 
@@ -63,15 +63,12 @@
 #define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 
-/*  Settings for the Diabolo bootloader
- *    BPS and RESET_SIGNAL are only used by `make` to provide
- *    settings to the Diabolo application on the host.
+/*  Settings for building the Diabolo bootloader
+ *  Settings for the Diabolo application are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  hw_pin_rxd
 #define DIABOLO_PIN_TX                  hw_pin_rxd
-#define DIABOLO_BPS                     230400
-#define DIABOLO_RESET_SIGNAL            DTR
-#define DIABOLO_CHAR_DELAY		0
+#define DIABOLO_SYNC                    5+1
 
 /*  Board pins
  */

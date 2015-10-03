@@ -1,24 +1,41 @@
 
+#	Makefile for Atmel AVR examples
+#
+#  The compiler must be given the name of the target device. HWA defines this
+#  name in its device header file, that is included by the board header file.
+#  Then, if the target requires compilation, the board header is first
+#  preprocessed in order to get the target device name.
+
 #$(warning INCLUDE)
 
-CWD		+=	$(dir $(lastword $(MAKEFILE_LIST)))
-MFD		:=	$(dir $(firstword $(CWD)))
+#CWD		+=	$(dir $(lastword $(MAKEFILE_LIST)))
+#MFD		?=	$(dir $(firstword $(CWD)))
+MFD		?=	$(dir $(lastword $(MAKEFILE_LIST)))
 
 #$(warning MFD=$(MFD))
 
+#  Messages in english
+#
+LANG		:= C
+
+#  Variables used by external scripts
+#
+# export OUTDIR
+# export OUT
+export BOARD
 export SOURCES
 export CONFIG
-export BOARD
+export LANG
 
 
 #  Default target
 #
+#    If no source file list provided, assume we're not in the directory of an
+#    example and select 'all-examples' as default target. Otherwise just do
+#    'all' in the directory of the example.
+#
 .PHONY: default
-# ifeq ($(wildcard main.c),)
-#   default:	check-all-examples
-# else
-#   default:	all
-# endif
+
 ifeq ($(SOURCES),)
   default:	all-examples
 else
@@ -30,13 +47,17 @@ endif
 #
 .PHONY: clean
 clean:
-	@find . -name 'build*' -prune -exec rm -rf {} ';'
+ifeq (,$(BOARD))
+	@find $(MFD).. -name 'build' -prune -exec rm -rf {} ';'
 	@find . '(' 			\
 		-name '*~' 		\
 		-o -name '*.cp.*'	\
 		-o -name '*.hwa.c'	\
 		-o -name '*.pyc'	\
 		')' -exec rm {} ';'
+else
+	rm -rf build/$(BOARD) $(MFD)../boards/build/$(BOARD)
+endif
 
 
 #  Produce HTML documentation
@@ -88,23 +109,8 @@ validate-all-examples:
 	done
 
 
-#  Include board-dependent Makefile if any
+#  This target automatically takes the name of the target that was not found
 #
-ifneq (,$(BOARD))
-include $(MFD)boards/Makefile.$(BOARD)
-else
-
-
-#  Targets that require BOARD and SOURCES to be defined are found in
-#  Makefile.build
-#
-force: ;
-
-%.cp.c %.cp.sx: force
-	@$(MAKE) -f $(MFD)make/Makefile.build --no-print-directory $@
-
 .DEFAULT:
-#	@echo "DEFAULT: $@"
-	@$(MAKE) -f $(MFD)make/Makefile.build --no-print-directory $@
-
-endif
+#	@echo ".DEFAULT: $@"
+	@$(MAKE) -f $(MFD)make/Makefile.cc --no-print-directory $@

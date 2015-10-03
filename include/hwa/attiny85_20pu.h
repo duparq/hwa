@@ -14,10 +14,6 @@
 #define HW_DEVICE_ATTINY85_20PU
 #define HW_DEVICE_PACKAGE_8P3
 
-#include "../../../atmel/avr/devices/attiny85.h"
+#include "../../atmel/avr/devices/attiny85.h"
 
-#else
-#  if !defined HW_DEVICE_ATTINY85_20PU
-#    error HWA header was already included for another device!
-#  endif
 #endif
