@@ -9,7 +9,7 @@
  *
  * Fade a LED connected to a counter compare output (method 1)
  *
- * Note: see method 2 in the next example.
+ * @note See method 2 in the next example.
  */
 
 
@@ -20,10 +20,11 @@
 
 /*  The counter
  */
-#define COUNTER                 hw_counter0
-#define CLKDIV                  64
-#define COUNTMODE               loop_up
-#define COMPARE                 compare0
+#define COUNTER			hw_counter0
+#define CLKDIV			64
+#define COUNTMODE		loop_up
+#define COMPARE			compare0
+#define TOP			0xFF
 
 
 /*  Service the counter overflow IRQ:
@@ -36,8 +37,8 @@
  */
 HW_ISR( COUNTER, overflow )
 {
-  static uint8_t        duty ;
-  static uint8_t        phase ;
+  static hw_uint_t(hw_bn(COUNTER))	duty ;
+  static uint8_t			phase ;
 
   if ( phase == 0 )
     hw_write( hw_rel(COUNTER,COMPARE), duty );
@@ -46,22 +47,22 @@ HW_ISR( COUNTER, overflow )
 
   duty++ ;
 
-  if ( duty==0 ) {
+  if ( (duty & TOP) == 0 ) {
     phase = (phase + 1) & 3 ;
 
-    /*  In 'loop_up' counting mode, we must disconnect/reconnect the output of
-     *  the compare unit as it can not provide pulses of less than 1 cycle.
+    /*	In 'loop_up' counting mode, we must disconnect/reconnect the output of
+     *	the compare unit as it can not provide pulses of less than 1 cycle.
      *
-     *  Note that the configuration of the counter is not known here, so there
-     *  is only loose checking against the arguments provided and the generated
-     *  code will probably have to read the hardware to retrieve unknown bit
-     *  values.
+     *	Note that the configuration of the counter is not known here, so there
+     *	is only loose checking against the arguments provided and the generated
+     *	code will probably have to read the hardware to retrieve unknown bit
+     *	values.
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
       if ( phase == 2 )
-        hw_config( hw_rel(COUNTER,COMPARE), output, disconnected );
+	hw_config( hw_rel(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-        hw_config( hw_rel(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+	hw_config( hw_rel(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
     }
   }
 }
@@ -77,23 +78,23 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa_config( hw_core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+	      sleep,	  enabled,
+	      sleep_mode, idle );
 
-  /*  Configure the counter to count between 0 and 0xFF
+  /*  Configure the counter to count between 0 and TOP
    */
   hwa_config( COUNTER,
-              clock,     prescaler_output(CLKDIV),
-              countmode, COUNTMODE,
-              bottom,    0,
-              top,       fixed_0xFF
-              );
+	      clock,	 prescaler_output(CLKDIV),
+	      countmode, COUNTMODE,
+	      bottom,	 0,
+	      top,	 TOP
+	      );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
     hwa_config( hw_rel(COUNTER,COMPARE),
-                output, clear_on_match_up_set_on_match_down );
+		output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
     hwa_config( hw_rel(COUNTER,COMPARE),
-                output, set_at_bottom_clear_on_match );
+		output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ
    */

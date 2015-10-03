@@ -117,6 +117,15 @@
  */
 #define hw_atomic_read(...)		HW_MTHD(hw_atomic_read, __VA_ARGS__)
 
+/**
+ * @ingroup public_obj_instructions
+ * @brief Write in an object with interrupts disabled (method)
+ *
+ * Syntax: `hw_atomic_write( object [,...] );`
+ * @hideinitializer
+ */
+#define hw_atomic_write(...)		HW_MTHD(hw_atomic_write, __VA_ARGS__)
+
 
 /**
  * @ingroup private
@@ -126,6 +135,16 @@
  * @hideinitializer
  */
 #define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _hw_reg(o,r))
+
+
+/**
+ * @ingroup private
+ * @brief Read one register of an object with interrupts disabled
+ *
+ * Syntax: `_hw_atomic_read( object, register );`
+ * @hideinitializer
+ */
+#define _hw_atomic_read_reg(o,r)		_HW_SPEC(_hw_atomic_read, _hw_reg(o,r))
 
 
 /**
@@ -375,6 +394,15 @@
 
 /**
  * @ingroup private
+ * @brief Read one group of consecutive bits from one hardware register with interrupts disabled
+ * @hideinitializer
+ */
+#define _hw_atomic_read__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp)	\
+  _hw_atomic_read_##rc(a+ra,rbn,rbp)
+
+
+/**
+ * @ingroup private
  * @brief Read two groups of consecutive bits from two hardware registers
  * @hideinitializer
  */
@@ -402,6 +430,14 @@
  */
 #define _hw_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v)	\
   _hw_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
+
+/**
+ * @ingroup private
+ * @brief Write one group of consecutive bits into one hardware register with interrupts disabled
+ * @hideinitializer
+ */
+#define _hw_atomic_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v)	\
+  _hw_atomic_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
 
 /**
  * @ingroup private

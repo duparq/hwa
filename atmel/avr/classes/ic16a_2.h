@@ -14,7 +14,7 @@
  * @section atmelavr_ic16a_config Configuration
  * @subsection atmelavr_ic16a_cf1 Synchronous
  *
- * __Note__: currently, only `edge` configuration is implemented for the synchronous
+ * @note: Currently, only `edge` configuration is implemented for the synchronous
  * method.
  *
  * @code
@@ -71,7 +71,7 @@
  *             edge,     falling
  *                     | rising,
  *
- *            [filter,   on
+ *           [ filter,   on
  *                     | off ]
  *           );
  * @endcode
@@ -137,6 +137,27 @@
 
 /**
  * @page atmelavr_ic16a
+ *
+ * @code
+ * hw_write( CAPTURE_NAME, value );
+ * @endcode
+ */
+#define _hw_mthd_hw_write__ic16a		, _hw_write_ic16a
+#define _hw_write_ic16a(o,i,a,v,...)		HW_TX( _hw_write_reg(o,reg,v), __VA_ARGS__ )
+
+/**
+ * @page atmelavr_ic16a
+ *
+ * @code
+ * hwa_write( CAPTURE_NAME, value );
+ * @endcode
+ */
+#define _hw_mthd_hwa_write__ic16a		, _hwa_write_ic16a
+#define _hwa_write_ic16a(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,reg,v), __VA_ARGS__ )
+
+
+/**
+ * @page atmelavr_ic16a
  * @section atmelavr_ic16a_st Status
  *
  * The capture event flag can be accessed through interrupt-related
@@ -159,13 +180,14 @@
  *******************************************************************************/
 
 #define _hwa_create__ic16a(o,i,a)		\
+  _hwa_create_reg( o, reg      );		\
   hwa->o.config.input  = 0xFF ;			\
   hwa->o.config.edge   = 0xFF ;			\
   hwa->o.config.filter = 0xFF
 
-#define _hwa_init__ic16a(o,i,a)
+#define _hwa_init__ic16a(o,i,a)			_hwa_init_reg(o,reg,0)
 
-#define _hwa_commit__ic16a(o,i,a)
+#define _hwa_commit__ic16a(o,i,a)		_hwa_commit_reg(o,reg)
 
 
 /**

@@ -22,7 +22,7 @@
   HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
 
 #define _hwx_turn_ad10__1(x,o, v, ...)					\
-  HW_TX(x##_write_reg(x,o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+  HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 
 
 /* 	Start a conversion

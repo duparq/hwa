@@ -29,11 +29,12 @@
 #define PWM                     hw_oc00
 #define CLKDIV                  64
 #define COUNTMODE               loop_up
+#define TOP			0xFF
 
 
 /*  Store the hardware configuration into a HWA context
  */
-HW_INLINE void setup_hardware ( hwa_t *hwa )
+HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
@@ -47,7 +48,7 @@ HW_INLINE void setup_hardware ( hwa_t *hwa )
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
-              top,       fixed_0xFF
+              top,       TOP
               );
 
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
@@ -91,7 +92,7 @@ HW_ISR( hw_rel(PWM,counter), overflow )
       /*  Start from the hardawre configuration used at initialization
        */
       hwa_begin_from_reset();
-      setup_hardware( hwa );
+      setup_hwa_context( hwa );
 
       if ( phase == 2 ) {
         /*
@@ -127,7 +128,7 @@ int main ( )
 
   /*  Store the hardware configuration into the HWA context
    */
-  setup_hardware( hwa );
+  setup_hwa_context( hwa );
 
   /*  Write this configuration into the hardware
    */
@@ -138,6 +139,3 @@ int main ( )
   for(;;)
     hw_sleep();
 }
-
-
-//_hwa_begreg( hw_portb, port );

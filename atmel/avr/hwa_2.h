@@ -237,8 +237,15 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
-  if (value & (~mask))
+  //  if ( (value & mask) != value ) {
+  if ( value & (~mask) ) {
+    /* hw_asm("wdr"); */
+    /* *(volatile uint8_t*)0 = value ; */
+    /* *(volatile uint8_t*)0 = mask ; */
+    /* *(volatile uint8_t*)0 = value & mask ; */
+    /* hw_asm("wdr"); */
     HWA_ERR("value overflows mask");
+  }
 #endif
 
   /*  Verify that we do not try to set non-writeable bits
@@ -256,10 +263,9 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
      *  sbi/cbi
      */
     if ( value )
-      *p |= value ; /* sbi */
-    else {
-      *p &= ~value ; /* cbi */
-    }
+      *p |= mask ; /* sbi */
+    else
+      *p &= ~mask ; /* cbi */
   }
   else {
     /*
@@ -277,7 +283,6 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       /*
        *  Read-modify-write
        */
-
       uint8_t sm = mask & rwm & value ;     /* what has to be set     */
       uint8_t cm = mask & rwm & (~value) ;  /* what has to be cleared */
       *p = (*p & ~cm) | sm ;
@@ -503,12 +508,31 @@ HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
  */
 #define _hw_atomic_read__r8		_hw_read__r8
 
+
+HW_INLINE uint16_t __hw_atomic_read__r16 ( intptr_t ra )
+{
+  uint16_t r;
+
+  hw_asm("cli"			"\n\t"
+	 "lds %A[r], %[a]"	"\n\t"
+	 "sei"			"\n\t"
+	 "lds %B[r], %[a]+1"	"\n\t"
+	 : [r] "=&r" (r)
+	 : [a] "p"   (ra)
+	 : "memory"
+	 );
+  return r;
+}
+
+
 HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
+  uint16_t v ;
+  uint16_t m = ((1UL<<rbn)-1)<<rbp ;
+
+#if 0
   volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
   volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
-  uint16_t v ;
-  uint16_t m = (1UL<<rbn)-1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
     uint8_t s = _hw_read_reg(hw_core0,sreg);
@@ -522,8 +546,54 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
     v = *pl ;
   else
     v = (*ph)<<8 ;
+#else
+  if ( (m&0xFF) == 0 )
+    v = (*(volatile uint8_t *)ra+1)<<8 ;
+  else if ( (m>>8) == 0 )
+    v = *(volatile uint8_t *)ra;
+  else
+    v = __hw_atomic_read__r16( ra );
+#endif
+
   return (v>>rbp) & m ;
 }
+
+
+#if 0
+/*
+ *	From http://www.avrfreaks.net/forum/atomic-readwrite-uint16t-variable?skey=atomic%20write
+ */
+#define atomic_read_word(__addr)                      \
+(__extension__({                                      \
+  uint16_t __result;                                  \
+  __asm__ __volatile__ (                              \
+    "cli                      \n\t"                   \
+    "lds %A[res], %[addr]     \n\t"                   \
+    "sei                      \n\t"                   \
+    "lds %B[res], %[addr] + 1 \n\t"                   \
+    : [res]  "=&r" (__result)                         \
+    : [addr] "p"   (&(__addr))                        \
+    : "memory"                                        \
+  );                                                  \
+  __result;                                           \
+}))
+
+#define atomic_write_word_restore(__addr, __data)     \
+(__extension__({                                      \
+  uint8_t  __tmp;                                     \
+  __asm__ __volatile__ (                              \
+    "in  %[tmp], __SREG__      \n\t"                  \
+    "cli                       \n\t"                  \
+    "sts %[addr], %A[data]     \n\t"                  \
+    "out __SREG__, %[tmp]      \n\t"                  \
+    "sts %[addr] + 1, %B[data] \n\t"                  \
+    : [tmp]  "=&r" (__tmp)                            \
+    : [data] "r"   (__data)                           \
+    , [addr] "p"   (&(__addr))                        \
+    : "memory"                                        \
+  );                                                  \
+}))
+#endif
 
 
 /*	ISR

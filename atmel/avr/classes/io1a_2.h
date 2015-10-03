@@ -217,7 +217,7 @@
 #define _hw_wrio1a_3(c,i,a,bn,bp,v)		_hw_wrio1a_4(a,bn,bp,v,_hw_##c##_##port)
 #define _hw_wrio1a_4(...)			_hw_wrio1a_5(__VA_ARGS__)
 //#define _hw_wrio1a_5(a,bn,bp,v, rt,ra,rwm,rfm)	_hw_write__r8(a+ra,rwm,rfm,bn,bp,v)
-#define _hw_wrio1a_5(a,bn,bp,v, rt,ra,rwm,rfm)	_hw_write__r8_m(a+ra,rwm,rfm,((1U<<bn)-1)<<bp,v)
+#define _hw_wrio1a_5(a,bn,bp,v, rt,ra,rwm,rfm)	_hw_write__r8_m(a+ra,rwm,rfm,((1U<<bn)-1)<<bp,(v)<<bp)
 
 /**
  * @page atmelavr_io1a

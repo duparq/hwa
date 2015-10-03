@@ -22,3 +22,7 @@ files must be included with something like:
 
  * @subpage atmegaxu4 :
    - `hwa/atmega32u4_mu.h`
+
+@note See [that
+thread](http://www.avrfreaks.net/forum/avr-errata-unpublished-and-other-gotchas)
+on [AVR Freaks](http://www.avrfreaks.net) for issues related to these devices.

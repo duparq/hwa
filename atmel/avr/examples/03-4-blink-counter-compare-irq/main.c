@@ -33,7 +33,7 @@ HW_ISR( COUNTER, COMPARE )
 
   static uint8_t n ;
   n++ ;
-  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+  if ( n >= (uint8_t)(0.5 + 1.0 * PERIOD / 2.0 / 0.001) ) {	/* Added 0.5 for rounding */
     n = 0 ;
     hw_toggle( PIN_LED );
   }
@@ -66,9 +66,9 @@ int main ( )
               top,       max
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_rel(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa_write( hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
   else /* loop_up */
-    hwa_write( hw_rel(COUNTER, COMPARE), 0.001 * hw_syshz / CLKDIV );
+    hwa_write( hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
 
   /*  Enable compare IRQ
    */

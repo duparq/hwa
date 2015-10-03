@@ -257,7 +257,7 @@
  * uint16_t adc = hw_read( ADC_NAME );
  * @endcode
  */
-#define _hw_mthd_hw_read__ad10b		, _hw_read_ad10_
+#define _hw_mthd_hw_read__ad10b		, _hw_rdad10_
 
 /**
  * @page atmelavr_ad10b

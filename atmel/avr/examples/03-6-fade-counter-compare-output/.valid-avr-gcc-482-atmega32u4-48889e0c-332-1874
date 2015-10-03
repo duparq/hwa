@@ -1,0 +1,143 @@
+HW_DEVICE="atmega32u4"
+hw_syshz="16000000"
+PWM="hw_oc01"
+CLKDIV="64"
+COUNTMODE="loop_up"
+
+build/pro-micro/out.elf:     file format elf32-avr
+
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 56 00 	jmp	0xac	; 0xac <__ctors_end>
+   4:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+   8:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+   c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  10:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  14:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  18:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  1c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  20:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  24:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  28:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  2c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  30:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  34:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  38:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  3c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  40:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  44:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  48:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  4c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  50:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  54:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  58:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  5c:	0c 94 6a 00 	jmp	0xd4	; 0xd4 <__vector_23>
+  60:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  64:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  68:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  6c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  70:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  74:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  78:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  7c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  80:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  84:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  88:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  8c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  90:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  94:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  98:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  9c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  a0:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  a4:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+  a8:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
+
+000000ac <__ctors_end>:
+  ac:	11 24       	eor	r1, r1
+  ae:	1f be       	out	0x3f, r1	; 63
+  b0:	cf ef       	ldi	r28, 0xFF	; 255
+  b2:	da e0       	ldi	r29, 0x0A	; 10
+  b4:	de bf       	out	0x3e, r29	; 62
+  b6:	cd bf       	out	0x3d, r28	; 61
+
+000000b8 <__do_clear_bss>:
+  b8:	11 e0       	ldi	r17, 0x01	; 1
+  ba:	a0 e0       	ldi	r26, 0x00	; 0
+  bc:	b1 e0       	ldi	r27, 0x01	; 1
+  be:	01 c0       	rjmp	.+2      	; 0xc2 <.do_clear_bss_start>
+
+000000c0 <.do_clear_bss_loop>:
+  c0:	1d 92       	st	X+, r1
+
+000000c2 <.do_clear_bss_start>:
+  c2:	a2 30       	cpi	r26, 0x02	; 2
+  c4:	b1 07       	cpc	r27, r17
+  c6:	e1 f7       	brne	.-8      	; 0xc0 <.do_clear_bss_loop>
+  c8:	0e 94 98 00 	call	0x130	; 0x130 <main>
+  cc:	0c 94 a4 00 	jmp	0x148	; 0x148 <_exit>
+
+000000d0 <__bad_interrupt>:
+  d0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000d4 <__vector_23>:
+  d4:	1f 92       	push	r1
+  d6:	0f 92       	push	r0
+  d8:	0f b6       	in	r0, 0x3f	; 63
+  da:	0f 92       	push	r0
+  dc:	11 24       	eor	r1, r1
+  de:	8f 93       	push	r24
+  e0:	9f 93       	push	r25
+  e2:	90 91 01 01 	lds	r25, 0x0101
+  e6:	80 91 00 01 	lds	r24, 0x0100
+  ea:	99 23       	and	r25, r25
+  ec:	19 f0       	breq	.+6      	; 0xf4 <__vector_23+0x20>
+  ee:	91 30       	cpi	r25, 0x01	; 1
+  f0:	11 f4       	brne	.+4      	; 0xf6 <__vector_23+0x22>
+  f2:	80 95       	com	r24
+  f4:	88 bd       	out	0x28, r24	; 40
+  f6:	80 91 00 01 	lds	r24, 0x0100
+  fa:	8f 5f       	subi	r24, 0xFF	; 255
+  fc:	80 93 00 01 	sts	0x0100, r24
+ 100:	81 11       	cpse	r24, r1
+ 102:	0f c0       	rjmp	.+30     	; 0x122 <__vector_23+0x4e>
+ 104:	80 91 01 01 	lds	r24, 0x0101
+ 108:	8f 5f       	subi	r24, 0xFF	; 255
+ 10a:	83 70       	andi	r24, 0x03	; 3
+ 10c:	80 93 01 01 	sts	0x0101, r24
+ 110:	82 30       	cpi	r24, 0x02	; 2
+ 112:	11 f4       	brne	.+4      	; 0x118 <__vector_23+0x44>
+ 114:	14 bc       	out	0x24, r1	; 36
+ 116:	05 c0       	rjmp	.+10     	; 0x122 <__vector_23+0x4e>
+ 118:	81 11       	cpse	r24, r1
+ 11a:	03 c0       	rjmp	.+6      	; 0x122 <__vector_23+0x4e>
+ 11c:	50 9a       	sbi	0x0a, 0	; 10
+ 11e:	83 e2       	ldi	r24, 0x23	; 35
+ 120:	84 bd       	out	0x24, r24	; 36
+ 122:	9f 91       	pop	r25
+ 124:	8f 91       	pop	r24
+ 126:	0f 90       	pop	r0
+ 128:	0f be       	out	0x3f, r0	; 63
+ 12a:	0f 90       	pop	r0
+ 12c:	1f 90       	pop	r1
+ 12e:	18 95       	reti
+
+00000130 <main>:
+ 130:	81 e0       	ldi	r24, 0x01	; 1
+ 132:	83 bf       	out	0x33, r24	; 51
+ 134:	50 9a       	sbi	0x0a, 0	; 10
+ 136:	93 e2       	ldi	r25, 0x23	; 35
+ 138:	94 bd       	out	0x24, r25	; 36
+ 13a:	93 e0       	ldi	r25, 0x03	; 3
+ 13c:	95 bd       	out	0x25, r25	; 37
+ 13e:	80 93 6e 00 	sts	0x006E, r24
+ 142:	78 94       	sei
+ 144:	88 95       	sleep
+ 146:	fe cf       	rjmp	.-4      	; 0x144 <main+0x14>
+
+00000148 <_exit>:
+ 148:	f8 94       	cli
+
+0000014a <__stop_program>:
+ 14a:	ff cf       	rjmp	.-2      	; 0x14a <__stop_program>

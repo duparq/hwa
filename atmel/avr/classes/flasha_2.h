@@ -127,7 +127,7 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 #define _hw_flasha_write_page(o,ptr,...)	HW_TX(_hw_flasha_pgwrt(o,ptr),__VA_ARGS__)
 
 
-#if !defined HW_DEVICE_BOOTRST
+#if !defined HW_DEVICE_FUSE_BOOTRST
 /*
  * Device without boot section: the MCU is halted when the flash memory is
  * busy, no need to wait for readiness

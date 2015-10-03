@@ -62,7 +62,7 @@ int main ( )
       hw_write( COUNTER, 0 );
       hw_clear_irqf( COUNTER, COMPARE );
       n++ ;
-      if ( n >= (uint8_t)(PERIOD/0.001/2.0+0.5) ) {
+      if ( n >= (uint8_t)(0.5 + 1.0*PERIOD/0.001/2.0+0.5) ) {
         /*
          *  Toggle the LED when a half period has elapsed
          */

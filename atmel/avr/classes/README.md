@@ -10,6 +10,7 @@ HWA provides the following classes for Atmel AVR devices:
 * @subpage atmelavr_ad10b
 * @subpage atmelavr_ad10c
 * @subpage atmelavr_c16a
+* @subpage atmelavr_c16b
 * @subpage atmelavr_c8a
 * @subpage atmelavr_c8b
 * @subpage atmelavr_c8c
@@ -20,7 +21,9 @@ HWA provides the following classes for Atmel AVR devices:
 * @subpage atmelavr_eeproma
 * @subpage atmelavr_flasha
 * @subpage atmelavr_ic16a
+* @subpage atmelavr_ic16b
 * @subpage atmelavr_inta
+* @subpage atmelavr_io0a
 * @subpage atmelavr_io1a
 * @subpage atmelavr_oc16a
 * @subpage atmelavr_oc8a

@@ -560,6 +560,10 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
  * @page atmelavr_c8c
  * @section atmelavr_c8c_cnt Count value
  *
+ * @note See [that
+ * thread](http://www.avrfreaks.net/comment/141688#comment-141688) on [AVR
+ * Freaks](http://www.avrfreaks.net) for count register write issues.
+ *
  * The count value is accessible for reading and writing through the following
  * instructions:
  */

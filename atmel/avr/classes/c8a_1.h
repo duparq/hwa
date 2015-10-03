@@ -26,6 +26,7 @@
  *  * @ref attinyx4 : `hw_counter0`
  *  * @ref attinyx5 : `hw_counter0`
  *  * @ref atmegax8 : `hw_counter0`
+ *  * @ref atmegaxu4 : `hw_counter0`
  */
 #define _hw_class__c8a
 

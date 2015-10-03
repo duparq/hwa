@@ -20,8 +20,8 @@
  *  * two compare units with waveform generators: `compare0` and `compare1`, of
  *    class @ref atmelavr_oc8a "_oc8a"
  *
- * __Note: currently, this class is not fully implemented. It lacks asynchronous
- * clocking possibilities.__
+ * @note Currently, this class is not fully implemented. It lacks asynchronous
+ * clocking possibilities.
  *
  * The only difference between this class and the `_c8a` class is the different
  * clocking possibilities.

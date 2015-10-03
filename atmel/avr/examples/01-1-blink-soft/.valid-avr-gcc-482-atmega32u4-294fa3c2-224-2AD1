@@ -1,5 +1,5 @@
 HW_DEVICE="atmega32u4"
-hw_syshz="16000000UL"
+hw_syshz="16000000"
 PIN_LED="hw_pin_pb0"
 PERIOD="0.5"
 

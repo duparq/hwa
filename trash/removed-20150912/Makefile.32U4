@@ -20,10 +20,10 @@ ifeq (,$(BOARD))
 endif
 
 
-#	Output basename and directory
-#
-OUTDIR		= build/$(BOARD)
-OUT		= $(OUTDIR)/out
+# #	Output basename and directory
+# #
+# OUTDIR		= build/$(BOARD)
+# OUT		= $(OUTDIR)/out
 
 
 #  Directories searched for include files:

@@ -44,8 +44,8 @@
  *
  *             //  The maximum value the counter reaches (the default is `max`)
  *             //
- *           [ top,         fixed_0xFF                  // Hardware fixed value 0x00FF
- *                        | max                         // Hardware fixed value 0x00FF
+ *           [ top,         0xFF                        // Hardware fixed value 0xFF
+ *                        | max                         // Hardware fixed value 0xFF
  *                        | compare0,]                  // Value stored in the compare0 unit
  *
  *             //  When the overflow flag is set
@@ -126,7 +126,9 @@
 
 /*  Optionnal argument `top`
  */
-#define _hw_c8a_top_fixed_0xFF			, 1
+#define _hw_c8a_top_0xFF			, 1
+#define _hw_c8a_top_0x00FF			, 1
+#define _hw_c8a_top_255				, 1
 #define _hw_c8a_top_max				, 1
 #define _hw_c8a_top_compare0			, 2
 
@@ -134,7 +136,7 @@
   HW_G2(_hwa_cfc8a_vtop,HW_IS(,_hw_c8a_top_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8a_vtop_0(o,v,...)				\
-  HW_ERR("`top` can be `fixed_0xFF`, `max`, or `compare0`,"	\
+  HW_ERR("`top` can be `0xFF`, `max`, or `compare0`,"		\
 	 " but not `" #v "`.")
 
 #define _hwa_cfc8a_vtop_1(o,v,k,...)					\
@@ -321,7 +323,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
    */
   uint8_t wgm = 0xFF ;
   if ( p->config.countmode == HW_A1(_hw_c8a_countmode_loop_up) ) {
-    if ( p->config.top == HW_A1(_hw_c8a_top_fixed_0xFF) ) {
+    if ( p->config.top == HW_A1(_hw_c8a_top_0xFF) ) {
       if ( compare_update == HW_A1(_hw_oc8a_update_at_bottom)
 	   || oc0->config.output == HW_A1(_hw_oc8a_output_clear_at_bottom_set_on_match)
 	   || oc0->config.output == HW_A1(_hw_oc8a_output_set_at_bottom_clear_on_match)
@@ -350,7 +352,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
     }
   }
   else /* countmode == loop_updown */ {
-    if ( p->config.top == HW_A1(_hw_c8a_top_fixed_0xFF) )
+    if ( p->config.top == HW_A1(_hw_c8a_top_0xFF) )
       wgm = 1 ;
     else /* top == ocra */
       wgm = 5 ;

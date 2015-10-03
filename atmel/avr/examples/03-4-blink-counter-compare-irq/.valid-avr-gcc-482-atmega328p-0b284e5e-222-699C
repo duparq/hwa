@@ -7,23 +7,8 @@ COUNTMODE="loop_up"
 COMPARE="compare0"
 PERIOD="0.5"
 
-
 build/nanodccduino/out.elf:     file format elf32-avr
 
-Sections:
-Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  000000de  00000172  2**0
-                  CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000de  00000000  00000000  00000094  2**1
-                  CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000001  00800100  00800100  00000172  2**0
-                  ALLOC
-  3 .stab         00000f60  00000000  00000000  00000174  2**2
-                  CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00001d4e  00000000  00000000  000010d4  2**0
-                  CONTENTS, READONLY, DEBUGGING
-  5 .comment      00000011  00000000  00000000  00002e22  2**0
-                  CONTENTS, READONLY
 
 Disassembly of section .text:
 
@@ -83,55 +68,21 @@ Disassembly of section .text:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000090 <__vector_14>:
-
-
-/*  Service the compare-match IRQ
- */
-HW_ISR( COUNTER, COMPARE )
-{
   90:	1f 92       	push	r1
   92:	0f 92       	push	r0
   94:	0f b6       	in	r0, 0x3f	; 63
   96:	0f 92       	push	r0
   98:	11 24       	eor	r1, r1
   9a:	8f 93       	push	r24
-
-    if ( rm == 0 )
-      /*
-       *  Nothing to be read, just write the new value
-       */
-      *p = v ;
   9c:	16 bc       	out	0x26, r1	; 38
-  hw_clear( COUNTER );
-
-  static uint8_t n ;
-  n++ ;
   9e:	80 91 00 01 	lds	r24, 0x0100
   a2:	8f 5f       	subi	r24, 0xFF	; 255
-  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
-  a4:	89 3f       	cpi	r24, 0xF9	; 249
+  a4:	8a 3f       	cpi	r24, 0xFA	; 250
   a6:	18 f4       	brcc	.+6      	; 0xae <__vector_14+0x1e>
-HW_ISR( COUNTER, COMPARE )
-{
-  hw_clear( COUNTER );
-
-  static uint8_t n ;
-  n++ ;
   a8:	80 93 00 01 	sts	0x0100, r24
   ac:	03 c0       	rjmp	.+6      	; 0xb4 <__vector_14+0x24>
-  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
-    n = 0 ;
   ae:	10 92 00 01 	sts	0x0100, r1
-     *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles
-     *  (ldi+out is 2 cycles) and it is sometimes required to have both bits
-     *  written at the same time (e.g. TSM/PSR).
-     */
-    if ( v )
-      *p |= wm ; /* sbi */
   b2:	1d 9a       	sbi	0x03, 5	; 3
-    hw_toggle( PIN_LED );
-  }
-}
   b4:	8f 91       	pop	r24
   b6:	0f 90       	pop	r0
   b8:	0f be       	out	0x3f, r0	; 63
@@ -140,43 +91,16 @@ HW_ISR( COUNTER, COMPARE )
   be:	18 95       	reti
 
 000000c0 <main>:
-     */
-    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
-
-    /*  Write new value
-     */
-    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
   c0:	81 e0       	ldi	r24, 0x01	; 1
   c2:	83 bf       	out	0x33, r24	; 51
-      /*
-       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
-       *  instruction CBI or SBI
-       */
-      if ( wm & r->mvalue )
-	*p |= wm ; /* sbi */
   c4:	25 9a       	sbi	0x04, 5	; 4
-     */
-    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
-
-    /*  Write new value
-     */
-    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
   c6:	83 e0       	ldi	r24, 0x03	; 3
   c8:	85 bd       	out	0x25, r24	; 37
   ca:	82 e0       	ldi	r24, 0x02	; 2
   cc:	80 93 6e 00 	sts	0x006E, r24
   d0:	8a ef       	ldi	r24, 0xFA	; 250
   d2:	87 bd       	out	0x27, r24	; 39
-
-  /*  Write this configuration into the hardware
-   */
-  hwa_commit();
-
-  hw_enable_interrupts();
   d4:	78 94       	sei
-
-  for(;;)
-    hw_sleep();
   d6:	88 95       	sleep
   d8:	fe cf       	rjmp	.-4      	; 0xd6 <main+0x16>
 

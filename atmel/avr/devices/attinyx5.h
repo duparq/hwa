@@ -578,7 +578,9 @@ typedef struct {
 #define _hw_pin_pb2			_io1a, 303, hw_portb, 1, 2
 #define _hw_pin_pb3			_io1a, 304, hw_portb, 1, 3
 #define _hw_pin_pb4			_io1a, 305, hw_portb, 1, 4
-#define _hw_pin_pb5			_io1a, 306, hw_portb, 1, 5
+#if HW_DEVICE_RSTDISBL == 0
+#  define _hw_pin_pb5			_io1a, 306, hw_portb, 1, 5
+#endif
 
 /*  Alternate pin functions
  */
@@ -1099,6 +1101,7 @@ typedef struct {
 #define _hw_adc0_admux			_r8,  0x27,   0xFF,   0x00
 #define _hw_adc0_sra			_r8,  0x26,   0xFF,   0x10
 #define _hw_adc0_adc			_r16, 0x24, 0x0000, 0x0000
+#define _hw_adc0_adch			_r8,  0x25,   0x00,   0x00
 #define _hw_adc0_srb			_r8,  0x23,   0xE7,   0x00
 //#define _hw_adc0_did			_r8,  0x34,   0x3F,   0x00
 
