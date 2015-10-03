@@ -93,37 +93,37 @@
 #endif
 
 #if HW_IS(external,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
+#  define HW_DEVICE_FUSE_CKSEL31			0
+#  define HW_DEVICE_FUSE_CKSEL0				0
 #elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
+#  define HW_DEVICE_FUSE_CKSEL31			1
+#  define HW_DEVICE_FUSE_CKSEL0				0
 #  define hw_syshz_base					8000000
 #elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				1
+#  define HW_DEVICE_FUSE_CKSEL31			1
+#  define HW_DEVICE_FUSE_CKSEL0				1
 #  define hw_syshz_base					128000
 #elif HW_IS(HW_DEVICE_CLK_SRC, low_freq_xosc)
 #  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
-#  define HW_DEVICE_CKSEL31				2
+#  define HW_DEVICE_FUSE_CKSEL31			2
 #
 #elif HW_IS(HW_DEVICE_CLK_SRC, low_power_xosc)
 #  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
 #  if HW_DEVICE_CLK_SRC_HZ < 900000
-#    define HW_DEVICE_CKSEL31				4
+#    define HW_DEVICE_FUSE_CKSEL31			4
 #  elif HW_DEVICE_CLK_SRC_HZ < 3000000
-#    define HW_DEVICE_CKSEL31				5
+#    define HW_DEVICE_FUSE_CKSEL31			5
 #  elif HW_DEVICE_CLK_SRC_HZ < 8000000
-#    define HW_DEVICE_CKSEL31				6
+#    define HW_DEVICE_FUSE_CKSEL31			6
 #  else
-#    define HW_DEVICE_CKSEL31				7
+#    define HW_DEVICE_FUSE_CKSEL31			7
 #  endif
 #elif HW_IS(HW_DEVICE_CLK_SRC, full_swing_xosc)
 #  ifndef HW_DEVICE_CLK_SRC_HZ
 #    error HW_DEVICE_CLK_SRC_HZ must be defined as the frequency of the crystal used for clocking
 #  else
 #    define hw_syshz_base				HW_DEVICE_CLK_SRC_HZ
-#    define HW_DEVICE_CKSEL31				3
+#    define HW_DEVICE_FUSE_CKSEL31				3
 #  endif
 #else
 #  error HW_DEVICE_CLK_SRC can be `rc_8MHz`, `rc_128kHz`, `low_freq_xosc`, `low_power_xosc`, `full_swing_xosc`, or `external`.
@@ -140,10 +140,10 @@
 #endif
 
 #if HW_DEVICE_CLK_PSC == 8
-#  define HW_DEVICE_CKDIV8				0
+#  define HW_DEVICE_FUSE_CKDIV8				0
 #  define hw_syshz					hw_syshz_base/8
 #elif HW_DEVICE_CLK_PSC == 1
-#  define HW_DEVICE_CKDIV8				1
+#  define HW_DEVICE_FUSE_CKDIV8				1
 #  define hw_syshz					hw_syshz_base
 #else
 #  HW_ERROR(`HW_DEVICE_CLK_PSC` can be `8`, or `1`, but not HW_DEVICE_CLK_PSC)
@@ -179,58 +179,58 @@
 /*	SUT
  */
 #if defined HW_DEVICE_STARTUP_DELAYS
-#  if HW_DEVICE_CKSEL31 < 2
-#    define HW_DEVICE_CKSEL0				0
+#  if HW_DEVICE_FUSE_CKSEL31 < 2
+#    define HW_DEVICE_FUSE_CKSEL0				0
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK)
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_4ms)
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_64ms)
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_SUT10				2
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
 #    endif
-#  elif HW_DEVICE_CKSEL31 == 2
+#  elif HW_DEVICE_FUSE_CKSEL31 == 2
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK)
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK_4ms)
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 4CK_64ms)
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_SUT10				2
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `4CK`, `4CK_4ms`, or `4CK_64ms`.
 #    endif
 #  else
 #    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				2
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				3
+#      define HW_DEVICE_FUSE_CKSEL0				0
+#      define HW_DEVICE_FUSE_SUT10				3
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				0
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				0
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				1
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				1
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				2
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				2
 #    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				3
+#      define HW_DEVICE_FUSE_CKSEL0				1
+#      define HW_DEVICE_FUSE_SUT10				3
 #    else
 #      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `258CK_14CK_4ms`, `258CK_14CK_64ms`, `1KCK_14CK`, `1KCK_14CK_4ms`, `1KCK_14CK_64ms`, `16KCK_14CK`, `16KCK_14CK_4ms`, or `16KCK_14CK_64ms`.
 #    endif
 #  endif
 #else
-#  define HW_DEVICE_SUT10				2
+#  define HW_DEVICE_FUSE_SUT10				2
 #endif
 
 
@@ -256,9 +256,9 @@
 #  define HW_DEVICE_CLOCK_OUTPUT			disabled
 #endif
 #if HW_IS(HW_DEVICE_CLOCK_OUTPUT, enabled)
-#  define HW_DEVICE_CKOUT				0
+#  define HW_DEVICE_FUSE_CKOUT				0
 #elif HW_IS(HW_DEVICE_CLOCK_OUTPUT, disabled)
-#  define HW_DEVICE_CKOUT				1
+#  define HW_DEVICE_FUSE_CKOUT				1
 #else
 #  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
 #endif
@@ -267,9 +267,9 @@
 #  define HW_DEVICE_EXTERNAL_RESET			enabled
 #endif
 #if HW_IS(HW_DEVICE_EXTERNAL_RESET, enabled)
-#  define HW_DEVICE_RSTDISBL				1
+#  define HW_DEVICE_FUSE_RSTDISBL			1
 #elif HW_IS(HW_DEVICE_EXTERNAL_RESET, disabled)
-#  define HW_DEVICE_RSTDISBL				0
+#  define HW_DEVICE_FUSE_RSTDISBL			0
 #else
 #  error HW_DEVICE_EXTERNAL_RESET must be defined as `enabled` (default) or `disabled`.
 #endif
@@ -278,9 +278,9 @@
 #  define HW_DEVICE_DEBUG_WIRE				disabled
 #endif
 #if HW_IS(HW_DEVICE_DEBUG_WIRE, enabled)
-#  define HW_DEVICE_DWEN				0
+#  define HW_DEVICE_FUSE_DWEN				0
 #elif HW_IS(HW_DEVICE_DEBUG_WIRE, disabled)
-#  define HW_DEVICE_DWEN				1
+#  define HW_DEVICE_FUSE_DWEN				1
 #else
 #  error HW_DEVICE_DEBUG_WIRE must be defined as `enabled` or `disabled` (default).
 #endif
@@ -289,9 +289,9 @@
 #  define HW_DEVICE_SERIAL_PROGRAMMING			enabled
 #endif
 #if HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, enabled)
-#  define HW_DEVICE_SPIEN				0
+#  define HW_DEVICE_FUSE_SPIEN				0
 #elif HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, disabled)
-#  define HW_DEVICE_SPIEN				1
+#  define HW_DEVICE_FUSE_SPIEN				1
 #else
 #  error HW_DEVICE_SERIAL_PROGRAMMING must be defined as `enabled` (default) or `disabled`.
 #endif
@@ -300,9 +300,9 @@
 #  define HW_DEVICE_WATCHDOG_ALWAYS_ON			no
 #endif
 #if HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, yes)
-#  define HW_DEVICE_WDTON				0
+#  define HW_DEVICE_FUSE_WDTON				0
 #elif HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, no)
-#  define HW_DEVICE_WDTON				1
+#  define HW_DEVICE_FUSE_WDTON				1
 #else
 #  error HW_DEVICE_WATCHDOG_ALWAYS_ON must be defined as `yes` or `no` (default).
 #endif
@@ -311,9 +311,9 @@
 #  define HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE	no
 #endif
 #if HW_IS(HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE, yes)
-#  define HW_DEVICE_EESAVE				0
+#  define HW_DEVICE_FUSE_EESAVE				0
 #elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE, no)
-#  define HW_DEVICE_EESAVE				1
+#  define HW_DEVICE_FUSE_EESAVE				1
 #else
 #  error HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE must be defined as `yes` or `no` (default).
 #endif
@@ -326,13 +326,13 @@
 #  define HW_DEVICE_BROWNOUT_DETECTION			off
 #endif
 #if HW_IS(HW_DEVICE_BROWNOUT_DETECTION, off)
-#  define HW_DEVICE_BODLEVEL				7
+#  define HW_DEVICE_FUSE_BODLEVEL			7
 #elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 1700_2000mV)
-#  define HW_DEVICE_BODLEVEL				6
+#  define HW_DEVICE_FUSE_BODLEVEL			6
 #elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 2500_2900mV)
-#  define HW_DEVICE_BODLEVEL				5
+#  define HW_DEVICE_FUSE_BODLEVEL			5
 #elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 4100_4500mV)
-#  define HW_DEVICE_BODLEVEL				4
+#  define HW_DEVICE_FUSE_BODLEVEL			4
 #else
 #  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
 #endif
@@ -349,9 +349,9 @@
 #  define HW_DEVICE_BOOT				application
 #endif
 #if HW_IS(HW_DEVICE_BOOT, application)
-#  define HW_DEVICE_BOOTRST				1
+#  define HW_DEVICE_FUSE_BOOTRST			1
 #elif HW_IS(HW_DEVICE_BOOT, bootloader)
-#  define HW_DEVICE_BOOTRST				0
+#  define HW_DEVICE_FUSE_BOOTRST			0
 #else
 #  error HW_DEVICE_BOOT must be defined as `bootloader` or `application` (default).
 #endif
@@ -908,9 +908,10 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
+#include "../classes/inta_1.h"
+
 /*	Object				class, id, address
  */
-#include "../classes/inta_1.h"
 #define _hw_int0			_inta, 110, 0
 
 /*	Object logical registers
@@ -1027,7 +1028,7 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/c8a_1.h"	/* was c8a but should be OK with object hardware regs */
+#include "../classes/c8a_1.h"
 
 /*	Object				class, id, address
  */
@@ -1147,7 +1148,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare units hw_oc10, hw_oc11 (OCR0A, OCR0B)		       *
+ *	Counter 1 compare units hw_oc10, hw_oc11 (OCR1A, OCR1B)		       *
  *									       *
  *******************************************************************************/
 

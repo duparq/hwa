@@ -24,13 +24,13 @@
 #  define HW_DEVICE_BOOTSECTION_SIZE			4096
 #endif
 #if HW_DEVICE_BOOTSECTION_SIZE == 512
-#  define HW_DEVICE_BOOTSZ				3
+#  define HW_DEVICE_FUSE_BOOTSZ				3
 #elif HW_DEVICE_BOOTSECTION_SIZE == 1024
-#  define HW_DEVICE_BOOTSZ				2
+#  define HW_DEVICE_FUSE_BOOTSZ				2
 #elif HW_DEVICE_BOOTSECTION_SIZE == 2048
-#  define HW_DEVICE_BOOTSZ				1
+#  define HW_DEVICE_FUSE_BOOTSZ				1
 #elif HW_DEVICE_BOOTSECTION_SIZE == 4096
-#  define HW_DEVICE_BOOTSZ				0
+#  define HW_DEVICE_FUSE_BOOTSZ				0
 #else
 #  error HW_DEVICE_BOOTSECTION_SIZE must be `512`, `1024`, `2048`, or `4096` (default).
 #endif
@@ -39,28 +39,28 @@
  *	FIXME: there's a problem with avrdude reading/writing unprogrammed
  *	fuses of extended byte as 0 instead of 1.
  */
-#define HW_DEVICE_FUSE_EB			\
+#define HW_DEVICE_FUSE_FUSE_EB			\
   /* 0xF8 | */					\
-  HW_DEVICE_BODLEVEL
+  HW_DEVICE_FUSE_BODLEVEL
 
 /*  Default: 0xD9
  */
-#define HW_DEVICE_FUSE_HB			\
-  HW_DEVICE_RSTDISBL<<7 |			\
-  HW_DEVICE_DWEN<<6 |				\
-  HW_DEVICE_SPIEN<<5 |				\
-  HW_DEVICE_WDTON<<4 |				\
-  HW_DEVICE_EESAVE<<3 |				\
-  HW_DEVICE_BOOTSZ<<1 |				\
-  HW_DEVICE_BOOTRST
+#define HW_DEVICE_FUSE_FUSE_HB			\
+  HW_DEVICE_FUSE_RSTDISBL<<7 |			\
+  HW_DEVICE_FUSE_DWEN<<6 |			\
+  HW_DEVICE_FUSE_SPIEN<<5 |			\
+  HW_DEVICE_FUSE_WDTON<<4 |			\
+  HW_DEVICE_FUSE_EESAVE<<3 |			\
+  HW_DEVICE_FUSE_BOOTSZ<<1 |			\
+  HW_DEVICE_FUSE_BOOTRST
 
 /*  Default: 0x62
  */
-#define HW_DEVICE_FUSE_LB			\
-  HW_DEVICE_CKDIV8<<7 |				\
-  HW_DEVICE_CKOUT<<6 |				\
-  HW_DEVICE_SUT10<<4 |				\
-  HW_DEVICE_CKSEL31<<1 |			\
-  HW_DEVICE_CKSEL0
+#define HW_DEVICE_FUSE_FUSE_LB			\
+  HW_DEVICE_FUSE_CKDIV8<<7 |			\
+  HW_DEVICE_FUSE_CKOUT<<6 |			\
+  HW_DEVICE_FUSE_SUT10<<4 |			\
+  HW_DEVICE_FUSE_CKSEL31<<1 |			\
+  HW_DEVICE_FUSE_CKSEL0
 
 #include "atmegax8.h"
