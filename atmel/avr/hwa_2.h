@@ -53,6 +53,14 @@
  */
 #define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
+/**
+ * @ingroup public_gen_instructions_atmelavr
+ * @brief Software loop of \c n system clock cycles.
+ *
+ * Only works with compile time constants.
+ */
+#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+
 
 /**
  * @ingroup public_gen_instructions_atmelavr
