@@ -199,11 +199,11 @@
  * uint8_t value = hw_read( IO_NAME );
  * @endcode
  */
-#define _hw_read_io1a(o,i, p,bn,bp)		_hw_rdio1a_2(_##p,bn,bp)
+#define _hw_read_io1a(o,i, p,bn,bp,...)		HW_TX(_hw_rdio1a_2(_##p,bn,bp),__VA_ARGS__)
 #define _hw_rdio1a_2(...)			_hw_rdio1a_3(__VA_ARGS__)
-#define _hw_rdio1a_3(c,i,a,bn,bp)		_hw_rdio1a_4(a,bn,bp,_hw_##c##_##port)
+#define _hw_rdio1a_3(c,i,a,bn,bp)		_hw_rdio1a_4(a,bn,bp,_hw_##c##_##pin)
 #define _hw_rdio1a_4(...)			_hw_rdio1a_5(__VA_ARGS__)
-#define _hw_rdio1a_5(a,bn,bp, rt,ra,rwm,rfm)	_hw_read_r8(a+ra,rwm,rfm,bn,bp)
+#define _hw_rdio1a_5(a,bn,bp, rt,ra,rwm,rfm)	_hw_read_##rt(a+ra,bn,bp)
 
 
 /**

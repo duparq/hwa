@@ -16,7 +16,10 @@
  * same I/O port. An `_io1a` object can be configured as analog input if it has
  * a `_did` logical register.
  *
- * `_io1a` objects do not have registers, they access their port's.
+ * `_io1a` objects have the following relative objects:
+ *
+ *  * one port, of class @ref atmelavr_p8a "_p8a": `hw_rel( IO_NAME, port )`
+ *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `hw_rel( IO_NAME, pcic )`
  */
 #define _hw_class__io1a
 

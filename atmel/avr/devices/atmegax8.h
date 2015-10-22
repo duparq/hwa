@@ -455,7 +455,9 @@
  * :---------------------------------------|--------------|------------------------
  * `hw_int0`                               | INT0         | External Interrupt Request 0
  * `hw_int1`                               | INT1         | External Interrupt Request 1
- * `hw_pin_*,change`                       | PCINT0/1/2   | Pin Change Interrupt Request 0/1/2
+ * `hw_pcic0`                              | PCINT0       | Pin Change Interrupt Request 0
+ * `hw_pcic1`                              | PCINT1       | Pin Change Interrupt Request 1
+ * `hw_pcic2`                              | PCINT2       | Pin Change Interrupt Request 2
  * `hw_wdog0`                              | WDT          | Watchdog Time-out Interrupt
  * `hw_oc20`<br>`hw_counter2,compare0`     | TIMER2 COMPA | Timer/Counter2 Compare Match A
  * `hw_oc21`<br>`hw_counter2,compare1`     | TIMER2 COMPB | Timer/Counter2 Compare Match B
@@ -571,7 +573,7 @@
 #define _hw_shared_prr			_r8, 0x64, 0xEF, 0x00
 #define _hw_shared_gpior2		_r8, 0x4B, 0xFF, 0x00
 #define _hw_shared_gpior1		_r8, 0x4A, 0xFF, 0x00
-#define _hw_shared_gtccr		_r8, 0x43, 0x81, 0x00
+#define _hw_shared_gtccr		_r8, 0x43, 0x83, 0x00
 #define _hw_shared_gpior0		_r8, 0x3E, 0xFF, 0x00
 #define _hw_shared_eimsk		_r8, 0x3D, 0x03, 0x00
 #define _hw_shared_eifr			_r8, 0x3C, 0x03, 0x03

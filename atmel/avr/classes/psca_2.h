@@ -31,7 +31,7 @@
  * @page atmelavr_psca
  * @section atmelavr_psca_stop Stop
  *
- * The hw_turn() instruction can reset and stops the prescaler:
+ * The hw_turn() instruction can reset and stop the prescaler:
  *
  * @code
  * hw_turn( hw_psc0, off );  //  Reset and halt the prescaler

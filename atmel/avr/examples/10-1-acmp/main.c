@@ -20,17 +20,6 @@
  */
 #define REFERENCE		bandgap
 
-/*  The analog comparator negative input
- *    This can be any analog input pin
- */
-/* #if defined HW_DEVICE_ATTINYX4 */
-/* #  define INPUT_NEG		   hw_pin_6 */
-/* #elif defined HW_DEVICE_ATTINYX5 */
-/* #  define INPUT_NEG		   hw_pin_7 */
-/* #elif defined HW_DEVICE_ATMEGAX8 */
-/* #  define INPUT_NEG		   hw_pin_19 */
-/* #endif */
-
 /*  The analog comparator output edge that will trigger an IRQ
  *    This can be `falling`, `rising` or `both`
  */

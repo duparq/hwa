@@ -584,7 +584,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
  * @endcode
  */
 #define _hw_mthd_hw_write__c8c		, _hw_write_c8c
-#define _hw_write_c8c(o,i,a,v)		_hw_write_reg(o,count,v)
+#define _hw_write_c8c(o,i,a,v,...)	HW_TX(_hw_write_reg(o,count,v),__VA_ARGS__)
 
 /**
  * @page atmelavr_c8c
