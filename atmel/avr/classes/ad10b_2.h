@@ -27,46 +27,44 @@
  *             //  the 50..200 kHz range for maximum resolution, and in all
  *             //  case lower than 1 MHz.
  *             //
- *             clock,     min                        // choose the nearest 50 kHz
- *                      | max                        // choose the nearest 200 kHz
- *                      | sysclk_div(    2
- *                                   |   4
- *                                   |   8
- *                                   |  16
- *                                   |  32
- *                                   |  64
- *                                   | 128 ),
+ *             clock,        sysclk_div(    2
+ *                                      |   4
+ *                                      |   8
+ *                                      |  16
+ *                                      |  32
+ *                                      |  64
+ *                                      | 128 ),
  *
  *             //  How a conversation is started
  *             //
- *             trigger,   manual                     // with the `hw_trigger()` instruction
- *                      | auto                       // as soon as a consersion is completed
- *                      | hw_acmp0                   // ANA_COMP interrupt request
- *                      | hw_int0                    // INT0 interrupt request
- *                      | hw_counter0_compare0       // TIMER0_COMPA interrupt request
- *                      | hw_counter0_overflow       // TIMER0_OVF interrupt request
- *                      | hw_counter1_compare1       // TIMER1_COMPB interrupt request
- *                      | hw_counter1_overflow       // TIMER1_OVF interrupt request
- *                      | hw_counter1_capture,       // TIMER1_CAPT interrupt request
+ *             trigger,      manual                     // with the `hw_trigger()` instruction
+ *                         | auto                       // as soon as a consersion is completed
+ *                         | hw_acmp0                   // ANA_COMP interrupt request
+ *                         | hw_int0                    // INT0 interrupt request
+ *                         | hw_counter0_compare0       // TIMER0_COMPA interrupt request
+ *                         | hw_counter0_overflow       // TIMER0_OVF interrupt request
+ *                         | hw_counter1_compare1       // TIMER1_COMPB interrupt request
+ *                         | hw_counter1_overflow       // TIMER1_OVF interrupt request
+ *                         | hw_counter1_capture,       // TIMER1_CAPT interrupt request
  *
  *             //  Voltage reference
  *             //
- *             vref,      vcc                        // Vcc
- *                      | hw_pin_avcc                // Voltage on AVCC pin
- *                      | hw_pin_aref                // Voltage on AREF pin
- *                      | bandgap,                   // Internal 1.1V bandgap
+ *             vref,         vcc                        // Vcc
+ *                         | hw_pin_avcc                // Voltage on AVCC pin
+ *                         | hw_pin_aref                // Voltage on AREF pin
+ *                         | bandgap,                   // Internal 1.1V bandgap
  * 
  *             //  Result alignment (default is `right`)
  *             //
- *           [ align,     left
- *                      | right, ]
+ *           [ align,        left
+ *                         | right, ]
  *
  *             //  Input
  *             //
- *             input,     hw_pin_adc0 .. hw_pin_adc7
- *                      | agnd
- *                      | bandgap
- *                      | temperature
+ *             input,        hw_pin_adc0 .. hw_pin_adc7
+ *                         | agnd
+ *                         | bandgap
+ *                         | temperature
  *           );
  * @endcode
  */
@@ -85,43 +83,9 @@
 #define _hwa_cfad10b_kclock_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10b_vclock, HW_IS(,_hw_ad10b_clock_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `min`, `max`, or `sysclk_div( 1 | 2 | 4 | 8 | 16 " \
-	 "| 32 | 64 | 128 )`, but not `"#v".")
+  HW_ERR("`clock` can be `sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 )`, not `"#v".")
 #define _hwa_cfad10b_vclock_1(o,v,k,...)				\
-  if ( HW_A1(_hw_ad10b_clock_##v) == HW_A1(_hw_ad10b_clock_min) ) {	\
-    if ( hw_syshz / 128 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_128));	\
-    else if ( hw_syshz / 64 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_64));	\
-    else if ( hw_syshz / 32 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_32));	\
-    else if ( hw_syshz / 16 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_16));	\
-    else if ( hw_syshz / 8 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_8));	\
-    else if ( hw_syshz / 4 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_4));	\
-    else								\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_2));	\
-  }									\
-  else if ( HW_A1(_hw_ad10b_clock_##v) == HW_A1(_hw_ad10b_clock_max) ) { \
-    if ( hw_syshz / 2 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_2));	\
-    else if ( hw_syshz / 4 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_4));	\
-    else if ( hw_syshz / 8 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_8));	\
-    else if ( hw_syshz / 16 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_16));	\
-    else if ( hw_syshz / 32 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_32));	\
-    else if ( hw_syshz / 64 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_64));	\
-    else								\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_128));	\
-  }									\
-  else									\
-    _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_##v));			\
+  _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_##v));			\
   HW_G2(_hwa_cfad10b_ktrigger, HW_IS(trigger,k))(o,k,__VA_ARGS__)
 
 #define _hw_is_clock_clock			, 1
@@ -132,8 +96,6 @@
 #define _hw_ad10b_clock_sysclk_div_32		, 5
 #define _hw_ad10b_clock_sysclk_div_64		, 6
 #define _hw_ad10b_clock_sysclk_div_128		, 7
-#define _hw_ad10b_clock_min			, 8
-#define _hw_ad10b_clock_max			, 9
 #define _hw_ad10b_clock_sysclk_div(x)		HW_G2(_hw_ad10b_clock_sysclk_div,x)
 
 /*	Mandatory parameter 'trigger'
@@ -189,7 +151,7 @@
   HW_G2(_hwa_cfad10b_valign, HW_IS(,_hw_ad10b_align_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hwa_cfad10b_valign_0(o,v,...)				\
   HW_ERR("`align` can be `left`, or `right` but not `" #v "`.")
-#define _hwa_cfad10b_valign_1(o,v,...)			\
+#define _hwa_cfad10b_valign_1(o,v,...)				\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10b_align_##v));	\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
 
@@ -200,9 +162,9 @@
 /*	Mandatory parameter 'input'
  */
 #define _hwa_cfad10b_kinput(o,...)					\
-  HW_G2(_hwa_cfad10b_kinput, HW_IS(input,__VA_ARGS__))(o,__VA_ARGS__)
-#define _hwa_cfad10b_kinput_0(o,k,...)			\
-  HW_ERR("expected `input` instead of `" #k "`.")
+    HW_G2(_hwa_cfad10b_kinput, HW_IS(input,__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfad10b_kinput_0(o,k,...)					\
+    HW_ERR("expected `input` instead of `" #k "`.")
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10b_input_##v)) )				\
     _hwa_write_reg(o,mux, HW_A1(_hw_ad10b_input_##v,0));		\
