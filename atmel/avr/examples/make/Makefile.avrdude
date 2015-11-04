@@ -1,28 +1,8 @@
 
 #	-*- makefile -*-
 
-#  Programming hardware must be known
-#
-ifeq (,$(PROG_HW))
-  $(error PROG_HW is not defined)
-endif
-
-
-#  Get the partno parameter from the DEVICE name
-#
-#	List avrdude known devices: "DEVICE = PARTNO"
-#	Remove spaces
-#	Extract the matching device name
-#
-# ifneq (,$(DEVICE))
-# $(OUT).avrdude: $(OUT).hwa
-# 	@echo "RULE: $@ $<"
-# 	@avrdude -c usbasp -p \? 2>&1 \
-# 	| sed -r -e 's/( )+//g'\
-# 	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
-
-# -include $(OUT).avrdude
-# endif
+PROG_HW		?= usbasp
+AVRDUDE_PARTNO	?= m328p
 
 
 #  Reset the microcontroller (link checking)

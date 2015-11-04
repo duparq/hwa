@@ -48,6 +48,7 @@ endif
 .PHONY: clean
 clean:
 ifeq (,$(BOARD))
+	@echo Cleaning $(abspath $(MFD)..)
 	@find $(MFD).. -name 'build' -prune -exec rm -rf {} ';'
 	@find . '(' 			\
 		-name '*~' 		\
@@ -56,6 +57,7 @@ ifeq (,$(BOARD))
 		-o -name '*.pyc'	\
 		')' -exec rm {} ';'
 else
+	@echo Cleaning $(abspath $(MFD)../boards/build/$(BOARD))
 	rm -rf build/$(BOARD) $(MFD)../boards/build/$(BOARD)
 endif
 
@@ -109,7 +111,8 @@ validate-all-examples:
 	done
 
 
-#  This target automatically takes the name of the target that was not found
+#  This target automatically takes the name of the target 
+#  that was not found in this Makefile
 #
 .DEFAULT:
 #	@echo ".DEFAULT: $@"

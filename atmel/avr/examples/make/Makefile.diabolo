@@ -47,26 +47,26 @@ erase:
 
 .PHONY: install
 install: $(OUT).bin
-	$(diabolo) $(DIABOLO_OPTS)		\
+	@$(diabolo) $(DIABOLO_OPTS)		\
 		--cache=/tmp/diabolo-cache.bin	\
 		--burn-flash $<
 
 
 .PHONY: diabolo
 diabolo:
-	$(diabolo) $(DIABOLO_OPTS)
+	@$(diabolo) $(DIABOLO_OPTS)
 
 
 .PHONY: identify
 identify:
-	$(diabolo) $(DIABOLO_OPTS)
+	@$(diabolo) $(DIABOLO_OPTS)
 
 
 .PHONY: decode-fuses
 decode-fuses:
-	$(diabolo) $(DIABOLO_OPTS) --decode-fuses
+	@$(diabolo) $(DIABOLO_OPTS) --decode-fuses
 
 
 .PHONY: reset
 reset:
-	$(diabolo) --reset
+	@$(diabolo) --reset

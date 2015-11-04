@@ -87,5 +87,14 @@ if ls .valid-*-${HW_DEVICE}-$CFG_CRC-$O_SIZE-$O_CRC >/dev/null 2>&1 ; then
     exit 0
 fi
 
+#  No validation file match. GCC version?
+#
+CCVERSION=$(avr-gcc -dumpversion)
+
+if ! ls .valid-${CCVERSION}-${HW_DEVICE}-${CFG_CRC}-* >/dev/null 2>&1 ; then
+    echo no validation file for avr-gcc version $CCVERSION
+    exit 6
+fi
+
 echo CRC mismatch $O_CRC
 exit 8

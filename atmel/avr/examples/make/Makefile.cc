@@ -93,7 +93,7 @@ export OUT
 #	when it reads complex values.
 #
 $(BOARDS)/build/$(BOARD).c:
-	@echo "RULE: $@"
+#	@echo "RULE: $@"
 	@mkdir -p $(BOARDS)/build
 	@echo "DEVICE=HW_DEVICE" >$@
 	@echo "DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE" >>$@
@@ -109,8 +109,8 @@ $(BOARDS)/build/$(BOARD).c:
 #  produce C code and that are useless for what we want to do.
 #
 $(BOARDS)/build/$(BOARD): $(BOARDS)/build/$(BOARD).c $(BOARDS)/$(BOARD).h
-	@echo "RULE: $@ : $^"
-	avr-cpp -I$(MFD)../../../../include					\
+#	@echo "RULE: $@ : $^"
+	@avr-cpp -I$(MFD)../../../../include					\
 		-D__ASSEMBLER__							\
 		-imacros $(BOARDS)/$(BOARD).h $(BOARDS)/build/$(BOARD).c | grep '^DEVICE' >$@
 
@@ -186,16 +186,16 @@ force: ;
 #  went wrong with the HWA macros
 #
 %.cp.c: %.c
-	@echo "RULE $@: $^"
-	$(CPP) $(CFLAGS) $< >$@
+#	@echo "RULE $@: $^"
+	@$(CPP) $(CFLAGS) $< >$@
 #	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
 
 #  .sx files must first be preprocessed in order to catch HWA error messages and
 #  format them for a correct display
 #
 $(OUTDIR)/%.cp.sx %.cp.sx: %.sx
-	@echo "RULE $@: $^"
-	$(CPP) $(AFLAGS) $< >$@
+#	@echo "RULE $@: $^"
+	@$(CPP) $(AFLAGS) $< >$@
 
 foo:
 	@awk 'BEGIN { result=0; }{						\
@@ -245,7 +245,7 @@ CFLAGS		+= $(INCLUDES)
 $(OUTDIR)/%.o: %.c
 #	@echo "RULE: $@ : $^"
 	@mkdir -p $(OUTDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 #  We want .sx files to be preprocessed first
 #
@@ -372,7 +372,7 @@ $(OUT).cfg: $(OUT).cfg.c
 #
 .PHONY: rem$(OUT).ccversion
 rem$(OUT).ccversion:
-	@echo "RULE: $@: $^"
+#	@echo "RULE: $@: $^"
 	@$(CC) --version | awk 'NR==1 {x=match($$3,/([0-9]+)\.([0-9]+)\.([0-9]+)/,m);\
 				if(x!=0){print "$(CC)-"m[1]m[2]m[3]}}' >$@
 
@@ -414,14 +414,14 @@ ccversion:
 .PHONY: check
 check: $(OUT).cfg $(OUT).bin #$(OUT).ccversion
 #	@echo "RULE: $@: $^"
-	OUT=$(OUT) bash $(MFD)check.sh
+	@OUT=$(OUT) bash $(MFD)check.sh
 
 
 #  Disassemble binary output file
 #
 .PHONY: disassemble
 disassemble:
-	avr-objdump -m avr:5 -b binary -D $(OUT).bin
+	@avr-objdump -m avr:5 -b binary -D $(OUT).bin
 
 
 #  Show device fuse values
@@ -435,6 +435,12 @@ show-fuses: $(INC_HWA)
 		$$(($$(echo $(DEVICE_FUSE_LB))))
 
 
+################################################################################
+#									       #
+#			Device programming				       #
+#									       #
+################################################################################
+
 #  This target automatically takes the name of the target that was not found.
 #  Load the Makefile for programming targets.
 #
@@ -442,8 +448,13 @@ ifeq (,$(PROG_SW))
 PROG_SW		= diabolo
 endif
 
-export diabolo
+# export diabolo
 
-.DEFAULT:
+#.DEFAULT:
 #	@echo ".DEFAULT: $@"
-	$(MAKE) -f $(MFD)Makefile.$(PROG_SW) --no-print-directory $@
+#	$(MAKE) -f $(MFD)Makefile.$(PROG_SW) --no-print-directory $@
+
+ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset))
+  $(info DIABLO)
+  include $(MFD)Makefile.$(PROG_SW)
+endif
