@@ -305,6 +305,42 @@ class Application:
             die(_("Target mismatch: connected to %s, %s expected.\n" %
                   (self.device.name, self.options.mcu)))
 
+        #  Compute the CRC of the firmware?
+        #
+        if self.options.fwcrc:
+            cout("\nReading firmware flash: ")
+            data=''
+            if self.device.protocol == 4:
+                l = self.device.pagesize
+            else: # protocol 5
+                l = 256
+            data = '\xFF'*self.device.bladdr
+            # data = '\xFF'*l
+            for a in range(self.device.bladdr, self.device.flashsize, l):
+                p = self.device.read_flash_page(a)
+                if p == None:
+                    cerr(_("\nRead page failed at 0x%04X.\n" % a))
+                    return False
+                cout('.')
+                flushout()
+                data += p
+
+            #  Compute the CRC
+            #
+            crc = CRC.init()
+            i = len(data)-1
+            while i>=0 and data[i]=='\xFF':
+                i -= 1
+            while i>=0:
+                crc = CRC.add(crc, data[i])
+                i -= 1
+
+            # x, crc = self.device.appstat(data)
+            cout(_("\nRead %d bytes of firmware, CRC=0x%04X.\n"
+                   % (len(data), crc)))
+            return
+
+
         #  Read flash memory?
         #
         if self.options.read_flash:
@@ -476,6 +512,7 @@ group.add_argument('-c', '--crc', help="CRC of the application",
 group.add_argument('-s', '--size', help="size of the application",
                    action='store_true')
 group.add_argument('--crc32', help="CRC32 of file", action='store_true')
+group.add_argument('--fwcrc', help="CRC of Diabolo firmware", action='store_true')
 group.add_argument('--read-flash', help="read flash memory", action='store_true')
 group.add_argument('--burn-flash', help="burn flash memory", action='store_true')
 group.add_argument('--clear-flash', help="clear flash memory", action='store_true')

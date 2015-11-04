@@ -281,7 +281,12 @@ class Device():
                                     "from %02X to %02X\n" % (p,old,new))
                                 return x[:-2]
 
-        s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
+        # s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
+        if len(cmdstr) > 8:
+            s = "\nCOMMAND [%s ... %s] (%d bytes) FAILED." \
+                % (s2hex(cmdstr[:4]), s2hex(cmdstr[-2:]), len(cmdstr))
+        else:
+            s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
         if crcerrors > 3:
             s += _("\nMany CRC unrecoverable errors detected. Your baudrate setting (%d) "\
                    "may be too high for the device.\n" % self.xserial.baudrate)
