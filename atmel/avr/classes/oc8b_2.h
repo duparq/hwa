@@ -49,7 +49,7 @@
       } while(0)
 
 #define _hwa_cfoc8b_kupdate_1(o,kw,v,...)				\
-  HW_G2(_hwa_cfoc8b_vupdate,HW_IS(at_top,_hw_oc8b_update_##v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfoc8b_vupdate,HW_IS(at_top,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfoc8b_vupdate_0(o,v,...)				\
   HW_ERR( "`update` can only be `at_top`, not `" #v "`.");
