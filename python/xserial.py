@@ -144,6 +144,13 @@ def get_serial(args):
         serial = ThreadedTimed(args)
     elif args.threaded_event:
         serial = ThreadedEvent(args)
+    elif args.tty and args.tty.startswith("net:"):
+        import telnetlib
+        serial = telnetlib.Telnet()
+        serial.open("192.168.1.78")
+        serial.write("?\r\n")
+        serial.close()
+        die("")
     else:
         serial = XSerial(args)
     return serial
