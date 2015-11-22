@@ -517,9 +517,9 @@
 #define _hw_irq_hw_spi0			_irq, 17, hw_spi0,     ie,  if
 #define _hw_irq_hw_spi0_txc		_irq, 17, hw_spi0,     ie,  if
 
-#define _hw_irq_hw_uart0_rxc		_irq, 18, hw_uart0,   ierxc,  ifrxc
-#define _hw_irq_hw_uart0_txqnf		_irq, 19, hw_uart0,   ietxqe, iftxqnf
-#define _hw_irq_hw_uart0_txc		_irq, 20, hw_uart0,   ietxc,  iftxc
+#define _hw_irq_hw_uart0_rxc		_irq, 18, hw_uart0,    ierxc,  ifrxc
+#define _hw_irq_hw_uart0_txqnf		_irq, 19, hw_uart0,    ietxqe, iftxqnf
+#define _hw_irq_hw_uart0_txc		_irq, 20, hw_uart0,    ietxc,  iftxc
 
 #define _hw_irq_hw_adc0			_irq, 21, hw_adc0,     ie,    if
 

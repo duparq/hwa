@@ -36,12 +36,12 @@
  * Nothing is written into the hardware until `hwa_commit()` is called.
  * @hideinitializer
  */
-#define hwa_begin_from_reset()						\
-  _hwa_check_optimizations(0);						\
-  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
-  _hwa_create_context(hwa) ;						\
-  _hwa_init_context(hwa) ;						\
-  hwa_nocommit() ;							\
+#define hwa_begin_from_reset()			\
+  _hwa_check_optimizations(0);			\
+  hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;		\
+  _hwa_create_context(hwa) ;			\
+  _hwa_init_context(hwa) ;			\
+  hwa_nocommit() ;				\
   uint8_t hwa_xcommit = 0
 
 
@@ -231,6 +231,8 @@
  * @hideinitializer
  */
 #define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
+
+#define _hw_config(...)			_HW_MTHD(hw_config, __VA_ARGS__,)
 
 /**
  * @ingroup public_obj_instructions
@@ -480,8 +482,8 @@
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
 #define _hwa_write__m2(o,a,						\
-			 r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-			 r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)	\
+		       r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
+		       r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
   do {									\
     _hwa_write_##rc1(&hwa->o.r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
@@ -541,7 +543,7 @@
 #define _hwa_wrrm1(...)			_hwa_wrrm2(__VA_ARGS__)
 #define _hwa_wrrm2(t,...)		_hwa_wrrm_##t(__VA_ARGS__)
 #define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
-    _hwa_write_##rc##_msk(&hwa->o.r,rwm,rfm,m,v)
+    _hwa_write_##rc##_m(&hwa->o.r,rwm,rfm,m,v)
 
 
 /**
@@ -662,8 +664,8 @@
  * @hideinitializer
  */
 #define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_hw_reg(o,r),v)
-#define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)	\
-  hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
+#define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)			\
+    hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
 
 
 
@@ -677,6 +679,15 @@ HW_INLINE void _hwa_create__r8 ( hwa_r8_t *r, intptr_t a )
 }
 
 HW_INLINE void _hwa_create__r16 ( hwa_r16_t *r, intptr_t a )
+{
+  r->a		= a ;
+  r->mmask	= 0 ;
+  r->mvalue	= 0 ;
+  r->omask	= 0 ;
+  r->ovalue	= 0 ;
+}
+
+HW_INLINE void _hwa_create__r32 ( hwa_r32_t *r, intptr_t a )
 {
   r->a		= a ;
   r->mmask	= 0 ;
@@ -709,6 +720,15 @@ HW_INLINE void _hwa_set__r16 ( hwa_r16_t *r, uint16_t v )
   r->mvalue = v ;
 }
 
+HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
+{
+  if ( r->mmask )
+    HWA_ERR("commit required before resetting.");
+
+  r->mmask = 0xFFFFFFFF ;
+  r->mvalue = v ;
+}
+
 
 /**
  * @ingroup private
@@ -730,8 +750,8 @@ HW_INLINE void _hwa_set__r16 ( hwa_r16_t *r, uint16_t v )
  * @param v	value to write.
  */
 HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r, 
-			       uint8_t rwm, uint8_t rfm,
-			       uint8_t bn, uint8_t bp, uint8_t v )
+				uint8_t rwm, uint8_t rfm,
+				uint8_t bn, uint8_t bp, uint8_t v )
 {
   if (bn == 0)
     HWA_ERR("no bit to be changed?");
@@ -779,9 +799,9 @@ HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,
  * @param msk	mask of bits concerned.
  * @param v	value to write.
  */
-HW_INLINE void _hwa_write__r8_msk ( hwa_r8_t *r, 
-				    uint8_t rwm, uint8_t rfm,
-				    uint8_t msk, uint8_t v )
+HW_INLINE void _hwa_write__r8_m ( hwa_r8_t *r, 
+				  uint8_t rwm, uint8_t rfm,
+				  uint8_t msk, uint8_t v )
 {
   if (v & ~msk)
     HWA_ERR("value overflows the mask.");
@@ -802,8 +822,8 @@ HW_INLINE void _hwa_write__r8_msk ( hwa_r8_t *r,
 
 
 HW_INLINE void _hwa_write__r16 ( hwa_r16_t *r,
-				uint16_t rwm, uint16_t rfm,
-				uint8_t bn, uint8_t bp, uint16_t v )
+				 uint16_t rwm, uint16_t rfm,
+				 uint8_t bn, uint8_t bp, uint16_t v )
 {
   if (bn == 0)
     HWA_ERR("no bit to be changed?");
@@ -826,6 +846,35 @@ HW_INLINE void _hwa_write__r16 ( hwa_r16_t *r,
 
   r->mmask |= sm ;
   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
+}
+
+
+HW_INLINE void _hwa_write__r32_m ( hwa_r32_t *r, 
+				   uint32_t rwm, uint32_t rfm,
+				   uint32_t msk, uint32_t v )
+{
+  if ( (v & msk) != v )
+    HWA_ERR("value overflows the mask.");
+
+  if ((rwm & msk) != msk)
+    HWA_ERR("trying to modify bits that are not writeable.");
+
+  if ((r->mmask & msk) != 0 && (r->mvalue & msk) != v)
+    HWA_ERR("committing is required before setting a new value.");
+
+  if ( msk & rfm )
+    if ( v == 0 )
+      HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+
+  r->mmask |= msk ;
+  r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
+}
+
+HW_INLINE void _hwa_write__r32 ( hwa_r32_t *r, 
+				 uint32_t rwm, uint32_t rfm,
+				 uint8_t bn, uint8_t bp, uint32_t v )
+{
+  _hwa_write__r32_m( r, rwm, rfm, ((1ULL<<bn)-1)<<bp, v<<bp );
 }
 
 

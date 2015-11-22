@@ -128,6 +128,10 @@ INPUT                  = ../README.md						\
 			 ../atmel/avr/examples/					\
 			 ../atmel/avr/examples/boards/				\
 			 ../atmel/avr/						\
+			 ../espressif/esp8266/devices/				\
+			 ../espressif/esp8266/classes/				\
+			 ../espressif/esp8266/examples/				\
+			 ../espressif/esp8266/					\
 			 ../hwa/						\
 		       	 ./							\
 		       	 hwa_license.md

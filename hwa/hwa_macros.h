@@ -38,6 +38,12 @@
 
 /**
  * @ingroup private_classes
+ * @brief 32-bit hardware register class.
+ */
+#define _hw_class__r32
+
+/**
+ * @ingroup private_classes
  * @brief Class logical register made of one group of consecutive bits.
  */
 #define _hw_class__cb1
@@ -371,6 +377,7 @@ extern char hw_error ;
  */
 #define _hw_hasbits__r8
 #define _hw_hasbits__r16
+#define _hw_hasbits__r32
 #define _hw_hasbits__cb1
 #define _hw_hasbits__cb2
 #define _hw_hasbits__ob1
@@ -492,6 +499,7 @@ extern char hw_error ;
  */
 #define _hw_x__r8(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r, _r8, ra,rwm,rfm,  8,0
 #define _hw_x__r16(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r,_r16, ra,rwm,rfm, 16,0
+#define _hw_x__r32(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r,_r32, ra,rwm,rfm, 32,0
 
 
 /*  Memory definition of one group of consecutive bits in one class or object
@@ -508,6 +516,7 @@ extern char hw_error ;
 #define _hw_x__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xcb1, _hw_##c##_##r,bn,bp,o,r)
 #define _hw_xcb1__r8(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
 #define _hw_xcb1__r16(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r16,ra,rwm,rfm, bn,bp
+#define _hw_xcb1__r32(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r32,ra,rwm,rfm, bn,bp
 
 
 /*  Memory definition of two groups of consecutive bits in one or two class
