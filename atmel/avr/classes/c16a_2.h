@@ -754,13 +754,13 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__c16a(o,i,a)			\
-  _hwa_create_reg( o, ccra     );		\
-  _hwa_create_reg( o, ccrb     );		\
-  _hwa_create_reg( o, ccrc     );		\
-  _hwa_create_reg( o, count    );		\
-  _hwa_create_reg( o, imsk     );		\
-  _hwa_create_reg( o, ifr      );		\
+#define _hwa_setup__c16a(o,i,a)			\
+  _hwa_setup_reg( o, ccra     );		\
+  _hwa_setup_reg( o, ccrb     );		\
+  _hwa_setup_reg( o, ccrc     );		\
+  _hwa_setup_reg( o, count    );		\
+  _hwa_setup_reg( o, imsk     );		\
+  _hwa_setup_reg( o, ifr      );		\
   hwa->o.config.clock     = 0xFF;		\
   hwa->o.config.countmode = 0xFF;		\
   hwa->o.config.top       = 0xFF;		\
@@ -788,15 +788,15 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
 
 /* HW_INLINE void _hwa_begin_p__c16a ( hwa_c16a_t *p, intptr_t a ) */
 /* { */
-/*   _hwa_create_reg_p( p, a, _c16a, ccra     ); */
-/*   _hwa_create_reg_p( p, a, _c16a, ccrb     ); */
-/*   _hwa_create_reg_p( p, a, _c16a, ccrc     ); */
-/*   _hwa_create_reg_p( p, a, _c16a, count    ); */
-/*   _hwa_create_reg_p( p, a, _c16a, capture0 ); */
-/*   _hwa_create_reg_p( p, a, _c16a, compare0 ); */
-/*   _hwa_create_reg_p( p, a, _c16a, compare1 ); */
-/*   _hwa_create_reg_p( p, a, _c16a, imsk     ); */
-/*   _hwa_create_reg_p( p, a, _c16a, ifr      ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, ccra     ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, ccrb     ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, ccrc     ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, count    ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, capture0 ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, compare0 ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, compare1 ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, imsk     ); */
+/*   _hwa_setup_reg_p( p, a, _c16a, ifr      ); */
 
 /*   p->config.clock           = 0xFF ; */
 /*   p->config.countmode       = 0xFF ; */

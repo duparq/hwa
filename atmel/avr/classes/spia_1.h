@@ -13,7 +13,7 @@
  * @page atmelavr_spia Class _spia: Serial Peripheral Interface
  *
  * A class `_spia` object is a Serial Peripheral Interface. It has the following
- * @ref relatives "relatives":
+ * @ref using_relatives "relatives":
  *
  *  * `pin_mosi`: the MOSI pin
  *  * `pin_miso`: the MISO pin

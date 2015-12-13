@@ -237,8 +237,8 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__oc16a(o,i,a)			\
-  _hwa_create_reg( o, reg );			\
+#define _hwa_setup__oc16a(o,i,a)			\
+  _hwa_setup_reg( o, reg );			\
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 

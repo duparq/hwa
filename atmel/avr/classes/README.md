@@ -1,6 +1,6 @@
 
-Object classes {#atmelavr_classes}
-==============
+Atmel AVR8 classes {#atmelavr8_classes}
+==================
 
 HWA provides the following classes for Atmel AVR devices:
 

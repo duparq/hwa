@@ -13,7 +13,7 @@
  * @page atmelavr_c8c Class _c8c: 8-bit counter/timer
  *
  * A class `_c8c` object is an 8-bit counting unit. It has the following @ref
- * relatives "relatives":
+ * using_relatives "relatives":
  *
  *  * one `prescaler` of class @ref atmelavr_psca "_psca"
  *

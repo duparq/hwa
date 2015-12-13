@@ -278,10 +278,10 @@
 	  _hwa_write_reg(compare1,pwm,1);				\
     }
 
-#define _hwa_create__c8b(o,i,a)			\
-  _hwa_create_reg( o, ccr      );		\
-  _hwa_create_reg( o, count    );		\
-  _hwa_create_reg( o, compare2 );
+#define _hwa_setup__c8b(o,i,a)			\
+  _hwa_setup_reg( o, ccr      );		\
+  _hwa_setup_reg( o, count    );		\
+  _hwa_setup_reg( o, compare2 );
 
 #define _hwa_init__c8b(o,i,a)			\
   _hwa_init_reg( o, ccr, 0      );		\

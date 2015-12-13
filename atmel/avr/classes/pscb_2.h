@@ -105,8 +105,8 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__pscb(o,i,a)			\
-  _hwa_create_reg( o, pllcsr );			\
+#define _hwa_setup__pscb(o,i,a)			\
+  _hwa_setup_reg( o, pllcsr );			\
   hwa->o.config.clock = 0xFF ;
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)

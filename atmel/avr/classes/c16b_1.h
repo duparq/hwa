@@ -17,7 +17,7 @@
  * @page atmelavr_c16b Class _c16b: 16-bit counter/timer
  *
  * A class `_c16b` object is a 16-bit counting unit. It has the following @ref
- * relatives "relatives":
+ * using_relatives "relatives":
  *
  *  * one prescaler, of class @ref atmelavr_psca "_psca": `prescaler`
  *

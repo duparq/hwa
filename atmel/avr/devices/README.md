@@ -1,28 +1,21 @@
 
-Devices {#atmelavr_devices}
-=======
+Atmel AVR8 devices {#atmelavr8_devices}
+==================
 
-There are the headers corresponding to the Atmel AVR devices HWA supports. These
-files must be included with something like:
+  * @subpage attinyx4
+    - include `hwa/attiny24a_pu.h`
+    - include `hwa/attiny44a_pu.h`
+    - include `hwa/attiny84a_pu.h`
 
-@code
-#include <hwa/attiny24a_pu.h>
-@endcode
+  * @subpage attinyx5
+    - include `hwa/attiny85_20pu.h`
 
- * @subpage attinyx4 :
-   - `hwa/attiny24a_pu.h`
-   - `hwa/attiny44a_pu.h`
-   - `hwa/attiny84a_pu.h`
+  * @subpage atmegax8
+    - include `hwa/atmega328p_au.h`
 
- * @subpage attinyx5 :
-   - `hwa/attiny85_20pu.h`
+  * @subpage atmegaxu4
+    - include `hwa/atmega32u4_mu.h`
 
- * @subpage atmegax8 :
-   - `hwa/atmega328p_au.h`
-
- * @subpage atmegaxu4 :
-   - `hwa/atmega32u4_mu.h`
-
-@note See [that
+@note see [that
 thread](http://www.avrfreaks.net/forum/avr-errata-unpublished-and-other-gotchas)
 on [AVR Freaks](http://www.avrfreaks.net) for issues related to these devices.

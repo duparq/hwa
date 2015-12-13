@@ -347,7 +347,7 @@ extern char hw_error ;
  * there is no remaining elements in a list at the end of its parsing.
  */
 #define HW_TX(result, ...)	HW_G2(_HW_TX,HW_IS(,__VA_ARGS__))((result),__VA_ARGS__)
-#define _HW_TX_0(result, ...)	HW_ERR("garbage found: `" HW_QUOTE(__VA_ARGS__) "`.");
+#define _HW_TX_0(result, ...)	HW_ERR("unexpected argument: `" HW_QUOTE(__VA_ARGS__) "`.");
 #define _HW_TX_1(result, ...)	_HW_TX_2 result
 #define _HW_TX_2(...)		__VA_ARGS__
 
@@ -360,7 +360,7 @@ extern char hw_error ;
  * end of its parsing.
  */
 #define HW_EOL(...)		HW_G2(_HW_EOL,HW_IS(,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_EOL_0(...)		HW_ERR("garbage found: `" HW_QUOTE(__VA_ARGS__) "`.");
+#define _HW_EOL_0(...)		HW_ERR("unexpected argument: `" HW_QUOTE(__VA_ARGS__) "`.");
 #define _HW_EOL_1(...)
 
 
@@ -564,6 +564,7 @@ extern char hw_error ;
  */
 #define _hw_x__xob1(to,tr,bn,bp, o,c,a,m)	_HW_SPEC(_hw_xxob1, _##to##_##tr,bn,bp,to,tr)
 #define _hw_xxob1__r8(ra,rwm,rfm, bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
+#define _hw_xxob1__r32(ra,rwm,rfm, bn,bp,o,r) 	_m1, o,0, r,_r32,ra,rwm,rfm, bn,bp
 
 
 //_hw_x__xob2(hw_counter0, gtccr, 1, 7, 1, gtccr, 1, 7, 0,hw_psc0,_psca,0,tsmpsr)

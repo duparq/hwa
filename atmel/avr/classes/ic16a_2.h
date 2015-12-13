@@ -179,8 +179,8 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__ic16a(o,i,a)		\
-  _hwa_create_reg( o, reg      );		\
+#define _hwa_setup__ic16a(o,i,a)		\
+  _hwa_setup_reg( o, reg      );		\
   hwa->o.config.input  = 0xFF ;			\
   hwa->o.config.edge   = 0xFF ;			\
   hwa->o.config.filter = 0xFF

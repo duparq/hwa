@@ -174,7 +174,7 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__ic16b	_hwa_create__ic16a
+#define _hwa_setup__ic16b	_hwa_setup__ic16a
 #define _hwa_init__ic16b	_hwa_init__ic16a
 #define _hwa_commit__ic16b	_hwa_commit__ic16a
 

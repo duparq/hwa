@@ -295,11 +295,11 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__uarta(o,i,a)			\
-  _hwa_create_reg( o, ubrr );				\
-  _hwa_create_reg( o, csra );				\
-  _hwa_create_reg( o, csrb );				\
-  _hwa_create_reg( o, csrc );				\
+#define _hwa_setup__uarta(o,i,a)			\
+  _hwa_setup_reg( o, ubrr );				\
+  _hwa_setup_reg( o, csra );				\
+  _hwa_setup_reg( o, csrb );				\
+  _hwa_setup_reg( o, csrc );				\
   hwa->o.config.brr  = 0 ;				\
   hwa->o.config.u2x  = 0 ;				\
   hwa->o.config.csz  = HW_A1(_hw_uarta_csz_8) ;		\

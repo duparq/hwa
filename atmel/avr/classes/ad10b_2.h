@@ -339,7 +339,7 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__ad10b(o,i,a)	_hwa_create__ad10_(o)
+#define _hwa_setup__ad10b(o,i,a)	_hwa_setup__ad10_(o)
 #define _hwa_init__ad10b(o,i,a)		_hwa_init__ad10_(o)
 #define _hwa_commit__ad10b(o,i,a)	_hwa_commit__ad10_(o)
 

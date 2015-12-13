@@ -22,7 +22,7 @@
 #define hwa_begin()							\
   _hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
-  _hwa_create_context(hwa) ;						\
+  _hwa_setup_context(hwa) ;						\
   uint8_t hwa_xcommit = 0 /* Will warn if hwa_commit() is not called */
 
 
@@ -39,7 +39,7 @@
 #define hwa_begin_from_reset()			\
   _hwa_check_optimizations(0);			\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;		\
-  _hwa_create_context(hwa) ;			\
+  _hwa_setup_context(hwa) ;			\
   _hwa_init_context(hwa) ;			\
   hwa_nocommit() ;				\
   uint8_t hwa_xcommit = 0
@@ -519,27 +519,27 @@
 #define _hw_mthd_hwa_write___xob1	, _hwa__write__xob1
 #define _hwa__write__xob1(t,o,r,bn,bp,v,_)	_hwa_write__xob1(t,o,r,bn,bp,v)
 
-
 /**
  * @ingroup private
- * @brief Write some bits of a memory definition
+ * @brief Write some bits of a hardware register
  * @hideinitializer
  *
- *	_hw_write_bits( mdef, bn, bp, v );
+ *	_hw_write_reg_m( o, r, m, v );
  */
-#define _hw_write_bits(...)		_hw_wrb(__VA_ARGS__)
-#define _hw_wrb(t,...)			_hw_wrb_##t(__VA_ARGS__)
-#define _hw_wrb__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, bn,bp, v)	\
-    _hw_write_##rc(a+ra,rwm,rfm,bn,bp,v)
+#define _hw_write_reg_m(o,r,m,v)	_hw_wrrm1(_hw_reg(o,r),m,v)
+#define _hw_wrrm1(...)			_hw_wrrm2(__VA_ARGS__)
+#define _hw_wrrm2(t,...)		_hw_wrrm_##t(__VA_ARGS__)
+#define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
+    _hw_write_##rc##_m(a+ra,rwm,rfm,m,v)
 
 /**
  * @ingroup private
  * @brief Write some bits of a hardware register
  * @hideinitializer
  *
- *	_hwa_write_reg_msk( o, r, m, v );
+ *	_hwa_write_reg_m( o, r, m, v );
  */
-#define _hwa_write_reg_msk(o,r,m,v)	_hwa_wrrm1(_hw_reg(o,r),m,v)
+#define _hwa_write_reg_m(o,r,m,v)	_hwa_wrrm1(_hw_reg(o,r),m,v)
 #define _hwa_wrrm1(...)			_hwa_wrrm2(__VA_ARGS__)
 #define _hwa_wrrm2(t,...)		_hwa_wrrm_##t(__VA_ARGS__)
 #define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
@@ -549,10 +549,10 @@
 /**
  * @brief Initialize the HWA context registers addresses of an object
  */
-//#define _hwa_create(o)			_HW_SPEC(_hwa_create,_##o,o)
-#define _hwa_create(o)			_hwa_create_2(_##o,o)
-#define _hwa_create_2(...)		_hwa_create_3(__VA_ARGS__)
-#define _hwa_create_3(c,i,a,o)		_hwa_create_##c(o,i,a)
+//#define _hwa_setup(o)			_HW_SPEC(_hwa_setup,_##o,o)
+#define _hwa_setup(o)			_hwa_setup_2(_##o,o)
+#define _hwa_setup_2(...)		_hwa_setup_3(__VA_ARGS__)
+#define _hwa_setup_3(c,i,a,o)		_hwa_setup_##c(o,i,a)
 
 
 /**
@@ -590,9 +590,9 @@
 /* #define _hwa_begin_reg_2(...)			_hwa_begin_reg_3(__VA_ARGS__) */
 /* #define _hwa_begin_reg_3(o,a,r, rc,ra, ... )	_hwa_begin_##rc( &hwa->o.r, a+ra ) */
 
-#define _hwa_create_reg(o,r)			_hwa_create_reg_2(_hw_hreg(o,r))
-#define _hwa_create_reg_2(...)			_hwa_create_reg_3(__VA_ARGS__)
-#define _hwa_create_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_create_##rt(&hwa->o.r, a+ra)
+#define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_hw_hreg(o,r))
+#define _hwa_setup_reg_2(...)			_hwa_setup_reg_3(__VA_ARGS__)
+#define _hwa_setup_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_setup_##rt(&hwa->o.r, a+ra)
 
 
 /**
@@ -634,6 +634,10 @@
 /**
  * @ingroup private
  * @brief Get the mmask of the logical register `r` of object `o`.
+ *
+ * The mmask is set each time a hwa_write() is performed. It is reset after the
+ * value has been committed.
+ *
  * @hideinitializer
  */
 #define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_hw_reg(o,r))
@@ -642,7 +646,7 @@
 
 /**
  * @ingroup private
- * @brief Get the value not committed yet for the logical register `r` of object `o`.
+ * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
 #define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_hw_reg(o,r))
@@ -669,7 +673,7 @@
 
 
 
-HW_INLINE void _hwa_create__r8 ( hwa_r8_t *r, intptr_t a )
+HW_INLINE void _hwa_setup__r8 ( hwa_r8_t *r, intptr_t a )
 {
   r->a		= a ;
   r->mmask	= 0 ;
@@ -678,7 +682,7 @@ HW_INLINE void _hwa_create__r8 ( hwa_r8_t *r, intptr_t a )
   r->ovalue	= 0 ;
 }
 
-HW_INLINE void _hwa_create__r16 ( hwa_r16_t *r, intptr_t a )
+HW_INLINE void _hwa_setup__r16 ( hwa_r16_t *r, intptr_t a )
 {
   r->a		= a ;
   r->mmask	= 0 ;
@@ -687,7 +691,7 @@ HW_INLINE void _hwa_create__r16 ( hwa_r16_t *r, intptr_t a )
   r->ovalue	= 0 ;
 }
 
-HW_INLINE void _hwa_create__r32 ( hwa_r32_t *r, intptr_t a )
+HW_INLINE void _hwa_setup__r32 ( hwa_r32_t *r, intptr_t a )
 {
   r->a		= a ;
   r->mmask	= 0 ;
@@ -931,9 +935,9 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 /**
  * @brief Initialize the HWA context registers addresses of an object (using a pointer in the HWA context)
  */
-#define _hwa_create_p(o)		_hwa_create_p_2(o, _##o)
-#define _hwa_create_p_2(...)		_hwa_create_p_3(__VA_ARGS__)
-#define _hwa_create_p_3(o,c,i,a)	_hwa_create_p_##c(&hwa->o,a)
+#define _hwa_setup_p(o)		_hwa_setup_p_2(o, _##o)
+#define _hwa_setup_p_2(...)		_hwa_setup_p_3(__VA_ARGS__)
+#define _hwa_setup_p_3(o,c,i,a)	_hwa_setup_p_##c(&hwa->o,a)
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value (using a pointer in the HWA context)
@@ -965,9 +969,9 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  * @brief Create a HWA register for an object pointed by p
  * @hideinitializer
  */
-#define _hwa_create_reg_p(o,a,c,r)		_hwa_berp_2(o,a,c,r,_hw_##c##_##r)
+#define _hwa_setup_reg_p(o,a,c,r)		_hwa_berp_2(o,a,c,r,_hw_##c##_##r)
 #define _hwa_berp_2(...)			_hwa_berp_3(__VA_ARGS__)
-#define _hwa_berp_3(o,a,c,r, rc,ra,rwm,rfm)	_hwa_create_##rc(&((o)->r),a+ra)
+#define _hwa_berp_3(o,a,c,r, rc,ra,rwm,rfm)	_hwa_setup_##rc(&((o)->r),a+ra)
 
 /**
  * @ingroup private

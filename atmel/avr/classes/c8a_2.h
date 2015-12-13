@@ -697,13 +697,13 @@ HW_INLINE _hw_c8a_stat_t _hw_c8a_stat( uint8_t byte )
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__c8a(o,i,a)			\
-  /* _hwa_create_reg( o, gtccr); */			\
-  _hwa_create_reg( o, ccra);			\
-  _hwa_create_reg( o, ccrb);			\
-  _hwa_create_reg( o, count);			\
-  _hwa_create_reg( o, imsk);			\
-  _hwa_create_reg( o, ifr);			\
+#define _hwa_setup__c8a(o,i,a)			\
+  /* _hwa_setup_reg( o, gtccr); */			\
+  _hwa_setup_reg( o, ccra);			\
+  _hwa_setup_reg( o, ccrb);			\
+  _hwa_setup_reg( o, count);			\
+  _hwa_setup_reg( o, imsk);			\
+  _hwa_setup_reg( o, ifr);			\
   hwa->o.config.clock     = 0xFF;		\
   hwa->o.config.countmode = 0xFF;		\
   hwa->o.config.top       = 0xFF;		\

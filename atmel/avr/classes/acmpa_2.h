@@ -151,7 +151,7 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__acmpa(o,i,a)	_hwa_create_reg( o, csr  );
+#define _hwa_setup__acmpa(o,i,a)	_hwa_setup_reg( o, csr  );
 
 #define _hwa_init__acmpa(o,i,a)		_hwa_init_reg( o, csr, 0x00 );
 

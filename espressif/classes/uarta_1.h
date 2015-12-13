@@ -10,7 +10,7 @@
  */
 
 /**
- * @page espressif_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
+ * @page esp8266_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
  *
  * A class `_uarta` object is a UART.
  *
@@ -24,12 +24,7 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r32_t     _brr, _conf0, _conf1 ;
-
-  struct {
-    uint32_t	baudrate ;
-    uint8_t	databits, parity, stopbits, rxen, txen ;
-  } config ;
+  hwa_r32_t     _ie, _ic, _clkdiv, _conf0, _conf1 ;
 } hwa_uarta_t ;
 
 #endif

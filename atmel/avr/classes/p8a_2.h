@@ -19,8 +19,8 @@
 #if 0
 HW_INLINE void _hwa_begin_p__p8a ( hwa_p8a_t *p, intptr_t a )
 {
-  _hwa_create_reg_p( p, a, _p8a, port );
-  _hwa_create_reg_p( p, a, _p8a, ddr  );
+  _hwa_setup_reg_p( p, a, _p8a, port );
+  _hwa_setup_reg_p( p, a, _p8a, ddr  );
 }
 
 
@@ -39,9 +39,9 @@ HW_INLINE void _hwa_commit_p__p8a ( hwa_t *hwa, hwa_p8a_t *p )
 #endif
 
 
-#define _hwa_create__p8a(o,i,a)			\
-  _hwa_create_reg( o, port );			\
-  _hwa_create_reg( o, ddr  )
+#define _hwa_setup__p8a(o,i,a)			\
+  _hwa_setup_reg( o, port );			\
+  _hwa_setup_reg( o, ddr  )
 
 #define _hwa_init__p8a(o,i,a)			\
   _hwa_init_reg( o, port, 0x00 );		\

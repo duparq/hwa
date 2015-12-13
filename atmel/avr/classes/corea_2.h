@@ -167,10 +167,10 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__corea(o,i,a)		\
-  _hwa_create_reg( o, mcucr  );			\
-  _hwa_create_reg( o, mcusr  );			\
-  _hwa_create_reg( o, osccal )
+#define _hwa_setup__corea(o,i,a)		\
+  _hwa_setup_reg( o, mcucr  );			\
+  _hwa_setup_reg( o, mcusr  );			\
+  _hwa_setup_reg( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */

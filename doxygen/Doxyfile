@@ -109,32 +109,16 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = ../README.md						\
 		       	 using.md						\
-		       	 using_header.md					\
-		       	 using_instructions.md					\
-		       	 using_peripherals.md					\
-		       	 using_interrupts.md					\
+		       	 devices.md						\
+			 ../atmel/README.md					\
+			 ../espressif/README.md					\
 		       	 porting.md						\
+		       	 hwa_license.md						\
 			 ../include/						\
-			 ../atmel/avr/devices/					\
-			 ../atmel/avr/classes/					\
-			 ../atmel/avr/swuarta/					\
-			 ../atmel/avr/examples/boards/README.md			\
-			 ../atmel/avr/examples/boards/attiny84.h		\
-			 ../atmel/avr/examples/boards/attiny85.h		\
-			 ../atmel/avr/examples/boards/arduino-pro-mini.h	\
-			 ../atmel/avr/examples/boards/nanodccduino.h		\
-			 ../atmel/avr/examples/diabolo/				\
-			 ../atmel/avr/examples/diabolo/device/diabolo.sx	\
-			 ../atmel/avr/examples/					\
-			 ../atmel/avr/examples/boards/				\
-			 ../atmel/avr/						\
-			 ../espressif/esp8266/devices/				\
-			 ../espressif/esp8266/classes/				\
-			 ../espressif/esp8266/examples/				\
-			 ../espressif/esp8266/					\
+			 ../atmel/						\
+			 ../espressif/						\
 			 ../hwa/						\
 		       	 ./							\
-		       	 hwa_license.md
 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \

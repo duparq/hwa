@@ -19,8 +19,8 @@
 
 /*  Object related to an IRQ
  */
-#define _hw_mthd_hw_sup__irq			, _hw_sup_irq
-#define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
+//#define _hw_mthd_hw_sup__irq			, _hw_sup_irq
+//#define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
 
 /**
  * @brief Get an IRQ object
@@ -37,7 +37,7 @@
 #define _hw_irq4_1(p,...)	_hw_irq_##p
 #define _hw_irq4_0(p,...)	HW_G2(_hw_irq5,HW_ISOBJ(p))(p,__VA_ARGS__)
 #define _hw_irq5_0(p,...)	HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_irq5_1(p,...)	HW_ERR("`"#p"` has no IRQ `` or `" \
+#define _hw_irq5_1(p,...)	HW_ERR("`"#p"` has no IRQ named `` or `" \
 				       HW_QUOTE(__VA_ARGS__)"`.")
 
 /*	Definition of an interrupt, extra arguments allowed and returned
@@ -52,7 +52,7 @@
 #define _hw_irqx4_1(p,...)	_hw_irq_##p, __VA_ARGS__
 #define _hw_irqx4_0(p,...)	HW_G2(_hw_irqx5,HW_ISOBJ(p))(p,__VA_ARGS__)
 #define _hw_irqx5_0(p,...)	HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_irqx5_1(p,...)	HW_ERR("`"#p"` has no IRQ `` or `" \
+#define _hw_irqx5_1(p,...)	HW_ERR("`"#p"` has no IRQ named `` or `" \
 				       HW_QUOTE(__VA_ARGS__)"`.")
 
 
@@ -130,8 +130,28 @@
 #define _hw_isr_a3_0(x,...)		HW_ERRFN(HW_ERR("garbage starting with `" #x "...`"))
 
 
-#if !defined __ASSEMBLER__
+/**
+ * @ingroup public_irq_instructions
+ * @brief Declaration of an ISR
+ *
+ * The `hw_handle_irq()` instruction declares an ISR for an IRQ.
+ *
+ * @code
+ * hw_handle_irq( hw_timer1, irq, ev_timer );
+ * @endcode
+ * @hideinitializer
+ */
+#define _hw_mthd_hw_handle_irq__irq	, _hw_handle_irq
 
+#define hw_handle_irq(...)		_hw_handleirq_2(hw_irqx(__VA_ARGS__,))
+#define _hw_handleirq_2(...)		HW_G2(_hw_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _hw_handleirq_0(...)		__VA_ARGS__
+#define _hw_handleirq_1(t,...)		_hw_handle_irq(__VA_ARGS__)
+
+#define _hw_handle_irq(v,o,ie,if,fn,...)	HW_TX(_hw_handleirq_##o##_##v(fn),__VA_ARGS__)
+
+
+#if !defined __ASSEMBLER__
 
 #define _hw_mthd_hw_turn__irq		, _hw_turn_irq
 /**

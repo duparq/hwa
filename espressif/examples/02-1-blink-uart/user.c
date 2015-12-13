@@ -88,6 +88,7 @@ void IROM user_init()
 
   os_printf("Hello World!\n");
 
+
   /*  Trigger a function call every 10 ms (about)
    */
   static os_timer_t timer ;
@@ -96,8 +97,3 @@ void IROM user_init()
   os_timer_setfn( &timer, (os_timer_func_t *)every10ms, NULL );
   os_timer_arm( &timer, 10, 1 );
 }
-
-/*
-Peter Kuizenga
-
-*/

@@ -49,8 +49,7 @@
 #define _hwx_tnpcica2_0(x,o,io,v,...)	HW_ERR("`" #o "` can turn `" #io "` `on` of `off`, but not `" #v "`.")
 #define _hwx_tnpcica2_1(x,o,io,v,...)	HW_TX(_hwx_tnpcica2_2(x,o,_##io,v),__VA_ARGS__)
 #define _hwx_tnpcica2_2(...)			_hwx_tnpcica2_3(__VA_ARGS__)
-//#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg(o,ie##bp,HW_A1(_hw_state_##v))
-#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg_msk(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
+#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
 
 
 /**
@@ -93,7 +92,7 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__pcica(o,i,a)	_hwa_create_reg( o, msk )
+#define _hwa_setup__pcica(o,i,a)	_hwa_setup_reg( o, msk )
 
 #define _hwa_init__pcica(o,i,a)		_hwa_init_reg( o, msk, 0x00 )
 

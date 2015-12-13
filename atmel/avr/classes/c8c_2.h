@@ -641,12 +641,12 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__c8c(o,i,a)			\
-  _hwa_create_reg( o, ccra);			\
-  _hwa_create_reg( o, ccrb);			\
-  _hwa_create_reg( o, count);			\
-  _hwa_create_reg( o, imsk);			\
-  _hwa_create_reg( o, ifr);			\
+#define _hwa_setup__c8c(o,i,a)			\
+  _hwa_setup_reg( o, ccra);			\
+  _hwa_setup_reg( o, ccrb);			\
+  _hwa_setup_reg( o, count);			\
+  _hwa_setup_reg( o, imsk);			\
+  _hwa_setup_reg( o, ifr);			\
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.countmode = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\

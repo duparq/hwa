@@ -55,18 +55,19 @@
 
 #include "config.h"
 
+/*  We need a device with an USI
+ */
+#if hw_id(hw_usi0) == 0
+HW_ERROR( device `HW_DEVICE` does not have a USI. )
+#endif
+
+
 #if defined ARDUINO
 #  define USI		hw_spi0
 #  define NRF_CSN	PIN_D2
 #else
 #  define USI		hw_usi0
 #  define NRF_CSN	hw_pin_3
-#endif
-
-/*  We need a device with an USI
- */
-#if hw_id(USI) == 0
-HW_ERROR( device `HW_DEVICE` does not have a USI. )
 #endif
 
 

@@ -142,7 +142,7 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__acmpb(o,i,a)	_hwa_create_reg( o, csr )
+#define _hwa_setup__acmpb(o,i,a)	_hwa_setup_reg( o, csr )
 #define _hwa_init__acmpb(o,i,a)		_hwa_init_reg( o, csr, 0x00 )
 #define _hwa_commit__acmpb(o,i,a)	_hwa_commit_reg( o, csr )
 

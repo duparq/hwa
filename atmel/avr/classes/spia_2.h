@@ -312,9 +312,9 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__spia(o,i,a)		\
-  _hwa_create_reg( o, cr );			\
-  _hwa_create_reg( o, sr )
+#define _hwa_setup__spia(o,i,a)		\
+  _hwa_setup_reg( o, cr );			\
+  _hwa_setup_reg( o, sr )
 
 #define _hwa_init__spia(o,i,a)			\
   _hwa_init_reg( o, cr, 0x00 );			\

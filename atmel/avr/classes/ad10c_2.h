@@ -457,7 +457,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__ad10c(o,i,a)		_hwa_create__ad10_(o)
+#define _hwa_setup__ad10c(o,i,a)		_hwa_setup__ad10_(o)
 #define _hwa_init__ad10c(o,i,a)			_hwa_init__ad10_(o)
 #define _hwa_commit__ad10c(o,i,a)		_hwa_commit__ad10_(o)
 

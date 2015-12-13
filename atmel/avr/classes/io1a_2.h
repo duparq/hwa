@@ -88,7 +88,7 @@
 #define _hw_cfio1a_vdirection_1(o,p,bn,bp,v,k,...)			\
   if ( HW_A1(hw_cfio1a_direction_##v)==1 && analog==1 )			\
     HWA_ERR("`" #o "` can not be an anolog output.");			\
-  _hw_write_bits(_hw_reg(p,ddr),bn,bp, (HW_A1(hw_cfio1a_direction_##v)?(1U<<bn)-1:0)); \
+  _hw_write_reg_m(p,ddr,((1<<bn)-1)<<bp, HW_A1(hw_cfio1a_direction_##v)?((1U<<bn)-1)<<bp:0); \
   HW_G2(_hw_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_vdirection_0(o,p,bn,bp,v,...)			\
@@ -108,7 +108,7 @@
   HW_G2(_hw_cfio1a_vpullup, HW_IS(,_hw_state_##v))(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_1(o,p,bn,bp,v,...)			\
-    _hw_write_bits(_hw_reg(p,port),bn,bp, (HW_A1(_hw_state_##v)?(1U<<bn)-1:0)); \
+    _hw_write_reg_m(p,port,((1<<bn)-1)<<bp, HW_A1(hw_state_##v)?((1U<<bn)-1)<<bp:0); \
     HW_EOL(__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_0(o,p,bn,bp,v,...)			\
@@ -199,11 +199,9 @@
  * uint8_t value = hw_read( IO_NAME );
  * @endcode
  */
-#define _hw_read_io1a(o,i, p,bn,bp,...)		HW_TX(_hw_rdio1a_2(_##p,bn,bp),__VA_ARGS__)
-#define _hw_rdio1a_2(...)			_hw_rdio1a_3(__VA_ARGS__)
-#define _hw_rdio1a_3(c,i,a,bn,bp)		_hw_rdio1a_4(a,bn,bp,_hw_##c##_##pin)
-#define _hw_rdio1a_4(...)			_hw_rdio1a_5(__VA_ARGS__)
-#define _hw_rdio1a_5(a,bn,bp, rt,ra,rwm,rfm)	_hw_read_##rt(a+ra,bn,bp)
+#define _hw_read_io1a(o,i, p,bn,bp,...)				\
+  HW_TX( ((_hw_read_reg(p, pin) & (((1<<bn)-1)<<bp))>>bp),	\
+	 __VA_ARGS__)
 
 
 /**
@@ -212,12 +210,9 @@
  * hw_write( IO_NAME, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)	HW_TX(_hw_wrio1a_2(_##p,bn,bp,v),__VA_ARGS__)
-#define _hw_wrio1a_2(...)			_hw_wrio1a_3(__VA_ARGS__)
-#define _hw_wrio1a_3(c,i,a,bn,bp,v)		_hw_wrio1a_4(a,bn,bp,v,_hw_##c##_##port)
-#define _hw_wrio1a_4(...)			_hw_wrio1a_5(__VA_ARGS__)
-//#define _hw_wrio1a_5(a,bn,bp,v, rt,ra,rwm,rfm)	_hw_write__r8(a+ra,rwm,rfm,bn,bp,v)
-#define _hw_wrio1a_5(a,bn,bp,v, rt,ra,rwm,rfm)	_hw_write__r8_m(a+ra,rwm,rfm,((1U<<bn)-1)<<bp,(v)<<bp)
+#define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
+  HW_TX( _hw_write_reg_m(p, port, ((1<<bn)-1)<<bp, (v)<<bp),	\
+	 __VA_ARGS__ )
 
 /**
  * @page atmelavr_io1a

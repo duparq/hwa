@@ -501,12 +501,12 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__twia(o,i,a)			\
-  _hwa_create_reg( o, br  );			\
-  _hwa_create_reg( o, cr  );			\
-  _hwa_create_reg( o, sr  );			\
-  _hwa_create_reg( o, ar  );			\
-  _hwa_create_reg( o, amr )
+#define _hwa_setup__twia(o,i,a)			\
+  _hwa_setup_reg( o, br  );			\
+  _hwa_setup_reg( o, cr  );			\
+  _hwa_setup_reg( o, sr  );			\
+  _hwa_setup_reg( o, ar  );			\
+  _hwa_setup_reg( o, amr )
 
 
 #define _hwa_init__twia(o,i,a)					\

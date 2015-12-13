@@ -51,7 +51,7 @@
  *		  9  MISO  8
  *
  * @par tcs3200.h
- * @include boards/tcs3200.h
+ * @include boards/attiny84-tcs3200.h
  * <br>
  */
 

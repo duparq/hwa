@@ -14,26 +14,87 @@ that consists of a small set of generic instructions designed to be applied on
 various types of objects that represent the peripheral controllers embedded in a
 microcontroller.
 
-Using these instructions makes the source code easier to read and to port
-between different targets since they describe clearly and concisely their
-effect, instead of manipulating numerical values and registers.
+There is an example of a timer configuration (ESP8266):
 
-HWA is not a library neither is it a programming language. HWA implements a
-mechanism of [ad hoc
+    //  Install ev_timer as NMI service routine for timer1
+    //
+    hw_handle_irq( hw_timer1, nmi, ev_timer );
+
+    //  Configure the timer to trigger a NMI every 10 ms.
+    //  The timer is clocked by the APB bus.
+    //
+    hw_config( hw_timer1,
+               clock,     apb_div_16,
+               countmode, loop_down,
+               top,       0.5 + 0.01*hw_apbhz/16,
+               action,    nmi
+              );
+
+HWA instructions make the source code easier to read and to port between
+different targets since they describe clearly and concisely their effect,
+instead of manipulating numerical values and registers.
+
+
+HWA also provides transactional processing in order to optimize as much as
+possible the binary code produced:
+
+    //  Start a transaction from RESET values
+    //
+    hwa_begin_from_reset();
+
+    //  Configure the LED pin
+    //
+    hwa_config( PIN_LED, direction, output );
+  
+    //  Configure the input pin in analog mode
+    //  with internal pull-up resistor
+    //
+    hwa_config( PIN_ANALOG_INPUT,
+                mode,      analog,
+                direction, input,
+                pullup,    on      );
+  
+    //  Actually do all the above with the best code possible
+    //
+    hwa_commit();
+
+
+The programmer can use both styles of access to the hardware - synchronous or
+asynchronous - at any time:
+
+![](doxygen/hwa_principle.jpeg)
+
+
+What HWA is not
+---------------
+
+**HWA is not a library** and it does not require a C++ compiler such as used
+for example by [Arduino](http://www.arduino.cc).
+
+HWA implements a mechanism of [ad hoc
 polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) only using
 standard C language
 ([C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29)) macro
-definitions and function-like macros, all processed by the standard
-preprocessor, not a C++ compiler such as used for example by
-[Arduinos](http://www.arduino.cc). Inline functions and a cache mechanism (the
-_HWA context_) combined to the compiler's optimizers make the binary code
-produced free of any penalty, either in terms of size, execution speed or memory
-used.
+definitions and function-like macros.
 
-Last, but not least, the error messages HWA produces try to guide the developper
-quickly to the solution.
+Inlined functions and the cache mechanism (the _HWA context_) combined to the
+compiler's optimizers make the binary code produced free of any penalty, either
+in terms of size, execution speed or memory used.
 
-![](doxygen/hwa_principle.jpeg)
+Last, but not least, although it heavily relies on preprocessor macros, the
+error messages HWA produces are clear enough to guide the developper quickly to
+the solution, often reminding him what positional parameters are expected.
+
+
+Supported devices
+-----------------
+
+HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8. Support
+of ATmega32U4 has been started.
+
+Support of Espressif's ESP8266 has been started.
+
+Support of ST's STM32F103 was started but needs to be rewritten.
 
 
 Documentation

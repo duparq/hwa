@@ -205,8 +205,8 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__wdoga(o,i,a)		\
-  _hwa_create_reg( o, csr );			\
+#define _hwa_setup__wdoga(o,i,a)		\
+  _hwa_setup_reg( o, csr );			\
   hwa->o.config.action = 0xFF ;			\
   hwa->o.config.timeout = 0xFF
 

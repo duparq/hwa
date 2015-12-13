@@ -9,7 +9,7 @@
  * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
-#include "../../hwa/hwa_2.h"
+#include "../hwa/hwa_2.h"
 
 /**
  * @ingroup public_gen_instructions_atmelavr
@@ -127,7 +127,7 @@
 #define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
 
 
-/**
+/*
  * @ingroup private
  * @brief  Write one 8-bit hardware register.
  *

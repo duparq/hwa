@@ -243,8 +243,7 @@ where:
 
  * `3` is the number of consecutive bits of this register;
 
- * `0` is the position of the least significant bit of this register in the
-   hardware register.
+ * `0` is the position of the least significant bit of this register in the hardware register.
 
 
 The logical `wgm` register of an 8-bit counter class `_c8a` is declared as an

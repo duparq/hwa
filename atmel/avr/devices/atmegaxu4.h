@@ -465,9 +465,9 @@
 
 /* @subsection atmegaxu4_objrel Aliases and relations
  *
- * Some objects can be accessed from their relatives or can have more than one
- * name. There are the existing relations between the device's objects and their
- * different names:
+ * Some objects can be accessed from their @ref using_relatives "relatives" or
+ * can have more than one name. There are the existing relations between the
+ * device's objects and their different names:
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------
@@ -1519,46 +1519,46 @@ typedef struct {
 #include "../classes/acmpa_2.h"
 
 
-HW_INLINE void _hwa_create_context( hwa_t *hwa )
+HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
-  _hwa_create_reg( hw_shared, eimsk );
-  _hwa_create_reg( hw_shared, eifr  );
-  _hwa_create_reg( hw_shared, eicra );
-  _hwa_create_reg( hw_shared, eicrb );
-  _hwa_create_reg( hw_shared, gtccr );
-  _hwa_create_reg( hw_shared, prr0  );
-  _hwa_create_reg( hw_shared, prr1  );
-  _hwa_create_reg( hw_shared, did0  );
-  _hwa_create_reg( hw_shared, did1  );
-  _hwa_create_reg( hw_shared, did2  );
-  _hwa_create_reg( hw_shared, pcicr );
-  _hwa_create_reg( hw_shared, pcifr );
+  _hwa_setup_reg( hw_shared, eimsk );
+  _hwa_setup_reg( hw_shared, eifr  );
+  _hwa_setup_reg( hw_shared, eicra );
+  _hwa_setup_reg( hw_shared, eicrb );
+  _hwa_setup_reg( hw_shared, gtccr );
+  _hwa_setup_reg( hw_shared, prr0  );
+  _hwa_setup_reg( hw_shared, prr1  );
+  _hwa_setup_reg( hw_shared, did0  );
+  _hwa_setup_reg( hw_shared, did1  );
+  _hwa_setup_reg( hw_shared, did2  );
+  _hwa_setup_reg( hw_shared, pcicr );
+  _hwa_setup_reg( hw_shared, pcifr );
 
-  _hwa_create( hw_core0 );
-  _hwa_create( hw_wdog0 );
-  _hwa_create( hw_portb );
-  _hwa_create( hw_portc );
-  _hwa_create( hw_portd );
-  _hwa_create( hw_porte );
-  _hwa_create( hw_portf );
+  _hwa_setup( hw_core0 );
+  _hwa_setup( hw_wdog0 );
+  _hwa_setup( hw_portb );
+  _hwa_setup( hw_portc );
+  _hwa_setup( hw_portd );
+  _hwa_setup( hw_porte );
+  _hwa_setup( hw_portf );
 
-  _hwa_create( hw_oc00 );
-  _hwa_create( hw_oc01 );
-  _hwa_create( hw_counter0 );
+  _hwa_setup( hw_oc00 );
+  _hwa_setup( hw_oc01 );
+  _hwa_setup( hw_counter0 );
 
-  _hwa_create( hw_oc10 );
-  _hwa_create( hw_oc11 );
-  _hwa_create( hw_oc12 );
-  _hwa_create( hw_ic10 );
-  _hwa_create( hw_counter1 );
+  _hwa_setup( hw_oc10 );
+  _hwa_setup( hw_oc11 );
+  _hwa_setup( hw_oc12 );
+  _hwa_setup( hw_ic10 );
+  _hwa_setup( hw_counter1 );
 
-  _hwa_create( hw_oc30 );
-  _hwa_create( hw_oc31 );
-  _hwa_create( hw_oc32 );
-  _hwa_create( hw_ic30 );
-  _hwa_create( hw_counter3 );
+  _hwa_setup( hw_oc30 );
+  _hwa_setup( hw_oc31 );
+  _hwa_setup( hw_oc32 );
+  _hwa_setup( hw_ic30 );
+  _hwa_setup( hw_counter3 );
 
-  _hwa_create( hw_acmp0 );
+  _hwa_setup( hw_acmp0 );
 }
 
 

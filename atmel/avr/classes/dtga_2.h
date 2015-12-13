@@ -130,10 +130,10 @@
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__dtga(o,i,a)			\
-  _hwa_create_reg( o, dtps );			\
-  _hwa_create_reg( o, dta );			\
-  _hwa_create_reg( o, dtb );
+#define _hwa_setup__dtga(o,i,a)			\
+  _hwa_setup_reg( o, dtps );			\
+  _hwa_setup_reg( o, dta );			\
+  _hwa_setup_reg( o, dtb );
 
 #define _hwa_init__dtga(o,i,a)			\
   _hwa_init_reg( o, dtps, 0x00 );		\

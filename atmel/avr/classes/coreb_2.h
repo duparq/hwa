@@ -180,11 +180,11 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  *                                                                             *
  *******************************************************************************/
 
-#define _hwa_create__coreb(o,i,a)		\
-  _hwa_create_reg( o, mcucr  );			\
-  _hwa_create_reg( o, mcusr  );			\
-  _hwa_create_reg( o, smcr   );			\
-  _hwa_create_reg( o, osccal )
+#define _hwa_setup__coreb(o,i,a)		\
+  _hwa_setup_reg( o, mcucr  );			\
+  _hwa_setup_reg( o, mcusr  );			\
+  _hwa_setup_reg( o, smcr   );			\
+  _hwa_setup_reg( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */

@@ -94,10 +94,10 @@ HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__ad10_(o)			\
-  _hwa_create_reg( o, admux );			\
-  _hwa_create_reg( o, sra   );			\
-  _hwa_create_reg( o, srb   )
+#define _hwa_setup__ad10_(o)			\
+  _hwa_setup_reg( o, admux );			\
+  _hwa_setup_reg( o, sra   );			\
+  _hwa_setup_reg( o, srb   )
 
 #define _hwa_init__ad10_(o)			\
   _hwa_init_reg( o, admux, 0x00 );		\

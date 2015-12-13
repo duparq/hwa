@@ -313,7 +313,7 @@ HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
 #if 0
 HW_INLINE void _hwa_begin_p__usia ( hwa_usia_t *p, intptr_t a )
 {
-  _hwa_create_reg_p( p, a, _usia, cr );
+  _hwa_setup_reg_p( p, a, _usia, cr );
 }
 
 
@@ -330,7 +330,7 @@ HW_INLINE void _hwa_commit_p__usia ( hwa_t *hwa, hwa_usia_t *p )
 
 #else
 
-#define _hwa_create__usia(o,i,a)		_hwa_create_reg( o, cr )
+#define _hwa_setup__usia(o,i,a)		_hwa_setup_reg( o, cr )
 #define _hwa_init__usia(o,i,a)		_hwa_init_reg( o, cr, 0x00 )
 #define _hwa_commit__usia(o,i,a)	_hwa_commit_reg( o, cr )
 

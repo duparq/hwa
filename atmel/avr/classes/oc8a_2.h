@@ -241,8 +241,8 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_create__oc8a(o,i,a)			\
-  _hwa_create_reg( o, reg );			\
+#define _hwa_setup__oc8a(o,i,a)			\
+  _hwa_setup_reg( o, reg );			\
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 
