@@ -37,89 +37,96 @@
 #define _hw_mthd_hw_config__io1a		, _hw_cfio1a
 #define _hw_mthd_hwa_config__io1a		, _hwa_cfio1a
 
-#define _hw_cfio1a( o,i, p,bn,bp, ...)					\
+#define _hw_cfio1a( o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
+#define _hw_cfio1a2(...)			_hw_cfio1a3( __VA_ARGS__ )
+#define _hw_cfio1a3( o,cf,p,bn,bp, ...)					\
   do{									\
     typedef struct {							\
       uint8_t commit ;							\
       hwa_shared_t hw_shared ;						\
-      hwa_iomxa_t hw_iomx0 ;						\
+      hwa_p16a_t p ;							\
+      hwa_pcfa_t cf ;							\
     } hwa_t ;								\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup( hw_shared );						\
-    _hwa_setup( hw_iomx0 );						\
-    HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,p,bn,bp,__VA_ARGS__,,); \
-    hwa->commit = 1; _hwa_commit( hw_shared ); _hwa_commit( hw_iomx0 );	\
+    _hwa_setup( p );							\
+    _hwa_setup( cf );							\
+    HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,cf,p,bn,bp,__VA_ARGS__,,); \
+    hwa->commit = 1; _hwa_commit( hw_shared );				\
+    _hwa_commit( p ); _hwa_commit( cf );				\
   }while(0)
 
-
-#define _hwa_cfio1a( o,i, p,bn,bp, ...)					\
-  HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,p,bn,bp,__VA_ARGS__,,); \
+#define _hwa_cfio1a( o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
+#define _hwa_cfio1a2(...)			_hwa_cfio1a3( __VA_ARGS__ )
+#define _hwa_cfio1a3( o,cf,p,bn,bp, ...)				\
+  HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,cf,p,bn,bp,__VA_ARGS__,,); \
 
 /*  Optionnal parameter `function`
  */
-#define _hwa_cfio1a_kfunction_1(o,p,bn,bp,k,v,...)				\
-  HW_G2(_hwa_cfio1a_vfunction, HW_IS(,_##o##_fn_##v))(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kfunction_1(o,cf,p,bn,bp,k,v,...)				\
+  HW_G2(_hwa_cfio1a_vfunction, HW_IS(,_##o##_fn_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vfunction_0(o,p,bn,bp,v,...)				\
+#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)				\
   HW_ERR("function for `" #o "` can be " _##o##_fns ", but not `" #v "`.")
 
-#define _hwa_cfio1a_vfunction_1(o,p,bn,bp,v,k,...)			\
-  _hwa_write_reg_m( hw_iomx0, o, 0x0130, HW_A1(_##o##_fn_##v) );	\
-  HW_A2(_##o##_fn_##v)							\
-  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_vfunction_1(o,cf,p,bn,bp,v,k,...)			\
+  _hwa_write_reg( cf, fn, HW_A1(_##o##_fn_##v) );			\
+  HW_A2(_##o##_fn_##v) /* Optionnal supplement of actions, e.g. swap  */ \
+  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfio1a_kfunction_0(o,p,bn,bp,k,...)				\
-  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_kfunction_0(o,cf,p,bn,bp,k,...)				\
+  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_is_function_function		, 1
 
 
 /*  Optionnal parameter `direction`
  */
-#define _hwa_cfio1a_kdirection_1(o,p,bn,bp,k,v,...)				\
-  HW_G2(_hwa_cfio1a_vdirection, HW_IS(,_hw_cfio1a_direction_##v))(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kdirection_1(o,cf,p,bn,bp,k,v,...)				\
+  HW_G2(_hwa_cfio1a_vdirection, HW_IS(,_hw_cfio1a_direction_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vdirection_0(o,p,bn,bp,v,...)				\
+#define _hwa_cfio1a_vdirection_0(o,cf,p,bn,bp,v,...)				\
   HW_ERR("`direction` can be `input`, `output` or `output_when_awake`, but not `" #v "`.")
 
-#define _hwa_cfio1a_vdirection_1(o,p,bn,bp,v,k,...)			\
-  _hwa_write_reg_m( hw_iomx0, o, 0x003, HW_A1(_hw_cfio1a_direction_##v) );	\
+#define _hwa_cfio1a_vdirection_1(o,cf,p,bn,bp,v,k,...)			\
+  _hwa_write_reg( cf, oex, HW_A1(_hw_cfio1a_direction_##v) );	\
   if ( HW_A1(_hw_cfio1a_direction_##v) != 0 )				\
     _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  /* _hw_write__r32_m( _hw_ra(p, _enbw1ts), 0xFFFFFFFF, 0, 0xFFFFFFFF, 1UL<<bp ); */ \
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfio1a_kdirection_0(o,p,bn,bp,k,...)				\
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_kdirection_0(o,cf,p,bn,bp,k,...)				\
+  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hw_is_direction_direction		, 1
-#define _hw_cfio1a_direction_input		, 0	/* */
-#define _hw_cfio1a_direction_output		, 1	/* */
-#define _hw_cfio1a_direction_output_when_awake	, 3	/* */
+#define _hw_is_direction_direction			, 1
+#define _hw_cfio1a_direction_input			, 0	/* oex */
+#define _hw_cfio1a_direction_output_when_awake		, 1
+#define _hw_cfio1a_direction_output_when_sleeping	, 2
+#define _hw_cfio1a_direction_output			, 3
 
 
 /*  Optionnal parameter `pullup`
  */
-#define _hwa_cfio1a_kpullup_1(o,p,bn,bp,k,v,...)				\
-    HW_G2(_hwa_cfio1a_vpullup0, HW_IS(,_hw_cfio1a_pullup_##v))(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kpullup_1(o,cf,p,bn,bp,k,v,...)				\
+    HW_G2(_hwa_cfio1a_vpullup0, HW_IS(,_hw_cfio1a_pullup_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vpullup_1(o,p,bn,bp,v,...)	\
-    _hwa_write_reg_m( hw_iomx0, o, 0x088, HW_A1(_hw_cfio1a_pullup_##v) ); \
+#define _hwa_cfio1a_vpullup_1(o,cf,p,bn,bp,v,...)	\
+    _hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pullup_##v) );	\
     HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfio1a_vpullup_0(o,p,bn,bp,v,...)				\
+#define _hwa_cfio1a_vpullup_0(o,cf,p,bn,bp,v,...)				\
     HW_ERR("`pullup` can be `on`, `off`, or `when_awake`, but not `" #v "`.");
 
-#define _hwa_cfio1a_vpullup0_0(o,p,bn,bp,v,...)			\
+#define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)			\
     HW_ERR("`pullup` can be `on`, `off`, or `when_awake`, but not `" #v "`.");
 
-#define _hwa_cfio1a_kpullup_0(o,p,bn,bp,...)	\
+#define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)	\
   HW_EOL(__VA_ARGS__)
 
 #define _hw_is_pullup_pullup			, 1
-#define _hw_cfio1a_pullup_off			, 0x00
-#define _hw_cfio1a_pullup_when_awake		, 0x80
-#define _hw_cfio1a_pullup_on			, 0x88
+#define _hw_cfio1a_pullup_off			, 0	/* pux */
+#define _hw_cfio1a_pullup_when_sleeping		, 1
+#define _hw_cfio1a_pullup_when_awake		, 2
+#define _hw_cfio1a_pullup_on			, 3
 
 
 /**
@@ -148,37 +155,40 @@
  * hw_write( IO_NAME, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__io1a		, _hw_write_io1a
+#define _hw_mthd_hw_write__io1a			, _hw_write_io1a
 
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
   HW_TX( _hw_write_reg_m(p, _out, ((1<<bn)-1)<<bp, (v)<<bp),	\
 	 __VA_ARGS__ )
 
 
-/*
+/**
  * @page esp8266_io1a
+ *
  * @code
  * hwa_write( IO_NAME, value );
  * @endcode
  */
-/* #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\ */
-/*   HW_TX(_hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v),__VA_ARGS__) */
+#define _hw_mthd_hwa_write__io1a		, _hwa_write_io1a
+
+#define _hwa_write_io1a(o,i, p,bn,bp, v, ...)				\
+  HW_TX(_hwa_write_reg_m(&hwa->p._out, ((1<<bn)-1)<<bp, (v)<<bp)),	\
+    __VA_ARGS__)
 
 
-/*
+/**
  * @page esp8266_io1a
  * @code
  * hw_toggle( IO_NAME );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
-//#define _hw_mthd_hwa_write__io1a	, _hwa_write_io1a
-//#define _hw_mthd_hw_toggle__io1a	, _hw_toggle_io1a
+#define _hw_mthd_hw_toggle__io1a		, _hw_toggle_io1a
 
-/* #define _hw_toggle_io1a(o,i, p,...)		_hw_toggle_io1a_2(_hw_reg(p,pin),__VA_ARGS__) */
-/* #define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__) */
-/* #define _hw_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\ */
-/*   HW_TX(_hw_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__) */
+#define _hw_toggle_io1a(o,i,p,bn,bp,...)	HW_TX( _hw_toggle_io1a_2(_hw_ra(p,_out),(((1<<bn)-1)<<bp)), \
+						       __VA_ARGS__)
 
+#define _hw_toggle_io1a_2(r,msk)					\
+  *(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /*
  * @page esp8266_io1a
@@ -189,6 +199,7 @@
  * hwa_toggle( IO_NAME );
  * @endcode
  */
+
 /* #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_hw_reg(p,pin),__VA_ARGS__) */
 /* #define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__) */
 /* #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\ */

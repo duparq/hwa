@@ -22,11 +22,7 @@ void IROM every100ms ( )
  */
 void IRAM ev_timer ( )
 {
-  static uint8_t	led ;
-
-  led = !led ;
-
-  hw_write( LED, led );
+  hw_toggle( LED );
 }
 
 
