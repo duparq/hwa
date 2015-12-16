@@ -639,9 +639,9 @@ HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   return ((*p)>>rbp) & m ;
 }
 
-HW_INLINE uint16_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
-  uint32_t m = (1UL<<rbn)-1 ;
+  uint32_t m = (1ULL<<rbn)-1 ;
   volatile uint32_t *p = (volatile uint32_t *)ra ;
   return ((*p)>>rbp) & m ;
 }

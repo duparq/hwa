@@ -502,21 +502,13 @@ extern char hw_error ;
 #define _hw_x__r32(ra,rwm,rfm, o,c,a,r)	_m1, o,a, r,_r32, ra,rwm,rfm, 32,0
 
 
-/*  Memory definition of one group of consecutive bits in one class or object
- *  hardware register
- *
- *	-> _m1, o,a, r,rc,ra,rwm,rfm, bn,bp
- */
-//#define _hw_x__xb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xxb1, _hw_##c##_##r,bn,bp,o,r)
-
-
 /*  Memory definition of a group of consecutive bits in one class register
  *	-> _m1, o,a, r,rc,ra,rwm,rfm, bn,bp
  */
-#define _hw_x__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xcb1, _hw_##c##_##r,bn,bp,o,r)
-#define _hw_xcb1__r8(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
-#define _hw_xcb1__r16(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r16,ra,rwm,rfm, bn,bp
-#define _hw_xcb1__r32(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r32,ra,rwm,rfm, bn,bp
+#define _hw_x__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_xcb1, _hw_##c##_##r,bn,bp,o,r,a)
+#define _hw_xcb1__r8(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r8,ra,rwm,rfm, bn,bp
+#define _hw_xcb1__r16(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r16,ra,rwm,rfm, bn,bp
+#define _hw_xcb1__r32(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r32,ra,rwm,rfm, bn,bp
 
 
 /*  Memory definition of two groups of consecutive bits in one or two class

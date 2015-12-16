@@ -550,9 +550,10 @@
  * @brief Initialize the HWA context registers addresses of an object
  */
 //#define _hwa_setup(o)			_HW_SPEC(_hwa_setup,_##o,o)
-#define _hwa_setup(o)			_hwa_setup_2(_##o,o)
-#define _hwa_setup_2(...)		_hwa_setup_3(__VA_ARGS__)
-#define _hwa_setup_3(c,i,a,o)		_hwa_setup_##c(o,i,a)
+#define _hwa_setup(o)			_hwa_setup_2(o)
+#define _hwa_setup_2(o)			_hwa_setup_3(_##o,o)
+#define _hwa_setup_3(...)		_hwa_setup_4(__VA_ARGS__)
+#define _hwa_setup_4(c,i,a,o)		_hwa_setup_##c(o,i,a)
 
 
 /**
@@ -576,9 +577,10 @@
  * @brief Commit the registers of an object
  */
 /* #define _hwa_commit(o)			_HW_SPEC(_hwa_commit,_##o,o) */
-#define _hwa_commit(o)			_hwa_commit_2(_##o,o)
-#define _hwa_commit_2(...)		_hwa_commit_3(__VA_ARGS__)
-#define _hwa_commit_3(c,i,a,o)		_hwa_commit_##c(o,i,a)
+#define _hwa_commit(o)			_hwa_commit_2(o)
+#define _hwa_commit_2(o)		_hwa_commit_3(_##o,o)
+#define _hwa_commit_3(...)		_hwa_commit_4(__VA_ARGS__)
+#define _hwa_commit_4(c,i,a,o)		_hwa_commit_##c(o,i,a)
 
 
 /**
