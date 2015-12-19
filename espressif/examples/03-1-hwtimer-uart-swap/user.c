@@ -30,10 +30,10 @@ void IROM user_init()
 {
   //  user_uart_wait_tx_fifo_empty();	/* Never returns? */
 
-  /*  Install IRQ handlers
+  /*  Install user IRQ handlers
    */
-  hw_handle_irq( hw_timer1, irq, ev_timer );
-  hw_handle_irq( hw_timer1, nmi, ev_timer );
+  os_handle_irq( hw_timer1, irq, ev_timer );
+  os_handle_irq( hw_timer1, nmi, ev_timer );
 
   //  hwa_begin();
   hwa_begin_from_reset();

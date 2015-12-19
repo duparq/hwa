@@ -47,23 +47,47 @@
  *									       *
  *******************************************************************************/
 /**
- * @ingroup atmegax8_interrupts
+ * @ingroup esp8266_interrupts
  * @brief Definition of the interrupts
  */
 /*  Interrupt definitions
  *
  *  'vector' is used to store the type of interrupt
  *
- *					class, vector, object, ie, if
+ *						class, vector, object, ie, if
  */
-#define _hw_irq_hw_timer1_nmi		_irq, nmi, hw_timer1, ie,
-#define _hw_irq_hw_timer1_irq		_irq,   9, hw_timer1, ie,
+#define _hw_irq_hw_timer1_nmi			_irq, nmi, hw_timer1, ie,
+#define _hw_irq_hw_timer1_irq			_irq,   9, hw_timer1, ie,
 
-#define _hw_handleirq_hw_timer1_nmi(fn)		NmiTimSetFunc(fn)
-#define _hw_handleirq_hw_timer1_9(fn)		ets_isr_attach(9, fn, 0)
+
+/*  ESP8266 interrupts are processed through OS calls to user service routines
+ */
+#define _os_handleirq_hw_timer1_nmi(fn)		NmiTimSetFunc(fn)
+#define _os_handleirq_hw_timer1_9(fn)		ets_isr_attach(9, fn, 0)
 
 extern void NmiTimSetFunc(void (*isr)(void));
 extern void ets_isr_unmask(unsigned intr);
+
+
+/**
+ * @ingroup public_irq_instructions
+ * @brief Declaration of an ISR
+ *
+ * The `os_handle_irq()` instruction declares a user ISR for an IRQ.
+ *
+ * @code
+ * os_handle_irq( hw_timer1, irq, ev_timer );
+ * @endcode
+ * @hideinitializer
+ */
+#define _hw_mthd_os_handle_irq__irq	, _os_handle_irq
+
+#define os_handle_irq(...)		_os_handleirq_2(hw_irqx(__VA_ARGS__,))
+#define _os_handleirq_2(...)		HW_G2(_os_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _os_handleirq_0(...)		__VA_ARGS__
+#define _os_handleirq_1(t,...)		_os_handle_irq(__VA_ARGS__)
+
+#define _os_handle_irq(v,o,ie,if,fn,...)	HW_TX(_os_handleirq_##o##_##v(fn),__VA_ARGS__)
 
 
 /*******************************************************************************
