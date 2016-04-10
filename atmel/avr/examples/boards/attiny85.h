@@ -12,7 +12,7 @@
 /**
  * @page atmelavr_boards
  *
- * @section boards_attiny85 Attiny85
+ * @section boards_attiny85 Board attiny85
  *
  * This is a single ATTINY85-20PU without crystal on a breadboard with a
  * USB/Serial adapter for 1-wire communication, a LED connected at pin #5

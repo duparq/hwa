@@ -12,7 +12,7 @@
 /**
  * @page atmelavr_boards
  *
- * @section boards_pro_mini Pro Mini
+ * @section boards_pro_mini Board pro-mini
  *
  * This is an Arduino clone board with a MEGA328P-AU microcontroller and a 16
  * MHz crystal.

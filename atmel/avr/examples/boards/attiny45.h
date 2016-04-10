@@ -12,7 +12,7 @@
 /**
  * @page atmelavr_boards
  *
- * @section boards_attiny45 Attiny45
+ * @section boards_attiny45 Board attiny45
  *
  * This is just a ATTINY45-20PU on a breadboard with a USB/Serial adapter and a
  * LED connected at pin #5 (PB0/OC0A). No crystal.

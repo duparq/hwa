@@ -12,7 +12,7 @@
 /**
  * @page atmelavr_boards
  *
- * @section boards_nanodccduino NANO DCCduino.h
+ * @section boards_nanodccduino Board nanodccduino
  *
  * This is an Arduino clone board with a MEGA328P-AU microcontroller, a 16 MHz
  * crystal and a CH340 USB/Serial adapter.
@@ -22,12 +22,12 @@
  *
  * @par USBASP wiring
  *
- *	USBASP -> 1  MOSI  D11 <- BOARD
- *		  2  VCC   5V
- *		  4  GND   GND
- *		  5  RST   RST
- *		  7  SCK   D13
- *		  9  MISO  D12
+ *      USBASP -> 1  MOSI  D11 <- BOARD
+ *                2  VCC   5V
+ *                4  GND   GND
+ *                5  RST   RST
+ *                7  SCK   D13
+ *                9  MISO  D12
  *
  * @par nanodccduino.h
  * @include nanodccduino.h

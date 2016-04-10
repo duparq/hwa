@@ -111,6 +111,7 @@ INPUT                  = ../README.md						\
 		       	 using.md						\
 		       	 devices.md						\
 			 ../atmel/README.md					\
+			 ../atmel/avr/examples/boards/README.md			\
 			 ../espressif/README.md					\
 		       	 porting.md						\
 		       	 hwa_license.md						\

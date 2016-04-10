@@ -12,7 +12,7 @@
 /**
  * @page atmelavr_boards
  *
- * @section boards_attiny84 Attiny84
+ * @section boards_attiny84 Board attiny84
  *
  * This is just a ATTINY84A-PU on a breadboard with a USB/Serial adapter and a
  * LED connected at pin #7 (PA6/OC1A). No crystal.
