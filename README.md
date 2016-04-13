@@ -79,16 +79,16 @@ an Atmel AVR device:
       //  Configure the watchdog to trigger an IRQ every 250ms
       //
       hwa_config( hw_wdog0,
-		  timeout,          250ms,
-		  action,           irq
-		  );
+                  timeout,  250ms,
+                  action,   irq
+                  );
 
       //  Configure the core to enter idle mode when asked to sleep
       //
       hwa_config( hw_core0,
-		  sleep,      enabled,
-		  sleep_mode, idle
-		  );
+                  sleep,      enabled,
+                  sleep_mode, idle
+                  );
 
       //  Write this configuration into the hardware
       //
@@ -101,7 +101,7 @@ an Atmel AVR device:
       //  Sleep between interrupts
       //
       for(;;)
-	hw_sleep();
+        hw_sleep();
 
       return 0 ;
     }
@@ -119,8 +119,8 @@ ST's STM32F103 is the device that initiated the writing of HWA. The code now
 needs to be rewritten.
 
 
-Organization of the source code of HWA
---------------------------------------
+Organization of the source tree
+-------------------------------
 
 The base source code of HWA is in the `hwa/` directory.
 
@@ -156,6 +156,12 @@ Status
 
 __WARNING!__ The development of HWA is very chaotic and this project is subject
 to heavy changes of the code-base.
+
+
+Hosting
+=======
+
+HWA is hosted on [Github](http://github.com/duparq/hwa).
 
 
 Feedback

@@ -1,6 +1,6 @@
 
-General informations {#using}
-====================
+Using HWA {#using}
+=========
 
 [TOC]
 
