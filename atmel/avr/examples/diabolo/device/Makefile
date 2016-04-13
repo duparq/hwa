@@ -20,4 +20,4 @@ export LDFLAGS PROG_SW PROG_HW
 
 include ../../Makefile
 
-install: burn write-fuses
+setup: burn write-fuses

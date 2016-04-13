@@ -102,17 +102,17 @@ class Device():
     def resume(self):
         for i in range(256):
             #trace()
-            if self.xserial.lastchar == '#':
+            if self.link.lastchar == '#':
                 return True
-            if self.xserial.lastchar == '!':
+            if self.link.lastchar == '!':
                 self.nresumes += 1
-                self.xserial.lastchar="" # lastchar is not set by self.xserial.rx(1) if there is no reply
-            self.xserial.tx('\n')
-            r = self.xserial.rx(1)
+                self.link.lastchar="" # lastchar is not set by self.link.rx(1) if there is no reply
+            self.link.tx('\n')
+            r = self.link.rx(1)
             if r!='':
-                dbg("RESUME: tx('\\n') -> %s (0x%02X)" % (r,ord(r)))
+                dbg("RESUME: tx('\\n') -> %s (0x%02X)\n" % (r,ord(r)))
             else:
-                dbg("RESUME: tx('\\n') -> no reply")
+                dbg("RESUME: tx('\\n') -> no reply\n")
         die(_("Could not get prompt.\n"))
 
 
@@ -136,9 +136,9 @@ class Device():
             # if repeat>0:
             #     trace()
             self.resume()
-            self.xserial.lastchar = ""
+            self.link.lastchar = ""
             dbg("EXECUTE: tx(%s) -> " % (s2hex(cmdstr)))
-            self.xserial.tx(cmdstr)
+            self.link.tx(cmdstr)
             self.ncmds += 1
             if rlen == 0:
                 return None
@@ -150,7 +150,7 @@ class Device():
                 r=""
                 t=timer()+kwargs['timeout']
                 while len(r) < rlen and timer() < t:
-                    c=self.xserial.rx(1)
+                    c=self.link.rx(1)
                     if c:
                         t=timer()+kwargs['timeout']
                         r += c
@@ -175,14 +175,14 @@ class Device():
                 #         prev=last
                         
             else:
-                r = self.xserial.rx(rlen)
+                r = self.link.rx(rlen)
 
             if r:
                 dbg("%s\n" % s2hex(r))
             else:
                 dbg("no reply\n")
 
-            if self.xserial.lastchar != '#':
+            if self.link.lastchar != '#':
                 dbg("  COMMAND FAILED\n")
                 self.ncmdfails += 1
                 continue
@@ -200,6 +200,7 @@ class Device():
                                 dbg(" #%d" % i)
                         dbg("\nGOOD REPLY:   %s\n\n" % s2hex(r))
                     return r[:-2]
+                dbg("  CRC ERROR: 0x%04X\n" % crc)
                 #
                 #  CRC error, try to correct it.
                 #
@@ -226,7 +227,7 @@ class Device():
                 self.ncrcerrors += 1
 
                 if len(r) != rlen-1:
-                    dbg("\nBAD REPLY #%d: %s" % (repeat,s2hex(r)))
+                    # dbg("  BAD REPLY #%d: %s\n" % (repeat,s2hex(r)))
                     continue
 
                 if not built:
@@ -236,7 +237,7 @@ class Device():
                     dbg("\n             ")
                     for i in range(rlen-1):
                         dbg(" %02d" % i)
-                dbg("\nBAD REPLY #%d: %s" % (repeat,s2hex(r)))
+                dbg("  BAD REPLY #%d: %s\n" % (repeat,s2hex(r)))
 
                 updated = False
                 if not built:
@@ -289,7 +290,7 @@ class Device():
             s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
         if crcerrors > 3:
             s += _("\nMany CRC unrecoverable errors detected. Your baudrate setting (%d) "\
-                   "may be too high for the device.\n" % self.xserial.baudrate)
+                   "may be too high for the device.\n" % self.link.baudrate)
         die(s)
 
 
@@ -311,7 +312,7 @@ class Device():
         except KeyError:
             die(_("Unknown device with signature %s" % signature))
 
-        device.xserial = self.xserial
+        device.link = self.link
         device.protocol = self.protocol
         device.blpages = struct.unpack('B', r[0])[0] ; r = r[1:]
         device.bladdr = device.flashsize-device.blpages*device.pagesize
@@ -431,18 +432,18 @@ class Device():
     def start_application(self):
         self.resume()
         self.ncmds += 1
-        self.xserial.tx('X'+struct.pack('>H', CRC.check('X')))
-        self.xserial.rx(1)
-        return self.xserial.lastchar == '\0'
+        self.link.tx('X'+struct.pack('>H', CRC.check('X')))
+        self.link.rx(1)
+        return self.link.lastchar == '\0'
 
 
-def get_device(xserial):
+def get_device(link):
     """
     Return a device object corresponding to the one the serial
     interface is connected to.
     """
     device = Device("",0,0,0,0,0)
-    device.xserial = xserial
+    device.link = link
     return device.identify()
 
 

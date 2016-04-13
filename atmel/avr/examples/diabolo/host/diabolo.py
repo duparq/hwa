@@ -19,6 +19,7 @@ import sys
 import os.path
 
 sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../../python"))
+sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
 
 import premain
 import __builtin__
@@ -30,7 +31,7 @@ from crc_ccitt import CRC
 import struct
 import time
 import devices
-import xserial
+import link
 
 
 class Application:
@@ -69,41 +70,46 @@ class Application:
 
     #  Read flash memory
     #
+    #    Protocol 5: read pages of 256 bytes, whatever the actual page size is.
+    #
+    #    vp: virgin page
+    #    sp: sub page
+    #    sps: sub page size
+    #
     def read_flash(self):
         t = timer()
         cout("\nReading flash:")
         s=''
-        if self.device.protocol == 4:
-            vp = '\xFF'*self.device.pagesize
-        else: # protocol 5
-            vp = '\xFF'*256
+        vp = '\xFF'*self.device.pagesize
+        sps = self.device.protocol<5 and self.device.pagesize or 256
         col=0
-        for a in range(0, self.device.flashsize, len(vp)):
-            if col==0 :
-                cout('\n')
-            col += 1
-            if col==64:
-                col=0
+        for a in range(0, self.device.flashsize, sps):
             if a < self.device.bladdr or self.options.full:
-                p = self.device.read_flash_page(a)
-                if p == None:
-                    cerr(_("\nRead page failed at 0x%04X.\n" % a))
+                page = self.device.read_flash_page(a)
+                if page == None:
+                    cerr(_("\nRead page failed at 0x%04X.\n" % a+b))
                     return False
-            if a < self.device.bladdr:
-                if (a != 0 and p != vp) or (a == 0 and p[2:] != vp[2:]):
-                    cout('X')
+            for b in range(0,sps,self.device.pagesize):
+                sp = page[b:b+self.device.pagesize]
+                if col==0 :
+                    cout('\n')
+                col += 1
+                if col==64:
+                    col=0
+                if a+b < self.device.bladdr:
+                    if (a+b != 0 and sp != vp) or (a+b == 0 and sp[2:] != vp[2:]):
+                        cout('X')
+                    else:
+                        cout('.')
                 else:
-                    cout('.')
-            else:
-                if self.options.full:
-                    cout('*')
-                else:
-                    cout('-')
-                    p = vp		# Do not store Diabolo code in cache file
-            flushout()
-            s += p
+                    if self.options.full:
+                        cout('*')
+                    else:
+                        cout('-')
+                        sp = vp		# Hide bootloader code
+                flushout()
+                s += sp
         t = timer()-t
-        # crc, x = appstat(s[:self.device.bladdr], self.device.bootsection)
         x, crc = self.device.appstat(s)
         cout(_("\nRead %d bytes in %d ms (%d Bps): %d application bytes, CRC=0x%04X.\n"
                % (len(s), t*1000, len(s)/t, x, crc)))
@@ -255,26 +261,20 @@ class Application:
         #  List available ttys?
         #
         if self.options.tty == "list":
-            ttys = xserial.list()
+            ttys = link.list()
             cout(_("Available ttys:\n" + str(ttys)))
             return
 
         #  Open the communication channel
         #
         try:
-            self.xserial = xserial.get_serial(self.options)
-            # if self.options.threaded_timed:
-            #     self.xserial = xserial.ThreadedTimed(self.options)
-            # elif self.options.threaded_event:
-            #     self.xserial = xserial.ThreadedEvent(self.options)
-            # else:
-            #     self.xserial = xserial.XSerial(self.options)
-        except xserial.serial.SerialException, e:
+            self.link = link.get(self.options)
+        except link.serial.SerialException, e:
             die(str(e))
 
         #  Reset the device connected to the serial interface
         #
-        self.xserial.reset_device()
+        self.link.reset_device()
 
         #  Just reset the device and quit?
         #
@@ -284,18 +284,19 @@ class Application:
         #  This is the best moment for detecting how many wires are used for the
         #  serial communication
         #
-        self.xserial.detect_wires()
+        self.link.detect_wires()
+        cout(_("Tty wires: %d\n") % self.link.wires)
 
         #  We can now send synchronization sequences
         #
         try:
-            self.xserial.sync()
+            self.link.sync()
         except Exception, e:
-            die(_("Synchronization failed."))
+            die(_("Synchronization failed.\n%s" % repr(e)))
 
         #  Identify device
         #
-        self.device = devices.get_device(self.xserial)
+        self.device = devices.get_device(self.link)
         cout(_("Connected to device (protocol %d):\n" % self.device.protocol))
         cout(self.device.str(self.options.show_fuses, self.options.decode_fuses))
 
@@ -444,18 +445,18 @@ class Application:
                 # trace()
                 #cout(_("Reset device's Diabolo\n"))
                 self.device.resume()
-                self.xserial.tx('*') # Send a bad command to force CRC re-computation
+                self.link.tx('*') # Send a bad command to force CRC re-computation
                 #
                 #  Wait up to 1 s for CRC computation (~50 cycles/byte)
                 #
                 t = timer()+1.0
-                while timer() < t and not self.xserial.rx(1): pass
+                while timer() < t and not self.link.rx(1): pass
                 if timer() >= t:
                     raise Exception("timeout waiting CRC recomputation")
-                if self.xserial.lastchar != '!':
+                if self.link.lastchar != '!':
                     raise Exception("unexpected reply (0x%02X) to '*' command" % ord(c))
-                self.xserial.tx('\n') # Resume
-                self.xserial.rx(1)
+                self.link.tx('\n') # Resume
+                self.link.rx(1)
                 self.device = self.device.identify()
                 cout("  Application CRC:\n")
                 cout(_("    computed: 0x%04X\n" % self.device.appcrc))
@@ -478,7 +479,7 @@ class Application:
             else:
                 cout("ERROR: target did not start its application.\n")
 
-        self.xserial.close()
+        self.link.close()
 
         if self.options.diag:
             cout(_("%d commands, %d fails, %d resumes, %d crc errors, total time: %.1f s.\n" % 
@@ -493,7 +494,7 @@ parser = argparse.ArgumentParser()
 
 #  Arguments about serial port
 #
-xserial.add_arguments(parser)
+link.add_arguments(parser)
 
 #  Target options
 #

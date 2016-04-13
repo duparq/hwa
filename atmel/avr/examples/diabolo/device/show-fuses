@@ -1,1 +1,0 @@
-printf "FUSE_EB=0x%02X  FUSE_HB=0x%02X  FUSE_LB=0x%02X"		$((${DEVICE_FUSE_EB}))		$((${DEVICE_FUSE_HB}))		$((${DEVICE_FUSE_LB}))

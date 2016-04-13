@@ -69,8 +69,7 @@ __builtin__.__dict__['disable_trace'] = disable_trace
 #  Print error message and exit with error code 1
 #
 def die(s):
-    sys.stderr.write('Fatal: '+s+'\n')
-    #sys.stdin.readline()
+    sys.stderr.write("\nFatal: "+s+'\n')
     sys.exit(1)
-    #raise Exception('fatal',s)
+
 __builtin__.__dict__['die'] = die

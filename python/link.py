@@ -1,40 +1,23 @@
 #!/usr/bin/env python
-
 # -*- coding: utf-8 -*-
 
-
-"""This is an extension of the PySerial module. It provides detection of the
-number of wires and synchronization methods for use with HWA example projects
-companion applications.
-
-3 types of extensions are provided to have non-blocking reads:
-
- * use serial.timeout
- * use a separate thread and a timer
- * use a separate thread and events
-
-Performances greatly vary depending on the type of extension used, the serial
-interface driver and the platform. For example, the reading rate in bytes per
-second of 32 KiB of Flash memory with Diabolo on a NanoDCCDuino:
-
-                             Linux                 Windows XP VirtualBoxed
-
-                    serial   thread   thread      serial   thread   threaded
-                    timeout  timed    event       timeout  timed    event
-
-PL2303 460800 Bps   25057    20262    15894        6981     4980     5932
-PL2303 230400 Bps   16505    15219    14554        6183     4472     5538
-PL2303 115200 Bps    9442     9081     9428        5248     4980     4540
-
-CH340  460800 Bps   26436    23829    17288        1386     3410     1149
-CH340  230400 Bps   16515    15255    14316        1254     2872     4674
-CH340  115200 Bps    9439     8832     9015        5437     4012     4907
-
-"""
+#  Use the pySerial-3.0 serial module
+#
+import sys
+import os.path
+sys.path.insert(1,os.path.normpath(sys.path[0]+"/pyserial-3.0"))
 
 import serial
 import time
 from utils import *
+
+
+if os.name == 'nt':  # sys.platform == 'win32':
+    from serial.tools.list_ports_windows import comports
+elif os.name == 'posix':
+    from serial.tools.list_ports_posix import comports
+else:
+    raise ImportError("Sorry: no implementation available for '%s'" % (os.name,))
 
 
 def add_arguments(parser):
@@ -68,7 +51,7 @@ def add_arguments(parser):
                         action='store_true')
 
 
-#  Return an arguments parser with XSerial arguments preloaded
+#  Return an arguments parser with Link arguments preloaded
 #
 def ArgumentParser():
     import argparse
@@ -77,93 +60,44 @@ def ArgumentParser():
     return parser
 
 
-#  Return a list of available ttys among /dev/ttyUSB0..7 and /dev/stty0..7,
-#  excluding the 'avoid' one
+#  Return a list of available serial ports
 #
-def list_ttys(avoid=()):
-    ports=[]
-    names=[]
-
-    #  Standard serial devices (/dev/ttyS??, COM?? ...)
-    #
-    for n in range(8):
-        d = serial.device(n)
-        names.append(d)
-
-    #  Linux USB adapter devices
-    #
-    for n in range(8):
-        d = '/dev/ttyUSB%d' % n
-        names.append(d)
-
-    #  Check the availability of each device
-    #
-    for name in names:
-        try:
-            if not name in avoid:
-                xserial=serial.Serial(name)
-                xserial.close()
-                ports.append(name)
-        except serial.SerialException, e:
-            pass
-    return ports
+def list():
+    return sorted([ i[0] for i in comports() ])
 
 
-#  Return the last available serial interface among /dev/ttyUSB0..7 and /dev/stty0..7,
-#  excluding the 'avoid' ones
+#  Return the last available serial port
 #
 def default(avoid=()):
-
-    #  Standard serial devices (/dev/ttyS??, COM?? ...)
-    #
-    names=[ serial.device(n) for n in range(8) ]
-
-    #  Linux USB adapter devices
-    #
-    for n in range(8):
-        d = '/dev/ttyUSB%d' % n
-        names.append(d)
-
-    #  Check the availability of each device
-    #
-    for name in reversed(names):
-        try:
-            if not name in avoid:
-                xserial=serial.Serial(name)
-                xserial.close()
-                return name
-        except serial.SerialException, e:
-            pass
+    for name in reversed(list()):
+        if not name in avoid:
+            return name
     return None
 
 
-#  Return a XSerial object according to arguments provided
+#  Return a Link object according to arguments provided
 #
-def get_serial(args):
+def get(args):
     if args.threaded_timed:
         serial = ThreadedTimed(args)
     elif args.threaded_event:
         serial = ThreadedEvent(args)
-    elif args.tty and args.tty.startswith("net:"):
-        import telnetlib
-        serial = telnetlib.Telnet()
-        serial.open("192.168.1.78")
-        serial.write("?\r\n")
-        serial.close()
-        die("")
     else:
-        serial = XSerial(args)
+        serial = Link(args)
     return serial
 
 
-class XSerial(serial.Serial):
+#  This class encapsulates a serial link object. That can be a real serial port,
+#  a USB converter, or a network connection...
+#
+class Link:
     def __init__(self, args):
         #
         #  CH340/CH341 support seems very buggy! Occasionnally, reception is
         #  delayed for a long time. It seems that openning the device with a
         #  default baudrate, then changing it for the baudrate actually wanted
         #  avoids this strange behavior. That does not cause trouble for other
-        #  devices so always do it that way.
+        #  devices so let's do it always that way.
         #
 
         #  Choose a default tty if none specified
@@ -175,9 +109,8 @@ class XSerial(serial.Serial):
             else:
                 die("No tty available")
 
-        serial.Serial.__init__(self, args.tty, 1200)
+        self.serial = serial.serial_for_url(args.tty, do_not_open=True)
         self.lastrxtime = 0
-        # self.timeout = max(0.001, 10.0/self.baudrate)
         self.args = args
         self.inter_char_delay = args.inter_char_delay
         self.wires = args.wires
@@ -188,11 +121,10 @@ class XSerial(serial.Serial):
         self.write = None	# Disable write (must use tx)
         self.lastchar = None
 
-        # syncs = { '': self.sync_none, '5+1': self.sync_5_1, '10+1': self.sync_10_1 }
-        # self.sync = syncs[args.sync]
+        self.serial.timeout = max(0.001, 10.0/args.bps)
 
-        self.baudrate = args.bps
-        self.timeout = max(0.001, 10.0/args.bps)
+        self.serial.baudrate = self.args.bps
+        self.serial.open()
 
         cout(_("Serial port: %s (%d bps)\n" % (args.tty, args.bps)))
 
@@ -218,105 +150,100 @@ class XSerial(serial.Serial):
                        self.reset_signal.upper()))
 
             if self.keep_txd_low != 0:
-                self.setBreak(True)
+                self.serial.break_condition = True
 
             if self.reset_signal == "dtr":
-                self.setDTR(True)
+                self.serial.dtr = True
                 time.sleep(self.reset_length)
-                self.setDTR(False)
+                self.serial.dtr = False
             elif self.reset_signal == "rts":
-                self.setRTS(True)
+                self.serial.rts = True
                 time.sleep(self.reset_length)
-                self.setRTS(False)
+                self.serial.rts = False
             else:
                 raise Exception(_("Unknown signal \"%s\" to drive reset." % self.reset_signal))
 
             if self.reset_length==0:
                 cout(_("Leaving reset signal %s low.\n" % self.reset_signal.upper()))
                 if self.reset_signal == "dtr":
-                    self.setDTR(True)
+                    self.serial.dtr = True
                 else:
-                    self.setRTS(True)
+                    self.serial.rts = True
 
             if self.keep_txd_low>0:
                 cout("Keeping TXD low for %.3f s\n" % self.keep_txd_low)
                 time.sleep(self.keep_txd_low)
-            self.setBreak(False)
+            self.serial.break_condition = False
 
+
+    #  Detect how many wires are used
+    #
     def detect_wires(self):
-        #  Flush the input buffer.
-        #
-        # serial.Serial.flush(self)
-        while serial.Serial.read(self,1): pass
-
-        #  Detect how many wires are used
-        #
+        self.flush()
         if self.wires == 0:
-            cout(_("Tty wires:"))
-            serial.Serial.write(self,'?')
+            self.serial.write('?')
             t=timer()+0.1
             wires=2
             while timer()<t:
-                r = serial.Serial.read(self,1)
+                r = self.serial.read(1)
                 if r=='?':
-                    while serial.Serial.read(self,1): pass
+                    while self.serial.read(1): pass
                     wires = 1
                     break
             self.wires = wires
-            cout(" %d\n" % self.wires)
 
 
     #  Flush the buffers
     #
     def flush(self):
-        self.flushOutput()
-        self.flushInput()
-        while serial.Serial.read(self,1): pass # flush
-        # self.txbuf = ""
+        self.serial.flushOutput()
+        self.serial.flushInput()
+        while self.serial.read(1): pass
+
 
     #  Send 10 low bits
     #    This is acheived by adding an even parity bit
     #
-    #    NOTE: this does not work with CH340/CH341 under Linux (3.13.0-60)
-    #          because the driver is buggy
+    #    NOTE: this does not work with CH340/CH341 under linux-3.13.0-60
+    #          because of a bug in the kernel driver
     #
     def tx10low(self):
         self.setParity(serial.PARITY_EVEN)
         self.tx('\0')
         self.setParity(serial.PARITY_NONE)
 
+
     #  Synchronize the UART of the other side:
     #    send 10 bits low, followed by 1 bit low.
     #
     def sync_10_1(self):
         cout("Synchonizing with 10+1 low bits: ")
-        while serial.Serial.read(self,1): pass # flush
+        while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
-            XSerial.flush(self)
-            XSerial.tx10low(self)
+            Link.flush(self)
+            Link.tx10low(self)
             time.sleep(0.001)
-            XSerial.tx(self,'\xFF')
-            r = XSerial.rx(self,1)
+            Link.tx(self,'\xFF')
+            r = Link.rx(self,1)
             if len(r):
                 cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
                 return
         raise Exception("synchronization failed")
 
+
     #  Synchronize UART with 5/1 low-level sequences
     #
     def sync_5_1(self):
-        # trace()
         cout("Synchonizing with 5+1 low bits (ASCII 'A'): ")
-        # self.nresyncs += 1
-        while serial.Serial.read(self,1): pass # flush
+        while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
-            XSerial.tx(self,'A')
-            r = XSerial.rx(self,1)
+            Link.tx(self,'A')
+            r = Link.rx(self,1)
             if len(r):
                 cout(" OK after %d bytes sent: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
@@ -331,7 +258,8 @@ class XSerial(serial.Serial):
             try:
                 self.sync_5_1()
                 return
-            except:
+            except Exception, e:
+                # trace(repr(e))
                 cout('\n')
         if self.args.sync=="" or self.args.sync=="10+1":
             try:
@@ -347,45 +275,39 @@ class XSerial(serial.Serial):
     #
     def tx(self, s):
         if not self.inter_char_delay:
-            serial.Serial.write(self,s)
+            self.serial.write(s)
         else:
-            serial.Serial.write(self,s[0])
+            self.serial.write(s[0])
             for c in s[1:]:
                 time.sleep(self.inter_char_delay)
-                serial.Serial.write(self,c)
+                self.serial.write(c)
         if self.wires==1:
             r = ""
             n = 0
             l = len(s)
-            timeouts = 0
+            self.lastrxtime = timer()
             while n<l:
-                c = serial.Serial.read(self,1)
-                if c !="" :
+                c = self.serial.read(1)
+                if c != "":
                     r += c
                     n += 1
                     self.lastrxtime = timer()
-                    timeouts = 0
                 else:
-                    timeouts += 1
-                    if timeouts == 100:
-                        raise Exception("timeout waiting echo")
+                    if timer()-self.lastrxtime > 1.0:
+                        raise Exception("One-wire echo timeout")
             if r != s:
-                raise Exception("wrong echo")
+                raise Exception("One-wire wrong echo\n  S: %s\n  R: %s" % (s2hex(s),s2hex(r)))
 
 
-    #  Receive n bytes or until there's a timeout
+    #  Receive l bytes or until there's a timeout
     #
-    def rx(self, n):
+    def rx(self, l, t1=100, t2=1):
         #
-        #  Wait up to 100 timeouts for the beginning of reception
+        #  Wait up to n1 timeouts for the beginning of reception
         #
-        #trace()
         r = ""
-        for i in range(100):
-            # trace()
-            # if self.timeout > 0.001:
-            #     raise Exception("timeout=%f" % self.timeout)
-            c = serial.Serial.read(self,1)
+        for i in range(t1):
+            c = self.serial.read(1)
             if c !="" :
                 r += c
                 self.lastchar = c
@@ -394,111 +316,88 @@ class XSerial(serial.Serial):
 
         if r != "":
             #
-            #  Wait for the completion of reception, accept up to 2 consecutive
-            #  timeouts
+            #  Wait for the completion of reception.
+            #  Accept up to t2 consecutive timeouts.
             #
             timeouts = 0
-            while len(r)<n:
-                c = serial.Serial.read(self,1)
+            while len(r)<l:
+                c = self.serial.read(1)
                 if c != "":
                     r += c
                     self.lastchar = c
                     self.lastrxtime = timer()
                     timeouts = 0
-                elif timeouts > 1:
-                    # trace("RX TIMEOUT")
+                elif timeouts > t2:
                     break
                 else:
                     timeouts += 1
-        # if n>0 and len(r)<n: cout(" rx(%d):timeout(%d) " % (n,len(r))) ; flushout()
-
         return r
 
 
-    #  Return all received data until an nto2 bytes duration has elapsed without
+    #  Return all received data until t2 bytes duration has elapsed without
     #  reception
     #
-    def rx_until_idle(self, nto2=2):
+    def rx_until_idle(self, t2=1):
         r = ""
         timeouts = 0
         while True:
-            c = serial.Serial.read(self,1)
+            c = self.serial.read(1)
             if c != '':
                 r += c
                 self.lastrxtime = timer()
                 timeouts = 0
             else:
                 timeouts += 1
-                if timeouts >= nto2:
+                if timeouts > t2:
                     return r
 
 
-    def command(self, command, reply_length, timeout=0):
-        """
-        Send 'command' and wait for a reply of 'reply_length' bytes.
-        Timeout occurs when there is no reception for more than 'timeout' seconds.
-        """
-        self.tx(command)
-        if timeout==0:
-            return self.xserial.rx(reply_length)
-        else:
-            to=timer()+timeout
-            reply=""
-            while len(reply)<reply_length and timer()<to:
-                c=self.rx(1)
-                if c:
-                    to=timer()+timeout
-                    reply += c
-            return reply
+    def close(self):
+        self.serial.close()
 
 
-class ThreadedTimed(XSerial):
-    """This is a threaded version of XSerial. Serial.timeout seems to be buggy under
+class ThreadedTimed(Link):
+    """This is a threaded version of Link. Serial.timeout seems to be buggy under
     Windows. This version uses serial.timeout only for the receiver thread not
     to be blocked on reception and then being able to terminate when asked. Each
-    time a byte is received, its arrival time is monitored and that is used to
-    compute timeouts.
+    time a byte is received, its arrival time is memorized for later timeouts
+    computings.
 
     """
     def __init__(self, args):
-        XSerial.__init__(self, args)
+        Link.__init__(self, args)
 
         import threading
         self.rxbuf = ""
         self.txbuf = ""
         self.lock = threading.Lock()
 
-        self.lastrxtime = 0
-        self.tbyte = max(0.001, 10.0/self.baudrate)
-
-        #  For the receiver thread not to be blocked by read()
-        #
-        self.timeout = self.tbyte
-
         #  Receiver thread
         #    
         def thread():
             while self.receiver_alive:
                 #
-                # Wait for one byte or timeout
+                #  Wait for one byte or timeout.
+                #  The timeout value is set in the base class.
                 #
-                r = serial.Serial.read(self,1)
+                r = self.serial.read(1)
                 if r:
                     #
-                    #  Append received bytes to the input buffer.
+                    #  Append received byte to the input buffer.
                     #
                     with self.lock:
                         self.lastrxtime = timer()
                         if self.txbuf:
                             #
-                            #    In one-wire mode, the output buffer (txbuf)
-                            #    contains characters that have been sent and
-                            #    that must be discarded when received back.
+                            #  In one-wire mode, the output buffer (txbuf)
+                            #  contains characters that have been sent and
+                            #  that must be discarded when received back.
                             #
                             s = self.txbuf[0]
                             self.txbuf = self.txbuf[1:]
                             if r != s:
-                                cerr("  Echo mismatch: rx=%02X, tx=%02X\n" % (ord(r), ord(s)))
+                                die("one-wire echo mismatch: TX=%02X, RX=%02X\n" \
+                                    % (ord(s), ord(r)))
                         else:
                             self.rxbuf += r
 
@@ -512,52 +411,43 @@ class ThreadedTimed(XSerial):
         if self.receiver_alive:
             self.receiver_alive = False
             self.receiver.join()
-            XSerial.close(self)
+            Link.close(self)
 
 
     def detect_wires(self):
         #
         #  Detect how many wires are used
         #
+        self.flush()
         if self.wires == 0:
-            cout(_("Tty wires:"))
-            self.flush()
             self.tx('?')
-            # for i in range(2):
-            #     time.sleep(self.tbyte)
-            #     if len(self.rxbuf):
-            #         break
-            # if len(self.rxbuf):
-            #     # r = self.rx(1)
-            r = self.rx_until_idle(1)
+            self.lastrxtime = timer()
+            r = self.rx(1, 0.1)
             if r=='?':
-                wires = 1
+                self.wires = 1
             elif r=='':
                 self.wires = 2
             else:
                 die("Bad echo")
-            cout(" %d\n" % self.wires)
 
     #  Flush the buffers
     #
     def flush(self):
         with self.lock:
-            r = self.rxbuf
+            Link.flush(self)
+            self.txbuf = ""
             self.rxbuf = ""
 
 
     #  Synchronize UART with 5/1 low-level sequences
     #
     def sync_5_1(self):
-
         cout("Synchonizing with 5+1 low bits (ASCII 'A'): ")
-
-        self.flush()
         for i in range(4):
+            self.tx('A')
+            r = self.rx(1, 0.1)
             cout('.')
             flushout()
-            self.tx('A')
-            r = self.rx(1)
             if len(r):
                 cout(" received '%c' (0x%02X) after %d tries.\n" % (r[0], ord(r[0]), i+1))
                 self.lastchar = r[0]
@@ -565,53 +455,57 @@ class ThreadedTimed(XSerial):
         raise Exception("synchronization failed")
 
     #  Send a string
-    #
-    #    In one-wire mode, the string is appended to the output buffer
-    #    so that the receiver can discard the echo
+    #    In one-wire mode, remove the echo
     #
     def tx(self, s):
 
+        #  There should not be waiting bytes in the output buffer
+        #
+        with self.lock:
+            if len(self.txbuf):
+                raise(Exception("TX buffer not empty"))
+
+        #  In one-wire mode, the string is appended to the output buffer
+        #  so that the receiver can discard the echo
+        #  
         if self.wires==1:
             with self.lock:
-                if len(self.txbuf)>0:
-                    raise Exception("txbuf not empty!")
                 self.txbuf += s
 
-        serial.Serial.write(self,s)
+        self.serial.write(s)
 
+        #  Wait that all data has been echoed back
+        #
         if self.wires==1:
-            for i in range(len(s)+1):
-                if len(self.txbuf) == 0:
-                    break
-                time.sleep(self.tbyte)
+            t=timer()
+            l0=len(self.txbuf)
+            while timer()-t < 1.0:
+                l = len(self.txbuf)
+                if l != l0:
+                    l0=l
+                    if l0==0:
+                        break
+                    t=timer()
+                time.sleep(self.serial.timeout)
+            if l0:
+                raise(Exception("One-wire echo timeout"))
 
 
     #  Receive n bytes or until there's a timeout
-    #    nto1: number of byte duration until reception has begun
-    #    nto2: number of byte duration the reception is idle
     #
-    def rx(self, n, nto1=100, nto2=2):
+    def rx(self, n, t1=1.0, t2=0.001):
 
-        if len(self.txbuf) > 0:
-            with self.lock:
-                raise Exception("txbuf not empty!", "[%s]" % s2hex(self.txbuf))
-
-        #  Wait up to nto1 byte durations for something to read
+        #  Wait up to t1 seconds for something to read
         #
-        for i in range(nto1):
-            if len(self.rxbuf)>0:
-                break
-            time.sleep(self.tbyte)
+        t=timer()
+        while len(self.rxbuf)<n and timer()-t < t1:
+            time.sleep(self.serial.timeout)
 
         #  Wait for the completion of reception: when all the wanted data bytes
-        #  have arrived or when nothing has been received for the duration of
-        #  nto2 bytes
+        #  have arrived or when nothing has been received t2 seconds
         #
-        while len(self.rxbuf) < n:
-            t=timer()
-            if t > self.lastrxtime + nto2*self.tbyte:
-                break
-            time.sleep(max(0,t-(self.lastrxtime+self.tbyte)))
+        while len(self.rxbuf)<n and timer()-self.lastrxtime < t2:
+            time.sleep(self.serial.timeout)
 
         #  Retrieve data
         #
@@ -626,41 +520,26 @@ class ThreadedTimed(XSerial):
 
         return r
 
-    #  Return all received data until an nto2 bytes duration has elapsed without
-    #  reception
-    #
-    def rx_until_idle(self, nto2=2):
-        while True:
-            t=timer()
-            with self.lock:
-                if t > self.lastrxtime + nto2*self.tbyte:
-                    r = self.rxbuf
-                    self.rxbuf = ""
-                    if len(r):
-                        self.lastchar = r[-1]
-                    return r
-            time.sleep(max(0,t-(self.lastrxtime+self.tbyte)))
 
-
-class ThreadedEvent(XSerial):
+class rem_ThreadedEvent(Link): # THIS HAS TO BE REWRITTEN
     """Use a seperate thread for serial communication and events to signal
     reception (or timeout).
 
     """
     def __init__(self, args):
-        XSerial.__init__(self, args)
+        Link.__init__(self, args)
 
         import threading
         self.rxbuf = ""
         self.txbuf = ""
         self.lock = threading.Lock()
 
-        self.tbyte = max(0.001, 10.0/self.baudrate)
+        # self.tbyte = max(0.001, 10.0/self.serial.baudrate)
 
         #  For the receiver thread not to be blocked by read()
         #
         # self.timeout = 0.01
-        self.timeout = self.tbyte
+        # self.serial.timeout = self.tbyte
 
         self.rxevent = threading.Event()
         self.receiving = False
@@ -672,7 +551,7 @@ class ThreadedEvent(XSerial):
         #
         def thread():
             while self.receiver_alive:
-                r = serial.Serial.read(self,1)	# Wait for one byte or timeout
+                r = self.serial.read(1)	# Wait for one byte or timeout
                 if r=='':
                     self.receiving = False
                 else:
@@ -705,7 +584,7 @@ class ThreadedEvent(XSerial):
         if self.receiver_alive:
             self.receiver_alive = False
             self.receiver.join()
-            XSerial.close(self)
+            Link.close(self)
 
 
     def detect_wires(self):
@@ -718,7 +597,7 @@ class ThreadedEvent(XSerial):
             self.tx('?')
             r = self.rx_until_idle(1)
             if r=='?':
-                wires = 1
+                self.wires = 1
             elif r=='':
                 self.wires = 2
             else:
@@ -728,8 +607,8 @@ class ThreadedEvent(XSerial):
     #  Flush the buffers
     #
     def flush(self):
+        Link.flush(self)
         with self.lock:
-            r = self.rxbuf
             self.rxbuf = ""
 
 
@@ -762,7 +641,7 @@ class ThreadedEvent(XSerial):
                     raise Exception("txbuf not empty!")
                 self.txbuf += s
 
-        serial.Serial.write(self,s)
+        self.serial.write(s)
 
         if self.wires==1:
             while len(self.txbuf):
@@ -834,3 +713,19 @@ class ThreadedEvent(XSerial):
                     if len(r):
                         self.lastchar = r[-1]
                     return r
+
+
+if __name__ == '__main__':
+    import premain
+    import argparse
+    parser = argparse.ArgumentParser()
+    add_arguments(parser)
+    args = parser.parse_args()
+
+    enable_trace()
+
+    link = Link(args)
+    link.detect_wires()
+    cout(_("Tty wires: %d\n") % link.wires)
+    link.tx("Hello World!")
+    link.reset_device()
