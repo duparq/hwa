@@ -107,7 +107,7 @@
   HW_ERR("`parity` can be `none`, `even`, or `odd`, but not `" #v "`.")
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
-  _hwa_write_reg(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
+  _hwa_write_reg(o, par, HW_A1(_hw_uarta_parity_##v));			\
   HW_G2(_hwx_cfuarta_kstopbits, HW_IS(stopbits,k))(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kparity_0(o,k,...)					\
@@ -127,12 +127,12 @@
 #define _hwx_cfuarta_vstopbits_0(o,v,...)				\
     HW_ERR("`stopbits` can be `1`, `1_5`, or `2`, but not `" #v "`.")
 
-#define _hwx_cfuarta_vstopbits_1(o,v,k,...)			\
-  _hwa_write_reg(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
-  HW_EOL(__VA_ARGS__)
+#define _hwx_cfuarta_vstopbits_1(o,v,k,...)				\
+  _hwa_write_reg(o, csbn, HW_A1(_hw_uarta_stopbits_##v));		\
+  HW_G2(_hwx_cfuarta_ktxqt, HW_IS(txq_threshold,k))(o,k,__VA_ARGS__)
 
-#define _hwx_cfuarta_kstopbits_0(o,k,...)	\
-  HW_EOL(__VA_ARGS__)
+#define _hwx_cfuarta_kstopbits_0(o,k,...)				\
+  HW_G2(_hwx_cfuarta_ktxqt, HW_IS(txq_threshold,k))(o,k,__VA_ARGS__)
 
 #define _hw_is_stopbits_stopbits		, 1
 
@@ -140,6 +140,17 @@
 #define _hw_uarta_stopbits_1			, 1
 #define _hw_uarta_stopbits_1_5			, 2
 #define _hw_uarta_stopbits_2			, 3
+
+/*	Optionnal parameter `txq_threshold`
+ */
+#define _hwx_cfuarta_ktxqt_1(o,k,v,...)		\
+  _hwa_write_reg(o, txqt, (int)(v));		\
+  HW_EOL(__VA_ARGS__)
+
+#define _hwx_cfuarta_ktxqt_0(o,...)		\
+  HW_EOL(__VA_ARGS__)
+
+#define _hw_is_txq_threshold_txq_threshold	, 1
 
 
 /*
@@ -160,7 +171,7 @@
 /* #define _hw_rduarta(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__) */
 
 
-/*
+/**
  * @page esp8266_uarta
  *
  * The `hw_write()` instruction writes a character into the data registerbut it
@@ -172,8 +183,8 @@
  * hw_write( UART_NAME, '#' );
  * @endcode
  */
-/* #define _hw_mthd_hw_write__uarta	, _hw_wruarta */
-/* #define _hw_wruarta(o,i,a,v,...)	HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__) */
+#define _hw_mthd_hw_write__uarta	, _hw_wruarta
+#define _hw_wruarta(o,i,a,v,...)	HW_TX(_hw_write_reg(o,fifo,v),__VA_ARGS__)
 
 
 /*  Power management

@@ -25,25 +25,25 @@
  * @brief Return from a naked interrupt service routine.
  * @hideinitializer
  */
-#define hw_reti()			hw_asm("reti")
+#define hw_reti()			HW_ERR("not implemented")
 
 /**
  * @ingroup public_gen_instructions_atmelavr
  * @brief Put the core in sleep mode.
  */
-#define hw_sleep()			hw_asm("sleep")
+#define hw_sleep()			HW_ERR("not implemented")
 
 /**
  * @ingroup public_gen_instructions_atmelavr
  * @brief Allow program interruption.
  */
-#define hw_enable_interrupts()		hw_asm("sei")
+#define hw_enable_interrupts()		HW_ERR("not implemented")
 
 /**
  * @ingroup public_gen_instructions_atmelavr
  * @brief Prevent program interruption.
  */
-#define hw_disable_interrupts()		hw_asm("cli")
+#define hw_disable_interrupts()		HW_ERR("not implemented")
 
 /**
  * @ingroup public_gen_instructions_atmelavr
@@ -51,54 +51,7 @@
  *
  * Only works with compile time constants.
  */
-#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Software loop of \c n system clock cycles.
- *
- * Only works with compile time constants.
- */
-#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
-
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief True if strings s0 and s1 are equal
- */
-#define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
-
-
-/**
- * @brief Power a peripheral on/off.
- *
- * This is a generic method that can be implemented by all peripheral
- * classes. An object supports power management if it has a logical register
- * named `prr`.
- *
- * This definition handles both hw_power() and hwa_power().
- */
-/*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
- *  given state.
- */
-#define _hw_power(o,i,a, ...)		\
-  HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hw,__VA_ARGS__,)
-#define _hwa_power(o,i,a, ...)		\
-  HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hwa,__VA_ARGS__,)
-
-#define _hwx_pwr_0(o,x,v, ...)			\
-  HW_ERR("expected `on` or `off`, not `" #v "`.")
-
-#define _hwx_pwr_1(o,x,v, ...)		\
-  HW_TX(HW_G2(_hwx_pwr1,HW_IS(hw_error,hw_reg(o,prr)))(o,x,v),__VA_ARGS__)
-
-/*  Register prr exists, process the instruction
- */
-#define _hwx_pwr1_0(o,x,v)	x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
-
-/*  Register prr does not exist
- */
-#define _hwx_pwr1_1(o,x,v)	HW_ERR("`"#o"` does not support power management.")
+#define hw_waste_cycles(n)		HW_ERR("not implemented")
 
 
 /**
@@ -106,117 +59,7 @@
  * @brief Execute a block with interrupts disabled
  * @hideinitializer
  */
-#define HW_ATOMIC(...)				\
-  do{						\
-    uint8_t s = _hw_read_reg(hw_core0,sreg);	\
-    hw_disable_interrupts();			\
-    { __VA_ARGS__ }				\
-    _hw_write_reg(hw_core0,sreg,s) ;		\
-  }while(0)
-
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief EEPROM memory segment storage
- *
- * Syntax:
- * @code
- * static uint16_t HW_MEM_EEPROM numbers[16] ;  // 16 16-bit numbers in EEPROM
- * @endcode
- */
-#define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
-
-
-/*
- * @ingroup private
- * @brief  Write one 8-bit hardware register.
- *
- * Write value `v` into `bn` consecutive bits starting at (least significant)
- * position `bp` of the hardware register at address `p`. Trying to write `1`s
- * into non-writeable bits triggers an error.
- *
- * @param ra	address of register.
- * @param rwm	writeable bits mask of the register.
- * @param rfm	flag bits mask of the register.
- * @param bn	number of consecutive bits concerned.
- * @param bp	position of the least significant bit conderned in the register.
- * @param v	value to write.
- */
-/* HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, */
-/* 			       uint8_t bn, uint8_t bp, uint8_t v ) */
-/* { */
-/* #if defined HWA_CHECK_ACCESS */
-/*   if ( ra == ~0 ) */
-/*     HWA_ERR("invalid access"); */
-/* #endif */
-
-/* #if !defined HWA_NO_CHECK_USEFUL */
-/*   if ( bn == 0 ) */
-/*     HWA_ERR("no bit to be changed?"); */
-/* #endif */
-
-/*   /\*	Mask of bits to modify */
-/*    *\/ */
-/*   uint8_t wm = (1U<<bn)-1 ; */
-
-/* #if !defined HWA_NO_CHECK_LIMITS */
-/*   if (v > wm) */
-/*     HWA_ERR("value too high for number of bits"); */
-/* #endif */
-
-/*   wm <<= bp ; */
-/*   v <<= bp ; */
-
-/*   /\*	Check that we do not try to set non-writeable bits */
-/*    *\/ */
-/*   if ( (v & wm & rwm) != (v & wm) ) */
-/*     HWA_ERR("bits not writeable."); */
-
-/*   volatile uint8_t *p = (volatile uint8_t *)ra ; */
-
-/*   if ( ra < 0x40 &&  */
-/*        (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 || */
-/* 	wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80) ) { */
-/*     /\* */
-/*      *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use */
-/*      *  sbi/cbi */
-/*      * */
-/*      *  Note: the same for writing 2 bits (2 sbi/cbi), though that would avoid */
-/*      *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles */
-/*      *  (ldi+out is 2 cycles) and it is sometimes required to have both bits */
-/*      *  written at the same time (e.g. TSM/PSR). */
-/*      *\/ */
-/*     if ( v ) */
-/*       *p |= wm ; /\* sbi *\/ */
-/*     else { */
-/*       if ( wm & rfm ) */
-/* 	HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
-/*       *p &= ~wm ; /\* cbi *\/ */
-/*     } */
-/*   } */
-/*   else { */
-/*     /\* */
-/*      *	Mask of bits to be read */
-/*      *	  = bits that are writeable and not to be modified and not flags */
-/*      *\/ */
-/*     uint8_t rm = rwm & ~wm & ~rfm ; */
-
-/*     if ( rm == 0 ) */
-/*       /\* */
-/*        *  Nothing to be read, just write the new value */
-/*        *\/ */
-/*       *p = v ; */
-/*     else { */
-/*       /\* */
-/*        *  Read-modify-write */
-/*        *\/ */
-/*       uint8_t sm = wm & v ;     /\* what has to be set     *\/ */
-/*       uint8_t cm = wm & (~v) ;  /\* what has to be cleared *\/ */
-/*       *p = (*p & ~cm) | sm ; */
-/*     } */
-/*   } */
-/* } */
-
+#define HW_ATOMIC(...)			HW_ERR("not implemented")
 
 /**
  * @ingroup private
@@ -646,117 +489,22 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   return ((*p)>>rbp) & m ;
 }
 
-
-/*	Atomic read
- *
- *	FIXME: if the I bit is set after writing SREG with its prior value, is
- *	the execution of the next opcode guaranteed as if the SEI instruction
- *	was used?
+/*  Clear IRQ
  */
-#define _hw_atomic_read__r8		_hw_read__r8
+#define _hw_clear_irq(v,o,e,f,c, ... )	HW_TX(_hw_write_reg(o,c, 1 ), __VA_ARGS__)
+#define _hwa_clear_irq(v,o,e,f,c, ... )	HW_TX(_hwa_write_reg(o,c, 1 ), __VA_ARGS__)
 
 
-HW_INLINE uint16_t __hw_atomic_read__r16 ( intptr_t ra )
-{
-  uint16_t r;
+#define _hw_turn_irqa_1(o,e,v, ...)				\
+  HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
-  hw_asm("cli"			"\n\t"
-	 "lds %A[r], %[a]"	"\n\t"
-	 "sei"			"\n\t"
-	 "lds %B[r], %[a]+1"	"\n\t"
-	 : [r] "=&r" (r)
-	 : [a] "p"   (ra)
-	 : "memory"
-	 );
-  return r;
-}
+#define _hwa_turn_irqa_1(o,e,v, ...)				\
+  HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
+#define _hw_turn_irqb(n,v, ...)		HW_G2(_hw_turn_irqb, HW_A1(_hw_state_##v))(n)
+#define _hw_turn_irqb_0(n)		ets_isr_mask(1<<n)
+#define _hw_turn_irqb_1(n)		ets_isr_unmask(1<<n)
 
-HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
-{
-  uint16_t v ;
-  uint16_t m = ((1UL<<rbn)-1)<<rbp ;
-
-#if 0
-  volatile uint8_t *pl = (volatile uint8_t *)ra+0 ;
-  volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
-
-  if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_reg(hw_core0,sreg);
-    hw_disable_interrupts();
-    uint8_t lb = *pl ;
-    _hw_write_reg(hw_core0,sreg,s);
-    uint8_t hb = *ph ;
-    v = (hb << 8) | lb ;
-  }
-  else if ( m & 0xFF )
-    v = *pl ;
-  else
-    v = (*ph)<<8 ;
-#else
-  if ( (m&0xFF) == 0 )
-    v = (*(volatile uint8_t *)ra+1)<<8 ;
-  else if ( (m>>8) == 0 )
-    v = *(volatile uint8_t *)ra;
-  else
-    v = __hw_atomic_read__r16( ra );
-#endif
-
-  return (v>>rbp) & m ;
-}
-
-
-#if 0
-/*
- *	From http://www.avrfreaks.net/forum/atomic-readwrite-uint16t-variable?skey=atomic%20write
- */
-#define atomic_read_word(__addr)                      \
-(__extension__({                                      \
-  uint16_t __result;                                  \
-  __asm__ __volatile__ (                              \
-    "cli                      \n\t"                   \
-    "lds %A[res], %[addr]     \n\t"                   \
-    "sei                      \n\t"                   \
-    "lds %B[res], %[addr] + 1 \n\t"                   \
-    : [res]  "=&r" (__result)                         \
-    : [addr] "p"   (&(__addr))                        \
-    : "memory"                                        \
-  );                                                  \
-  __result;                                           \
-}))
-
-#define atomic_write_word_restore(__addr, __data)     \
-(__extension__({                                      \
-  uint8_t  __tmp;                                     \
-  __asm__ __volatile__ (                              \
-    "in  %[tmp], __SREG__      \n\t"                  \
-    "cli                       \n\t"                  \
-    "sts %[addr], %A[data]     \n\t"                  \
-    "out __SREG__, %[tmp]      \n\t"                  \
-    "sts %[addr] + 1, %B[data] \n\t"                  \
-    : [tmp]  "=&r" (__tmp)                            \
-    : [data] "r"   (__data)                           \
-    , [addr] "p"   (&(__addr))                        \
-    : "memory"                                        \
-  );                                                  \
-}))
-#endif
-
-
-/*	ISR
- */
-#define hw_israttr_isr_interruptible		, __attribute__((interrupt))
-#define hw_israttr_isr_non_interruptible	, 
-#define hw_israttr_isr_naked			, __attribute__((naked))
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
-
-/*  Single event ISR
- */
-#define _hw_isr_(vector, ...)						\
-  HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
-  void __vector_##vector (void)
+/* #define _hwa_turn_irqb(n,v, ...)	HW_G2(_hwa_turn_irqb, HW_A1(_hw_state_##v))(n) */
+/* #define _hwa_turn_irqb_0(n)		ets_isr_mask(1<<n) */
+/* #define _hwa_turn_irqb_1(n)		ets_isr_unmask(1<<n) */

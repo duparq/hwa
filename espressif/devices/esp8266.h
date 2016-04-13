@@ -17,8 +17,8 @@
 #define hw_syshz				80000000
 #define hw_apbhz				hw_syshz
 
-#define hw_uptime_us				(*(volatile uint32_t*)0x3ff20c00)
-#define hw_uptime				(hw_uptime_us / 1e6)
+#define hw_uptime_us()				(*(volatile uint32_t*)0x3ff20c00)
+#define hw_uptime()				(hw_uptime_us() / 1e6)
 
 
 /*******************************************************************************
@@ -56,17 +56,25 @@
  *
  *						class, vector, object, ie, if
  */
-#define _hw_irq_hw_timer1_nmi			_irq, nmi, hw_timer1, ie,
-#define _hw_irq_hw_timer1_irq			_irq,   9, hw_timer1, ie,
+//#define _hw_irq_hw_timer1_nmi			_irqa, nmi, hw_timer1, ie, ,
+#define _hw_irq_hw_timer1_irq			_irqa,   9, hw_timer1, ie, ,
+#define _hw_irq_hw_uart0_rxq			_irqa,   0, hw_uart0, ierxq, ifrxq, icrxq
+#define _hw_irq_hw_uart0_txq			_irqa,   0, hw_uart0, ietxq, iftxq, ictxq
+#define _hw_irq_hw_uart0_rxto			_irqa,   0, hw_uart0, ierxto, ifrxto, icrxto
+
+#define _hw_irq_hw_timer1_nmi			_nmi
+#define _hw_irq_hw_timer1			_irqb, 9
+#define _hw_irq_hw_uart0			_irqb, 5
 
 
 /*  ESP8266 interrupts are processed through OS calls to user service routines
  */
 #define _os_handleirq_hw_timer1_nmi(fn)		NmiTimSetFunc(fn)
 #define _os_handleirq_hw_timer1_9(fn)		ets_isr_attach(9, fn, 0)
+#define _os_handleirq_hw_uart0_all(fn)		ets_isr_attach(5, fn, 0)
 
 extern void NmiTimSetFunc(void (*isr)(void));
-extern void ets_isr_unmask(unsigned intr);
+//extern void ets_isr_unmask(unsigned intr);
 
 
 /**
@@ -82,12 +90,15 @@ extern void ets_isr_unmask(unsigned intr);
  */
 #define _hw_mthd_os_handle_irq__irq	, _os_handle_irq
 
+#define _hw_is__irqb__irqb		, 1
+
 #define os_handle_irq(...)		_os_handleirq_2(hw_irqx(__VA_ARGS__,))
 #define _os_handleirq_2(...)		HW_G2(_os_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _os_handleirq_0(...)		__VA_ARGS__
-#define _os_handleirq_1(t,...)		_os_handle_irq(__VA_ARGS__)
+#define _os_handleirq_1(t,...)		_os_handle##t(__VA_ARGS__)
 
-#define _os_handle_irq(v,o,ie,if,fn,...)	HW_TX(_os_handleirq_##o##_##v(fn),__VA_ARGS__)
+#define _os_handle_irqb(n,fn,...)	HW_TX( ets_isr_attach(n,fn,0), __VA_ARGS__ )
+#define _os_handle_nmi(fn,...)		HW_TX( NmiTimSetFunc(fn), __VA_ARGS__ )
 
 
 /*******************************************************************************
@@ -527,7 +538,7 @@ typedef struct {
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
-#define _hw__uarta__fifo		_r32, 0x00, 0x0, 0
+#define _hw__uarta__fifo		_r32, 0x00, 0xFF, 0
 #define _hw__uarta__ir			_r32, 0x04, 0x0, 0		// IRQ raw
 #define _hw__uarta__if			_r32, 0x08, 0x0, 0		// IRQ stat
 #define _hw__uarta__ie			_r32, 0x0C, 0x1FF, 0		// IRQ enable
@@ -545,7 +556,7 @@ typedef struct {
 
 /*	Class logical registers
  */
-#define _hw__uarta_rxqcnt		_cb1, _fifo, 8, 0	// RX fifo read position
+#define _hw__uarta_fifo			_cb1, _fifo, 8, 0	// RX/TX fifo read/write
 
 #define _hw__uarta_irrxto		_cb1, _ir, 1, 8		// IRQ RX timeout
 #define _hw__uarta_irrxbrk		_cb1, _ir, 1, 7		// IRQ break detected
@@ -564,8 +575,8 @@ typedef struct {
 #define _hw__uarta_ifrxof		_cb1, _if, 1, 4		// IRQ RX overflow
 #define _hw__uarta_ifrxfe		_cb1, _if, 1, 3		// IRQ frame error
 #define _hw__uarta_ifrxpe		_cb1, _if, 1, 2		// IRQ parity error
-#define _hw__uarta_iftxqe		_cb1, _if, 1, 1		// IRQ TX fifo empty
-#define _hw__uarta_ifrxqf		_cb1, _if, 1, 0		// IRQ RX fifo full
+#define _hw__uarta_iftxq		_cb1, _if, 1, 1		// IRQ TX fifo empty
+#define _hw__uarta_ifrxq		_cb1, _if, 1, 0		// IRQ RX fifo full
 
 #define _hw__uarta_ierxto		_cb1, _ie, 1, 8		// IRQ RX timeout
 #define _hw__uarta_ierxbrk		_cb1, _ie, 1, 7		// IRQ break detected
@@ -574,8 +585,8 @@ typedef struct {
 #define _hw__uarta_ierxof		_cb1, _ie, 1, 4		// IRQ RX overflow
 #define _hw__uarta_ierxfe		_cb1, _ie, 1, 3		// IRQ frame error
 #define _hw__uarta_ierxpe		_cb1, _ie, 1, 2		// IRQ parity error
-#define _hw__uarta_ietxqe		_cb1, _ie, 1, 1		// IRQ TX fifo empty
-#define _hw__uarta_ierxqf		_cb1, _ie, 1, 0		// IRQ RX fifo full
+#define _hw__uarta_ietxq		_cb1, _ie, 1, 1		// IRQ TX fifo threshold
+#define _hw__uarta_ierxq		_cb1, _ie, 1, 0		// IRQ RX fifo threshold
 
 #define _hw__uarta_icrxto		_cb1, _ic, 1, 8		// IRQ RX timeout
 #define _hw__uarta_icrxbrk		_cb1, _ic, 1, 7		// IRQ break detected
@@ -584,8 +595,8 @@ typedef struct {
 #define _hw__uarta_icrxof		_cb1, _ic, 1, 4		// IRQ RX overflow
 #define _hw__uarta_icrxfe		_cb1, _ic, 1, 3		// IRQ frame error
 #define _hw__uarta_icrxpe		_cb1, _ic, 1, 2		// IRQ parity error
-#define _hw__uarta_ictxqe		_cb1, _ic, 1, 1		// IRQ TX fifo empty
-#define _hw__uarta_icrxqf		_cb1, _ic, 1, 0		// IRQ RX fifo full
+#define _hw__uarta_ictxq		_cb1, _ic, 1, 1		// IRQ TX fifo empty
+#define _hw__uarta_icrxq		_cb1, _ic, 1, 0		// IRQ RX fifo full
 
 #define _hw__uarta_clkdiv		_cb1, _clkdiv, 20, 0	// Baudrate divider
 
@@ -596,7 +607,7 @@ typedef struct {
 #define _hw__uarta_srxd			_cb1, _stat, 1, 15	// RX PIN Level
 #define _hw__uarta_sctsn		_cb1, _stat, 1, 14	// CTS PIN Level
 #define _hw__uarta_sdsrn		_cb1, _stat, 1, 13	// DSR PIN Level
-#define _hw__uarta_srxcnt		_cb1, _stat, 8,	 0	// RX FIFO COUNT (8bit)
+#define _hw__uarta_rxqcnt		_cb1, _stat, 8,	 0	// RX FIFO COUNT (8bit)
 
 #define _hw__uarta_cdtri		_cb1, _conf0, 1, 24	// Invert DTR
 #define _hw__uarta_crtsi		_cb1, _conf0, 1, 23	// Invert RTS
@@ -604,25 +615,25 @@ typedef struct {
 #define _hw__uarta_cdsri		_cb1, _conf0, 1, 21	// Invert DSR
 #define _hw__uarta_cctsi		_cb1, _conf0, 1, 20	// Invert CTS
 #define _hw__uarta_crxi			_cb1, _conf0, 1, 19	// Invert RX
-#define _hw__uarta_ctxrst		_cb1, _conf0, 1, 18	// Reset TX FIFO
-#define _hw__uarta_crxrst		_cb1, _conf0, 1, 17	// Reset RX FIFO
+#define _hw__uarta_txqrst		_cb1, _conf0, 1, 18	// Reset TX FIFO
+#define _hw__uarta_rxqrst		_cb1, _conf0, 1, 17	// Reset RX FIFO
 #define _hw__uarta_ctxhfe		_cb1, _conf0, 1, 15	// Enable TX harware flow
 #define _hw__uarta_clbe			_cb1, _conf0, 1, 14	// Enable loopback
 #define _hw__uarta_cbrk			_cb1, _conf0, 1,  8	// Keep TXD low (BRK)
 #define _hw__uarta_cswdtr		_cb1, _conf0, 1,  7	// Assert DTR
 #define _hw__uarta_cswrts		_cb1, _conf0, 1,  6	// Assert RTS
-#define _hw__uarta_csbn			_cb1, _conf0, 2,  4	// StopBits Count (2bit) 0:disable, 1:1bit, 2:1.5bit, 3:2bit
-#define _hw__uarta_cbn			_cb1, _conf0, 2,  2	// DataBits Count (2bin) 0:5bit, 1:6bit, 2:7bit, 3:8bit
-#define _hw__uarta_cpae			_cb1, _conf0, 1,  1	// Parity Enable
-#define _hw__uarta_cpa			_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
-#define _hw__uarta_cpx			_cb1, _conf0, 2,  0	// HWA convenience
+#define _hw__uarta_csbn			_cb1, _conf0, 2,  4	// StopBits
+#define _hw__uarta_cbn			_cb1, _conf0, 2,  2	// DataBits
+//#define _hw__uarta_cpae			_cb1, _conf0, 1,  1	// Parity Enable
+//#define _hw__uarta_cpa			_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
+#define _hw__uarta_par			_cb1, _conf0, 2,  0	// HWA convenience
 
-#define _hw__uarta_ctoe			_cb1, _conf1, 1, 31	// RX TimeOut Enable
-#define _hw__uarta_ctot			_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
-#define _hw__uarta_crxhfe		_cb1, _conf1, 1, 23	// RX Harware Flow Enable
-#define _hw__uarta_crxhft		_cb1, _conf1, 7, 16	// RX Harware Flow Treshold (7bit)
-#define _hw__uarta_cfet			_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
-#define _hw__uarta_cfft			_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
+#define _hw__uarta_rxtoe		_cb1, _conf1, 1, 31	// RX TimeOut Enable
+#define _hw__uarta_rxtot		_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
+#define _hw__uarta_rxhfe		_cb1, _conf1, 1, 23	// RX Harware Flow Enable
+#define _hw__uarta_rxhft		_cb1, _conf1, 7, 16	// RX Harware Flow Treshold (7bit)
+#define _hw__uarta_txqt			_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
+#define _hw__uarta_rxqt			_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
 
 #define _hw__uarta_swap			_xob1, hw_shared, _swap, 1, 2
 
@@ -632,6 +643,31 @@ typedef struct {
  */
 //#define hw_uart0pin_txd			hw_pin_gpio1
 //#define hw_uart0pin_rxd			hw_pin_gpio3
+
+/* #define _hw_class__utxfifoa */
+
+/* /\*	Objects				class, id, address */
+/*  *\/ */
+/* #define _hw_uart0txfifo			_utxfifoa, 0x60000001, 0 */
+
+/* #define _hw_uart0txfifo_threshold	_xcb1, hw_uart0, _conf1, 7, 8 */
+
+
+/* #define _hw_mthd_hwa_config__utxfifoa	, _hwa_cfutxfifoa */
+
+/* #define _hwa_cfutxfifoa(o,i,a,...)					\ */
+/*     do{ HW_G2(_hwa_cfutxfifoa_kthreshold, HW_IS(threshold,__VA_ARGS__))(o,__VA_ARGS__,,) }while(0) */
+
+/* 	Optionnal parameter `threshold`
+ */
+/* #define _hwa_cfutxfifoa_kthreshold_1(o,k,v,...)		\ */
+/*     _hwa_write_reg(o, threshold, (int)(v) )		\ */
+/*       HW_EOL(__VA_ARGS__) */
+
+/* #define _hwa_cfutxfifoa_kthreshold_0(o,...)	\ */
+/*     HW_EOL(__VA_ARGS__) */
+
+/* #define _hw_is_threshold_threshold		, 1 */
 
 
 /*******************************************************************************
@@ -671,7 +707,7 @@ typedef struct {
   hwa_pcfa_t	hw_pin_gpio14_cf ;
   hwa_pcfa_t	hw_pin_gpio15_cf ;
   hwa_tm23a_t	hw_timer1 ;
-  hwa_uarta_t	hw_uart0 ;
+  hwa_uarta_t	hw_uart0, hw_uart1 ;
 } hwa_t ;
 
 
@@ -707,6 +743,7 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 
   _hwa_setup( hw_timer1 );
   _hwa_setup( hw_uart0 );
+  _hwa_setup( hw_uart1 );
 }
 
 
@@ -732,6 +769,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
   /* _hwa_init( hw_pin_gpio15_cf ); */
   _hwa_init( hw_timer1 );
   _hwa_init( hw_uart0 );
+  _hwa_init( hw_uart1 );
 }
 
 
@@ -757,6 +795,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 
   _hwa_commit( hw_timer1 );
   _hwa_commit( hw_uart0 );
+  _hwa_commit( hw_uart1 );
 
   //  _hwa_commit_reg( hw_shared, _edgeie ); /* Process IRQ at last */
   _hwa_commit( hw_shared );

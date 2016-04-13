@@ -28,8 +28,8 @@
  *             //  Counting mode
  *             //
  *           [ countmode,   stop                   // Stop
- *                        | down                   // Count down to 0 and stop
- *                        | loop_down, ]           // Count down to 0 and reload
+ *                        | down_noloop            // Count down to 0 and stop
+ *                        | down_loop, ]           // Count down to 0 and reload
  *
  *             //  Class _tm23a timers all count from top down to 0
  *             //
@@ -102,15 +102,15 @@
   HW_G2(_hwa_cftm23a_kbottom, HW_IS(bottom,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vcountmode_0(o,v,...)				\
-  HW_ERR("`countmode` can be `down`, `loop_down`, or `stop`, but not `" #v "`.")
+  HW_ERR("`countmode` can be `down_noloop`, `down_loop`, or `stop`, but not `" #v "`.")
 
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
   HW_G2(_hwa_cftm23a_kbottom, HW_IS(bottom,k))(o,k,__VA_ARGS__)
 
 #define _hw_is_countmode_countmode		, 1
 #define _hw_tm23a_countmode_stop		, 0, 0	/* en, arl */
-#define _hw_tm23a_countmode_down		, 1, 0
-#define _hw_tm23a_countmode_loop_down		, 1, 1
+#define _hw_tm23a_countmode_down_noloop		, 1, 0
+#define _hw_tm23a_countmode_down_loop		, 1, 1
 
 /*	Optionnal parameter `bottom`
  */
