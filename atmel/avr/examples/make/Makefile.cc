@@ -455,6 +455,6 @@ endif
 #	$(MAKE) -f $(MFD)Makefile.$(PROG_SW) --no-print-directory $@
 
 ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset))
-  $(info DIABLO)
+  $(info Loading $(MFD)Makefile.$(PROG_SW))
   include $(MFD)Makefile.$(PROG_SW)
 endif

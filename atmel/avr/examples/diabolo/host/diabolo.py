@@ -555,4 +555,8 @@ if args.debug:
 
 enable_trace()
 
-Application(args).run()
+try:
+    Application(args).run()
+except KeyboardInterrupt:
+    cout('\n')
+    pass

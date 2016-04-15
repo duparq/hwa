@@ -18,7 +18,17 @@ KEEP_TXD_LOW	= \
 	t=$$(( $$SUT - 1000 * $$i ))						;\
 	printf "%d.%03d" $$i $$t )
 
-#  Diabolo options
+
+#  Option: DIABOLO_PORT. This can be:
+#    * a tty: /dev/ttyS4
+#    * a serial adapter: /dev/ttyUSB0
+#    * a RFC2217 adapter: rfc2217://192.168.1.78:23
+#
+ifneq (,$(DIABOLO_PORT))
+  DIABOLO_OPTS	+= -t $(DIABOLO_PORT)
+endif
+
+#  Option: DIABOLO_BPS
 #
 ifneq (,$(DIABOLO_BPS))
    DIABOLO_OPTS	 += --bps=$(DIABOLO_BPS)

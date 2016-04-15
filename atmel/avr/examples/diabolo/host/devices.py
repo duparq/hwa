@@ -290,7 +290,7 @@ class Device():
             s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
         if crcerrors > 3:
             s += _("\nMany CRC unrecoverable errors detected. Your baudrate setting (%d) "\
-                   "may be too high for the device.\n" % self.link.baudrate)
+                   "may be too high for the device.\n" % self.link.serial.baudrate)
         die(s)
 
 
