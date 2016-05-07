@@ -25,6 +25,9 @@ host.
 A build system is also provided, that uses GNU Make and a few other GNU
 utilities.
 
+Your toolchain must provide the `stdint.h` header file and a C runtime
+library, AVR-libc for example.
+
 
 Toolchain
 ---------

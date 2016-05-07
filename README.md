@@ -9,29 +9,30 @@ HWA<sup><a href="#hwa">*</a></sup> is a hardware abstraction tool for
 programming microcontrollers in C language. A few features of HWA are useful for
 programming in assembler too.
 
-HWA is designed to help the programmer write readable and portable
-hardware-related code between different targets without impacting the
-efficiency.
+HWA is designed to help the developer to write hardware-related code that:
 
-To achieve this goal, HWA provides the programmer with an object-oriented
-interface to the hardware that consists of a small set of generic instructions
-designed to be applied on various types of objects that represent the peripheral
-controllers embedded in a microcontroller. This is called [ad hoc
-polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism).
+ * is easy to read,
+ * is easy to port between different targets,
+ * produces the most effecient binary code.
 
-These instructions make the source code easier to read and to port between
-different targets since they describe clearly and concisely their effect,
-instead of manipulating numerical values and registers.
+To achieve these goals, HWA provides the developer with:
 
-HWA also provides transactional processing instructions that work on a _context_,
-allowing further optimization of the binary code produced.
+ * a set of object names that represent the hardware of a microcontroller,
 
-**HWA is not implemented as a library** but as a set of preprocessor
-definitions. Thus, contrary to a library (such as used by the Arduinos), the use
-of HWA does not affect the efficiency: the compiler's optimizers make the binary
-code produced as efficient as if values were written directly in
-registers. There is no penalty in using HWA, either in terms of size, execution
-speed or memory used.
+ * a small set of
+   [polymorphic](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) instructions
+   that use an object name followed by mandatory or optional self-speaking
+   keyword arguments,
+
+ * a transactional processing mechanism, using a _context_, allowing further
+   optimization of the binary code.
+
+**HWA is not a library** but a set of preprocessor definitions. Thus, contrary
+to a library (such as used by the Arduinos), the use of HWA does not affect the
+efficiency of the binary code produced: the compiler's optimizers make the
+binary code as efficient as if you wrote smart accesses to hardware registers
+yourself. So, there is no penalty in using HWA, either in terms of size,
+execution speed or memory used.
 
 **HWA does not require a C++ compiler**. Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
@@ -50,7 +51,7 @@ an Atmel AVR device:
     #include <hwa/attiny44a_pu.h>
 
 
-    //  We can use pin numbers as the device name tells HWA the package of the device
+    //  We can use pin numbers as the device name tells HWA the package
     //
     #define PIN_LED      hw_pin_7
 
