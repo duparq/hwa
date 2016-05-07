@@ -39,8 +39,8 @@ def add_arguments(parser):
                         "asserted in seconds, 0 means forever (default: 0.01)",
                         metavar='SECONDS', type=float, default='0.01')
     parser.add_argument('--keep-txd-low', help="how long TXD is "
-                        "maintained low after RESET (0.0)", metavar='SECONDS',
-                        type=float, default='0.0')
+                        "maintained low after RESET (0.5)", metavar='SECONDS',
+                        type=float, default='0.5')
     parser.add_argument('--sync', choices=['5+1','10+1'],
                         help="synchronization method", default='')
     parser.add_argument('--threaded-timed',
