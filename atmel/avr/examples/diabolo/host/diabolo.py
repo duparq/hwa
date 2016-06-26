@@ -274,17 +274,36 @@ class Application:
 
         #  Reset the device connected to the serial interface
         #
-        self.link.reset_device()
+        self.link.set_TXD(0)
+        self.link.set_RESET(0)
+
+        if self.options.reset_length:
+            time.sleep(self.options.reset_length)
+
+        self.link.set_RESET(1)
 
         #  Just reset the device and quit?
         #
         if self.options.reset_and_exit:
             return
 
+        if self.options.keep_txd_low == 0:
+            cout("WARNING: target will probably not remain in Diabolo if TXD is not "
+                 "maintained low long enough!\n")
+        else:
+            time.sleep(self.options.keep_txd_low)
+
+        self.link.set_TXD(1)
+
         #  This is the best moment for detecting how many wires are used for the
-        #  serial communication
+        #  serial communication since the target device is supposed to be
+        #  waiting in Diabolo for the synchronization.
         #
-        self.link.detect_wires()
+        #  It is safe to send data on the serial line now even if the RESET
+        #  signal is used to drive the power supply (sending data while the
+        #  device is not powered could cause troubles).
+        #
+        self.link.detect_wires('?')
         cout(_("Tty wires: %d\n") % self.link.wires)
 
         #  We can now send synchronization sequences

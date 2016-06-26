@@ -40,7 +40,7 @@ def add_arguments(parser):
                         metavar='SECONDS', type=float, default='0.01')
     parser.add_argument('--keep-txd-low', help="how long TXD is "
                         "maintained low after RESET (0.5)", metavar='SECONDS',
-                        type=float, default='0.5')
+                        type=float, default='0')
     parser.add_argument('--sync', choices=['5+1','10+1'],
                         help="synchronization method", default='')
     parser.add_argument('--threaded-timed',
@@ -129,7 +129,7 @@ class Link:
         cout(_("Serial port: %s (%d bps)\n" % (args.tty, args.bps)))
 
 
-    def reset_device(self):
+    def rem_reset_device(self):
         #
         #  Reset the device. To enter the Diabolo bootloader, TXD must be
         #  maintained low while Diabolo computes the CRC of the application.
@@ -175,18 +175,45 @@ class Link:
                 time.sleep(self.keep_txd_low)
             self.serial.break_condition = False
 
+    def set_RESET(self, state):
+        if not self.reset_signal:
+            raise Exception(_("No signal \"%s\" to drive reset." % self.reset_signal))
+
+        if self.reset_signal == "dtr":
+            if state == 0:
+                cout(_("Resetting device using signal %s.\n" %
+                       self.reset_signal.upper()))
+                self.serial.dtr = True
+            else:
+                self.serial.dtr = False
+        elif self.reset_signal == "rts":
+            if state == 0:
+                cout(_("Resetting device using signal %s.\n" %
+                       self.reset_signal.upper()))
+                self.serial.rts = True
+            else:
+                self.serial.rts = False
+        else:
+            raise Exception(_("Unknown signal \"%s\" to drive reset." % self.reset_signal))
+
+    def set_TXD(self, state):
+        if state == 0:
+            self.serial.break_condition = True
+        else:
+            self.serial.break_condition = False
+
 
     #  Detect how many wires are used
     #
-    def detect_wires(self):
+    def detect_wires(self, char):
         self.flush()
         if self.wires == 0:
-            self.serial.write('?')
+            self.serial.write(char)
             t=timer()+0.1
             wires=2
             while timer()<t:
                 r = self.serial.read(1)
-                if r=='?':
+                if r==char:
                     while self.serial.read(1): pass
                     wires = 1
                     break
@@ -217,7 +244,7 @@ class Link:
     #    send 10 bits low, followed by 1 bit low.
     #
     def sync_10_1(self):
-        cout("Synchonizing with 10+1 low bits: ")
+        cout("Synchronizing with 10+1 low bits: ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
@@ -237,7 +264,7 @@ class Link:
     #  Synchronize UART with 5/1 low-level sequences
     #
     def sync_5_1(self):
-        cout("Synchonizing with 5+1 low bits (ASCII 'A'): ")
+        cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
@@ -442,7 +469,7 @@ class ThreadedTimed(Link):
     #  Synchronize UART with 5/1 low-level sequences
     #
     def sync_5_1(self):
-        cout("Synchonizing with 5+1 low bits (ASCII 'A'): ")
+        cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
         for i in range(4):
             self.tx('A')
             r = self.rx(1, 0.1)
@@ -616,7 +643,7 @@ class rem_ThreadedEvent(Link): # THIS HAS TO BE REWRITTEN
     #
     def sync_5_1(self):
 
-        cout("Synchonizing with 5+1 low bits (ASCII 'A'): ")
+        cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
 
         self.flush()
         for i in range(4):
