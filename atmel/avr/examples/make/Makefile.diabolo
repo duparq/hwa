@@ -11,7 +11,7 @@ MFD	:=	$(dir $(lastword $(MAKEFILE_LIST)))
 #  start (assumes 65 ms + 32KCK) and the bootloader has the time to check the
 #  CRC of the application (30 cycles/byte).
 #
-KEEP_TXD_LOW	= \
+DIABOLO_KEEP_TXD_LOW	?= \
 	$(shell \
 	SUT=$$(( 65 + (32768+30*$(DEVICE_FLASH_SIZE))*1000/$(DEVICE_SYSHZ) ))	;\
 	i=$$(( $$SUT / 1000 ))							;\
@@ -34,7 +34,7 @@ ifneq (,$(DIABOLO_BPS))
    DIABOLO_OPTS	 += --bps=$(DIABOLO_BPS)
 endif
 
-DIABOLO_OPTS	 += --keep-txd-low=$(KEEP_TXD_LOW)
+DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
 
 #DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
 

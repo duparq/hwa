@@ -3,23 +3,10 @@
 
 #$(warning Makefile.attiny85)
 
-# DEVICE			= attiny85
-# DEVICE_FLASH_SIZE	= 8192
 AVRDUDE_PARTNO		= t85
 
 # PROG_SW			?= diabolo
 
 DIABOLO_BPS		= 230400
-DIABOLO_KEEP_TXD_LOW	= 0.129
+DIABOLO_KEEP_TXD_LOW	= 0.129		# 30 ms more than computed value
 DIABOLO_RESET_SIGNAL	= DTR
-
-# CWD		+=	$(dir $(lastword $(MAKEFILE_LIST)))
-# MFD		:=	$(dir $(firstword $(CWD)))
-
-# #  Include Atmel AVR main Makefile
-# #
-# include $(MFD)../make/Makefile.32U4
-
-# #  Include chip programming targets
-# #
-# include $(MFD)../make/Makefile.$(PROG_SW)
