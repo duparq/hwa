@@ -21,7 +21,7 @@
 	RXDBIT    = hw_bp(hw_rel(hw_swuart,_pin_rxd))
 #endif
 
-	;; Wether we need to check the edge that triggers the start condition
+	;; Whether we need to check the edge that triggers the start condition
 	;;
 #if hw_id(hw_rel(hw_swuart,_pin_rxd)) == hw_id(hw_pin_int0) \
  || hw_id(hw_rel(hw_swuart,_pin_rxd)) == hw_id(hw_pin_ain1)
@@ -56,11 +56,12 @@
 	DBG_RXSTART2  = DBG && 0
 	DBG_RXBIT     = DBG && 0
 	DBG_RXDATA    = DBG && 0
-	DBG_RXEOF     = DBG && 0
+	DBG_RXST      = DBG && 0
 
 	DBG_TXSTART   = DBG && 0
 	DBG_TXBIT     = DBG && 0
-	DBG_TXEOF     = DBG && 0
+	DBG_TXSB      = DBG && 0
+	DBG_TXECHO    = DBG && 1
 
 	DBG_GETBYTE   = DBG && 0
 	DBG_PUTBYTE   = DBG && 0
@@ -105,6 +106,7 @@
 #define F_RXTX   stat, 4		// 0==RX, 1==TX
 #define F_WBTX   stat, 5		// 1: wait one match before tx
 #define F_SYNCED stat, 6		// 0: swuart needs to be synced
+#define F_ECHO   stat, 7		// 1: echo mismatch
 
 #else
 
@@ -128,34 +130,34 @@
 
 
 	.section .bss
-	.global __do_clear_bss	; Initialize data to 0
+	.global __do_clear_bss		; Initialize data to 0
 
-	.global	HW_G3(_,hw_swuart,data)
-	.global	HW_G3(_,hw_swuart,dt0)
-	.global	HW_G3(_,hw_swuart,dtn)
+	.global	DATA(data)
+	.global	DATA(dt0)
+	.global	DATA(dtn)
 
 	;; Registers stored in RAM
 	;;
-HW_G3(_,hw_swuart,data):	.byte	0		; Data register
-HW_G3(_,hw_swuart,shift):	.byte	0		; Shift register
-HW_G3(_,hw_swuart,nbit):	.byte	0		; # of bits to rx/tx
+DATA(data):	.byte	0		; Data register
+DATA(shift):	.byte	0		; Shift register
+DATA(nbit):	.byte	0		; # of bits to rx/tx
 
 #	if COUNT_BN==8
-HW_G3(_,hw_swuart,dt0):	.byte	0		; 1.5 bit duration
-HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
+DATA(dt0):	.byte	0		; 1.5 bit duration
+DATA(dtn):	.byte	0		; 1 bit duration
 #	elif COUNT_BN==16
-HW_G3(_,hw_swuart,dt0):	.byte	0		; 1.5 bit duration
-			.byte	0
-HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
-			.byte	0
+DATA(dt0):	.byte	0		; 1.5 bit duration
+		.byte	0
+DATA(dtn):	.byte	0		; 1 bit duration
+		.byte	0
 #	endif
 
-	stat = HW_G3(_,hw_swuart,stat)
-	data = HW_G3(_,hw_swuart,data)
-	shift = HW_G3(_,hw_swuart,shift)
-	nbit = HW_G3(_,hw_swuart,nbit)
-	dt0 = HW_G3(_,hw_swuart,dt0)
-	dtn = HW_G3(_,hw_swuart,dtn)
+	stat = DATA(stat)
+	data = DATA(data)
+	shift = DATA(shift)
+	nbit = DATA(nbit)
+	dt0 = DATA(dt0)
+	dtn = DATA(dtn)
 
 	.section .text
 
@@ -169,12 +171,12 @@ HW_G3(_,hw_swuart,dtn):	.byte	0		; 1 bit duration
 	;; Edge checking is not a high priority since catching a rising edge
 	;; would happen only when UART is out of sync.
 	;;
-	;; Interrupts are disabled for CY_STSEI cycles (until sampling
+	;; Interrupts are disabled for CY_ST_SEI cycles (until sampling
 	;; of counter COUNT).
 	;; 
 	;; Total isr_start cycles: CY_ST
 	;;
-	;; Look at the end of this file for CY_ values.
+	;; To get CY_ values: avr-nm out.elf | grep " a CY_"
 	;;
 	.global HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic))
 ;; HW_ISR(hw_rel(hw_swuart,_pin_rxd),change):
@@ -191,19 +193,19 @@ HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)):
 #	if COUNT_BN==8
 	push	R24		; [2]
 	sei			; [1]
-	XLD	R24, count	; [ ]
+	XLD	R24, count
 	CYCLES=CYCLES+3
+	CY_ST_SEI=CYCLES
 #	endif
 #	if COUNT_BN==16
 	push	R24		; [2]
 	push	R25		; [2]
-	XLD	R24, count+0	; [ ]
+	XLD	R24, count+0
 	sei			; [1]
-	XLD	R25, count+1	; [ ]
+	XLD	R25, count+1
 	CYCLES=CYCLES+5
+	CY_ST_SEI=CYCLES
 #	endif
-
-	CY_STSEI=CYCLES
 
 	push	R26		; [2]
 	CYCLES=CYCLES+2
@@ -221,19 +223,18 @@ HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)):
 	;;   This must be checked before checking the edge since autosyncing
 	;;   requires to detect both falling and rising edges
 	;;
-	XSBIS	r26, F_SYNCED		; [ ]
-	rjmp	HW_G3(,hw_swuart,sync)	; [2]
+	XSBIS	r26, F_SYNCED
+	rjmp	LABEL(sync)	; [2]
 	CYCLES=CYCLES+2
 #	endif
 
 	;; Test edge
 	;;
 #	if CHECK_START_EDGE
-	XSBIC	r26, RXDPIN, RXDBIT	; [ ]
-	rjmp	HW_G3(,hw_swuart,st99)
-#	endif
-
+	XSBIC	r26, RXDPIN, RXDBIT
+	rjmp	LABEL(st99)	; [2]
 	CYCLES=CYCLES+2
+#	endif
 
 	.if DBG_RXSTART2
 	sbi	DBGPORT, DBGBIT	; [2]
@@ -249,16 +250,16 @@ HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)):
 #	if COUNT_BN==8
 	lds	R26, dt0	; [2]
 	add	R24, R26	; [1]
-	XST	comp, r24	; [ ]
-	CYCLES=CYCLES+5
+	XST	comp, r24
+	CYCLES=CYCLES+3
 #	endif
 #	if COUNT_BN==16
 	lds	R26, dt0+0	; [2]
 	add	R24, R26	; [1]
 	lds	R26, dt0+1	; [2]
 	adc	R25, R26	; [1]
-	XST	comp+1, r25	; [ ]
-	XST	comp+0, r24	; [ ]
+	XST	comp+1, r25
+	XST	comp+0, r24
 	CYCLES=CYCLES+6
 #	endif
 
@@ -272,7 +273,7 @@ HW_ISR(hw_rel(hw_rel(hw_swuart,_pin_rxd),pcic)):
 
 	;; End of start routine
 	;; 
-HW_G3(,hw_swuart,st99):
+LABEL(st99):
 	pop	R26		; [2]
 	out	SREG, R26	; [1]
 	pop	R26		; [2]
@@ -284,7 +285,6 @@ HW_G3(,hw_swuart,st99):
 	.endif
 
 	pop	R24		; [2]
-	CYCLES=CYCLES+2
 
 	;; .if DBG_START || DBG_START2
 	;; cbi	DBGPORT, DBGBIT	; [2]
@@ -292,8 +292,8 @@ HW_G3(,hw_swuart,st99):
 	;; .endif
 
 	reti			; [4]
-	CYCLES=CYCLES+4
-	CY_START=CYCLES
+	CYCLES=CYCLES+6
+	CY_ST=CYCLES
 
 #endif /* defined PINRX */
 
@@ -306,15 +306,10 @@ HW_G3(,hw_swuart,st99):
 	;; frame can take a little longer than for a normal data bit and the
 	;; next date can expire before the end of the processing.
 	;;
-	;; RX: all interrupts blocked for 20 cycles
-	;;     received bit sampled 20 cycles after interrupt
-	;; TX: all interrupts blocked for --- cycles
-	;;     bit sent --- cycles after interrupt
-	;;
 	.global HW_ISR(COMPARE)
 HW_ISR(COMPARE):
 
-	CYCLES=4			; [4]		<- call
+	CYCLES=4		; [4]	<- call
 
 	.if DBG_ISR_BIT
 	;; sbi	DBGPORT, DBGBIT	; [2]
@@ -340,7 +335,7 @@ HW_ISR(COMPARE):
 	lds	R31, dtn	; [2]
 	add	R30, R31	; [1]
 	XST	comp, R30
-	CYCLES=CYCLES+9
+	CYCLES=CYCLES+5
 #	endif
 #	if COUNT_BN==16
 	lds	R30, dtn+0	; [2]
@@ -353,20 +348,19 @@ HW_ISR(COMPARE):
 	pop	R29		; [2]
 	XST	comp+1, R31
 	XST	comp+0, R30
-	CYCLES=CYCLES+12
+	CYCLES=CYCLES+10
 #	endif
 
-#	if hw_id(hw_rel(hw_swuart,_pin_txd))
-#	  if hw_id(hw_rel(hw_swuart,_pin_rxd))
-	CY_RX0=CYCLES+1
-	XSBIC	R31, F_RXTX		; [ ]		TX or RX?
-#	  endif
-	rjmp	HW_G3(,hw_swuart,tx)	; [2]
+#   if hw_id(hw_rel(hw_swuart,_pin_txd))
+#     if hw_id(hw_rel(hw_swuart,_pin_rxd))
+	XSBIC	R31, F_RXTX	;	TX or RX?
+#     endif
+	rjmp	LABEL(tx)	; [2]
 	CYCLES=CYCLES+2
-	CY_TX0=CYCLES
-#	else
-#  	  error "swuarta without TX pin is not handled"
-#	endif
+	CY_TX=CYCLES
+#   else
+#     error "swuarta without TX pin is not handled"
+#   endif
 
 #	if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	;; Receiving
@@ -379,7 +373,7 @@ HW_ISR(COMPARE):
 	sei			; [1]		Sample port of RXD pin
 	in	R31, RXDPIN	; [1]		and enable interrupts
 	CYCLES=CYCLES+2
-	CY_RXSEI=CYCLES
+	CY_RX_SEI=CYCLES
 
 	bst	R31, RXDBIT	; [1]		Store RXD bit to T
 	lds	R31, shift	; [2]		Store T to shift register
@@ -393,10 +387,10 @@ HW_ISR(COMPARE):
 	sts	nbit, R31	; [2]
 	CYCLES=CYCLES+5
 
-	brmi	HW_G3(,hw_swuart,rxeof)	; [1/2]		nbit < 0
-	CY_RXEOF0=CYCLES+2
-	brne	HW_G3(,hw_swuart,cmpend); [1/2]		nbit > 0
-	CY_RXNXT0=CYCLES+3
+	brmi	LABEL(rxsb)	; [1/2]		nbit < 0
+	CY_RX_SB=CYCLES+2
+	brne	LABEL(cmp99)	; [1/2]		nbit > 0
+	CY_RX_DB=CYCLES+3
 	CYCLES=CYCLES+2
 
 	;; nbit==0: all data bits received
@@ -412,36 +406,38 @@ HW_ISR(COMPARE):
 	sts	data, R31	; [2]
 	CYCLES=CYCLES+4
 #	endif /* defined PINRX */
-	;; CY_RX3=CYCLES
 
 	;; Return from compare ISR
 	;;
-HW_G3(,hw_swuart,cmpend):
-	CY_NEXT=CYCLES
+LABEL(cmp99):
+	CY_CMP99=CYCLES
 
 	pop	R30		; [2]
 	pop	R31		; [2]		Leave ISR
 	out	SREG, R31	; [1]
 	pop	R31		; [2]
 
-	;; .if DBG_BIT+DBG_RXBIT+DBG_RXEOF+DBG_RXDATA+DBG_TXBIT+DBG_TXEOF
+	;; .if DBG_BIT+DBG_RXBIT+DBG_RX_SB+DBG_RXDATA+DBG_TXBIT+DBG_TXSB
 	;; cbi	DBGPORT, DBGBIT	; [2]
 	;; CYCLES=CYCLES+2
 	;; .endif
 
 	reti			; [4]
 	CYCLES=CYCLES+11
-	CY_RX=CYCLES
-	CY_NEXT=CYCLES-CY_NEXT
+
+	CY_RX_LDB=CYCLES
+	CY_RX_DB=CY_RX_DB+CYCLES-CY_CMP99
+	CY_CMP99=CYCLES-CY_CMP99
 
 
 #if hw_id(hw_rel(hw_swuart,_pin_rxd))
 	;;
 	;; Stop bit has been sampled
 	;;
-HW_G3(,hw_swuart,rxeof):
-	CY_RXEOF=CYCLES
-	.if DBG_RXEOF
+LABEL(rxsb):
+	CYCLES0=CYCLES
+	CY_RXSB=CYCLES
+	.if DBG_RXST
 	cbi	DBGPORT, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
@@ -449,13 +445,13 @@ HW_G3(,hw_swuart,rxeof):
 	;; Status = RXC + WBTX + SYNCED + STOP bit value
 	;;  If SYNCED was 0 do not set RXC since received byte is not data
 	;;
-	XLD	r31, stat			; [ ]
+	XLD	r31, stat
 	bld	r31, HW_A1(F_STOP)		; [1]	Stop bit value
 	ori	r31, 1<<HW_A1(F_WBTX)		; [1]
-	sbrc	r31, HW_A1(F_SYNCED)		; [ ]
+	sbrc	r31, HW_A1(F_SYNCED)
 	ori	r31, 1<<HW_A1(F_RXC)		; [1]
 	ori	r31, 1<<HW_A1(F_SYNCED)		; [1]
-	XST	stat, R31			; [ ]
+	XST	stat, R31
 	CYCLES=CYCLES+4
 
 	;;	Disable 'bit' interrupt
@@ -465,12 +461,14 @@ HW_G3(,hw_swuart,rxeof):
 	enable_start(R31)
 
 #	if HW_G2(hw_swuart,callback)
-	rcall	HW_G3(,hw_swuart,callback)
+	rcall	LABEL(callback)
 #	endif
 
-	rjmp	HW_G3(,hw_swuart,cmpend)	; [2]
+	rjmp	LABEL(cmp99)	; [2]
 	CYCLES=CYCLES+2
-	CY_RXEOF=CYCLES-CY_RXEOF
+
+	CY_RXSB=CYCLES-CY_RXSB
+	CY_RX_SB=CY_RX_SB+CY_RXSB+CY_CMP99
 
 #endif /* defined PINRX */
 
@@ -479,9 +477,33 @@ HW_G3(,hw_swuart,rxeof):
 	;;
 	;;  ISR to send one bit of data, stop, or idle
 	;;
-	CYCLES=CY_TX0
-HW_G3(,hw_swuart,tx):
-	lds	R31, shift	; [2]		Send bit and enable ints ASAP
+LABEL(tx):
+	CYCLES=CY_TX
+
+#   if HW_G2(hw_swuart,check_echo) \
+       && hw_id(HW_G2(hw_swuart,pin_txd)) == hw_id(HW_G2(hw_swuart,pin_rxd))
+
+	clr	R31		; [1]
+	XLD	R30, RXDPIN	;		Sample RXD bit,
+	bst	R30, RXDBIT	; [1]		store it in T,
+	bld	R31, HW_A1(F_ECHO)    ; [1]	and then to R31 in F_ECHO position
+	lds	R30, stat	; [2]		Load sent bit
+	andi	R30, 1<<HW_A1(F_ECHO) ; [1]	Clear other bits
+	cp	R30, R31	; [1]		Compare sent bit / echo bit
+	breq	1f		; [1/2]		Continue TX if equal
+	CYCLES0=CYCLES+8
+
+	;; Echo mismatch
+	;;
+	.if DBG_TXECHO
+	sbi	DBGPIN, DBGBIT	; [2]
+	.endif
+	XSB	R31, F_ECHO
+	rjmp	LABEL(txsb)	;		Abandon
+	CYCLES=CYCLES0
+#   endif
+
+1:	lds	R31, shift	; [2]		Send bit and enable ints ASAP
 	lsr	R31		; [1]
 	CYCLES=CYCLES+3
 	
@@ -490,63 +512,69 @@ HW_G3(,hw_swuart,tx):
 	CYCLES=CYCLES+2
 	.endif
 
-	brcc	HW_G3(,hw_swuart,tx0)	; [1/2]
-HW_G3(,hw_swuart,tx1):
+	brcc	LABEL(tx0)	; [1/2]
+LABEL(tx1):
 	sei			; [1]
 	sbi	TXDPORT, TXDBIT	; [2]
-	rjmp	HW_G3(,hw_swuart,txn)	; [2]
-HW_G3(,hw_swuart,tx0):
+	rjmp	LABEL(txn)	; [2]
+LABEL(tx0):
 	sei			; [1]
 	cbi	TXDPORT, TXDBIT	; [2]
 
-HW_G3(,hw_swuart,txn):
+LABEL(txn):
 	sts	shift, R31	; [2]		Prepare next bits
 
-	CYCLES=CYCLES+8	; 7/8
-	CY_TXSEI=CYCLES
+	CYCLES=CYCLES+8	; 7 or 8
+	CY_TX_SEI=CYCLES
 
 	lds	R31, nbit	; [2]		One more bit sent
 	subi	R31, 1		; [1]		'dec' does not set the carry flag!
 	sts	nbit, R31	; [2]
 	CYCLES=CYCLES+5
 
-	brmi	HW_G3(,hw_swuart,txeof)	; [1/2]		nbit<0: all data bits sent
-	CY_TXEOF0=CYCLES+2
+	brmi	LABEL(txsb)	; [1/2]		nbit<0: stop bit just sent
+	CY_TX_SB=CYCLES+2
 	CYCLES=CYCLES+1
 
 	brne	1f		; [1/2]		nbit>0: data bits remaining
-	CY_TXNXT0=CYCLES+4
+	CY_TX_DB=CYCLES+2
 	CYCLES=CYCLES+1
 
 	ldi	R31, 0x03	; [1]		nbit==0: load stop and idle state bits
 	sts	shift, R31	; [2]
-1:	rjmp	HW_G3(,hw_swuart,cmpend) ; [2]
-	CYCLES=CYCLES+5
-	CY_TXB0=CYCLES
+	CYCLES=CYCLES+3
 
-	CY_TXEOF=CYCLES
-HW_G3(,hw_swuart,txeof):
-				;		End of frame
-	CYCLES=CYCLES+2
-	.if DBG_TXEOF
+1:	rjmp	LABEL(cmp99)	; [2]
+
+	CY_TX_DB=CY_TX_DB+2+CY_CMP99
+	CY_TX_LDB=CYCLES+2+CY_CMP99
+
+
+LABEL(txsb):
+	;;
+	;;	Stop bit just sent
+	;;
+	CY_TXSB=CYCLES
+
+	.if DBG_TXSB
 	sbi	DBGPORT, DBGBIT	; [2]
 	CYCLES=CYCLES+2
 	.endif
 
-	XSB	R31, F_WBTX	; [ ]	Need to wait one more match before next TX can start
-	disable_match(R31)	; [ ]		nbit==-2: sending idle bit, tx done
+	XSB	R31, F_TXC	;	Status = tx completed
+	XSB	R31, F_WBTX	;	Need to wait one more match before next TX can start
+
+	disable_match(R31)
 
 #	if hw_id(hw_rel(hw_swuart,_pin_txd)) == hw_id(hw_rel(hw_swuart,_pin_rxd))
-	cbi	TXDDR, TXDBIT	; [2]		Release TXD
+	cbi	TXDDR, TXDBIT	; [2]	Release TXD
 	cbi	TXDPORT, TXDBIT	; [2]
 	CYCLES=CYCLES+4
 #	endif
 
-	XSB	R31, F_TXC	; [ ]		Status = tx completed
-
 #	if hw_id(hw_rel(hw_swuart,_pin_rxd))
-	XCB	R31, F_RXTX	; [ ]		Mode = RX
-	enable_start(R31)	; [ ]
+	XCB	R31, F_RXTX	;	Mode = RX
+	enable_start(R31)
 #	endif
 
 	.if DBG_PUTBYTE
@@ -555,12 +583,14 @@ HW_G3(,hw_swuart,txeof):
 	.endif
 
 #	if HW_G2(hw_swuart,callback)
-	rjmp	HW_G3(,hw_swuart,callback)	; [ ]
+	rjmp	LABEL(callback)
 #	endif
 
-	rjmp	HW_G3(,hw_swuart,cmpend)	; [2]
+	rjmp	LABEL(cmp99)	; [2]
 	CYCLES=CYCLES+2
-	CY_TXEOF=CYCLES-CY_TXEOF
+	
+	CY_TXSB=CYCLES-CY_TXSB
+	CY_TX_SB=CY_TX_SB+CY_TXSB+CY_CMP99
 
 #endif /* defined PINTX */
 
@@ -570,9 +600,9 @@ HW_G3(,hw_swuart,txeof):
 	;; Return last received byte or wait until a byte is received and return
 	;; it.
 	;;
-	.global		HW_G3(,hw_swuart,getbyte)
-	.section	.text.HW_G3(,hw_swuart,getbyte),"ax",@progbits
-HW_G3(,hw_swuart,getbyte):
+	.global		LABEL(getbyte)
+	.section	.text.LABEL(getbyte),"ax",@progbits
+LABEL(getbyte):
 	.if DBG_GETBYTE
 	sbi	DBGPORT, DBGBIT
 	.endif
@@ -604,17 +634,17 @@ HW_G3(,hw_swuart,getbyte):
 
 	;; Send one byte (R24)
 	;;
-	.global		HW_G3(,hw_swuart,putbyte)
-	.section	.text.HW_G3(,hw_swuart,putbyte),"ax",@progbits
-HW_G3(,hw_swuart,putbyte):
+	.global		LABEL(putbyte)
+	.section	.text.LABEL(putbyte),"ax",@progbits
+LABEL(putbyte):
 	.if DBG_PUTBYTE
 	cbi	DBGPORT, DBGBIT
 	.endif
 	ldi	R25, 8		;	Number of data bits to send
 
 
-HW_G3(,hw_swuart,putbits):
-	rcall	HW_G3(,hw_swuart,wait_ready)
+LABEL(putbits):
+	rcall	LABEL(wait_ready)
 
 	;; FIXME: WBTX is needed between end of reception and beginning
 	;; of transmission since the stop bit is sampled before the end
@@ -652,30 +682,35 @@ HW_G3(,hw_swuart,putbits):
 	;; 
 #	if COUNT_BN==8
 	cli
-	XLD	R24, count	     ;		Get date
+	CYCLES=0
+	XLD	R24, count	;		Get date
 	sei			; [1]|
 	cbi	TXDPORT, TXDBIT	; [2]|=3	Send start bit
 	lds	R25, dtn	;		Compute first data bit date
-	subi	R25, (CY_TXSEI-3+CLK_DIV/2)/CLK_DIV ;		Compensate bit isr / send delay
+	CYCLES=CYCLES+3
+	subi	R25, (CY_TX_SEI-CYCLES+CLK_DIV/2)/CLK_DIV ;	Compensate bit isr / send delay
 	add	R24, R25
 	XST	comp, R24
 #	endif
-
 #	if COUNT_BN==16
 	cli
-	XLD	R24, count+0	     ;		Get date
-	XLD	R25, count+1	     ; [1]|
-	sei			     ; [1]|
-	cbi	TXDPORT, TXDBIT	     ; [2]|=4	Send start bit
-	lds	R26, dtn+0	     ;		Compute first data bit date
-	lds	R27, dtn+1	     ;
-	sbiw	R26, (CY_TXSEI-4+CLK_DIV/2)/CLK_DIV ;		Compensate bit isr / send delay
+	CYCLES=0
+	XLD	R24, count+0	;		Get date
+	XLD	R25, count+1	;
+	sei			; [1]|
+	cbi	TXDPORT, TXDBIT	; [2]|=3	Send start bit
+	CYCLES=CYCLES+3
+	lds	R26, dtn+0	;		Compute first data bit date
+	lds	R27, dtn+1	;
+	sbiw	R26, (CY_TX_SEI-CYCLES+CLK_DIV/2)/CLK_DIV ;	Compensate bit isr / send delay
 	add	R24, R26
 	adc	R25, R27
 	XST	comp+1, R25
 	XST	comp+0, R24
 #	endif
-
+#	if CHECKBUS
+	XCB	R31, F_ECHO	; [ ]		Store bit value
+#	endif
 	enable_match(R24)
 	ret
 
@@ -683,7 +718,7 @@ HW_G3(,hw_swuart,putbits):
 	;; Send BREAK (R24: nbits)
 	;; 
 	.section	.text.brk,"ax",@progbits
-HW_G3(,hw_swuart,brk):
+LABEL(brk):
 	mov	R25, R24
 	ldi	R24, 0
 	subi	R25, 1
@@ -694,14 +729,14 @@ HW_G3(,hw_swuart,brk):
 
 	;; Wait until rx/tx completed, i.e. match interrupt disabled
 	;;
-	.section	.text.HW_G3(,hw_swuart,wait_ready),"ax",@progbits
-HW_G3(,hw_swuart,wait_ready):
+	.section	.text.LABEL(wait_ready),"ax",@progbits
+LABEL(wait_ready):
 	.if DBG_WAITREADY
 	sbi	DBGPIN, DBGBIT
 	.endif
 
 	XSBIC	R26, MATCH_IE
-	rjmp	HW_G3(,hw_swuart,wait_ready)
+	rjmp	LABEL(wait_ready)
 
 	.if DBG_WAITREADY
 	sbi	DBGPORT, DBGBIT
@@ -713,9 +748,9 @@ HW_G3(,hw_swuart,wait_ready):
 
 	;; Wait RX idle for at least (R24) bits
 	;; 
-	.section	.text.HW_G3(,hw_swuart,wait_rxidle),"ax",@progbits
-HW_G3(,hw_swuart,wait_rxidle):
-	rcall	HW_G3(,hw_swuart,wait_ready)
+	.section	.text.LABEL(wait_rxidle),"ax",@progbits
+LABEL(wait_rxidle):
+	rcall	LABEL(wait_ready)
 
 	XLD	R20, count+0
 #if COUNT_BN==16
@@ -773,9 +808,9 @@ HW_G3(,hw_swuart,wait_rxidle):
 
 	;; Reset the UART
 	;;
-	.global		HW_G3(,hw_swuart,reset)
-	.section	.text.HW_G3(,hw_swuart,reset),"ax",@progbits
-HW_G3(,hw_swuart,reset):
+	.global		LABEL(reset)
+	.section	.text.LABEL(reset),"ax",@progbits
+LABEL(reset):
 	disable_match(r24)
 	ldi	r24, 0
 	XST	stat, r24
@@ -794,17 +829,3 @@ HW_G3(,hw_swuart,reset):
 	enable_start(r24)
 #endif
 	ret
-
-	;; .fail	CY_STSEI			; 11
-
-	;; .fail	CY_RXSEI			; 14
-	;; .fail	CY_RX				; 59
-	;; .fail	CY_RXNXT0+CY_NEXT		; 56
-	;; .fail	CY_RXEOF0+CY_RXEOF+CY_NEXT	; 72
-
-	;; .fail	CY_TXSEI			; 23
-	;; .fail	CY_TXB0+CY_NEXT			; 62
-	;; .fail	CY_TXEOF0+CY_TXEOF+CY_NEXT	; 80
-
-	;; .fail	CY_RXEOF			; 17
-	;; .fail	CY_NEXT				; 27

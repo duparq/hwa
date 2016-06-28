@@ -12,12 +12,17 @@
 	;; Consecutive low-level durations t1 and t2 are measured.
 	;; When 4.75×t2 <= t1 <= 5.25×t2, synchronization is done
 	;; and r25:r24 contains the bit duration (baudrate) in CPU cycles.
+	;;
+	;; NOTE: it seems that the measurement of the bit duration tends to
+	;; lower the result. So, bits are sample sooner and sooner. That said,
+	;; the sampling is always done well after the edges.
+
 
 #if !CHECK_START_EDGE
 #  error Autosync needs to detect both falling and rising edges
 #endif
 
-	;; Start date is stored in r25:r24
+	;; Start date (value of count) is stored in r25:r24
 	;; r26 and SREG are pushed
 	;;
 	.section	.text.HW_G3(,hw_swuart,sync),"ax",@progbits
@@ -85,7 +90,7 @@ HW_G3(,hw_swuart,sync):
 #	endif
 	;;
 	;;	Compute r29:r28 = dt = (t2+2)/4
-	;; 
+	;;
 #	if COUNT_BN == 8
 	mov	r28, r24	; r28 = t2
 	subi	r28, -2		; r28 = t2+2
@@ -100,9 +105,9 @@ HW_G3(,hw_swuart,sync):
 	lsr	r29		;
 	ror	r28		; r29:r28 = (t2+2)/4
 #	endif
-	;; 
+	;;
 	;;	Compute r27:r26 = 5×t2 - dt
-	;; 
+	;;
 	sub	r26, r28	;
 #	if COUNT_BN == 16
 	sbc	r27, r29	; r27:r26 = 5×t2 - dt
@@ -119,7 +124,7 @@ HW_G3(,hw_swuart,sync):
 	brcs	3f		; then t1 is too low, get another sample
 	;;
 	;;	Compute r27:r26 = 5×t2 + dt
-	;; 
+	;;
 	add	r26, r28	; r26 = 5×t2
 #	if COUNT_BN == 16
 	adc	r27, r29	; r27:r26 = 5×t2
@@ -130,7 +135,7 @@ HW_G3(,hw_swuart,sync):
 #	endif
 	;;
 	;;	Check the upper bound
-	;; 
+	;;
 	cp	r24, r26	; if ( t1 > 5×t2 + dt )
 #	if COUNT_BN == 16
 	cpc	r25, r27
@@ -138,11 +143,17 @@ HW_G3(,hw_swuart,sync):
 	brcc	3f		; then t1 is too high, get another sample
 	;;
 	;;	5 / 1 sequence is validated
-	;;	Compute dt0 = dtn + (dtn+1)/2 - delay
+	;; 
+	;;	Compute the date of the first sample: dt0 = dtn + (dtn+1)/2 - DELAY
 	;;
-	;;	Add 16 cycles (better sooner than later!)
+	;;      'sampling_shift' lets us adjust the sampling date, to give time
+	;;	to wake up from idle for example.
 	;;
-	DELAY=(CY_STSEI+CY_RXSEI+16)/HW_G2(hw_swuart,clk_div)
+#if HW_G2(hw_swuart,sampling_shift)
+	DELAY=(CY_ST_SEI+CY_RX_SEI-HW_G2(hw_swuart,sampling_shift))/HW_G2(hw_swuart,clk_div)
+#else
+	DELAY=(CY_ST_SEI+CY_RX_SEI)/HW_G2(hw_swuart,clk_div)
+#endif
 
 #	if COUNT_BN == 8
 	lds	r24, dtn+0
@@ -164,13 +175,13 @@ HW_G3(,hw_swuart,sync):
 	adc	r25, r27	;
 #	endif
 
-	subi	r24, lo8(DELAY)
+	subi	r24, lo8(DELAY)	; r25:r24 = dtn + (dtn+1)/2 - DELAY
 #	if COUNT_BN == 16
-	sbci	r25, hi8(DELAY)
+	sbci	r25, hi8(DELAY)	;
 #	endif
-	;; 
+	;;
 	;;	Store dt0
-	;; 
+	;;
 	sts	dt0+0, r24
 #	if COUNT_BN == 16
 	sts	dt0+1, r25
@@ -199,9 +210,9 @@ HW_G3(,hw_swuart,sync):
 
 	;;
 	;;	Assert 'synced'
-	;; 
+	;;
 	;; XSB	r24, F_SYNCED
-3:	
+3:
 #	if COUNT_BN == 16
 	pop	r29
 	pop	r27

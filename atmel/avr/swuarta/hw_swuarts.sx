@@ -14,6 +14,19 @@
 	__hw_swuart1_stat = _hw_ra(hw_shared, gpior1)
 
 
+/*	Create a label
+ */
+//#ifdef LABEL
+#undef LABEL
+	  //#endif
+#define LABEL(x)		HW_G3(,hw_swuart,x)
+
+/*	Create a data
+ */
+#undef DATA
+#define DATA(x)			HW_G3(_,hw_swuart,x)
+
+
 /*	hw_swuart0
  */
 #if defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd
