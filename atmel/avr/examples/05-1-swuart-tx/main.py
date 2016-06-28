@@ -6,15 +6,30 @@ import os.path
 import __builtin__
 
 sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../python"))
+sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
 
 import premain
 from utils import s2hex, hexdump
 import time
 
-import xserial
+import link
 
-serial = xserial.get_serial( xserial.ArgumentParser().parse_args() )
-serial.reset_device()
+#  Create command line arguments parser
+#
+import argparse
+parser = argparse.ArgumentParser()
+
+#  Add arguments about serial port
+#
+link.add_arguments(parser)
+
+args = parser.parse_args()
+
+serial = link.get( args )
+
+#  Release the RESET signal
+#
+serial.set_RESET(1)
 
 try:
     col = 0

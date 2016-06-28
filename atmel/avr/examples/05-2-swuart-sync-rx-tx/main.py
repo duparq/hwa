@@ -4,47 +4,37 @@
 import sys
 import os.path
 sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../python"))
+sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
 
 import __builtin__
 import premain
 from utils import s2hex, hexdump
 import time
 
+import link
+
 #  Command line arguments
 #
 import argparse
 parser = argparse.ArgumentParser()
 
-import xserial
-xserial.add_arguments(parser)
+#  Add arguments about serial port
+#
+link.add_arguments(parser)
 
 args = parser.parse_args()
 
-#  Extract the sync method to use from the source
-#
-# import subprocess
-# subprocess.call(["make", "BOARD=attiny84", "build/sync"])
-
-# f=open("build/sync", "r")
-# s = f.read()
-# f.close()
-
-# s = s.replace('\n','').split("=")
-# if s[0]!="SYNC":
-#     die(_("synchronization method not found.\n"))
-# if s[1]=="sync_5_1":
-#     args.sync=="5+1"
-# elif s[1]=="sync_10_1":
-#     args.sync=="10+1"
-# else:
-#     die(_("unknown synchronization method \"%s\"."))
-
 #  Open serial interface
 #
-serial = xserial.get_serial(args)
-serial.reset_device()
-serial.detect_wires()
-time.sleep(0.2)	# Leave Diabolo anough time to check the CRC and start the application
+serial = link.get( args )
+
+#  Release the RESET signal and detect how many wires are used (this will make
+#  Diabolo start the application as soon as it has computed the CRC).
+#
+serial.set_RESET(1)
+serial.detect_wires('?')
+cout("Wires: %d\n" % serial.wires)
+time.sleep(0.5)
 serial.sync()
 
 #  Application
@@ -57,7 +47,7 @@ try:
     while True:
         if n==20:
             n=0
-            serial.tx('x')
+            serial.tx('x') # Force resync
             try:
                 serial.sync()
             except:
