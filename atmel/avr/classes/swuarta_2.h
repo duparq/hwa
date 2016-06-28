@@ -172,6 +172,10 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
  *             //
  *           [ bps,         BPS, ]
  *
+ *             //  Transfer rate in SYSHZ cycles per bit
+ *             //
+ *           [ cpb,         CYCLES, ]
+ *
  *             //  Number of data bits in frame. Must be `8`.
  *             //
  *           [ databits,    8, ]
@@ -207,12 +211,23 @@ HW_INLINE void _hw_swuart1_config ( hwa_t *hwa __attribute__((unused)) )
  */
 #define _hwa_cfswuarta_kbps_1(o,k,v,...)	\
   __##o##_##dtn = (hw_syshz + v/2) / v ;	\
-  _hwa_cfswuarta_kbps_0(o,__VA_ARGS__)
+  HW_G2(_hwa_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfswuarta_kbps_0(o,k,...)					\
-  HW_G2(_hwa_cfswuarta_kdatabits, HW_IS(databits,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfswuarta_kcpb, HW_IS(cpb,k))(o,k,__VA_ARGS__)
 
 #define _hw_is_bps_bps				, 1
+
+/*  Process arg `cpb`
+ */
+#define _hwa_cfswuarta_kcpb_1(o,k,v,...)	\
+  _##o##_##set_cpb(v) ;			\
+  HW_G2(_hwa_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(o,__VA_ARGS__)
+
+#define _hwa_cfswuarta_kcpb_0(o,k,...)				\
+  HW_G2(_hwa_cfswuarta_kdatabits, HW_IS(databits,k))(o,k,__VA_ARGS__)
+
+#define _hw_is_cpb_cpb				, 1
 
 /*  Process arg `databits`
  */
@@ -355,13 +370,13 @@ extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
  */
 typedef struct {
   unsigned int	stop	: 1 ;
-  unsigned int	idle    : 1 ;
+  unsigned int	__1    : 1 ;
   unsigned int	rxc     : 1 ;
   unsigned int	txc     : 1 ;
   unsigned int	rxtx    : 1 ;
   unsigned int	wbtx    : 1 ;
   unsigned int	synced  : 1 ;
-  unsigned int  __7     : 1 ;
+  unsigned int  __7  : 1 ;
 } _hw_swuarta_stat_t ;
 
 /* #define _hw__swuarta_st_stop		cb1, _st, 1, 0 */

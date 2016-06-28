@@ -8,23 +8,22 @@
 #include "swuarta_macros.sx"
 
 
-	;; Status is stored in SFR
-	;; 
-	__hw_swuart0_stat = _hw_ra(hw_shared, gpior0)
-	__hw_swuart1_stat = _hw_ra(hw_shared, gpior1)
-
-
 /*	Create a label
  */
-//#ifdef LABEL
 #undef LABEL
-	  //#endif
 #define LABEL(x)		HW_G3(,hw_swuart,x)
 
 /*	Create a data
  */
 #undef DATA
 #define DATA(x)			HW_G3(_,hw_swuart,x)
+
+
+	;; Status is stored in SFR
+	;;
+ 
+	__hw_swuart0_stat = _hw_ra(hw_shared, gpior0)
+	__hw_swuart1_stat = _hw_ra(hw_shared, gpior1)
 
 
 /*	hw_swuart0
@@ -49,6 +48,7 @@
 #  define hw_swuart		hw_swuart0
 #  include "swuarta.sx"
 #  undef hw_swuart
+#  undef AUTOSYNC
 #endif
 
 
@@ -74,4 +74,5 @@
 #  define hw_swuart		hw_swuart1
 #  include "swuarta.sx"
 #  undef hw_swuart
+#  undef AUTOSYNC
 #endif

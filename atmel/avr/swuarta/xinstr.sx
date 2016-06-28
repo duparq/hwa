@@ -1,6 +1,8 @@
 
 	;; -*- asm -*-
 
+#define	SREG		hw_ra(hw_core0, sreg)
+
 	;; in/lds
 	;;
 	.macro XLD reg a
@@ -58,17 +60,18 @@
 
 	;; Clear one bit (atomic)
 	;;
-	.macro XCBA reg a b
+	.macro XCBA r1 r2 a b
 	.if \a < 0x20
 	cbi	\a, \b
 	CYCLES=CYCLES+2
 	.else
-	cli
-	XLD	\reg, \a
-	andi	\reg, ~(1<<\b)
-	sei
-	XST	\a, \reg
-	CYCLES=CYCLES+3
+	in	\r1, SREG	; [1]
+	cli			; [1]
+	XLD	\r2, \a
+	andi	\r2, ~(1<<\b)	; [1]
+	out	SREG, \r1	; [1]
+	XST	\a, \r2
+	CYCLES=CYCLES+4
 	.endif
 	.endm
 
@@ -90,17 +93,18 @@
 
 	;; Set one bit (atomic)
 	;; 
-	.macro XSBA reg a b
+	.macro XSBA r1 r2 a b
 	.if \a < 0x20
 	sbi	\a, \b
 	CYCLES=CYCLES+2
 	.else
+	in	\r1, SREG
 	cli
-	XLD	\reg, \a
-	ori	\reg, 1<<\b
-	sei
-	XST	\a, \reg
-	CYCLES=CYCLES+3
+	XLD	\r2, \a
+	ori	\r2, 1<<\b
+	out	SREG, \r1
+	XST	\a, \r2
+	CYCLES=CYCLES+4
 	.endif
 	.endm
 
