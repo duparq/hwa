@@ -28,6 +28,15 @@ export CONFIG
 export LANG
 
 
+#  If BOARD is specified, check that it exists
+#
+ifneq (,$(BOARD))
+  ifeq (,$(wildcard $(MFD)/boards/$(BOARD).h))
+    $(error "$(BOARD)" is not a valid board name)
+  endif
+endif
+
+
 #  Default target
 #
 #    If no source file list provided, assume we're not in the directory of an
