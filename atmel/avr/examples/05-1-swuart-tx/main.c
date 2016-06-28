@@ -18,7 +18,7 @@
  * enough (if using an internal RC oscillator for example).
  *
  * @par config.h
- * @include 05-1-swuart-tx//config.h
+ * @include 05-1-swuart-tx/config.h
  *
  * @par main.c
  */
@@ -52,7 +52,7 @@ main ( )
 
     /*	Wait for 0.1s
      */
-    hw_delay_cycles( 0.1 * hw_syshz );
+    hw_waste_cycles( 0.1 * hw_syshz );
 
     /*	Send a '.'
      */

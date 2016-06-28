@@ -126,6 +126,3 @@ main ( )
     }
   }
 }
-
-/* hw_rel(hw_swuart0_pin_rxd,pcic); */
-/* hwa_clear_irqf( hw_rel(hw_swuart0_pin_rxd,pcic) ); */
