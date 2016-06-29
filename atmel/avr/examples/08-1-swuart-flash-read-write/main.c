@@ -89,9 +89,9 @@ static void process ( uint8_t byte )
         /*  Process the reprogramming of the page. Some more checkings could be
          *  done in order to not erase or program blank pages.
          */
-        hw_command( hw_flash0, load_buffer, page );
-        hw_command( hw_flash0, erase_page, zpage );
-        hw_command( hw_flash0, write_page, zpage );
+	hw_cmd( hw_flash0, load_buffer, page );
+        hw_cmd( hw_flash0, erase_page, zpage );
+        hw_cmd( hw_flash0, write_page, zpage );
 
         hw_write( UART, '$');
         return ;

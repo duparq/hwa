@@ -417,6 +417,44 @@ extern hw_uint_t(hw_bn(hw_swuart1_compare))	__hw_swuart1_dtn ;
 extern hw_uint_t(hw_bn(hw_swuart1_compare))	__hw_swuart1_dt0 ;
 #endif
 
+/* #define _hw_mthd_hw_function__swuarta		, _hw_swuarta_function */
+/* #define _hw_swuarta_function(o,i,a,f,...)	HW_TX(_##o##_##f(__VA_ARGS__),) */
+
+
+/**
+ * @page atmelavr_swuarta
+ * @section atmelavr_swuarta_reset Synchronization
+ *
+ * In addition to automatic synchronization, the UART can be synchronized using
+ * the `hw_cmd()` instruction.
+ *
+ * @code
+ * hw_cmd( UART, sync91 );
+ * @endcode
+ *
+ * For this to work, the user must provide and declare the synchronization
+ * function:
+ *
+ * @code
+ * //  Declare the method for all objects of class _swuarta
+ * //
+ * #define _hw_cmd__swuarta_sync91      , _hw_swuarta_sync91
+ *
+ * //  Trigger an error if unexpected arguments are provided
+ * //
+ * #define _hw_swuarta_sync91(o,...)    HW_TX(hw_swuarta_sync91(o),__VA_ARGS__)
+ *
+ * //  Produce the call the function for the object
+ * //
+ * #define hw_swuarta_sync91(o)         o##_sync91()
+ *
+ * //  Prototype of the function called for the hw_swuart0 object
+ * //
+ * void                                 hw_swuart0_sync91 ( );
+ * @endcode
+ */
+
+
 /**
  * @page atmelavr_swuarta
  * <br>

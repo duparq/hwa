@@ -215,12 +215,21 @@
 
 /**
  * @ingroup public_obj_instructions
- * @brief Make an object execute one of its special commands (method)
+ * @brief Make an object execute one of its special commands.
  *
- * Syntax: `hw_command( object, command [,...] );`
+ * Syntax: `hw_cmd( object, command [,...] );`
  * @hideinitializer
  */
-#define hw_command(...)			HW_MTHD(hw_command, __VA_ARGS__,)
+
+#define hw_cmd(o,...)		_hw_cmd2(o,__VA_ARGS__,)
+#define _hw_cmd2(o,f,...)	_hw_cmd3(f,o,_##o,__VA_ARGS__)
+#define _hw_cmd3(...)		_hw_cmd4(__VA_ARGS__)
+#define _hw_cmd4(f,o,c,...)	HW_G2(_hw_cmd5,HW_IS(,HW_G3(_hw_cmd,c,f)))(f,o,c,__VA_ARGS__)
+#define _hw_cmd5_1(f,o,c,i,a,...)	HW_A1(HW_G3(_hw_cmd,c,f))(o,__VA_ARGS__)
+
+#define _hw_cmd5_0(f,o,c,...)	HW_G2(_hw_cmd6, HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
+#define _hw_cmd6_0(f,o,c,...)	HW_ERR("`"#o"` is not a HWA object.")
+#define _hw_cmd6_1(f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no command `"#f"`.")
 
 
 /**

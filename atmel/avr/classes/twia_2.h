@@ -58,13 +58,13 @@
  */
 #define _hw_mthd_hwa_config__twia		, _hwa_cftwia
 #define _hwa_cftwia( o,i,a, ... )		_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
-					\
+\
 
 /*	Optionnal argument `sclhz`
  */
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
-    /*  Configure I/Os */						\
+    /*	Configure I/Os */						\
     x##_config( hw_rel(o,pin_scl), direction, output );			\
     x##_config( hw_rel(o,pin_sda), direction, output );			\
     x##_write( hw_rel(o,pin_scl), 1 );					\
@@ -72,10 +72,10 @@
     HW_G2(_hwx_cftwia_ksclhz, HW_IS(sclhz,k))(x,o,k,__VA_ARGS__);	\
   } while(0)
 
-#define _hwx_cftwia_ksclhz_1(x,o,k,v,...)					\
+#define _hwx_cftwia_ksclhz_1(x,o,k,v,...)			\
   HW_G2(_hwx_cftwia_vsclhz, HW_IS(,v))(x,o,v,__VA_ARGS__)
 
-#define _hwx_cftwia_vsclhz_1(x,o,v,...)					\
+#define _hwx_cftwia_vsclhz_1(x,o,v,...)		\
   HW_ERR("value of `sclhz` must be a number.")
 
 #define _hwx_cftwia_vsclhz_0(x,o,v,k,...)				\
@@ -124,7 +124,7 @@
   x##_write_reg( o, sla, v );						\
   HW_G2(_hwx_cftwia_kgcall, HW_IS(general_call,k))(x,o,k,__VA_ARGS__)
 
-#define _hwx_cftwia_ksladdr_0(x,o,k,...)					\
+#define _hwx_cftwia_ksladdr_0(x,o,k,...)				\
   HW_G2(_hwx_cftwia_kgcall, HW_IS(general_call,k))(x,o,k,__VA_ARGS__)
 
 #define _hw_is_slave_address_slave_address		, 1
@@ -137,24 +137,24 @@
 #define _hwx_cftwia_vgcall_0(x,o,v,...)					\
   HW_ERR("`general_call` can be `enabled` or `disabled`, but not `" #v "`.")
 
-#define _hwx_cftwia_vgcall_1(x,o,v,k,...)	\
-  x##_write_reg( o, gce, HW_A1(_hw_state_##v );	\
-  HW_G2(_hwx_cftwia_kslam, HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
+#define _hwx_cftwia_vgcall_1(x,o,v,k,...)				\
+  x##_write_reg( o, gce, HW_A1(_hw_state_##v );				\
+		 HW_G2(_hwx_cftwia_kslam, HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cftwia_kgcall_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_kslam, HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
 #define _hw_is_general_call_general_call		, 1
 
-  /*	Optionnal argument `slave_address_mask`
-   */
+/*	Optionnal argument `slave_address_mask`
+ */
 #define _hwx_cftwia_kslam_1(x,o,k,v,...)			\
   HW_G2(_hwx_cftwia_vslam, HW_IS(,v))(x,o,v,__VA_ARGS__)
 
-#define _hwx_cftwia_vslam_1(x,o,v,...)			\
-    HW_ERR("value of `slave_address_mask` must be a number.")
+#define _hwx_cftwia_vslam_1(x,o,v,...)				\
+  HW_ERR("value of `slave_address_mask` must be a number.")
 
-#define _hwx_cftwia_vslam_0(x,o,v,...)				\
+#define _hwx_cftwia_vslam_0(x,o,v,...)					\
   if ( v < 0 || v > 127 )						\
     HWA_ERR("value of `slave_address_mask` must be in the range 0..127."); \
   HW_TX( x##_write_reg( o, slam, v ), __VA_ARGS__)
@@ -169,9 +169,8 @@
  * @page atmelavr_twia
  * @section Commands
  *
- * Class `_twia` peripherals are driven using the `hw_command()` instruction.
- * The presence of the optionnal `irq` parameter indicates that the command
- * also enables the IRQ.
+ * Class `_twia` peripherals are driven using the `hw_cmd()` instruction.
+ * An optionnal `irq` parameter can be used to have the command enable the IRQ.
  *
  * @note HWA verifies to some extent the nature of the given parameters. As all
  * this is implemented using macro definitions, some care must be taken
@@ -181,131 +180,79 @@
  * character.
  *
  * @code
- * hw_command( TWI_NAME, start [,irq] );                // Transmit START condition
- * hw_command( TWI_NAME, slaw, SLA [,irq] );            // Transmit SLA slave address + write bit
- * hw_command( TWI_NAME, slar, SLA [,irq] );            // Transmit SLA slave address + read bit
- * hw_command( TWI_NAME, write, DATA [,irq] );          // Transmit DATA
- * hw_command( TWI_NAME, read, ack | nack [,irq] );     // Receive one byte, send ACK or NACK
- * hw_command( TWI_NAME, stop [,irq] );                 // Transmit STOP condition
+ * hw_cmd( TWI_NAME, start [,irq] );                // Transmit START condition
+ * hw_cmd( TWI_NAME, slaw, SLA [,irq] );            // Transmit SLA slave address + write bit
+ * hw_cmd( TWI_NAME, slar, SLA [,irq] );            // Transmit SLA slave address + read bit
+ * hw_cmd( TWI_NAME, write, DATA [,irq] );          // Transmit DATA
+ * hw_cmd( TWI_NAME, read, ack | nack [,irq] );     // Receive one byte, send ACK or NACK
+ * hw_cmd( TWI_NAME, stop [,irq] );                 // Transmit STOP condition
  * @endcode
  */
-#define _hw_mthd_hw_command__twia		, _hw_cmtwia
 
-/*	The optionnal `irq` parameter is processed at last, as is the CR
- *	register written.
- */
+#define _hw_cmd__twia_start		, _hw_cmd_twia_start
+#define _hw_cmd_twia_start(o,...)					\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifenstart,__VA_ARGS__)
 
-/*	`start`?
- */
-#define _hw_cmtwia(o,i,a,...)						\
-  do{ HW_G2(_hw_cmtwia_kstart,HW_IS(start,__VA_ARGS__))(o,__VA_ARGS__,,); }while(0)
 
-#define _hw_cmtwia_kstart_1(o,k,i,...)				\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenstart,i,__VA_ARGS__)
+#define _hw_cmd__twia_stop		, _hw_cmd_twia_stop
+#define _hw_cmd_twia_stop(o,...)					\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifenstop,__VA_ARGS__)
 
-#define _hw_is_start_start		, 1
 
-/*	`slaw`?
- */
-#define _hw_cmtwia_kstart_0(o,k,...)				\
-  HW_G2(_hw_cmtwia_kslaw,HW_IS(slaw,k))(o,k,__VA_ARGS__)
+#define _hw_cmd__twia_slaw		, _hw_cmd_twia_slaw
+#define _hw_cmd_twia_slaw(o,...)				\
+  HW_G2(_hw_cmd_twia_vslaw,HW_IS(,__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd_twia_vslaw_1(...)		\
+  HW_ERR("slave address missing.")
+#define _hw_cmd_twia_vslaw_0(o,v,...)					\
+  if ( ((uint8_t)(v)) > 127 )						\
+    HWA_ERR("slave address must be in the range 0..127.");		\
+  _hw_write_reg(o,dr,((v)<<1)+0);					\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifen,__VA_ARGS__)
 
-#define _hw_cmtwia_kslaw_1(o,k,v,...)			\
-  HW_G2(_hw_cmtwia_vslaw, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
 
-#define _hw_cmtwia_vslaw_1(x,o,v,...)		\
-  HW_ERR("slave address must be a number.")
+#define _hw_cmd__twia_slar		, _hw_cmd_twia_slar
+#define _hw_cmd_twia_slar(o,...)					\
+  HW_G2(_hw_cmd_twia_vslar,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd_twia_vslar_1(...)		\
+  HW_ERR("slave address missing.")
+#define _hw_cmd_twia_vslar_0(o,v,...)					\
+  if ( ((uint8_t)(v)) > 127 )						\
+    HWA_ERR("slave address must be in the range 0..127.");		\
+  _hw_write_reg(o,dr,((v)<<1)+1);					\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifen,__VA_ARGS__)
 
-#define _hw_cmtwia_vslaw_0(x,o,v,i,...)				\
-  if ( ((uint8_t)(v)) > 127 )					\
-    HWA_ERR("slave address must be in the range 0..127.");	\
-  _hw_write_reg(o,dr,((v)<<1)+0);				\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
 
-#define _hw_is_slaw_slaw		, 1
+#define _hw_cmd__twia_write		, _hw_cmd_twia_write
+#define _hw_cmd_twia_write(o,...)					\
+  HW_G2(_hw_cmd_twia_vwrite,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd_twia_vwrite_1(...)		\
+  HW_ERR("value missing.")
+#define _hw_cmd_twia_vwrite_0(o,v,...)					\
+  _hw_write_reg(o,dr,v);						\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifen,__VA_ARGS__)
 
-/*	`slar`?
- */
-#define _hw_cmtwia_kslaw_0(o,k,...)				\
-  HW_G2(_hw_cmtwia_kslar,HW_IS(slar,k))(o,k,__VA_ARGS__)
 
-#define _hw_cmtwia_kslar_1(o,k,v,...)			\
-  HW_G2(_hw_cmtwia_vslar, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
+#define _hw_cmd__twia_read		, _hw_cmd_twia_read
+#define _hw_cmd_twia_read(o,...)					\
+  HW_G2(_hw_cmd_twia_read_ack,HW_IS(ack,__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd_twia_read_ack_1(o,k,...)				\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifenack,__VA_ARGS__)
+#define _hw_cmd_twia_read_ack_0(o,...)					\
+  HW_G2(_hw_cmd_twia_read_nack,HW_IS(nack,__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd_twia_read_nack_1(o,k,...)				\
+  HW_G2(_hw_cmd_twia_end,HW_IS(irq,__VA_ARGS__))(o,ifen,__VA_ARGS__)
+#define _hw_cmd_twia_read_nack_0(o,...)					\
+  HW_ERR("expected `ack` or `nack` instead of `" #__VA_ARGS__ "`.");
 
-#define _hw_cmtwia_vslar_1(x,o,v,...)		\
-  HW_ERR("slave address must be a number.")
-
-#define _hw_cmtwia_vslar_0(x,o,v,i,...)				\
-  if ( ((uint8_t)(v)) > 127 )					\
-    HWA_ERR("slave address must be in the range 0..127.");	\
-  _hw_write_reg(o,dr,((v)<<1)+1);				\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
-
-#define _hw_is_slar_slar		, 1
-
-/*	`write`?
- */
-#define _hw_cmtwia_kslar_0(o,k,...)				\
-  HW_G2(_hw_cmtwia_kwrite,HW_IS(write,k))(o,k,__VA_ARGS__)
-
-#define _hw_cmtwia_kwrite_1(o,k,v,...)				\
-  HW_G2(_hw_cmtwia_vwrite, HW_IS_VOID(v))(x,o,v,__VA_ARGS__)
-
-#define _hw_cmtwia_vwrite_1(x,o,v,...)		\
-  HW_ERR("missing write value.")
-
-#define _hw_cmtwia_vwrite_0(x,o,v,i,...)	\
-  _hw_write_reg(o,dr,v);			\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
-
-#define _hw_is_write_write		, 1
-
-/*	`read`?
- */
-#define _hw_cmtwia_kwrite_0(o,k,...)				\
-  HW_G2(_hw_cmtwia_kread,HW_IS(read,k))(o,k,__VA_ARGS__)
-
-/*		`ack` or `nack`
- */
-#define _hw_cmtwia_kread_1(o,k,a,...)				\
-  HW_G2(_hw_cmtwia_kreadkack,HW_IS(ack,a))(o,k,a,__VA_ARGS__)
-
-#define _hw_cmtwia_kreadkack_1(o,k,a,i,...)			\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenack,i,__VA_ARGS__)
-
-#define _hw_cmtwia_kreadkack_0(o,k,a,...)			\
-  HW_G2(_hw_cmtwia_kreadknack,HW_IS(nack,a))(o,k,a,__VA_ARGS__)
-
-#define _hw_cmtwia_kreadknack_1(o,k,a,i,...)			\
-    HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifen,i,__VA_ARGS__)
-
-#define _hw_cmtwia_kreadknack_0(o,k,a,...)			\
-  HW_ERR("expected `ack` or `nack` instead of `" #a "`.");
-
-#define _hw_is_read_read		, 1
 #define _hw_is_ack_ack			, 1
 #define _hw_is_nack_nack		, 1
 
-/*	`stop`?
- */
-#define _hw_cmtwia_kread_0(o,k,...)				\
-  HW_G2(_hw_cmtwia_kstop,HW_IS(stop,k))(o,k,__VA_ARGS__)
 
-#define _hw_cmtwia_kstop_1(o,k,i,...)				\
-  HW_G2(_hw_cmtwia_irq,HW_IS(irq,i))(o,ifenstop,i,__VA_ARGS__)
-
-#define _hw_cmtwia_kstop_0(o,k,...)				\
-  HW_ERR("command can be `start`, `slaw`, `slar`, `read`, `write`, "	\
-	 "or `stop`, but not `" #k "`.")
-
-#define _hw_is_stop_stop		, 1
-
-/*	`irq` ?
- */
-#define _hw_cmtwia_irq_0(o,v,...)				\
+#define _hw_cmd_twia_end_0(o,v,...)				\
   HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v), __VA_ARGS__ )
 
-#define _hw_cmtwia_irq_1(o,v,k,...)				\
+#define _hw_cmd_twia_end_1(o,v,k,...)				\
   HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v##ie), __VA_ARGS__ )
 
 #define _hw_is_irq_irq			, 1
@@ -335,7 +282,7 @@
  *
  * @code
  * if ( hw_stat(TWI_NAME) == HW_TWI_START ) {
- *	// Start condition has been transmitted
+ *      // Start condition has been transmitted
  * }
  * @endcode
  *
@@ -427,9 +374,9 @@
 
 /** @page atmelavr_twia
  *    * `HW_TWI_SR_ARB_LOST_GCALL_ACK`: arbitration lost in SLA+RW, general call
- *      received, ACK returned
+ *	received, ACK returned
  */
-#define HW_TWI_SR_ARB_LOST_GCALL_ACK 	0x78
+#define HW_TWI_SR_ARB_LOST_GCALL_ACK	0x78
 
 /** @page atmelavr_twia
  *    * `HW_TWI_SR_DATA_ACK`: data received, ACK returned
@@ -496,28 +443,28 @@
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__twia(o,i,a)			\
-  _hwa_setup_reg( o, br  );			\
-  _hwa_setup_reg( o, cr  );			\
-  _hwa_setup_reg( o, sr  );			\
-  _hwa_setup_reg( o, ar  );			\
+  _hwa_setup_reg( o, br	 );			\
+  _hwa_setup_reg( o, cr	 );			\
+  _hwa_setup_reg( o, sr	 );			\
+  _hwa_setup_reg( o, ar	 );			\
   _hwa_setup_reg( o, amr )
 
 
-#define _hwa_init__twia(o,i,a)					\
-  _hwa_init_reg( o, br,  0x00 );				\
-  _hwa_init_reg( o, cr,  0x00 );				\
-  _hwa_init_reg( o, sr,  0xF8 );				\
-  _hwa_init_reg( o, ar,  0xFE );				\
+#define _hwa_init__twia(o,i,a)			\
+  _hwa_init_reg( o, br,	 0x00 );		\
+  _hwa_init_reg( o, cr,	 0x00 );		\
+  _hwa_init_reg( o, sr,	 0xF8 );		\
+  _hwa_init_reg( o, ar,	 0xFE );		\
   _hwa_init_reg( o, amr, 0x00 )
 
 
-#define _hwa_commit__twia(o,i,a)			\
+#define _hwa_commit__twia(o,i,a)		\
   _hwa_commit_reg( o, br  );			\
   _hwa_commit_reg( o, cr  );			\
   _hwa_commit_reg( o, sr  );			\

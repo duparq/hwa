@@ -87,44 +87,39 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  *
  *  Steps 1 & 2 can be done in any order.
  *
- * The `hw_command()` instruction can perform these 3 operations on the
+ * The `hw_cmd()` instruction can perform these 3 operations on the
  * Flash memory:
  *
  *  * `load_buffer` : loads the page buffer
  *
  * @code
  * uint8_t page[HW_DEVICE_FLASH_PAGE_SIZE] ;
- * hw_command( hw_flash0, load_buffer, page );  // Store page[] into the memory page buffer
+ * hw_cmd( hw_flash0, load_buffer, page );  // Store page[] into the memory page buffer
  * @endcode
  *
  *  * `erase_page` : erase a memory page
  *
  * @code
  * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
- * hw_command( hw_flash0, erase_page, zpage );  // Erase memory page at address buf.addr
+ * hw_cmd( hw_flash0, erase_page, zpage );  // Erase memory page at address buf.addr
  * @endcode
  *
  *  * `write_page` : write a memory page with the content of the buffer
  *
  * @code
  * intptr_t zpage = buf.addr & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
- * hw_command( hw_flash0, write_page, zpage );  // Program page buffer at memory address buf.addr
+ * hw_cmd( hw_flash0, write_page, zpage );  // Program page buffer at memory address buf.addr
  * @endcode
  */
-#define _hw_mthd_hw_command__flasha		, _hw_command_flasha
 
-#define _hw_flasha_command_load_buffer		, load_buffer
-#define _hw_flasha_command_write_page		, write_page
-#define _hw_flasha_command_erase_page		, erase_page
+#define _hw_cmd__flasha_load_buffer		, _hw_cmd_flasha_load_buffer
+#define _hw_cmd_flasha_load_buffer(o,src,...)	HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
 
-#define _hw_command_flasha(o,i,a,...)					\
-  HW_G2(_hw_flasha,HW_IS(,_hw_flasha_command_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_cmd__flasha_erase_page		, _hw_cmd_flasha_erase_page
+#define _hw_cmd_flasha_erase_page(o,src,...)	HW_TX(_hw_flasha_pgers(o,src),__VA_ARGS__)
 
-#define _hw_flasha_1(o,cmd,...)			_hw_flasha_##cmd(o,__VA_ARGS__)
-
-#define _hw_flasha_load_buffer(o,src,...)	HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
-#define _hw_flasha_erase_page(o,ptr,...)	HW_TX(_hw_flasha_pgers(o,ptr),__VA_ARGS__)
-#define _hw_flasha_write_page(o,ptr,...)	HW_TX(_hw_flasha_pgwrt(o,ptr),__VA_ARGS__)
+#define _hw_cmd__flasha_write_page		, _hw_cmd_flasha_write_page
+#define _hw_cmd_flasha_write_page(o,src,...)	HW_TX(_hw_flasha_pgwrt(o,src),__VA_ARGS__)
 
 
 #if !defined HW_DEVICE_FUSE_BOOTRST

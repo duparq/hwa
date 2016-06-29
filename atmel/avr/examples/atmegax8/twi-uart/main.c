@@ -18,6 +18,10 @@
  * register assigments and sometimes puts useless code such as `eor r25, r25`
  * and later `ldi r25, 0`. Why?
  *
+ * @note Revision 2016-06-29: use `hw_cmd()` instead of `hw_command()`. The
+ * binary code is now 3474 bytes long with avr-gcc-4.9.2 (was 3336 with
+ * avr-gcc-4.8.2). WHY?
+ *
  * @par main.c
  **/
 
@@ -26,7 +30,7 @@
 
 #include BOARD_H
 
-#define TWI	hw_twi0
+#define TWI     hw_twi0
 
 #define DEBUG 1
 
@@ -34,13 +38,13 @@
  * Note [3]
  * TWI address for 24Cxx EEPROM:
  *
- * 1 0 1  0  E2 E1 E0	24C01/24C02
- * 1 0 1  0  E2 E1 A8	24C04
- * 1 0 1  0  E2 A9 A8	24C08
- * 1 0 1  0 A10 A9 A8	24C16
- * 1 0 1  0   0  0  0	24FC512
+ * 1 0 1  0  E2 E1 E0   24C01/24C02
+ * 1 0 1  0  E2 E1 A8   24C04
+ * 1 0 1  0  E2 A9 A8   24C08
+ * 1 0 1  0 A10 A9 A8   24C16
+ * 1 0 1  0   0  0  0   24FC512
  */
-#define TWI_SLA_24CXX	0xA0	/* 24FC512 */
+#define TWI_SLA_24CXX   0xA0    /* 24FC512 */
 
 /*
  * Note [3a]
@@ -60,7 +64,7 @@
  * Thus, normal operation should not require more than 100 iterations
  * to get the device to respond to a selection.
  */
-#define MAX_ITER	200
+#define MAX_ITER        200
 
 /*
  * Number of bytes that can be written in a row, see comments for
@@ -88,10 +92,10 @@ ioinit(void)
 {
   hwa_begin_from_reset();
   hwa_config( hw_uart0,
-	      bps, 9600,
-	      receiver,    disabled,
-	      transmitter, enabled
-	      );
+              bps, 9600,
+              receiver,    disabled,
+              transmitter, enabled
+              );
   hwa_config( TWI, sclhz, 100000 );
   hwa_commit();
 }
@@ -148,8 +152,6 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
   sla = TWI_SLA_24CXX ;
 #endif
 
-  //  *(volatile uint8_t*)0 = sla ;
-
   /*
    * Note [8]
    * First cycle: master transmitter mode
@@ -159,114 +161,114 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     return -1;
 
  begin:
-  hw_command( TWI, start );		/* send start condition */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, start );                 /* send start condition */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_START:
-      case HW_TWI_REP_START:		/* OK, but should not happen */
-	break;
+      case HW_TWI_REP_START:            /* OK, but should not happen */
+        break;
 
-      case HW_TWI_MT_ARB_LOST:		/* Note [9] */
-	goto begin;
+      case HW_TWI_MT_ARB_LOST:          /* Note [9] */
+        goto begin;
 
       default:
-	return -1;			/* error: not in start condition */
-					/* NB: do /not/ send stop condition */
+        return -1;                      /* error: not in start condition */
+                                        /* NB: do /not/ send stop condition */
     }
 
   /* Note [10]
    */
-  hw_command( TWI, slaw, sla>>1 );		/* send SLA+W */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, slaw, sla>>1 );          /* send SLA+W */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
-	break;
+        break;
 
-      case HW_TWI_MT_SLA_NACK:		/* nack during select: device busy writing */
-	goto restart;			/* Note [11] */
+      case HW_TWI_MT_SLA_NACK:          /* nack during select: device busy writing */
+        goto restart;                   /* Note [11] */
 
-      case HW_TWI_MT_ARB_LOST:		/* re-arbitrate */
-	goto begin;
+      case HW_TWI_MT_ARB_LOST:          /* re-arbitrate */
+        goto begin;
 
       default:
-	goto error;			/* must send stop condition */
+        goto error;                     /* must send stop condition */
     }
   
 
 #ifdef WORD_ADDRESS_16BIT
 
-  hw_command( TWI, write, eeaddr >> 8 );
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, write, eeaddr >> 8 );
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
-	break;
+        break;
 
       case HW_TWI_MT_DATA_NACK:
-	goto quit;
+        goto quit;
 
       case HW_TWI_MT_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	goto error;			/* must send stop condition */
+        goto error;                     /* must send stop condition */
     }
 
 #endif
 
-  hw_command( TWI, write, eeaddr );	/* low 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, write, eeaddr );         /* low 8 bits of addr */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
-  	break;
+        break;
 
       case HW_TWI_MT_DATA_NACK:
-  	goto quit;
+        goto quit;
 
       case HW_TWI_MT_ARB_LOST:
-  	goto begin;
+        goto begin;
 
       default:
-  	goto error;			/* must send stop condition */
+        goto error;                     /* must send stop condition */
     }
 
   /*
    * Note [12]
    * Next cycle(s): master receiver mode
    */
-  hw_command( TWI, start );		/* send (rep.) start condition */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, start );                 /* send (rep.) start condition */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
-      case HW_TWI_START:		/* OK, but should not happen */
+      case HW_TWI_START:                /* OK, but should not happen */
       case HW_TWI_REP_START:
-	break;
+        break;
 
       case HW_TWI_MT_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	goto error;
+        goto error;
     }
 
-  hw_command( TWI, slar, sla>>1 );		/* send SLA+R */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, slar, sla>>1 );          /* send SLA+R */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MR_SLA_ACK:
-	break;
+        break;
 
       case HW_TWI_MR_SLA_NACK:
-	goto quit;
+        goto quit;
 
       case HW_TWI_MR_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	goto error;
+        goto error;
     }
 
   /* Note [13]
@@ -274,31 +276,31 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
   for ( ; len>0 ; len-- ) {
 
     if (len == 1)
-      hw_command( TWI, read, nack );	/* ask last byte, send NACK*/
+      hw_cmd( TWI, read, nack );        /* ask last byte, send NACK*/
     else
-      hw_command( TWI, read, ack );	/* ask one more byte, send ACK*/
+      hw_cmd( TWI, read, ack );         /* ask one more byte, send ACK*/
 
-    while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+    while( !hw_stat_irqf(TWI) ) {}      /* wait for transmission */
     switch( (twst=hw_stat(TWI)) )
       {
-    	case HW_TWI_MR_DATA_NACK:
-    	  len = 0;			/* force end of loop */
-    	  /* FALLTHROUGH */
-    	case HW_TWI_MR_DATA_ACK:
-    	  *buf++ = hw_read(TWI);
-    	  rv++;
-    	  if(twst == HW_TWI_MR_DATA_NACK) goto quit;
-    	  break;
+        case HW_TWI_MR_DATA_NACK:
+          len = 0;                      /* force end of loop */
+          /* FALLTHROUGH */
+        case HW_TWI_MR_DATA_ACK:
+          *buf++ = hw_read(TWI);
+          rv++;
+          if(twst == HW_TWI_MR_DATA_NACK) goto quit;
+          break;
 
-    	default:
-    	  goto error;
+        default:
+          goto error;
       }
   }
 
  quit:
   /* Note [14]
    */
-  hw_command( TWI, stop );		/* send stop condition */
+  hw_cmd( TWI, stop );          /* send stop condition */
   return rv;
 
  error:
@@ -353,97 +355,97 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   /* Note [15] */
 
-  hw_command( TWI, start );	/* send start condition */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, start );                 /* send start condition */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
-      case HW_TWI_REP_START:		/* OK, but should not happen */
+      case HW_TWI_REP_START:            /* OK, but should not happen */
       case HW_TWI_START:
-	break;
+        break;
 
       case HW_TWI_MT_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	return -1;		/* error: not in start condition */
-				/* NB: do /not/ send stop condition */
+        return -1;              /* error: not in start condition */
+                                /* NB: do /not/ send stop condition */
     }
 
-  hw_command( TWI, slaw, sla>>1 );		/* send SLA+W */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, slaw, sla>>1 );          /* send SLA+W */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
-	break;
+        break;
 
-      case HW_TWI_MT_SLA_NACK:	/* nack during select: device busy writing */
-	goto restart;
+      case HW_TWI_MT_SLA_NACK:  /* nack during select: device busy writing */
+        goto restart;
 
-      case HW_TWI_MT_ARB_LOST:	/* re-arbitrate */
-	goto begin;
+      case HW_TWI_MT_ARB_LOST:  /* re-arbitrate */
+        goto begin;
 
       default:
-	goto error;		/* must send stop condition */
+        goto error;             /* must send stop condition */
     }
 
 #ifdef WORD_ADDRESS_16BIT
-  hw_command( TWI, write, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, write, eeaddr>>8 );      /* 16 bit word address device, send high 8 bits of addr */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
-	break;
+        break;
 
       case HW_TWI_MT_DATA_NACK:
-	goto quit;
+        goto quit;
 
       case HW_TWI_MT_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	goto error;		/* must send stop condition */
+        goto error;             /* must send stop condition */
     }
 #endif
 
-  hw_command( TWI, write, eeaddr );	/* low 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+  hw_cmd( TWI, write, eeaddr );         /* low 8 bits of addr */
+  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
   switch( (twst=hw_stat(TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
-	break;
+        break;
 
       case HW_TWI_MT_DATA_NACK:
-	goto quit;
+        goto quit;
 
       case HW_TWI_MT_ARB_LOST:
-	goto begin;
+        goto begin;
 
       default:
-	goto error;			/* must send stop condition */
+        goto error;                     /* must send stop condition */
     }
 
 
   for ( ; len>0 ; len-- ) {
-    
-    hw_command( TWI, write, (*buf++) );
 
-    while( !hw_stat_irqf(TWI) ) {}	/* wait for transmission */
+    hw_cmd( TWI, write, (*buf++) );
+
+    while( !hw_stat_irqf(TWI) ) {}      /* wait for transmission */
     switch( (twst=hw_stat(TWI)) )
       {
-	case HW_TWI_MT_DATA_NACK:
-	  goto error;			/* device write protected -- Note [16] */
+        case HW_TWI_MT_DATA_NACK:
+          goto error;                   /* device write protected -- Note [16] */
 
-	case HW_TWI_MT_DATA_ACK:
-	  rv++;
-	  break;
+        case HW_TWI_MT_DATA_ACK:
+          rv++;
+          break;
 
-	default:
-	  goto error;
+        default:
+          goto error;
       }
   }
 
  quit:
-  hw_command( TWI, stop );	/* send stop condition */
+  hw_cmd( TWI, stop );  /* send stop condition */
   return rv;
 
  error:
@@ -466,14 +468,14 @@ ee24xx_write_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     {
 #if DEBUG
       printf("Calling ee24xx_write_page(%d, %d, %p)",
-	     eeaddr, len, buf);
+             eeaddr, len, buf);
 #endif
       rv = ee24xx_write_page(eeaddr, len, buf);
 #if DEBUG
       printf(" => %d\n", rv);
 #endif
       if (rv == -1)
-	return -1;
+        return -1;
 
       eeaddr += rv;
       len -= rv;
@@ -513,12 +515,12 @@ main(void)
       printf("%#04x: ", a);
       rv = ee24xx_read_bytes(a, 16, b);
       if (rv <= 0)
-	error();
+        error();
       if (rv < 16)
-	printf("warning: short read %d\n", rv);
+        printf("warning: short read %d\n", rv);
       a += rv;
       for (x = 0; x < rv; x++)
-	printf("%02x ", b[x]);
+        printf("%02x ", b[x]);
       putchar('\n');
     }
 
@@ -533,12 +535,12 @@ main(void)
       printf("%#04x: ", a);
       rv = ee24xx_read_bytes(a, 16, b);
       if (rv <= 0)
-	error();
+        error();
       if (rv < 16)
-	printf("warning: short read %d\n", rv);
+        printf("warning: short read %d\n", rv);
       a += rv;
       for (x = 0; x < rv; x++)
-	printf("%02x ", b[x]);
+        printf("%02x ", b[x]);
       putchar('\n');
     }
 
