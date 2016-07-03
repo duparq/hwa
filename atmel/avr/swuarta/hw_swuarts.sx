@@ -5,7 +5,6 @@
  */	
 
 #include "xinstr.sx"
-#include "swuarta_macros.sx"
 
 
 /*	Create a label

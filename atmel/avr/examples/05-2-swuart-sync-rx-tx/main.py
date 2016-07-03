@@ -34,8 +34,10 @@ serial = link.get( args )
 serial.set_RESET(1)
 serial.detect_wires('?')
 cout("Wires: %d\n" % serial.wires)
+
+#  Give Diabolo enough time to compute the CRC before it starts the application.
+#
 time.sleep(0.5)
-serial.sync()
 
 #  Application
 #
@@ -43,13 +45,16 @@ try:
     import struct
     t0 = 0
     tick=time.time()
-    n = 0
+    resyncs = 0
+    n = 20
     while True:
         if n==20:
             n=0
+            resyncs += 1
             serial.tx('x') # Force resync
             try:
-                serial.sync()
+                cout("Resync #%d: " % resyncs)
+                serial.sync_5_1()
             except:
                 die(_("Could not get the application prompt.\n"))
             continue

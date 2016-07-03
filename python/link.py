@@ -261,6 +261,23 @@ class Link:
         raise Exception("synchronization failed")
 
 
+    #  Synchronize UART with 9/1 low-level sequences
+    #
+    def sync_9_1(self):
+        cout("Synchronizing with 9+1 low bits (0x00,0xFF): ")
+        while self.serial.read(1): pass # flush
+        for i in range(4):
+            cout('.')
+            flushout()
+            Link.tx(self,'\x00\xFF')
+            r = Link.rx(self,1)
+            if len(r):
+                cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
+                self.lastchar = r[0]
+                return
+        raise Exception("synchronization failed")
+
+
     #  Synchronize UART with 5/1 low-level sequences
     #
     def sync_5_1(self):
@@ -278,12 +295,19 @@ class Link:
         raise Exception("synchronization failed")
 
 
-    #  Default synchronization method: try 5+1, then 10+1
+    #  Default synchronization method: try 5+1, then 9+1, then 10+1
     #
     def sync(self):
         if self.args.sync=="" or self.args.sync=="5+1":
             try:
                 self.sync_5_1()
+                return
+            except Exception, e:
+                # trace(repr(e))
+                cout('\n')
+        if self.args.sync=="" or self.args.sync=="9+1":
+            try:
+                self.sync_9_1()
                 return
             except Exception, e:
                 # trace(repr(e))

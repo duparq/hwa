@@ -1,0 +1,182 @@
+
+	;; -*- asm -*-
+
+	;; Auto-synchronization for software UART
+	;;
+	;; This code is designed to be executed from the START ISR.
+	;;
+	;; Baudrate is determined by measuring the low-level durations of a
+	;; 9 bits low / 1 bit low sequence.
+	;;
+	;; Consecutive low-level durations t1 and t2 are measured.
+	;; When 8.5×t2 <= t1 <= 9.5×t2, synchronization is done.
+
+	;; Limits
+	;;
+	;; Using only 8-bit values, the duration of 9.5 bits low must be < 256
+	;; cycles, i.e. 27 cycles / bit and the minimum baudrate is 37 kbsp /
+	;; CPU MHz. Such a baudrate / syshz ratio is not affordable, so we do
+	;; measures using 16-bit software values.
+
+#if !CHECK_START_EDGE
+#  error Autosync needs to detect both falling and rising edges
+#endif
+
+#if CLK_DIV != 1 && CLK_DIV != 8
+#  error Autosync does not support this clk_div
+#endif
+
+#if COUNT_BN != 8
+#  warning This routine is not optimized and not tested with 16-bit counters. Try an older version.
+#endif
+
+	;; Start date (value of count) is stored in [R25:]R24
+	;; R24, [R25], R26, and SREG are pushed
+	;;
+	.section	.text.LABEL(autosync_9_1),"ax",@progbits
+LABEL(autosync_9_1):
+	CYCLES=CY_SYNC0
+
+	XSBIC	R26, RXD_AP
+	rjmp	LABEL(st99)
+
+	CYCLES=CYCLES+1		; XSBIC did skip the 1 word rjmp
+
+	;;
+	;; Low level
+	;;
+
+	;; Use existant registers to store measure of low level duration
+	;;
+	measl = DATA(dt0)
+	meash = DATA(dtn)
+
+#	if COUNT_BN==8
+	push	R25		; [2]
+	CYCLES=CYCLES+2
+#	endif
+
+	XCB	R26, START_IE	;	Disable START interrupts
+
+	CYCLES=CYCLES+3	; +3 cycles for ldi/ldi/cli below
+	ldi	R24, lo8((CYCLES+3)/5-1)
+	ldi	R25, hi8((CYCLES+3)/5-1)
+
+	;; Measure low level duration in 5 CPU cycles units in R25:R24
+	;;
+	cli
+2:	adiw	R24, 1		; [2]
+	XSBIS	R26, RXD_AP	; [1/2]
+	rjmp	2b		; [2]
+	sei
+
+	push	R27
+	push	R28
+	push	R29
+	push	R30
+	push	R31
+
+	;; Compute R27:R26 = 9×t2
+	;; 
+	movw	R26, R24	; R27:R26 = t2
+	ldi	R28, 3
+2:	lsl	R26
+	rol	R27
+	dec	R28
+	brne	2b
+	add	R26, R24
+	adc	R27, R25	; R27:R26 = 9×t2
+
+	;; Compute R31:R30 = dt = 0.5×t2
+	;; 
+	movw	R30, R24	; R31:R30 = t2
+	adiw	R30, 1		; round
+	lsr	R31		;
+	ror	R30		; R31:R30 = t2/2
+
+	;; Compute R27:R26 = 9×t2 - dt
+	;; 
+	sub	R26, R30	;
+	sbc	R27, R31	;
+
+	;; Load last measure
+	;; 
+	lds	R28, measl
+	lds	R29, meash
+
+	;; Check lower limit
+	;;
+	cp	R28, R26	; if ( t1 < 9×t2 - dt )
+	cpc	R29, R27
+	brcc	2f
+
+	;; Need another sample.
+
+8:	sts	measl, R24	; Store measure
+	sts	meash, R25
+
+	XCIF	R26, START_IF	; Clear START IRQ flag
+	XSBAI	R26, START_IE	; Enable START interrupts
+
+9:
+#	if COUNT_BN==8
+	pop	R25
+	CYCLES=CYCLES+2
+#	endif
+	pop	R31
+	pop	R30
+	pop	R29
+	pop	R28
+	pop	R27
+
+	rjmp	LABEL(st99)
+
+	;; Compute R27:R26 = 9×t2 + dt
+	;;
+2:	add	R26, R30	;
+	adc	R27, R31	; R27:R26 = 9×t2
+	add	R26, R30	;
+	adc	R27, R31	; R27:R26 = 9×t2 + dt
+
+	;; Check upper limit
+	;; 
+	cp	R28, R26	; if ( t1 > 9×t2 + dt )
+	cpc	R29, R27	;   then t1 is too high
+	brcc	8b		;   need to get another sample
+
+	;; Compute dtn
+	;;
+	;; t1 = 9×t2 in units of 5 CPU cycles
+	;; t1+t2 = 10×t2 in units of 5 CPU cycles = 2×t2 in units of 1 CPU cycle
+	;;
+	add	R24, R28
+	adc	R25, R29	; R25:R24 = t2 + t1 = 10×t2
+	adiw	R24, 1
+	lsr	R25
+	ror	R24		; R25:R24 = 5×t2 = t2 in syshz units = dtn
+
+#if CLK_DIV == 8
+	;;
+	;;  Conform to CLK_DIV: R25:R24 = dtn/8
+	;;
+	ldi	R26, 3
+2:	lsr	R24
+	ror	R25
+	dec	R26
+	brne	2b
+#endif
+
+	;; Set baudrate registers
+	;;
+	rcall	LABEL(set_dt)
+
+	;; Start a fake receiving to ensure that the UART will not transmit
+	;; before the end of the synchronization byte.
+	;;
+	ldi	R26, 8		; 8 data bits to receive
+	sts	nbit, R26	;
+	;; XCB	R26, START_IE	; Disable START interrupts
+	XCIF	R26, MATCH_IF	; Clear compare-match IRQ flag
+	XSBAI	R26, MATCH_IE	; Enable compare-match interrupts
+
+	rjmp	9b

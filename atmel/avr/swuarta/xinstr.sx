@@ -29,9 +29,9 @@
 	.endm
 
 
-	;; Clear flag by writing 1 into it
+	;; Clear interrupt flag by writing 1 into it
 	;; 
-	.macro XCF reg a b
+	.macro XCIF reg a b
 	.if \a < 0x20
 	sbi	\a, \b		; [2]
 	CYCLES=CYCLES+2
@@ -91,9 +91,9 @@
 	.endm
 
 
-	;; Set one bit (atomic)
+	;; Set one bit (atomic with SREG saved)
 	;; 
-	.macro XSBA r1 r2 a b
+	.macro XSBAS r1 r2 a b
 	.if \a < 0x20
 	sbi	\a, \b
 	CYCLES=CYCLES+2
@@ -104,6 +104,23 @@
 	ori	\r2, 1<<\b
 	out	SREG, \r1
 	XST	\a, \r2
+	CYCLES=CYCLES+4
+	.endif
+	.endm
+
+
+	;; Set one bit (atomic with cli/sei)
+	;; 
+	.macro XSBAI r a b
+	.if \a < 0x20
+	sbi	\a, \b
+	CYCLES=CYCLES+2
+	.else
+	cli
+	XLD	\r, \a
+	ori	\r, 1<<\b
+	sei
+	XST	\a, \r
 	CYCLES=CYCLES+4
 	.endif
 	.endm

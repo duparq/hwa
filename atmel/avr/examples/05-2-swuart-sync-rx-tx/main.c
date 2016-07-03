@@ -13,6 +13,11 @@
  *
  *      ./main.py
  *
+ *  Tests:
+ *    attiny85-3V3:
+ *      sync_5_1 70000, 100000, 115200, 150000, 200000 bps OK
+ *               140000 bps fails?
+ *
  * @par config.h
  * @include 05-2-swuart-sync-rx-tx/config.h
  *
@@ -47,10 +52,10 @@ main ( )
               sleep_mode, idle );
 
   /*  We can change the system clock frequency if we do not use
-   *  a crystal oscillator
+   *  a crystal oscillator.
    */
 #if !defined HW_DEVICE_CLK_SRC_HZ
-  //  hwa_write_reg( hw_core0, osccal, 0xFF );
+  hwa_write_reg( hw_core0, osccal, 0xFF );
 #endif
 
   /*  Write this configuration into the hardware
@@ -70,7 +75,7 @@ main ( )
 
     /*  Signal UART desynchronization
      */
-    hw_write( PIN_LED, 1 );
+    hw_write( PIN_LED, 0 );
 
     /*  Force UART to re-synchronize
      */
@@ -84,7 +89,7 @@ main ( )
 
     /*  Signal UART synchronization
      */
-    hw_write( PIN_LED, 0 );
+    hw_write( PIN_LED, 1 );
 
     /*  Process commands
      */

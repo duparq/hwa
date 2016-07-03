@@ -1,0 +1,54 @@
+
+	;; -*- asm -*-
+
+	;; Wait for at least (R24) successive "1" bits
+	;;
+	.global		LABEL(wait_idle_bits)
+	.section	.text.LABEL(wait_idle_bits),"ax",@progbits
+LABEL(wait_idle_bits):
+	rcall	LABEL(wait_ready)
+
+	XLD	R20, count+0
+#if COUNT_BN==16
+	XLD	R21, count+1
+#endif
+
+	lds	R18, dtn
+#if COUNT_BN==16
+	lds	R19, dtn+1
+#endif
+
+1:
+	.if DBG_WAITIDLE
+	sbi	DBGPIN, DBGBIT
+	.endif
+
+	mov	R25, R24	; How many bits to wait
+
+2:	add	R20, R18
+#if COUNT_BN==16
+	adc	R21, R19
+#endif
+
+#if COUNT_BN==16
+	XST	comp+1, R21
+#endif
+	XST	comp+0, R20
+
+	;; Clear IRQ flag
+	;;
+3:	XCIF	R22, MATCH_IF
+
+4:	sbis	RXDPIN, RXDBIT
+	rjmp	1b		; Restart if RXD==0
+	XSBIS	R22, MATCH_IF_RA, MATCH_IF_BP
+	rjmp	4b
+
+	dec	R25
+	brne	2b
+
+	.if DBG_WAITIDLE
+	sbi	DBGPIN, DBGBIT
+	.endif
+
+	ret
