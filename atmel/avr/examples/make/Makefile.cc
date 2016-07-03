@@ -7,23 +7,17 @@
 
 #$(warning INCLUDE)
 
-#  CWD contains the name of the directory of the last included file
 #  MFD contains the directory name of this Makefile whatever has been included
 #
-#LAST	:=	$(lastword $(MAKEFILE_LIST))
-
-#$(warning Makefile.t84: LAST=$(LAST))
-
-#MFD	:=	$(dir $(LAST))
-
 MFD	:=	$(dir $(lastword $(MAKEFILE_LIST)))
 
-#$(warning Makefile.t84: MFD=$(MFD))
+#$(info Loaded $(MFD)Makefile.cc)
 
 #	Choose a default board if none specified
 #
 ifeq (,$(BOARD))
   BOARD		:=	attiny84
+  $(info Selected default board 'attiny84')
 endif
 
 #	Load board's Makefile if it exists
@@ -296,16 +290,17 @@ $(OUT).elf: $(OBJECTS) $(LDSCRIPT)
 #  PADTO is used to fill unused flash memory space with 0xFF bytes
 #
 ifneq (,$(DEVICE_FLASH_SIZE))
+#  $(info PADTO=$(DEVICE_FLASH_SIZE))
   PADTO = --pad-to $(DEVICE_FLASH_SIZE)
 else
   PADTO =
 endif
 
 %.bin: %.elf
-	@$(OBJCOPY) -R .eeprom -O binary --gap-fill=0xFF $(PADTO) $^ $@
+	@$(OBJCOPY) --only-section .text -O binary --gap-fill=0xFF $(PADTO) $^ $@
 
 %.hex: %.elf
-	@$(OBJCOPY) --gap-fill=0xFF -R .eeprom -O ihex $^ $@
+	@$(OBJCOPY) --only-section .text -O ihex --gap-fill=0xFF $^ $@
 
 #  Object dump flags:
 #
@@ -455,6 +450,6 @@ endif
 #	$(MAKE) -f $(MFD)Makefile.$(PROG_SW) --no-print-directory $@
 
 ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset))
-  $(info Loading $(MFD)Makefile.$(PROG_SW))
+#  $(info Loading $(MFD)Makefile.$(PROG_SW))
   include $(MFD)Makefile.$(PROG_SW)
 endif
