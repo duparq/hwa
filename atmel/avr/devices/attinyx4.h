@@ -76,19 +76,11 @@
 
 /**
  * @page attinyx4
- * @subsection attinyx4_fuses Fuses
  *
  * Optionnaly, before including the device-specific header, fuses values can be
  * defined to describe the target more precisely. If these symbols are not
  * defined by the user, HWA will define them with the factory values.
  *
- * @subsubsection attinyx4_fuses_clocking Clocking
- *
- * Symbol		 |Valid values | Comments
- * :---------------------|-------------|:-----------
- * `HW_DEVICE_CLK_SRC`	 |`external`<br><b>`rc_8MHz`</b><br>`rc_128kHz`<br>`xosc`|External source on pin CLKI<br>Internal RC oscillator<br>Internal RC oscillator<br>Crystal oscillator between pins XTAL1 and XTAL2
- * `HW_DEVICE_CLK_SRC_HZ`|Integer     | Clock frequency for `external` and `xosc` clock source
- * `HW_DEVICE_CLK_PSC`	 |`8`<br>`1`  |Clock divided by 8<br>Clock not divided
  */
 #define _hw_is_external_external			, 1
 #define _hw_is_rc_8MHz_rc_8MHz				, 1

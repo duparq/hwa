@@ -784,6 +784,9 @@ extern char hw_error ;
  * @ingroup private_obj_macros
  * @brief Name of the relative `x` of object `o`.
  * @hideinitializer
+ *
+ * The public version of `hw_rel()` fails if one of the arguments is the result
+ * of a `hw_rel()`. This private version should be used instead in HWA code.
  */
 #define _hw_rel(o,x)			__hw_rel_2(o,x)
 #define __hw_rel_2(o,x)			o##x

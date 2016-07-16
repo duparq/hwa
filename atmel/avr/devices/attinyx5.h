@@ -1173,11 +1173,11 @@ typedef struct {
 /*	Class logical registers
  */
 #define _hw__flasha_sigrd		_cb1, csr, 1, 5
-#define _hw__flasha_rsig		_cb1, csr, 1, 5 /* old definition */
+#define _hw__flasha_rsig		_cb1, csr, 1, 5 /* old name */
 #define _hw__flasha_rwwsre		_cb1, csr, 1, 4
-#define _hw__flasha_ctpb		_cb1, csr, 1, 4 /* old definition */
+#define _hw__flasha_ctpb		_cb1, csr, 1, 4 /* old name */
 #define _hw__flasha_blbset		_cb1, csr, 1, 3
-#define _hw__flasha_rflb		_cb1, csr, 1, 3 /* old definition */
+#define _hw__flasha_rflb		_cb1, csr, 1, 3 /* old name */
 #define _hw__flasha_pgwrt		_cb1, csr, 1, 2
 #define _hw__flasha_pgers		_cb1, csr, 1, 1
 #define _hw__flasha_spmen		_cb1, csr, 1, 0
@@ -1200,9 +1200,7 @@ typedef struct {
   _hw_rc(hw_rel(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
 #define _hw_swuart0_dt0							\
   _hw_rc(hw_rel(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#define _hw_swuart0__st			_hw_ra(hw_shared, gpior0)
 #define _hw_swuart0_sr			_hw_shared_gpior0
-#define _hw_swuart0_synced		_ob1, sr, 1, 0
 #endif
 
 #if defined hw_swuart1_compare
@@ -1214,10 +1212,15 @@ typedef struct {
   _hw_rc(hw_rel(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
 #define _hw_swuart1_dt0							\
   _hw_rc(hw_rel(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#define _hw_swuart1__st			_hw_ra(hw_shared, gpior1)
 #define _hw_swuart1_sr			_hw_shared_gpior1
-#define _hw_swuart1_synced		_ob1, sr, 1, 0
 #endif
+
+
+/*******************************************************************************
+ *									       *
+ *			C O N T E X T					       *
+ *									       *
+ *******************************************************************************/
 
 
 #if !defined __ASSEMBLER__
