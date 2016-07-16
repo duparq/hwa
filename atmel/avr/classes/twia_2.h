@@ -474,12 +474,9 @@
 
 /**
  * @page atmelavr_twia
- * @section Internals
+ * @section atmelavr_twia_internals Internals
  *
- * Though it should not be necessary, internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_twia` objects have the following hardware registers:
+ * Class `_twia` objects hold the following hardware registers:
  *
  *  * `br`: bit rate register
  *  * `cr`: control register
@@ -501,7 +498,11 @@
  *  * `sla`: slave address
  *  * `slam`: enable ack mask
  *  * `gce`: general call enable
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_twia

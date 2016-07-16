@@ -169,8 +169,8 @@
 
 
 /**
- * @page atmelavr_wdogb
- * @section atmelavr_wdogb_reset Reset
+ * @page atmelavr_wdoga
+ * @section atmelavr_wdoga_reset Reset
  *
  * The `hw_reset()` instruction resets the watchdog timer (issues a `wdr`):
  *

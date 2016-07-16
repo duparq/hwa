@@ -42,7 +42,7 @@
  *
  *             //  Class _c8b counters all loop from 0 to top
  *             //
- *           [ countmode,   loop_up, ]
+ *           [ countmode,   up_loop, ]
  *           [ bottom,      0,       ]
  *
  *             //  The maximum value the counter reaches (the default is `max`)
@@ -108,13 +108,14 @@
 /*  Optionnal argument `countmode`
  */
 #define _hw_is_countmode_countmode	, 1
-#define _hw_is_loop_up_loop_up		, 1
+#define _hw_is_up_loop_loop_up		, 1
+#define _hw_is_up_loop_up_loop		, 1
 
 #define _hwa_cfc8b_kcountmode_1(o,k,v,...)				\
-  HW_G2(_hwa_cfc8b_vcountmode,HW_IS(loop_up,v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfc8b_vcountmode,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vcountmode_0(o,v,...)				\
-  HW_ERR( "`countmode` can only be `loop_up`, not `" #v "`.");
+  HW_ERR( "`countmode` can only be `up_loop`, not `" #v "`.");
 
 #define _hwa_cfc8b_vcountmode_1(o,v,...)	\
   _hwa_cfc8b_kcountmode_0(o,__VA_ARGS__)
@@ -296,12 +297,9 @@
 
 /**
  * @page atmelavr_c8b
- * @section Internals
+ * @section atmelavr_c8b_internals Internals
  *
- * Though it should not be necessary, internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_c8b` counters have the following hardware registers:
+ * Class `_c8b` objects hold the following hardware registers:
  *
  *  * `ccr`: control register
  *  * `count`: count register
@@ -313,7 +311,11 @@
  *  * `cs`: clock selection
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_c8b

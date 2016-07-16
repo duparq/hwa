@@ -148,12 +148,9 @@
 
 /**
  * @page atmelavr_dtga
- * @section Internals
+ * @section atmelavr_dtga_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_dtga` objects have the following hardware registers:
+ * Class `_dtga` objects hold the following hardware registers:
  *
  *  * `dtps` : clock prescaler
  *  * `dta` : dead time register a
@@ -166,7 +163,11 @@
  *  * `compare0_l` : delay for complementary output pin of compare unit 0
  *  * `compare1_h` : delay for output pin of compare unit 1
  *  * `compare1_l` : delay for complementary output pin of compare unit 1
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_dtga

@@ -30,8 +30,8 @@
  *                                           |   64     // System clock divided by 64
  *                                           |  256     // System clock divided by 256
  *                                           | 1024 )   // System clock divided by 1024
- *                        | syshz_ext_rising            // External input, rising edge
- *                        | syshz_ext_falling,          // External input, falling edge
+ *                        | ext_rising                  // External input, rising edge
+ *                        | ext_falling,                // External input, falling edge
  *
  *             //  How does this counter count
  *             //
@@ -98,7 +98,9 @@
 
 /*  Optionnal argument `countmode`
  */
+#define _hw_c16a_countmode_up_loop		, 1
 #define _hw_c16a_countmode_loop_up		, 1
+#define _hw_c16a_countmode_updown_loop		, 2
 #define _hw_c16a_countmode_loop_updown		, 2
 
 #define _hwa_cfc16a_kmode_0(o,k,...)					\
@@ -108,7 +110,7 @@
   HW_G2(_hwa_cfc16a_vmode,HW_IS(,_hw_c16a_countmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vmode_0(o,v,...)					\
-  HW_ERR("`countmode` can be `loop_up`, or `loo_updown`, but not `" #v "`.")
+  HW_ERR("`countmode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
 
 #define _hwa_cfc16a_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c16a_countmode_##v);			\
@@ -841,12 +843,9 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
 
 /**
  * @page atmelavr_c16a
- * @section Internals
+ * @section atmelavr_c16a_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_c16a` object have the following hardware registers:
+ * Class `_c16a` objects hold the following hardware registers:
  *
  *  * `ccra`: control register a
  *  * `ccrb`: control register b
@@ -861,7 +860,11 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
  *  * `cs`: clock selection
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_c16a

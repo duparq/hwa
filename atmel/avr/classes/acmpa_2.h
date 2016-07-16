@@ -160,12 +160,9 @@
 
 /**
  * @page atmelavr_acmpa
- * @section Internals
+ * @section atmelavr_acmpa_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_acmpa` objects have the following hardware registers:
+ * Class `_acmpa` objects hold the following hardware registers:
  *
  *  * `csr`: control/status register
  *
@@ -181,6 +178,9 @@
  *  * `ie` : analog comparator interrupt enable
  *  * `acic` : analog comparator input capture enable
  *  * `acis` : analog comparator interrupt mode select
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
 
 /**

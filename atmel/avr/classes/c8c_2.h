@@ -37,8 +37,8 @@
  *
  *             //  How does this counter count
  *             //
- *             countmode,   loop_up                     // Count up and loop
- *                        | loop_updown,                // Count up and down alternately
+ *             countmode,   up_loop                     // Count up and loop
+ *                        | updown_loop,                // Count up and down alternately
  *
  *             //  Class _c8c counters all count from 0
  *             //
@@ -97,7 +97,9 @@
 
 /*  Optionnal argument `countmode`
  */
+#define _hw_c8c_countmode_up_loop		, 1
 #define _hw_c8c_countmode_loop_up		, 1
+#define _hw_c8c_countmode_updown_loop		, 2
 #define _hw_c8c_countmode_loop_updown		, 2
 
 #define _hwa_cfc8c_kmode_0(o,k,...)					\
@@ -107,7 +109,7 @@
   HW_G2(_hwa_cfc8c_vmode,HW_IS(,_hw_c8c_countmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vmode_0(o,v,...)					\
-  HW_ERR("`mode` can be `loop_up`, or `loo_updown`, but not `" #v "`.")
+  HW_ERR("`mode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
 
 #define _hwa_cfc8c_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c8c_countmode_##v);			\
@@ -678,12 +680,9 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
 
 /**
  * @page atmelavr_c8c
- * @section Internals
+ * @section atmelavr_c8c_internals Internals
  *
- * Though it should not be necessary, internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_c8c` counters have the following hardware registers:
+ * Class `_c8c` objects hold the following hardware registers:
  *
  *  * `ccra`: control register a
  *  * `ccrb`: control register b
@@ -698,7 +697,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
  *  * `cs`: clock selection
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_c8c

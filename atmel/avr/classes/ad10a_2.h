@@ -69,7 +69,7 @@
  *           );
  * @endcode
  *
- * @subsection atmelavr_ad10c_cf2 Differential mode
+ * @subsection atmelavr_ad10a_cf2 Differential mode
  *
  * The differential mode allows the use of the 20x gain stage.
  *
@@ -505,12 +505,9 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /**
  * @page atmelavr_ad10a
- * @section Internals
+ * @section atmelavr_ad10a_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_ad10a` objects have the following hardware registers:
+ * Class `_ad1àa` objects hold the following hardware registers:
  *
  *  * `admux`: analog multiplexer and voltage reference
  *  * `sra`: control/status register a
@@ -530,7 +527,11 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *  * `ts`: trigger source
  *  * `ie`: overflow IRQ mask
  *  * `if`: overflow IRQ flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_ad10a

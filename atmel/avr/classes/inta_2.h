@@ -88,16 +88,16 @@
 
 /**
  * @page atmelavr_inta
- * @section Internals
+ * @section atmelavr_inta_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_inta` objects have the following logical registers:
+ * Class `_inta` objects hold the following hardware registers:
  *
  *  * `sc`: sense control
  *  * `ie`: IRQ mask
  *  * `if`: IRQ flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
 
 

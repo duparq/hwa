@@ -70,12 +70,9 @@
 
 /**
  * @page atmelavr_pcica
- * @section Internals
+ * @section atmelavr_pcica_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_pcica` objects have the following hardware registers:
+ * Class `_pcica` objects hold the following hardware registers:
  *
  *  * `msk`: mask of monitored pins
  *
@@ -83,6 +80,9 @@
  *
  *  * `ie`: pin change IRQ mask
  *  * `if`: pin change IRQ flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
 
 

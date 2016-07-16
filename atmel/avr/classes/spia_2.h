@@ -328,12 +328,9 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
 
 /**
  * @page atmelavr_spia
- * @section Internals
+ * @section atmelavr_spia_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_spia` objects have the following hardware registers:
+ * Class `_spia` objects hold the following hardware registers:
  *
  *  * `cr`: control register
  *  * `sr`: status register
@@ -351,7 +348,11 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *  * `sp2x`: double clock speed
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_spia

@@ -346,12 +346,9 @@
 
 /**
  * @page atmelavr_ad10b
- * @section Internals
+ * @section atmelavr_ad10b_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible
- * through the @ref public_reg_instructions "register access intructions".
- *
- * Class `_ad10b` objects have the following hardware registers:
+ * Class `_ad10b` objects hold the following hardware registers:
  *
  *  * `admux`: analog multiplexer and voltage reference
  *  * `sra`: control/status register a
@@ -371,7 +368,11 @@
  *  * `ts`: trigger source
  *  * `ie`: overflow IRQ mask
  *  * `if`: overflow IRQ flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_ad10b

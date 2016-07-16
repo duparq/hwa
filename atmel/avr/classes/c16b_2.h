@@ -98,7 +98,9 @@
 
 /*  Optionnal argument `countmode`
  */
+#define _hw_c16b_countmode_up_loop		, 1
 #define _hw_c16b_countmode_loop_up		, 1
+#define _hw_c16b_countmode_updown_loop		, 2
 #define _hw_c16b_countmode_loop_updown		, 2
 
 #define _hwa_cfc16b_kmode_0(o,k,...)					\
@@ -108,7 +110,7 @@
   HW_G2(_hwa_cfc16b_vmode,HW_IS(,_hw_c16b_countmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16b_vmode_0(o,v,...)					\
-  HW_ERR("`countmode` can be `loop_up`, or `loo_updown`, but not `" #v "`.")
+  HW_ERR("`countmode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
 
 #define _hwa_cfc16b_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c16b_countmode_##v);			\
@@ -729,12 +731,9 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
 
 /**
  * @page atmelavr_c16b
- * @section Internals
+ * @section atmelavr_c16b_internals Internals
  *
- * Though it should not be necessary, the internal registers are accessible through
- * the @ref public_reg_instructions "register access intructions".
- *
- * Class `_c16b` object have the following hardware registers:
+ * Class `_c16b` objects hold the following hardware registers:
  *
  *  * `ccra`: control register a
  *  * `ccrb`: control register b
@@ -749,7 +748,11 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
  *  * `cs`: clock selection
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
+ *
+ * These registers are accessible through the @ref public_reg_instructions
+ * "register access intructions".
  */
+
 
 /**
  * @page atmelavr_c16b
