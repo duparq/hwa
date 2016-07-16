@@ -41,7 +41,7 @@ def add_arguments(parser):
     parser.add_argument('--keep-txd-low', help="how long TXD is "
                         "maintained low after RESET (0.5)", metavar='SECONDS',
                         type=float, default='0')
-    parser.add_argument('--sync', choices=['5+1','10+1'],
+    parser.add_argument('--sync', choices=['5_1','9_1','10_1'],
                         help="synchronization method", default='')
     parser.add_argument('--threaded-timed',
                         help="use a separate thread and a timer for serial interface",
@@ -235,25 +235,25 @@ class Link:
     #          because of a bug in the kernel driver
     #
     def tx10low(self):
-        self.setParity(serial.PARITY_EVEN)
+        self.serial.parity =  serial.PARITY_EVEN
         self.tx('\0')
-        self.setParity(serial.PARITY_NONE)
-
+        self.serial.parity =  serial.PARITY_NONE
 
     #  Synchronize the UART of the other side:
     #    send 10 bits low, followed by 1 bit low.
     #
     def sync_10_1(self):
-        cout("Synchronizing with 10+1 low bits: ")
+        cout("Synchronizing (10_1): ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
             Link.flush(self)
             Link.tx10low(self)
-            time.sleep(0.001)
-            Link.tx(self,'\xFF')
-            r = Link.rx(self,1)
+            r = Link.rx(self,1,1,1)
+            if len(r)==0:
+                Link.tx(self,'\xFF')
+                r = Link.rx(self,1,1,1)
             if len(r):
                 cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
@@ -264,13 +264,16 @@ class Link:
     #  Synchronize UART with 9/1 low-level sequences
     #
     def sync_9_1(self):
-        cout("Synchronizing with 9+1 low bits (0x00,0xFF): ")
+        cout("Synchronizing (9_1): ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
-            Link.tx(self,'\x00\xFF')
-            r = Link.rx(self,1)
+            Link.tx(self,'\x00')
+            r = Link.rx(self,1,1,1)
+            if len(r)==0:
+                Link.tx(self,'\xFF')
+                r = Link.rx(self,1,1,1)
             if len(r):
                 cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
@@ -279,15 +282,24 @@ class Link:
 
 
     #  Synchronize UART with 5/1 low-level sequences
+    #    Several possibilities:
+    #
+    #      'A' (0x41): 1 low + 1 high + 5 low + 1 high + 1 low, the first bit
+    #		       low requires the device to be quick enough to detect the
+    #		       following 5 low bits
+    #
+    #      'p' (0x70): 5 low + 3 high + 1 low, may be the most efficient
+    #
+    #      0xF0 / 0xFF: 5 low + many high + 1 low, good for slowest devices
     #
     def sync_5_1(self):
-        cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
+        cout("Synchronizing (5_1): ")
         while self.serial.read(1): pass # flush
-        for i in range(4):
+        for i in range(400):
             cout('.')
             flushout()
-            Link.tx(self,'A')
-            r = Link.rx(self,1)
+            Link.tx(self,'p')
+            r = Link.rx(self,1,1,1)
             if len(r):
                 cout(" OK after %d bytes sent: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
@@ -295,24 +307,24 @@ class Link:
         raise Exception("synchronization failed")
 
 
-    #  Default synchronization method: try 5+1, then 9+1, then 10+1
+    #  Default synchronization method: try 5_1, then 9_1, then 10_1
     #
     def sync(self):
-        if self.args.sync=="" or self.args.sync=="5+1":
+        if self.args.sync=="" or self.args.sync=="5_1":
             try:
                 self.sync_5_1()
                 return
             except Exception, e:
                 # trace(repr(e))
                 cout('\n')
-        if self.args.sync=="" or self.args.sync=="9+1":
+        if self.args.sync=="" or self.args.sync=="9_1":
             try:
                 self.sync_9_1()
                 return
             except Exception, e:
                 # trace(repr(e))
                 cout('\n')
-        if self.args.sync=="" or self.args.sync=="10+1":
+        if self.args.sync=="" or self.args.sync=="10_1":
             try:
                 self.sync_10_1()
                 return
@@ -322,7 +334,7 @@ class Link:
 
 
     #  Send a string
-    #    In one-wire mode, remove the echo
+    #    In one-wire mode, wait for the echo and remove it
     #
     def tx(self, s):
         if not self.inter_char_delay:

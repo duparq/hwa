@@ -7,22 +7,26 @@
 	;;
 	;; Baudrate is determined by measuring the low-level durations of a
 	;; 9 bits low / 1 bit low sequence.
+	;; Interrupts are disabled while measuring, i.e. for the duration
+	;; of a low level.
 	;;
 	;; Consecutive low-level durations t1 and t2 are measured.
 	;; When 8.5×t2 <= t1 <= 9.5×t2, synchronization is done.
 
-	;; Limits
+	;; ** LIMITS **
 	;;
-	;; Using only 8-bit values, the duration of 9.5 bits low must be < 256
-	;; cycles, i.e. 27 cycles / bit and the minimum baudrate is 37 kbsp /
-	;; CPU MHz. Such a baudrate / syshz ratio is not affordable, so we do
-	;; measures using 16-bit software values.
+	;; Using 16-bit values, the duration of 9.5 bits low must be < 65356
+	;; counting units. With units of 5 cycles, one bit must not last more
+	;; than 34495 cycles.
+	;; With HW_SYSHZ = 1e6, the minimum baudrate is 29 bps.
+	;; The highest the CPU frequency, the best the precision of the timing.
+
 
 #if !CHECK_START_EDGE
 #  error Autosync needs to detect both falling and rising edges
 #endif
 
-#if CLK_DIV != 1 && CLK_DIV != 8
+#if CLK_DIV > 8 || CLK_DIV & (CLK_DIV-1) != 0
 #  error Autosync does not support this clk_div
 #endif
 
@@ -30,45 +34,51 @@
 #  warning This routine is not optimized and not tested with 16-bit counters. Try an older version.
 #endif
 
-	;; Start date (value of count) is stored in [R25:]R24
-	;; R24, [R25], R26, and SREG are pushed
+	;; Use existant registers to store the duration of low level
+	;;
+	measl = dt0
+	meash = dtn
+
+
+	;; R24, [R25], R26, and SREG are already stacked
 	;;
 	.section	.text.LABEL(autosync_9_1),"ax",@progbits
 LABEL(autosync_9_1):
 	CYCLES=CY_SYNC0
 
-	XSBIC	R26, RXD_AP
-	rjmp	LABEL(st99)
+	XSBIC	R26, RXD_AP	; Return if RXD is high
+	rjmp	LABEL(st99)	;
 
 	CYCLES=CYCLES+1		; XSBIC did skip the 1 word rjmp
 
 	;;
-	;; Low level
+	;; RXD is low
 	;;
 
-	;; Use existant registers to store measure of low level duration
-	;;
-	measl = DATA(dt0)
-	meash = DATA(dtn)
+	XCBAI	R26, START_IE	;	Disable START interrupts
 
-#	if COUNT_BN==8
+#  if COUNT_BN==8
 	push	R25		; [2]
 	CYCLES=CYCLES+2
-#	endif
+#  endif
 
-	XCB	R26, START_IE	;	Disable START interrupts
-
-	CYCLES=CYCLES+3	; +3 cycles for ldi/ldi/cli below
-	ldi	R24, lo8((CYCLES+3)/5-1)
-	ldi	R25, hi8((CYCLES+3)/5-1)
-
-	;; Measure low level duration in 5 CPU cycles units in R25:R24
+	;; Initialize duration
+	;;   Round to nearest 5-cycles unit
+	;;   Subtract the 5-cycles unit that is going to be added
 	;;
-	cli
-2:	adiw	R24, 1		; [2]
-	XSBIS	R26, RXD_AP	; [1/2]
-	rjmp	2b		; [2]
+	CYCLES=CYCLES+3	; +3 cycles for ldi/ldi/cli below
+	ldi	R24, lo8((CYCLES+2)/5-1)	; [1]
+	ldi	R25, hi8((CYCLES+2)/5-1)	; [1]
+
+	;; Measure low level duration in R25:R24 in units of 5 CPU cycles
+	;;
+	cli					; [1]
+2:	adiw	R24, 1		; [2]   |
+	XSBIS	R26, RXD_AP	; [1/2] |
+	rjmp	2b		; [2]   |=5
 	sei
+
+	sbi	DBGPORT, DBGBIT
 
 	push	R27
 	push	R28
@@ -115,14 +125,16 @@ LABEL(autosync_9_1):
 8:	sts	measl, R24	; Store measure
 	sts	meash, R25
 
+	cbi	DBGPORT, DBGBIT
+
 	XCIF	R26, START_IF	; Clear START IRQ flag
 	XSBAI	R26, START_IE	; Enable START interrupts
 
 9:
-#	if COUNT_BN==8
+
+#  if COUNT_BN==8
 	pop	R25
-	CYCLES=CYCLES+2
-#	endif
+#  endif
 	pop	R31
 	pop	R30
 	pop	R29
@@ -155,17 +167,6 @@ LABEL(autosync_9_1):
 	lsr	R25
 	ror	R24		; R25:R24 = 5×t2 = t2 in syshz units = dtn
 
-#if CLK_DIV == 8
-	;;
-	;;  Conform to CLK_DIV: R25:R24 = dtn/8
-	;;
-	ldi	R26, 3
-2:	lsr	R24
-	ror	R25
-	dec	R26
-	brne	2b
-#endif
-
 	;; Set baudrate registers
 	;;
 	rcall	LABEL(set_dt)
@@ -173,9 +174,19 @@ LABEL(autosync_9_1):
 	;; Start a fake receiving to ensure that the UART will not transmit
 	;; before the end of the synchronization byte.
 	;;
+	XLD	R24, count+0
+	lds	R25, dtn+0
+	add	R24, R25
+	XST	comp+0, R24
+#if COUNT_BN==16
+	XLD	R24, count+1
+	lds	R25, dtn+1
+	adc	R24, R25
+	XST	comp+1, R24
+#endif
+	XCBAI	R26, START_IE	; Disable START
 	ldi	R26, 8		; 8 data bits to receive
 	sts	nbit, R26	;
-	;; XCB	R26, START_IE	; Disable START interrupts
 	XCIF	R26, MATCH_IF	; Clear compare-match IRQ flag
 	XSBAI	R26, MATCH_IE	; Enable compare-match interrupts
 

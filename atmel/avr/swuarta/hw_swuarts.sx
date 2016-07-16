@@ -2,76 +2,42 @@
 /*	-*- c -*-
  *
  *	Implements software UARTS hw_swuart0 hw_swuart1
- */	
+ */
 
-#include "xinstr.sx"
+#include "../avrx.sx"
 
 
 /*	Create a label
  */
 #undef LABEL
-#define LABEL(x)		HW_G3(,hw_swuart,x)
+#define LABEL(x)		HW_G3(,UART,x)
 
 /*	Create a data
  */
 #undef DATA
-#define DATA(x)			HW_G3(_,hw_swuart,x)
-
-
-	;; Status is stored in SFR
-	;;
- 
-	__hw_swuart0_stat = _hw_ra(hw_shared, gpior0)
-	__hw_swuart1_stat = _hw_ra(hw_shared, gpior1)
+#define DATA(x)			HW_G3(_,UART,x)
 
 
 /*	hw_swuart0
  */
 #if defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd
-#  if defined hw_swuart0_pin_txd && hw_id(hw_swuart0_pin_txd)==0
-#    error invalid definition of hw_swuart0_pin_txd
-#  endif
-#  if defined hw_swuart0_pin_rxd && hw_id(hw_swuart0_pin_rxd)==0
-#    error invalid definition of hw_swuart0_pin_rxd
-#  endif
-#  if !defined hw_swuart0_compare
-#    error hw_swuart0_compare is not defined
-#  endif
-#  if !defined hw_swuart0_clk_div
-#    error hw_swuart0_clk_div is not defined
-#  endif
-#  if defined hw_swuart0_autosync
-#    define AUTOSYNC
-#  endif
-#
-#  define hw_swuart		hw_swuart0
-#  include "swuarta.sx"
-#  undef hw_swuart
+#  undef UART
+#  define UART			hw_swuart0
 #  undef AUTOSYNC
+#  if defined hw_swuart0_autosync
+#    define AUTOSYNC		1
+#  endif
+#  include "swuarta.sx"
 #endif
-
 
 /*	hw_swuart1
  */
 #if defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd
-#  if defined hw_swuart1_pin_txd && hw_id(hw_swuart1_pin_txd)==0
-#    error invalid definition of hw_swuart1_pin_txd
-#  endif
-#  if defined hw_swuart1_pin_rxd && hw_id(hw_swuart1_pin_rxd)==0
-#    error invalid definition of hw_swuart1_pin_rxd
-#  endif
-#  if !defined hw_swuart1_compare
-#    error hw_swuart1_compare is not defined
-#  endif
-#  if !defined hw_swuart1_clk_div
-#    error hw_swuart1_clk_div is not defined
-#  endif
-#  if defined hw_swuart1_autosync
-#    define AUTOSYNC
-#  endif
-#
-#  define hw_swuart		hw_swuart1
-#  include "swuarta.sx"
-#  undef hw_swuart
+#  undef UART
+#  define UART			hw_swuart1
 #  undef AUTOSYNC
+#  if defined hw_swuart1_autosync
+#    define AUTOSYNC		1
+#  endif
+#  include "swuarta.sx"
 #endif

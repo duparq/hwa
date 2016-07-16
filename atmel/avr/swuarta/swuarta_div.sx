@@ -1,0 +1,31 @@
+
+	;; -*- asm -*-
+
+	.global		_swuarta_div_2
+	.section	.text._swuarta_div_2,"ax",@progbits
+_swuarta_div_2:
+	adiw	R24, 1
+	lsr	R25
+	ror	R24
+	ret
+
+	.global		_swuarta_div_4
+	.section	.text._swuarta_div_4,"ax",@progbits
+_swuarta_div_4:
+	adiw	R24, 2
+	lsr	R25
+	ror	R24
+	lsr	R25
+	ror	R24
+	ret
+
+	.global		_swuarta_div_8
+	.section	.text._swuarta_div_8,"ax",@progbits
+_swuarta_div_8:
+	adiw	R24, 4
+	ldi	R26, 3
+2:	lsr	R25
+	ror	R24
+	dec	R26
+	brne	2b
+	ret

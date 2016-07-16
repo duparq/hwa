@@ -1,53 +1,56 @@
 
 	;; -*- asm -*-
 
+#if HW_G2(hw_swuart,sampling_shift)
+#  define SHIFT		HW_G2(hw_swuart,sampling_shift)
+#else
+#  define SHIFT		0
+#endif
+
 	;; Set UART registers dtn & dt0
+	;;   Computations are done with 16-bit precision even for 8-bit counter
+	;;   since dtn is given in CPU cycles (the CLK_DIV may lead to 8-bit values).
 	;;
 	.global		LABEL(set_dt)
 	.section	.text.LABEL(set_dt),"ax",@progbits
 LABEL(set_dt):
 
-	sts	dtn+0,r24	; Store dtn
-#	if COUNT_BN == 16
+#if defined CANRX && CLK_DIV > 1
+	movw	R30, R24	; Save dtn
+	rcall	HW_G2(_hw_swuarta_div,CLK_DIV)	;   dtn/CLK_DIV
+#endif
+	sts	dtn+0,r24	; Store dtn/CLK_DIV
+#  if COUNT_BN == 16
 	sts	dtn+1,r25	;
-#	endif
+#  endif
 
 #if defined CANRX
-
-#	if COUNT_BN == 8
-	mov	r26, r24	; r24 = dtn in counter units
-	inc	r26		; r26 = (dtn+1)/2
-	lsr	r26		;
-#	endif
-#	if COUNT_BN == 16
+#  if CLK_DIV > 1
+	movw	R24, R30	; Restore dtn
+#  endif
 	movw	r26, r24	; r25:r24 = dtn in counter units
 	adiw	r26, 1		; r27:r26 = (dtn+1)/2
 	lsr	r27		;
 	ror	r26		;
-#	endif
 
 	add	r24, r26	; r25:r24 = dtn + (dtn+1)/2
-#	if COUNT_BN == 16
 	adc	r25, r27	;
-#	endif
 
-#  if HW_G2(hw_swuart,sampling_shift)
-	DELAY=(CY_ST_SEI+CY_RX_SEI-HW_G2(hw_swuart,sampling_shift))/HW_G2(hw_swuart,clk_div)
-#  else
-	DELAY=(CY_ST_SEI+CY_RX_SEI)/HW_G2(hw_swuart,clk_div)
-#  endif
+	DELAY = CY_ST_SEI + CY_RX_SEI - SHIFT
 
 	subi	r24, lo8(DELAY)	; r25:r24 = dtn + (dtn+1)/2 - DELAY
-#	if COUNT_BN == 16
 	sbci	r25, hi8(DELAY)	;
-#	endif
-	;;
+
+#  if CLK_DIV > 1
+	rcall	HW_G2(_hw_swuarta_div,CLK_DIV)
+#  endif
+
 	;;	Store dt0
 	;;
 	sts	dt0+0, r24
-#	if COUNT_BN == 16
+#  if COUNT_BN == 16
 	sts	dt0+1, r25
-#	endif
+#  endif
 
 #endif
 	ret
