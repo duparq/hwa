@@ -117,7 +117,7 @@ main ( )
 
   /*  Wait for UART synchronization
    */
-  while ( !hw_stat(UART).synced ) {}
+  while ( !hw_stat(UART).sync ) {}
 
   /*  Process commands from host
    */

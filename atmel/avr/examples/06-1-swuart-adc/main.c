@@ -126,7 +126,7 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw_stat(UART).synced )
+  while ( !hw_stat(UART).sync )
     hw_sleep();
   hw_write( UART, '$' );
 

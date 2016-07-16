@@ -34,14 +34,18 @@
  * counter units. As the counter has 16 bits, the lowest period it can
  * measure is about 122 Hz. Experience shows that it is enough.
  *
- * @par boards/attiny84.h
- * @include boards/attiny84.h
+ * @par boards/attiny84-tcs3200.h
+ * @include boards/attiny84-tcs3200.h
  *
  * @par config.h
  * @include config.h
  */
 
 #include "config.h"
+
+#if ! defined BOARD_TCS3200
+#  error Incompatible board
+#endif
 
 #define UART		hw_swuart0
 

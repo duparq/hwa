@@ -31,6 +31,8 @@ serial = link.get( args )
 #  Release the RESET signal and detect how many wires are used (this will make
 #  Diabolo start the application as soon as it has computed the CRC).
 #
+serial.set_RESET(0)
+time.sleep(0.01)
 serial.set_RESET(1)
 serial.detect_wires('?')
 cout("Wires: %d\n" % serial.wires)
@@ -38,6 +40,7 @@ cout("Wires: %d\n" % serial.wires)
 #  Give Diabolo enough time to compute the CRC before it starts the application.
 #
 time.sleep(0.5)
+
 
 #  Application
 #

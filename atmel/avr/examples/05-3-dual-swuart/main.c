@@ -92,7 +92,7 @@ main ( )
     hw_reset( hw_swuart1 );
     for(;;) {
       hw_sleep();
-      if ( hw_stat(hw_swuart0).synced ) {
+      if ( hw_stat(hw_swuart0).sync ) {
         hw_write( hw_swuart0, '$');     /* signal the synchronization */
         hw_write_reg( hw_swuart1, dt0, hw_read_reg( hw_swuart0, dt0 ) );
         hw_write_reg( hw_swuart1, dtn, hw_read_reg( hw_swuart0, dtn ) );
@@ -100,7 +100,7 @@ main ( )
         hw_write( hw_swuart1, '$');     /* signal the synchronization */
         break ;
       }
-      if ( hw_stat(hw_swuart1).synced ) {
+      if ( hw_stat(hw_swuart1).sync ) {
         hw_write( hw_swuart1, '$');     /* signal the synchronization */
         hw_write_reg( hw_swuart0, dt0, hw_read_reg( hw_swuart1, dt0 ) );
         hw_write_reg( hw_swuart0, dtn, hw_read_reg( hw_swuart1, dtn ) );

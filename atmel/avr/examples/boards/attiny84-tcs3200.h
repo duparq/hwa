@@ -55,6 +55,8 @@
  * <br>
  */
 
+#define BOARD_TCS3200
+
 /*  Device configuration
  */
 #define HW_DEVICE_CLK_SRC		rc_8MHz

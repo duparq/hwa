@@ -13,11 +13,6 @@
  *
  *      ./main.py
  *
- *  Tests:
- *    attiny85-3V3:
- *      sync_5_1 70000, 100000, 115200, 150000, 200000 bps OK
- *               140000 bps fails?
- *
  * @par config.h
  * @include 05-2-swuart-sync-rx-tx/config.h
  *
@@ -83,7 +78,7 @@ main ( )
 
     /*  Wait for UART synchronization, then send the prompt
      */
-    while ( !hw_stat(UART).synced )
+    while ( !hw_stat(UART).sync )
       hw_sleep();
     hw_write( UART, '$');
 

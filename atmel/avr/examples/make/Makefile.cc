@@ -36,7 +36,7 @@ BOARDS		= $(MFD)../boards
 
 #  Diabolo is the preferred bootloader
 #
-diabolo		= $(MFD)../diabolo/host/diabolo.py
+diabolo		= $(MFD)../diabolo/software/diabolo.py
 
 #  BOARD_H indicates the board definition header file the example project source
 #  must use
@@ -297,16 +297,21 @@ else
 endif
 
 %.bin: %.elf
-	@$(OBJCOPY) --only-section .text -O binary --gap-fill=0xFF $(PADTO) $^ $@
+	@$(OBJCOPY) -O binary $^ $@
+
+# @$(OBJCOPY) --only-section .text --only-section .data	\
+# 	-O binary --gap-fill=0xFF $(PADTO) $^ $@
 
 %.hex: %.elf
-	@$(OBJCOPY) --only-section .text -O ihex --gap-fill=0xFF $^ $@
+	@$(OBJCOPY) --only-section .text --only-section .data	\
+		-O ihex --gap-fill=0xFF $^ $@
 
 #  Object dump flags:
 #
 #  -d: disassembly
 #  -S: disassembly + source code
 #  -h: section headers
+#  --no-show-raw-insn: no machine code
 #
 %.lst: %.elf
 #	@$(ODUMP) -S $^ >$@
@@ -327,6 +332,32 @@ stat:	$(OUT).bin
 	else									\
 	  echo "Install Python if you want Diabolo to stat your application."	;\
 	fi
+
+#  Display _swuarta performances
+#
+swuart-perfs: $(OUT).elf
+	@get() { echo 0x$$(avr-nm $< | grep " a $$1\$$" | cut -d' ' -f1); } ;\
+	CY_ST=$$(get CY_ST)								;\
+	CY_ST_SEI=$$(get CY_ST_SEI)							;\
+	CY_RX_SEI=$$(get CY_RX_SEI)							;\
+	CY_RX_DB=$$(get CY_RX_DB)							;\
+	CY_RX_LDB=$$(get CY_RX_LDB)							;\
+	CY_RX_SB=$$(get CY_RX_SB)							;\
+	CY_TX_SEI=$$(get CY_TX_SEI)							;\
+	CY_TX_DB=$$(get CY_TX_DB)							;\
+	CY_TX_LDB=$$(get CY_TX_LDB)							;\
+	CY_TX_SB=$$(get CY_TX_SB)							;\
+	CY_SYNC0=$$(get CY_SYNC0)							;\
+	CY_SYNC2=$$(get CY_SYNC2)							;\
+	echo "Start condition: $$(( $$CY_ST )) cycles (interrupts disabled for $$(( $$CY_ST_SEI )) cycles)"			;\
+	echo "Reception of data bit: $$(( $$CY_RX_DB )) cycles (interrupts disabled for $$(( $$CY_RX_SEI )) cycles)"				;\
+	echo "Reception of last data bit: $$(( $$CY_RX_LDB )) cycles"			;\
+	echo "Reception of stop bit: $$(( $$CY_RX_SB )) cycles"				;\
+	echo "Transmission of data bit: $$(( $$CY_TX_DB )) cycles (interrupts disabled for $$(( $$CY_TX_SEI )) cycles)"			;\
+	echo "Transmission of last data bit: $$(( $$CY_TX_LDB )) cycles"		;\
+	echo "Transmission of stop bit: $$(( $$CY_TX_SB )) cycles"			;\
+	echo "Synchronization falling edge to counting loop: $$(( $$CY_SYNC0 )) cycles"	;\
+	echo "Synchronization limit exceeded: $$(( $$CY_SYNC2 )) cycles"
 
 
 ################################################################################

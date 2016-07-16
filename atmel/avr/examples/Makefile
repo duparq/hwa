@@ -57,17 +57,17 @@ endif
 .PHONY: clean
 clean:
 ifeq (,$(BOARD))
-	@echo Cleaning $(abspath $(MFD)..)
-	@find $(MFD).. -name 'build' -prune -exec rm -rf {} ';'
-	@find . '(' 			\
-		-name '*~' 		\
-		-o -name '*.cp.*'	\
-		-o -name '*.hwa.c'	\
-		-o -name '*.pyc'	\
+	@echo Cleaning $(abspath $(PWD)/build)		;\
+	find . -name 'build' -prune -exec rm -rf {} ';'	;\
+	find . '(' 					\
+		-name '*~' 				\
+		-o -name '*.cp.*'			\
+		-o -name '*.hwa.c'			\
+		-o -name '*.pyc'			\
 		')' -exec rm {} ';'
 else
-	@echo Cleaning $(abspath $(MFD)../boards/build/$(BOARD))
-	rm -rf build/$(BOARD) $(MFD)../boards/build/$(BOARD)
+	@echo Cleaning $(abspath $(MFD)../boards/build/$(BOARD)) $(abspath $(PWD)/../build/$(BOARD))
+	rm -rf $(MFD)../boards/build/$(BOARD) build/$(BOARD)
 endif
 
 

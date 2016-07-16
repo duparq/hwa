@@ -15,7 +15,7 @@ fi
 
 #echo -n "$(basename $PWD): "
 OUT=build/${BOARD}/out
-DIABOLO=$(dirname $0)/../diabolo/host/diabolo.py
+DIABOLO=$(dirname $0)/../diabolo/software/diabolo.py
 
 
 #  Build .cfg file
