@@ -141,7 +141,7 @@
 #  define DBG1
 #endif
 
-#include "atmelavr-xinstr.sx"		// Macros for extended instructions
+#include "../../../avrx.sx"		// Macros for extended instructions
 #include "diabolo-macros.sx"		// Macros for diabolo
 
 

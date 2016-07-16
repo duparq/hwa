@@ -238,7 +238,7 @@ class Application:
                 #  Use sys.stdout.write instead of cout to bypass '--quiet'
                 #
                 sys.stdout.write(_("%s: %d /%d application bytes, CRC=0x%04X.\n" %
-                                   (self.options.filename, x, len(data), crc)))
+                                   (self.options.filename, x, self.device.flashsize, crc)))
             elif self.options.crc:
                 sys.stdout.write("%04X\n" % crc )
             else:
