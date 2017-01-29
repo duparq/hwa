@@ -60,7 +60,7 @@
 
 /*  We need a device with an USI
  */
-#if hw_id(hw_usi0) == 0
+#if HW_ID(hw_usi0) == 0
 HW_ERROR( device `HW_DEVICE` does not have a USI. )
 #endif
 

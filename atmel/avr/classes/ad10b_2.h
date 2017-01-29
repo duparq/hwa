@@ -206,21 +206,21 @@
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10b_input_##v)) )				\
     _hwa_write_reg(o,mux, HW_A1(_hw_ad10b_input_##v,0));		\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc0 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc0 ) )		\
     _hwa_write_reg(o,mux, 0);						\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc1 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc1 ) )		\
     _hwa_write_reg(o,mux, 1);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc2 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc2 ) )		\
     _hwa_write_reg(o,mux, 2);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc3 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc3 ) )		\
     _hwa_write_reg(o,mux, 3);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc4 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc4 ) )		\
     _hwa_write_reg(o,mux, 4);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc5 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc5 ) )		\
     _hwa_write_reg(o,mux, 5);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc6 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc6 ) )		\
     _hwa_write_reg(o,mux, 6);	     					\
-  else if ( hw_id(v)!=0 && hw_id(v)==hw_id( hw_pin_adc7 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc7 ) )		\
     _hwa_write_reg(o,mux, 7);						\
   else									\
     HWA_ERR("`input` can be `hw_pin_adc0..7` (or synonyms), "		\

@@ -93,26 +93,26 @@
 #define _hwa_cfacmpa_xnegin_0(o,...)		HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfacmpa_xnegin_1(o,k,v,...)				\
-  if ( hw_id(v)==hw_id(hw_pin_ain1) ) {					\
+  if ( HW_ID(v)==HW_ID(hw_pin_ain1) ) {					\
     _hwa_write_reg(o,acme,0);						\
   } else {								\
     _hwa_write_reg(o,acme,1);						\
     _hwa_write_reg(o,aden,0);						\
-    if ( hw_id(v) == hw_id( hw_pin_adc0 ) )				\
+    if ( HW_ID(v) == HW_ID( hw_pin_adc0 ) )				\
       _hwa_write_reg(o,admux, 0);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc1 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc1 ) )			\
       _hwa_write_reg(o,admux, 1);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc2 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc2 ) )			\
       _hwa_write_reg(o,admux, 2);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc3 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc3 ) )			\
       _hwa_write_reg(o,admux, 3);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc4 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc4 ) )			\
       _hwa_write_reg(o,admux, 4);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc5 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc5 ) )			\
       _hwa_write_reg(o,admux, 5);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc6 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc6 ) )			\
       _hwa_write_reg(o,admux, 6);					\
-    else if ( hw_id(v) == hw_id( hw_pin_adc7 ) )			\
+    else if ( HW_ID(v) == HW_ID( hw_pin_adc7 ) )			\
       _hwa_write_reg(o,admux, 7);					\
     else								\
       HWA_ERR("`negative_input` can be `hw_pin_ain1`, or any "		\

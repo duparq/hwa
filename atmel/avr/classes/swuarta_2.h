@@ -117,10 +117,10 @@
 #  if !defined hw_swuart0_compare
 #    error hw_swuart0_compare is not defined
 #  endif
-#  if defined hw_swuart0_pin_txd && hw_id(hw_swuart0_pin_txd)==0
+#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
 #    error invalid definition of hw_swuart0_pin_txd
 #  endif
-#  if defined hw_swuart0_pin_rxd && hw_id(hw_swuart0_pin_rxd)==0
+#  if defined hw_swuart0_pin_rxd && HW_ID(hw_swuart0_pin_rxd)==0
 #    error invalid definition of hw_swuart0_pin_rxd
 #  endif
 #  if defined hw_swuart0_pin_rxd && !defined hw_swuart0_starter
@@ -160,7 +160,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    *
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
-#  if defined hw_swuart0_pin_txd && hw_id(hw_swuart0_pin_txd) != hw_id(hw_swuart0_pin_rxd)
+#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd) != HW_ID(hw_swuart0_pin_rxd)
   _hwa( config, hw_swuart0_pin_txd, direction, output );
   _hwa( write, hw_swuart0_pin_txd, 1 );
 #  endif
@@ -177,10 +177,10 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
 #  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined
 #  endif
-#  if defined hw_swuart1_pin_txd && hw_id(hw_swuart1_pin_txd)==0
+#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
 #    error invalid definition of hw_swuart1_pin_txd
 #  endif
-#  if defined hw_swuart1_pin_rxd && hw_id(hw_swuart1_pin_rxd)==0
+#  if defined hw_swuart1_pin_rxd && HW_ID(hw_swuart1_pin_rxd)==0
 #    error invalid definition of hw_swuart1_pin_rxd
 #  endif
 #  if defined hw_swuart1_pin_rxd && !defined hw_swuart1_starter
@@ -220,7 +220,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    *
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
-#  if defined hw_swuart1_pin_txd && hw_id(hw_swuart1_pin_txd) != hw_id(hw_swuart1_pin_rxd)
+#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd) != HW_ID(hw_swuart1_pin_rxd)
   _hwa( config, hw_swuart1_pin_txd, direction, output );
   _hwa( write, hw_swuart1_pin_txd, 1 );
 #  endif

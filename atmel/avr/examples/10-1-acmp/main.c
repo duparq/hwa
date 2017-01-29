@@ -99,7 +99,7 @@ int main ( )
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
-#if hw_id( hw_io(REFERENCE) )
+#if HW_ID( hw_io(REFERENCE) )
   hwa( config, REFERENCE,
        mode,	 analog,
        direction, input

@@ -265,7 +265,7 @@
  * where:
  *
  * * `id` is a unique number identifying the object. If you're not going to use
- *        the `hw_id()` instruction, any value (or even none) is OK.
+ *        the `HW_ID()` instruction, any value (or even none) is OK.
  *
  * * `port` is the name of the object holding the pin, e.g.: `hw_porta`.
  *

@@ -879,9 +879,9 @@ extern char hw_error ;
  * @brief ID of object `o`. 0 if the object does not exist.
  * @hideinitializer
  */
-#define hw_id(o)			HW_G2(_hw_id,HW_ISON(o))(o)
-#define _hw_id_1(o)			HW_A1(_##o)
-#define _hw_id_0(o)			0
+#define HW_ID(o)			HW_G2(_HW_ID,HW_ISON(o))(o)
+#define _HW_ID_1(o)			HW_A1(_##o)
+#define _HW_ID_0(o)			0
 
 
 /**
