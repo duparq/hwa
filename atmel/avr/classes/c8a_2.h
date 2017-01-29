@@ -185,7 +185,7 @@
  * in the case of external register access, and display accurate error messages.
  */
 #define _hwa_solve__c8a( o,i,a )	\
-  _hwa_solve__c8a_2( o, _hw_rel(o,compare0), _hw_rel(o,compare1) )
+  _hwa_solve__c8a_2( o, _HW_REL(o,compare0), _HW_REL(o,compare1) )
 
 #define _hwa_solve__c8a_2(...)		_hwa_solve__c8a_3(__VA_ARGS__)
 
@@ -257,10 +257,10 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _hw_rel(oc0,pin), direction, output );		\
+	_hwa( config, _HW_REL(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _hw_rel(oc1,pin), direction, output );		\
+	_hwa( config, _HW_REL(oc1,pin), direction, output );		\
     }									\
   } while(0)
 

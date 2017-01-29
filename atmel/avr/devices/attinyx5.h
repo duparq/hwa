@@ -428,23 +428,23 @@
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------
- * `hw_psc0`	 | `hw_counter0prescaler`  | `hw_rel(hw_counter0, prescaler)`
- * `hw_psc0`	 | `hw_counter0prescaler0` | `hw_rel(hw_counter0, prescaler0)`
- * `hw_psc0`	 | `hw_counter1prescaler`  | `hw_rel(hw_counter1, prescaler)`
- * `hw_psc0`	 | `hw_counter1prescaler0` | `hw_rel(hw_counter1, prescaler0)`
- * `hw_oc00`	 | `hw_counter0compare0`   | `hw_rel(hw_counter0, compare0)`
- * `hw_oc01`	 | `hw_counter0compare1`   | `hw_rel(hw_counter0, compare1)`
- * `hw_counter0` | `hw_oc00counter`	   | `hw_rel(hw_oc00, counter)`
- * `hw_counter0` | `hw_oc01counter`	   | `hw_rel(hw_oc01, counter)`
- * `hw_pin_oc00` | `hw_oc00pin`		   | `hw_rel(hw_oc00, pin)`
- * `hw_pin_oc01` | `hw_oc01pin`		   | `hw_rel(hw_oc01, pin)`
- * `hw_oc10`	 | `hw_counter1compare0`   | `hw_rel(hw_counter1, compare0)`
- * `hw_oc11`	 | `hw_counter1compare1`   | `hw_rel(hw_counter1, compare1)`
- * `hw_counter1` | `hw_oc10counter`	   | `hw_rel(hw_oc10, counter)`
- * `hw_counter1` | `hw_oc11counter`	   | `hw_rel(hw_oc11, counter)`
- * `hw_pin_oc10` | `hw_oc10pin`		   | `hw_rel(hw_oc10, pin)`
- * `hw_pin_oc11` | `hw_oc11pin`		   | `hw_rel(hw_oc11, pin)`
- * `hw_dtg1`	 | `hw_counter1dtg0`	   | `hw_rel(hw_counter1, dtg)`<br>`hw_rel(hw_counter1, dtg0)`
+ * `hw_psc0`	 | `hw_counter0prescaler`  | `HW_REL(hw_counter0, prescaler)`
+ * `hw_psc0`	 | `hw_counter0prescaler0` | `HW_REL(hw_counter0, prescaler0)`
+ * `hw_psc0`	 | `hw_counter1prescaler`  | `HW_REL(hw_counter1, prescaler)`
+ * `hw_psc0`	 | `hw_counter1prescaler0` | `HW_REL(hw_counter1, prescaler0)`
+ * `hw_oc00`	 | `hw_counter0compare0`   | `HW_REL(hw_counter0, compare0)`
+ * `hw_oc01`	 | `hw_counter0compare1`   | `HW_REL(hw_counter0, compare1)`
+ * `hw_counter0` | `hw_oc00counter`	   | `HW_REL(hw_oc00, counter)`
+ * `hw_counter0` | `hw_oc01counter`	   | `HW_REL(hw_oc01, counter)`
+ * `hw_pin_oc00` | `hw_oc00pin`		   | `HW_REL(hw_oc00, pin)`
+ * `hw_pin_oc01` | `hw_oc01pin`		   | `HW_REL(hw_oc01, pin)`
+ * `hw_oc10`	 | `hw_counter1compare0`   | `HW_REL(hw_counter1, compare0)`
+ * `hw_oc11`	 | `hw_counter1compare1`   | `HW_REL(hw_counter1, compare1)`
+ * `hw_counter1` | `hw_oc10counter`	   | `HW_REL(hw_oc10, counter)`
+ * `hw_counter1` | `hw_oc11counter`	   | `HW_REL(hw_oc11, counter)`
+ * `hw_pin_oc10` | `hw_oc10pin`		   | `HW_REL(hw_oc10, pin)`
+ * `hw_pin_oc11` | `hw_oc11pin`		   | `HW_REL(hw_oc11, pin)`
+ * `hw_dtg1`	 | `hw_counter1dtg0`	   | `HW_REL(hw_counter1, dtg)`<br>`HW_REL(hw_counter1, dtg0)`
  */
 
 
@@ -1197,9 +1197,9 @@ typedef struct {
  */
 #define _hw_swuart0			_swuarta, 1200, 0
 #define _hw_swuart0_dtn							\
-  _hw_rc(hw_rel(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
 #define _hw_swuart0_dt0							\
-  _hw_rc(hw_rel(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
 #define _hw_swuart0_sr			_hw_shared_gpior0
 #endif
 
@@ -1209,9 +1209,9 @@ typedef struct {
  */
 #define _hw_swuart1			_swuarta, 1210, 0
 #define _hw_swuart1_dtn							\
-  _hw_rc(hw_rel(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
 #define _hw_swuart1_dt0							\
-  _hw_rc(hw_rel(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
 #define _hw_swuart1_sr			_hw_shared_gpior1
 #endif
 

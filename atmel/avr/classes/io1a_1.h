@@ -18,8 +18,8 @@
  *
  * `_io1a` objects have the following relative objects:
  *
- *  * one port, of class @ref atmelavr_p8a "_p8a": `hw_rel( IO_NAME, port )`
- *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `hw_rel( IO_NAME, pcic )`
+ *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_REL( IO_NAME, port )`
+ *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_REL( IO_NAME, pcic )`
  */
 #define _hw_class__io1a
 
@@ -60,22 +60,22 @@
 /**
  * @page atmelavr_io1a
  *
- * The `hw_rel()` instruction is usefull to retrieve the name of the I/O port
+ * The `HW_REL()` instruction is usefull to retrieve the name of the I/O port
  * associated to the I/O:
  *
  * @code
- * #if hw_id(hw_pin_pa3) && hw_id(hw_rel(hw_pin_pa3,port)) != hw_id(hw_port_a)
+ * #if hw_id(hw_pin_pa3) && hw_id(HW_REL(hw_pin_pa3,port)) != hw_id(hw_port_a)
  * #  Pin PA3 should be a PORTA pin!
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_rel__io1a		, _hw_rel_io1a
+#define _hw_mthd_HW_REL__io1a		, _HW_REL_io1a
 
 #define _hw_is_port_port
 
-#define _hw_rel_io1a(o,x,...)	\
-  HW_G2(_hw_rel_io1a,HW_IS(,_hw_is_port_##x))(o,x,__VA_ARGS__)
+#define _HW_REL_io1a(o,x,...)	\
+  HW_G2(_HW_REL_io1a,HW_IS(,_hw_is_port_##x))(o,x,__VA_ARGS__)
 
-#define _hw_rel_io1a_1(o,x,i,p,...)	p
+#define _HW_REL_io1a_1(o,x,i,p,...)	p
 
-#define _hw_rel_io1a_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`."))
+#define _HW_REL_io1a_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`."))

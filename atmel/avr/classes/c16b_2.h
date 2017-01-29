@@ -200,10 +200,10 @@
  * in the case of external register access, and display accurate error messages.
  */
 #define _hwa_solve__c16b( o,i,a )	_hwa_solve__c16b_2( o,		\
-							    _hw_rel(o,compare0), \
-							    _hw_rel(o,compare1), \
-							    _hw_rel(o,compare2), \
-							    _hw_rel(o,capture0) )
+							    _HW_REL(o,compare0), \
+							    _HW_REL(o,compare1), \
+							    _HW_REL(o,compare2), \
+							    _HW_REL(o,capture0) )
 #define _hwa_solve__c16b_2(...)		_hwa_solve__c16b_3(__VA_ARGS__)
 
 #define _hwa_solve__c16b_3( o, oc0, oc1, oc2, ic0 )			\
@@ -226,13 +226,13 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _hw_rel(oc0,pin), direction, output );		\
+	_hwa( config, _HW_REL(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _hw_rel(oc1,pin), direction, output );		\
+	_hwa( config, _HW_REL(oc1,pin), direction, output );		\
       if ( hwa->oc2.config.output != 0xFF				\
 	   && hwa->oc2.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _hw_rel(oc2,pin), direction, output );		\
+	_hwa( config, _HW_REL(oc2,pin), direction, output );		\
     }									\
     else if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \

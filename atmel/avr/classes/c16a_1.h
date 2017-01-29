@@ -15,14 +15,14 @@
  * A class `_c16a` object is a 16-bit counting unit that has 4 relative objects:
  *
  *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `hw_rel( COUNTER_NAME, prescaler )`
+ *    * `HW_REL( COUNTER_NAME, prescaler )`
  *
  *  * two compare units with waveform generators, of class @ref atmelavr_oc16a "_oc16a":
- *    * `hw_rel( COUNTER_NAME, compare0 )` and <br>
- *      `hw_rel( COUNTER_NAME, compare1 )`
+ *    * `HW_REL( COUNTER_NAME, compare0 )` and <br>
+ *      `HW_REL( COUNTER_NAME, compare1 )`
  *
  *  * one capture unit of class @ref atmelavr_dtga "_ic16a":
- *    * `hw_rel( COUNTER_NAME, capture0 )`
+ *    * `HW_REL( COUNTER_NAME, capture0 )`
  *
  * It is used by:
  *

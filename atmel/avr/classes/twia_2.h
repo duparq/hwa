@@ -65,10 +65,10 @@
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
     /*	Configure I/Os */						\
-    x##_config( hw_rel(o,pin_scl), direction, output );			\
-    x##_config( hw_rel(o,pin_sda), direction, output );			\
-    x##_write( hw_rel(o,pin_scl), 1 );					\
-    x##_write( hw_rel(o,pin_sda), 1 );					\
+    x##_config( HW_REL(o,pin_scl), direction, output );			\
+    x##_config( HW_REL(o,pin_sda), direction, output );			\
+    x##_write( HW_REL(o,pin_scl), 1 );					\
+    x##_write( HW_REL(o,pin_sda), 1 );					\
     HW_G2(_hwx_cftwia_ksclhz, HW_IS(sclhz,k))(x,o,k,__VA_ARGS__);	\
   } while(0)
 

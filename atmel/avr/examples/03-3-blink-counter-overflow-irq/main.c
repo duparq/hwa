@@ -67,9 +67,9 @@ int main ( )
               top,       compare0
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa( write, HW_REL(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
-    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
+    hwa( write, HW_REL(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
 
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 

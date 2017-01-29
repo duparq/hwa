@@ -66,9 +66,9 @@ int main ( )
               top,       max
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa( write, hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
+    hwa( write, HW_REL(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
   else /* loop_up */
-    hwa( write, hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
+    hwa( write, HW_REL(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
 
   /*  Enable compare IRQ
    */

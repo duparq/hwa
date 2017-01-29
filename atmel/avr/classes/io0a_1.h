@@ -21,5 +21,5 @@
 #define _hw_bn_io0a(o,i, cn,bn,bp,...)         0
 
 
-#define _hw_mthd_hw_rel__io0a		, _hw_rel_io0a
-#define _hw_rel_io0a(o,...)		HW_ERR("`"#o"` has no relative."))
+#define _hw_mthd_HW_REL__io0a		, _HW_REL_io0a
+#define _HW_REL_io0a(o,...)		HW_ERR("`"#o"` has no relative."))

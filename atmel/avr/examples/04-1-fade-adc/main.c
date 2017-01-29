@@ -116,7 +116,7 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
   if ( duty ) {
     hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
-      hw( write, hw_rel(COUNTER,compare1), duty );
+      hw( write, HW_REL(COUNTER,compare1), duty );
       hw( turn, HW_IRQ(COUNTER,compare1), on );
     }
     else
@@ -134,7 +134,7 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
  *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
  *  spare a few bytes and have a faster code with a naked ISR.
  */
-#if hw_ra(hw_rel(PIN_LED,port), port) < 0x40
+#if hw_ra(HW_REL(PIN_LED,port), port) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
 {
   hw( write, PIN_LED, 0 );
@@ -185,7 +185,7 @@ int main ( )
 
   /*  Configure the counter prescaler
    */
-  hwa( config, hw_rel(COUNTER,prescaler),
+  hwa( config, HW_REL(COUNTER,prescaler),
        clock,  system );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
@@ -198,7 +198,7 @@ int main ( )
        top,	  TOP_OBJ,
        //	    overflow,  at_top,
        );
-  hwa( write, hw_rel(COUNTER, TOP_OBJ), COUNT_TOP );
+  hwa( write, HW_REL(COUNTER, TOP_OBJ), COUNT_TOP );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC to make a single conversion and trigger an

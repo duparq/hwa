@@ -462,7 +462,7 @@ extern char hw_error ;
  * @endcode
  *
  * <object> can be the name of an object or the result of a statement, e.g.:
- * `hw_reg(<object>,<register>)`, `hw_rel(<object>.<object>)` ...  Inside `hw()`
+ * `hw_reg(<object>,<register>)`, `HW_REL(<object>.<object>)` ...  Inside `hw()`
  * and `hwa()`, `hw_` prefixes can be omitted for the statements:
  * `reg(<object>,<register>)`, `rel(<object>.<object>)` ...
  *
@@ -889,26 +889,26 @@ extern char hw_error ;
  * @brief Name of the relative object `x` of object `o`.
  * @hideinitializer
  *
- * This is used for example to get the prescaler name of a counter, the pin name
- * of a compare unit output, etc.
+ * This is used for example to get the prescaler name of a counter, the output
+ * pin name of a compare unit, etc.
  */
-#define hw_rel(o,x)			_hw_rel1(o,x)
-#define _hw_rel1(...)			_hw_rel0_0(__VA_ARGS__)
-#define _hw_rel0_0(o,x)			HW_G2(_hw_rel2,HW_ISON(o##x))(o,x)
-#define _hw_rel0_2(...)			_hw_rel0_0(__VA_ARGS__)
-#define _hw_rel2_1(o,x)			o##x
-#define _hw_rel2_0(o,x)			HW_PE(o, HW_G2(_hw_rel20,HW_ISON(o))(o,x))
-#define _hw_rel20_0(o,x)		HW_E(`o` is not an object.)
+#define HW_REL(o,x)			_HW_REL1(o,x)
+#define _HW_REL1(...)			_HW_REL0_0(__VA_ARGS__)
+#define _HW_REL0_0(o,x)			HW_G2(_HW_REL2,HW_ISON(o##x))(o,x)
+#define _HW_REL0_2(...)			_HW_REL0_0(__VA_ARGS__)
+#define _HW_REL2_1(o,x)			o##x
+#define _HW_REL2_0(o,x)			HW_PE(o, HW_G2(_HW_REL20,HW_ISON(o))(o,x))
+#define _HW_REL20_0(o,x)		HW_E(`o` is not an object.)
 
-/*  Look for a class-defined hw_rel() method
+/*  Look for a class-defined HW_REL() method
  */
-#define _hw_rel20_1(o,x)		_hw_rel3(o,x,_##o)
-#define _hw_rel3(...)			_hw_rel4(__VA_ARGS__)
-#define _hw_rel4(o,x,c,...)		HW_G2(_hw_rel4,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
-#define _hw_rel4_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
-#define _hw_rel4_1(o,x,c,...)		HW_G2(_hw_rel41, HW_IS(,_hw_mthd_hw_rel_##c))(o,x,c,__VA_ARGS__)
-#define _hw_rel41_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
-#define _hw_rel41_1(o,x,c,...)		HW_A1(_hw_mthd_hw_rel_##c)(o,x,__VA_ARGS__)
+#define _HW_REL20_1(o,x)		_HW_REL3(o,x,_##o)
+#define _HW_REL3(...)			_HW_REL4(__VA_ARGS__)
+#define _HW_REL4(o,x,c,...)		HW_G2(_HW_REL4,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
+#define _HW_REL4_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
+#define _HW_REL4_1(o,x,c,...)		HW_G2(_HW_REL41, HW_IS(,_hw_mthd_HW_REL_##c))(o,x,c,__VA_ARGS__)
+#define _HW_REL41_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
+#define _HW_REL41_1(o,x,c,...)		HW_A1(_hw_mthd_HW_REL_##c)(o,x,__VA_ARGS__)
 
 
 /**
@@ -916,8 +916,8 @@ extern char hw_error ;
  * @brief Name of the relative `x` of object `o`.
  * @hideinitializer
  *
- * The public version of `hw_rel()` fails if one of the arguments is the result
- * of a `hw_rel()`. This private version should be used instead in HWA code.
+ * The public version of `HW_REL()` fails if one of the arguments is the result
+ * of a `HW_REL()`. This private version should be used instead in HWA code.
  */
-#define _hw_rel(o,x)			__hw_rel2(o,x)
-#define __hw_rel2(o,x)			o##x
+#define _HW_REL(o,x)			__HW_REL2(o,x)
+#define __HW_REL2(o,x)			o##x

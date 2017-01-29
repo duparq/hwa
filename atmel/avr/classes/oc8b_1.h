@@ -15,11 +15,11 @@
  * A class `_oc8b` object is an 8-bit compare unit with waveform generator that
  * drives two complementary outputs. It has the following relative objects:
  *
- *  * one counter, whose name is given by `hw_rel( COMPARE_NAME, counter )`
+ *  * one counter, whose name is given by `HW_REL( COMPARE_NAME, counter )`
  *
- *  * one output pin, whose name is given by `hw_rel( COMPARE_NAME, pin_h )`
+ *  * one output pin, whose name is given by `HW_REL( COMPARE_NAME, pin_h )`
  *
- *  * one complementary output pin, whose name is given by `hw_rel( COMPARE_NAME, pin_l )`
+ *  * one complementary output pin, whose name is given by `HW_REL( COMPARE_NAME, pin_l )`
  *
  * It is used in:
  *

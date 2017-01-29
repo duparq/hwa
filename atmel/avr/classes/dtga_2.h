@@ -17,7 +17,7 @@
  * the delay in prescaled clock units before the assertion of the output `X_y`:
  *
  * @code
- * hw_config( hw_rel( hw_counter0, dtg0 ),
+ * hw_config( HW_REL( hw_counter0, dtg0 ),
  *
  *          [ clock_div,  1 | 2 | 4 | 8, ]      // default is `1`
  *

@@ -252,7 +252,7 @@
  * -> If 
  */
 #define _hwa_solve__c8b( o,i,a )					\
-  _hwa_solve__c8b_2( o, _hw_rel(o,compare0), _hw_rel(o,compare1) )
+  _hwa_solve__c8b_2( o, _HW_REL(o,compare0), _HW_REL(o,compare1) )
 
 #define _hwa_solve__c8b_2(...)	_hwa_solve_c8b(__VA_ARGS__)
 

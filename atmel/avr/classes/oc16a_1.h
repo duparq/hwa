@@ -15,9 +15,9 @@
  * A class `_oc16a` object is a 16-bit counter compare unit with waveform
  * generator. It has the following relative objects:
  *
- *  * one counter, whose name is given by `hw_rel( COMPARE_NAME, counter )`
+ *  * one counter, whose name is given by `HW_REL( COMPARE_NAME, counter )`
  *
- *  * one output pin, whose name is given by `hw_rel( COMPARE_NAME, pin )`
+ *  * one output pin, whose name is given by `HW_REL( COMPARE_NAME, pin )`
  *
  * It is used in:
  *
