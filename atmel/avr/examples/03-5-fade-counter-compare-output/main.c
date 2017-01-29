@@ -37,7 +37,7 @@
  */
 HW_ISR( COUNTER, overflow )
 {
-  static hw_uint_t(hw_bn(COUNTER))	duty ;
+  static hw_uint_t(HW_BITS(COUNTER))	duty ;
   static uint8_t			phase ;
 
   if ( phase == 0 )

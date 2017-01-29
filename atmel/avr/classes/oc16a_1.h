@@ -31,11 +31,11 @@
  * @page atmelavr_oc16a
  * @par Instructions that do not produce C code
  *
- * The `hw_bn()` instruction retrieves the number of bits of the compare
+ * The `HW_BITS()` instruction retrieves the number of bits of the compare
  * register:
  *
  * @code
- * #if hw_bn( COMPARE_NAME ) != 16
+ * #if HW_BITS( COMPARE_NAME ) != 16
  * #  error A 16-bit compare unit is required!
  * #endif
  * @endcode

@@ -307,7 +307,7 @@ extern char hw_error ;
 /* No method f for object o of class c. Is o an object?
  */
 #define _HW_MTHD4_0(f,o,c,...)	HW_G2(_HW_MTHD5, HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
-#define _HW_MTHD5_1(f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no method `"#f"`.")
+#define _HW_MTHD5_1(f,o,c,...)	HW_E(object `o` of class `c` has no method `f`.)
 
 /* o is not an object. Is it a class name?
  */
@@ -321,7 +321,7 @@ extern char hw_error ;
 
 /* o is not an object and not a class name. Propagate or trigger an error.
  */
-#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_ERR("`"#o"` is not a HWA object."))
+#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_E(`o` is not a HWA object.))
 
 
 /**
@@ -462,7 +462,7 @@ extern char hw_error ;
  * @endcode
  *
  * <object> can be the name of an object or the result of a statement, e.g.:
- * `hw_reg(<object>,<register>)`, `HW_REL(<object>.<object>)` ...  Inside `hw()`
+ * `HW_REG(<object>,<register>)`, `HW_REL(<object>.<object>)` ...  Inside `hw()`
  * and `hwa()`, `hw_` prefixes can be omitted for the statements:
  * `reg(<object>,<register>)`, `rel(<object>.<object>)` ...
  *
@@ -528,7 +528,7 @@ extern char hw_error ;
 #define _hwp5_1(p,f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no method `"#p#f"`.")
 
 /*  o is not an object. Is it a class name?
- *    For example, hwa( write, hw_reg(o,r), value ) expands with the class of the register
+ *    For example, hwa( write, HW_REG(o,r), value ) expands with the class of the register
  */
 #define _hwp5_0(p,f,o,x,...)	HW_G2(_hwp6, HW_IS(,_hw_class_##o))(p,f,o,__VA_ARGS__,)
 #define _hwp6_1(p,f,c,o,...)	HW_G2(_hwp4, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,o,c,__VA_ARGS__)
@@ -637,21 +637,21 @@ extern char hw_error ;
  * Errors are processed at last.
  */
 /*  FIXME: fails without HW_ERR if p is a _pin1:
- *  	_hw_reg_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
- *  -> Should hw_reg() be a method?
+ *  	_HW_REG_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
+ *  -> Should HW_REG() be a method?
  */
 
-#define hw_reg(o,x)			_hw_reg2(o,x)
-#define _hw_reg2(...)			_HW_GEN(_hw_reg3,__VA_ARGS__)
-#define _hw_reg3(c,o,i,a,r)		_hw_reg4(_hw_##c##_##r,o,c,a,r)
-#define _hw_reg4(...)			_hw_reg5(__VA_ARGS__)
-#define _hw_reg5(t,...)			HW_G2(_hw_reg, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
-#define _hw_reg_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _hw_reg_0(t,o,c,a,r)		_hw_reg6(_##o##_##r,o,c,a,r)
-#define _hw_reg6(...)			_hw_reg7(__VA_ARGS__)
-#define _hw_reg7(t,...)			HW_G2(_hw_reg7, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
-#define _hw_reg7_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _hw_reg7_0(t,o,c,a,r)		HW_PE(o, HW_E(`o` has no attribute `r`.))
+#define HW_REGISTER(o,x)		_HW_REG2(o,x)
+#define _HW_REG2(...)			_HW_GEN(_HW_REG3,__VA_ARGS__)
+#define _HW_REG3(c,o,i,a,r)		_HW_REG4(_hw_##c##_##r,o,c,a,r)
+#define _HW_REG4(...)			_HW_REG5(__VA_ARGS__)
+#define _HW_REG5(t,...)			HW_G2(_HW_REG, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
+#define _HW_REG_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
+#define _HW_REG_0(t,o,c,a,r)		_HW_REG6(_##o##_##r,o,c,a,r)
+#define _HW_REG6(...)			_HW_REG7(__VA_ARGS__)
+#define _HW_REG7(t,...)			HW_G2(_HW_REG7, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
+#define _HW_REG7_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
+#define _HW_REG7_0(t,o,c,a,r)		HW_PE(o, HW_E(`o` has no attribute `r`.))
 
 
 /**
@@ -659,7 +659,8 @@ extern char hw_error ;
  * @brief Memory definition of a register (internal use, no error checking)
  * @hideinitializer
  */
-#define _hw_reg(o,r)			_hw__reg_2(o,_##o,r)
+#define _HW_REGISTER(o,r)		_hw__reg_2(o,_##o,r)
+#define _HW_REG(o,r)			_hw__reg_2(o,_##o,r)
 #define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
 #define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_##c##_##r,o,c,a,r)
 #define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
@@ -755,12 +756,16 @@ extern char hw_error ;
  * @brief Address of object `o`.
  * @hideinitializer
  */
-#define hw_addr(o)			HW_MTHD(hw_addr, o,)
+//#define hw_addr(o)			HW_MTHD(hw_addr, o,)
+//#define HW_ADDRESS(o)			HW_MTHD(HW_ADDRESS, o,)
+#define HW_ADDRESS(...)			HW_MTHD(HW_ADDRESS, __VA_ARGS__,)
+
 
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
 #define _hw_mthd_hw_addr__m1		, _hw_addr__m1
+#define _hw_mthd_HW_ADDRESS__m1		, _hw_addr__m1
 
 
 /**
@@ -771,9 +776,9 @@ extern char hw_error ;
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
-#define hw_ra(o,r)			_hw_ra1(hw_reg(o,r))
-#define _hw_ra1(...)			_hw_ra2(__VA_ARGS__)
-#define _hw_ra2(x,...)			HW_PE(x, _HW_SPEC(_hw_ra, x, __VA_ARGS__))
+/* #define hw_ra(o,r)			_hw_ra1(HW_REG(o,r)) */
+/* #define _hw_ra1(...)			_hw_ra2(__VA_ARGS__) */
+/* #define _hw_ra2(x,...)			HW_PE(x, _HW_SPEC(_hw_ra, x, __VA_ARGS__)) */
 
 
 /**
@@ -781,7 +786,7 @@ extern char hw_error ;
  * @brief  Address of an object's register (internal use)
  * @hideinitializer
  */
-#define _hw_ra(o,r)			_HW_SPEC(_hw__ra, _hw_reg(o,r))
+#define _hw_ra(o,r)			_HW_SPEC(_hw__ra, _HW_REG(o,r))
 
 
 /**
@@ -802,10 +807,10 @@ extern char hw_error ;
  * @brief Address and position of the least significant bit of the register `r` of object `o`.
  * @hideinitializer
  */
-#define _hw_rap(o,r)			_HW_SPEC(_hw__rap, _hw_reg(o,r))
+/* #define _hw_rap(o,r)			_HW_SPEC(_hw__rap, _HW_REG(o,r)) */
 
-#define _hw_mthd_hw__rap__m1		, _hw__rap__m1
-#define _hw__rap__m1(...)		_hw_addr__m1(__VA_ARGS__,), _hw_bp__m1(__VA_ARGS__,)
+/* #define _hw_mthd_hw__rap__m1		, _hw__rap__m1 */
+/* #define _hw__rap__m1(...)		_hw_addr__m1(__VA_ARGS__,), _hw_bp__m1(__VA_ARGS__,) */
 
 
 /**
@@ -813,14 +818,14 @@ extern char hw_error ;
  * @brief Number of bits of object `o`.
  * @hideinitializer
  */
-#define hw_bn(o)			HW_MTHD(hw_bn, o,)
+#define HW_BITS(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
 
 #define _hw_mthd_hw_bn__m1		, _hw_bn__m1
 
 #define _hw_bn__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
 
 
-#define _hw_bn(o)			_HW_MTHD(hw_bn, o,)
+//#define _HW_BITS(o)			_HW_MTHD(hw_bn, o,)
 
 
 /**
@@ -828,7 +833,7 @@ extern char hw_error ;
  * @brief Number of bits of the register `r` of object `o`.
  * @hideinitializer
  */
-#define _hw_rbn(o,r)					_HW_SPEC(_hw_rbn,_hw_reg(o,r))
+#define _hw_rbn(o,r)					_HW_SPEC(_hw_rbn,_HW_REG(o,r))
 #define _hw_rbn__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
 
 
@@ -837,7 +842,7 @@ extern char hw_error ;
  * @brief Position of least significant bit of object `o`.
  * @hideinitializer
  */
-#define hw_bp(o)					HW_MTHD(hw_bp, o,)
+#define HW_POSITION(...)				HW_MTHD(hw_bp, __VA_ARGS__,)
 
 #define _hw_mthd_hw_bp__m1				, _hw_bp__m1
 
@@ -849,7 +854,7 @@ extern char hw_error ;
  * @brief Position of the least significant bit of the register `r` of object `o`.
  * @hideinitializer
  */
-#define _hw_rbp(o,r)					_HW_SPEC(_hw_rbp,_hw_reg(o,r))
+#define _hw_rbp(o,r)					_HW_SPEC(_hw_rbp,_HW_REG(o,r))
 #define _hw_rbp__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
 
 
@@ -870,7 +875,7 @@ extern char hw_error ;
  * @brief Class of the register `r` of object `o`.
  * @hideinitializer
  */
-#define _hw_rc(o,r)					_HW_SPEC(_hw_rc,_hw_reg(o,r))
+#define _hw_rc(o,r)					_HW_SPEC(_hw_rc,_HW_REG(o,r))
 #define _hw_rc__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)		rc
 
 
@@ -892,6 +897,7 @@ extern char hw_error ;
  * This is used for example to get the prescaler name of a counter, the output
  * pin name of a compare unit, etc.
  */
+#define HW_RELATIVE(o,x)		_HW_REL1(o,x)
 #define HW_REL(o,x)			_HW_REL1(o,x)
 #define _HW_REL1(...)			_HW_REL0_0(__VA_ARGS__)
 #define _HW_REL0_0(o,x)			HW_G2(_HW_REL2,HW_ISON(o##x))(o,x)
@@ -919,5 +925,6 @@ extern char hw_error ;
  * The public version of `HW_REL()` fails if one of the arguments is the result
  * of a `HW_REL()`. This private version should be used instead in HWA code.
  */
+#define _HW_RELATIVE(o,x)		__HW_REL2(o,x)
 #define _HW_REL(o,x)			__HW_REL2(o,x)
 #define __HW_REL2(o,x)			o##x

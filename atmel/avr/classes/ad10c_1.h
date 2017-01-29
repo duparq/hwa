@@ -43,10 +43,10 @@
  * @page atmelavr_ad10c
  * @par Instructions that do not produce C code
  *
- * The `hw_bn(...)` instruction retrieves the number of bits of the ADC:
+ * The `HW_BITS(...)` instruction retrieves the number of bits of the ADC:
  *
  * @code
- * #if hw_bn( hw_adc0 ) < 10
+ * #if HW_BITS( hw_adc0 ) < 10
  * #  error At least 10-bit ADC is required!
  * #endif
  * @endcode

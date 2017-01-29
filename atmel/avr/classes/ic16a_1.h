@@ -30,11 +30,11 @@
  * @page atmelavr_ic16a
  * @par Instructions that do not produce C code
  *
- * The `hw_bn()` instruction retrieves the number of bits of the capture
+ * The `HW_BITS()` instruction retrieves the number of bits of the capture
  * register:
  *
  * @code
- * #if hw_bn( CAPTURE_NAME ) != 16
+ * #if HW_BITS( CAPTURE_NAME ) != 16
  * #  error A 16-bit capture unit is required!
  * #endif
  * @endcode

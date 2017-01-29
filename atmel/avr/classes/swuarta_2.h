@@ -547,15 +547,15 @@ typedef struct {
 #if defined hw_swuart0_compare
 extern void					_hw_swuart0_reset ( ) ;
 extern void					_hw_swuart0_set_dt ( uint16_t ) ;
-extern hw_uint_t(hw_bn(hw_swuart0_compare))	__hw_swuart0_dtn ;
-extern hw_uint_t(hw_bn(hw_swuart0_compare))	__hw_swuart0_dt0 ;
+extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dtn ;
+extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dt0 ;
 #endif
 
 #if defined hw_swuart1_compare
 extern void					_hw_swuart1_reset ( ) ;
 extern void					_hw_swuart1_set_dt ( uint16_t ) ;
-extern hw_uint_t(hw_bn(hw_swuart1_compare))	__hw_swuart1_dtn ;
-extern hw_uint_t(hw_bn(hw_swuart1_compare))	__hw_swuart1_dt0 ;
+extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dtn ;
+extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dt0 ;
 #endif
 
 

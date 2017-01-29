@@ -34,10 +34,10 @@
  * @page atmelavr_c8b
  * @par Instructions that do not produce C code
  *
- * The `hw_bn()` instruction retrieves the number of bits of the counting register:
+ * The `HW_BITS()` instruction retrieves the number of bits of the counting register:
  *
  * @code
- * #if hw_bn( COUNTER_NAME ) != 8
+ * #if HW_BITS( COUNTER_NAME ) != 8
  * #  error You must choose a 8-bit counter!
  * #endif
  * @endcode

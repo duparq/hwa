@@ -41,7 +41,7 @@ LABEL(wait_idle_bits):
 
 4:	sbis	RXDPIN, RXDBIT
 	rjmp	1b		; Restart if RXD==0
-	XSBIS	R22, MATCH_IF_RA, MATCH_IF_BP
+	XSBIS	R22, MATCH_IF
 	rjmp	4b
 
 	dec	R25

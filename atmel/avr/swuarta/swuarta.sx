@@ -7,36 +7,42 @@
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if hw_id(hw_rel(UART,_pin_txd))
+#if HW_ID(HW_RELATIVE(UART,_pin_txd))
 #  define CANTX 1
-	TXDPORT   = hw_ra(hw_rel(hw_rel(UART,_pin_txd),port), port)
-	TXDPIN    = hw_ra(hw_rel(hw_rel(UART,_pin_txd),port), pin)
-	TXDDR     = hw_ra(hw_rel(hw_rel(UART,_pin_txd),port), ddr)
-	TXDBIT    = hw_bp(hw_rel(UART,_pin_txd))
-#else	
+#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_txd),port)
+	TXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
+	TXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
+	TXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
+	TXDBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_txd) )
+#  undef PORT
+#else
 #  define CANTX 0
 #endif
 
-#if hw_id(hw_rel(UART,_pin_rxd))
+#if HW_ID(HW_RELATIVE(UART,_pin_rxd))
 #  define CANRX 1
-	RXDPORT   = hw_ra(hw_rel(hw_rel(UART,_pin_rxd),port), port)
-	RXDPIN    = hw_ra(hw_rel(hw_rel(UART,_pin_rxd),port), pin)
-	RXDDR     = hw_ra(hw_rel(hw_rel(UART,_pin_rxd),port), ddr)
-	RXDBIT    = hw_bp(hw_rel(UART,_pin_rxd))
-#  define RXD_AP	RXDPIN, RXDBIT
+#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_rxd),port)
+	RXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
+	RXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
+	RXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
+	RXDBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_rxd) )
+#  define RXD_AP  RXDPIN, RXDBIT
+#  undef PORT
 #else	
 #  define CANRX 0
 #endif
 
 	;; Debugging options
 	;; 
-#if hw_id(hw_rel(UART,_pin_dbg))
+#if HW_ID(HW_RELATIVE(UART,_pin_dbg))
+#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_dbg),port)
 	DBG       = 1
-	DBGPORT   = hw_ra(hw_rel(hw_rel(UART,_pin_dbg),port), port)
-	DBGPIN    = hw_ra(hw_rel(hw_rel(UART,_pin_dbg),port), pin)
-	DBGDR     = hw_ra(hw_rel(hw_rel(UART,_pin_dbg),port), ddr)
-	DBGBIT    = hw_bp(hw_rel(UART,_pin_dbg))
+	DBGPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
+	DBGPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
+	DBGDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
+	DBGBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_dbg) )
 #  define DBG_AP	DBGPIN, DBGBIT
+#  undef PORT
 #else
 	DBG       = 0
 #endif
@@ -72,42 +78,39 @@
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if hw_id(hw_rel(UART,_pin_rxd)) == hw_id(hw_pin_int0) \
- || hw_id(hw_rel(UART,_pin_rxd)) == hw_id(hw_pin_ain1)
+#if HW_ID(HW_RELATIVE(UART,_pin_rxd)) == HW_ID(hw_pin_int0) \
+ || HW_ID(HW_RELATIVE(UART,_pin_rxd)) == HW_ID(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
 #endif
 
-#define ONEWIRE		hw_id(HW_G2(UART,pin_txd)) == hw_id(HW_G2(UART,pin_rxd))
+#define ONEWIRE		HW_ID(HW_G2(UART,pin_txd)) == HW_ID(HW_G2(UART,pin_rxd))
 #define CHECKTX		HW_G2(UART,check_tx)
 #define	CLK_DIV		HW_G2(UART,clk_div)
 
 #undef COMPARE
-#define COMPARE		_hw_rel(UART,_compare)
+#define COMPARE		_HW_RELATIVE(UART,_compare)
 
 #undef COUNTER
-#define COUNTER		_hw_rel(COMPARE,counter)
+#define COUNTER		_HW_RELATIVE(COMPARE,counter)
 
 #undef STARTISR
-#define STARTISR	_hw_rel(UART,_starter)
+#define STARTISR	_HW_RELATIVE(UART,_starter)
 
+
+#define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
 
 #if CANRX
-#  define START_IE	hw_ap(HW_IRQE(STARTISR))
-#  define START_IF	hw_ap(HW_IRQF(STARTISR))
+#  define START_IE	AP(HW_IRQE(STARTISR))
+#  define START_IF	AP(HW_IRQF(STARTISR))
 #endif
 
-#define MATCH_IF_RA	hw_addr(HW_IRQF(COMPARE))
-#define MATCH_IF_BP	hw_bp(HW_IRQF(COMPARE))
-#define MATCH_IF	hw_ap(HW_IRQF(COMPARE))
-
-#define MATCH_IE_RA	hw_addr(HW_IRQE(COMPARE))
-#define MATCH_IE_BP	hw_bp(HW_IRQE(COMPARE))
-#define MATCH_IE	hw_ap(HW_IRQE(COMPARE))
+#define MATCH_IF	AP(HW_IRQF(COMPARE))
+#define MATCH_IE	AP(HW_IRQE(COMPARE))
 
 #undef COUNT_BN
-#define COUNT_BN 	hw_bn(COUNTER)
+#define COUNT_BN 	HW_BITS(COUNTER)
 
 
 	.section .bss
@@ -141,12 +144,12 @@ DATA(dtn):	.byte	0		; 1 bit duration
 
 	;; Counter registers
 	;;
-	count = _hw_ra(COUNTER, count)
-	comp  = _hw_ra(COMPARE, reg)
+	count = HW_ADDRESS( HW_REGISTER(COUNTER,count) )
+	comp  = HW_ADDRESS( HW_REGISTER(COMPARE,reg) )
 
 	;; Status byte
 	;;
-	stat  = _hw_ra(UART,sr)		; defined in the device-specific HWA header
+	stat  = HW_ADDRESS( HW_REGISTER(UART,sr) ) ; defined in the device-specific HWA header
 
 #define F_RXC    stat, 0		// RX complete (stop bit sampled)
 #define F_TXC    stat, 1		// TX complete
@@ -609,7 +612,7 @@ LABEL(txsb):
 	CYCLES=CYCLES+4
 #  endif
 
-#  if hw_id(hw_rel(UART,_pin_rxd))
+#  if HW_ID(HW_RELATIVE(UART,_pin_rxd))
 	XCB	R31, F_RXTX	;	Mode = RX
 
 	;; Clear flag, enable START interrupts

@@ -32,11 +32,11 @@
  * @page atmelavr_oc8b
  * @par Instructions that do not produce C code
  *
- * The `hw_bn()` instruction retrieves the number of bits of the compare
+ * The `HW_BITS()` instruction retrieves the number of bits of the compare
  * register:
  *
  * @code
- * #if hw_bn( COMPARE_NAME ) != 8
+ * #if HW_BITS( COMPARE_NAME ) != 8
  * #  error A 8-bit compare unit is required!
  * #endif
  * @endcode

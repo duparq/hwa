@@ -86,7 +86,7 @@
  * Syntax: `_hw_read( object, register );`
  * @hideinitializer
  */
-#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _hw_reg(o,r))
+#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_REG(o,r))
 
 
 /**
@@ -96,7 +96,7 @@
  * Syntax: `_hw_atomic_read( object, register );`
  * @hideinitializer
  */
-#define _hw_atomic_read_reg(o,r)		_HW_SPEC(_hw_atomic_read, _hw_reg(o,r))
+#define _hw_atomic_read_reg(o,r)		_HW_SPEC(_hw_atomic_read, _HW_REG(o,r))
 
 
 /**
@@ -106,7 +106,7 @@
  * Syntax: `_hw_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, hw_reg(o,r), v,)
+#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, HW_REGISTER(o,r), v,)
 
 
 /**
@@ -116,7 +116,7 @@
  * Syntax: `_hwa_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _hw_reg(o,r), v)
+#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_REG(o,r), v)
 
 
 #define _hw_mthd_hw_read__m1		, _hw_read__m1
@@ -272,7 +272,7 @@
  *
  *	_hw_write_reg_m( o, r, m, v );
  */
-#define _hw_write_reg_m(o,r,m,v)	_hw_wrrm1(_hw_reg(o,r),m,v)
+#define _hw_write_reg_m(o,r,m,v)	_hw_wrrm1(_HW_REG(o,r),m,v)
 #define _hw_wrrm1(...)			_hw_wrrm2(__VA_ARGS__)
 #define _hw_wrrm2(t,...)		_hw_wrrm_##t(__VA_ARGS__)
 #define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
@@ -285,7 +285,7 @@
  *
  *	_hwa_write_reg_m( o, r, m, v );
  */
-#define _hwa_write_reg_m(o,r,m,v)	_hwa_wrrm1(_hw_reg(o,r),m,v)
+#define _hwa_write_reg_m(o,r,m,v)	_hwa_wrrm1(_HW_REG(o,r),m,v)
 #define _hwa_wrrm1(...)			_hwa_wrrm2(__VA_ARGS__)
 #define _hwa_wrrm2(t,...)		_hwa_wrrm_##t(__VA_ARGS__)
 #define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
@@ -371,7 +371,7 @@
 /* #define _hwa_commit_hreg_3(rt,ra,rwm,rfm,o,c,a,r)	\ */
 /*   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit) */
 
-#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_hw_reg(o,r))
+#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_REG(o,r))
 #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__)
 #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__)
 
@@ -388,7 +388,7 @@
  *
  * @hideinitializer
  */
-#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_hw_reg(o,r))
+#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_HW_REG(o,r))
 #define _hwa_mmask__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mmask)>>bp)&((1U<<bn)-1))
 
 
@@ -397,7 +397,7 @@
  * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_hw_reg(o,r))
+#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_HW_REG(o,r))
 #define _hwa_mvalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mvalue)>>bp)&((1U<<bn)-1))
 
 
@@ -406,7 +406,7 @@
  * @brief Get the last committed value for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_hw_reg(o,r))
+#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_HW_REG(o,r))
 #define _hwa_ovalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.ovalue)>>bp)&((1U<<bn)-1))
 
 
@@ -415,7 +415,7 @@
  * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modification mask (mmask).
  * @hideinitializer
  */
-#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_hw_reg(o,r),v)
+#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_REG(o,r),v)
 #define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)			\
     hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
 
@@ -651,7 +651,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  * Syntax: `_hw_read_reg_p( pointer, class, register );`
  * @hideinitializer
  */
-#define _hw_read_reg_p(o,c,r)		_HW_SPEC(_hw_readp, _hw_reg_p(o,c,r))
+#define _hw_read_reg_p(o,c,r)		_HW_SPEC(_hw_readp, _HW_REG_p(o,c,r))
 /**
  * @ingroup private
  * @brief Write one register of an object, knowing only the class and having a
@@ -660,7 +660,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  * Syntax: `_hw_write_reg_p( pointer, class, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg_p(o,c,r,v)	_HW_SPEC(_hw_write, _hw_reg_p(o,c,r), v)
+#define _hw_write_reg_p(o,c,r,v)	_HW_SPEC(_hw_write, _HW_REG_p(o,c,r), v)
 
 /**
  * @ingroup private
@@ -670,7 +670,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  * Syntax: `_hwa_write_reg_p( pointer, class, register, value );`
  * @hideinitializer
  */
-#define _hwa_write_reg_p(o,c,r,v)	_HW_SPEC(_hwa_write, _hw_reg_p(o,c,r), v)
+#define _hwa_write_reg_p(o,c,r,v)	_HW_SPEC(_hwa_write, _HW_REG_p(o,c,r), v)
 
 #define _hwa_write__m1_p( o,rc,rwm,rfm, bn,bp, v )	\
   _hwa_write_##rc( o, rwm,rfm, bn,bp,v )
@@ -727,7 +727,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  *
  * @hideinitializer
  */
-#define _hwa_commit_reg_p(o,c,r)	_hwa_commitregp_2(_hw_reg_p(o,c,r))
+#define _hwa_commit_reg_p(o,c,r)	_hwa_commitregp_2(_HW_REG_p(o,c,r))
 #define _hwa_commitregp_2(...)		_hwa_commitregp_3(__VA_ARGS__)
 #define _hwa_commitregp_3(t,...)	_hwa_commitregp_##t(__VA_ARGS__)
 

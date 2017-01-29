@@ -28,10 +28,10 @@
  * @page atmelavr_io1a
  * @par Instructions that do not produce C code:
  *
- * The `hw_bn()` instruction retrieves the number of bits of an I/O definition:
+ * The `HW_BITS()` instruction retrieves the number of bits of an I/O definition:
  *
  * @code
- * #if HW_ID(hw_pin_pa3) && (hw_bn(hw_pin_pa3) != 1)
+ * #if HW_ID(hw_pin_pa3) && (HW_BITS(hw_pin_pa3) != 1)
  * #  HWA is damaged!
  * #endif
  * @endcode

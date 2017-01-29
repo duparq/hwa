@@ -133,9 +133,9 @@
 			 "  andi %[r], %[wdp]"		"\n\t"		\
 			 "  out  %[wdtcr], %[r]"	"\n\t"		\
 			 : [r] "=&d" (reg)				\
-			 : [wdtcr] "I" (_hw_addr(_hw_reg(o, csr))-0x20), \
-			   [wdce] "I" (1<<_hw_bp(_hw_reg(o, wdce))),	\
-			   [wde] "I" (1<<_hw_bp(_hw_reg(o, wde))),	\
+			 : [wdtcr] "I" (_hw_addr(_HW_REG(o, csr))-0x20), \
+			   [wdce] "I" (1<<_hw_bp(_HW_REG(o, wdce))),	\
+			   [wde] "I" (1<<_hw_bp(_HW_REG(o, wde))),	\
 			   [wdp] "I" (0x27));				\
   } while(0)
 

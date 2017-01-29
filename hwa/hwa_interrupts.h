@@ -41,7 +41,7 @@
 #define HW_IRQE(...)		_HW_IRQE2(HW_IRQ(__VA_ARGS__))
 #define _HW_IRQE2(...)		HW_G2(_HW_IRQE,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_IRQE_0(...)		__VA_ARGS__
-#define _HW_IRQE_1(t,o,v,e,f)	_hw_reg(o,e)
+#define _HW_IRQE_1(t,o,v,e,f)	_HW_REG(o,e)
 
 
 /**
@@ -54,7 +54,7 @@
  */
 #define HW_IRQF(...)		_HW_IRQF2(HW_IRQ(__VA_ARGS__))
 #define _HW_IRQF2(...)		HW_G2(_HW_IRQF,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_IRQF_1(c,o,v,e,f)	_hw_reg(o,f)
+#define _HW_IRQF_1(c,o,v,e,f)	_HW_REG(o,f)
 #define _HW_IRQF_0(...)		__VA_ARGS__
 
 

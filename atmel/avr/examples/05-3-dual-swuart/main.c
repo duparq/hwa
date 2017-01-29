@@ -50,7 +50,7 @@ main ( )
 {
   /*  Increase the frequency of the RC oscillator to the max
    */
-  hw( write, hw_reg(hw_core0, osccal), 0xFF );
+  hw( write, HW_REGISTER(hw_core0, osccal), 0xFF );
 
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
@@ -94,17 +94,17 @@ main ( )
       hw_sleep();
       if ( hw( stat, hw_swuart0 ).sync ) {
         hw( write, hw_swuart0, '$');     /* signal the synchronization */
-        hw( write, hw_reg(hw_swuart1, dt0), hw( read, hw_reg(hw_swuart0, dt0) ) );
-        hw( write, hw_reg(hw_swuart1, dtn), hw( read, hw_reg(hw_swuart0, dtn) ) );
-        hw( write, hw_reg(hw_swuart1, synced), 1 );
+        hw( write, HW_REGISTER(hw_swuart1, dt0), hw( read, HW_REGISTER(hw_swuart0, dt0) ) );
+        hw( write, HW_REGISTER(hw_swuart1, dtn), hw( read, HW_REGISTER(hw_swuart0, dtn) ) );
+        hw( write, HW_REGISTER(hw_swuart1, synced), 1 );
         hw( write, hw_swuart1, '$');     /* signal the synchronization */
         break ;
       }
       if ( hw( stat, hw_swuart1 ).sync ) {
         hw( write, hw_swuart1, '$');     /* signal the synchronization */
-        hw( write, hw_reg(hw_swuart0, dt0), hw( read, hw_reg(hw_swuart1, dt0) ) );
-        hw( write, hw_reg(hw_swuart0, dtn), hw( read, hw_reg(hw_swuart1, dtn) ) );
-        hw( write, hw_reg(hw_swuart0, synced), 1 );
+        hw( write, HW_REGISTER(hw_swuart0, dt0), hw( read, HW_REGISTER(hw_swuart1, dt0) ) );
+        hw( write, HW_REGISTER(hw_swuart0, dtn), hw( read, HW_REGISTER(hw_swuart1, dtn) ) );
+        hw( write, HW_REGISTER(hw_swuart0, synced), 1 );
         hw( write, hw_swuart0, '$');     /* signal the synchronization */
         break ;
       }

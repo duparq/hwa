@@ -27,7 +27,7 @@
 
 /*  PWM timings
  */
-#if hw_bn(COUNTER)==16
+#if HW_BITS(COUNTER)==16
 #  define PWM_PERIOD		0.02		/* 50 Hz */
 #  define PWM_TMIN		0		/* set to 0.000300 for servo */
 #  define PWM_TMAX		PWM_PERIOD	/* set to 0.003000 for servo */
@@ -45,7 +45,7 @@
 
 /*  Top value and range of duty value according to PWM timings
  */
-#define count_t			hw_uint_t(hw_bn(COUNTER))
+#define count_t			hw_uint_t(HW_BITS(COUNTER))
 #define COUNT_TOP		(uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
 #define COMPARE_MIN		(count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
 #define COMPARE_MAX		(count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
@@ -132,9 +132,9 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
 /*  Service compare-match IRQ: turn the LED off
  *
  *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
- *  spare a few bytes and have a faster code with a naked ISR.
+ *  spare a few bytes and have a faster code using a naked ISR.
  */
-#if hw_ra(HW_REL(PIN_LED,port), port) < 0x40
+#if HW_ADDRESS(HW_REGISTER(HW_RELATIVE(PIN_LED,port),port)) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
 {
   hw( write, PIN_LED, 0 );
@@ -180,7 +180,7 @@ int main ( )
   /*  Check that the counter can handle the top value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
    */
-  if ( COUNT_TOP > ((1UL<<hw_bn(COUNTER))-1) )
+  if ( COUNT_TOP > ((1UL<<HW_BITS(COUNTER))-1) )
     HWA_ERR("PWM_COUNTER can not afford PWM_PERIOD.") ;
 
   /*  Configure the counter prescaler

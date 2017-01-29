@@ -116,7 +116,7 @@ int main ( )
   /*  Check that the counter can handle the ON_TIME value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
    */
-  if ( ON_TIME_COUNT > ((1UL<<hw_bn(COUNTER))-1) )
+  if ( ON_TIME_COUNT > ((1UL<<HW_BITS(COUNTER))-1) )
     HWA_ERR("COUNTER can not afford ON_TIME.") ;
 
   /*  Configure the counter to count from 0 to max

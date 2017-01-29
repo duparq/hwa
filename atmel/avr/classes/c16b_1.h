@@ -37,10 +37,10 @@
  * @page atmelavr_c16b
  * @par Instructions that do not produce C code
  *
- * The `hw_bn()` instruction retrieves the number of bits of the counting register:
+ * The `HW_BITS()` instruction retrieves the number of bits of the counting register:
  *
  * @code
- * #if hw_bn( COUNTER_NAME ) != 16
+ * #if HW_BITS( COUNTER_NAME ) != 16
  * #  error You must choose a 16-bit counter!
  * #endif
  * @endcode
