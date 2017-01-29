@@ -81,16 +81,16 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Configure SPI (SPI master clocked by software over USI)
    */
-  hwa_config( SPI );
+  hwa( config, SPI );
 
   /*  Configure nRF CSN pin
    */
-  hwa_config( NRF_CSN, direction, output );
-  hwa_write(  NRF_CSN, 1 );
+  hwa( config, NRF_CSN, direction, output );
+  hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware
    */
@@ -100,7 +100,7 @@ main ( )
 
   /*  Wait for UART synchronization
    */
-  while ( !hw_stat(UART).sync ) {}
+  while ( !hw( stat,UART).sync ) {}
 
   /*  Process commands from host
    */
@@ -108,41 +108,41 @@ main ( )
 
     /*  Prompt
      */
-    hw_write( UART, '$' );
+    hw( write, UART, '$' );
 
     /*  Get command
      */
-    uint8_t c = hw_read( UART );
+    uint8_t c = hw( read, UART );
     if ( c == '=' ) {
 
       /*  Number of bytes to send to SPI slave
        */
-      uint8_t ntx = hw_read( UART );
+      uint8_t ntx = hw( read, UART );
       if ( ntx < 1 || ntx > 33 )
         goto error ;
 
       /*  Number of bytes to send back to talker
        */
-      uint8_t nrx = hw_read( UART );
+      uint8_t nrx = hw( read, UART );
       if ( nrx > 32 )
         goto error ;
 
       /*  Select SPI slave and send data
        */
-      hw_write( NRF_CSN, 0 );
+      hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-        c = hw_read( UART );
-        hw_write( SPI, c );
+        c = hw( read, UART );
+        hw( write, SPI, c );
       }
 
       /*  Send reply to talker and deselect SPI slave
        */
       while ( nrx-- ) {
-        hw_write( SPI, 0 );
-        c = hw_read( SPI );
-        hw_write( UART, c );
+        hw( write, SPI, 0 );
+        c = hw( read, SPI );
+        hw( write, UART, c );
       }
-      hw_write( NRF_CSN, 1 );
+      hw( write, NRF_CSN, 1 );
     }
     else {
       /*
@@ -151,8 +151,8 @@ main ( )
        */
       do {
       error:
-        hw_write( UART, '!' );
-        c = hw_read( UART );
+        hw( write, UART, '!' );
+        c = hw( read, UART );
       } while ( c != '\n' ) ;
     }
   }

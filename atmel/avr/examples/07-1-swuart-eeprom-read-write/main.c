@@ -53,18 +53,18 @@ static void process ( uint8_t byte )
     if ( byte == '\n'
          && buf.addr < HW_DEVICE_EEPROM_SIZE ) {
       if ( buf.cmd == 'E' )
-        hw_write( hw_eeprom0, buf.addr, buf.n );
+        hw( write, hw_eeprom0, buf.addr, buf.n );
       else {
         while ( buf.n-- ) {
-          uint8_t byte = hw_read( hw_eeprom0, buf.addr );
-          hw_write( UART, byte );
+          uint8_t byte = hw( read, hw_eeprom0, buf.addr );
+          hw( write, UART, byte );
           buf.addr++ ;
         }
       }
-      hw_write( UART, '$' );
+      hw( write, UART, '$' );
       return ;
     }
-    hw_write( UART, '!' );
+    hw( write, UART, '!' );
   }
 }
 
@@ -79,11 +79,11 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -95,9 +95,9 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw_stat(UART).sync )
+  while ( !hw( stat,UART).sync )
     hw_sleep();
-  hw_write( UART, '$');
+  hw( write, UART, '$');
 
   for(;;) {
     /*
@@ -106,12 +106,12 @@ main ( )
      *    process incomming bytes
      */
     hw_sleep();
-    if ( hw_stat(UART).rxc ) {
+    if ( hw( stat,UART).rxc ) {
       /*
        *  MCU awakened by SWUART that has received a stop bit
        *  Process the received byte (clears rxc flag)
        */
-      process( hw_read(UART) );
+      process( hw( read,UART) );
     }
   }
 }

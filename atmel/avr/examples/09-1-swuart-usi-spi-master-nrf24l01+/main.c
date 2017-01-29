@@ -76,13 +76,13 @@ HW_ERROR( device `HW_DEVICE` does not have a USI. )
  */
 static void write_usi ( char c )
 {
-  hw_write( USI, c );
-  hw_clear_irqf( USI, txc );
+  hw( write, USI, c );
+  hw( clear, HW_IRQF(USI,txc) );
   do {
-    hw_trigger( USI );
+    hw( trigger, USI );
     // hw_delay_cycles( 50e-6 * hw_syshz );
   }
-  while ( !hw_stat_irqf(USI,txc) );
+  while ( !hw( read, HW_IRQF(USI,txc) ) );
 }
 
 
@@ -96,18 +96,18 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Configure the USI as SPI master clocked by software
    */
-  hwa_config( USI,
-	      mode,  spi_master,
-	      clock, software );
+  hwa( config, USI,
+       mode,   spi_master,
+       clock,  software    );
 
   /*  Configure nRF CSN pin
    */
-  hwa_config( NRF_CSN, direction, output );
-  hwa_write(  NRF_CSN, 1 );
+  hwa( config, NRF_CSN, direction, output );
+  hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware
    */
@@ -117,7 +117,7 @@ main ( )
 
   /*  Wait for UART synchronization
    */
-  while ( !hw_stat(UART).sync ) {}
+  while ( !hw( stat,UART).sync ) {}
 
   /*  Process commands from host
    */
@@ -125,33 +125,33 @@ main ( )
 
     /*	Prompt
      */
-    hw_write( UART, '$' );
+    hw( write, UART, '$' );
 
     /*	The host sends commands starting with '=' and followed by:
      *	  * the number of bytes to send to SPI slave (1 byte)
      *	  * the number of bytes to read (1 byte)
      *	  * the bytes to send
      */
-    uint8_t c = hw_read( UART );
+    uint8_t c = hw( read, UART );
     if ( c == '=' ) {
 
       /*  Number of bytes to send to SPI slave
        */
-      uint8_t ntx = hw_read( UART );
+      uint8_t ntx = hw( read, UART );
       if ( ntx < 1 || ntx > 33 )
 	goto error ;
 
       /*  Number of bytes to send back to talker
        */
-      uint8_t nrx = hw_read( UART );
+      uint8_t nrx = hw( read, UART );
       if ( nrx > 32 )
 	goto error ;
 
       /*  Select SPI slave and send data
        */
-      hw_write( NRF_CSN, 0 );
+      hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-	c = hw_read( UART );
+	c = hw( read, UART );
 	write_usi( c );
       }
 
@@ -159,10 +159,10 @@ main ( )
        */
       while ( nrx-- ) {
 	write_usi( 0 );
-	c = hw_read( USI );
-	hw_write( UART, c );
+	c = hw( read, USI );
+	hw( write, UART, c );
       }
-      hw_write( NRF_CSN, 1 );
+      hw( write, NRF_CSN, 1 );
     }
     else {
       /*
@@ -171,8 +171,8 @@ main ( )
        */
       do {
       error:
-	hw_write( UART, '!' );
-	c = hw_read( UART );
+	hw( write, UART, '!' );
+	c = hw( read, UART );
       } while ( c != '\n' ) ;
     }
   }

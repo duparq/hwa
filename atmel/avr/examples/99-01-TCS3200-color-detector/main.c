@@ -85,8 +85,8 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Select the channel
    */
-  hw_write( PIN_TCS3200_S3, s3!=0 );
-  hw_write( PIN_TCS3200_S2, s2!=0 );
+  hw( write, PIN_TCS3200_S3, s3!=0 );
+  hw( write, PIN_TCS3200_S2, s2!=0 );
 
   /*	The datasheet says: ``The output-scaling counter registers are cleared
    *	upon the next pulse of the principal frequency after any transition of
@@ -101,13 +101,13 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Prepare to capture the date of the next rising edge
    */
-  hw_config( hw_rel(COUNTER, CAPTURE), edge, rising );
+  hw( config, hw_rel(COUNTER, CAPTURE), edge, rising );
   hw_clear_irqf( COUNTER, CAPTURE );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
-  hw_write( hw_rel(COUNTER, COMPARE), hw_read(COUNTER) );
+  hw( write, hw_rel(COUNTER, COMPARE), hw( read,COUNTER) );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
@@ -115,7 +115,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
      *	Rising edge occured: continue below
      */
     if ( hw_stat_irqf(COUNTER, CAPTURE) ) {
-      t = hw_read( hw_rel(COUNTER, CAPTURE) ) ;
+      t = hw( read, hw_rel(COUNTER, CAPTURE) ) ;
       break ;
     }
     /*
@@ -127,10 +127,10 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Now wait for the falling edge
    */
-  hw_config( hw_rel(COUNTER, CAPTURE), edge, falling );
+  hw( config, hw_rel(COUNTER, CAPTURE), edge, falling );
   hw_clear_irqf( COUNTER, CAPTURE );
 
-  hw_write( hw_rel(COUNTER, COMPARE), t );
+  hw( write, hw_rel(COUNTER, COMPARE), t );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
@@ -138,7 +138,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
       /*
        *  Return the half-period
        */
-      return hw_read( hw_rel(COUNTER, CAPTURE) ) - t ;
+      return hw( read, hw_rel(COUNTER, CAPTURE) ) - t ;
     if ( hw_stat_irqf(COUNTER, COMPARE) )
       /*
        *  Half-period is too long
@@ -165,7 +165,7 @@ static void tx1h ( uint8_t n )
   else
     n = n - 10 + 'A' ;
 
-  hw_write( UART, n );
+  hw( write, UART, n );
 }
 
 
@@ -221,22 +221,22 @@ main ( )
 {
   hwa_begin_from_reset();
 
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Capture used to compute the TCS output period
    */
-  hwa_config( hw_rel(COUNTER,CAPTURE),
+  hwa( config, hw_rel(COUNTER,CAPTURE),
 	      input,   pin_icp,
 	      edge,    rising );
 
-  hwa_config( PIN_TCS3200_S2, direction, output );
-  hwa_write( PIN_TCS3200_S2, 0 );
+  hwa( config, PIN_TCS3200_S2, direction, output );
+  hwa( write, PIN_TCS3200_S2, 0 );
 
-  hwa_config( PIN_TCS3200_S3, direction, output );
-  hwa_write( PIN_TCS3200_S3, 0 );
+  hwa( config, PIN_TCS3200_S3, direction, output );
+  hwa( write, PIN_TCS3200_S3, 0 );
 
-  hwa_config( PIN_OUTS, direction, output );
-  hwa_write( PIN_OUTS, 0 );
+  hwa( config, PIN_OUTS, direction, output );
+  hwa( write, PIN_OUTS, 0 );
 
   hwa_commit();
 
@@ -244,7 +244,7 @@ main ( )
 
   /*  tclear_max is stored in EEPROM
    */
-  hw_read_bytes( hw_eeprom0, &tclear_max, &ee_tclear_max, sizeof(tclear_max) );
+  hw( read_bytes, hw_eeprom0, &tclear_max, &ee_tclear_max, sizeof(tclear_max) );
 
   /*  Main loop
    */
@@ -286,7 +286,7 @@ main ( )
        */
       region_t r ;
       for ( rn=0 ; rn<sizeof(ee_regions)/sizeof(region_t) ; rn++ ) {
-	hw_read_bytes( hw_eeprom0, &r, &ee_regions[rn], sizeof(r) ) ;
+	hw( read_bytes, hw_eeprom0, &r, &ee_regions[rn], sizeof(r) ) ;
 	if ( r.radius < 0xFF ) {
 	  uint16_t qp, qr, qg, qb ;
 	  qp = r.radius ;
@@ -305,7 +305,7 @@ main ( )
 	/*
 	 *  Region found, produce the result
 	 */
-	hw_write( PIN_OUTS, r.result & 0x0F );
+	hw( write, PIN_OUTS, r.result & 0x0F );
       }
       else {
 	/*
@@ -313,7 +313,7 @@ main ( )
 	 */
 	rn = 0xFF ;
 
-	hw_write( PIN_OUTS, 0 );
+	hw( write, PIN_OUTS, 0 );
       }
     }
     else {
@@ -326,14 +326,14 @@ main ( )
       pgreen = 0 ;
       pblue  = 0 ;
 
-      hw_write( PIN_OUTS, 0 );
+      hw( write, PIN_OUTS, 0 );
     }
 
-    if ( hw_stat(UART).rxc ) {
+    if ( hw( stat,UART).rxc ) {
       /*
        *  Process received byte on UART
        */
-      uint8_t cmd = hw_read(UART); 
+      uint8_t cmd = hw( read,UART); 
       if ( cmd=='s' ) {
 	/*
 	 *  Return sampling data to host
@@ -354,8 +354,8 @@ main ( )
 	  tx2h( rn  );
 	}
 	else
-	  hw_write( UART, '.');
-	hw_write( UART, '\n' );
+	  hw( write, UART, '.');
+	hw( write, UART, '\n' );
       }
       else if ( cmd=='r' ) {
 	/*
@@ -363,7 +363,7 @@ main ( )
 	 */
 	for ( uint8_t i=0 ; i<sizeof(ee_regions)/sizeof(region_t) ; i++ ) {
 	  region_t r ;
-	  hw_read_bytes( hw_eeprom0, &r, &ee_regions[i], sizeof(region_t) );
+	  hw( read_bytes, hw_eeprom0, &r, &ee_regions[i], sizeof(region_t) );
 	  if ( r.radius != 0xFF ) {
 	    tx2h(i);
 	    tx2h(r.radius);
@@ -371,7 +371,7 @@ main ( )
 	    tx2h(r.green);
 	    tx2h(r.blue);
 	    tx2h(r.result);
-	    hw_write(UART, '\n');
+	    hw( write,UART, '\n');
 	  }
 	}
       }
@@ -385,7 +385,7 @@ main ( )
 	 *  sends several meanwhile. So, the host will have to wait a ' '
 	 *  indicating that we're listening before it completes the command.
 	 */
-	hw_write(UART, ' ');
+	hw( write,UART, ' ');
 	/*
 	 *  Receive the remaining of the command
 	 *
@@ -400,8 +400,8 @@ main ( )
 	uint8_t cmdbuf[12] ;
 	uint8_t i=0 ;
 	for(;;) {
-	  if ( hw_stat(UART).rxc ) {
-	    uint8_t byte = hw_read(UART);
+	  if ( hw( stat,UART).rxc ) {
+	    uint8_t byte = hw( read,UART);
 	    if (byte=='\n')
 	      break ;
 	    if ( !ishex(byte) )
@@ -429,14 +429,14 @@ main ( )
 	region.result = HH2i( &cmdbuf[10] );
 
 	region_t region0 ;
-	hw_read_bytes( hw_eeprom0, &region0, &ee_regions[rn], sizeof(region) );
+	hw( read_bytes, hw_eeprom0, &region0, &ee_regions[rn], sizeof(region) );
 
 	/*  Update region if different
 	 */
 	if ( __builtin_memcmp(&region, &region0, sizeof(region_t)) )
-	  hw_write_bytes( hw_eeprom0, &ee_regions[rn], &region, sizeof(region) );
+	  hw( write_bytes, hw_eeprom0, &ee_regions[rn], &region, sizeof(region) );
 
-	hw_write( UART, '\n' );
+	hw( write, UART, '\n' );
       }
       else if ( cmd=='l' ) {
 	/*
@@ -444,7 +444,7 @@ main ( )
 	 *  channel)
 	 */
 	tx4h(tclear_max);
-	hw_write(UART, '\n');
+	hw( write,UART, '\n');
       }
       else if ( cmd=='L' ) {
 	/*
@@ -453,15 +453,15 @@ main ( )
 	/*
 	 *  Send a ' ' to indicate the host that we're now listening
 	 */
-	hw_write(UART, ' ');
+	hw( write,UART, ' ');
 
 	/*  Receive command line
 	 */
 	uint8_t cmdbuf[4] ;
 	uint8_t i=0 ;
 	for(;;) {
-	  if ( hw_stat(UART).rxc ) {
-	    uint8_t byte = hw_read(UART);
+	  if ( hw( stat,UART).rxc ) {
+	    uint8_t byte = hw( read,UART);
 	    if (byte=='\n')
 	      break ;
 	    if ( !ishex(byte) )
@@ -480,16 +480,16 @@ main ( )
 	uint16_t max = HHHH2i( &cmdbuf[0] );
 	if ( max != tclear_max ) {
 	  tclear_max = max ;
-	  hw_write_bytes( hw_eeprom0, &ee_tclear_max, &tclear_max, sizeof(tclear_max) );
-	  hw_write( UART, 'w' );
+	  hw( write_bytes, hw_eeprom0, &ee_tclear_max, &tclear_max, sizeof(tclear_max) );
+	  hw( write, UART, 'w' );
 	}
-	hw_write( UART, '\n' );
+	hw( write, UART, '\n' );
       }
       else if ( cmd=='\n' )
-	hw_write( UART, '\n' );
+	hw( write, UART, '\n' );
       else {
       error:
-	hw_write( UART, '!' );
+	hw( write, UART, '!' );
       }
     }
   }

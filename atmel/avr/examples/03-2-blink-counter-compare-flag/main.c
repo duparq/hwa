@@ -23,6 +23,8 @@
 #define COMPARE                 compare0
 #define PERIOD                  0.5
 
+#define IRQF			HW_IRQF(COUNTER,COMPARE)	// IRQ flag
+
 
 int main ( )
 {
@@ -33,20 +35,20 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Configure the counter to count from 0 to its max and loop
    */
-  hwa_config( COUNTER,
-              clock,     HW_G2(prescaler_output, CLKDIV),
-              countmode, loop_up,
-              bottom,    0,
-              top,       max,
-              );
+  hwa( config,    COUNTER,
+       clock,     HW_G2(prescaler_output, CLKDIV),
+       countmode, loop_up,
+       bottom,    0,
+       top,       max,
+       );
 
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */
-  hwa_write( hw_rel(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
+  hwa( write, hw_rel(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
 
   /*  Write this configuration into the hardware
    */
@@ -58,16 +60,16 @@ int main ( )
      *  When a compare-match occurs, clear the counter, clear the flag and count
      *  the elapsed millisecond
      */
-    if ( hw_stat_irqf(COUNTER,COMPARE) ) {
-      hw_write( COUNTER, 0 );
-      hw_clear_irqf( COUNTER, COMPARE );
+    if ( hw( read, IRQF ) ) {
+      hw( write, COUNTER, 0 );
+      hw( clear, IRQF );
       n++ ;
       if ( n >= (uint8_t)(0.5 + 1.0*PERIOD/0.001/2.0+0.5) ) {
         /*
          *  Toggle the LED when a half period has elapsed
          */
         n = 0 ;
-        hw_toggle( PIN_LED );
+        hw( toggle, PIN_LED );
       }
     }
   }

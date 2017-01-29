@@ -484,53 +484,53 @@
  * @ingroup atmegax8_interrupts
  * @brief Definition of the interrupts
  */
-#define _hw_irq_hw_int0			_irq,  1, hw_int0,     ie,  if
-#define _hw_irq_hw_int1			_irq,  2, hw_int1,     ie,  if
-#define _hw_irq_hw_pcic0		_irq,  3, hw_pcic0,    ie,  if
-#define _hw_irq_hw_pcic1		_irq,  4, hw_pcic1,    ie,  if
-#define _hw_irq_hw_pcic2		_irq,  5, hw_pcic2,    ie,  if
-#define _hw_irq_hw_wdog0		_irq,  6, hw_wdog0,    ie,  if
-
-#define _hw_irq_hw_counter2_compare0	_irq,  7, hw_oc20,     ie,  if
-#define _hw_irq_hw_oc20			_irq,  7, hw_oc20,     ie,  if
-#define _hw_irq_hw_counter2_compare1	_irq,  8, hw_oc21,     ie,  if
-#define _hw_irq_hw_oc21			_irq,  8, hw_oc21,     ie,  if
-#define _hw_irq_hw_counter2_overflow	_irq,  9, hw_counter2, ie,  if
-#define _hw_irq_hw_counter2		_irq,  9, hw_counter2, ie,  if
-
-#define _hw_irq_hw_counter1_capture0	_irq, 10, hw_ic10,     ie,  if
-#define _hw_irq_hw_ic10			_irq, 10, hw_ic10,     ie,  if
-#define _hw_irq_hw_counter1_compare0	_irq, 11, hw_oc10,     ie,  if
-#define _hw_irq_hw_oc10			_irq, 11, hw_oc10,     ie,  if
-#define _hw_irq_hw_counter1_compare1	_irq, 12, hw_oc11,     ie,  if
-#define _hw_irq_hw_oc11			_irq, 12, hw_oc11,     ie,  if
-#define _hw_irq_hw_counter1_overflow	_irq, 13, hw_counter1, ie,  if
-#define _hw_irq_hw_counter1		_irq, 13, hw_counter1, ie,  if
-
-#define _hw_irq_hw_counter0_compare0	_irq, 14, hw_oc00,     ie,  if
-#define _hw_irq_hw_oc00			_irq, 14, hw_oc00,     ie,  if
-#define _hw_irq_hw_counter0_compare1	_irq, 15, hw_oc01,     ie,  if
-#define _hw_irq_hw_oc01			_irq, 15, hw_oc01,     ie,  if
-#define _hw_irq_hw_counter0_overflow	_irq, 16, hw_counter0, ie,  if
-#define _hw_irq_hw_counter0		_irq, 16, hw_counter0, ie,  if
-
-#define _hw_irq_hw_spi0			_irq, 17, hw_spi0,     ie,  if
-#define _hw_irq_hw_spi0_txc		_irq, 17, hw_spi0,     ie,  if
-
-#define _hw_irq_hw_uart0_rxc		_irq, 18, hw_uart0,    ierxc,  ifrxc
-#define _hw_irq_hw_uart0_txqnf		_irq, 19, hw_uart0,    ietxqe, iftxqnf
-#define _hw_irq_hw_uart0_txc		_irq, 20, hw_uart0,    ietxc,  iftxc
-
-#define _hw_irq_hw_adc0			_irq, 21, hw_adc0,     ie,    if
-
-#define _hw_irq_hw_eeprom0		_irq, 22, hw_eeprom0,  ie, /* no irq flag */
-#define _hw_irq_hw_eeprom0_ready	_irq, 22, hw_eeprom0,  ie,
-
-#define _hw_irq_hw_acmp0		_irq, 23, hw_acmp0,    ie, if
-
-#define _hw_irq_hw_twi0			_irq, 24, hw_twi0,     ie, if
-
-#define _hw_irq_hw_flash0		_irq, 25, hw_flash0,   ie, if
+#define _hw_irq_hw_int0_		_irq, hw_int0,      1, ie,  if
+#define _hw_irq_hw_int1_		_irq, hw_int1,      2, ie,  if
+#define _hw_irq_hw_pcic0_		_irq, hw_pcic0,     3, ie,  if
+#define _hw_irq_hw_pcic1_		_irq, hw_pcic1,     4, ie,  if
+#define _hw_irq_hw_pcic2_		_irq, hw_pcic2,     5, ie,  if
+#define _hw_irq_hw_wdog0_		_irq, hw_wdog0,     6, ie,  if
+					                   
+#define _hw_irq_hw_counter2_compare0	_irq, hw_oc20,      7, ie,  if
+#define _hw_irq_hw_oc20_		_irq, hw_oc20,      7, ie,  if
+#define _hw_irq_hw_counter2_compare1	_irq, hw_oc21,      8, ie,  if
+#define _hw_irq_hw_oc21_		_irq, hw_oc21,      8, ie,  if
+#define _hw_irq_hw_counter2_overflow	_irq, hw_counter2,  9, ie,  if
+#define _hw_irq_hw_counter2		_irq, hw_counter2,  9, ie,  if
+					                   
+#define _hw_irq_hw_counter1_capture0	_irq, hw_ic10,     10, ie,  if
+#define _hw_irq_hw_ic10_		_irq, hw_ic10,     10, ie,  if
+#define _hw_irq_hw_counter1_compare0	_irq, hw_oc10,     11, ie,  if
+#define _hw_irq_hw_oc10_		_irq, hw_oc10,     11, ie,  if
+#define _hw_irq_hw_counter1_compare1	_irq, hw_oc11,     12, ie,  if
+#define _hw_irq_hw_oc11_		_irq, hw_oc11,     12, ie,  if
+#define _hw_irq_hw_counter1_overflow	_irq, hw_counter1, 13, ie,  if
+#define _hw_irq_hw_counter1_		_irq, hw_counter1, 13, ie,  if
+					                   
+#define _hw_irq_hw_counter0_compare0	_irq, hw_oc00,     14, ie,  if
+#define _hw_irq_hw_oc00_		_irq, hw_oc00,     14, ie,  if
+#define _hw_irq_hw_counter0_compare1	_irq, hw_oc01,     15, ie,  if
+#define _hw_irq_hw_oc01_		_irq, hw_oc01,     15, ie,  if
+#define _hw_irq_hw_counter0_overflow	_irq, hw_counter0, 16, ie,  if
+#define _hw_irq_hw_counter0_		_irq, hw_counter0, 16, ie,  if
+					                   
+#define _hw_irq_hw_spi0_		_irq, hw_spi0,     17, ie,  if
+#define _hw_irq_hw_spi0_txc		_irq, hw_spi0,     17, ie,  if
+					                   
+#define _hw_irq_hw_uart0_rxc		_irq, hw_uart0,    18, ierxc,  ifrxc
+#define _hw_irq_hw_uart0_txqnf		_irq, hw_uart0,    19, ietxqe, iftxqnf
+#define _hw_irq_hw_uart0_txc		_irq, hw_uart0,    20, ietxc,  iftxc
+					                   
+#define _hw_irq_hw_adc0_		_irq, hw_adc0,     21, ie,    if
+					                   
+#define _hw_irq_hw_eeprom0		_irq, hw_eeprom0,  22, ie, /* no irq flag */
+#define _hw_irq_hw_eeprom0_ready	_irq, hw_eeprom0,  22, ie,
+					                   
+#define _hw_irq_hw_acmp0_		_irq, hw_acmp0,    23, ie, if
+					                   
+#define _hw_irq_hw_twi0_		_irq, hw_twi0,     24, ie, if
+					                   
+#define _hw_irq_hw_flash0_		_irq, hw_flash0,   25, ie, if
 
 
 /**

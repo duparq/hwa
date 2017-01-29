@@ -35,12 +35,11 @@ main ( )
 
   /*  Configure the UART
    */
-  hwa_config( UART,
-	      bps,	BPS,
-	      databits, 8,
-	      parity,	none,
-	      stopbits, 1,
-	      );
+  hwa( config,   UART,
+       bps,	 BPS,
+       databits, 8,
+       parity,	 none,
+       stopbits, 1     );
 
   /*  Write this configuration into the hardware
    */
@@ -56,6 +55,6 @@ main ( )
 
     /*	Send a '.'
      */
-    hw_write( UART, '.');
+    hw( write, UART, '.');
   }
 }

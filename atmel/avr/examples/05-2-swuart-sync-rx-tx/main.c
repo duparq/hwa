@@ -34,23 +34,23 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+  hwa( config,     hw_core0,
+       sleep,      enabled,
+       sleep_mode, idle     );
 
   /*  We can change the system clock frequency if we do not use
    *  a crystal oscillator.
    */
 #if !defined HW_DEVICE_CLK_SRC_HZ
-  hwa_write_reg( hw_core0, osccal, 0xFF );
+  hwa( write, hw_reg(hw_core0, osccal), 0xFF );
 #endif
 
   /*  Write this configuration into the hardware
@@ -70,21 +70,22 @@ main ( )
 
     /*  Signal UART desynchronization
      */
-    hw_write( PIN_LED, 0 );
+    hw( write, PIN_LED, 0 );
 
     /*  Force UART to re-synchronize
      */
-    hw_reset( UART );
+    hw( reset, UART );
 
     /*  Wait for UART synchronization, then send the prompt
      */
-    while ( !hw_stat(UART).sync )
+    while ( !hw(stat,UART).sync )
       hw_sleep();
-    hw_write( UART, '$');
+
+    hw( write, UART, '$');
 
     /*  Signal UART synchronization
      */
-    hw_write( PIN_LED, 1 );
+    hw( write, PIN_LED, 1 );
 
     /*  Process commands
      */
@@ -92,30 +93,31 @@ main ( )
 
       /*  Wait for a command
        */
-      while ( !hw_stat(UART).rxc )
+      while ( !hw(stat,UART).rxc )
         hw_sleep();
-      uint8_t byte = hw_read(UART);
+
+      uint8_t byte = hw( read, UART );
 
       /*  Process it
        */
       if ( byte=='A' ) {
-        hw_write( PIN_LED, 1 );
+        hw( write, PIN_LED, 1 );
         /*
          *  Known command: reply with values of UART registers dtn, dt0
          */
         uint16_t dt ;
 
-        dt = hw_read_reg( UART, dtn ) ;
-        hw_write( UART, (dt>>0) & 0xFF );
-        hw_write( UART, (dt>>8) & 0xFF );
+        dt = hw( read, hw_reg(UART,dtn) ) ;
+        hw( write, UART, (dt>>0) & 0xFF );
+        hw( write, UART, (dt>>8) & 0xFF );
 
-        dt = hw_read_reg( UART, dt0 ) ;
-        hw_write( UART, (dt>>0) & 0xFF );
-        hw_write( UART, (dt>>8) & 0xFF );
+        dt = hw( read, hw_reg(UART,dt0) ) ;
+        hw( write, UART, (dt>>0) & 0xFF );
+        hw( write, UART, (dt>>8) & 0xFF );
 
-        hw_write( UART,'$');
+        hw( write, UART,'$');
 
-        hw_write( PIN_LED, 0 );
+        hw( write, PIN_LED, 0 );
       }
       else {
         /*

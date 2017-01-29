@@ -475,27 +475,27 @@
  * `hw_usi0,start`						| USI_STR     | USI start
  * `hw_wdog0`							| WDT	      | Watchdog timeout
  */
-#define _hw_irq_hw_int0			_irq,  1, hw_core0,    ie,    if
-#define _hw_irq_hw_pcic0		_irq,  2, hw_pcic0,    ie,    if
-#define _hw_irq_hw_counter1_compare0	_irq,  3, hw_oc10,     ie,    if
-#define _hw_irq_hw_oc10			_irq,  3, hw_oc10,     ie,    if
-#define _hw_irq_hw_counter1		_irq,  4, hw_counter1, ie,    if
-#define _hw_irq_hw_counter1_overflow	_irq,  4, hw_counter1, ie,    if
-#define _hw_irq_hw_counter0		_irq,  5, hw_counter0, ie,    if
-#define _hw_irq_hw_counter0_overflow	_irq,  5, hw_counter0, ie,    if
-#define _hw_irq_hw_eeprom0		_irq,  6, hw_eeprom0,  ie, /* no irq flag */
-#define _hw_irq_hw_eeprom0_ready	_irq,  6, hw_eeprom0,  ie,
-#define _hw_irq_hw_acmp0		_irq,  7, hw_acmp0,    ie,    if
-#define _hw_irq_hw_adc0			_irq,  8, hw_adc0,     ie,    if
-#define _hw_irq_hw_counter1_compare1	_irq,  9, hw_oc11,     ie,    if
-#define _hw_irq_hw_counter0_compare0	_irq, 10, hw_oc00,     ie,    if
-#define _hw_irq_hw_oc00			_irq, 10, hw_oc00,     ie,    if
-#define _hw_irq_hw_counter0_compare1	_irq, 11, hw_oc01,     ie,    if
-#define _hw_irq_hw_oc01			_irq, 11, hw_oc01,     ie,    if
-#define _hw_irq_hw_wdog0		_irq, 12, hw_wdog0,    ie,    if
-#define _hw_irq_hw_usi0_start		_irq, 13, hw_usi0,     ies,   ifs
-#define _hw_irq_hw_usi0_overflow	_irq, 14, hw_usi0,     ieov,  ifov
-#define _hw_irq_hw_usi0_txc		_irq, 14, hw_usi0,     ieov,  ifov
+#define _hw_irq_hw_int0_		_irq, hw_core0,     1, ie,    if
+#define _hw_irq_hw_pcic0_		_irq, hw_pcic0,     2, ie,    if
+#define _hw_irq_hw_counter1_compare0	_irq, hw_oc10,      3, ie,    if
+#define _hw_irq_hw_oc10_		_irq, hw_oc10,      3, ie,    if
+#define _hw_irq_hw_counter1_		_irq, hw_counter1,  4, ie,    if
+#define _hw_irq_hw_counter1_overflow	_irq, hw_counter1,  4, ie,    if
+#define _hw_irq_hw_counter0_		_irq, hw_counter0,  5, ie,    if
+#define _hw_irq_hw_counter0_overflow	_irq, hw_counter0,  5, ie,    if
+#define _hw_irq_hw_eeprom0_		_irq, hw_eeprom0,   6, ie, /* no irq flag */
+#define _hw_irq_hw_eeprom0_ready	_irq, hw_eeprom0,   6, ie,
+#define _hw_irq_hw_acmp0_		_irq, hw_acmp0,     7, ie,    if
+#define _hw_irq_hw_adc0_		_irq, hw_adc0,      8, ie,    if
+#define _hw_irq_hw_counter1_compare1	_irq, hw_oc11,      9, ie,    if
+#define _hw_irq_hw_counter0_compare0	_irq, hw_oc00,     10, ie,    if
+#define _hw_irq_hw_oc00_		_irq, hw_oc00,     10, ie,    if
+#define _hw_irq_hw_counter0_compare1	_irq, hw_oc01,     11, ie,    if
+#define _hw_irq_hw_oc01_		_irq, hw_oc01,     11, ie,    if
+#define _hw_irq_hw_wdog0_		_irq, hw_wdog0,    12, ie,    if
+#define _hw_irq_hw_usi0_start		_irq, hw_usi0,     13, ies,   ifs
+#define _hw_irq_hw_usi0_overflow	_irq, hw_usi0,     14, ieov,  ifov
+#define _hw_irq_hw_usi0_txc		_irq, hw_usi0,     14, ieov,  ifov
 
 
 /*******************************************************************************

@@ -216,10 +216,10 @@
     _hwa_write_reg(o,pwm,1);						\
     _hwa_write_reg(o,mode,3);						\
   }									\
-  if ( hwa->o.config.outputh != 0xFF && hwa->o.config.outputh != 0 )		\
-    hwa_config( _hw_rel(o,pin_h), direction, output );		\
-  if ( hwa->o.config.outputl != 0xFF && hwa->o.config.outputl != 0 )		\
-    hwa_config( _hw_rel(o,pin_l), direction, output );		\
+  if ( hwa->o.config.outputh != 0xFF && hwa->o.config.outputh != 0 )	\
+    _hwa( config, _hw_rel(o,pin_h), direction, output );		\
+  if ( hwa->o.config.outputl != 0xFF && hwa->o.config.outputl != 0 )	\
+    _hwa( config, _hw_rel(o,pin_l), direction, output );			\
   }
 
 

@@ -74,10 +74,10 @@
 #define _hw_c8a_clock_ext_falling		, 7
 #define _hw_c8a_clock_prescaler_output(x)	HW_G2(_hw_c8a_clock_prescaler_output,x)
 
-#define _hwa_config_c8a(o,i,a, ...)						\
+#define _hwa_config_c8a(o,i,a, ...)					\
   do { HW_G2(_hwa_cfc8a_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
 
-#define _hwa_cfc8a_kclock_0(o,k,...)					\
+#define _hwa_cfc8a_kclock_0(o,k,...)			\
   HW_ERR("expected `clock` instead of `" #k "`.")
 
 #define _hwa_cfc8a_kclock_1(o,k,v,...)					\
@@ -99,7 +99,7 @@
 #define _hw_c8a_countmode_updown_loop		, 2
 #define _hw_c8a_countmode_loop_updown		, 2
 
-#define _hwa_cfc8a_kmode_0(o,k,...)					\
+#define _hwa_cfc8a_kmode_0(o,k,...)			\
   HW_ERR("expected `countmode` instead of `" #k "`.")
 
 #define _hwa_cfc8a_kmode_1(o,k,v,...)					\
@@ -108,8 +108,8 @@
 #define _hwa_cfc8a_vmode_0(o,v,...)					\
   HW_ERR("`countmode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
 
-#define _hwa_cfc8a_vmode_1(o,v,k,...)					\
-  hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_##v);			\
+#define _hwa_cfc8a_vmode_1(o,v,k,...)				\
+  hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_##v);	\
   HW_G2(_hwa_cfc8a_kbottom,HW_IS(bottom,k))(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
@@ -117,7 +117,7 @@
 #define _hwa_cfc8a_kbottom_1(o,k,v,...)			\
   HW_G2(_hwa_cfc8a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfc8a_vbottom_0(o,v,...)			\
+#define _hwa_cfc8a_vbottom_0(o,v,...)		\
   HW_ERR("bottom must be `0`, not `" #v "`.")
 
 #define _hwa_cfc8a_vbottom_1(o,v,k,...)			\
@@ -137,8 +137,8 @@
 #define _hwa_cfc8a_ktop_1(o,k,v,...)					\
   HW_G2(_hwa_cfc8a_vtop,HW_IS(,_hw_c8a_top_##v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfc8a_vtop_0(o,v,...)				\
-  HW_ERR("`top` can be `0xFF`, `max`, or `compare0`,"		\
+#define _hwa_cfc8a_vtop_0(o,v,...)			\
+  HW_ERR("`top` can be `0xFF`, `max`, or `compare0`,"	\
 	 " but not `" #v "`.")
 
 #define _hwa_cfc8a_vtop_1(o,v,k,...)					\
@@ -161,8 +161,8 @@
   HW_ERR("optionnal parameter `overflow` can be `at_bottom`, "	\
 	 "`at_top, or `at_max`, but `not `" #v "`.")
 
-#define _hwa_cfc8a_voverflow_1(o,v,...)				\
-  if ( hwa->o.config.countmode == HW_A1(_hw_c8a_countmode_loop_up)		\
+#define _hwa_cfc8a_voverflow_1(o,v,...)					\
+  if ( hwa->o.config.countmode == HW_A1(_hw_c8a_countmode_loop_up)	\
        && HW_A1(_hw_c8a_overflow_##v) == HW_A1(_hw_c8a_overflow_at_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `at_bottom` "	\
 	    "when countmode is `loop_up`.");				\
@@ -184,9 +184,9 @@
  * the objects and then can put computed registers values into the context, even
  * in the case of external register access, and display accurate error messages.
  */
-#define _hwa_solve__c8a( o,i,a )	_hwa_solve__c8a_2( o,		\
-							   _hw_rel(o,compare0),	\
-							   _hw_rel(o,compare1) )
+#define _hwa_solve__c8a( o,i,a )	\
+  _hwa_solve__c8a_2( o, _hw_rel(o,compare0), _hw_rel(o,compare1) )
+
 #define _hwa_solve__c8a_2(...)		_hwa_solve__c8a_3(__VA_ARGS__)
 
 #define _hwa_solve__c8a_3( o, oc0, oc1 )				\
@@ -257,10 +257,10 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc0,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc1,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc1,pin), direction, output );		\
     }									\
   } while(0)
 
@@ -700,7 +700,7 @@ HW_INLINE _hw_c8a_stat_t _hw_c8a_stat( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__c8a(o,i,a)			\
-  /* _hwa_setup_reg( o, gtccr); */			\
+  /* _hwa_setup_reg( o, gtccr); */		\
   _hwa_setup_reg( o, ccra);			\
   _hwa_setup_reg( o, ccrb);			\
   _hwa_setup_reg( o, count);			\
@@ -712,23 +712,23 @@ HW_INLINE _hw_c8a_stat_t _hw_c8a_stat( uint8_t byte )
   hwa->o.config.overflow  = 0xFF
 
 
-#define _hwa_init__c8a(o,i,a)					\
-  /* _hwa_init_reg( o, gtccr, 0x00 ); */				\
-  _hwa_init_reg( o, ccra,  0x00 );				\
-  _hwa_init_reg( o, ccrb,  0x00 );				\
-  _hwa_init_reg( o, count, 0x00 );				\
-  _hwa_init_reg( o, imsk,  0x00 );				\
+#define _hwa_init__c8a(o,i,a)			\
+  /* _hwa_init_reg( o, gtccr, 0x00 ); */	\
+  _hwa_init_reg( o, ccra,  0x00 );		\
+  _hwa_init_reg( o, ccrb,  0x00 );		\
+  _hwa_init_reg( o, count, 0x00 );		\
+  _hwa_init_reg( o, imsk,  0x00 );		\
   _hwa_init_reg( o, ifr,   0x00 )
 
 
-  /* hwa->o.config.clock     = HW_A1(_hw_c8a_clock_none);		\ */
-  /* hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_loop_up);	\ */
-  /* hwa->o.config.top       = HW_A1(_hw_c8a_top_max);		\ */
-  /* hwa->o.config.overflow  = HW_A1(_hw_c8a_overflow_at_max) */
+/* hwa->o.config.clock     = HW_A1(_hw_c8a_clock_none);		\ */
+/* hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_loop_up);	\ */
+/* hwa->o.config.top       = HW_A1(_hw_c8a_top_max);		\ */
+/* hwa->o.config.overflow  = HW_A1(_hw_c8a_overflow_at_max) */
 
 
 #define _hwa_commit__c8a(o,i,a)			\
-  /* _hwa_commit_reg( o, gtccr); */			\
+  /* _hwa_commit_reg( o, gtccr); */		\
   _hwa_commit_reg( o, ccra);			\
   _hwa_commit_reg( o, ccrb);			\
   _hwa_commit_reg( o, count);			\

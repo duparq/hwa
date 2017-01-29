@@ -33,13 +33,13 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Configure the watchdog to trigger an IRQ periodically
    */
-  hwa_config( hw_wdog0,
-              timeout,          TIMEOUT,
-              action,           irq );
+  hwa( config,  hw_wdog0,
+       timeout, TIMEOUT,
+       action,  irq       );
 
   /*  Write this configuration into the hardware
    */
@@ -50,9 +50,9 @@ int main ( )
      *  As soon as the watchdog IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    if ( hw_stat_irqf( hw_wdog0 ) ) {
-      hw_clear_irqf( hw_wdog0 );
-      hw_toggle( PIN_LED );
+    if ( hw( read, HW_IRQF(hw_wdog0) ) ) {
+      hw( clear, HW_IRQF(hw_wdog0) );
+      hw( toggle, PIN_LED );
     }
   }
     

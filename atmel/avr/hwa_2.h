@@ -493,12 +493,12 @@ HW_INLINE void _hwa_commit__r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Boo
  * @param rbp	position of the least significant bit conderned in the register.
  * @return	the value of the rbn consecutive bits at position rbp in the register.
  */
-HW_INLINE uint8_t _hw_read__r8 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
-{
-  uint8_t m = (1U<<rbn)-1 ;
-  volatile uint8_t *p = (volatile uint8_t *)ra ;
-  return ((*p)>>rbp) & m ;
-}
+#define _hw_read__r8(ra,rbn,rbp) (((*(volatile uint8_t*)(ra))>>(rbp))&((1U<<(rbn))-1))
+
+
+#define _hw_mthd_hw_read__r16		, _hw_read_r16
+//#define _hw_read_r16(o,a,wm,fm,...)	_hw_read__r16(a,16,0)
+#define _hw_read_r16(o,a,wm,fm,...)	*(volatile uint16_t*)a
 
 HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
@@ -606,9 +606,9 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*	ISR
  */
-#define hw_israttr_isr_interruptible		, __attribute__((interrupt))
-#define hw_israttr_isr_non_interruptible	, 
-#define hw_israttr_isr_naked			, __attribute__((naked))
+#define _hw_israttr_isr_interruptible		, __attribute__((interrupt))
+#define _hw_israttr_isr_non_interruptible	, 
+#define _hw_israttr_isr_naked			, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
@@ -618,6 +618,18 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*  Single event ISR
  */
-#define _hw_isr_(vector, ...)						\
-  HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
-  void __vector_##vector (void)
+#define _HW_ISR_(v,...)							\
+  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void __vector_##v(void)
+
+
+/*  Clear an interrupt flag by writing 1 into it
+ */
+#define _hw_mthd_hw_clear__m1		, _hw_clear_m1
+
+#define _hw_clear_m1(o,a,r,rc,...)	_hw_write_##rc(__VA_ARGS__ 1)
+
+#define _hw_mthd_hwa_clear__m1		, _hwa_clear_m1
+
+#define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1)
+//_hwa_clear_m1(hw_shared,0, gifr,_r8,0x5A,0x70,0x70, 1,5,);

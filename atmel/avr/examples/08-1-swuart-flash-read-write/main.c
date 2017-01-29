@@ -83,17 +83,17 @@ static void process ( uint8_t byte )
         /*  Get the content of the page to be modified and make the required
          *  change
          */
-        hw_read_bytes( hw_flash0, page, zpage, sizeof(page) );
+        hw( read_bytes, hw_flash0, page, zpage, sizeof(page) );
         page[ zbyte ] = buf.n ;
 
         /*  Process the reprogramming of the page. Some more checkings could be
          *  done in order to not erase or program blank pages.
          */
-	hw_cmd( hw_flash0, load_buffer, page );
-        hw_cmd( hw_flash0, erase_page, zpage );
-        hw_cmd( hw_flash0, write_page, zpage );
+	hw( load_buffer, hw_flash0, page );
+        hw( erase_page,  hw_flash0, zpage );
+        hw( write_page,  hw_flash0, zpage );
 
-        hw_write( UART, '$');
+        hw( write, UART, '$');
         return ;
       }
       else if ( buf.cmd == 'f' ) {
@@ -101,14 +101,14 @@ static void process ( uint8_t byte )
          *  Read data
          */
         while ( buf.n-- ) {
-          uint8_t byte = hw_read( hw_flash0, buf.addr++ );
-          hw_write( UART,  byte );
+          uint8_t byte = hw( read, hw_flash0, buf.addr++ );
+          hw( write, UART,  byte );
         }
-        hw_write( UART, '$');
+        hw( write, UART, '$');
         return ;
       }
     }
-    hw_write( UART, '!');
+    hw( write, UART, '!');
     return ;
   }
 }
@@ -124,11 +124,11 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -140,9 +140,9 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw_stat(UART).sync )
+  while ( !hw( stat,UART).sync )
     hw_sleep();
-  hw_write( UART, '$');
+  hw( write, UART, '$');
 
   for(;;) {
     /*
@@ -150,12 +150,12 @@ main ( )
      *    put the MCU into sleep mode, an interrupt will awake it
      */
     hw_sleep();
-    if ( hw_stat(UART).rxc ) {
+    if ( hw( stat,UART).rxc ) {
       /*
        *  MCU awakened by SWUART that has received a stop bit
        *  Get the received byte (clears rxc flag)
        */
-      process( hw_read(UART) );
+      process( hw( read,UART) );
     }
   }
 }

@@ -32,23 +32,23 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Configure the counter to overflow every 0.001 s.
    *  The compare unit `output0` (OCxA) is used to store the top value.
    *  Unless otherwise stated, the overflow will occur at top in `loop_up`
    *  counting mode, at bottom in `loop_updown` counting mode.
    */
-  hwa_config( COUNTER,
+  hwa( config, COUNTER,
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       compare0,
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
-    hwa_write( hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
+    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
 
   /*  Write this configuration into the hardware
    */
@@ -56,12 +56,12 @@ int main ( )
 
   static uint8_t n ;
   for(;;) {
-    if ( hw_stat_irqf( COUNTER, overflow ) ) {
-      hw_clear_irqf( COUNTER, overflow );
+    if ( hw( read, HW_IRQF(COUNTER, overflow) ) ) {
+      hw( clear, HW_IRQF(COUNTER, overflow) );
       n++ ;
       if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
         n = 0 ;
-        hw_toggle( PIN_LED );
+        hw( toggle, PIN_LED );
       }
     }
   }

@@ -50,8 +50,8 @@ volatile uint8_t                x_adc ; // Set to 1 after adc is written
  */
 HW_ISR( COUNTER, overflow )
 {
-  hw_turn( hw_adc0, on );
-  hw_toggle( PIN_LED );
+  hw( turn, hw_adc0, on );
+  hw( toggle, PIN_LED );
 }
 
 
@@ -60,8 +60,8 @@ HW_ISR( COUNTER, overflow )
  */
 HW_ISR( hw_adc0 )
 {
-  adc = hw_read( hw_adc0 );
-  hw_turn( hw_adc0, off );
+  adc = hw( read, hw_adc0 );
+  hw( turn, hw_adc0, off );
   x_adc = 1 ;
 }
 
@@ -76,15 +76,15 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART );
+  hwa( config, UART );
 
   /*  Configure LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -98,25 +98,25 @@ main ( )
    *  We use the loop_updown counting mode so that an 8-bit counter can handle
    *  the delay at 16 MHz.
    */
-  hwa_config( COUNTER,
+  hwa( config, COUNTER,
               clock,     prescaler_output(1024),
               countmode, loop_updown,
               bottom,    0,
               top,       compare0
               );
-  hwa_write( hw_rel(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
-  hwa_turn_irq( COUNTER, overflow, on );
+  hwa( write, hw_rel(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
+  hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)
    */
-  hwa_config( hw_adc0,
+  hwa( config, hw_adc0,
               clock,   sysclk_div(128),
               trigger, manual,
               vref,    vcc,
               align,   right,
 	      input,   PIN_ANALOG_INPUT
               );
-  hwa_turn_irq( hw_adc0, on );
+  hwa( turn, HW_IRQ(hw_adc0), on );
 
   /*  Write this configuration into the hardware
    */
@@ -126,9 +126,9 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw_stat(UART).sync )
+  while ( !hw( stat,UART).sync )
     hw_sleep();
-  hw_write( UART, '$' );
+  hw( write, UART, '$' );
 
   /*  Main loop:
    *    Enter sleep mode
@@ -142,8 +142,8 @@ main ( )
         x_adc = 0 ;
         x = adc ;
       } while( x_adc );
-      hw_write( UART, (x & 0x00FF)>>0 );
-      hw_write( UART, (x & 0xFF00)>>8 );
+      hw( write, UART, (x & 0x00FF)>>0 );
+      hw( write, UART, (x & 0xFF00)>>8 );
     }
   }
 }

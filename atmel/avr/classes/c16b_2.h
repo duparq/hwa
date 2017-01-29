@@ -226,13 +226,13 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc0,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc1,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc1,pin), direction, output );		\
       if ( hwa->oc2.config.output != 0xFF				\
 	   && hwa->oc2.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc2,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc2,pin), direction, output );		\
     }									\
     else if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \

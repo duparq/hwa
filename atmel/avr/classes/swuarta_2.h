@@ -141,19 +141,19 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart0_clk_div
-  hwa_config( hw_rel(hw_swuart0_compare,counter),
-  	      clock,     prescaler_output(hw_swuart0_clk_div),
-  	      countmode, loop_up,
-  	      top,       max );
+  _hwa( config, hw_rel(hw_swuart0_compare,counter),
+	       clock,     prescaler_output(hw_swuart0_clk_div),
+	       countmode, loop_up,
+	       top,       max );
 #  endif
 
   /*  RXD pin
    */
 #  if defined hw_swuart0_pin_rxd
-  hwa_config( hw_swuart0_pin_rxd, direction, input );
-  hwa_clear_irqf( hw_rel(hw_swuart0_pin_rxd,pcic) );
-  hwa_turn_irq( hw_rel(hw_swuart0_pin_rxd,pcic), on );
-  hwa_turn( hw_rel(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
+  _hwa( config, hw_swuart0_pin_rxd, direction, input );
+  hwa( clear, HW_IRQF(hw_rel(hw_swuart0_pin_rxd,pcic)) );
+  hwa( turn, HW_IRQ(hw_rel(hw_swuart0_pin_rxd,pcic)), on );
+  _hwa( turn, hw_rel(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
 
   /*  TXD pin
@@ -161,14 +161,14 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart0_pin_txd && hw_id(hw_swuart0_pin_txd) != hw_id(hw_swuart0_pin_rxd)
-  hwa_config( hw_swuart0_pin_txd, direction, output );
-  hwa_write( hw_swuart0_pin_txd, 1 );
+  _hwa( config, hw_swuart0_pin_txd, direction, output );
+  _hwa( write, hw_swuart0_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart0_pin_dbg
-  hwa_config( hw_swuart0_pin_dbg, direction, output );
+  _hwa( config, hw_swuart0_pin_dbg, direction, output );
 #  endif
 }
 #endif
@@ -201,19 +201,19 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart1_clk_div
-  hwa_config( hw_rel(hw_swuart1_compare,counter),
-  	      clock,     prescaler_output(hw_swuart1_clk_div),
-  	      countmode, loop_up,
-  	      top,       max );
+  _hwa( config, hw_rel(hw_swuart1_compare,counter),
+	       clock,     prescaler_output(hw_swuart1_clk_div),
+	       countmode, loop_up,
+	       top,       max );
 #  endif
 
   /*  RXD pin
    */
 #  if defined hw_swuart1_pin_rxd
-  hwa_config( hw_swuart1_pin_rxd, direction, input );
-  hwa_clear_irqf( hw_rel(hw_swuart1_pin_rxd,pcic) );
-  hwa_turn_irq( hw_rel(hw_swuart1_pin_rxd,pcic), on );
-  hwa_turn( hw_rel(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
+  _hwa( config, hw_swuart1_pin_rxd, direction, input );
+  _hwa( clear, HW_IRQF(hw_rel(hw_swuart1_pin_rxd,pcic)) );
+  _hwa( turn, HW_IRQ(hw_rel(hw_swuart1_pin_rxd,pcic)), on );
+  _hwa( turn, hw_rel(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif
 
   /*  TXD pin
@@ -221,14 +221,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart1_pin_txd && hw_id(hw_swuart1_pin_txd) != hw_id(hw_swuart1_pin_rxd)
-  hwa_config( hw_swuart1_pin_txd, direction, output );
-  hwa_write( hw_swuart1_pin_txd, 1 );
+  _hwa( config, hw_swuart1_pin_txd, direction, output );
+  _hwa( write, hw_swuart1_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart1_pin_dbg
-  hwa_config( hw_swuart1_pin_dbg, direction, output );
+  _hwa( config, hw_swuart1_pin_dbg, direction, output );
 #  endif
 }
 #endif
@@ -310,7 +310,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
   HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
 
-#define _hwx_cfswuarta_kbps_0(x,o,k,...)				\
+#define _hwx_cfswuarta_kbps_0(x,o,k,...)			\
   HW_G2(_hwx_cfswuarta_kcpb, HW_IS(cpb,k))(x,o,k,__VA_ARGS__)
 
 #define _hw_is_bps_bps				, 1
@@ -322,7 +322,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
   HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
 
-#define _hwx_cfswuarta_kcpb_0(x,o,k,...)					\
+#define _hwx_cfswuarta_kcpb_0(x,o,k,...)				\
   HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,k))(x,o,k,__VA_ARGS__)
 
 #define _hw_is_cpb_cpb				, 1
@@ -388,7 +388,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 
 #define _hwx_cfswuarta_vreceiver_1(x,o,v,...)				\
   x##_turn_irq(o##_pin_rx),change,_hw_state_##v));			\
-  _hwx_cfswuarta_kreceiver_0(x,o,__VA_ARGS__)
+						  _hwx_cfswuarta_kreceiver_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kreceiver_0(x,o,k,...)				\
   HW_G2(_hwx_cfswuarta_ktransmitter, HW_IS(transmitter,k))(x,o,k,__VA_ARGS__)
@@ -398,9 +398,9 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `transmitter`
  */
 #define _hwx_cfswuarta_ktransmitter_1(x,o,k,v,...)			\
-    HW_G2(_hwx_cfswuarta_vtransmitter, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
+  HW_G2(_hwx_cfswuarta_vtransmitter, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
 
-#define _hwx_cfswuarta_vtransmitter_0(x,o,v,...)				\
+#define _hwx_cfswuarta_vtransmitter_0(x,o,v,...)		\
   HW_ERR("`transmitter` must be `enabled`, not `" #v "`.")
 
 #define _hwx_cfswuarta_vtransmitter_1(x,o,v,...)	\
@@ -430,7 +430,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #define _hw_swuarta_read(o,i,a,...)	HW_TX(_##o##_getbyte(),__VA_ARGS__)
 
 #if defined hw_swuart0_pin_rxd
-extern uint8_t				_hw_swuart0_getbyte ( ) ;
+  extern uint8_t				_hw_swuart0_getbyte ( ) ;
 #else
 #  define _hw_swuart0_getbyte()		HW_ERR("hw_swuart0 has no RXD PIN.")
 #endif
@@ -524,8 +524,8 @@ typedef struct {
  */
 #define _hw_mthd_hw_clear__swuarta		, _hw_clear__swuarta
 #define _hw_clear__swuarta(o,i,a,...)		HW_TX(_hw_clear_swuarta(o),__VA_ARGS__)
-#define _hw_clear_swuarta( o )						\
-  do {									\
+#define _hw_clear_swuarta( o )					\
+  do {								\
     *(volatile uint8_t*)_hw_ra(o,sr) &= 0xFE ; /* Clear RXC */	\
     *(volatile uint8_t*)_hw_ra(o,sr) &= 0xFD ; /* Clear TXC */	\
   }while(0)

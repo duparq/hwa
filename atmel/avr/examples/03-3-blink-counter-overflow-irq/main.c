@@ -31,7 +31,7 @@ HW_ISR( COUNTER, overflow )
   n++ ;
   if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
     n = 0 ;
-    hw_toggle( PIN_LED );
+    hw( toggle, PIN_LED );
   }
 }
 
@@ -45,11 +45,11 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -60,18 +60,18 @@ int main ( )
    *  at top in `loop_up` counting mode, and at bottom in `loop_updown` counting
    *  mode.
    */
-  hwa_config( COUNTER,
+  hwa( config, COUNTER,
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       compare0
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
+    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
-    hwa_write( hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
+    hwa( write, hw_rel(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
 
-  hwa_turn_irq( COUNTER, overflow, on );
+  hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Write this configuration into the hardware
    */

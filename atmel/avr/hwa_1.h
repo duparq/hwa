@@ -92,5 +92,5 @@
  *	FIXME: should name it _vector(...)
  */
 #if defined __ASSEMBLER__
-#  define _hw_isr_(vector, ...)			__vector_##vector
+#  define _HW_ISR_(vector, ...)			__vector_##vector
 #endif

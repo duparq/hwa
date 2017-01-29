@@ -154,7 +154,7 @@
   HW_ERR("pin `"#o"` does not support analog mode.")
 
 #define _hwa_cfio1a_vmode_analog_1(o,p,bn,bp,...)	\
-  _hwa_write(_##o##_##did, 1);				\
+  _hwa( write, _##o##_##did, 1);			\
   _hwa_cfio1a_kmode_0(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_digital	_hwa_cfio1a_kmode_0
@@ -230,10 +230,10 @@
  * hw_toggle( IO_NAME );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
-#define _hw_toggle_io1a(o,i, p,...)		_hw_toggle_io1a_2(_hw_reg(p,pin),__VA_ARGS__)
+#define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_hw_reg(p,pin),__VA_ARGS__)
 #define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__)
-#define _hw_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hw_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)
+#define _hw_toggle_io1a_3(_m1,o,a,r,rc,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
+  HW_TX(_hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,1,),__VA_ARGS__)
 
 
 /**
@@ -248,7 +248,7 @@
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_hw_reg(p,pin),__VA_ARGS__)
 #define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__)
 #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hwa_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)
+  HW_TX(_hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)
 
 
 /**

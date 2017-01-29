@@ -46,37 +46,37 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Have the CPU enter power_down mode when the 'sleep' instruction is
    *  executed and make it wake up as a watchdog interrupt occurs.
    */
-  hwa_config( hw_core0,
-	      sleep,	  enabled,
-	      sleep_mode, power_down );
+  hwa( config, hw_core0,
+       sleep,	  enabled,
+       sleep_mode, power_down );
 
   /*  Go into sleep definitely if the watchdog triggered a reset.
    */
-  if ( hw_stat( hw_core0 ).reset_by_watchdog ) {
-    hwa_clear( hw_core0 );
+  if ( hw( stat, hw_core0 ).reset_by_watchdog ) {
+    hwa( clear, hw_core0 );
 
     /*	When the device is reset by the watchdog, the watchdog remains enabled
      *	so we must stop it.
      */
-    hwa_turn( hw_wdog0, off );
+    hwa( turn, hw_wdog0, off );
     hwa_commit();
     hw_sleep();
     for (;;)			/* This should */
-      hw_toggle( PIN_LED );	/* not happen  */
+      hw( toggle, PIN_LED );	/* not happen  */
   }
 
   /*  Configure the watchdog to time-out every TIMEOUT (this will wake the CPU
-   *  up), first setting its flag, then resetting the device unless it has been
-   *  reconfigured.
+   *  up), setting its flag the first time, resetting the device the second time
+   *  if it has been reconfigured.
    */
-  hwa_config( hw_wdog0,
-	      timeout,	    TIMEOUT,
-	      action,	    irq_or_reset );
+  hwa( config,  hw_wdog0,
+       timeout,	TIMEOUT,
+       action,	irq_or_reset );
 
   /*  Write this configuration into the hardware
    */
@@ -95,16 +95,16 @@ int main ( )
      *	the IRQ so that next timeout will reset the device. Load the context
      *	with this information, but do not write it into hardware.
      */
-    hwa_turn_irq( hw_wdog0, off );
+    hwa( turn, HW_IRQ(hw_wdog0), off );
     hwa_nocommit();
 
-    hw_toggle( PIN_LED );
+    hw( toggle, PIN_LED );
     count++ ;
     if ( count < 19 ) {
       /*
        *  Re-enable the watchdog IRQ.
        */
-      hwa_turn_irq( hw_wdog0, on );
+      hwa( turn, HW_IRQ(hw_wdog0), on );
       hwa_commit();
     }
   }

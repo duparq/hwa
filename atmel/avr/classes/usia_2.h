@@ -85,9 +85,9 @@
   _hwa_write_reg( o, wm, 1 );					\
   _hwa_write_reg( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
-    _hwa_config( hw_pin_usck, direction, output );		\
-    _hwa_config( hw_pin_do,   direction, output );		\
-    _hwa_config( hw_pin_di,   direction, input	);		\
+    _hwa( config, hw_pin_usck, direction, output );		\
+    _hwa( config, hw_pin_do,   direction, output );		\
+    _hwa( config, hw_pin_di,   direction, input	);		\
     _hwa_write_reg( o, clk, 1 );				\
   }								\
   else								\
@@ -122,52 +122,6 @@
 #define _hw_wrusia(o,i,a,v,...)		HW_TX( _hw_write_reg( o, dr, v ), __VA_ARGS__ )
 
 
-#if 0
-/**
- * @page atmelavr_usia
- * @section atmelavr_usia_stat Getting the status
- *
- * @code
- * uint8_t byte ;
- * hw_stat_t( USI ) st ;       // Structure of USI status
- * st = hw_stat( USI );	       // Read the status
- * if ( st.txc )	       // Transmission complete?
- *   byte = hw_read( USI );
- * @endcode
- */
-typedef union {
-  uint8_t		byte ;
-  struct {
-    unsigned int __0_4	  : 5 ;
-    unsigned int stop	  : 1 ;
-    unsigned int overflow : 1 ;
-    unsigned int start	  : 1 ;
-  } ;
-  struct {
-    unsigned int __0_5	  : 6 ;
-    unsigned int txc	  : 1 ;
-    unsigned int __7	  : 1 ;
-  } ;
-} _hw_usia_stat_t ;
-
-
-HW_INLINE _hw_usia_stat_t _hw_usia_stat( uint8_t byte )
-{
-  _hw_usia_stat_t	st ;
-  st.byte = byte ;
-  return st ;
-}
-
-#define _hw_mthd_hw_stat__usia		, _hw_stusia
-#define _hw_stusia(p,i,a,...)		HW_TX(_hw_usia_stat(_hw_read_reg(p,sr)), \
-					      __VA_ARGS__)
-
-#define _hw_mthd_hw_stat_t__usia	, _hw_usia_stat_t
-#define _hw_usia_stat_t(p,i,a,...)	HW_TX( usi_status_t, __VA_ARGS__)
-
-#endif
-
-
 /**
  * @page atmelavr_usia
  * @section atmelavr_usia_trigger Clocking
@@ -197,35 +151,18 @@ HW_INLINE _hw_usia_stat_t _hw_usia_stat( uint8_t byte )
  */
 #define _hw_mthd_hwa_config__usia_spimaster_swclk		, _hwa_cfspimswclk
 
-#if 0
-
-#define _hwa_cfspimswclk(p,i,usin,...)		\
-  HW_TX( _hwa_docfspimswclk(hwa, &hwa->usin), __VA_ARGS__ )
-
-HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
-{
-  hwa_config(hw_pin_usck, direction, output);
-  hwa_config(hw_pin_do,	  direction, output);
-
-  _hwa_write_reg_p( p, _usia, wm,  1 );
-  _hwa_write_reg_p( p, _usia, cs,  2 );
-  _hwa_write_reg_p( p, _usia, clk, 1 );
-}
-
-#else
-
 #define _hwa_cfspimswclk(p,i,o,...)		\
   HW_TX( _hwa_docfspimswclk(o), __VA_ARGS__ )
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
-    _hwa_config( hw_pin_usck, direction, output );	\
-    _hwa_config( hw_pin_do,   direction, output );	\
+    _hwa( config, hw_pin_usck, direction, output );	\
+    _hwa( config, hw_pin_do,   direction, output );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  2 );			\
     _hwa_write_reg( o, clk, 1 );			\
   } while(0)
-#endif
+
 
 /**
  * @page atmelavr_usia_spimaster_swclk
@@ -268,31 +205,15 @@ HW_INLINE void _hwa_docfspimswclk( hwa_t *hwa, hwa_usia_t *p )
  */
 #define _hw_mthd_hwa_config_usia_spimaster_c0clk		, _hwa_cfspimc0clk
 
-#define x_hwa_cfspimc0clk(c,n,i, usin)		\
-  _hwa_docfspimswclk(hwa, &hwa->usin)
-
-#if 0
-HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
-{
-  hwa_config(hw_pin_usck, direction, output);
-  hwa_config(hw_pin_do,	  direction, output);
-  hwa_config(hw_pin_di,	  direction, input);
-
-  _hwa_write_reg_p( p, _usia, wm,  1 );
-  _hwa_write_reg_p( p, _usia, cs,  1 );
-  _hwa_write_reg_p( p, _usia, clk, 0 );
-}
-#else
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
-    hwa_config( hw_pin_usck, direction, output );	\
-    hwa_config( hw_pin_do,   direction, output );	\
-    hwa_config( hw_pin_di,   direction, input  );	\
+    _hwa( config, hw_pin_usck, direction, output );	\
+    _hwa( config, hw_pin_do,   direction, output );	\
+    _hwa( config, hw_pin_di,   direction, input  );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  1 );			\
     _hwa_write_reg( o, clk, 0 );			\
   } while(0)
-#endif
 
 
 #define _hw_mthd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
@@ -310,31 +231,9 @@ HW_INLINE void _hwa_docfspimc0clk( hwa_t *hwa, hwa_usia_t *p )
  *									       *
  *******************************************************************************/
 
-#if 0
-HW_INLINE void _hwa_begin_p__usia ( hwa_usia_t *p, intptr_t a )
-{
-  _hwa_setup_reg_p( p, a, _usia, cr );
-}
-
-
-HW_INLINE void _hwa_init_p__usia ( hwa_usia_t *p )
-{
-  _hwa_set__r8( &p->cr, 0x00 );
-}
-
-
-HW_INLINE void _hwa_commit_p__usia ( hwa_t *hwa, hwa_usia_t *p )
-{
-  _hwa_commit_reg_p( p, _usia, cr );
-}
-
-#else
-
 #define _hwa_setup__usia(o,i,a)		_hwa_setup_reg( o, cr )
 #define _hwa_init__usia(o,i,a)		_hwa_init_reg( o, cr, 0x00 )
 #define _hwa_commit__usia(o,i,a)	_hwa_commit_reg( o, cr )
-
-#endif
 
 /**
  * @page atmelavr_usia

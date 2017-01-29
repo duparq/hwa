@@ -36,10 +36,10 @@
 
 int main ( )
 {
-  hw_config( PIN_LED, direction, output );
+  hw( config, PIN_LED, direction, output );
 
   for(;;) {
-    hw_toggle( PIN_LED );
+    hw( toggle, PIN_LED );
     hw_delay_cycles( PERIOD/2 * hw_syshz );
   }
 }

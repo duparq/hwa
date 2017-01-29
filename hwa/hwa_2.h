@@ -11,7 +11,7 @@
 
 /**
  * @ingroup public_context_instructions
- * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
+ * @brief Create a context to memorize what the `hwa(...)` instructions do.
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
  * @hideinitializer
@@ -28,7 +28,7 @@
 
 /**
  * @ingroup public_context_instructions
- * @brief Create a context to memorize what the `hwa_...(...)` instructions do.
+ * @brief Create a context to memorize what the `hwa(...)` instructions do.
  *
  * The context is initialized with the values the registers have after a
  * system reset.
@@ -80,54 +80,6 @@
 
 
 /**
- * @ingroup public_obj_instructions
- * @brief Read from an object (method)
- * @hideinitializer
- *
- * Syntax: `hw_read( object [,...] );`
- */
-/*  Variable arguments list is required. E.g. `hw_read( hw_flash0, address )`
- */
-#define hw_read(...)			HW_MTHD(hw_read, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Read multiple bytes from an object (method)
- *
- * Syntax: `hw_read_bytes( object [,...] );`
- * @hideinitializer
- */
-#define hw_read_bytes(...)		HW_MTHD(hw_read_bytes, __VA_ARGS__,)
-
-/**
- * @ingroup public_reg_instructions
- * @brief Read one register of an object (method)
- *
- * Syntax: `hw_read_reg( object, register );`
- * @hideinitializer
- */
-#define hw_read_reg(...)		HW_MTHD(hw_read, hw_reg(__VA_ARGS__))
-
-/**
- * @ingroup public_obj_instructions
- * @brief Read from an object with interrupts disabled (method)
- *
- * Syntax: `hw_atomic_read( object [,...] );`
- * @hideinitializer
- */
-#define hw_atomic_read(...)		HW_MTHD(hw_atomic_read, __VA_ARGS__)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Write in an object with interrupts disabled (method)
- *
- * Syntax: `hw_atomic_write( object [,...] );`
- * @hideinitializer
- */
-#define hw_atomic_write(...)		HW_MTHD(hw_atomic_write, __VA_ARGS__)
-
-
-/**
  * @ingroup private
  * @brief Read one register of an object
  *
@@ -148,60 +100,14 @@
 
 
 /**
- * @ingroup public_obj_instructions
- * @brief Write into an object (method)
- *
- * Syntax: `hw_write( object [,...], value );`
- * @hideinitializer
- */
-/*  Variable arguments list is required. E.g. `hw/hwa_write( hw_flash0, address, value )`
- */
-#define hw_write(...)			HW_MTHD(hw_write, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Write into an object (method)
- *
- * Syntax: `hwa_write( object [,...], value );`
- * @hideinitializer
- */
-#define hwa_write(...)			HW_MTHD(hwa_write, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Write multiple bytes into an object (method)
- *
- * Syntax: `hw_write_bytes( object, ... );`
- * @hideinitializer
- */
-#define hw_write_bytes(...)		HW_MTHD(hw_write_bytes, __VA_ARGS__,)
-
-/**
- * @ingroup public_reg_instructions
- * @brief Write into one register of an object (method)
- *
- * Syntax: `hw_write_reg( object, register, value );`
- * @hideinitializer
- */
-#define hw_write_reg(o,r,v)		HW_MTHD(hw_write, hw_reg(o,r),v)
-
-/**
- * @ingroup public_reg_instructions
- * @brief Write into one register of an object (method)
- *
- * Syntax: `hwa_write( object, register, value );`
- * @hideinitializer
- */
-#define hwa_write_reg(o,r,v)		HW_MTHD(hwa_write, hw_reg(o,r),v)
-
-/**
  * @ingroup private
  * @brief Write one register of an object
  *
  * Syntax: `_hw_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, hw_reg(o,r), v)
+#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, hw_reg(o,r), v,)
+
 
 /**
  * @ingroup private
@@ -211,179 +117,6 @@
  * @hideinitializer
  */
 #define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _hw_reg(o,r), v)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Make an object execute one of its special commands.
- *
- * Syntax: `hw_cmd( object, command [,...] );`
- * @hideinitializer
- */
-
-#define hw_cmd(o,...)		_hw_cmd2(o,__VA_ARGS__,)
-#define _hw_cmd2(o,f,...)	_hw_cmd3(f,o,_##o,__VA_ARGS__)
-#define _hw_cmd3(...)		_hw_cmd4(__VA_ARGS__)
-#define _hw_cmd4(f,o,c,...)	HW_G2(_hw_cmd5,HW_IS(,HW_G3(_hw_cmd,c,f)))(f,o,c,__VA_ARGS__)
-#define _hw_cmd5_1(f,o,c,i,a,...)	HW_A1(HW_G3(_hw_cmd,c,f))(o,__VA_ARGS__)
-
-#define _hw_cmd5_0(f,o,c,...)	HW_G2(_hw_cmd6, HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
-#define _hw_cmd6_0(f,o,c,...)	HW_ERR("`"#o"` is not a HWA object.")
-#define _hw_cmd6_1(f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no command `"#f"`.")
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Configure an object (method)
- *
- * Syntax: `hw_config( object, ... );`
- * @hideinitializer
- */
-#define hw_config(...)			HW_MTHD(hw_config, __VA_ARGS__,)
-
-#define _hw_config(...)			_HW_MTHD(hw_config, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Configure an object (method)
- *
- * Syntax: `hwa_config( object, ... );`
- * @hideinitializer
- */
-#define hwa_config(...)			HW_MTHD(hwa_config, __VA_ARGS__,)
-
-#define _hwa_config(...)		_HW_MTHD(hwa_config, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Clear an object (method)
- *
- * Syntax: `hw_clear( object [,...] );`
- * @hideinitializer
- */
-#define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Clear an object (method)
- *
- * Syntax: `hwa_clear( object [,...] );`
- * @hideinitializer
- */
-#define hwa_clear(...)			HW_MTHD(hwa_clear, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Reset an object (method)
- *
- * Syntax: `hw_reset( object [,...] );`
- * @hideinitializer
- */
-#define hw_reset(...)			HW_MTHD(hw_reset, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Reset an object (method)
- *
- * Syntax: `hwa_reset( object [,...] );`
- * @hideinitializer
- */
-#define hwa_reset(...)			HW_MTHD(hwa_reset, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Power an object on/off (method)
- *
- * Syntax: `hw_power( object, on | off );`
- * @hideinitializer
- */
-#define hw_power(...)			HW_MTHD(hw_power, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Power an object on/off (method)
- *
- * Syntax: `hwa_power( object, on | off );`
- * @hideinitializer
- */
-#define hwa_power(...)			HW_MTHD(hwa_power, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Type of the status of an object (method)
- *
- * Syntax: `hw_stat_t( object );`
- * @hideinitializer
- */
-#define hw_stat_t(...)			HW_MTHD(hw_stat_t, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Read the status of an object (method)
- *
- * Syntax: `hw_stat( object [,...] );`
- * @hideinitializer
- */
-#define hw_stat(...)			HW_MTHD(hw_stat, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Toggle an object, probably an i/o pin (method)
- *
- * Syntax: `hw_toggle( object [,...] );`
- * @hideinitializer
- */
-#define hw_toggle(...)			HW_MTHD(hw_toggle, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Toggle an object, probably an i/o pin (method)
- *
- * Syntax: `hwa_toggle( object [,...] );`
- * @hideinitializer
- */
-#define hwa_toggle(...)			HW_MTHD(hwa_toggle, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Turn an object on/off (method)
- *
- * Syntax: `hw_turn( object [,...], on | off );`
- * @hideinitializer
- */
-#define hw_turn(...)			HW_MTHD(hw_turn, __VA_ARGS__,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Turn an object on/off (method)
- *
- * Syntax: `hwa_turn( object [,...], on | off );`
- * @hideinitializer
- */
-#define hwa_turn(...)			HW_MTHD(hwa_turn, __VA_ARGS__,)
-
-
-/**
- * @ingroup public_obj_instructions
- * @brief Trigger object `o`.
- *
- * @hideinitializer
- */
-#define hw_trigger(o)			HW_MTHD(hw_trigger, o,)
-
-/**
- * @ingroup public_obj_instructions
- * @brief Trigger object `o`.
- *
- * @hideinitializer
- */
-#define hwa_trigger(o)			HW_MTHD(hwa_trigger, o,)
 
 
 #define _hw_mthd_hw_read__m1		, _hw_read__m1
@@ -399,7 +132,12 @@
  * @brief Read one group of consecutive bits from one hardware register
  * @hideinitializer
  */
-#define _hw_read__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp)	\
+/* #define _hw_read__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp)	\ */
+/*   _hw_read_##rc(a+ra,rbn,rbp) */
+
+#define _hw_read__m1(...)		_hw_read__m1_x(__VA_ARGS__,)
+
+#define _hw_read__m1_x(o,a, r,rc,ra,rwm,rfm, rbn,rbp, ...)	\
   _hw_read_##rc(a+ra,rbn,rbp)
 
 
@@ -439,8 +177,9 @@
  * @brief Write one group of consecutive bits into one hardware register
  * @hideinitializer
  */
-#define _hw_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v)	\
+#define _hw_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v,...)	\
   _hw_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
+
 
 /**
  * @ingroup private
@@ -457,7 +196,7 @@
  */
 #define _hw_write__m2(o,a,						\
 		      rn1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		      rn2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
+		      rn2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v, ...)	\
   do {									\
     if ( ra1==ra2 ) {							\
       /* HWA_ERR("That should not happen"); */				\
@@ -481,13 +220,9 @@
   _hw_write_##rc( ra, rwm,rfm, bn,bp, v )
 
 
-/* #define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /\* Internal use *\/ */
-/* #define _hwa_write_2(x,...)		_hwa_write_##x(x,__VA_ARGS__) */
+#define _hwa_write__m1(...)	_hwa_write__m1_x(__VA_ARGS__,)
 
-#define _hwa_write(...)			_HW_MTHD(hwa_write, __VA_ARGS__,)
-
-
-#define _hwa_write__m1(o,a, r,rc,ra,rwm,rfm, bn,bp, v)	\
+#define _hwa_write__m1_x(o,a, r,rc,ra,rwm,rfm, bn,bp, v, ...)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
 #define _hwa_write__m2(o,a,						\
@@ -497,6 +232,8 @@
     _hwa_write_##rc1(&hwa->o.r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
       _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
   } while(0)
+
+#define _hw_mthd_hwa_write__r8		, _hwa_write__r8
 
 
 /**

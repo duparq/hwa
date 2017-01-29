@@ -258,10 +258,10 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc0,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	hwa_config( _hw_rel(oc1,pin), direction, output );		\
+	_hwa( config, _hw_rel(oc1,pin), direction, output );		\
     }									\
   } while(0)
 

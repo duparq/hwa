@@ -73,7 +73,7 @@ HW_ISR( hw_adc0, isr_interruptible )
 {
   /*  Get the new value
    */
-  uint16_t adc = hw_read( hw_adc0 );
+  uint16_t adc = hw( read, hw_adc0 );
 
   /*  Low-pass filter
    */
@@ -102,7 +102,7 @@ HW_ISR( hw_adc0, isr_interruptible )
 
   /*  Start a new conversion
    */
-  hw_trigger( hw_adc0 );
+  hw( trigger, hw_adc0 );
 }
 
 
@@ -114,17 +114,17 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
   /*  No need to protect access to duty since interrupts are not allowed */
 
   if ( duty ) {
-    hw_write( PIN_LED, 1 );
+    hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
-      hw_write( hw_rel(COUNTER, compare1), duty );
-      hw_turn_irq( COUNTER, compare1, on );
+      hw( write, hw_rel(COUNTER,compare1), duty );
+      hw( turn, HW_IRQ(COUNTER,compare1), on );
     }
     else
-      hw_turn_irq( COUNTER, compare1, off );
+      hw( turn, HW_IRQ(COUNTER,compare1), off );
   }
   else {
-    hw_write( PIN_LED, 0 );
-    hw_turn_irq( COUNTER, compare1, off );
+    hw( write, PIN_LED, 0 );
+    hw( turn, HW_IRQ(COUNTER,compare1), off );
   }
 }
 
@@ -137,13 +137,13 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
 #if hw_ra(hw_rel(PIN_LED,port), port) < 0x40
 HW_ISR( COUNTER, compare1, isr_naked )
 {
-  hw_write( PIN_LED, 0 );
+  hw( write, PIN_LED, 0 );
   hw_asm("reti");
 }
 #else
 HW_ISR( COUNTER, compare1 )
 {
-  hw_write( PIN_LED, 0 );
+  hw( write, PIN_LED, 0 );
 }
 #endif
 
@@ -157,25 +157,25 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
-	      sleep,	  enabled,
-	      sleep_mode, idle
-	      );
+  hwa( config, hw_core0,
+       sleep,	  enabled,
+       sleep_mode, idle
+       );
 
   /*  Configure LED pin
    */
-  hwa_config( PIN_LED,
-	      direction, output
-	      );
+  hwa( config, PIN_LED,
+       direction, output
+       );
 
   /*  Configure analog input pin in analog mode (disable digital input buffer)
    *  and enable the internal pull-up resistor
    */
-  hwa_config( PIN_ANALOG_INPUT,
-	      mode,	 analog,
-	      direction, input,
-	      pullup,	 on
-	      );
+  hwa( config,    PIN_ANALOG_INPUT,
+       mode,	  analog,
+       direction, input,
+       pullup,	  on
+       );
 
   /*  Check that the counter can handle the top value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
@@ -185,34 +185,34 @@ int main ( )
 
   /*  Configure the counter prescaler
    */
-  hwa_config( hw_rel(COUNTER,prescaler),
-	      clock,   system );
+  hwa( config, hw_rel(COUNTER,prescaler),
+       clock,  system );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
    *  The counter overflow ISR manages the compare IRQ
    */
-  hwa_config( COUNTER,
-	      clock,	 prescaler_output(COUNTER_CLK_DIV),
-	      countmode, loop_up,
-	      bottom,	 0,
-	      top,	 TOP_OBJ,
-	      //	    overflow,  at_top,
-	      );
-  hwa_write( hw_rel(COUNTER, TOP_OBJ), COUNT_TOP );
-  hwa_turn_irq( COUNTER, overflow, on );
+  hwa( config,    COUNTER,
+       clock,	  prescaler_output(COUNTER_CLK_DIV),
+       countmode, loop_up,
+       bottom,	  0,
+       top,	  TOP_OBJ,
+       //	    overflow,  at_top,
+       );
+  hwa( write, hw_rel(COUNTER, TOP_OBJ), COUNT_TOP );
+  hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC to make a single conversion and trigger an
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
-  hwa_config( hw_adc0,
-	      clock,   sysclk_div(ADC_CLK_DIV),
-	      trigger, manual,
-	      vref,    vcc,
-	      align,   right,
-	      input,   PIN_ANALOG_INPUT,
-	      );
-  hwa_turn_irq( hw_adc0, on );
-  hwa_trigger( hw_adc0 );
+  hwa( config,  hw_adc0,
+       clock,   sysclk_div(ADC_CLK_DIV),
+       trigger, manual,
+       vref,    vcc,
+       align,   right,
+       input,   PIN_ANALOG_INPUT,
+       );
+  hwa( turn, HW_IRQ(hw_adc0), on );
+  hwa( trigger, hw_adc0 );
 
   /*  Write this configuration into the hardware
    */

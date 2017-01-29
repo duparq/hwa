@@ -24,7 +24,7 @@ HW_ISR( hw_wdog0 )
 {
   /*  Blink the LED
    */
-  hw_toggle( PIN_LED );
+  hw( toggle, PIN_LED );
 }
 
 
@@ -37,18 +37,18 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
-  hwa_config( hw_wdog0,
+  hwa( config, hw_wdog0,
               timeout,          TIMEOUT,
               action,           irq
               );
 
   /*  Configure the core to enter idle mode when asked to sleep
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle
               );
@@ -68,3 +68,16 @@ int main ( )
     
   return 0 ;
 }
+
+
+/* HW_IRQX( hw_counter0 ); */
+/* HW_IRQX( hw_counter0,overflow ); */
+
+/* HW_ISR( hw_counter0 ); */
+/* HW_ISR( hw_counter0,overflow ); */
+
+/* HW_ISR( hw_counter0, isr_naked ); */
+/* HW_ISR( hw_counter0,overflow, isr_naked ); */
+
+/* HW_ISR( hw_counter0, isr_naked, isr_interruptible, bbb, ccc ); */
+/* HW_ISR( hw_counter0,overflow, isr_naked, isr_interruptible ); */

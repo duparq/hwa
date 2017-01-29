@@ -11,49 +11,23 @@
  * This file contains all that is relative to interrupts.
  */
 
-/*  Interrupt requests are objects of class _irq
- */
-#define _hw_class__irq
-#define _hw_is__irq__irq			, 1
-
-
-/*  Object related to an IRQ
- */
-//#define _hw_mthd_hw_sup__irq			, _hw_sup_irq
-//#define _hw_sup_irq(vec, p, ie, if, ...)	HW_TX(p, __VA_ARGS__)
-
 /**
- * @brief Get an IRQ object
+ * @ingroup public_irq_instructions
+ * @brief Definition of an IRQ.
  *
- * Syntax: `hw_irq( object [, irq_name] )`
+ * `HW_IRQ( object [, irq_name] )`
+ *
  * @hideinitializer
  */
-#define hw_irq(...)		_hw_irq2(__VA_ARGS__,,)
-#define _hw_irq2(p,c,...)	HW_G2(_hw_irq3,				\
-				      HW_IS(_irq,_hw_irq_##p##_##c))(p,c,__VA_ARGS__)
-#define _hw_irq3_1(p,c,...)	_hw_irq_##p##_##c
-#define _hw_irq3_0(p,...)	HW_G2(_hw_irq4, HW_IS(_irq,_hw_irq_##p))(p,__VA_ARGS__)
-//#define _hw_irq4_1(p,...)	_hw_irq_##p, __VA_ARGS__
-#define _hw_irq4_1(p,...)	_hw_irq_##p
-#define _hw_irq4_0(p,...)	HW_G2(_hw_irq5,HW_ISOBJ(p))(p,__VA_ARGS__)
-#define _hw_irq5_0(p,...)	HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_irq5_1(p,...)	HW_ERR("`"#p"` has no IRQ named `` or `" \
-				       HW_QUOTE(__VA_ARGS__)"`.")
+#define _hw_class__irq
+#define _hw_is__irq__irq	, 1
 
-/*	Definition of an interrupt, extra arguments allowed and returned
- */
-#define hw_irqx(...)		HW_G2(_hw_irqx2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_irqx2_1(...)	__VA_ARGS__
-#define _hw_irqx2_0(p,...)						\
-  HW_G2(_hw_irqx3, HW_IS(_irq,_hw_irq_##p##_##__VA_ARGS__))(p,__VA_ARGS__)
-#define _hw_irqx3_1(p,...)	_hw_irq_##p##_##__VA_ARGS__
-#define _hw_irqx3_0(p,...)					\
-  HW_G2(_hw_irqx4, HW_IS(_irq,_hw_irq_##p))(p,__VA_ARGS__)
-#define _hw_irqx4_1(p,...)	_hw_irq_##p, __VA_ARGS__
-#define _hw_irqx4_0(p,...)	HW_G2(_hw_irqx5,HW_ISOBJ(p))(p,__VA_ARGS__)
-#define _hw_irqx5_0(p,...)	HW_ERR("`"#p"` is not a HWA object.")
-#define _hw_irqx5_1(p,...)	HW_ERR("`"#p"` has no IRQ named `` or `" \
-				       HW_QUOTE(__VA_ARGS__)"`.")
+#define HW_IRQ(...)		_HW_IRQ2(__VA_ARGS__,,)
+#define _HW_IRQ2(o,x,...)	HW_G2(_HW_IRQ3,HW_IS(_irq,_hw_irq_##o##_##x))(o,x,__VA_ARGS__)
+#define _HW_IRQ3_1(o,x,...)	_hw_irq_##o##_##x
+#define _HW_IRQ3_0(o,...)	HW_G2(_HW_IRQ5,HW_ISON(o))(o,__VA_ARGS__)
+#define _HW_IRQ5_0(o,...)	HW_E(`o` is not an object.)
+#define _HW_IRQ5_1(o,...)	HW_E(`o` has no IRQ named `HW_A0(__VA_ARGS__)`.)
 
 
 /**
@@ -64,10 +38,10 @@
  * Syntax 2: `hw_irqe( hw_irq(object [, irq_name]) )`
  * @hideinitializer
  */
-#define hw_irqe(...)		_hw_irqe_2(hw_irq(__VA_ARGS__))
-#define _hw_irqe_2(...)		HW_G2(_hw_irqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_irqe_0(...)		__VA_ARGS__
-#define _hw_irqe_1(t,v,p,e,f)	_hw_reg(p,e)
+#define HW_IRQE(...)		_HW_IRQE2(HW_IRQ(__VA_ARGS__))
+#define _HW_IRQE2(...)		HW_G2(_HW_IRQE,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _HW_IRQE_0(...)		__VA_ARGS__
+#define _HW_IRQE_1(t,o,v,e,f)	_hw_reg(o,e)
 
 
 /**
@@ -78,11 +52,10 @@
  * Syntax 2: `hw_irqf( hw_irq(object [, irq_name]) )`
  * @hideinitializer
  */
-//#define hw_irqf(...)		_hw_irqf_2(hw_irqx(__VA_ARGS__))
-#define hw_irqf(...)		_hw_irqf_2(hw_irq(__VA_ARGS__))
-#define _hw_irqf_2(...)		HW_G2(_hw_irqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_irqf_0(...)		__VA_ARGS__
-#define _hw_irqf_1(t,v,p,e,f)	_hw_reg(p,f)
+#define HW_IRQF(...)		_HW_IRQF2(HW_IRQ(__VA_ARGS__))
+#define _HW_IRQF2(...)		HW_G2(_HW_IRQF,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
+#define _HW_IRQF_1(c,o,v,e,f)	_hw_reg(o,f)
+#define _HW_IRQF_0(...)		__VA_ARGS__
 
 
 /**
@@ -100,7 +73,7 @@
  *   enabled.
  *
  * @code
- * HW_ISR( object [, irq_name] [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
+ * HW_ISR( object [, reason] [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
  * {
  *    ... // Service the ISR
  *
@@ -109,123 +82,89 @@
  * @endcode
  * @hideinitializer
  */
-#define HW_ISR(...)			_hw_isr_2(hw_irqx(__VA_ARGS__,))
-#define _hw_isr_2(...)			HW_G2(_hw_isr2,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_isr2_0(...)			HW_ERRFN(__VA_ARGS__)
-#define _hw_isr2_1(irq,v,n,e,f,...)	HW_G2(_hw_isr_a1, HW_IS(,__VA_ARGS__))(__VA_ARGS__, v)
 
-#define _hw_isr_a1_1(_,...)		_hw_isr_(__VA_ARGS__,)
-#define _hw_isr_a1_0(x,...)		HW_G2(_hw_isr_a1_0, HW_IS(,hw_israttr_##x))(x,__VA_ARGS__)
-#define _hw_isr_a1_0_0(x,...)		HW_ERRFN(HW_ERR("`"#x"` is not a valid ISR attribute."))
-#define _hw_isr_a1_0_1(x,...)		\
-  HW_G2(_hw_isr_a2,HW_IS(,__VA_ARGS__))(__VA_ARGS__, HW_A1(hw_israttr_##x))
+/*  The IRQ object/reason arguments may be followed by other arguments. So, we
+ *  do not use HW_IRQ().
+ */
+/*  Is x '_irq' ?
+ */
+#define HW_ISR(...)		HW_G2(_HW_ISR1,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__,,)
+#define _HW_ISR1_1(...)		_HW_ISR2(__VA_ARGS__)
 
-#define _hw_isr_a2_1(_,...)		_hw_isr_(__VA_ARGS__)
-#define _hw_isr_a2_0(x,...)		HW_G2(_hw_isr_a2_0, HW_IS(,hw_israttr_##x))(x,__VA_ARGS__)
-#define _hw_isr_a2_0_0(x,...)		HW_ERRFN(HW_ERR("`"#x"` is not a valid ISR attribute."))
-#define _hw_isr_a2_0_1(x,...)		\
-  HW_G2(_hw_isr_a3,HW_IS(,__VA_ARGS__))(__VA_ARGS__ HW_A1(hw_israttr_##x))
+/*  Is _hw_irq_##o##_##x an irq?
+ */
+#define _HW_ISR1_0(o,x,...)	HW_G2(_HW_ISR1_3,HW_IS(_irq,_hw_irq_##o##_##x))(o,x,__VA_ARGS__)
+#define _HW_ISR1_3_1(o,x,...)	_HW_ISR2(_hw_irq_##o##_##x,__VA_ARGS__)
 
-#define _hw_isr_a3_1(_,...)		_hw_isr_(__VA_ARGS__)
-#define _hw_isr_a3_0(x,...)		HW_ERRFN(HW_ERR("garbage starting with `" #x "...`"))
+/*  Is _hw_irq_##o##_ an irq?
+ */
+#define _HW_ISR1_3_0(o,...)	HW_G2(_HW_ISR1_4,HW_IS(_irq,_hw_irq_##o##_))(o,__VA_ARGS__)
+#define _HW_ISR1_4_1(o,...)	_HW_ISR2(_hw_irq_##o##_, __VA_ARGS__)
+
+/*  There is an error
+ */
+#define _HW_ISR1_4_0(o,...)	HW_G2(_HW_ISR1_5,HW_ISON(o))(o,__VA_ARGS__)
+#define _HW_ISR1_5_1(o,...)	HW_E(`o` has no IRQ named `` or `HW_QUOTE(__VA_ARGS__)`.) _HW_ISR_X_
+#define _HW_ISR1_5_0(o,...)	HW_PE(o,HW_E(`o` is not an object.)) _HW_ISR_X_
+
+/*  The definition of the IRQ is expanded, process the remaining arguments if any
+ */
+#define _HW_ISR2(...)		_HW_ISR3(__VA_ARGS__)
+#define _HW_ISR3(i,o,v,e,f,...)	HW_G2(_HW_ISR4,HW_IS(,__VA_ARGS__))(v,__VA_ARGS__)
+#define _HW_ISR4_1(v,...)	_HW_ISR_(v,)
+#define _HW_ISR4_0(v,x,...)	HW_G2(_HW_ISR5, HW_IS(,_hw_israttr_##x))(v,x,__VA_ARGS__)
+#define _HW_ISR5_0(v,x,...)	HW_E(#x is not a valid ISR attribute.) _HW_ISR_X_
+#define _HW_ISR5_1(v,a1,...)	HW_G2(_HW_ISR6,HW_IS(,__VA_ARGS__))(v,a1,__VA_ARGS__)
+#define _HW_ISR6_1(v,a1,...)	_HW_ISR_(v,HW_A1(_hw_israttr_##a1))
+#define _HW_ISR6_0(v,a1,x,...)	HW_G2(_HW_ISR7, HW_IS(,_hw_israttr_##x))(v,a1,x,__VA_ARGS__)
+#define _HW_ISR7_0(v,a1,x,...)	HW_E(#x is not a valid ISR attribute.) _HW_ISR_X_
+#define _HW_ISR7_1(v,a1,a2,...)	HW_G2(_HW_ISR8,HW_IS(,__VA_ARGS__))(v,a1,a2,__VA_ARGS__)
+#define _HW_ISR8_1(v,a1,a2,...)	_HW_ISR_(v, HW_A1(_hw_israttr_##a1) HW_A1(_hw_israttr_##a2))
+#define _HW_ISR8_0(v,a1,a2,...)	HW_E(unexpected argument: HW_QUOTE(__VA_ARGS__).) _HW_ISR_X_
+
+#define _HW_ISR_X_		void HW_G2(hw,__COUNTER__)()
+
+
+/*  Definition of an interrupt. Extra arguments are allowed and returned unchanged.
+ *  Only used by HW_ISR().
+ *
+ *    HW_IRQX(hw_counter0)
+ *    HW_IRQX(hw_counter0,compare)
+ *    HW_IRQX(hw_counter0,compare,isr_naked,...)
+ */
+//#define HW_ISR1_(...)		_HW_ISR1_1(__VA_ARGS__,,)
 
 
 #if !defined __ASSEMBLER__
 
 #define _hw_mthd_hw_turn__irq		, _hw_turn_irq
+
 /**
  * @ingroup private
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  */
-#define _hw_turn_irq(v,p,e,f, ...)					\
-  HW_G2(_hw_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
-#define _hw_turn_irq_vstate_0(p,e, ...)					\
-  HW_ERR("expected `on` or `off`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
-#define _hw_turn_irq_vstate_1(p,e,v, ...)				\
-    HW_TX(_hw_write_reg( p,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
+#define _hw_turn_irq(o,v,e,f, ...)					\
+  HW_G2(_hw_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(o,e, __VA_ARGS__,)
+#define _hw_turn_irq_vstate_0(o,e, ...)				\
+  HW_E(expected `on` or `off` instead of HW_QUOTE(__VA_ARGS__).)
+#define _hw_turn_irq_vstate_1(o,e,v, ...)			\
+  HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
 #define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
+
 /**
  * @ingroup private
  * @brief  Turn an IRQ on/off
  * @hideinitializer
  */
-#define _hwa_turn_irq(v,p,e,f, ...)					\
-  HW_G2(_hwa_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(p,e, __VA_ARGS__,)
-#define _hwa_turn_irq_vstate_0(p,e, ...)				\
-  HW_ERR("expected `on` or `off`, got `" HW_QUOTE(__VA_ARGS__) "` instead.")
-#define _hwa_turn_irq_vstate_1(p,e,v, ...)			\
-  HW_TX(_hwa_write_reg(p,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief  Stat an IRQ enable bit
- *
- * Get the state of the IRQ enable bit.
- *
- * @code
- * hw_stat_irqe( hw_counter0, overflow )
- * @endcode
- * @hideinitializer
- */
-#define hw_stat_irqe(...)		_hw_statirqe_2(hw_irq(__VA_ARGS__))
-#define _hw_statirqe_2(...)		HW_G2(_hw_statirqe,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_statirqe_0(...)		__VA_ARGS__
-#define _hw_statirqe_1(t,v,o,e,f,...)	_hw_read_reg(o,e)
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief  Stat an IRQ flag bit
- *
- * Get the state of the IRQ flag bit.
- *
- * @code
- * hw_stat_irqf( hw_counter0, overflow )
- * @endcode
- * @hideinitializer
- */
-#define hw_stat_irqf(...)		_hw_statirqf_2(hw_irq(__VA_ARGS__))
-#define _hw_statirqf_2(...)		HW_G2(_hw_statirqf,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__,)
-#define _hw_statirqf_0(...)		__VA_ARGS__
-#define _hw_statirqf_1(t,v,o,e,f,...)	_hw_read_reg(o,f)
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief  Turn an IRQ on/off
- * @hideinitializer
- *
- * Enable or disable an IRQ by setting the IRQ enable bit to 0 or 1.
- *
- * @code
- * hw_turn_irq( hw_counter0, overflow, on );
- * @endcode
- */
-#define hw_turn_irq(...)		_hw_turnirq_2(hw_irqx(__VA_ARGS__,))
-#define _hw_turnirq_2(...)		HW_G2(_hw_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_turnirq_0(...)		__VA_ARGS__
-#define _hw_turnirq_1(t,...)		_hw_turn_irq(__VA_ARGS__)
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief  Turn an IRQ on/off
- * @hideinitializer
- *
- * Enable or disable an IRQ by setting the IRQ enable bit to 0 or 1.
- *
- * @code
- * hw_turn_irq( hw_counter0, overflow, on );
- * @endcode
- */
-#define hwa_turn_irq(...)		_hwa_turnirq_2(hw_irqx(__VA_ARGS__,))
-#define _hwa_turnirq_2(...)		HW_G2(_hwa_turnirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_turnirq_0(...)		__VA_ARGS__
-#define _hwa_turnirq_1(t,...)		_hwa_turn_irq(__VA_ARGS__)
+#define _hwa_turn_irq(o,v,e,f, ...)					\
+  HW_G2(_hwa_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(o,e, __VA_ARGS__,)
+#define _hwa_turn_irq_vstate_0(o,e, ...)				\
+  HW_E(expected `on` or `off` instead of HW_QUOTE(__VA_ARGS__).)
+#define _hwa_turn_irq_vstate_1(o,e,v, ...)			\
+  HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
 /**
@@ -245,62 +184,5 @@
 #define _hwa_clear_irq(v,p,e,f, ... )	HW_TX(_hwa_write_reg(p,f, 1 ), __VA_ARGS__)
 #define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
 
-
-/**
- * @ingroup public_irq_instructions
- * @brief Clear an IRQ flag
- * @hideinitializer
- *
- * This is a synonym for hw_clear_irq()
- */
-#define hw_clear_irqf(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief Clear an IRQ flag
- * @hideinitializer
- *
- * @code
- * hw_clear_irq( hw_counter0, overflow );
- * @endcode
- */
-#define hw_clear_irq(...)		_hw_clearirq_2(hw_irqx(__VA_ARGS__,))
-#define _hw_clearirq_2(...)		HW_G2(_hw_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hw_clearirq_0(...)		__VA_ARGS__
-#define _hw_clearirq_1(t,...)		_hw_clear_irq(__VA_ARGS__)
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief	Clear an IRQ flag
- * @hideinitializer
- *
- * This is a synonym for hwa_clear_irq()
- */
-#define hwa_clear_irqf(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
-
-/**
- * @ingroup public_irq_instructions
- * @brief Clear an IRQ flag
- * @hideinitializer
- *
- * @code
- * hwa_clear_irq( hw_counter0, overflow );
- * @endcode
- */
-#define hwa_clear_irq(...)		_hwa_clearirq_2(hw_irqx(__VA_ARGS__,))
-#define _hwa_clearirq_2(...)		HW_G2(_hwa_clearirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _hwa_clearirq_0(...)		__VA_ARGS__
-#define _hwa_clearirq_1(t,...)		_hwa_clear_irq(__VA_ARGS__)
-
-
-/**
- * @ingroup private
- * @brief	Stat irq flag
- * @hideinitializer
- */
-#define _hw_stat_irq(v,o,e,f, ... )	HW_TX((_hw_read_reg(o,e)==1), __VA_ARGS__)
-#define _hw_mthd_hw_stat__irq		, _hw_stat_irq
 
 #endif /* !defined __ASSEMBLER__ */

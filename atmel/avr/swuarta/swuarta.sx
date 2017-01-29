@@ -13,6 +13,8 @@
 	TXDPIN    = hw_ra(hw_rel(hw_rel(UART,_pin_txd),port), pin)
 	TXDDR     = hw_ra(hw_rel(hw_rel(UART,_pin_txd),port), ddr)
 	TXDBIT    = hw_bp(hw_rel(UART,_pin_txd))
+#else	
+#  define CANTX 0
 #endif
 
 #if hw_id(hw_rel(UART,_pin_rxd))
@@ -22,6 +24,8 @@
 	RXDDR     = hw_ra(hw_rel(hw_rel(UART,_pin_rxd),port), ddr)
 	RXDBIT    = hw_bp(hw_rel(UART,_pin_rxd))
 #  define RXD_AP	RXDPIN, RXDBIT
+#else	
+#  define CANRX 0
 #endif
 
 	;; Debugging options
@@ -90,17 +94,17 @@
 
 
 #if CANRX
-#  define START_IE	hw_ap(hw_irqe(STARTISR))
-#  define START_IF	hw_ap(hw_irqf(STARTISR))
+#  define START_IE	hw_ap(HW_IRQE(STARTISR))
+#  define START_IF	hw_ap(HW_IRQF(STARTISR))
 #endif
 
-#define MATCH_IF_RA	hw_addr(hw_irqf(COMPARE))
-#define MATCH_IF_BP	hw_bp(hw_irqf(COMPARE))
-#define MATCH_IF	hw_ap(hw_irqf(COMPARE))
+#define MATCH_IF_RA	hw_addr(HW_IRQF(COMPARE))
+#define MATCH_IF_BP	hw_bp(HW_IRQF(COMPARE))
+#define MATCH_IF	hw_ap(HW_IRQF(COMPARE))
 
-#define MATCH_IE_RA	hw_addr(hw_irqe(COMPARE))
-#define MATCH_IE_BP	hw_bp(hw_irqe(COMPARE))
-#define MATCH_IE	hw_ap(hw_irqe(COMPARE))
+#define MATCH_IE_RA	hw_addr(HW_IRQE(COMPARE))
+#define MATCH_IE_BP	hw_bp(HW_IRQE(COMPARE))
+#define MATCH_IE	hw_ap(HW_IRQE(COMPARE))
 
 #undef COUNT_BN
 #define COUNT_BN 	hw_bn(COUNTER)
@@ -156,7 +160,10 @@ DATA(dtn):	.byte	0		; 1 bit duration
 
 	.section .text
 
-#if defined CANRX
+	CY_ST_SEI=0
+	CY_RX_SEI=0
+
+#if CANRX
 
 	;; Start condition (falling edge on RXD)
 	;;
@@ -399,7 +406,7 @@ HW_ISR(COMPARE):
 	CYCLES=CYCLES+4
 #   else
 	CY_RX_DB=0
-#   endif /* defined CANRX */
+#   endif /* CANRX */
 
 	;; Return from compare ISR
 	;;
@@ -424,7 +431,7 @@ LABEL(cmp99):
 	CY_CMP99=CYCLES-CY_CMP99
 
 
-#if defined CANRX
+#if CANRX
 	;;
 	;; Stop bit has been sampled
 	;;
@@ -476,10 +483,10 @@ LABEL(rxsb):
 	CY_RXSB=CYCLES-CY_RXSB
 	CY_RX_SB=CY_RX_SB+CY_RXSB+CY_CMP99
 
-#endif /* defined CANRX */
+#endif /* CANRX */
 
 	
-#if defined CANTX
+#if CANTX
 	;;
 	;;  Send next bit (data or stop)
 	;;    Re-enable interrupts as soon as possible
@@ -626,7 +633,7 @@ LABEL(txsb):
 	CY_TXSB=CYCLES-CY_TXSB
 	CY_TX_SB=CY_TX_SB+CY_TXSB+CY_CMP99
 
-#endif /* defined CANTX */
+#endif /* CANTX */
 
 
 #if CANRX

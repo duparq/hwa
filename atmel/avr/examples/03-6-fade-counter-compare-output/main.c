@@ -38,13 +38,13 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
-  hwa_config( hw_rel(PWM,counter),
+  hwa( config, hw_rel(PWM,counter),
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
@@ -52,13 +52,13 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
               );
 
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_config( PWM, output, clear_on_match_up_set_on_match_down );
+    hwa( config, PWM, output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
-    hwa_config( PWM, output, set_at_bottom_clear_on_match );
+    hwa( config, PWM, output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ
    */
-  hwa_turn_irq( hw_rel(PWM,counter), overflow, on );
+  hwa( turn, HW_IRQ(hw_rel(PWM,counter),overflow), on );
 }
 
 
@@ -75,9 +75,9 @@ HW_ISR( hw_rel(PWM,counter), overflow )
   static uint8_t        phase ;
 
   if ( phase == 0 )
-    hw_write( PWM, duty );
+    hw( write, PWM, duty );
   else if ( phase == 1 )
-    hw_write( PWM, ~duty );
+    hw( write, PWM, ~duty );
 
   duty++ ;
 
@@ -99,9 +99,9 @@ HW_ISR( hw_rel(PWM,counter), overflow )
          *  Change the compare output config from 'set_at_bottom_clear_on_match'
          *  to 'disconnected'
          */
-        hwa_config( PWM, output, set_at_bottom_clear_on_match );
+        hwa( config, PWM, output, set_at_bottom_clear_on_match );
         hwa_nocommit();
-        hwa_config( PWM, output, disconnected );
+        hwa( config, PWM, output, disconnected );
         hwa_commit();
       }
       else if ( phase == 0 ) {
@@ -109,9 +109,9 @@ HW_ISR( hw_rel(PWM,counter), overflow )
          *  Change the compare output config from 'disconnected' to
          *  'set_at_bottom_clear_on_match'
          */
-        hwa_config( PWM, output, disconnected );
+        hwa( config, PWM, output, disconnected );
         hwa_nocommit();
-        hwa_config( PWM, output, set_at_bottom_clear_on_match );
+        hwa( config, PWM, output, set_at_bottom_clear_on_match );
         hwa_commit();
       }
     }

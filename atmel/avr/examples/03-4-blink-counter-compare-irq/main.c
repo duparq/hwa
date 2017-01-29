@@ -29,13 +29,13 @@
  */
 HW_ISR( COUNTER, COMPARE )
 {
-  hw_write( COUNTER, 0 );
+  hw( write, COUNTER, 0 );
 
   static uint8_t n ;
   n++ ;
   if ( n >= (uint8_t)(0.5 + 1.0 * PERIOD / 2.0 / 0.001) ) {	/* Added 0.5 for rounding */
     n = 0 ;
-    hw_toggle( PIN_LED );
+    hw( toggle, PIN_LED );
   }
 }
 
@@ -49,30 +49,30 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa_config( PIN_LED, direction, output );
+  hwa( config, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa_config( hw_core0,
+  hwa( config, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
   /*  Configure the compare unit to match every 0.001 s.
    */
-  hwa_config( COUNTER,
+  hwa( config, COUNTER,
               clock,     HW_G2(prescaler_output, CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
               top,       max
               );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa_write( hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
+    hwa( write, hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
   else /* loop_up */
-    hwa_write( hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
+    hwa( write, hw_rel(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
 
   /*  Enable compare IRQ
    */
-  hwa_turn_irq( COUNTER, COMPARE, on );
+  hwa( turn, HW_IRQ(COUNTER,COMPARE), on );
 
   /*  Write this configuration into the hardware
    */
