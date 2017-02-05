@@ -92,15 +92,15 @@ main ( )
    *
    *  The compare unit `compare0` (OCRxA) is used to store the top value.
    *  Unless otherwise stated, the overflow will be automatically set to occur
-   *  at top in `loop_up` counting mode, and at bottom in `loop_updown` counting
+   *  at top in `up_loop` counting mode, and at bottom in `updown_loop` counting
    *  mode.
    *
-   *  We use the loop_updown counting mode so that an 8-bit counter can handle
+   *  We use the updown_loop counting mode so that an 8-bit counter can handle
    *  the delay at 16 MHz.
    */
   hwa( configure, COUNTER,
               clock,     prescaler_output(1024),
-              countmode, loop_updown,
+              countmode, updown_loop,
               bottom,    0,
               top,       compare0
               );

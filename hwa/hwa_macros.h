@@ -106,13 +106,18 @@
  *  that stops the compiling process. The error message 's' must be a single
  *  argument, i.e. it must not contain commas.
  */
-#define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s))
+#define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s.))
 #define _HW_E2(s)		_HW_E3(s)
 #if !defined HW_XE
 #  define _HW_E3(s)		_Pragma(#s)
 #else
 #  define _HW_E3(s)		_xPragma(#s)
 #endif
+
+#define HW_E_O(x)		HW_E(`x` is not an object)
+#define HW_E_ST(x)		HW_E(expected `on` or `off` instead of `x`)
+#define HW_E_UA(...)		HW_E(unexpected argument HW_QUOTE(__VA_ARGS__))
+
 
 /*  HW_E()-produced errors must be detected as objects
  */
@@ -321,7 +326,7 @@ extern char hw_error ;
 
 /* o is not an object and not a class name. Propagate or trigger an error.
  */
-#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_E(`o` is not a HWA object.))
+#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_E_O(o))
 
 
 /**
@@ -360,7 +365,7 @@ extern char hw_error ;
 #define _HW_GEN_2(...)		_HW_GEN_3(__VA_ARGS__)
 #define _HW_GEN_3(f,o,c,...)	HW_G2(_HW_GEN,HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
 #define _HW_GEN_1(f,o,c,...)	f(c,o,__VA_ARGS__)
-#define _HW_GEN_0(f,o,...)	HW_PE(o, HW_E(`o` is not an object.))
+#define _HW_GEN_0(f,o,...)	HW_PE(o, HW_E_O(o))
 
 
 /**
@@ -437,11 +442,7 @@ extern char hw_error ;
  */
 #define _hw_od2_0(...)		HW_G2(_hw_od3,HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__)
 #define _hw_od3_1(...)		__VA_ARGS__
-//#define _hw_od3_0(o)		HW_E(`o`: is not an object.)
-#define _hw_od3_0(o)		HW_PE(o,HW_E(`o`: is not an object.))
-/* #define _hw_od3_0(o)		HW_G2(_hw_od4,HW_IS(error,o))(o) */
-/* #define _hw_od4_1(o)		o */
-/* #define _hw_od4_0(o)		HW_E(`o`: is not an object.) */
+#define _hw_od3_0(o)		HW_PE(o,HW_E_O(o))
 
 
 /**
@@ -532,7 +533,7 @@ extern char hw_error ;
  */
 #define _hwp5_0(p,f,o,x,...)	HW_G2(_hwp6, HW_IS(,_hw_class_##o))(p,f,o,__VA_ARGS__,)
 #define _hwp6_1(p,f,c,o,...)	HW_G2(_hwp4, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,o,c,__VA_ARGS__)
-#define _hwp6_0(p,f,o,x,...)	HW_PE(x, HW_ERR("`"#o"` is not a HWA object."))
+#define _hwp6_0(p,f,o,x,...)	HW_PE(x, HW_E_O(o))
 #endif
 
 
@@ -570,7 +571,7 @@ extern char hw_error ;
 
 /*  o is not an object. Propagate or trigger an error.
  */
-#define __hwp5_0(p,f,o,x,...)	HW_PE(x, HW_ERR("`"#o"` is not a HWA object."))
+#define __hwp5_0(p,f,o,x,...)	HW_PE(x, HW_E_O(o))
 
   
 
@@ -904,16 +905,16 @@ extern char hw_error ;
 #define _HW_REL0_2(...)			_HW_REL0_0(__VA_ARGS__)
 #define _HW_REL2_1(o,x)			o##x
 #define _HW_REL2_0(o,x)			HW_PE(o, HW_G2(_HW_REL20,HW_ISON(o))(o,x))
-#define _HW_REL20_0(o,x)		HW_E(`o` is not an object.)
+#define _HW_REL20_0(o,x)		HW_E_O(o)
 
 /*  Look for a class-defined HW_REL() method
  */
 #define _HW_REL20_1(o,x)		_HW_REL3(o,x,_##o)
 #define _HW_REL3(...)			_HW_REL4(__VA_ARGS__)
 #define _HW_REL4(o,x,c,...)		HW_G2(_HW_REL4,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
-#define _HW_REL4_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
+#define _HW_REL4_0(o,x,...)		HW_E(`o` has no relative named `x`)
 #define _HW_REL4_1(o,x,c,...)		HW_G2(_HW_REL41, HW_IS(,_hw_mthd_HW_REL_##c))(o,x,c,__VA_ARGS__)
-#define _HW_REL41_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`.")
+#define _HW_REL41_0(o,x,...)		HW_E(`o` has no relative named `x`)
 #define _HW_REL41_1(o,x,c,...)		HW_A1(_hw_mthd_HW_REL_##c)(o,x,__VA_ARGS__)
 
 

@@ -19,7 +19,7 @@
  */
 #define COUNTER                 hw_counter0
 #define CLKDIV                  64
-#define COUNTMODE               loop_up
+#define COUNTMODE               up_loop
 #define PERIOD                  0.5
 
 
@@ -57,7 +57,7 @@ int main ( )
    *
    *  The compare unit `compare0` (OCRxA) is used to store the top value.
    *  Unless otherwise stated, the overflow will be automatically set to occur
-   *  at top in `loop_up` counting mode, and at bottom in `loop_updown` counting
+   *  at top in `up_loop` counting mode, and at bottom in `updown_loop` counting
    *  mode.
    */
   hwa( configure, COUNTER,
@@ -66,7 +66,7 @@ int main ( )
               bottom,    0,
               top,       compare0
               );
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
+  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );

@@ -22,7 +22,7 @@
  */
 #define COUNTER			hw_counter0
 #define CLKDIV			64
-#define COUNTMODE		loop_up
+#define COUNTMODE		up_loop
 #define COMPARE			compare0
 #define TOP			0xFF
 
@@ -50,7 +50,7 @@ HW_ISR( COUNTER, overflow )
   if ( (duty & TOP) == 0 ) {
     phase = (phase + 1) & 3 ;
 
-    /*	In 'loop_up' counting mode, we must disconnect/reconnect the output of
+    /*	In 'up_loop' counting mode, we must disconnect/reconnect the output of
      *	the compare unit as it can not provide pulses of less than 1 cycle.
      *
      *	Note that the configuration of the counter is not known here, so there
@@ -58,7 +58,7 @@ HW_ISR( COUNTER, overflow )
      *	code will probably have to read the hardware to retrieve unknown bit
      *	values.
      */
-    if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
+    if ( hw_streq(HW_QUOTE(COUNTMODE),"up_loop") ) {
       if ( phase == 2 )
 	hw( configure, HW_RELATIVE(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
@@ -89,10 +89,10 @@ int main ( )
 	      bottom,	 0,
 	      top,	 TOP
 	      );
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
+  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( configure, HW_RELATIVE(COUNTER,COMPARE),
 		output, clear_on_match_up_set_on_match_down );
-  else /* loop_up */
+  else /* up_loop */
     hwa( configure, HW_RELATIVE(COUNTER,COMPARE),
 		output, set_at_bottom_clear_on_match );
 

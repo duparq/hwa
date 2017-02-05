@@ -41,7 +41,7 @@ int main ( )
    */
   hwa( configure,    COUNTER,
        clock,     HW_G2(prescaler_output, CLKDIV),
-       countmode, loop_up,
+       countmode, up_loop,
        bottom,    0,
        top,       max,
        );

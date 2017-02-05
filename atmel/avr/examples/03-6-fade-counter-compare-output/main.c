@@ -28,7 +28,7 @@
  */
 #define PWM                     hw_oc00
 #define CLKDIV                  64
-#define COUNTMODE               loop_up
+#define COUNTMODE               up_loop
 #define TOP			0xFF
 
 
@@ -51,9 +51,9 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
               top,       TOP
               );
 
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
+  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( configure, PWM, output, clear_on_match_up_set_on_match_down );
-  else /* loop_up */
+  else /* up_loop */
     hwa( configure, PWM, output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ
@@ -84,10 +84,10 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
   if ( duty==0 ) {
     phase = (phase + 1) & 3 ;
 
-    /*  In 'loop_up' counting mode, we must disconnect/reconnect the output of
+    /*  In 'up_loop' counting mode, we must disconnect/reconnect the output of
      *  the compare unit as it can not provide pulses of less than 1 cycle.
      */
-    if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
+    if ( hw_streq(HW_QUOTE(COUNTMODE),"up_loop") ) {
 
       /*  Start from the hardawre configuration used at initialization
        */

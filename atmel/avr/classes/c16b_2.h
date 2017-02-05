@@ -35,8 +35,8 @@
  *
  *             //  How does this counter count
  *             //
- *             countmode,   loop_up                     // Count up and loop
- *                        | loop_updown,                // Count up and down alternately
+ *             countmode,   up_loop                     // Count up and loop
+ *                        | updown_loop,                // Count up and down alternately
  *
  *             //  Class _c16b counters all count from 0
  *             //
@@ -99,9 +99,9 @@
 /*  Optionnal argument `countmode`
  */
 #define _hw_c16b_countmode_up_loop		, 1
-#define _hw_c16b_countmode_loop_up		, 1
+#define _hw_c16b_countmode_up_loop		, 1
 #define _hw_c16b_countmode_updown_loop		, 2
-#define _hw_c16b_countmode_loop_updown		, 2
+#define _hw_c16b_countmode_updown_loop		, 2
 
 #define _hwa_cfc16b_kmode_0(o,k,...)					\
   HW_ERR("expected `countmode` instead of `" #k "`.")
@@ -324,9 +324,9 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
    */
   uint8_t overflow = c->config.overflow ;
   if ( overflow == 0xFF && c->config.top == HW_A1(_hw_c16b_top_compare0) ) {
-    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_loop_up) )
+    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) )
       overflow = HW_A1(_hw_c16b_overflow_at_top);
-    else /* if ( c->config.countmode == HW_A1(_hw_c16b_countmode_loop_up) ) */
+    else /* if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) ) */
       overflow = HW_A1(_hw_c16b_overflow_at_bottom);
   }
 
@@ -379,12 +379,12 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
   /*	Determine WGM
    */
   uint8_t wgm = 0xFF ;
-  if ( c->config.countmode == HW_A1(_hw_c16b_countmode_loop_up)
+  if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop)
        && c->config.top == HW_A1(_hw_c16b_top_compare0)
        && overflow == HW_A1(_hw_c16b_overflow_at_top) )
     wgm = 15 ;
   else    
-    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_loop_up) ) {
+    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) ) {
       if ( c->config.top == HW_A1(_hw_c16b_top_0xFFFF) )
 	wgm = 0 ;
       else if (c->config.top == HW_A1(_hw_c16b_top_0xFF) )

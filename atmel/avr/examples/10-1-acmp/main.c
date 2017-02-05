@@ -123,7 +123,7 @@ int main ( )
    */
   hwa( configure, COUNTER,
        clock,	 HW_G2(prescaler_output, COUNTER_CLK_DIV),
-       countmode, loop_up
+       countmode, up_loop
        );
 
   /*  Prepare the compare value for the PIN_LED pulse

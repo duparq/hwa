@@ -193,7 +193,7 @@ int main ( )
    */
   hwa( configure,    COUNTER,
        clock,	  prescaler_output(COUNTER_CLK_DIV),
-       countmode, loop_up,
+       countmode, up_loop,
        bottom,	  0,
        top,	  TOP_OBJ,
        //	    overflow,  at_top,

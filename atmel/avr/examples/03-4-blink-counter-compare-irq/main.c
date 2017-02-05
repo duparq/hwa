@@ -20,7 +20,7 @@
  */
 #define COUNTER                 hw_counter0
 #define CLKDIV                  64
-#define COUNTMODE               loop_up
+#define COUNTMODE               up_loop
 #define COMPARE                 compare0
 #define PERIOD                  0.5
 
@@ -53,26 +53,26 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, hw_core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+  hwa( configure,  hw_core0,
+       sleep,      enabled,
+       sleep_mode, idle );
 
   /*  Configure the compare unit to match every 0.001 s.
    */
   hwa( configure, COUNTER,
-              clock,     HW_G2(prescaler_output, CLKDIV),
-              countmode, COUNTMODE,
-              bottom,    0,
-              top,       max
-              );
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
+       clock,     prescaler_output(CLKDIV),
+       countmode, COUNTMODE,
+       bottom,    0,
+       top,       max );
+
+  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
-  else /* loop_up */
+  else /* up_loop */
     hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
 
   /*  Enable compare IRQ
    */
-  hwa( turn, HW_IRQ(COUNTER,COMPARE), on );
+  hwa( turn, HW_IRQ(COUNTER, COMPARE), on );
 
   /*  Write this configuration into the hardware
    */

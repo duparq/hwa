@@ -108,8 +108,8 @@
 /*  Optionnal argument `countmode`
  */
 #define _hw_is_countmode_countmode	, 1
-#define _hw_is_up_loop_loop_up		, 1
 #define _hw_is_up_loop_up_loop		, 1
+#define _hw_is_up_up_loop_loop		, 1
 
 #define _hwa_cfc8b_kcountmode_1(o,k,v,...)				\
   HW_G2(_hwa_cfc8b_vcountmode,HW_IS(up_loop,v))(o,v,__VA_ARGS__)

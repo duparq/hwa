@@ -98,9 +98,9 @@
 /*  Optionnal argument `countmode`
  */
 #define _hw_c8c_countmode_up_loop		, 1
-#define _hw_c8c_countmode_loop_up		, 1
+#define _hw_c8c_countmode_up_loop		, 1
 #define _hw_c8c_countmode_updown_loop		, 2
-#define _hw_c8c_countmode_loop_updown		, 2
+#define _hw_c8c_countmode_updown_loop		, 2
 
 #define _hwa_cfc8c_kmode_0(o,k,...)					\
   HW_ERR("expected `countmode` instead of `" #k "`.")
@@ -163,10 +163,10 @@
 	 "`at_top, or `at_max`, but `not `" #v "`.")
 
 #define _hwa_cfc8c_voverflow_1(o,v,...)				\
-  if ( hwa->o.config.countmode == HW_A1(_hw_c8c_countmode_loop_up)		\
+  if ( hwa->o.config.countmode == HW_A1(_hw_c8c_countmode_up_loop)		\
        && HW_A1(_hw_c8c_overflow_##v) == HW_A1(_hw_c8c_overflow_at_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `at_bottom` "	\
-	    "when countmode is `loop_up`.");				\
+	    "when countmode is `up_loop`.");				\
   HW_TX(hwa->o.config.overflow = HW_A1(_hw_c8c_overflow_##v); ,__VA_ARGS__)
 
 #define _hwa_cfc8c_koverflow_0(o,...)		\
@@ -291,9 +291,9 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
    */
   uint8_t overflow = p->config.overflow ;
   if ( overflow == 0xFF && p->config.top == HW_A1(_hw_c8c_top_compare0) ) {
-    if ( p->config.countmode == HW_A1(_hw_c8c_countmode_loop_up) )
+    if ( p->config.countmode == HW_A1(_hw_c8c_countmode_up_loop) )
       overflow = HW_A1(_hw_c8c_overflow_at_top);
-    else /* if ( p->config.countmode == HW_A1(_hw_c8c_countmode_loop_up) ) */
+    else /* if ( p->config.countmode == HW_A1(_hw_c8c_countmode_up_loop) ) */
       overflow = HW_A1(_hw_c8c_overflow_at_bottom);
   }
 
@@ -325,7 +325,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
   /*	Determine WGM
    */
   uint8_t wgm = 0xFF ;
-  if ( p->config.countmode == HW_A1(_hw_c8c_countmode_loop_up) ) {
+  if ( p->config.countmode == HW_A1(_hw_c8c_countmode_up_loop) ) {
     if ( p->config.top == HW_A1(_hw_c8c_top_fixed_0xFF) ) {
       if ( compare_update == HW_A1(_hw_oc8a_update_at_bottom)
 	   || oc0->config.output == HW_A1(_hw_oc8a_output_clear_at_bottom_set_on_match)
@@ -354,7 +354,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
 	wgm = 2 ;
     }
   }
-  else /* countmode == loop_updown */ {
+  else /* countmode == updown_loop */ {
     if ( p->config.top == HW_A1(_hw_c8c_top_fixed_0xFF) )
       wgm = 1 ;
     else /* top == ocra */
@@ -664,7 +664,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_oc8a_t *oc0, hwa_oc8a_t *oc
 
 
   /* hwa->o.config.clock     = HW_A1(_hw_c8c_clock_none);		\ */
-  /* hwa->o.config.countmode = HW_A1(_hw_c8c_countmode_loop_up);	\ */
+  /* hwa->o.config.countmode = HW_A1(_hw_c8c_countmode_up_loop);	\ */
   /* hwa->o.config.top	     = HW_A1(_hw_c8c_top_max);		\ */
   /* hwa->o.config.overflow  = HW_A1(_hw_c8c_overflow_at_max) */
 

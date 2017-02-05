@@ -19,7 +19,7 @@
  */
 #define COUNTER                 hw_counter0
 #define CLKDIV                  64
-#define COUNTMODE               loop_up
+#define COUNTMODE               up_loop
 #define PERIOD                  0.5
 
 
@@ -36,8 +36,8 @@ int main ( )
 
   /*  Configure the counter to overflow every 0.001 s.
    *  The compare unit `output0` (OCxA) is used to store the top value.
-   *  Unless otherwise stated, the overflow will occur at top in `loop_up`
-   *  counting mode, at bottom in `loop_updown` counting mode.
+   *  Unless otherwise stated, the overflow will occur at top in `up_loop`
+   *  counting mode, at bottom in `updown_loop` counting mode.
    */
   hwa( configure, COUNTER,
               clock,     prescaler_output(CLKDIV),
@@ -45,7 +45,7 @@ int main ( )
               bottom,    0,
               top,       compare0,
               );
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
+  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );
