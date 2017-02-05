@@ -32,7 +32,7 @@
  * @endcode
  */
 
-#define _hw_mthd_hwa_config__oc8b		, _hwa_cfoc8b
+#define _hw_mthd_hwa_configure__oc8b		, _hwa_cfoc8b
 
 
 /*  Optionnal argument `update`
@@ -217,9 +217,9 @@
     _hwa_write_reg(o,mode,3);						\
   }									\
   if ( hwa->o.config.outputh != 0xFF && hwa->o.config.outputh != 0 )	\
-    _hwa( config, _HW_REL(o,pin_h), direction, output );		\
+    _hwa( configure, _HW_REL(o,pin_h), direction, output );		\
   if ( hwa->o.config.outputl != 0xFF && hwa->o.config.outputl != 0 )	\
-    _hwa( config, _HW_REL(o,pin_l), direction, output );			\
+    _hwa( configure, _HW_REL(o,pin_l), direction, output );			\
   }
 
 

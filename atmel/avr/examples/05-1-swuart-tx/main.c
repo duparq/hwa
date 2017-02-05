@@ -35,7 +35,7 @@ main ( )
 
   /*  Configure the UART
    */
-  hwa( config,   UART,
+  hwa( configure,   UART,
        bps,	 BPS,
        databits, 8,
        parity,	 none,

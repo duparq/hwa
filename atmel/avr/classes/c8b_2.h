@@ -57,7 +57,7 @@
  *            );
  * @endcode
  */
-#define _hw_mthd_hwa_config__c8b                , _hwa_cfc8b
+#define _hw_mthd_hwa_configure__c8b                , _hwa_cfc8b
 
 /*  Mandatory argument `clock`
  *

@@ -76,15 +76,15 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa( config, UART );
+  hwa( configure, UART );
 
   /*  Configure LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -98,7 +98,7 @@ main ( )
    *  We use the loop_updown counting mode so that an 8-bit counter can handle
    *  the delay at 16 MHz.
    */
-  hwa( config, COUNTER,
+  hwa( configure, COUNTER,
               clock,     prescaler_output(1024),
               countmode, loop_updown,
               bottom,    0,
@@ -109,7 +109,7 @@ main ( )
 
   /*  Configure the ADC (this turns it on)
    */
-  hwa( config, hw_adc0,
+  hwa( configure, hw_adc0,
               clock,   sysclk_div(128),
               trigger, manual,
               vref,    vcc,

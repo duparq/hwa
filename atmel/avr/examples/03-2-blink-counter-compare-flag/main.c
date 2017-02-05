@@ -35,11 +35,11 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Configure the counter to count from 0 to its max and loop
    */
-  hwa( config,    COUNTER,
+  hwa( configure,    COUNTER,
        clock,     HW_G2(prescaler_output, CLKDIV),
        countmode, loop_up,
        bottom,    0,

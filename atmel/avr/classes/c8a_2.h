@@ -56,7 +56,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__c8a		, _hwa_config_c8a
+#define _hw_mthd_hwa_configure__c8a		, _hwa_cfc8a
 
 /*  Mandatory argument `clock`
  *
@@ -74,7 +74,7 @@
 #define _hw_c8a_clock_ext_falling		, 7
 #define _hw_c8a_clock_prescaler_output(x)	HW_G2(_hw_c8a_clock_prescaler_output,x)
 
-#define _hwa_config_c8a(o,i,a, ...)					\
+#define _hwa_cfc8a(o,i,a, ...)					\
   do { HW_G2(_hwa_cfc8a_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8a_kclock_0(o,k,...)			\
@@ -257,10 +257,10 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc0,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc1,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc1,pin), direction, output );		\
     }									\
   } while(0)
 

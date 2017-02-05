@@ -38,7 +38,7 @@
  *            );
  * @endcode
  */
-#define _hw_mthd_hwa_config__wdogb	, _hwa_cfwdogb
+#define _hw_mthd_hwa_configure__wdogb	, _hwa_cfwdogb
 
 /*    Optionnal argument `timeout`
  */

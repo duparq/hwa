@@ -45,11 +45,11 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -60,7 +60,7 @@ int main ( )
    *  at top in `loop_up` counting mode, and at bottom in `loop_updown` counting
    *  mode.
    */
-  hwa( config, COUNTER,
+  hwa( configure, COUNTER,
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,

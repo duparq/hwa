@@ -48,7 +48,7 @@
     HW_G2(_hwa_cfuarta_kbps, HW_IS(bps,__VA_ARGS__))(o,__VA_ARGS__,,)	\
       } while(0)
 
-#define _hw_mthd_hwa_config__uarta		, _hwa_cfuarta
+#define _hw_mthd_hwa_configure__uarta		, _hwa_cfuarta
 
 /* 	Optionnal parameter `bps`
  *	  Choose the U2X value that gives the lowest error

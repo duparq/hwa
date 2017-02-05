@@ -31,7 +31,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hw_config__ic16a		, _hw_cfic16a
+#define _hw_mthd_hw_configure__ic16a		, _hw_cfic16a
 
 #define hw_ic16a_input_pin_icp			, 1
 #define hw_ic16a_input_acmp0			, 2
@@ -76,7 +76,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__ic16a		, _hwa_cfic16a
+#define _hw_mthd_hwa_configure__ic16a		, _hwa_cfic16a
 
 #define _hwa_cfic16a(o,i,a,...)						\
   do {									\

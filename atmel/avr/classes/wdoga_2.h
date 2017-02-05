@@ -38,7 +38,7 @@
  *            );
  * @endcode
  */
-#define _hw_mthd_hwa_config__wdoga	, _hwa_cfwdoga
+#define _hw_mthd_hwa_configure__wdoga	, _hwa_cfwdoga
 
 /*    Optionnal argument `timeout`
  */

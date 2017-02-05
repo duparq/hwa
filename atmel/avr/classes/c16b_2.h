@@ -60,7 +60,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__c16b		, _hwa_cfc16b
+#define _hw_mthd_hwa_configure__c16b		, _hwa_cfc16b
 
 /*  Mandatory argument `clock`
  *
@@ -226,13 +226,13 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc0,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc1,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc1,pin), direction, output );		\
       if ( hwa->oc2.config.output != 0xFF				\
 	   && hwa->oc2.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc2,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc2,pin), direction, output );		\
     }									\
     else if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \

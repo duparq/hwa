@@ -72,7 +72,7 @@
  *             clock,   system );
  * @endcode
  */
-#define _hw_mthd_hwa_config__psca		, _hwa_cfpsca
+#define _hw_mthd_hwa_configure__psca		, _hwa_cfpsca
 
 /*  Mandatory argument `clock`
  */

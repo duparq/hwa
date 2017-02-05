@@ -60,9 +60,9 @@ HW_ISR( COUNTER, overflow )
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
       if ( phase == 2 )
-	hw( config, HW_RELATIVE(COUNTER,COMPARE), output, disconnected );
+	hw( configure, HW_RELATIVE(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-	hw( config, HW_RELATIVE(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+	hw( configure, HW_RELATIVE(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
     }
   }
 }
@@ -77,23 +77,23 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
 	      sleep,	  enabled,
 	      sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and TOP
    */
-  hwa( config, COUNTER,
+  hwa( configure, COUNTER,
 	      clock,	 prescaler_output(CLKDIV),
 	      countmode, COUNTMODE,
 	      bottom,	 0,
 	      top,	 TOP
 	      );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa( config, HW_RELATIVE(COUNTER,COMPARE),
+    hwa( configure, HW_RELATIVE(COUNTER,COMPARE),
 		output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
-    hwa( config, HW_RELATIVE(COUNTER,COMPARE),
+    hwa( configure, HW_RELATIVE(COUNTER,COMPARE),
 		output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ

@@ -141,7 +141,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart0_clk_div
-  _hwa( config, HW_REL(hw_swuart0_compare,counter),
+  _hwa( configure, HW_REL(hw_swuart0_compare,counter),
 	       clock,     prescaler_output(hw_swuart0_clk_div),
 	       countmode, loop_up,
 	       top,       max );
@@ -150,7 +150,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  RXD pin
    */
 #  if defined hw_swuart0_pin_rxd
-  _hwa( config, hw_swuart0_pin_rxd, direction, input );
+  _hwa( configure, hw_swuart0_pin_rxd, direction, input );
   hwa( clear, HW_IRQF(HW_REL(hw_swuart0_pin_rxd,pcic)) );
   hwa( turn, HW_IRQ(HW_REL(hw_swuart0_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
@@ -161,14 +161,14 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd) != HW_ID(hw_swuart0_pin_rxd)
-  _hwa( config, hw_swuart0_pin_txd, direction, output );
+  _hwa( configure, hw_swuart0_pin_txd, direction, output );
   _hwa( write, hw_swuart0_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart0_pin_dbg
-  _hwa( config, hw_swuart0_pin_dbg, direction, output );
+  _hwa( configure, hw_swuart0_pin_dbg, direction, output );
 #  endif
 }
 #endif
@@ -201,7 +201,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart1_clk_div
-  _hwa( config, HW_REL(hw_swuart1_compare,counter),
+  _hwa( configure, HW_REL(hw_swuart1_compare,counter),
 	       clock,     prescaler_output(hw_swuart1_clk_div),
 	       countmode, loop_up,
 	       top,       max );
@@ -210,7 +210,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  RXD pin
    */
 #  if defined hw_swuart1_pin_rxd
-  _hwa( config, hw_swuart1_pin_rxd, direction, input );
+  _hwa( configure, hw_swuart1_pin_rxd, direction, input );
   _hwa( clear, HW_IRQF(HW_REL(hw_swuart1_pin_rxd,pcic)) );
   _hwa( turn, HW_IRQ(HW_REL(hw_swuart1_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
@@ -221,14 +221,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd) != HW_ID(hw_swuart1_pin_rxd)
-  _hwa( config, hw_swuart1_pin_txd, direction, output );
+  _hwa( configure, hw_swuart1_pin_txd, direction, output );
   _hwa( write, hw_swuart1_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart1_pin_dbg
-  _hwa( config, hw_swuart1_pin_dbg, direction, output );
+  _hwa( configure, hw_swuart1_pin_dbg, direction, output );
 #  endif
 }
 #endif
@@ -285,8 +285,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  *           );
  * @endcode
  */
-#define _hw_mthd_hw_config__swuarta		, _hw_cfswuarta
-#define _hw_mthd_hwa_config__swuarta		, _hwa_cfswuarta
+#define _hw_mthd_hw_configure__swuarta		, _hw_cfswuarta
+#define _hw_mthd_hwa_configure__swuarta		, _hwa_cfswuarta
 
 /*  Configuration of the relatives is easier inside a function to handle
  *  undeclared pins.

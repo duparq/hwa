@@ -157,21 +157,21 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
        sleep,	  enabled,
        sleep_mode, idle
        );
 
   /*  Configure LED pin
    */
-  hwa( config, PIN_LED,
+  hwa( configure, PIN_LED,
        direction, output
        );
 
   /*  Configure analog input pin in analog mode (disable digital input buffer)
    *  and enable the internal pull-up resistor
    */
-  hwa( config,    PIN_ANALOG_INPUT,
+  hwa( configure,    PIN_ANALOG_INPUT,
        mode,	  analog,
        direction, input,
        pullup,	  on
@@ -185,13 +185,13 @@ int main ( )
 
   /*  Configure the counter prescaler
    */
-  hwa( config, HW_RELATIVE(COUNTER,prescaler),
+  hwa( configure, HW_RELATIVE(COUNTER,prescaler),
        clock,  system );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
    *  The counter overflow ISR manages the compare IRQ
    */
-  hwa( config,    COUNTER,
+  hwa( configure,    COUNTER,
        clock,	  prescaler_output(COUNTER_CLK_DIV),
        countmode, loop_up,
        bottom,	  0,
@@ -204,7 +204,7 @@ int main ( )
   /*  Configure the ADC to make a single conversion and trigger an
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
-  hwa( config,  hw_adc0,
+  hwa( configure,  hw_adc0,
        clock,   sysclk_div(ADC_CLK_DIV),
        trigger, manual,
        vref,    vcc,

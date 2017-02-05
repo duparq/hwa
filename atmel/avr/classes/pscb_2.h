@@ -35,7 +35,7 @@
  *
  * __Note 5__: the PLL is never stopped once it has been turned on.
  */
-#define _hw_mthd_hwa_config__pscb		, _hwa_cfpscb
+#define _hw_mthd_hwa_configure__pscb		, _hwa_cfpscb
 
 /*  Mandatory argument `clock`
  *

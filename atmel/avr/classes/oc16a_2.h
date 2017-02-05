@@ -56,7 +56,7 @@
 
 #define _hw_is_disconnected_disconnected		, 1
 
-#define _hw_mthd_hw_config__oc16a		, _hw_cfoc16a
+#define _hw_mthd_hw_configure__oc16a		, _hw_cfoc16a
 
 #define _hw_cfoc16a(o,i,a, ...)						\
   do {									\
@@ -109,7 +109,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mthd_hwa_config__oc16a		, _hwa_cfoc16a
+#define _hw_mthd_hwa_configure__oc16a		, _hwa_cfoc16a
 
 #define _hwa_cfoc16a(o,i,a,...)						\
   do {									\

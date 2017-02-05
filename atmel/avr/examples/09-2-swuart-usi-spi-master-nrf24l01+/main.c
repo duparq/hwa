@@ -81,15 +81,15 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa( config, UART );
+  hwa( configure, UART );
 
   /*  Configure SPI (SPI master clocked by software over USI)
    */
-  hwa( config, SPI );
+  hwa( configure, SPI );
 
   /*  Configure nRF CSN pin
    */
-  hwa( config, NRF_CSN, direction, output );
+  hwa( configure, NRF_CSN, direction, output );
   hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware

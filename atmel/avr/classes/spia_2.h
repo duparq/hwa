@@ -53,7 +53,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__spia		, _hwa_cfspia
+#define _hw_mthd_hwa_configure__spia		, _hwa_cfspia
 
 /*	Mandatory parameter `mode`
  */
@@ -81,10 +81,10 @@
   _hwa_write_reg(o,mstr, HW_A2(_hw_spia_mode_##v));		\
   if ( HW_A1(_hw_spia_mode_##v) == 1 ) {			\
     if ( HW_A2(_hw_spia_mode_##v) == 0 )			\
-      _hwa( config, _HW_REL(o,pin_miso), direction, output );	\
+      _hwa( configure, _HW_REL(o,pin_miso), direction, output );	\
     else {							\
-      _hwa( config, _HW_REL(o,pin_mosi), direction, output );	\
-      _hwa( config, _HW_REL(o,pin_sck), direction, output );	\
+      _hwa( configure, _HW_REL(o,pin_mosi), direction, output );	\
+      _hwa( configure, _HW_REL(o,pin_sck), direction, output );	\
     }								\
   }								\
   HW_G2(_hwa_cfspia_kclock, HW_IS(clock,k))(o,k,__VA_ARGS__)

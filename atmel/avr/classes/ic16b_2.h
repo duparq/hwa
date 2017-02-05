@@ -30,7 +30,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hw_config__ic16b		, _hw_cfic16b
+#define _hw_mthd_hw_configure__ic16b		, _hw_cfic16b
 
 #define hw_ic16b_input_pin_icp			, 1
 #define hw_ic16b_input_acmp0			, 2
@@ -74,7 +74,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__ic16b		, _hwa_cfic16b
+#define _hw_mthd_hwa_configure__ic16b		, _hwa_cfic16b
 
 #define _hwa_cfic16b(o,i,a,...)						\
   do {									\

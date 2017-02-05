@@ -70,7 +70,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__ad10b		, _hwa_cfad10b
+#define _hw_mthd_hwa_configure__ad10b		, _hwa_cfad10b
 
 /*	Mandatory parameter 'clock'
  */

@@ -33,7 +33,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hw_config__oc8a			, _hw_cfoc8a
+#define _hw_mthd_hw_configure__oc8a			, _hw_cfoc8a
 
 /*  Mandatory parameter `output`
  */
@@ -103,7 +103,7 @@
  *            );
  * @endcode
  */
-#define _hw_mthd_hwa_config__oc8a		, _hwa_cfoc8a
+#define _hw_mthd_hwa_configure__oc8a		, _hwa_cfoc8a
 
 /*  Optionnal parameter `update`
  */

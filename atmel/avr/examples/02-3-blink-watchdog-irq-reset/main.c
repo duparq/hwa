@@ -46,12 +46,12 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Have the CPU enter power_down mode when the 'sleep' instruction is
    *  executed and make it wake up as a watchdog interrupt occurs.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
        sleep,	  enabled,
        sleep_mode, power_down );
 
@@ -74,7 +74,7 @@ int main ( )
    *  up), setting its flag the first time, resetting the device the second time
    *  if it has been reconfigured.
    */
-  hwa( config,  hw_wdog0,
+  hwa( configure,  hw_wdog0,
        timeout,	TIMEOUT,
        action,	irq_or_reset );
 

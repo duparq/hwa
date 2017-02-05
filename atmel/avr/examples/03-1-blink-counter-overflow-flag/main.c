@@ -32,14 +32,14 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Configure the counter to overflow every 0.001 s.
    *  The compare unit `output0` (OCxA) is used to store the top value.
    *  Unless otherwise stated, the overflow will occur at top in `loop_up`
    *  counting mode, at bottom in `loop_updown` counting mode.
    */
-  hwa( config, COUNTER,
+  hwa( configure, COUNTER,
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,

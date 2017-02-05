@@ -33,7 +33,7 @@
  *          );
  * @endcode
  */
-#define _hw_mthd_hw_config__twia		, _hw_cftwia
+#define _hw_mthd_hw_configure__twia		, _hw_cftwia
 #define _hw_cftwia( o,i,a, ... )		_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
 /**
@@ -56,7 +56,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__twia		, _hwa_cftwia
+#define _hw_mthd_hwa_configure__twia		, _hwa_cftwia
 #define _hwa_cftwia( o,i,a, ... )		_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 \
 

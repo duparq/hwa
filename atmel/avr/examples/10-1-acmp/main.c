@@ -87,20 +87,20 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
        sleep,	  enabled,
        sleep_mode, idle
        );
 
   /*  Configure LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
 #if HW_ID( hw_io(REFERENCE) )
-  hwa( config, REFERENCE,
+  hwa( configure, REFERENCE,
        mode,	 analog,
        direction, input
        );
@@ -108,7 +108,7 @@ int main ( )
 
   /*  Configure INPUT_NEG pin in analog mode (disable digital input buffer)
    */
-  hwa( config, PIN_ANALOG_INPUT,
+  hwa( configure, PIN_ANALOG_INPUT,
        mode,	 analog,
        direction, input
        );
@@ -121,7 +121,7 @@ int main ( )
 
   /*  Configure the counter to count from 0 to max
    */
-  hwa( config, COUNTER,
+  hwa( configure, COUNTER,
        clock,	 HW_G2(prescaler_output, COUNTER_CLK_DIV),
        countmode, loop_up
        );
@@ -132,7 +132,7 @@ int main ( )
 
   /*  Configure the analog comparator
    */
-  hwa( config,         hw_acmp0,
+  hwa( configure,         hw_acmp0,
        edge,	       EDGE,
        positive_input, REFERENCE,
        negative_input, PIN_ANALOG_INPUT );

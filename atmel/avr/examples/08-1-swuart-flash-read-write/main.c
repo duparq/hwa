@@ -124,11 +124,11 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa( config, UART );
+  hwa( configure, UART );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 

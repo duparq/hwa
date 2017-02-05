@@ -58,7 +58,7 @@
  *             );
  * @endcode
  */
-#define _hw_mthd_hwa_config__c8c		, _hwa_config_c8c
+#define _hw_mthd_hwa_configure__c8c		, _hwa_config_c8c
 
 /*  Mandatory argument `clock`
  *
@@ -258,10 +258,10 @@
        */								\
       if ( hwa->oc0.config.output != 0xFF				\
 	   && hwa->oc0.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc0,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc0,pin), direction, output );		\
       if ( hwa->oc1.config.output != 0xFF				\
 	   && hwa->oc1.config.output != HW_A1(_hw_oc8a_output_disconnected) ) \
-	_hwa( config, _HW_REL(oc1,pin), direction, output );		\
+	_hwa( configure, _HW_REL(oc1,pin), direction, output );		\
     }									\
   } while(0)
 

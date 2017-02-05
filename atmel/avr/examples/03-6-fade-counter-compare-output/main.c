@@ -38,13 +38,13 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
               sleep,      enabled,
               sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
-  hwa( config, HW_RELATIVE(PWM,counter),
+  hwa( configure, HW_RELATIVE(PWM,counter),
               clock,     prescaler_output(CLKDIV),
               countmode, COUNTMODE,
               bottom,    0,
@@ -52,9 +52,9 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
               );
 
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa( config, PWM, output, clear_on_match_up_set_on_match_down );
+    hwa( configure, PWM, output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
-    hwa( config, PWM, output, set_at_bottom_clear_on_match );
+    hwa( configure, PWM, output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ
    */
@@ -99,9 +99,9 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
          *  Change the compare output config from 'set_at_bottom_clear_on_match'
          *  to 'disconnected'
          */
-        hwa( config, PWM, output, set_at_bottom_clear_on_match );
+        hwa( configure, PWM, output, set_at_bottom_clear_on_match );
         hwa_nocommit();
-        hwa( config, PWM, output, disconnected );
+        hwa( configure, PWM, output, disconnected );
         hwa_commit();
       }
       else if ( phase == 0 ) {
@@ -109,9 +109,9 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
          *  Change the compare output config from 'disconnected' to
          *  'set_at_bottom_clear_on_match'
          */
-        hwa( config, PWM, output, disconnected );
+        hwa( configure, PWM, output, disconnected );
         hwa_nocommit();
-        hwa( config, PWM, output, set_at_bottom_clear_on_match );
+        hwa( configure, PWM, output, set_at_bottom_clear_on_match );
         hwa_commit();
       }
     }

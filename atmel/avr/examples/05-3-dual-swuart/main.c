@@ -59,14 +59,14 @@ main ( )
 
   /*  Configure the software UARTs
    */
-  hwa( config, hw_swuart0 );
-  hwa( config, hw_swuart1 );
+  hwa( configure, hw_swuart0 );
+  hwa( configure, hw_swuart1 );
 
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( config,     hw_core0,
+  hwa( configure,     hw_core0,
        sleep,      enabled,
        sleep_mode, idle );
 

@@ -96,17 +96,17 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa( config, UART );
+  hwa( configure, UART );
 
   /*  Configure the USI as SPI master clocked by software
    */
-  hwa( config, USI,
+  hwa( configure, USI,
        mode,   spi_master,
        clock,  software    );
 
   /*  Configure nRF CSN pin
    */
-  hwa( config, NRF_CSN, direction, output );
+  hwa( configure, NRF_CSN, direction, output );
   hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware

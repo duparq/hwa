@@ -33,7 +33,7 @@
  *            );
  * @endcode
  */
-#define _hw_mthd_hwa_config__usia	, _hwa_cfusia
+#define _hw_mthd_hwa_configure__usia	, _hwa_cfusia
 
 #define _hw_usia_mode_disconnected	, 1
 #define _hw_usia_mode_spi_master	, 2
@@ -85,9 +85,9 @@
   _hwa_write_reg( o, wm, 1 );					\
   _hwa_write_reg( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
-    _hwa( config, hw_pin_usck, direction, output );		\
-    _hwa( config, hw_pin_do,   direction, output );		\
-    _hwa( config, hw_pin_di,   direction, input	);		\
+    _hwa( configure, hw_pin_usck, direction, output );		\
+    _hwa( configure, hw_pin_do,   direction, output );		\
+    _hwa( configure, hw_pin_di,   direction, input	);		\
     _hwa_write_reg( o, clk, 1 );				\
   }								\
   else								\
@@ -149,15 +149,15 @@
  * hw_config( SPI );
  * @endcode
  */
-#define _hw_mthd_hwa_config__usia_spimaster_swclk		, _hwa_cfspimswclk
+#define _hw_mthd_hwa_configure__usia_spimaster_swclk		, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(p,i,o,...)		\
   HW_TX( _hwa_docfspimswclk(o), __VA_ARGS__ )
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
-    _hwa( config, hw_pin_usck, direction, output );	\
-    _hwa( config, hw_pin_do,   direction, output );	\
+    _hwa( configure, hw_pin_usck, direction, output );	\
+    _hwa( configure, hw_pin_do,   direction, output );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  2 );			\
     _hwa_write_reg( o, clk, 1 );			\
@@ -203,13 +203,13 @@
 
 /*	Configuration of USI as SPI master with counter0_overflow clock
  */
-#define _hw_mthd_hwa_config_usia_spimaster_c0clk		, _hwa_cfspimc0clk
+#define _hw_mthd_hwa_configure_usia_spimaster_c0clk		, _hwa_cfspimc0clk
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
-    _hwa( config, hw_pin_usck, direction, output );	\
-    _hwa( config, hw_pin_do,   direction, output );	\
-    _hwa( config, hw_pin_di,   direction, input  );	\
+    _hwa( configure, hw_pin_usck, direction, output );	\
+    _hwa( configure, hw_pin_do,   direction, output );	\
+    _hwa( configure, hw_pin_di,   direction, input  );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  1 );			\
     _hwa_write_reg( o, clk, 0 );			\

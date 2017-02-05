@@ -31,7 +31,7 @@
  *             );
  * @endcode
  */
-#define _hw_mthd_hwa_config__corea	, _hwa_cfcorea
+#define _hw_mthd_hwa_configure__corea	, _hwa_cfcorea
 
 /*  TODO: use a list of wake-up sources instead (or in addition)?
  */

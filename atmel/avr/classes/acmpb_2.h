@@ -40,7 +40,7 @@
  *  seems acceptable to make the configuration instructions of the ADC or the
  *  ACMP drive the analog multiplexer transparently.
  */
-#define _hw_mthd_hwa_config__acmpb		, _hwa_cfacmpb
+#define _hw_mthd_hwa_configure__acmpb		, _hwa_cfacmpb
 
 /*  Optionnal parameter `edge`
  */

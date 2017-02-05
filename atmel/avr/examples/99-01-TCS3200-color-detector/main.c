@@ -101,7 +101,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Prepare to capture the date of the next rising edge
    */
-  hw( config, HW_RELATIVE(COUNTER, CAPTURE), edge, rising );
+  hw( configure, HW_RELATIVE(COUNTER, CAPTURE), edge, rising );
   hw_clear_irqf( COUNTER, CAPTURE );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
@@ -127,7 +127,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Now wait for the falling edge
    */
-  hw( config, HW_RELATIVE(COUNTER, CAPTURE), edge, falling );
+  hw( configure, HW_RELATIVE(COUNTER, CAPTURE), edge, falling );
   hw_clear_irqf( COUNTER, CAPTURE );
 
   hw( write, HW_RELATIVE(COUNTER, COMPARE), t );
@@ -221,21 +221,21 @@ main ( )
 {
   hwa_begin_from_reset();
 
-  hwa( config, UART );
+  hwa( configure, UART );
 
   /*  Capture used to compute the TCS output period
    */
-  hwa( config, HW_RELATIVE(COUNTER,CAPTURE),
+  hwa( configure, HW_RELATIVE(COUNTER,CAPTURE),
 	      input,   pin_icp,
 	      edge,    rising );
 
-  hwa( config, PIN_TCS3200_S2, direction, output );
+  hwa( configure, PIN_TCS3200_S2, direction, output );
   hwa( write, PIN_TCS3200_S2, 0 );
 
-  hwa( config, PIN_TCS3200_S3, direction, output );
+  hwa( configure, PIN_TCS3200_S3, direction, output );
   hwa( write, PIN_TCS3200_S3, 0 );
 
-  hwa( config, PIN_OUTS, direction, output );
+  hwa( configure, PIN_OUTS, direction, output );
   hwa( write, PIN_OUTS, 0 );
 
   hwa_commit();

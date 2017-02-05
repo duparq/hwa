@@ -103,7 +103,7 @@
  *           );
  * @endcode
  */
-#define _hw_mthd_hwa_config__ad10c		, _hwa_cfad10c
+#define _hw_mthd_hwa_configure__ad10c		, _hwa_cfad10c
 
 /*  Mandatory parameter `clock`
  */

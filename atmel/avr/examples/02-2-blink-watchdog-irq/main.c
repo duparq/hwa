@@ -37,18 +37,18 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( config, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, direction, output );
 
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
-  hwa( config, hw_wdog0,
+  hwa( configure, hw_wdog0,
               timeout,          TIMEOUT,
               action,           irq
               );
 
   /*  Configure the core to enter idle mode when asked to sleep
    */
-  hwa( config, hw_core0,
+  hwa( configure, hw_core0,
               sleep,      enabled,
               sleep_mode, idle
               );
