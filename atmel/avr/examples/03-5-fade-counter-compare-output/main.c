@@ -41,9 +41,9 @@ HW_ISR( COUNTER, overflow )
   static uint8_t			phase ;
 
   if ( phase == 0 )
-    hw( write, HW_REL(COUNTER,COMPARE), duty );
+    hw( write, HW_RELATIVE(COUNTER,COMPARE), duty );
   else if ( phase == 1 )
-    hw( write, HW_REL(COUNTER,COMPARE), ~duty );
+    hw( write, HW_RELATIVE(COUNTER,COMPARE), ~duty );
 
   duty++ ;
 
@@ -60,9 +60,9 @@ HW_ISR( COUNTER, overflow )
      */
     if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_up") ) {
       if ( phase == 2 )
-	hw( config, HW_REL(COUNTER,COMPARE), output, disconnected );
+	hw( config, HW_RELATIVE(COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-	hw( config, HW_REL(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+	hw( config, HW_RELATIVE(COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
     }
   }
 }
@@ -90,10 +90,10 @@ int main ( )
 	      top,	 TOP
 	      );
   if ( hw_streq(HW_QUOTE(COUNTMODE),"loop_updown") )
-    hwa( config, HW_REL(COUNTER,COMPARE),
+    hwa( config, HW_RELATIVE(COUNTER,COMPARE),
 		output, clear_on_match_up_set_on_match_down );
   else /* loop_up */
-    hwa( config, HW_REL(COUNTER,COMPARE),
+    hwa( config, HW_RELATIVE(COUNTER,COMPARE),
 		output, set_at_bottom_clear_on_match );
 
   /*  Enable overflow IRQ

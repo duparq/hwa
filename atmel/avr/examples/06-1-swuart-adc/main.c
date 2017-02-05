@@ -104,7 +104,7 @@ main ( )
               bottom,    0,
               top,       compare0
               );
-  hwa( write, HW_REL(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
+  hwa( write, HW_RELATIVE(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)

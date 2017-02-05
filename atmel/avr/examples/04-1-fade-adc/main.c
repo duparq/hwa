@@ -116,7 +116,7 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
   if ( duty ) {
     hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
-      hw( write, HW_REL(COUNTER,compare1), duty );
+      hw( write, HW_RELATIVE(COUNTER,compare1), duty );
       hw( turn, HW_IRQ(COUNTER,compare1), on );
     }
     else
@@ -185,7 +185,7 @@ int main ( )
 
   /*  Configure the counter prescaler
    */
-  hwa( config, HW_REL(COUNTER,prescaler),
+  hwa( config, HW_RELATIVE(COUNTER,prescaler),
        clock,  system );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
@@ -198,7 +198,7 @@ int main ( )
        top,	  TOP_OBJ,
        //	    overflow,  at_top,
        );
-  hwa( write, HW_REL(COUNTER, TOP_OBJ), COUNT_TOP );
+  hwa( write, HW_RELATIVE(COUNTER, TOP_OBJ), COUNT_TOP );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC to make a single conversion and trigger an

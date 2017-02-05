@@ -49,7 +49,7 @@
 
 #define UART		hw_swuart0
 
-#define COUNTER		HW_REL(hw_swuart0_compare,counter)
+#define COUNTER		HW_RELATIVE(hw_swuart0_compare,counter)
 #define CAPTURE		capture0
 #define COMPARE		compare1
 
@@ -101,13 +101,13 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Prepare to capture the date of the next rising edge
    */
-  hw( config, HW_REL(COUNTER, CAPTURE), edge, rising );
+  hw( config, HW_RELATIVE(COUNTER, CAPTURE), edge, rising );
   hw_clear_irqf( COUNTER, CAPTURE );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
-  hw( write, HW_REL(COUNTER, COMPARE), hw( read,COUNTER) );
+  hw( write, HW_RELATIVE(COUNTER, COMPARE), hw( read,COUNTER) );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
@@ -115,7 +115,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
      *	Rising edge occured: continue below
      */
     if ( hw_stat_irqf(COUNTER, CAPTURE) ) {
-      t = hw( read, HW_REL(COUNTER, CAPTURE) ) ;
+      t = hw( read, HW_RELATIVE(COUNTER, CAPTURE) ) ;
       break ;
     }
     /*
@@ -127,10 +127,10 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Now wait for the falling edge
    */
-  hw( config, HW_REL(COUNTER, CAPTURE), edge, falling );
+  hw( config, HW_RELATIVE(COUNTER, CAPTURE), edge, falling );
   hw_clear_irqf( COUNTER, CAPTURE );
 
-  hw( write, HW_REL(COUNTER, COMPARE), t );
+  hw( write, HW_RELATIVE(COUNTER, COMPARE), t );
   hw_clear_irqf( COUNTER, COMPARE );
 
   for (;;) {
@@ -138,7 +138,7 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
       /*
        *  Return the half-period
        */
-      return hw( read, HW_REL(COUNTER, CAPTURE) ) - t ;
+      return hw( read, HW_RELATIVE(COUNTER, CAPTURE) ) - t ;
     if ( hw_stat_irqf(COUNTER, COMPARE) )
       /*
        *  Half-period is too long
@@ -225,7 +225,7 @@ main ( )
 
   /*  Capture used to compute the TCS output period
    */
-  hwa( config, HW_REL(COUNTER,CAPTURE),
+  hwa( config, HW_RELATIVE(COUNTER,CAPTURE),
 	      input,   pin_icp,
 	      edge,    rising );
 

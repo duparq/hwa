@@ -48,7 +48,7 @@ int main ( )
 
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */
-  hwa( write, HW_REL(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
+  hwa( write, HW_RELATIVE(COUNTER,COMPARE), 0.001 * hw_syshz / CLKDIV );
 
   /*  Write this configuration into the hardware
    */
