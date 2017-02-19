@@ -94,6 +94,13 @@
 #define _hw_class__m2
 
 
+/**
+ * @ingroup private_classes
+ * @brief Object logical register made of one group of consecutive bits.
+ */
+#define _hw_class__xob1
+
+
 #define _hw_is_hw_error_hw_error	, 1, /* one more comma to remove '; StaticAssert(...)' */
 
 
@@ -458,41 +465,23 @@
 #define _hwx5_0(x,f,c,o,...)	HW_E_OCM(o,c,f)
 
 
+
 /*  Internal use only version
  */
-#define _hw(...)		__hwp0(hw_,__VA_ARGS__,)
-#define _hwa(...)		__hwp0(hwa_,__VA_ARGS__,)
-#define __hwp0(...)		__hwp1(__VA_ARGS__)
+#define _hwa(...)		__hwa1(__VA_ARGS__,)
+#define __hwa1(f,o,...)		__hwa2(f,HW_OD(o),__VA_ARGS__)
+#define __hwa2(...)		__hwa3(__VA_ARGS__)
 
-#define __hwp1(p,f,x,...)	HW_G2(__hwp1,HW_IS(,_hw_class_##x))(p,f,x,__VA_ARGS__)
-#define __hwp1_1(p,f,c,...)	HW_G2(__hwp11, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,c,__VA_ARGS__)
-#define __hwp11_1(p,f,c,...)	HW_A1(_hw_mthd_##p##f##_##c)(__VA_ARGS__)
-
-
-/*  Assuming the object exists, expand its definition to get its class name.
+/*  Do not proceed further in case of error
  */
-#define __hwp1_0(p,f,o,...)	__hwp2(p,f,o,_##o,__VA_ARGS__)
-#define __hwp2(...)		__hwp3(__VA_ARGS__)
+#define __hwa3(f,c,...)		HW_G2(__hwa4, HW_IS(,_hw_class_##c))(f,c,__VA_ARGS__)
+#define __hwa4_0(f,c,...)	HW_E(processing error: HW_QUOTE(__hwa4_0(f,c,__VA_ARGS__)))
 
-/*  Is there a method p_f for object o of class c?
+/*  Look for a method x_f for object o of class c.
  */
-#define __hwp3(p,f,o,c,...)	HW_G2(__hwp4, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,o,c,__VA_ARGS__)
-
-/*  Apply method p_f to object o of class c.
- */
-#define __hwp4_1(p,f,o,c,...)	HW_A1(_hw_mthd_##p##f##_##c)(o,__VA_ARGS__)
-
-/*  Method f for object o of class c not found. Is o an object?
- */
-#define __hwp4_0(p,f,o,c,...)	HW_G2(__hwp5, HW_IS(,_hw_class_##c))(p,f,o,c,__VA_ARGS__)
-
-/*  o is an object. Trigger an error.
- */
-#define __hwp5_1(p,f,o,c,...)	HW_E(o,c,#p#f)
-
-/*  o is not an object. Propagate or trigger an error.
- */
-#define __hwp5_0(p,f,o,x,...)	HW_E(processing error)
+#define __hwa4_1(f,c,...)	HW_G2(__hwa41, HW_IS(,_hw_mthd_hwa_##f##_##c))(f,c,__VA_ARGS__)
+#define __hwa41_1(f,c,...)	HW_A1(_hw_mthd_hwa_##f##_##c)(__VA_ARGS__)
+#define __hwa41_0(f,c,o,...)	HW_E_OCM(o,c,hwa_##f)
 
   
 

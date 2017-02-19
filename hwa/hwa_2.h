@@ -253,17 +253,18 @@
 #define _hwa_write_oreg(_,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
 
 
-//#define _hw_xob1__r8(ra,rwm,rfm,bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
-//_hwa_write__xob1(_xob1,hw_adc0, did, 1, 5, 1);
 #define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_##o##_##r,o,r,bn,bp,v)
 #define _hwa_write__xob1_2(...)		_hwa_write__xob1_3(__VA_ARGS__)
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
-/*  Added for io1a_2.h:   _hwa_write(_##o##_##did, 1);
+/*  Added for io1a_2.h:
+ *    _hwa_write(_##o##_##did, 1);
+ *      _hwa__write__xob1(hw_shared, did, 1, 0, 1,);
  */
-#define _hw_mthd_hwa_write___xob1	, _hwa__write__xob1
-#define _hwa__write__xob1(t,o,r,bn,bp,v,_)	_hwa_write__xob1(t,o,r,bn,bp,v)
+#define _hw_mthd_hwa_write__xob1		, _hwa__write__xob1
+#define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(,o,r,bn,bp,v)
+
 
 /**
  * @ingroup private
