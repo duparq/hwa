@@ -324,7 +324,7 @@
  * <li>`address`: the address of `o`
  * </ul>
  */
-#define _HW_GEN(f,o,...)	_HW_GEN2(f,hw_od(o),__VA_ARGS__)
+#define _HW_GEN(f,o,...)	_HW_GEN2(f,HW_OD(o),__VA_ARGS__)
 #define _HW_GEN2(...)		_HW_GEN3(__VA_ARGS__)
 #define _HW_GEN3(f,c,...)	HW_G2(_HW_GEN,HW_IS(,c))(f,c,__VA_ARGS__)
 #define _HW_GEN_0(f,...)	f(__VA_ARGS__)
@@ -378,7 +378,7 @@
  * @hideinitializer
  *
  * @code
- * hw_od(o)
+ * HW_OD(o)
  * @endcode
  *
  * o can can be an object name, a class name starting an object definition, or
@@ -390,22 +390,22 @@
 
 /*  If o is a class name, job's done
  */
-#define hw_od(o)		_hw_od1(o)
-#define _hw_od1(...)		HW_G2(_hw_od2,HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_od2_1(...)		__VA_ARGS__
+#define HW_OD(o)		_HW_OD1(o)
+#define _HW_OD1(...)		HW_G2(_HW_OD2,HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _HW_OD2_1(...)		__VA_ARGS__
 
 /*  Is o an object's name?
  */
-#define _hw_od2_0(o)		_hw_od3(o,_##o)
-#define _hw_od3(...)		_hw_od4(__VA_ARGS__)
-#define _hw_od4(o,...)		HW_G2(_hw_od4,HW_IS(,_hw_class_##__VA_ARGS__))(o,__VA_ARGS__)
-#define _hw_od4_1(o,c,...)	c,o,__VA_ARGS__
+#define _HW_OD2_0(o)		_HW_OD3(o,_##o)
+#define _HW_OD3(...)		_HW_OD4(__VA_ARGS__)
+#define _HW_OD4(o,...)		HW_G2(_HW_OD4,HW_IS(,_hw_class_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _HW_OD4_1(o,c,...)	c,o,__VA_ARGS__
 
 /*  o is not an object, produce an error
  */
-#define _hw_od4_0(o,...)	HW_G2(_hw_od5, HW_IS(,o))(o)
-#define _hw_od5_0(o)		HW_E_O(o)
-#define _hw_od5_1(o)		HW_E_OM()
+#define _HW_OD4_0(o,...)	HW_G2(_HW_OD5, HW_IS(,o))(o)
+#define _HW_OD5_0(o)		HW_E_O(o)
+#define _HW_OD5_1(o)		HW_E_OM()
 
 
 /**
@@ -441,7 +441,7 @@
 #define hw(...)			_hwx0(hw_,__VA_ARGS__)
 #define hwa(...)		_hwx0(hwa_,__VA_ARGS__)
 #define _hwx0(...)		_hwx1(__VA_ARGS__,)
-#define _hwx1(x,f,o,...)	_hwx2(x,f,hw_od(o),__VA_ARGS__)
+#define _hwx1(x,f,o,...)	_hwx2(x,f,HW_OD(o),__VA_ARGS__)
 #define _hwx2(...)		_hwx3(__VA_ARGS__)
 
 /*  Do not proceed further in case of error
