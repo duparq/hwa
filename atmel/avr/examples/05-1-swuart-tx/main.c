@@ -35,11 +35,11 @@ main ( )
 
   /*  Configure the UART
    */
-  hwa( configure,   UART,
-       bps,	 BPS,
-       databits, 8,
-       parity,	 none,
-       stopbits, 1     );
+  hwa( configure, UART,
+       bps,       BPS,
+       databits,  8,
+       parity,    none,
+       stopbits,  1     );
 
   /*  Write this configuration into the hardware
    */
@@ -49,11 +49,11 @@ main ( )
 
   for(;;) {
 
-    /*	Wait for 0.1s
+    /*  Wait for 0.1s
      */
     hw_waste_cycles( 0.1 * hw_syshz );
 
-    /*	Send a '.'
+    /*  Send a '.'
      */
     hw( write, UART, '.');
   }

@@ -89,7 +89,7 @@ static void process ( uint8_t byte )
         /*  Process the reprogramming of the page. Some more checkings could be
          *  done in order to not erase or program blank pages.
          */
-	hw( load_buffer, hw_flash0, page );
+        hw( load_buffer, hw_flash0, page );
         hw( erase_page,  hw_flash0, zpage );
         hw( write_page,  hw_flash0, zpage );
 
@@ -128,9 +128,9 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, hw_core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+  hwa( configure,  hw_core0,
+       sleep,      enabled,
+       sleep_mode, idle );
 
   /*  Write this configuration into the hardware
    */

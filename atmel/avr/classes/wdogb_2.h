@@ -61,8 +61,7 @@
   HW_G2(_hwa_cfwdogb_vtimeout,HW_IS(,_hw_wdogb_timeout_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vtimeout_0(o,v,...)				\
-  HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, "	\
-	 "`500ms`, `1s`, `2s`, `4s` or `8s` but not `" #v "`.")
+  HW_E_AVL(timeout, v, 16ms | 32ms | 64ms | 125ms | 250ms | 500ms | 1s | 2s | 4s | 8s)
 
 #define _hwa_cfwdogb_vtimeout_1(o,v,k,...)			\
   hwa->o.config.timeout = HW_A1(_hw_wdogb_timeout_##v);		\
@@ -80,13 +79,13 @@
 #define _hw_wdogb_action_irq_or_reset	, 3
 
 #define _hwa_cfwdogb_kaction_0(o,k,...)				\
-  HW_ERR("expected `action` instead of `" #k "`.")
+  HW_E_VL(k,action)
 
 #define _hwa_cfwdogb_kaction_1(o,k,v,...)				\
   HW_G2(_hwa_cfwdogb_vaction,HW_IS(,_hw_wdogb_action_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vaction_0(o,v,...)					\
-  HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #v "`.")
+  HW_E_AVL(action, v, none | irq | reset | irq_or_reset)
 
 #define _hwa_cfwdogb_vaction_1(o,v,...)			\
   hwa->o.config.action = HW_A1(_hw_wdogb_action_##v);	\
@@ -108,7 +107,7 @@
   HW_G2(_hw_turn_wdogb, HW_IS(,_hw_state_##v))(o,v)
 
 #define _hw_turn_wdogb_0(o, v)						\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 
 #define _hw_turn_wdogb_1(o, v)		HW_G2(_hw_turn_wdogb, v)(o)
 
@@ -154,7 +153,7 @@
   HW_G2(_hwa_turn_wdogb, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
 
 #define _hwa_turn_wdogb_0(o, v, ...)				\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 
 #define _hwa_turn_wdogb_1(o, v, ...)		\
   HW_G2(_hwa_turn_wdogb, v)(o,i,a)		\

@@ -58,7 +58,7 @@
   HW_G2(_hwa_cfacmpa_vedge, HW_IS(,_hw_acmpa_edge_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vedge_0(o,v,...)					\
-  HW_ERR("`edge` can be `falling`, `rising`, or `both`, but not `"#v".")
+  HW_E_AVL(edge, v, falling | rising | both)
 
 #define _hwa_cfacmpa_vedge_1(o,v,k,...)			\
   _hwa_write_reg(o,acis, HW_A1(_hw_acmpa_edge_##v));	\
@@ -77,7 +77,7 @@
   HW_G2(_hwa_cfacmpa_vposin, HW_IS(,_hw_acmpa_posin_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vposin_0(o,v,...)					\
-  HW_ERR("`positive_input` can be `hw_pin_ain0`, or `bandgap` but not `"#v"`.")
+  HW_E_AVL(positive_input, v, hw_pin_ain0 | bandgap)
 
 #define _hwa_cfacmpa_vposin_1(o,v,k,...)		\
   _hwa_write_reg(o,acbg, HW_A1(_hw_acmpa_posin_##v));	\
@@ -137,8 +137,7 @@
 #define _hw_turnacmpa_vstate_1(o,i,a,v,...)	\
   HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
 
-#define _hw_turnacmpa_vstate_0(o,i,a,v,...)	\
-  HW_ERR("object `" #o "` of class `_acmpa` can be turned `on` or `off`, but not `" #v "`.")
+#define _hw_turnacmpa_vstate_0(o,i,a,v,...)	HW_E_ST(v)
 #endif
 
 #define _hw_mthd_hw_power__acmpa			, _hw_power

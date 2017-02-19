@@ -147,7 +147,7 @@
 #  define HW_DEVICE_CKDIV8				1
 #  define hw_syshz					hw_syshz_base
 #else
-#  HW_ERROR(`HW_DEVICE_CLK_PSC` can be `8`, or `1` but not #HW_DEVICE_CLK_PSC)
+HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #endif
 
 /**
@@ -1151,28 +1151,24 @@ typedef struct {
 /*
  *	Object hw_swuart0
  */
-#define _hw_swuart0			_swuarta, 1200, 0
-#define _hw_swuart0_dtn							\
-  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#define _hw_swuart0_dt0							\
-  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#define _hw_swuart0__st			_hw_ra(hw_shared, gpior0)
-#define _hw_swuart0_sr			_hw_shared_gpior0
-#define _hw_swuart0_synced		_ob1, sr, 1, 0
+#define _hw_swuart0		_swuarta, 1200, 0
+#define _hw_swuart0_dtn		_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#define _hw_swuart0_dt0		_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#define _hw_swuart0__st		_hw_ra(hw_shared, gpior0)
+#define _hw_swuart0_sr		_hw_shared_gpior0
+#define _hw_swuart0_synced	_ob1, sr, 1, 0
 #endif
 
 #if defined hw_swuart1_compare
 /*
  *	Object hw_swuart1
  */
-#define _hw_swuart1			_swuarta, 1210, 0
-#define _hw_swuart1_dtn							\
-  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#define _hw_swuart1_dt0							\
-  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#define _hw_swuart1__st			_hw_ra(hw_shared, gpior1)
-#define _hw_swuart1_sr			_hw_shared_gpior1
-#define _hw_swuart1_synced		_ob1, sr, 1, 0
+#define _hw_swuart1		_swuarta, 1210, 0
+#define _hw_swuart1_dtn		_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#define _hw_swuart1_dt0		_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#define _hw_swuart1__st		_hw_ra(hw_shared, gpior1)
+#define _hw_swuart1_sr		_hw_shared_gpior1
+#define _hw_swuart1_synced	_ob1, sr, 1, 0
 #endif
 
 

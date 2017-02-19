@@ -66,8 +66,7 @@
 #define _hwa_cfio1a_kfunction_1(o,cf,p,bn,bp,k,v,...)				\
   HW_G2(_hwa_cfio1a_vfunction, HW_IS(,_##o##_fn_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)				\
-  HW_ERR("function for `" #o "` can be " _##o##_fns ", but not `" #v "`.")
+#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _##o##_fns)
 
 #define _hwa_cfio1a_vfunction_1(o,cf,p,bn,bp,v,k,...)			\
   _hwa_write_reg( cf, fn, HW_A1(_##o##_fn_##v) );			\
@@ -85,8 +84,7 @@
 #define _hwa_cfio1a_kdirection_1(o,cf,p,bn,bp,k,v,...)				\
   HW_G2(_hwa_cfio1a_vdirection, HW_IS(,_hw_cfio1a_direction_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vdirection_0(o,cf,p,bn,bp,v,...)				\
-  HW_ERR("`direction` can be `input`, `output` or `output_when_awake`, but not `" #v "`.")
+#define _hwa_cfio1a_vdirection_0(o,cf,p,bn,bp,v,...)	HW_E_AVL(direction, v, input | output | output_when_awake)
 
 #define _hwa_cfio1a_vdirection_1(o,cf,p,bn,bp,v,k,...)			\
   _hwa_write_reg( cf, oex, HW_A1(_hw_cfio1a_direction_##v) );	\
@@ -113,14 +111,9 @@
     _hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pullup_##v) );	\
     HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfio1a_vpullup_0(o,cf,p,bn,bp,v,...)				\
-    HW_ERR("`pullup` can be `on`, `off`, or `when_awake`, but not `" #v "`.");
-
-#define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)			\
-    HW_ERR("`pullup` can be `on`, `off`, or `when_awake`, but not `" #v "`.");
-
-#define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)	\
-  HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1a_vpullup_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
+#define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
+#define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)		HW_EOL(__VA_ARGS__)
 
 #define _hw_is_pullup_pullup			, 1
 #define _hw_cfio1a_pullup_off			, 0	/* pux */

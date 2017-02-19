@@ -81,15 +81,13 @@
   do { HW_G2(_hwa_cfc8c_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8c_kclock_0(o,k,...)					\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 
 #define _hwa_cfc8c_kclock_1(o,k,v,...)					\
   HW_G2(_hwa_cfc8c_vclock,HW_IS(,_hw_c8c_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vclock_0(o,v,...)					\
-  HW_ERR( "`clock` can be `none`, "					\
-	  "`prescaler_output( 0 | 1 | 8 | 32 | 64 | 128 | 256 | 512 | 1024 )`, " \
-	  "or `ext_xosc`, but not `" #v "`.")
+  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 32 | 64 | 128 | 256 | 512 | 1024 ) | ext_xosc)
 
 #define _hwa_cfc8c_vclock_1(o,v,k,...)				\
   hwa->o.config.clock = HW_A1(_hw_c8c_clock_##v);		\
@@ -103,13 +101,13 @@
 #define _hw_c8c_countmode_updown_loop		, 2
 
 #define _hwa_cfc8c_kmode_0(o,k,...)					\
-  HW_ERR("expected `countmode` instead of `" #k "`.")
+  HW_E_VL(k,countmode)
 
 #define _hwa_cfc8c_kmode_1(o,k,v,...)					\
   HW_G2(_hwa_cfc8c_vmode,HW_IS(,_hw_c8c_countmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vmode_0(o,v,...)					\
-  HW_ERR("`mode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
+  HW_E_AVL(mode, v, up_loop | updown_loop)
 
 #define _hwa_cfc8c_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c8c_countmode_##v);			\
@@ -121,7 +119,7 @@
   HW_G2(_hwa_cfc8c_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vbottom_0(o,v,...)			\
-  HW_ERR("bottom must be `0`, not `" #v "`.")
+  HW_E_AVL(bottom, v, `0`)
 
 #define _hwa_cfc8c_vbottom_1(o,v,k,...)			\
   HW_G2(_hwa_cfc8c_ktop,HW_IS(top,k))(o,k,__VA_ARGS__)
@@ -139,8 +137,7 @@
   HW_G2(_hwa_cfc8c_vtop,HW_IS(,_hw_c8c_top_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vtop_0(o,v,...)				\
-  HW_ERR("`top` can be `fixed_0xFF`, `max`, or `compare0`,"	\
-	 " but not `" #v "`.")
+  HW_E_AVL(top, v, fixed_0xFF | max | compare0)
 
 #define _hwa_cfc8c_vtop_1(o,v,k,...)					\
   hwa->o.config.top = HW_A1(_hw_c8c_top_##v);				\
@@ -159,8 +156,7 @@
   HW_G2(_hwa_cfc8c_voverflow, HW_IS(,_hw_c8c_overflow_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_voverflow_0(o,v,...)				\
-  HW_ERR("optionnal parameter `overflow` can be `at_bottom`, "	\
-	 "`at_top, or `at_max`, but `not `" #v "`.")
+  HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)
 
 #define _hwa_cfc8c_voverflow_1(o,v,...)				\
   if ( hwa->o.config.countmode == HW_A1(_hw_c8c_countmode_up_loop)		\

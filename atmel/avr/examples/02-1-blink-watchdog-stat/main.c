@@ -37,9 +37,9 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ periodically
    */
-  hwa( configure,  hw_wdog0,
-       timeout, TIMEOUT,
-       action,  irq       );
+  hwa( configure, hw_wdog0,
+       timeout,   TIMEOUT,
+       action,    irq       );
 
   /*  Write this configuration into the hardware
    */

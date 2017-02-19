@@ -19,7 +19,7 @@
   HW_G2(_hwx_turn_ad10_, HW_IS(,_hw_state_##v))(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_ad10__0(x,o, v, ...)			\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 
 #define _hwx_turn_ad10__1(x,o, v, ...)					\
   HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
@@ -49,14 +49,11 @@
 
 /*  Optionnal argument `lo8`
  */
-
 #define _hw_rdad10__khi8_0(o,k,...)				\
   HW_G2(_hw_rdad10__klo8, HW_IS(lo8,k))(o,k,__VA_ARGS__)
 
 #define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_hw_ra(o,adc)))
-
-#define _hw_rdad10__klo8_0(o,k,...)					\
-  HW_ERR("can read `lo8` or `hi8` of `" #o "`, but not `" #k "`.")
+#define _hw_rdad10__klo8_0(o,k,...)	HW_E(optionnal parameter can be `lo8 | hi8` but not `k`)
 
 #define _hw_is_lo8_lo8			, 1
 

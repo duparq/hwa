@@ -46,7 +46,7 @@
   HW_G2(_hw_cfic16akw1, HW_IS(,_hw_cfic16a_kw_##__VA_ARGS__))(o,__VA_ARGS__,)
 
 #define _hw_cfic16akw1_0(o,kw,...)					\
-  HW_ERR("expected `input`, `edge` or `filter` instead of `" #kw "`.")
+  HW_E_VL(k,input | edge | filter)
 
 #define _hw_cfic16akw1_1(o,kw,...)		\
   HW_A1(_hw_cfic16a_kw_##kw)(o,__VA_ARGS__)
@@ -54,7 +54,7 @@
 #define _hw_cfic16a_edge(o,v,...)					\
   HW_G2(_hw_cfic16a_vedge,HW_IS(,hw_ic16a_edge_##v))(o,v,__VA_ARGS__)
 #define _hw_cfic16a_vedge_0(o,v,...)					\
-  HW_ERR( "`edge` can be `falling` or `rising` but not `" #v "`.")
+  HW_E_AVL(edge, v, falling | rising)
 #define _hw_cfic16a_vedge_1(o,v,...)			\
   HW_TX(_hw_write_reg(o, ices, HW_A1(hw_ic16a_edge_##v)-1),__VA_ARGS__)
 
@@ -84,26 +84,26 @@
       } while(0)
 
 #define _hwa_cfic16a_kinput_0(o,k,...)					\
-  HW_ERR("expected `input` instead of `" #k "`.")
+  HW_E_VL(k,input)
 
 #define _hwa_cfic16a_kinput_1(o,k,v,...)				\
   HW_G2(_hwa_cfic16a_vinput,HW_IS(,hw_ic16a_input_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vinput_0(o,v,...)					\
-  HW_ERR( "`input` can be `pin_icp` or `hw_acmp0` but not `" #v "`.")
+  HW_E_AVL(input, v, pin_icp | hw_acmp0)
 
 #define _hwa_cfic16a_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_ic16a_input_##v);			\
   HW_G2(_hwa_cfic16a_kedge,HW_IS(edge,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfic16a_kedge_0(o,k,...)					\
-  HW_ERR("expected `edge` instead of `" #k "`.")
+  HW_E_VL(k,edge)
 
 #define _hwa_cfic16a_kedge_1(o,k,v,...)				\
   HW_G2(_hwa_cfic16a_vedge,HW_IS(,hw_ic16a_edge_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vedge_0(o,v,...)					\
-  HW_ERR( "`edge` can be `falling` or `rising` but not `" #v "`.")
+  HW_E_AVL(edge, v, falling | rising)
 
 #define _hwa_cfic16a_vedge_1(o,v,k,...)				\
   hwa->o.config.edge = HW_A1(hw_ic16a_edge_##v);				\
@@ -116,7 +116,7 @@
   HW_G2(_hwa_cfic16a_vfilter,HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vfilter_0(o,v,...)					\
-  HW_ERR( "optionnal parameter `filter` can be `on` or `off` but not `" #v "`.")
+  HW_E_OAVL(filter, v, on | off)
 
 #define _hwa_cfic16a_vfilter_1(o,v,...)		\
   hwa->o.config.filter = HW_A1(_hw_state_##v);		\

@@ -56,8 +56,7 @@
 #define _hwa_cfuarta_kbps_1(o,k,v,...)					\
   HW_G2(_hwa_cfuarta_vbps, HW_IS(,v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfuarta_vbps_1(o,v,...)					\
-  HW_ERR("value of `bps` must be a number.")
+#define _hwa_cfuarta_vbps_1(o,v,...)	HW_E_VM(bps)
 
 #define _hwa_cfuarta_vbps_0(o,v,...)					\
   uint32_t brr8 = (hw_syshz / 8 + (v/2)) / v ;				\
@@ -89,7 +88,7 @@
   HW_G2(_hwa_cfuarta_vdatabits, HW_IS(,_hw_uarta_csz_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vdatabits_0(o,v,...)				\
-  HW_ERR("`databits` can be `5`, `6`, `7`, `8`, or `9`, but not `" #v "`.")
+  HW_E_AVL(databits, v, 5 | 6 | 7 | 8 | 9)
 
 #define _hwa_cfuarta_vdatabits_1(o,v,k,...)	\
   hwa->o.config.csz = HW_A1(_hw_uarta_csz_##v);	\
@@ -112,7 +111,7 @@
   HW_G2(_hwa_cfuarta_vparity, HW_IS(,_hw_uarta_pm_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vparity_0(o,v,...)					\
-  HW_ERR("`parity` can be `none`, `even`, or `odd`, but not `" #v "`.")
+  HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwa_cfuarta_vparity_1(o,v,k,...)	\
   hwa->o.config.pm = HW_A1(_hw_uarta_pm_##v);	\
@@ -133,7 +132,7 @@
   HW_G2(_hwa_cfuarta_vstopbits, HW_IS(,_hw_uarta_sbs_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vstopbits_0(o,v,...)				\
-  HW_ERR("`stopbits` can be `1`, or `2`, but not `" #v "`.")
+  HW_E_AVL(stopbits, v, 1 | 2)
 
 #define _hwa_cfuarta_vstopbits_1(o,v,k,...)	\
   hwa->o.config.sbs = HW_A1(_hw_uarta_sbs_##v);	\
@@ -153,7 +152,7 @@
   HW_G2(_hwa_cfuarta_vreceiver, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vreceiver_0(o,v,...)			\
-  HW_ERR("`receiver` can be `enabled`, or `disabled`, but not `" #v "`.")
+  HW_E_AVL(receiver, v, enabled | disabled)
 
 #define _hwa_cfuarta_vreceiver_1(o,v,k,...)	\
   hwa->o.config.rxen = HW_A1(_hw_state_##v);				\
@@ -170,7 +169,7 @@
   HW_G2(_hwa_cfuarta_vtransmitter, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vtransmitter_0(o,v,...)				\
-  HW_ERR("`transmitter` can be `enabled`, or `disabled`, but not `" #v "`.")
+  HW_E_AVL(transmitter, v, enabled | disabled)
 
 #define _hwa_cfuarta_vtransmitter_1(o,v,...)	\
   hwa->o.config.txen = HW_A1(_hw_state_##v);	\

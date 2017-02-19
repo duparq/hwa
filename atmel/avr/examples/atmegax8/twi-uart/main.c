@@ -22,6 +22,9 @@
  * binary code is now 3474 bytes long with avr-gcc-4.9.2 (was 3336 with
  * avr-gcc-4.8.2). WHY?
  *
+ * @note Revision 2017-02-19 (not tested): use `hw()` instead of `hw_cmd()`. The
+ * binary code is now 3338 bytes long with avr-gcc-4.9.2.
+ *
  * @par main.c
  **/
 
@@ -91,12 +94,11 @@ void
 ioinit(void)
 {
   hwa_begin_from_reset();
-  hwa_config( hw_uart0,
-              bps, 9600,
-              receiver,    disabled,
-              transmitter, enabled
-              );
-  hwa_config( TWI, sclhz, 100000 );
+  hwa( configure,   hw_uart0,
+       bps,         9600,
+       receiver,    disabled,
+       transmitter, enabled  );
+  hwa( configure, TWI, sclhz, 100000 );
   hwa_commit();
 }
 
@@ -111,8 +113,8 @@ uart_putchar(char c, FILE *unused __attribute__((unused)) )
   if (c == '\n')
     uart_putchar('\r',0);
 
-  while ( !hw_stat( hw_uart0 ).txqnf ) {}
-  hw_write( hw_uart0, c );
+  while ( !hw( stat, hw_uart0 ).txqnf ) {}
+  hw( write, hw_uart0, c );
   
   return 0;
 }
@@ -161,9 +163,10 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     return -1;
 
  begin:
-  hw_cmd( TWI, start );                 /* send start condition */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_start, TWI );                  /* send start condition */
+
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_START:
       case HW_TWI_REP_START:            /* OK, but should not happen */
@@ -179,9 +182,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
   /* Note [10]
    */
-  hw_cmd( TWI, slaw, sla>>1 );          /* send SLA+W */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_slaw, TWI, sla>>1 );           /* send SLA+W */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
         break;
@@ -199,9 +202,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #ifdef WORD_ADDRESS_16BIT
 
-  hw_cmd( TWI, write, eeaddr >> 8 );
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_data, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
         break;
@@ -218,9 +221,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #endif
 
-  hw_cmd( TWI, write, eeaddr );         /* low 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_data, TWI, eeaddr );           /* lowest 8 bits of addr */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
         break;
@@ -239,9 +242,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
    * Note [12]
    * Next cycle(s): master receiver mode
    */
-  hw_cmd( TWI, start );                 /* send (rep.) start condition */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_start, TWI );                  /* send (rep.) start condition */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_START:                /* OK, but should not happen */
       case HW_TWI_REP_START:
@@ -254,9 +257,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
         goto error;
     }
 
-  hw_cmd( TWI, slar, sla>>1 );          /* send SLA+R */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_slar, TWI, sla>>1 );           /* send SLA+R */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MR_SLA_ACK:
         break;
@@ -276,18 +279,18 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
   for ( ; len>0 ; len-- ) {
 
     if (len == 1)
-      hw_cmd( TWI, read, nack );        /* ask last byte, send NACK*/
+      hw( tx_read, TWI, nack );         /* ask last byte, send NACK*/
     else
-      hw_cmd( TWI, read, ack );         /* ask one more byte, send ACK*/
+      hw( tx_read, TWI, ack );          /* ask one more byte, send ACK*/
 
-    while( !hw_stat_irqf(TWI) ) {}      /* wait for transmission */
-    switch( (twst=hw_stat(TWI)) )
+    while( !hw(read, HW_IRQF(TWI)) ) {} /* wait for transmission */
+    switch( (twst=hw(stat,TWI)) )
       {
         case HW_TWI_MR_DATA_NACK:
           len = 0;                      /* force end of loop */
           /* FALLTHROUGH */
         case HW_TWI_MR_DATA_ACK:
-          *buf++ = hw_read(TWI);
+          *buf++ = hw(read,TWI);
           rv++;
           if(twst == HW_TWI_MR_DATA_NACK) goto quit;
           break;
@@ -300,7 +303,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
  quit:
   /* Note [14]
    */
-  hw_cmd( TWI, stop );          /* send stop condition */
+  hw( tx_stop, TWI );                   /* send stop condition */
   return rv;
 
  error:
@@ -355,9 +358,9 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   /* Note [15] */
 
-  hw_cmd( TWI, start );                 /* send start condition */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_start, TWI );                  /* send start condition */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_REP_START:            /* OK, but should not happen */
       case HW_TWI_START:
@@ -371,9 +374,9 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
                                 /* NB: do /not/ send stop condition */
     }
 
-  hw_cmd( TWI, slaw, sla>>1 );          /* send SLA+W */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_slaw, TWI, sla>>1 );           /* send SLA+W */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
         break;
@@ -389,9 +392,9 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 
 #ifdef WORD_ADDRESS_16BIT
-  hw_cmd( TWI, write, eeaddr>>8 );      /* 16 bit word address device, send high 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_data, TWI, eeaddr>>8 );        /* 16 bit word address device, send high 8 bits of addr */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
         break;
@@ -407,9 +410,9 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 #endif
 
-  hw_cmd( TWI, write, eeaddr );         /* low 8 bits of addr */
-  while( !hw_stat_irqf(TWI) ) {}        /* wait for transmission */
-  switch( (twst=hw_stat(TWI)) )
+  hw( tx_data, TWI, eeaddr );           /* low 8 bits of addr */
+  while( !hw(read, HW_IRQF(TWI)) ) {}   /* wait for transmission */
+  switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
         break;
@@ -427,10 +430,10 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   for ( ; len>0 ; len-- ) {
 
-    hw_cmd( TWI, write, (*buf++) );
+    hw( tx_data, TWI, (*buf++) );
 
-    while( !hw_stat_irqf(TWI) ) {}      /* wait for transmission */
-    switch( (twst=hw_stat(TWI)) )
+    while( !hw(read, HW_IRQF(TWI)) ) {} /* wait for transmission */
+    switch( (twst=hw(stat,TWI)) )
       {
         case HW_TWI_MT_DATA_NACK:
           goto error;                   /* device write protected -- Note [16] */
@@ -445,7 +448,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
   }
 
  quit:
-  hw_cmd( TWI, stop );  /* send stop condition */
+  hw( tx_stop, TWI );                   /* send stop condition */
   return rv;
 
  error:

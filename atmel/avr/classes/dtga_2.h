@@ -54,7 +54,7 @@
   HW_G2(_hwa_cfdtga_vclockdiv,HW_IS(,HW_A0(_hw_dtga_vclockdiv_##v)))(o,v,__VA_ARGS__) \
 
 #define _hwa_cfdtga_vclockdiv_0(o,v,...)		\
-  HW_ERR("`clockdiv` can be 1, 2, 4, or 8, but not `" #v "`.")
+  HW_E_AVL(clockdiv, v, 1 | 2 | 4 | 8)
 
 #define _hwa_cfdtga_vclockdiv_1(o,v,...)		\
   _hwa_write_reg(o,psc,HW_A1(_hw_dtga_vclockdiv_##v));\

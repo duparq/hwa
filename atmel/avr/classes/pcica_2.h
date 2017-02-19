@@ -40,13 +40,13 @@
 /*	Verify that a I/O name is given
  */
 #define _hwx_tnpcica1(x,o,io,...)	HW_G2(_hwx_tnpcica1,HW_IS(_io1a,_##io))(x,o,io,__VA_ARGS__)
-#define _hwx_tnpcica1_0(x,o,io,...)	HW_ERR("device has no I/O pin named `" #io "`.")
+#define _hwx_tnpcica1_0(x,o,io,...)	HW_E(`io` is not an i/o pin)
 
 /*	Verify that a state is given
  */
 #define _hwx_tnpcica1_1(x,o,io,v,...)	HW_G2(_hwx_tnpcica2,HW_IS(,_hw_state_##v))(x,o,io,v,__VA_ARGS__)
 
-#define _hwx_tnpcica2_0(x,o,io,v,...)	HW_ERR("`" #o "` can turn `" #io "` `on` of `off`, but not `" #v "`.")
+#define _hwx_tnpcica2_0(x,o,io,v,...)	HW_E_ST(v)
 #define _hwx_tnpcica2_1(x,o,io,v,...)	HW_TX(_hwx_tnpcica2_2(x,o,_##io,v),__VA_ARGS__)
 #define _hwx_tnpcica2_2(...)			_hwx_tnpcica2_3(__VA_ARGS__)
 #define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_reg_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)

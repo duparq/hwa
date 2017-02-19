@@ -53,7 +53,7 @@
   HW_G2(_hw_cfio1a_vmode, HW_IS(,hw_cfio1a_mode_##v))(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_0(o,p,bn,bp,v,...)				\
-  HW_ERR("`mode` can be `analog` or `digital`, but not `" #v "`.")
+  HW_E_AVL(mode, v, analog | digital)
 
 #define _hw_cfio1a_vmode_1(o,p,bn,bp,v,...)				\
   HW_G2(_hw_cfio1a_vmode,v)(o,p,bn,bp,__VA_ARGS__)
@@ -61,8 +61,7 @@
 #define _hw_cfio1a_vmode_analog(o,p,bn,bp,...)				\
   HW_G2(_hw_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
 
-#define _hw_cfio1a_vmode_analog_0(o,p,bn,bp,...)	\
-  HW_ERR("`"#o"` does not support analog mode.")
+#define _hw_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
 #define _hw_cfio1a_vmode_analog_1(o,p,bn,bp,k,...)			\
   analog = 1 ;								\
@@ -92,7 +91,7 @@
   HW_G2(_hw_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_vdirection_0(o,p,bn,bp,v,...)			\
-  HW_ERR("`direction` can be `input` or `output`, but not `" #v "`.")
+  HW_E_AVL(direction, v, input | output)
 
 #define _hw_cfio1a_kdirection_0(o,p,bn,bp,k,...)			\
   HW_G2(_hw_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
@@ -112,7 +111,7 @@
     HW_EOL(__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_0(o,p,bn,bp,v,...)			\
-  HW_ERR("`pullup` can be `on` or `off`, but not `" #v "`.");
+  HW_E_AVL(pullup, v, on | off)
 
 
 /**
@@ -142,7 +141,7 @@
   HW_G2(_hwa_cfio1a_vmode, HW_IS(,hw_cfio1a_mode_##v))(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_0(o,p,bn,bp,v,...)				\
-  HW_ERR("`mode` can be `analog` or `digital`, but not `" #v "`.")
+  HW_E_AVL(mode, v, analog | digital)
 
 #define _hwa_cfio1a_vmode_1(o,p,bn,bp,v,...)				\
   HW_G2(_hwa_cfio1a_vmode, v)(o,p,bn,bp,__VA_ARGS__)
@@ -150,8 +149,7 @@
 #define _hwa_cfio1a_vmode_analog(o,p,bn,bp,...)				\
   HW_G2(_hwa_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
 
-#define _hwa_cfio1a_vmode_analog_0(o,p,bn,bp,...)	\
-  HW_ERR("pin `"#o"` does not support analog mode.")
+#define _hwa_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
 #define _hwa_cfio1a_vmode_analog_1(o,p,bn,bp,...)	\
   _hwa( write, _##o##_##did, 1);			\
@@ -170,7 +168,7 @@
   HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_vdirection_0(o,p,bn,bp,v,...)			\
-  HW_ERR("`direction` can be `input` or `output`, but not `" #v "`.")
+  HW_E_AVL(direction, v, input | output)
 
 #define _hwa_cfio1a_kdirection_0(o,p,bn,bp,k,...)			\
   HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
@@ -186,7 +184,7 @@
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfio1a_vpullup_0(o,p,bn,bp,v,...)				\
-  HW_ERR("`pullup` can be `on` or `off`, but not `" #v "`.")
+  HW_E_AVL(pullup, v, on | off)
 
 
 /**

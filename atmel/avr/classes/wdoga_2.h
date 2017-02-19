@@ -61,8 +61,7 @@
   HW_G2(_hwa_cfwdoga_vtimeout,HW_IS(,_hw_wdoga_timeout_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdoga_vtimeout_0(o,v,...)				\
-  HW_ERR("`timeout` can be `16ms`, `32ms`, `64ms`, `125ms`, `250ms`, "	\
-	 "`500ms`, `1s`, `2s`, `4s` or `8s` but not `" #v "`.")
+  HW_E_AVL(timeout, v, 16ms | 32ms | 64ms | 125ms | 250ms | 500ms | 1s | 2s | 4s | 8s)
 
 #define _hwa_cfwdoga_vtimeout_1(o,v,k,...)			\
   hwa->o.config.timeout = HW_A1(_hw_wdoga_timeout_##v);		\
@@ -80,13 +79,13 @@
 #define _hw_wdoga_action_irq_or_reset	, 3
 
 #define _hwa_cfwdoga_kaction_0(o,k,...)				\
-  HW_ERR("expected `action` instead of `" #k "`.")
+  HW_E_VL(k,action)
 
 #define _hwa_cfwdoga_kaction_1(o,k,v,...)				\
   HW_G2(_hwa_cfwdoga_vaction,HW_IS(,_hw_wdoga_action_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdoga_vaction_0(o,v,...)					\
-  HW_ERR("`action` can be `none`, `irq`, `reset`, or `irq_or_reset` but not `" #v "`.")
+  HW_E_AVL(action, v, none | irq | reset | irq_or_reset)
 
 #define _hwa_cfwdoga_vaction_1(o,v,...)			\
   hwa->o.config.action = HW_A1(_hw_wdoga_action_##v);	\
@@ -108,7 +107,7 @@
   HW_G2(_hw_turn_wdoga, HW_IS(,_hw_state_##v))(o,v)
 
 #define _hw_turn_wdoga_0(o, v)						\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 
 #define _hw_turn_wdoga_1(o, v)		HW_G2(_hw_turn_wdoga, v)(o)
 
@@ -154,7 +153,7 @@
   HW_G2(_hwa_turn_wdoga, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
 
 #define _hwa_turn_wdoga_0(o, v, ...)				\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 
 #define _hwa_turn_wdoga_1(o, v, ...)		\
   HW_G2(_hwa_turn_wdoga, v)(o,i,a)		\
@@ -267,8 +266,7 @@ HW_INLINE void _hwa_commit_p__wdoga ( hwa_t *hwa, hwa_wdoga_t *p )
        *    3. Set WDE to 0 within 4 cycles after 2.
        */
 #if HW_DEVICE_WDTON == 0
-      HW_ERR( "watchdog can not be turned off because HW_DEVICE_FUSE_WDTON is " \
-	      "enabled." );
+      HW_E(watchdog can not be turned off because HW_DEVICE_FUSE_WDTON is enabled)
 #endif
       _hwa_write_reg_p( p, _wdoga, wdrf, 0 );
       _hwa_commit_reg_p( p, _wdoga, wdrf );

@@ -50,19 +50,15 @@
 
 #define _hw_is_clock_clock		, 1
 
-#define _hwa_cfpscb_kclock_0(o,kw,...)		\
-  HW_ERR("expected `clock` instead of `" #kw "`.");
-
-#define _hwa_cfpscb_kclock_1(o,kw,v,...)					\
-  HW_G2(_hwa_cfpscb_vclock,HW_IS(,_hw_pscb_clock_##v))(o,v,__VA_ARGS__)
+#define _hwa_cfpscb_kclock_0(o,k,...)		HW_E_VL(k,clock)
+#define _hwa_cfpscb_kclock_1(o,k,v,...)		HW_G2(_hwa_cfpscb_vclock,HW_IS(,_hw_pscb_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hw_pscb_clock_system			, 0
 #define _hw_pscb_clock_pll_32MHz		, 1
 #define _hw_pscb_clock_pll_64MHz		, 2
 
 #define _hwa_cfpscb_vclock_0(o,v,...)					\
-  HW_ERR( "`clock` can be `system`, `pll_32MHz`, or `pll_64MHz` "	\
-	  "but not `" #v "`.");
+  HW_E_AVL(clock, v, system | pll_32MHz | pll_64MHz)
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
 #  define _hwa_cfpscb_vclock_1(o,v,...)					\

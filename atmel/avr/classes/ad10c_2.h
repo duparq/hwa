@@ -115,12 +115,11 @@
   } while(0)
 
 #define _hwa_cfad10c_kclock_0(o,k,...)					\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 #define _hwa_cfad10c_kclock_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10c_vclock, HW_IS(,_hw_ad10c_clock_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `min`, `max`, or `sysclk_div( 1 | 2 | 4 | 8 | 16 " \
-	 "| 32 | 64 | 128 )`, but not `"#v".")
+  HW_E_AVL(clock, v, min | max | sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 #define _hwa_cfad10c_vclock_1(o,v,k,...)				\
   if ( HW_A1(_hw_ad10c_clock_##v) == HW_A1(_hw_ad10c_clock_min) ) {	\
     if ( hw_syshz / 128 >= 50000 )					\
@@ -173,13 +172,11 @@
 /*  Mandatory parameter `trigger`
  */
 #define _hwa_cfad10c_ktrigger_0(o,k,...)		\
-  HW_ERR("expected `trigger` instead of `" #k "`.")
+  HW_E_VL(k,trigger)
 #define _hwa_cfad10c_ktrigger_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10c_vtrigger, HW_IS(,_hw_ad10c_trigger_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vtrigger_0(o,v,...)				\
-  HW_ERR("`trigger` can be `manual`, `auto`, `hw_acmp0`, `hw_core0_int0`, " \
-	 "`hw_counter0_compare0`, `hw_counter0_overflow`, "		\
-	 "`hw_counter0_compare1`, `hw_pcic0`, but not `" #v "`.")
+  HW_E_AVL(trigger, v, manual | auto | hw_acmp0 | hw_core0_int0 | hw_counter0_compare0 | hw_counter0_overflow | hw_counter0_compare1 | hw_pcic0)
 #define _hwa_cfad10c_vtrigger_1(o,v,k,...)				\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10c_trigger_##v));		\
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10c_trigger_##v));		\
@@ -198,12 +195,11 @@
 /*  Mandatory parameter `vref`
  */
 #define _hwa_cfad10c_kvref_0(o,k,...)					\
-  HW_ERR("expected `vref` instead of `" #k "`.")
+  HW_E_VL(k,vref)
 #define _hwa_cfad10c_kvref_1(o,k,v,...)					\
   HW_G2(_hwa_cfad10c_vvref, HW_IS(,_hw_ad10c_vref_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vvref_0(o,v,...)				\
-  HW_ERR("`vref` can be `vcc`, `hw_pin_aref`, `bandgap_1100mV`, "\
-	 "`handgap_2560mV`, or `handgap_2560mV_aref`, but not `" #v "`.")
+  HW_E_AVL(vref, v, vcc | hw_pin_aref | bandgap_1100mV | handgap_2560mV | handgap_2560mV_aref)
 #define _hwa_cfad10c_vvref_1(o,v,k,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10c_vref_##v));	\
   HW_G2(_hwa_cfad10c_kalign, HW_IS(align,k))(o,k,__VA_ARGS__)
@@ -220,8 +216,7 @@
 #define _hwa_cfad10c_kalign_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10c_valign, HW_IS(,_hw_ad10c_align_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_valign_0(o,v,...)				\
-  HW_ERR("optionnal parameter `align` can be `left` or `right`, "\
-	 "but not `" #v "`.")
+  HW_E_OAVL(align, v, left | right)
 #define _hwa_cfad10c_valign_1(o,v,k,...)				\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10c_align_##v));			\
   HW_G2(_hwa_cfad10c_kpolarity, HW_IS(polarity,k))(o,k,__VA_ARGS__)
@@ -237,8 +232,7 @@
 #define _hwa_cfad10c_kpolarity_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10c_vpolarity, HW_IS(,_hw_ad10c_polarity_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vpolarity_0(o,v,...)				\
-    HW_ERR("optionnal parameter `polarity` can be `unipolar` or `bipolar`, " \
-	   "but not `" #v "`.")
+    HW_E_OAVL(polarity, v, unipolar | bipolar)
 #define _hwa_cfad10c_vpolarity_1(o,v,k,...)				\
     _hwa_write_reg(o,bin, HW_A1(_hw_ad10c_polarity_##vpolarity));	\
     HW_G2(_hwa_cfad10c_kgain, HW_IS(gain,k))(o,k,__VA_ARGS__)
@@ -291,22 +285,20 @@
 /*	Process 'positive_input' & 'negative_input' in differential mode
  */
 #define _hwa_cfad10c_kpositive_input_0(o,k,...)				\
-  HW_ERR("expected `input` or `positive_input` instead of `" #k "`.")
+  HW_E_VL(k,input | positive_input)
 #define _hwa_cfad10c_kpositive_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10c_vpositive_input, HW_IS(,_hw_ad10c_input_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vpositive_input_0(o,v,...)				\
-  HW_ERR("`positive_input` can be `hw_pin_adc0`, `hw_pin_adc1`, "	\
-	 "`hw_pin_adc2`, or `hw_pin_adc3`, or synonyms, but not `" #v "`.")
+  HW_E_AVL(`positive_input`, v, `hw_pin_adc0 | hw_pin_adc1 | hw_pin_adc2 | hw_pin_adc3` or synonyms)
 #define _hwa_cfad10c_vpositive_input_1(o,v,k,...)			\
   uint8_t positive_input = HW_A1(_hw_ad10c_input_##v);		\
   HW_G2(_hwa_cfad10c_knegative_input, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 #define _hwa_cfad10c_knegative_input_0(o,k,...)				\
-  HW_ERR("expected `negative_input` instead of `" #k "`.")
+  HW_E_VL(k,negative_input)
 #define _hwa_cfad10c_knegative_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10c_vnegative_input, HW_IS(,_hw_ad10c_input_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vnegative_input_0(o,v,...)		\
-  HW_ERR("`negative_input` can be `hw_pin_adc0`, `hw_pin_adc1`, "	\
-	 "`hw_pin_adc2`, or `hw_pin_adc3`, or synonyms, but not `" #v "`.")
+  HW_E_AVL(`negative_input`, v, `hw_pin_adc0 | hw_pin_adc1 | hw_pin_adc2 | hw_pin_adc3` or synonyms)
 #define _hwa_cfad10c_vnegative_input_1(o,v,...)		\
   uint8_t negative_input = HW_A1(_hw_ad10c_input_##v);		\
   HW_TX(_hwa_write_reg(o,mux,						\

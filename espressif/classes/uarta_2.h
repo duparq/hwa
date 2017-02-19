@@ -63,8 +63,7 @@
 #define _hwx_cfuarta_kbps_1(o,k,v,...)			\
   HW_G2(_hwx_cfuarta_vbps, HW_IS(,v))(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vbps_1(o,v,...)				\
-  HW_ERR("value of `bps` or `baudrate` must be a number.")
+#define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
 #define _hwx_cfuarta_vbps_0(o,v,...)					\
   _hwa_write_reg(o, clkdiv, (int)(0.5 + hw_apbhz*1.0/(v)) );		\
@@ -81,8 +80,7 @@
 #define _hwx_cfuarta_kdatabits_1(o,k,v,...)				\
   HW_G2(_hwx_cfuarta_vdatabits, HW_IS(,_hw_uarta_databits_##v))(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vdatabits_0(o,v,...)				\
-  HW_ERR("`databits` can be `5`, `6`, `7`, or `8`, but not `" #v "`.")
+#define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E_AVL(databits, v, 5 | 6 | 7 | 8)
 
 #define _hwx_cfuarta_vdatabits_1(o,v,k,...)			\
   _hwa_write_reg(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
@@ -103,8 +101,7 @@
 #define _hwx_cfuarta_kparity_1(o,k,v,...)				\
   HW_G2(_hwx_cfuarta_vparity, HW_IS(,_hw_uarta_parity_##v))(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vparity_0(o,v,...)					\
-  HW_ERR("`parity` can be `none`, `even`, or `odd`, but not `" #v "`.")
+#define _hwx_cfuarta_vparity_0(o,v,...)		HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
   _hwa_write_reg(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
@@ -124,8 +121,7 @@
 #define _hwx_cfuarta_kstopbits_1(o,k,v,...)				\
     HW_G2(_hwx_cfuarta_vstopbits, HW_IS(,_hw_uarta_stopbits_##v))(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vstopbits_0(o,v,...)				\
-    HW_ERR("`stopbits` can be `1`, `1_5`, or `2`, but not `" #v "`.")
+#define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E_AVL(stopbits, v, 1 | 1_5 | 2)
 
 #define _hwx_cfuarta_vstopbits_1(o,v,k,...)			\
   _hwa_write_reg(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\

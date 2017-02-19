@@ -18,14 +18,15 @@
  *   specified at compile time via the command line. If not, the Makefile will
  *   set it to `attiny84` by default. For example, `make BOARD=nanodccduino`
  *   will lead to `BOARD_H` defined as `<boards/nanodccduino.h>`. See @ref
- *   atmelavr_boards for the list of board files provided.
+ *   atmelavr_boards for the list of board definition files provided.
  *
- * * `PIN_LED` is the definition of the I/O pin at which a LED is connected. It
+ * * `PIN_LED` is the name of the I/O pin at which a LED is connected. It
  *   is defined in the target board header file.
  *
  * * `PERIOD` is the blinking period.
  *
- * * `hw_syshz` is the CPU frequency computed by HWA from the device settings.
+ * * `hw_syshz` is the CPU frequency, computed by HWA from the device
+ *    configuration fuses.
  *
  * @par main.c
  */

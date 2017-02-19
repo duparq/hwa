@@ -152,7 +152,7 @@
 #  define HW_DEVICE_FUSE_CKDIV8				1
 #  define hw_syshz					hw_syshz_base
 #else
-#  HW_ERROR(`HW_DEVICE_CLK_PSC` can be `8`, or `1`, but not HW_DEVICE_CLK_PSC)
+HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #endif
 
 

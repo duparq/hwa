@@ -68,13 +68,13 @@
   } while(0)
 
 #define _hwa_cfspia_kmode_0(o,k,...)					\
-  HW_ERR("expected `mode` instead of `" #k "`.")
+  HW_E_VL(k,mode)
 
 #define _hwa_cfspia_kmode_1(o,k,v,...)				\
   HW_G2(_hwa_cfspia_vmode, HW_IS(,_hw_spia_mode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vmode_0(o,v,...)					\
-  HW_ERR("`mode` can be `master`, `slave`, or `off` but not `"#v".")
+  HW_E_AVL(mode, v, master | slave | off)
 
 #define _hwa_cfspia_vmode_1(o,v,k,...)				\
   _hwa_write_reg(o,en, HW_A1(_hw_spia_mode_##v));		\
@@ -102,14 +102,13 @@
 #define _hw_spia_clock_sysclk_div(x)		HW_G2(_hw_spia_clock_sysclk_div,x)
 
 #define _hwa_cfspia_kclock_0(o,k,...)			\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 
 #define _hwa_cfspia_kclock_1(o,k,v,...)					\
   HW_G2(_hwa_cfspia_vclock, HW_IS(,_hw_spia_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 )`, " \
-	 "but not `"#v".")
+  HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 
 #define _hwa_cfspia_vclock_1(o,v,k,...)				\
   _hwa_write_reg(o,xpr, HW_A1(_hw_spia_clock_##v));			\
@@ -122,13 +121,13 @@
 #define _hw_spia_sck_idle_high			, 1
 
 #define _hwa_cfspia_ksck_idle_0(o,k,...)		\
-  HW_ERR("expected `sck_idle` instead of `" #k "`.")
+  HW_E_VL(k,sck_idle)
 
 #define _hwa_cfspia_ksck_idle_1(o,k,v,...)				\
   HW_G2(_hwa_cfspia_vsck_idle, HW_IS(,_hw_spia_sck_idle_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vsck_idle_0(o,v,...)			\
-  HW_ERR("`sck_idle` can be `low` or `high` but not `"#v".")
+  HW_E_AVL(sck_idle, v, low | high)
 
 #define _hwa_cfspia_vsck_idle_1(o,v,k,...)				\
   _hwa_write_reg(o,cpol, HW_A1(_hw_spia_sck_idle_##v));		\
@@ -147,14 +146,14 @@
 #define _hw_spia_sck_idle_high_sampling_edge_second	, 1
 
 #define _hwa_cfspia_ksampling_edge_0(o,v,k,...)			\
-  HW_ERR("expected `sampling_edge` instead of `" #k "`.")
+  HW_E_VL(k,sampling_edge)
 
 #define _hwa_cfspia_ksampling_edge_1(o,idle,k,v,...)			\
   HW_G2(_hwa_cfspia_vsampling_edge,					\
 	HW_IS(,_hw_spia_sck_idle_##idle##_sampling_edge_##v))(o,idle,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vsampling_edge_0(o,idle,v,...)			\
-  HW_ERR("`sampling_edge` can be `low` or `high` but not `"#v".")
+  HW_E_AVL(sampling_edge, v, low | high)
 
 #define _hwa_cfspia_vsampling_edge_1(o,idle,v,k,...)			\
   HW_TX( _hwa_write_reg(o,cpha, HW_A1(_hw_spia_sck_idle_##idle##_sampling_edge_##v)),\
@@ -224,7 +223,7 @@
 #define _hw_turn_spia(o,i,a, ...)					\
   HW_G2(_hw_turn_spia, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
   HW_TX(_hw_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 
@@ -239,7 +238,7 @@
 #define _hwa_turn_spia(o,i,a, ...)					\
   HW_G2(_hwa_turn_spia, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
-  HW_ERR("`" #o "` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\
   HW_TX(_hwa_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 

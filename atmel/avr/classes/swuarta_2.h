@@ -151,8 +151,8 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart0_pin_rxd
   _hwa( configure, hw_swuart0_pin_rxd, direction, input );
-  hwa( clear, HW_IRQF(HW_REL(hw_swuart0_pin_rxd,pcic)) );
-  hwa( turn, HW_IRQ(HW_REL(hw_swuart0_pin_rxd,pcic)), on );
+  hwa( clear, HW_IRQF(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)) );
+  hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
 
@@ -333,7 +333,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   HW_G2(_hwx_cfswuarta_vdatabits, HW_IS(,_hw_swuarta_csz_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vdatabits_0(x,o,v,...)		\
-  HW_ERR("`databits` must be `8`, not `" #v "`.")
+  HW_E_AVL(`databits`, v, `8`)
 
 #define _hwx_cfswuarta_vdatabits_1(x,o,v,...)	\
   _hwx_cfswuarta_kdatabits_0(x,o,__VA_ARGS__)
@@ -350,7 +350,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   HW_G2(_hwx_cfswuarta_vparity, HW_IS(,_hw_swuarta_pm_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vparity_0(x,o,v,...)		\
-  HW_ERR("`parity` must be `none`, not `" #v "`.")
+  HW_E_AVL(`parity`, v, `none`)
 
 #define _hwx_cfswuarta_vparity_1(x,o,v,...)	\
   _hwx_cfswuarta_kparity_0(x,o,__VA_ARGS__)
@@ -367,7 +367,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   HW_G2(_hwx_cfswuarta_vstopbits, HW_IS(,_hw_swuarta_sbs_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vstopbits_0(x,o,v,...)		\
-  HW_ERR("`stopbits` must be `1`, not `" #v "`.")
+  HW_E_AVL(`stopbits`, v, `1`)
 
 #define _hwx_cfswuarta_vstopbits_1(x,o,v,...)	\
   _hwx_cfswuarta_kstopbits_0(x,o,__VA_ARGS__)
@@ -384,7 +384,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   HW_G2(_hwx_cfswuarta_vreceiver, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vreceiver_0(x,o,v,...)				\
-  HW_ERR("`receiver` can be `enabled` or `disabled`, but not `" #v "`.")
+  HW_E_AVL(receiver, v, enabled | disabled)
 
 #define _hwx_cfswuarta_vreceiver_1(x,o,v,...)				\
   x##_turn_irq(o##_pin_rx),change,_hw_state_##v));			\
@@ -401,7 +401,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   HW_G2(_hwx_cfswuarta_vtransmitter, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vtransmitter_0(x,o,v,...)		\
-  HW_ERR("`transmitter` must be `enabled`, not `" #v "`.")
+  HW_E_AVL(`transmitter`, v, `enabled`)
 
 #define _hwx_cfswuarta_vtransmitter_1(x,o,v,...)	\
   _hwx_cfswuarta_end(o,__VA_ARGS__)
@@ -432,13 +432,13 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #if defined hw_swuart0_pin_rxd
   extern uint8_t				_hw_swuart0_getbyte ( ) ;
 #else
-#  define _hw_swuart0_getbyte()		HW_ERR("hw_swuart0 has no RXD PIN.")
+#  define _hw_swuart0_getbyte()		HW_E(`hw_swuart0` has no RXD pin)
 #endif
 
 #if defined hw_swuart1_pin_rxd
 extern uint8_t				_hw_swuart1_getbyte ( ) ;
 #else
-#  define _hw_swuart1_getbyte()		HW_ERR("hw_swuart1 has no RXD PIN.")
+#  define _hw_swuart1_getbyte()		HW_E(`hw_swuart1` has no RXD pin)
 #endif
 
 
@@ -462,13 +462,13 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
 #if defined hw_swuart0_pin_txd
 extern void				_hw_swuart0_putbyte ( uint8_t byte ) ;
 #else
-#  define _hw_swuart0_putbyte(x)	HW_ERR("hw_swuart0 has no TXD PIN.")
+#  define _hw_swuart0_putbyte(x)	HW_E(`hw_swuart0` has no TXD pin)
 #endif
 
 #if defined hw_swuart1_pin_txd
 extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
 #else
-#  define _hw_swuart1_putbyte(x)	HW_ERR("hw_swuart1 has no TXD PIN.")
+#  define _hw_swuart1_putbyte(x)	HW_E(`hw_swuart1` has no TXD pin)
 #endif
 
 

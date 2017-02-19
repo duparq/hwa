@@ -72,4 +72,4 @@
 
 #define _hw_rel_io1a_1(o,x,i,p,...)	p
 
-#define _hw_rel_io1a_0(o,x,...)		HW_ERR("`"#o"` has no relative named `"#x"`."))
+#define _hw_rel_io1a_0(o,x,...)		HW_E(`o` has no relative named `x`)

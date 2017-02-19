@@ -52,14 +52,13 @@
   HW_G2(_hwx_cfinta_ksense,HW_IS(sense,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cfinta_ksense_0(x,o,k,...)			\
-  HW_ERR("expected `sense` instead of `" #k "`.")
+  HW_E_VL(k,sense)
 
 #define _hwx_cfinta_ksense_1(x,o,k,v,...)				\
   HW_G2(_hwx_cfinta_vsense,HW_IS(,_hw_inta_sense_##v))(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfinta_vsense_0(x,o,v,...)					\
-  HW_ERR( "`sense` can be `low_level`, `edge`, `falling_edge`, "	\
-	  "or `rising_edge`, but not `" #v "`.")
+  HW_E_AVL(sense, v, low_level | edge | falling_edge | rising_edge)
 
 #define _hwx_cfinta_vsense_1(x,o,v,...)				\
   HW_TX( x##_write_reg(o,sc,HW_A1(_hw_inta_sense_##v)), __VA_ARGS__ )

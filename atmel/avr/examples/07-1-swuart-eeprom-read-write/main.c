@@ -83,9 +83,9 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, hw_core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+  hwa( configure,  hw_core0,
+       sleep,      enabled,
+       sleep_mode, idle );
 
   /*  Write this configuration into the hardware
    */

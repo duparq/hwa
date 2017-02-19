@@ -89,17 +89,11 @@
 #define _hwa_cfc8b(o,i,a, ...)						\
   do { HW_G2(_hwa_cfc8b_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
 
-#define _hwa_cfc8b_kclock_0(o,k,...)		\
-  HW_ERR("expected `clock` instead of `" #k "`.");
-
-#define _hwa_cfc8b_kclock_1(o,k,v,...)					\
-  HW_G2(_hwa_cfc8b_vclock,HW_IS(,_hw_c8b_clock_##v))(o,v,__VA_ARGS__)
+#define _hwa_cfc8b_kclock_0(o,k,...)		HW_E_VL(k,clock)
+#define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_G2(_hwa_cfc8b_vclock,HW_IS(,_hw_c8b_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vclock_0(o,v,...)					\
-  HW_ERR( "`clock` can be `none` or "					\
-	  "`prescaler_output( 0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | "	\
-	  "128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 )`, "	\
-	  "but not `" #v "`.");
+  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 ))
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
   _hwa_write_reg(o, cs, HW_A1(_hw_c8b_clock_##v));			\
@@ -115,7 +109,7 @@
   HW_G2(_hwa_cfc8b_vcountmode,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vcountmode_0(o,v,...)				\
-  HW_ERR( "`countmode` can only be `up_loop`, not `" #v "`.");
+  HW_E_AVL(`countmode`, v, `up_loop`)
 
 #define _hwa_cfc8b_vcountmode_1(o,v,...)	\
   _hwa_cfc8b_kcountmode_0(o,__VA_ARGS__)
@@ -131,7 +125,7 @@
     HW_G2(_hwa_cfc8b_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vbottom_0(o,v,...)				\
-  HW_ERR( "`bottom` can only be `0`, not `" #v "`.");
+  HW_E_AVL(`bottom`, v, `0`)
 
 #define _hwa_cfc8b_vbottom_1(o,v,...)				\
   _hwa_cfc8b_kbottom_0(o,__VA_ARGS__)
@@ -151,7 +145,7 @@
   HW_G2(_hwa_cfc8b_vtop,HW_IS(,_hw_c8b_top_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vtop_0(o,v,...)\
-  HW_ERR("`top` can be `fixed_0xFF`, `max`, or `compare2`, but not `" #v "`.");
+  HW_E_AVL(top, v, fixed_0xFF | max | compare2)
 
 #define _hwa_cfc8b_vtop_1(o,v,...)\
   _hwa_write_reg(o, ctc, HW_A1(_hw_c8b_top_##v));	\
@@ -170,7 +164,7 @@
     HW_G2(_hwa_cfc8b_voverflow,HW_IS(at_bottom,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_voverflow_0(o,v,...)				\
-  HW_ERR( "`overflow` can only be `at_bottom`, not `" #v "`.");
+  HW_E_AVL(`overflow`, v, `at_bottom`)
 
 #define _hwa_cfc8b_voverflow_1(o,v,...)				\
   _hwa_cfc8b_koverflow_0(o,__VA_ARGS__)

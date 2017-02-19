@@ -11,7 +11,7 @@
  *  Upper case definitions process arbitrary lists of arguments.
  *
  *  Lower case definitions deal with lists of arguments starting with an object
- *  or class name.
+ *  name or an object definition starting with a class name.
  */
 
 
@@ -102,9 +102,14 @@
  * @brief Emit an error at preprocessing stage
  * @hideinitializer
  */
-/*  This one uses the C99 _Pragma operator. It produces a preprocessing error
- *  that stops the compiling process. The error message 's' must be a single
- *  argument, i.e. it must not contain commas.
+/*  Error handling is based on the C99 _Pragma operator. It produces a
+ *  preprocessing error as soon as the _Pragma(...) sentence is produced, be it
+ *  inside or outside of a C function definition, or in an assembler
+ *  source. _Pragma(...) can not be processed by macros as the sentence is
+ *  removed from the preprocessor output and replaced by a void token.
+ *
+ *  The error message 's' must be a single argument, i.e. it must not contain
+ *  commas.
  */
 #define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s.))
 #define _HW_E2(s)		_HW_E3(s)
@@ -115,62 +120,21 @@
 #endif
 
 #define HW_E_O(x)		HW_E(`x` is not an object)
-#define HW_E_ST(x)		HW_E(expected `on` or `off` instead of `x`)
-#define HW_E_UA(...)		HW_E(unexpected argument HW_QUOTE(__VA_ARGS__))
+#define HW_E_OM()		HW_E(missing object name)
+#define HW_E_T(x)		HW_E(unrecognized token `x`)
 
+#define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
+#define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
+#define HW_E_ST(x)		HW_E(`x` is not `on | off`)
 
-/*  HW_E()-produced errors must be detected as objects
- */
-#define _hw_is_error__Pragma(...)	, 1
-#define _hw_is_error__xPragma(...)	, 1
-/* #define _hw_class__Pragma */
-/* #define _hw_class__xPragma */
+#define HW_E_VL(v,l)		HW_E(`v` is not `l`)
+#define HW_E_AVM(a)		HW_E(missing value for `a`)
+#define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
+#define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter `a` can be `l` but not `v`)
+#define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
+#define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
 
-#if defined __ASSEMBLER__
-/*
- *  Assembler .error directive can not appear in operand position.
- *  So, emit a hw_error(...) that will be catched by the building process.
- */
-#  define HW_ERR(msg)		hw_error(__FILE__,__LINE__,"HWA: " msg)
-#  define HW_ERRFN(...)		.error __VA_ARGS__
-
-#else
-
-/**
- * @ingroup public_gen_macros
- * @brief Emit an error at preprocessing stage
- * @hideinitializer
- */
-/*  avr-gcc ignores the GCC error pragma
- */
-#  define HW_ERR(msg)		hw_error++; _Static_assert(0, "HWA: " msg);
-
-/*  Avoid the emitting of an additionnal warning when HW_ERR is emittied.
- */
-extern char hw_error ;
-
-/**
- * @ingroup public_gen_macros
- * @brief Emit an error at preprocessing stage (when not inside a function)
- *
- * Encapsulate the error into a fake function.
- *
- * @hideinitializer
- */
-#define HW_ERROR(...)		_HW_ERROR_2(__COUNTER__, __VA_ARGS__)
-#define _HW_ERROR_2(...)	_HW_ERROR_3(__VA_ARGS__)
-#define _HW_ERROR_3(n,...)	void hw_err_##n() { _Static_assert(0, "HWA: " #__VA_ARGS__) ; }
-
-#endif
-
-
-/*  Propagate error or continue: expand to x if x is an error,
- *  otherwise expand to y.
- */
-#define HW_PE(...)		_HW_PE_2(__VA_ARGS__)
-#define _HW_PE_2(x, y)		HW_G2(_HW_PE,HW_IS(hw_error,x))(x, y)
-#define _HW_PE_0(x, y)		y
-#define _HW_PE_1(x, y)		x
+#define HW_ERROR		HW_E
 
 
 /**
@@ -312,7 +276,7 @@ extern char hw_error ;
 /* No method f for object o of class c. Is o an object?
  */
 #define _HW_MTHD4_0(f,o,c,...)	HW_G2(_HW_MTHD5, HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
-#define _HW_MTHD5_1(f,o,c,...)	HW_E(object `o` of class `c` has no method `f`.)
+#define _HW_MTHD5_1(f,o,c,...)	HW_E_OCM(o,c,f)
 
 /* o is not an object. Is it a class name?
  */
@@ -321,13 +285,12 @@ extern char hw_error ;
 /* Is there a method f for class c?
  */
 #define _HW_MTHD6_1(f,o,oo,...)	HW_G2(_HW_MTHD8, HW_IS(,_hw_mthd_##f##_##o))(f,o,__VA_ARGS__)
-#define _HW_MTHD8_0(f,c,...)	HW_ERR("class `"#c"` has no method `"#f"`.")
+#define _HW_MTHD8_0(f,c,...)	HW_E_CM(c,f)
 #define _HW_MTHD8_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
 
 /* o is not an object and not a class name. Propagate or trigger an error.
  */
-#define _HW_MTHD6_0(f,o,...)	HW_PE(o, HW_E_O(o))
-
+#define _HW_MTHD6_0(...)	HW_E(processing error)
 
 /**
  */
@@ -361,12 +324,11 @@ extern char hw_error ;
  * <li>`address`: the address of `o`
  * </ul>
  */
-#define _HW_GEN(f,o,...)	_HW_GEN_2(f,o,_##o,__VA_ARGS__)
-#define _HW_GEN_2(...)		_HW_GEN_3(__VA_ARGS__)
-#define _HW_GEN_3(f,o,c,...)	HW_G2(_HW_GEN,HW_IS(,_hw_class_##c))(f,o,c,__VA_ARGS__)
-#define _HW_GEN_1(f,o,c,...)	f(c,o,__VA_ARGS__)
-#define _HW_GEN_0(f,o,...)	HW_PE(o, HW_E_O(o))
-
+#define _HW_GEN(f,o,...)	_HW_GEN2(f,hw_od(o),__VA_ARGS__)
+#define _HW_GEN2(...)		_HW_GEN3(__VA_ARGS__)
+#define _HW_GEN3(f,c,...)	HW_G2(_HW_GEN,HW_IS(,c))(f,c,__VA_ARGS__)
+#define _HW_GEN_0(f,...)	f(__VA_ARGS__)
+#define _HW_GEN_1(f,o,...)	HW_E_MO()
 
 /**
  * @ingroup public_gen_macros
@@ -383,8 +345,8 @@ extern char hw_error ;
  * This is used to help detecting and propagating errors, or ensuring that
  * there is no remaining elements in a list at the end of its parsing.
  */
-#define HW_TX(result, ...)	HW_G2(_HW_TX,HW_IS(,__VA_ARGS__))((result),__VA_ARGS__)
-#define _HW_TX_0(result, ...)	HW_E(unexpected argument: HW_QUOTE(__VA_ARGS__).)
+#define HW_TX(result, ...)	HW_G2(_HW_TX,HW_IS(,__VA_ARGS__))((result),__VA_ARGS__,)
+#define _HW_TX_0(result,x,...)	HW_E_T(x)
 #define _HW_TX_1(result, ...)	_HW_TX_2 result
 #define _HW_TX_2(...)		__VA_ARGS__
 
@@ -396,8 +358,8 @@ extern char hw_error ;
  * This is used to ensure that there is no remaining elements in a list at the
  * end of its parsing.
  */
-#define HW_EOL(...)		HW_G2(_HW_EOL,HW_IS(,__VA_ARGS__))(__VA_ARGS__)
-#define _HW_EOL_0(...)		HW_ERR("unexpected argument: `" HW_QUOTE(__VA_ARGS__) "`.");
+#define HW_EOL(...)		HW_G2(_HW_EOL,HW_IS(,__VA_ARGS__))(__VA_ARGS__,)
+#define _HW_EOL_0(x,...)	HW_E_T(x)
 #define _HW_EOL_1(...)
 
 
@@ -423,26 +385,27 @@ extern char hw_error ;
  * an error.
  *
  * Returns the definition starting with a class name followed by the object
- * name: c,o,...
- * or an error: _Pragma(...)
+ * name: c,o,... or a void token and emit an error.
  */
-/*  Expand o
- */
-#define hw_od(o)		_hw_od1(o)
-
-/*  If o is an object name, expand its definition
- */
-#define _hw_od1(...)		HW_G2(_hw_od2,HW_IS(,HW_G2(_hw_class,_##__VA_ARGS__)))(__VA_ARGS__)
-#define _hw_od2_1(o)		_hw_od2_2(o,_##o)
-#define _hw_od2_2(...)		_hw_od2_3(__VA_ARGS__)
-#define _hw_od2_3(o,c,...)	c,o,__VA_ARGS__
 
 /*  If o is a class name, job's done
- *    Note: errors are objects of class _Pragma()
  */
-#define _hw_od2_0(...)		HW_G2(_hw_od3,HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__)
-#define _hw_od3_1(...)		__VA_ARGS__
-#define _hw_od3_0(o)		HW_PE(o,HW_E_O(o))
+#define hw_od(o)		_hw_od1(o)
+#define _hw_od1(...)		HW_G2(_hw_od2,HW_IS(,_hw_class_##__VA_ARGS__))(__VA_ARGS__)
+#define _hw_od2_1(...)		__VA_ARGS__
+
+/*  Is o an object's name?
+ */
+#define _hw_od2_0(o)		_hw_od3(o,_##o)
+#define _hw_od3(...)		_hw_od4(__VA_ARGS__)
+#define _hw_od4(o,...)		HW_G2(_hw_od4,HW_IS(,_hw_class_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_od4_1(o,c,...)	c,o,__VA_ARGS__
+
+/*  o is not an object, produce an error
+ */
+#define _hw_od4_0(o,...)	HW_G2(_hw_od5, HW_IS(,o))(o)
+#define _hw_od5_0(o)		HW_E_O(o)
+#define _hw_od5_1(o)		HW_E_OM()
 
 
 /**
@@ -481,60 +444,18 @@ extern char hw_error ;
 #define _hwx1(x,f,o,...)	_hwx2(x,f,hw_od(o),__VA_ARGS__)
 #define _hwx2(...)		_hwx3(__VA_ARGS__)
 
+/*  Do not proceed further in case of error
+ */
+#define _hwx3(x,f,c,...)	HW_G2(_hwx4, HW_IS(,_hw_class_##c))(x,f,c,__VA_ARGS__)
+#define _hwx4_0(x,f,c,...)	HW_G2(_hwx40, HW_IS(,c))(c)
+#define _hwx40_1(...)		HW_E_OM()
+#define _hwx40_0(c)		HW_E_O(c)
+
 /*  Look for a method x_f for object o of class c.
  */
-#define _hwx3(x,f,c,o,...)	HW_G2(_hwx3, HW_IS(,_hw_mthd_##x##f##_##c))(x,f,c,o,__VA_ARGS__)
-#define _hwx3_1(x,f,c,o,...)	HW_A1(_hw_mthd_##x##f##_##c)(o,__VA_ARGS__)
-
-/*  Method f for object o of class c not found. Trigger an error.
- */
-#define _hwx3_0(x,f,c,o,...)	HW_G2(_hwx4, HW_IS(error,c))(x,f,c,o,__VA_ARGS__)
-#define _hwx4_1(x,f,c,...)	c
-#define _hwx4_0(x,f,c,o,...)	HW_E(object `o` of class `c` has no method `x##f`.)
-
-
-#if 0
-/*  Handle a short function name as object
- */
-#define _hwp01(p,f,o,...)	HW_G2(_hwp01, HW_IS(,_hw_sfn_##o))(p,f,o,__VA_ARGS__)
-#define _hwp01_1(p,f,o,...)	_hwp01_2(p,f,_hw_sfn_##o,__VA_ARGS__)
-#define _hwp01_2(...)		_hwp01_3(__VA_ARGS__)
-#define _hwp01_3(p,f,_,...)	_hwp01_0(p,f,__VA_ARGS__)
-
-/*  If o is a class name, apply the method
- */
-#define _hwp01_0(p,f,o,...)	HW_G2(_hwp1,HW_IS(,_hw_class_##x))(p,f,o,__VA_ARGS__)
-#define _hwp1_1(p,f,o,...)	HW_G2(__hwp11, HW_IS(,_hw_mthd_##p##f##_##x))(p,f,o,__VA_ARGS__)
-
-/*  Otherwise, assuming the object exists, expand its definition to get its
- *  class name.
- */
-#define _hwp1_0(p,f,o,...)	_hwp2(p,f,o,_##o,__VA_ARGS__)
-#define _hwp2(...)		_hwp3(__VA_ARGS__)
-
-/*  Is there a method p_f for object o of class c?
- */
-#define _hwp3(p,f,o,c,...)	HW_G2(_hwp4, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,o,c,__VA_ARGS__)
-
-/*  Apply method p_f to object o of class c.
- */
-#define _hwp4_1(p,f,o,c,...)	HW_A1(_hw_mthd_##p##f##_##c)(o,__VA_ARGS__)
-
-/*  Method f for object o of class c not found. Is o an object?
- */
-#define _hwp4_0(p,f,o,c,...)	HW_G2(_hwp5, HW_IS(,_hw_class_##c))(p,f,o,c,__VA_ARGS__)
-
-/*  o is an object. Trigger an error.
- */
-#define _hwp5_1(p,f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no method `"#p#f"`.")
-
-/*  o is not an object. Is it a class name?
- *    For example, hwa( write, HW_REG(o,r), value ) expands with the class of the register
- */
-#define _hwp5_0(p,f,o,x,...)	HW_G2(_hwp6, HW_IS(,_hw_class_##o))(p,f,o,__VA_ARGS__,)
-#define _hwp6_1(p,f,c,o,...)	HW_G2(_hwp4, HW_IS(,_hw_mthd_##p##f##_##c))(p,f,o,c,__VA_ARGS__)
-#define _hwp6_0(p,f,o,x,...)	HW_PE(x, HW_E_O(o))
-#endif
+#define _hwx4_1(x,f,c,...)	HW_G2(_hwx5, HW_IS(,_hw_mthd_##x##f##_##c))(x,f,c,__VA_ARGS__)
+#define _hwx5_1(x,f,c,...)	HW_A1(_hw_mthd_##x##f##_##c)(__VA_ARGS__)
+#define _hwx5_0(x,f,c,o,...)	HW_E_OCM(o,c,f)
 
 
 /*  Internal use only version
@@ -567,11 +488,11 @@ extern char hw_error ;
 
 /*  o is an object. Trigger an error.
  */
-#define __hwp5_1(p,f,o,c,...)	HW_ERR("object `"#o"` of class `"#c"` has no method `"#p#f"`.")
+#define __hwp5_1(p,f,o,c,...)	HW_E(o,c,#p#f)
 
 /*  o is not an object. Propagate or trigger an error.
  */
-#define __hwp5_0(p,f,o,x,...)	HW_PE(x, HW_E_O(o))
+#define __hwp5_0(p,f,o,x,...)	HW_E(processing error)
 
   
 
@@ -646,13 +567,13 @@ extern char hw_error ;
 #define _HW_REG2(...)			_HW_GEN(_HW_REG3,__VA_ARGS__)
 #define _HW_REG3(c,o,i,a,r)		_HW_REG4(_hw_##c##_##r,o,c,a,r)
 #define _HW_REG4(...)			_HW_REG5(__VA_ARGS__)
-#define _HW_REG5(t,...)			HW_G2(_HW_REG, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
-#define _HW_REG_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _HW_REG_0(t,o,c,a,r)		_HW_REG6(_##o##_##r,o,c,a,r)
+#define _HW_REG5(t,...)			HW_G2(_HW_REG5, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
+#define _HW_REG5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
+#define _HW_REG5_0(t,o,c,a,r)		_HW_REG6(_##o##_##r,o,c,a,r)
 #define _HW_REG6(...)			_HW_REG7(__VA_ARGS__)
 #define _HW_REG7(t,...)			HW_G2(_HW_REG7, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
 #define _HW_REG7_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _HW_REG7_0(t,o,c,a,r)		HW_PE(o, HW_E(`o` has no attribute `r`.))
+#define _HW_REG7_0(t,o,c,a,r)		HW_E(`o` has no register `r`)
 
 
 /**
@@ -757,8 +678,8 @@ extern char hw_error ;
  * @brief Address of object `o`.
  * @hideinitializer
  */
-//#define hw_addr(o)			HW_MTHD(hw_addr, o,)
-//#define HW_ADDRESS(o)			HW_MTHD(HW_ADDRESS, o,)
+/*  The argument can be an object definition
+ */
 #define HW_ADDRESS(...)			HW_MTHD(HW_ADDRESS, __VA_ARGS__,)
 
 
@@ -767,19 +688,6 @@ extern char hw_error ;
  */
 #define _hw_mthd_hw_addr__m1		, _hw_addr__m1
 #define _hw_mthd_HW_ADDRESS__m1		, _hw_addr__m1
-
-
-/**
- * @ingroup public_obj_macros
- * @brief  Address of the register `r` of object `o`.
- * @hideinitializer
- */
-/* This is defined in the vendor-specific file since the address can be
- * different between C and assembler.
- */
-/* #define hw_ra(o,r)			_hw_ra1(HW_REG(o,r)) */
-/* #define _hw_ra1(...)			_hw_ra2(__VA_ARGS__) */
-/* #define _hw_ra2(x,...)			HW_PE(x, _HW_SPEC(_hw_ra, x, __VA_ARGS__)) */
 
 
 /**
@@ -819,6 +727,8 @@ extern char hw_error ;
  * @brief Number of bits of object `o`.
  * @hideinitializer
  */
+/*  The argument can be an object definition
+ */
 #define HW_BITS(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
 
 #define _hw_mthd_hw_bn__m1		, _hw_bn__m1
@@ -842,6 +752,8 @@ extern char hw_error ;
  * @ingroup public_obj_macros
  * @brief Position of least significant bit of object `o`.
  * @hideinitializer
+ */
+/*  The argument can be an object definition
  */
 #define HW_POSITION(...)				HW_MTHD(hw_bp, __VA_ARGS__,)
 
@@ -900,22 +812,23 @@ extern char hw_error ;
  */
 #define HW_RELATIVE(o,x)		_HW_REL1(o,x)
 #define HW_REL(o,x)			_HW_REL1(o,x)
-#define _HW_REL1(...)			_HW_REL0_0(__VA_ARGS__)
-#define _HW_REL0_0(o,x)			HW_G2(_HW_REL2,HW_ISON(o##x))(o,x)
-#define _HW_REL0_2(...)			_HW_REL0_0(__VA_ARGS__)
-#define _HW_REL2_1(o,x)			o##x
-#define _HW_REL2_0(o,x)			HW_PE(o, HW_G2(_HW_REL20,HW_ISON(o))(o,x))
-#define _HW_REL20_0(o,x)		HW_E_O(o)
+#define _HW_REL1(...)			_HW_REL2(__VA_ARGS__)
+#define _HW_REL2(o,x)			HW_G2(_HW_REL2,HW_IS(,o))(o,x)
+#define _HW_REL2_1(o,x)			HW_E_OM()
+#define _HW_REL2_0(o,x)			HW_G2(_HW_REL3,HW_ISON(o))(o,x)
+#define _HW_REL3_0(o,x)			HW_E_O(o)
+#define _HW_REL3_1(o,x)			HW_G2(_HW_REL4,HW_ISON(o##x))(o,x)
+#define _HW_REL4_1(o,x)			o##x
 
 /*  Look for a class-defined HW_REL() method
  */
-#define _HW_REL20_1(o,x)		_HW_REL3(o,x,_##o)
-#define _HW_REL3(...)			_HW_REL4(__VA_ARGS__)
-#define _HW_REL4(o,x,c,...)		HW_G2(_HW_REL4,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
-#define _HW_REL4_0(o,x,...)		HW_E(`o` has no relative named `x`)
-#define _HW_REL4_1(o,x,c,...)		HW_G2(_HW_REL41, HW_IS(,_hw_mthd_HW_REL_##c))(o,x,c,__VA_ARGS__)
-#define _HW_REL41_0(o,x,...)		HW_E(`o` has no relative named `x`)
-#define _HW_REL41_1(o,x,c,...)		HW_A1(_hw_mthd_HW_REL_##c)(o,x,__VA_ARGS__)
+#define _HW_REL4_0(o,x)			_HW_REL4(o,x,_##o)
+#define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
+#define _HW_REL5(o,x,c,...)		HW_G2(_HW_REL5,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
+#define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)
+#define _HW_REL5_1(o,x,c,...)		HW_G2(_HW_REL6, HW_IS(,_hw_mthd_HW_REL_##c))(o,x,c,__VA_ARGS__)
+#define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
+#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mthd_HW_REL_##c)(o,x,__VA_ARGS__)
 
 
 /**

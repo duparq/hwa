@@ -82,15 +82,13 @@
   do { HW_G2(_hwa_cfc16a_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc16a_kclock_0(o,k,...)				\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 
 #define _hwa_cfc16a_kclock_1(o,k,v,...)				\
   HW_G2(_hwa_cfc16a_vclock,HW_IS(,_hw_c16a_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vclock_0(o,v,...)					\
-  HW_ERR( "`clock` can be `none`, "				\
-	  "`prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 )`, "	\
-	  "`ext_falling`, `ext_rising`, but not `" #v "`.")
+  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 ) | ext_falling | ext_rising)
 
 #define _hwa_cfc16a_vclock_1(o,v,k,...)					\
   hwa->o.config.clock = HW_A1(_hw_c16a_clock_##v);				\
@@ -104,13 +102,13 @@
 #define _hw_c16a_countmode_updown_loop		, 2
 
 #define _hwa_cfc16a_kmode_0(o,k,...)					\
-  HW_ERR("expected `countmode` instead of `" #k "`.")
+  HW_E_VL(k,countmode)
 
 #define _hwa_cfc16a_kmode_1(o,k,v,...)					\
   HW_G2(_hwa_cfc16a_vmode,HW_IS(,_hw_c16a_countmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vmode_0(o,v,...)					\
-  HW_ERR("`countmode` can be `up_loop`, or `updown_loop`, but not `" #v "`.")
+  HW_E_AVL(countmode, v, up_loop | updown_loop)
 
 #define _hwa_cfc16a_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c16a_countmode_##v);			\
@@ -122,7 +120,7 @@
   HW_G2(_hwa_cfc16a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vbottom_0(o,v,...)	\
-  HW_ERR("bottom must be `0`, not `" #v "`.")
+  HW_E_AVL(bottom, v, `0`)
 
 #define _hwa_cfc16a_vbottom_1(o,v,k,...)	\
   HW_G2(_hwa_cfc16a_ktop,HW_IS(top,k))(o,k,__VA_ARGS__)
@@ -144,9 +142,7 @@
   HW_G2(_hwa_cfc16a_vtop,HW_IS(,_hw_c16a_top_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vtop_0(o,v,...)					\
-  HW_ERR("`top` can be `fixed_0xFF`, `fixed_0x1FF`, `fixed_0x3FF`, "	\
-	 "`fixed_0xFFFF`, `max`, `capture0`, or `compare0`,"		\
-	 " but not `" #v "`.")
+  HW_E_AVL(top, v, fixed_0xFF | fixed_0x1FF | fixed_0x3FF | fixed_0xFFFF | max | capture0 | compare0)
 
 #define _hwa_cfc16a_vtop_1(o,v,k,...)					\
   hwa->o.config.top = HW_A1(_hw_c16a_top_##v);				\
@@ -165,8 +161,7 @@
   HW_G2(_hwa_cfc16a_voverflow, HW_IS(,_hw_c16a_overflow_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_voverflow_0(o,v,...)				\
-  HW_ERR("optionnal parameter `overflow` can be `at_bottom`, "		\
-	 "`at_top, or `at_max`, but `not `" #v "`.")
+  HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)
 
 #define _hwa_cfc16a_voverflow_1(o,v,...)				\
   HW_TX(hwa->o.config.overflow = HW_A1(_hw_c16a_overflow_##v),__VA_ARGS__)

@@ -114,14 +114,13 @@
   } while(0)
 
 #define _hwa_cfad10a_kclock_0(o,k,...)					\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 
 #define _hwa_cfad10a_kclock_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10a_vclock, HW_IS(,_hw_ad10a_clock_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 )`, " \
-	 "but not `"#v".")
+  HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 
 #define _hwa_cfad10a_vclock_1(o,v,k,...)				\
   _hwa_write_reg(o,ps, HW_A1(_hw_ad10a_clock_##v));			\
@@ -139,16 +138,13 @@
 /*  Mandatory parameter `trigger`
  */
 #define _hwa_cfad10a_ktrigger_0(o,k,...)		\
-  HW_ERR("expected `trigger` instead of `" #k "`.")
+  HW_E_VL(k,trigger)
 
 #define _hwa_cfad10a_ktrigger_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10a_vtrigger, HW_IS(,_hw_ad10a_trigger_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vtrigger_0(o,v,...)				\
-  HW_ERR("`trigger` can be `manual`, `auto`, `hw_acmp0`, `hw_int0`, "	\
-	 "`hw_counter0_compare0`, `hw_counter0_overflow`, "		\
-	 "`hw_counter1_compare1`, `hw_counter1_overflow`, "		\
-	 "`hw_counter1_capture0`, but not `" #v "`.")
+  HW_E_AVL(trigger, v, manual | auto | hw_acmp0 | hw_int0 | hw_counter0_compare0 | hw_counter0_overflow | hw_counter1_compare1 | hw_counter1_overflow | hw_counter1_capture0)
 
 #define _hwa_cfad10a_vtrigger_1(o,v,k,...)			\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10a_trigger_##v));		\
@@ -169,13 +165,13 @@
 /*  Mandatory parameter `vref`
  */
 #define _hwa_cfad10a_kvref_0(o,k,...)					\
-  HW_ERR("expected `vref` instead of `" #k "`.")
+  HW_E_VL(k,vref)
 
 #define _hwa_cfad10a_kvref_1(o,k,v,...)					\
   HW_G2(_hwa_cfad10a_vvref, HW_IS(,_hw_ad10a_vref_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vvref_0(o,v,...)				\
-  HW_ERR("`vref` can be `vcc`, `pin_aref`, or `bandgap`, but not `" #v "`.")
+  HW_E_AVL(vref, v, vcc | pin_aref | bandgap)
 
 #define _hwa_cfad10a_vvref_1(o,v,k,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
@@ -192,8 +188,7 @@
   HW_G2(_hwa_cfad10a_valign, HW_IS(,_hw_ad10a_align_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_valign_0(o,v,...)				\
-  HW_ERR("optionnal parameter `align` can be `left` or `right`, "\
-	 "but not `" #v "`.")
+  HW_E_OAVL(align, v, left | right)
 #define _hwa_cfad10a_valign_1(o,v,k,...)				\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10a_align_##v));			\
   HW_G2(_hwa_cfad10a_kpolarity, HW_IS(polarity,k))(o,k,__VA_ARGS__)
@@ -211,8 +206,7 @@
   HW_G2(_hwa_cfad10a_vpolarity, HW_IS(,_hw_ad10a_polarity_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpolarity_0(o,v,...)				\
-  HW_ERR("optionnal parameter `polarity` can be `unipolar` or `bipolar`, " \
-	 "but not `" #v "`.")
+  HW_E_OAVL(polarity, v, unipolar | bipolar)
 
 #define _hwa_cfad10a_vpolarity_1(o,v,k,...)			\
   _hwa_write_reg(o,bin, HW_A1(_hw_ad10a_polarity_##vpolarity));	\
@@ -276,27 +270,25 @@
 /*  'positive_input' & 'negative_input' for differential mode
  */
 #define _hwa_cfad10a_kpositive_input_0(o,k,...)				\
-  HW_ERR("expected `input` or `positive_input` instead of `" #k "`.")
+  HW_E_VL(k,input | positive_input)
 
 #define _hwa_cfad10a_kpositive_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10a_vpositive_input, HW_IS(,_hw_ad10a_input_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpositive_input_0(o,v,...)				\
-  HW_ERR("`positive_input` can be `hw_pin_adc0..7` or synonyms, "	\
-	 "but not `" #v "`.")
+  HW_E_AVL(`positive_input`, v, `hw_pin_adc0..7` or synonyms)
 #define _hwa_cfad10a_vpositive_input_1(o,v,k,...)			\
   uint8_t positive_input = HW_A1(_hw_ad10a_input_##v);		\
   HW_G2(_hwa_cfad10a_knegative_input, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_knegative_input_0(o,k,...)				\
-  HW_ERR("expected `negative_input` instead of `" #k "`.")
+  HW_E_VL(k,negative_input)
 
 #define _hwa_cfad10a_knegative_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10a_vnegative_input, HW_IS(,_hw_ad10a_input_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vnegative_input_0(o,v,...)		\
-  HW_ERR("`negative_input` can be `hw_pin_adc0..7` or synonyms, "	\
-	 "but not `" #v "`.")
+  HW_E_AVL(`negative_input`, v, `hw_pin_adc0..7` or synonyms)
 
 #define _hwa_cfad10a_vnegative_input_1(o,v,...)		\
   uint8_t negative_input = HW_A1(_hw_ad10a_input_##v);		\

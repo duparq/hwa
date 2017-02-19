@@ -81,12 +81,11 @@
   } while(0)
 
 #define _hwa_cfad10b_kclock_0(o,k,...)			\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+  HW_E_VL(k,clock)
 #define _hwa_cfad10b_kclock_1(o,k,v,...)				\
   HW_G2(_hwa_cfad10b_vclock, HW_IS(,_hw_ad10b_clock_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `min`, `max`, or `sysclk_div( 1 | 2 | 4 | 8 | 16 " \
-	 "| 32 | 64 | 128 )`, but not `"#v".")
+  HW_E_AVL(clock, v, min | max | sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 #define _hwa_cfad10b_vclock_1(o,v,k,...)				\
   if ( HW_A1(_hw_ad10b_clock_##v) == HW_A1(_hw_ad10b_clock_min) ) {	\
     if ( hw_syshz / 128 >= 50000 )					\
@@ -139,13 +138,11 @@
 /*	Mandatory parameter 'trigger'
  */
 #define _hwa_cfad10b_ktrigger_0(o,k,...)		\
-  HW_ERR("expected `trigger` instead of `" #k "`.")
+  HW_E_VL(k,trigger)
 #define _hwa_cfad10b_ktrigger_1(o,k,...)				\
   HW_G2(_hwa_cfad10b_vtrigger, HW_IS(,_hw_ad10b_trigger_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hwa_cfad10b_vtrigger_0(o,v,...)				\
-  HW_ERR("`trigger` can be `manual`, `auto`, `int0`, `hw_acmp0`, "	\
-	 "`hw_counter0_compare0`, `hw_counter0_overflow`, `hw_counter1_compare1`, " \
-	 "`hw_counter1_overflow`, `hw_counter1_capture0`, but not `" #v "`.")
+  HW_E_AVL(trigger, v, manual | auto | int0 | hw_acmp0 | hw_counter0_compare0 | hw_counter0_overflow | hw_counter1_compare1 | hw_counter1_overflow | hw_counter1_capture0)
 #define _hwa_cfad10b_vtrigger_1(o,v,...)				\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10b_trigger_##v));			\
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10b_trigger_##v));			\
@@ -164,12 +161,9 @@
 
 /*	Mandatory parameter 'vref'
  */
-#define _hwa_cfad10b_kvref_0(o,...)					\
-  HW_ERR("expected `vref` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-#define _hwa_cfad10b_kvref_1(o,k,...)					\
-  HW_G2(_hwa_cfad10b_vvref, HW_IS(,_hw_ad10b_vref_##__VA_ARGS__))(o,__VA_ARGS__)
-#define _hwa_cfad10b_vvref_0(o,v,...)					\
-  HW_ERR("`vref` can be `vcc`, `hw_pin_avcc`, `hw_pin_aref`, or `bandgap` but not `" #v "`.")
+#define _hwa_cfad10b_kvref_0(o,k,...)		HW_E_VL(k,vref)
+#define _hwa_cfad10b_kvref_1(o,k,v,...)		HW_G2(_hwa_cfad10b_vvref,HW_IS(,_hw_ad10b_vref_##v))(o,v,__VA_ARGS__)
+#define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | hw_pin_avcc | hw_pin_aref | bandgap)
 #define _hwa_cfad10b_vvref_1(o,v,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
   _hwa_cfad10b_align(o,__VA_ARGS__)
@@ -188,7 +182,7 @@
 #define _hwa_cfad10b_kalign_1(o,k,...)					\
   HW_G2(_hwa_cfad10b_valign, HW_IS(,_hw_ad10b_align_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _hwa_cfad10b_valign_0(o,v,...)				\
-  HW_ERR("`align` can be `left`, or `right` but not `" #v "`.")
+  HW_E_AVL(align, v, left | right)
 #define _hwa_cfad10b_valign_1(o,v,...)			\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10b_align_##v));	\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
@@ -202,7 +196,7 @@
 #define _hwa_cfad10b_kinput(o,...)					\
   HW_G2(_hwa_cfad10b_kinput, HW_IS(input,__VA_ARGS__))(o,__VA_ARGS__)
 #define _hwa_cfad10b_kinput_0(o,k,...)			\
-  HW_ERR("expected `input` instead of `" #k "`.")
+  HW_E_VL(k,input)
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10b_input_##v)) )				\
     _hwa_write_reg(o,mux, HW_A1(_hw_ad10b_input_##v,0));		\

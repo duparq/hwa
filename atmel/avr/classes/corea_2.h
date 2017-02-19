@@ -52,7 +52,7 @@
   HW_G2(_hwa_cfcorea_vsleep, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleep_0(o,v,...)					\
-  HW_ERR("`sleep` can be `enabled` or `disabled`, but not `" #v "`.")
+  HW_E_AVL(sleep, v, enabled | disabled)
 
 #define _hwa_cfcorea_vsleep_1(o,v,k,...)				\
   _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
@@ -72,8 +72,7 @@
   HW_G2(_hwa_cfcorea_vsleepmode, HW_IS(,hw_sleepmode_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleepmode_0(o,v,...)				\
-  HW_ERR("`sleep_mode` can be `idle`, `adc_noise_reduction`, or "	\
-	 "`power_down`, but not `" #v "`.")
+  HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down)
 
 #define _hwa_cfcorea_vsleepmode_1(o,v,...)		\
   _hwa_write_reg( o, sm, HW_A1(hw_sleepmode_##v) );	\

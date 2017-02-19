@@ -50,9 +50,7 @@
 #define _hwa_cfcorec_ksleep_1(o,k,v,...)				\
   HW_G2(_hwa_cfcorec_vsleep, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfcorec_vsleep_0(o,v,...)					\
-  HW_ERR("expected `enabled` or `disabled`, got `" #v "` instead.")
-
+#define _hwa_cfcorec_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
 #define _hwa_cfcorec_vsleep_1(o,v,k,...)				\
   _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcorec_ksleepmode, HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
@@ -77,8 +75,7 @@
 #define _hw_sleepmode_extended_standby		, 7
 
 #define _hwa_cfcorec_vsleepmode_0(o,v,...)				\
-  HW_ERR("`sleep_mode` can be `idle`, `adc_noise_reduction`, `power_down`, " \
-	 "`power_save`, `standby`, or `extended_standby`, but not `" #v "`.")
+  HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down | power_save | standby | extended_standby)
 
 #define _hwa_cfcorec_vsleepmode_1(o,v,...)	\
   HW_TX(_hwa_write_reg( o, sm, HW_A1(_hw_sleepmode_##v)),__VA_ARGS__)

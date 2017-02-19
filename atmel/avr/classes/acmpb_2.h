@@ -58,7 +58,7 @@
   HW_G2(_hwa_cfacmpb_vedge, HW_IS(,_hw_acmpb_edge_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vedge_0(o,v,...)					\
-  HW_ERR("`edge` can be `falling`, `rising`, or `both`, but not `"#v".")
+  HW_E_AVL(edge, v, falling | rising | both)
 
 #define _hwa_cfacmpb_vedge_1(o,v,k,...)			\
   _hwa_write_reg(o,acis, HW_A1(_hw_acmpb_edge_##v));	\
@@ -77,7 +77,7 @@
   HW_G2(_hwa_cfacmpb_vposin, HW_IS(,_hw_acmpb_posin_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_0(o,v,...)					\
-  HW_ERR("`positive_input` can be `hw_pin_ain0`, or `bandgap` but not `"#v"`.")
+  HW_E_AVL(positive_input, v, hw_pin_ain0 | bandgap)
 
 #define _hwa_cfacmpb_vposin_1(o,v,k,...)		\
   _hwa_write_reg(o,acbg, HW_A1(_hw_acmpb_posin_##v));	\
@@ -129,7 +129,7 @@
   HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
 
 #define _hw_turnacmpb_vstate_0(o,i,a,v,...)	\
-  HW_ERR("object `" #o "` of class `_acmpb` can be turned `on` or `off`, but not `" #v "`.")
+  HW_E_ST(v)
 #endif
 
 #define _hw_mthd_hw_power__acmpb			, _hw_power

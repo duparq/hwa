@@ -53,25 +53,18 @@
 #define _hwa_cfusia( o,i,a,... )					\
   do {									\
     uint8_t mode, clock ;						\
-    HW_G2(_hwa_cfusia_kmode, HW_IS(mode,__VA_ARGS__))(o,__VA_ARGS__,)	\
+    HW_G2(_hwa_cfusia_kmode, HW_IS(mode,__VA_ARGS__))(o,__VA_ARGS__,,)	\
       } while(0)
-#define _hwa_cfusia_kmode_0(o,...)					\
-  HW_ERR("expected `mode` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-#define _hwa_cfusia_kmode_1(o,kw,...)					\
-  HW_G2(_hwa_cfusia_vmode, HW_IS(,_hw_usia_mode_##__VA_ARGS__))(o,__VA_ARGS__)
-#define _hwa_cfusia_vmode_0(o,v,...)					\
-  HW_ERR("`mode` can be `spi_master` or `spi_slave` but not`"#v"`.")
+#define _hwa_cfusia_kmode_0(o,k,...)	HW_E_VL(k, mode)
+#define _hwa_cfusia_kmode_1(o,kw,...)	HW_G2(_hwa_cfusia_vmode, HW_IS(,_hw_usia_mode_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfusia_vmode_0(o,v,...)	HW_E_AVL(mode, v, spi_master | spi_slave)
 #define _hwa_cfusia_vmode_1(o,v,...)					\
   mode = HW_A1(_hw_usia_mode_##v);					\
   HW_G2(_hwa_cfusia_kclock, HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__)
 
-#define _hwa_cfusia_kclock_0(o,...)					\
-  HW_ERR("expected `clock` instead of `" HW_QUOTE(__VA_ARGS__) "`.")
-#define _hwa_cfusia_kclock_1(o,kw,...)				\
-  HW_G2(_hwa_cfusia_vclock, HW_IS(,_hw_usia_clock_##__VA_ARGS__))(o,__VA_ARGS__)
-#define _hwa_cfusia_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `software`, `oc0`, `external_rising`, "	\
-	 "or `external_falling` but not`"#v"`.")
+#define _hwa_cfusia_kclock_0(o,k,...)	HW_E_VL(k, clock)
+#define _hwa_cfusia_kclock_1(o,kw,...)	HW_G2(_hwa_cfusia_vclock, HW_IS(,_hw_usia_clock_##__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | oc0 | external_rising | external_falling)
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\
   HW_TX(_hwa_docfusia(o,mode,clock),__VA_ARGS__);

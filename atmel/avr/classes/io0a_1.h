@@ -22,4 +22,4 @@
 
 
 #define _hw_mthd_HW_REL__io0a		, _HW_REL_io0a
-#define _HW_REL_io0a(o,...)		HW_ERR("`"#o"` has no relative."))
+#define _HW_REL_io0a(o,...)		HW_E(`o` has no relatives)

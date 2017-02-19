@@ -48,7 +48,7 @@
 						    HW_IS(,_hw_state_##v))(o,v), \
 					      __VA_ARGS__)
 
-#define _hw_turnpsca_0(o,v)		HW_ERR("expected `on` or `off` but not `"#v"`.")
+#define _hw_turnpsca_0(o,v)		HW_E_VL(v, on | off)
 #define _hw_turnpsca_1(o,v)		HW_G2(_hw_turnpsca_1,HW_A1(_hw_state_##v))(o)
 
 /*  Stopping the prescaler requires setting its `tsm` and `psr` bits to 1
@@ -81,8 +81,7 @@
 
 #define _hw_is_clock_clock		, 1
 
-#define _hwa_cfpsca_kclock_0(o,k,...)		\
-  HW_ERR("expected `clock` instead of `" #k "`.");
+#define _hwa_cfpsca_kclock_0(o,k,...)		HW_E_VL(k,clock)
 
 #define _hwa_cfpsca_kclock_1(o,k,v,...)					\
   HW_G2(_hwa_cfpsca_vclock,HW_IS(,_hw_psca_clock_##v))(o,v,__VA_ARGS__)
@@ -90,7 +89,7 @@
 #define _hw_psca_clock_system			, 0
 
 #define _hwa_cfpsca_vclock_0(o,v,...)					\
-  HW_ERR( "`clock` can only be `system`, not `" #v "`.");
+  HW_E_AVL(`clock`, v, `system`)
 
 #define _hwa_cfpsca_vclock_1(o,v,...)					\
   HW_EOL(__VA_ARGS__)

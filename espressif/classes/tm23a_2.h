@@ -77,9 +77,7 @@
   _hwa_write_reg(o,psc,HW_A1(_hw_tm23a_clock_##v));			\
   HW_G2(_hwa_cftm23a_kcountmode, HW_IS(countmode,__VA_ARGS__))(o,__VA_ARGS__)
 
-#define _hwa_cftm23a_vclock_0(o,v,...)					\
-  HW_ERR("`clock` can be `apb_div(1)`, `apb_div(16)`, or `apb_div(256)`, " \
-	 "but not `" #v "`.")
+#define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
 #define _hwa_cftm23a_kclock_0(o,k,...)					\
   HW_G2(_hwa_cftm23a_kcountmode, HW_IS(countmode,k))(o,k,__VA_ARGS__)
@@ -101,8 +99,7 @@
   _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_countmode_##v));		\
   HW_G2(_hwa_cftm23a_kbottom, HW_IS(bottom,k))(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vcountmode_0(o,v,...)				\
-  HW_ERR("`countmode` can be `down`, `loop_down`, or `stop`, but not `" #v "`.")
+#define _hwa_cftm23a_vcountmode_0(o,v,...)	HW_E_AVL(countmode, v, down | loop_down | stop)
 
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
   HW_G2(_hwa_cftm23a_kbottom, HW_IS(bottom,k))(o,k,__VA_ARGS__)
@@ -117,8 +114,7 @@
 #define _hwa_cftm23a_kbottom_1(o,k,v,...)			\
   HW_G2(_hwa_cftm23a_vbottom, HW_IS(0,v))(o,v,__VA_ARGS__)
 
-#define _hwa_cftm23a_vbottom_0(o,v,...)			\
-    HW_ERR("`bottom` can only be `0`, not `" #v "`.")
+#define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E_AVL(bottom, v, 0)
 
 #define _hwa_cftm23a_vbottom_1(o,v,k,...)			\
     HW_G2(_hwa_cftm23a_ktop, HW_IS(top,k))(o,k,__VA_ARGS__)
@@ -150,8 +146,7 @@
   _hwa_write_reg(o,irqtype,HW_A2(_hw_tm23a_irqtype_##v));	\
   HW_EOL(__VA_ARGS__)
 
-#define _hwa_cftm23a_virqtype_0(o,v,...)				\
-  HW_ERR("`irq_type` can be `edge` or `level`, but not `" #v "`.")
+#define _hwa_cftm23a_virqtype_0(o,v,...)	HW_E_AVL(irq_type, v, edge | level)
 
 #define _hwa_cftm23a_kirqtype_0(o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -183,8 +178,7 @@
   }									\
   HW_EOL(__VA_ARGS__)
 
-#define _hwa_cftm23a_vaction_0(o,v,...)					\
-  HW_ERR("`action` can be `none`, `irq` or `nmi`, but not `" #v "`.")
+#define _hwa_cftm23a_vaction_0(o,v,...)		HW_E_AVL(action, v, none | irq | nmi)
 
 #define _hwa_cftm23a_kaction_0(o,...)		\
   HW_EOL(__VA_ARGS__)

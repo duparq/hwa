@@ -52,7 +52,7 @@
   HW_G2(_hwa_cfoc8b_vupdate,HW_IS(at_top,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfoc8b_vupdate_0(o,v,...)				\
-  HW_ERR( "`update` can only be `at_top`, not `" #v "`.");
+  HW_E_AVL(`update`, v, `at_top`)
 
 #define _hwa_cfoc8b_vupdate_1(o,v,...)		\
   _hwa_cfoc8b_kupdate_0(o,__VA_ARGS__)
@@ -80,9 +80,7 @@
   HW_G2(_hwa_cfoc8b_voutputh,HW_IS(,_hw_oc8b_voutputh_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfoc8b_voutputh_0(o,v,...)					\
-  HW_ERR( "`output_h` (or `output`) can be `disconnected`, `toggle_on_match`, "	\
-	  "`clear_on_match`, `set_on_match`, `set_at_bottom_clear_on_match`, " \
-	  "or `clear_at_bottom_set_on_match`, but not `" #v "`.")
+  HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match`)
 
 #define _hwa_cfoc8b_voutputh_1(o,v,...)		\
   hwa->o.config.outputh = HW_A1(_hw_oc8b_voutputh_##v);	\
@@ -105,8 +103,7 @@
   HW_G2(_hwa_cfoc8b_voutputl,HW_IS(,_hw_oc8b_voutputl_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfoc8b_voutputl_0(o,v,...)				\
-  HW_ERR( "`output_l` can be `disconnected` or "		\
-	  "`clear_at_bottom_set_on_match`, but not `" #v "`.")
+  HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_on_match)
 
 #define _hwa_cfoc8b_voutputl_1(o,v,...)			\
   hwa->o.config.outputl = HW_A1(_hw_oc8b_voutputl_##v);	\

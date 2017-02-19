@@ -86,8 +86,7 @@
 #define _hwa_power(o,i,a, ...)		\
   HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hwa,__VA_ARGS__,)
 
-#define _hwx_pwr_0(o,x,v, ...)			\
-  HW_ERR("expected `on` or `off`, not `" #v "`.")
+#define _hwx_pwr_0(o,x,v, ...)		HW_E_ST(v)
 
 #define _hwx_pwr_1(o,x,v, ...)		\
   HW_TX(HW_G2(_hwx_pwr1,HW_IS(hw_error,HW_REG(o,prr)))(o,x,v),__VA_ARGS__)
@@ -98,7 +97,7 @@
 
 /*  Register prr does not exist
  */
-#define _hwx_pwr1_1(o,x,v)	HW_ERR("`"#o"` does not support power management.")
+#define _hwx_pwr1_1(o,x,v)	HW_E(`o` does not support power management)
 
 
 /**

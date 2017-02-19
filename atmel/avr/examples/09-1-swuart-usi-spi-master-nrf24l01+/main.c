@@ -58,16 +58,16 @@
 /*  We need a device with an USI
  */
 #if HW_ID(hw_usi0) == 0
-HW_ERROR( device `HW_DEVICE` does not have a USI. )
+HW_ERROR(device `HW_DEVICE` does not have a USI)
 #endif
 
 
 #if defined ARDUINO
-#  define USI		hw_spi0
-#  define NRF_CSN	PIN_D2
+#  define USI           hw_spi0
+#  define NRF_CSN       PIN_D2
 #else
-#  define USI		hw_usi0
-#  define NRF_CSN	hw_pin_3
+#  define USI           hw_usi0
+#  define NRF_CSN       hw_pin_3
 #endif
 
 
@@ -101,13 +101,13 @@ main ( )
   /*  Configure the USI as SPI master clocked by software
    */
   hwa( configure, USI,
-       mode,   spi_master,
-       clock,  software    );
+       mode,      spi_master,
+       clock,     software    );
 
   /*  Configure nRF CSN pin
    */
   hwa( configure, NRF_CSN, direction, output );
-  hwa( write,  NRF_CSN, 1 );
+  hwa( write, NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware
    */
@@ -123,14 +123,14 @@ main ( )
    */
   for(;;) {
 
-    /*	Prompt
+    /*  Prompt
      */
     hw( write, UART, '$' );
 
-    /*	The host sends commands starting with '=' and followed by:
-     *	  * the number of bytes to send to SPI slave (1 byte)
-     *	  * the number of bytes to read (1 byte)
-     *	  * the bytes to send
+    /*  The host sends commands starting with '=' and followed by:
+     *    * the number of bytes to send to SPI slave (1 byte)
+     *    * the number of bytes to read (1 byte)
+     *    * the bytes to send
      */
     uint8_t c = hw( read, UART );
     if ( c == '=' ) {
@@ -139,28 +139,28 @@ main ( )
        */
       uint8_t ntx = hw( read, UART );
       if ( ntx < 1 || ntx > 33 )
-	goto error ;
+        goto error ;
 
       /*  Number of bytes to send back to talker
        */
       uint8_t nrx = hw( read, UART );
       if ( nrx > 32 )
-	goto error ;
+        goto error ;
 
       /*  Select SPI slave and send data
        */
       hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-	c = hw( read, UART );
-	write_usi( c );
+        c = hw( read, UART );
+        write_usi( c );
       }
 
       /*  Send reply to host and deselect SPI slave
        */
       while ( nrx-- ) {
-	write_usi( 0 );
-	c = hw( read, USI );
-	hw( write, UART, c );
+        write_usi( 0 );
+        c = hw( read, USI );
+        hw( write, UART, c );
       }
       hw( write, NRF_CSN, 1 );
     }
@@ -171,8 +171,8 @@ main ( )
        */
       do {
       error:
-	hw( write, UART, '!' );
-	c = hw( read, UART );
+        hw( write, UART, '!' );
+        c = hw( read, UART );
       } while ( c != '\n' ) ;
     }
   }
