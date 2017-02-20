@@ -191,17 +191,6 @@ $(OUTDIR)/%.cp.sx %.cp.sx: %.sx
 #	@echo "RULE $@: $^"
 	@$(CPP) $(AFLAGS) $< >$@
 
-foo:
-	@awk 'BEGIN { result=0; }{						\
-	  x=match($$0,/hw_error\((.*),(.*),(.*)\)/,gr) ;			\
-	  if (x != 0) {								\
-	    result=1;								\
-	    command="cd "gr[1]"; pwd ; basename "gr[1] ;			\
-	    command|getline fpath ;						\
-	    printf "%s:%s:error: %s\n",fpath,gr[2],gensub(/" *"/,"","g",gr[3])	\
-	  }									\
-	} END { exit result; }' $@
-
 
 ################################################################################
 #									       #

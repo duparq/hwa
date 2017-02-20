@@ -138,10 +138,10 @@
   HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
 
 #define _hw_turnacmpa_vstate_0(o,i,a,v,...)	HW_E_ST(v)
-#endif
 
 #define _hw_mthd_hw_power__acmpa			, _hw_power
 #define _hw_mthd_hwa_power__acmpa			, _hwa_power
+#endif
 
 
 /*******************************************************************************

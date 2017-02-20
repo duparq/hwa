@@ -81,23 +81,23 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(o,i,a, ...)		\
-  HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hw,__VA_ARGS__,)
-#define _hwa_power(o,i,a, ...)		\
-  HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hwa,__VA_ARGS__,)
+#define _hw_power(c,o,i,a, ...)		HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hw,__VA_ARGS__,)
+#define _hwa_power(c,o,i,a, ...)	HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hwa,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_ST(v)
-
-#define _hwx_pwr_1(o,x,v, ...)		\
-  HW_TX(HW_G2(_hwx_pwr1,HW_IS(hw_error,HW_REG(o,prr)))(o,x,v),__VA_ARGS__)
+#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_G2(_hwx_pwr1,HW_IS(,HW_G2(_hw_hasbits, _##o##_##prr)))(o,x,v),__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
  */
-#define _hwx_pwr1_0(o,x,v)	x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr1_1(o,x,v)	x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
 
 /*  Register prr does not exist
  */
-#define _hwx_pwr1_1(o,x,v)	HW_E(`o` does not support power management)
+#define _hwx_pwr1_0(o,x,v)	HW_E(`o` does not support power management)
+
+
+#define _hw_mthd_hw_power	, _hw_power
+#define _hw_mthd_hwa_power	, _hwa_power
 
 
 /**

@@ -101,9 +101,6 @@
 #define _hw_class__xob1
 
 
-#define _hw_is_hw_error_hw_error	, 1, /* one more comma to remove '; StaticAssert(...)' */
-
-
 /**
  * @ingroup public_gen_macros
  * @brief Emit an error at preprocessing stage
@@ -462,7 +459,12 @@
  */
 #define _hwx4_1(x,f,c,...)	HW_G2(_hwx5, HW_IS(,_hw_mthd_##x##f##_##c))(x,f,c,__VA_ARGS__)
 #define _hwx5_1(x,f,c,...)	HW_A1(_hw_mthd_##x##f##_##c)(__VA_ARGS__)
-#define _hwx5_0(x,f,c,o,...)	HW_E_OCM(o,c,f)
+
+/*  Look for a global method
+ */
+#define _hwx5_0(x,f,...)	HW_G2(_hwx6, HW_IS(,_hw_mthd_##x##f))(x,f,__VA_ARGS__)
+#define _hwx6_1(x,f,...)	HW_A1(_hw_mthd_##x##f)(__VA_ARGS__)
+#define _hwx6_0(x,f,c,o,...)	HW_E_OCM(o,c,f)
 
 
 
@@ -767,10 +769,15 @@
  *
  * `hw_uint_t(8)` expands to `uint8_t`, `hw_uint_t(16)` expands to `uint16_t`, etc.
  */
-#define hw_uint_t(bn)					HW_G2(_hw_uintt,HW_IS(hw_error,bn))(bn)
-#define _hw_uintt_1(...)				__VA_ARGS__
-#define _hw_uintt_0(bn)					uint##bn##_t
+#define hw_uint_t(bn)					_hw_uintt0(bn)
+#define _hw_uintt0(bn)					HW_G2(_hw_uintt1,HW_IS(8,bn##_))(bn)
+#define _hw_uintt1_1(bn)				uint8_t
+#define _hw_uintt1_0(bn)				HW_G2(_hw_uintt2,HW_IS(16,bn##_))(bn)
+#define _hw_uintt2_1(bn)				uint16_t
+#define _hw_uintt2_0(bn)				HW_E_VL(bn,8|16) uint8_t
 
+#define _hw_is_8_8_			, 1
+#define _hw_is_16_16_			, 1
 
 /**
  * @ingroup private

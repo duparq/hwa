@@ -374,7 +374,7 @@
 #endif
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz) && HW_DEVICE_BODLEVEL==6
-#  hw_error("`pll_64MHz` is not available for suplly voltage < 2.7 V." );
+#  HW_ERROR(`pll_64MHz` is not available with supply voltages below 2.7 V)
 #endif
 
 
