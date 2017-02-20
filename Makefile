@@ -13,6 +13,7 @@ clean:
 		-name '*~' 		\
 		-o -name '*.cp.*'	\
 		-o -name '*.pyc'	\
+		-o -name '*.bak'	\
 		')' -exec rm -rf {} ';'
 	@find . -name 'build' -prune -exec rm -rf {} ';'
 	@rm -rf doxygen/html
