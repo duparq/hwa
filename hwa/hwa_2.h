@@ -214,7 +214,7 @@
   _hw_write_##rc( o->r.a, rwm,rfm, bn,bp,v)
 
 
-#define _hw_write__xob1(o,r,bn,bp,v)	_hw_write__xob1_2(_##o##_##r,o,r,bn,bp,v)
+#define _hw_write__xob1(o,r,bn,bp,v)	_hw_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
 #define _hw_write__xob1_2(...)		_hw_write__xob1_3(__VA_ARGS__)
 #define _hw_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hw_write_##rc( ra, rwm,rfm, bn,bp, v )
@@ -253,7 +253,7 @@
 #define _hwa_write_oreg(_,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
 
 
-#define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_##o##_##r,o,r,bn,bp,v)
+#define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
 #define _hwa_write__xob1_2(...)		_hwa_write__xob1_3(__VA_ARGS__)
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
@@ -681,9 +681,9 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 /**
  * @brief Initialize the HWA context registers addresses of an object (using a pointer in the HWA context)
  */
-#define _hwa_setup_p(o)		_hwa_setup_p_2(o, _##o)
+#define _hwa_setup_p(o)			_hwa_setup_p_2(o, _##o)
 #define _hwa_setup_p_2(...)		_hwa_setup_p_3(__VA_ARGS__)
-#define _hwa_setup_p_3(o,c,i,a)	_hwa_setup_p_##c(&hwa->o,a)
+#define _hwa_setup_p_3(o,c,i,a)		_hwa_setup_p_##c(&hwa->o,a)
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value (using a pointer in the HWA context)
@@ -715,7 +715,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
  * @brief Create a HWA register for an object pointed by p
  * @hideinitializer
  */
-#define _hwa_setup_reg_p(o,a,c,r)		_hwa_berp_2(o,a,c,r,_hw_##c##_##r)
+#define _hwa_setup_reg_p(o,a,c,r)		_hwa_berp_2(o,a,c,r,_hw_reg_##c##_##r)
 #define _hwa_berp_2(...)			_hwa_berp_3(__VA_ARGS__)
 #define _hwa_berp_3(o,a,c,r, rc,ra,rwm,rfm)	_hwa_setup_##rc(&((o)->r),a+ra)
 

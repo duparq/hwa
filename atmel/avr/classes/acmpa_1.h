@@ -32,13 +32,13 @@
 
 /*	Class logical registers
  */
-#define _hw__acmpa_acd			_cb1, csr, 1, 7
-#define _hw__acmpa_acbg			_cb1, csr, 1, 6
-#define _hw__acmpa_aco			_cb1, csr, 1, 5
-#define _hw__acmpa_if			_cb1, csr, 1, 4
-#define _hw__acmpa_ie			_cb1, csr, 1, 3
-#define _hw__acmpa_acic			_cb1, csr, 1, 2
-#define _hw__acmpa_acis			_cb1, csr, 2, 0
+#define _hw_reg__acmpa_acd		_cb1, csr, 1, 7
+#define _hw_reg__acmpa_acbg		_cb1, csr, 1, 6
+#define _hw_reg__acmpa_aco		_cb1, csr, 1, 5
+#define _hw_reg__acmpa_if		_cb1, csr, 1, 4
+#define _hw_reg__acmpa_ie		_cb1, csr, 1, 3
+#define _hw_reg__acmpa_acic		_cb1, csr, 1, 2
+#define _hw_reg__acmpa_acis		_cb1, csr, 2, 0
 
 
 #if !defined __ASSEMBLER__

@@ -556,11 +556,11 @@
 
 #define HW_REGISTER(o,x)		_HW_REG2(o,x)
 #define _HW_REG2(...)			_HW_GEN(_HW_REG3,__VA_ARGS__)
-#define _HW_REG3(c,o,i,a,r)		_HW_REG4(_hw_##c##_##r,o,c,a,r)
+#define _HW_REG3(c,o,i,a,r)		_HW_REG4(_hw_reg_##c##_##r,o,c,a,r)
 #define _HW_REG4(...)			_HW_REG5(__VA_ARGS__)
 #define _HW_REG5(t,...)			HW_G2(_HW_REG5, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
 #define _HW_REG5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _HW_REG5_0(t,o,c,a,r)		_HW_REG6(_##o##_##r,o,c,a,r)
+#define _HW_REG5_0(t,o,c,a,r)		_HW_REG6(_hw_reg_##o##_##r,o,c,a,r)
 #define _HW_REG6(...)			_HW_REG7(__VA_ARGS__)
 #define _HW_REG7(t,...)			HW_G2(_HW_REG7, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
 #define _HW_REG7_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
@@ -575,11 +575,11 @@
 #define _HW_REGISTER(o,r)		_hw__reg_2(o,_hw_obj_##o,r)
 #define _HW_REG(o,r)			_hw__reg_2(o,_hw_obj_##o,r)
 #define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
-#define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_##c##_##r,o,c,a,r)
+#define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_reg_##c##_##r,o,c,a,r)
 #define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
 #define _hw__reg_5(t,...)		HW_G2(_hw__reg, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
 #define _hw__reg_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _hw__reg_0(t,o,c,a,r)		_hw__reg_6(_##o##_##r,o,c,a,r)
+#define _hw__reg_0(t,o,c,a,r)		_hw__reg_6(_hw_reg_##o##_##r,o,c,a,r)
 #define _hw__reg_6(...)			_hw__reg_1(__VA_ARGS__)
 
 
@@ -592,30 +592,30 @@
 #define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)		_m1, o,a, r,_r16, ra,rwm,rfm, 16,0
 #define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)		_m1, o,a, r,_r32, ra,rwm,rfm, 32,0
 
-#define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_ob1, _##o##_##r,bn,bp,o,r)
+#define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_ob1, _hw_reg_##o##_##r,bn,bp,o,r)
 #define _hw_r2m_ob1__r8(ra,rwm,rfm,bn,bp,o,r) 		_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
 
 #define _hw_r2m__ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
-  _hw_r2m_cb2_2( r1,_##o##_##r1,rbn1,rbp1,vbp1,				\
-		 r2,_##o##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
+  _hw_r2m_cb2_2( r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1,				\
+		 r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
 
 
-#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,m)	_HW_SPEC(_hw_r2m_xob1, _##to##_##tr,bn,bp,to,tr)
+#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,m)	_HW_SPEC(_hw_r2m_xob1, _hw_reg_##to##_##tr,bn,bp,to,tr)
 #define _hw_r2m_xob1__r8(ra,rwm,rfm, bn,bp,o,r) 	_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
 #define _hw_r2m_xob1__r32(ra,rwm,rfm, bn,bp,o,r) 	_m1, o,0, r,_r32,ra,rwm,rfm, bn,bp
 
 #define _hw_r2m__xob2(xo, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m) \
-  _hw_r2m_cb2_2( r1,_##xo##_##r1,rbn1,rbp1,vbp1,			\
-		 r2,_##xo##_##r2,rbn2,rbp2,vbp2, xo,c,a,m )
+  _hw_r2m_cb2_2( r1,_hw_reg_##xo##_##r1,rbn1,rbp1,vbp1,			\
+		 r2,_hw_reg_##xo##_##r2,rbn2,rbp2,vbp2, xo,c,a,m )
 
-#define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_cb1, _hw_##c##_##r,bn,bp,o,r,a)
+#define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_cb1, _hw_reg_##c##_##r,bn,bp,o,r,a)
 #define _hw_r2m_cb1__r8(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r8,ra,rwm,rfm, bn,bp
 #define _hw_r2m_cb1__r16(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r16,ra,rwm,rfm, bn,bp
 #define _hw_r2m_cb1__r32(ra,rwm,rfm,bn,bp,o,r,a) 	_m1, o,a, r,_r32,ra,rwm,rfm, bn,bp
 
 #define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
-  _hw_r2m_cb2_2( r1,_hw_##c##_##r1,rbn1,rbp1,vbp1,			\
-		 r2,_hw_##c##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
+  _hw_r2m_cb2_2( r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1,			\
+		 r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
 #define _hw_r2m_cb2_2(...)		_hw_r2m_cb2_3(__VA_ARGS__)
 #define _hw_r2m_cb2_3( r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
 		       r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, o,c,a,m )	\
@@ -656,11 +656,13 @@
  */
 #define _hw_hreg(o,r)			__hw_hreg_2(o,_hw_obj_##o,r)
 #define __hw_hreg_2(...)		__hw_hreg_3(__VA_ARGS__)
-#define __hw_hreg_3(o,c,i,a,r)		__hw_hreg_4(_hw_##c##_##r,o,c,a,r)
+//__hw_hreg_3(hw_porta,_p8a, 300, 0x39,port);
+#define __hw_hreg_3(o,c,i,a,r)		__hw_hreg_4(_hw_reg_##c##_##r,o,c,a,r)
 #define __hw_hreg_4(...)		__hw_hreg_5(__VA_ARGS__)
+//__hw_hreg_5(_hw_reg__p8a_port,hw_porta,_p8a,0x39,port);
 #define __hw_hreg_5(t,...)		HW_G2(__hw_hreg, HW_IS(,_hw_hasbits_##t))(t,__VA_ARGS__)
 #define __hw_hreg_1(t,...)		t, __VA_ARGS__
-#define __hw_hreg_0(t,o,c,a,r)		__hw_hreg_6(_##o##_##r,o,c,a,r)
+#define __hw_hreg_0(t,o,c,a,r)		__hw_hreg_6(_hw_reg_##o##_##r,o,c,a,r)
 #define __hw_hreg_6(...)		__VA_ARGS__
 
 

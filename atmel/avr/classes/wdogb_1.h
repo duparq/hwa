@@ -26,15 +26,15 @@
 
 /*	Class logical registers
  */
-#define _hw__wdogb_if			_cb1, csr, 1, 7
-#define _hw__wdogb_ie			_cb1, csr, 1, 6
-#define _hw__wdogb_wdp			_cb2, csr, 1, 5, 3, csr, 3, 0, 0
-#define _hw__wdogb_wdce			_cb1, csr, 1, 4
-#define _hw__wdogb_wde			_cb1, csr, 1, 3
+#define _hw_reg__wdogb_if			_cb1, csr, 1, 7
+#define _hw_reg__wdogb_ie			_cb1, csr, 1, 6
+#define _hw_reg__wdogb_wdp			_cb2, csr, 1, 5, 3, csr, 3, 0, 0
+#define _hw_reg__wdogb_wdce			_cb1, csr, 1, 4
+#define _hw_reg__wdogb_wde			_cb1, csr, 1, 3
 
-#define _hw__wdogb_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
-#define _hw__wdogb_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
-#define _hw__wdogb_wdall		_cb1, csr, 7, 0 /* convenient for turning wd off */
+#define _hw_reg__wdogb_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
+#define _hw_reg__wdogb_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
+#define _hw_reg__wdogb_wdall		_cb1, csr, 7, 0 /* convenient for turning wd off */
 
 
 #if !defined __ASSEMBLER__
