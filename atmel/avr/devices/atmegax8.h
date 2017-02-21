@@ -562,7 +562,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 /*	Object				class, id, address
  */
 #define _hw_class__shared
-#define _hw_shared			_shared, 0, 0
+#define _hw_obj_hw_shared			_shared, 0, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -647,49 +647,49 @@ typedef struct {
 #include "../classes/p8a_1.h"
 #include "../classes/io1a_1.h"
 
-#define _hw_portb			_p8a, 300, 0x23
-#define _hw_portc			_p8a, 310, 0x26
-#define _hw_portd			_p8a, 320, 0x29
+#define _hw_obj_hw_portb		_p8a, 300, 0x23
+#define _hw_obj_hw_portc		_p8a, 310, 0x26
+#define _hw_obj_hw_portd		_p8a, 320, 0x29
 
 /*  Pins				class, id, port, bn, bp
  */
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT)
-#  define _hw_pin_pb0			_io1a, 301, hw_portb, 1, 0
+#  define _hw_obj_hw_pin_pb0		_io1a, 301, hw_portb, 1, 0
 #endif
-#define _hw_pin_pb1			_io1a, 302, hw_portb, 1, 1
-#define _hw_pin_pb2			_io1a, 303, hw_portb, 1, 2
-#define _hw_pin_pb3			_io1a, 304, hw_portb, 1, 3
-#define _hw_pin_pb4			_io1a, 305, hw_portb, 1, 4
-#define _hw_pin_pb5			_io1a, 306, hw_portb, 1, 5
+#define _hw_obj_hw_pin_pb1		_io1a, 302, hw_portb, 1, 1
+#define _hw_obj_hw_pin_pb2		_io1a, 303, hw_portb, 1, 2
+#define _hw_obj_hw_pin_pb3		_io1a, 304, hw_portb, 1, 3
+#define _hw_obj_hw_pin_pb4		_io1a, 305, hw_portb, 1, 4
+#define _hw_obj_hw_pin_pb5		_io1a, 306, hw_portb, 1, 5
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb6			_io1a, 307, hw_portb, 1, 6
+#  define _hw_obj_hw_pin_pb6		_io1a, 307, hw_portb, 1, 6
 #endif
 #if !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_pin_pb7			_io1a, 308, hw_portb, 1, 7
+#  define _hw_obj_hw_pin_pb7		_io1a, 308, hw_portb, 1, 7
 #endif
-#define _hw_port_b			_io1a, 309, hw_portb, 8, 0
+#define _hw_obj_hw_port_b		_io1a, 309, hw_portb, 8, 0
 
-#define _hw_pin_pc0			_io1a, 311, hw_portc, 1, 0
-#define _hw_pin_pc1			_io1a, 312, hw_portc, 1, 1
-#define _hw_pin_pc2			_io1a, 313, hw_portc, 1, 2
-#define _hw_pin_pc3			_io1a, 314, hw_portc, 1, 3
-#define _hw_pin_pc4			_io1a, 315, hw_portc, 1, 4
-#define _hw_pin_pc5			_io1a, 316, hw_portc, 1, 5
+#define _hw_obj_hw_pin_pc0		_io1a, 311, hw_portc, 1, 0
+#define _hw_obj_hw_pin_pc1		_io1a, 312, hw_portc, 1, 1
+#define _hw_obj_hw_pin_pc2		_io1a, 313, hw_portc, 1, 2
+#define _hw_obj_hw_pin_pc3		_io1a, 314, hw_portc, 1, 3
+#define _hw_obj_hw_pin_pc4		_io1a, 315, hw_portc, 1, 4
+#define _hw_obj_hw_pin_pc5		_io1a, 316, hw_portc, 1, 5
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET)
-#  define _hw_pin_pc6			_io1a, 317, hw_portc, 1, 6
+#  define _hw_obj_hw_pin_pc6		_io1a, 317, hw_portc, 1, 6
 #endif
-#define _hw_port_c			_io1a, 319, hw_portc, 7, 0
+#define _hw_obj_hw_port_c		_io1a, 319, hw_portc, 7, 0
 
-#define _hw_pin_pd0			_io1a, 321, hw_portd, 1, 0
-#define _hw_pin_pd1			_io1a, 322, hw_portd, 1, 1
-#define _hw_pin_pd2			_io1a, 323, hw_portd, 1, 2
-#define _hw_pin_pd3			_io1a, 324, hw_portd, 1, 3
-#define _hw_pin_pd4			_io1a, 325, hw_portd, 1, 4
-#define _hw_pin_pd5			_io1a, 326, hw_portd, 1, 5
-#define _hw_pin_pd6			_io1a, 327, hw_portd, 1, 6
-#define _hw_pin_pd7			_io1a, 328, hw_portd, 1, 7
-#define _hw_port_d			_io1a, 329, hw_portd, 8, 0
+#define _hw_obj_hw_pin_pd0		_io1a, 321, hw_portd, 1, 0
+#define _hw_obj_hw_pin_pd1		_io1a, 322, hw_portd, 1, 1
+#define _hw_obj_hw_pin_pd2		_io1a, 323, hw_portd, 1, 2
+#define _hw_obj_hw_pin_pd3		_io1a, 324, hw_portd, 1, 3
+#define _hw_obj_hw_pin_pd4		_io1a, 325, hw_portd, 1, 4
+#define _hw_obj_hw_pin_pd5		_io1a, 326, hw_portd, 1, 5
+#define _hw_obj_hw_pin_pd6		_io1a, 327, hw_portd, 1, 6
+#define _hw_obj_hw_pin_pd7		_io1a, 328, hw_portd, 1, 7
+#define _hw_obj_hw_port_d		_io1a, 329, hw_portd, 8, 0
 
 /*  Alternate pin functions
  */
@@ -720,23 +720,20 @@ typedef struct {
 #define hw_pin_ain1			hw_pin_pd7
 #define hw_pin_ain0			hw_pin_pd6
 
-#define _hw_pin_adc6			_io1a, 336
-#define _hw_pin_adc7			_io1a, 337
+#define _hw_obj_hw_pin_adc6		_io1a, 336
+#define _hw_obj_hw_pin_adc7		_io1a, 337
 
 /*  Digital input disable bits for analog input pins
  */
-#define _hw_pin_pc0_did			_xob1, hw_shared, did0, 1, 0	/* ADC0 */
-#define _hw_pin_pc1_did			_xob1, hw_shared, did0, 1, 1	/* ADC1 */
-#define _hw_pin_pc2_did			_xob1, hw_shared, did0, 1, 2	/* ADC2 */
-#define _hw_pin_pc3_did			_xob1, hw_shared, did0, 1, 3	/* ADC3 */
-#define _hw_pin_pc4_did			_xob1, hw_shared, did0, 1, 4	/* ADC4 */
-#define _hw_pin_pc5_did			_xob1, hw_shared, did0, 1, 5	/* ADC5 */
+#define _hw_reg_hw_pin_pc0_did		_xob1, hw_shared, did0, 1, 0	/* ADC0 */
+#define _hw_reg_hw_pin_pc1_did		_xob1, hw_shared, did0, 1, 1	/* ADC1 */
+#define _hw_reg_hw_pin_pc2_did		_xob1, hw_shared, did0, 1, 2	/* ADC2 */
+#define _hw_reg_hw_pin_pc3_did		_xob1, hw_shared, did0, 1, 3	/* ADC3 */
+#define _hw_reg_hw_pin_pc4_did		_xob1, hw_shared, did0, 1, 4	/* ADC4 */
+#define _hw_reg_hw_pin_pc5_did		_xob1, hw_shared, did0, 1, 5	/* ADC5 */
 
-/* #define _hw_pin_adc6_did		, */
-/* #define _hw_pin_adc7_did		, */
-
-#define _hw_pin_pd6_did			_xob1, hw_shared, did1, 1, 0	/* AIN0 */
-#define _hw_pin_pd7_did			_xob1, hw_shared, did1, 1, 1	/* AIN1 */
+#define _hw_reg_hw_pin_pd6_did		_xob1, hw_shared, did1, 1, 0	/* AIN0 */
+#define _hw_reg_hw_pin_pd7_did		_xob1, hw_shared, did1, 1, 1	/* AIN1 */
 
 /*  Communications
  */
@@ -874,7 +871,7 @@ typedef struct {
 /*	Object				class, id, address
  */
 #include "../classes/coreb_1.h"
-#define _hw_core0			_coreb, 101, 0
+#define _hw_obj_hw_core0		_coreb, 101, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -914,7 +911,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_int0			_inta, 110, 0
+#define _hw_obj_hw_int0			_inta, 110, 0
 
 /*	Object logical registers
  */
@@ -924,7 +921,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_int1			_inta, 111, 0
+#define _hw_obj_hw_int1			_inta, 111, 0
 
 /*	Object logical registers
  */
@@ -943,7 +940,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_pcic0			_pcica, 350, 0
+#define _hw_obj_hw_pcic0		_pcica, 350, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -956,7 +953,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_pcic1			_pcica, 351, 0
+#define _hw_obj_hw_pcic1		_pcica, 351, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -969,7 +966,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_pcic2			_pcica, 352, 0
+#define _hw_obj_hw_pcic2		_pcica, 352, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -991,7 +988,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_wdog0			_wdogb, 109, 0
+#define _hw_obj_hw_wdog0		_wdogb, 109, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -1012,7 +1009,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_psc0			_psca, 401, 0
+#define _hw_obj_hw_psc0			_psca, 401, 0
 
 /*	Object logical registers
  */
@@ -1034,7 +1031,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_counter0			_c8a, 400, 0
+#define _hw_obj_hw_counter0		_c8a, 400, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1071,7 +1068,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc00			_oc8a, 402, 0
+#define _hw_obj_hw_oc00			_oc8a, 402, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1091,7 +1088,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc01			_oc8a, 402, 0
+#define _hw_obj_hw_oc01			_oc8a, 402, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1120,7 +1117,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_counter1			_c16a, 410, 0
+#define _hw_obj_hw_counter1		_c16a, 410, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1158,7 +1155,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc10			_oc16a, 411, 0
+#define _hw_obj_hw_oc10			_oc16a, 411, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1178,7 +1175,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc11			_oc16a, 412, 0
+#define _hw_obj_hw_oc11			_oc16a, 412, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1207,7 +1204,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_ic10			_ic16a, 413, 0
+#define _hw_obj_hw_ic10			_ic16a, 413, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1237,7 +1234,7 @@ typedef struct {
 
 /*	Instance			class, id, address
  */					
-#define _hw_psc2			_psca, 421, 0
+#define _hw_obj_hw_psc2			_psca, 421, 0
 
 /*	Object registers		class, address, write mask, flags mask
  */
@@ -1259,7 +1256,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_counter2			_c8c, 420, 0
+#define _hw_obj_hw_counter2		_c8c, 420, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1294,7 +1291,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc20			_oc8a, 402, 0
+#define _hw_obj_hw_oc20			_oc8a, 402, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1314,7 +1311,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_oc21			_oc8a, 402, 0
+#define _hw_obj_hw_oc21			_oc8a, 402, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1343,7 +1340,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_spi0			_spia, 500, 0
+#define _hw_obj_hw_spi0			_spia, 500, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1383,7 +1380,7 @@ typedef struct {
 
 /*	Object
  */
-#define _hw_uart0			_uarta, 600, 0x00
+#define _hw_obj_hw_uart0		_uarta, 600, 0x00
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -1436,7 +1433,7 @@ typedef struct {
 
 /*	Object
  */
-#define _hw_twi0			_twia, 610, 0x00
+#define _hw_obj_hw_twi0			_twia, 610, 0x00
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -1463,7 +1460,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */					
-#define _hw_acmp0			_acmpa, 710, 0
+#define _hw_obj_hw_acmp0		_acmpa, 710, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
@@ -1491,7 +1488,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */					
-#define _hw_adc0			_ad10b, 720, 0
+#define _hw_obj_hw_adc0			_ad10b, 720, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
@@ -1542,7 +1539,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */					
-#define _hw_eeprom0			_eeproma, 1000, 0
+#define _hw_obj_hw_eeprom0		_eeproma, 1000, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
@@ -1571,7 +1568,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */					
-#define _hw_flash0			_flasha, 1100, 0
+#define _hw_obj_hw_flash0		_flasha, 1100, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
@@ -1601,11 +1598,9 @@ typedef struct {
 /*
  *	Object hw_swuart0
  */
-#define _hw_swuart0			_swuarta, 1200, 0
-#define _hw_swuart0_dtn							\
-  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#define _hw_swuart0_dt0							\
-  _hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#define _hw_obj_hw_swuart0		_swuarta, 1200, 0
+#define _hw_swuart0_dtn			_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#define _hw_swuart0_dt0			_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
 #define _hw_swuart0__st			_hw_ra(hw_shared, gpior0)
 #define _hw_swuart0_sr			_hw_shared_gpior0
 #define _hw_swuart0_synced		_ob1, sr, 1, 0
@@ -1615,11 +1610,9 @@ typedef struct {
 /*
  *	Object hw_swuart1
  */
-#define _hw_swuart1			_swuarta, 1210, 0
-#define _hw_swuart1_dtn							\
-  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#define _hw_swuart1_dt0							\
-  _hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#define _hw_obj_hw_swuart1		_swuarta, 1210, 0
+#define _hw_swuart1_dtn			_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#define _hw_swuart1_dt0			_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
 #define _hw_swuart1__st			_hw_ra(hw_shared, gpior1)
 #define _hw_swuart1_sr			_hw_shared_gpior1
 #define _hw_swuart1_synced		_ob1, sr, 1, 0

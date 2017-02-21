@@ -269,7 +269,7 @@
 
 /*  Get the definition of the object o (assuming the object exists)
  */
-#define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,o,_##o,__VA_ARGS__)
+#define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,o,_hw_obj_##o,__VA_ARGS__)
 #define _HW_MTHD2(...)		_HW_MTHD3(__VA_ARGS__)
 
 /*  Is there a method f for object o of class c?
@@ -299,7 +299,7 @@
 /**
  */
 #define _HW_MTHD(...)		__HW_MTHD1(__VA_ARGS__)
-#define __HW_MTHD1(f,o,...)	__HW_MTHD2(f,o,_##o,__VA_ARGS__)
+#define __HW_MTHD1(f,o,...)	__HW_MTHD2(f,o,_hw_obj_##o,__VA_ARGS__)
 #define __HW_MTHD2(...)		__HW_MTHD3(__VA_ARGS__)
 #define __HW_MTHD3(f,o,c,...)	HW_A1(_hw_mthd_##f##_##c)(o,__VA_ARGS__)
 
@@ -339,7 +339,7 @@
  * @brief `1` if the first element is the name of a HWA object, `0` if not.
  * @hideinitializer
  */
-#define HW_ISON(...)		HW_IS(,HW_G2(_hw_class,HW_G2(,__VA_ARGS__)))
+#define HW_ISON(...)		HW_IS(,HW_G2(_hw_class,HW_G2(_hw_obj,__VA_ARGS__)))
 
 
 /**
@@ -400,7 +400,7 @@
 
 /*  Is o an object's name?
  */
-#define _HW_OD2_0(o)		_HW_OD3(o,_##o)
+#define _HW_OD2_0(o)		_HW_OD3(o,_hw_obj_##o)
 #define _HW_OD3(...)		_HW_OD4(__VA_ARGS__)
 #define _HW_OD4(o,...)		HW_G2(_HW_OD4,HW_IS(,_hw_class_##__VA_ARGS__))(o,__VA_ARGS__)
 #define _HW_OD4_1(o,c,...)	c,o,__VA_ARGS__
@@ -572,8 +572,8 @@
  * @brief Memory definition of a register (internal use, no error checking)
  * @hideinitializer
  */
-#define _HW_REGISTER(o,r)		_hw__reg_2(o,_##o,r)
-#define _HW_REG(o,r)			_hw__reg_2(o,_##o,r)
+#define _HW_REGISTER(o,r)		_hw__reg_2(o,_hw_obj_##o,r)
+#define _HW_REG(o,r)			_hw__reg_2(o,_hw_obj_##o,r)
 #define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
 #define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_##c##_##r,o,c,a,r)
 #define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
@@ -654,7 +654,7 @@
  * @brief Definition of class or object `o` hardware register `r`
  * @hideinitializer
  */
-#define _hw_hreg(o,r)			__hw_hreg_2(o,_##o,r)
+#define _hw_hreg(o,r)			__hw_hreg_2(o,_hw_obj_##o,r)
 #define __hw_hreg_2(...)		__hw_hreg_3(__VA_ARGS__)
 #define __hw_hreg_3(o,c,i,a,r)		__hw_hreg_4(_hw_##c##_##r,o,c,a,r)
 #define __hw_hreg_4(...)		__hw_hreg_5(__VA_ARGS__)
@@ -794,7 +794,7 @@
  * @hideinitializer
  */
 #define HW_ID(o)			HW_G2(_HW_ID,HW_ISON(o))(o)
-#define _HW_ID_1(o)			HW_A1(_##o)
+#define _HW_ID_1(o)			HW_A1(_hw_obj_##o)
 #define _HW_ID_0(o)			0
 
 
@@ -818,7 +818,7 @@
 
 /*  Look for a class-defined HW_REL() method
  */
-#define _HW_REL4_0(o,x)			_HW_REL4(o,x,_##o)
+#define _HW_REL4_0(o,x)			_HW_REL4(o,x,_hw_obj_##o)
 #define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
 #define _HW_REL5(o,x,c,...)		HW_G2(_HW_REL5,HW_IS(,_hw_class_##c))(o,x,c,__VA_ARGS__)
 #define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)

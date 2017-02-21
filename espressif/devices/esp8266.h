@@ -150,7 +150,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_port0			_p16a, 0x60000300, 0x60000300
+#define _hw_obj_hw_port0		_p16a, 0x60000300, 0x60000300
 
 
 /*	Class hardware registers	class, address, write mask, flags mask
@@ -229,29 +229,29 @@ typedef struct {
 
 /*	Pins				class, id, port, bn, bp
  */
-#define _hw_pin_gpio0			_io1a, 300, hw_port0, 1, 0
-#define _hw_pin_gpio1			_io1a, 301, hw_port0, 1, 1
-#define _hw_pin_gpio2			_io1a, 302, hw_port0, 1, 2
-#define _hw_pin_gpio3			_io1a, 303, hw_port0, 1, 3
-#define _hw_pin_gpio4			_io1a, 304, hw_port0, 1, 4
-#define _hw_pin_gpio5			_io1a, 305, hw_port0, 1, 5
-#define _hw_pin_gpio6			_io1a, 306, hw_port0, 1, 6
-#define _hw_pin_gpio7			_io1a, 307, hw_port0, 1, 7
-#define _hw_pin_gpio8			_io1a, 308, hw_port0, 1, 8
-#define _hw_pin_gpio9			_io1a, 309, hw_port0, 1, 9
-#define _hw_pin_gpio10			_io1a, 310, hw_port0, 1, 10
-#define _hw_pin_gpio11			_io1a, 311, hw_port0, 1, 11
-#define _hw_pin_gpio12			_io1a, 312, hw_port0, 1, 12
-#define _hw_pin_gpio13			_io1a, 313, hw_port0, 1, 13
-#define _hw_pin_gpio14			_io1a, 314, hw_port0, 1, 14
-#define _hw_pin_gpio15			_io1a, 315, hw_port0, 1, 15
+#define _hw_obj_hw_pin_gpio0			_io1a, 300, hw_port0, 1, 0
+#define _hw_obj_hw_pin_gpio1			_io1a, 301, hw_port0, 1, 1
+#define _hw_obj_hw_pin_gpio2			_io1a, 302, hw_port0, 1, 2
+#define _hw_obj_hw_pin_gpio3			_io1a, 303, hw_port0, 1, 3
+#define _hw_obj_hw_pin_gpio4			_io1a, 304, hw_port0, 1, 4
+#define _hw_obj_hw_pin_gpio5			_io1a, 305, hw_port0, 1, 5
+#define _hw_obj_hw_pin_gpio6			_io1a, 306, hw_port0, 1, 6
+#define _hw_obj_hw_pin_gpio7			_io1a, 307, hw_port0, 1, 7
+#define _hw_obj_hw_pin_gpio8			_io1a, 308, hw_port0, 1, 8
+#define _hw_obj_hw_pin_gpio9			_io1a, 309, hw_port0, 1, 9
+#define _hw_obj_hw_pin_gpio10			_io1a, 310, hw_port0, 1, 10
+#define _hw_obj_hw_pin_gpio11			_io1a, 311, hw_port0, 1, 11
+#define _hw_obj_hw_pin_gpio12			_io1a, 312, hw_port0, 1, 12
+#define _hw_obj_hw_pin_gpio13			_io1a, 313, hw_port0, 1, 13
+#define _hw_obj_hw_pin_gpio14			_io1a, 314, hw_port0, 1, 14
+#define _hw_obj_hw_pin_gpio15			_io1a, 315, hw_port0, 1, 15
 
 
 /*	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class
  *
  *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
  */
-#define _hw_pin_gpio16			_io1b, 316, hw_port1, 1, 0
+#define _hw_obj_hw_pin_gpio16			_io1b, 316, hw_port1, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -294,22 +294,22 @@ typedef struct {
  */
 #include "../classes/pcfa_1.h"
 
-#define _hw_pin_gpio12_cf		_pcfa, 0x60000804, 0x60000804
-#define _hw_pin_gpio13_cf		_pcfa, 0x60000808, 0x60000808
-#define _hw_pin_gpio14_cf		_pcfa, 0x6000080C, 0x6000080C
-#define _hw_pin_gpio15_cf		_pcfa, 0x60000810, 0x60000810
-#define _hw_pin_gpio3_cf		_pcfa, 0x60000814, 0x60000814
-#define _hw_pin_gpio1_cf		_pcfa, 0x60000818, 0x60000818
-#define _hw_pin_gpio6_cf		_pcfa, 0x6000081c, 0x6000081c
-#define _hw_pin_gpio7_cf		_pcfa, 0x60000820, 0x60000820
-#define _hw_pin_gpio8_cf		_pcfa, 0x60000824, 0x60000824
-#define _hw_pin_gpio9_cf		_pcfa, 0x60000828, 0x60000828
-#define _hw_pin_gpio10_cf		_pcfa, 0x6000082c, 0x6000082c
-#define _hw_pin_gpio11_cf		_pcfa, 0x60000830, 0x60000830
-#define _hw_pin_gpio0_cf		_pcfa, 0x60000834, 0x60000834
-#define _hw_pin_gpio2_cf		_pcfa, 0x60000838, 0x60000838
-#define _hw_pin_gpio4_cf		_pcfa, 0x6000083C, 0x6000083C
-#define _hw_pin_gpio5_cf		_pcfa, 0x60000840, 0x60000840
+#define _hw_obj_hw_pin_gpio12_cf		_pcfa, 0x60000804, 0x60000804
+#define _hw_obj_hw_pin_gpio13_cf		_pcfa, 0x60000808, 0x60000808
+#define _hw_obj_hw_pin_gpio14_cf		_pcfa, 0x6000080C, 0x6000080C
+#define _hw_obj_hw_pin_gpio15_cf		_pcfa, 0x60000810, 0x60000810
+#define _hw_obj_hw_pin_gpio3_cf		_pcfa, 0x60000814, 0x60000814
+#define _hw_obj_hw_pin_gpio1_cf		_pcfa, 0x60000818, 0x60000818
+#define _hw_obj_hw_pin_gpio6_cf		_pcfa, 0x6000081c, 0x6000081c
+#define _hw_obj_hw_pin_gpio7_cf		_pcfa, 0x60000820, 0x60000820
+#define _hw_obj_hw_pin_gpio8_cf		_pcfa, 0x60000824, 0x60000824
+#define _hw_obj_hw_pin_gpio9_cf		_pcfa, 0x60000828, 0x60000828
+#define _hw_obj_hw_pin_gpio10_cf		_pcfa, 0x6000082c, 0x6000082c
+#define _hw_obj_hw_pin_gpio11_cf		_pcfa, 0x60000830, 0x60000830
+#define _hw_obj_hw_pin_gpio0_cf		_pcfa, 0x60000834, 0x60000834
+#define _hw_obj_hw_pin_gpio2_cf		_pcfa, 0x60000838, 0x60000838
+#define _hw_obj_hw_pin_gpio4_cf		_pcfa, 0x6000083C, 0x6000083C
+#define _hw_obj_hw_pin_gpio5_cf		_pcfa, 0x60000840, 0x60000840
 
 
 /*  Pin functions
@@ -442,7 +442,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_timer1			_tm23a, 0x60000600, 0x60000600
+#define _hw_obj_hw_timer1		_tm23a, 0x60000600, 0x60000600
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
@@ -479,7 +479,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_timer2			_tm32a, 0x60000620, 0x60000620
+#define _hw_obj_hw_timer2		_tm32a, 0x60000620, 0x60000620
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -522,8 +522,8 @@ typedef struct {
 
 /*	Objects				class, id, address
  */
-#define _hw_uart0			_uarta, 0x60000000, 0x60000000
-#define _hw_uart1			_uarta, 0x60000F00, 0x60000F00
+#define _hw_obj_hw_uart0		_uarta, 0x60000000, 0x60000000
+#define _hw_obj_hw_uart1		_uarta, 0x60000F00, 0x60000F00
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */

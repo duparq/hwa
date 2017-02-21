@@ -59,13 +59,13 @@
   HW_G2(_hw_cfio1a_vmode,v)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_analog(o,p,bn,bp,...)				\
-  HW_G2(_hw_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
+  HW_G2(_hw_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_hw_reg_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
 #define _hw_cfio1a_vmode_analog_1(o,p,bn,bp,k,...)			\
   analog = 1 ;								\
-  _hw_write(_##o##_##did, 1);						\
+  _hw_write(_hw_reg_##o##_##did, 1);						\
   HW_G2(_hw_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_digital(o,p,bn,bp,k,...)			\
@@ -147,12 +147,12 @@
   HW_G2(_hwa_cfio1a_vmode, v)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_analog(o,p,bn,bp,...)				\
-  HW_G2(_hwa_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
+  HW_G2(_hwa_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_hw_reg_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
 #define _hwa_cfio1a_vmode_analog_1(o,p,bn,bp,...)	\
-  _hwa( write, _##o##_##did, 1);			\
+  _hwa( write, _hw_reg_##o##_##did, 1);			\
   _hwa_cfio1a_kmode_0(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_digital	_hwa_cfio1a_kmode_0
