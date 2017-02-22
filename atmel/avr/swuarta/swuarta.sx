@@ -8,25 +8,25 @@
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if HW_ID(HW_RELATIVE(UART,_pin_txd))
+#if HW_ID(HW_G02(UART,pin_txd))
 #  define CANTX 1
-#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_txd),port)
+#  define PORT	HW_RELATIVE( HW_G02(UART,pin_txd), port )
 	TXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	TXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	TXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	TXDBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_txd) )
+	TXDBIT    = HW_POSITION( HW_G02(UART,pin_txd) )
 #  undef PORT
 #else
 #  define CANTX 0
 #endif
 
-#if HW_ID(HW_RELATIVE(UART,_pin_rxd))
+#if HW_ID(HW_G02(UART,pin_rxd))
 #  define CANRX 1
-#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_rxd),port)
+#  define PORT	HW_RELATIVE( HW_G02(UART,pin_rxd), port )
 	RXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	RXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	RXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	RXDBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_rxd) )
+	RXDBIT    = HW_POSITION( HW_G02(UART,pin_rxd) )
 #  define RXD_AP  RXDPIN, RXDBIT
 #  undef PORT
 #else	
@@ -35,14 +35,14 @@
 
 	;; Debugging options
 	;; 
-#if HW_ID(HW_RELATIVE(UART,_pin_dbg))
-#  define PORT	HW_RELATIVE(HW_RELATIVE(UART,_pin_dbg),port)
+#if HW_ID(HW_G02(UART,pin_dbg))
+#  define PORT	HW_RELATIVE( HW_G02(UART,pin_dbg), port )
 	DBG       = 1
 	DBGPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	DBGPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	DBGDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	DBGBIT    = HW_POSITION( HW_RELATIVE(UART,_pin_dbg) )
-#  define DBG_AP	DBGPIN, DBGBIT
+	DBGBIT    = HW_POSITION( HW_G02(UART,pin_dbg) )
+#  define DBG_AP  DBGPIN, DBGBIT
 #  undef PORT
 #else
 	DBG       = 0
@@ -79,8 +79,8 @@
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if HW_ID(HW_RELATIVE(UART,_pin_rxd)) == HW_ID(hw_pin_int0) \
- || HW_ID(HW_RELATIVE(UART,_pin_rxd)) == HW_ID(hw_pin_ain1)
+#if HW_ID(HW_G02(UART,pin_rxd)) == HW_ID(hw_pin_int0) \
+ || HW_ID(HW_G02(UART,pin_rxd)) == HW_ID(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
@@ -91,13 +91,13 @@
 #define	CLK_DIV		HW_G2(UART,clk_div)
 
 #undef COMPARE
-#define COMPARE		_HW_RELATIVE(UART,_compare)
+#define COMPARE		HW_G02(UART,compare)
 
 #undef COUNTER
 #define COUNTER		_HW_RELATIVE(COMPARE,counter)
 
 #undef STARTISR
-#define STARTISR	_HW_RELATIVE(UART,_starter)
+#define STARTISR	HW_G02(UART,starter)
 
 
 #define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
@@ -613,7 +613,7 @@ LABEL(txsb):
 	CYCLES=CYCLES+4
 #  endif
 
-#  if HW_ID(HW_RELATIVE(UART,_pin_rxd))
+#  if CANRX
 	XCB	R31, F_RXTX	;	Mode = RX
 
 	;; Clear flag, enable START interrupts

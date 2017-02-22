@@ -614,12 +614,12 @@ typedef struct {
 
 /*  Relative pin change controllers
  */
-#define hw_pin_pb0pcic			hw_pcic0
-#define hw_pin_pb1pcic			hw_pcic0
-#define hw_pin_pb2pcic			hw_pcic0
-#define hw_pin_pb3pcic			hw_pcic0
-#define hw_pin_pb4pcic			hw_pcic0
-#define hw_pin_pb5pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb0_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb1_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb2_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb3_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb4_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pb5_pcic			hw_pcic0
 
 /*  Pin numbers
  */
@@ -767,10 +767,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter0prescaler0		hw_psc0
-#define hw_counter0prescaler		hw_psc0
-#define hw_counter0compare0		hw_oc00
-#define hw_counter0compare1		hw_oc01
+#define _hw_rel_hw_counter0_prescaler0		hw_psc0
+#define _hw_rel_hw_counter0_prescaler		hw_psc0
+#define _hw_rel_hw_counter0_compare0		hw_oc00
+#define _hw_rel_hw_counter0_compare1		hw_oc01
 
 
 
@@ -821,8 +821,8 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_oc00pin			hw_pin_oc0a
-#define hw_oc00counter			hw_counter0
+#define _hw_rel_hw_oc00_pin			hw_pin_oc0a
+#define _hw_rel_hw_oc00_counter			hw_counter0
 
 
 /*	Object				class, id, address
@@ -842,8 +842,8 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_oc01pin			hw_pin_oc0b
-#define hw_oc01counter			hw_counter0
+#define _hw_rel_hw_oc01_pin			hw_pin_oc0b
+#define _hw_rel_hw_oc01_counter			hw_counter0
 
 
 /*******************************************************************************
@@ -874,13 +874,13 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1prescaler		hw_psc1
-#define hw_counter1prescaler0		hw_psc1
-#define hw_counter1compare0		hw_oc10
-#define hw_counter1compare1		hw_oc11
-#define hw_counter1compare2		hw_oc12
-#define hw_counter1dtg			hw_dtg1
-#define hw_counter1dtg0			hw_dtg1
+#define _hw_rel_hw_counter1_prescaler		hw_psc1
+#define _hw_rel_hw_counter1_prescaler0		hw_psc1
+#define _hw_rel_hw_counter1_compare0		hw_oc10
+#define _hw_rel_hw_counter1_compare1		hw_oc11
+#define _hw_rel_hw_counter1_compare2		hw_oc12
+#define _hw_rel_hw_counter1_dtg			hw_dtg1
+#define _hw_rel_hw_counter1_dtg0		hw_dtg1
 
 
 /*******************************************************************************
@@ -935,10 +935,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_oc10pin			hw_pin_oc1a
-#define hw_oc10pin_h			hw_pin_oc1a
-#define hw_oc10pin_l			hw_pin_oc1an
-#define hw_oc10counter			hw_counter1
+#define _hw_rel_hw_oc10_pin			hw_pin_oc1a
+#define _hw_rel_hw_oc10_pin_h			hw_pin_oc1a
+#define _hw_rel_hw_oc10_pin_l			hw_pin_oc1an
+#define _hw_rel_hw_oc10_counter			hw_counter1
 
 /*	Object				class, id, address
  */
@@ -958,10 +958,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_oc11pin			hw_pin_oc1b
-#define hw_oc11pin_h			hw_pin_oc1b
-#define hw_oc11pin_l			hw_pin_oc1bn
-#define hw_oc11counter			hw_counter1
+#define _hw_rel_hw_oc11_pin			hw_pin_oc1b
+#define _hw_rel_hw_oc11_pin_h			hw_pin_oc1b
+#define _hw_rel_hw_oc11_pin_l			hw_pin_oc1bn
+#define _hw_rel_hw_oc11_counter			hw_counter1
 
 /*	Object				class, id, address
  */

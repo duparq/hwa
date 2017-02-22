@@ -176,6 +176,9 @@
 #define HW_G2(...)		_HW_G2_(__VA_ARGS__,,)
 #define _HW_G2_(a,b,...)	a##_##b
 
+#define HW_G02(...)		_HW_G02_(__VA_ARGS__,,)
+#define _HW_G02_(a,b,...)	a##_##b
+
 
 /**
  * @ingroup public_gen_macros
@@ -815,8 +818,8 @@
 #define _HW_REL2_1(o,x)			HW_E_OM()
 #define _HW_REL2_0(o,x)			HW_G2(_HW_REL3,HW_ISON(o))(o,x)
 #define _HW_REL3_0(o,x)			HW_E_O(o)
-#define _HW_REL3_1(o,x)			HW_G2(_HW_REL4,HW_ISON(o##x))(o,x)
-#define _HW_REL4_1(o,x)			o##x
+#define _HW_REL3_1(o,x)			HW_G2(_HW_REL4,HW_ISON(_hw_rel_##o##_##x))(o,x)
+#define _HW_REL4_1(o,x)			_hw_rel_##o##_##x
 
 /*  Look for a class-defined HW_REL() method
  */
@@ -839,4 +842,4 @@
  */
 #define _HW_RELATIVE(o,x)		__HW_REL2(o,x)
 #define _HW_REL(o,x)			__HW_REL2(o,x)
-#define __HW_REL2(o,x)			o##x
+#define __HW_REL2(o,x)			_hw_rel_##o##_##x

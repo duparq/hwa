@@ -11,7 +11,7 @@
  *  HWA header is included
  */
 #define hw_swuart0_pin_txd		DIABOLO_PIN_TX
-#define hw_swuart0_compare		hw_counter0compare0
+#define hw_swuart0_compare		hw_oc00
 #define hw_swuart0_clk_div		1
 
 /*  Include target board + device + HWA definitions

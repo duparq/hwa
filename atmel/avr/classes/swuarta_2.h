@@ -113,9 +113,12 @@
  */
 
 
-#if defined hw_swuart0_pin_rxd || defined hw_swuart0_pin_txd
+#if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
 #  if !defined hw_swuart0_compare
 #    error hw_swuart0_compare is not defined
+#  endif
+#  if !defined hw_swuart0_clk_div
+#    error hw_swuart0_clk_div is not defined
 #  endif
 #  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
 #    error invalid definition of hw_swuart0_pin_txd
@@ -127,12 +130,7 @@
 #    warning hw_swuart0_starter is not defined, using default 'pcic'
 #    define hw_swuart0_starter	HW_REL(hw_swuart0_pin_rxd,pcic)
 #  endif
-#  if !defined hw_swuart0_compare
-#    error hw_swuart0_compare is not defined
-#  endif
-#  if !defined hw_swuart0_clk_div
-#    error hw_swuart0_clk_div is not defined
-#  endif
+
 
 /*  Configure the relatives of hw_swuart0
  */
@@ -141,10 +139,10 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart0_clk_div
-  _hwa( configure, HW_REL(hw_swuart0_compare,counter),
-	       clock,     prescaler_output(hw_swuart0_clk_div),
-	       countmode, up_loop,
-	       top,       max );
+  _hwa( configure, HW_RELATIVE(hw_swuart0_compare,counter),
+	clock,     prescaler_output(hw_swuart0_clk_div),
+	countmode, up_loop,
+	top,       max );
 #  endif
 
   /*  RXD pin
@@ -173,9 +171,13 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
 }
 #endif
 
-#if defined hw_swuart1_pin_rxd || defined hw_swuart1_pin_txd
+
+#if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
 #  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined
+#  endif
+#  if !defined hw_swuart1_clk_div
+#    error hw_swuart1_clk_div is not defined
 #  endif
 #  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
 #    error invalid definition of hw_swuart1_pin_txd
@@ -187,12 +189,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
 #    warning hw_swuart1_starter is not defined, using default 'pcic'
 #    define hw_swuart1_starter	HW_REL(hw_swuart1_pin_rxd,pcic)
 #  endif
-#  if !defined hw_swuart1_compare
-#    error hw_swuart1_compare is not defined
-#  endif
-#  if !defined hw_swuart1_clk_div
-#    error hw_swuart1_clk_div is not defined
-#  endif
+
 
 /*  Configure the relatives of hw_swuart1
  */
@@ -201,18 +198,18 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart1_clk_div
-  _hwa( configure, HW_REL(hw_swuart1_compare,counter),
-	       clock,     prescaler_output(hw_swuart1_clk_div),
-	       countmode, up_loop,
-	       top,       max );
+  _hwa( configure, HW_RELATIVE(hw_swuart1_compare,counter),
+	clock,     prescaler_output(hw_swuart1_clk_div),
+	countmode, up_loop,
+	top,       max );
 #  endif
 
   /*  RXD pin
    */
 #  if defined hw_swuart1_pin_rxd
   _hwa( configure, hw_swuart1_pin_rxd, direction, input );
-  _hwa( clear, HW_IRQF(HW_REL(hw_swuart1_pin_rxd,pcic)) );
-  _hwa( turn, HW_IRQ(HW_REL(hw_swuart1_pin_rxd,pcic)), on );
+  hwa( clear, HW_IRQF(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)) );
+  hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif
 
