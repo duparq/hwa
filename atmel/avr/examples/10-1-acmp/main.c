@@ -49,7 +49,7 @@ HW_ISR( COUNTER, COMPARE )
 {
   hw( turn, HW_IRQ(COUNTER,COMPARE), off );
   hw( write, PIN_LED, 0 );
-  hw( clear, HW_IRQF(acmp0) );
+  hw( clear, HW_IRQFLAG(acmp0) );
   hw( turn, HW_IRQ(acmp0), on );
 }
 
@@ -73,7 +73,7 @@ HW_ISR( acmp0 )
   if ( COUNTER_CLK_DIV > 1 )
     hw( turn,HW_RELATIVE(COUNTER,prescaler0), on);
 
-  hw( clear, HW_IRQF(COUNTER,COMPARE) );
+  hw( clear, HW_IRQFLAG(COUNTER,COMPARE) );
   hw( turn, HW_IRQ(COUNTER,COMPARE), on );
 }
 

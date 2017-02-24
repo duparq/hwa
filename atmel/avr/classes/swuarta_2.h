@@ -149,7 +149,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart0_pin_rxd
   _hwa( configure, hw_swuart0_pin_rxd, direction, input );
-  hwa( clear, HW_IRQF(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)) );
+  hwa( clear, HW_IRQFLAG(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)) );
   hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
@@ -208,7 +208,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart1_pin_rxd
   _hwa( configure, hw_swuart1_pin_rxd, direction, input );
-  hwa( clear, HW_IRQF(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)) );
+  hwa( clear, HW_IRQFLAG(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)) );
   hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)), on );
   _hwa( turn, HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif

@@ -56,8 +56,8 @@ int main ( )
 
   static uint8_t n ;
   for(;;) {
-    if ( hw( read, HW_IRQF(COUNTER, overflow) ) ) {
-      hw( clear, HW_IRQF(COUNTER, overflow) );
+    if ( hw( read, HW_IRQFLAG(COUNTER, overflow) ) ) {
+      hw( clear, HW_IRQFLAG(COUNTER, overflow) );
       n++ ;
       if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
         n = 0 ;

@@ -50,8 +50,8 @@ int main ( )
      *  As soon as the watchdog IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    if ( hw( read, HW_IRQF(wdog0) ) ) {
-      hw( clear, HW_IRQF(wdog0) );
+    if ( hw( read, HW_IRQFLAG(wdog0) ) ) {
+      hw( clear, HW_IRQFLAG(wdog0) );
       hw( toggle, PIN_LED );
     }
   }

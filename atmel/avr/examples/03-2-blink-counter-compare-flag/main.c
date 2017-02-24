@@ -23,7 +23,7 @@
 #define COMPARE                 compare0
 #define PERIOD                  0.5
 
-#define IRQF			HW_IRQF(COUNTER,COMPARE)	// IRQ flag
+#define IRQF			HW_IRQFLAG(COUNTER,COMPARE)	// IRQ flag
 
 
 int main ( )
