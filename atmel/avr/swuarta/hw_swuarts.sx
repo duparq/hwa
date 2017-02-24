@@ -20,7 +20,7 @@
 
 /*	hw_swuart0
  */
-#if defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd
+#if defined hw_swuart0_compare
 #  undef UART
 #  define UART			swuart0
 #  undef AUTOSYNC
@@ -32,7 +32,7 @@
 
 /*	hw_swuart1
  */
-#if defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd
+#if defined hw_swuart1_compare
 #  undef UART
 #  define UART			swuart1
 #  undef AUTOSYNC

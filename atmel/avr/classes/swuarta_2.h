@@ -113,24 +113,12 @@
  */
 
 
-#if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
-#  if !defined hw_swuart0_compare
-#    error hw_swuart0_compare is not defined
-#  endif
-#  if !defined hw_swuart0_clk_div
-#    error hw_swuart0_clk_div is not defined
-#  endif
-#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
-#    error invalid definition of hw_swuart0_pin_txd
-#  endif
-#  if defined hw_swuart0_pin_rxd && HW_ID(hw_swuart0_pin_rxd)==0
-#    error invalid definition of hw_swuart0_pin_rxd
-#  endif
-#  if defined hw_swuart0_pin_rxd && !defined hw_swuart0_starter
-#    warning hw_swuart0_starter is not defined, using default 'pcic'
-#    define hw_swuart0_starter	HW_REL(hw_swuart0_pin_rxd,pcic)
-#  endif
+#if defined hw_swuart0_compare
 
+extern void					_hw_swuart0_reset ( ) ;
+extern void					_hw_swuart0_set_dt ( uint16_t ) ;
+extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dtn ;
+extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dt0 ;
 
 /*  Configure the relatives of hw_swuart0
  */
@@ -172,24 +160,12 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
 #endif
 
 
-#if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
-#  if !defined hw_swuart1_compare
-#    error hw_swuart1_compare is not defined
-#  endif
-#  if !defined hw_swuart1_clk_div
-#    error hw_swuart1_clk_div is not defined
-#  endif
-#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
-#    error invalid definition of hw_swuart1_pin_txd
-#  endif
-#  if defined hw_swuart1_pin_rxd && HW_ID(hw_swuart1_pin_rxd)==0
-#    error invalid definition of hw_swuart1_pin_rxd
-#  endif
-#  if defined hw_swuart1_pin_rxd && !defined hw_swuart1_starter
-#    warning hw_swuart1_starter is not defined, using default 'pcic'
-#    define hw_swuart1_starter	HW_REL(hw_swuart1_pin_rxd,pcic)
-#  endif
+#if defined hw_swuart1_compare
 
+extern void					_hw_swuart1_reset ( ) ;
+extern void					_hw_swuart1_set_dt ( uint16_t ) ;
+extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dtn ;
+extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dt0 ;
 
 /*  Configure the relatives of hw_swuart1
  */
@@ -229,6 +205,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #  endif
 }
 #endif
+
+#if defined hw_swuart0_compare || defined hw_swuart1_compare
 
 /**
  * @page atmelavr_swuarta
@@ -541,20 +519,6 @@ typedef struct {
 #define _hw_mthd_hw_reset__swuarta		, _hw_swuarta_reset
 #define _hw_swuarta_reset(o,i,a,...)		HW_TX(_hw_##o##_##reset(),__VA_ARGS__)
 
-#if defined hw_swuart0_compare
-extern void					_hw_swuart0_reset ( ) ;
-extern void					_hw_swuart0_set_dt ( uint16_t ) ;
-extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dtn ;
-extern hw_uint_t(HW_BITS(hw_swuart0_compare))	__hw_swuart0_dt0 ;
-#endif
-
-#if defined hw_swuart1_compare
-extern void					_hw_swuart1_reset ( ) ;
-extern void					_hw_swuart1_set_dt ( uint16_t ) ;
-extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dtn ;
-extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dt0 ;
-#endif
-
 
 /**
  * @page atmelavr_swuarta
@@ -570,6 +534,8 @@ extern hw_uint_t(HW_BITS(hw_swuart1_compare))	__hw_swuart1_dt0 ;
  * "register access intructions".
  */
 
+
+#endif /* defined hw_swuart0_compare || defined hw_swuart1_compare */
 
 /**
  * @page atmelavr_swuarta
