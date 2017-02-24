@@ -58,10 +58,10 @@
       hwa_tm23a_t o ;							\
     } hwa_t ;								\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
-    _hwa_setup( hw_shared );						\
+    _hwa_setup( shared );						\
     _hwa_setup( o );							\
     HW_G2(_hwa_cftm23a_kclock, HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,); \
-    hwa->commit = 1; _hwa_commit( o ); _hwa_commit( hw_shared );	\
+    hwa->commit = 1; _hwa_commit( o ); _hwa_commit( shared );	\
   }while(0)
 
 #define _hwa_cftm23a(o,i,a,...)						\
@@ -238,7 +238,7 @@
     /* if ( hwa->o.config.action != 0xFF					\ */
     /* 	 && hwa->o.config.action != HW_A1(_hw_tm23a_action_none ) ) {	\ */
     /*   _hwa_write_reg(o,ie,1);						\ */
-    /*   /\* _hwa_commit_reg( hw_shared, _edgeie ); *\/				\ */
+    /*   /\* _hwa_commit_reg( shared, _edgeie ); *\/				\ */
     /* }									\ */
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_irq) )		\ */
     /*   ets_isr_unmask(1<<HW_A1(_hw_irq_##o##_irq))			\ */
@@ -246,7 +246,7 @@
 
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_none) ) {	\ */
     /*   _hwa_write_reg(o,ie,0);						\ */
-    /*   _hwa_commit_reg( hw_shared, _edgeie );				\ */
+    /*   _hwa_commit_reg( shared, _edgeie );				\ */
     /* }									\ */
 
 

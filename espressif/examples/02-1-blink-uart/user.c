@@ -1,7 +1,7 @@
 
 #include <hwa/modules/esp-wroom-02.h>
 
-#define LED		hw_pin_gpio5
+#define LED		pin_gpio5
 
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
@@ -24,7 +24,7 @@ void IROM every10ms ( )
        *  TXD has been set low for 100 ms. Release it now: connect pin GPIO1 to
        *  the TXD signal
        */
-      hw_config( hw_pin_gpio1, function, hw_uart0_txd );
+      hw_config( pin_gpio1, function, hw_uart0_txd );
   }
 
   count++ ;
@@ -44,7 +44,7 @@ void IROM every10ms ( )
      *	Turn TXD low for 100 ms: connect pin GPIO1 to the GPIO1 signal
      */
     txdlow = 10 ;
-    hw_config( hw_pin_gpio1, function, gpio );
+    hw_config( pin_gpio1, function, gpio );
   }
   else {
     /*
@@ -69,15 +69,15 @@ void IROM user_init()
   /*  Pin GPIO1 is also used as pin TXD of hw_uart0
    *  We want a low level on that pin when used as a GPIO
    */
-  hw_config( hw_pin_gpio1,
+  hw_config( pin_gpio1,
 	     function,	   gpio,		// Optionnal
 	     direction,	   output );
-  hw_write( hw_pin_gpio1, 0 );
+  hw_write( pin_gpio1, 0 );
 
   /*  Configure the UART
    *	Note: the OS has already configured the RXD and TXD pins
    */
-  hw_config( hw_uart0,
+  hw_config( uart0,
 	     baudrate,	  9600,
 	     databits,	  8,
 	     parity,	  none,

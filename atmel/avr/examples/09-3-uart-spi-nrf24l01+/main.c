@@ -56,7 +56,7 @@
 #  error That should not happen
 #endif
 
-#define UART		hw_uart0
+#define UART		uart0
 
 
 /*  Transfer 1 byte on the SPI.
@@ -65,9 +65,9 @@
  */
 uint8_t spi_tfr( uint8_t v )
 {
-  hw( write, hw_spi0, v );
-  while( !hw( read, HW_IRQF(hw_spi0) ) ) {}
-  return hw( read, hw_spi0 );
+  hw( write, spi0, v );
+  while( !hw( read, HW_IRQF(spi0) ) ) {}
+  return hw( read, spi0 );
 }
 
 
@@ -105,7 +105,7 @@ main ( )
 
   /*  Configure the USI as SPI master clocked by software
    */
-  hwa( configure,     hw_spi0,
+  hwa( configure,     spi0,
        mode,          master,
        clock,         sysclk_div(128), 
        sck_idle,      low,

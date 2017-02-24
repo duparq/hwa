@@ -19,7 +19,7 @@
  * to use the analog multiplexer output.
  *
  * @code
- * hwa_config( hw_acmp0,
+ * hwa_config( acmp0,
  * 
  *           [ edge,             falling
  *                             | rising
@@ -117,7 +117,7 @@
  * @page atmelavr_acmpb
  * @section atmelavr_acmpb_pm Power management
  * @code
- * hw_turn( hw_acmp0, on | off );
+ * hw_turn( acmp0, on | off );
  * @endcode
  */
 #define _hw_mthd_hw_turn__acmpb			, _hw_turnacmpb

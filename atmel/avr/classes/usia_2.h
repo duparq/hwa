@@ -92,7 +92,7 @@
  * @section atmelavr_usia_data Data
  *
  * @code
- * uint8_t byte = hw_read( hw_usi0 );
+ * uint8_t byte = hw_read( usi0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__usia		, _hw_rdusia
@@ -107,7 +107,7 @@
  * @page atmelavr_usia
  *
  * @code
- * hw_write( hw_usi0, 'A' );
+ * hw_write( usi0, 'A' );
  * @endcode
  */
 #define _hw_mthd_hw_write__usia		, _hw_wrusia
@@ -120,7 +120,7 @@
  * @section atmelavr_usia_trigger Clocking
  *
  * @code
- * hw_trigger( hw_usi0 );
+ * hw_trigger( usi0 );
  * @endcode
  */
 
@@ -137,7 +137,7 @@
  * @section atmelavr_usia_spimaster_swclk_config Configuring the SPI
  *
  * @code
- * #define SPI		hw_spimaster0_swclk
+ * #define SPI		spimaster0_swclk
  *
  * hw_config( SPI );
  * @endcode
@@ -162,7 +162,7 @@
  * @section atmelavr_usia_spimaster_swclk_read Getting the last received byte
  *
  * @code
- * #define SPI		hw_spimaster0_swclk
+ * #define SPI		spimaster0_swclk
  *
  * uint8_t byte = hw_read( SPI );
  * @endcode
@@ -177,7 +177,7 @@
  * @section atmelavr_usia_spimaster_swclk_write Sending one byte
  *
  * @code
- * hw_write( hw_spimaster0_swclk, 'A' );
+ * hw_write( spimaster0_swclk, 'A' );
  * @endcode
  */
 #define _hw_mthd_hw_write__usia_spimaster_swclk		, _hw_wrspimswclk
@@ -212,7 +212,7 @@
 #define _hw_mthd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
 #define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
-  _hw_write_reg(hw_##usin, dr, v )
+  _hw_write_reg(##usin, dr, v )
 
 
 #define _hw_mthd_hw_read_usia_spimaster_c0clk	, _hw_read_usia

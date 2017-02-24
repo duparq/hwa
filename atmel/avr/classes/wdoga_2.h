@@ -18,7 +18,7 @@
  * IRQ, the next timeout resets the device.
  *
  * @code
- * hwa_config( hw_wdog0,
+ * hwa_config( wdog0,
  *
  *           [ timeout,   16ms
  *                      | 32ms
@@ -97,7 +97,7 @@
  * @section atmelavr_wdoga_turn Turning on/off
  *
  * @code
- * hw_turn( hw_wdog0,   on
+ * hw_turn( wdog0,   on
  *                    | off );
  * @endcode
  */
@@ -125,7 +125,7 @@
 #define _hw_turn_wdoga_off(o)						\
   do {									\
     uint8_t reg ;							\
-    _hw_write_reg( hw_core0, mcusr, 0 );				\
+    _hw_write_reg( core0, mcusr, 0 );				\
     __asm__ __volatile__("  in   %[r], %[wdtcr]"	"\n\t"		\
 			 "  ori  %[r], %[wdce]|%[wde]"	"\n\t"		\
 			 "  out  %[wdtcr], %[r]"	"\n\t"		\
@@ -143,7 +143,7 @@
  * @page atmelavr_wdoga
  *
  * @code
- * hwa_turn( hw_wdog0,   on
+ * hwa_turn( wdog0,   on
  *                     | off );
  * @endcode
  */
@@ -174,7 +174,7 @@
  * The `hw_reset()` instruction resets the watchdog timer (issues a `wdr`):
  *
  * @code
- * hw_reset( hw_wdog0 );
+ * hw_reset( wdog0 );
  * @endcode
  */
 #define _hw_mthd_hw_reset__wdoga		, _hw_rstwdoga
@@ -189,9 +189,9 @@
  * The overflow flag can be accessed through the interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( hw_wdog0 ) ) {
- *   hw_clear_irqf( hw_wdog0 );
- *   hw_turn_irq( hw_wdog0, on );
+ * if ( hw_stat_irqf( wdog0 ) ) {
+ *   hw_clear_irqf( wdog0 );
+ *   hw_turn_irq( wdog0, on );
  *   n_wdoverflows++ ;
  * }
  * @endcode

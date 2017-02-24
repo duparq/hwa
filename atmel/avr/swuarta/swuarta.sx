@@ -8,25 +8,25 @@
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if HW_ID(HW_G02(UART,pin_txd))
+#if HW_ID(HW_G3(hw,UART,pin_txd))
 #  define CANTX 1
-#  define PORT	HW_RELATIVE( HW_G02(UART,pin_txd), port )
+#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_txd), port )
 	TXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	TXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	TXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	TXDBIT    = HW_POSITION( HW_G02(UART,pin_txd) )
+	TXDBIT    = HW_POSITION( HW_G3(hw,UART,pin_txd) )
 #  undef PORT
 #else
 #  define CANTX 0
 #endif
 
-#if HW_ID(HW_G02(UART,pin_rxd))
+#if HW_ID(HW_G3(hw,UART,pin_rxd))
 #  define CANRX 1
-#  define PORT	HW_RELATIVE( HW_G02(UART,pin_rxd), port )
+#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_rxd), port )
 	RXDPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	RXDPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	RXDDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	RXDBIT    = HW_POSITION( HW_G02(UART,pin_rxd) )
+	RXDBIT    = HW_POSITION( HW_G3(hw,UART,pin_rxd) )
 #  define RXD_AP  RXDPIN, RXDBIT
 #  undef PORT
 #else	
@@ -35,13 +35,13 @@
 
 	;; Debugging options
 	;; 
-#if HW_ID(HW_G02(UART,pin_dbg))
-#  define PORT	HW_RELATIVE( HW_G02(UART,pin_dbg), port )
+#if HW_ID(HW_G3(hw,UART,pin_dbg))
+#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_dbg), port )
 	DBG       = 1
 	DBGPORT   = HW_ADDRESS( HW_REGISTER(PORT,port) )
 	DBGPIN    = HW_ADDRESS( HW_REGISTER(PORT,pin) )
 	DBGDR     = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	DBGBIT    = HW_POSITION( HW_G02(UART,pin_dbg) )
+	DBGBIT    = HW_POSITION( HW_G3(hw,UART,pin_dbg) )
 #  define DBG_AP  DBGPIN, DBGBIT
 #  undef PORT
 #else
@@ -79,25 +79,25 @@
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if HW_ID(HW_G02(UART,pin_rxd)) == HW_ID(hw_pin_int0) \
- || HW_ID(HW_G02(UART,pin_rxd)) == HW_ID(hw_pin_ain1)
+#if HW_ID(HW_G3(hw,UART,pin_rxd)) == HW_ID(hw_pin_int0) \
+ || HW_ID(HW_G3(hw,UART,pin_rxd)) == HW_ID(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
 #endif
 
-#define ONEWIRE		HW_ID(HW_G2(UART,pin_txd)) == HW_ID(HW_G2(UART,pin_rxd))
-#define CHECKTX		HW_G2(UART,check_tx)
-#define	CLK_DIV		HW_G2(UART,clk_div)
+#define ONEWIRE		HW_ID(HW_G3(hw,UART,pin_txd)) == HW_ID(HW_G3(hw,UART,pin_rxd))
+#define CHECKTX		HW_G3(hw,UART,check_tx)
+#define	CLK_DIV		HW_G3(hw,UART,clk_div)
 
 #undef COMPARE
-#define COMPARE		HW_G02(UART,compare)
+#define COMPARE		HW_G3(hw,UART,compare)
 
 #undef COUNTER
 #define COUNTER		_HW_RELATIVE(COMPARE,counter)
 
 #undef STARTISR
-#define STARTISR	HW_G02(UART,starter)
+#define STARTISR	HW_G3(hw,UART,starter)
 
 
 #define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
@@ -229,7 +229,7 @@ HW_ISR(STARTISR):
 	;;   may require to detect both falling and rising edges
 	;;
 	XSBIS	R26, F_SYNC
-	rjmp	LABEL(HW_G2(autosync,HW_G2(UART,autosync)))	; [2]
+	rjmp	LABEL(HW_G2(autosync,HW_G3(hw,UART,autosync)))	; [2]
 
 	CYCLES=CYCLES+2
 	CY_SYNC0=CYCLES
@@ -627,7 +627,7 @@ LABEL(txsb):
 	CYCLES=CYCLES+2
 	.endif
 
-#  if HW_G2(UART,callback)
+#  if HW_G3(hw,UART,callback)
 	rjmp	LABEL(callback)
 #  endif
 
@@ -779,8 +779,8 @@ LABEL(putbyte):
 
 #if CANRX
 #  if AUTOSYNC
-#    if HW_IS(,HW_G2(_hw_swuarta_autosync,HW_G2(UART,autosync)))
-#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,HW_G2(UART,autosync))))
+#    if HW_IS(,HW_G2(_hw_swuarta_autosync,HW_G3(hw,UART,autosync)))
+#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,HW_G3(hw,UART,autosync))))
 #    else
 #      error `autosync` must be `5_1`, `9_1`, or `10_1`.
 #    endif

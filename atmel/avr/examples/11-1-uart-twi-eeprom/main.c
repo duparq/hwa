@@ -33,7 +33,7 @@
 
 #include BOARD_H
 
-#define TWI     hw_twi0
+#define TWI     twi0
 
 #define DEBUG 1
 
@@ -94,7 +94,7 @@ void
 ioinit(void)
 {
   hwa_begin_from_reset();
-  hwa( configure,   hw_uart0,
+  hwa( configure,   uart0,
        bps,         9600,
        receiver,    disabled,
        transmitter, enabled  );
@@ -113,8 +113,8 @@ uart_putchar(char c, FILE *unused __attribute__((unused)) )
   if (c == '\n')
     uart_putchar('\r',0);
 
-  while ( !hw( stat, hw_uart0 ).txqnf ) {}
-  hw( write, hw_uart0, c );
+  while ( !hw( stat, uart0 ).txqnf ) {}
+  hw( write, uart0, c );
   
   return 0;
 }

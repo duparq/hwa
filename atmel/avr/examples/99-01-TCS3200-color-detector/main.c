@@ -47,7 +47,7 @@
 #  error Incompatible board
 #endif
 
-#define UART            hw_swuart0
+#define UART            swuart0
 
 #define COUNTER         HW_RELATIVE(hw_swuart0_compare,counter)
 #define CAPTURE         capture0
@@ -244,7 +244,7 @@ main ( )
 
   /*  tclear_max is stored in EEPROM
    */
-  hw( read_bytes, hw_eeprom0, &tclear_max, &ee_tclear_max, sizeof(tclear_max) );
+  hw( read_bytes, eeprom0, &tclear_max, &ee_tclear_max, sizeof(tclear_max) );
 
   /*  Main loop
    */
@@ -286,7 +286,7 @@ main ( )
        */
       region_t r ;
       for ( rn=0 ; rn<sizeof(ee_regions)/sizeof(region_t) ; rn++ ) {
-        hw( read_bytes, hw_eeprom0, &r, &ee_regions[rn], sizeof(r) ) ;
+        hw( read_bytes, eeprom0, &r, &ee_regions[rn], sizeof(r) ) ;
         if ( r.radius < 0xFF ) {
           uint16_t qp, qr, qg, qb ;
           qp = r.radius ;
@@ -363,7 +363,7 @@ main ( )
          */
         for ( uint8_t i=0 ; i<sizeof(ee_regions)/sizeof(region_t) ; i++ ) {
           region_t r ;
-          hw( read_bytes, hw_eeprom0, &r, &ee_regions[i], sizeof(region_t) );
+          hw( read_bytes, eeprom0, &r, &ee_regions[i], sizeof(region_t) );
           if ( r.radius != 0xFF ) {
             tx2h(i);
             tx2h(r.radius);
@@ -429,12 +429,12 @@ main ( )
         region.result = HH2i( &cmdbuf[10] );
 
         region_t region0 ;
-        hw( read_bytes, hw_eeprom0, &region0, &ee_regions[rn], sizeof(region) );
+        hw( read_bytes, eeprom0, &region0, &ee_regions[rn], sizeof(region) );
 
         /*  Update region if different
          */
         if ( __builtin_memcmp(&region, &region0, sizeof(region_t)) )
-          hw( write_bytes, hw_eeprom0, &ee_regions[rn], &region, sizeof(region) );
+          hw( write_bytes, eeprom0, &ee_regions[rn], &region, sizeof(region) );
 
         hw( write, UART, '\n' );
       }
@@ -480,7 +480,7 @@ main ( )
         uint16_t max = HHHH2i( &cmdbuf[0] );
         if ( max != tclear_max ) {
           tclear_max = max ;
-          hw( write_bytes, hw_eeprom0, &ee_tclear_max, &tclear_max, sizeof(tclear_max) );
+          hw( write_bytes, eeprom0, &ee_tclear_max, &tclear_max, sizeof(tclear_max) );
           hw( write, UART, 'w' );
         }
         hw( write, UART, '\n' );

@@ -10,19 +10,19 @@
 /*	Create a label
  */
 #undef LABEL
-#define LABEL(x)		HW_G3(,UART,x)
+#define LABEL(x)		HW_G3(_hw,UART,x)
 
 /*	Create a data
  */
 #undef DATA
-#define DATA(x)			HW_G3(_,UART,x)
+#define DATA(x)			HW_G3(__hw,UART,x)
 
 
 /*	hw_swuart0
  */
 #if defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd
 #  undef UART
-#  define UART			hw_swuart0
+#  define UART			swuart0
 #  undef AUTOSYNC
 #  if defined hw_swuart0_autosync
 #    define AUTOSYNC		1
@@ -34,7 +34,7 @@
  */
 #if defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd
 #  undef UART
-#  define UART			hw_swuart1
+#  define UART			swuart1
 #  undef AUTOSYNC
 #  if defined hw_swuart1_autosync
 #    define AUTOSYNC		1

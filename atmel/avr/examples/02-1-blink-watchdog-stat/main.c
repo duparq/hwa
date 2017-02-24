@@ -37,7 +37,7 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ periodically
    */
-  hwa( configure, hw_wdog0,
+  hwa( configure, wdog0,
        timeout,   TIMEOUT,
        action,    irq       );
 
@@ -50,8 +50,8 @@ int main ( )
      *  As soon as the watchdog IRQ flag is set, clear
      *  it and toggle the LED.
      */
-    if ( hw( read, HW_IRQF(hw_wdog0) ) ) {
-      hw( clear, HW_IRQF(hw_wdog0) );
+    if ( hw( read, HW_IRQF(wdog0) ) ) {
+      hw( clear, HW_IRQF(wdog0) );
       hw( toggle, PIN_LED );
     }
   }

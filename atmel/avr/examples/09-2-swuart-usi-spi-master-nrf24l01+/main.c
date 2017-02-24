@@ -60,14 +60,14 @@
 
 /*  We need a device with an USI
  */
-#if HW_ID(hw_usi0) == 0
+#if HW_ID(usi0) == 0
 HW_ERROR(device `HW_DEVICE` does not have a USI)
 #endif
 
 
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
-#define SPI             hw_spimaster_swclk0
+#define SPI             spimaster_swclk0
 #define NRF_CSN         HW_PIN(3)
 
 

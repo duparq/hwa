@@ -291,7 +291,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 
 #define _hwa_cfswuarta(o,i,a,...)					\
   do {									\
-    _##o##_config_relatives( hwa );					\
+    _hw_##o##_config_relatives( hwa );					\
     HW_G2(_hwx_cfswuarta_kbps, HW_IS(bps,__VA_ARGS__))(_hwa,o,__VA_ARGS__,); \
   } while(0)
 
@@ -303,7 +303,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `bps`
  */
 #define _hwx_cfswuarta_kbps_1(x,o,k,v,...)				\
-  _##o##_##set_dt((hw_syshz + (v)/2) / (v)) ;				\
+  _hw_##o##_##set_dt((hw_syshz + (v)/2) / (v)) ;				\
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
   HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
 
@@ -315,7 +315,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `cpb`
  */
 #define _hwx_cfswuarta_kcpb_1(x,o,k,v,...)				\
-  _##o##_##set_dt(v) ;							\
+  _hw_##o##_##set_dt(v) ;							\
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
   HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
 
@@ -424,18 +424,18 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  * @endcode
  */
 #define _hw_mthd_hw_read__swuarta	, _hw_swuarta_read
-#define _hw_swuarta_read(o,i,a,...)	HW_TX(_##o##_getbyte(),__VA_ARGS__)
+#define _hw_swuarta_read(o,i,a,...)	HW_TX(_hw_##o##_getbyte(),__VA_ARGS__)
 
 #if defined hw_swuart0_pin_rxd
-  extern uint8_t				_hw_swuart0_getbyte ( ) ;
+  extern uint8_t			_hw_swuart0_getbyte ( ) ;
 #else
-#  define _hw_swuart0_getbyte()		HW_E(`hw_swuart0` has no RXD pin)
+#  define _hw_swuart0_getbyte()		HW_E(`swuart0` has no RXD pin)
 #endif
 
 #if defined hw_swuart1_pin_rxd
 extern uint8_t				_hw_swuart1_getbyte ( ) ;
 #else
-#  define _hw_swuart1_getbyte()		HW_E(`hw_swuart1` has no RXD pin)
+#  define _hw_swuart1_getbyte()		HW_E(`swuart1` has no RXD pin)
 #endif
 
 
@@ -454,18 +454,18 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
  * @endcode
  */
 #define _hw_mthd_hw_write__swuarta	, _hw_swuarta_write
-#define _hw_swuarta_write(o,i,a,v,...)	HW_TX(_##o##_putbyte(v),__VA_ARGS__)
+#define _hw_swuarta_write(o,i,a,v,...)	HW_TX(_hw_##o##_putbyte(v),__VA_ARGS__)
 
 #if defined hw_swuart0_pin_txd
 extern void				_hw_swuart0_putbyte ( uint8_t byte ) ;
 #else
-#  define _hw_swuart0_putbyte(x)	HW_E(`hw_swuart0` has no TXD pin)
+#  define _hw_swuart0_putbyte(x)	HW_E(`swuart0` has no TXD pin)
 #endif
 
 #if defined hw_swuart1_pin_txd
 extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
 #else
-#  define _hw_swuart1_putbyte(x)	HW_E(`hw_swuart1` has no TXD pin)
+#  define _hw_swuart1_putbyte(x)	HW_E(`swuart1` has no TXD pin)
 #endif
 
 
@@ -484,10 +484,10 @@ extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
  *
  * @code
  * uint8_t byte ;
- * hw_stat_t( hw_swuart0 ) st ;   // Structure of UART status
- * st = hw_stat( hw_swuart0 );    // Read the status
+ * hw_stat_t( swuart0 ) st ;   // Structure of UART status
+ * st = hw_stat( swuart0 );    // Read the status
  * if ( st.rxc )                  // Reception complete?
- *   byte = hw_read( hw_swuart0 );
+ *   byte = hw_read( swuart0 );
  * @endcode
  */
 typedef struct {
@@ -535,11 +535,11 @@ typedef struct {
  * baudrate detection, the UART will first resynchronize.
  *
  * @code
- * hw_reset( UART );
+ * hw( reset, UART );
  * @endcode
  */
 #define _hw_mthd_hw_reset__swuarta		, _hw_swuarta_reset
-#define _hw_swuarta_reset(p,i,a,...)		HW_TX(_##p##_##reset(),__VA_ARGS__)
+#define _hw_swuarta_reset(o,i,a,...)		HW_TX(_hw_##o##_##reset(),__VA_ARGS__)
 
 #if defined hw_swuart0_compare
 extern void					_hw_swuart0_reset ( ) ;

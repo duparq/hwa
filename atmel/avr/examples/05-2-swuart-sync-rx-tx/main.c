@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#define UART                    hw_swuart0
+#define UART                    swuart0
 
 
 int
@@ -42,7 +42,7 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,     hw_core0,
+  hwa( configure,     core0,
        sleep,      enabled,
        sleep_mode, idle     );
 
@@ -50,7 +50,7 @@ main ( )
    *  a crystal oscillator.
    */
 #if !defined HW_DEVICE_CLK_SRC_HZ
-  hwa( write, HW_REGISTER(hw_core0, osccal), 0xFF );
+  hwa( write, HW_REGISTER(core0, osccal), 0xFF );
 #endif
 
   /*  Write this configuration into the hardware

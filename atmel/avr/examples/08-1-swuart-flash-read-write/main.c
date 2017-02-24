@@ -83,15 +83,15 @@ static void process ( uint8_t byte )
         /*  Get the content of the page to be modified and make the required
          *  change
          */
-        hw( read_bytes, hw_flash0, page, zpage, sizeof(page) );
+        hw( read_bytes, flash0, page, zpage, sizeof(page) );
         page[ zbyte ] = buf.n ;
 
         /*  Process the reprogramming of the page. Some more checkings could be
          *  done in order to not erase or program blank pages.
          */
-        hw( load_buffer, hw_flash0, page );
-        hw( erase_page,  hw_flash0, zpage );
-        hw( write_page,  hw_flash0, zpage );
+        hw( load_buffer, flash0, page );
+        hw( erase_page,  flash0, zpage );
+        hw( write_page,  flash0, zpage );
 
         hw( write, UART, '$');
         return ;
@@ -101,7 +101,7 @@ static void process ( uint8_t byte )
          *  Read data
          */
         while ( buf.n-- ) {
-          uint8_t byte = hw( read, hw_flash0, buf.addr++ );
+          uint8_t byte = hw( read, flash0, buf.addr++ );
           hw( write, UART,  byte );
         }
         hw( write, UART, '$');
@@ -128,7 +128,7 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,  hw_core0,
+  hwa( configure,  core0,
        sleep,      enabled,
        sleep_mode, idle );
 

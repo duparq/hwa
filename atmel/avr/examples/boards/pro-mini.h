@@ -66,30 +66,30 @@
 /*  Settings for building the Diabolo bootloader
  *  Settings for the Diabolo application are in the board's Makefile
  */
-#define DIABOLO_PIN_RX                  hw_pin_rxd
-#define DIABOLO_PIN_TX                  hw_pin_rxd
+#define DIABOLO_PIN_RX                  pin_rxd
+#define DIABOLO_PIN_TX                  pin_rxd
 #define DIABOLO_SYNC                    5+1
 
 /*  Board pins
  */
 #define ARDUINO
 
-#define PIN_D2				hw_pin_pd2	// INT0
-#define PIN_D3				hw_pin_pd3	// OC2B INT1
-#define PIN_D4				hw_pin_pd4	//      T0
-#define PIN_D5				hw_pin_pd5	// OC0B T1
-#define PIN_D6				hw_pin_pd6	// OC0A AIN0
-#define PIN_D7				hw_pin_pd7	//      AIN1
-#define PIN_D8				hw_pin_pb0	// ICP1
-#define PIN_D9				hw_pin_pb1	// OC1A
-#define PIN_D10				hw_pin_pb2	// OC1B
-#define PIN_D11				hw_pin_pb3	// OC2A MOSI
-#define PIN_D12				hw_pin_pb4
-#define PIN_D13				hw_pin_pb5
+#define PIN_D2				pin_pd2	// INT0
+#define PIN_D3				pin_pd3	// OC2B INT1
+#define PIN_D4				pin_pd4	//      T0
+#define PIN_D5				pin_pd5	// OC0B T1
+#define PIN_D6				pin_pd6	// OC0A AIN0
+#define PIN_D7				pin_pd7	//      AIN1
+#define PIN_D8				pin_pb0	// ICP1
+#define PIN_D9				pin_pb1	// OC1A
+#define PIN_D10				pin_pb2	// OC1B
+#define PIN_D11				pin_pb3	// OC2A MOSI
+#define PIN_D12				pin_pb4
+#define PIN_D13				pin_pb5
 
 #define PIN_ANALOG_INPUT		HW_PIN(adc0)
 
-#define PIN_LED				hw_pin_pb5
+#define PIN_LED				pin_pb5
 
 /*  Include HWA definitions
  */

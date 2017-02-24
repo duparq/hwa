@@ -3,7 +3,7 @@
 
 	;; Extended instructions
 
-#define	SREG		HW_ADDRESS( HW_REGISTER(hw_core0, sreg) )
+#define	SREG		HW_ADDRESS( HW_REGISTER(core0, sreg) )
 
 	CYCLES=0
 

@@ -48,11 +48,11 @@
       hwa_pcfa_t cf ;							\
     } hwa_t ;								\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
-    _hwa_setup( hw_shared );						\
+    _hwa_setup( shared );						\
     _hwa_setup( p );							\
     _hwa_setup( cf );							\
     HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,cf,p,bn,bp,__VA_ARGS__,,); \
-    hwa->commit = 1; _hwa_commit( hw_shared );				\
+    hwa->commit = 1; _hwa_commit( shared );				\
     _hwa_commit( p ); _hwa_commit( cf );				\
   }while(0)
 

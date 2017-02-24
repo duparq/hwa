@@ -16,7 +16,7 @@
  * The `hw_read()` instruction reads one byte at given memory address:
  *
  * @code
- * uint8_t byte = hw_read( hw_flash0, addr ); // Read byte at address addr
+ * uint8_t byte = hw_read( flash0, addr ); // Read byte at address addr
  * @endcode
  */
 #define _hw_mthd_hw_read__flasha		, _hw_read_flasha
@@ -44,7 +44,7 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
  * @code
  * uint8_t dst[10];
  * uint8_t count = sizeof(dst);
- * hw_read_bytes( hw_flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
+ * hw_read_bytes( flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
  * @endcode
  */
 
@@ -91,9 +91,9 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  * uint8_t page[HW_DEVICE_FLASH_PAGE_SIZE] ;
  * intptr_t zpage = address & ~(HW_DEVICE_FLASH_PAGE_SIZE-1) ;
  *
- * hw( load_buffer, hw_flash0, page );  // Store data into the memory page buffer
- * hw( erase_page, hw_flash0, zpage );  // Erase memory page
- * hw( write_page, hw_flash0, zpage );  // Program memory page with page buffer content
+ * hw( load_buffer, flash0, page );  // Store data into the memory page buffer
+ * hw( erase_page, flash0, zpage );  // Erase memory page
+ * hw( write_page, flash0, zpage );  // Program memory page with page buffer content
  * @endcode
  */
 

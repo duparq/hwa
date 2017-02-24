@@ -35,7 +35,7 @@
  *
  * Syntax 1: `hw_irqe( object [, irq_name] )`
  *
- * Syntax 2: `hw_irqe( hw_irq(object [, irq_name]) )`
+ * Syntax 2: `hw_irqe( irq(object [, irq_name]) )`
  * @hideinitializer
  */
 #define HW_IRQE(...)		_HW_IRQE2(HW_IRQ(__VA_ARGS__))
@@ -49,7 +49,7 @@
  *
  * Syntax 1: `hw_irqf( object [, irq_name] )`
  *
- * Syntax 2: `hw_irqf( hw_irq(object [, irq_name]) )`
+ * Syntax 2: `hw_irqf( irq(object [, irq_name]) )`
  * @hideinitializer
  */
 #define HW_IRQF(...)		_HW_IRQF2(HW_IRQ(__VA_ARGS__))
@@ -126,7 +126,7 @@
 /*  Definition of an interrupt. Extra arguments are allowed and returned unchanged.
  *  Only used by HW_ISR().
  *
- *    HW_IRQX(hw_counter0)
+ *    HW_IRQX(counter0)
  *    HW_IRQX(hw_counter0,compare)
  *    HW_IRQX(hw_counter0,compare,isr_naked,...)
  */

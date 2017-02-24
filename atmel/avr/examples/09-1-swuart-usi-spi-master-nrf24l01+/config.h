@@ -11,7 +11,7 @@
 #define hw_swuart0_compare	      	HW_RELATIVE(hw_counter1,compare0)
 #define hw_swuart0_clk_div      	1
 
-#define UART                            hw_swuart0
+#define UART                            swuart0
 
 #include BOARD_H
 

@@ -17,7 +17,7 @@
 
 /*  The counter
  */
-#define COUNTER                 hw_counter0
+#define COUNTER                 counter0
 #define CLKDIV                  64
 #define COUNTMODE               up_loop
 #define PERIOD                  0.5

@@ -27,7 +27,7 @@
 
 /*  The counter used to produce the LED pulse
  */
-#define COUNTER			hw_counter0
+#define COUNTER			counter0
 #define COUNTER_CLK_DIV		64
 #define COMPARE			compare0
 
@@ -49,8 +49,8 @@ HW_ISR( COUNTER, COMPARE )
 {
   hw( turn, HW_IRQ(COUNTER,COMPARE), off );
   hw( write, PIN_LED, 0 );
-  hw( clear, HW_IRQF(hw_acmp0) );
-  hw( turn, HW_IRQ(hw_acmp0), on );
+  hw( clear, HW_IRQF(acmp0) );
+  hw( turn, HW_IRQ(acmp0), on );
 }
 
 
@@ -60,9 +60,9 @@ HW_ISR( COUNTER, COMPARE )
  *    program a compare-match IRQ to occur in 1ms.
  *	(maybe reset the prescaler)
  */
-HW_ISR( hw_acmp0 )
+HW_ISR( acmp0 )
 {
-  hw( turn, HW_IRQ(hw_acmp0), off );
+  hw( turn, HW_IRQ(acmp0), off );
   hw( write, PIN_LED, 1 );
 
   if ( COUNTER_CLK_DIV > 1 )
@@ -87,7 +87,7 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,  hw_core0,
+  hwa( configure,  core0,
        sleep,      enabled,
        sleep_mode, idle );
 
@@ -128,12 +128,12 @@ int main ( )
 
   /*  Configure the analog comparator
    */
-  hwa( configure,      hw_acmp0,
+  hwa( configure,      acmp0,
        edge,	       EDGE,
        positive_input, REFERENCE,
        negative_input, PIN_ANALOG_INPUT );
 
-  hwa( turn, HW_IRQ(hw_acmp0), on );
+  hwa( turn, HW_IRQ(acmp0), on );
 
   /*  Write this configuration into the hardware
    */

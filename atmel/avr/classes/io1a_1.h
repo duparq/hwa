@@ -48,7 +48,7 @@
  * of the least significant bit:
  *
  * @code
- * #if HW_ID(hw_pin_pa3) && (hw_bp(hw_pin_pa3) != 3)
+ * #if HW_ID(hw_pin_pa3) && (hw_bp(pin_pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode

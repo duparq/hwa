@@ -50,7 +50,7 @@ main ( )
 {
   /*  Increase the frequency of the RC oscillator to the max
    */
-  hw( write, HW_REGISTER(hw_core0, osccal), 0xFF );
+  hw( write, HW_REGISTER(core0, osccal), 0xFF );
 
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
@@ -59,14 +59,14 @@ main ( )
 
   /*  Configure the software UARTs
    */
-  hwa( configure, hw_swuart0 );
-  hwa( configure, hw_swuart1 );
+  hwa( configure, swuart0 );
+  hwa( configure, swuart1 );
 
   hwa( configure, PIN_LED, direction, output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,     hw_core0,
+  hwa( configure,     core0,
        sleep,      enabled,
        sleep_mode, idle );
 
@@ -88,24 +88,24 @@ main ( )
      */
     hw( write, PIN_LED, 1 );
 
-    hw( reset, hw_swuart0 );
-    hw( reset, hw_swuart1 );
+    hw( reset, swuart0 );
+    hw( reset, swuart1 );
     for(;;) {
       hw_sleep();
-      if ( hw( stat, hw_swuart0 ).sync ) {
-        hw( write, hw_swuart0, '$');     /* signal the synchronization */
-        hw( write, HW_REGISTER(hw_swuart1, dt0), hw( read, HW_REGISTER(hw_swuart0, dt0) ) );
-        hw( write, HW_REGISTER(hw_swuart1, dtn), hw( read, HW_REGISTER(hw_swuart0, dtn) ) );
-        hw( write, HW_REGISTER(hw_swuart1, synced), 1 );
-        hw( write, hw_swuart1, '$');     /* signal the synchronization */
+      if ( hw( stat, swuart0 ).sync ) {
+        hw( write, swuart0, '$');     /* signal the synchronization */
+        hw( write, HW_REGISTER(swuart1, dt0), hw( read, HW_REGISTER(swuart0, dt0) ) );
+        hw( write, HW_REGISTER(swuart1, dtn), hw( read, HW_REGISTER(swuart0, dtn) ) );
+        hw( write, HW_REGISTER(swuart1, synced), 1 );
+        hw( write, swuart1, '$');     /* signal the synchronization */
         break ;
       }
-      if ( hw( stat, hw_swuart1 ).sync ) {
-        hw( write, hw_swuart1, '$');     /* signal the synchronization */
-        hw( write, HW_REGISTER(hw_swuart0, dt0), hw( read, HW_REGISTER(hw_swuart1, dt0) ) );
-        hw( write, HW_REGISTER(hw_swuart0, dtn), hw( read, HW_REGISTER(hw_swuart1, dtn) ) );
-        hw( write, HW_REGISTER(hw_swuart0, synced), 1 );
-        hw( write, hw_swuart0, '$');     /* signal the synchronization */
+      if ( hw( stat, swuart1 ).sync ) {
+        hw( write, swuart1, '$');     /* signal the synchronization */
+        hw( write, HW_REGISTER(swuart0, dt0), hw( read, HW_REGISTER(swuart1, dt0) ) );
+        hw( write, HW_REGISTER(swuart0, dtn), hw( read, HW_REGISTER(swuart1, dtn) ) );
+        hw( write, HW_REGISTER(swuart0, synced), 1 );
+        hw( write, swuart0, '$');     /* signal the synchronization */
         break ;
       }
     }
@@ -116,27 +116,27 @@ main ( )
      */
     for(;;) {
       hw_sleep();
-      if ( hw( stat, hw_swuart0 ).rxc ) {
+      if ( hw( stat, swuart0 ).rxc ) {
         /*
          *  UART0 -> UART0 + UART1
          */
-        if ( hw( stat, hw_swuart0 ).stop == 0 )
+        if ( hw( stat, swuart0 ).stop == 0 )
           break ;       /* null stop bit -> resynchronize */
 
-        uint8_t byte = hw( read, hw_swuart0 );
-        hw( write, hw_swuart0, byte );
-        hw( write, hw_swuart1, byte );
+        uint8_t byte = hw( read, swuart0 );
+        hw( write, swuart0, byte );
+        hw( write, swuart1, byte );
       }
-      if ( hw( stat, hw_swuart1 ).rxc ) {
+      if ( hw( stat, swuart1 ).rxc ) {
         /*
          *  UART1 -> UART1 + UART0
          */
-        if ( hw( stat, hw_swuart1 ).stop == 0 )
+        if ( hw( stat, swuart1 ).stop == 0 )
           break ;       /* null stop bit -> resynchronize */
 
-        uint8_t byte = hw( read, hw_swuart1 );
-        hw( write, hw_swuart1, byte );
-        hw( write, hw_swuart0, byte );
+        uint8_t byte = hw( read, swuart1 );
+        hw( write, swuart1, byte );
+        hw( write, swuart0, byte );
       }
     }
   }

@@ -20,7 +20,7 @@
 
 /*  Service watchdog IRQ
  */
-HW_ISR( hw_wdog0 )
+HW_ISR( wdog0 )
 {
   /*  Blink the LED
    */
@@ -41,14 +41,14 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
-  hwa( configure, hw_wdog0,
+  hwa( configure, wdog0,
               timeout,          TIMEOUT,
               action,           irq
               );
 
   /*  Configure the core to enter idle mode when asked to sleep
    */
-  hwa( configure, hw_core0,
+  hwa( configure, core0,
               sleep,      enabled,
               sleep_mode, idle
               );
@@ -68,16 +68,3 @@ int main ( )
     
   return 0 ;
 }
-
-
-/* HW_IRQX( hw_counter0 ); */
-/* HW_IRQX( hw_counter0,overflow ); */
-
-/* HW_ISR( hw_counter0 ); */
-/* HW_ISR( hw_counter0,overflow ); */
-
-/* HW_ISR( hw_counter0, isr_naked ); */
-/* HW_ISR( hw_counter0,overflow, isr_naked ); */
-
-/* HW_ISR( hw_counter0, isr_naked, isr_interruptible, bbb, ccc ); */
-/* HW_ISR( hw_counter0,overflow, isr_naked, isr_interruptible ); */

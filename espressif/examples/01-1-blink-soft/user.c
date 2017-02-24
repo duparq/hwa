@@ -1,7 +1,7 @@
 
 #include <hwa/modules/esp-wroom-02.h>
 
-#define LED		hw_pin_gpio5
+#define LED		pin_gpio5
 
 
 /*  Function called every 250 ms

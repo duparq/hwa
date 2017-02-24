@@ -53,10 +53,10 @@ static void process ( uint8_t byte )
     if ( byte == '\n'
          && buf.addr < HW_DEVICE_EEPROM_SIZE ) {
       if ( buf.cmd == 'E' )
-        hw( write, hw_eeprom0, buf.addr, buf.n );
+        hw( write, eeprom0, buf.addr, buf.n );
       else {
         while ( buf.n-- ) {
-          uint8_t byte = hw( read, hw_eeprom0, buf.addr );
+          uint8_t byte = hw( read, eeprom0, buf.addr );
           hw( write, UART, byte );
           buf.addr++ ;
         }
@@ -83,7 +83,7 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,  hw_core0,
+  hwa( configure,  core0,
        sleep,      enabled,
        sleep_mode, idle );
 

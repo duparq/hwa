@@ -18,7 +18,7 @@
 
 /*  The counter
  */
-#define COUNTER                 hw_counter0
+#define COUNTER                 counter0
 #define CLKDIV                  64
 #define COUNTMODE               up_loop
 #define COMPARE                 compare0
@@ -53,7 +53,7 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,  hw_core0,
+  hwa( configure,  core0,
        sleep,      enabled,
        sleep_mode, idle );
 

@@ -25,7 +25,7 @@
  * The `hw_bn()` instruction retrieves the number of bits of an I/O definition:
  *
  * @code
- * #if hw_id(hw_pin_pa3) && (hw_bn(hw_pin_pa3) != 1)
+ * #if hw_id(pin_pa3) && (hw_bn(pin_pa3) != 1)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -42,7 +42,7 @@
  * of the least significant bit:
  *
  * @code
- * #if hw_id(hw_pin_pa3) && (hw_bp(hw_pin_pa3) != 3)
+ * #if hw_id(pin_pa3) && (hw_bp(pin_pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -58,7 +58,7 @@
  * associated to the I/O:
  *
  * @code
- * #if hw_id(hw_pin_pa3) && hw_id(hw_rel(hw_pin_pa3,port)) != hw_id(hw_port_a)
+ * #if hw_id(pin_pa3) && hw_id(rel(hw_pin_pa3,port)) != hw_id(port_a)
  * #  Pin PA3 should be a PORTA pin!
  * #endif
  * @endcode

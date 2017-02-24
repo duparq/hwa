@@ -17,7 +17,7 @@
 #  error This example does work only with ATtinyX5s
 #endif
 
-#define COUNTER			hw_counter1	// hw_counter1
+#define COUNTER			counter1	// hw_counter1
 #define CLOCK_SRC		system		// system | pll_32MHz | pll_64MHz
 #define CLOCK_PSC		16		// power of 2 in the range 1..16384
 #define PWM_HZ			20000		// frequency of generated signals

@@ -16,7 +16,7 @@
  * The `hw_read()` instruction reads one byte at given memory address:
  *
  * @code
- * uint8_t byte = hw_read( hw_eeprom0, 0x42 );  // read byte at address 0x42
+ * uint8_t byte = hw_read( eeprom0, 0x42 );  // read byte at address 0x42
  * @endcode
  */
 #define _hw_mthd_hw_read__eeproma		, _hw_read_eeproma
@@ -49,7 +49,7 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
  * @code
  * uint16_t address = 0x00F8 ;
  * uint8_t bytes[8] ;
- * hw_read_bytes( hw_eeprom0, &bytes, address, sizeof(bytes) );
+ * hw_read_bytes( eeprom0, &bytes, address, sizeof(bytes) );
  * @endcode
  */
 #define _hw_mthd_hw_read_bytes__eeproma		, _hw_eeproma_read_bytes
@@ -81,7 +81,7 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
  * The `hw_write()` instruction writes one byte at given memory address:
  *
  * @code
- * hw_write( hw_eeprom0, 0x42, 42 );  // Write 42 at address 0x42
+ * hw_write( eeprom0, 0x42, 42 );  // Write 42 at address 0x42
  * @endcode
  */
 #define _hw_mthd_hw_write__eeproma		, _hw_write_eeproma
@@ -117,7 +117,7 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
  *
  * @code
  * extern uint8_t bytes[42] ;
- * hw_write_bytes( hw_eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100
+ * hw_write_bytes( eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100
  * @endcode
  */
 #define _hw_mthd_hw_write_bytes__eeproma		, _hw_eeproma_write_bytes

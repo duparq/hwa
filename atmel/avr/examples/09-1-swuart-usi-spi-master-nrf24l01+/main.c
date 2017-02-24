@@ -57,16 +57,16 @@
 
 /*  We need a device with an USI
  */
-#if HW_ID(hw_usi0) == 0
+#if HW_ID(usi0) == 0
 HW_ERROR(device `HW_DEVICE` does not have a USI)
 #endif
 
 
 #if defined ARDUINO
-#  define USI           hw_spi0
+#  define USI           spi0
 #  define NRF_CSN       HW_PIN(PIN_D2)
 #else
-#  define USI           hw_usi0
+#  define USI           usi0
 #  define NRF_CSN       HW_PIN(3)
 #endif
 

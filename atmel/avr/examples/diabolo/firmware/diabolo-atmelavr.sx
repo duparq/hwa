@@ -90,42 +90,42 @@
 
 	;; Hardware registers
 	;;
-	MCUSR      = hw_ra(hw_core0, mcusr)
-	 BP_EXTRF  = hw_bp(hw_reg(hw_core0, extrf))
-	 BP_PORF   = hw_bp(hw_reg(hw_core0, porf))
+	MCUSR      = hw_ra(core0, mcusr)
+	 BP_EXTRF  = hw_bp(reg(hw_core0, extrf))
+	 BP_PORF   = hw_bp(reg(hw_core0, porf))
 
-	SPMCSR	   = hw_ra(hw_flash0, csr)
-	 BP_RWWSRE = hw_bp(hw_reg(hw_flash0, rwwsre))
-	 BP_BLBSET = hw_bp(hw_reg(hw_flash0, blbset))
-	 BP_PGWRT  = hw_bp(hw_reg(hw_flash0, pgwrt))
-	 BP_PGERS  = hw_bp(hw_reg(hw_flash0, pgers))
-	 BP_SPMEN  = hw_bp(hw_reg(hw_flash0, spmen))
+	SPMCSR	   = hw_ra(flash0, csr)
+	 BP_RWWSRE = hw_bp(reg(hw_flash0, rwwsre))
+	 BP_BLBSET = hw_bp(reg(hw_flash0, blbset))
+	 BP_PGWRT  = hw_bp(reg(hw_flash0, pgwrt))
+	 BP_PGERS  = hw_bp(reg(hw_flash0, pgers))
+	 BP_SPMEN  = hw_bp(reg(hw_flash0, spmen))
 
-	EEARL	   = hw_ra(hw_eeprom0, ar)+0
-	EEARH	   = hw_ra(hw_eeprom0, ar)+1
-	EEDR	   = hw_ra(hw_eeprom0, dr)
-	EECR	   = hw_ra(hw_eeprom0, cr)
-#define AP_EEMPE   hw_ap(hw_reg(hw_eeprom0, mpe))
-#define AP_EEPE	   hw_ap(hw_reg(hw_eeprom0, pe))
-#define AP_EERE	   hw_ap(hw_reg(hw_eeprom0, re))
+	EEARL	   = hw_ra(eeprom0, ar)+0
+	EEARH	   = hw_ra(eeprom0, ar)+1
+	EEDR	   = hw_ra(eeprom0, dr)
+	EECR	   = hw_ra(eeprom0, cr)
+#define AP_EEMPE   hw_ap(reg(hw_eeprom0, mpe))
+#define AP_EEPE	   hw_ap(reg(hw_eeprom0, pe))
+#define AP_EERE	   hw_ap(reg(hw_eeprom0, re))
 
 	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
-	RXDPORT	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), port)
-	RXDPIN	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), pin)
-	RXDDR	   = hw_ra(hw_rel(DIABOLO_PIN_RX,port), ddr)
+	RXDPORT	   = hw_ra(rel(DIABOLO_PIN_RX,port), port)
+	RXDPIN	   = hw_ra(rel(DIABOLO_PIN_RX,port), pin)
+	RXDDR	   = hw_ra(rel(DIABOLO_PIN_RX,port), ddr)
 	 BP_RXD	   = hw_bp(DIABOLO_PIN_RX)
-	TXDPORT	   = hw_ra(hw_rel(DIABOLO_PIN_TX,port), port)
-	TXDDR	   = hw_ra(hw_rel(DIABOLO_PIN_TX,port), ddr)
+	TXDPORT	   = hw_ra(rel(DIABOLO_PIN_TX,port), port)
+	TXDDR	   = hw_ra(rel(DIABOLO_PIN_TX,port), ddr)
 	 BP_TXD	   = hw_bp(DIABOLO_PIN_TX)
 
 	;; Debug pin
 	;;
 #if defined DIABOLO_PIN_DBG
 
-	DBGPORT   = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), port)
-	DBGPIN    = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), pin)
-	DBGDDR    = hw_ra(hw_rel(DIABOLO_PIN_DBG,port), ddr)
+	DBGPORT   = hw_ra(rel(DIABOLO_PIN_DBG,port), port)
+	DBGPIN    = hw_ra(rel(DIABOLO_PIN_DBG,port), pin)
+	DBGDDR    = hw_ra(rel(DIABOLO_PIN_DBG,port), ddr)
 	DBGBIT    = hw_bp(DIABOLO_PIN_DBG)
 
 #  define DBGDDR1	sbi	DBGDDR, DBGBIT

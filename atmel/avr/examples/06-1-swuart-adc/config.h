@@ -6,9 +6,9 @@
 #define hw_swuart0_starter              HW_RELATIVE(DIABOLO_PIN_RX,pcic)
 #define hw_swuart0_autosync             5_1
 #define hw_swuart0_clk_div              1
-#define hw_swuart0_compare              HW_RELATIVE(hw_counter1,compare0)
+#define hw_swuart0_compare              HW_RELATIVE(counter1,compare0)
 
-#define UART                            hw_swuart0
+#define UART                            swuart0
 
 #include BOARD_H
 

@@ -21,7 +21,7 @@
 
 /*  The counter used for PWM
  */
-#define COUNTER                 hw_counter1
+#define COUNTER                 counter1
 #define COUNTER_CLK_DIV         8
 
 
@@ -69,11 +69,11 @@ static volatile count_t         duty ;
 /*  Service ADC "conversion completed" IRQ: compute duty
  *  Make the ISR interruptible so that counter IRQs are serviced promptly.
  */
-HW_ISR( hw_adc0, isr_interruptible )
+HW_ISR( adc0, isr_interruptible )
 {
   /*  Get the new value
    */
-  uint16_t adc = hw( read, hw_adc0 );
+  uint16_t adc = hw( read, adc0 );
 
   /*  Low-pass filter
    */
@@ -102,7 +102,7 @@ HW_ISR( hw_adc0, isr_interruptible )
 
   /*  Start a new conversion
    */
-  hw( trigger, hw_adc0 );
+  hw( trigger, adc0 );
 }
 
 
@@ -157,7 +157,7 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,  hw_core0,
+  hwa( configure,  core0,
        sleep,      enabled,
        sleep_mode, idle      );
 
@@ -201,15 +201,15 @@ int main ( )
   /*  Configure the ADC to make a single conversion and trigger an
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
-  hwa( configure, hw_adc0,
+  hwa( configure, adc0,
        clock,     sysclk_div(ADC_CLK_DIV),
        trigger,   manual,
        vref,      vcc,
        align,     right,
        input,     PIN_ANALOG_INPUT );
   
-  hwa( turn, HW_IRQ(hw_adc0), on );
-  hwa( trigger, hw_adc0 );
+  hwa( turn, HW_IRQ(adc0), on );
+  hwa( trigger, adc0 );
 
   /*  Write this configuration into the hardware
    */

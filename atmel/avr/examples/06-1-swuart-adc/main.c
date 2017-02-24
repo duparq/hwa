@@ -39,7 +39,7 @@
  *    FIXME: using the same counter as for swuart overrides the configuration
  *    without error!
  */
-#define COUNTER                 hw_counter0
+#define COUNTER                 counter0
 
 volatile uint16_t               adc ;   // Last adc value
 volatile uint8_t                x_adc ; // Set to 1 after adc is written
@@ -50,7 +50,7 @@ volatile uint8_t                x_adc ; // Set to 1 after adc is written
  */
 HW_ISR( COUNTER, overflow )
 {
-  hw( turn, hw_adc0, on );
+  hw( turn, adc0, on );
   hw( toggle, PIN_LED );
 }
 
@@ -58,10 +58,10 @@ HW_ISR( COUNTER, overflow )
 /*  Service ADC conversion interrupt:
  *    get ADC result, stop the ADC, signal new data ready
  */
-HW_ISR( hw_adc0 )
+HW_ISR( adc0 )
 {
-  adc = hw( read, hw_adc0 );
-  hw( turn, hw_adc0, off );
+  adc = hw( read, adc0 );
+  hw( turn, adc0, off );
   x_adc = 1 ;
 }
 
@@ -84,7 +84,7 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, hw_core0,
+  hwa( configure, core0,
               sleep,      enabled,
               sleep_mode, idle );
 
@@ -109,14 +109,14 @@ main ( )
 
   /*  Configure the ADC (this turns it on)
    */
-  hwa( configure, hw_adc0,
+  hwa( configure, adc0,
               clock,   sysclk_div(128),
               trigger, manual,
               vref,    vcc,
               align,   right,
 	      input,   PIN_ANALOG_INPUT
               );
-  hwa( turn, HW_IRQ(hw_adc0), on );
+  hwa( turn, HW_IRQ(adc0), on );
 
   /*  Write this configuration into the hardware
    */

@@ -1,7 +1,7 @@
 
 #include <hwa/modules/esp-wroom-02.h>
 
-#define LED		hw_pin_gpio4
+#define LED		pin_gpio4
 
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
@@ -45,10 +45,10 @@ void IROM user_init()
 
   /*  Configure the UART
    */
-  hwa_config( hw_pin_gpio15, function, uart0_txd );
-  hwa_config( hw_pin_gpio13, function, uart0_rxd );
+  hwa_config( pin_gpio15, function, uart0_txd );
+  hwa_config( pin_gpio13, function, uart0_rxd );
 
-  hwa_config( hw_uart0,
+  hwa_config( uart0,
 	      baudrate,	  115200,
 	      databits,	  8,
 	      parity,	  none,
@@ -57,7 +57,7 @@ void IROM user_init()
 
   /*  Configure the timer1 to trigger a NMI interrupt every 10 ms
    */
-  hwa_config( hw_timer1,
+  hwa_config( timer1,
   	      clock,     apb_div_16,
   	      countmode, loop_down,
   	      top,       0.5 + 0.01*hw_apbhz/16,

@@ -159,7 +159,7 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
  * The `hw_clear()` instruction clears the status flags all at once:
  *
  * @code
- * hwa_clear( hw_core0 );
+ * hwa_clear( core0 );
  * @endcode
  */
 #define _hw_mthd_hwa_clear__corec	, _hwa_clear__corec

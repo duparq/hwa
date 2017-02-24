@@ -18,7 +18,7 @@
 
 /*  The counter
  */
-#define COUNTER                 hw_counter0
+#define COUNTER                 counter0
 #define CLKDIV                  64
 #define COMPARE                 compare0
 #define PERIOD                  0.5
