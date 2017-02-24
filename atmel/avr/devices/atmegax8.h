@@ -691,35 +691,6 @@ typedef struct {
 #define _hw_obj_hw_pin_pd7		_io1a, 328, hw_portd, 1, 7
 #define _hw_obj_hw_port_d		_io1a, 329, hw_portd, 8, 0
 
-/*  Alternate pin functions
- */
-#define hw_pin_sck			hw_pin_pb5
-#define hw_pin_miso			hw_pin_pb4
-#define hw_pin_mosi			hw_pin_pb3
-#define hw_pin_ss			hw_pin_pb2
-
-/*  Capture & compare outputs
- */
-#define hw_pin_oc00			hw_pin_pd6
-#define hw_pin_oc01			hw_pin_pd5
-#define hw_pin_oc10			hw_pin_pb1
-#define hw_pin_oc11			hw_pin_pb2
-#define hw_pin_ic10			hw_pin_pb0
-#define hw_pin_oc20			hw_pin_pb3
-#define hw_pin_oc21			hw_pin_pd3
-
-/*  Analog pins. ADC6/ADC7 are analog inputs only, no DID register.
- */
-#define hw_pin_adc0			hw_pin_pc0
-#define hw_pin_adc1			hw_pin_pc1
-#define hw_pin_adc2			hw_pin_pc2
-#define hw_pin_adc3			hw_pin_pc3
-#define hw_pin_adc4			hw_pin_pc4
-#define hw_pin_adc5			hw_pin_pc5
-
-#define hw_pin_ain1			hw_pin_pd7
-#define hw_pin_ain0			hw_pin_pd6
-
 #define _hw_obj_hw_pin_adc6		_io1a, 336
 #define _hw_obj_hw_pin_adc7		_io1a, 337
 
@@ -734,14 +705,6 @@ typedef struct {
 
 #define _hw_reg_hw_pin_pd6_did		_xob1, hw_shared, did1, 1, 0	/* AIN0 */
 #define _hw_reg_hw_pin_pd7_did		_xob1, hw_shared, did1, 1, 1	/* AIN1 */
-
-/*  Communications
- */
-#define hw_pin_scl			hw_pin_pc5
-#define hw_pin_sda			hw_pin_pc4
-
-#define hw_pin_txd			hw_pin_pd1
-#define hw_pin_rxd			hw_pin_pd0
 
 /*  Relative pin change controllers
  */
@@ -771,93 +734,123 @@ typedef struct {
 #define _hw_rel_hw_pin_pd6_pcic			hw_pcic2
 #define _hw_rel_hw_pin_pd7_pcic			hw_pcic2
 
-
-/*  Pins by numbers
+/*  Canonical pin names
  */
+#define _hw_pin_sck			, hw_pin_pb5
+#define _hw_pin_miso			, hw_pin_pb4
+#define _hw_pin_mosi			, hw_pin_pb3
+#define _hw_pin_ss			, hw_pin_pb2
+
+#define _hw_pin_oc00			, hw_pin_pd6
+#define _hw_pin_oc01			, hw_pin_pd5
+#define _hw_pin_oc10			, hw_pin_pb1
+#define _hw_pin_oc11			, hw_pin_pb2
+#define _hw_pin_ic10			, hw_pin_pb0
+#define _hw_pin_oc20			, hw_pin_pb3
+#define _hw_pin_oc21			, hw_pin_pd3
+
+#define _hw_pin_adc0			, hw_pin_pc0
+#define _hw_pin_adc1			, hw_pin_pc1
+#define _hw_pin_adc2			, hw_pin_pc2
+#define _hw_pin_adc3			, hw_pin_pc3
+#define _hw_pin_adc4			, hw_pin_pc4
+#define _hw_pin_adc5			, hw_pin_pc5
+#define _hw_pin_adc6			, hw_pin_adc6
+#define _hw_pin_adc7			, hw_pin_adc7
+
+#define _hw_pin_ain1			, hw_pin_pd7
+#define _hw_pin_ain0			, hw_pin_pd6
+
+#define _hw_pin_scl			, hw_pin_pc5
+#define _hw_pin_sda			, hw_pin_pc4
+
+#define _hw_pin_txd			, hw_pin_pd1
+#define _hw_pin_rxd			, hw_pin_pd0
+
 #if defined HW_DEVICE_PACKAGE_28P
 #
-#  define hw_pin_1			hw_pin_pc6
-#  define hw_pin_2			hw_pin_pd0
-#  define hw_pin_3			hw_pin_pd1
-#  define hw_pin_4			hw_pin_pd2
-#  define hw_pin_5			hw_pin_pd3
-#  define hw_pin_6			hw_pin_pd4
-#  define hw_pin_9			hw_pin_pb6
-#  define hw_pin_10			hw_pin_pb7
-#  define hw_pin_11			hw_pin_pd5
-#  define hw_pin_12			hw_pin_pd6
-#  define hw_pin_13			hw_pin_pd7
-#  define hw_pin_14			hw_pin_pb0
-#  define hw_pin_15			hw_pin_pb1
-#  define hw_pin_16			hw_pin_pb2
-#  define hw_pin_17			hw_pin_pb3
-#  define hw_pin_18			hw_pin_pb4
-#  define hw_pin_19			hw_pin_pb5
-#  define hw_pin_23			hw_pin_pc0
-#  define hw_pin_24			hw_pin_pc1
-#  define hw_pin_25			hw_pin_pc2
-#  define hw_pin_26			hw_pin_pc3
-#  define hw_pin_27			hw_pin_pc4
-#  define hw_pin_28			hw_pin_pc5
+#  define _hw_pin_1			, hw_pin_pc6
+#  define _hw_pin_2			, hw_pin_pd0
+#  define _hw_pin_3			, hw_pin_pd1
+#  define _hw_pin_4			, hw_pin_pd2
+#  define _hw_pin_5			, hw_pin_pd3
+#  define _hw_pin_6			, hw_pin_pd4
+#  define _hw_pin_9			, hw_pin_pb6
+#  define _hw_pin_10			, hw_pin_pb7
+#  define _hw_pin_11			, hw_pin_pd5
+#  define _hw_pin_12			, hw_pin_pd6
+#  define _hw_pin_13			, hw_pin_pd7
+#  define _hw_pin_14			, hw_pin_pb0
+#  define _hw_pin_15			, hw_pin_pb1
+#  define _hw_pin_16			, hw_pin_pb2
+#  define _hw_pin_17			, hw_pin_pb3
+#  define _hw_pin_18			, hw_pin_pb4
+#  define _hw_pin_19			, hw_pin_pb5
+#  define _hw_pin_23			, hw_pin_pc0
+#  define _hw_pin_24			, hw_pin_pc1
+#  define _hw_pin_25			, hw_pin_pc2
+#  define _hw_pin_26			, hw_pin_pc3
+#  define _hw_pin_27			, hw_pin_pc4
+#  define _hw_pin_28			, hw_pin_pc5
 #
 #elif defined HW_DEVICE_PACKAGE_28Q
 #
-#  define hw_pin_1			hw_pin_pd3
-#  define hw_pin_2			hw_pin_pd4
-/* #  define hw_pin_3			hw_pin_ */
-/* #  define hw_pin_4			hw_pin_ */
-#  define hw_pin_5			hw_pin_pb6
-#  define hw_pin_6			hw_pin_pb7
-#  define hw_pin_7			hw_pin_pd5
-#  define hw_pin_8			hw_pin_pd6
-#  define hw_pin_9			hw_pin_pd7
-#  define hw_pin_10			hw_pin_pb0
-#  define hw_pin_11			hw_pin_pb1
-#  define hw_pin_12			hw_pin_pb2
-#  define hw_pin_13			hw_pin_pb3
-#  define hw_pin_14			hw_pin_pb4
-#  define hw_pin_15			hw_pin_pb5
-/* #  define hw_pin_16			hw_pin_ */
-/* #  define hw_pin_17			hw_pin_ */
-/* #  define hw_pin_18			hw_pin_ */
-#  define hw_pin_19			hw_pin_pc0
-#  define hw_pin_20			hw_pin_pc1
-#  define hw_pin_21			hw_pin_pc2
-#  define hw_pin_22			hw_pin_pc3
-#  define hw_pin_23			hw_pin_pc4
-#  define hw_pin_24			hw_pin_pc5
-#  define hw_pin_25			hw_pin_pc6
-#  define hw_pin_26			hw_pin_pd0
-#  define hw_pin_27			hw_pin_pd1
-#  define hw_pin_28			hw_pin_pd2
+#  define _hw_pin_1			, hw_pin_pd3
+#  define _hw_pin_2			, hw_pin_pd4
+/* #  define _hw_pin_3			, hw_pin_ */
+/* #  define _hw_pin_4			, hw_pin_ */
+#  define _hw_pin_5			, hw_pin_pb6
+#  define _hw_pin_6			, hw_pin_pb7
+#  define _hw_pin_7			, hw_pin_pd5
+#  define _hw_pin_8			, hw_pin_pd6
+#  define _hw_pin_9			, hw_pin_pd7
+#  define _hw_pin_10			, hw_pin_pb0
+#  define _hw_pin_11			, hw_pin_pb1
+#  define _hw_pin_12			, hw_pin_pb2
+#  define _hw_pin_13			, hw_pin_pb3
+#  define _hw_pin_14			, hw_pin_pb4
+#  define _hw_pin_15			, hw_pin_pb5
+/* #  define _hw_pin_16			, hw_pin_ */
+/* #  define _hw_pin_17			, hw_pin_ */
+/* #  define _hw_pin_18			, hw_pin_ */
+#  define _hw_pin_19			, hw_pin_pc0
+#  define _hw_pin_20			, hw_pin_pc1
+#  define _hw_pin_21			, hw_pin_pc2
+#  define _hw_pin_22			, hw_pin_pc3
+#  define _hw_pin_23			, hw_pin_pc4
+#  define _hw_pin_24			, hw_pin_pc5
+#  define _hw_pin_25			, hw_pin_pc6
+#  define _hw_pin_26			, hw_pin_pd0
+#  define _hw_pin_27			, hw_pin_pd1
+#  define _hw_pin_28			, hw_pin_pd2
 #
 #elif defined HW_DEVICE_PACKAGE_32Q
 #
-#  define hw_pin_1			hw_pin_pd3
-#  define hw_pin_2			hw_pin_pd4
-#  define hw_pin_7			hw_pin_pb6
-#  define hw_pin_8			hw_pin_pb7
-#  define hw_pin_9			hw_pin_pd5
-#  define hw_pin_10			hw_pin_pd6
-#  define hw_pin_11			hw_pin_pd7
-#  define hw_pin_12			hw_pin_pb0
-#  define hw_pin_13			hw_pin_pb1
-#  define hw_pin_14			hw_pin_pb2
-#  define hw_pin_15			hw_pin_pb3
-#  define hw_pin_16			hw_pin_pb4
-#  define hw_pin_17			hw_pin_pb5
-#  define hw_pin_19			hw_pin_adc6
-#  define hw_pin_22			hw_pin_adc7
-#  define hw_pin_23			hw_pin_pc0
-#  define hw_pin_24			hw_pin_pc1
-#  define hw_pin_25			hw_pin_pc2
-#  define hw_pin_26			hw_pin_pc3
-#  define hw_pin_27			hw_pin_pc4
-#  define hw_pin_28			hw_pin_pc5
-#  define hw_pin_29			hw_pin_pc6
-#  define hw_pin_30			hw_pin_pd0
-#  define hw_pin_31			hw_pin_pd1
-#  define hw_pin_32			hw_pin_pd2
+#  define _hw_pin_1			, hw_pin_pd3
+#  define _hw_pin_2			, hw_pin_pd4
+#  define _hw_pin_7			, hw_pin_pb6
+#  define _hw_pin_8			, hw_pin_pb7
+#  define _hw_pin_9			, hw_pin_pd5
+#  define _hw_pin_10			, hw_pin_pd6
+#  define _hw_pin_11			, hw_pin_pd7
+#  define _hw_pin_12			, hw_pin_pb0
+#  define _hw_pin_13			, hw_pin_pb1
+#  define _hw_pin_14			, hw_pin_pb2
+#  define _hw_pin_15			, hw_pin_pb3
+#  define _hw_pin_16			, hw_pin_pb4
+#  define _hw_pin_17			, hw_pin_pb5
+#  define _hw_pin_19			, hw_pin_adc6
+#  define _hw_pin_22			, hw_pin_adc7
+#  define _hw_pin_23			, hw_pin_pc0
+#  define _hw_pin_24			, hw_pin_pc1
+#  define _hw_pin_25			, hw_pin_pc2
+#  define _hw_pin_26			, hw_pin_pc3
+#  define _hw_pin_27			, hw_pin_pc4
+#  define _hw_pin_28			, hw_pin_pc5
+#  define _hw_pin_29			, hw_pin_pc6
+#  define _hw_pin_30			, hw_pin_pd0
+#  define _hw_pin_31			, hw_pin_pd1
+#  define _hw_pin_32			, hw_pin_pd2
 #
 #endif
 
@@ -1083,8 +1076,9 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc00_pin			hw_pin_oc00
+#define _hw_rel_hw_oc00_pin			hw_pin_pd6
 #define _hw_rel_hw_oc00_counter			hw_counter0
+
 
 /*	Object				class, id, address
  */
@@ -1103,7 +1097,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc01_pin			hw_pin_oc01
+#define _hw_rel_hw_oc01_pin			hw_pin_pd5
 #define _hw_rel_hw_oc01_counter			hw_counter0
 
 
@@ -1170,8 +1164,9 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc10_pin			hw_pin_oc10
+#define _hw_rel_hw_oc10_pin			hw_pin_pb1
 #define _hw_rel_hw_oc10_counter			hw_counter1
+
 
 /*	Object				class, id, address
  */
@@ -1190,7 +1185,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc11_pin			hw_pin_oc11
+#define _hw_rel_hw_oc11_pin			hw_pin_pb2
 #define _hw_rel_hw_oc11_counter			hw_counter1
 
 
@@ -1220,7 +1215,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_ic10_pin			hw_pin_ic11
+#define _hw_rel_hw_ic10_pin			hw_pin_pb0
 #define _hw_rel_hw_ic10_counter			hw_counter1
 
 
@@ -1306,8 +1301,9 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc20_pin			hw_pin_oc20
+#define _hw_rel_hw_oc20_pin			hw_pin_pb3
 #define _hw_rel_hw_oc20_counter			hw_counter2
+
 
 /*	Object				class, id, address
  */
@@ -1326,7 +1322,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc21_pin			hw_pin_oc21
+#define _hw_rel_hw_oc21_pin			hw_pin_pd3
 #define _hw_rel_hw_oc21_counter			hw_counter2
 
 
@@ -1364,10 +1360,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_spi0pin_mosi			hw_pin_mosi
-#define hw_spi0pin_miso			hw_pin_miso
-#define hw_spi0pin_sck			hw_pin_sck
-#define hw_spi0pin_ss			hw_pin_ss
+#define _hw_rel_hw_spi0_pin_mosi		hw_pin_pb3
+#define _hw_rel_hw_spi0_pin_miso		hw_pin_pb4
+#define _hw_rel_hw_spi0_pin_sck			hw_pin_pb5
+#define _hw_rel_hw_spi0_pin_ss			hw_pin_pb2
 
 
 /*******************************************************************************
@@ -1446,8 +1442,8 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_twi0pin_scl			hw_pin_scl
-#define hw_twi0pin_sda			hw_pin_sda
+#define _hw_rel_hw_twi0_pin_scl			hw_pin_pc5
+#define _hw_rel_hw_twi0_pin_sda			hw_pin_pc4
 
 
 /*******************************************************************************

@@ -65,9 +65,9 @@
  */
 uint8_t spi_tfr( uint8_t v )
 {
-  hw_write( hw_spi0, v );
-  while( !hw_stat_irqf(hw_spi0) ) {}
-  return hw_read( hw_spi0 );
+  hw( write, hw_spi0, v );
+  while( !hw( read, HW_IRQF(hw_spi0) ) ) {}
+  return hw( read, hw_spi0 );
 }
 
 
@@ -75,8 +75,8 @@ uint8_t spi_tfr( uint8_t v )
  */
 uint8_t uart_rx()
 {
-  while ( !hw_stat_irqf(UART,rxc) ) {}
-  return hw_read( UART );
+  while ( !hw( read, HW_IRQF(UART,rxc) ) ) {}
+  return hw( read, UART );
 }
 
 
@@ -85,8 +85,8 @@ uint8_t uart_rx()
  */
 void uart_tx( uint8_t c )
 {
-  while ( !hw_stat_irqf(UART,txqnf) ) {}
-  hw_write( UART, c );
+  while ( !hw( read, HW_IRQF(UART,txqnf) ) ) {}
+  hw( write, UART, c );
 }
 
 
@@ -100,22 +100,21 @@ main ( )
 
   /*  Configure the software UART
    */
-  hwa_config( UART,
-  	      bps,  115200 );
+  hwa( configure, UART,
+       bps,       115200 );
 
   /*  Configure the USI as SPI master clocked by software
    */
-  hwa_config( hw_spi0,
-	      mode,          master,
-	      clock,         sysclk_div(128), 
-	      sck_idle,      low,
-	      sampling_edge, rising
-	      );
+  hwa( configure,     hw_spi0,
+       mode,          master,
+       clock,         sysclk_div(128), 
+       sck_idle,      low,
+       sampling_edge, rising );
 
   /*  Configure nRF CSN pin
    */
-  hwa_config( NRF_CSN, direction, output );
-  hwa_write(  NRF_CSN, 1 );
+  hwa( configure, NRF_CSN, direction, output );
+  hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware
    */
@@ -151,7 +150,7 @@ main ( )
 
       /*  Select SPI slave and send data
        */
-      hw_write( NRF_CSN, 0 );
+      hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
 	c = uart_rx();
 	spi_tfr( c );
@@ -163,7 +162,7 @@ main ( )
 	c = spi_tfr(0);
 	uart_tx(c);
       }
-      hw_write( NRF_CSN, 1 );
+      hw( write, NRF_CSN, 1 );
     }
     else {
       /*

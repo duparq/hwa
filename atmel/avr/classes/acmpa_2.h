@@ -25,11 +25,11 @@
  *                             | rising
  *                             | both,   ]
  *
- *           [ positive_input,   hw_pin_ain0
+ *           [ positive_input,   HW_PIN(ain0)
  *                             | bandgap,    ]
  *
- *           [ negative_input,   hw_pin_ain1
- *                             | hw_pin_adc0 .. hw_pin_adc7 ]
+ *           [ negative_input,   HW_PIN(ain1)
+ *                             | HW_PIN(adc0..7) ]
  *           );
  * @endcode
  */
@@ -70,14 +70,14 @@
 /*  Optionnal parameter `positive_input`
  */
 #define _hw_is_positive_input_positive_input	, 1
-#define _hw_acmpa_posin_hw_pin_ain0		, 0	/* ACBG */
+#define _hw_acmpa_posin_HW_PIN(ain0)		, 0	/* ACBG */
 #define _hw_acmpa_posin_bandgap			, 1	/* ACBG */
 
 #define _hwa_cfacmpa_xposin_1(o,k,v,...)				\
   HW_G2(_hwa_cfacmpa_vposin, HW_IS(,_hw_acmpa_posin_##v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vposin_0(o,v,...)					\
-  HW_E_AVL(positive_input, v, hw_pin_ain0 | bandgap)
+  HW_E_AVL(positive_input, v, HW_PIN(ain0) | bandgap)
 
 #define _hwa_cfacmpa_vposin_1(o,v,k,...)		\
   _hwa_write_reg(o,acbg, HW_A1(_hw_acmpa_posin_##v));	\
@@ -93,29 +93,29 @@
 #define _hwa_cfacmpa_xnegin_0(o,...)		HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfacmpa_xnegin_1(o,k,v,...)				\
-  if ( HW_ID(v)==HW_ID(hw_pin_ain1) ) {					\
+  if ( HW_ID(v)==HW_ID(HW_PIN(ain1)) ) {				\
     _hwa_write_reg(o,acme,0);						\
   } else {								\
     _hwa_write_reg(o,acme,1);						\
     _hwa_write_reg(o,aden,0);						\
-    if ( HW_ID(v) == HW_ID( hw_pin_adc0 ) )				\
+    if ( HW_ID(v) == HW_ID( HW_PIN(adc0) ) )				\
       _hwa_write_reg(o,admux, 0);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc1 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc1) ) )			\
       _hwa_write_reg(o,admux, 1);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc2 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc2) ) )			\
       _hwa_write_reg(o,admux, 2);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc3 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc3) ) )			\
       _hwa_write_reg(o,admux, 3);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc4 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc4) ) )			\
       _hwa_write_reg(o,admux, 4);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc5 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc5) ) )			\
       _hwa_write_reg(o,admux, 5);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc6 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc6) ) )			\
       _hwa_write_reg(o,admux, 6);					\
-    else if ( HW_ID(v) == HW_ID( hw_pin_adc7 ) )			\
+    else if ( HW_ID(v) == HW_ID( HW_PIN(adc7) ) )			\
       _hwa_write_reg(o,admux, 7);					\
     else								\
-      HWA_ERR("`negative_input` can be `hw_pin_ain1`, or any "		\
+      HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any "		\
 	      "analog input pin, but not`" #v "`.");			\
   }									\
   HW_EOL(__VA_ARGS__)

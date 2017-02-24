@@ -55,8 +55,8 @@
 /*  Settings for building the Diabolo bootloader
  *  Settings for the Diabolo application are in the board's Makefile
  */
-#define DIABOLO_PIN_RX			hw_pin_rxd
-#define DIABOLO_PIN_TX			hw_pin_txd
+#define DIABOLO_PIN_RX			HW_PIN(rxd)
+#define DIABOLO_PIN_TX			HW_PIN(txd)
 #define DIABOLO_SYNC			5+1
 
 /*  Board pins
@@ -84,7 +84,7 @@
 #define PIN_MISO			hw_pin_pb4
 #define PIN_SCK				hw_pin_pb5
 
-#define PIN_ANALOG_INPUT		hw_pin_adc0
+#define PIN_ANALOG_INPUT		HW_PIN(adc0)
 
 #define PIN_LED				hw_pin_pb5
 

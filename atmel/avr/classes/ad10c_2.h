@@ -53,7 +53,7 @@
  *             //  Voltage reference
  *             //
  *             vref,      vcc                        // Vcc
- *                      | hw_pin_aref                // Voltage on AREF pin
+ *                      | pin_aref                   // Voltage on AREF pin
  *                      | bandgap_1100mV             // Internal 1.1V bandgap
  *                      | bandgap_2560mV             // Internal 2.56V bandgap
  *                      | bandgap_2560mV_aref,       //   + output on AREF pin for decoupling
@@ -65,7 +65,7 @@
  *
  *             //  Input
  *             //
- *             input,     hw_pin_adc0 .. hw_pin_adc3
+ *             input,     HW_PIN(adc0..3)
  *                      | gnd
  *                      | bandgap
  *                      | temperature
@@ -97,9 +97,9 @@
  *             //  HWA will trigger an error if you try to use a combination
  *             //  of inputs that is not available
  *             //
- *             positive_input,   hw_pin_adc0 .. hw_pin_adc3,
+ *             positive_input,   HW_PIN(adc0..3)
  * 
- *             negative_input,   hw_pin_adc0 .. hw_pin_adc3
+ *             negative_input,   HW_PIN(adc0..3)
  *           );
  * @endcode
  */
@@ -199,7 +199,7 @@
 #define _hwa_cfad10c_kvref_1(o,k,v,...)					\
   HW_G2(_hwa_cfad10c_vvref, HW_IS(,_hw_ad10c_vref_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vvref_0(o,v,...)				\
-  HW_E_AVL(vref, v, vcc | hw_pin_aref | bandgap_1100mV | handgap_2560mV | handgap_2560mV_aref)
+  HW_E_AVL(vref, v, vcc | pin_aref | bandgap_1100mV | handgap_2560mV | handgap_2560mV_aref)
 #define _hwa_cfad10c_vvref_1(o,v,k,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10c_vref_##v));	\
   HW_G2(_hwa_cfad10c_kalign, HW_IS(align,k))(o,k,__VA_ARGS__)
@@ -260,16 +260,16 @@
 #define _hwa_cfad10c_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10c_input_##v)) )				\
     _hwa_write_reg(o,mux, HW_A1(_hw_ad10c_input_##v,0));		\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc0 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc0) ) )		\
     _hwa_write_reg(o,mux, 0);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc1 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc1) ) )		\
     _hwa_write_reg(o,mux, 1);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc2 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc2) ) )		\
     _hwa_write_reg(o,mux, 2);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc3 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc3) ) )		\
     _hwa_write_reg(o,mux, 3);	     					\
   else									\
-    HWA_ERR("`input` can be `hw_pin_adc0..3` (or synonyms), "		\
+    HWA_ERR("`input` can be 'HW_PIN(adc0..3)' (or synonyms), "		\
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
   HW_TX(__VA_ARGS__)
 
@@ -289,7 +289,7 @@
 #define _hwa_cfad10c_kpositive_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10c_vpositive_input, HW_IS(,_hw_ad10c_input_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vpositive_input_0(o,v,...)				\
-  HW_E_AVL(`positive_input`, v, `hw_pin_adc0 | hw_pin_adc1 | hw_pin_adc2 | hw_pin_adc3` or synonyms)
+  HW_E_AVL(`positive_input`, v, 'HW_PIN(adc0..3)' or synonyms)
 #define _hwa_cfad10c_vpositive_input_1(o,v,k,...)			\
   uint8_t positive_input = HW_A1(_hw_ad10c_input_##v);		\
   HW_G2(_hwa_cfad10c_knegative_input, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
@@ -298,7 +298,7 @@
 #define _hwa_cfad10c_knegative_input_1(o,k,v,...)			\
   HW_G2(_hwa_cfad10c_vnegative_input, HW_IS(,_hw_ad10c_input_##v))(o,v,__VA_ARGS__)
 #define _hwa_cfad10c_vnegative_input_0(o,v,...)		\
-  HW_E_AVL(`negative_input`, v, `hw_pin_adc0 | hw_pin_adc1 | hw_pin_adc2 | hw_pin_adc3` or synonyms)
+  HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..3)' or synonyms)
 #define _hwa_cfad10c_vnegative_input_1(o,v,...)		\
   uint8_t negative_input = HW_A1(_hw_ad10c_input_##v);		\
   HW_TX(_hwa_write_reg(o,mux,						\

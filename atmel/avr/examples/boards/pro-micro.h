@@ -124,7 +124,7 @@ THIS IS NOT DONE YET
 #define PIN_D12				hw_pin_pb4
 #define PIN_D13				hw_pin_pb5
 
-#define PIN_ANALOG_INPUT		hw_pin_adc0
+#define PIN_ANALOG_INPUT		HW_PIN(adc0)
 
 #define PIN_LED				hw_pin_pb5
 

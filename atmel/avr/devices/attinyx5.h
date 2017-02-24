@@ -582,27 +582,6 @@ typedef struct {
 #  define _hw_obj_hw_pin_pb5		_io1a, 306, hw_portb, 1, 5
 #endif
 
-/*  Alternate pin functions
- */
-#define hw_pin_oc0a			hw_pin_pb0
-#define hw_pin_oc0b			hw_pin_pb1
-
-#define hw_pin_oc1a			hw_pin_pb1
-#define hw_pin_oc1an			hw_pin_pb0
-#define hw_pin_oc1b			hw_pin_pb4
-#define hw_pin_oc1bn			hw_pin_pb3
-
-#define hw_pin_usck			hw_pin_pb2
-#define hw_pin_do			hw_pin_pb1
-#define hw_pin_di			hw_pin_pb0
-
-#define hw_pin_adc0			hw_pin_pb5
-#define hw_pin_adc1			hw_pin_pb2
-#define hw_pin_adc2			hw_pin_pb4
-#define hw_pin_adc3			hw_pin_pb3
-#define hw_pin_ain1			hw_pin_pb1
-#define hw_pin_ain0			hw_pin_pb0
-
 /*  Digital input disable bits for analog input pins
  */
 #define _hw_reg_hw_pin_pb5_did		_xob1, hw_shared, did, 1, 5	/* ADC0 */
@@ -621,15 +600,34 @@ typedef struct {
 #define _hw_rel_hw_pin_pb4_pcic			hw_pcic0
 #define _hw_rel_hw_pin_pb5_pcic			hw_pcic0
 
-/*  Pin numbers
+/*  Canonical pin names
  */
+#define _hw_pin_oc0a			, hw_pin_pb0
+#define _hw_pin_oc0b			, hw_pin_pb1
+
+#define _hw_pin_oc1a			, hw_pin_pb1
+#define _hw_pin_oc1an			, hw_pin_pb0
+#define _hw_pin_oc1b			, hw_pin_pb4
+#define _hw_pin_oc1bn			, hw_pin_pb3
+
+#define _hw_pin_usck			, hw_pin_pb2
+#define _hw_pin_do			, hw_pin_pb1
+#define _hw_pin_di			, hw_pin_pb0
+
+#define _hw_pin_adc0			, hw_pin_pb5
+#define _hw_pin_adc1			, hw_pin_pb2
+#define _hw_pin_adc2			, hw_pin_pb4
+#define _hw_pin_adc3			, hw_pin_pb3
+#define _hw_pin_ain1			, hw_pin_pb1
+#define _hw_pin_ain0			, hw_pin_pb0
+
 #if defined HW_DEVICE_PACKAGE_8P3
-#  define hw_pin_1			hw_pin_pb5
-#  define hw_pin_2			hw_pin_pb3
-#  define hw_pin_3			hw_pin_pb4
-#  define hw_pin_5			hw_pin_pb0
-#  define hw_pin_6			hw_pin_pb1
-#  define hw_pin_7			hw_pin_pb2
+#  define _hw_pin_1			, hw_pin_pb5
+#  define _hw_pin_2			, hw_pin_pb3
+#  define _hw_pin_3			, hw_pin_pb4
+#  define _hw_pin_5			, hw_pin_pb0
+#  define _hw_pin_6			, hw_pin_pb1
+#  define _hw_pin_7			, hw_pin_pb2
 #endif
 
 
@@ -821,7 +819,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc00_pin			hw_pin_oc0a
+#define _hw_rel_hw_oc00_pin			hw_pin_pb0
 #define _hw_rel_hw_oc00_counter			hw_counter0
 
 
@@ -842,7 +840,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc01_pin			hw_pin_oc0b
+#define _hw_rel_hw_oc01_pin			hw_pin_pb1
 #define _hw_rel_hw_oc01_counter			hw_counter0
 
 
@@ -935,9 +933,9 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc10_pin			hw_pin_oc1a
-#define _hw_rel_hw_oc10_pin_h			hw_pin_oc1a
-#define _hw_rel_hw_oc10_pin_l			hw_pin_oc1an
+#define _hw_rel_hw_oc10_pin			hw_pin_pb1
+#define _hw_rel_hw_oc10_pin_h			hw_pin_pb1
+#define _hw_rel_hw_oc10_pin_l			hw_pin_pb0
 #define _hw_rel_hw_oc10_counter			hw_counter1
 
 /*	Object				class, id, address
@@ -958,9 +956,9 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_hw_oc11_pin			hw_pin_oc1b
-#define _hw_rel_hw_oc11_pin_h			hw_pin_oc1b
-#define _hw_rel_hw_oc11_pin_l			hw_pin_oc1bn
+#define _hw_rel_hw_oc11_pin			hw_pin_pb4
+#define _hw_rel_hw_oc11_pin_h			hw_pin_pb4
+#define _hw_rel_hw_oc11_pin_l			hw_pin_pb3
 #define _hw_rel_hw_oc11_counter			hw_counter1
 
 /*	Object				class, id, address

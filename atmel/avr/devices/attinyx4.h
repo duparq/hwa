@@ -575,24 +575,6 @@ typedef struct {
 #  define _hw_obj_hw_pin_pb3		_io1a, 314, hw_portb, 1, 3
 #endif
 
-/*  Alternate pin functions
- */
-#define hw_pin_ain0			hw_pin_pa1
-#define hw_pin_ain1			hw_pin_pa2
-
-#define hw_pin_usck			hw_pin_pa4
-#define hw_pin_do			hw_pin_pa5
-#define hw_pin_di			hw_pin_pa6
-
-#define hw_pin_adc0			hw_pin_pa0
-#define hw_pin_adc1			hw_pin_pa1
-#define hw_pin_adc2			hw_pin_pa2
-#define hw_pin_adc3			hw_pin_pa3
-#define hw_pin_adc4			hw_pin_pa4
-#define hw_pin_adc5			hw_pin_pa5
-#define hw_pin_adc6			hw_pin_pa6
-#define hw_pin_adc7			hw_pin_pa7
-
 /*  Digital input disable bits for analog input pins
  */
 #define _hw_reg_hw_pin_pa0_did		_xob1, hw_shared, did, 1, 0
@@ -606,36 +588,52 @@ typedef struct {
 
 /*  Relative pin change controllers
  */
-#define _hw_rel_hw_pin_pa0_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa1_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa2_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa3_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa4_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa5_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa6_pcic			hw_pcic0
-#define _hw_rel_hw_pin_pa7_pcic			hw_pcic0
+#define _hw_rel_hw_pin_pa0_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa1_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa2_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa3_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa4_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa5_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa6_pcic		hw_pcic0
+#define _hw_rel_hw_pin_pa7_pcic		hw_pcic0
 
-#define _hw_rel_hw_pin_pb0_pcic			hw_pcic1
-#define _hw_rel_hw_pin_pb1_pcic			hw_pcic1
-#define _hw_rel_hw_pin_pb2_pcic			hw_pcic1
-#define _hw_rel_hw_pin_pb3_pcic			hw_pcic1
+#define _hw_rel_hw_pin_pb0_pcic		hw_pcic1
+#define _hw_rel_hw_pin_pb1_pcic		hw_pcic1
+#define _hw_rel_hw_pin_pb2_pcic		hw_pcic1
+#define _hw_rel_hw_pin_pb3_pcic		hw_pcic1
 
-/*	Pins by numbers
+/*  Canonical pin names
  */
+#define _hw_pin_ain0			, hw_pin_pa1
+#define _hw_pin_ain1			, hw_pin_pa2
+
+#define _hw_pin_usck			, hw_pin_pa4
+#define _hw_pin_do			, hw_pin_pa5
+#define _hw_pin_di			, hw_pin_pa6
+
+#define _hw_pin_adc0			, hw_pin_pa0
+#define _hw_pin_adc1			, hw_pin_pa1
+#define _hw_pin_adc2			, hw_pin_pa2
+#define _hw_pin_adc3			, hw_pin_pa3
+#define _hw_pin_adc4			, hw_pin_pa4
+#define _hw_pin_adc5			, hw_pin_pa5
+#define _hw_pin_adc6			, hw_pin_pa6
+#define _hw_pin_adc7			, hw_pin_pa7
+
 #if defined HW_DEVICE_PACKAGE_14P3
 #
-#  define hw_pin_2			hw_pin_pb0
-#  define hw_pin_3			hw_pin_pb1
-#  define hw_pin_4			hw_pin_pb3
-#  define hw_pin_5			hw_pin_pb2
-#  define hw_pin_6			hw_pin_pa7
-#  define hw_pin_7			hw_pin_pa6
-#  define hw_pin_8			hw_pin_pa5
-#  define hw_pin_9			hw_pin_pa4
-#  define hw_pin_10			hw_pin_pa3
-#  define hw_pin_11			hw_pin_pa2
-#  define hw_pin_12			hw_pin_pa1
-#  define hw_pin_13			hw_pin_pa0
+#  define _hw_pin_2			, hw_pin_pb0
+#  define _hw_pin_3			, hw_pin_pb1
+#  define _hw_pin_4			, hw_pin_pb3
+#  define _hw_pin_5			, hw_pin_pb2
+#  define _hw_pin_6			, hw_pin_pa7
+#  define _hw_pin_7			, hw_pin_pa6
+#  define _hw_pin_8			, hw_pin_pa5
+#  define _hw_pin_9			, hw_pin_pa4
+#  define _hw_pin_10			, hw_pin_pa3
+#  define _hw_pin_11			, hw_pin_pa2
+#  define _hw_pin_12			, hw_pin_pa1
+#  define _hw_pin_13			, hw_pin_pa0
 #
 #endif
 

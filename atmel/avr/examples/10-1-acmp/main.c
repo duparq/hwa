@@ -87,10 +87,9 @@ int main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, hw_core0,
-       sleep,	  enabled,
-       sleep_mode, idle
-       );
+  hwa( configure,  hw_core0,
+       sleep,      enabled,
+       sleep_mode, idle );
 
   /*  Configure LED pin
    */
@@ -99,19 +98,17 @@ int main ( )
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
-#if HW_ID( hw_io(REFERENCE) )
+#if HW_ID( REFERENCE )
   hwa( configure, REFERENCE,
-       mode,	 analog,
-       direction, input
-       );
+       mode,      analog,
+       direction, input );
 #endif
 
   /*  Configure INPUT_NEG pin in analog mode (disable digital input buffer)
    */
   hwa( configure, PIN_ANALOG_INPUT,
-       mode,	 analog,
-       direction, input
-       );
+       mode,      analog,
+       direction, input );
 
   /*  Check that the counter can handle the ON_TIME value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
@@ -122,9 +119,8 @@ int main ( )
   /*  Configure the counter to count from 0 to max
    */
   hwa( configure, COUNTER,
-       clock,	 HW_G2(prescaler_output, COUNTER_CLK_DIV),
-       countmode, up_loop
-       );
+       clock,     prescaler_output(COUNTER_CLK_DIV),
+       countmode, up_loop );
 
   /*  Prepare the compare value for the PIN_LED pulse
    */
@@ -132,10 +128,11 @@ int main ( )
 
   /*  Configure the analog comparator
    */
-  hwa( configure,         hw_acmp0,
+  hwa( configure,      hw_acmp0,
        edge,	       EDGE,
        positive_input, REFERENCE,
        negative_input, PIN_ANALOG_INPUT );
+
   hwa( turn, HW_IRQ(hw_acmp0), on );
 
   /*  Write this configuration into the hardware

@@ -64,10 +64,10 @@ HW_ERROR(device `HW_DEVICE` does not have a USI)
 
 #if defined ARDUINO
 #  define USI           hw_spi0
-#  define NRF_CSN       PIN_D2
+#  define NRF_CSN       HW_PIN(PIN_D2)
 #else
 #  define USI           hw_usi0
-#  define NRF_CSN       hw_pin_3
+#  define NRF_CSN       HW_PIN(3)
 #endif
 
 

@@ -68,7 +68,7 @@ HW_ERROR(device `HW_DEVICE` does not have a USI)
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
 #define SPI             hw_spimaster_swclk0
-#define NRF_CSN         hw_pin_3
+#define NRF_CSN         HW_PIN(3)
 
 
 int

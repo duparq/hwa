@@ -124,6 +124,7 @@
 #endif
 
 #define HW_E_O(x)		HW_E(`x` is not an object)
+#define HW_E_P(x)		HW_E(`x` is not a pin)
 #define HW_E_OM()		HW_E(missing object name)
 #define HW_E_T(x)		HW_E(unrecognized token `x`)
 
@@ -843,3 +844,15 @@
 #define _HW_RELATIVE(o,x)		__HW_REL2(o,x)
 #define _HW_REL(o,x)			__HW_REL2(o,x)
 #define __HW_REL2(o,x)			_hw_rel_##o##_##x
+
+
+/**
+ * @ingroup public_obj_macros
+ * @brief Canonical name of a pin
+ * @hideinitializer
+ */
+#define HW_PIN(o)		_HW_PIN1(o,_hw_pin_##o,)
+#define _HW_PIN1(...)		_HW_PIN2(__VA_ARGS__)
+#define _HW_PIN2(o,x,...)	HW_G2(_HW_PIN,HW_IS(,x))(o,__VA_ARGS__)
+#define _HW_PIN_0(o,...)	HW_E_P(o)
+#define _HW_PIN_1(o,p,...)	p

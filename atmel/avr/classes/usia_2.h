@@ -73,14 +73,14 @@
   if ( mode != HW_A1(_hw_usia_mode_spi_master)			\
        && mode != HW_A1(_hw_usia_mode_spi_slave) )		\
     HWA_ERR("sorry, desired mode is not supported yet.");	\
-  if ( clock != HW_A1(_hw_usia_clock_software) )			\
+  if ( clock != HW_A1(_hw_usia_clock_software) )		\
     HWA_ERR("sorry, desired clock mode is not supported yet.");	\
   _hwa_write_reg( o, wm, 1 );					\
   _hwa_write_reg( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
-    _hwa( configure, hw_pin_usck, direction, output );		\
-    _hwa( configure, hw_pin_do,   direction, output );		\
-    _hwa( configure, hw_pin_di,   direction, input	);		\
+    _hwa( configure, HW_PIN(usck), direction, output );		\
+    _hwa( configure, HW_PIN(do),   direction, output );		\
+    _hwa( configure, HW_PIN(di),   direction, input  );		\
     _hwa_write_reg( o, clk, 1 );				\
   }								\
   else								\
@@ -149,8 +149,8 @@
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
-    _hwa( configure, hw_pin_usck, direction, output );	\
-    _hwa( configure, hw_pin_do,   direction, output );	\
+    _hwa( configure, HW_PIN(usck), direction, output );	\
+    _hwa( configure, HW_PIN(do),   direction, output );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  2 );			\
     _hwa_write_reg( o, clk, 1 );			\
@@ -200,9 +200,9 @@
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
-    _hwa( configure, hw_pin_usck, direction, output );	\
-    _hwa( configure, hw_pin_do,   direction, output );	\
-    _hwa( configure, hw_pin_di,   direction, input  );	\
+    _hwa( configure, HW_PIN(usck), direction, output );	\
+    _hwa( configure, HW_PIN(do),   direction, output );	\
+    _hwa( configure, HW_PIN(di),   direction, input  );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  1 );			\
     _hwa_write_reg( o, clk, 0 );			\

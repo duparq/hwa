@@ -52,8 +52,8 @@
  *             //  Voltage reference
  *             //
  *             vref,      vcc                        // Vcc
- *                      | hw_pin_avcc                // Voltage on AVCC pin
- *                      | hw_pin_aref                // Voltage on AREF pin
+ *                      | pin_avcc                   // Voltage on AVCC pin
+ *                      | pin_aref                   // Voltage on AREF pin
  *                      | bandgap,                   // Internal 1.1V bandgap
  * 
  *             //  Result alignment (default is `right`)
@@ -63,7 +63,7 @@
  *
  *             //  Input
  *             //
- *             input,     hw_pin_adc0 .. hw_pin_adc7
+ *             input,     HW_PIN(adc0..7)
  *                      | agnd
  *                      | bandgap
  *                      | temperature
@@ -163,7 +163,7 @@
  */
 #define _hwa_cfad10b_kvref_0(o,k,...)		HW_E_VL(k,vref)
 #define _hwa_cfad10b_kvref_1(o,k,v,...)		HW_G2(_hwa_cfad10b_vvref,HW_IS(,_hw_ad10b_vref_##v))(o,v,__VA_ARGS__)
-#define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | hw_pin_avcc | hw_pin_aref | bandgap)
+#define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | pin_avcc | pin_aref | bandgap)
 #define _hwa_cfad10b_vvref_1(o,v,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
   _hwa_cfad10b_align(o,__VA_ARGS__)
@@ -200,24 +200,24 @@
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10b_input_##v)) )				\
     _hwa_write_reg(o,mux, HW_A1(_hw_ad10b_input_##v,0));		\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc0 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc0) ) )		\
     _hwa_write_reg(o,mux, 0);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc1 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc1) ) )		\
     _hwa_write_reg(o,mux, 1);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc2 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc2) ) )		\
     _hwa_write_reg(o,mux, 2);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc3 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc3) ) )		\
     _hwa_write_reg(o,mux, 3);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc4 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc4) ) )		\
     _hwa_write_reg(o,mux, 4);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc5 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc5) ) )		\
     _hwa_write_reg(o,mux, 5);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc6 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc6) ) )		\
     _hwa_write_reg(o,mux, 6);	     					\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( hw_pin_adc7 ) )		\
+  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc7) ) )		\
     _hwa_write_reg(o,mux, 7);						\
   else									\
-    HWA_ERR("`input` can be `hw_pin_adc0..7` (or synonyms), "		\
+    HWA_ERR("`input` can be 'HW_PIN(adc0..7)' (or synonyms), "		\
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
   HW_TX(__VA_ARGS__)
 

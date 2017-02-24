@@ -71,21 +71,21 @@
 /*  Settings for building the Diabolo bootloader.
  *  (Settings for the host application are in the board's Makefile)
  */
-#define DIABOLO_PIN_RX			hw_pin_2
-#define DIABOLO_PIN_TX			hw_pin_2
+#define DIABOLO_PIN_RX			HW_PIN(2)
+#define DIABOLO_PIN_TX			HW_PIN(2)
 #define DIABOLO_SYNC			10+1
 
 /*  Channel selection pins
  */
-#define PIN_TCS3200_S2			hw_pin_5
-#define PIN_TCS3200_S3			hw_pin_3
+#define PIN_TCS3200_S2			HW_PIN(5)
+#define PIN_TCS3200_S3			HW_PIN(3)
 
 /*  Create a `PIN_OUTS` object consisting of the 4 consecutive I/O pins
  *  PA5,PA4,PA3,PA2 (14pdip: 8..11)
  *
  *					class, id, parent, #of bits, position of lsb
  */
-#define _PIN_OUTS			_io1a, 0, hw_porta, 4, 2
+#define _hw_obj_PIN_OUTS		_io1a, 0, hw_porta, 4, 2
 
 /*  Include HWA definitions
  */
