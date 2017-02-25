@@ -37,7 +37,7 @@
  * :----------------------|-----------------------|:--------------------------------------
  * `hw_port0`	 | @ref espressif_p16a "_p16a"	  | General purpose I/O port
  * `hw_timer1`	 | @ref espressif_tm23a "_tm23a"  | 23-bit timer
- * `hw_uart0`	 | @ref esp8266_uarta "_uarta"    | UART
+ * `hw_uart0`	 | @ref esp8266_uarta "_uarta"	  | UART
  */
 
 
@@ -56,8 +56,8 @@
  *
  *						class, vector, object, ie, if
  */
-#define _hw_irq_timer1_nmi			_irq, nmi, timer1, ie,
-#define _hw_irq_timer1_irq			_irq,   9, timer1, ie,
+#define _hw_irq_timer1_nmi		_irq, nmi, timer1, ie,
+#define _hw_irq_timer1_irq		_irq,	9, timer1, ie,
 
 
 /*  ESP8266 interrupts are processed through OS calls to user service routines
@@ -150,7 +150,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_port0		_p16a, 101, 0x60000300
+#define _hw_def_port0			_p16a, 101, 0x60000300
 
 
 /*	Class hardware registers	class, address, write mask, flags mask
@@ -161,35 +161,35 @@ typedef struct {
  *	  * 0D-ESP8266__Pin_List__Release_15-11-2014.ods
  *	  * ESP8266_RTOS_SDK/blob/master/examples/driver_lib/driver/gpio.c
  */
-#define _hw_reg__p16a__out			_r32, 0x00, 0xFFFFFFFF, 0
+#define _hw_reg__p16a__out		_r32, 0x00, 0xFFFFFFFF, 0
 #define _hw_reg__p16a__outw1ts		_r32, 0x04, 0x0000FFFF, 0
 #define _hw_reg__p16a__outw1tc		_r32, 0x08, 0x0000FFFF, 0
-#define _hw_reg__p16a__enb			_r32, 0x0C, 0x003FFFFF, 0
+#define _hw_reg__p16a__enb		_r32, 0x0C, 0x003FFFFF, 0
 #define _hw_reg__p16a__enbw1ts		_r32, 0x10, 0x0000FFFF, 0
 #define _hw_reg__p16a__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
-#define _hw_reg__p16a__in			_r32, 0x18, 0x00000000, 0
-#define _hw_reg__p16a__ie			_r32, 0x1C, 0x0000FFFF, 0
+#define _hw_reg__p16a__in		_r32, 0x18, 0x00000000, 0
+#define _hw_reg__p16a__ie		_r32, 0x1C, 0x0000FFFF, 0
 #define _hw_reg__p16a__iew1ts		_r32, 0x20, 0x0000FFFF, 0
 #define _hw_reg__p16a__iew1tc		_r32, 0x24, 0x0000FFFF, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define _hw_reg__p16a_btsel			_cb1, _out,     16, 16
-#define _hw_reg__p16a_out			_cb1, _out,     16,  0
+#define _hw_reg__p16a_btsel		_cb1, _out,	16, 16
+#define _hw_reg__p16a_out		_cb1, _out,	16,  0
 #define _hw_reg__p16a_outw1ts		_cb1, _outw1ts, 16,  0
 #define _hw_reg__p16a_outw1tc		_cb1, _outw1tc, 16,  0
 
-#define _hw_reg__p16a_sdiosel		_cb1, _enb,      6, 16
-#define _hw_reg__p16a_enb			_cb1, _enb,     16,  0
+#define _hw_reg__p16a_sdiosel		_cb1, _enb,	 6, 16
+#define _hw_reg__p16a_enb		_cb1, _enb,	16,  0
 #define _hw_reg__p16a_enbw1ts		_cb1, _enbw1ts, 16,  0
 #define _hw_reg__p16a_enbw1tc		_cb1, _enbw1tc, 16,  0
 
-#define _hw_reg__p16a_strapping		_cb1, _in,      16, 16
-#define _hw_reg__p16a_in			_cb1, _in,      16,  0
+#define _hw_reg__p16a_strapping		_cb1, _in,	16, 16
+#define _hw_reg__p16a_in		_cb1, _in,	16,  0
 
-#define _hw_reg__p16a_ie			_cb1, _ie,      16, 16
-#define _hw_reg__p16a_iew1ts		_cb1, _iew1ts,  16, 16
-#define _hw_reg__p16a_iew1tc		_cb1, _iew1tc,  16, 16
+#define _hw_reg__p16a_ie		_cb1, _ie,	16, 16
+#define _hw_reg__p16a_iew1ts		_cb1, _iew1ts,	16, 16
+#define _hw_reg__p16a_iew1tc		_cb1, _iew1tc,	16, 16
 
 
 /*******************************************************************************
@@ -205,7 +205,7 @@ typedef struct {
  * Each pin can be connected to different signals with the `hw_config()` or
  * `hwa_config()` instruction.
  *
- * Pin    | HWA name        | Class                       | Functions
+ * Pin	  | HWA name	    | Class			  | Functions
  * -------|-----------------|-----------------------------|-------------
  * GPIO0  | `hw_pin_gpio0`  | @ref esp8266_io1a "_io1a" | `gpio` / `spi_cs2` / `clk_out`
  * GPIO1  | `hw_pin_gpio1`  | @ref esp8266_io1a "_io1a" | `gpio` / `uart0_txd` / `spi_cs1` / `clk_rtc`
@@ -229,29 +229,29 @@ typedef struct {
 
 /*	Pins				class, id, port, bn, bp
  */
-#define _hw_def_pin_gpio0			_io1a, 102, port0, 1, 0
-#define _hw_def_pin_gpio1			_io1a, 103, port0, 1, 1
-#define _hw_def_pin_gpio2			_io1a, 104, port0, 1, 2
-#define _hw_def_pin_gpio3			_io1a, 105, port0, 1, 3
-#define _hw_def_pin_gpio4			_io1a, 106, port0, 1, 4
-#define _hw_def_pin_gpio5			_io1a, 107, port0, 1, 5
-#define _hw_def_pin_gpio6			_io1a, 108, port0, 1, 6
-#define _hw_def_pin_gpio7			_io1a, 109, port0, 1, 7
-#define _hw_def_pin_gpio8			_io1a, 110, port0, 1, 8
-#define _hw_def_pin_gpio9			_io1a, 111, port0, 1, 9
-#define _hw_def_pin_gpio10			_io1a, 112, port0, 1, 10
-#define _hw_def_pin_gpio11			_io1a, 113, port0, 1, 11
-#define _hw_def_pin_gpio12			_io1a, 114, port0, 1, 12
-#define _hw_def_pin_gpio13			_io1a, 115, port0, 1, 13
-#define _hw_def_pin_gpio14			_io1a, 116, port0, 1, 14
-#define _hw_def_pin_gpio15			_io1a, 117, port0, 1, 15
+#define _hw_def_pin_gpio0		_io1a, 102, port0, 1, 0
+#define _hw_def_pin_gpio1		_io1a, 103, port0, 1, 1
+#define _hw_def_pin_gpio2		_io1a, 104, port0, 1, 2
+#define _hw_def_pin_gpio3		_io1a, 105, port0, 1, 3
+#define _hw_def_pin_gpio4		_io1a, 106, port0, 1, 4
+#define _hw_def_pin_gpio5		_io1a, 107, port0, 1, 5
+#define _hw_def_pin_gpio6		_io1a, 108, port0, 1, 6
+#define _hw_def_pin_gpio7		_io1a, 109, port0, 1, 7
+#define _hw_def_pin_gpio8		_io1a, 110, port0, 1, 8
+#define _hw_def_pin_gpio9		_io1a, 111, port0, 1, 9
+#define _hw_def_pin_gpio10		_io1a, 112, port0, 1, 10
+#define _hw_def_pin_gpio11		_io1a, 113, port0, 1, 11
+#define _hw_def_pin_gpio12		_io1a, 114, port0, 1, 12
+#define _hw_def_pin_gpio13		_io1a, 115, port0, 1, 13
+#define _hw_def_pin_gpio14		_io1a, 116, port0, 1, 14
+#define _hw_def_pin_gpio15		_io1a, 117, port0, 1, 15
 
 
 /*	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class
  *
  *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
  */
-#define _hw_def_pin_gpio16			_io1b, 118, port1, 1, 0
+#define _hw_def_pin_gpio16		_io1b, 118, port1, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -442,7 +442,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_timer1		_tm23a, 135, 0x60000600
+#define _hw_def_timer1			_tm23a, 135, 0x60000600
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
@@ -453,18 +453,18 @@ typedef struct {
 
 /*	Class logical registers
  */
-#define _hw_reg__tm23a_int			_cb1, _ctrl,  1, 8	// Interrupt status
-#define _hw_reg__tm23a_en			_cb1, _ctrl,  1, 7	// Enable timer
-#define _hw_reg__tm23a_arl			_cb1, _ctrl,  1, 6	// Auto-reload after 0
-#define _hw_reg__tm23a_psc			_cb1, _ctrl,  2, 2	// Prescaler
+#define _hw_reg__tm23a_int		_cb1, _ctrl,  1, 8	// Interrupt status
+#define _hw_reg__tm23a_en		_cb1, _ctrl,  1, 7	// Enable timer
+#define _hw_reg__tm23a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
+#define _hw_reg__tm23a_psc		_cb1, _ctrl,  2, 2	// Prescaler
 #define _hw_reg__tm23a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
 
-#define _hw_reg__tm23a_load			_cb1, _load,  23, 0	// Reload value
+#define _hw_reg__tm23a_load		_cb1, _load,  23, 0	// Reload value
 #define _hw_reg__tm23a_count		_cb1, _count, 23, 0	// Count
 
 #define _hw_reg__tm23a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-#define _hw_reg_timer1_ie			_xob1, shared, _edgeie, 1, 1
+#define _hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -479,7 +479,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_timer2		_tm32a, 136, 0x60000620
+#define _hw_def_timer2			_tm32a, 136, 0x60000620
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -491,18 +491,18 @@ typedef struct {
 
 /*	Class logical registers
  */
-#define _hw_reg__tm32a_int			_cb1, _ctrl,  1, 8	// Interrupt status
-#define _hw_reg__tm32a_en			_cb1, _ctrl,  1, 7	// Enable timer
-#define _hw_reg__tm32a_arl			_cb1, _ctrl,  1, 6	// Auto-reload after 0
-#define _hw_reg__tm32a_psc			_cb1, _ctrl,  2, 2	// Prescaler
+#define _hw_reg__tm32a_int		_cb1, _ctrl,  1, 8	// Interrupt status
+#define _hw_reg__tm32a_en		_cb1, _ctrl,  1, 7	// Enable timer
+#define _hw_reg__tm32a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
+#define _hw_reg__tm32a_psc		_cb1, _ctrl,  2, 2	// Prescaler
 #define _hw_reg__tm32a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
 
-#define _hw_reg__tm32a_load			_cb1, _load,  32, 0	// Reload value
+#define _hw_reg__tm32a_load		_cb1, _load,  32, 0	// Reload value
 #define _hw_reg__tm32a_count		_cb1, _count, 32, 0	// Count
 
 #define _hw_reg__tm32a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-//#define _hw_reg_timer1_ie			_xob1, shared, _edgeie, 1, 1
+//#define _hw_reg_timer1_ie		  _xob1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -510,7 +510,7 @@ typedef struct {
  *	UARTS								       *
  *									       *
  *	See:								       *
- *       * 8E-ESP8266__Interface_UART__EN_v0.2.pdf			       *
+ *	 * 8E-ESP8266__Interface_UART__EN_v0.2.pdf			       *
  *	 * 8F-ESP8266__Interface__UART_Registers_v0.1			       *
  *	 * Arduino/cores/esp8266/HardwareSerial.h			       *
  *	 * Arduino/cores/esp8266/HardwareSerial.cpp			       *
@@ -522,18 +522,18 @@ typedef struct {
 
 /*	Objects				class, id, address
  */
-#define _hw_def_uart0		_uarta, 137, 0x60000000
-#define _hw_def_uart1		_uarta, 138, 0x60000F00
+#define _hw_def_uart0			_uarta, 137, 0x60000000
+#define _hw_def_uart1			_uarta, 138, 0x60000F00
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
 #define _hw_reg__uarta__fifo		_r32, 0x00, 0x0, 0
-#define _hw_reg__uarta__ir			_r32, 0x04, 0x0, 0		// IRQ raw
-#define _hw_reg__uarta__if			_r32, 0x08, 0x0, 0		// IRQ stat
-#define _hw_reg__uarta__ie			_r32, 0x0C, 0x1FF, 0		// IRQ enable
-#define _hw_reg__uarta__ic			_r32, 0x10, 0x1FF, 0x1FF	// IRQ clear
+#define _hw_reg__uarta__ir		_r32, 0x04, 0x0, 0		// IRQ raw
+#define _hw_reg__uarta__if		_r32, 0x08, 0x0, 0		// IRQ stat
+#define _hw_reg__uarta__ie		_r32, 0x0C, 0x1FF, 0		// IRQ enable
+#define _hw_reg__uarta__ic		_r32, 0x10, 0x1FF, 0x1FF	// IRQ clear
 #define _hw_reg__uarta__clkdiv		_r32, 0x14, 0xFFFFF, 0
-#define _hw_reg__uarta__autobaud		_r32, 0x18, 0xFF01, 0
+#define _hw_reg__uarta__autobaud	_r32, 0x18, 0xFF01, 0
 #define _hw_reg__uarta__stat		_r32, 0x1C, 0x0, 0
 #define _hw_reg__uarta__conf0		_r32, 0x20, 0x01FE61FF, 0
 #define _hw_reg__uarta__conf1		_r32, 0x24, 0xFFFF7F7F, 0
@@ -541,7 +541,7 @@ typedef struct {
 #define _hw_reg__uarta__hipulse		_r32, 0x2C, 0x0, 0
 #define _hw_reg__uarta__pulsnum		_r32, 0x30, 0x0, 0
 #define _hw_reg__uarta__date		_r32, 0x78, 0xFFFFFFFF, 0
-#define _hw_reg__uarta__id			_r32, 0x7C, 0xFFFFFFFF, 0
+#define _hw_reg__uarta__id		_r32, 0x7C, 0xFFFFFFFF, 0
 
 /*	Class logical registers
  */
@@ -589,44 +589,44 @@ typedef struct {
 
 #define _hw_reg__uarta_clkdiv		_cb1, _clkdiv, 20, 0	// Baudrate divider
 
-#define _hw_reg__uarta_stxd			_cb1, _stat, 1, 31	// TX PIN Level
+#define _hw_reg__uarta_stxd		_cb1, _stat, 1, 31	// TX PIN Level
 #define _hw_reg__uarta_srtsn		_cb1, _stat, 1, 30	// RTS PIN Level
 #define _hw_reg__uarta_sdtrn		_cb1, _stat, 1, 29	// DTR PIN Level
 #define _hw_reg__uarta_stxcnt		_cb1, _stat, 8, 16	// TX FIFO COUNT (8bit)
-#define _hw_reg__uarta_srxd			_cb1, _stat, 1, 15	// RX PIN Level
+#define _hw_reg__uarta_srxd		_cb1, _stat, 1, 15	// RX PIN Level
 #define _hw_reg__uarta_sctsn		_cb1, _stat, 1, 14	// CTS PIN Level
 #define _hw_reg__uarta_sdsrn		_cb1, _stat, 1, 13	// DSR PIN Level
 #define _hw_reg__uarta_srxcnt		_cb1, _stat, 8,	 0	// RX FIFO COUNT (8bit)
 
 #define _hw_reg__uarta_cdtri		_cb1, _conf0, 1, 24	// Invert DTR
 #define _hw_reg__uarta_crtsi		_cb1, _conf0, 1, 23	// Invert RTS
-#define _hw_reg__uarta_ctxi			_cb1, _conf0, 1, 22	// Invert TX
+#define _hw_reg__uarta_ctxi		_cb1, _conf0, 1, 22	// Invert TX
 #define _hw_reg__uarta_cdsri		_cb1, _conf0, 1, 21	// Invert DSR
 #define _hw_reg__uarta_cctsi		_cb1, _conf0, 1, 20	// Invert CTS
-#define _hw_reg__uarta_crxi			_cb1, _conf0, 1, 19	// Invert RX
+#define _hw_reg__uarta_crxi		_cb1, _conf0, 1, 19	// Invert RX
 #define _hw_reg__uarta_ctxrst		_cb1, _conf0, 1, 18	// Reset TX FIFO
 #define _hw_reg__uarta_crxrst		_cb1, _conf0, 1, 17	// Reset RX FIFO
 #define _hw_reg__uarta_ctxhfe		_cb1, _conf0, 1, 15	// Enable TX harware flow
-#define _hw_reg__uarta_clbe			_cb1, _conf0, 1, 14	// Enable loopback
-#define _hw_reg__uarta_cbrk			_cb1, _conf0, 1,  8	// Keep TXD low (BRK)
+#define _hw_reg__uarta_clbe		_cb1, _conf0, 1, 14	// Enable loopback
+#define _hw_reg__uarta_cbrk		_cb1, _conf0, 1,  8	// Keep TXD low (BRK)
 #define _hw_reg__uarta_cswdtr		_cb1, _conf0, 1,  7	// Assert DTR
 #define _hw_reg__uarta_cswrts		_cb1, _conf0, 1,  6	// Assert RTS
-#define _hw_reg__uarta_csbn			_cb1, _conf0, 2,  4	// StopBits Count (2bit) 0:disable, 1:1bit, 2:1.5bit, 3:2bit
-#define _hw_reg__uarta_cbn			_cb1, _conf0, 2,  2	// DataBits Count (2bin) 0:5bit, 1:6bit, 2:7bit, 3:8bit
-#define _hw_reg__uarta_cpae			_cb1, _conf0, 1,  1	// Parity Enable
-#define _hw_reg__uarta_cpa			_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
-#define _hw_reg__uarta_cpx			_cb1, _conf0, 2,  0	// HWA convenience
+#define _hw_reg__uarta_csbn		_cb1, _conf0, 2,  4	// StopBits Count (2bit) 0:disable, 1:1bit, 2:1.5bit, 3:2bit
+#define _hw_reg__uarta_cbn		_cb1, _conf0, 2,  2	// DataBits Count (2bin) 0:5bit, 1:6bit, 2:7bit, 3:8bit
+#define _hw_reg__uarta_cpae		_cb1, _conf0, 1,  1	// Parity Enable
+#define _hw_reg__uarta_cpa		_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
+#define _hw_reg__uarta_cpx		_cb1, _conf0, 2,  0	// HWA convenience
 
-#define _hw_reg__uarta_ctoe			_cb1, _conf1, 1, 31	// RX TimeOut Enable
-#define _hw_reg__uarta_ctot			_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
+#define _hw_reg__uarta_ctoe		_cb1, _conf1, 1, 31	// RX TimeOut Enable
+#define _hw_reg__uarta_ctot		_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
 #define _hw_reg__uarta_crxhfe		_cb1, _conf1, 1, 23	// RX Harware Flow Enable
 #define _hw_reg__uarta_crxhft		_cb1, _conf1, 7, 16	// RX Harware Flow Treshold (7bit)
-#define _hw_reg__uarta_cfet			_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
-#define _hw_reg__uarta_cfft			_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
+#define _hw_reg__uarta_cfet		_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
+#define _hw_reg__uarta_cfft		_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
 
-#define _hw_reg__uarta_swap			_xob1, shared, _swap, 1, 2
+#define _hw_reg__uarta_swap		_xob1, shared, _swap, 1, 2
 
-// #define _hw_reg__uarta_		_cb1, _, 1,	//
+// #define _hw_reg__uarta_		   _cb1, _, 1,	//
 
 /*  Relatives
  */
