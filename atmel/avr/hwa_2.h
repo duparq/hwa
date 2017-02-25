@@ -81,11 +81,11 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(c,o,i,a, ...)		HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hw,__VA_ARGS__,)
-#define _hwa_power(c,o,i,a, ...)	HW_G2(_hwx_pwr,HW_IS(,_hw_state_##__VA_ARGS__))(o,_hwa,__VA_ARGS__,)
+#define _hw_power(c,o,i,a, ...)		HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
+#define _hwa_power(c,o,i,a, ...)	HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_ST(v)
-#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_G2(_hwx_pwr1,HW_IS(,HW_G2(_hw_hasbits, _##o##_##prr)))(o,x,v),__VA_ARGS__)
+#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_GX(_hwx_pwr1,HW_G2(_hw_hasbits, _##o##_##prr))(o,x,v),__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
  */
@@ -626,9 +626,8 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
  */
 #define _hw_mthd_hw_clear__m1		, _hw_clear_m1
 
-#define _hw_clear_m1(o,a,r,rc,...)	_hw_write_##rc(__VA_ARGS__ 1)
+#define _hw_clear_m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,...)	_hw_write_##rc(ra,rwm,rfm,rbn,rbp,1)
 
 #define _hw_mthd_hwa_clear__m1		, _hwa_clear_m1
 
 #define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1)
-//_hwa_clear_m1(hw_shared,0, gifr,_r8,0x5A,0x70,0x70, 1,5,);

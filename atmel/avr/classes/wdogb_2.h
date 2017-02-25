@@ -55,20 +55,20 @@
 #define _hw_wdogb_timeout_8s		, 9
 
 #define _hwa_cfwdogb(o,i,a, ...)	\
-  do { HW_G2(_hwa_cfwdogb_ktimeout,HW_IS(timeout,__VA_ARGS__))(o,__VA_ARGS__,,) }while(0)
+  do { HW_GX(_hwa_cfwdogb_ktimeout,_hw_is_timeout_##__VA_ARGS__)(o,__VA_ARGS__,,) }while(0)
 
 #define _hwa_cfwdogb_ktimeout_1(o,k,v,...)				\
-  HW_G2(_hwa_cfwdogb_vtimeout,HW_IS(,_hw_wdogb_timeout_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfwdogb_vtimeout,_hw_wdogb_timeout_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vtimeout_0(o,v,...)				\
   HW_E_AVL(timeout, v, 16ms | 32ms | 64ms | 125ms | 250ms | 500ms | 1s | 2s | 4s | 8s)
 
 #define _hwa_cfwdogb_vtimeout_1(o,v,k,...)			\
   hwa->o.config.timeout = HW_A1(_hw_wdogb_timeout_##v);		\
-  HW_G2(_hwa_cfwdogb_kaction,HW_IS(action,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfwdogb_kaction,_hw_is_action_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfwdogb_ktimeout_0(...)				\
-  HW_G2(_hwa_cfwdogb_kaction,HW_IS(action,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfwdogb_kaction,_hw_is_action_##k)(o,k,__VA_ARGS__)
 
 /*    Mandatory argument `action`
  */
@@ -82,7 +82,7 @@
   HW_E_VL(k,action)
 
 #define _hwa_cfwdogb_kaction_1(o,k,v,...)				\
-  HW_G2(_hwa_cfwdogb_vaction,HW_IS(,_hw_wdogb_action_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfwdogb_vaction,_hw_wdogb_action_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vaction_0(o,v,...)					\
   HW_E_AVL(action, v, none | irq | reset | irq_or_reset)
@@ -104,7 +104,7 @@
 #define _hw_mthd_hw_turn__wdogb		, _hw_turn_wdogb
 
 #define _hw_turn_wdogb(o,i,a, v)			\
-  HW_G2(_hw_turn_wdogb, HW_IS(,_hw_state_##v))(o,v)
+  HW_GX(_hw_turn_wdogb,_hw_state_##v)(o,v)
 
 #define _hw_turn_wdogb_0(o, v)						\
   HW_E_ST(v)
@@ -150,7 +150,7 @@
 #define _hw_mthd_hwa_turn__wdogb	, _hwa_turn_wdogb
 
 #define _hwa_turn_wdogb(o,i,a, ...)					\
-  HW_G2(_hwa_turn_wdogb, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__,)
+  HW_GX(_hwa_turn_wdogb,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hwa_turn_wdogb_0(o, v, ...)				\
   HW_E_ST(v)

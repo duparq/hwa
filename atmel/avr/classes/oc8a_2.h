@@ -54,13 +54,13 @@
 
 #define _hw_cfoc8a(o,i,a, ...)						\
   do {									\
-    HW_G2(_hw_cfoc8a_koutput, HW_IS(output,__VA_ARGS__))(o,__VA_ARGS__,,);	\
+    HW_GX(_hw_cfoc8a_koutput,_hw_is_output_##__VA_ARGS__)(o,__VA_ARGS__,,);	\
   }while(0)
 
 #define _hw_cfoc8a_koutput_0(o,k,...)		\
   HW_E_VL(k,output)
 #define _hw_cfoc8a_koutput_1(o,k,v,...)					\
-  HW_G2(_hw_cfoc8a_voutput, HW_IS(,_hw_oc8a_output_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hw_cfoc8a_voutput,_hw_oc8a_output_##v)(o,v,__VA_ARGS__)
 #define _hw_cfoc8a_voutput_0(o,v,...)					\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)
 #define _hw_cfoc8a_voutput_1(o,v,...)					\
@@ -110,20 +110,20 @@
 
 #define _hwa_cfoc8a(o,i,a,...)						\
   do {									\
-    HW_G2(_hwa_cfoc8a_kupdate, HW_IS(update,__VA_ARGS__))(o,__VA_ARGS__,); \
+    HW_GX(_hwa_cfoc8a_kupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,); \
   }while(0)
 
 #define _hwa_cfoc8a_kupdate_0(o,k,...)				\
-  HW_G2(_hwa_cfoc8a_koutput, HW_IS(output,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfoc8a_koutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfoc8a_kupdate_1(o,k,v,...)				\
-  HW_G2(_hwa_cfoc8a_vupdate, HW_IS(,_hw_oc8a_update_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfoc8a_vupdate,_hw_oc8a_update_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfoc8a_vupdate_0(o,v,...)		\
   HW_E_AVL(update mode of `o`, v, `immediately | at_bottom | at_top`)
 
 #define _hwa_cfoc8a_vupdate_1(o,v,k,...)			\
   hwa->o.config.update = HW_A1(_hw_oc8a_update_##v);		\
-  HW_G2(_hwa_cfoc8a_koutput, HW_IS(output,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfoc8a_koutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `output`
  */
@@ -131,7 +131,7 @@
   HW_TX(,__VA_ARGS__)
 
 #define _hwa_cfoc8a_koutput_1(o,k,v,...)					\
-  HW_G2(_hwa_cfoc8a_voutput, HW_IS(,_hw_oc8a_output_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfoc8a_voutput,_hw_oc8a_output_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfoc8a_voutput_0(o,v,...)			\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)

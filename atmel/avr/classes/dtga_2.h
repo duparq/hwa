@@ -47,11 +47,11 @@
   do {									\
     /* Add a second void argument to the end of the list so that there are always */ \
     /* at least 2 arguments following the last non-void argument. */	\
-    HW_G2(_hwa_cfdtga_kclockdiv,HW_IS(,_hw_dtga_kclockdiv_##__VA_ARGS__))(o,__VA_ARGS__,) \
+    HW_GX(_hwa_cfdtga_kclockdiv,_hw_dtga_kclockdiv_##__VA_ARGS__)(o,__VA_ARGS__,) \
       } while(0)
 
 #define _hwa_cfdtga_kclockdiv_1(o,kw,v,...)				\
-  HW_G2(_hwa_cfdtga_vclockdiv,HW_IS(,HW_A0(_hw_dtga_vclockdiv_##v)))(o,v,__VA_ARGS__) \
+  HW_GX(_hwa_cfdtga_vclockdiv,HW_A0(_hw_dtga_vclockdiv_##v))(o,v,__VA_ARGS__) \
 
 #define _hwa_cfdtga_vclockdiv_0(o,v,...)		\
   HW_E_AVL(clockdiv, v, 1 | 2 | 4 | 8)
@@ -61,7 +61,7 @@
   _hwa_cfdtga_kclockdiv_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kclockdiv_0(o,kw,...)				\
-  HW_G2(_hwa_cfdtga_kcompare0h,HW_IS(,_hw_dtga_kcompare0h_##kw))(o,kw,__VA_ARGS__)
+  HW_GX(_hwa_cfdtga_kcompare0h,_hw_dtga_kcompare0h_##kw)(o,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `compare0_h`
@@ -76,7 +76,7 @@
   _hwa_cfdtga_kcompare0h_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare0h_0(o,kw,...)				\
-  HW_G2(_hwa_cfdtga_kcompare0l,HW_IS(,_hw_dtga_kcompare0l_##kw))(o,kw,__VA_ARGS__)
+  HW_GX(_hwa_cfdtga_kcompare0l,_hw_dtga_kcompare0l_##kw)(o,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `compare0_l`
@@ -91,7 +91,7 @@
   _hwa_cfdtga_kcompare0l_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare0l_0(o,kw,...)				\
-  HW_G2(_hwa_cfdtga_kcompare1h,HW_IS(,_hw_dtga_kcompare1h_##kw))(o,kw,__VA_ARGS__)
+  HW_GX(_hwa_cfdtga_kcompare1h,_hw_dtga_kcompare1h_##kw)(o,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `compare1_h`
@@ -106,7 +106,7 @@
   _hwa_cfdtga_kcompare1h_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare1h_0(o,kw,...)				\
-  HW_G2(_hwa_cfdtga_kcompare1l,HW_IS(,_hw_dtga_kcompare1l_##kw))(o,kw,__VA_ARGS__)
+  HW_GX(_hwa_cfdtga_kcompare1l,_hw_dtga_kcompare1l_##kw)(o,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `compare1_l`

@@ -64,14 +64,14 @@
 
 #define _hwa_cfspia(o,i,a,...)						\
   do {									\
-    HW_G2(_hwa_cfspia_kmode, HW_IS(mode,__VA_ARGS__))(o,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfspia_kmode,_hw_is_mode_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfspia_kmode_0(o,k,...)					\
   HW_E_VL(k,mode)
 
 #define _hwa_cfspia_kmode_1(o,k,v,...)				\
-  HW_G2(_hwa_cfspia_vmode, HW_IS(,_hw_spia_mode_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vmode_0(o,v,...)					\
   HW_E_AVL(mode, v, master | slave | off)
@@ -87,7 +87,7 @@
       _hwa( configure, _HW_REL(o,pin_sck), direction, output );	\
     }								\
   }								\
-  HW_G2(_hwa_cfspia_kclock, HW_IS(clock,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 /*	Mandatory parameter `clock`
  */
@@ -105,14 +105,14 @@
   HW_E_VL(k,clock)
 
 #define _hwa_cfspia_kclock_1(o,k,v,...)					\
-  HW_G2(_hwa_cfspia_vclock, HW_IS(,_hw_spia_clock_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfspia_vclock,_hw_spia_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 
 #define _hwa_cfspia_vclock_1(o,v,k,...)				\
   _hwa_write_reg(o,xpr, HW_A1(_hw_spia_clock_##v));			\
-  HW_G2(_hwa_cfspia_ksck_idle, HW_IS(sck_idle,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfspia_ksck_idle,HW_IS(sck_idle,k))(o,k,__VA_ARGS__)
 
 /*	Mandatory parameter `sck_idle`
  */
@@ -124,14 +124,14 @@
   HW_E_VL(k,sck_idle)
 
 #define _hwa_cfspia_ksck_idle_1(o,k,v,...)				\
-  HW_G2(_hwa_cfspia_vsck_idle, HW_IS(,_hw_spia_sck_idle_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfspia_vsck_idle,_hw_spia_sck_idle_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vsck_idle_0(o,v,...)			\
   HW_E_AVL(sck_idle, v, low | high)
 
 #define _hwa_cfspia_vsck_idle_1(o,v,k,...)				\
   _hwa_write_reg(o,cpol, HW_A1(_hw_spia_sck_idle_##v));		\
-  HW_G2(_hwa_cfspia_ksampling_edge, HW_IS(sampling_edge,k))(o,v,k,__VA_ARGS__)
+  HW_G2(_hwa_cfspia_ksampling_edge,HW_IS(sampling_edge,k))(o,v,k,__VA_ARGS__)
 
 /*	Mandatory parameter `sampling_edge`
  */
@@ -221,7 +221,7 @@
 #define _hw_mthd_hw_turn__spia		, _hw_turn_spia
 
 #define _hw_turn_spia(o,i,a, ...)					\
-  HW_G2(_hw_turn_spia, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
+  HW_GX(_hw_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
@@ -236,7 +236,7 @@
 #define _hw_mthd_hwa_turn__spia		, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,i,a, ...)					\
-  HW_G2(_hwa_turn_spia, HW_IS(,_hw_state_##__VA_ARGS__))(o,__VA_ARGS__)
+  HW_GX(_hwa_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\

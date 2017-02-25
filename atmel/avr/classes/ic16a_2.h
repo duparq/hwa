@@ -43,7 +43,7 @@
 //#define _hw_cfic16a_kw_				, _hw_cfic16a_
 
 #define _hw_cfic16a(o,i,a,...)						\
-  HW_G2(_hw_cfic16akw1, HW_IS(,_hw_cfic16a_kw_##__VA_ARGS__))(o,__VA_ARGS__,)
+  HW_GX(_hw_cfic16akw1,_hw_cfic16a_kw_##__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_cfic16akw1_0(o,kw,...)					\
   HW_E_VL(k,input | edge | filter)
@@ -52,7 +52,7 @@
   HW_A1(_hw_cfic16a_kw_##kw)(o,__VA_ARGS__)
 
 #define _hw_cfic16a_edge(o,v,...)					\
-  HW_G2(_hw_cfic16a_vedge,HW_IS(,hw_ic16a_edge_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hw_cfic16a_vedge,hw_ic16a_edge_##v)(o,v,__VA_ARGS__)
 #define _hw_cfic16a_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 #define _hw_cfic16a_vedge_1(o,v,...)			\
@@ -80,40 +80,40 @@
 
 #define _hwa_cfic16a(o,i,a,...)						\
   do {									\
-    HW_G2(_hwa_cfic16a_kinput,HW_IS(input,__VA_ARGS__))(o,__VA_ARGS__,,) \
+    HW_GX(_hwa_cfic16a_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__,,) \
       } while(0)
 
 #define _hwa_cfic16a_kinput_0(o,k,...)					\
   HW_E_VL(k,input)
 
 #define _hwa_cfic16a_kinput_1(o,k,v,...)				\
-  HW_G2(_hwa_cfic16a_vinput,HW_IS(,hw_ic16a_input_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfic16a_vinput,hw_ic16a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vinput_0(o,v,...)					\
   HW_E_AVL(input, v, pin_icp | hw_acmp0)
 
 #define _hwa_cfic16a_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_ic16a_input_##v);			\
-  HW_G2(_hwa_cfic16a_kedge,HW_IS(edge,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfic16a_kedge,_hw_is_edge_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfic16a_kedge_0(o,k,...)					\
   HW_E_VL(k,edge)
 
 #define _hwa_cfic16a_kedge_1(o,k,v,...)				\
-  HW_G2(_hwa_cfic16a_vedge,HW_IS(,hw_ic16a_edge_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfic16a_vedge,hw_ic16a_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 
 #define _hwa_cfic16a_vedge_1(o,v,k,...)				\
   hwa->o.config.edge = HW_A1(hw_ic16a_edge_##v);				\
-  HW_G2(_hwa_cfic16a_kfilter,HW_IS(filter,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfic16a_kfilter,_hw_is_filter_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfic16a_kfilter_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfic16a_kfilter_1(o,k,v,...)				\
-  HW_G2(_hwa_cfic16a_vfilter,HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfic16a_vfilter,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfic16a_vfilter_0(o,v,...)					\
   HW_E_OAVL(filter, v, on | off)

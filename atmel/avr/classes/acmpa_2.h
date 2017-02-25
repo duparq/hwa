@@ -51,21 +51,21 @@
 
 #define _hwa_cfacmpa(o,i,a,...)						\
   do {									\
-    HW_G2(_hwa_cfacmpa_xedge, HW_IS(edge,__VA_ARGS__))(o,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfacmpa_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfacmpa_xedge_1(o,k,v,...)				\
-  HW_G2(_hwa_cfacmpa_vedge, HW_IS(,_hw_acmpa_edge_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfacmpa_vedge,_hw_acmpa_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising | both)
 
 #define _hwa_cfacmpa_vedge_1(o,v,k,...)			\
   _hwa_write_reg(o,acis, HW_A1(_hw_acmpa_edge_##v));	\
-  HW_G2(_hwa_cfacmpa_xposin, HW_IS(positive_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfacmpa_xposin,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpa_xedge_0(o,k,...)					\
-  HW_G2(_hwa_cfacmpa_xposin, HW_IS(positive_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfacmpa_xposin,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `positive_input`
  */
@@ -74,17 +74,17 @@
 #define _hw_acmpa_posin_bandgap			, 1	/* ACBG */
 
 #define _hwa_cfacmpa_xposin_1(o,k,v,...)				\
-  HW_G2(_hwa_cfacmpa_vposin, HW_IS(,_hw_acmpa_posin_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfacmpa_vposin,_hw_acmpa_posin_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vposin_0(o,v,...)					\
   HW_E_AVL(positive_input, v, HW_PIN(ain0) | bandgap)
 
 #define _hwa_cfacmpa_vposin_1(o,v,k,...)		\
   _hwa_write_reg(o,acbg, HW_A1(_hw_acmpa_posin_##v));	\
-  HW_G2(_hwa_cfacmpa_xnegin, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfacmpa_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpa_xposin_0(o,k,...)					\
-  HW_G2(_hwa_cfacmpa_xnegin, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfacmpa_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `negative_input`
  */
@@ -132,7 +132,7 @@
 #define _hw_mthd_hw_turn__acmpa			, _hw_turnacmpa
 
 #define _hw_turnacmpa(o,i,a,...)		\
-  HW_G2(_hw_turnacmpa_vstate,HW_IS(,__hw_state_##__VA_ARGS__))
+  HW_GX(_hw_turnacmpa_vstate,__hw_state_##__VA_ARGS__)
 
 #define _hw_turnacmpa_vstate_1(o,i,a,v,...)	\
   HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )

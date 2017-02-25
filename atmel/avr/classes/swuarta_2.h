@@ -267,15 +267,15 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  *  undeclared pins.
  */
 
-#define _hwa_cfswuarta(o,i,a,...)					\
+#define _hwa_cfswuarta(o,i,a,k,...)					\
   do {									\
     _hw_##o##_config_relatives( hwa );					\
-    HW_G2(_hwx_cfswuarta_kbps, HW_IS(bps,__VA_ARGS__))(_hwa,o,__VA_ARGS__,); \
+    HW_GX(_hwx_cfswuarta_kbps,_hw_is_bps_##k)(_hwa,o,k,__VA_ARGS__,);	\
   } while(0)
 
-#define _hw_cfswuarta(o,i,a,...)					\
+#define _hw_cfswuarta(o,i,a,k,...)					\
   do {									\
-    HW_G2(_hwx_cfswuarta_kbps, HW_IS(bps,__VA_ARGS__))(_hw,o,__VA_ARGS__,); \
+    HW_GX(_hwx_cfswuarta_kbps,_hw_is_bps_##k)(_hw,o,k,__VA_ARGS__,);	\
   } while(0)
 
 /*  Process arg `bps`
@@ -283,10 +283,10 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #define _hwx_cfswuarta_kbps_1(x,o,k,v,...)				\
   _hw_##o##_##set_dt((hw_syshz + (v)/2) / (v)) ;				\
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
-  HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kdatabits,_hw_is_databits_##__VA_ARGS__)(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kbps_0(x,o,k,...)			\
-  HW_G2(_hwx_cfswuarta_kcpb, HW_IS(cpb,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kcpb,_hw_is_cpb_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_bps_bps				, 1
 
@@ -295,17 +295,17 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #define _hwx_cfswuarta_kcpb_1(x,o,k,v,...)				\
   _hw_##o##_##set_dt(v) ;							\
   *(volatile uint8_t*)_hw_ra(o,sr) |= 0x08 ; /* Set SYNC */		\
-  HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,__VA_ARGS__))(x,o,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kdatabits,_hw_is_databits_##__VA_ARGS__)(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kcpb_0(x,o,k,...)				\
-  HW_G2(_hwx_cfswuarta_kdatabits, HW_IS(databits,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kdatabits,_hw_is_databits_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_cpb_cpb				, 1
 
 /*  Process arg `databits`
  */
 #define _hwx_cfswuarta_kdatabits_1(x,o,k,v,...)				\
-  HW_G2(_hwx_cfswuarta_vdatabits, HW_IS(,_hw_swuarta_csz_##v))(x,o,v,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_vdatabits,_hw_swuarta_csz_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vdatabits_0(x,o,v,...)		\
   HW_E_AVL(`databits`, v, `8`)
@@ -314,7 +314,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kdatabits_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kdatabits_0(x,o,k,...)				\
-  HW_G2(_hwx_cfswuarta_kparity, HW_IS(parity,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kparity,_hw_is_parity_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_databits_databits		, 1
 #define _hw_swuarta_csz_8			, 0
@@ -322,7 +322,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `parity`
  */
 #define _hwx_cfswuarta_kparity_1(x,o,k,v,...)				\
-  HW_G2(_hwx_cfswuarta_vparity, HW_IS(,_hw_swuarta_pm_##v))(x,o,v,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_vparity,_hw_swuarta_pm_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vparity_0(x,o,v,...)		\
   HW_E_AVL(`parity`, v, `none`)
@@ -331,7 +331,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kparity_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kparity_0(x,o,k,...)				\
-  HW_G2(_hwx_cfswuarta_kstopbits, HW_IS(stopbits,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kstopbits,_hw_is_stopbits_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_parity_parity			, 1
 #define _hw_swuarta_pm_none			, 0
@@ -339,7 +339,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `stopbits`
  */
 #define _hwx_cfswuarta_kstopbits_1(x,o,k,v,...)				\
-  HW_G2(_hwx_cfswuarta_vstopbits, HW_IS(,_hw_swuarta_sbs_##v))(x,o,v,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_vstopbits,_hw_swuarta_sbs_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vstopbits_0(x,o,v,...)		\
   HW_E_AVL(`stopbits`, v, `1`)
@@ -348,7 +348,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kstopbits_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kstopbits_0(x,o,k,...)				\
-  HW_G2(_hwx_cfswuarta_kreceiver, HW_IS(receiver,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_kreceiver,_hw_is_receiver_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_stopbits_stopbits		, 1
 #define _hw_swuarta_sbs_1			, 0
@@ -356,7 +356,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `receiver`
  */
 #define _hwx_cfswuarta_kreceiver_1(x,o,k,v,...)				\
-  HW_G2(_hwx_cfswuarta_vreceiver, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_vreceiver,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vreceiver_0(x,o,v,...)				\
   HW_E_AVL(receiver, v, enabled | disabled)
@@ -366,14 +366,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 						  _hwx_cfswuarta_kreceiver_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kreceiver_0(x,o,k,...)				\
-  HW_G2(_hwx_cfswuarta_ktransmitter, HW_IS(transmitter,k))(x,o,k,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_ktransmitter,_hw_is_transmitter_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_is_receiver_receiver		, 1
 
 /*  Process arg `transmitter`
  */
 #define _hwx_cfswuarta_ktransmitter_1(x,o,k,v,...)			\
-  HW_G2(_hwx_cfswuarta_vtransmitter, HW_IS(,_hw_state_##v))(x,o,v,__VA_ARGS__)
+  HW_GX(_hwx_cfswuarta_vtransmitter,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vtransmitter_0(x,o,v,...)		\
   HW_E_AVL(`transmitter`, v, `enabled`)

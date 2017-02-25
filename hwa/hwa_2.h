@@ -106,7 +106,7 @@
  * Syntax: `_hw_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, HW_REGISTER(o,r), v,)
+#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, _HW_REG(o,r), v,)
 
 
 /**

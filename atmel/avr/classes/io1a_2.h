@@ -46,11 +46,11 @@
 #define _hw_cfio1a( o,i, p,bn,bp, ...)					\
   do{									\
      uint8_t analog = 0xFF ;						\
-     HW_G2(_hw_cfio1a_kmode, HW_IS(mode,__VA_ARGS__))(o,p,bn,bp,__VA_ARGS__,,); \
+     HW_GX(_hw_cfio1a_kmode,_hw_is_mode_##__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__,,); \
   }while(0)
 
 #define _hw_cfio1a_kmode_1(o,p,bn,bp,k,v,...)				\
-  HW_G2(_hw_cfio1a_vmode, HW_IS(,hw_cfio1a_mode_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_vmode,hw_cfio1a_mode_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_0(o,p,bn,bp,v,...)				\
   HW_E_AVL(mode, v, analog | digital)
@@ -59,21 +59,21 @@
   HW_G2(_hw_cfio1a_vmode,v)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_analog(o,p,bn,bp,...)				\
-  HW_G2(_hw_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_hw_reg_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_vmode_analog,HW_G2(_hw_hasbits,_hw_reg_##o##_##did),0)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
 #define _hw_cfio1a_vmode_analog_1(o,p,bn,bp,k,...)			\
   analog = 1 ;								\
   _hw_write(_hw_reg_##o##_##did, 1);						\
-  HW_G2(_hw_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_kdirection,_hw_is_direction_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_vmode_digital(o,p,bn,bp,k,...)			\
   analog = 0 ;								\
-  HW_G2(_hw_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_kdirection,_hw_is_direction_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_kmode_0(o,p,bn,bp,k,...)				\
-  HW_G2(_hw_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_kdirection,_hw_is_direction_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 /*  Optionnal parameter `direction`
  */
@@ -82,19 +82,19 @@
 #define hw_cfio1a_direction_output	, 1
 
 #define _hw_cfio1a_kdirection_1(o,p,bn,bp,k,v,...)			\
-  HW_G2(_hw_cfio1a_vdirection, HW_IS(,hw_cfio1a_direction_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_vdirection,hw_cfio1a_direction_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vdirection_1(o,p,bn,bp,v,k,...)			\
   if ( HW_A1(hw_cfio1a_direction_##v)==1 && analog==1 )			\
     HWA_ERR("`" #o "` can not be an anolog output.");			\
   _hw_write_reg_m(p,ddr,((1<<bn)-1)<<bp, HW_A1(hw_cfio1a_direction_##v)?((1U<<bn)-1)<<bp:0); \
-  HW_G2(_hw_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_kpullup,_hw_is_pullup_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_cfio1a_vdirection_0(o,p,bn,bp,v,...)			\
   HW_E_AVL(direction, v, input | output)
 
 #define _hw_cfio1a_kdirection_0(o,p,bn,bp,k,...)			\
-  HW_G2(_hw_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_kpullup,_hw_is_pullup_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 /*  Optionnal parameter `pullup`
  */
@@ -104,7 +104,7 @@
   HW_EOL(__VA_ARGS__)
 
 #define _hw_cfio1a_kpullup_1(o,p,bn,bp,k,v,...)				\
-  HW_G2(_hw_cfio1a_vpullup, HW_IS(,_hw_state_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hw_cfio1a_vpullup,_hw_state_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_1(o,p,bn,bp,v,...)			\
     _hw_write_reg_m(p,port,((1<<bn)-1)<<bp, HW_A1(hw_state_##v)?((1U<<bn)-1)<<bp:0); \
@@ -134,11 +134,11 @@
  */
 #define _hwa_cfio1a( o,i, p,bn,bp, ...)					\
   do {									\
-    HW_G2(_hwa_cfio1a_kmode, HW_IS(mode,__VA_ARGS__))(o,p,bn,bp,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfio1a_kmode,_hw_is_mode_##__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfio1a_kmode_1(o,p,bn,bp,k,v,...)				\
-  HW_G2(_hwa_cfio1a_vmode, HW_IS(,hw_cfio1a_mode_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vmode,hw_cfio1a_mode_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_0(o,p,bn,bp,v,...)				\
   HW_E_AVL(mode, v, analog | digital)
@@ -147,7 +147,7 @@
   HW_G2(_hwa_cfio1a_vmode, v)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_analog(o,p,bn,bp,...)				\
-  HW_G2(_hwa_cfio1a_vmode_analog, HW_IS(,HW_G2(_hw_hasbits,_hw_reg_##o##_##did)))(o,p,bn,bp,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vmode_analog,HW_G2(_hw_hasbits,_hw_reg_##o##_##did),0)(o,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_vmode_analog_0(o,p,bn,bp,...)	HW_E(pin `o` does not support analog mode)
 
@@ -158,26 +158,26 @@
 #define _hwa_cfio1a_vmode_digital	_hwa_cfio1a_kmode_0
 
 #define _hwa_cfio1a_kmode_0(o,p,bn,bp,k,...)				\
-  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,p,bn,bp,k,__VA_ARGS__) \
+  HW_GX(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,p,bn,bp,k,__VA_ARGS__) \
 
 #define _hwa_cfio1a_kdirection_1(o,p,bn,bp,k,v,...)			\
-  HW_G2(_hwa_cfio1a_vdirection, HW_IS(,hw_cfio1a_direction_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vdirection,hw_cfio1a_direction_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vdirection_1(o,p,bn,bp,v,k,...)			\
   _hwa_write__r8( &hwa->p.ddr, 0xFF,0, bn,bp, (HW_A1(hw_cfio1a_direction_##v)?(1U<<bn)-1:0)); \
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_vdirection_0(o,p,bn,bp,v,...)			\
   HW_E_AVL(direction, v, input | output)
 
 #define _hwa_cfio1a_kdirection_0(o,p,bn,bp,k,...)			\
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_kpullup_0(o,p,bn,bp,...)	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfio1a_kpullup_1(o,p,bn,bp,k,v,...)			\
-  HW_G2(_hwa_cfio1a_vpullup, HW_IS(,_hw_state_##v))(o,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vpullup,_hw_state_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vpullup_1(o,p,bn,bp,v,...)			\
   _hwa_write__r8( &hwa->p.port, 0xFF,0, bn,bp, (HW_A1(_hw_state_##v)?(1U<<bn)-1:0) );\

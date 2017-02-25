@@ -44,7 +44,7 @@
  * @endcode
  */
 #define _hw_mthd_hw_bn__ic16b			, _hw_bn_ic16b
-#define _hw_bn_ic16b(o,i,a,_)			16
+#define _hw_bn_ic16b(o,i,a,...)			16
 
 
 /**

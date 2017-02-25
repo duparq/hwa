@@ -281,7 +281,7 @@ typedef struct {
 
 #define _hw_is_var_var			, 1
 
-#define hw_pin_gpio(x)			HW_G2(hw_pin_gpio_var,HW_IS(var,x))(x)
+#define hw_pin_gpio(x)			HW_GX(hw_pin_gpio_var,_hw_is_var_##x)(x)
 
 #define hw_pin_gpio_var_0(x)		hw_pin_gpio##x
 

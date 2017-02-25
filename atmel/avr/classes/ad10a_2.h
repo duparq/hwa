@@ -110,21 +110,21 @@
     uint8_t input1 __attribute__((unused)) = 0xFF ;			\
     uint8_t input2 __attribute__((unused)) = 0xFF ;			\
     _hwa_write_reg( o, en, 1 ); /* turn the ADC on */			\
-    HW_G2(_hwa_cfad10a_kclock, HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfad10a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfad10a_kclock_0(o,k,...)					\
   HW_E_VL(k,clock)
 
 #define _hwa_cfad10a_kclock_1(o,k,v,...)				\
-  HW_G2(_hwa_cfad10a_vclock, HW_IS(,_hw_ad10a_clock_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vclock,_hw_ad10a_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
 
 #define _hwa_cfad10a_vclock_1(o,v,k,...)				\
   _hwa_write_reg(o,ps, HW_A1(_hw_ad10a_clock_##v));			\
-  HW_G2(_hwa_cfad10a_ktrigger, HW_IS(trigger,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_ktrigger,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10a_clock_sysclk_div_2		, 1	/* , ps */
 #define _hw_ad10a_clock_sysclk_div_4		, 2
@@ -141,7 +141,7 @@
   HW_E_VL(k,trigger)
 
 #define _hwa_cfad10a_ktrigger_1(o,k,v,...)				\
-  HW_G2(_hwa_cfad10a_vtrigger, HW_IS(,_hw_ad10a_trigger_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vtrigger,_hw_ad10a_trigger_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | hw_acmp0 | hw_int0 | hw_counter0_compare0 | hw_counter0_overflow | hw_counter1_compare1 | hw_counter1_overflow | hw_counter1_capture0)
@@ -149,7 +149,7 @@
 #define _hwa_cfad10a_vtrigger_1(o,v,k,...)			\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10a_trigger_##v));		\
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10a_trigger_##v));		\
-  HW_G2(_hwa_cfad10a_kvref, HW_IS(vref,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kvref,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_trigger_trigger			, 1
 #define _hw_ad10a_trigger_manual		, 0, 0	/* , ate, ts */
@@ -168,14 +168,14 @@
   HW_E_VL(k,vref)
 
 #define _hwa_cfad10a_kvref_1(o,k,v,...)					\
-  HW_G2(_hwa_cfad10a_vvref, HW_IS(,_hw_ad10a_vref_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vvref,_hw_ad10a_vref_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vvref_0(o,v,...)				\
   HW_E_AVL(vref, v, vcc | pin_aref | bandgap)
 
 #define _hwa_cfad10a_vvref_1(o,v,k,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
-  HW_G2(_hwa_cfad10a_kalign, HW_IS(align,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kalign,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_vref_vref			, 1
 #define _hw_ad10a_vref_vcc			, 0	/* , refs */
@@ -185,16 +185,16 @@
 /*  Optionnal parameter `align`
  */
 #define _hwa_cfad10a_kalign_1(o,k,v,...)				\
-  HW_G2(_hwa_cfad10a_valign, HW_IS(,_hw_ad10a_align_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_valign,_hw_ad10a_align_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_valign_0(o,v,...)				\
   HW_E_OAVL(align, v, left | right)
 #define _hwa_cfad10a_valign_1(o,v,k,...)				\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10a_align_##v));			\
-  HW_G2(_hwa_cfad10a_kpolarity, HW_IS(polarity,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kpolarity,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_kalign_0(o,k,...)					\
-  HW_G2(_hwa_cfad10a_kpolarity, HW_IS(polarity,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kpolarity,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_align_align			, 1
 #define _hw_ad10a_align_left			, 1	/* , lar */
@@ -203,17 +203,17 @@
 /*  Optionnal parameter `polarity`
  */
 #define _hwa_cfad10a_kpolarity_1(o,k,v,...)				\
-  HW_G2(_hwa_cfad10a_vpolarity, HW_IS(,_hw_ad10a_polarity_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vpolarity,_hw_ad10a_polarity_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpolarity_0(o,v,...)				\
   HW_E_OAVL(polarity, v, unipolar | bipolar)
 
 #define _hwa_cfad10a_vpolarity_1(o,v,k,...)			\
   _hwa_write_reg(o,bin, HW_A1(_hw_ad10a_polarity_##vpolarity));	\
-  HW_G2(_hwa_cfad10a_kgain, HW_IS(gain,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kgain,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_kpolarity_0(o,k,...)			\
-  HW_G2(_hwa_cfad10a_kgain, HW_IS(gain,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kgain,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_polarity_polarity		, 1
 #define _hw_ad10a_polarity_unipolar		, 0	/* , bin */
@@ -227,10 +227,10 @@
   gain = (uint8_t)(v) ;							\
   if ( gain != 1 && gain != 20 )					\
     HWA_ERR("optionnal parameter `gain` must be 1 or 20.");		\
-  HW_G2(_hwa_cfad10a_kpositive_input, HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
+  HW_G2(_hwa_cfad10a_kpositive_input,HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfad10a_kgain_0(o,k,...)				\
-  HW_G2(_hwa_cfad10a_kinput, HW_IS(input,k))(o,k,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `input` -> single-end mode, end of list
  */
@@ -259,7 +259,7 @@
   HW_TX(__VA_ARGS__)
 
 #define _hwa_cfad10a_kinput_0(o,k,...)					\
-  HW_G2(_hwa_cfad10a_kpositive_input, HW_IS(positive_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfad10a_kpositive_input,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
 #define _hw_is_input_input			, 1
 #define _hw_ad10a_input_bandgap			, 0x21	/* , mux */
@@ -273,19 +273,19 @@
   HW_E_VL(k,input | positive_input)
 
 #define _hwa_cfad10a_kpositive_input_1(o,k,v,...)			\
-  HW_G2(_hwa_cfad10a_vpositive_input, HW_IS(,_hw_ad10a_input_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vpositive_input,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpositive_input_0(o,v,...)				\
   HW_E_AVL(`positive_input`, v, 'HW_PIN(adc0..7)' or synonyms)
 #define _hwa_cfad10a_vpositive_input_1(o,v,k,...)			\
   uint8_t positive_input = HW_A1(_hw_ad10a_input_##v);		\
-  HW_G2(_hwa_cfad10a_knegative_input, HW_IS(negative_input,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfad10a_knegative_input,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_knegative_input_0(o,k,...)				\
   HW_E_VL(k,negative_input)
 
 #define _hwa_cfad10a_knegative_input_1(o,k,v,...)			\
-  HW_G2(_hwa_cfad10a_vnegative_input, HW_IS(,_hw_ad10a_input_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfad10a_vnegative_input,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vnegative_input_0(o,v,...)		\
   HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..7)' or synonyms)

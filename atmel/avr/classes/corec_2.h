@@ -44,19 +44,19 @@
 
 #define _hwa_cfcorec(o,i,a,...)					\
   do {									\
-    HW_G2(_hwa_cfcorec_ksleep, HW_IS(sleep,__VA_ARGS__))(o,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfcorec_ksleep,_hw_is_sleep_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfcorec_ksleep_1(o,k,v,...)				\
-  HW_G2(_hwa_cfcorec_vsleep, HW_IS(,_hw_state_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfcorec_vsleep,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorec_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
 #define _hwa_cfcorec_vsleep_1(o,v,k,...)				\
   _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
-  HW_G2(_hwa_cfcorec_ksleepmode, HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfcorec_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfcorec_ksleep_0(o,k,...)					\
-  HW_G2(_hwa_cfcorec_ksleepmode, HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
+  HW_G2(_hwa_cfcorec_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `sleep_mode`
  */
@@ -65,7 +65,7 @@
 #define _hwa_cfcorec_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcorec_ksleepmode_1(o,k,v,...)				\
-  HW_G2(_hwa_cfcorec_vsleepmode, HW_IS(,_hw_sleepmode_##v))(o,v,__VA_ARGS__)
+  HW_GX(_hwa_cfcorec_vsleepmode,_hw_sleepmode_##v)(o,v,__VA_ARGS__)
 
 #define _hw_sleepmode_idle			, 0
 #define _hw_sleepmode_adc_noise_reduction	, 1
@@ -164,7 +164,7 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
  */
 #define _hw_mthd_hwa_clear__corec	, _hwa_clear__corec
 
-#define _hwa_clear__corec(o,i,a,_)	_hwa_write_reg( o, allrf, 0 )
+#define _hwa_clear__corec(o,i,a,...)	_hwa_write_reg( o, allrf, 0 )
 
 
 /*******************************************************************************

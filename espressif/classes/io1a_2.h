@@ -51,7 +51,7 @@
     _hwa_setup( shared );						\
     _hwa_setup( p );							\
     _hwa_setup( cf );							\
-    HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,cf,p,bn,bp,__VA_ARGS__,,); \
+    HW_GX(_hwa_cfio1a_kfunction,_hw_is_function_##__VA_ARGS__)(o,cf,p,bn,bp,__VA_ARGS__,,); \
     hwa->commit = 1; _hwa_commit( shared );				\
     _hwa_commit( p ); _hwa_commit( cf );				\
   }while(0)
@@ -59,22 +59,22 @@
 #define _hwa_cfio1a( o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
 #define _hwa_cfio1a2(...)			_hwa_cfio1a3( __VA_ARGS__ )
 #define _hwa_cfio1a3( o,cf,p,bn,bp, ...)				\
-  HW_G2(_hwa_cfio1a_kfunction, HW_IS(function,__VA_ARGS__))(o,cf,p,bn,bp,__VA_ARGS__,,); \
+  HW_GX(_hwa_cfio1a_kfunction,_hw_is_function_##__VA_ARGS__)(o,cf,p,bn,bp,__VA_ARGS__,,); \
 
 /*  Optionnal parameter `function`
  */
 #define _hwa_cfio1a_kfunction_1(o,cf,p,bn,bp,k,v,...)				\
-  HW_G2(_hwa_cfio1a_vfunction, HW_IS(,_##o##_fn_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vfunction,_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _##o##_fns)
 
 #define _hwa_cfio1a_vfunction_1(o,cf,p,bn,bp,v,k,...)			\
   _hwa_write_reg( cf, fn, HW_A1(_##o##_fn_##v) );			\
   HW_A2(_##o##_fn_##v) /* Optionnal supplement of actions, e.g. swap  */ \
-  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_kfunction_0(o,cf,p,bn,bp,k,...)				\
-  HW_G2(_hwa_cfio1a_kdirection, HW_IS(direction,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_is_function_function		, 1
 
@@ -82,7 +82,7 @@
 /*  Optionnal parameter `direction`
  */
 #define _hwa_cfio1a_kdirection_1(o,cf,p,bn,bp,k,v,...)				\
-  HW_G2(_hwa_cfio1a_vdirection, HW_IS(,_hw_cfio1a_direction_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_vdirection,_hw_cfio1a_direction_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vdirection_0(o,cf,p,bn,bp,v,...)	HW_E_AVL(direction, v, input | output | output_when_awake)
 
@@ -90,10 +90,10 @@
   _hwa_write_reg( cf, oex, HW_A1(_hw_cfio1a_direction_##v) );	\
   if ( HW_A1(_hw_cfio1a_direction_##v) != 0 )				\
     _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_kdirection_0(o,cf,p,bn,bp,k,...)				\
-  HW_G2(_hwa_cfio1a_kpullup, HW_IS(pullup,k))(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_GX(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hw_is_direction_direction			, 1
 #define _hw_cfio1a_direction_input			, 0	/* oex */
@@ -105,7 +105,7 @@
 /*  Optionnal parameter `pullup`
  */
 #define _hwa_cfio1a_kpullup_1(o,cf,p,bn,bp,k,v,...)				\
-    HW_G2(_hwa_cfio1a_vpullup0, HW_IS(,_hw_cfio1a_pullup_##v))(o,cf,p,bn,bp,v,__VA_ARGS__)
+    HW_GX(_hwa_cfio1a_vpullup0,_hw_cfio1a_pullup_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 
 #define _hwa_cfio1a_vpullup_1(o,cf,p,bn,bp,v,...)	\
     _hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pullup_##v) );	\

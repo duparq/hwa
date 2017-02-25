@@ -73,7 +73,7 @@
 
 #define _hw_is_port_port
 
-#define _HW_REL_io1a(o,x,...)		HW_G2(_HW_REL_io1a,HW_IS(,_hw_is_port_##x))(o,x,__VA_ARGS__)
+#define _HW_REL_io1a(o,x,...)		HW_GX(_HW_REL_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)
 
 #define _HW_REL_io1a_1(o,x,i,p,...)	p
 #define _HW_REL_io1a_0(o,x,...)		HW_E_OO(o,x)

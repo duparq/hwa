@@ -42,7 +42,7 @@
  * @endcode
  */
 #define _hw_mthd_hw_bn__oc8a			, _hw_bn_oc8a
-#define _hw_bn_oc8a(o,i,a,_)			8
+#define _hw_bn_oc8a(o,i,a,...)			8
 
 
 /**

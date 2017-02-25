@@ -13,10 +13,10 @@
 /*	Turn ADC on / off
  */
 #define _hw_turn_ad10_(o,i,a, v, ...)			\
-  HW_G2(_hwx_turn_ad10_, HW_IS(,_hw_state_##v))(_hw,o,v,__VA_ARGS__)
+  HW_GX(_hwx_turn_ad10_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 
 #define _hwa_turn_ad10_(o,i,a, v, ...)			\
-  HW_G2(_hwx_turn_ad10_, HW_IS(,_hw_state_##v))(_hwa,o,v,__VA_ARGS__)
+  HW_GX(_hwx_turn_ad10_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_ad10__0(x,o, v, ...)			\
   HW_E_ST(v)
@@ -27,21 +27,21 @@
 
 /* 	Start a conversion
  */
-#define _hw_trigger_ad10_(o,i,a,_)	_hw_write_reg( o, sc, 1 )
-#define _hwa_trigger_ad10_(o,i,a,_)	_hwa_write_reg( o, sc, 1 )
+#define _hw_trigger_ad10_(o,i,a,...)	_hw_write_reg( o, sc, 1 )
+#define _hwa_trigger_ad10_(o,i,a,...)	_hwa_write_reg( o, sc, 1 )
 
 
 /*	Read the result of the conversion
  */
 #define _hw_rdad10_(o,i,a,...)					\
-  HW_G2(_hw_rdad10_, HW_IS(,__VA_ARGS__))(o,__VA_ARGS__,)
+  HW_GX(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_rdad10__1(o,...)		_hw_read_reg(o, adc)
 
 /*  Optionnal argument `hi8`
  */
 #define _hw_rdad10__0(o,k,...)					\
-  HW_G2(_hw_rdad10__khi8, HW_IS(hi8,k))(o,k,__VA_ARGS__)
+  HW_G2(_hw_rdad10__khi8,HW_IS(hi8,k))(o,k,__VA_ARGS__)
 
 #define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_hw_ra(o,adc)+1))
 
@@ -50,7 +50,7 @@
 /*  Optionnal argument `lo8`
  */
 #define _hw_rdad10__khi8_0(o,k,...)				\
-  HW_G2(_hw_rdad10__klo8, HW_IS(lo8,k))(o,k,__VA_ARGS__)
+  HW_G2(_hw_rdad10__klo8,HW_IS(lo8,k))(o,k,__VA_ARGS__)
 
 #define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_hw_ra(o,adc)))
 #define _hw_rdad10__klo8_0(o,k,...)	HW_E(optionnal parameter can be `lo8 | hi8` but not `k`)
@@ -61,7 +61,7 @@
 /*	Read the ADC result with interrupts disabled and restore state as soon
  *	as possible.
  */
-#define _hw_ardad10_(o,i,a,_)		_hw_atomic_read_reg(o, adc)
+#define _hw_ardad10_(o,i,a,...)		_hw_atomic_read_reg(o, adc)
 
 /*	Status
  */

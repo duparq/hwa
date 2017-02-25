@@ -46,12 +46,12 @@
  *    `commit` function handles the hardware configuration.
  */
 #define _hwa_cfpscb(o,i,a, ...)						\
-  do { HW_G2(_hwa_cfpscb_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,) } while(0)
+  do { HW_GX(_hwa_cfpscb_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,) } while(0)
 
 #define _hw_is_clock_clock		, 1
 
 #define _hwa_cfpscb_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfpscb_kclock_1(o,k,v,...)		HW_G2(_hwa_cfpscb_vclock,HW_IS(,_hw_pscb_clock_##v))(o,v,__VA_ARGS__)
+#define _hwa_cfpscb_kclock_1(o,k,v,...)		HW_GX(_hwa_cfpscb_vclock,_hw_pscb_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hw_pscb_clock_system			, 0
 #define _hw_pscb_clock_pll_32MHz		, 1

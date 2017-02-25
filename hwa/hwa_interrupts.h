@@ -110,15 +110,15 @@
 /*  The definition of the IRQ is expanded, process the remaining arguments if any
  */
 #define _HW_ISR2(...)		_HW_ISR3(__VA_ARGS__)
-#define _HW_ISR3(i,o,v,e,f,...)	HW_G2(_HW_ISR4,HW_IS(,__VA_ARGS__))(v,__VA_ARGS__)
+#define _HW_ISR3(i,o,v,e,f,...)	HW_GX(_HW_ISR4,__VA_ARGS__)(v,__VA_ARGS__)
 #define _HW_ISR4_1(v,...)	HW_TX(_HW_ISR_(v,),__VA_ARGS__)
-#define _HW_ISR4_0(v,x,...)	HW_G2(_HW_ISR5, HW_IS(,_hw_israttr_##x))(v,x,__VA_ARGS__)
+#define _HW_ISR4_0(v,x,...)	HW_GX(_HW_ISR5,_hw_israttr_##x)(v,x,__VA_ARGS__)
 #define _HW_ISR5_0(v,x,...)	HW_E(object has no IRQ named `x`) void hw_isr_error_##x()
-#define _HW_ISR5_1(v,a1,...)	HW_G2(_HW_ISR6,HW_IS(,__VA_ARGS__))(v,a1,__VA_ARGS__)
+#define _HW_ISR5_1(v,a1,...)	HW_GX(_HW_ISR6,__VA_ARGS__)(v,a1,__VA_ARGS__)
 #define _HW_ISR6_1(v,a1,...)	_HW_ISR_(v,HW_A1(_hw_israttr_##a1))
-#define _HW_ISR6_0(v,a1,x,...)	HW_G2(_HW_ISR7, HW_IS(,_hw_israttr_##x))(v,a1,x,__VA_ARGS__)
+#define _HW_ISR6_0(v,a1,x,...)	HW_GX(_HW_ISR7,_hw_israttr_##x)(v,a1,x,__VA_ARGS__)
 #define _HW_ISR7_0(v,a1,x,...)	HW_E_T(x) void hw_isr_error_##x()
-#define _HW_ISR7_1(v,a1,a2,...)	HW_G2(_HW_ISR8,HW_IS(,__VA_ARGS__))(v,a1,a2,__VA_ARGS__,)
+#define _HW_ISR7_1(v,a1,a2,...)	HW_GX(_HW_ISR8,__VA_ARGS__)(v,a1,a2,__VA_ARGS__,)
 #define _HW_ISR8_1(v,a1,a2,...)	_HW_ISR_(v, HW_A1(_hw_israttr_##a1) HW_A1(_hw_israttr_##a2))
 #define _HW_ISR8_0(v,a1,a2,x,...)	HW_E_T(x) void hw_isr_error_##x()
 
@@ -143,7 +143,7 @@
  * @hideinitializer
  */
 #define _hw_turn_irq(o,v,e,f, ...)					\
-  HW_G2(_hw_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(o,e, __VA_ARGS__,)
+  HW_GX(_hw_turn_irq_vstate,_hw_state_##__VA_ARGS__)(o,e, __VA_ARGS__,)
 #define _hw_turn_irq_vstate_0(o,e,x, ...)	HW_E_ST(x)
 #define _hw_turn_irq_vstate_1(o,e,v, ...)			\
   HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
@@ -157,7 +157,7 @@
  * @hideinitializer
  */
 #define _hwa_turn_irq(o,v,e,f, ...)					\
-  HW_G2(_hwa_turn_irq_vstate, HW_IS(,_hw_state_##__VA_ARGS__))(o,e, __VA_ARGS__,)
+  HW_GX(_hwa_turn_irq_vstate,_hw_state_##__VA_ARGS__)(o,e, __VA_ARGS__,)
 #define _hwa_turn_irq_vstate_0(o,e,x, ...)	HW_E_ST(x)
 #define _hwa_turn_irq_vstate_1(o,e,v, ...)			\
   HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
@@ -168,8 +168,9 @@
  * @brief  Clear an IRQ flag
  * @hideinitializer
  */
-#define _hw_clear_irq(v,p,e,f, ... )	HW_TX(_hw_write_reg(p,f, 1 ), __VA_ARGS__)
 #define _hw_mthd_hw_clear__irq		, _hw_clear_irq
+
+#define _hw_clear_irq(v,p,e,f,...)	HW_TX(_hw_write_reg(p,f,1),__VA_ARGS__)
 
 
 /**
@@ -177,8 +178,9 @@
  * @brief  Clear irq flag
  * @hideinitializer
  */
-#define _hwa_clear_irq(v,p,e,f, ... )	HW_TX(_hwa_write_reg(p,f, 1 ), __VA_ARGS__)
 #define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
+
+#define _hwa_clear_irq(v,p,e,f,...)	HW_TX(_hwa_write_reg(p,f,1),__VA_ARGS__)
 
 
 #endif /* !defined __ASSEMBLER__ */
