@@ -1183,7 +1183,6 @@ typedef struct {
 
 /*	Object hw_swuart1
  */
-
 #if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
 #  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined

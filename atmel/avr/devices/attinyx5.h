@@ -1175,24 +1175,73 @@ typedef struct {
 
 #define _hw_class__swuarta
 
-#if defined hw_swuart0_compare
-/*
- *	Object hw_swuart0
+/*	Object hw_swuart0
  */
-#define _hw_def_swuart0		_swuarta, 1200, 0
-#define _hw_reg_swuart0_dtn			_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#define _hw_reg_swuart0_dt0			_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#define _hw_reg_swuart0_sr			_hw_reg_shared_gpior0
+#if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
+#  if !defined hw_swuart0_compare
+#    error hw_swuart0_compare is not defined
+#  elif HW_ID(hw_swuart0_compare) == 0
+#    error HWA: hw_swuart0_compare: invalid definition
+#    undef hw_swuart0_compare
+#  endif
+#  if !defined hw_swuart0_clk_div
+#    error hw_swuart0_clk_div is not defined
+#    undef hw_swuart0_compare
+#  endif
+#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
+#    error invalid definition of hw_swuart0_pin_txd
+#    undef hw_swuart0_compare
+#  endif
+#  if defined hw_swuart0_pin_rxd && HW_ID(hw_swuart0_pin_rxd)==0
+#    error invalid definition of hw_swuart0_pin_rxd
+#    undef hw_swuart0_compare
+#  endif
+#  if defined hw_swuart0_pin_rxd && !defined hw_swuart0_starter
+#    warning hw_swuart0_starter is not defined, using default 'pcic'
+#    undef hw_swuart0_compare
+#  endif
+#endif
+
+#if defined hw_swuart0_compare
+#  define _hw_def_swuart0	_swuarta, 1200, 0
+#  define _hw_reg_swuart0_dtn	_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#  define _hw_reg_swuart0_dt0	_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#  define _hw_reg_swuart0_sr	_hw_reg_shared_gpior0
+#endif
+
+
+/*	Object hw_swuart1
+ */
+#if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
+#  if !defined hw_swuart1_compare
+#    error hw_swuart1_compare is not defined
+#  elif HW_ID(hw_swuart1_compare) == 0
+#    error HWA: hw_swuart1_compare: invalid definition
+#    undef hw_swuart1_compare
+#  endif
+#  if !defined hw_swuart1_clk_div
+#    error hw_swuart1_clk_div is not defined
+#    undef hw_swuart1_compare
+#  endif
+#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
+#    error invalid definition of hw_swuart1_pin_txd
+#    undef hw_swuart1_compare
+#  endif
+#  if defined hw_swuart1_pin_rxd && HW_ID(hw_swuart1_pin_rxd)==0
+#    error invalid definition of hw_swuart1_pin_rxd
+#    undef hw_swuart1_compare
+#  endif
+#  if defined hw_swuart1_pin_rxd && !defined hw_swuart1_starter
+#    warning hw_swuart1_starter is not defined, using default 'pcic'
+#    undef hw_swuart1_compare
+#  endif
 #endif
 
 #if defined hw_swuart1_compare
-/*
- *	Object hw_swuart1
- */
-#define _hw_def_swuart1		_swuarta, 1210, 0
-#define _hw_reg_swuart1_dtn			_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#define _hw_reg_swuart1_dt0			_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#define _hw_reg_swuart1_sr			_hw_reg_shared_gpior1
+#  define _hw_def_swuart1	_swuarta, 1210, 0
+#  define _hw_reg_swuart1_dtn	_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#  define _hw_reg_swuart1_dt0	_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#  define _hw_reg_swuart1_sr	_hw_reg_shared_gpior1
 #endif
 
 
