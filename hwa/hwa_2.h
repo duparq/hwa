@@ -250,7 +250,8 @@
  * @brief  Write the register of an object
  */
 #define _hw_mthd_hwa_write__oreg	, _hwa_write_oreg
-#define _hwa_write_oreg(_,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
+
+#define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
 
 
 #define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
