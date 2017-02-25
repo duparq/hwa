@@ -252,50 +252,6 @@
   } while(0)
 
 
-#if 0
-#define _hwa_commit__wdoga(o,i,a)		_hwa_commit_p__wdoga(hwa,&hwa->o)
-
-HW_INLINE void _hwa_commit_p__wdoga ( hwa_t *hwa, hwa_wdoga_t *p )
-{
-  if ( p->config.action != 0xFF ) {
-    if ( p->config.action == HW_A1(_hw_wdoga_action_none) ) {
-      /*
-       *  Turn the watchdog off:
-       *    1. Clear WDRF
-       *    2. Set WDCE and WDE to 1 in the same operation
-       *    3. Set WDE to 0 within 4 cycles after 2.
-       */
-#if HW_DEVICE_WDTON == 0
-      HW_E(watchdog can not be turned off because HW_DEVICE_FUSE_WDTON is enabled)
-#endif
-      _hwa_write_reg_p( p, _wdoga, wdrf, 0 );
-      _hwa_commit_reg_p( p, _wdoga, wdrf );
-
-      // _hwa_write_reg_p( p, _wdoga, wdif, 1 );
-      _hwa_write_reg_p( p, _wdoga, wdce, 1 );
-      _hwa_write_reg_p( p, _wdoga, wde,  1 );
-      _hwa_commit_reg_p( p, _wdoga, csr );
-      _hwa_write_reg_p( p, _wdoga, ie, 0 );
-      _hwa_write_reg_p( p, _wdoga, wdce, 0 );
-      _hwa_write_reg_p( p, _wdoga, wde, 0 );
-      _hwa_write_reg_p( p, _wdoga, wdp, 0 );
-    }
-    else {
-      /*
-       *  Configure the watchdog
-       */
-      _hwa_write_reg_p( p, _wdoga, eie, p->config.action );
-      if ( p->config.timeout != 0xFF )
-	_hwa_write_reg_p( p, _wdoga, wdp, p->config.timeout );
-    }
-    p->config.action = 0xFF ;
-    p->config.timeout = 0xFF ;
-  }
-  _hwa_commit_reg_p( p, _wdoga, csr );
-}
-#endif
-
-
 /**
  * @page atmelavr_wdoga
  * <br>

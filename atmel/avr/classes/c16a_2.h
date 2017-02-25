@@ -762,10 +762,6 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
   hwa->o.config.countmode = 0xFF;		\
   hwa->o.config.top       = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
-  /* hwa->o.config.compare0.update = 0xFF ;	\ */
-  /* hwa->o.config.compare0.output = 0xFF ;	\ */
-  /* hwa->o.config.compare1.update = 0xFF ;	\ */
-  /* hwa->o.config.compare1.output = 0xFF ;	\ */
 
 #define _hwa_init__c16a(o,i,a)					\
   _hwa_init_reg( o, ccra, 0x00 );			\
@@ -783,58 +779,6 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
   _hwa_commit_reg( o, imsk     )
 
 
-/* HW_INLINE void _hwa_begin_p__c16a ( hwa_c16a_t *p, intptr_t a ) */
-/* { */
-/*   _hwa_setup_reg_p( p, a, _c16a, ccra     ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, ccrb     ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, ccrc     ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, count    ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, capture0 ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, compare0 ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, compare1 ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, imsk     ); */
-/*   _hwa_setup_reg_p( p, a, _c16a, ifr      ); */
-
-/*   p->config.clock           = 0xFF ; */
-/*   p->config.countmode       = 0xFF ; */
-/*   p->config.top             = 0xFF ; */
-/*   p->config.overflow        = 0xFF ; */
-/*   p->config.compare0.update = 0xFF ; */
-/*   p->config.compare0.output = 0xFF ; */
-/*   p->config.compare1.update = 0xFF ; */
-/*   p->config.compare1.output = 0xFF ; */
-/*   p->config.capture0.input  = 0xFF ; */
-/*   p->config.capture0.edge   = 0xFF ; */
-/*   p->config.capture0.filter = 0xFF ; */
-/* } */
-
-
-/* HW_INLINE void _hwa_init_p__c16a ( hwa_c16a_t *p ) */
-/* { */
-/*   _hwa_set__r8(  &p->ccra,  0x00 ); */
-/*   _hwa_set__r8(  &p->ccrb,  0x00 ); */
-/*   _hwa_set__r8(  &p->ccrc,  0x00 ); */
-/*   _hwa_set__r16( &p->count, 0x00 ); */
-/*   _hwa_set__r16( &p->capture0,   0x00 ); */
-/*   _hwa_set__r16( &p->compare0,  0x00 ); */
-/*   _hwa_set__r16( &p->compare1,  0x00 ); */
-/*   _hwa_set__r8(  &p->imsk,  0x00 ); */
-/*   _hwa_set__r8(  &p->ifr,   0x00 ); */
-/* } */
-
-
-/* HW_INLINE void _hwa_commit_p__c16a ( hwa_t *hwa, hwa_c16a_t *p ) */
-/* { */
-/*   _hwa_commit_reg_p( p, _c16a, ccra  ); */
-/*   _hwa_commit_reg_p( p, _c16a, ccrb  ); */
-/*   _hwa_commit_reg_p( p, _c16a, ccrc  ); */
-/*   _hwa_commit_reg_p( p, _c16a, count ); */
-/*   _hwa_commit_reg_p( p, _c16a, capture0   ); */
-/*   _hwa_commit_reg_p( p, _c16a, compare0  ); */
-/*   _hwa_commit_reg_p( p, _c16a, compare1  ); */
-/*   _hwa_commit_reg_p( p, _c16a, imsk  ); */
-/*   _hwa_commit_reg_p( p, _c16a, ifr   ); */
-/* } */
 
 /**
  * @page atmelavr_c16a

@@ -1363,9 +1363,6 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
    *
    *  The configuration values are written here since the solve function only
    *  has the address of the counter and does not know its name.
-   *
-   *  _reg_p(...) could be used as well though it can not access registers of
-   *  another object.
    */
   _hwa_solve( counter0 );
   _hwa_solve( counter1 );
