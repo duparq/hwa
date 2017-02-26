@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- * * @ref attinyx5 : `hw_acmp0`
+ * * @ref attinyx5 : `acmp0`
  */
 #define _hw_class__acmpb
 

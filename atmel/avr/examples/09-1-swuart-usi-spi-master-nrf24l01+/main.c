@@ -21,7 +21,7 @@
  * has to be connected to pin MOSI/DI of the MCU, and pin MOSI, input of the
  * nRF, has to be connected to pin MISO/DO of the MCU.
  *
- * @par Test application
+ * @par Test applicapion
  *
  *     ./main.py
  * 
@@ -166,7 +166,7 @@ main ( )
     }
     else {
       /*
-       *  First byte of command must be '='. Send '!' as error indicator and
+       *  First byte of command must be '='. Send '!' as error indicapor and
        *  wait for '\n' as error acknowledgement.
        */
       do {

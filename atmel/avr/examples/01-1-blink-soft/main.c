@@ -25,7 +25,7 @@
  *
  * * `PERIOD` is the blinking period.
  *
- * * `hw_syshz` is the CPU frequency, computed by HWA from the device
+ * * `syshz` is the CPU frequency, computed by HWA from the device
  *    configuration fuses.
  *
  * @par main.c

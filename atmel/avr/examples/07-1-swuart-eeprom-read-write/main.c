@@ -9,7 +9,7 @@
  *
  * @par Read/write bytes of EEPROM memory
  *
- * @par Test application
+ * @par Test applicapion
  *
  *      ./main.py --help
  *      ./main.py read 0 512

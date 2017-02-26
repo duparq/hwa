@@ -69,7 +69,7 @@
  */
 #define _hw_c16b_clock_none			, 0
 #define _hw_c16b_clock_syshz			, 1
-#define _hw_c16b_clock_prescaler_output_1	, 1	/* Useful for concat */
+#define _hw_c16b_clock_prescaler_output_1	, 1	/* Useful for concap */
 #define _hw_c16b_clock_prescaler_output_8	, 2
 #define _hw_c16b_clock_prescaler_output_64	, 3
 #define _hw_c16b_clock_prescaler_output_256	, 4
@@ -201,33 +201,33 @@
 							    _HW_REL(o,capture0) )
 #define _hwa_solve__c16b_2(...)		_hwa_solve__c16b_3(__VA_ARGS__)
 
-#define _hwa_solve__c16b_3( o, oc0, oc1, oc2, ic0 )			\
+#define _hwa_solve__c16b_3( o, compare0, compare1, compare2, ic0 )			\
   do {									\
-    uint8_t r = _hwa_solve_c16b( &hwa->o, &hwa->oc0, &hwa->oc1, &hwa->oc2, &hwa->ic0 ); \
+    uint8_t r = _hwa_solve_c16b( &hwa->o, &hwa->compare0, &hwa->compare1, &hwa->compare2, &hwa->ic0 ); \
     if ( r == 0 ) {							\
       /*								\
        *  Write solved registers					\
        */								\
       if ( hwa->o.solved.cs != 0xFF ) _hwa_write_reg( o, cs, hwa->o.solved.cs ); \
       if ( hwa->o.solved.wgm != 0xFF ) _hwa_write_reg( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->oc0.solved.com != 0xFF ) _hwa_write_reg( oc0, com, hwa->oc0.solved.com ); \
-      if ( hwa->oc1.solved.com != 0xFF ) _hwa_write_reg( oc1, com, hwa->oc1.solved.com ); \
-      if ( hwa->oc2.solved.com != 0xFF ) _hwa_write_reg( oc2, com, hwa->oc2.solved.com ); \
+      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write_reg( compare0, com, hwa->compare0.solved.com ); \
+      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write_reg( compare1, com, hwa->compare1.solved.com ); \
+      if ( hwa->compare2.solved.com != 0xFF ) _hwa_write_reg( compare2, com, hwa->compare2.solved.com ); \
       if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write_reg( ic0, acic, hwa->ic0.solved.acic ); \
       if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write_reg( ic0, ices, hwa->ic0.solved.ices ); \
       if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write_reg( ic0, icnc, hwa->ic0.solved.icnc ); \
       /*								\
        *  Configure used compare outputs as I/O outputs			\
        */								\
-      if ( hwa->oc0.config.output != 0xFF				\
-	   && hwa->oc0.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( configure, _HW_REL(oc0,pin), direction, output );		\
-      if ( hwa->oc1.config.output != 0xFF				\
-	   && hwa->oc1.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( configure, _HW_REL(oc1,pin), direction, output );		\
-      if ( hwa->oc2.config.output != 0xFF				\
-	   && hwa->oc2.config.output != HW_A1(_hw_oc16a_output_disconnected) ) \
-	_hwa( configure, _HW_REL(oc2,pin), direction, output );		\
+      if ( hwa->compare0.config.output != 0xFF				\
+	   && hwa->compare0.config.output != HW_A1(_hw_cmp16a_output_disconnected) ) \
+	_hwa( configure, _HW_REL(compare0,pin), direction, output );		\
+      if ( hwa->compare1.config.output != 0xFF				\
+	   && hwa->compare1.config.output != HW_A1(_hw_cmp16a_output_disconnected) ) \
+	_hwa( configure, _HW_REL(compare1,pin), direction, output );		\
+      if ( hwa->compare2.config.output != 0xFF				\
+	   && hwa->compare2.config.output != HW_A1(_hw_cmp16a_output_disconnected) ) \
+	_hwa( configure, _HW_REL(compare2,pin), direction, output );		\
     }									\
     else if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \
@@ -236,41 +236,41 @@
     else if ( r == 3 )							\
       HWA_ERR("configuration of `" #o "` is required.");		\
     else if ( r == 4 )							\
-      HWA_ERR("`mode` of `" #oc0 "` can be "				\
+      HWA_ERR("`mode` of `" #compare0 "` can be "				\
 	      "`disconnected`, `toggle_on_match`, `clear_on_match`, or " \
 	      "`set_on_match`.");					\
     else if ( r == 5 )							\
-      HWA_ERR("`mode` of `" #oc0 "` can be "				\
+      HWA_ERR("`mode` of `" #compare0 "` can be "				\
 	      "`disconnected`, `set_at_bottom_clear_on_match`, or "	\
 	      "`clear_at_bottom_set_on_match`.");			\
     else if ( r == 6 )							\
-      HWA_ERR("`mode` of `" #oc0 "` can be "				\
+      HWA_ERR("`mode` of `" #compare0 "` can be "				\
 	      "`disconnected`, `toggle_on_match`, "			\
 	      "`set_at_bottom_clear_on_match`, or "			\
 	      "`clear_at_bottom_set_on_match`.");			\
     else if ( r == 7 )							\
-      HWA_ERR("`mode` of `" #oc0 "` can be "				\
+      HWA_ERR("`mode` of `" #compare0 "` can be "				\
 	      "`disconnected`, `clear_on_match_up_set_on_match_down`, " \
 	      "or `set_on_match_up_clear_on_match_down`.");		\
     else if ( r == 8 )							\
-      HWA_ERR("`mode` of `" #oc0 "` can be "				\
+      HWA_ERR("`mode` of `" #compare0 "` can be "				\
 	      "`disconnected`, `toggle_on_match`, "			\
 	      "`clear_on_match_up_set_on_match_down`, "			\
 	      "or `set_on_match_up_clear_on_match_down`.");		\
     else if ( r == 9 )							\
-      HWA_ERR("`mode` of `" #oc1 "` can be "				\
+      HWA_ERR("`mode` of `" #compare1 "` can be "				\
 	      "`disconnected`, `toggle_on_match`, `clear_on_match`, or " \
 	      "`set_on_match`.");					\
     else if ( r == 10 )							\
-      /* HWA_ERR("`mode` of `" #oc1 "` can be " */			\
+      /* HWA_ERR("`mode` of `" #compare1 "` can be " */			\
       /* "`disconnected`, `set_at_bottom_clear_on_match`, or " */	\
       /* "`clear_at_bottom_set_on_match`."); */				\
       HWA_ERR("when the counter is configured in normal mode, "		\
-	      "`mode` of `" #oc1 "` can be "				\
+	      "`mode` of `" #compare1 "` can be "				\
 	      "`disconnected`, `clear_on_match`, `set_on_match`, or "	\
 	      "`toggle_on_match`.");					\
     else if ( r == 11 )							\
-      HWA_ERR("`mode` of `" #oc1 "` can be "				\
+      HWA_ERR("`mode` of `" #compare1 "` can be "				\
 	      "`disconnected`, `clear_on_match_up_set_on_match_down`, "	\
 	      "or `set_on_match_up_clear_on_match_down`.");		\
     else if ( r == 12 )							\
@@ -291,14 +291,14 @@
 
 /*	Solve the configuration of the counter with its compare and capture units
  */
-HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
-				    hwa_oc16a_t *oc1, hwa_oc16a_t *oc2, hwa_ic16a_t *ic0 )
+HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
+				    hwa_cmp16a_t *compare1, hwa_cmp16a_t *compare2, hwa_cap16a_t *ic0 )
 {
   c->solved.cs   = 0xFF ;
   c->solved.wgm  = 0xFF ;
-  oc0->solved.com = 0xFF ;
-  oc1->solved.com = 0xFF ;
-  oc2->solved.com = 0xFF ;
+  compare0->solved.com = 0xFF ;
+  compare1->solved.com = 0xFF ;
+  compare2->solved.com = 0xFF ;
   ic0->solved.acic = 0xFF ;
   ic0->solved.ices = 0xFF ;
   ic0->solved.icnc = 0xFF ;
@@ -328,21 +328,21 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
   /*  Compare update setting
    */
   uint8_t compare_update = 0xFF ;
-  if ( oc0->config.update != 0xFF )
-    compare_update = oc0->config.update ;
-  if ( oc1->config.update != 0xFF ) {
-    if ( compare_update != 0xFF && compare_update != oc1->config.update ) {
-      HWA_ERR("optionnal parameter `update` of class _oc16a compare unit must all be the same.");
+  if ( compare0->config.update != 0xFF )
+    compare_update = compare0->config.update ;
+  if ( compare1->config.update != 0xFF ) {
+    if ( compare_update != 0xFF && compare_update != compare1->config.update ) {
+      HWA_ERR("optionnal parameter `update` of class _cmp16a compare unit must all be the same.");
       return 1 ;
     }
-    compare_update = oc0->config.update ;
+    compare_update = compare0->config.update ;
   }
-  if ( oc2->config.update != 0xFF ) {
-    if ( compare_update != 0xFF && compare_update != oc2->config.update ) {
-      HWA_ERR("optionnal parameter `update` of class _oc16a compare unit must all be the same.");
+  if ( compare2->config.update != 0xFF ) {
+    if ( compare_update != 0xFF && compare_update != compare2->config.update ) {
+      HWA_ERR("optionnal parameter `update` of class _cmp16a compare unit must all be the same.");
       return 1 ;
     }
-    compare_update = oc0->config.update ;
+    compare_update = compare0->config.update ;
   }
 
   /* Mode WGM   Operation                     COUNTMODE    TOP     OCR  OVF  OCF  ICF  OCA                OCB
@@ -389,22 +389,22 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
       else if (c->config.top == HW_A1(_hw_c16b_top_0x3FF) )
 	wgm = 7 ;
       else if (c->config.top == HW_A1(_hw_c16b_top_compare0) ) {
-	if ( compare_update == HW_A1(_hw_oc16a_update_immediately)
+	if ( compare_update == HW_A1(_hw_cmp16a_update_immediately)
 	     || overflow == HW_A1(_hw_c16b_overflow_at_top)
-	     || oc1->config.output == HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	     || oc1->config.output == HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match))
+	     || compare1->config.output == HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	     || compare1->config.output == HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match))
 	  wgm = 15 ;
 	else 
 	  wgm = 4 ;
       }
       else /* if (c->top == HW_A1(_hw_c16b_top_capture0) ) */ {
-	if (compare_update == HW_A1(_hw_oc16a_update_at_top)
+	if (compare_update == HW_A1(_hw_cmp16a_update_at_top)
 	    || overflow == HW_A1(_hw_c16b_overflow_at_top)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_toggle_on_match)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match))
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_toggle_on_match)
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match))
 	  wgm = 14 ;
 	else 
 	  wgm = 12 ;
@@ -418,20 +418,20 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
       else if (c->config.top == HW_A1(_hw_c16b_top_0x3FF) )
 	wgm = 3 ;
       else if (c->config.top == HW_A1(_hw_c16b_top_compare0) ) {
-	if (compare_update == HW_A1(_hw_oc16a_update_at_bottom)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down))
+	if (compare_update == HW_A1(_hw_cmp16a_update_at_bottom)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down))
 	  wgm = 9 ;
 	else 
 	  wgm = 11 ;
       }
       else /* if (c->top == HW_A1(_hw_c16b_top_capture0) ) */ {
-	if (compare_update == HW_A1(_hw_oc16a_update_at_bottom)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_toggle_on_match)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	    || oc0->config.output == HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	    || oc1->config.output == HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down))
+	if (compare_update == HW_A1(_hw_cmp16a_update_at_bottom)
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_toggle_on_match)
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	    || compare0->config.output == HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	    || compare1->config.output == HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down))
 	  wgm = 8 ;
 	else 
 	  wgm = 10 ;
@@ -444,42 +444,42 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
 
   /*	Solve the configuration of compare output A
    */
-  if ( oc0->config.output != 0xFF ) {
+  if ( compare0->config.output != 0xFF ) {
 
     uint8_t	mode = 0xFF ;
 
-    if ( oc0->config.output == HW_A1(_hw_oc16a_output_disconnected) )
+    if ( compare0->config.output == HW_A1(_hw_cmp16a_output_disconnected) )
       mode = 0 ;
-    else if ( oc0->config.output == HW_A1(_hw_oc16a_output_toggle_on_match) )
+    else if ( compare0->config.output == HW_A1(_hw_cmp16a_output_toggle_on_match) )
       mode = 1 ;
-    else if ( oc0->config.output == HW_A1(_hw_oc16a_output_clear_on_match)
-	      || oc0->config.output == HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	      || oc0->config.output == HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down) )
+    else if ( compare0->config.output == HW_A1(_hw_cmp16a_output_clear_on_match)
+	      || compare0->config.output == HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	      || compare0->config.output == HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down) )
       mode = 2 ;
     else
       mode = 3 ;
 
-    oc0->solved.com = mode ;
+    compare0->solved.com = mode ;
   }
 
   /*  Solve the configuration of compare output B
    */
-  if ( oc1->config.output != 0xFF ) {
+  if ( compare1->config.output != 0xFF ) {
 
     uint8_t	mode = 0xFF ;
 
-    if ( oc1->config.output == HW_A1(_hw_oc16a_output_disconnected) )
+    if ( compare1->config.output == HW_A1(_hw_cmp16a_output_disconnected) )
       mode = 0 ;
-    else if ( oc1->config.output == HW_A1(_hw_oc16a_output_toggle_on_match) )
+    else if ( compare1->config.output == HW_A1(_hw_cmp16a_output_toggle_on_match) )
       mode = 1 ;
-    else if ( oc1->config.output == HW_A1(_hw_oc16a_output_clear_on_match)
-	      || oc1->config.output == HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	      || oc1->config.output == HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down) )
+    else if ( compare1->config.output == HW_A1(_hw_cmp16a_output_clear_on_match)
+	      || compare1->config.output == HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	      || compare1->config.output == HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down) )
       mode = 2 ;
     else
       mode = 3 ;
 
-    oc1->solved.com = mode ;
+    compare1->solved.com = mode ;
   }
 
   /*	Solve the configuration of the capture input
@@ -494,38 +494,38 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
 
   /*	Check the validity of the configuration
    */
-  if ( c->config.countmode != 0xFF || oc0->config.output != 0xFF || oc1->config.output != 0xFF ) {
+  if ( c->config.countmode != 0xFF || compare0->config.output != 0xFF || compare1->config.output != 0xFF ) {
 
     if ( c->config.countmode == 0xFF )
       return 3 ; // HWA_ERR("configuration of counter is required.");
 
     /*	Check compare output A
      */
-    if ( oc0->config.output != 0xFF ) {
+    if ( compare0->config.output != 0xFF ) {
       if ( wgm==0 || wgm==12 ) {
-	if ( oc0->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_clear_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_set_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_toggle_on_match) )
+	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match) )
 	  return 4 ;
 	/* HWA_ERR("compare output A of class _c16b counter mode must be " */
 	/* 	  "`disconnected`, `clear_on_match`, `set_on_match`, or " */
 	/* 	  "`toggle_on_match`."); */
       }
       else if ( wgm==5 || wgm==6 || wgm==7 ) {
-	if ( oc0->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match) )
+	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 5 ;
 	  /* HWA_ERR("compare output A of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `set_at_bottom_clear_on_match`, or " */
 	  /* 	  "`clear_at_bottom_set_on_match`."); */
       }
       else if ( wgm==14 ) {
-	if ( oc0->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_toggle_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match) )
+	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 6 ;
 	  /* HWA_ERR("compare output A of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `toggle_on_match`, " */
@@ -533,19 +533,19 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
 	  /* 	  "`clear_at_bottom_set_on_match`."); */
       }
       else if ( wgm==1 || wgm==2 || wgm==3 ) {
-	if ( oc0->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down) )
+	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 7 ;
 	  /* HWA_ERR("compare output A of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `clear_on_match_up_set_on_match_down`, " */
 	  /* 	  "or `set_on_match_up_clear_on_match_down`."); */
       }
       else if ( wgm==8 || wgm==10 ) {
-	if ( oc0->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_toggle_on_match)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	     && oc0->config.output != HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down) )
+	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 8 ;
 	  /* HWA_ERR("compare output A of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `toggle_on_match`, " */
@@ -553,37 +553,37 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
 	  /* 	  "or `set_on_match_up_clear_on_match_down`."); */
       }
       //    else if ( c->top == HW_A1(_hw_c16b_top_compare0)
-      else if ( oc0->config.output )
+      else if ( compare0->config.output )
 	return 9 ;
 	/* HWA_ERR("can not use of `compare_a` as both top value and output of class _c16b counter."); */
     }
 
     /*	Check compare output B
      */
-    if ( oc1->config.output != 0xFF ) {
+    if ( compare1->config.output != 0xFF ) {
       if ( wgm==0 || wgm==4 || wgm==12 ) {
-	if ( oc1->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_clear_on_match)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_set_on_match)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_toggle_on_match) )
+	if ( compare1->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_clear_on_match)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_set_on_match)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match) )
 	  return 10 ;
 	  /* HWA_ERR("compare output B of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `clear_on_match`, `set_on_match`, or " */
 	  /* 	  "`toggle_on_match`."); */
       }
       else if ( wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15 ) {
-	if ( oc1->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_set_at_bottom_clear_on_match)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_clear_at_bottom_set_on_match) )
+	if ( compare1->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_set_at_bottom_clear_on_match)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 11 ;
 	  /* HWA_ERR("compare output B of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `set_at_bottom_clear_on_match`, or " */
 	  /* 	  "`clear_at_bottom_set_on_match`."); */
       }
       else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
-	if ( oc1->config.output != HW_A1(_hw_oc16a_output_disconnected)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_clear_on_match_up_set_on_match_down)
-	     && oc1->config.output != HW_A1(_hw_oc16a_output_set_on_match_up_clear_on_match_down) )
+	if ( compare1->config.output != HW_A1(_hw_cmp16a_output_disconnected)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_clear_on_match_up_set_on_match_down)
+	     && compare1->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 12 ;
 	  /* HWA_ERR("compare output B of class _c16b counter mode must be " */
 	  /* 	  "`disconnected`, `clear_on_match_up_set_on_match_down`, " */
@@ -595,19 +595,19 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_oc16a_t *oc0,
      */
     if ( compare_update != 0xFF ) {
       if ( wgm==0 || wgm==4 || wgm==12 ) {
-	if ( compare_update != HW_A1(_hw_oc16a_update_immediately) )
+	if ( compare_update != HW_A1(_hw_cmp16a_update_immediately) )
 	  return 13 ;
 	  /* HWA_ERR("optionnal parameter `update` of class _c16b counter must be "\ */
 	  /* 	  "`immediately`."); */
       }
       else if ( wgm==8 || wgm==9 ) {
-	if ( compare_update != HW_A1(_hw_oc16a_update_at_bottom) )
+	if ( compare_update != HW_A1(_hw_cmp16a_update_at_bottom) )
 	  return 14 ;
 	  /* HWA_ERR("optionnal parameter `update` of class _c16b counter must be " */
 	  /* 	  "`at_bottom`."); */
       }
       else
-	if( compare_update != HW_A1(_hw_oc16a_update_at_top) )
+	if( compare_update != HW_A1(_hw_cmp16a_update_at_top) )
 	  return 15 ;
 	  /* HWA_ERR("optionnal parameter `update` of class _c16b counter must be " */
 	  /* 	  "`at_top`."); */

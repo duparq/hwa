@@ -18,7 +18,7 @@
  * IRQ, the next timeout resets the device.
  *
  * @code
- * hwa_config( wdog0,
+ * hwa_config( watchdog0,
  *
  *           [ timeout,   16ms
  *                      | 32ms
@@ -97,7 +97,7 @@
  * @section atmelavr_wdogb_turn Turning on/off
  *
  * @code
- * hw_turn( wdog0,   on
+ * hw_turn( watchdog0,   on
  *                    | off );
  * @endcode
  */
@@ -143,7 +143,7 @@
  * @page atmelavr_wdogb
  *
  * @code
- * hwa_turn( wdog0,   on
+ * hwa_turn( watchdog0,   on
  *                     | off );
  * @endcode
  */
@@ -174,7 +174,7 @@
  * The `hw_reset()` instruction resets the watchdog timer (issues a `wdr`):
  *
  * @code
- * hw_reset( wdog0 );
+ * hw_reset( watchdog0 );
  * @endcode
  */
 #define _hw_mthd_hw_reset__wdogb		, _hw_rstwdogb
@@ -189,9 +189,9 @@
  * The overflow flag can be accessed through the interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( wdog0 ) ) {
- *   hw_clear_irqf( wdog0 );
- *   hw_turn_irq( wdog0, on );
+ * if ( hw_stat_irqf( watchdog0 ) ) {
+ *   hw_clear_irqf( watchdog0 );
+ *   hw_turn_irq( watchdog0, on );
  *   n_wdoverflows++ ;
  * }
  * @endcode

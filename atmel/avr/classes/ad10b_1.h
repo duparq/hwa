@@ -32,7 +32,7 @@
  *
  * It is used in:
  *
- *  * @ref atmegax8 : `hw_adc0`
+ *  * @ref atmegax8 : `adc0`
  */
 #define _hw_class__ad10b
 

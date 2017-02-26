@@ -16,8 +16,8 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_core0`
- * * @ref attinyx5 : `hw_core0`
+ * * @ref attinyx4 : `core0`
+ * * @ref attinyx5 : `core0`
  */
 #define _hw_class__corea
 

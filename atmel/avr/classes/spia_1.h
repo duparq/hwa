@@ -22,7 +22,7 @@
  *
  * It is used by:
  *
- *  * @ref atmegax8 : `hw_spi0`
+ *  * @ref atmegax8 : `spi0`
  */
 #define _hw_class__spia
 

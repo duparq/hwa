@@ -16,8 +16,8 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_acmp0`
- * * @ref atmegax8 : `hw_acmp0`
+ * * @ref attinyx4 : `acmp0`
+ * * @ref atmegax8 : `acmp0`
  */
 #define _hw_class__acmpa
 

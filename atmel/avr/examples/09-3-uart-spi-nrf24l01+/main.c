@@ -16,7 +16,7 @@
  *            SCL <- SCK  (5)(6)  MOSI -> MOSI
  *           MISO <- MISO (7)(8)  IRQ
  *
- * @par Test application
+ * @par Test applicapion
  *
  *     ./main.py
  * 
@@ -166,7 +166,7 @@ main ( )
     }
     else {
       /*
-       *  First byte of command must be '='. Send '!' as error indicator and
+       *  First byte of command must be '='. Send '!' as error indicapor and
        *  wait for '\n' as error acknowledgement.
        */
       do {

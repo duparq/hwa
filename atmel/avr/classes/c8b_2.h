@@ -251,8 +251,8 @@
 #define _hwa_solve__c8b_2(...)	_hwa_solve_c8b(__VA_ARGS__)
 
 #define _hwa_solve_c8b(counter, compare0, compare1)			\
-    _hwa_solve_oc8b( compare0 );					\
-    _hwa_solve_oc8b( compare1 );					\
+    _hwa_solve_cmp8b( compare0 );					\
+    _hwa_solve_cmp8b( compare1 );					\
     if ( _hwa_mmask(compare0, pwm) && _hwa_mmask(compare1, pwm)		\
 	 && _hwa_mvalue(compare0, pwm) != _hwa_mvalue(compare1, pwm) )	\
       HWA_ERR("used compare outputs must be in the same NORMAL or PWM mode."); \

@@ -215,7 +215,7 @@
  * * `id` is a unique number identifying the object. If you're not going to use
  *        the `hw_id()` instruction, any value (or even none) is OK.
  *
- * * `port` is the name of the I/O port object holding the pin, e.g.: `hw_port0`.
+ * * `port` is the name of the I/O port object holding the pin, e.g.: `port0`.
  *
  * * `bn` is the number of consecutive bits the I/O definition contains.
  *

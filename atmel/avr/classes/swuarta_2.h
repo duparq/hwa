@@ -15,7 +15,7 @@
  * Class `_swuarta` implements a software-emulated UART with the following
  * features:
  *
- * * simplex or half-duplex communication over 1 or 2 wires
+ * * simplex or half-duplex communicapion over 1 or 2 wires
  * * frames of 1 start bit, 8 data bits, 1 stop bit (no parity bit)
  * * requirements:
  *   * one 8 or 16-bit counter compare unit
@@ -55,18 +55,18 @@
  *
  * Symbol | Example | Comment
  * :------|:--------|:-------
- * `hw_swuart0_pin_txd` | `hw_pin_pa0`         | Pin used for TXD (optionnal)
- * `hw_swuart0_pin_rxd` | `hw_pin_5`           | Pin used for RXD (optionnal)
- * `hw_swuart0_starter` | `HW_REL(hw_pin_5,pcic)` | Interrupt provider for the start condition
- * `hw_swuart0_compare` | `hw_oc00`<br>`hw_oc01`<br>...    | Counter compare unit used for bit timing
- * `hw_swuart0_clk_div` | `1`<br>`8`<br>...      | Counter prescaler setting (division of `hw_sysclk`)
- * `hw_swuart0_autosync`| `5_1`<br>`9_1`<br>`10_1` | Synchronization method (optionnal)
- * `hw_swuart0_check_tx`|                    | Define this for bus collision detection (optionnal)
- * `hw_swuart0_pin_dbg` | `hw_pin_6`           | Pin used for debugging (optionnal)
+ * `swuart0_pin_txd` | `pin_pa0`         | Pin used for TXD (optionnal)
+ * `swuart0_pin_rxd` | `pin_5`           | Pin used for RXD (optionnal)
+ * `swuart0_starter` | `HW_RELATIVE(pin_5,pcic)` | Interrupt provider for the start condition
+ * `swuart0_compare` | `compare00`<br>`compare01`<br>...    | Counter compare unit used for bit timing
+ * `swuart0_clk_div` | `1`<br>`8`<br>...      | Counter prescaler setting (division of `sysclk`)
+ * `swuart0_autosync`| `5_1`<br>`9_1`<br>`10_1` | Synchronization method (optionnal)
+ * `swuart0_check_tx`|                    | Define this for bus collision detection (optionnal)
+ * `swuart0_pin_dbg` | `pin_6`           | Pin used for debugging (optionnal)
  *
  * @par Pins
  *
- * If both `hw_swuart0_pin_rxd` and `hw_swuart0_pin_txd` are defined and the
+ * If both `swuart0_pin_rxd` and `swuart0_pin_txd` are defined and the
  * same, the UART reverts to RX mode after a transmission is
  * completed. Transmissions are delayed until a reception is completed once it
  * has started.<br>
@@ -78,17 +78,17 @@
  *
  * By default, the pin-change controller associated to the RXD pin is used as
  * the interrupt provider for detecting the start bit. This implies that the
- * same pin-change controller should not be used by the application.
+ * same pin-change controller should not be used by the applicapion.
  *
  * @par Counting unit
  *
  * The counting unit is configured in up-loop mode, counting from 0 to the
- * maximum it can reach. The user application can use the count value and the
+ * maximum it can reach. The user applicapion can use the count value and the
  * overflow interrupt, for example to make a RTC counter.
  *
  * @par Automatic baudrate detection
  *
- * If defined, the `hw_swuart0_autosync` gives the UART the capability to
+ * If defined, the `swuart0_autosync` gives the UART the capability to
  * automatically detect the baudrate.
  *
  * * The `5_1` method waits for a sequence of 5 low-level bits followed by
@@ -103,11 +103,11 @@
  *
  * @par Bus collision detection
  *
- * If the symbol `hw_swuart0_check_tx` is defined, each time a new bit has to be
+ * If the symbol `swuart0_check_tx` is defined, each time a new bit has to be
  * transfered the status of the bus is first compared to the last bit sent. If
  * there is a mismatch (collision), the UART releases the TXD pin and sets the
  * `stop` status flag to 0. The UART continues virtually to send until the end
- * of the frame when it sets the `txc` bit as usual. That way, the application
+ * of the frame when it sets the `txc` bit as usual. That way, the applicapion
  * remains synchronized with the bus and can decide whether to retry the
  * transmission or to listen to what is happening on the bus.
  */

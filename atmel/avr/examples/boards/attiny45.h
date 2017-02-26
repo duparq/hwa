@@ -17,7 +17,7 @@
  * This is just a ATTINY45-20PU on a breadboard with a USB/Serial adapter and a
  * LED connected at pin #5 (PB0/OC0A). No crystal.
  *
- * The serial communication uses 1 wire for RX/TX, AVR pin #2 connected to the
+ * The serial communicapion uses 1 wire for RX/TX, AVR pin #2 connected to the
  * RXD pin of the serial adapter, and a 1k resistor is connected between the RXD
  * and TXD pins (it could be replaced by a diode, Schottky preferably).
  *
@@ -53,13 +53,13 @@
 #define HW_DEVICE_BROWNOUT_DETECTION    4100_4500mV
 
 /*  Settings for building the Diabolo bootloader
- *  Settings for the Diabolo application are in the board's Makefile
+ *  Settings for the Diabolo applicapion are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  HW_PIN(2)
 #define DIABOLO_PIN_TX                  HW_PIN(2)
 #define DIABOLO_SYNC                    5+1
 
-/*  The pin at which the LED is connected. The target device name indicates its
+/*  The pin at which the LED is connected. The target device name indicapes its
  *  package, then pin numbers can be used as well as pin names.
  */
 #define PIN_LED                         HW_PIN(5)	// OC0A

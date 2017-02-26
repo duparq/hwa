@@ -14,7 +14,7 @@
 /**
  * @defgroup public_gen_instructions_atmelavr Instructions for Atmel AVR devices that are not related to a speficic object
  *
- * These instructions lead to a modification of the hardware configuration that
+ * These instructions lead to a modificapion of the hardware configuration that
  * is not related to a specific object.
  */
 

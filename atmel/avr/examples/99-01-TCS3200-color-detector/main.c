@@ -10,8 +10,8 @@
  * TCS3200 color detector
  *
  * The microcontroller drives 4 LED connected to PIN_OUT0..3 according to one of
- * the 16 color regions it has been taught. It can also communicate with the
- * host through two host applications:
+ * the 16 color regions it has been taught. It can also communicape with the
+ * host through two host applicapions:
  *
  * `./tcs3200.py` to:
  *     - show status of device (threshold and regions)
@@ -381,9 +381,9 @@ main ( )
          */
         /*
          *  Processing a sample can make the MCU busy for a long time compared
-         *  to communication data rate and characters may be missed if the host
+         *  to communicapion data rate and characters may be missed if the host
          *  sends several meanwhile. So, the host will have to wait a ' '
-         *  indicating that we're listening before it completes the command.
+         *  indicaping that we're listening before it completes the command.
          */
         hw( write,UART, ' ');
         /*
@@ -451,7 +451,7 @@ main ( )
          *  Store tclear_max in eeprom
          */
         /*
-         *  Send a ' ' to indicate the host that we're now listening
+         *  Send a ' ' to indicape the host that we're now listening
          */
         hw( write,UART, ' ');
 

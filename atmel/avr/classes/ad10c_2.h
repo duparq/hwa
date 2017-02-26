@@ -89,7 +89,7 @@
  *           [ polarity,         unipolar
  *                             | bipolar, ]
  *
- *             //  Amplification (default is 1)
+ *             //  Amplificapion (default is 1)
  *             //
  *           [ gain,             1
  *                             | 20, ]
@@ -319,24 +319,24 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
       return 0x08 + (gain==20);
     else if ( neg==1 )
       return 0x0A + (gain==20);
-    HWA_ERR("`negative_input` must be `hw_pin_adc0` or `hw_pin_adc1` or synonyms.");
+    HWA_ERR("`negative_input` must be `pin_adc0` or `pin_adc1` or synonyms.");
   }
   else if ( pos==1 ) {
     if ( neg==0 )
       return 0x1A + (gain==20);
-    HWA_ERR("`negative_input` must be `hw_pin_adc0` or synonym.");
+    HWA_ERR("`negative_input` must be `pin_adc0` or synonym.");
   }
   else if ( pos==2 ) {
     if ( neg==2 )
       return 0x04 + (gain==20);
     else if ( neg==3 )
       return 0x06 + (gain==20);
-    HWA_ERR("`negative_input` must be `hw_pin_adc2` or `hw_pin_adc3` or synonyms.");
+    HWA_ERR("`negative_input` must be `pin_adc2` or `pin_adc3` or synonyms.");
   }
   else if ( pos==3 ) {
     if ( neg==2 )
       return 0x16 + (gain==20);
-    HWA_ERR("`negative_input` must be `hw_pin_adc2` or synonym.");
+    HWA_ERR("`negative_input` must be `pin_adc2` or synonym.");
   }
   HWA_ERR("parsing error.");
   return 0;

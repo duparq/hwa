@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- *  * @ref atmegax8 : `hw_uart0`
+ *  * @ref atmegax8 : `uart0`
  */
 #define _hw_class__uarta
 

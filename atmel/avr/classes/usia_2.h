@@ -27,7 +27,7 @@
  *             //  How is it clocked
  *             //
  *             clock,   software              // Clocked by software
- *                    | hw_oc0                // Clocked by compare unit ? of counter 0
+ *                    | hw_compare0                // Clocked by compare unit ? of counter 0
  *                    | external_rising       // Clocked by external source rising edge
  *                    | external_falling      // Clocked by external source falling edge
  *            );
@@ -42,7 +42,7 @@
 #define _hw_usia_mode_twi_slave		, 5
 
 #define _hw_usia_clock_software		, 0
-#define _hw_usia_clock_oc0		, 1	/* FIXME: compare or overflow? */
+#define _hw_usia_clock_compare0		, 1	/* FIXME: compare or overflow? */
 #define _hw_usia_clock_external_rising	, 2
 #define _hw_usia_clock_external_falling	, 3
 
@@ -64,7 +64,7 @@
 
 #define _hwa_cfusia_kclock_0(o,k,...)	HW_E_VL(k, clock)
 #define _hwa_cfusia_kclock_1(o,kw,...)	HW_GX(_hwa_cfusia_vclock,_hw_usia_clock_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | oc0 | external_rising | external_falling)
+#define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | compare0 | external_rising | external_falling)
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\
   HW_TX(_hwa_docfusia(o,mode,clock),__VA_ARGS__);

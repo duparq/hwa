@@ -16,8 +16,8 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_wdog0`
- * * @ref attinyx5 : `hw_wdog0`
+ * * @ref attinyx4 : `watchdog0`
+ * * @ref attinyx5 : `watchdog0`
  */
 #define _hw_class__wdoga
 

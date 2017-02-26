@@ -17,16 +17,16 @@
  *  * one prescaler of class @ref atmelavr_psca "_psca":
  *    * `HW_REL( COUNTER_NAME, prescaler )`
  *
- *  * two compare units with waveform generators, of class @ref atmelavr_oc8a "_oc8a":
+ *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a "_cmp8a":
  *    * `HW_REL( COUNTER_NAME, compare0 )` and <br>
  *      `HW_REL( COUNTER_NAME, compare1 )`
  *
  * It is used in:
  *
- *  * @ref attinyx4 : `hw_counter0`
- *  * @ref attinyx5 : `hw_counter0`
- *  * @ref atmegax8 : `hw_counter0`
- *  * @ref atmegaxu4 : `hw_counter0`
+ *  * @ref attinyx4 : `counter0`
+ *  * @ref attinyx5 : `counter0`
+ *  * @ref atmegax8 : `counter0`
+ *  * @ref atmegaxu4 : `counter0`
  */
 #define _hw_class__c8a
 

@@ -15,10 +15,10 @@
  * A class `_flasha` object is a Flash memory.
  *
  * It is used in:
- *  * @ref attinyx4 : `hw_flash0`
- *  * @ref attinyx5 : `hw_flash0`
- *  * @ref atmegax8 : `hw_flash0`
- *  * @ref atmegaxu4 : `hw_flash0`
+ *  * @ref attinyx4 : `flash0`
+ *  * @ref attinyx5 : `flash0`
+ *  * @ref atmegax8 : `flash0`
+ *  * @ref atmegaxu4 : `flash0`
  */
 #define _hw_class__flasha
 

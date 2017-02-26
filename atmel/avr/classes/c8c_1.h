@@ -18,7 +18,7 @@
  *  * one `prescaler` of class @ref atmelavr_psca "_psca"
  *
  *  * two compare units with waveform generators: `compare0` and `compare1`, of
- *    class @ref atmelavr_oc8a "_oc8a"
+ *    class @ref atmelavr_cmp8a "_cmp8a"
  *
  * @note Currently, this class is not fully implemented. It lacks asynchronous
  * clocking possibilities.
@@ -28,7 +28,7 @@
  *
  * It is used in:
  *
- *  * @ref atmegax8 : `hw_counter2`
+ *  * @ref atmegax8 : `counter2`
  */
 #define _hw_class__c8c
 

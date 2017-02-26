@@ -17,11 +17,11 @@
  * This is an Arduino clone board with a MEGA328P-AU microcontroller and a 16
  * MHz crystal.
  *
- * The serial communication uses 1 wire for RX/TX. The board RX pin is connected
+ * The serial communicapion uses 1 wire for RX/TX. The board RX pin is connected
  * to the RXD pin of the serial adapter and a 1k resistor is connected between
  * the RXD and TXD pins. Alternately, RX can be tied to VCC through a 1k
  * resistor and a Schottky diode connected between TXD (anode) and RXD
- * (cathode).
+ * (caphode).
  *
  * @par Serial adapter wiring
  *
@@ -64,7 +64,7 @@
 #define HW_DEVICE_CLOCK_OUTPUT          disabled
 
 /*  Settings for building the Diabolo bootloader
- *  Settings for the Diabolo application are in the board's Makefile
+ *  Settings for the Diabolo applicapion are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  pin_rxd
 #define DIABOLO_PIN_TX                  pin_rxd

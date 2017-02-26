@@ -34,7 +34,7 @@
  * @endcode
  */
 /*
- *  NOTE: another solution could be the creation of an object `hw_admux0` for
+ *  NOTE: another solution could be the creation of an object `admux0` for
  *  the analog multiplexer that's shared between the ADC and the ACMP but the
  *  ADC and ACMP can not use the analog multiplexer at the same time. Then, it
  *  seems acceptable to make the configuration instructions of the ADC or the

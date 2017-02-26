@@ -9,7 +9,7 @@
  *
  *  Reply to incoming 'A' with software UART registers dtn & dt0.
  *
- *  Test application:
+ *  Test applicapion:
  *
  *      ./main.py
  *

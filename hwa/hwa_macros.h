@@ -211,7 +211,7 @@
  * @ingroup public_gen_macros
  * @brief Expands to 1 if the first element of the list is void, 0 otherwise.
  *
- * This is a more elaborate verification than `HW_IS(,x)` since it also accepts
+ * This is a more elaborate verificapion than `HW_IS(,x)` since it also accepts
  * x to begin with a left bracket.
  *
  * @hideinitializer
@@ -226,7 +226,7 @@
 
 /**
  * @ingroup public_gen_macros
- * @brief Concatenates '_1' to 'f' if 'x' is '', '_0' otherwise.
+ * @brief Concapenates '_1' to 'f' if 'x' is '', '_0' otherwise.
  *
  * @hideinitializer
  */
@@ -254,9 +254,9 @@
  *
  * declares the method `_hw_myfunc()` for the class `_myclass`.
  *
- * If the object `hw_myobject` pertains to the class `_myclass`, the instruction
+ * If the object `myobject` pertains to the class `_myclass`, the instruction
  * `hw_myfunc( myboject, a0, a1 )` is expanded as: `_hw_myfunc_myclass(
- * hw_myobject,i,a, a0, a1, )` where `i` is the ID of `hw_myobject` and `a` its
+ * hw_myobject,i,a, a0, a1, )` where `i` is the ID of `myobject` and `a` its
  * the base address, followed by the arguments passed to the instruction.
  *
  * `HW_MTHD()` verifies the existence of the object and its class method. An

@@ -3,19 +3,19 @@ Diabolo bootloader {#atmelavr_diabolo}
 ==================
 
 Diabolo is a bootloader (Diabolo Is A BOot LOader) developed using HWA for
-assembler programming for the device side, and Python for the host application.
+assembler programming for the device side, and Python for the host applicapion.
 
- * it is fast, as the host application uses a __cache mecanism__ to determine
+ * it is fast, as the host applicapion uses a __cache mecanism__ to determine
    the pages that have to be programmed;
 
  * it is not too big: ~ __640 bytes__;
 
  * it is very convenient since it can use __any pin__ for __1 or 2-wire serial
-   communication__ (__automatically detected__ by the host side application)
+   communicapion__ (__automatically detected__ by the host side applicapion)
    with __automatic detection of baudrate__ so that no baudrate has to be
    hardcoded in the project and __no crystal__ is required on the target;
 
- * validity of application code and communication messages are checked with a
+ * validity of applicapion code and communicapion messages are checked with a
    __16-bit CRC__.
 
 The source code of Diabolo is in the `atmel/avr/examples/diabolo/` directory.
@@ -62,11 +62,11 @@ Otherwise, you'll have to edit the `device/Makefile` to suit your programming
 tools.
 
 
-Using the Diabolo host application
+Using the Diabolo host applicapion
 ----------------------------------
 
 Once you have installed Diabolo, you can check that everything works with the
-`host/diabolo.py` application.
+`host/diabolo.py` applicapion.
 
 Assuming you only have one USB-Serial adapter, that should display the status of
 your device:

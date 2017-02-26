@@ -20,7 +20,7 @@
 
 /*  Service watchdog IRQ
  */
-HW_ISR( wdog0 )
+HW_ISR( watchdog0 )
 {
   /*  Blink the LED
    */
@@ -41,7 +41,7 @@ int main ( )
 
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
-  hwa( configure, wdog0,
+  hwa( configure, watchdog0,
               timeout,          TIMEOUT,
               action,           irq
               );

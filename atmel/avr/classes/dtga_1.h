@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- * * @ref attinyx5 : `hw_dtg1`
+ * * @ref attinyx5 : `dtg1`
  */
 #define _hw_class__dtga
 

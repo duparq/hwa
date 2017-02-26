@@ -9,10 +9,15 @@
  * @brief 16-bit capture unit
  */
 
+/*
+ *	This is the same as the _cap16a except that it can not bo connected to
+ *	the analog comparator output.
+ */
+
 /**
- * @page atmelavr_ic16a Class _ic16a: 16-bit capture unit
+ * @page atmelavr_cap16b Class _cap16b: 16-bit capture unit
  *
- * A class `_ic16a` object is a 16-bit capture unit. It has the following
+ * A class `_cap16b` object is a 16-bit capture unit. It has the following
  * relative objects:
  *
  *  * one counter, whose name is given by `HW_REL( CAPTURE_NAME, counter )`
@@ -21,13 +26,12 @@
  *
  * It is used in:
  *
- *  * @ref attinyx4 : `hw_ic10`
- *  * @ref atmegax8 : `hw_ic10`
+ *  * @ref atmegaxu4 : `capture30`
  */
-#define _hw_class__ic16a
+#define _hw_class__cap16b
 
 /**
- * @page atmelavr_ic16a
+ * @page atmelavr_cap16b
  * @par Instructions that do not produce C code
  *
  * The `HW_BITS()` instruction retrieves the number of bits of the capture
@@ -39,12 +43,12 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__ic16a			, _hw_bn_ic16a
-#define _hw_bn_ic16a(o,i,a,...)			16
+#define _hw_mthd_hw_bn__cap16b			, _hw_bn_cap16b
+#define _hw_bn_cap16b(o,i,a,...)			16
 
 
 /**
- * @page atmelavr_ic16a
+ * @page atmelavr_cap16b
  * @par Interrupts
  *
  * The capture unit can trigger an @ref using_interrupts "anonymous IRQ" when
@@ -58,27 +62,4 @@
  * @endcode
  */
 
-
-#if !defined __ASSEMBLER__
-
-/*  HWA context
- */
-typedef struct {
-
-  hwa_r16_t	reg ;
-
-  /*  Registers used for high-level configuration
-   */
-  struct {
-    uint8_t	input, edge, filter ;
-  } config ;
-
-  /*  Registers used for configuration resolution
-   */
-  struct {
-    uint8_t	acic, ices, icnc ;
-  } solved ;
-
-} hwa_ic16a_t ;
-
-#endif
+#define hwa_cap16b_t	hwa_cap16a_t

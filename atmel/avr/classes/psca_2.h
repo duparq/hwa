@@ -17,7 +17,7 @@
  * it:
  *
  * @code
- * hw_reset( psc0 );
+ * hw_reset( prescaler0 );
  * @endcode
  */
 #define _hw_mthd_hw_reset__psca		, _hw_psca_reset
@@ -34,13 +34,13 @@
  * The hw_turn() instruction can reset and stop the prescaler:
  *
  * @code
- * hw_turn( psc0, off );  //  Reset and halt the prescaler
+ * hw_turn( prescaler0, off );  //  Reset and halt the prescaler
  * @endcode
  *
  * or release it:
  *
  * @code
- * hw_turn( psc0, on );   //  Release the prescaler
+ * hw_turn( prescaler0, on );   //  Release the prescaler
  * @endcode
  */
 #define _hw_mthd_hw_turn__psca		, _hw_psca_turn

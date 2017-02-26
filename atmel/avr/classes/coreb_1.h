@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- * * @ref atmegax8 : `hw_core0`
+ * * @ref atmegax8 : `core0`
  */
 #define _hw_class__coreb
 

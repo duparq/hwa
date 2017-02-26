@@ -17,8 +17,8 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_psc0`
- * * @ref attinyx5 : `hw_psc0`
- * * @ref atmegax8 : `hw_psc0`, `hw_psc1`
+ * * @ref attinyx4 : `prescaler0`
+ * * @ref attinyx5 : `prescaler0`
+ * * @ref atmegax8 : `prescaler0`, `prescaler1`
  */
 #define _hw_class__psca

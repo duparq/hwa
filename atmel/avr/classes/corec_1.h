@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- * * @ref atmegaxu4 : `hw_core0`
+ * * @ref atmegaxu4 : `core0`
  */
 #define _hw_class__corec
 

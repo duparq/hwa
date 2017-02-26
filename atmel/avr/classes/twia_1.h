@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- *  * @ref atmegax8 : `hw_twi0`
+ *  * @ref atmegax8 : `twi0`
  */
 #define _hw_class__twia
 

@@ -5,7 +5,7 @@ Software UART for Atmel AVRs
 Class '_swuarta' implements a software-emulated UART with the following
 features:
 
-* simplex or half-duplex communication over 1 or 2 wires
+* simplex or half-duplex communicapion over 1 or 2 wires
 * frames of 1 start bit, 8 data bits, 1 stop bit (no parity bit)
 * requirements:
   * one 8 or 16-bit counter compare unit

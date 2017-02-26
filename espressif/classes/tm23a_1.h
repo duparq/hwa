@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- *  * @ref esp8266 : `hw_timer1` and `hw_timer2`
+ *  * @ref esp8266 : `timer1` and `timer2`
  */
 #define _hw_class__tm23a
 

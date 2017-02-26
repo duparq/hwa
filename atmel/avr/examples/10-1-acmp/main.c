@@ -16,7 +16,7 @@
 
 
 /*  The analog comparator positive input
- *    This can be `bandgap` or `hw_pin_ain0` (or synonym)
+ *    This can be `bandgap` or `pin_ain0` (or synonym)
  */
 #define REFERENCE		bandgap
 

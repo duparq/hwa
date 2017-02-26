@@ -130,14 +130,14 @@ uart_putchar(char c, FILE *unused __attribute__((unused)) )
  * transfered.
  * Address bits exceeding 256 are transfered in the
  * E2/E1/E0 bits (subaddress bits) of the device selector.
- * Address is sent in two dedicated 8 bit transfers
+ * Address is sent in two dedicaped 8 bit transfers
  * for 16 bit address devices (larger EEPROM devices)
  *
  * The second bus cycle will reselect the device (repeated start
  * condition, going into master receiver mode), and transfer the data
  * from the device to the TWI master.  Multiple bytes can be
  * transfered by ACKing the client's transfer.  The last transfer will
- * be NACKed, which the client will take as an indication to not
+ * be NACKed, which the client will take as an indicapion to not
  * initiate further transfers.
  */
 int

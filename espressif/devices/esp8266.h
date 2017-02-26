@@ -35,9 +35,9 @@
  *
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
- * `hw_port0`	 | @ref espressif_p16a "_p16a"	  | General purpose I/O port
- * `hw_timer1`	 | @ref espressif_tm23a "_tm23a"  | 23-bit timer
- * `hw_uart0`	 | @ref esp8266_uarta "_uarta"	  | UART
+ * `port0`	 | @ref espressif_p16a "_p16a"	  | General purpose I/O port
+ * `timer1`	 | @ref espressif_tm23a "_tm23a"  | 23-bit timer
+ * `uart0`	 | @ref esp8266_uarta "_uarta"	  | UART
  */
 
 
@@ -207,72 +207,72 @@ typedef struct {
  *
  * Pin	  | HWA name	    | Class			  | Functions
  * -------|-----------------|-----------------------------|-------------
- * GPIO0  | `hw_pin_gpio0`  | @ref esp8266_io1a "_io1a" | `gpio` / `spi_cs2` / `clk_out`
- * GPIO1  | `hw_pin_gpio1`  | @ref esp8266_io1a "_io1a" | `gpio` / `uart0_txd` / `spi_cs1` / `clk_rtc`
- * GPIO2  | `hw_pin_gpio2`  | @ref esp8266_io1a "_io1a" | `gpio` / `i2so_ws` / `uart1_txd` / `uart0_txd`
- * GPIO3  | `hw_pin_gpio3`  | @ref esp8266_io1a "_io1a" | `gpio` / `uart0_rxd` / `i2so_data` / `fn_clk_xtal`
- * GPIO4  | `hw_pin_gpio4`  | @ref esp8266_io1a "_io1a" | `gpio` / `clk_xtal`
- * GPIO5  | `hw_pin_gpio5`  | @ref esp8266_io1a "_io1a" | `gpio` / `clk_rtc`
- * GPIO6  | `hw_pin_gpio6`  | @ref esp8266_io1a "_io1a" | `gpio` / `sd_clk` / `spi_clk` / `uart1_cts`
- * GPIO7  | `hw_pin_gpio7`  | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data0` / `spi_q` / `uart1_txd`
- * GPIO8  | `hw_pin_gpio8`  | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data1` / `spi_d` / `uart1_rxd`
- * GPIO9  | `hw_pin_gpio9`  | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data2` / `spi_hd` / `hspi_hd`
- * GPIO10 | `hw_pin_gpio10` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data3` / `spi_wp` / `hspi_wp`
- * GPIO11 | `hw_pin_gpio11` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_cmd` / `spi_cs0` / `uart1_rts`
- * GPIO12 | `hw_pin_gpio12` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdi` / `i2si_data` / `hspiq_miso` / `uart0_dtr`
- * GPIO13 | `hw_pin_gpio13` | @ref esp8266_io1a "_io1a" | `gpio` / `mtck` / `i2s_bck` / `hspi_mosi` / `uart0_cts`
- * GPIO14 | `hw_pin_gpio14` | @ref esp8266_io1a "_io1a" | `gpio` / `mtms` / `i2si_ws` / `hspi_clk` / `uart0_dsr`
- * GPIO15 | `hw_pin_gpio15` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdo` / `i2so_bck` / `hspi_cs` / `uart0_rts`
- * GPIO16 | `hw_pin_gpio16` | @ref esp8266_io1a "_io1a" | `gpio` / `xpd_dcdc` / `ext_wakeup` / `deep_sleep` / `bt_xtal_en`
+ * GPIO0  | `gpio0`	| @ref esp8266_io1a "_io1a" | `gpio` / `spi_cs2` / `clk_out`
+ * GPIO1  | `gpio1`	| @ref esp8266_io1a "_io1a" | `gpio` / `uart0_txd` / `spi_cs1` / `clk_rtc`
+ * GPIO2  | `gpio2`	| @ref esp8266_io1a "_io1a" | `gpio` / `i2so_ws` / `uart1_txd` / `uart0_txd`
+ * GPIO3  | `gpio3`	| @ref esp8266_io1a "_io1a" | `gpio` / `uart0_rxd` / `i2so_data` / `fn_clk_xtal`
+ * GPIO4  | `gpio4`	| @ref esp8266_io1a "_io1a" | `gpio` / `clk_xtal`
+ * GPIO5  | `gpio5`	| @ref esp8266_io1a "_io1a" | `gpio` / `clk_rtc`
+ * GPIO6  | `gpio6`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_clk` / `spi_clk` / `uart1_cts`
+ * GPIO7  | `gpio7`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data0` / `spi_q` / `uart1_txd`
+ * GPIO8  | `gpio8`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data1` / `spi_d` / `uart1_rxd`
+ * GPIO9  | `gpio9`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data2` / `spi_hd` / `hspi_hd`
+ * GPIO10 | `gpio10` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data3` / `spi_wp` / `hspi_wp`
+ * GPIO11 | `gpio11` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_cmd` / `spi_cs0` / `uart1_rts`
+ * GPIO12 | `gpio12` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdi` / `i2si_data` / `hspiq_miso` / `uart0_dtr`
+ * GPIO13 | `gpio13` | @ref esp8266_io1a "_io1a" | `gpio` / `mtck` / `i2s_bck` / `hspi_mosi` / `uart0_cts`
+ * GPIO14 | `gpio14` | @ref esp8266_io1a "_io1a" | `gpio` / `mtms` / `i2si_ws` / `hspi_clk` / `uart0_dsr`
+ * GPIO15 | `gpio15` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdo` / `i2so_bck` / `hspi_cs` / `uart0_rts`
+ * GPIO16 | `gpio16` | @ref esp8266_io1a "_io1a" | `gpio` / `xpd_dcdc` / `ext_wakeup` / `deep_sleep` / `bt_xtal_en`
  */
 
 
 /*	Pins				class, id, port, bn, bp
  */
-#define _hw_def_pin_gpio0		_io1a, 102, port0, 1, 0
-#define _hw_def_pin_gpio1		_io1a, 103, port0, 1, 1
-#define _hw_def_pin_gpio2		_io1a, 104, port0, 1, 2
-#define _hw_def_pin_gpio3		_io1a, 105, port0, 1, 3
-#define _hw_def_pin_gpio4		_io1a, 106, port0, 1, 4
-#define _hw_def_pin_gpio5		_io1a, 107, port0, 1, 5
-#define _hw_def_pin_gpio6		_io1a, 108, port0, 1, 6
-#define _hw_def_pin_gpio7		_io1a, 109, port0, 1, 7
-#define _hw_def_pin_gpio8		_io1a, 110, port0, 1, 8
-#define _hw_def_pin_gpio9		_io1a, 111, port0, 1, 9
-#define _hw_def_pin_gpio10		_io1a, 112, port0, 1, 10
-#define _hw_def_pin_gpio11		_io1a, 113, port0, 1, 11
-#define _hw_def_pin_gpio12		_io1a, 114, port0, 1, 12
-#define _hw_def_pin_gpio13		_io1a, 115, port0, 1, 13
-#define _hw_def_pin_gpio14		_io1a, 116, port0, 1, 14
-#define _hw_def_pin_gpio15		_io1a, 117, port0, 1, 15
+#define _hw_def_gpio0			_io1a, 102, port0, 1, 0
+#define _hw_def_gpio1			_io1a, 103, port0, 1, 1
+#define _hw_def_gpio2			_io1a, 104, port0, 1, 2
+#define _hw_def_gpio3			_io1a, 105, port0, 1, 3
+#define _hw_def_gpio4			_io1a, 106, port0, 1, 4
+#define _hw_def_gpio5			_io1a, 107, port0, 1, 5
+#define _hw_def_gpio6			_io1a, 108, port0, 1, 6
+#define _hw_def_gpio7			_io1a, 109, port0, 1, 7
+#define _hw_def_gpio8			_io1a, 110, port0, 1, 8
+#define _hw_def_gpio9			_io1a, 111, port0, 1, 9
+#define _hw_def_gpio10			_io1a, 112, port0, 1, 10
+#define _hw_def_gpio11			_io1a, 113, port0, 1, 11
+#define _hw_def_gpio12			_io1a, 114, port0, 1, 12
+#define _hw_def_gpio13			_io1a, 115, port0, 1, 13
+#define _hw_def_gpio14			_io1a, 116, port0, 1, 14
+#define _hw_def_gpio15			_io1a, 117, port0, 1, 15
 
 
 /*	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class
  *
  *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
  */
-#define _hw_def_pin_gpio16		_io1b, 118, port1, 1, 0
+#define _hw_def_gpio16			_io1b, 118, port1, 1, 0
 
 
 /*  Association of pin numbers and pin names
  */
-#define hw_pin_8			hw_pin_gpio16
-#define hw_pin_9			hw_pin_gpio14
-#define hw_pin_10			hw_pin_gpio12
-#define hw_pin_12			hw_pin_gpio13
-#define hw_pin_13			hw_pin_gpio15
-#define hw_pin_14			hw_pin_gpio2
-#define hw_pin_15			hw_pin_gpio0
-#define hw_pin_16			hw_pin_gpio4
-#define hw_pin_18			hw_pin_gpio9
-#define hw_pin_19			hw_pin_gpio10
-#define hw_pin_20			hw_pin_gpio11
-#define hw_pin_21			hw_pin_gpio6
-#define hw_pin_22			hw_pin_gpio7
-#define hw_pin_23			hw_pin_gpio8
-#define hw_pin_24			hw_pin_gpio5
-#define hw_pin_25			hw_pin_gpio3
-#define hw_pin_26			hw_pin_gpio1
+#define hw_pin_8			gpio16
+#define hw_pin_9			gpio14
+#define hw_pin_10			gpio12
+#define hw_pin_12			gpio13
+#define hw_pin_13			gpio15
+#define hw_pin_14			gpio2
+#define hw_pin_15			gpio0
+#define hw_pin_16			gpio4
+#define hw_pin_18			gpio9
+#define hw_pin_19			gpio10
+#define hw_pin_20			gpio11
+#define hw_pin_21			gpio6
+#define hw_pin_22			gpio7
+#define hw_pin_23			gpio8
+#define hw_pin_24			gpio5
+#define hw_pin_25			gpio3
+#define hw_pin_26			gpio1
 
 
 /*  Pin designed by a number stored in a variable
@@ -294,22 +294,22 @@ typedef struct {
  */
 #include "../classes/pcfa_1.h"
 
-#define _hw_def_pin_gpio12_cf		_pcfa, 119, 0x60000804
-#define _hw_def_pin_gpio13_cf		_pcfa, 120, 0x60000808
-#define _hw_def_pin_gpio14_cf		_pcfa, 121, 0x6000080C
-#define _hw_def_pin_gpio15_cf		_pcfa, 122, 0x60000810
-#define _hw_def_pin_gpio3_cf		_pcfa, 123, 0x60000814
-#define _hw_def_pin_gpio1_cf		_pcfa, 124, 0x60000818
-#define _hw_def_pin_gpio6_cf		_pcfa, 125, 0x6000081c
-#define _hw_def_pin_gpio7_cf		_pcfa, 126, 0x60000820
-#define _hw_def_pin_gpio8_cf		_pcfa, 127, 0x60000824
-#define _hw_def_pin_gpio9_cf		_pcfa, 128, 0x60000828
-#define _hw_def_pin_gpio10_cf		_pcfa, 129, 0x6000082c
-#define _hw_def_pin_gpio11_cf		_pcfa, 130, 0x60000830
-#define _hw_def_pin_gpio0_cf		_pcfa, 131, 0x60000834
-#define _hw_def_pin_gpio2_cf		_pcfa, 132, 0x60000838
-#define _hw_def_pin_gpio4_cf		_pcfa, 133, 0x6000083C
-#define _hw_def_pin_gpio5_cf		_pcfa, 134, 0x60000840
+#define _hw_def_gpio12_cf		_pcfa, 119, 0x60000804
+#define _hw_def_gpio13_cf		_pcfa, 120, 0x60000808
+#define _hw_def_gpio14_cf		_pcfa, 121, 0x6000080C
+#define _hw_def_gpio15_cf		_pcfa, 122, 0x60000810
+#define _hw_def_gpio3_cf		_pcfa, 123, 0x60000814
+#define _hw_def_gpio1_cf		_pcfa, 124, 0x60000818
+#define _hw_def_gpio6_cf		_pcfa, 125, 0x6000081c
+#define _hw_def_gpio7_cf		_pcfa, 126, 0x60000820
+#define _hw_def_gpio8_cf		_pcfa, 127, 0x60000824
+#define _hw_def_gpio9_cf		_pcfa, 128, 0x60000828
+#define _hw_def_gpio10_cf		_pcfa, 129, 0x6000082c
+#define _hw_def_gpio11_cf		_pcfa, 130, 0x60000830
+#define _hw_def_gpio0_cf		_pcfa, 131, 0x60000834
+#define _hw_def_gpio2_cf		_pcfa, 132, 0x60000838
+#define _hw_def_gpio4_cf		_pcfa, 133, 0x6000083C
+#define _hw_def_gpio5_cf		_pcfa, 134, 0x60000840
 
 
 /*  Pin functions
@@ -321,111 +321,111 @@ typedef struct {
  *	The symbol _pinname_fns is used to build the error message when an
  *	unavailable function is chosen with hw_config().
  */
-#define _hw_pin_gpio0_fn_gpio		, 0
-#define _hw_pin_gpio0_fn_spi_cs2	, 1
-#define _hw_pin_gpio0_fn_clk_out	, 4 /* RESET */
-#define _hw_pin_gpio0_fns		"`gpio`, `spi_cs2`, or `clk_out`"
+#define _hw_gpio0_fn_gpio		, 0
+#define _hw_gpio0_fn_spi_cs2		, 1
+#define _hw_gpio0_fn_clk_out		, 4 /* RESET */
+#define _hw_gpio0_fns			"`gpio`, `spi_cs2`, or `clk_out`"
 
-#define _hw_pin_gpio1_fn_uart0_txd	, 0, _hwa_write_reg( uart0, swap, 0 );
-#define _hw_pin_gpio1_fn_spi_cs1	, 1
-#define _hw_pin_gpio1_fn_gpio		, 3
-#define _hw_pin_gpio1_fn_clk_rtc	, 4
-#define _hw_pin_gpio1_fns		"`gpio`, `uart0_txd`, `spi_cs1`, or `clk_rtc`"
+#define _hw_gpio1_fn_uart0_txd		, 0, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_gpio1_fn_spi_cs1		, 1
+#define _hw_gpio1_fn_gpio		, 3
+#define _hw_gpio1_fn_clk_rtc		, 4
+#define _hw_gpio1_fns			"`gpio`, `uart0_txd`, `spi_cs1`, or `clk_rtc`"
 
-#define _hw_pin_gpio2_fn_gpio		, 0
-#define _hw_pin_gpio2_fn_i2so_ws	, 1
-#define _hw_pin_gpio2_fn_uart1_txd	, 2
-#define _hw_pin_gpio2_fn_uart0_txd	, 4, _hwa_write_reg( uart0, swap, 0 );
-#define _hw_pin_gpio2_fn_hw_uart0_txd	, 4
-#define _hw_pin_gpio2_fns		"`gpio`, `i2so_ws`, `uart1_txd`, or `uart0_txd`"
+#define _hw_gpio2_fn_gpio		, 0
+#define _hw_gpio2_fn_i2so_ws		, 1
+#define _hw_gpio2_fn_uart1_txd		, 2
+#define _hw_gpio2_fn_uart0_txd		, 4, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_gpio2_fn_hw_uart0_txd	, 4
+#define _hw_gpio2_fns			"`gpio`, `i2so_ws`, `uart1_txd`, or `uart0_txd`"
 
-#define _hw_pin_gpio3_fn_uart0_rxd	, 0, _hwa_write_reg( uart0, swap, 0 );
-#define _hw_pin_gpio3_fn_i2so_data	, 1
-#define _hw_pin_gpio3_fn_gpio		, 3
-#define _hw_pin_gpio3_fn_clk_xtal	, 4
-#define _hw_pin_gpio3_fns		"`gpio`, `uart0_rxd`, `i2so_data`, or `fn_clk_xtal`"
+#define _hw_gpio3_fn_uart0_rxd		, 0, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_gpio3_fn_i2so_data		, 1
+#define _hw_gpio3_fn_gpio		, 3
+#define _hw_gpio3_fn_clk_xtal		, 4
+#define _hw_gpio3_fns			"`gpio`, `uart0_rxd`, `i2so_data`, or `fn_clk_xtal`"
 
-#define _hw_pin_gpio4_fn_gpio		, 0
-#define _hw_pin_gpio4_fn_clk_xtal	, 1
-#define _hw_pin_gpio4_fns		"`gpio` or `clk_xtal`"
+#define _hw_gpio4_fn_gpio		, 0
+#define _hw_gpio4_fn_clk_xtal		, 1
+#define _hw_gpio4_fns			"`gpio` or `clk_xtal`"
 
-#define _hw_pin_gpio5_fn_gpio		, 0
-#define _hw_pin_gpio5_fn_clk_rtc	, 1
-#define _hw_pin_gpio5_fns		"`gpio`, or `clk_rtc`"
+#define _hw_gpio5_fn_gpio		, 0
+#define _hw_gpio5_fn_clk_rtc		, 1
+#define _hw_gpio5_fns			"`gpio`, or `clk_rtc`"
 
-#define _hw_pin_gpio6_fn_sd_clk		, 0
-#define _hw_pin_gpio6_fn_spi_clk	, 1
-#define _hw_pin_gpio6_fn_gpio		, 3
-#define _hw_pin_gpio6_fn_uart1_cts	, 4
-#define _hw_pin_gpio6_fns		"`gpio`, `sd_clk`, `spi_clk`, or `uart1_cts`"
+#define _hw_gpio6_fn_sd_clk		, 0
+#define _hw_gpio6_fn_spi_clk		, 1
+#define _hw_gpio6_fn_gpio		, 3
+#define _hw_gpio6_fn_uart1_cts		, 4
+#define _hw_gpio6_fns			"`gpio`, `sd_clk`, `spi_clk`, or `uart1_cts`"
 
-#define _hw_pin_gpio7_fn_sd_data0	, 0
-#define _hw_pin_gpio7_fn_spi_q		, 1
-#define _hw_pin_gpio7_fn_gpio		, 3
-#define _hw_pin_gpio7_fn_uart1_txd	, 4
-#define _hw_pin_gpio7_fns		"`gpio`, `sd_data0`, `spi_q`, or `uart1_txd`"
+#define _hw_gpio7_fn_sd_data0		, 0
+#define _hw_gpio7_fn_spi_q		, 1
+#define _hw_gpio7_fn_gpio		, 3
+#define _hw_gpio7_fn_uart1_txd		, 4
+#define _hw_gpio7_fns			"`gpio`, `sd_data0`, `spi_q`, or `uart1_txd`"
 
-#define _hw_pin_gpio8_fn_sd_data1	, 0
-#define _hw_pin_gpio8_fn_spi_d		, 1
-#define _hw_pin_gpio8_fn_gpio		, 3
-#define _hw_pin_gpio8_fn_u1_rxd		, 4
-#define _hw_pin_gpio8_fns		"`gpio`, `sd_data1`, `spi_d`, or `u1_rxd`"
+#define _hw_gpio8_fn_sd_data1		, 0
+#define _hw_gpio8_fn_spi_d		, 1
+#define _hw_gpio8_fn_gpio		, 3
+#define _hw_gpio8_fn_u1_rxd		, 4
+#define _hw_gpio8_fns			"`gpio`, `sd_data1`, `spi_d`, or `u1_rxd`"
 
-#define _hw_pin_gpio9_fn_sd_data2	, 0
-#define _hw_pin_gpio9_fn_spi_hd		, 1
-#define _hw_pin_gpio9_fn_gpio		, 3
-#define _hw_pin_gpio9_fn_hspi_hd	, 4
-#define _hw_pin_gpio9_fns		"`gpio`, `sd_data2`, `spi_hd`, or `hspi_hd`"
+#define _hw_gpio9_fn_sd_data2		, 0
+#define _hw_gpio9_fn_spi_hd		, 1
+#define _hw_gpio9_fn_gpio		, 3
+#define _hw_gpio9_fn_hspi_hd		, 4
+#define _hw_gpio9_fns			"`gpio`, `sd_data2`, `spi_hd`, or `hspi_hd`"
 
-#define _hw_pin_gpio10_fn_sd_data3	, 0
-#define _hw_pin_gpio10_fn_spi_wp	, 1
-#define _hw_pin_gpio10_fn_gpio		, 3
-#define _hw_pin_gpio10_fn_hspi_wp	, 4
-#define _hw_pin_gpio10_fns		"`gpio`, `sd_data3`, `spi_wp`, or `hspi_wp`"
+#define _hw_gpio10_fn_sd_data3		, 0
+#define _hw_gpio10_fn_spi_wp		, 1
+#define _hw_gpio10_fn_gpio		, 3
+#define _hw_gpio10_fn_hspi_wp		, 4
+#define _hw_gpio10_fns			"`gpio`, `sd_data3`, `spi_wp`, or `hspi_wp`"
 
-#define _hw_pin_gpio11_fn_sd_cmd	, 0
-#define _hw_pin_gpio11_fn_spi_cs0	, 1
-#define _hw_pin_gpio11_fn_gpio		, 3
-#define _hw_pin_gpio11_fn_uart1_rts	, 4
-#define _hw_pin_gpio11_fns		"`gpio`, `sd_cmd`, `spi_cs0`, or `uart1_rts`"
+#define _hw_gpio11_fn_sd_cmd		, 0
+#define _hw_gpio11_fn_spi_cs0		, 1
+#define _hw_gpio11_fn_gpio		, 3
+#define _hw_gpio11_fn_uart1_rts		, 4
+#define _hw_gpio11_fns			"`gpio`, `sd_cmd`, `spi_cs0`, or `uart1_rts`"
 
-#define _hw_pin_gpio12_fn_mtdi		, 0
-#define _hw_pin_gpio12_fn_i2si_data	, 1
-#define _hw_pin_gpio12_fn_hspi_miso	, 2
-#define _hw_pin_gpio12_fn_gpio		, 3
-#define _hw_pin_gpio12_fn_uart0_dtr	, 4
-#define _hw_pin_gpio12_fns		"`gpio`, `mtdi`, `i2si_data`, `hspi_miso`, or `uart0_dtr`"
+#define _hw_gpio12_fn_mtdi		, 0
+#define _hw_gpio12_fn_i2si_data		, 1
+#define _hw_gpio12_fn_hspi_miso		, 2
+#define _hw_gpio12_fn_gpio		, 3
+#define _hw_gpio12_fn_uart0_dtr		, 4
+#define _hw_gpio12_fns			"`gpio`, `mtdi`, `i2si_data`, `hspi_miso`, or `uart0_dtr`"
 
-#define _hw_pin_gpio13_fn_mtck		, 0
-#define _hw_pin_gpio13_fn_i2s_bck	, 1
-#define _hw_pin_gpio13_fn_hspi_mosi	, 2
-#define _hw_pin_gpio13_fn_gpio		, 3
-#define _hw_pin_gpio13_fn_uart0_cts	, 4
-#define _hw_pin_gpio13_fn_uart0_rxd	, 4, _hwa_write_reg( uart0, swap, 1 );
-#define _hw_pin_gpio13_fns		"`gpio`, `mtck`, `i2s_bck`, `hspi_mosi`, or `uart0_cts`"
+#define _hw_gpio13_fn_mtck		, 0
+#define _hw_gpio13_fn_i2s_bck		, 1
+#define _hw_gpio13_fn_hspi_mosi		, 2
+#define _hw_gpio13_fn_gpio		, 3
+#define _hw_gpio13_fn_uart0_cts		, 4
+#define _hw_gpio13_fn_uart0_rxd		, 4, _hwa_write_reg( uart0, swap, 1 );
+#define _hw_gpio13_fns			"`gpio`, `mtck`, `i2s_bck`, `hspi_mosi`, or `uart0_cts`"
 
-#define _hw_pin_gpio14_fn_mtms		, 0
-#define _hw_pin_gpio14_fn_i2si_ws	, 1
-#define _hw_pin_gpio14_fn_hspi_clk	, 2
-#define _hw_pin_gpio14_fn_gpio		, 3
-#define _hw_pin_gpio14_fn_uart0_dsr	, 4
-#define _hw_pin_gpio14_fns		"`gpio`, `mtms`, `i2si_ws`, `hspi_clk`, or `uart0_dsr`"
+#define _hw_gpio14_fn_mtms		, 0
+#define _hw_gpio14_fn_i2si_ws		, 1
+#define _hw_gpio14_fn_hspi_clk		, 2
+#define _hw_gpio14_fn_gpio		, 3
+#define _hw_gpio14_fn_uart0_dsr		, 4
+#define _hw_gpio14_fns			"`gpio`, `mtms`, `i2si_ws`, `hspi_clk`, or `uart0_dsr`"
 
-#define _hw_pin_gpio15_fn_mtdo		, 0
-#define _hw_pin_gpio15_fn_i2so_bck	, 1
-#define _hw_pin_gpio15_fn_hspi_cs	, 2
-#define _hw_pin_gpio15_fn_gpio		, 3
-#define _hw_pin_gpio15_fn_uart0_rts	, 4
-#define _hw_pin_gpio15_fn_uart0_txd	, 4, _hwa_write_reg( uart0, swap, 1 );
-#define _hw_pin_gpio15_fns		"`gpio`, `mtdo`, `i2so_bck`, `hspi_cs`, `uart0_rts`, or `uart0_txd`"
+#define _hw_gpio15_fn_mtdo		, 0
+#define _hw_gpio15_fn_i2so_bck		, 1
+#define _hw_gpio15_fn_hspi_cs		, 2
+#define _hw_gpio15_fn_gpio		, 3
+#define _hw_gpio15_fn_uart0_rts		, 4
+#define _hw_gpio15_fn_uart0_txd		, 4, _hwa_write_reg( uart0, swap, 1 );
+#define _hw_gpio15_fns			"`gpio`, `mtdo`, `i2so_bck`, `hspi_cs`, `uart0_rts`, or `uart0_txd`"
 
-#define _hw_pin_gpio16_fn_xpd_dcdc	, 0
-#define _hw_pin_gpio16_fn_rtc_gpio0	, 1
-#define _hw_pin_gpio16_fn_gpio		, 1
-#define _hw_pin_gpio16_fn_ext_wakeup	, 2
-#define _hw_pin_gpio16_fn_deep_sleep	, 3
-#define _hw_pin_gpio16_fn_bt_xtal_en	, 4
-#define _hw_pin_gpio16_fns		"`gpio`, `xpd_dcdc`, `ext_wakeup`, `deep_sleep`, or `bt_xtal_en`"
+#define _hw_gpio16_fn_xpd_dcdc		, 0
+#define _hw_gpio16_fn_rtc_gpio0		, 1
+#define _hw_gpio16_fn_gpio		, 1
+#define _hw_gpio16_fn_ext_wakeup	, 2
+#define _hw_gpio16_fn_deep_sleep	, 3
+#define _hw_gpio16_fn_bt_xtal_en	, 4
+#define _hw_gpio16_fns			"`gpio`, `xpd_dcdc`, `ext_wakeup`, `deep_sleep`, or `bt_xtal_en`"
 
 
 /*******************************************************************************
@@ -502,7 +502,7 @@ typedef struct {
 
 #define _hw_reg__tm32a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-//#define _hw_reg_timer1_ie		  _xob1, shared, _edgeie, 1, 1
+//#define _hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -626,12 +626,12 @@ typedef struct {
 
 #define _hw_reg__uarta_swap		_xob1, shared, _swap, 1, 2
 
-// #define _hw_reg__uarta_		   _cb1, _, 1,	//
+// #define _hw_reg__uarta_		_cb1, _, 1,	//
 
 /*  Relatives
  */
-//#define hw_uart0pin_txd			hw_pin_gpio1
-//#define hw_uart0pin_rxd			hw_pin_gpio3
+//#define hw_uart0pin_txd			hw_gpio1
+//#define hw_uart0pin_rxd			hw_gpio3
 
 
 /*******************************************************************************
@@ -654,22 +654,22 @@ typedef struct {
   hwa_shared_t	shared ;
 
   hwa_p16a_t	port0 ;
-  hwa_pcfa_t	pin_gpio0_cf ;
-  hwa_pcfa_t	pin_gpio1_cf ;
-  hwa_pcfa_t	pin_gpio2_cf ;
-  hwa_pcfa_t	pin_gpio3_cf ;
-  hwa_pcfa_t	pin_gpio4_cf ;
-  hwa_pcfa_t	pin_gpio5_cf ;
-  hwa_pcfa_t	pin_gpio6_cf ;
-  hwa_pcfa_t	pin_gpio7_cf ;
-  hwa_pcfa_t	pin_gpio8_cf ;
-  hwa_pcfa_t	pin_gpio9_cf ;
-  hwa_pcfa_t	pin_gpio10_cf ;
-  hwa_pcfa_t	pin_gpio11_cf ;
-  hwa_pcfa_t	pin_gpio12_cf ;
-  hwa_pcfa_t	pin_gpio13_cf ;
-  hwa_pcfa_t	pin_gpio14_cf ;
-  hwa_pcfa_t	pin_gpio15_cf ;
+  hwa_pcfa_t	gpio0_cf ;
+  hwa_pcfa_t	gpio1_cf ;
+  hwa_pcfa_t	gpio2_cf ;
+  hwa_pcfa_t	gpio3_cf ;
+  hwa_pcfa_t	gpio4_cf ;
+  hwa_pcfa_t	gpio5_cf ;
+  hwa_pcfa_t	gpio6_cf ;
+  hwa_pcfa_t	gpio7_cf ;
+  hwa_pcfa_t	gpio8_cf ;
+  hwa_pcfa_t	gpio9_cf ;
+  hwa_pcfa_t	gpio10_cf ;
+  hwa_pcfa_t	gpio11_cf ;
+  hwa_pcfa_t	gpio12_cf ;
+  hwa_pcfa_t	gpio13_cf ;
+  hwa_pcfa_t	gpio14_cf ;
+  hwa_pcfa_t	gpio15_cf ;
   hwa_tm23a_t	timer1 ;
   hwa_uarta_t	uart0 ;
 } hwa_t ;
@@ -688,22 +688,22 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
   _hwa_setup( shared );
   _hwa_setup( port0 );
-  _hwa_setup( pin_gpio0_cf );
-  _hwa_setup( pin_gpio1_cf );
-  _hwa_setup( pin_gpio2_cf );
-  _hwa_setup( pin_gpio3_cf );
-  _hwa_setup( pin_gpio4_cf );
-  _hwa_setup( pin_gpio5_cf );
-  _hwa_setup( pin_gpio6_cf );
-  _hwa_setup( pin_gpio7_cf );
-  _hwa_setup( pin_gpio8_cf );
-  _hwa_setup( pin_gpio9_cf );
-  _hwa_setup( pin_gpio10_cf );
-  _hwa_setup( pin_gpio11_cf );
-  _hwa_setup( pin_gpio12_cf );
-  _hwa_setup( pin_gpio13_cf );
-  _hwa_setup( pin_gpio14_cf );
-  _hwa_setup( pin_gpio15_cf );
+  _hwa_setup( gpio0_cf );
+  _hwa_setup( gpio1_cf );
+  _hwa_setup( gpio2_cf );
+  _hwa_setup( gpio3_cf );
+  _hwa_setup( gpio4_cf );
+  _hwa_setup( gpio5_cf );
+  _hwa_setup( gpio6_cf );
+  _hwa_setup( gpio7_cf );
+  _hwa_setup( gpio8_cf );
+  _hwa_setup( gpio9_cf );
+  _hwa_setup( gpio10_cf );
+  _hwa_setup( gpio11_cf );
+  _hwa_setup( gpio12_cf );
+  _hwa_setup( gpio13_cf );
+  _hwa_setup( gpio14_cf );
+  _hwa_setup( gpio15_cf );
 
   _hwa_setup( timer1 );
   _hwa_setup( uart0 );
@@ -714,22 +714,22 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init( shared );
   _hwa_init( port0 );
-  /* _hwa_init( pin_gpio0_cf ); */
-  /* _hwa_init( pin_gpio1_cf ); */
-  /* _hwa_init( pin_gpio2_cf ); */
-  /* _hwa_init( pin_gpio3_cf ); */
-  /* _hwa_init( pin_gpio4_cf ); */
-  /* _hwa_init( pin_gpio5_cf ); */
-  /* _hwa_init( pin_gpio6_cf ); */
-  /* _hwa_init( pin_gpio7_cf ); */
-  /* _hwa_init( pin_gpio8_cf ); */
-  /* _hwa_init( pin_gpio9_cf ); */
-  /* _hwa_init( pin_gpio10_cf ); */
-  /* _hwa_init( pin_gpio11_cf ); */
-  /* _hwa_init( pin_gpio12_cf ); */
-  /* _hwa_init( pin_gpio13_cf ); */
-  /* _hwa_init( pin_gpio14_cf ); */
-  /* _hwa_init( pin_gpio15_cf ); */
+  /* _hwa_init( gpio0_cf ); */
+  /* _hwa_init( gpio1_cf ); */
+  /* _hwa_init( gpio2_cf ); */
+  /* _hwa_init( gpio3_cf ); */
+  /* _hwa_init( gpio4_cf ); */
+  /* _hwa_init( gpio5_cf ); */
+  /* _hwa_init( gpio6_cf ); */
+  /* _hwa_init( gpio7_cf ); */
+  /* _hwa_init( gpio8_cf ); */
+  /* _hwa_init( gpio9_cf ); */
+  /* _hwa_init( gpio10_cf ); */
+  /* _hwa_init( gpio11_cf ); */
+  /* _hwa_init( gpio12_cf ); */
+  /* _hwa_init( gpio13_cf ); */
+  /* _hwa_init( gpio14_cf ); */
+  /* _hwa_init( gpio15_cf ); */
   _hwa_init( timer1 );
   _hwa_init( uart0 );
 }
@@ -737,22 +737,22 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
-  _hwa_commit( pin_gpio0_cf );
-  _hwa_commit( pin_gpio1_cf );
-  _hwa_commit( pin_gpio2_cf );
-  _hwa_commit( pin_gpio3_cf );
-  _hwa_commit( pin_gpio4_cf );
-  _hwa_commit( pin_gpio5_cf );
-  _hwa_commit( pin_gpio6_cf );
-  _hwa_commit( pin_gpio7_cf );
-  _hwa_commit( pin_gpio8_cf );
-  _hwa_commit( pin_gpio9_cf );
-  _hwa_commit( pin_gpio10_cf );
-  _hwa_commit( pin_gpio11_cf );
-  _hwa_commit( pin_gpio12_cf );
-  _hwa_commit( pin_gpio13_cf );
-  _hwa_commit( pin_gpio14_cf );
-  _hwa_commit( pin_gpio15_cf );
+  _hwa_commit( gpio0_cf );
+  _hwa_commit( gpio1_cf );
+  _hwa_commit( gpio2_cf );
+  _hwa_commit( gpio3_cf );
+  _hwa_commit( gpio4_cf );
+  _hwa_commit( gpio5_cf );
+  _hwa_commit( gpio6_cf );
+  _hwa_commit( gpio7_cf );
+  _hwa_commit( gpio8_cf );
+  _hwa_commit( gpio9_cf );
+  _hwa_commit( gpio10_cf );
+  _hwa_commit( gpio11_cf );
+  _hwa_commit( gpio12_cf );
+  _hwa_commit( gpio13_cf );
+  _hwa_commit( gpio14_cf );
+  _hwa_commit( gpio15_cf );
   _hwa_commit( port0 );
 
   _hwa_commit( timer1 );

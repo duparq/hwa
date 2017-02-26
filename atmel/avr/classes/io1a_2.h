@@ -265,7 +265,7 @@
  * * `id` is a unique number identifying the object. If you're not going to use
  *        the `HW_ID()` instruction, any value (or even none) is OK.
  *
- * * `port` is the name of the object holding the pin, e.g.: `hw_porta`.
+ * * `port` is the name of the object holding the pin, e.g.: `porta`.
  *
  * * `bn` is the number of consecutive bits the GPIO definition contains.
  *

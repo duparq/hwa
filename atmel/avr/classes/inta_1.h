@@ -16,9 +16,9 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_int0`
- * * @ref attinyx5 : `hw_int0`
- * * @ref atmegax8 : `hw_int0`, `hw_int1`
+ * * @ref attinyx4 : `int0`
+ * * @ref attinyx5 : `int0`
+ * * @ref atmegax8 : `int0`, `int1`
  */
 #define _hw_class__inta
 

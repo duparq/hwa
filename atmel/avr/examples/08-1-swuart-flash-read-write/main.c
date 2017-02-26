@@ -12,26 +12,26 @@
  * Algorithm:
  *
  *     Synchronize the software UART.
- *     Send the application '$' prompt
+ *     Send the applicapion '$' prompt
  *     Infinite loop:
  *       Wait for: c + al + ah + n + '\n'
  *       IF c=='f' THEN read n bytes from Flash address al:ah
  *       IF c=='F' THEN write n at Flash address al:ah
  *
- * @par Test application
+ * @par Test applicapion
  *
  *      ./main.py --help
  *      ./main.py read 0 1024
  *      ./main.py write 0x800 0x55 # BE CAREFULL OF NOT OVERWRITING THE APPLICATION OR THE BOOTLOADER!
  *  Note: if you have Diabolo installed, writing into the Flash memory below
- *  Diabolo will corrupt the application CRC and Diabolo will not start the
- *  application anymore after RESET. Oonly a few 0xFF bytes above Diabolo can be
- *  modified without changing the CRC. If the application does not start, you
+ *  Diabolo will corrupt the applicapion CRC and Diabolo will not start the
+ *  applicapion anymore after RESET. Oonly a few 0xFF bytes above Diabolo can be
+ *  modified without changing the CRC. If the applicapion does not start, you
  *  can still dump the Flash content with:
  *
  *      diabolo.py --read-flash --hexdump
  *
- *  FIXME: the Diabolo host application should help repairing the CRC.
+ *  FIXME: the Diabolo host applicapion should help repairing the CRC.
  *
  * @par config.h
  * @include 08-1-swuart-flash-read-write/config.h

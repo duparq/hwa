@@ -15,10 +15,10 @@
  * A class `_eeproma` object is an EEPROM memory.
  *
  * It is used in:
- *  * @ref attinyx4 : `hw_eeprom0`
- *  * @ref attinyx5 : `hw_eeprom0`
- *  * @ref atmegax8 : `hw_eeprom0`
- *  * @ref atmegaxu4 : `hw_eeprom0`
+ *  * @ref attinyx4 : `eeprom0`
+ *  * @ref attinyx5 : `eeprom0`
+ *  * @ref atmegax8 : `eeprom0`
+ *  * @ref atmegaxu4 : `eeprom0`
  */
 #define _hw_class__eeproma
 

@@ -18,8 +18,8 @@ illustrating various features of HWA for the Atmel ATtiny44/84, ATmega328P and
 ATtiny45/85 devices.
 
 The `main.c` file of each example project gives informations about what it does
-and how you can test it. A Python application, usually named `main.py`, is
-provided in the directory of the examples that need to communicate with the
+and how you can test it. A Python applicapion, usually named `main.py`, is
+provided in the directory of the examples that need to communicape with the
 host.
 
 A build system is also provided, that uses GNU Make and a few other GNU
@@ -35,7 +35,7 @@ Toolchain
 To be able to compile the example projects, you need a properly configured
 avr-gcc toolchain and GNU Make. Python2.7 + pySerial are required if you want to
 check the CRC of the binary code produced, use the Diabolo bootloader or for
-testing the examples that communicate.
+testing the examples that communicape.
 
 __GNU/Linux__ users usually only have to install the required packages their
 distribution provides.
@@ -66,7 +66,7 @@ tested using:
  * Pyserial: installed from the bash command line: `/c/Python27/Scripts/pip install pyserial`
 
  * Optionnally: [wxPython](http://www.wxpython.org/download.php) for companion
-   applications that have graphical capablities.
+   applicapions that have graphical capablities.
 
 
 Once all this is downloaded and installed, update your PATH, e.g.:
@@ -139,7 +139,7 @@ Checking the validity of the produced code without programming a device
 If you installed Python, you can run `make check-all-examples` in the
 `examples/` directory or `make check` in one of the examples directories to
 verify that the generated code is valid. Here again, you can use the `BOARD`
-variable to restrict the verifications to a specific target board. The
+variable to restrict the verificapions to a specific target board. The
 validation is done by verifying that the CRC16 of the binary code produced for a
 given compiler and a given configuration is preserved. Each example project
 contains validation files, named `.valid-*`. The name of a validation file
@@ -152,4 +152,4 @@ possible that the compilers just have made different register choices. However,
 for a given compiler, and a given configuration, a difference in the CRC16 means
 that there is a significant difference in the produced codes. The machine code
 included in the validation file is then usefull to see if the variations in the
-produced code result of modifications in the HWA core.
+produced code result of modificapions in the HWA core.

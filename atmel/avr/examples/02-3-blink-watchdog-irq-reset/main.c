@@ -31,7 +31,7 @@
  *    instruction ourselves (otherwise avr-gcc does some register
  *    initializations even though none is used).
  */
-HW_ISR( wdog0, isr_naked )
+HW_ISR( watchdog0, isr_naked )
 {
   hw_reti();
 }
@@ -63,7 +63,7 @@ int main ( )
     /*	When the device is reset by the watchdog, the watchdog remains enabled
      *	so we must stop it.
      */
-    hwa( turn, wdog0, off );
+    hwa( turn, watchdog0, off );
     hwa_commit();
     hw_sleep();
     for (;;)			/* This should */
@@ -74,7 +74,7 @@ int main ( )
    *  up), setting its flag the first time, resetting the device the second time
    *  if it has been reconfigured.
    */
-  hwa( configure,  wdog0,
+  hwa( configure,  watchdog0,
        timeout,	TIMEOUT,
        action,	irq_or_reset );
 
@@ -95,7 +95,7 @@ int main ( )
      *	the IRQ so that next timeout will reset the device. Load the context
      *	with this information, but do not write it into hardware.
      */
-    hwa( turn, HW_IRQ(wdog0), off );
+    hwa( turn, HW_IRQ(watchdog0), off );
     hwa_nocommit();
 
     hw( toggle, PIN_LED );
@@ -104,7 +104,7 @@ int main ( )
       /*
        *  Re-enable the watchdog IRQ.
        */
-      hwa( turn, HW_IRQ(wdog0), on );
+      hwa( turn, HW_IRQ(watchdog0), on );
       hwa_commit();
     }
   }

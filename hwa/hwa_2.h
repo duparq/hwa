@@ -411,7 +411,7 @@
 
 /**
  * @ingroup private
- * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modification mask (mmask).
+ * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modificapion mask (mmask).
  * @hideinitializer
  */
 #define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_REG(o,r),v)

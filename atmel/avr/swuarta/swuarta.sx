@@ -174,7 +174,7 @@ DATA(dtn):	.byte	0		; 1 bit duration
 	;; Priority is to get the date of the start condition and re-enable
 	;; interrupts as soon as possible.
 	;;
-	;; Edge checking is not a high priority since catching a rising edge
+	;; Edge checking is not a high priority since capching a rising edge
 	;; would happen only when UART is out of sync.
 	;;
 	;; Interrupts are disabled for CY_ST_SEI cycles (until sampling

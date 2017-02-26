@@ -11,7 +11,7 @@
  *
  * Send '\\r'+ 4 hex characters of last ADC conversion every 20 ms
  *
- * @par Test application
+ * @par Test applicapion
  *
  * Display the ADC result on the command line:
  *

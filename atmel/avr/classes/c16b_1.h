@@ -21,14 +21,14 @@
  *
  *  * one prescaler, of class @ref atmelavr_psca "_psca": `prescaler`
  *
- *  * three compare units with waveform generators, of class @ref atmelavr_oc8a
- *    "_oc16a": `compare0`, `compare1`, and `compare2`
+ *  * three compare units with waveform generators, of class @ref atmelavr_cmp8a
+ *    "_cmp16a": `compare0`, `compare1`, and `compare2`
  *
- *  * one capture unit, of class @ref atmelavr_ic16a "_ic16a": `capture`
+ *  * one capture unit, of class @ref atmelavr_cap16a "_cap16a": `capture`
  *
  * It is used in:
  *
- *  * @ref atmegaxu4 : `hw_counter1`, `hw_counter3`
+ *  * @ref atmegaxu4 : `counter1`, `counter3`
  */
 #define _hw_class__c16b
 

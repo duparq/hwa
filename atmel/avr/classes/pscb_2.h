@@ -30,7 +30,7 @@
  * __Note 3__: it is highly recommended that the counter is stopped whenever the
  * prescaler clock is switched between `pll_32MHz` and `pll_64MHz`.
  *
- * __Note 4__: turning the PLL on requires a special proc8adure that taked about
+ * __Note 4__: turning the PLL on requires a special prcmp8adure that taked about
  * 100 µs to execute.
  *
  * __Note 5__: the PLL is never stopped once it has been turned on.
@@ -120,7 +120,7 @@
     if ( hwa->o.config.clock == HW_A1(_hw_pscb_clock_system) )		\
       _hwa_write_reg( o, pcke, 0 );					\
     else if ( _hwa_ovalue( o, plle ) == 0 ) {				\
-      /* PLL start proc8adure (once started, it is never stopped). */	\
+      /* PLL start prcmp8adure (once started, it is never stopped). */	\
       _hwa_write_reg(o,plle,1);						\
       _hwa_commit_reg(o,pllcsr);					\
       hw_delay_cycles(100e-6 * hw_syshz);				\

@@ -19,8 +19,8 @@
  *
  * It is used in:
  *
- * * @ref atmegax8 : `hw_wdog0`
- * * @ref atmegaxu4 : `hw_wdog0`
+ * * @ref atmegax8 : `watchdog0`
+ * * @ref atmegaxu4 : `watchdog0`
  */
 #define _hw_class__wdogb
 

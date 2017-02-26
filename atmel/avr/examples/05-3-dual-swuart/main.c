@@ -20,7 +20,7 @@
  *
  * 2. Choose a moderate baudrate so that the CPU has the time to service
  * interrupts in a relatively reasonable time (115200 bps seems OK for
- * `hw_counter1` with internal 8 MHz RC oscilltor and OSCCAL=0xFF or the 16 MHz
+ * `counter1` with internal 8 MHz RC oscilltor and OSCCAL=0xFF or the 16 MHz
  * Nanodccduino).
  *
  * 3. CH340 USB/Serial adapter does not send parity bits under Linux (though no
@@ -28,7 +28,7 @@
  * in a Windows XP VirtualBoxed under Linux, so there must be a bug in the Linux
  * driver).
  *
- * @par Test application
+ * @par Test applicapion
  *
  *      ./main.py -b BAUDRATE
  *

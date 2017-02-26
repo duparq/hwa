@@ -16,9 +16,9 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_pcic0`, `hw_pcic1`
- * * @ref attinyx5 : `hw_pcic0`
- * * @ref atmegax8 : `hw_pcic0`, `hw_pcic1`, `hw_pcic2`
+ * * @ref attinyx4 : `pcic0`, `pcic1`
+ * * @ref attinyx5 : `pcic0`
+ * * @ref atmegax8 : `pcic0`, `pcic1`, `pcic2`
  */
 #define _hw_class__pcica
 

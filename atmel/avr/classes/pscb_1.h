@@ -21,7 +21,7 @@
  *
  * It is used in:
  *
- * * @ref attinyx5 : `hw_psc1`
+ * * @ref attinyx5 : `prescaler1`
  */
 #define _hw_class__pscb
 

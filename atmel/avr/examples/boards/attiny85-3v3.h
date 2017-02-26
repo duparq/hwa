@@ -15,7 +15,7 @@
  * @section boards_attiny85_3v3 Board attiny85-3v3
  *
  * This is a single ATTINY85-20PU without crystal on a breadboard with a
- * USB/Serial adapter for 1-wire communication, a LED connected at pin #5
+ * USB/Serial adapter for 1-wire communicapion, a LED connected at pin #5
  * (PB0/OC0A), one analog input pin.
  *
  * @par Pin Configuration
@@ -27,7 +27,7 @@
  *
  * @par Serial adapter wiring
  *
- * The serial communication uses 1 wire for RX/TX, AVR pin #2 connected to the
+ * The serial communicapion uses 1 wire for RX/TX, AVR pin #2 connected to the
  * RXD pin of the serial adapter, and a 1k resistor is connected between the RXD
  * and TXD pins (it could be replaced by a diode, Schottky preferably).
  *
@@ -64,13 +64,13 @@
 #define HW_DEVICE_STARTUP_DELAYS	6CK_14CK_64ms
 
 /*  Settings for building the Diabolo bootloader
- *  Settings for the Diabolo application are in the board's Makefile
+ *  Settings for the Diabolo applicapion are in the board's Makefile
  */
 #define DIABOLO_PIN_RX                  HW_PIN(2)
 #define DIABOLO_PIN_TX                  HW_PIN(2)
 #define DIABOLO_SYNC                    5+1
 
-/*  The pin at which the LED is connected. The target device name indicates its
+/*  The pin at which the LED is connected. The target device name indicapes its
  *  package, then pins named by their number can be used.
  */
 #define PIN_LED                         HW_PIN(5)	// OC0A

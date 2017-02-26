@@ -16,7 +16,7 @@
  *
  * It is used in:
  *
- *  * @ref esp8266 : `hw_uart0` and `hw_uart1`
+ *  * @ref esp8266 : `uart0` and `uart1`
  */
 #define _hw_class__uarta
 

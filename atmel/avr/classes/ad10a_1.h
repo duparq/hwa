@@ -34,7 +34,7 @@
  *
  * It is used by:
  *
- *  * @ref attinyx4 : `hw_adc0`
+ *  * @ref attinyx4 : `adc0`
  */
 #define _hw_class__ad10a
 

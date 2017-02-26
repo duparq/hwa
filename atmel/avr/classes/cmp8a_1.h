@@ -10,9 +10,9 @@
  */
 
 /**
- * @page atmelavr_oc8a Class _oc8a: 8-bit compare unit with waveform generator
+ * @page atmelavr_cmp8a Class _cmp8a: 8-bit compare unit with waveform generator
  *
- * A class `_oc8a` object is an 8-bit compare unit with waveform generator. It
+ * A class `_cmp8a` object is an 8-bit compare unit with waveform generator. It
  * has the following relative objects:
  *
  *  * one counter, whose name is given by `HW_REL( COMPARE_NAME, counter )`
@@ -21,15 +21,15 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `hw_oc00`, `hw_oc01`
- * * @ref attinyx5 : `hw_oc00`, `hw_oc01`
- * * @ref atmegax8 : `hw_oc00`, `hw_oc01`, `hw_oc20`, `hw_oc21`
+ * * @ref attinyx4 : `compare00`, `compare01`
+ * * @ref attinyx5 : `compare00`, `compare01`
+ * * @ref atmegax8 : `compare00`, `compare01`, `compare20`, `compare21`
  */
-#define _hw_class__oc8a
+#define _hw_class__cmp8a
 
 
 /**
- * @page atmelavr_oc8a
+ * @page atmelavr_cmp8a
  * @par Instructions that do not produce C code
  *
  * The `HW_BITS()` instruction retrieves the number of bits of the compare
@@ -41,12 +41,12 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__oc8a			, _hw_bn_oc8a
-#define _hw_bn_oc8a(o,i,a,...)			8
+#define _hw_mthd_hw_bn__cmp8a			, _hw_bn_cmp8a
+#define _hw_bn_cmp8a(o,i,a,...)			8
 
 
 /**
- * @page atmelavr_oc8a
+ * @page atmelavr_cmp8a
  * @par Interrupts
  *
  * The compare unit can trigger an @ref using_interrupts "anonymous IRQ" when
@@ -84,6 +84,6 @@ typedef struct {
     uint8_t	com ;
   } solved ;
 
-} hwa_oc8a_t ;
+} hwa_cmp8a_t ;
 
 #endif

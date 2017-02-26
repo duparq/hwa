@@ -1,7 +1,7 @@
 
 #include <hwa/modules/esp-wroom-02.h>
 
-#define LED		pin_gpio4
+#define LED		gpio4
 
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
@@ -45,8 +45,8 @@ void IROM user_init()
 
   /*  Configure the UART
    */
-  hwa_config( pin_gpio15, function, uart0_txd );
-  hwa_config( pin_gpio13, function, uart0_rxd );
+  hwa_config( gpio15, function, uart0_txd );
+  hwa_config( gpio13, function, uart0_rxd );
 
   hwa_config( uart0,
 	      baudrate,	  115200,
