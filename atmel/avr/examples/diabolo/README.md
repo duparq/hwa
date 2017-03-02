@@ -15,7 +15,7 @@ assembler programming for the device side, and Python for the host applicapion.
    with __automatic detection of baudrate__ so that no baudrate has to be
    hardcoded in the project and __no crystal__ is required on the target;
 
- * validity of applicapion code and communicapion messages are checked with a
+ * validity of applicapion code and communication messages are checked with a
    __16-bit CRC__.
 
 The source code of Diabolo is in the `atmel/avr/examples/diabolo/` directory.
@@ -29,21 +29,21 @@ In order to install Diabolo on the microcontroller, you must edit the file
 define the following symbols:
 
 @code
-    #define HW_DEVICE_SELF_PROGRAMMING      enabled
+    #define DIABOLO_PIN_RX		    HW_PIN(2)
+    #define DIABOLO_PIN_TX		    HW_PIN(2)
 
-    #define DIABOLO_PIN_RX                  hw_pin_2
-    #define DIABOLO_PIN_TX                  hw_pin_2
+    #define HW_DEVICE_SELF_PROGRAMMING	    enabled
 @endcode
 
 Optionnally, you can also define additionnal fuses:
 
 @code
-    #define HW_DEVICE_CLK_SRC               rc_8MHz
-    #define HW_DEVICE_CLK_PSC               1
-    #define HW_DEVICE_EXTERNAL_RESET        enabled
-    #define HW_DEVICE_DEBUG_WIRE            disabled
+    #define HW_DEVICE_CLK_SRC		    rc_8MHz
+    #define HW_DEVICE_CLK_PSC		    1
+    #define HW_DEVICE_EXTERNAL_RESET	    enabled
+    #define HW_DEVICE_DEBUG_WIRE	    disabled
     #define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
-    #define HW_DEVICE_CLOCK_OUTPUT          disabled
+    #define HW_DEVICE_CLOCK_OUTPUT	    disabled
     #define HW_DEVICE_BROWNOUT_DETECTION    2500_2900mV
 @endcode
 

@@ -36,8 +36,8 @@
 	;; using 10 low-level bits characters, i.e.  bps @8 MHz.
 	;; 
 	;;   8 MHz / 1200 bps:
-	;;    1 bit = 833µs =  6667 cycles = 1333 units
-	;;    10 bits =  units
+	;;    1 bit = 833µs =	6667 cycles = 1333 units
+	;;    10 bits =	 units
 	;;    t1 = 13316, t2 = 1331, t = 6658
 	;; 
 	;;   8 MHz / 2400 bps
@@ -52,7 +52,7 @@
 	;;
 	;;   8 MHz / 115200 bps
 	;;    1 bit = 8.68µs = 69.4 cycles = 13.89 units
-	;;    10 bits =  units
+	;;    10 bits =	 units
 	;;    t1 = 138, t2 = 13, t = !
 
 	.global		swuart_sync_10_1

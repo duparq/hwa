@@ -181,6 +181,7 @@ force: ;
 #
 %.cp.c: %.c
 #	@echo "RULE $@: $^"
+	@echo "$(CPP) $(CFLAGS) $< >$@"
 	@$(CPP) $(CFLAGS) $< >$@
 #	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
 
@@ -207,7 +208,7 @@ CFLAGS		+= -Wextra
 #CFLAGS		+= -pedantic
 CFLAGS		+= -Wpedantic	# GCC 4.8
 CFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
-CFLAGS		+= -ftrack-macro-expansion=0
+#CFLAGS		+= -ftrack-macro-expansion=0
 #CFLAGS		+= -fomit-frame-pointer
 CFLAGS		+= -ffunction-sections
 #CFLAGS		+= -fno-builtins

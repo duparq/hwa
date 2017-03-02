@@ -24,7 +24,7 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r32_t     _load, _ctrl ;
+  hwa_r32_t	_load, _ctrl ;
 
   /* struct { */
   /*   uint32_t	baudrate ; */

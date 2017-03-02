@@ -11,7 +11,7 @@
 
 #ifndef HW_DEVICE
 
-#define HW_DEVICE                       attiny45
+#define HW_DEVICE			attiny45
 #define HW_DEVICE_ATTINY45_20PU
 #define HW_DEVICE_PACKAGE_8P3
 

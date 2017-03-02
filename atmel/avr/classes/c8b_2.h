@@ -13,58 +13,58 @@
  * @page atmelavr_c8b
  * @section atmelavr_c8b_acfg Configuration
  *
- * __Note__: the configuration of a class `_c8b` counter must be done inside the
- * same context as its compare outputs if they are used, so that HWA has all the
+ * __Note__ The configuration of a class `_c8b` counter must be done inside the
+ * same context as its compare units if they are used, so that HWA has all the
  * necessary informations to choose the correct register settings.
  *
  * @code
- * hwa_config( COUNTER_NAME,
+ * hwa( configure, counter0,
  *
- *             //  Clock source
- *             //
- *             clock,       none                        // No clock, counter stopped
- *                        | prescaler_output(      0    // No clock, counter stopped
- *                                           |     1    // System clock
- *                                           |     2    // System clock divided by 2
- *                                           |     4    // System clock divided by 4
- *                                           |     8
- *                                           |    16
- *                                           |    32
- *                                           |    64
- *                                           |   128
- *                                           |   256
- *                                           |   512
- *                                           |  1024
- *                                           |  2048
- *                                           |  4096
- *                                           |  8192
- *                                           | 16384 ),  // System clock divided by 16384
+ *      //  Clock source
+ *      //
+ *      clock,       none                        // No clock, counter stopped
+ *                 | prescaler_output(      0    // No clock, counter stopped
+ *                                    |     1    // System clock
+ *                                    |     2    // System clock divided by 2
+ *                                    |     4    // System clock divided by 4
+ *                                    |     8
+ *                                    |    16
+ *                                    |    32
+ *                                    |    64
+ *                                    |   128
+ *                                    |   256
+ *                                    |   512
+ *                                    |  1024
+ *                                    |  2048
+ *                                    |  4096
+ *                                    |  8192
+ *                                    | 16384 ),  // System clock divided by 16384
  *
- *             //  Class _c8b counters all loop from 0 to top
- *             //
- *           [ countmode,   up_loop, ]
- *           [ bottom,      0,       ]
+ *      //  Class _c8b counters all loop from 0 to top
+ *      //
+ *    [ countmode,   up_loop, ]
+ *    [ bottom,      0,       ]
  *
- *             //  The maximum value the counter reaches (the default is `max`)
- *             //
- *           [ top,         fixed_0xFF                   // Hardware fixed value 0xFF
- *                        | max                          // Hardware fixed value 0xFF
- *                        | compare2, ]                  // Value stored in the compare unit 2
+ *      //  The maximum value the counter reaches (the default is `max`)
+ *      //
+ *    [ top,         0xFF | 0x00FF | 255          // Hardware fixed value 0xFF
+ *                 | max                          // Hardware fixed value 0xFF
+ *                 | compare2, ]                  // Value stored in the compare unit 2
  *
- *             //  When the overflow flag is set
- *             //
- *           [ overflow,    at_bottom ]                  // When the counter restarts from 0
- *            );
+ *      //  When the overflow flag is set
+ *      //
+ *    [ overflow,    at_bottom ]                  // When the counter restarts from 0
+ *     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c8b                , _hwa_cfc8b
+#define _hw_mthd_hwa_configure__c8b		, _hwa_cfc8b
 
 /*  Mandatory argument `clock`
  *
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_is_clock_clock			, 1
+#define _hw_is_clock_clock			,  1
 #define _hw_c8b_clock_none			,  0	/* , CS */
 #define _hw_c8b_clock_stop			,  0
 #define _hw_c8b_clock_0				,  0
@@ -136,16 +136,18 @@
 
 /*  Optionnal argument `top`
  */
-#define _hw_is_top_top				, 1
-#define _hw_c8b_top_fixed_0xFF			, 0	/* , CTC */
-#define _hw_c8b_top_max				, 0
-#define _hw_c8b_top_compare2			, 1
+#define _hw_is_top_top			, 1	/* , CTC */
+#define _hw_c8b_top_0xFF		, 0
+#define _hw_c8b_top_0x00FF		, 0
+#define _hw_c8b_top_255			, 0
+#define _hw_c8b_top_max			, 0
+#define _hw_c8b_top_compare2		, 1
 
 #define _hwa_cfc8b_ktop_1(o,k,v,...)					\
   HW_GX(_hwa_cfc8b_vtop,_hw_c8b_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vtop_0(o,v,...)\
-  HW_E_AVL(top, v, fixed_0xFF | max | compare2)
+  HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
 
 #define _hwa_cfc8b_vtop_1(o,v,...)\
   _hwa_write_reg(o, ctc, HW_A1(_hw_c8b_top_##v));	\
@@ -157,8 +159,8 @@
 
 /*  Optionnal argument `overflow`
  */
-#define _hw_is_overflow_overflow		, 1
-#define _hw_is_at_bottom_at_bottom		, 1
+#define _hw_is_overflow_overflow	, 1
+#define _hw_is_at_bottom_at_bottom	, 1
 
 #define _hwa_cfc8b_koverflow_1(o,k,v,...)				\
     HW_G2(_hwa_cfc8b_voverflow,HW_IS(at_bottom,v))(o,v,__VA_ARGS__)
@@ -183,29 +185,29 @@
 /**
  * @page atmelavr_c8b
  * @code
- * hw_read( COUNTER_NAME );
+ * hw( read, counter0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__c8b			, _hw_c8brd
-#define _hw_c8brd(o,i,a,...)			HW_TX( _hw_read_reg(o,count), __VA_ARGS__)
+#define _hw_mthd_hw_read__c8b		, _hw_c8brd
+#define _hw_c8brd(o,i,a,...)		HW_TX( _hw_read_reg(o,count), __VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
  * @code
- * hw_write( COUNTER_NAME, value );
+ * hw( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__c8b			, _hw_c8bwr
-#define _hw_c8bwr(o,i,a,v,...)			HW_TX( _hw_write_reg(o,count,v), __VA_ARGS__)
+#define _hw_mthd_hw_write__c8b		, _hw_c8bwr
+#define _hw_c8bwr(o,i,a,v,...)		HW_TX( _hw_write_reg(o,count,v), __VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
  * @code
- * hwa_write( COUNTER_NAME, value );
+ * hwa( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__c8b			, _hwa_c8bwr
-#define _hwa_c8bwr(o,i,a,v,...)			HW_TX( _hwa_write_reg(o,count,v), __VA_ARGS__)
+#define _hw_mthd_hwa_write__c8b		, _hwa_c8bwr
+#define _hwa_c8bwr(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,count,v), __VA_ARGS__)
 
 
 /**
@@ -215,18 +217,18 @@
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( COUNTER_NAME ) ) {        // Read overflow IRQ flag
- *   hw_clear_irqf( COUNTER_NAME );             // Clear overflow IRQ flag
- *   hw_turn_irq( COUNTER_NAME, off );          // Disable overflow IRQs
+ * if ( hw( read, HW_IRQFLAG( counter0 ) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, HW_IRQFLAG( counter0 ) );		// Clear overflow IRQ flag
+ *   hw( turn, HW_IRQ( counter0, off ) );		// Disable overflow IRQs
  * }
  * @endcode
  */
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 /**
@@ -279,8 +281,8 @@
   _hwa_setup_reg( o, compare2 );
 
 #define _hwa_init__c8b(o,i,a)			\
-  _hwa_init_reg( o, ccr, 0      );		\
-  _hwa_init_reg( o, count, 0    );		\
+  _hwa_init_reg( o, ccr, 0	);		\
+  _hwa_init_reg( o, count, 0	);		\
   _hwa_init_reg( o, compare2, 0 );
 
 #define _hwa_commit__c8b(o,i,a)			\
@@ -306,7 +308,7 @@
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

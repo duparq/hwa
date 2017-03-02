@@ -88,7 +88,7 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Configure LED pin
@@ -100,14 +100,14 @@ int main ( )
    */
 #if HW_ID( REFERENCE )
   hwa( configure, REFERENCE,
-       mode,      analog,
+       mode,	  analog,
        direction, input );
 #endif
 
   /*  Configure INPUT_NEG pin in analog mode (disable digital input buffer)
    */
   hwa( configure, PIN_ANALOG_INPUT,
-       mode,      analog,
+       mode,	  analog,
        direction, input );
 
   /*  Check that the counter can handle the ON_TIME value. This must be done
@@ -119,7 +119,7 @@ int main ( )
   /*  Configure the counter to count from 0 to max
    */
   hwa( configure, COUNTER,
-       clock,     prescaler_output(COUNTER_CLK_DIV),
+       clock,	  prescaler_output(COUNTER_CLK_DIV),
        countmode, up_loop );
 
   /*  Prepare the compare value for the PIN_LED pulse

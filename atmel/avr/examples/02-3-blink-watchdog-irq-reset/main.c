@@ -33,7 +33,7 @@
  */
 HW_ISR( watchdog0, isr_naked )
 {
-  hw_reti();
+  hw_asm("reti");
 }
 
 
@@ -57,7 +57,7 @@ int main ( )
 
   /*  Go into sleep definitely if the watchdog triggered a reset.
    */
-  if ( hw( stat, core0 ).reset_by_watchdog ) {
+  if ( hw(stat,core0).reset_by_watchdog ) {
     hwa( clear, core0 );
 
     /*	When the device is reset by the watchdog, the watchdog remains enabled

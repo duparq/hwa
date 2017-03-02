@@ -14,25 +14,25 @@
  * @section atmelavr_cmp8b_acfg Configuration
  *
  * @code
- * hwa_config( COMPARE_NAME,
+ * hwa( configure, compare0,
  *
- *         [   update,     at_top, ]
+ *	   [   update,	   at_top, ]
  *
- *         [   output
- *           | output_h,   disconnected
- *                       | toggle_on_match
- *                       | clear_on_match
- *                       | set_on_match
- *                       | set_at_bottom_clear_on_match
- *                       | clear_at_bottom_set_on_match, ]
+ *	   [   output
+ *	     | output_h,   disconnected
+ *			 | toggle_on_match
+ *			 | clear_on_match
+ *			 | set_on_match
+ *			 | set_at_bottom_clear_on_match
+ *			 | clear_at_bottom_set_on_match, ]
  *
- *         [   output_l,   disconnected
- *                       | clear_at_bottom_set_on_match  ]
- *           );
+ *	   [   output_l,   disconnected
+ *			 | clear_at_bottom_set_on_match	 ]
+ *	     );
  * @endcode
  */
 
-#define _hw_mthd_hwa_configure__cmp8b		, _hwa_cfcmp8b
+#define _hw_mthd_hwa_configure__cmp8b	, _hwa_cfcmp8b
 
 
 /*  Optionnal argument `update`
@@ -40,8 +40,8 @@
  *    Add a second void argument to the end of the list so that there are always
  *    at least 2 arguments following the last non-void argument.
  */
-#define _hw_is_update_update			, 1
-#define _hw_is_at_top_at_top			, 1
+#define _hw_is_update_update		, 1
+#define _hw_is_at_top_at_top		, 1
 
 #define _hwa_cfcmp8b(o,i,a, ...)						\
   do {									\
@@ -63,15 +63,15 @@
 
 /*  Optionnal argument `output` (or `output_h`)
  */
-#define _hw_cmp8b_koutputh_output			, 1
-#define _hw_cmp8b_koutputh_output_h			, 1
+#define _hw_cmp8b_koutputh_output	, 1
+#define _hw_cmp8b_koutputh_output_h	, 1
 
 /*								// COM	PWM
  */
-#define _hw_cmp8b_voutputh_disconnected			, 0	// 0	0
-#define _hw_cmp8b_voutputh_toggle_on_match			, 1	// 1	0
-#define _hw_cmp8b_voutputh_clear_on_match			, 2	// 2	0
-#define _hw_cmp8b_voutputh_set_on_match			, 3	// 3	0
+#define _hw_cmp8b_voutputh_disconnected	, 0	// 0	0
+#define _hw_cmp8b_voutputh_toggle_on_match	, 1	// 1	0
+#define _hw_cmp8b_voutputh_clear_on_match	, 2	// 2	0
+#define _hw_cmp8b_voutputh_set_on_match	, 3	// 3	0
 #define _hw_cmp8b_voutputh_set_at_bottom_clear_on_match	, 4	// 1,2	1
 #define _hw_cmp8b_voutputh_clear_at_bottom_set_on_match	, 5	// 3	1
 
@@ -92,11 +92,11 @@
 
 /*  Optionnal argument `output_l`
  */
-#define _hw_is_output_l_output_l			, 1
+#define _hw_is_output_l_output_l	, 1
 
 /*								// COM	  PWM
  */
-#define _hw_cmp8b_voutputl_disconnected			, 0	// 0,2,3  0,1
+#define _hw_cmp8b_voutputl_disconnected	, 0	// 0,2,3  0,1
 #define _hw_cmp8b_voutputl_clear_at_bottom_set_on_match	, 1	// 1	  1
 
 #define _hwa_cfcmp8b_koutputl_1(o,kw,v,...)				\
@@ -120,17 +120,17 @@
  * The compare value is set using the hw_write() or hwa_write() instruction:
  *
  * @code
- * hw_write( COMPARE_NAME, value );
+ * hw_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cmp8b		, _hw_wrcmp8b
+#define _hw_mthd_hw_write__cmp8b	, _hw_wrcmp8b
 #define _hw_wrcmp8b(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v), __VA_ARGS__)
 
 /**
  * @page atmelavr_cmp8b
  *
  * @code
- * hwa_write( COMPARE_NAME, value );
+ * hwa_write( compare0, value );
  * @endcode
  */
 #define _hw_mthd_hwa_write__cmp8b	, _hwa_wrcmp8b
@@ -140,10 +140,10 @@
 /**
  * @page atmelavr_cmp8b
  *
- * The compare value is read using the hw_read() instruction:
+ * The compare value is read using the`read`instruction:
  *
  * @code
- * uint16_t ocr = hw_read( COMPARE_NAME );
+ * uint16_t ocr = hw( read, compare0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__cmp8b		, _hw_read_cmp8b
@@ -158,9 +158,9 @@
  * instructions:
  *
  * @code
- * if ( hw_stat_irqf( COMPARE_NAME ) ) {        // Read compare IRQ flag
- *   hw_clear_irqf( COMPARE_NAME );             // Clear compare IRQ flag
- *   hw_turn_irq( COMPARE_NAME, off );          // Disable compare IRQs
+ * if ( hw( read, HW_IRQFLAG( compare0 ) ) ) {	// Read compare IRQ flag
+ *   hw( clear, HW_IRQFLAG( compare0 ) );		// Clear compare IRQ flag
+ *   hw( turn, HW_IRQ( compare0, off ) );		// Disable compare IRQs
  * }
  * @endcode
  */

@@ -11,7 +11,7 @@
  *
  *  Test applicapion:
  *
- *      ./main.py
+ *	./main.py
  *
  * @par config.h
  * @include 05-2-swuart-sync-rx-tx/config.h
@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#define UART                    swuart0
+#define UART			swuart0
 
 
 int
@@ -43,8 +43,8 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,     core0,
-       sleep,      enabled,
-       sleep_mode, idle     );
+       sleep,	   enabled,
+       sleep_mode, idle	    );
 
   /*  We can change the system clock frequency if we do not use
    *  a crystal oscillator.
@@ -63,67 +63,67 @@ main ( )
 
 
   /*  Main loop:
-   *    synchronize UART
-   *    process incomming commands until error
+   *	synchronize UART
+   *	process incomming commands until error
    */
   for(;;) {
 
-    /*  Signal UART desynchronization
+    /*	Signal UART desynchronization
      */
     hw( write, PIN_LED, 0 );
 
-    /*  Force UART to re-synchronize
+    /*	Force UART to re-synchronize
      */
     hw( reset, UART );
 
-    /*  Wait for UART synchronization, then send the prompt
+    /*	Wait for UART synchronization, then send the prompt
      */
     while ( !hw(stat,UART).sync )
       hw_sleep();
 
     hw( write, UART, '$');
 
-    /*  Signal UART synchronization
+    /*	Signal UART synchronization
      */
     hw( write, PIN_LED, 1 );
 
-    /*  Process commands
+    /*	Process commands
      */
     for(;;) {
 
       /*  Wait for a command
        */
       while ( !hw(stat,UART).rxc )
-        hw_sleep();
+	hw_sleep();
 
       uint8_t byte = hw( read, UART );
 
       /*  Process it
        */
       if ( byte=='A' ) {
-        hw( write, PIN_LED, 1 );
-        /*
-         *  Known command: reply with values of UART registers dtn, dt0
-         */
-        uint16_t dt ;
+	hw( write, PIN_LED, 1 );
+	/*
+	 *  Known command: reply with values of UART registers dtn, dt0
+	 */
+	uint16_t dt ;
 
-        dt = hw( read, HW_REGISTER(UART,dtn) ) ;
-        hw( write, UART, (dt>>0) & 0xFF );
-        hw( write, UART, (dt>>8) & 0xFF );
+	dt = hw( read, HW_REGISTER(UART,dtn) ) ;
+	hw( write, UART, (dt>>0) & 0xFF );
+	hw( write, UART, (dt>>8) & 0xFF );
 
-        dt = hw( read, HW_REGISTER(UART,dt0) ) ;
-        hw( write, UART, (dt>>0) & 0xFF );
-        hw( write, UART, (dt>>8) & 0xFF );
+	dt = hw( read, HW_REGISTER(UART,dt0) ) ;
+	hw( write, UART, (dt>>0) & 0xFF );
+	hw( write, UART, (dt>>8) & 0xFF );
 
-        hw( write, UART,'$');
+	hw( write, UART,'$');
 
-        hw( write, PIN_LED, 0 );
+	hw( write, PIN_LED, 0 );
       }
       else {
-        /*
-         *  Unknown command: -> resync
-         */
-        break ;
+	/*
+	 *  Unknown command: -> resync
+	 */
+	break ;
       }
     }
   }

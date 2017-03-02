@@ -20,9 +20,9 @@
  * A class `_cap16b` object is a 16-bit capture unit. It has the following
  * relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( CAPTURE_NAME, counter )`
+ *  * one counter, whose name is given by `HW_REL( capture0, counter )`
  *
- *  * one input pin, whose name is given by `HW_REL( CAPTURE_NAME, pin )`
+ *  * one input pin, whose name is given by `HW_REL( capture0, pin )`
  *
  * It is used in:
  *
@@ -34,16 +34,16 @@
  * @page atmelavr_cap16b
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS()` instruction retrieves the number of bits of the capture
+ * The `HW_BITS()` instruction returns the number of bits of the capture
  * register:
  *
  * @code
- * #if HW_BITS( CAPTURE_NAME ) != 16
+ * #if HW_BITS( capture0 ) != 16
  * #  error A 16-bit capture unit is required!
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__cap16b			, _hw_bn_cap16b
+#define _hw_mthd_hw_bn__cap16b		, _hw_bn_cap16b
 #define _hw_bn_cap16b(o,i,a,...)			16
 
 
@@ -55,7 +55,7 @@
  * a capture event occurs.
  *
  * @code
- * HW_ISR( CAPTURE_NAME )
+ * HW_ISR( capture0 )
  * {
  *    // Process capture event
  * }

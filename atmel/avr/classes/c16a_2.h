@@ -13,69 +13,69 @@
  * @page atmelavr_c16a
  * @section atmelavr_c16a_config Configuration
  *
- * __Note__: if the optionnal argument `overflow` is not stated, HWA will select
- * an acceptable value according to the configuration of the compare units found
- * in the HWA context. If `overflow` is stated, HWA will check the validity of
- * its value.
+ * __Note__ If the optionnal argument `overflow` is not stated, an acceptable value
+ * will be selected according to the configuration of the compare units found in
+ * the HWA context. If `overflow` is stated, the validity of its value will be
+ * verified.
  *
  * @code
- * hwa_config( COUNTER_NAME,
+ * hwa( configure, counter0,
  *
- *             //  How the counter is clocked
- *             //
- *             clock,       none                        // No clock, the counter is stopped
- *                        | prescaler_output(     0     // No clock, the counter is stopped
- *                                           |    1     // System clock
- *                                           |    8     // System clock divided by 8
- *                                           |   64     // System clock divided by 64
- *                                           |  256     // System clock divided by 256
- *                                           | 1024 )   // System clock divided by 1024
- *                        | ext_rising                  // External input, rising edge
- *                        | ext_falling,                // External input, falling edge
+ *      //  How the counter is clocked
+ *      //
+ *      clock,       none                       // No clock, the counter is stopped
+ *                 | prescaler_output(     0    // No clock, the counter is stopped
+ *                                    |    1    // System clock
+ *                                    |    8    // System clock divided by 8
+ *                                    |   64    // System clock divided by 64
+ *                                    |  256    // System clock divided by 256
+ *                                    | 1024 )  // System clock divided by 1024
+ *                 | ext_rising                 // External input, rising edge
+ *                 | ext_falling,               // External input, falling edge
  *
- *             //  How does this counter count
- *             //
- *             countmode,   up_loop                     // Count up and loop
- *                        | updown_loop,                // Count up and down alternately
+ *      //  How does this counter count
+ *      //
+ *      countmode,   up_loop                    // Count up and loop
+ *                 | updown_loop,               // Count up and down alternately
  *
- *             //  Class _c16a counters all count from 0
- *             //
- *           [ bottom,      0, ]
+ *      //  Class _c16a counters all count from 0
+ *      //
+ *    [ bottom,      0, ]
  *
- *             //  The maximum value the counter reaches (the default is `max`)
- *             //
- *           [ top,         fixed_0xFF                  // Hardware fixed value 0x00FF
- *                        | fixed_0x1FF                 // Hardware fixed value 0x01FF
- *                        | fixed_0x3FF                 // Hardware fixed value 0x03FF
- *                        | fixed_0xFFFF                // Hardware fixed value 0xFFFF
- *                        | max                         // Hardware fixed value 0xFFFF
- *                        | compare0                    // Value stored in the compare0 unit
- *                        | capture0,]                  // Value stored in the capture0 unit
+ *      //  The maximum value the counter reaches (the default is `max`)
+ *      //
+ *    [ top,         0xFF | 0x00FF | 255        // Hardware fixed value 0x00FF
+ *                 | 0x1FF | 0x01FF | 511       // Hardware fixed value 0x01FF
+ *                 | 0x3FF | 0x03FF | 1023      // Hardware fixed value 0x03FF
+ *                 | 0xFFFF | 65535             // Hardware fixed value 0xFFFF
+ *                 | max                        // Hardware fixed value 0xFFFF
+ *                 | compare0                   // Value stored in the compare0 unit
+ *                 | capture0, ]                // Value stored in the capture0 unit
  *
- *             //  When the overflow flag is set
- *             //
- *           [ overflow,    at_bottom                   // When the counter resets to bottom
- *                        | at_top                      // When the counter reaches the top value
- *                        | at_max ]                    // When the counter reaches its max value
- *           );
+ *      //  When the overflow flag is set
+ *      //
+ *    [ overflow,    at_bottom                  // When the counter resets to bottom
+ *                 | at_top                     // When the counter reaches the top value
+ *                 | at_max ]                   // When the counter reaches its max value
+ *    );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c16a		, _hwa_cfc16a
+#define _hw_mthd_hwa_configure__c16a	, _hwa_cfc16a
 
 /*  Mandatory argument `clock`
  *
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c16a_clock_none			, 0
-#define _hw_c16a_clock_syshz			, 1
+#define _hw_c16a_clock_none		, 0
+#define _hw_c16a_clock_syshz		, 1
 #define _hw_c16a_clock_prescaler_output_1	, 1	/* Useful for concap */
 #define _hw_c16a_clock_prescaler_output_8	, 2
 #define _hw_c16a_clock_prescaler_output_64	, 3
 #define _hw_c16a_clock_prescaler_output_256	, 4
 #define _hw_c16a_clock_prescaler_output_1024	, 5
-#define _hw_c16a_clock_ext_rising		, 6
-#define _hw_c16a_clock_ext_falling		, 7
+#define _hw_c16a_clock_ext_rising	, 6
+#define _hw_c16a_clock_ext_falling	, 7
 #define _hw_c16a_clock_prescaler_output(x)	HW_G2(_hw_c16a_clock_prescaler_output,x)
 
 #define _hwa_cfc16a(o,i,a, ...)					\
@@ -96,10 +96,10 @@
 
 /*  Optionnal argument `countmode`
  */
-#define _hw_c16a_countmode_up_loop		, 1
-#define _hw_c16a_countmode_up_loop		, 1
-#define _hw_c16a_countmode_updown_loop		, 2
-#define _hw_c16a_countmode_updown_loop		, 2
+#define _hw_c16a_countmode_up_loop	, 1
+#define _hw_c16a_countmode_up_loop	, 1
+#define _hw_c16a_countmode_updown_loop	, 2
+#define _hw_c16a_countmode_updown_loop	, 2
 
 #define _hwa_cfc16a_kmode_0(o,k,...)					\
   HW_E_VL(k,countmode)
@@ -134,9 +134,9 @@
 #define _hw_c16a_top_fixed_0x1FF			, 2
 #define _hw_c16a_top_fixed_0x3FF			, 3
 #define _hw_c16a_top_fixed_0xFFFF		, 4
-#define _hw_c16a_top_max				, 4
-#define _hw_c16a_top_capture0			, 5
-#define _hw_c16a_top_compare0			, 6
+#define _hw_c16a_top_max		, 4
+#define _hw_c16a_top_capture0		, 5
+#define _hw_c16a_top_compare0		, 6
 
 #define _hwa_cfc16a_ktop_1(o,k,v,...)					\
   HW_GX(_hwa_cfc16a_vtop,_hw_c16a_top_##v)(o,v,__VA_ARGS__)
@@ -153,9 +153,9 @@
 
 /*  Optionnal argument `overflow`
  */
-#define _hw_c16a_overflow_at_bottom			, 0
-#define _hw_c16a_overflow_at_top			, 1
-#define _hw_c16a_overflow_at_max			, 2
+#define _hw_c16a_overflow_at_bottom	, 0
+#define _hw_c16a_overflow_at_top	, 1
+#define _hw_c16a_overflow_at_max	, 2
 
 #define _hwa_cfc16a_koverflow_1(o,k,v,...)				\
   HW_GX(_hwa_cfc16a_voverflow,_hw_c16a_overflow_##v)(o,v,__VA_ARGS__)
@@ -274,8 +274,8 @@
 HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 				    hwa_cmp16a_t *compare1, hwa_cap16a_t *ic0 )
 {
-  c->solved.cs   = 0xFF ;
-  c->solved.wgm  = 0xFF ;
+  c->solved.cs	 = 0xFF ;
+  c->solved.wgm	 = 0xFF ;
   compare0->solved.com = 0xFF ;
   compare1->solved.com = 0xFF ;
   ic0->solved.acic = 0xFF ;
@@ -312,30 +312,30 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
     return 1 ; // HWA_ERR("optionnal parameter 'update' of class _c16a counter must be'immediately'.");
   compare_update = compare0->config.update ;
 
-  /* Mode WGM   Operation                     COUNTMODE    TOP     OCR  OVF  OCF  ICF  OCA                OCB
-   *                                                               TOP
-   *                                                               UPD
+  /* Mode WGM	Operation		      COUNTMODE	   TOP	   OCR	OVF  OCF  ICF  OCA		  OCB
+   *								   TOP
+   *								   UPD
    *
-   *   0  0000  Normal                        LOOP_UP      0xFFFF  IMM  MAX            CoM,SoM,ToM        CoM,SoM,ToM
-   *   4  0100  CTC (Clear Timer on Match)    LOOP_UP      ocra    IMM  MAX  TOP                          CoM,SoM,ToM
-   *  12  1100  CTC (Clear Timer on Match)    LOOP_UP      icr     IMM  MAX       TOP  CoM,SoM,ToM        CoM,SoM,ToM
+   *   0  0000	Normal			      LOOP_UP	   0xFFFF  IMM	MAX	       CoM,SoM,ToM	  CoM,SoM,ToM
+   *   4  0100	CTC (Clear Timer on Match)    LOOP_UP	   ocra	   IMM	MAX  TOP			  CoM,SoM,ToM
+   *  12  1100	CTC (Clear Timer on Match)    LOOP_UP	   icr	   IMM	MAX	  TOP  CoM,SoM,ToM	  CoM,SoM,ToM
    *
-   *   5  0101  Fast PWM, 8-bit               LOOP_UP      0xFF    TOP  TOP            SaBCoM,CaBSoM      SaBCoM,CaBSoM
-   *   6  0110  Fast PWM, 9-bit               LOOP_UP      0x1FF   TOP  TOP            SaBCoM,CaBSoM      SaBCoM,CaBSoM
-   *   7  0111  Fast PWM, 10-bit              LOOP_UP      0x3FF   TOP  TOP            SaBCoM,CaBSoM      SaBCoM,CaBSoM
-   *  14  1110  Fast PWM                      LOOP_UP      icr     TOP  TOP       TOP  ToM,SaBCoM,CaBSoM  SaBCoM,CaBSoM
-   *  15  1111  Fast PWM                      LOOP_UP      ocra    TOP  TOP  TOP                          SaBCoM,CaBSoM
+   *   5  0101	Fast PWM, 8-bit		      LOOP_UP	   0xFF	   TOP	TOP	       SaBCoM,CaBSoM	  SaBCoM,CaBSoM
+   *   6  0110	Fast PWM, 9-bit		      LOOP_UP	   0x1FF   TOP	TOP	       SaBCoM,CaBSoM	  SaBCoM,CaBSoM
+   *   7  0111	Fast PWM, 10-bit	      LOOP_UP	   0x3FF   TOP	TOP	       SaBCoM,CaBSoM	  SaBCoM,CaBSoM
+   *  14  1110	Fast PWM		      LOOP_UP	   icr	   TOP	TOP	  TOP  ToM,SaBCoM,CaBSoM  SaBCoM,CaBSoM
+   *  15  1111	Fast PWM		      LOOP_UP	   ocra	   TOP	TOP  TOP			  SaBCoM,CaBSoM
    *
-   *   1  0001  PWM, Phase Correct, 8-bit     LOOP_UPDOWN  0xFF    TOP  BOT            CMUSMD,SMUCMD      CMUSMD,SMUCMD
-   *   2  0010  PWM, Phase Correct, 9-bit     LOOP_UPDOWN  0x1FF   TOP  BOT            CMUSMD,SMUCMD      CMUSMD,SMUCMD
-   *   3  0011  PWM, Phase Correct, 10-bit    LOOP_UPDOWN  0x3FF   TOP  BOT            CMUSMD,SMUCMD      CMUSMD,SMUCMD
-   *  10  1010  PWM, Phase Correct            LOOP_UPDOWN  icr     TOP  BOT       TOP  ToM,CMUSMD,SMUCMD  CMUSMD,SMUCMD
-   *  11  1011  PWM, Phase Correct            LOOP_UPDOWN  ocra    TOP  BOT  TOP                          CMUSMD,SMUCMD
+   *   1  0001	PWM, Phase Correct, 8-bit     LOOP_UPDOWN  0xFF	   TOP	BOT	       CMUSMD,SMUCMD	  CMUSMD,SMUCMD
+   *   2  0010	PWM, Phase Correct, 9-bit     LOOP_UPDOWN  0x1FF   TOP	BOT	       CMUSMD,SMUCMD	  CMUSMD,SMUCMD
+   *   3  0011	PWM, Phase Correct, 10-bit    LOOP_UPDOWN  0x3FF   TOP	BOT	       CMUSMD,SMUCMD	  CMUSMD,SMUCMD
+   *  10  1010	PWM, Phase Correct	      LOOP_UPDOWN  icr	   TOP	BOT	  TOP  ToM,CMUSMD,SMUCMD  CMUSMD,SMUCMD
+   *  11  1011	PWM, Phase Correct	      LOOP_UPDOWN  ocra	   TOP	BOT  TOP			  CMUSMD,SMUCMD
    *
-   *   8  1000  PWM, Phase & Freq. Correct    LOOP_UPDOWN  icr     BOT  BOT       TOP  ToM,CMUSMD,SMUCMD  CMUSMD,SMUCMD
-   *   9  1001  PWM, Phase & Freq. Correct    LOOP_UPDOWN  ocra    BOT  BOT  TOP                          CMUSMD,SMUCMD
+   *   8  1000	PWM, Phase & Freq. Correct    LOOP_UPDOWN  icr	   BOT	BOT	  TOP  ToM,CMUSMD,SMUCMD  CMUSMD,SMUCMD
+   *   9  1001	PWM, Phase & Freq. Correct    LOOP_UPDOWN  ocra	   BOT	BOT  TOP			  CMUSMD,SMUCMD
    *
-   *  13  1101  *Reserved*
+   *  13  1101	*Reserved*
    */
 
   /*	Determine WGM
@@ -345,7 +345,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
        && c->config.top == HW_A1(_hw_c16a_top_compare0)
        && overflow == HW_A1(_hw_c16a_overflow_at_top) )
     wgm = 15 ;
-  else    
+  else	  
     if ( c->config.countmode == HW_A1(_hw_c16a_countmode_up_loop) ) {
       if ( c->config.top == HW_A1(_hw_c16a_top_fixed_0xFFFF) )
 	wgm = 0 ;
@@ -476,8 +476,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match) )
 	  return 4 ;
 	/* HWA_ERR("compare output A of class _c16a counter mode must be " */
-	/* 	  "'disconnected', 'clear_on_match', 'set_on_match', or " */
-	/* 	  "'toggle_on_match'."); */
+	/*	  "'disconnected', 'clear_on_match', 'set_on_match', or " */
+	/*	  "'toggle_on_match'."); */
       }
       else if ( wgm==5 || wgm==6 || wgm==7 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -485,8 +485,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 5 ;
 	  /* HWA_ERR("compare output A of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'set_at_bottom_clear_on_match', or " */
-	  /* 	  "'clear_at_bottom_set_on_match'."); */
+	  /*	  "'disconnected', 'set_at_bottom_clear_on_match', or " */
+	  /*	  "'clear_at_bottom_set_on_match'."); */
       }
       else if ( wgm==14 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -495,9 +495,9 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 6 ;
 	  /* HWA_ERR("compare output A of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'toggle_on_match', " */
-	  /* 	  "'set_at_bottom_clear_on_match', or " */
-	  /* 	  "'clear_at_bottom_set_on_match'."); */
+	  /*	  "'disconnected', 'toggle_on_match', " */
+	  /*	  "'set_at_bottom_clear_on_match', or " */
+	  /*	  "'clear_at_bottom_set_on_match'."); */
       }
       else if ( wgm==1 || wgm==2 || wgm==3 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -505,8 +505,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 7 ;
 	  /* HWA_ERR("compare output A of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
-	  /* 	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
+	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
       }
       else if ( wgm==8 || wgm==10 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -515,9 +515,9 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 8 ;
 	  /* HWA_ERR("compare output A of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'toggle_on_match', " */
-	  /* 	  "'clear_on_match_up_set_on_match_down', " */
-	  /* 	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'toggle_on_match', " */
+	  /*	  "'clear_on_match_up_set_on_match_down', " */
+	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
       }
       //    else if ( c->top == HW_A1(_hw_c16a_top_compare0)
       else if ( compare0->config.output )
@@ -535,8 +535,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare1->config.output != HW_A1(_hw_cmp16a_output_toggle_on_match) )
 	  return 10 ;
 	  /* HWA_ERR("compare output B of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'clear_on_match', 'set_on_match', or " */
-	  /* 	  "'toggle_on_match'."); */
+	  /*	  "'disconnected', 'clear_on_match', 'set_on_match', or " */
+	  /*	  "'toggle_on_match'."); */
       }
       else if ( wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15 ) {
 	if ( compare1->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -544,8 +544,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare1->config.output != HW_A1(_hw_cmp16a_output_clear_at_bottom_set_on_match) )
 	  return 11 ;
 	  /* HWA_ERR("compare output B of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'set_at_bottom_clear_on_match', or " */
-	  /* 	  "'clear_at_bottom_set_on_match'."); */
+	  /*	  "'disconnected', 'set_at_bottom_clear_on_match', or " */
+	  /*	  "'clear_at_bottom_set_on_match'."); */
       }
       else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
 	if ( compare1->config.output != HW_A1(_hw_cmp16a_output_disconnected)
@@ -553,8 +553,8 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	     && compare1->config.output != HW_A1(_hw_cmp16a_output_set_on_match_up_clear_on_match_down) )
 	  return 12 ;
 	  /* HWA_ERR("compare output B of class _c16a counter mode must be " */
-	  /* 	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
-	  /* 	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
+	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
       }
     }
 
@@ -565,19 +565,19 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	if ( compare_update != HW_A1(_hw_cmp16a_update_immediately) )
 	  return 13 ;
 	  /* HWA_ERR("optionnal parameter 'update' of class _c16a counter must be "\ */
-	  /* 	  "'immediately'."); */
+	  /*	  "'immediately'."); */
       }
       else if ( wgm==8 || wgm==9 ) {
 	if ( compare_update != HW_A1(_hw_cmp16a_update_at_bottom) )
 	  return 14 ;
 	  /* HWA_ERR("optionnal parameter 'update' of class _c16a counter must be " */
-	  /* 	  "'at_bottom'."); */
+	  /*	  "'at_bottom'."); */
       }
       else
 	if( compare_update != HW_A1(_hw_cmp16a_update_at_top) )
 	  return 15 ;
 	  /* HWA_ERR("optionnal parameter 'update' of class _c16a counter must be " */
-	  /* 	  "'at_top'."); */
+	  /*	  "'at_top'."); */
     }
 
     /*	Overflow
@@ -587,18 +587,18 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 	if ( overflow != HW_A1(_hw_c16a_overflow_at_max) )
 	  return 16 ;
 	  /* HWA_ERR("optionnal parameter 'overflow' of class _c16a counter must be " */
-	  /* 	  "'at_max'."); */
+	  /*	  "'at_max'."); */
       }
       else if ( (wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15) ) {
 	if ( overflow != HW_A1(_hw_c16a_overflow_at_top) )
 	  return 17 ;
 	  /* HWA_ERR("optionnal parameter 'overflow' of class _c16a counter must be " */
-	  /* 	  "'at_top'."); */
+	  /*	  "'at_top'."); */
       }
       else if ( overflow != HW_A1(_hw_c16a_overflow_at_bottom) )
 	return 18 ;
 	/* HWA_ERR("optionnal parameter 'overflow' of class _c16a counter must be " */
-	/* 	"'at_bottom'."); */
+	/*	"'at_bottom'."); */
     }
   }
 
@@ -617,7 +617,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 /**
  * @page atmelavr_c16a
  * @code
- * hw_read( COUNTER_NAME );
+ * hw( read, counter0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__c16a		, _hw_read_c16a
@@ -627,7 +627,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 /**
  * @page atmelavr_c16a
  * @code
- * hw_write( COUNTER_NAME, value );
+ * hw( write, counter0, value );
  * @endcode
  */
 #define _hw_mthd_hw_write__c16a		, _hw_write_c16a
@@ -636,98 +636,12 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 /**
  * @page atmelavr_c16a
  * @code
- * hwa_write( COUNTER_NAME, value );
+ * hwa( write, counter0, value );
  * @endcode
  */
 #define _hw_mthd_hwa_write__c16a	, _hwa_write_c16a
 #define _hwa_write_c16a(o,i,a,v)	_hwa_write_reg(o,count,v)
 
-
-#if 0
-/**
- * @page atmelavr_c16a
- * @section atmelavr_c16a_clear Clearing the counter (setting the value to 0)
- *
- * Note: this does not reset the prescaler.
- *
- * @code
- * hw/hwa_clear( COUNTER );
- * @endcode
- * @code
- * hw/hwa_write_reg( COUNTER, count, 0 );
- * @endcode
- */
-#define _hw_mthd_hw_clear__c16a		, _hw_clear_c16a
-#define _hw_clear_c16a(o,i,a,...)	HW_TX(_hw_write_reg(o,count,0),__VA_ARGS__)
-
-#define _hw_mthd_hwa_clear__c16a	, _hwa_clear_c16a
-#define _hwa_clear_c16a(o,i,a)		_hwa_write_reg(o,count,0)
-
-/**
- * @page atmelavr_c16a
- * @section atmelavr_c16a_stat Getting the status of the counter
- *
- * Available flags are:
- * * overflow
- * * compare0
- * * compare1
- * * capture0
- *
- * These flags correspond to the interrupt requests the counter can
- * trigger.
- *
- * @code
- * //  Create a structure to receive the counter status
- * //
- * hw_stat_t(COUNTER) st ;
- *
- * //  Copy the counter status to the structure
- * //
- * st = hw_stat( COUNTER );
- *
- * //  Process the overflow flag
- * //
- * if ( st.overflow ) {
- *   hw_clear_irq( COUNTER, overflow );
- *   n_overflows++ ;
- * }
- * @endcode
- *
- * @code
- * //  Process the overflow flag
- * //
- * if ( hw_stat( COUNTER ).overflow ) {
- *   hw_clear_irq( COUNTER, overflow );
- *   n_overflows++ ;
- * }
- * @endcode
- */
-#define _hw_mthd_hw_stat__c16a		, _hw_stat_c16a
-#define _hw_mthd_hw_stat_t__c16a	, _hw_statt_c16a
-
-#define _hw_statt_c16a(o,i,a,...)	HW_TX(_hw_c16a_stat_t, __VA_ARGS__)
-
-typedef union {
-  uint8_t         byte ;
-  struct {
-    unsigned int  overflow : 1 ;
-    unsigned int  compare0 : 1 ;
-    unsigned int  compare1 : 1 ;
-    unsigned int  _34      : 2 ;
-    unsigned int  capture0 : 1 ;
-    unsigned int  _76      : 2 ;
-  };
-} _hw_c16a_stat_t ;
-
-#define _hw_stat_c16a(o,i,a,...)	HW_TX(_hw_c16a_stat(_hw_read_reg(o, ifr)), __VA_ARGS__)
-
-HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
-{
-  _hw_c16a_stat_t	st ;
-  st.byte = byte ;
-  return st ;
-}
-#endif
 
 
 /**
@@ -737,18 +651,18 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( COUNTER_NAME ) ) {        // Read overflow IRQ flag
- *   hw_clear_irqf( COUNTER_NAME );             // Clear overflow IRQ flag
- *   hw_turn_irq( COUNTER_NAME, off );          // Disable overflow IRQs
+ * if ( hw( read, HW_IRQFLAG( counter0 ) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, HW_IRQFLAG( counter0 ) );		// Clear overflow IRQ flag
+ *   hw( turn, HW_IRQ( counter0, off ) );	// Disable overflow IRQs
  * }
  * @endcode
  */
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__c16a(o,i,a)			\
@@ -758,18 +672,18 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
   _hwa_setup_reg( o, count    );		\
   _hwa_setup_reg( o, imsk     );		\
   _hwa_setup_reg( o, ifr      );		\
-  hwa->o.config.clock     = 0xFF;		\
+  hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.countmode = 0xFF;		\
-  hwa->o.config.top       = 0xFF;		\
+  hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 
 #define _hwa_init__c16a(o,i,a)					\
   _hwa_init_reg( o, ccra, 0x00 );			\
-  _hwa_init_reg( o, ccrb, 0x00     );		\
-  _hwa_init_reg( o, ccrc, 0x00     );		\
-  _hwa_init_reg( o, count, 0x00    );		\
-  _hwa_init_reg( o, imsk, 0x00     );		\
-  _hwa_init_reg( o, ifr, 0x00      )
+  _hwa_init_reg( o, ccrb, 0x00	   );		\
+  _hwa_init_reg( o, ccrc, 0x00	   );		\
+  _hwa_init_reg( o, count, 0x00	   );		\
+  _hwa_init_reg( o, imsk, 0x00	   );		\
+  _hwa_init_reg( o, ifr, 0x00	   )
 
 #define _hwa_commit__c16a(o,i,a)			\
   _hwa_commit_reg( o, ccra     );		\
@@ -800,7 +714,7 @@ HW_INLINE _hw_c16a_stat_t _hw_c16a_stat( uint8_t byte )
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

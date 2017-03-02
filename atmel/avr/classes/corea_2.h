@@ -14,31 +14,31 @@
  * @section atmelavr_corea_config Configuration
  *
  * @code
- * hwa_config( OBJECT_NAME,
+ * hwa( configure, core0,
  *
- *             //  Whether the `hw_sleep()` instruction will put the core in
- *             //  sleep mode or not
- *             //
- *           [ sleep,        enabled,
- *                         | disabled, ]
+ *	       //  Whether the `hw_sleep()` instruction will put the core in
+ *	       //  sleep mode or not
+ *	       //
+ *	     [ sleep,	     enabled,
+ *			   | disabled, ]
  *
- *             //  Wanted sleep mode
- *             //
- *           [ sleep_mode,   idle
- *                         | adc_noise_reduction
- *                         | power_down
- *                         | standby             ]
- *             );
+ *	       //  Wanted sleep mode
+ *	       //
+ *	     [ sleep_mode,   idle
+ *			   | adc_noise_reduction
+ *			   | power_down
+ *			   | standby		 ]
+ *	       );
  * @endcode
  */
 #define _hw_mthd_hwa_configure__corea	, _hwa_cfcorea
 
-/*  TODO: use a list of wake-up sources instead (or in addition)?
+/*  TODO use a list of wake-up sources instead (or in addition)?
  */
 
 /*	Optionnal parameter `sleep`
  */
-#define _hw_is_sleep_sleep			, 1
+#define _hw_is_sleep_sleep		, 1
 
 #define _hwa_cfcorea(o,i,a,...)					\
   do {									\
@@ -60,7 +60,7 @@
 
 /*	Optionnal parameter `sleep_mode`
  */
-#define _hw_is_sleep_mode_sleep_mode		, 1
+#define _hw_is_sleep_mode_sleep_mode	, 1
 #define hw_sleepmode_idle			, 0
 #define hw_sleepmode_adc_noise_reduction	, 1
 #define hw_sleepmode_power_down			, 2
@@ -83,7 +83,7 @@
  * @page atmelavr_corea
  * @section atmelavr_corea_sleep Sleep
  *
- * If enabled, the `hw_sleep()` instruction puts the core into sleeping mode:
+ * If enabled, the `hw_sleep()` instruction puts the core into sleeping mode
  *
  * @code
  * hw_sleep();
@@ -95,18 +95,18 @@
  * @page atmelavr_corea
  * @section atmelavr_corea_stat Status
  *
- * The `hw_stat()` instruction returns the status flags of the core in a
+ * The `hw(stat,)` instruction returns the status flags of the core in a
  * structure whose typename is given by the `hw_stat_t()` instruction. Available
- * flags are:
+ * flags are
  *
- * * `porf`  or `reset_by_power_on`  : 1 if reset was caused by power-on
- * * `extrf` or `reset_by_reset_pin` : 1 if reset was caused by external pin RESET
- * * `borf`  or `reset_by_brown_out` : 1 if reset was caused by brown-out detection
- * * `wdrf`  or `reset_by_watchdog`  : 1 if reset was caused by watchdog
+ * * `porf`  or `reset_by_power_on`   1 if reset was caused by power-on
+ * * `extrf` or `reset_by_reset_pin`  1 if reset was caused by external pin RESET
+ * * `borf`  or `reset_by_brown_out`  1 if reset was caused by brown-out detection
+ * * `wdrf`  or `reset_by_watchdog`   1 if reset was caused by watchdog
  *
  * @code
- * hw_stat_t( OBJECT_NAME ) st ;
- * st = hw_stat( OBJECT_NAME );
+ * hw_stat_t( core0 ) st ;
+ * st = hw( stat, core0 );
  * if ( st.wdrf ) {
  *   n_wdresets++ ;    // Increment watchdog resets count
  * }
@@ -114,23 +114,23 @@
  */
 #define _hw_mthd_hw_stat__corea		, _hw_stat_corea
 
-/*  FIXME: intf0 should be there
+/*  FIXME intf0 should be there
  */
 typedef union {
   uint8_t	  byte ;
   struct {
-    unsigned int porf	: 1 ;
-    unsigned int extrf	: 1 ;
-    unsigned int borf	: 1 ;
-    unsigned int wdrf	: 1 ;
-    unsigned int __4to7 : 4 ;
+    unsigned int porf:	 1 ;
+    unsigned int extrf:	 1 ;
+    unsigned int borf:	 1 ;
+    unsigned int wdrf:	 1 ;
+    unsigned int __4to7: 4 ;
   };
   struct {
-    unsigned int reset_by_power_on  : 1 ;
-    unsigned int reset_by_reset_pin : 1 ;
-    unsigned int reset_by_brown_out : 1 ;
-    unsigned int reset_by_watchdog  : 1 ;
-    unsigned int __4to7_2	    : 4 ;
+    unsigned int reset_by_power_on:  1 ;
+    unsigned int reset_by_reset_pin: 1 ;
+    unsigned int reset_by_brown_out: 1 ;
+    unsigned int reset_by_watchdog:  1 ;
+    unsigned int __4to7_2:	     4 ;
   };
 } _hw_corea_stat_t ;
 
@@ -148,10 +148,10 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 /**
  * @page atmelavr_corea
  *
- * The `hw_clear()` instruction clears the status flags all at once:
+ * The ``clear`` instruction clears the status flags all at once
  *
  * @code
- * hwa_clear( core0 );
+ * hwa( clear, core0 );
  * @endcode
  */
 #define _hw_mthd_hwa_clear__corea	, _hwa_clear_corea

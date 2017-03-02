@@ -13,7 +13,7 @@
 
 /**
  * @page atmegaxu4 ATmega16U4/32U4
- * @section attinyx8_device Device description symbols
+ * @section attinyx8_device Defined symbols
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
@@ -407,7 +407,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * @page atmegaxu4
  * @section atmegaxu4_object Peripherals
  *
- * @note A missing class name means that the peripheral is not implemented yet.
+ * __Note__ A missing class name means that the peripheral is not implemented yet.
  *
  * Object name	 | Class			   | Comments
  * :-------------|---------------------------------|:---------------------------
@@ -438,16 +438,16 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `compare31`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter3 (OC3B)
  * `compare32`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter3 (OC3C)
  * `capture30`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter3 (ICP3)
- * `acmp0`	 | @ref atmelavr_acmpa "acmpa"	   | Analog Comparator
- * `eeprom0`	 | @ref atmelavr_eeproma "eeproma" | Eeprom memory
- * `flash0`	 | @ref atmelavr_flasha "flasha"   | Flash memory
+ * `acmp0`	 | @ref atmelavr_acmpa "_acmpa"	   | Analog Comparator
+ * `eeprom0`	 | @ref atmelavr_eeproma "_eeproma" | Eeprom memory
+ * `flash0`	 | @ref atmelavr_flasha "_flasha"   | Flash memory
  */
 
 /*
  * `spi0`	 | @ref atmelavr_spia "_spia"	| Serial Peripheral Interface
  * `uart0`	 | @ref atmelavr_uarta "_uarta" | Universal Asynchronous Receiver Transmitter
  * `twi0`	 | @ref atmelavr_twia "_twia"	| 2-wire Serial Interface
- * `adc0`	 | @ref atmelavr_ad10b "ad10b"	| 10-bit Analog to Digital Converter
+ * `adc0`	 | @ref atmelavr_ad10b "_ad10b"	| 10-bit Analog to Digital Converter
  */
 
 /*
@@ -459,15 +459,15 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * Name			  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
  * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "swuarta" | Software UART
+ * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
  */
 
 /* @subsection atmegaxu4_objrel Aliases and relations
  *
- * Some objects can be accessed from their @ref using_relatives "relatives" or
- * can have more than one name. There are the existing relations between the
- * device's objects and their different names:
+ * Some objects can be accessed from their relatives or can have more than one
+ * name. There are the existing relations between the device's objects and their
+ * different names:
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------
@@ -1214,7 +1214,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 capture unit: hw_capture10					       *
+ *	Counter 1 capture unit: capture10					       *
  *									       *
  *******************************************************************************/
 
@@ -1362,7 +1362,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 3 capture unit: hw_capture30					       *
+ *	Counter 3 capture unit: capture30					       *
  *									       *
  *******************************************************************************/
 
@@ -1392,7 +1392,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	hw_acmp0: analog comparator					       *
+ *	acmp0: analog comparator					       *
  *									       *
  *******************************************************************************/
 

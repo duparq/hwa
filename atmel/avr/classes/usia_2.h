@@ -14,23 +14,23 @@
  * @section atmelavr_usia_config Configuration
  *
  * @code
- * hwa_config( USI,
+ * hwa( configure, USI,
  *
- *             //  How the USI behaves
- *             //
- *             mode,    disconnected          // The USI is disabled
- *                    | spi_master            // The USI acts as a SPI master
- *                    | spi_slave             // The USI acts as a SPI slave
- *                    | twi_master            // The USI acts as a I²C master
- *                    | twi_slave,            // The USI acts as a I²C slave
+ *	       //  How the USI behaves
+ *	       //
+ *	       mode,	disconnected	      // The USI is disabled
+ *		      | spi_master	      // The USI acts as a SPI master
+ *		      | spi_slave	      // The USI acts as a SPI slave
+ *		      | twi_master	      // The USI acts as a I²C master
+ *		      | twi_slave,	      // The USI acts as a I²C slave
  *
- *             //  How is it clocked
- *             //
- *             clock,   software              // Clocked by software
- *                    | hw_compare0                // Clocked by compare unit ? of counter 0
- *                    | external_rising       // Clocked by external source rising edge
- *                    | external_falling      // Clocked by external source falling edge
- *            );
+ *	       //  How is it clocked
+ *	       //
+ *	       clock,	software	      // Clocked by software
+ *		      | hw_compare0		   // Clocked by compare unit ? of counter 0
+ *		      | external_rising	      // Clocked by external source rising edge
+ *		      | external_falling      // Clocked by external source falling edge
+ *	      );
  * @endcode
  */
 #define _hw_mthd_hwa_configure__usia	, _hwa_cfusia
@@ -48,7 +48,7 @@
 
 #define _hw_is_mode_mode		, 1
 
-/* 	Mandatory argument `mode`
+/*	Mandatory argument `mode`
  */
 #define _hwa_cfusia( o,i,a,... )					\
   do {									\
@@ -92,7 +92,7 @@
  * @section atmelavr_usia_data Data
  *
  * @code
- * uint8_t byte = hw_read( usi0 );
+ * uint8_t byte = hw( read, usi0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__usia		, _hw_rdusia
@@ -139,10 +139,10 @@
  * @code
  * #define SPI		spimaster0_swclk
  *
- * hw_config( SPI );
+ * hw( configure, SPI );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__usia_spimaster_swclk		, _hwa_cfspimswclk
+#define _hw_mthd_hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(p,i,o,...)		\
   HW_TX( _hwa_docfspimswclk(o), __VA_ARGS__ )
@@ -164,10 +164,10 @@
  * @code
  * #define SPI		spimaster0_swclk
  *
- * uint8_t byte = hw_read( SPI );
+ * uint8_t byte = hw( read, SPI );
  * @endcode
  */
-#define _hw_mthd_hw_read__usia_spimaster_swclk			, _hw_rdspimswclk
+#define _hw_mthd_hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
 
 #define _hw_rdspimswclk(o,i,usio,...)		HW_TX( _hw_read_reg( usio, dr ), __VA_ARGS__ )
 
@@ -180,7 +180,7 @@
  * hw_write( spimaster0_swclk, 'A' );
  * @endcode
  */
-#define _hw_mthd_hw_write__usia_spimaster_swclk		, _hw_wrspimswclk
+#define _hw_mthd_hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
 
 #define _hw_wrspimswclk(p,i,usin,v,...)			\
   HW_TX(						\
@@ -196,7 +196,7 @@
 
 /*	Configuration of USI as SPI master with counter0_overflow clock
  */
-#define _hw_mthd_hwa_configure_usia_spimaster_c0clk		, _hwa_cfspimc0clk
+#define _hw_mthd_hwa_configure_usia_spimaster_c0clk	, _hwa_cfspimc0clk
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\

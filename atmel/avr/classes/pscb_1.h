@@ -32,7 +32,7 @@ typedef struct {
 
   /*  Hardware registers
    */
-  hwa_r8_t 	pllcsr ;
+  hwa_r8_t	pllcsr ;
 
   /*  Registers used for high-level configuration
    */

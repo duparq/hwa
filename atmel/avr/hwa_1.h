@@ -12,49 +12,15 @@
 #include "../../hwa/hwa_1.h"
 
 /**
- * @defgroup public_gen_instructions_atmelavr Instructions for Atmel AVR devices that are not related to a speficic object
- *
- * These instructions lead to a modificapion of the hardware configuration that
- * is not related to a specific object.
- */
-
-#if defined DOXYGEN
-/**
- * @ingroup public_gen_macros
- * @brief The name of the device as used by the compiler
- */
-#  define HW_DEVICE
-/**
- * @ingroup public_gen_macros
- * @brief Defined if the packaging of the device is device_package
- */
-#  define HW_DEVICE_PACKAGE_device_package
-#endif
-
-/**
- * @ingroup public_gen_macros_atmelavr
+ * @ingroup public_atmelavr_def
  * @brief Defined for all Atmel AVR devices
+ * @hideinitializer
  */
 #define HW_DEVICE_ATMELAVR
 
-/**
- * @ingroup public_gen_macros_atmelavr
- * @brief Defined as `atmel` for all Atmel devices
- */
-#define HW_DEVICE_VENDOR	atmel
-
-/**
- * @ingroup public_gen_macros_atmelavr
- * @brief Defined as `avr` for all Atmel AVR devices
- */
-#define HW_DEVICE_ARCH		avr
-
-/**
- * @ingroup public_gen_macros_atmelavr
- * @brief Expands to the CPU clock frequency (cpu cycles per second).
- */
-#if defined DOXYGEN
-#  define hw_syshz
+#if !defined DOXYGEN
+#  define HW_DEVICE_VENDOR	atmel
+#  define HW_DEVICE_ARCH	avr
 #endif
 
 

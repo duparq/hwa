@@ -33,7 +33,7 @@
 
 #include BOARD_H
 
-#define PERIOD                  0.5
+#define PERIOD			0.5
 
 int main ( )
 {
@@ -41,6 +41,6 @@ int main ( )
 
   for(;;) {
     hw( toggle, PIN_LED );
-    hw_delay_cycles( PERIOD/2 * hw_syshz );
+    hw_waste_cycles( PERIOD/2 * hw_syshz );
   }
 }

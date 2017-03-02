@@ -22,7 +22,7 @@
  * @page esp8266_io1a
  * @par Instructions that do not produce C code:
  *
- * The `hw_bn()` instruction retrieves the number of bits of an I/O definition:
+ * The `hw_bn()` instruction returns the number of bits of an I/O definition:
  *
  * @code
  * #if hw_id(pin_pa3) && (hw_bn(pin_pa3) != 1)
@@ -30,9 +30,9 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__io1a                   , _hw_bn_io1a
+#define _hw_mthd_hw_bn__io1a		, _hw_bn_io1a
 
-#define _hw_bn_io1a(o,i, cn,bn,bp,...)         bn
+#define _hw_bn_io1a(o,i, cn,bn,bp,...)	       bn
 
 
 /**
@@ -47,8 +47,8 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bp__io1a                   , _hw_bp_io1a
-#define _hw_bp_io1a(o,i, cn,bn,bp,...)         bp
+#define _hw_mthd_hw_bp__io1a		, _hw_bp_io1a
+#define _hw_bp_io1a(o,i, cn,bn,bp,...)	       bp
 
 
 /**

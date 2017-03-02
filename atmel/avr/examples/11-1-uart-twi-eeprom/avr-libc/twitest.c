@@ -1,21 +1,21 @@
 /*
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE" (Revision 42):
- * <joerg@FreeBSD.ORG> wrote this file.  As long as you retain this notice you
+ * <joerg@FreeBSD.ORG> wrote this file.	 As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return.        Joerg Wunsch
+ * this stuff is worth it, you can buy me a beer in return.	   Joerg Wunsch
  * ----------------------------------------------------------------------------
  */
 /*
  * ----------------------------------------------------------------------------
  * Updated to handle larger devices having 16-bit addresses
- *                                                 (2007-09-05) Ruwan Jayanetti
+ *						   (2007-09-05) Ruwan Jayanetti
  * ----------------------------------------------------------------------------
  */
 /*
  * ----------------------------------------------------------------------------
  * Slightly modified to compile for ATmega328P. Completed I/O initialization.
- *                                            (2015-08-28) Christophe Duparquet
+ *					      (2015-08-28) Christophe Duparquet
  * ----------------------------------------------------------------------------
  */
 
@@ -85,7 +85,7 @@
  * complete, but low enough to properly abort an infinite loop in case
  * a slave is broken or not present at all.  With 100 kHz TWI clock,
  * transfering the start condition and SLA+R/W packet takes about 10
- * µs.  The longest write period is supposed to not exceed ~ 10 ms.
+ * µs.	The longest write period is supposed to not exceed ~ 10 ms.
  * Thus, normal operation should not require more than 100 iterations
  * to get the device to respond to a selection.
  */
@@ -102,7 +102,7 @@
 #define PAGE_SIZE 8
 
 /*
- * Saved TWI status register, for error messages only.  We need to
+ * Saved TWI status register, for error messages only.	We need to
  * save it in a variable, since the datasheet only guarantees the TWSR
  * register to have valid contents while the TWINT bit in TWCR is set.
  */
@@ -175,7 +175,7 @@ uart_putchar(char c, FILE *unused __attribute__((unused)))
  * The second bus cycle will reselect the device (repeated start
  * condition, going into master receiver mode), and transfer the data
  * from the device to the TWI master.  Multiple bytes can be
- * transfered by ACKing the client's transfer.  The last transfer will
+ * transfered by ACKing the client's transfer.	The last transfer will
  * be NACKed, which the client will take as an indicapion to not
  * initiate further transfers.
  */
@@ -368,7 +368,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
  * macro PAGE_SIZE above.
  *
  * The function simply returns after writing one page, returning the
- * actual number of data byte written.  It is up to the caller to
+ * actual number of data byte written.	It is up to the caller to
  * re-invoke it in order to write further data.
  */
 int

@@ -21,7 +21,7 @@
 
 /*  Watchdog timeout
  */
-#define TIMEOUT                 250ms
+#define TIMEOUT			250ms
 
 
 int main ( )
@@ -38,8 +38,8 @@ int main ( )
   /*  Configure the watchdog to trigger an IRQ periodically
    */
   hwa( configure, watchdog0,
-       timeout,   TIMEOUT,
-       action,    irq       );
+       timeout,	  TIMEOUT,
+       action,	  irq	    );
 
   /*  Write this configuration into the hardware
    */
@@ -47,8 +47,8 @@ int main ( )
 
   for(;;) {
     /*
-     *  As soon as the watchdog IRQ flag is set, clear
-     *  it and toggle the LED.
+     *	As soon as the watchdog IRQ flag is set, clear
+     *	it and toggle the LED.
      */
     if ( hw( read, HW_IRQFLAG(watchdog0) ) ) {
       hw( clear, HW_IRQFLAG(watchdog0) );

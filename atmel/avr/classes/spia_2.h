@@ -13,54 +13,54 @@
  * @page atmelavr_spia
  * @section atmelavr_spia_cf Configuration
  *
- * __Note 1__: when configured in master or slave mode, the SPI automatically
+ * __Note 1__ When configured in master or slave mode, the SPI automatically
  * configures its related I/O pins as inputs or outputs according to the mode.
  *
- * __Note 2__: in master mode, if the SS pin is configured as an input, it must
+ * __Note 2__ In master mode, if the SS pin is configured as an input, it must
  *  be held high.  Otherwise the SPI will be automatically turned into slave
  *  mode by hardware as soon as the SS pin goes low.
 
  * @code
- * hwa_config( SPI_NAME,
+ * hwa( configure, spi0,
  *
- *             //  Mode
- *             //
- *             mode,            master
- *                            | slave
- *                            | off,
+ *	       //  Mode
+ *	       //
+ *	       mode,		master
+ *			      | slave
+ *			      | off,
  *
- *             //  Clock frequency
- *             //
- *             clock,           sysclk_div(    2
- *                                         |   4
- *                                         |   8
- *                                         |  16
- *                                         |  32
- *                                         |  64
- *                                         | 128 ),
+ *	       //  Clock frequency
+ *	       //
+ *	       clock,		sysclk_div(    2
+ *					   |   4
+ *					   |   8
+ *					   |  16
+ *					   |  32
+ *					   |  64
+ *					   | 128 ),
  *
- *             //  State of SCK when idle
- *             //
- *             sck_idle,        low
- *                            | high,
+ *	       //  State of SCK when idle
+ *	       //
+ *	       sck_idle,	low
+ *			      | high,
  *
- *             //  Sampling clock edge
- *             //
- *             sampling_edge,   falling
- *                            | rising
- *                            | first
- *                            | second
- *           );
+ *	       //  Sampling clock edge
+ *	       //
+ *	       sampling_edge,	falling
+ *			      | rising
+ *			      | first
+ *			      | second
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__spia		, _hwa_cfspia
+#define _hw_mthd_hwa_configure__spia	, _hwa_cfspia
 
 /*	Mandatory parameter `mode`
  */
-#define _hw_is_mode_mode			, 1
-#define _hw_spia_mode_master			, 1, 1	/* , en , mstr */
-#define _hw_spia_mode_slave			, 1, 0
-#define _hw_spia_mode_off			, 0, 0
+#define _hw_is_mode_mode		, 1
+#define _hw_spia_mode_master		, 1, 1	/* , en , mstr */
+#define _hw_spia_mode_slave		, 1, 0
+#define _hw_spia_mode_off		, 0, 0
 
 #define _hwa_cfspia(o,i,a,...)						\
   do {									\
@@ -91,14 +91,14 @@
 
 /*	Mandatory parameter `clock`
  */
-#define _hw_is_clock_clock			, 1
-#define _hw_spia_clock_sysclk_div_2		, 4	/* , xpr */
-#define _hw_spia_clock_sysclk_div_4		, 0
-#define _hw_spia_clock_sysclk_div_8		, 5
-#define _hw_spia_clock_sysclk_div_16		, 1
-#define _hw_spia_clock_sysclk_div_32		, 6
-#define _hw_spia_clock_sysclk_div_64		, 2
-#define _hw_spia_clock_sysclk_div_128		, 3
+#define _hw_is_clock_clock		, 1
+#define _hw_spia_clock_sysclk_div_2	, 4	/* , xpr */
+#define _hw_spia_clock_sysclk_div_4	, 0
+#define _hw_spia_clock_sysclk_div_8	, 5
+#define _hw_spia_clock_sysclk_div_16	, 1
+#define _hw_spia_clock_sysclk_div_32	, 6
+#define _hw_spia_clock_sysclk_div_64	, 2
+#define _hw_spia_clock_sysclk_div_128	, 3
 #define _hw_spia_clock_sysclk_div(x)		HW_G2(_hw_spia_clock_sysclk_div,x)
 
 #define _hwa_cfspia_kclock_0(o,k,...)			\
@@ -116,9 +116,9 @@
 
 /*	Mandatory parameter `sck_idle`
  */
-#define _hw_is_sck_idle_sck_idle		, 1
-#define _hw_spia_sck_idle_low			, 0	/* , cpol */
-#define _hw_spia_sck_idle_high			, 1
+#define _hw_is_sck_idle_sck_idle	, 1
+#define _hw_spia_sck_idle_low		, 0	/* , cpol */
+#define _hw_spia_sck_idle_high		, 1
 
 #define _hwa_cfspia_ksck_idle_0(o,k,...)		\
   HW_E_VL(k,sck_idle)
@@ -135,7 +135,7 @@
 
 /*	Mandatory parameter `sampling_edge`
  */
-#define _hw_is_sampling_edge_sampling_edge		, 1
+#define _hw_is_sampling_edge_sampling_edge	, 1
 #define _hw_spia_sck_idle_low_sampling_edge_rising	, 0	/* , cpol */
 #define _hw_spia_sck_idle_low_sampling_edge_falling	, 1
 #define _hw_spia_sck_idle_high_sampling_edge_rising	, 1
@@ -168,7 +168,7 @@
 /**
  * @page atmelavr_spia
  * @code
- * hw_read( SPI_NAME );
+ * hw( read, spi0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__spia		, _hw_read_spia
@@ -178,7 +178,7 @@
 /**
  * @page atmelavr_spia
  * @code
- * hw_write( SPI_NAME, value );
+ * hw_write( spi0, value );
  * @endcode
  */
 #define _hw_mthd_hw_write__spia		, _hw_wrspia
@@ -194,14 +194,14 @@
 /*   while (1) { */
 /*     uint8_t sr = *(volatile uint8_t*)flag_addr ; */
 /*     if ( sr & flag ) */
-/*       return *(volatile uint8_t*)dr ; */
+/*	 return *(volatile uint8_t*)dr ; */
 /*   } */
 /* } */
 
 /* /\** */
 /*  * @page atmelavr_spia */
 /*  * @code */
-/*  * hwa_write( SPI_NAME, value ); */
+/*  * hwa_write( spi0, value ); */
 /*  * @endcode */
 /*  *\/ */
 /* #define _hw_mthd_hwa_write__spia	, _hwa_write_spia */
@@ -215,7 +215,7 @@
  * When the SPI is turned on, it takes control of the MOSI and MISO pins.
  *
  * @code
- * hw_turn( SPI_NAME, on | off );
+ * hw_turn( spi0, on | off );
  * @endcode
  */
 #define _hw_mthd_hw_turn__spia		, _hw_turn_spia
@@ -230,7 +230,7 @@
 /**
  * @page atmelavr_spia
  * @code
- * hwa_turn( SPI_NAME, on | off );
+ * hwa_turn( spi0, on | off );
  * @endcode
  */
 #define _hw_mthd_hwa_turn__spia		, _hwa_turn_spia
@@ -247,11 +247,11 @@
  * @page atmelavr_spia
  * @section atmelavr_spia_st Status
  *
- * The `hw_stat_irqf()` instruction lets you read the "transfer complete" flag.
+ * Reading the "transfer complete" flag:
  *
  * @code
- * if ( hw_stat_irqf( SPI_NAME ) ) {    // Read transfer complete IRQ flag
- *   hw_turn_irq( SPI_NAME, off );      // Disable transfer complete IRQs
+ * if ( hw( read, HW_IRQFLAG( spi0 ) ) ) {  // Read "transfer complete" IRQ flag
+ *   hw( turn, HW_IRQ( spi0, off ) );              // Disable transfer complete IRQs
  * }
  * @endcode
  *
@@ -260,20 +260,20 @@
  * flag has been read:
  *
  * @code
- * if ( hw_stat_irqf( SPI_NAME ) )      // Read transfer complete IRQ flag
- *   data = hw_read( SPI_NAME );        // Read data and clear transfer complete IRQ flag
+ * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read transfer complete IRQ flag
+ *   data = hw( read, spi0 );              // Read data and clear transfer complete IRQ flag
  * @endcode
  *
- * The `hw_stat()` instruction lets you read the `collision` flag:
+ * The `hw(stat,)` instruction lets you read the `collision` flag:
  *
  * @code
  * //  Create a structure to receive the counter status
  * //
- * hw_stat_t( SPI_NAME ) st ;
+ * hw_stat_t( spi0 ) st ;
  *
  * //  Copy the SPI status into the structure
  * //
- * st = hw_stat( SPI_NAME );
+ * st = hw( stat, spi0 );
  *
  * //  Process the collision flag
  * //
@@ -348,7 +348,7 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

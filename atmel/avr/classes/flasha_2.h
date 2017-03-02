@@ -13,13 +13,13 @@
  * @page atmelavr_flasha
  * @section atmelavr_eeproma_read Read operations
  *
- * The `hw_read()` instruction reads one byte at given memory address:
+ * The `read` instruction reads one byte at given memory address:
  *
  * @code
- * uint8_t byte = hw_read( flash0, addr ); // Read byte at address addr
+ * uint8_t byte = hw( read, flash0, addr ); // Read byte at address addr
  * @endcode
  */
-#define _hw_mthd_hw_read__flasha		, _hw_read_flasha
+#define _hw_mthd_hw_read__flasha	, _hw_read_flasha
 #define _hw_read_flasha(o,i,a,addr,...)		HW_TX( _hw_flashardbyte(addr), __VA_ARGS__)
 
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
@@ -48,7 +48,7 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
  * @endcode
  */
 
-#define _hw_mthd_hw_read_bytes__flasha		, _hw_read_bytes_flasha
+#define _hw_mthd_hw_read_bytes__flasha	, _hw_read_bytes_flasha
 
 #define _hw_read_bytes_flasha(o,i,a,dst,addr,n,...)	\
   HW_TX( _hw_flashardbytes(dst,addr,n), __VA_ARGS__)
@@ -97,13 +97,13 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  * @endcode
  */
 
-#define _hw_mthd_hw_load_buffer__flasha		, _hw_flasha_load_buffer
+#define _hw_mthd_hw_load_buffer__flasha	, _hw_flasha_load_buffer
 #define _hw_flasha_load_buffer(o,i,a,src,...)	HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
 
-#define _hw_mthd_hw_erase_page__flasha		, _hw_flasha_erase_page
+#define _hw_mthd_hw_erase_page__flasha	, _hw_flasha_erase_page
 #define _hw_flasha_erase_page(o,i,a,src,...)	HW_TX(_hw_flasha_pgers(o,src),__VA_ARGS__)
 
-#define _hw_mthd_hw_write_page__flasha		, _hw_flasha_write_page
+#define _hw_mthd_hw_write_page__flasha	, _hw_flasha_write_page
 #define _hw_flasha_write_page(o,i,a,src,...)	HW_TX(_hw_flasha_pgwrt(o,src),__VA_ARGS__)
 
 
@@ -223,44 +223,44 @@ HW_INLINE void __hw_flasha_ldpgbf( void *src )
 HW_INLINE void __hw_flasha_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 {
   if ( csr-0x20 < 0x20 ) {
-    hw_asm("    out	CSR, %[r1]				\n"
-	   "    spm						\n"
-	   "1:  sbic    CSR, BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
-	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
-	   "    spm						\n"
-	   "1:  sbic    CSR, BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
+    hw_asm("	out	CSR, %[r1]				\n"
+	   "	spm						\n"
+	   "1:	sbic	CSR, BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
+	   "	out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "	spm						\n"
+	   "1:	sbic	CSR, BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
 	   : [r1] "=r" (cmd)
 	   : "z" (ptr) :
 	   );
   }
   else if ( csr-0x20 < 0x40 ) {
-    hw_asm("    out	CSR, %[r1]				\n"
-	   "    spm						\n"
-	   "1:  in      %[r1], CSR				\n"
-	   "    sbrc    %[r1], BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
-	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
-	   "    spm						\n"
-	   "1:  in      %[r1], CSR				\n"
-	   "    sbrc    %[r1], BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
+    hw_asm("	out	CSR, %[r1]				\n"
+	   "	spm						\n"
+	   "1:	in	%[r1], CSR				\n"
+	   "	sbrc	%[r1], BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
+	   "	out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "	spm						\n"
+	   "1:	in	%[r1], CSR				\n"
+	   "	sbrc	%[r1], BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
 	   : [r1] "=r" (cmd)
 	   : "0" (cmd), "z" (ptr) :
 	   );
   }
   else {
-    hw_asm("    sts	CSR+0x20, %[r1]				\n"
-	   "    spm						\n"
-	   "1:  lds     %[r1], CSR+0x20				\n"
-	   "    sbrc    %[r1], BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
-	   "    out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
-	   "    spm						\n"
-	   "1:  lds     %[r1], CSR+0x20				\n"
-	   "    sbrc    %[r1], BP_SPMEN				\n"
-	   "    rjmp	1b					\n"
+    hw_asm("	sts	CSR+0x20, %[r1]				\n"
+	   "	spm						\n"
+	   "1:	lds	%[r1], CSR+0x20				\n"
+	   "	sbrc	%[r1], BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
+	   "	out	CSR, 1<<BP_RWWSRE | 1<<BP_SPMEN		\n"
+	   "	spm						\n"
+	   "1:	lds	%[r1], CSR+0x20				\n"
+	   "	sbrc	%[r1], BP_SPMEN				\n"
+	   "	rjmp	1b					\n"
 	   : [r1] "=r" (cmd)
 	   : "z" (ptr) :
 	   );

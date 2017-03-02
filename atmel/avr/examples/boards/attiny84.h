@@ -24,31 +24,31 @@
  *
  * @par Pin Configuration
  *
- *                           Vcc o   U   o Gnd
- *                XTAL1 CLKI PB0 o       o PA0 ADC0 AREF
- *                     XTAL2 PB1 o       o PA1 ADC1 AIN0
- *                     RESET PB3 o       o PA2 ADC2 AIN1
- *           INT0 OC0A CKOUT PB2 o       o PA3 ADC3 T0
- *             ICP OC0B ADC7 PA7 o       o PA4 ADC4 USCK SCL T1
- *     OC1A SDA MOSI DI ADC6 PA6 o       o PA5 ADC5 DO MISO OC1B
+ *			     Vcc o   U	 o Gnd
+ *		  XTAL1 CLKI PB0 o	 o PA0 ADC0 AREF
+ *		       XTAL2 PB1 o	 o PA1 ADC1 AIN0
+ *		       RESET PB3 o	 o PA2 ADC2 AIN1
+ *	     INT0 OC0A CKOUT PB2 o	 o PA3 ADC3 T0
+ *	       ICP OC0B ADC7 PA7 o	 o PA4 ADC4 USCK SCL T1
+ *     OC1A SDA MOSI DI ADC6 PA6 o	 o PA5 ADC5 DO MISO OC1B
  *
  *
  * @par Serial adapter wiring
  *
  *     TINY84 ->  2 : RXD <- Serial Adapter
- *                  : TXD
- *                4 : DTR
- *               14 : GND
- *                1 : VCC
+ *		    : TXD
+ *		  4 : DTR
+ *		 14 : GND
+ *		  1 : VCC
  *
  * @par USBASP wiring
  *
- *      USBASP -> 1  MOSI  7  <- TINY84
- *                2  VCC   1
- *                4  GND   14
- *                5  RST   4
- *                7  SCK   9
- *                9  MISO  8
+ *	USBASP -> 1  MOSI  7  <- TINY84
+ *		  2  VCC   1
+ *		  4  GND   14
+ *		  5  RST   4
+ *		  7  SCK   9
+ *		  9  MISO  8
  *
  * @par attiny84.h
  * @include boards/attiny84.h

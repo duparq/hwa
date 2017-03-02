@@ -17,17 +17,17 @@
  * This is an Arduino clone board with a MEGA328P-AU microcontroller, a 16 MHz
  * crystal and a CH340 USB/Serial adapter.
  *
- * @note I've discovered that my Linux driver for CH340/CH341 is buggy and does
+ * __Note__ I've discovered that my Linux driver for CH340/CH341 is buggy and does
  * not send parity bytes. So, use the 5+1 synchronization sequence.
  *
  * @par USBASP wiring
  *
- *      USBASP -> 1  MOSI  D11 <- BOARD
- *                2  VCC   5V
- *                4  GND   GND
- *                5  RST   RST
- *                7  SCK   D13
- *                9  MISO  D12
+ *	USBASP -> 1  MOSI  D11 <- BOARD
+ *		  2  VCC   5V
+ *		  4  GND   GND
+ *		  5  RST   RST
+ *		  7  SCK   D13
+ *		  9  MISO  D12
  *
  * @par nanodccduino.h
  * @include nanodccduino.h
@@ -65,16 +65,16 @@
 
 #define PIN_D2				pin_pd2	// INT0
 #define PIN_D3				pin_pd3	// OC2B INT1
-#define PIN_D4				pin_pd4	//      T0
+#define PIN_D4				pin_pd4	//	T0
 #define PIN_D5				pin_pd5	// OC0B T1
 #define PIN_D6				pin_pd6	// OC0A AIN0
-#define PIN_D7				pin_pd7	//      AIN1
+#define PIN_D7				pin_pd7	//	AIN1
 #define PIN_D8				pin_pb0	// ICP1
 #define PIN_D9				pin_pb1	// OC1A
 #define PIN_D10				pin_pb2	// OC1B SS
 #define PIN_D11				pin_pb3	// OC2A MOSI
-#define PIN_D12				pin_pb4	//      MISO
-#define PIN_D13				pin_pb5	//      SCK
+#define PIN_D12				pin_pb4	//	MISO
+#define PIN_D13				pin_pb5	//	SCK
 
 #define PIN_A5				pin_pc5	// SCL
 #define PIN_A4				pin_pc4	// SDA

@@ -15,7 +15,7 @@
 
 /*  Watchdog timeout
  */
-#define TIMEOUT                 250ms
+#define TIMEOUT			250ms
 
 
 /*  Service watchdog IRQ
@@ -42,16 +42,16 @@ int main ( )
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */
   hwa( configure, watchdog0,
-              timeout,          TIMEOUT,
-              action,           irq
-              );
+	      timeout,		TIMEOUT,
+	      action,		irq
+	      );
 
   /*  Configure the core to enter idle mode when asked to sleep
    */
   hwa( configure, core0,
-              sleep,      enabled,
-              sleep_mode, idle
-              );
+	      sleep,	  enabled,
+	      sleep_mode, idle
+	      );
 
   /*  Write this configuration into the hardware
    */

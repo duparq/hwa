@@ -15,11 +15,11 @@
  * A class `_c8a` object is an 8-bit counting unit that has 3 relative objects:
  *
  *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `HW_REL( COUNTER_NAME, prescaler )`
+ *    * `HW_REL( counter0, prescaler )`
  *
  *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a "_cmp8a":
- *    * `HW_REL( COUNTER_NAME, compare0 )` and <br>
- *      `HW_REL( COUNTER_NAME, compare1 )`
+ *    * `HW_REL( counter0, compare0 )` and <br>
+ *	`HW_REL( counter0, compare1 )`
  *
  * It is used in:
  *
@@ -34,10 +34,10 @@
  * @page atmelavr_c8a
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS()` instruction retrieves the number of bits of the counting register:
+ * The `HW_BITS()` instruction returns the number of bits of the counting register:
  *
  * @code
- * #if HW_BITS( COUNTER_NAME ) != 8
+ * #if HW_BITS( counter0 ) != 8
  * #  error You must choose a 8-bit counter!
  * #endif
  * @endcode
@@ -51,7 +51,7 @@
  *
  * Class `_c8a` objects can trigger the following IRQs:
  *
- *  * `COUNTER_NAME` or `COUNTER_NAME,overflow`: counter overflow
+ *  * `counter0` or `counter0,overflow`: counter overflow
  */
 
 #if !defined __ASSEMBLER__
@@ -62,11 +62,11 @@ typedef struct {
 
   /*  Hardware registers
    */
-  hwa_r8_t 	ccra ;
-  hwa_r8_t 	ccrb ;
-  hwa_r8_t 	count ;
-  hwa_r8_t 	imsk ;
-  hwa_r8_t 	ifr ;
+  hwa_r8_t	ccra ;
+  hwa_r8_t	ccrb ;
+  hwa_r8_t	count ;
+  hwa_r8_t	imsk ;
+  hwa_r8_t	ifr ;
 
   /*  Registers used for high-level configuration
    */

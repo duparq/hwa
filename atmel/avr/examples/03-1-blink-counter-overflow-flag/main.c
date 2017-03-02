@@ -22,6 +22,10 @@
 #define COUNTMODE               up_loop
 #define PERIOD                  0.5
 
+/*  Compare strings
+ */
+#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
+
 
 int main ( )
 {
@@ -40,12 +44,12 @@ int main ( )
    *  counting mode, at bottom in `updown_loop` counting mode.
    */
   hwa( configure, COUNTER,
-              clock,     prescaler_output(CLKDIV),
-              countmode, COUNTMODE,
-              bottom,    0,
-              top,       compare0,
-              );
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
+       clock,     prescaler_output(CLKDIV),
+       countmode, COUNTMODE,
+       bottom,    0,
+       top,       compare0 );
+  
+  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
   else
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV );

@@ -5,27 +5,26 @@ Using HWA {#using}
 [TOC]
 
 This section gives general informations about how to use HWA, whatever the
-target device.
+target device. Look at the @ref support "Supported devices" page for
+device-specific documentation.
 
 
-Device header file {#using_header}
-==================
+Device header {#using_header}
+=============
 
-In order to use the HWA facilities, you must first include the header file
-corresponding to your device:
+In order to use the HWA facilities, you must first include a header file
+to your source:
 
 @code
 #include <hwa/attiny44a_pu.h>
 @endcode
 
-The header file is searched in the `include/` directory of HWA.
+Your development tool should be configured to search the header file in the
+`/include/` directory of HWA.
 
-@par Configuration fuses
-
-If your device has configuration fuses (e.g. Atmel AVR), you can set their
-values through the definition of symbols prefixed with `HW_DEVICE_` __before
-including the device header__. HWA sets undefined fuses with factory default
-values:
+If your device uses configuration fuses (e.g. Atmel AVR), you __must__ set their
+values __before including the device header__ otherwise factory values will be
+assumed:
 
 @code
 #define HW_DEVICE_CLK_SRC               rc_8MHz
@@ -44,138 +43,94 @@ values:
 Instructions {#using_instructions}
 ============
 
-Many HWA instructions are generic and accept an object name as first
-parameter. Several instructions accept a variable length list of parameters
-consisting of key/value pairs.
+Many HWA instructions are generic: they apply on various types of objects and
+accept a variable number of arguments usually consisting of key/value pairs.
 
-There are two kinds of instructions:
+The two most important instructions are `hw()` and `hwa()`. Both take an @ref
+using_actions "action" as first argument and an @ref using_objects "object" as
+second argument. Additional arguments may follow.
 
- * the synchronous instructions, prefixed with `hw_`;
+`hw()` is used for synchronous actions, i.e. actions that produce an immediate
+result.
 
- * the asynchronous instructions, prefixed with `hwa_`.
+`hwa()` is used for asynchronous actions. Asynchronous actions can only be used
+after a _HWA context_ has been created with the `hwa_begin()` or the
+`hwa_begin_from_reset()` instruction.
 
-__Synchronous instructions__ produce an immediate result.
+The following asynchronous actions are then memorized into the context until the
+the `hwa_commit()` instruction or the `hwa_nocommit()` instruction is met.
 
-__Asynchronous instructions__ can only be used after a _HWA context_ has been
-created with the `hwa_begin()` or `hwa_begin_from_reset()` instruction. The
-action of asynchronous instructions is memorized into the context and when the
-`hwa_commit()` instruction is met, HWA determines from the context the machine
-code to produce.
+The `hwa_commit()` instruction triggers the production of the machine code.
 
-The `hwa_nocommit()` instruction puts the context in a known state but does not
-produce machine code. This is useful to make HWA produce efficient code for
-modifying a configuration without rewriting all the hardware registers.
+The `hwa_nocommit()` instruction does not produce machine code but is useful to
+put the context in a known state usually before following actions modify
+it. This allows the production of machine code that avoids writing values that
+already are in the registers.
 
-See also:
+Using a HWA context allows the best optimization of the machine code to
+access the hardware, particularly with microcontrollers that have hardware
+registers shared by several peripheral controllers.
 
- * <a href="modules.html">Instructions sorted by category</a>
-
- * <a href="examples.html">The examples provided with HWA</a>
-
-
-Peripherals {#using_peripherals}
-===========
-
-All the peripheral features of a device are held by HWA objects.
-
-All object names are lower cased, begin with `hw_` and usually end with a
-number:
-
- * `hw_counter0`
- * `hw_counter1`
- * `hw_adc0`
- * `hw_uart0`
- * ...
-
-except I/O ports that end with a letter:
-
- * `hw_porta`
- * `hw_portb`
- * ...
-
-I/O names (singles or groups of I/O pins) always begin with `hw_pin_`:
-
- * `hw_pin_pa0`
- * `hw_pin_pb4`
- * `hw_pin_2`
- * ...
-
-Pin names based on pin numbers can be used when HWA knows how the device is
-packaged. That should be the case if you have included a header with a full
-device name:
-
-@code
-#include <hwa/atmega328p_au.h>  // ATmega328p in 32 pin QFP
-@endcode
+See also: <a href="modules.html">instructions sorted by category</a>.
 
 
-Relatives {#using_relatives}
----------
+Actions {#using_actions}
+=======
 
-Sometimes, one peripheral is implemented by a set of objects that have a
-relationship. Typically, the Atmel AVR timer/counters are implemented through:
+Action arguments are lower-cased words.
 
- * one counting unit
- * two compare units
- * one optionnal capture unit
+Action	    | Comments
+:-----------|:-----------
+`clear`     | Clear the object (usually an IRQ flag).
+`configure` | Configure the object.
+`power`     | Power the object ON/OFF.
+`read`      | Read the object.
+`reset`     | Reset the object.
+`stat`      | Read the status of the object.
+`toggle`    | Toggle the state of the object (usually an I/O pin).
+`trigger`   | Trigger the object (start a ADC convertion...).
+`turn`      | Turn the object ON/OFF.
+`write`     | Write a value in the object.
 
-The compare units and their output pins are also defined as relative objects.
 
-The `hw_rel()` instruction gives the name of any relative object of an
-object.
+Objects {#using_objects}
+=======
 
-For example, the Atmel AVR ATmega328P has a compare output pin named OC0A that
-is the output of the compare unit A of the TIM0 timer/counter. With HWA, TIM0 is
-called `hw_counter0` and its first compare unit (A) is called `hw_oc00`.
+Object arguments can be peripheral controller names or canonical I/O pin names
+(i.e. the name used for the basic I/O function). They are lower cased and end
+with a number, except I/O ports that can end with a letter if a number would be
+confusing:
 
- * The instruction `hw_rel( hw_counter0, compare0 )` expands to `hw_oc00`.
+ * `counter0`, `counter1` ;
+ * `adc0` ;
+ * `uart0` ;
+ * `porta`, `portb` ;
+ * `pin_pa0`...
 
- * The instruction `hw_rel( hw_oc00, counter )` expands to `hw_counter0`.
-
- * The instruction `hw_rel( hw_oc00, pin )` expands to `hw_pin_oc0a`.
-
-The `hw_rel()` instruction is useful to make the source code less dependant of
-the affectation of the peripherals. For example, you define the symbol PWM to
-hold the name of the compare unit whose output pin will produced a PWM
-signal. You can configure its related objects, namely the counting unit and the
-ouput pin, this way:
-
-@code
-#define PWM	hw_oc00
-
-...
-
-hwa_config( PWM, set_at_bottom_clear_on_match );
-hwa_config( hw_rel(PWM, counter), countmode, loop_up );
-hwa_write( PWM, (1U<<hw_bn(PWM))/2 ); // 50% duty cycle
-@endcode
-
-If in the future you must use `hw_oc21` instead of `hw_oc00`, you just need to
-change the definition of the PWM symbol accordingly and the rest of the code
-will remain unchanged.
+Instructions that return objects names (`HW_RELATIVE()`, `HW_PIN()`) or those
+that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_REGISTER()`) can
+be used as object arguments too.
 
 
 Interrupts {#using_interrupts}
 ==========
 
-Interrupts are a special kind of HWA objects that are used through the following
-specific methods:
+Interrupts are objects that support the following instructions:
 
- * `HW_ISR()`
- * `hw_turn_irq()`, `hwa_turn_irq()`
- * `hw_clear_irq()`, `hwa_clear_irq()`
- * `hw_stat_irqe()`
- * `hw_stat_irqf()`
+ * `HW_IRQ(...)`: returns the definition of an IRQ;
+ * `hw|hwa( turn, HW_IRQ(...), on|off )`: enable or disable an IRQ;
+ * `hw|hwa( clear, HW_IRQFLAG(...) )`: clears an IRQ flag;
+ * `hw( read, HW_IRQFLAG(...) )`: read an IRQ flag.
 
-An interrupt object is identified with an object name that may be followed by an
-event name. For example:
+Interrupt definitions (`HW_IRQ(...)`) and interrupt flags (`HW_IRQFLAG(...)`)
+require an object name that may be followed by an event name. For example:
 
- * `hw_counter0`
- * `hw_counter0, overflow`
- * `hw_counter0, compare0`
- * `hw_pin_pa0, change`
- * `hw_wdog0`
- * `hw_acmp0`
+ * `HW_IRQ(watchdog0)`;
+ * `HW_IRQ(counter0)`;
+ * `HW_IRQ(counter0, overflow)`;
+ * `HW_IRQ(counter0, compare0)`;
+ * `HW_IRQ(pin_pa0, change)`;
+ * ...
 
 
 Interrupt Service Routine {#using_isr}
@@ -183,11 +138,11 @@ Interrupt Service Routine {#using_isr}
 
 Interrupt service routines are declared with the `HW_ISR()` instruction.
 
-For example, the USI can trigger several different interrupts, the event name is
-required:
+For example, as the USI can trigger several different interrupt requests, the
+event name is required:
 
 @code
-HW_ISR( hw_usi0, txc )
+HW_ISR( usi0, txc )
 {
   // code to handle the transmit-complete IRQ of the USI
 }
@@ -196,7 +151,7 @@ HW_ISR( hw_usi0, txc )
 The watchdog can only trigger one "anonymous" IRQ:
 
 @code
-HW_ISR( hw_wdog0 )
+HW_ISR( watchdog0 )
 {
   // code to handle the overflow of the watchdog timer
 }
@@ -223,24 +178,12 @@ For example, if you are sure that your ISR does not alter any CPU register, you
 can spare a few program memory bytes and CPU cycles:
 
 @code
-HW_ISR( hw_counter0, overflow, isr_naked )
+HW_ISR( counter0, overflow, isr_naked )
 {
-  hw_toggle( hw_pin_pa0 ); // will use the `sbi` instruction, no register is altered
-  hw_reti();               // produce the `reti` instruction
+  hw( toggle, pin_pa0 );  // will use the `sbi` instruction, no register is altered
+  hw_asm("reti");         // produce the `reti` instruction
 }
 @endcode
-
-
-Interrupt request flag and mask {#using_isr_flags}
--------------------------------
-
-Interrupt request flags can be read and cleared with the `hw_stat_irqf()` and
-`hw_clear_irqf()` or `hwa_clear_irqf()` instructions.
-
-Interrupt request masks can be read with the `hw_stat_irqe()` instruction.
-
-Interrupt requests can be enabled and disabled with the `hw_turn_irq()` or
-`hwa_turn_irq()` instructions.
 
 
 

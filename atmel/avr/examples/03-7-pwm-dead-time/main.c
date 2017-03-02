@@ -40,13 +40,13 @@ int main ( )
   hwa_begin_from_reset();
 
   hwa( configure, HW_REL(COUNTER, prescaler0),
-       clock,     CLOCK_SRC );
+       clock,	  CLOCK_SRC );
 
   hwa( configure, COUNTER,
-       clock,     prescaler_output(CLOCK_PSC),
+       clock,	  prescaler_output(CLOCK_PSC),
        countmode, up_loop,
-       bottom,    0,
-       top,       compare2,
+       bottom,	  0,
+       top,	  compare2,
        overflow,  at_bottom
        );
 

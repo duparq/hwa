@@ -14,14 +14,14 @@
  * @section atmelavr_inta_cf Configuration
  *
  * @code
- * hw_config( EI_NAME,
+ * hw( configure, int0,
  *
- *            //  What does trigger the IRQ
- *            //
- *            sense,   low_level
- *                   | edge
- *                   | falling_edge
- *                   | rising_edge  );
+ *	      //  What does trigger the IRQ
+ *	      //
+ *	      sense,   low_level
+ *		     | edge
+ *		     | falling_edge
+ *		     | rising_edge  );
  * @endcode
  */
 #define _hw_mthd_hw_configure__inta	, _hw_cfinta
@@ -32,14 +32,14 @@
  * @page atmelavr_inta
  *
  * @code
- * hwa_config( EI_NAME,
+ * hwa( configure, int0,
  *
- *             //  What does trigger the IRQ
- *             //
- *             sense,   low_level
- *                    | edge
- *                    | falling_edge
- *                    | rising_edge  );
+ *	       //  What does trigger the IRQ
+ *	       //
+ *	       sense,	low_level
+ *		      | edge
+ *		      | falling_edge
+ *		      | rising_edge  );
  * @endcode
  */
 #define _hw_mthd_hwa_configure__inta	, _hwa_cfinta
@@ -77,9 +77,9 @@
  * The IRQ mask and flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( EI_NAME ) ) {        // Read IRQ flag
- *   hw_clear_irqf( EI_NAME );             // Clear IRQ flag
- *   hw_turn_irq( EI_NAME, off );          // Disable IRQ
+ * if ( hw( read, HW_IRQFLAG( int0 ) ) ) {	   // Read IRQ flag
+ *   hw( clear, HW_IRQFLAG( int0 ) );		   // Clear IRQ flag
+ *   hw( turn, HW_IRQ( int0, off ) );	   // Disable IRQ
  * }
  * @endcode
  */
@@ -95,7 +95,7 @@
  *  * `ie`: IRQ mask
  *  * `if`: IRQ flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

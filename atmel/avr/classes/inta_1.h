@@ -29,5 +29,5 @@
  *
  * Class `_inta` objects can trigger the following IRQs:
  *
- *  * `EI_NAME`
+ *  * `int0`
  */

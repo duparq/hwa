@@ -26,7 +26,7 @@
  *
  * Class `_acmpb` objects can trigger the following IRQs:
  *
- *  * `OBJECT_NAME`: comparator output event
+ *  * `HW_IRQ(acmp0)`: comparator output event
  */
 
 #if !defined __ASSEMBLER__

@@ -16,8 +16,8 @@
 /**
  * @page atmelavr_c16b Class _c16b: 16-bit counter/timer
  *
- * A class `_c16b` object is a 16-bit counting unit. It has the following @ref
- * using_relatives "relatives":
+ * A class `_c16b` object is a 16-bit counting unit. It has the following
+ * relatives:
  *
  *  * one prescaler, of class @ref atmelavr_psca "_psca": `prescaler`
  *
@@ -37,10 +37,10 @@
  * @page atmelavr_c16b
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS()` instruction retrieves the number of bits of the counting register:
+ * The `HW_BITS()` instruction returns the number of bits of the counting register:
  *
  * @code
- * #if HW_BITS( COUNTER_NAME ) != 16
+ * #if HW_BITS( counter0 ) != 16
  * #  error You must choose a 16-bit counter!
  * #endif
  * @endcode
@@ -54,7 +54,7 @@
  *
  * Class `_c16b` objects can trigger the following IRQs:
  *
- *  * `COUNTER_NAME` or `COUNTER_NAME,overflow`: counter overflow
+ *  * `counter0` or `counter0,overflow`: counter overflow
  */
 
 

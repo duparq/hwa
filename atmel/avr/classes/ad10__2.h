@@ -25,7 +25,7 @@
   HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
 
 
-/* 	Start a conversion
+/*	Start a conversion
  */
 #define _hw_trigger_ad10_(o,i,a,...)	_hw_write_reg( o, sc, 1 )
 #define _hwa_trigger_ad10_(o,i,a,...)	_hwa_write_reg( o, sc, 1 )

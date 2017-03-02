@@ -22,21 +22,21 @@
 
 /*	Class logical registers
  */
-#define _hw_reg__twia_if			_cb1, cr, 1, 7		// IRQ flasg
-#define _hw_reg__twia_ack			_cb1, cr, 1, 6		// Enable ACK
-#define _hw_reg__twia_start			_cb1, cr, 1, 5		// Tx START condition
-#define _hw_reg__twia_stop			_cb1, cr, 1, 4		// Tx STOP condition
+#define _hw_reg__twia_if		_cb1, cr, 1, 7		// IRQ flasg
+#define _hw_reg__twia_ack		_cb1, cr, 1, 6		// Enable ACK
+#define _hw_reg__twia_start		_cb1, cr, 1, 5		// Tx START condition
+#define _hw_reg__twia_stop		_cb1, cr, 1, 4		// Tx STOP condition
 #define _hw_reg__twia_collision		_cb1, cr, 1, 3		// Collision flag
-#define _hw_reg__twia_en			_cb1, cr, 1, 2		// Enable TWI (take I/Os)
-#define _hw_reg__twia_ie			_cb1, cr, 1, 0		// Enable IRQs
+#define _hw_reg__twia_en		_cb1, cr, 1, 2		// Enable TWI (take I/Os)
+#define _hw_reg__twia_ie		_cb1, cr, 1, 0		// Enable IRQs
 
 #define _hw_reg__twia_status		_cb1, sr, 5, 3		// Status code
-#define _hw_reg__twia_psc			_cb1, sr, 2, 0		// Prescaler
+#define _hw_reg__twia_psc		_cb1, sr, 2, 0		// Prescaler
 
-#define _hw_reg__twia_sla			_cb1, ar, 7, 1		// Slave address
-#define _hw_reg__twia_gce			_cb1, ar, 1, 0		// General Call Enable
+#define _hw_reg__twia_sla		_cb1, ar, 7, 1		// Slave address
+#define _hw_reg__twia_gce		_cb1, ar, 1, 0		// General Call Enable
 
-#define _hw_reg__twia_slam			_cb1, amr, 7, 1		// Slave address mask
+#define _hw_reg__twia_slam		_cb1, amr, 7, 1		// Slave address mask
 
 /*	Values for CR
  */
@@ -56,7 +56,7 @@
  *
  * Class `_twia` objects can trigger the following IRQs:
  *
- *  * `TWI_NAME`
+ *  * `twi0`
  */
 
 #if !defined __ASSEMBLER__
@@ -67,11 +67,11 @@ typedef struct {
 
   /*  Hardware registers
    */
-  hwa_r8_t 	br ;
-  hwa_r8_t 	cr ;
-  hwa_r8_t 	sr ;
-  hwa_r8_t 	ar ;
-  hwa_r8_t 	amr ;
+  hwa_r8_t	br ;
+  hwa_r8_t	cr ;
+  hwa_r8_t	sr ;
+  hwa_r8_t	ar ;
+  hwa_r8_t	amr ;
 } hwa_twia_t ;
 
 #endif

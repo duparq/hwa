@@ -10,7 +10,7 @@ LABEL(sample):
 
 	sts	nbit, R24	;	# of data bits to receive
 
-	;; XCB	R24, stat, HW_A1(F_RXTX) 	; RX
+	;; XCB	R24, stat, HW_A1(F_RXTX)	; RX
 
 	;; Compute first data bit date
 	;;

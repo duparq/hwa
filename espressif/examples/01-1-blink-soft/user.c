@@ -9,7 +9,7 @@
  */
 void ICACHE_FLASH_ATTR every10ms ( )
 {
-  if ( hw_read( LED ) == 0 )
+  if ( hw( read, LED ) == 0 )
     hw_write( LED, 1 );
   else
     hw_write( LED, 0 );
@@ -20,10 +20,10 @@ void ICACHE_FLASH_ATTR user_init()
 {
   /*  Configure the LED output
    */
-  hw_config( LED,
-  	     function,  gpio,			// Optionnal
-  	     direction, output_when_awake
-  	     );
+  hw( configure, LED,
+	     function,	gpio,			// Optionnal
+	     direction, output_when_awake
+	     );
 
   /*  Trigger a function call every 10 ms (about)
    */

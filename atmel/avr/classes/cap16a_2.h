@@ -14,24 +14,24 @@
  * @section atmelavr_cap16a_config Configuration
  * @subsection atmelavr_cap16a_cf1 Synchronous
  *
- * @note: Currently, only `edge` configuration is implemented for the synchronous
+ * __Note__ Currently, only `edge` configuration is implemented for the synchronous
  * method.
  *
  * @code
- * hw_config( CAPTURE_NAME,
+ * hw( configure, capture0,
  *
- *           [input,    pin_icp      // NOT IMPLEMENTED YET
- *                    | hw_acmp0, ]
+ *	     [input,	pin_icp	     // NOT IMPLEMENTED YET
+ *		      | acmp0, ]
  *
- *           [edge,     falling
- *                    | rising, ]
+ *	     [edge,	falling
+ *		      | rising, ]
  *
- *           [filter,   on           // NOT IMPLEMENTED YET
- *                    | off ]
- *           );
+ *	     [filter,	on	     // NOT IMPLEMENTED YET
+ *		      | off ]
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hw_configure__cap16a		, _hw_cfcap16a
+#define _hw_mthd_hw_configure__cap16a	, _hw_cfcap16a
 
 #define hw_cap16a_input_pin_icp			, 1
 #define hw_cap16a_input_acmp0			, 2
@@ -39,8 +39,8 @@
 #define hw_cap16a_edge_falling			, 1
 #define hw_cap16a_edge_rising			, 2
 
-#define _hw_cfcap16a_kw_edge			, _hw_cfcap16a_edge
-//#define _hw_cfcap16a_kw_				, _hw_cfcap16a_
+#define _hw_cfcap16a_kw_edge		, _hw_cfcap16a_edge
+//#define _hw_cfcap16a_kw_		, _hw_cfcap16a_
 
 #define _hw_cfcap16a(o,i,a,...)						\
   HW_GX(_hw_cfcap16akw1,_hw_cfcap16a_kw_##__VA_ARGS__)(o,__VA_ARGS__,)
@@ -63,20 +63,20 @@
  * @page atmelavr_cap16a
  * @subsection atmelavr_cap16a_cf2 Asynchronous
  * @code
- * hwa_config( CAPTURE_NAME,
+ * hwa( configure, capture0,
  *
- *             input,    pin_icp
- *                     | hw_acmp0,
+ *	       input,	 pin_icp
+ *		       | acmp0,
  *
- *             edge,     falling
- *                     | rising,
+ *	       edge,	 falling
+ *		       | rising,
  *
- *           [ filter,   on
- *                     | off ]
- *           );
+ *	     [ filter,	 on
+ *		       | off ]
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cap16a		, _hwa_cfcap16a
+#define _hw_mthd_hwa_configure__cap16a	, _hwa_cfcap16a
 
 #define _hwa_cfcap16a(o,i,a,...)						\
   do {									\
@@ -90,7 +90,7 @@
   HW_GX(_hwa_cfcap16a_vinput,hw_cap16a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcap16a_vinput_0(o,v,...)					\
-  HW_E_AVL(input, v, pin_icp | hw_acmp0)
+  HW_E_AVL(input, v, pin_icp | acmp0)
 
 #define _hwa_cfcap16a_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_cap16a_input_##v);			\
@@ -128,10 +128,10 @@
  * @section atmelavr_cap16a_read Capture value
  *
  * @code
- * uint16_t capture = hw_read( CAPTURE_NAME );
+ * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cap16a			, _hw_read_cap16a
+#define _hw_mthd_hw_read__cap16a	, _hw_read_cap16a
 #define _hw_read_cap16a(o,i,a,...)		HW_TX( _hw_read_reg(o,reg), __VA_ARGS__ )
 
 
@@ -139,20 +139,20 @@
  * @page atmelavr_cap16a
  *
  * @code
- * hw_write( CAPTURE_NAME, value );
+ * hw_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cap16a		, _hw_write_cap16a
+#define _hw_mthd_hw_write__cap16a	, _hw_write_cap16a
 #define _hw_write_cap16a(o,i,a,v,...)		HW_TX( _hw_write_reg(o,reg,v), __VA_ARGS__ )
 
 /**
  * @page atmelavr_cap16a
  *
  * @code
- * hwa_write( CAPTURE_NAME, value );
+ * hwa_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cap16a		, _hwa_write_cap16a
+#define _hw_mthd_hwa_write__cap16a	, _hwa_write_cap16a
 #define _hwa_write_cap16a(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,reg,v), __VA_ARGS__ )
 
 
@@ -164,9 +164,9 @@
  * instructions:
  *
  * @code
- * if ( hw_stat_irqf( CAPTURE_NAME ) ) {        // Read capture IRQ flag
- *   hw_clear_irqf( CAPTURE_NAME );             // Clear capture IRQ flag
- *   hw_turn_irq( CAPTURE_NAME, off );          // Disable capture IRQs
+ * if ( hw( read, HW_IRQFLAG( capture0 ) ) ) {	// Read capture IRQ flag
+ *   hw( clear, HW_IRQFLAG( capture0 ) );		// Clear capture IRQ flag
+ *   hw( turn, HW_IRQ( capture0, off ) );		// Disable capture IRQs
  * }
  * @endcode
  */
@@ -174,9 +174,9 @@
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__cap16a(o,i,a)		\

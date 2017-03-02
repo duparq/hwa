@@ -29,7 +29,11 @@
 #define PWM                     compare00
 #define CLKDIV                  64
 #define COUNTMODE               up_loop
-#define TOP			0xFF
+#define TOP                     0xFF
+
+/*  Compare strings
+ */
+#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
 
 
 /*  Store the hardware configuration into a HWA context
@@ -38,20 +42,19 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 {
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+  hwa( configure,  core0,
+       sleep,      enabled,
+       sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa( configure, HW_RELATIVE(PWM,counter),
-              clock,     prescaler_output(CLKDIV),
-              countmode, COUNTMODE,
-              bottom,    0,
-              top,       TOP
-              );
+       clock,     prescaler_output(CLKDIV),
+       countmode, COUNTMODE,
+       bottom,    0,
+       top,       TOP );
 
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
+  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( configure, PWM, output, clear_on_match_up_set_on_match_down );
   else /* up_loop */
     hwa( configure, PWM, output, set_at_bottom_clear_on_match );
@@ -87,7 +90,7 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
     /*  In 'up_loop' counting mode, we must disconnect/reconnect the output of
      *  the compare unit as it can not provide pulses of less than 1 cycle.
      */
-    if ( hw_streq(HW_QUOTE(COUNTMODE),"up_loop") ) {
+    if ( !STRCMP(HW_QUOTE(COUNTMODE),"up_loop") ) {
 
       /*  Start from the hardawre configuration used at initialization
        */

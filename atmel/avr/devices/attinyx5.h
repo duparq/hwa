@@ -13,18 +13,18 @@
 
 /**
  * @page attinyx5 ATtiny25/45/85
- * @section attinyx5_device Description
+ * @section attinyx5_device Defined symbols
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
  *
  * Symbol		    | Comments
  * :------------------------|:-----------
- * `HW_DEVICE_ATTINYX5`	    |Always defined (void)
- * `HW_DEVICE_ATTINY85`<br>`HW_DEVICE_ATTINY85_20PU` | Defined (void) depending on the HWA header included
+ * `HW_DEVICE_ATTINYX5`	    |Defined void.
+ * `HW_DEVICE_ATTINY85`<br>`HW_DEVICE_ATTINY85_20PU` | Defined void depending on the HWA header included.
  * `HW_DEVICE_PACKAGE_8P3`  |Defined (void) depending on the packaging of the device.
- * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x001E`
+ * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
+ * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x001E`.
  *
  * Symbol		       | ATtiny25     | ATtiny45     | ATtiny85	     
  * :---------------------------|:------------:|:------------:|:-------------:
@@ -416,15 +416,15 @@
  * 
  * Name			  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
- * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "swuarta" | Software UART
+ * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
+ * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
  *
  * @subsection attinyx5_objrel Aliases and relations
  *
- * Some objects can be accessed from their @ref using_relatives "relatives" or
- * can have more than one name. There are the existing relations between the
- * device's objects and their different names:
+ * Some objects can be accessed from their relatives or can have more than one
+ * name. There are the existing relations between the device's objects and their
+ * different names:
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------

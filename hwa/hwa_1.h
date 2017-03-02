@@ -9,60 +9,143 @@
  * @brief HWA definitions that do not produce C code
  */
 
-/**
- * @defgroup public_obj_instructions Instructions related to one object configuration
- *
- * These instructions receive an object name as first argument and modify the
- * hardware configuration.
- */
-
-/**
- * @defgroup public_context_instructions Instructions related to the HWA context
- */
-
-/**
- * @defgroup public_obj_macros Instructions that provide informations about objects
- *
- * These instructions provide informations about an object without accessing the
- * hardware.
- */
-
-/**
- * @defgroup public_reg_instructions Instructions related to registers
- *
- * These instructions receive an object name as first argument and the name of
- * one of its hardware or logical registers as a second argument.
- */
-
-/**
- * @defgroup public_irq_instructions Instructions related to interrupts
- *
- * These instructions receive an interrupt name as first argument (that is an
- * object name that can be followed by an event name).
- */
-
-/**
- * @defgroup public_gen_macros General purpose macros
- *
- * These instructions act on various types of arguments and do not access the
- * hardware.
- */
-
-/**
- * @defgroup private HWA internal instructions
- *
- * These instruction are intended for internal use.
- * There is no argument checking and no error processing.
- */
-
-/**
- * @defgroup private_classes HWA internal classes
- *
- * These classes are defined to be used internally by HWA.
- */
-
 #include "hwa_macros.h"
 #include "hwa_interrupts.h"
+
+
+#if DOXYGEN
+
+/**
+ * @ingroup public_def
+ * @brief The name of the device as used by the compiler.
+ * @hideinitializer
+ */
+#  define HW_DEVICE
+
+/**
+ * @ingroup public_def
+ * @brief Defined if the packaging of the device is device_package. See the @ref support "device-specific documentation" for details.
+ * @hideinitializer
+ */
+#  define HW_DEVICE_PACKAGE_device_package
+
+/**
+ * @ingroup public_def
+ * @brief The device vendor. See the @ref support "device-specific documentation" for details.
+ * @hideinitializer
+ */
+#  define HW_DEVICE_VENDOR
+
+/**
+ * @ingroup public_def
+ * @brief The device architecture. See the @ref support "device-specific documentation" for details.
+ * @hideinitializer
+ */
+#  define HW_DEVICE_ARCH
+
+/**
+ * @ingroup public_def
+ * @brief The CPU clock frequency (cpu cycles per second).
+ */
+#  define hw_syshz
+
+#endif /* defined DOXYGEN */
+
+
+/*	State definitions		, positive, negative
+ */
+#define _hw_state_on			, 1, 0
+#define _hw_state_off			, 0, 1
+#define _hw_state_yes			, 1, 0
+#define _hw_state_no			, 0, 1
+#define _hw_state_enabled		, 1, 0
+#define _hw_state_disabled		, 0, 1
+
+/**
+ * @ingroup private_def
+ * @brief 8-bit hardware register class.
+ */
+#define _hw_class__r8
+
+
+/**
+ * @ingroup private_def
+ * @brief 16-bit hardware register class.
+ */
+#define _hw_class__r16
+
+
+/**
+ * @ingroup private_def
+ * @brief 32-bit hardware register class.
+ */
+#define _hw_class__r32
+
+
+/**
+ * @ingroup private_def
+ * @brief Class logical register made of one group of consecutive bits.
+ */
+#define _hw_class__cb1
+
+
+/**
+ * @ingroup private_def
+ * @brief Class logical register made of two groups of consecutive bits.
+ */
+#define _hw_class__cb2
+
+
+/**
+ * @ingroup private_def
+ * @brief Object logical register made of one group of consecutive bits.
+ */
+#define _hw_class__ob1
+
+
+/**
+ * @ingroup private_def
+ * @brief Object logical register made of two groups of consecutive bits.
+ */
+#define _hw_class__ob2
+
+
+/**
+ * @ingroup private_def
+ * @brief Interrupt object class.
+ */
+#define _hw_class__irq
+
+
+/**
+ * @ingroup private_def
+ * @brief Memory definition of one group of consecutive bits.
+ */
+#define _hw_class__m1
+
+
+/**
+ * @ingroup private_def
+ * @brief Memory definition of two groups of consecutive bits.
+ */
+#define _hw_class__m2
+
+
+/**
+ * @ingroup private_def
+ * @brief Object logical register made of one group of consecutive bits.
+ */
+#define _hw_class__xob1
+
+
+/**
+ * @ingroup private_def
+ * @brief Object register class.
+ *
+ *  An `_oreg` class object is a register of an object that can be accessed with
+ *  the generic instructions designed for objects.
+ */
+#define _hw_class__oreg
 
 
 #if !defined __ASSEMBLER__
@@ -96,7 +179,7 @@
 
 
 /**
- * @ingroup public_gen_macros
+ * @ingroup public_ins
  * @brief Trigger an error after code generation.
  * @hideinitializer
  */

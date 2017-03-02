@@ -44,12 +44,12 @@ sync:	push	r24
 
 	;; Falling edge
 	;;
-	;; 	Memorise the date in match
+	;;	Memorise the date in match
 	;;
 	sts	match+0, r24
 	sts	match+1, r25
 	;;
-	;; 	Shift: dt0 <- dtn
+	;;	Shift: dt0 <- dtn
 	;;
 	lds	r26, dtn+0
 	sts	dt0+0, r26
@@ -60,7 +60,7 @@ sync:	push	r24
 
 	;; Rising edge
 	;;
-	;; 	Memorise in dtn (r25:r24) the duration of the low-level
+	;;	Memorise in dtn (r25:r24) the duration of the low-level
 	;;
 2:	lds	r26, match+0
 	lds	r27, match+1
@@ -99,7 +99,7 @@ sync:	push	r24
 	lds	r25, dt0+1
 	cp	r24, r26	; if ( t1 < 10×t2 - dt )
 	cpc	r25, r27	;   then t1 is too low
-	brcs	3f		;        get another sample
+	brcs	3f		;	 get another sample
 	;;
 	;;	Compute r27:r26 = 10×t2 + dt
 	;; 
@@ -112,7 +112,7 @@ sync:	push	r24
 	;; 
 	cp	r24, r26	; if ( t1 > 10×t2 + dt )
 	cpc	r25, r27	;   then t1 is too high
-	brcc	3f		;        get another sample
+	brcc	3f		;	 get another sample
 	;;
 	;;	10 / 1 sequence is validated
 	;;	Compute dt0 = dtn + dtn/2 - dtn/8 - delay (counter units)

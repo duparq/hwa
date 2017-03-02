@@ -14,23 +14,23 @@
  * @section atmelavr_cap16b_config Configuration
  * @subsection atmelavr_cap16b_cf1 Synchronous
  *
- * @note: Currently, only `edge` configuration is implemented for the synchronous
+ * __Note__ Currently, only `edge` configuration is implemented for the synchronous
  * method.
  *
  * @code
- * hw_config( CAPTURE_NAME,
+ * hw( configure, capture0,
  *
- *            input,    pin_icp,     // NOT IMPLEMENTED YET
+ *	      input,	pin_icp,     // NOT IMPLEMENTED YET
  *
- *           [edge,     falling
- *                    | rising, ]
+ *	     [edge,	falling
+ *		      | rising, ]
  *
- *           [filter,   on           // NOT IMPLEMENTED YET
- *                    | off ]
- *           );
+ *	     [filter,	on	     // NOT IMPLEMENTED YET
+ *		      | off ]
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hw_configure__cap16b		, _hw_cfcap16b
+#define _hw_mthd_hw_configure__cap16b	, _hw_cfcap16b
 
 #define hw_cap16b_input_pin_icp			, 1
 #define hw_cap16b_input_acmp0			, 2
@@ -38,8 +38,8 @@
 #define hw_cap16b_edge_falling			, 1
 #define hw_cap16b_edge_rising			, 2
 
-#define _hw_cfcap16b_kw_edge			, _hw_cfcap16b_edge
-//#define _hw_cfcap16b_kw_				, _hw_cfcap16b_
+#define _hw_cfcap16b_kw_edge		, _hw_cfcap16b_edge
+//#define _hw_cfcap16b_kw_		, _hw_cfcap16b_
 
 #define _hw_cfcap16b(o,i,a,...)						\
   HW_GX(_hw_cfcap16bkw1,_hw_cfcap16b_kw_##__VA_ARGS__)(o,__VA_ARGS__,)
@@ -62,19 +62,19 @@
  * @page atmelavr_cap16b
  * @subsection atmelavr_cap16b_cf2 Asynchronous
  * @code
- * hwa_config( CAPTURE_NAME,
+ * hwa( configure, capture0,
  *
- *             input,    pin_icp,
+ *	       input,	 pin_icp,
  *
- *             edge,     falling
- *                     | rising,
+ *	       edge,	 falling
+ *		       | rising,
  *
- *           [ filter,   on
- *                     | off ]
- *           );
+ *	     [ filter,	 on
+ *		       | off ]
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cap16b		, _hwa_cfcap16b
+#define _hw_mthd_hwa_configure__cap16b	, _hwa_cfcap16b
 
 #define _hwa_cfcap16b(o,i,a,...)						\
   do {									\
@@ -126,29 +126,29 @@
  * @section atmelavr_cap16b_read Capture value
  *
  * @code
- * uint16_t capture = hw_read( CAPTURE_NAME );
+ * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cap16b			, _hw_read_cap16a
+#define _hw_mthd_hw_read__cap16b	, _hw_read_cap16a
 
 
 /**
  * @page atmelavr_cap16b
  *
  * @code
- * hw_write( CAPTURE_NAME, value );
+ * hw_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cap16b		, _hw_write_cap16a
+#define _hw_mthd_hw_write__cap16b	, _hw_write_cap16a
 
 /**
  * @page atmelavr_cap16b
  *
  * @code
- * hwa_write( CAPTURE_NAME, value );
+ * hwa_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cap16b		, _hwa_write_cap16a
+#define _hw_mthd_hwa_write__cap16b	, _hwa_write_cap16a
 
 
 /**
@@ -159,9 +159,9 @@
  * instructions:
  *
  * @code
- * if ( hw_stat_irqf( CAPTURE_NAME ) ) {        // Read capture IRQ flag
- *   hw_clear_irqf( CAPTURE_NAME );             // Clear capture IRQ flag
- *   hw_turn_irq( CAPTURE_NAME, off );          // Disable capture IRQs
+ * if ( hw( read, HW_IRQFLAG( capture0 ) ) ) {	// Read capture IRQ flag
+ *   hw( clear, HW_IRQFLAG( capture0 ) );		// Clear capture IRQ flag
+ *   hw( turn, HW_IRQ( capture0, off ) );		// Disable capture IRQs
  * }
  * @endcode
  */
@@ -169,14 +169,14 @@
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cap16b	_hwa_setup__cap16a
-#define _hwa_init__cap16b	_hwa_init__cap16a
-#define _hwa_commit__cap16b	_hwa_commit__cap16a
+#define _hwa_setup__cap16b		_hwa_setup__cap16a
+#define _hwa_init__cap16b		_hwa_init__cap16a
+#define _hwa_commit__cap16b		_hwa_commit__cap16a
 
 
 /**

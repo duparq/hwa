@@ -31,7 +31,7 @@
  * @page esp8266
  * @section esp8266_peripherals Peripherals
  *
- * @note All the peripherals are not completely implemented yet.
+ * __Note__ All the peripherals are not completely implemented yet.
  *
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
@@ -202,8 +202,8 @@ typedef struct {
  * @page esp8266
  * @section esp8266_pins Pins
  *
- * Each pin can be connected to different signals with the `hw_config()` or
- * `hwa_config()` instruction.
+ * Each pin can be connected to different signals with the `hw(configure,)` or
+ * `hwa(configure,...)` instruction.
  *
  * Pin	  | HWA name	    | Class			  | Functions
  * -------|-----------------|-----------------------------|-------------

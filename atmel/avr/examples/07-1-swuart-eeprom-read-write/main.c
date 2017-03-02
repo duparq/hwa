@@ -11,9 +11,9 @@
  *
  * @par Test applicapion
  *
- *      ./main.py --help
- *      ./main.py read 0 512
- *      ./main.py write 0x01F0 0x55
+ *	./main.py --help
+ *	./main.py read 0 512
+ *	./main.py write 0x01F0 0x55
  *
  * @par config.h
  * @include 07-1-swuart-eeprom-read-write/config.h
@@ -26,18 +26,18 @@
 
 /*  Process received bytes. Valid sequences are:
  *
- *  'e'+al+ah+n+'\n'    Read n bytes from eeprom address al:ah
- *  'E'+al+ah+v+'\n'    Write v in eeprom at address al:ah
+ *  'e'+al+ah+n+'\n'	Read n bytes from eeprom address al:ah
+ *  'E'+al+ah+v+'\n'	Write v in eeprom at address al:ah
  */
 static void process ( uint8_t byte )
 {
-  static uint8_t        bcount = 0 ;
+  static uint8_t	bcount = 0 ;
   static union {
-    uint8_t             buf[4] ;
+    uint8_t		buf[4] ;
     struct {
-      uint8_t           cmd ;
-      uint16_t          addr ;
-      uint8_t           n ;
+      uint8_t		cmd ;
+      uint16_t		addr ;
+      uint8_t		n ;
     } ;
   } buf ;
 
@@ -51,15 +51,15 @@ static void process ( uint8_t byte )
   else {
     bcount = 0 ;
     if ( byte == '\n'
-         && buf.addr < HW_DEVICE_EEPROM_SIZE ) {
+	 && buf.addr < HW_DEVICE_EEPROM_SIZE ) {
       if ( buf.cmd == 'E' )
-        hw( write, eeprom0, buf.addr, buf.n );
+	hw( write, eeprom0, buf.addr, buf.n );
       else {
-        while ( buf.n-- ) {
-          uint8_t byte = hw( read, eeprom0, buf.addr );
-          hw( write, UART, byte );
-          buf.addr++ ;
-        }
+	while ( buf.n-- ) {
+	  uint8_t byte = hw( read, eeprom0, buf.addr );
+	  hw( write, UART, byte );
+	  buf.addr++ ;
+	}
       }
       hw( write, UART, '$' );
       return ;
@@ -84,7 +84,7 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Write this configuration into the hardware
@@ -95,18 +95,18 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw( stat,UART).sync )
+  while ( !hw(stat,UART).sync )
     hw_sleep();
   hw( write, UART, '$');
 
   for(;;) {
     /*
-     *  Main loop:
-     *    put the MCU into sleep mode, an interrupt will awake it
-     *    process incomming bytes
+     *	Main loop:
+     *	  put the MCU into sleep mode, an interrupt will awake it
+     *	  process incomming bytes
      */
     hw_sleep();
-    if ( hw( stat,UART).rxc ) {
+    if ( hw(stat,UART).rxc ) {
       /*
        *  MCU awakened by SWUART that has received a stop bit
        *  Process the received byte (clears rxc flag)

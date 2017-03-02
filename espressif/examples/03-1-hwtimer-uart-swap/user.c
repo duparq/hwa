@@ -38,17 +38,17 @@ void IROM user_init()
   //  hwa_begin();
   hwa_begin_from_reset();
 
-  hwa_config( LED,
+  hwa( configure, LED,
 	      function,	gpio,
 	      direction, output_when_awake
-  	     );
+	     );
 
   /*  Configure the UART
    */
-  hwa_config( gpio15, function, uart0_txd );
-  hwa_config( gpio13, function, uart0_rxd );
+  hwa( configure, gpio15, function, uart0_txd );
+  hwa( configure, gpio13, function, uart0_rxd );
 
-  hwa_config( uart0,
+  hwa( configure, uart0,
 	      baudrate,	  115200,
 	      databits,	  8,
 	      parity,	  none,
@@ -57,12 +57,12 @@ void IROM user_init()
 
   /*  Configure the timer1 to trigger a NMI interrupt every 10 ms
    */
-  hwa_config( timer1,
-  	      clock,     apb_div_16,
-  	      countmode, loop_down,
-  	      top,       0.5 + 0.01*hw_apbhz/16,
-  	      action,    irq
-  	      );
+  hwa( configure, timer1,
+	      clock,	 apb_div_16,
+	      countmode, loop_down,
+	      top,	 0.5 + 0.01*hw_apbhz/16,
+	      action,	 irq
+	      );
 
   hwa_commit();
 

@@ -67,9 +67,9 @@ LABEL(autosync_5_1):
 	;; Measure low level duration in R25:R24 in units of 5 CPU cycles
 	;;
 	cli					; [1]
-2:	adiw	R24, 1		; [2]   |
+2:	adiw	R24, 1		; [2]	|
 	XSBIS	R26, RXD_AP	; [1/2] |
-	rjmp	2b		; [2]   |=5
+	rjmp	2b		; [2]	|=5
 	sei
 	CY_SYNC1=CYCLES
 

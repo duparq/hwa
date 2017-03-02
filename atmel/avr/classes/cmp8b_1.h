@@ -15,11 +15,11 @@
  * A class `_cmp8b` object is an 8-bit compare unit with waveform generator that
  * drives two complementary outputs. It has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( COMPARE_NAME, counter )`
+ *  * one counter, whose name is given by `HW_REL( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_REL( COMPARE_NAME, pin_h )`
+ *  * one output pin, whose name is given by `HW_REL( compare0, pin_h )`
  *
- *  * one complementary output pin, whose name is given by `HW_REL( COMPARE_NAME, pin_l )`
+ *  * one complementary output pin, whose name is given by `HW_REL( compare0, pin_l )`
  *
  * It is used in:
  *
@@ -32,16 +32,16 @@
  * @page atmelavr_cmp8b
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS()` instruction retrieves the number of bits of the compare
+ * The `HW_BITS()` instruction returns the number of bits of the compare
  * register:
  *
  * @code
- * #if HW_BITS( COMPARE_NAME ) != 8
+ * #if HW_BITS( compare0 ) != 8
  * #  error A 8-bit compare unit is required!
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__cmp8b			, _hw_bn_cmp8b
+#define _hw_mthd_hw_bn__cmp8b		, _hw_bn_cmp8b
 #define _hw_bn_cmp8b(o,i,a,...)			8
 
 
@@ -53,7 +53,7 @@
  * a compare event occurs:
  *
  * @code
- * HW_ISR( COMPARE_NAME )
+ * HW_ISR( compare0 )
  * {
  *    // Process compare event
  * }
@@ -67,7 +67,7 @@ typedef struct {
 
   /*  Hardware registers
    */
-  hwa_r8_t 	reg ;
+  hwa_r8_t	reg ;
 
   /*  Registers used for high-level configuration
    */

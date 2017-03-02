@@ -27,7 +27,7 @@
  *
  * Class `_acmpa` objects can trigger the following IRQs:
  *
- *  * `OBJECT_NAME`: comparator output event
+ *  * `HW_IRQ(acmp0)`: comparator output event
  */
 
 /*	Class logical registers

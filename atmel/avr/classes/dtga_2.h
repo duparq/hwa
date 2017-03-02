@@ -17,31 +17,31 @@
  * the delay in prescaled clock units before the assertion of the output `X_y`:
  *
  * @code
- * hw_config( HW_REL( hw_counter0, dtg0 ),
+ * hw( configure, HW_REL( hw_counter0, dtg0 ),
  *
- *          [ clock_div,  1 | 2 | 4 | 8, ]      // default is `1`
+ *	    [ clock_div,  1 | 2 | 4 | 8, ]	// default is `1`
  *
- *          [ compare0_h, 0..15, ]              // default is `0`
+ *	    [ compare0_h, 0..15, ]		// default is `0`
  *
- *          [ compare0_l, 0..15, ]              // default is `0`
+ *	    [ compare0_l, 0..15, ]		// default is `0`
  *
- *          [ compare1_h, 0..15, ]              // default is `0`
+ *	    [ compare1_h, 0..15, ]		// default is `0`
  *
- *          [ compare1_l, 0..15  ]              // default is `0`
- *           );
+ *	    [ compare1_l, 0..15	 ]		// default is `0`
+ *	     );
  * @endcode
  */
 
-#define _hw_mthd_hwa_configure__dtga		, _hwa_cfdtga
+#define _hw_mthd_hwa_configure__dtga	, _hwa_cfdtga
 
 
 /*  Optionnal argument `clock_div`
  */
 #define _hw_dtga_kclockdiv_clock_div
-#define _hw_dtga_vclockdiv_1			, 0
-#define _hw_dtga_vclockdiv_2			, 1
-#define _hw_dtga_vclockdiv_4			, 2
-#define _hw_dtga_vclockdiv_8			, 3
+#define _hw_dtga_vclockdiv_1		, 0
+#define _hw_dtga_vclockdiv_2		, 1
+#define _hw_dtga_vclockdiv_4		, 2
+#define _hw_dtga_vclockdiv_8		, 3
 
 #define _hwa_cfdtga(o,i,a, ...)						\
   do {									\
@@ -125,9 +125,9 @@
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__dtga(o,i,a)			\
@@ -164,7 +164,7 @@
  *  * `compare1_h` : delay for output pin of compare unit 1
  *  * `compare1_l` : delay for complementary output pin of compare unit 1
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

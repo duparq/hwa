@@ -16,6 +16,6 @@ Atmel AVR8 devices {#atmelavr8_devices}
   * @subpage atmegaxu4
     - include `hwa/atmega32u4_mu.h`
 
-@note see [that
+__Note__ See [that
 thread](http://www.avrfreaks.net/forum/avr-errata-unpublished-and-other-gotchas)
 on [AVR Freaks](http://www.avrfreaks.net) for issues related to these devices.

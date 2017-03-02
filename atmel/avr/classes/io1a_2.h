@@ -22,17 +22,17 @@
  * @subsection atmelavr_io1a_cf1 Synchronous
  *
  * @code
- * hw_config( IO_NAME,
+ * hw( configure, pin_pa0,
  *
- *          [ mode,        analog,
- *                       | digital, ]
+ *	    [ mode,	   analog,
+ *			 | digital, ]
  *
- *          [ direction,   input,
- *                       | output, ]
+ *	    [ direction,   input,
+ *			 | output, ]
  *
- *          [ pullup,      on,
- *                       | off ]
- *            );
+ *	    [ pullup,	   on,
+ *			 | off ]
+ *	      );
  * @endcode
  */
 #define _hw_mthd_hw_configure__io1a	, _hw_cfio1a
@@ -119,17 +119,17 @@
  * @subsection atmelavr_io1a_cf2 Asynchronous
  *
  * @code
- * hwa_config( IO_NAME,
+ * hwa( configure, pin_pa0,
  *
- *           [ mode,        analog,
- *                        | digital, ]
+ *	     [ mode,	    analog,
+ *			  | digital, ]
  *
- *           [ direction,   input,
- *                        | output, ]
+ *	     [ direction,   input,
+ *			  | output, ]
  *
- *           [ pullup,      on,
- *                        | off ]
- *             );
+ *	     [ pullup,	    on,
+ *			  | off ]
+ *	       );
  * @endcode
  */
 #define _hwa_cfio1a( o,i, p,bn,bp, ...)					\
@@ -194,7 +194,7 @@
  * Class `_io1a` I/O objects can be read and written with the following instructions:
  *
  * @code
- * uint8_t value = hw_read( IO_NAME );
+ * uint8_t value = hw( read, pin_pa0 );
  * @endcode
  */
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
@@ -205,7 +205,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw_write( IO_NAME, value );
+ * hw_write( pin_pa0, value );
  * @endcode
  */
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
@@ -215,7 +215,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hwa_write( IO_NAME, value );
+ * hwa_write( pin_pa0, value );
  * @endcode
  */
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
@@ -225,7 +225,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw_toggle( IO_NAME );	//  Toggle one or several consecutive pins at once
+ * hw_toggle( pin_pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
 #define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_REG(p,pin),__VA_ARGS__)
@@ -240,7 +240,7 @@
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
  * //
- * hwa_toggle( IO_NAME );
+ * hwa_toggle( pin_pa0 );
  * @endcode
  */
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_REG(p,pin),__VA_ARGS__)
@@ -258,12 +258,12 @@
  *
  * A class `_io1a` I/O definition named `mypins` is created with:
  *
- *     #define _hw_pin_mypins		 _io1a, id, port, bn, bp
+ *     #define _hw_pin_mypins		_io1a, id, port, bn, bp
  *
  * where:
  *
  * * `id` is a unique number identifying the object. If you're not going to use
- *        the `HW_ID()` instruction, any value (or even none) is OK.
+ *	  the `HW_ID()` instruction, any value (or even none) is OK.
  *
  * * `port` is the name of the object holding the pin, e.g.: `porta`.
  *

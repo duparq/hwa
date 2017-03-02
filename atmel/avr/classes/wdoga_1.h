@@ -25,7 +25,7 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r8_t 	csr ;
+  hwa_r8_t	csr ;
 
   struct {
     uint8_t	action, timeout ;

@@ -18,24 +18,24 @@
  * IRQ, the next timeout resets the device.
  *
  * @code
- * hwa_config( watchdog0,
+ * hwa( configure, watchdog0,
  *
- *           [ timeout,   16ms
- *                      | 32ms
- *                      | 64ms
- *                      | 125ms
- *                      | 250ms
- *                      | 500ms
- *                      | 1s
- *                      | 2s
- *                      | 4s
- *                      | 8s,   ]
+ *	     [ timeout,	  16ms
+ *			| 32ms
+ *			| 64ms
+ *			| 125ms
+ *			| 250ms
+ *			| 500ms
+ *			| 1s
+ *			| 2s
+ *			| 4s
+ *			| 8s,	]
  *
- *             action,    none
- *                      | irq
- *                      | reset
- *                      | irq_or_reset,
- *            );
+ *	       action,	  none
+ *			| irq
+ *			| reset
+ *			| irq_or_reset,
+ *	      );
  * @endcode
  */
 #define _hw_mthd_hwa_configure__wdoga	, _hwa_cfwdoga
@@ -97,8 +97,8 @@
  * @section atmelavr_wdoga_turn Turning on/off
  *
  * @code
- * hw_turn( watchdog0,   on
- *                    | off );
+ * hw_turn( watchdog0,	 on
+ *		      | off );
  * @endcode
  */
 #define _hw_mthd_hw_turn__wdoga		, _hw_turn_wdoga
@@ -126,11 +126,11 @@
   do {									\
     uint8_t reg ;							\
     _hw_write_reg( core0, mcusr, 0 );				\
-    __asm__ __volatile__("  in   %[r], %[wdtcr]"	"\n\t"		\
-			 "  ori  %[r], %[wdce]|%[wde]"	"\n\t"		\
-			 "  out  %[wdtcr], %[r]"	"\n\t"		\
+    __asm__ __volatile__("  in	 %[r], %[wdtcr]"	"\n\t"		\
+			 "  ori	 %[r], %[wdce]|%[wde]"	"\n\t"		\
+			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
 			 "  andi %[r], %[wdp]"		"\n\t"		\
-			 "  out  %[wdtcr], %[r]"	"\n\t"		\
+			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
 			 : [r] "=&d" (reg)				\
 			 : [wdtcr] "I" (_hw_addr(_HW_REG(o, csr))-0x20), \
 			   [wdce] "I" (1<<_hw_bp(_HW_REG(o, wdce))),	\
@@ -143,8 +143,8 @@
  * @page atmelavr_wdoga
  *
  * @code
- * hwa_turn( watchdog0,   on
- *                     | off );
+ * hwa_turn( watchdog0,	  on
+ *		       | off );
  * @endcode
  */
 #define _hw_mthd_hwa_turn__wdoga	, _hwa_turn_wdoga
@@ -177,7 +177,7 @@
  * hw_reset( watchdog0 );
  * @endcode
  */
-#define _hw_mthd_hw_reset__wdoga		, _hw_rstwdoga
+#define _hw_mthd_hw_reset__wdoga	, _hw_rstwdoga
 
 #define _hw_rstwdoga(o,i,a,...)			HW_TX(hw_asm("wdr"::),__VA_ARGS__)
 
@@ -189,9 +189,9 @@
  * The overflow flag can be accessed through the interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( watchdog0 ) ) {
- *   hw_clear_irqf( watchdog0 );
- *   hw_turn_irq( watchdog0, on );
+ * if ( hw( read, HW_IRQFLAG( watchdog0 ) ) ) {
+ *   hw( clear, HW_IRQFLAG( watchdog0 ) );
+ *   hw( turn, HW_IRQ( watchdog0, on ) );
  *   n_wdoverflows++ ;
  * }
  * @endcode
@@ -199,9 +199,9 @@
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__wdoga(o,i,a)		\
@@ -232,7 +232,7 @@
 	_hwa_write_reg( o, wdrf, 0 );					\
 	_hwa_commit_reg( o, wdrf );					\
 	_hwa_write_reg( o, wdce, 1 );					\
-	_hwa_write_reg( o, wde,  1 );					\
+	_hwa_write_reg( o, wde,	 1 );					\
 	_hwa_commit_reg( o, csr );					\
 	_hwa_write_reg( o, ie, 0 );					\
 	_hwa_write_reg( o, wdce, 0 );					\

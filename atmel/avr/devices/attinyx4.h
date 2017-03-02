@@ -13,18 +13,18 @@
 
 /**
  * @page attinyx4 ATtiny24/44/84
- * @section attinyx4_device Description
+ * @section attinyx4_device Defined symbols
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
  *
  * Symbol		    | Comments
  * :------------------------|:-----------
- * `HW_DEVICE_ATTINYX4`	    |Always defined (void)
- * `HW_DEVICE_ATTINY84`<br>`HW_DEVICE_ATTINY84_20PU`<br>...|Defined (void) depending on the HWA header included
+ * `HW_DEVICE_ATTINYX4`	    |Defined void.
+ * `HW_DEVICE_ATTINY84`<br>`HW_DEVICE_ATTINY84_20PU`<br>...|Defined void depending on the HWA header included.
  * `HW_DEVICE_PACKAGE_8P3`  |Defined (void) depending on the packaging of the device.
- * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x`
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x`
+ * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
+ * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x0022`.
  *
  * Symbol		       | ATtiny24     | ATtiny44     | ATtiny84	     
  * :---------------------------|:------------:|:------------:|:-------------:
@@ -382,15 +382,15 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * 
  * Name			  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
- * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "swuarta" | Software UART
+ * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
+ * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
  *
  * @subsection attinyx4_objrel Aliases and relations
  *
- * Some objects can be accessed from their @ref using_relatives "relatives" or
- * can have more than one name. There are the existing relations between the
- * device's objects and their different names:
+ * Some objects can be accessed from their relatives or can have more than one
+ * name. There are the existing relations between the device's objects and their
+ * different names:
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------
@@ -400,14 +400,14 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `prescaler0`	 | `counter1prescaler0` | `HW_RELATIVE(counter1, prescaler0)`
  * `compare00`	 | `counter0compare0`	| `HW_RELATIVE(counter0, compare0)`
  * `compare01`	 | `counter0compare1`	| `HW_RELATIVE(counter0, compare1)`
- * `counter0` | `compare00counter`	   | `HW_RELATIVE(compare00, counter)`
- * `counter0` | `compare01counter`	   | `HW_RELATIVE(compare01, counter)`
+ * `counter0`    | `compare00counter`	   | `HW_RELATIVE(compare00, counter)`
+ * `counter0`    | `compare01counter`	   | `HW_RELATIVE(compare01, counter)`
  * `pin_compare00` | `compare00pin`		   | `HW_RELATIVE(compare00, pin)`
  * `pin_compare01` | `compare01pin`		   | `HW_RELATIVE(compare01, pin)`
  * `compare10`	 | `counter1compare0`	| `HW_RELATIVE(counter1, compare0)`
  * `compare11`	 | `counter1compare1`	| `HW_RELATIVE(counter1, compare1)`
- * `counter1` | `compare10counter`	   | `HW_RELATIVE(compare10, counter)`
- * `counter1` | `compare11counter`	   | `HW_RELATIVE(compare11, counter)`
+ * `counter1`    | `compare10counter`	   | `HW_RELATIVE(compare10, counter)`
+ * `counter1`    | `compare11counter`	   | `HW_RELATIVE(compare11, counter)`
  * `pin_compare10` | `compare10pin`		   | `HW_RELATIVE(compare10, pin)`
  * `pin_compare11` | `compare11pin`		   | `HW_RELATIVE(compare11, pin)`
  */
@@ -1365,7 +1365,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
    *  has the address of the counter and does not know its name.
    */
   _hwa_solve( counter0 );
-  _hwa_solve( counter1 );
+  /* _hwa_solve( counter1 ); */
 
   _hwa_commit_reg( shared, gimsk );
   _hwa_commit_reg( shared, gifr	 );

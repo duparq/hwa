@@ -30,14 +30,14 @@
  * Class `_pcica` objects can trigger the following IRQs as soon as the state of
  * one of its monitored pins changes:
  *
- *  * `PCIC_NAME`: monitored pin change event
+ *  * `pcic0`: monitored pin change event
  */
 
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r8_t 	msk ;
+  hwa_r8_t	msk ;
 } hwa_pcica_t ;
 
 #endif

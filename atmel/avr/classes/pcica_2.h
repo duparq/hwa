@@ -19,22 +19,22 @@
  * object monitors:
  *
  * @code
- * hw_turn( PCIC_NAME, IO_NAME, on | off);
+ * hw_turn( pcic0, pin_pa0, on | off);
  * @endcode
  */
-#define _hw_mthd_hw_turn__pcica			, _hw_tnpcica
+#define _hw_mthd_hw_turn__pcica		, _hw_tnpcica
 #define _hw_tnpcica( o,i,a, ...)		_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
 
-#define _hw_is__io1a__io1a			, 1
+#define _hw_is__io1a__io1a		, 1
 
 
 /**
  * @page atmelavr_pcica
  * @code
- * hwa_turn( PCIC_NAME, IO_NAME, on | off);
+ * hwa_turn( pcic0, pin_pa0, on | off);
  * @endcode
  */
-#define _hw_mthd_hwa_turn__pcica		, _hwa_tnpcica
+#define _hw_mthd_hwa_turn__pcica	, _hwa_tnpcica
 #define _hwa_tnpcica( o,i,a, ...)		_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
 
 /*	Verify that a I/O name is given
@@ -60,9 +60,9 @@
  * interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( PCIC_NAME ) ) {        // Read pin change flag
- *   hw_clear_irqf( PCIC_NAME );             // Clear pin change flag
- *   hw_turn_irq( PCIC_NAME, off );          // Disable pin change IRQ
+ * if ( hw( read, HW_IRQFLAG( pcic0 ) ) ) {	     // Read pin change flag
+ *   hw( clear, HW_IRQFLAG( pcic0 ) );	     // Clear pin change flag
+ *   hw( turn, HW_IRQ( pcic0, off ) );	     // Disable pin change IRQ
  * }
  * @endcode
  */
@@ -81,15 +81,15 @@
  *  * `ie`: pin change IRQ mask
  *  * `if`: pin change IRQ flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__pcica(o,i,a)	_hwa_setup_reg( o, msk )

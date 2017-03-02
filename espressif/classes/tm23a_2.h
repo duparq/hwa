@@ -14,41 +14,41 @@
  * @section espressif_tm23a_config Configuration
  *
  * @code
- * hwa_config( TIMER_NAME,
+ * hwa( configure, timer0,
  *
- *             //  Clock source
- *             //
- *           [ clock,       apb                    // APB clock
- *                        | apb_div(  1            // APB clock
- *                                  | 2            // APB clock divided by 2
- *                                  | 4            // APB clock divided by 4
- *                                  | ...
- *                                  | 256 ), ]     // APB clock divided by 256
+ *	       //  Clock source
+ *	       //
+ *	     [ clock,	    apb			   // APB clock
+ *			  | apb_div(  1		   // APB clock
+ *				    | 2		   // APB clock divided by 2
+ *				    | 4		   // APB clock divided by 4
+ *				    | ...
+ *				    | 256 ), ]	   // APB clock divided by 256
  *
- *             //  Counting mode
- *             //
- *           [ countmode,   stop                   // Stop
- *                        | down                   // Count down to 0 and stop
- *                        | loop_down, ]           // Count down to 0 and reload
+ *	       //  Counting mode
+ *	       //
+ *	     [ countmode,   stop		   // Stop
+ *			  | down		   // Count down to 0 and stop
+ *			  | loop_down, ]	   // Count down to 0 and reload
  *
- *             //  Class _tm23a timers all count from top down to 0
- *             //
- *           [ bottom,      0, ]
+ *	       //  Class _tm23a timers all count from top down to 0
+ *	       //
+ *	     [ bottom,	    0, ]
  *
- *             //  The value the counter loads after 0 is reached
- *             //
- *           [ top,         VALUE, ]               // VALUE: 0 .. 0x7FFFFF
+ *	       //  The value the counter loads after 0 is reached
+ *	       //
+ *	     [ top,	    VALUE, ]		   // VALUE: 0 .. 0x7FFFFF
  *
- *             //  Action triggered after 0 is reached
- *             //
- *           [ action,      none
- *                        | irq
- *                        | nmi  ]
- *           );
+ *	       //  Action triggered after 0 is reached
+ *	       //
+ *	     [ action,	    none
+ *			  | irq
+ *			  | nmi	 ]
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hw_config__tm23a		, _hw_cftm23a
-#define _hw_mthd_hwa_config__tm23a		, _hwa_cftm23a
+#define _hw_mthd_hw_config__tm23a	, _hw_cftm23a
+#define _hw_mthd_hwa_config__tm23a	, _hwa_cftm23a
 
 #define _hw_cftm23a(o,i,a,...)						\
   do{									\
@@ -68,7 +68,7 @@
   HW_GX(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) \
 
 
-/* 	Optionnal parameter `clock`
+/*	Optionnal parameter `clock`
  */
 #define _hwa_cftm23a_kclock_1(o,k,v,...)				\
   HW_GX(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
@@ -82,11 +82,11 @@
 #define _hwa_cftm23a_kclock_0(o,k,...)					\
   HW_GX(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_clock_clock			, 1
-#define _hw_tm23a_clock_apb			, 0
-#define _hw_tm23a_clock_apb_div_1		, 0
-#define _hw_tm23a_clock_apb_div_16		, 1
-#define _hw_tm23a_clock_apb_div_256		, 2
+#define _hw_is_clock_clock		, 1
+#define _hw_tm23a_clock_apb		, 0
+#define _hw_tm23a_clock_apb_div_1	, 0
+#define _hw_tm23a_clock_apb_div_16	, 1
+#define _hw_tm23a_clock_apb_div_256	, 2
 #define _hw_tm23a_clock_apb_div(x)		HW_G2(_hw_tm23a_clock_apb_div,x)
 
 /*	Optionnal parameter `countmode`
@@ -104,10 +104,10 @@
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
   HW_GX(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_countmode_countmode		, 1
-#define _hw_tm23a_countmode_stop		, 0, 0	/* en, arl */
-#define _hw_tm23a_countmode_down		, 1, 0
-#define _hw_tm23a_countmode_loop_down		, 1, 1
+#define _hw_is_countmode_countmode	, 1
+#define _hw_tm23a_countmode_stop	, 0, 0	/* en, arl */
+#define _hw_tm23a_countmode_down	, 1, 0
+#define _hw_tm23a_countmode_loop_down	, 1, 1
 
 /*	Optionnal parameter `bottom`
  */
@@ -122,7 +122,7 @@
 #define _hwa_cftm23a_kbottom_0(o,k,...)				\
     HW_GX(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_bottom_bottom			, 1
+#define _hw_is_bottom_bottom		, 1
 
 /*	Optionnal parameter `top`
  */
@@ -192,10 +192,10 @@
  * @page espressif_tm23a
  * @section espressif_tm23a_data Count
  *
- * The `hw_read()` instruction returns the content of the counting register:
+ * The `read` instruction returns the content of the counting register:
  *
  * @code
- * uint32_t count = hw_read( TIMER_NAME );
+ * uint32_t count = hw( read, timer0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__tm23a		, _hw_rdtm23a
@@ -208,7 +208,7 @@
  * The `hw_write()` instruction sets the content of the counting register:
  *
  * @code
- * hw_write( TIMER_NAME, VALUE );
+ * hw_write( timer0, VALUE );
  * @endcode
  */
 #define _hw_mthd_hw_write__tm23a	, _hw_wrtm23a
@@ -236,17 +236,17 @@
     _hwa_commit_reg( o, _ctrl );					\
 
     /* if ( hwa->o.config.action != 0xFF					\ */
-    /* 	 && hwa->o.config.action != HW_A1(_hw_tm23a_action_none ) ) {	\ */
-    /*   _hwa_write_reg(o,ie,1);						\ */
-    /*   /\* _hwa_commit_reg( shared, _edgeie ); *\/				\ */
+    /*	 && hwa->o.config.action != HW_A1(_hw_tm23a_action_none ) ) {	\ */
+    /*	 _hwa_write_reg(o,ie,1);						\ */
+    /*	 /\* _hwa_commit_reg( shared, _edgeie ); *\/				\ */
     /* }									\ */
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_irq) )		\ */
-    /*   ets_isr_unmask(1<<HW_A1(_hw_irq_##o##_irq))			\ */
+    /*	 ets_isr_unmask(1<<HW_A1(_hw_irq_##o##_irq))			\ */
 
 
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_none) ) {	\ */
-    /*   _hwa_write_reg(o,ie,0);						\ */
-    /*   _hwa_commit_reg( shared, _edgeie );				\ */
+    /*	 _hwa_write_reg(o,ie,0);						\ */
+    /*	 _hwa_commit_reg( shared, _edgeie );				\ */
     /* }									\ */
 
 

@@ -14,23 +14,22 @@
  * @page atmelavr_acmpb
  * @section atmelavr_acmpb_config Configuration
  *
- * __Note__: when the analog comparator shares the analog multiplexer output
+ * __Note__ When the analog comparator shares the analog multiplexer output
  * with the ADC, the ADC must be turned off for the analog comparator to be able
  * to use the analog multiplexer output.
  *
  * @code
- * hwa_config( acmp0,
+ * hwa( configure, acmp0,
  * 
- *           [ edge,             falling
- *                             | rising
- *                             | both, ]
+ *    [ edge,		 falling
+ *    		       | rising
+ *    		       | both, ]
  *
- *           [ positive_input,   HW_PIN(ain0)
- *                             | bandgap,    ]
+ *    [ positive_input,	 HW_PIN(ain0)
+ *    		       | bandgap,    ]
  *
- *           [ negative_input,   HW_PIN(ain1)
- *                             | HW_PIN(adc0..3) ]
- *           );
+ *    [ negative_input,	 HW_PIN(ain1)
+ *    		       | HW_PIN(adc0..3) ] );
  * @endcode
  */
 /*
@@ -40,14 +39,14 @@
  *  seems acceptable to make the configuration instructions of the ADC or the
  *  ACMP drive the analog multiplexer transparently.
  */
-#define _hw_mthd_hwa_configure__acmpb		, _hwa_cfacmpb
+#define _hw_mthd_hwa_configure__acmpb	, _hwa_cfacmpb
 
 /*  Optionnal parameter `edge`
  */
-#define _hw_is_edge_edge			, 1
-#define _hw_acmpb_edge_falling			, 2	/* ACIS */
-#define _hw_acmpb_edge_rising			, 3
-#define _hw_acmpb_edge_both			, 0
+#define _hw_is_edge_edge		, 1
+#define _hw_acmpb_edge_falling		, 2	/* ACIS */
+#define _hw_acmpb_edge_rising		, 3
+#define _hw_acmpb_edge_both		, 0
 
 #define _hwa_cfacmpb(o,i,a,...)						\
   do {									\
@@ -71,7 +70,7 @@
  */
 #define _hw_is_positive_input_positive_input	, 1
 #define _hw_acmpb_posin_HW_PIN(ain0)		, 0	/* ACBG */
-#define _hw_acmpb_posin_bandgap			, 1	/* ACBG */
+#define _hw_acmpb_posin_bandgap		, 1	/* ACBG */
 
 #define _hwa_cfacmpb_xposin_1(o,k,v,...)				\
   HW_GX(_hwa_cfacmpb_vposin,_hw_acmpb_posin_##v)(o,v,__VA_ARGS__)
@@ -112,34 +111,15 @@
   }									\
     HW_EOL(__VA_ARGS__)
 
-#if 0
-/**
- * @page atmelavr_acmpb
- * @section atmelavr_acmpb_pm Power management
- * @code
- * hw_turn( acmp0, on | off );
- * @endcode
- */
-#define _hw_mthd_hw_turn__acmpb			, _hw_turnacmpb
 
-#define _hw_turnacmpb(o,i,a,...)		\
-  HW_GX(_hw_turnacmpb_vstate,__hw_state_##__VA_ARGS__)
-
-#define _hw_turnacmpb_vstate_1(o,i,a,v,...)	\
-  HW_TX( _hw_write_reg(o,acd,(HW_A1(__hw_state_##v)==0)), __VA_ARGS__ )
-
-#define _hw_turnacmpb_vstate_0(o,i,a,v,...)	\
-  HW_E_ST(v)
-#endif
-
-#define _hw_mthd_hw_power__acmpb			, _hw_power
-#define _hw_mthd_hwa_power__acmpb			, _hwa_power
+#define _hw_mthd_hw_power__acmpb	, _hw_power
+#define _hw_mthd_hwa_power__acmpb	, _hwa_power
 
 
 /*******************************************************************************
- *                                                                             *
- *      Context management						       *
- *                                                                             *
+ *									       *
+ *	Context management						       *
+ *									       *
  *******************************************************************************/
 
 #define _hwa_setup__acmpb(o,i,a)	_hwa_setup_reg( o, csr )
@@ -167,7 +147,7 @@
  *  * `acic` : analog comparator input capture enable
  *  * `acis` : analog comparator interrupt mode select
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

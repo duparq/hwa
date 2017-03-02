@@ -12,55 +12,79 @@
  */
 
 /**
- * @ingroup public_irq_instructions
- * @brief Definition of an IRQ.
+ * @ingroup public_ins_obj
+ * @brief Returns the definition the @ref using_objects "object"'s IRQ "...".
  *
- * `HW_IRQ( object [, irq_name] )`
+ * The first argument must be an object name and it may be followed by an
+ * interrupt name.
+ *
+ * For example, for many counters, `HW_IRQ(counter0)` and
+ * `HW_IRQ(counter0,overflow)` are equivalent.
+ *
+ * @code
+ * hw( turn, HW_IRQ(counter0,overflow), on );   // Enables overflow IRQ for counter0
+ * @endcode
  *
  * @hideinitializer
  */
-#define _hw_class__irq
-#define _hw_is__irq__irq	, 1
-
-#define HW_IRQ(...)		_HW_IRQ2(__VA_ARGS__,,)
+#if defined DOXYGEN
+#  define HW_IRQ(object, ...)
+#else
+#  define HW_IRQ(...)		_HW_IRQ2(__VA_ARGS__,,)
+#endif
 #define _HW_IRQ2(o,x,...)	HW_G2(_HW_IRQ3,HW_IS(_irq,_hw_irq_##o##_##x))(o,x,__VA_ARGS__)
 #define _HW_IRQ3_1(o,x,...)	_hw_irq_##o##_##x
 #define _HW_IRQ3_0(o,...)	HW_G2(_HW_IRQ5,HW_ISON(o))(o,__VA_ARGS__)
 #define _HW_IRQ5_0(o,...)	HW_E_O(o)
 #define _HW_IRQ5_1(o,x,...)	HW_E(`o` has no IRQ named `x`.)
 
+#define _hw_class__irq
+#define _hw_is__irq__irq		, 1
+
 
 /**
- * @brief Definition of the enable bit of an IRQ
- *
- * Syntax 1: `hw_irqe( object [, irq_name] )`
- *
- * Syntax 2: `hw_irqe( irq(object [, irq_name]) )`
+ * @ingroup public_ins_obj
+ * @brief Returns the definition of the mask bit of @ref using_objects "object"'s IRQ "...".
  * @hideinitializer
  */
-#define HW_IRQMASK(...)		_HW_IRQM2(HW_IRQ(__VA_ARGS__))
+#if defined DOXYGEN
+#  define HW_IRQMASK(object, ...)
+#else
+#  define HW_IRQMASK(...)	_HW_IRQM2(HW_IRQ(__VA_ARGS__))
+#endif
 #define _HW_IRQM2(...)		HW_G2(_HW_IRQM,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_IRQM_0(...)		__VA_ARGS__
 #define _HW_IRQM_1(t,o,v,e,f)	_HW_REG(o,e)
 
 
 /**
- * @brief Definition of the flag bit of an IRQ
- *
- * Syntax 1: `hw_irqf( object [, irq_name] )`
- *
- * Syntax 2: `hw_irqf( irq(object [, irq_name]) )`
+ * @ingroup public_ins_obj
+ * @brief Returns the definition of the flag bit of @ref using_objects "object"'s IRQ "...".
  * @hideinitializer
+ *
+ * @code
+ * hw( read, HW_IRQFLAG(counter0,overflow) );
+ * @endcode
+ *
+ * @code
+ * hw( clear, HW_IRQFLAG(counter0) );
+ * @endcode
+ *
  */
-#define HW_IRQFLAG(...)		_HW_IRQF2(HW_IRQ(__VA_ARGS__))
+#if defined DOXYGEN
+#  define HW_IRQFLAG(object, ...)
+#else
+#  define HW_IRQFLAG(...)	_HW_IRQF2(HW_IRQ(__VA_ARGS__))
+#endif
 #define _HW_IRQF2(...)		HW_G2(_HW_IRQF,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _HW_IRQF_1(c,o,v,e,f)	_HW_REG(o,f)
 #define _HW_IRQF_0(...)		__VA_ARGS__
 
 
 /**
- * @ingroup public_irq_instructions
- * @brief Declaration of an ISR
+ * @ingroup public_ins_obj
+ * @brief Declares the ISR for @ref using_objects "object"'s IRQ "...".
+ * @hideinitializer
  *
  * The `HW_ISR(...)` instruction accepts 2 optionnal arguments after the
  * designation of the IRQ:
@@ -80,7 +104,6 @@
  *    [ hw_reti(); ]
  * }
  * @endcode
- * @hideinitializer
  */
 
 /*  The IRQ object/reason arguments may be followed by other arguments. So, we
@@ -88,7 +111,11 @@
  */
 /*  Is x '_irq' ?
  */
-#define HW_ISR(...)		HW_G2(_HW_ISR1,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__,,)
+#if defined DOXYGEN
+#  define HW_ISR(object, ...)
+#else
+#  define HW_ISR(...)		HW_G2(_HW_ISR1,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__,,)
+#endif
 #define _HW_ISR1_1(...)		_HW_ISR2(__VA_ARGS__)
 
 /*  Is _hw_irq_##o##_##x an irq?
@@ -123,23 +150,13 @@
 #define _HW_ISR8_0(v,a1,a2,x,...)	HW_E_T(x) void hw_isr_error_##x()
 
 
-/*  Definition of an interrupt. Extra arguments are allowed and returned unchanged.
- *  Only used by HW_ISR().
- *
- *    HW_IRQX(counter0)
- *    HW_IRQX(hw_counter0,compare)
- *    HW_IRQX(hw_counter0,compare,isr_naked,...)
- */
-//#define HW_ISR1_(...)		_HW_ISR1_1(__VA_ARGS__,,)
-
-
 #if !defined __ASSEMBLER__
 
 #define _hw_mthd_hw_turn__irq		, _hw_turn_irq
 
 /**
- * @ingroup private
- * @brief  Turn an IRQ on/off
+ * @ingroup private_ins
+ * @brief  Turns an IRQ on/off.
  * @hideinitializer
  */
 #define _hw_turn_irq(o,v,e,f, ...)					\
@@ -152,8 +169,8 @@
 #define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
 
 /**
- * @ingroup private
- * @brief  Turn an IRQ on/off
+ * @ingroup private_ins
+ * @brief  Turns an IRQ on/off.
  * @hideinitializer
  */
 #define _hwa_turn_irq(o,v,e,f, ...)					\
@@ -164,8 +181,8 @@
 
 
 /**
- * @ingroup private
- * @brief  Clear an IRQ flag
+ * @ingroup private_ins
+ * @brief  Clears an IRQ flag.
  * @hideinitializer
  */
 #define _hw_mthd_hw_clear__irq		, _hw_clear_irq
@@ -174,8 +191,8 @@
 
 
 /**
- * @ingroup private
- * @brief  Clear irq flag
+ * @ingroup private_ins
+ * @brief  Clears an irq flag.
  * @hideinitializer
  */
 #define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq

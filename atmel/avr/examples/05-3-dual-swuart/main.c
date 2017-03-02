@@ -30,7 +30,7 @@
  *
  * @par Test applicapion
  *
- *      ./main.py -b BAUDRATE
+ *	./main.py -b BAUDRATE
  *
  * @par config.h
  * @include 05-3-dual-swuart/config.h
@@ -67,7 +67,7 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,     core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Write this configuration into the hardware
@@ -83,8 +83,8 @@ main ( )
    */
   for(;;) {
     /*
-     *  Wait that one UART resynchronizes and configure the other with the same
-     *  baudrate
+     *	Wait that one UART resynchronizes and configure the other with the same
+     *	baudrate
      */
     hw( write, PIN_LED, 1 );
 
@@ -92,51 +92,51 @@ main ( )
     hw( reset, swuart1 );
     for(;;) {
       hw_sleep();
-      if ( hw( stat, swuart0 ).sync ) {
-        hw( write, swuart0, '$');     /* signal the synchronization */
-        hw( write, HW_REGISTER(swuart1, dt0), hw( read, HW_REGISTER(swuart0, dt0) ) );
-        hw( write, HW_REGISTER(swuart1, dtn), hw( read, HW_REGISTER(swuart0, dtn) ) );
-        hw( write, HW_REGISTER(swuart1, synced), 1 );
-        hw( write, swuart1, '$');     /* signal the synchronization */
-        break ;
+      if ( hw(stat,swuart0).sync ) {
+	hw( write, swuart0, '$');     /* signal the synchronization */
+	hw( write, HW_REGISTER(swuart1, dt0), hw( read, HW_REGISTER(swuart0, dt0) ) );
+	hw( write, HW_REGISTER(swuart1, dtn), hw( read, HW_REGISTER(swuart0, dtn) ) );
+	hw( write, HW_REGISTER(swuart1, synced), 1 );
+	hw( write, swuart1, '$');     /* signal the synchronization */
+	break ;
       }
-      if ( hw( stat, swuart1 ).sync ) {
-        hw( write, swuart1, '$');     /* signal the synchronization */
-        hw( write, HW_REGISTER(swuart0, dt0), hw( read, HW_REGISTER(swuart1, dt0) ) );
-        hw( write, HW_REGISTER(swuart0, dtn), hw( read, HW_REGISTER(swuart1, dtn) ) );
-        hw( write, HW_REGISTER(swuart0, synced), 1 );
-        hw( write, swuart0, '$');     /* signal the synchronization */
-        break ;
+      if ( hw(stat,swuart1).sync ) {
+	hw( write, swuart1, '$');     /* signal the synchronization */
+	hw( write, HW_REGISTER(swuart0, dt0), hw( read, HW_REGISTER(swuart1, dt0) ) );
+	hw( write, HW_REGISTER(swuart0, dtn), hw( read, HW_REGISTER(swuart1, dtn) ) );
+	hw( write, HW_REGISTER(swuart0, synced), 1 );
+	hw( write, swuart0, '$');     /* signal the synchronization */
+	break ;
       }
     }
     hw( write, PIN_LED, 0 );
 
     /*
-     *  Send on one UART what has been received from the other
+     *	Send on one UART what has been received from the other
      */
     for(;;) {
       hw_sleep();
-      if ( hw( stat, swuart0 ).rxc ) {
-        /*
-         *  UART0 -> UART0 + UART1
-         */
-        if ( hw( stat, swuart0 ).stop == 0 )
-          break ;       /* null stop bit -> resynchronize */
+      if ( hw(stat,swuart0).rxc ) {
+	/*
+	 *  UART0 -> UART0 + UART1
+	 */
+	if ( hw(stat,swuart0).stop == 0 )
+	  break ;	/* null stop bit -> resynchronize */
 
-        uint8_t byte = hw( read, swuart0 );
-        hw( write, swuart0, byte );
-        hw( write, swuart1, byte );
+	uint8_t byte = hw( read, swuart0 );
+	hw( write, swuart0, byte );
+	hw( write, swuart1, byte );
       }
-      if ( hw( stat, swuart1 ).rxc ) {
-        /*
-         *  UART1 -> UART1 + UART0
-         */
-        if ( hw( stat, swuart1 ).stop == 0 )
-          break ;       /* null stop bit -> resynchronize */
+      if ( hw(stat,swuart1).rxc ) {
+	/*
+	 *  UART1 -> UART1 + UART0
+	 */
+	if ( hw(stat,swuart1).stop == 0 )
+	  break ;	/* null stop bit -> resynchronize */
 
-        uint8_t byte = hw( read, swuart1 );
-        hw( write, swuart1, byte );
-        hw( write, swuart0, byte );
+	uint8_t byte = hw( read, swuart1 );
+	hw( write, swuart1, byte );
+	hw( write, swuart0, byte );
       }
     }
   }

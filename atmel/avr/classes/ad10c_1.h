@@ -27,7 +27,7 @@
  *   takes 13 clock cycles, 13.5 in the auto-trigger mode, and 25 for the
  *   initial conversion.
  *
- * @note The ADC and the analog comparator share the output of the analog
+ * __Note__ The ADC and the analog comparator share the output of the analog
  * multiplexer. When the ADC is enabled, the analog comparator can not use the
  * analog multiplexer output. Thus, HWA implements these peripherals as if each
  * has his own analog multiplexer.
@@ -43,10 +43,10 @@
  * @page atmelavr_ad10c
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS(...)` instruction retrieves the number of bits of the ADC:
+ * The `HW_BITS(...)` instruction returns the number of bits of the ADC:
  *
  * @code
- * #if HW_BITS( hw_adc0 ) < 10
+ * #if HW_BITS( adc0 ) < 10
  * #  error At least 10-bit ADC is required!
  * #endif
  * @endcode
@@ -61,7 +61,7 @@
  *
  * Class `_ad10c` objects can trigger the following IRQs:
  *
- *  * `ADC_NAME`: conversion completed
+ *  * `adc0`: conversion completed
  */
 
 

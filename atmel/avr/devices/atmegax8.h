@@ -13,7 +13,7 @@
 
 /**
  * @page atmegax8 ATmega48A/PA/88A/PA/168A/PA/328/P
- * @section atmegax8_device Description
+ * @section atmegax8_device Defined symbols
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
@@ -21,11 +21,11 @@
  * Symbol		    | Comments
  * :------------------------|:-----------
  * `HW_DEVICE`		    |The device name passed to the compiler
- * `HW_DEVICE_ATMEGAX8`	    |Always defined (void)
- * `HW_DEVICE_ATMEGA48`<br>...<br>`HW_DEVICE_ATMEGA328P_AU` | Defined (void) depending on the HWA header included
- * `HW_DEVICE_PACKAGE_32Q`  |Defined (void) depending on the packaging of the device.
- * `HW_DEVICE_RAM_START`    |Address of first RAM byte (after registers and I/O regs)
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table)
+ * `HW_DEVICE_ATMEGAX8`	    |Defined void.
+ * `HW_DEVICE_ATMEGA48`<br>...<br>`HW_DEVICE_ATMEGA328P_AU` | Defined void depending on the HWA header included.
+ * `HW_DEVICE_PACKAGE_32Q`  |Defined void depending on the packaging of the device.
+ * `HW_DEVICE_RAM_START`    |Address of first RAM byte (after registers and I/O regs): `0x0100`.
+ * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table). See below.
  *
  * Symbol		       | ATmega48(P)A | ATmega88(P)A | ATmega168(P)A | ATmega328(P)
  * :---------------------------|:------------:|:------------:|:-------------:|:------------:
@@ -36,7 +36,6 @@
  * `HW_DEVICE_EEPROM_SIZE`     |256	      |512	     |512	     |1024
  * `HW_DEVICE_EEPROM_PAGE_SIZE`|4	      |4	     |4		     |4
  * `HW_DEVICE_RAM_SIZE`	       |512	      |1024	     |1024	     |2048
- * `HW_DEVICE_RAM_START`       |0x0100	      |0x0100	     |0x0100	     |0x0100
  * `HW_DEVICE_APP_START`       |0x0034	      |0x0034	     |0x0068	     |0x0068
  */
 #define HW_DEVICE_ATMEGAX8
@@ -75,12 +74,12 @@
  * `HW_DEVICE_CLK_SRC_HZ`| Positive integer |Clock frequency for `external` and `xosc` clock source
  * `HW_DEVICE_CLK_PSC`	 | <b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
  */
-#define _hw_is_external_external	, 1
-#define _hw_is_rc_8MHz_rc_8MHz				, 1
-#define _hw_is_rc_128kHz_rc_128kHz			, 1
-#define _hw_is_low_freq_xosc_low_freq_xosc, 1
-#define _hw_is_low_power_xosc_low_power_xosc, 1
-#define _hw_is_full_swing_xosc_full_swing_xosc, 1
+#define _hw_is_external_external		, 1
+#define _hw_is_rc_8MHz_rc_8MHz			, 1
+#define _hw_is_rc_128kHz_rc_128kHz		, 1
+#define _hw_is_low_freq_xosc_low_freq_xosc	, 1
+#define _hw_is_low_power_xosc_low_power_xosc	, 1
+#define _hw_is_full_swing_xosc_full_swing_xosc	, 1
 
 /*  Define default HW_DEVICE_CLK_SRC_HZ as void so that hw_syshz_base can be checked
  */
@@ -366,7 +365,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 /**
  * @section atmegax8_object Peripherals
  *
- * @note All the peripherals are not completely implemented yet.
+ * __Note__ All the peripherals are not completely implemented yet.
  *
  * Object name		  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
@@ -394,10 +393,10 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `spi0`	 | @ref atmelavr_spia "_spia"	| Serial Peripheral Interface
  * `uart0`	 | @ref atmelavr_uarta "_uarta" | Universal Asynchronous Receiver Transmitter
  * `twi0`	 | @ref atmelavr_twia "_twia"	| 2-wire Serial Interface
- * `acmp0`	 | @ref atmelavr_acmpa "acmpa"	| Analog Comparator
- * `adc0`	 | @ref atmelavr_ad10b "ad10b"	| 10-bit Analog to Digital Converter
- * `eeprom0`	 | @ref atmelavr_eeproma "eeproma" | Eeprom memory
- * `flash0`	 | @ref atmelavr_flasha "flasha"   | Flash memory
+ * `acmp0`	 | @ref atmelavr_acmpa "_acmpa"	| Analog Comparator
+ * `adc0`	 | @ref atmelavr_ad10b "_ad10b"	| 10-bit Analog to Digital Converter
+ * `eeprom0`	 | @ref atmelavr_eeproma "_eeproma" | Eeprom memory
+ * `flash0`	 | @ref atmelavr_flasha "_flasha"   | Flash memory
  *
  * @subsection atmegax8_swobj Software-emulated peripherals
  * 
@@ -405,15 +404,15 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * 
  * Name			  | Class		  | Comments
  * :----------------------|-----------------------|:--------------------------------------
- * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "swuarta" | Software UART
+ * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
+ * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
  *
  * @subsection atmegax8_objrel Aliases and relations
  *
- * Some objects can be accessed from their @ref using_relatives "relatives" or
- * can have more than one name. There are the existing relations between the
- * device's objects and their different names:
+ * Some objects can be accessed from their relatives or can have more than one
+ * name. There are the existing relations between the device's objects and their
+ * different names:
  *
  * Name		 | Aliases		 | Relations
  * :-------------|-----------------------|:--------------------------------------
@@ -537,8 +536,8 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * @page atmegax8
  * @section atmegax8_pm Power Management
  *
- * The following peripherals can be powered on/off using the `hw_power()` or the
- * `hwa_power()` instruction:
+ * The following peripherals can be powered on/off using the `power`
+ * instruction:
  *
  *  * `twi0`
  *  * `counter0`
@@ -547,6 +546,10 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  *  * `spi0`
  *  * `uart0`
  *  * `adc0`
+ *
+ * @code
+ * hw( power, counter0, on );
+ * @endcode
  */
 
 
@@ -1191,7 +1194,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 capture unit hw_capture10					       *
+ *	Counter 1 capture unit capture10					       *
  *									       *
  *******************************************************************************/
 
@@ -1448,7 +1451,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	hw_acmp0: analog comparator					       *
+ *	acmp0: analog comparator					       *
  *									       *
  *******************************************************************************/
 
@@ -1497,7 +1500,7 @@ typedef struct {
 
 /*	Object hardware registers	class, address, write mask, flags mask
  *
- *	These are necessary for hw_acmp0, and analog input pin configuration
+ *	These are necessary for acmp0, and analog input pin configuration
  *	that needs access to the did register of the ADC object.
  */					
 #define _hw_reg_adc0_admux		_r8,  0x7C,   0xEF,   0x00

@@ -18,45 +18,45 @@
  * pin and does not perform any verificapion against the counter configuration:
  *
  * @code
- * hw_config( COMPARE_NAME,
+ * hw( configure, compare0,
  *
- *             //  Behavior of the ouput pin
- *             //
- *            output,   disconnected
- *                 | toggle_on_match
- *                 | clear_on_match
- *                 | set_on_match
- *                 | set_at_bottom_clear_on_match
- *                 | clear_at_bottom_set_on_match
- *                 | clear_on_match_up_set_on_match_down
- *                 | set_on_match_up_clear_on_match_down
- *           );
+ *	       //  Behavior of the ouput pin
+ *	       //
+ *	      output,	disconnected
+ *		   | toggle_on_match
+ *		   | clear_on_match
+ *		   | set_on_match
+ *		   | set_at_bottom_clear_on_match
+ *		   | clear_at_bottom_set_on_match
+ *		   | clear_on_match_up_set_on_match_down
+ *		   | set_on_match_up_clear_on_match_down
+ *	     );
  * @endcode
  */
-#define _hw_is_update_update			, 1
-#define _hw_is_output_output			, 1
+#define _hw_is_update_update		, 1
+#define _hw_is_output_output		, 1
 
-#define _hw_cmp16a_update_immediately		, 0
-#define _hw_cmp16a_update_at_bottom			, 1
-#define _hw_cmp16a_update_at_top			, 2
+#define _hw_cmp16a_update_immediately	, 0
+#define _hw_cmp16a_update_at_bottom	, 1
+#define _hw_cmp16a_update_at_top	, 2
 
 /*							     , code, COM value
  */
-#define _hw_cmp16a_output_disconnected				, 0, 0	/* Non-PWM */
-#define _hw_cmp16a_output_toggle_on_match				, 1, 1	/* Non-PWM */
-#define _hw_cmp16a_output_clear_on_match				, 2, 2	/* Non-PWM */
-#define _hw_cmp16a_output_set_on_match				, 3, 3	/* Non-PWM */
+#define _hw_cmp16a_output_disconnected	, 0, 0	/* Non-PWM */
+#define _hw_cmp16a_output_toggle_on_match	, 1, 1	/* Non-PWM */
+#define _hw_cmp16a_output_clear_on_match	, 2, 2	/* Non-PWM */
+#define _hw_cmp16a_output_set_on_match	, 3, 3	/* Non-PWM */
 
-#define _hw_cmp16a_output_set_at_bottom_clear_on_match		, 4, 2	/* Fast PWM */
-#define _hw_cmp16a_output_clear_at_bottom_set_on_match		, 5, 3
+#define _hw_cmp16a_output_set_at_bottom_clear_on_match	, 4, 2	/* Fast PWM */
+#define _hw_cmp16a_output_clear_at_bottom_set_on_match	, 5, 3
 
 #define _hw_cmp16a_output_clear_on_match_up_set_on_match_down	, 6, 2	/* Phase correct PWM */
 #define _hw_cmp16a_output_set_on_match_up_clear_on_match_down	, 7, 3
 
 
-#define _hw_is_disconnected_disconnected		, 1
+#define _hw_is_disconnected_disconnected	, 1
 
-#define _hw_mthd_hw_configure__cmp16a		, _hw_cfcmp16a
+#define _hw_mthd_hw_configure__cmp16a	, _hw_cfcmp16a
 
 #define _hw_cfcmp16a(o,i,a, ...)						\
   do {									\
@@ -77,13 +77,13 @@
  * @page atmelavr_cmp16a
  * @subsection atmelavr_cmp16a_cf2 Asynchronous
  *
- * The hwa_config() instruction allows the `update` parameter to be set. It
+ * The `hwa(configure,...)` instruction allows the `update` parameter to be set. It
  * tells when the compare value is transferred from the latch register to the
  * compare register. This is used to complete and check the configuration of the
  * related counter when the hwa_commit() instruction is encountered:
  *
  * @code
- * hwa_config( COMPARE_NAME,
+ * hwa( configure, compare0,
  *
  *	       //  When the content of the compare register is latched
  *	       //
@@ -93,7 +93,7 @@
  *
  *	       //  Behavior of the ouput pin
  *	       //
- *	     [ output,      disconnected
+ *	     [ output,	    disconnected
  *		       | toggle_on_match
  *		       | clear_on_match
  *		       | set_on_match
@@ -104,7 +104,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cmp16a		, _hwa_cfcmp16a
+#define _hw_mthd_hwa_configure__cmp16a	, _hwa_cfcmp16a
 
 #define _hwa_cfcmp16a(o,i,a,...)						\
   do {									\
@@ -142,10 +142,10 @@
  * The compare value is set using the hw_write() or hwa_write() instruction:
  *
  * @code
- * hw_write( COMPARE_NAME, value );
+ * hw_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cmp16a			, _hw_write_cmp16a
+#define _hw_mthd_hw_write__cmp16a	, _hw_write_cmp16a
 #define _hw_write_cmp16a(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v),__VA_ARGS__)
 
 
@@ -153,23 +153,23 @@
  * @page atmelavr_cmp16a
  *
  * @code
- * hwa_write( COMPARE_NAME, value );
+ * hwa_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cmp16a			, _hwa_write_cmp16a
+#define _hw_mthd_hwa_write__cmp16a	, _hwa_write_cmp16a
 #define _hwa_write_cmp16a(o,i,a,v,...)		HW_TX(_hwa_write_reg(o,reg,v),__VA_ARGS__)
 
 
 /**
  * @page atmelavr_cmp16a
  *
- * The compare value is read using the hw_read() instruction:
+ * The compare value is read using the`read`instruction:
  *
  * @code
- * uint16_t ocr = hw_read( COMPARE_NAME );
+ * uint16_t ocr = hw( read, compare0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cmp16a			, _hw_read_cmp16a
+#define _hw_mthd_hw_read__cmp16a	, _hw_read_cmp16a
 #define _hw_read_cmp16a(o,i,a,...)			HW_TX(_hw_read_reg(o,reg),__VA_ARGS__)
 
 
@@ -180,20 +180,20 @@
  * The hw_trigger() or hwa_trigger() instructions trigger a compare event:
  *
  * @code
- * hw_trigger( COMPARE_NAME );
+ * hw_trigger( compare0 );
  * @endcode
  */
-#define _hw_mthd_hw_trigger__cmp16a		, _hw_trigger_cmp16a
+#define _hw_mthd_hw_trigger__cmp16a	, _hw_trigger_cmp16a
 #define _hw_trigger_cmp16a(o,i,a)			_hw_write_reg(o,force,1)
 
 /**
  * @page atmelavr_cmp16a
  *
  * @code
- * hwa_trigger( COMPARE_NAME );
+ * hwa_trigger( compare0 );
  * @endcode
  */
-#define _hw_mthd_hwa_trigger__cmp16a		, _hwa_trigger_cmp16a
+#define _hw_mthd_hwa_trigger__cmp16a	, _hwa_trigger_cmp16a
 #define _hwa_trigger_cmp16a(o,i,a)			_hwa_write_reg(o,force,1)
 
 
@@ -205,9 +205,9 @@
  * instructions:
  *
  * @code
- * if ( hw_stat_irqf( COMPARE_NAME ) ) {        // Read compare IRQ flag
- *   hw_clear_irqf( COMPARE_NAME );             // Clear compare IRQ flag
- *   hw_turn_irq( COMPARE_NAME, off );          // Disable compare IRQs
+ * if ( hw( read, HW_IRQFLAG( compare0 ) ) ) {	// Read compare IRQ flag
+ *   hw( clear, HW_IRQFLAG( compare0 ) );		// Clear compare IRQ flag
+ *   hw( turn, HW_IRQ( compare0, off ) );		// Disable compare IRQs
  * }
  * @endcode
  */

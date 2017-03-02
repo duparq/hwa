@@ -24,7 +24,7 @@ void IROM every10ms ( )
        *  TXD has been set low for 100 ms. Release it now: connect pin GPIO1 to
        *  the TXD signal
        */
-      hw_config( gpio1, function, hw_uart0_txd );
+      hw( configure, gpio1, function, hw_uart0_txd );
   }
 
   count++ ;
@@ -35,7 +35,7 @@ void IROM every10ms ( )
    */
   count = 0 ;
 
-  if ( hw_read( LED ) == 0 ) {
+  if ( hw( read, LED ) == 0 ) {
     /*
      *	Turn LED on
      */
@@ -44,7 +44,7 @@ void IROM every10ms ( )
      *	Turn TXD low for 100 ms: connect pin GPIO1 to the GPIO1 signal
      */
     txdlow = 10 ;
-    hw_config( gpio1, function, gpio );
+    hw( configure, gpio1, function, gpio );
   }
   else {
     /*
@@ -61,7 +61,7 @@ void IROM every10ms ( )
 
 void IROM user_init()
 {
-  hw_config( LED,
+  hw( configure, LED,
 	     function,	gpio,			// Optionnal
 	     direction, output_when_awake
 	     );
@@ -69,7 +69,7 @@ void IROM user_init()
   /*  Pin GPIO1 is also used as pin TXD of hw_uart0
    *  We want a low level on that pin when used as a GPIO
    */
-  hw_config( gpio1,
+  hw( configure, gpio1,
 	     function,	   gpio,		// Optionnal
 	     direction,	   output );
   hw_write( gpio1, 0 );
@@ -77,7 +77,7 @@ void IROM user_init()
   /*  Configure the UART
    *	Note: the OS has already configured the RXD and TXD pins
    */
-  hw_config( uart0,
+  hw( configure, uart0,
 	     baudrate,	  9600,
 	     databits,	  8,
 	     parity,	  none,

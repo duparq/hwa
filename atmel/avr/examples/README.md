@@ -75,7 +75,7 @@ Once all this is downloaded and installed, update your PATH, e.g.:
 
 You can put this line in `/etc/profile` to have `bash` set it when it starts.
 
-__Note__: until now, I have only tried such a setup with a VirtualBoxed Windows
+__Note__ Until now, I have only tried such a setup with a VirtualBoxed Windows
 XP and it is _very_ slow.
 
 

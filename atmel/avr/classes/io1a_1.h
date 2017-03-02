@@ -18,8 +18,8 @@
  *
  * `_io1a` objects have the following relative objects:
  *
- *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_REL( IO_NAME, port )`
- *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_REL( IO_NAME, pcic )`
+ *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_REL( pin_pa0, port )`
+ *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_REL( pin_pa0, pcic )`
  */
 #define _hw_class__io1a
 
@@ -28,7 +28,7 @@
  * @page atmelavr_io1a
  * @par Instructions that do not produce C code:
  *
- * The `HW_BITS()` instruction retrieves the number of bits of an I/O definition:
+ * The `HW_BITS()` instruction returns the number of bits of an I/O definition:
  *
  * @code
  * #if HW_ID(hw_pin_pa3) && (HW_BITS(hw_pin_pa3) != 1)
@@ -36,9 +36,9 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__io1a                   , _hw_bn_io1a
+#define _hw_mthd_hw_bn__io1a		, _hw_bn_io1a
 
-#define _hw_bn_io1a(o,i, cn,bn,bp,...)         bn
+#define _hw_bn_io1a(o,i, cn,bn,bp,...)	       bn
 
 
 /**
@@ -53,8 +53,8 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bp__io1a                   , _hw_bp_io1a
-#define _hw_bp_io1a(o,i, cn,bn,bp,...)         bp
+#define _hw_mthd_hw_bp__io1a		, _hw_bp_io1a
+#define _hw_bp_io1a(o,i, cn,bn,bp,...)	       bp
 
 
 /**

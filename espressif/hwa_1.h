@@ -47,9 +47,9 @@
 /* #define _hw_is_edge_edge		, 1 */
 /* #define _hw_is_filter_filter		, 1 */
 /* #define _hw_is_input_input		, 1 */
-/* #define _hw_is_ocu_ocu			, 1 */
+/* #define _hw_is_ocu_ocu		, 1 */
 /* #define _hw_is_overflow_overflow	, 1 */
-/* #define _hw_is_top_top			, 1 */
+/* #define _hw_is_top_top		, 1 */
 /* #define _hw_is_update_update		, 1 */
 
 

@@ -10,7 +10,7 @@
 #define uint8	uint8_t
 #define sint8	int8_t
 
-typedef unsigned char   bool;
+typedef unsigned char	bool;
 /* probably should not put STATUS here */
 typedef enum {
     OK = 0,
@@ -28,5 +28,5 @@ typedef enum {
 #define ICACHE_RODATA_ATTR
 #endif /* ICACHE_FLASH */
 
-#define true            (1)
-#define false           (0)
+#define true		(1)
+#define false		(0)

@@ -12,61 +12,34 @@
 #include "../../hwa/hwa_2.h"
 
 /**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Insert inline assembler code
- * @hideinitializer
- *
- * Syntax: `hw_asm("reti");  // Insert the RETI instruction`
- */
-#define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Return from a naked interrupt service routine.
- * @hideinitializer
- */
-#define hw_reti()			hw_asm("reti")
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Put the core in sleep mode.
+ * @ingroup public_ins_atmelavr
+ * @brief Puts the core in sleep mode.
  */
 #define hw_sleep()			hw_asm("sleep")
 
+
 /**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Allow program interruption.
+ * @ingroup public_ins_atmelavr
+ * @brief Allows program interruption.
  */
 #define hw_enable_interrupts()		hw_asm("sei")
 
+
 /**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Prevent program interruption.
+ * @ingroup public_ins_atmelavr
+ * @brief Prevents program interruption.
  */
 #define hw_disable_interrupts()		hw_asm("cli")
 
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief Software loop of \c n system clock cycles.
- *
- * Only works with compile time constants.
- */
-#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
 
 /**
- * @ingroup public_gen_instructions_atmelavr
+ * @ingroup public_ins_atmelavr
  * @brief Software loop of \c n system clock cycles.
  *
  * Only works with compile time constants.
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
-
-/**
- * @ingroup public_gen_instructions_atmelavr
- * @brief True if strings s0 and s1 are equal
- */
-#define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
 
 
 /**
@@ -96,12 +69,12 @@
 #define _hwx_pwr1_0(o,x,v)	HW_E(`o` does not support power management)
 
 
-#define _hw_mthd_hw_power	, _hw_power
-#define _hw_mthd_hwa_power	, _hwa_power
+#define _hw_mthd_hw_power		, _hw_power
+#define _hw_mthd_hwa_power		, _hwa_power
 
 
 /**
- * @ingroup public_gen_instructions_atmelavr
+ * @ingroup public_ins_atmelavr
  * @brief Execute a block with interrupts disabled
  * @hideinitializer
  */
@@ -115,12 +88,12 @@
 
 
 /**
- * @ingroup public_gen_instructions_atmelavr
+ * @ingroup public_ins_atmelavr
  * @brief EEPROM memory segment storage
  *
  * Syntax:
  * @code
- * static uint16_t HW_MEM_EEPROM numbers[16] ;  // 16 16-bit numbers in EEPROM
+ * static uint16_t HW_MEM_EEPROM numbers[16] ;	// 16 16-bit numbers in EEPROM
  * @endcode
  */
 #define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
@@ -177,13 +150,13 @@ HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
        (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
 	wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80) ) {
     /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
-     *  sbi/cbi
+     *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *	sbi/cbi
      *
-     *  Note: the same for writing 2 bits (2 sbi/cbi), though that would avoid
-     *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles
-     *  (ldi+out is 2 cycles) and it is sometimes required to have both bits
-     *  written at the same time (e.g. TSM/PSR).
+     *	Note: the same for writing 2 bits (2 sbi/cbi), though that would avoid
+     *	clobbering one register, is not interresting as sbi/cbi takes 2 cycles
+     *	(ldi+out is 2 cycles) and it is sometimes required to have both bits
+     *	written at the same time (e.g. TSM/PSR).
      */
     if ( v )
       *p |= wm ; /* sbi */
@@ -209,8 +182,8 @@ HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       /*
        *  Read-modify-write
        */
-      uint8_t sm = wm & v ;     /* what has to be set     */
-      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      uint8_t sm = wm & v ;	/* what has to be set	  */
+      uint8_t cm = wm & (~v) ;	/* what has to be cleared */
       *p = (*p & ~cm) | sm ;
     }
   }
@@ -266,8 +239,8 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
        (mask==0x01 || mask==0x02 || mask==0x04 || mask==0x08 ||
 	mask==0x10 || mask==0x20 || mask==0x40 || mask==0x80) ) {
     /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
-     *  sbi/cbi
+     *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *	sbi/cbi
      */
     if ( value )
       *p |= mask ; /* sbi */
@@ -290,7 +263,7 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
       /*
        *  Read-modify-write
        */
-      uint8_t sm = mask & rwm & value ;     /* what has to be set     */
+      uint8_t sm = mask & rwm & value ;	    /* what has to be set     */
       uint8_t cm = mask & rwm & (~value) ;  /* what has to be cleared */
       *p = (*p & ~cm) | sm ;
     }
@@ -339,11 +312,11 @@ HW_INLINE void _hw_write__r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
 	wm==0x0100 || wm==0x0200 || wm==0x0400 || wm==0x0800 ||
 	wm==0x1000 || wm==0x2000 || wm==0x4000 || wm==0x8000) ) {
     /*
-     *  FIXME: could put a signal here to see if that code is usefull.
+     *	FIXME: could put a signal here to see if that code is usefull.
      */
     /*
-     *  Just 1 bit to be written at C address < 0x40 (ASM addresses < 0x20): use
-     *  sbi/cbi
+     *	Just 1 bit to be written at C address < 0x40 (ASM addresses < 0x20): use
+     *	sbi/cbi
      */
     if ( v )
       *p |= wm ; /* sbi */
@@ -399,9 +372,9 @@ HW_INLINE void _hwa_commit__r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool co
   volatile uint8_t *p = (volatile uint8_t *)r->a ;
 
   /*  Mask of bits to be written:
-   *    =     bits that are writeable (rwm)
-   *      AND that has been written (mmask)
-   *      AND that really need to be modified (ovalue != mvalue)
+   *	=     bits that are writeable (rwm)
+   *	  AND that has been written (mmask)
+   *	  AND that really need to be modified (ovalue != mvalue)
    */
   uint8_t wm = rwm & r->mmask & ((r->ovalue ^ r->mvalue) | ~r->omask);
 
@@ -424,23 +397,23 @@ HW_INLINE void _hwa_commit__r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, _Bool co
     }
 
     /*	Mask of bits to be read
-     *	  =     bits that are not to be modified (mmask)
-     *      AND not flags (rfm)
-     *      AND that are not known (omask)
-     *      AND that are writeable (rwm)
+     *	  =	bits that are not to be modified (mmask)
+     *	    AND not flags (rfm)
+     *	    AND that are not known (omask)
+     *	    AND that are writeable (rwm)
      */
     uint8_t rm = ~r->mmask & ~rfm & ~r->omask & rwm ;
 
-    /*  Read only if needed
+    /*	Read only if needed
      */
     if ( rm )
       r->ovalue = *p ;
 
-    /*  Compute new value
+    /*	Compute new value
      */
     r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
 
-    /*  Write new value
+    /*	Write new value
      */
     *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
   }
@@ -570,44 +543,44 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 /*
  *	From http://www.avrfreaks.net/forum/atomic-readwrite-uint16t-variable?skey=atomic%20write
  */
-#define atomic_read_word(__addr)                      \
-(__extension__({                                      \
-  uint16_t __result;                                  \
-  __asm__ __volatile__ (                              \
-    "cli                      \n\t"                   \
-    "lds %A[res], %[addr]     \n\t"                   \
-    "sei                      \n\t"                   \
-    "lds %B[res], %[addr] + 1 \n\t"                   \
-    : [res]  "=&r" (__result)                         \
-    : [addr] "p"   (&(__addr))                        \
-    : "memory"                                        \
-  );                                                  \
-  __result;                                           \
+#define atomic_read_word(__addr)		      \
+(__extension__({				      \
+  uint16_t __result;				      \
+  __asm__ __volatile__ (			      \
+    "cli		      \n\t"		      \
+    "lds %A[res], %[addr]     \n\t"		      \
+    "sei		      \n\t"		      \
+    "lds %B[res], %[addr] + 1 \n\t"		      \
+    : [res]  "=&r" (__result)			      \
+    : [addr] "p"   (&(__addr))			      \
+    : "memory"					      \
+  );						      \
+  __result;					      \
 }))
 
 #define atomic_write_word_restore(__addr, __data)     \
-(__extension__({                                      \
-  uint8_t  __tmp;                                     \
-  __asm__ __volatile__ (                              \
-    "in  %[tmp], __SREG__      \n\t"                  \
-    "cli                       \n\t"                  \
-    "sts %[addr], %A[data]     \n\t"                  \
-    "out __SREG__, %[tmp]      \n\t"                  \
-    "sts %[addr] + 1, %B[data] \n\t"                  \
-    : [tmp]  "=&r" (__tmp)                            \
-    : [data] "r"   (__data)                           \
-    , [addr] "p"   (&(__addr))                        \
-    : "memory"                                        \
-  );                                                  \
+(__extension__({				      \
+  uint8_t  __tmp;				      \
+  __asm__ __volatile__ (			      \
+    "in	 %[tmp], __SREG__      \n\t"		      \
+    "cli		       \n\t"		      \
+    "sts %[addr], %A[data]     \n\t"		      \
+    "out __SREG__, %[tmp]      \n\t"		      \
+    "sts %[addr] + 1, %B[data] \n\t"		      \
+    : [tmp]  "=&r" (__tmp)			      \
+    : [data] "r"   (__data)			      \
+    , [addr] "p"   (&(__addr))			      \
+    : "memory"					      \
+  );						      \
 }))
 #endif
 
 
 /*	ISR
  */
-#define _hw_israttr_isr_interruptible		, __attribute__((interrupt))
+#define _hw_israttr_isr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_isr_non_interruptible	, 
-#define _hw_israttr_isr_naked			, __attribute__((naked))
+#define _hw_israttr_isr_naked		, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))

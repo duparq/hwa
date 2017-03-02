@@ -14,33 +14,33 @@
  * @section atmelavr_uarta_config Configuration
  *
  * @code
- * hwa_config( UART_NAME,
+ * hwa( configure, uart0,
  *
- *             //  Transfer rate in bits per second
- *             //
- *           [ bps,         BPS, ]
+ *	       //  Transfer rate in bits per second
+ *	       //
+ *	     [ bps,	    BPS, ]
  *
- *             //  Number of data bits in frame. Default is `8`.
- *             //
- *           [ databits,    5 | 6 | 7 | 8 | 9, ]
+ *	       //  Number of data bits in frame. Default is `8`.
+ *	       //
+ *	     [ databits,    5 | 6 | 7 | 8 | 9, ]
  *
- *             //  Parity. Default is `none`.
- *             //
- *           [ parity,      none, even, odd, ]
+ *	       //  Parity. Default is `none`.
+ *	       //
+ *	     [ parity,	    none, even, odd, ]
  *
- *             //  Number of stop bits in frame. Default is `1`.
- *             //
- *           [ stopbits,    1 | 2, ]
+ *	       //  Number of stop bits in frame. Default is `1`.
+ *	       //
+ *	     [ stopbits,    1 | 2, ]
  *
- *             //  Whether the UART can receive. Default is `enabled`.
- *             //
- *           [ receiver,    enabled | disabled, ]
+ *	       //  Whether the UART can receive. Default is `enabled`.
+ *	       //
+ *	     [ receiver,    enabled | disabled, ]
  *
- *             //  Whether the UART can transmit. Default is `enabled`.
- *             //
- *           [ transmitter, enabled | disabled, ]
+ *	       //  Whether the UART can transmit. Default is `enabled`.
+ *	       //
+ *	     [ transmitter, enabled | disabled, ]
  *
- *           );
+ *	     );
  * @endcode
  */
 #define _hwa_cfuarta(o,i,a,...)						\
@@ -48,9 +48,9 @@
     HW_GX(_hwa_cfuarta_kbps,_hw_is_bps_##__VA_ARGS__)(o,__VA_ARGS__,,)	\
       } while(0)
 
-#define _hw_mthd_hwa_configure__uarta		, _hwa_cfuarta
+#define _hw_mthd_hwa_configure__uarta	, _hwa_cfuarta
 
-/* 	Optionnal parameter `bps`
+/*	Optionnal parameter `bps`
  *	  Choose the U2X value that gives the lowest error
  */
 #define _hwa_cfuarta_kbps_1(o,k,v,...)					\
@@ -80,7 +80,7 @@
 #define _hwa_cfuarta_kbps_0(o,k,...)					\
   HW_GX(_hwa_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_bps_bps				, 1
+#define _hw_is_bps_bps			, 1
 
 /*	Optionnal parameter `databits`
  */
@@ -97,13 +97,13 @@
 #define _hwa_cfuarta_kdatabits_0(o,k,...)				\
   HW_GX(_hwa_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_databits_databits		, 1
+#define _hw_is_databits_databits	, 1
 
-#define _hw_uarta_csz_5				, 0
-#define _hw_uarta_csz_6				, 1
-#define _hw_uarta_csz_7				, 2
-#define _hw_uarta_csz_8				, 3
-#define _hw_uarta_csz_9				, 7
+#define _hw_uarta_csz_5			, 0
+#define _hw_uarta_csz_6			, 1
+#define _hw_uarta_csz_7			, 2
+#define _hw_uarta_csz_8			, 3
+#define _hw_uarta_csz_9			, 7
 
 /*	Optionnal parameter `parity`
  */
@@ -120,11 +120,11 @@
 #define _hwa_cfuarta_kparity_0(o,k,...)					\
   HW_GX(_hwa_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_parity_parity			, 1
+#define _hw_is_parity_parity		, 1
 
-#define _hw_uarta_pm_none			, 0
-#define _hw_uarta_pm_even			, 2
-#define _hw_uarta_pm_odd			, 3
+#define _hw_uarta_pm_none		, 0
+#define _hw_uarta_pm_even		, 2
+#define _hw_uarta_pm_odd		, 3
 
 /*	Optionnal parameter `stopbits`
  */
@@ -141,10 +141,10 @@
 #define _hwa_cfuarta_kstopbits_0(o,k,...)				\
   HW_GX(_hwa_cfuarta_kreceiver,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_stopbits_stopbits		, 1
+#define _hw_is_stopbits_stopbits	, 1
 
-#define _hw_uarta_sbs_1				, 0
-#define _hw_uarta_sbs_2				, 1
+#define _hw_uarta_sbs_1			, 0
+#define _hw_uarta_sbs_2			, 1
 
 /*	Optionnal parameter `receiver`
  */
@@ -161,7 +161,7 @@
 #define _hwa_cfuarta_kreceiver_0(o,k,...)				\
   HW_GX(_hwa_cfuarta_ktransmitter,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_receiver_receiver		, 1
+#define _hw_is_receiver_receiver	, 1
 
 /*	Optionnal parameter `transmitter`
  */
@@ -178,14 +178,14 @@
 #define _hwa_cfuarta_ktransmitter_0(o,...)	\
   _hwa_cfuarta_end(o,__VA_ARGS__)
 
-#define _hw_is_transmitter_transmitter		, 1
+#define _hw_is_transmitter_transmitter	, 1
 
 #define _hwa_cfuarta_end(o,...)			\
-  _hwa_write_reg(o,brr,  hwa->o.config.brr );	\
-  _hwa_write_reg(o,2x,   hwa->o.config.u2x );	\
-  _hwa_write_reg(o,csz,  hwa->o.config.csz );	\
-  _hwa_write_reg(o,pm,   hwa->o.config.pm  );	\
-  _hwa_write_reg(o,sbs,  hwa->o.config.sbs );	\
+  _hwa_write_reg(o,brr,	 hwa->o.config.brr );	\
+  _hwa_write_reg(o,2x,	 hwa->o.config.u2x );	\
+  _hwa_write_reg(o,csz,	 hwa->o.config.csz );	\
+  _hwa_write_reg(o,pm,	 hwa->o.config.pm  );	\
+  _hwa_write_reg(o,sbs,	 hwa->o.config.sbs );	\
   _hwa_write_reg(o,rxen, hwa->o.config.rxen );	\
   _hwa_write_reg(o,txen, hwa->o.config.txen );	\
   HW_TX(,__VA_ARGS__)
@@ -195,14 +195,14 @@
  * @page atmelavr_uarta
  * @section atmelavr_uarta_data Data
  *
- * The `hw_read()` returns the content of the data register but it does not
+ * The `read` returns the content of the data register but it does not
  * verify that the transmit buffer of the UART is not empty before reading
  * it. You may have to verify that a character has been received before reading
  * the data register:
  *
  * @code
- * while ( ! hw_stat_irqf( UART_NAME, rxc ) ) {}
- * uint8_t byte = hw_read( UART_NAME );
+ * while ( ! hw( read, HW_IRQFLAG( uart0, rxc ) ) ) {}
+ * uint8_t byte = hw( read, uart0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__uarta		, _hw_rduarta
@@ -217,8 +217,8 @@
  * writing into it. You may have to verify this first:
  *
  * @code
- * while ( ! hw_stat_irqf( UART_NAME, txqnf ) ) {}
- * hw_write( UART_NAME, '#' );
+ * while ( ! hw( read, HW_IRQFLAG( uart0, txqnf ) ) ) {}
+ * hw_write( uart0, '#' );
  * @endcode
  */
 #define _hw_mthd_hw_write__uarta	, _hw_wruarta
@@ -245,10 +245,10 @@
  *
  * @code
  * uint8_t byte ;
- * hw_stat_t( UART_NAME ) st ;      // Structure of UART status
- * st = hw_stat( UART_NAME );       // Read the status
- * if ( st.rxc )                    // Reception complete?
- *   byte = hw_read( UART_NAME );
+ * hw_stat_t( uart0 ) st ;	    // Structure of UART status
+ * st = hw( stat, uart0 );	    // Read the status
+ * if ( st.rxc )		    // Reception complete?
+ *   byte = hw( read, uart0 );
  * @endcode
  */
 typedef union {
@@ -263,13 +263,13 @@ typedef union {
     unsigned int rxc   : 1 ;
   };
   struct {
-    unsigned int ___0_1       : 2 ;
+    unsigned int ___0_1	      : 2 ;
     unsigned int parity_error : 1 ;
     unsigned int overrun      : 1 ;
     unsigned int frame_error  : 1 ;
-    unsigned int _txqnf       : 1 ;
-    unsigned int _txc         : 1 ;
-    unsigned int _rxc         : 1 ;
+    unsigned int _txqnf	      : 1 ;
+    unsigned int _txc	      : 1 ;
+    unsigned int _rxc	      : 1 ;
   };
 } _hw_uarta_stat_t ;
 

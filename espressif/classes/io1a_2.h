@@ -13,29 +13,29 @@
  * @page esp8266_io1a
  * @section esp8266_io1a_config Configuration
  *
- * The `hw_config()` and `hwa_config()` instructions configure _io1a class I/O
+ * The `hw(configure,)` and `hwa(configure,...)` instructions configure _io1a class I/O
  * definitions:
  *
  * @code
- * hw/hwa_config( IO_NAME,
+ * hw/hwa( configure, pin_pa0,
  *
- *              [ function,    FUNCTION, ] // FUNCTION is dependent of the I/O that is configured.
+ *		[ function,    FUNCTION, ] // FUNCTION is dependent of the I/O that is configured.
  *
- *              [ direction,   input
- *                           | output_when_awake
- *                           | output,           ]
+ *		[ direction,   input
+ *			     | output_when_awake
+ *			     | output,		 ]
  *
- *              [ pullup,      on
- *                           | when_awake
- *                           | off,       ]
- *                );
+ *		[ pullup,      on
+ *			     | when_awake
+ *			     | off,	  ]
+ *		  );
  * @endcode
  *
- * @note `direction` and `pullup` should only be used when FUNCTION is
+ * __Note__ `direction` and `pullup` should only be used when FUNCTION is
  * `gpio`. There is no checking here.
  */
-#define _hw_mthd_hw_config__io1a		, _hw_cfio1a
-#define _hw_mthd_hwa_config__io1a		, _hwa_cfio1a
+#define _hw_mthd_hw_config__io1a	, _hw_cfio1a
+#define _hw_mthd_hwa_config__io1a	, _hwa_cfio1a
 
 #define _hw_cfio1a( o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
 #define _hw_cfio1a2(...)			_hw_cfio1a3( __VA_ARGS__ )
@@ -76,7 +76,7 @@
 #define _hwa_cfio1a_kfunction_0(o,cf,p,bn,bp,k,...)				\
   HW_GX(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hw_is_function_function		, 1
+#define _hw_is_function_function	, 1
 
 
 /*  Optionnal parameter `direction`
@@ -95,11 +95,11 @@
 #define _hwa_cfio1a_kdirection_0(o,cf,p,bn,bp,k,...)				\
   HW_GX(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hw_is_direction_direction			, 1
-#define _hw_cfio1a_direction_input			, 0	/* oex */
-#define _hw_cfio1a_direction_output_when_awake		, 1
+#define _hw_is_direction_direction	, 1
+#define _hw_cfio1a_direction_input	, 0	/* oex */
+#define _hw_cfio1a_direction_output_when_awake	, 1
 #define _hw_cfio1a_direction_output_when_sleeping	, 2
-#define _hw_cfio1a_direction_output			, 3
+#define _hw_cfio1a_direction_output	, 3
 
 
 /*  Optionnal parameter `pullup`
@@ -115,21 +115,21 @@
 #define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
 #define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)		HW_EOL(__VA_ARGS__)
 
-#define _hw_is_pullup_pullup			, 1
-#define _hw_cfio1a_pullup_off			, 0	/* pux */
-#define _hw_cfio1a_pullup_when_sleeping		, 1
-#define _hw_cfio1a_pullup_when_awake		, 2
-#define _hw_cfio1a_pullup_on			, 3
+#define _hw_is_pullup_pullup		, 1
+#define _hw_cfio1a_pullup_off		, 0	/* pux */
+#define _hw_cfio1a_pullup_when_sleeping	, 1
+#define _hw_cfio1a_pullup_when_awake	, 2
+#define _hw_cfio1a_pullup_on		, 3
 
 
 /**
  * @page esp8266_io1a
  * @section esp8266_io1a_read State
  *
- * The instruction `hw_read()` returns the state of the I/O object:
+ * The instruction `read` returns the state of the I/O object:
  *
  * @code
- * uint8_t value = hw_read( IO_NAME );
+ * uint8_t value = hw( read, pin_pa0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__io1a		, _hw_read_io1a
@@ -145,10 +145,10 @@
  * The instruction `hw_write()` changes the state of the I/O object:
  *
  * @code
- * hw_write( IO_NAME, value );
+ * hw_write( pin_pa0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__io1a			, _hw_write_io1a
+#define _hw_mthd_hw_write__io1a		, _hw_write_io1a
 
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
   HW_TX( _hw_write_reg_m(p, _out, ((1<<bn)-1)<<bp, (v)<<bp),	\
@@ -159,10 +159,10 @@
  * @page esp8266_io1a
  *
  * @code
- * hwa_write( IO_NAME, value );
+ * hwa_write( pin_pa0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__io1a		, _hwa_write_io1a
+#define _hw_mthd_hwa_write__io1a	, _hwa_write_io1a
 
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)				\
   HW_TX(_hwa_write_reg_m(&hwa->p._out, ((1<<bn)-1)<<bp, (v)<<bp)),	\
@@ -172,10 +172,10 @@
 /**
  * @page esp8266_io1a
  * @code
- * hw_toggle( IO_NAME );	//  Toggle one or several consecutive pins at once
+ * hw_toggle( pin_pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
-#define _hw_mthd_hw_toggle__io1a		, _hw_toggle_io1a
+#define _hw_mthd_hw_toggle__io1a	, _hw_toggle_io1a
 
 #define _hw_toggle_io1a(o,i,p,bn,bp,...)	HW_TX( _hw_toggle_io1a_2(_hw_ra(p,_out),(((1<<bn)-1)<<bp)), \
 						       __VA_ARGS__)
@@ -189,7 +189,7 @@
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
  * //
- * hwa_toggle( IO_NAME );
+ * hwa_toggle( pin_pa0 );
  * @endcode
  */
 
@@ -208,12 +208,12 @@
  *
  * A class `_io1a` I/O definition named `mypins` is created with:
  *
- *     #define _hw_pin_mypins		 _io1a, id, port, bn, bp
+ *     #define _hw_pin_mypins		_io1a, id, port, bn, bp
  *
  * where:
  *
  * * `id` is a unique number identifying the object. If you're not going to use
- *        the `hw_id()` instruction, any value (or even none) is OK.
+ *	  the `hw_id()` instruction, any value (or even none) is OK.
  *
  * * `port` is the name of the I/O port object holding the pin, e.g.: `port0`.
  *

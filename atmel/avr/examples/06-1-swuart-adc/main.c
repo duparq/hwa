@@ -15,13 +15,13 @@
  *
  * Display the ADC result on the command line:
  *
- *      ./main.py
+ *	./main.py
  *
  * You can add a low-pass filtering with the `--lpf` option.
  *
  * Display the ADC result on a graphical dial (requires wxPython):
  *
- *      ./main.py --gfx
+ *	./main.py --gfx
  *
  * ![Dial](dial.jpeg)
  *
@@ -39,10 +39,10 @@
  *    FIXME: using the same counter as for swuart overrides the configuration
  *    without error!
  */
-#define COUNTER                 counter0
+#define COUNTER			counter0
 
-volatile uint16_t               adc ;   // Last adc value
-volatile uint8_t                x_adc ; // Set to 1 after adc is written
+volatile uint16_t		adc ;	// Last adc value
+volatile uint8_t		x_adc ; // Set to 1 after adc is written
 
 
 /*  Service counter overflow interrupt:
@@ -85,8 +85,8 @@ main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure, core0,
-              sleep,      enabled,
-              sleep_mode, idle );
+	      sleep,	  enabled,
+	      sleep_mode, idle );
 
   /*  Configure the counter to overflow every ~0.02 s.
    *
@@ -99,23 +99,23 @@ main ( )
    *  the delay at 16 MHz.
    */
   hwa( configure, COUNTER,
-              clock,     prescaler_output(1024),
-              countmode, updown_loop,
-              bottom,    0,
-              top,       compare0
-              );
+	      clock,	 prescaler_output(1024),
+	      countmode, updown_loop,
+	      bottom,	 0,
+	      top,	 compare0
+	      );
   hwa( write, HW_RELATIVE(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)
    */
   hwa( configure, adc0,
-              clock,   sysclk_div(128),
-              trigger, manual,
-              vref,    vcc,
-              align,   right,
+	      clock,   sysclk_div(128),
+	      trigger, manual,
+	      vref,    vcc,
+	      align,   right,
 	      input,   PIN_ANALOG_INPUT
-              );
+	      );
   hwa( turn, HW_IRQ(adc0), on );
 
   /*  Write this configuration into the hardware
@@ -126,21 +126,21 @@ main ( )
 
   /*  Wait for UART synchronization, then send the prompt
    */
-  while ( !hw( stat,UART).sync )
+  while ( !hw(stat,UART).sync )
     hw_sleep();
   hw( write, UART, '$' );
 
   /*  Main loop:
-   *    Enter sleep mode
-   *    Send new data to host
+   *	Enter sleep mode
+   *	Send new data to host
    */
   for(;;) {
     hw_sleep();
     if ( x_adc ) {
       uint16_t x ;
       do {
-        x_adc = 0 ;
-        x = adc ;
+	x_adc = 0 ;
+	x = adc ;
       } while( x_adc );
       hw( write, UART, (x & 0x00FF)>>0 );
       hw( write, UART, (x & 0xFF00)>>8 );

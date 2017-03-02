@@ -24,8 +24,8 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r16_t     ubrr ;
-  hwa_r8_t      csra, csrb, csrc/* , dr */ ;
+  hwa_r16_t	ubrr ;
+  hwa_r8_t	csra, csrb, csrc/* , dr */ ;
 
   struct {
     uint16_t	brr ;

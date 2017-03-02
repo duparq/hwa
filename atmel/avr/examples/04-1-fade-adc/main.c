@@ -21,49 +21,49 @@
 
 /*  The counter used for PWM
  */
-#define COUNTER                 counter1
-#define COUNTER_CLK_DIV         8
+#define COUNTER			counter1
+#define COUNTER_CLK_DIV		8
 
 
 /*  PWM timings
  */
 #if HW_BITS(COUNTER)==16
-#  define PWM_PERIOD            0.02            /* 50 Hz */
-#  define PWM_TMIN              0               /* set to 0.000300 for servo */
-#  define PWM_TMAX              PWM_PERIOD      /* set to 0.003000 for servo */
+#  define PWM_PERIOD		0.02		/* 50 Hz */
+#  define PWM_TMIN		0		/* set to 0.000300 for servo */
+#  define PWM_TMAX		PWM_PERIOD	/* set to 0.003000 for servo */
 #else
-#  define PWM_PERIOD            0.0002          /* 5 kHz */
-#  define PWM_TMIN              0
-#  define PWM_TMAX              PWM_PERIOD
+#  define PWM_PERIOD		0.0002		/* 5 kHz */
+#  define PWM_TMIN		0
+#  define PWM_TMAX		PWM_PERIOD
 #endif
 
 
 /*  Clock divider for the ADC
  */
-#define ADC_CLK_DIV             128             /* T=~13*128/8=208 µs @8MHz */
+#define ADC_CLK_DIV		128		/* T=~13*128/8=208 µs @8MHz */
 
 
 /*  Top value and range of duty value according to PWM timings
  */
-#define count_t                 hw_uint_t(HW_BITS(COUNTER))
-#define COUNT_TOP               (uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
-#define COMPARE_MIN             (count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
-#define COMPARE_MAX             (count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
+#define count_t			hw_uint_t(HW_BITS(COUNTER))
+#define COUNT_TOP		(uint32_t)(hw_syshz*PWM_PERIOD/COUNTER_CLK_DIV)
+#define COMPARE_MIN		(count_t)(PWM_TMIN*hw_syshz/COUNTER_CLK_DIV)
+#define COMPARE_MAX		(count_t)(PWM_TMAX*hw_syshz/COUNTER_CLK_DIV)
 
 
 /*  ATtinyX5s use compare2 as top value, others use compare0
  */
 #if defined HW_DEVICE_ATTINYX5
-#  define TOP_OBJ               compare2
+#  define TOP_OBJ		compare2
 #else
-#  define TOP_OBJ               compare0
+#  define TOP_OBJ		compare0
 #endif
 
 
 /*  Value to store in the compare unit (must be the same size as the count
  *  register)
  */
-static volatile count_t         duty ;
+static volatile count_t		duty ;
 
 
 /*  Service ADC "conversion completed" IRQ: compute duty
@@ -77,8 +77,8 @@ HW_ISR( adc0, isr_interruptible )
 
   /*  Low-pass filter
    */
-  const uint8_t                 ns = 32 ;       /* # of samples   */
-  static uint16_t               lpfsum ;        /* sum of samples */
+  const uint8_t			ns = 32 ;	/* # of samples	  */
+  static uint16_t		lpfsum ;	/* sum of samples */
 
   lpfsum = lpfsum - (lpfsum + ns/2)/ns + adc ;
 
@@ -94,8 +94,8 @@ HW_ISR( adc0, isr_interruptible )
     duty = tmp ;
     hw_enable_interrupts();
     /* HW_ATOMIC( */
-    /*        duty = tmp ; */
-    /*        ); */
+    /*	      duty = tmp ; */
+    /*	      ); */
   }
   else
     duty = tmp ;
@@ -158,8 +158,8 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
-       sleep_mode, idle      );
+       sleep,	   enabled,
+       sleep_mode, idle	     );
 
   /*  Configure LED pin
    */
@@ -170,9 +170,9 @@ int main ( )
    *  and enable the internal pull-up resistor
    */
   hwa( configure, PIN_ANALOG_INPUT,
-       mode,      analog,
+       mode,	  analog,
        direction, input,
-       pullup,    on       );
+       pullup,	  on	   );
 
   /*  Check that the counter can handle the top value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
@@ -183,17 +183,17 @@ int main ( )
   /*  Configure the counter prescaler
    */
   hwa( configure, HW_RELATIVE(COUNTER,prescaler),
-       clock,     system );
+       clock,	  system );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
    *  The counter overflow ISR manages the compare IRQ
    */
   hwa( configure, COUNTER,
-       clock,     prescaler_output(COUNTER_CLK_DIV),
+       clock,	  prescaler_output(COUNTER_CLK_DIV),
        countmode, up_loop,
-       bottom,    0,
-       top,       TOP_OBJ,
-       //           overflow,  at_top,
+       bottom,	  0,
+       top,	  TOP_OBJ,
+       //	    overflow,  at_top,
        );
   hwa( write, HW_RELATIVE(COUNTER, TOP_OBJ), COUNT_TOP );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
@@ -202,11 +202,11 @@ int main ( )
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
   hwa( configure, adc0,
-       clock,     sysclk_div(ADC_CLK_DIV),
-       trigger,   manual,
-       vref,      vcc,
-       align,     right,
-       input,     PIN_ANALOG_INPUT );
+       clock,	  sysclk_div(ADC_CLK_DIV),
+       trigger,	  manual,
+       vref,	  vcc,
+       align,	  right,
+       input,	  PIN_ANALOG_INPUT );
   
   hwa( turn, HW_IRQ(adc0), on );
   hwa( trigger, adc0 );

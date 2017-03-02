@@ -1,0 +1,59 @@
+
+/* These groups will be listed in the same order in the documentation */
+
+/**
+ * @defgroup public_ins_obj Object-related instructions
+ *
+ * These instructions can be used in user application code. They act on various
+ * types of arguments and produce machine code. Arguments are checked and
+ * explicit error messages are emitted.
+ */
+
+/**
+ * @defgroup public_def Public symbol definitions
+ *
+ * These symbol definitions can be used in user application code.
+ */
+
+/**
+ * @defgroup public_mac Public macro definitions
+ *
+ * These macro definitions can be used in user application code.
+ */
+
+/**
+ * @defgroup private_mac Private macro definitions
+ *
+ * These macro definitions are used internally by HWA. They act on various types
+ * of arguments but do not access the hardware. They may be used in user
+ * application code though no checking is performed on the arguments.
+ */
+
+/**
+ * @defgroup private_def Private definitions
+ *
+ * These symbol definitions are used internally by HWA.
+ */
+
+/**
+ * @defgroup public_ins General instructions
+ *
+ * These instructions can be used in user application code. They act on various
+ * types of arguments and produce machine code. Arguments are checked and
+ * explicit error messages are emitted.
+ */
+
+/**
+ * @defgroup private_ins Private instructions
+ *
+ * These instruction are used internally. There is no argument checking and no
+ * error processing.
+ */
+
+/**
+ * @defgroup public_atmelavr_def Public Atmel AVR specific definitions.
+ */
+
+/**
+ * @defgroup public_ins_atmelavr Public Atmel AVR specific general instructions.
+ */

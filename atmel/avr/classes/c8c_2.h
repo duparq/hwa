@@ -13,59 +13,59 @@
  * @page atmelavr_c8c
  * @section atmelavr_c8c_config Configuration
  *
- * __Note__: if the optionnal argument `overflow` is not stated, HWA will select
+ * __Note__ If the optionnal argument `overflow` is not stated, HWA will select
  * an acceptable value according to the configuration of the compare units found
  * in the HWA context. If `overflow` is stated, HWA will check the validity of
  * its value.
  *
  * @code
- * hwa_config( COUNTER_NAME,
+ * hwa( configure, counter0,
  * 
- *             //  How the counter is clocked
- *             //
- *             clock,       none                        // No clock, the counter is stopped
- *                        | prescaler_output(     0     // No clock, the counter is stopped
- *                                           |    1     // System clock
- *                                           |    8     // System clock divided by 8
- *                                           |   32     // System clock divided by 32
- *                                           |   64     // System clock divided by 64
- *                                           |  128     // System clock divided by 128
- *                                           |  256     // System clock divided by 256
- *                                           |  512     // System clock divided by 512
- *                                           | 1024 )   // System clock divided by 1024
- *                        | ext_xosc,                   // Crystal between pins TOSC1-TOSC2
+ *	       //  How the counter is clocked
+ *	       //
+ *	       clock,	    none			// No clock, the counter is stopped
+ *			  | prescaler_output(	  0	// No clock, the counter is stopped
+ *					     |	  1	// System clock
+ *					     |	  8	// System clock divided by 8
+ *					     |	 32	// System clock divided by 32
+ *					     |	 64	// System clock divided by 64
+ *					     |	128	// System clock divided by 128
+ *					     |	256	// System clock divided by 256
+ *					     |	512	// System clock divided by 512
+ *					     | 1024 )	// System clock divided by 1024
+ *			  | ext_xosc,			// Crystal between pins TOSC1-TOSC2
  *
- *             //  How does this counter count
- *             //
- *             countmode,   up_loop                     // Count up and loop
- *                        | updown_loop,                // Count up and down alternately
+ *	       //  How does this counter count
+ *	       //
+ *	       countmode,   up_loop			// Count up and loop
+ *			  | updown_loop,		// Count up and down alternately
  *
- *             //  Class _c8c counters all count from 0
- *             //
- *           [ bottom,      0, ]
+ *	       //  Class _c8c counters all count from 0
+ *	       //
+ *	     [ bottom,	    0, ]
  *
- *             //  The maximum value the counter reaches (the default is `max`)
- *             //
- *           [ top,         fixed_0xFF                  // Hardware fixed value 0xFF
- *                        | max                         // Hardware fixed value 0xFF
- *                        | compare0, ]                 // Value stored in the compare0 unit
+ *	       //  The maximum value the counter reaches (the default is `max`)
+ *	       //
+ *	     [ top,	    fixed_0xFF			// Hardware fixed value 0xFF
+ *			  | max				// Hardware fixed value 0xFF
+ *			  | compare0, ]			// Value stored in the compare0 unit
  *
- *             //  When the overflow flag is set
- *             //
- *           [ overflow,    at_bottom                   // When the counter resets to bottom
- *                        | at_top                      // When the counter reaches the top value
- *                        | at_max ]                    // When the counter reaches its max value
- *             );
+ *	       //  When the overflow flag is set
+ *	       //
+ *	     [ overflow,    at_bottom			// When the counter resets to bottom
+ *			  | at_top			// When the counter reaches the top value
+ *			  | at_max ]			// When the counter reaches its max value
+ *	       );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c8c		, _hwa_config_c8c
+#define _hw_mthd_hwa_configure__c8c	, _hwa_config_c8c
 
 /*  Mandatory argument `clock`
  *
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c8c_clock_none			, 0
+#define _hw_c8c_clock_none		, 0
 #define _hw_c8c_clock_prescaler_output_0	, 0
 #define _hw_c8c_clock_prescaler_output_1	, 1
 #define _hw_c8c_clock_prescaler_output_8	, 2
@@ -74,7 +74,7 @@
 #define _hw_c8c_clock_prescaler_output_128	, 5
 #define _hw_c8c_clock_prescaler_output_256	, 6
 #define _hw_c8c_clock_prescaler_output_1024	, 7
-#define _hw_c8c_clock_ext_xosc			, 8
+#define _hw_c8c_clock_ext_xosc		, 8
 #define _hw_c8c_clock_prescaler_output(x)	HW_G2(_hw_c8c_clock_prescaler_output,x)
 
 #define _hwa_config_c8c(o,i,a, ...)						\
@@ -95,10 +95,10 @@
 
 /*  Optionnal argument `countmode`
  */
-#define _hw_c8c_countmode_up_loop		, 1
-#define _hw_c8c_countmode_up_loop		, 1
-#define _hw_c8c_countmode_updown_loop		, 2
-#define _hw_c8c_countmode_updown_loop		, 2
+#define _hw_c8c_countmode_up_loop	, 1
+#define _hw_c8c_countmode_up_loop	, 1
+#define _hw_c8c_countmode_updown_loop	, 2
+#define _hw_c8c_countmode_updown_loop	, 2
 
 #define _hwa_cfc8c_kmode_0(o,k,...)					\
   HW_E_VL(k,countmode)
@@ -130,8 +130,8 @@
 /*  Optionnal argument `top`
  */
 #define _hw_c8c_top_fixed_0xFF			, 1
-#define _hw_c8c_top_max				, 1
-#define _hw_c8c_top_compare0			, 2
+#define _hw_c8c_top_max			, 1
+#define _hw_c8c_top_compare0		, 2
 
 #define _hwa_cfc8c_ktop_1(o,k,v,...)					\
   HW_GX(_hwa_cfc8c_vtop,_hw_c8c_top_##v)(o,v,__VA_ARGS__)
@@ -148,9 +148,9 @@
 
 /*  Optionnal argument `overflow`
  */
-#define _hw_c8c_overflow_at_bottom		, 0
-#define _hw_c8c_overflow_at_top			, 1
-#define _hw_c8c_overflow_at_max			, 2
+#define _hw_c8c_overflow_at_bottom	, 0
+#define _hw_c8c_overflow_at_top		, 1
+#define _hw_c8c_overflow_at_max		, 2
 
 #define _hwa_cfc8c_koverflow_1(o,k,v,...)				\
   HW_GX(_hwa_cfc8c_voverflow,_hw_c8c_overflow_##v)(o,v,__VA_ARGS__)
@@ -558,7 +558,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @page atmelavr_c8c
  * @section atmelavr_c8c_cnt Count value
  *
- * @note See [that
+ * __Note__ See [that
  * thread](http://www.avrfreaks.net/comment/141688#comment-141688) on [AVR
  * Freaks](http://www.avrfreaks.net) for count register write issues.
  *
@@ -568,7 +568,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 /**
  * @page atmelavr_c8c
  * @code
- * hw_read( COUNTER_NAME );
+ * hw( read, counter0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__c8c		, _hw_read_c8c
@@ -578,7 +578,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 /**
  * @page atmelavr_c8c
  * @code
- * hw_write( COUNTER_NAME, value );
+ * hw_write( counter0, value );
  * @endcode
  */
 #define _hw_mthd_hw_write__c8c		, _hw_write_c8c
@@ -587,7 +587,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 /**
  * @page atmelavr_c8c
  * @code
- * hwa_write( COUNTER_NAME, value );
+ * hwa_write( counter0, value );
  * @endcode
  */
 #define _hw_mthd_hwa_write__c8c		, _hwa_write_c8c
@@ -600,7 +600,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  *  * setting the count value to 0 (this does not reset the prescaler):
  *
  * @code
- * hw_clear( COUNTER_NAME );
+ *`hw( clear, counter0 )`;
  * @endcode
  */
 #define _hw_mthd_hw_clear__c8c		, _hw_clear_c8c
@@ -610,7 +610,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @page atmelavr_c8c
  *
  * @code
- * hwa_clear( COUNTER_NAME );
+ * hwa( clear, counter0 );
  * @endcode
  */
 #define _hw_mthd_hwa_clear__c8c		, _hwa_clear_c8c
@@ -625,9 +625,9 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw_stat_irqf( COUNTER_NAME ) ) {        // Read overflow IRQ flag
- *   hw_clear_irqf( COUNTER_NAME );             // Clear overflow IRQ flag
- *   hw_turn_irq( COUNTER_NAME, off );          // Disable overflow IRQs
+ * if ( hw( read, HW_IRQFLAG( counter0 ) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, HW_IRQFLAG( counter0 ) );		// Clear overflow IRQ flag
+ *   hw( turn, HW_IRQ( counter0, off ) );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -694,7 +694,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

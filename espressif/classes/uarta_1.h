@@ -24,7 +24,7 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r32_t     _ie, _ic, _clkdiv, _conf0, _conf1 ;
+  hwa_r32_t	_ie, _ic, _clkdiv, _conf0, _conf1 ;
 } hwa_uarta_t ;
 
 #endif

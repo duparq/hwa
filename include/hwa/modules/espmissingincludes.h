@@ -73,18 +73,18 @@ void ets_delay_us(int ms);
 
 // This is not missing in SDK 1.1.0 but causes a parens error
 #undef PIN_FUNC_SELECT
-#define PIN_FUNC_SELECT(PIN_NAME, FUNC)  do { \
-    WRITE_PERI_REG(PIN_NAME,   \
-        (READ_PERI_REG(PIN_NAME) & ~(PERIPHS_IO_MUX_FUNC<<PERIPHS_IO_MUX_FUNC_S))  \
-            |( (((FUNC&BIT2)<<2)|(FUNC&0x3))<<PERIPHS_IO_MUX_FUNC_S) );  \
-    } while (0)
-
+#define PIN_FUNC_SELECT(P,F)						\
+  do {									\
+    WRITE_PERI_REG(P,							\
+		   (READ_PERI_REG(P) & ~(PERIPHS_IO_MUX_FUNC<<PERIPHS_IO_MUX_FUNC_S)) \
+		   |( (((F&BIT2)<<2)|(F&0x3))<<PERIPHS_IO_MUX_FUNC_S) ); \
+  } while (0)
 
 // Shortcuts for memory functions
 //#define os_malloc   pvPortMalloc // defined in SDK 1.4.0 onwards
-//#define os_free     vPortFree    // defined in SDK 1.4.0 onwards
+//#define os_free     vPortFree	   // defined in SDK 1.4.0 onwards
 //#define os_zalloc   pvPortZalloc // defined in SDK 1.4.0 onwards
 //uint8 wifi_get_opmode(void); // defined in SDK 1.0.0 onwards
-//int os_random();             // defined in SDK 1.1.0 onwards
+//int os_random();	       // defined in SDK 1.1.0 onwards
 
 #endif

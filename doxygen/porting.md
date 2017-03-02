@@ -7,27 +7,27 @@ Porting HWA {#porting}
 Files {#porting_files}
 =====
 
-Porting HWA to the device `mymcu` of architecture `arch` (avr, avr32, stm32...)
-and built by the `vendor` company (atmel, st, microchip...) requires writing at
+Porting HWA to a device `%mymcu` of architecture `%arch` (avr, avr32, stm32...)
+built by the `vendor` company (atmel, st, microchip...) requires writing at
 least two files:
 
- * `include/hwa/mymcu.h`: the header file that is included in the source code of
+ * `%include/hwa/mymcu.h`: the header file that is included in the source code of
    the projects that use this device;
 
- * `vendor/arch/devices/mymcu.h`: the device file, included by the previous
-   header file, that gathers all the definitions that make HWA useable for the
-   device.
+ * `%vendor/arch/devices/mymcu.h`: the device file, included by the header file,
+   that gathers all the definitions that make HWA useable for the device.
 
-The device file defines all the peripheral objects the device embeds and
-includes their classes definitions. The definitions of the classes are split
-into two files in the `vendor/arch/classes/` directory whose names begin with
-the class name without the leading underscore `_`:
+The device file defines all the objects that represent the peripheral
+controllers the device embeds and includes their classes definitions. The
+definitions of the classes are split into two files in the
+`vendor/arch/classes/` directory whose names begin with the class name without
+the leading underscore `%_`:
 
- * one file whose name ends with `_1.h` that contains the definitions that do
+ * one file whose name ends with `%_1.h` that contains the definitions that do
    not produce C code and the definition that builds the HWA context;
 
- * one file whose name ends with `_2.h` that contains the definitions that
-   produce C code;
+ * one file whose name ends with `%_2.h` that contains the definitions that
+   produce C code.
 
 
 Structure of a device file {#porting_df}
@@ -36,8 +36,8 @@ Structure of a device file {#porting_df}
 Let's see how the `atmel/avr/devices/atmegax8.h` file is structured.
 
 The file is split in two parts. The first part is the only one that is included
-for assembler programming as it defines all the objects but does not produce C
-code:
+for assembler programming as it defines all the objects but nothing that
+produces C code:
 
  1. It includes `../hwa_1.h`, that is `atmel/avr/hwa_1.h` that is included by
     all the Atmel AVR device definition files. In addition to including the
@@ -51,8 +51,8 @@ code:
  3. Then comes the list of the peripherals for the documentation and the
     definitions of the interrupts.
 
- 4. A `hw_shared` object is created to gather hardware registers that are not to
-    be attached to a specific object.
+ 4. A `%shared` object is created to gather hardware registers that are not to be
+    attached to a specific object.
 
  5. The ports and I/O pins are declared, as well as their alternate names.
 
@@ -62,9 +62,10 @@ code:
 The second part of the device file concerns the HWA context and the production
 of C code:
 
- 1. The `hwa_t` structure is populated with the elements of context of each object.
+ 1. The `hwa_t` structure is populated with the elements of context relative to
+    each object.
 
- 2. The class definition header files that produce C code '*_2.h' are included.
+ 2. The class definition header files that produce C code `*_2.h` are included.
 
  3. The context management functions are defined.
 
@@ -72,7 +73,7 @@ of C code:
 Classes {#porting_classes}
 =======
 
-All peripheral features of a device are objects pertaining to a class.
+All peripheral controllers of a device are objects pertaining to a class.
 
 Class names are lower cased, prefixed with an underscore `_` and end with a
 letter that is used to distinguish various classes of the same kind of objects.
@@ -80,9 +81,9 @@ letter that is used to distinguish various classes of the same kind of objects.
 For example, classes that implement an 8-bit counter are called `_c8a`, `_c8b`,
 or `_c8c`...
 
-A class is declared to HWA with a symbol starting with `_hw_class_` and ending
-with the class name. The definition of this symbol must be void. For example,
-the class `_c8a` is declared with:
+A class is declared with a symbol starting with `_hw_class_` and ending with the
+class name. The definition of this symbol must be void. For example, the class
+`_c8a` is declared with:
 
 @code
 #define _hw_class__c8a
@@ -92,23 +93,23 @@ the class `_c8a` is declared with:
 Objects {#porting_objects}
 =======
 
-Object names start with `hw_`. An object is declared to HWA with a symbol that
-starts with an underscore `_` and ends with the object name. The definition of
-this symbol must begin with a declared class name.
+An object is declared to HWA with a symbol that starts with `_hw_def_` followed
+by the object name. The definition of this symbol must begin with a declared
+class name.
 
-For example, the object `hw_counter0` of class `_c8a` is declared with something
-like:
+For example, the object named `counter0` of class `%_c8a` is declared with
+something like:
 
 @code
 /*	Object				class, id, address
  */
-#define _hw_counter0			_c8a, 100, 0x0000
+#define _hw_def_counter0		_c8a, 100, 0x0000
 @endcode
 
 where:
 
  * `100` is a unique number identifying the object. This is used by the
-   `hw_id()` instruction.
+   `HW_ID()` instruction.
 
  * `0x0000` is the base address of the object, that will be added to the
    relative addresses of the registers of the class. The base address can be
@@ -143,7 +144,7 @@ then in the object.
 Hardware registers {#porting_hregs}
 ------------------
 
-Hardware registers are objects of class `_r8`, `_r16`, or `_r32`, respectively
+Hardware registers are objects of class `%_r8`, `%_r16`, or `%_r32`, respectively
 for 8, 16, and 32-bit real registers.
 
 
@@ -155,13 +156,13 @@ register with a definition like:
 @code
 /*	Class hardware register		class, address, write mask, flags mask
  */
-#define _hw__c8a_count			_r8, 0x40, 0xFF, 0x00
+#define _hw_reg__c8a_count		_r8, 0x40, 0xFF, 0x00
 @endcode
 
-The symbol defined is the concatenation of `_hw_`, the class name, and the
+The symbol defined is the concatenation of `_hw_reg_`, the class name, and the
 register name. In this definition:
 
- * `_r8` is the class of the register;
+ * `%_r8` is the class of the register;
 
  * `0x40` is the address of the register relatively to the base address of the
    object);
@@ -176,12 +177,12 @@ register name. In this definition:
 __Object hardware registers__
 
 The `ifr` register of an 8-bit counter class `_c8a` is declared as a register of
-the `hw_counter0` object with a definition like:
+the `counter0` object with a definition like:
 
 @code
 /*	Object hardware register	class, address, write mask, flags mask
  */
-#define _hw_counter0_ifr		_r8, 0x35, 0x07, 0x07
+#define _hw_reg_counter0_ifr		_r8, 0x35, 0x07, 0x07
 @endcode
 
 The symbol defined is the concatenation of an underscore, the object name, an
@@ -232,7 +233,7 @@ class register with a definition like:
 @code
 /*	Class logical register
  */
-#define _hw__c8a_cs			_cb1, ccrb, 3, 0
+#define _hw_reg__c8a_cs			_cb1, ccrb, 3, 0
 @endcode
 
 where:
@@ -252,7 +253,7 @@ object register with a definition like:
 @code
 /*	Object logical register
  */
-#define _hw_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define _hw_reg_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 @endcode
 
 where:
@@ -276,10 +277,10 @@ from a class or from an object using a register of class `_xob1`.
 
 An example is the `acic` logical register of the class `_c16a` that is in fact
 stored in the bit 2 of the `csr` hardware register of the analog comparator
-`hw_acmp0` object:
+`acmp0` object:
 
 @code
-#define _hw__c16a_acic		_xob1, hw_acmp0, csr, 1, 2
+#define _hw_reg__c16a_acic		_xob1, acmp0, csr, 1, 2
 @endcode
 
 
@@ -287,16 +288,16 @@ Interrupts {#porting_irqs}
 ==========
 
 Interrupts are objects of the `_irq` class. The interrupt for the event
-`overflow` of the `hw_counter0` is defined with something like:
+`overflow` of the `counter0` is defined with something like:
 
 @code
-#define _hw_irq_hw_counter0_overflow	_irq, 4, irqe, irqf
+#define _hw_irq_counter0_overflow	_irq, 4, irqe, irqf
 @endcode
 
 or considering that there is no need for the event name to be specified:
 
 @code
-#define _hw_irq_hw_counter0		_irq, 4, irqe, irqf
+#define _hw_irq_counter0_		_irq, 4, irqe, irqf
 @endcode
 
 where:
@@ -320,7 +321,7 @@ symbol made of the prefix `_hw_mthd_`, the instruction name, an underscore `_`,
 the class name.
 
 For example, to declare that the class `_wdoga` supports the generic instruction
-`hw_reset()`, the following symbol must be defined:
+`hw(reset,...)`, the following symbol must be defined:
 
 @code
 #define _hw_mthd_hw_reset__wdoga	, _hw_rstwdoga
@@ -336,13 +337,13 @@ The definition contains two elements:
 Then, HWA will expand the instruction
 
 @code
-hw_reset( hw_wdog0 )
+hw( reset, wdog0 )
 @endcode
 
 to
 
 @code
-_hw_rstwdoga( hw_wdog0, 100, 0x0000, )
+_hw_rstwdoga( wdog0, 100, 0x0000, )
 @endcode
 
 where the arguments are:
@@ -358,27 +359,6 @@ remaining argument in the list after the end of their processing, using the
 
 @code
 HW_EOL(__VA_ARGS__)	// Produce an error if first argument in __VA_ARGS__ is not void
-@endcode
-
-
-Generic instructions {#porting_gnrc}
-====================
-
-HWA provides a set of generic instructions that should cover almost all the
-requirements.
-
-It is not yet decided whether adding new generic instructions is wishable or
-not, but the generic instructions set should be restricted as these instructions
-are meant to apply to a large diversity of objects.
-
-For objects that require the creation of a new instruction, the generic
-instruction `hw_command()` or `hwa_command()` should be considered first.
-
-Generic instructions that are translated to class methods are declared using the
-`HW_MTHD()` macro. For example, the `hw_clear()` symbol is defined as:
-
-@code
-#define hw_clear(...)			HW_MTHD(hw_clear, __VA_ARGS__,)
 @endcode
 
 
@@ -398,10 +378,10 @@ First, the method has to be declared:
 #define _hw_mthd_hwa_config__c8a		, _hwa_config_c8a
 @endcode
 
-The instruction `hwa_config( hw_counter0, ... )` will then be translated to
+The instruction `hwa( configure, counter0, ... )` will then be translated to
 `_hwa_config_c8a(o,i,a,...)` where:
 
- * `o` is the name of the object: "hw_counter0";
+ * `o` is the name of the object: "counter0";
 
  * `i` is the id of the object;
 
@@ -462,8 +442,8 @@ continues the processing of the arguments to verify that the following argument
   HW_G2(_hwa_cfc8a_vclock,HW_IS(,_hw_c8a_clock_##v))(o,v,__VA_ARGS__)
 @endcode
 
-`HW_IS(,_hw_c8a_clock_##v)` expands to `1` for any value of `v` that makes
-`_hw_c8a_clock_##v` expand with a void element in first position. For example:
+`HW_IS(,_hw_c8a_clock_##%v)` expands to `1` for any value of `v` that makes
+`_hw_c8a_clock_##%v` expand with a void element in first position. For example:
 
 @code
 #define _hw_c8a_clock_prescaler_output_64	, 3
@@ -484,7 +464,7 @@ and the processing of the following key, that should be "countmode", begins:
   HW_G2(_hwa_cfc8a_kmode,HW_IS(countmode,k))(o,k,__VA_ARGS__)
 @endcode
 
-`HW_A1(_hw_c8a_clock_##v)` expands to the element _a1_ of the list '(_a0_, _a1_,
+`HW_A1(_hw_c8a_clock_##%v)` expands to the element _a1_ of the list '(_a0_, _a1_,
 ...)'.
 
 With the definition:
@@ -493,8 +473,8 @@ With the definition:
 #define _hw_c8a_clock_prescaler_output_64	, 3
 @endcode
 
-if `v` is "prescaler_output_64", `_hw_c8a_clock_##v` expands to ",3" and
-`HW_A1(_hw_c8a_clock_##v)` expands to "3", the numerical value stored in the
+if `v` is "prescaler_output_64", `_hw_c8a_clock_##%v` expands to ",3" and
+`HW_A1(_hw_c8a_clock_##%v)` expands to "3", the numerical value stored in the
 context.
 
 The following definition allows the programmer to type `prescaler_output(64)`

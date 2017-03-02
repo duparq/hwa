@@ -9,12 +9,35 @@
  * @brief HWA definitions that produce C code
  */
 
+
 /**
- * @ingroup public_context_instructions
+ * @ingroup public_ins
+ * @brief Insert inline assembler code
+ * @hideinitializer
+ *
+ * @code
+ * hw_asm("reti");  // Insert the RETI instruction
+ * @endcode
+ */
+#define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
+
+
+/**
+ * @ingroup public_ins
+ * @brief Insert a software loop for `n` system clock cycles.
+ * @hideinitializer
+ *
+ * Only works with compile-time constants.
+ */
+#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+
+
+/**
+ * @ingroup public_ins
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
+ * @hideinitializer
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
- * @hideinitializer
  */
 /*
  * Expands _hwa_begin_all() that must be defined in hwa_<device>_2.h.
@@ -27,14 +50,14 @@
 
 
 /**
- * @ingroup public_context_instructions
+ * @ingroup public_ins
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
+ * @hideinitializer
  *
  * The context is initialized with the values the registers have after a
  * system reset.
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
- * @hideinitializer
  */
 #define hwa_begin_from_reset()			\
   _hwa_check_optimizations(0);			\
@@ -46,8 +69,8 @@
 
 
 /**
- * @ingroup public_context_instructions
- * @brief  Commit configuration to hardware.
+ * @ingroup public_ins
+ * @brief Generate machine code for the configuration stored in the context.
  *
  * Solve the configuration stored into the HWA context, then do the required
  * hardware register writes.
@@ -65,7 +88,7 @@
 
 
 /**
- * @ingroup public_context_instructions
+ * @ingroup public_ins
  * @brief  Same as hwa_commit() but do not write into hardware.
  *
  * This is used to put the HWA context in a known state before modifying it.
@@ -80,17 +103,17 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Read one register of an object
  *
- * Syntax: `_hw_read( object, register );`
+ * Syntax: `_hw( read, object, register );`
  * @hideinitializer
  */
 #define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_REG(o,r))
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Read one register of an object with interrupts disabled
  *
  * Syntax: `_hw_atomic_read( object, register );`
@@ -100,7 +123,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write one register of an object
  *
  * Syntax: `_hw_write_reg( object, register, value );`
@@ -110,7 +133,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write one register of an object
  *
  * Syntax: `_hwa_write_reg( object, register, value );`
@@ -128,7 +151,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Read one group of consecutive bits from one hardware register
  * @hideinitializer
  */
@@ -142,7 +165,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Read one group of consecutive bits from one hardware register with interrupts disabled
  * @hideinitializer
  */
@@ -151,7 +174,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Read two groups of consecutive bits from two hardware registers
  * @hideinitializer
  */
@@ -163,7 +186,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write something
  *
  * Syntax: `_hw_write( ..., value );`
@@ -173,7 +196,7 @@
 #define _hw_write_2(x,...)		_hw_write_##x(__VA_ARGS__)
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write one group of consecutive bits into one hardware register
  * @hideinitializer
  */
@@ -182,7 +205,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write one group of consecutive bits into one hardware register with interrupts disabled
  * @hideinitializer
  */
@@ -190,7 +213,7 @@
   _hw_atomic_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write two groups of consecutive bits into two hardware registers
  * @hideinitializer
  */
@@ -237,16 +260,6 @@
 
 
 /**
- * @ingroup private_classes
- * @brief Object register class.
- *
- *  An `_oreg` class object is a register of an object that can be accessed with
- *  the generic instructions designed for objects.
- */
-#define _hw_class__oreg
-
-
-/**
  * @brief  Write the register of an object
  */
 #define _hw_mthd_hwa_write__oreg	, _hwa_write_oreg
@@ -261,14 +274,14 @@
 
 /*  Added for io1a_2.h:
  *    _hwa_write(_##o##_##did, 1);
- *      _hwa__write__xob1(hw_shared, did, 1, 0, 1,);
+ *	_hwa__write__xob1(hw_shared, did, 1, 0, 1,);
  */
-#define _hw_mthd_hwa_write__xob1		, _hwa__write__xob1
+#define _hw_mthd_hwa_write__xob1	, _hwa__write__xob1
 #define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(,o,r,bn,bp,v)
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write some bits of a hardware register
  * @hideinitializer
  *
@@ -281,7 +294,7 @@
     _hw_write_##rc##_m(a+ra,rwm,rfm,m,v)
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Write some bits of a hardware register
  * @hideinitializer
  *
@@ -329,7 +342,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Create a HWA register
  * @hideinitializer
  */
@@ -343,7 +356,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Initialize an HWA register of an object with its reset value
  * @hideinitializer
  */
@@ -357,7 +370,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Commit one object hardware register
  * @hideinitializer
  */
@@ -379,7 +392,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Get the mmask of the logical register `r` of object `o`.
  *
  * The mmask is set each time a hwa_write() is performed. It is reset after the
@@ -392,7 +405,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
@@ -401,7 +414,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Get the last committed value for the logical register `r` of object `o`.
  * @hideinitializer
  */
@@ -410,7 +423,7 @@
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modificapion mask (mmask).
  * @hideinitializer
  */
@@ -449,7 +462,7 @@ HW_INLINE void _hwa_setup__r32 ( hwa_r32_t *r, intptr_t a )
 
 
 /** 
- * @ingroup private
+ * @ingroup private_ins
  * @brief  Initialize a HWA register to a specific value (usually the reset value).
  * @hideinitializer
  */
@@ -482,7 +495,7 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief  Write into one 8-bit context register.
  *
  * Write value `v` into `bn` consecutive bits starting at least significant
@@ -510,7 +523,7 @@ HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,
   if (v > (1U<<bn)-1)
     HWA_ERR("value too high for number of bits.");
 
-  uint8_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
+  uint8_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask	 */
 
   //  *((volatile uint8_t*)0) = sm ;
 
@@ -534,7 +547,7 @@ HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief  Write into one 8-bit context register.
  *
  * Write value `v` into `msk` bits of the context register pointed by
@@ -582,7 +595,7 @@ HW_INLINE void _hwa_write__r16 ( hwa_r16_t *r,
   if (v > (1U<<bn)-1)
     HWA_ERR("value too high for bits number.");
 
-  uint16_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask  */
+  uint16_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask	 */
   uint16_t sv = v << bp ;		/* shifted value */
 
   if ((rwm & sm) != sm)
@@ -630,7 +643,7 @@ HW_INLINE void _hwa_write__r32 ( hwa_r32_t *r,
 
 
 /**
- * @ingroup private
+ * @ingroup private_ins
  * @brief Trigger an error if optimizers failed to remove this code
  * @hideinitializer
  */

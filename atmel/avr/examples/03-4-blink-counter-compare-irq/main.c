@@ -18,11 +18,15 @@
 
 /*  The counter
  */
-#define COUNTER                 counter0
-#define CLKDIV                  64
-#define COUNTMODE               up_loop
-#define COMPARE                 compare0
-#define PERIOD                  0.5
+#define COUNTER			counter0
+#define CLKDIV			64
+#define COUNTMODE		up_loop
+#define COMPARE			compare0
+#define PERIOD			0.5
+
+/*  Compare strings
+ */
+#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
 
 
 /*  Service the compare-match IRQ
@@ -54,18 +58,18 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Configure the compare unit to match every 0.001 s.
    */
   hwa( configure, COUNTER,
-       clock,     prescaler_output(CLKDIV),
+       clock,	  prescaler_output(CLKDIV),
        countmode, COUNTMODE,
-       bottom,    0,
-       top,       max );
+       bottom,	  0,
+       top,	  max );
 
-  if ( hw_streq(HW_QUOTE(COUNTMODE),"updown_loop") )
+  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
   else /* up_loop */
     hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );

@@ -14,12 +14,12 @@
  * 
  * @par nRF24L01+ module wiring
  *
- *                   Gnd  [1](2)  Vcc
- *            Gnd <- CE   (3)(4)  CSN  -> 
- *            SCL <- SCK  (5)(6)  MOSI -> DO or MOSI
+ *		     Gnd  [1](2)  Vcc
+ *	      Gnd <- CE	  (3)(4)  CSN  -> 
+ *	      SCL <- SCK  (5)(6)  MOSI -> DO or MOSI
  *     MISO or DI <- MISO (7)(8)  IRQ
  * 
- * __Note__: for devices that use an USI to emulate an SPI interface, the MCU is
+ * __Note__ For devices that use an USI to emulate an SPI interface, the MCU is
  * considered a slave regarding the SPI pin names. Pin MISO, output of the nRF,
  * has to be connected to pin MOSI/DI of the MCU, and pin MOSI, input of the
  * nRF, has to be connected to pin MISO/DO of the MCU.
@@ -30,18 +30,18 @@
  * 
  * should display:
  *
- *     Register CONFIG    : 0x00 = 08
- *     Register EN_AA     : 0x01 = 3F
+ *     Register CONFIG	  : 0x00 = 08
+ *     Register EN_AA	  : 0x01 = 3F
  *     Register EN_RX_ADDR: 0x02 = 03
  *     Register SETUP_AW  : 0x03 = 03
  *     Register SETUP_RETR: 0x04 = 03
- *     Register RF_CH     : 0x05 = 02
+ *     Register RF_CH	  : 0x05 = 02
  *     Register RF_SETUP  : 0x06 = 0F
- *     Register STATUS    : 0x07 = 0E
+ *     Register STATUS	  : 0x07 = 0E
  *     Register RX_ADDR_P0: 0x0A = E7 E7 E7 E7 E7
  *     Register RX_ADDR_P1: 0x0B = C2 C2 C2 C2 C2
- *     Register DYNPD     : 0x1C = 00
- *     Register FEATURE   : 0x1D = 00
+ *     Register DYNPD	  : 0x1C = 00
+ *     Register FEATURE	  : 0x1D = 00
  * 
  * @par config.h
  * @include 09-2-swuart-usi-spi-master-nrf24l01+/config.h
@@ -67,8 +67,8 @@ HW_ERROR(device `HW_DEVICE` does not have a USI)
 
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
-#define SPI             spimaster_swclk0
-#define NRF_CSN         HW_PIN(3)
+#define SPI		spimaster_swclk0
+#define NRF_CSN		HW_PIN(3)
 
 
 int
@@ -100,17 +100,17 @@ main ( )
 
   /*  Wait for UART synchronization
    */
-  while ( !hw( stat,UART).sync ) {}
+  while ( !hw(stat,UART).sync ) {}
 
   /*  Process commands from host
    */
   for(;;) {
 
-    /*  Prompt
+    /*	Prompt
      */
     hw( write, UART, '$' );
 
-    /*  Get command
+    /*	Get command
      */
     uint8_t c = hw( read, UART );
     if ( c == '=' ) {
@@ -119,28 +119,28 @@ main ( )
        */
       uint8_t ntx = hw( read, UART );
       if ( ntx < 1 || ntx > 33 )
-        goto error ;
+	goto error ;
 
       /*  Number of bytes to send back to talker
        */
       uint8_t nrx = hw( read, UART );
       if ( nrx > 32 )
-        goto error ;
+	goto error ;
 
       /*  Select SPI slave and send data
        */
       hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-        c = hw( read, UART );
-        hw( write, SPI, c );
+	c = hw( read, UART );
+	hw( write, SPI, c );
       }
 
       /*  Send reply to talker and deselect SPI slave
        */
       while ( nrx-- ) {
-        hw( write, SPI, 0 );
-        c = hw( read, SPI );
-        hw( write, UART, c );
+	hw( write, SPI, 0 );
+	c = hw( read, SPI );
+	hw( write, UART, c );
       }
       hw( write, NRF_CSN, 1 );
     }
@@ -151,8 +151,8 @@ main ( )
        */
       do {
       error:
-        hw( write, UART, '!' );
-        c = hw( read, UART );
+	hw( write, UART, '!' );
+	c = hw( read, UART );
       } while ( c != '\n' ) ;
     }
   }

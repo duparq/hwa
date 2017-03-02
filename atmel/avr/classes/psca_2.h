@@ -34,13 +34,13 @@
  * The hw_turn() instruction can reset and stop the prescaler:
  *
  * @code
- * hw_turn( prescaler0, off );  //  Reset and halt the prescaler
+ * hw_turn( prescaler0, off );	//  Reset and halt the prescaler
  * @endcode
  *
  * or release it:
  *
  * @code
- * hw_turn( prescaler0, on );   //  Release the prescaler
+ * hw_turn( prescaler0, on );	//  Release the prescaler
  * @endcode
  */
 #define _hw_mthd_hw_turn__psca		, _hw_psca_turn
@@ -67,12 +67,12 @@
  * `_psca` class prescalers are all clocked by the system clock.
  *
  * @code
- * hwa_config( NAME,
+ * hwa( configure, prescaler0,
  *
- *             clock,   system );
+ *	       clock,	system );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__psca		, _hwa_cfpsca
+#define _hw_mthd_hwa_configure__psca	, _hwa_cfpsca
 
 /*  Mandatory argument `clock`
  */
@@ -86,7 +86,7 @@
 #define _hwa_cfpsca_kclock_1(o,k,v,...)					\
   HW_GX(_hwa_cfpsca_vclock,_hw_psca_clock_##v)(o,v,__VA_ARGS__)
 
-#define _hw_psca_clock_system			, 0
+#define _hw_psca_clock_system		, 0
 
 #define _hwa_cfpsca_vclock_0(o,v,...)					\
   HW_E_AVL(`clock`, v, `system`)

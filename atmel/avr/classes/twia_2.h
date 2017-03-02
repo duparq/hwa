@@ -13,50 +13,50 @@
  * @page atmelavr_twia
  * @section atmelavr_twia_cf Configuration
  *
- * @note Configuring the TWI enables it and configures the SCL and SDA pins as
+ * __Note__ Configuring the TWI enables it and configures the SCL and SDA pins as
  * high-level outputs.
  *
  * @code
- * hw_config( TWI_NAME,
+ * hw( configure, twi0,
  *
- *            //  scl speed
- *            //
- *          [ sclhz,                <value>, ]
+ *	      //  scl speed
+ *	      //
+ *	    [ sclhz,		    <value>, ]
  *
- *          [ slave_address,        <value>, ]
+ *	    [ slave_address,	    <value>, ]
  *
- *          [ general_call,         enabled
- *                                | disabled, ]
+ *	    [ general_call,	    enabled
+ *				  | disabled, ]
  *
- *          [ slave_address_mask,   <value> ]
+ *	    [ slave_address_mask,   <value> ]
  *
- *          );
+ *	    );
  * @endcode
  */
-#define _hw_mthd_hw_configure__twia		, _hw_cftwia
+#define _hw_mthd_hw_configure__twia	, _hw_cftwia
 #define _hw_cftwia( o,i,a, ... )		_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
 /**
  * @page atmelavr_twia
  *
  * @code
- * hwa_config( TWI_NAME,
+ * hwa( configure, twi0,
  *
- *             //  scl speed
- *             //
- *           [ sclhz,                <value>, ]
+ *	       //  scl speed
+ *	       //
+ *	     [ sclhz,		     <value>, ]
  *
- *           [ slave_address,        <value>, ]
+ *	     [ slave_address,	     <value>, ]
  *
- *           [ general_call,         enabled
- *                                 | disabled, ]
+ *	     [ general_call,	     enabled
+ *				   | disabled, ]
  *
- *           [ slave_address_mask,   <value> ]
+ *	     [ slave_address_mask,   <value> ]
  *
- *           );
+ *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__twia		, _hwa_cftwia
+#define _hw_mthd_hwa_configure__twia	, _hwa_cftwia
 #define _hwa_cftwia( o,i,a, ... )		_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 \
 
@@ -125,7 +125,7 @@
 #define _hwx_cftwia_ksladdr_0(x,o,k,...)				\
   HW_G2(_hwx_cftwia_kgcall,HW_IS(general_call,k))(x,o,k,__VA_ARGS__)
 
-#define _hw_is_slave_address_slave_address		, 1
+#define _hw_is_slave_address_slave_address	, 1
 
 /*	Optionnal argument `general_call`
  */
@@ -142,7 +142,7 @@
 #define _hwx_cftwia_kgcall_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
-#define _hw_is_general_call_general_call		, 1
+#define _hw_is_general_call_general_call	, 1
 
 /*	Optionnal argument `slave_address_mask`
  */
@@ -169,7 +169,7 @@
  * Class `_twia` peripherals are driven using the `hw()` instruction.
  * An optionnal `irq` parameter can be used to have the command enable the IRQ.
  *
- * @note HWA verifies to some extent the nature of the given parameters. As all
+ * __Note__ HWA verifies to some extent the nature of the given parameters. As all
  * this is implemented using macro definitions, some care must be taken
  * regarding how the parameters are written in order to avoid strange
  * behavior. For example, if the DATA parameter is `*ptr`, you must rewrite it
@@ -177,12 +177,12 @@
  * character.
  *
  * @code
- * hw( tx_start, TWI_NAME [,irq] );             // Transmit START condition
- * hw( tx_slaw, TWI_NAME, SLA [,irq] );         // Transmit SLA slave address + write bit
- * hw( tx_slar, TWI_NAME, SLA [,irq] );         // Transmit SLA slave address + read bit
- * hw( tx_data, TWI_NAME, DATA [,irq] );        // Transmit DATA
- * hw( tx_read, TWI_NAME, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
- * hw( tx_stop, TWI_NAME [,irq] );              // Transmit STOP condition
+ * hw( tx_start, twi0 [,irq] );		// Transmit START condition
+ * hw( tx_slaw, twi0, SLA [,irq] );		// Transmit SLA slave address + write bit
+ * hw( tx_slar, twi0, SLA [,irq] );		// Transmit SLA slave address + read bit
+ * hw( tx_data, twi0, DATA [,irq] );	// Transmit DATA
+ * hw( tx_read, twi0, ack | nack [,irq] );	// Receive one byte, send ACK or NACK
+ * hw( tx_stop, twi0 [,irq] );		// Transmit STOP condition
  * @endcode
  */
 #define _hw_mthd_hw_tx_start__twia	, _hw_twia_txstart
@@ -247,10 +247,10 @@
  * @page atmelavr_twia
  * @section atmelavr_twia_data Data
  *
- * The `hw_read()` returns the content of the data register.
+ * The `read` returns the content of the data register.
  *
  * @code
- * uint8_t byte = hw_read( TWI_NAME );
+ * uint8_t byte = hw( read, twi0 );
  * @endcode
  */
 #define _hw_mthd_hw_read__twia		, _hw_rdtwia
@@ -262,12 +262,12 @@
  * @page atmelavr_twia
  * @section atmelavr_twia_stat Status
  *
- * The `hw_stat()` instruction returns the status flags of the TWI as a byte
+ * The `hw(stat,)` instruction returns the status flags of the TWI as a byte
  * whose value can be compared to HWA predefined symbols:
  *
  * @code
- * if ( hw_stat(TWI_NAME) == HW_TWI_START ) {
- *      // Start condition has been transmitted
+ * if ( hw(stat,twi0) == HW_TWI_START ) {
+ *	// Start condition has been transmitted
  * }
  * @endcode
  *
@@ -484,7 +484,7 @@
  *  * `slam`: enable ack mask
  *  * `gce`: general call enable
  *
- * These registers are accessible through the @ref public_reg_instructions
+ * These registers are accessible through the @ref public_ins
  * "register access intructions".
  */
 

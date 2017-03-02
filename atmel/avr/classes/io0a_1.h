@@ -17,8 +17,8 @@
 #define _hw_class__io0a
 
 
-#define _hw_mthd_hw_bn__io0a                   , _hw_bn_io0a
-#define _hw_bn_io0a(o,i, cn,bn,bp,...)         0
+#define _hw_mthd_hw_bn__io0a		, _hw_bn_io0a
+#define _hw_bn_io0a(o,i, cn,bn,bp,...)	       0
 
 
 #define _hw_mthd_HW_REL__io0a		, _HW_REL_io0a

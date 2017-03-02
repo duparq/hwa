@@ -21,18 +21,18 @@
 	;; Returned codes
 	;;
 	CODE_CRC  = (1<<7)	; Errors: CRC
-	CODE_FAIL = (1<<4)	;         Operation failed
-	CODE_WRT  = (1<<1)	; Info:   Written
-	CODE_ERS  = (1<<0)	;         Erased
+	CODE_FAIL = (1<<4)	;	  Operation failed
+	CODE_WRT  = (1<<1)	; Info:	  Written
+	CODE_ERS  = (1<<0)	;	  Erased
 	CODE_OK = 0		; Success
 
 	;; Constants
 	;;
 	PROTOCOL   = 5
-	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE  ; from HWA
-	FLASHSIZE  = HW_DEVICE_FLASH_SIZE       ;
-	RAMSTART   = HW_DEVICE_RAM_START        ;
-	RAMEND     = HW_DEVICE_RAM_START+HW_DEVICE_RAM_SIZE-1
+	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE	; from HWA
+	FLASHSIZE  = HW_DEVICE_FLASH_SIZE	;
+	RAMSTART   = HW_DEVICE_RAM_START	;
+	RAMEND	   = HW_DEVICE_RAM_START+HW_DEVICE_RAM_SIZE-1
 	SIGNATURE0 = HW_A0(HW_DEVICE_SIGNATURE) ;
 	SIGNATURE1 = HW_A1(HW_DEVICE_SIGNATURE) ;
 	SIGNATURE2 = HW_A2(HW_DEVICE_SIGNATURE) ;
@@ -70,19 +70,19 @@
 	;; R1:R0      value written into flash page buffer
 	;; R3:R2      CRC of applicapion
 	;; R5:R4      RAMSTART (used to store incomming data)
-	;; R9         OSCCAL value at reset if XSPEED defined
+	;; R9	      OSCCAL value at reset if XSPEED defined
 	;; R11:R10    CRC 16 bits (CCITT) of last transfered packet
 	;; R13:R12    UART 1.5 bit duration in cycles
 	;; R15:R14    UART bit duration in cycles
-	;; R16        general usage
-	;; R17        FF if all applicapion bytes are FF, general usage
-	;; R18        CRC computation
-	;; R19        CRC computation
-	;; R20        counter for bytes to send/receive/read/program
-	;; R21        general use
-	;; R22        UART bits counter
-	;; R23        UART received byte buffer
-	;; R24        UART rx/tx byte
+	;; R16	      general usage
+	;; R17	      FF if all applicapion bytes are FF, general usage
+	;; R18	      CRC computation
+	;; R19	      CRC computation
+	;; R20	      counter for bytes to send/receive/read/program
+	;; R21	      general use
+	;; R22	      UART bits counter
+	;; R23	      UART received byte buffer
+	;; R24	      UART rx/tx byte
 	;; R27:R26    delay routine
 	;; R29:R28    Y: RAM address, Z backup
 	;; R31:R30    Z: flash address counter (LPM/SPM)
@@ -90,43 +90,44 @@
 
 	;; Hardware registers
 	;;
-	MCUSR      = hw_ra(core0, mcusr)
-	 BP_EXTRF  = hw_bp(reg(hw_core0, extrf))
-	 BP_PORF   = hw_bp(reg(hw_core0, porf))
+	MCUSR	   = HW_ADDRESS(HW_REGISTER(core0, mcusr))
+	 BP_EXTRF  = HW_POSITION(HW_REGISTER(core0, extrf))
+	 BP_PORF   = HW_POSITION(HW_REGISTER(core0, porf))
 
-	SPMCSR	   = hw_ra(flash0, csr)
-	 BP_RWWSRE = hw_bp(reg(hw_flash0, rwwsre))
-	 BP_BLBSET = hw_bp(reg(hw_flash0, blbset))
-	 BP_PGWRT  = hw_bp(reg(hw_flash0, pgwrt))
-	 BP_PGERS  = hw_bp(reg(hw_flash0, pgers))
-	 BP_SPMEN  = hw_bp(reg(hw_flash0, spmen))
+	SPMCSR	   = HW_ADDRESS(HW_REGISTER(flash0, csr))
+	 BP_RWWSRE = HW_POSITION(HW_REGISTER(flash0, rwwsre))
+	 BP_BLBSET = HW_POSITION(HW_REGISTER(flash0, blbset))
+	 BP_PGWRT  = HW_POSITION(HW_REGISTER(flash0, pgwrt))
+	 BP_PGERS  = HW_POSITION(HW_REGISTER(flash0, pgers))
+	 BP_SPMEN  = HW_POSITION(HW_REGISTER(flash0, spmen))
 
-	EEARL	   = hw_ra(eeprom0, ar)+0
-	EEARH	   = hw_ra(eeprom0, ar)+1
-	EEDR	   = hw_ra(eeprom0, dr)
-	EECR	   = hw_ra(eeprom0, cr)
-#define AP_EEMPE   hw_ap(reg(hw_eeprom0, mpe))
-#define AP_EEPE	   hw_ap(reg(hw_eeprom0, pe))
-#define AP_EERE	   hw_ap(reg(hw_eeprom0, re))
+	EEARL	   = HW_ADDRESS(HW_REGISTER(eeprom0, ar))+0
+	EEARH	   = HW_ADDRESS(HW_REGISTER(eeprom0, ar))+1
+	EEDR	   = HW_ADDRESS(HW_REGISTER(eeprom0, dr))
+	EECR	   = HW_ADDRESS(HW_REGISTER(eeprom0, cr))
+
+#define AP_EEMPE   HW_ADDRESS(HW_REGISTER(eeprom0,mpe)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
+#define AP_EEPE	   HW_ADDRESS(HW_REGISTER(eeprom0,pe)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
+#define AP_EERE	   HW_ADDRESS(HW_REGISTER(eeprom0,re)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
 
 	;; Communicapion pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
-	RXDPORT	   = hw_ra(rel(DIABOLO_PIN_RX,port), port)
-	RXDPIN	   = hw_ra(rel(DIABOLO_PIN_RX,port), pin)
-	RXDDR	   = hw_ra(rel(DIABOLO_PIN_RX,port), ddr)
-	 BP_RXD	   = hw_bp(DIABOLO_PIN_RX)
-	TXDPORT	   = hw_ra(rel(DIABOLO_PIN_TX,port), port)
-	TXDDR	   = hw_ra(rel(DIABOLO_PIN_TX,port), ddr)
-	 BP_TXD	   = hw_bp(DIABOLO_PIN_TX)
+	RXDPORT	   = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_RX,port), port))
+	RXDPIN	   = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_RX,port), pin))
+	RXDDR	   = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_RX,port), ddr))
+	 BP_RXD	   = HW_POSITION(DIABOLO_PIN_RX)
+	TXDPORT	   = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_TX,port), port))
+	TXDDR	   = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_TX,port), ddr))
+	 BP_TXD	   = HW_POSITION(DIABOLO_PIN_TX)
 
 	;; Debug pin
 	;;
 #if defined DIABOLO_PIN_DBG
 
-	DBGPORT   = hw_ra(rel(DIABOLO_PIN_DBG,port), port)
-	DBGPIN    = hw_ra(rel(DIABOLO_PIN_DBG,port), pin)
-	DBGDDR    = hw_ra(rel(DIABOLO_PIN_DBG,port), ddr)
-	DBGBIT    = hw_bp(DIABOLO_PIN_DBG)
+	DBGPORT	  = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_DBG,port), port))
+	DBGPIN	  = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_DBG,port), pin))
+	DBGDDR	  = HW_ADDRESS(HW_REGISTER(HW_RELATIVE(DIABOLO_PIN_DBG,port), ddr))
+	DBGBIT	  = HW_POSITION(DIABOLO_PIN_DBG)
 
 #  define DBGDDR1	sbi	DBGDDR, DBGBIT
 #  define DBGDDR0	cbi	DBGDDR, DBGBIT
@@ -146,10 +147,10 @@
 
 
 	;; /********************************/
-	;; /*            START             */
-	;; /*                              */
-	;; /*     Diabolo entry point      */
-	;; /*                              */
+	;; /*		 START		   */
+	;; /*				   */
+	;; /*	  Diabolo entry point	   */
+	;; /*				   */
 	;; /********************************/
 
 
@@ -211,7 +212,7 @@ app:	DBGDDR0
 	;; Prepare for communicapion
 	;;
 init:	DBG1
-	ldi	R16, lo8(RAMSTART) 	; Store RAMSTART into R5:R4
+	ldi	R16, lo8(RAMSTART)	; Store RAMSTART into R5:R4
 	ldi	R17, hi8(RAMSTART)	;
 	movw	R4, R16
 	DBG0
@@ -251,7 +252,7 @@ sync:
 
 	;; Initialize TXD pin if separate from RXD
 	;;
-#if hw_id(DIABOLO_PIN_RX) != hw_id(DIABOLO_PIN_TX)
+#if HW_ID(DIABOLO_PIN_RX) != HW_ID(DIABOLO_PIN_TX)
 	sbi	TXDPORT, BP_TXD
 	sbi	TXDDR, BP_TXD
 #endif
@@ -294,7 +295,7 @@ xi:	cpi	R24, 'i'
 	rcall	obytecrc
 	mov	R24, R2		; 6: CRC of applicapion (LSB)
 	rcall	obytecrc
-	clr	R31				;  7: Fuses low byte      (0x0000)
+	clr	R31				;  7: Fuses low byte	  (0x0000)
 	clr	R30				;  8: Lock bits		  (0x0001)
 2:	ldi	R24, 1<<BP_BLBSET | 1<<BP_SPMEN	;  9: Fuses extended byte (0x0002)
 	XST	SPMCSR, R24			; 10: Fuses high byte	  (0x0003)
@@ -424,7 +425,7 @@ xe:	cpi	R24, 'e'
 	rcall	iaddr		; Get address and store it in Z
 	rcall	ibyte		; R24 = how many bytes to read
 	mov	R20, R24
-2:	rcall	eerd 		; Read EEPROM and add to CRC
+2:	rcall	eerd		; Read EEPROM and add to CRC
 	rcall	obyte
 	dec	R20
 	brne	2b		; Until the last one
@@ -449,7 +450,7 @@ xE:	cpi	R24, 'E'
 	;;
 	movw	R28, R4		; Y = RAMSTART
 ;; 2:	ldi	R24, 0		; Command: erase & write
-;; 	XST	EECR, R24
+;;	XST	EECR, R24
 2:	XST	EEARL, R30	; Address
 	XST	EEARH, R31
 	ld	R24, Y+		; Byte value
@@ -481,7 +482,7 @@ xX:	cpi	R24, 'X'
 	;;
 	;; Deinitialize TXD pin if not the same as RXD
 	;; 
-#if hw_id(DIABOLO_PIN_RX) != hw_id(DIABOLO_PIN_TX)
+#if HW_ID(DIABOLO_PIN_RX) != HW_ID(DIABOLO_PIN_TX)
 	ldi	R24, 0
 	XST	TXDDR, R24
 	XST	TXDPORT, R24
@@ -501,49 +502,49 @@ x:	rcall	stat
 	;; Delay 10 + 4 * floor(R27:R26 / 4) cycles
 	;;
 delay:				; [3] rcall
-	sbiw	R26, 4		; [2]   |
+	sbiw	R26, 4		; [2]	|
 	brcc	delay		; [2/1] |= 4
 	ret			; [4]
 
 
 	;; Receive one byte in R24			R22, R23, R24, R25
-	;; 						R10, R11, R18, R19
+	;;						R10, R11, R18, R19
 	;;
 	;; ibytes returns 35 cycles after the stop bit has been sampled.
 	;;
 ibyte:
 	DBG1
-;; ibyte:	ldi 	R22, 9		; 8 data bits + 1 stop bit
-#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
+;; ibyte:	ldi	R22, 9		; 8 data bits + 1 stop bit
+#if HW_ID(DIABOLO_PIN_RX) == HW_ID(DIABOLO_PIN_TX)
 	cbi	TXDDR, BP_TXD	;
 	cbi	TXDPORT, BP_TXD	; Release TXD
 #endif
 2:	sbis	RXDPIN, BP_RXD	;	Wait RXD == 1
 	rjmp	2b
-3:	sbic 	RXDPIN, BP_RXD	; [1/2] Wait RXD == 0
-	rjmp 	3b		; [2]   |=2
+3:	sbic	RXDPIN, BP_RXD	; [1/2] Wait RXD == 0
+	rjmp	3b		; [2]	|=2
 
-	ldi 	R22, 8		; [1]	|	8 data bits (stop bit discarded)
+	ldi	R22, 8		; [1]	|	8 data bits (stop bit discarded)
 	movw	R26, R12	; [1]	|	Delay 1.5 bit (skip start)
 	sbiw	R26, 4+10	; [2]	|=4
 	rcall	delay
 
 4:	in	R24, RXDPIN	; [1]	|	Sample one bit in T
 	bst	R24, BP_RXD	; [1]	|
-	lsr 	R23		; [1]   |	Store T into byte buffer
+	lsr	R23		; [1]	|	Store T into byte buffer
 	bld	R23, 7		; [1]	|
-	dec 	R22		; [1]   |
-	breq 	1f		; [1/2] |	Exit loop after last bit
+	dec	R22		; [1]	|
+	breq	1f		; [1/2] |	Exit loop after last bit
 	movw	R26, R14	; [1]	|
 	sbiw	R26, 9+10+2	; [2]	|=9	Wait next bit
 	rcall	delay
-	rjmp 	4b		; [2]   |=2   	Loop for next bit
+	rjmp	4b		; [2]	|=2	Loop for next bit
 
 1:	DBG0
 	mov	R24, R23	; [1]		Store received byte in R24
 
 	;; Update CRC (R11:R10) with byte R24
-	;; 						R10, R11, R18, R19
+	;;						R10, R11, R18, R19
 	;;
 crcadd:				; [4] (call)
 	mov	R19, R24	; [1] Save byte
@@ -578,7 +579,7 @@ crcadd:				; [4] (call)
 	;; Send one byte (R24, destroyed)
 	;; Update CRC (initialized at 0xFFFF after prompt)
 	;;
-	;; 						R10, R11, R18, R19
+	;;						R10, R11, R18, R19
 	;;
 obytecrc:
 	rcall	crcadd
@@ -586,7 +587,7 @@ obytecrc:
 	;;
 obyte:
 	;; mov	R27, R24
-#if hw_id(DIABOLO_PIN_RX) == hw_id(DIABOLO_PIN_TX)
+#if HW_ID(DIABOLO_PIN_RX) == HW_ID(DIABOLO_PIN_TX)
 	;;
 	;; Delay 1.5 bit time between RX and TX on the same wire
 	;; 
@@ -605,9 +606,9 @@ obyte:
 	com	R24		; Complement byte (optimization)
 	sec			; Load start bit
 2:	brcc	3f		; [1/2]	|	IF CARRY
-	cbi	TXDPORT, BP_TXD	; [1]   |	THEN send '0'
+	cbi	TXDPORT, BP_TXD	; [1]	|	THEN send '0'
 	rjmp	4f		; [2]	|
-3:	sbi	TXDPORT, BP_TXD	; [1]   |	ELSE send '1'
+3:	sbi	TXDPORT, BP_TXD	; [1]	|	ELSE send '1'
 	nop			; [1]	|
 4:	movw	R26, R14	; [1]	|
 	sbiw	R26, 7+10+4	; [2]	|=7
@@ -620,7 +621,7 @@ obyte:
 	;; Execute SPM instruction after setting SPMCSR with R21 value
 	;; 
 #if defined HW_DEVICE_FUSE_BOOTRST
-dospm:  XST	SPMCSR, R21
+dospm:	XST	SPMCSR, R21
 	spm
 2:	XSBIC	R21, SPMCSR, BP_SPMEN ; Wait end of SPM instruction
 	rjmp	2b
@@ -649,7 +650,7 @@ crci:	ldi	R16, 0xFF
 	;;   R17==0xFF if all opcodes are 0xFF, R17=0 if not all opcodes are 0xFF
 	;;
 	;; Cycles = 48*nbytes
-	;;        = 48 ms/kB of flash code @1MHz
+	;;	  = 48 ms/kB of flash code @1MHz
 	;;
 stat:	rcall	crci
 	ldi	R30, lo8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; Begin with last byte
@@ -669,7 +670,7 @@ stat:	rcall	crci
 
 #if !defined HW_DEVICE_FUSE_BOOTRST
 	cpi	R31, 0		; [1]	Do not compute the RESET vector for devices
-	brne	2b		; [2]   without a boot section
+	brne	2b		; [2]	without a boot section
 	cpi	R30, 2		; [1]
 	brcc	2b		; [2]=48
 #else

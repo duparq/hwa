@@ -15,9 +15,9 @@
  * A class `_cmp16a` object is a 16-bit counter compare unit with waveform
  * generator. It has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( COMPARE_NAME, counter )`
+ *  * one counter, whose name is given by `HW_REL( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_REL( COMPARE_NAME, pin )`
+ *  * one output pin, whose name is given by `HW_REL( compare0, pin )`
  *
  * It is used in:
  *
@@ -31,16 +31,16 @@
  * @page atmelavr_cmp16a
  * @par Instructions that do not produce C code
  *
- * The `HW_BITS()` instruction retrieves the number of bits of the compare
+ * The `HW_BITS()` instruction returns the number of bits of the compare
  * register:
  *
  * @code
- * #if HW_BITS( COMPARE_NAME ) != 16
+ * #if HW_BITS( compare0 ) != 16
  * #  error A 16-bit compare unit is required!
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__cmp16a			, _hw_bn_cmp16a
+#define _hw_mthd_hw_bn__cmp16a		, _hw_bn_cmp16a
 #define _hw_bn_cmp16a(o,i,a,...)			16
 
 
@@ -52,7 +52,7 @@
  * a compare event occurs:
  *
  * @code
- * HW_ISR( COMPARE_NAME )
+ * HW_ISR( compare0 )
  * {
  *    // Process compare event
  * }
@@ -68,7 +68,7 @@ typedef struct {
 
   /*  Hardware registers
    */
-  hwa_r16_t 	reg ;
+  hwa_r16_t	reg ;
 
   /*  Registers used for high-level configuration
    */
