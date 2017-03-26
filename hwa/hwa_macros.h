@@ -538,19 +538,6 @@
 #if defined DOXYGEN
 #  define HW_REGISTER(object, reg)
 #else
-/* #  define HW_REGISTER(o,x)		_HW_REG2(o,x) */
-/* #endif */
-/* #define _HW_REG2(...)			_HW_GEN(_HW_REG3,__VA_ARGS__) */
-/* #define _HW_REG3(c,o,i,a,r)		_HW_REG4(_hw_reg_##c##_##r,o,c,a,r) */
-/* #define _HW_REG4(...)			_HW_REG5(__VA_ARGS__) */
-/* #define _HW_REG5(t,...)			HW_GX(_HW_REG5,_hw_hasbits_##t)(t,__VA_ARGS__) */
-/* #define _HW_REG5_1(t,...)		_hw_r2m_##t(__VA_ARGS__) */
-/* #define _HW_REG5_0(t,o,c,a,r)		_HW_REG6(_hw_reg_##o##_##r,o,c,a,r) */
-/* #define _HW_REG6(...)			_HW_REG7(__VA_ARGS__) */
-/* #define _HW_REG7(t,...)			HW_GX(_HW_REG7,_hw_hasbits_##t)(t,__VA_ARGS__) */
-/* #define _HW_REG7_1(t,...)		_hw_r2m_##t(__VA_ARGS__) */
-/* #define _HW_REG7_0(t,o,c,a,r)		HW_E(`o` has no register `r`) */
-
 #  define HW_REGISTER(o,x)		_HW_REG1(HW_OD(o),x)
 #endif
 #define _HW_REG1(...)			_HW_REG2(__VA_ARGS__)
@@ -572,15 +559,14 @@
  * @brief Memory definition of a register (internal use, no error checking)
  * @hideinitializer
  */
-//#define _HW_REGISTER(o,r)		_hw__reg_2(o,_hw_def_##o,r)
-#define _HW_REG(o,r)			_hw__reg_2(o,_hw_def_##o,r)
-#define _hw__reg_2(...)			_hw__reg_3(__VA_ARGS__)
-#define _hw__reg_3(o,c,i,a,r)		_hw__reg_4(_hw_reg_##c##_##r,o,c,a,r)
-#define _hw__reg_4(...)			_hw__reg_5(__VA_ARGS__)
-#define _hw__reg_5(t,...)		HW_GX(_hw__reg,_hw_hasbits_##t)(t,__VA_ARGS__)
-#define _hw__reg_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define _hw__reg_0(t,o,c,a,r)		_hw__reg_6(_hw_reg_##o##_##r,o,c,a,r)
-#define _hw__reg_6(...)			_hw__reg_1(__VA_ARGS__)
+#define _HW_REG(o,r)			_HW__REG_2(o,_hw_def_##o,r)
+#define _HW__REG_2(...)			_HW__REG_3(__VA_ARGS__)
+#define _HW__REG_3(o,c,i,a,r)		_HW__REG_4(_hw_reg_##c##_##r,o,c,a,r)
+#define _HW__REG_4(...)			_HW__REG_5(__VA_ARGS__)
+#define _HW__REG_5(t,...)		HW_GX(_HW__REG,_hw_hasbits_##t)(t,__VA_ARGS__)
+#define _HW__REG_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
+#define _HW__REG_0(t,o,c,a,r)		_HW__REG_6(_hw_reg_##o##_##r,o,c,a,r)
+#define _HW__REG_6(...)			_HW__REG_1(__VA_ARGS__)
 
 
 /*  Convert a register definition to a memory definition of class _m1 or _m2
@@ -588,65 +574,25 @@
  *	-> _m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
  *		     r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
  */
-#define _hw_r2m__r8(ra,rwm,rfm, o,c,a,r)		_m1, o,a, r, _r8, ra,rwm,rfm,  8,0
-#define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)		_m1, o,a, r,_r16, ra,rwm,rfm, 16,0
-#define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)		_m1, o,a, r,_r32, ra,rwm,rfm, 32,0
-
-#define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_ob1, _hw_reg_##o##_##r,bn,bp,o,r)
-#define _hw_r2m_ob1__r8(ra,rwm,rfm,bn,bp,o,r)		_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
-
-#define _hw_r2m__ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
-  _hw_r2m_cb2_2( r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1,				\
-		 r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
-
-
-#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,m)	_HW_SPEC(_hw_r2m_xob1, _hw_reg_##to##_##tr,bn,bp,to,tr)
-#define _hw_r2m_xob1__r8(ra,rwm,rfm, bn,bp,o,r)		_m1, o,0, r,_r8,ra,rwm,rfm, bn,bp
-#define _hw_r2m_xob1__r32(ra,rwm,rfm, bn,bp,o,r)	_m1, o,0, r,_r32,ra,rwm,rfm, bn,bp
-
-#define _hw_r2m__xob2(xo, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m) \
-  _hw_r2m_cb2_2( r1,_hw_reg_##xo##_##r1,rbn1,rbp1,vbp1,			\
-		 r2,_hw_reg_##xo##_##r2,rbn2,rbp2,vbp2, xo,c,a,m )
-
-#define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_HW_SPEC(_hw_r2m_cb1, _hw_reg_##c##_##r,bn,bp,o,r,a)
-#define _hw_r2m_cb1__r8(ra,rwm,rfm,bn,bp,o,r,a)		_m1, o,a, r,_r8,ra,rwm,rfm, bn,bp
-#define _hw_r2m_cb1__r16(ra,rwm,rfm,bn,bp,o,r,a)	_m1, o,a, r,_r16,ra,rwm,rfm, bn,bp
-#define _hw_r2m_cb1__r32(ra,rwm,rfm,bn,bp,o,r,a)	_m1, o,a, r,_r32,ra,rwm,rfm, bn,bp
-
-#define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m)	\
-  _hw_r2m_cb2_2( r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1,			\
-		 r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2, o,c,a,m)
-#define _hw_r2m_cb2_2(...)		_hw_r2m_cb2_3(__VA_ARGS__)
-#define _hw_r2m_cb2_3( r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		       r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, o,c,a,m )	\
-  _m2, o,a,								\
-    r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,				\
-    r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
-
-/*  Remplacement pour _hw_r2m(...)
- *
- *  Le nom du registre tel que demandé apparaît en 2e position, utile pour les
- *  messages d'erreurs.
- *
- *    o,c  ->  c,o
- *    _m1,o,a,r	 ->  _m1,r,o,a
- *    _m2,o,a	 ->  _m2,r,o,a
+/*
+ *  Le nom du registre tel que demandé pourrait être rappelé en 2e position,
+ *  utile pour les messages d'erreurs. Par exemple, un registre logique peut se
+ *  retrouver réparti sur 2 registres matériels dont le nom n'a pas d'intérêt
+ *  pour le développeur.
  */
-/* #define _hw_r3m__r8(ra,rwm,rfm, c,o,a,r)		_m1,r,o,a,r, _r8, ra,rwm,rfm,  8,0 */
-/* #define _hw_r3m__r16(ra,rwm,rfm, c,o,a,r)		_m1,r,o,a,r,_r16, ra,rwm,rfm, 16,0 */
-/* #define _hw_r3m__r32(ra,rwm,rfm, c,o,a,r)		_m1,r,o,a,r,_r32, ra,rwm,rfm, 32,0 */
-/* #define _hw_r3m__ob1(tr,bn,bp, c,o,a,r)			_m1,r,o,0,tr,_##o##_##tr,bn,bp */
-/* #define _hw_r3m__cb1(tr,bn,bp, c,o,a,r)			_m1,r,o,a,tr,_hw_##c##_##tr,bn,bp */
-/* #define _hw_r3m__xob1(to,tr,bn,bp, c,o,a,r)		_m1,r,o,0,tr,_##to##_##tr,bn,bp */
+#define _hw_r2m__r8(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r, _r8,ra,rwm,rfm, 8,0
+#define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r16,ra,rwm,rfm,16,0
+#define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r32,ra,rwm,rfm,32,0
+#define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_m1,o,0,r,_hw_reg_##o##_##r,bn,bp
+#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,r)	_m1,to,0,tr,_hw_reg_##to##_##tr,bn,bp
+#define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_m1,o,a,r,_hw_reg_##c##_##r,bn,bp
+#define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
+  _m2,o,a, r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2
+#define _hw_r2m__ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
+  _m2,o,a, r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2
+#define _hw_r2m__xob2(to, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m) \
+  _m2,o,a, r1,_hw_reg_##to##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##to##_##r2,rbn2,rbp2,vbp2
 
-/* #define _hw_r3m__ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, c,o,a,r)	\ */
-/*   _m2,r,o,a, r1,_##o##_##r1,rbn1,rbp1,vbp1, r2,_##o##_##r2,rbn2,rbp2,vbp2 */
-
-/* #define _hw_r3m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, c,o,a,r)	\ */
-/*   _m2,r,o,a, r1,_hw_##c##_##r1,rbn1,rbp1,vbp1, r2,_hw_##c##_##r2,rbn2,rbp2,vbp2 */
-
-/* #define _hw_r3m__xob2(to, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, c,o,a,r) \ */
-/*   _m2,r,xo,a, r1,_##to##_##r1,rbn1,rbp1,vbp1, r2,_##to##_##r2,rbn2,rbp2,vbp2 */
 
 
 /**
