@@ -22,6 +22,7 @@
 #define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
 
 
+#if !defined hw_waste_cycles
 /**
  * @ingroup public_ins
  * @brief Insert a software loop for `n` system clock cycles.
@@ -29,7 +30,8 @@
  *
  * Only works with compile-time constants.
  */
-#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+#  define hw_waste_cycles(n)		HW_E_IMP(hw_waste_cycles)
+#endif
 
 
 /**
@@ -119,7 +121,7 @@
  * Syntax: `_hw_atomic_read( object, register );`
  * @hideinitializer
  */
-#define _hw_atomic_read_reg(o,r)		_HW_SPEC(_hw_atomic_read, _HW_REG(o,r))
+#define _hw_atomic_read_reg(o,r)	_HW_SPEC(_hw_atomic_read, _HW_REG(o,r))
 
 
 /**
@@ -148,6 +150,9 @@
 #define _hw_mthd_hw_write__m2		, _hw_write__m2
 #define _hw_mthd_hwa_write__m1		, _hwa_write__m1
 #define _hw_mthd_hwa_write__m2		, _hwa_write__m2
+#define _hw_mthd_hwa_write__r8		, _hwa_write__r8
+#define _hw_mthd_hwa_write__oreg	, _hwa_write_oreg
+#define _hw_mthd_hwa_write__xob1	, _hwa__write__xob1
 
 
 /**
@@ -223,9 +228,9 @@
   do {									\
     if ( ra1==ra2 ) {							\
       /* HWA_ERR("That should not happen"); */				\
-      _hw_write_##rc1##_m( a+ra1, rwm1, rfm1,				\
-			   (((1U<<rbn1)-1)<<rbp1) | (((1U<<rbn2)-1)<<rbp2), \
-			   (((v>>vbp1)&((1<<rbn1)-1))<<rbp1) | (((v>>vbp2)&((1<<rbn2)-1))<<rbp2)); \
+      _hw_write##rc1( a+ra1, rwm1, rfm1,				\
+		      (((1U<<rbn1)-1)<<rbp1) | (((1U<<rbn2)-1)<<rbp2),	\
+		      (((v>>vbp1)&((1<<rbn1)-1))<<rbp1) | (((v>>vbp2)&((1<<rbn2)-1))<<rbp2)); \
     }									\
     else {								\
       _hw_write_##rc1(a+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
@@ -256,14 +261,10 @@
       _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
   } while(0)
 
-#define _hw_mthd_hwa_write__r8		, _hwa_write__r8
-
 
 /**
  * @brief  Write the register of an object
  */
-#define _hw_mthd_hwa_write__oreg	, _hwa_write_oreg
-
 #define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
 
 
@@ -276,7 +277,6 @@
  *    _hwa_write(_##o##_##did, 1);
  *	_hwa__write__xob1(hw_shared, did, 1, 0, 1,);
  */
-#define _hw_mthd_hwa_write__xob1	, _hwa__write__xob1
 #define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(,o,r,bn,bp,v)
 
 
@@ -287,11 +287,8 @@
  *
  *	_hw_write_reg_m( o, r, m, v );
  */
-#define _hw_write_reg_m(o,r,m,v)	_hw_wrrm1(_HW_REG(o,r),m,v)
-#define _hw_wrrm1(...)			_hw_wrrm2(__VA_ARGS__)
-#define _hw_wrrm2(t,...)		_hw_wrrm_##t(__VA_ARGS__)
-#define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
-    _hw_write_##rc##_m(a+ra,rwm,rfm,m,v)
+#define _hw_write_reg_m(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_REG(o,r),m,v)
+#define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hw_write##rc(a+ra,rwm,rfm,m,v)
 
 /**
  * @ingroup private_ins
@@ -300,45 +297,43 @@
  *
  *	_hwa_write_reg_m( o, r, m, v );
  */
-#define _hwa_write_reg_m(o,r,m,v)	_hwa_wrrm1(_HW_REG(o,r),m,v)
-#define _hwa_wrrm1(...)			_hwa_wrrm2(__VA_ARGS__)
-#define _hwa_wrrm2(t,...)		_hwa_wrrm_##t(__VA_ARGS__)
-#define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp, m, v)	\
-    _hwa_write_##rc##_m(&hwa->o.r,rwm,rfm,m,v)
+#define _hwa_write_reg_m(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_REG(o,r),m,v)
+#define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hwa_write##rc(&hwa->o.r,rwm,rfm,m,v)
+
+
+/**
+ * @ingroup private_mac
+ * @brief Specialize instruction `f` for class `c`: _HW_SP(f,c,...) -> f_c(...)
+ * @hideinitializer
+ *
+ *  This is an alternative to _HW_SPEC() that is useful to allow _HW_SPEC() expansion.
+ */
+#define _HW_SP(...)			__HW_SP_2(__VA_ARGS__)
+#define __HW_SP_2(f,c,...)		f##_##c(__VA_ARGS__)
 
 
 /**
  * @brief Initialize the HWA context registers addresses of an object
  */
-#define _hwa_setup(o)			_hwa_setup_2(o)
-#define _hwa_setup_2(o)			_hwa_setup_3(o,_hw_def_##o)
-#define _hwa_setup_3(...)		_hwa_setup_4(__VA_ARGS__)
-#define _hwa_setup_4(o,c,...)		_hwa_setup_##c(o,__VA_ARGS__)
+#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_OD(o))
 
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value
  */
-#define _hwa_init(o)			_hwa_init_2(o,_hw_def_##o)
-#define _hwa_init_2(...)		_hwa_init_3(__VA_ARGS__)
-#define _hwa_init_3(o,c,...)		_hwa_init_##c(o,__VA_ARGS__)
+#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_OD(o))
 
 
 /**
  * @brief Solve the configuration of an object
  */
-#define _hwa_solve(o)			_hwa_solve_2(o,_hw_def_##o)
-#define _hwa_solve_2(...)		_hwa_solve_3(__VA_ARGS__)
-#define _hwa_solve_3(o,c,...)		_hwa_solve_##c(o,__VA_ARGS__)
+#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_OD(o))
 
 
 /**
  * @brief Commit the registers of an object
  */
-#define _hwa_commit(o)			_hwa_commit_2(o)
-#define _hwa_commit_2(o)		_hwa_commit_3(o,_hw_def_##o)
-#define _hwa_commit_3(...)		_hwa_commit_4(__VA_ARGS__)
-#define _hwa_commit_4(o,c,...)		_hwa_commit_##c(o,__VA_ARGS__)
+#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_OD(o))
 
 
 /**
@@ -513,37 +508,37 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
  * @param bp	position of the least significant bit in the register.
  * @param v	value to write.
  */
-HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r, 
-				uint8_t rwm, uint8_t rfm,
-				uint8_t bn, uint8_t bp, uint8_t v )
-{
-  if (bn == 0)
-    HWA_ERR("no bit to be changed?");
+/* HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,  */
+/* 				uint8_t rwm, uint8_t rfm, */
+/* 				uint8_t bn, uint8_t bp, uint8_t v ) */
+/* { */
+/*   if (bn == 0) */
+/*     HWA_ERR("no bit to be changed?"); */
 
-  if (v > (1U<<bn)-1)
-    HWA_ERR("value too high for number of bits.");
+/*   if (v > (1U<<bn)-1) */
+/*     HWA_ERR("value too high for number of bits."); */
 
-  uint8_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask	 */
+/*   uint8_t sm = ((1U<<bn)-1) << bp ;	/\* shifted mask	 *\/ */
 
-  //  *((volatile uint8_t*)0) = sm ;
+/*   //  *((volatile uint8_t*)0) = sm ; */
 
-  uint8_t sv = v << bp ;		/* shifted value */
+/*   uint8_t sv = v << bp ;		/\* shifted value *\/ */
 
-  //  *((volatile uint8_t*)0) = sv ;
+/*   //  *((volatile uint8_t*)0) = sv ; */
 
-  if ((rwm & sm) != sm)
-    HWA_ERR("bits not writeable.");
+/*   if ((rwm & sm) != sm) */
+/*     HWA_ERR("bits not writeable."); */
 
-  if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
-    HWA_ERR("committing is required before setting a new value.");
+/*   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv) */
+/*     HWA_ERR("committing is required before setting a new value."); */
 
-  if ( sm & rfm )
-    if ( v == 0 )
-      HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+/*   if ( sm & rfm ) */
+/*     if ( v == 0 ) */
+/*       HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
 
-  r->mmask |= sm ;
-  r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
-}
+/*   r->mmask |= sm ; */
+/*   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ; */
+/* } */
 
 
 /**
@@ -563,9 +558,7 @@ HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,
  * @param msk	mask of bits concerned.
  * @param v	value to write.
  */
-HW_INLINE void _hwa_write__r8_m ( hwa_r8_t *r, 
-				  uint8_t rwm, uint8_t rfm,
-				  uint8_t msk, uint8_t v )
+HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, uint8_t msk, uint8_t v )
 {
   if (v & ~msk)
     HWA_ERR("value overflows the mask.");
@@ -585,37 +578,27 @@ HW_INLINE void _hwa_write__r8_m ( hwa_r8_t *r,
 }
 
 
-HW_INLINE void _hwa_write__r16 ( hwa_r16_t *r,
-				 uint16_t rwm, uint16_t rfm,
-				 uint8_t bn, uint8_t bp, uint16_t v )
+HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, uint16_t msk, uint16_t v )
 {
-  if (bn == 0)
-    HWA_ERR("no bit to be changed?");
+  if (v & ~msk)
+    HWA_ERR("value overflows the mask.");
 
-  if (v > (1U<<bn)-1)
-    HWA_ERR("value too high for bits number.");
+  if ((rwm & msk) != msk)
+    HWA_ERR("trying to modify bits that are not writeable.");
 
-  uint16_t sm = ((1U<<bn)-1) << bp ;	/* shifted mask	 */
-  uint16_t sv = v << bp ;		/* shifted value */
+  if ((r->mmask & msk) != 0 && (r->mvalue & msk) != v)
+    HWA_ERR("committing is required before setting a new value.");
 
-  if ((rwm & sm) != sm)
-    HWA_ERR("bits not writeable.");
-
-  if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv)
-    HWA_ERR("commit required before setting a new value.");
-
-  if ( sm & rfm )
+  if ( msk & rfm )
     if ( v == 0 )
       HWA_ERR("flag bit can only be cleared by writing 1 into it.");
 
-  r->mmask |= sm ;
-  r->mvalue = (r->mvalue & ~sm) | (sm & sv) ;
+  r->mmask |= msk ;
+  r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
 }
 
 
-HW_INLINE void _hwa_write__r32_m ( hwa_r32_t *r, 
-				   uint32_t rwm, uint32_t rfm,
-				   uint32_t msk, uint32_t v )
+HW_INLINE void _hwa_write_r32 ( hwa_r32_t *r, uint32_t rwm, uint32_t rfm, uint32_t msk, uint32_t v )
 {
   if ( (v & msk) != v )
     HWA_ERR("value overflows the mask.");
@@ -634,13 +617,6 @@ HW_INLINE void _hwa_write__r32_m ( hwa_r32_t *r,
   r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
 }
 
-HW_INLINE void _hwa_write__r32 ( hwa_r32_t *r, 
-				 uint32_t rwm, uint32_t rfm,
-				 uint8_t bn, uint8_t bp, uint32_t v )
-{
-  _hwa_write__r32_m( r, rwm, rfm, ((1ULL<<bn)-1)<<bp, v<<bp );
-}
-
 
 /**
  * @ingroup private_ins
@@ -651,3 +627,12 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 {
   if (x) { HWA_ERR("you may have forgotten to turn optimizations on."); }
 }
+
+
+#define _hw_write__r8(ra,rwm,rfm,bn,bp,v)	_hw_write_r8(ra,rwm,rfm,((1UL<<bn)-1)<<bp,((uint8_t)(v))<<bp)
+#define _hw_write__r16(ra,rwm,rfm,bn,bp,v)	_hw_write_r16(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)
+#define _hw_write__r32(ra,rwm,rfm,bn,bp,v)	_hw_write_r32(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)
+
+#define _hwa_write__r8(ra,rwm,rfm,bn,bp,v)	_hwa_write_r8(ra,rwm,rfm,((1UL<<bn)-1)<<bp,((uint8_t)(v))<<bp)
+#define _hwa_write__r16(ra,rwm,rfm,bn,bp,v)	_hwa_write_r16(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)
+#define _hwa_write__r32(ra,rwm,rfm,bn,bp,v)	_hwa_write_r32(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)

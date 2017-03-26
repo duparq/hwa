@@ -45,13 +45,13 @@
 #define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
 #define HW_E_ST(x)		HW_E(`x` is not `on | off`)
-
 #define HW_E_VL(v,l)		HW_E(`v` is not `l`)
 #define HW_E_AVM(a)		HW_E(missing value for `a`)
 #define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
 #define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter `a` can be `l` but not `v`)
 #define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
 #define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
+#define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
 
 #define HW_ERROR		HW_E
 
@@ -254,7 +254,7 @@
 
 /**
  * @ingroup private_mac
- * @brief Specialize instruction `f` for class `c`: _HW_SPEC(f,t,...) -> f_c(...)
+ * @brief Specialize instruction `f` for class `c`: _HW_SPEC(f,c,...) -> f_c(...)
  * @hideinitializer
  *
  *  Arguments must start with a class name that is to be appended to the
@@ -359,6 +359,18 @@
 #define _HW_OD4_0(o,...)	HW_GX(_HW_OD5,o)(o)
 #define _HW_OD5_0(o)		HW_E_O(o)
 #define _HW_OD5_1(o)		HW_E_OM()
+
+
+/**
+ * @ingroup private_mac
+ * @brief Returns the definition of the @ref using_objects "object".
+ * @hideinitializer
+ *
+ * This is an equivalent for HW_OD() but without error checking.
+ */
+#define _HW_OD(o)		__HW_OD1(o,_hw_def_##o)
+#define __HW_OD1(...)		__HW_OD2(__VA_ARGS__)
+#define __HW_OD2(o,c,...)	c,o,__VA_ARGS__
 
 
 /**

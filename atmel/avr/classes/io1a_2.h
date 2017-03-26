@@ -208,9 +208,7 @@
  * hw_write( pin_pa0, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
-  HW_TX( _hw_write_reg_m(p, port, ((1<<bn)-1)<<bp, (v)<<bp),	\
-	 __VA_ARGS__ )
+#define _hw_write_io1a(o,i, p,bn,bp, v,...)	HW_TX( _hw_write_reg_m(p, port, ((1<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
 
 /**
  * @page atmelavr_io1a

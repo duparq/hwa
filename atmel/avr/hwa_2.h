@@ -9,8 +9,6 @@
  * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
-#include "../../hwa/hwa_2.h"
-
 /**
  * @ingroup public_ins_atmelavr
  * @brief Puts the core in sleep mode.
@@ -36,9 +34,13 @@
  * @ingroup public_ins_atmelavr
  * @brief Software loop of \c n system clock cycles.
  *
- * Only works with compile time constants.
+ * Only works with compile-time constants.
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+
+
+
+#include "../../hwa/hwa_2.h"
 
 
 
@@ -103,98 +105,7 @@
  * @ingroup private
  * @brief  Write one 8-bit hardware register.
  *
- * Write value `v` into `bn` consecutive bits starting at (least significant)
- * position `bp` of the hardware register at address `p`. Trying to write `1`s
- * into non-writeable bits triggers an error.
- *
- * @param ra	address of register.
- * @param rwm	writeable bits mask of the register.
- * @param rfm	flag bits mask of the register.
- * @param bn	number of consecutive bits concerned.
- * @param bp	position of the least significant bit conderned in the register.
- * @param v	value to write.
- */
-HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
-			       uint8_t bn, uint8_t bp, uint8_t v )
-{
-#if defined HWA_CHECK_ACCESS
-  if ( ra == ~0 )
-    HWA_ERR("invalid access");
-#endif
-
-#if !defined HWA_NO_CHECK_USEFUL
-  if ( bn == 0 )
-    HWA_ERR("no bit to be changed?");
-#endif
-
-  /*	Mask of bits to modify
-   */
-  uint8_t wm = (1U<<bn)-1 ;
-
-#if !defined HWA_NO_CHECK_LIMITS
-  if (v > wm)
-    HWA_ERR("value too high for number of bits");
-#endif
-
-  wm <<= bp ;
-  v <<= bp ;
-
-  /*	Check that we do not try to set non-writeable bits
-   */
-  if ( (v & wm & rwm) != (v & wm) )
-    HWA_ERR("bits not writeable.");
-
-  volatile uint8_t *p = (volatile uint8_t *)ra ;
-
-  if ( ra < 0x40 && 
-       (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 ||
-	wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80) ) {
-    /*
-     *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
-     *	sbi/cbi
-     *
-     *	Note: the same for writing 2 bits (2 sbi/cbi), though that would avoid
-     *	clobbering one register, is not interresting as sbi/cbi takes 2 cycles
-     *	(ldi+out is 2 cycles) and it is sometimes required to have both bits
-     *	written at the same time (e.g. TSM/PSR).
-     */
-    if ( v )
-      *p |= wm ; /* sbi */
-    else {
-      if ( wm & rfm )
-	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
-      *p &= ~wm ; /* cbi */
-    }
-  }
-  else {
-    /*
-     *	Mask of bits to be read
-     *	  = bits that are writeable and not to be modified and not flags
-     */
-    uint8_t rm = rwm & ~wm & ~rfm ;
-
-    if ( rm == 0 )
-      /*
-       *  Nothing to be read, just write the new value
-       */
-      *p = v ;
-    else {
-      /*
-       *  Read-modify-write
-       */
-      uint8_t sm = wm & v ;	/* what has to be set	  */
-      uint8_t cm = wm & (~v) ;	/* what has to be cleared */
-      *p = (*p & ~cm) | sm ;
-    }
-  }
-}
-
-
-/**
- * @ingroup private
- * @brief  Write one 8-bit hardware register using mask and value
- *
- * Write value `v` through `mask` bits of the hardware register at address `p`.
+ * Write `value` through `mask` bits of the hardware register at address `ra`.
  * Trying to write `1`s into non-writeable bits triggers an error.
  *
  * @param ra	address of register.
@@ -203,8 +114,7 @@ HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
  * @param mask	mask of bits concerned.
  * @param value	value to write.
  */
-HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
-				 uint8_t mask, uint8_t value )
+HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mask, uint8_t value )
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
@@ -273,76 +183,75 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 
 /**
  * @ingroup private
- * @brief  Write one 8-bit hardware register.
+ * @brief  Write one 16-bit hardware register
+ *
+ * Write `value` through `mask` bits of the hardware register at address `ra`.
+ * Trying to write `1`s into non-writeable bits triggers an error.
+ *
+ * @param ra	address of register.
+ * @param rwm	writeable bits mask of the register.
+ * @param rfm	flag bits mask of the register.
+ * @param mask	mask of bits concerned.
+ * @param value	value to write.
  */
-/* TODO: Atmel AVR8 does not have 16 bit access instructions. Could check
- *	sbi/cbi for 2 different bytes
- */
-HW_INLINE void _hw_write__r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
-			      uint8_t bn, uint8_t bp, uint16_t v )
+HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint16_t mask, uint16_t value )
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
     HWA_ERR("invalid access");
 #endif
 
-  if ( bn == 0 )
+#if !defined HWA_NO_CHECK_USEFUL
+  if ( mask == 0 )
     HWA_ERR("no bit to be changed?");
+#endif
 
-  /*	Mask of bits to modify
+#if !defined HWA_NO_CHECK_LIMITS
+  if ( value & (~mask) ) {
+    HWA_ERR("value overflows mask");
+  }
+#endif
+
+  /*  Verify that we do not try to set non-writeable bits
    */
-  uint16_t wm = (1U<<bn)-1 ;
-
-  if (v > wm)
-    HWA_ERR("value too high for number of bits");
-
-  wm <<= bp ;
-  v <<= bp ;
-
-  /*	Check that we do not try to set non-writeable bits
-   */
-  if ( (v & wm & rwm) != (v & wm) )
+  if ( (value & mask & rwm) != (value & mask) )
     HWA_ERR("bits not writeable.");
 
   volatile uint16_t *p = (volatile uint16_t *)ra ;
 
   if ( ra < 0x40 && 
-       (wm==0x0001 || wm==0x0002 || wm==0x0004 || wm==0x0008 ||
-	wm==0x0010 || wm==0x0020 || wm==0x0040 || wm==0x0080 ||
-	wm==0x0100 || wm==0x0200 || wm==0x0400 || wm==0x0800 ||
-	wm==0x1000 || wm==0x2000 || wm==0x4000 || wm==0x8000) ) {
+       (mask==0x0001 || mask==0x0002 || mask==0x0004 || mask==0x0008 ||
+	mask==0x0010 || mask==0x0020 || mask==0x0040 || mask==0x0080 ||
+	mask==0x0100 || mask==0x0200 || mask==0x0400 || mask==0x0800 ||
+	mask==0x1000 || mask==0x2000 || mask==0x4000 || mask==0x8000) ) {
     /*
-     *	FIXME: could put a signal here to see if that code is usefull.
-     */
-    /*
-     *	Just 1 bit to be written at C address < 0x40 (ASM addresses < 0x20): use
+     *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
      *	sbi/cbi
      */
-    if ( v )
-      *p |= wm ; /* sbi */
-    else {
-      if ( wm & rfm )
-	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
-      *p &= ~wm ; /* cbi */
-    }
+    if ( value )
+      *p |= mask ; /* sbi */
+    else
+      *p &= ~mask ; /* cbi */
   }
   else {
     /*
      *	Mask of bits to be read
      *	  = bits that are writeable and not to be modified and not flags
      */
-    uint16_t rm = rwm & ~wm & ~rfm ;
+    uint16_t rm = rwm & ~mask & ~rfm ;
 
     if ( rm == 0 )
       /*
        *  Nothing to be read, just write the new value
        */
-      *p = v ;
+      *p = value ;
     else {
       /*
        *  Read-modify-write
        */
-      *p = (*p & rm) | (v & wm) ;
+      uint16_t sm = mask & rwm & value ;	/* what has to be set     */
+      uint16_t cm = mask & rwm & (~value) ;	/* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
     }
   }
 }
@@ -578,9 +487,9 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*	ISR
  */
-#define _hw_israttr_isr_interruptible	, __attribute__((interrupt))
+#define _hw_israttr_isr_interruptible		, __attribute__((interrupt))
 #define _hw_israttr_isr_non_interruptible	, 
-#define _hw_israttr_isr_naked		, __attribute__((naked))
+#define _hw_israttr_isr_naked			, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))

@@ -9,8 +9,6 @@
  * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
-#include "../hwa/hwa_2.h"
-
 /**
  * @ingroup public_ins_espressif
  * @brief Insert inline assembler code
@@ -51,14 +49,6 @@
  *
  * Only works with compile time constants.
  */
-#define hw_delay_cycles(n)		__builtin_avr_delay_cycles(n)
-
-/**
- * @ingroup public_ins_espressif
- * @brief Software loop of \c n system clock cycles.
- *
- * Only works with compile time constants.
- */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
@@ -67,6 +57,9 @@
  * @brief True if strings s0 and s1 are equal
  */
 #define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
+
+
+#include "../hwa/hwa_2.h"
 
 
 /**
@@ -126,97 +119,6 @@
 #define HW_MEM_EEPROM			__attribute__((section(".eeprom")))
 
 
-/*
- * @ingroup private
- * @brief  Write one 8-bit hardware register.
- *
- * Write value `v` into `bn` consecutive bits starting at (least significant)
- * position `bp` of the hardware register at address `p`. Trying to write `1`s
- * into non-writeable bits triggers an error.
- *
- * @param ra	address of register.
- * @param rwm	writeable bits mask of the register.
- * @param rfm	flag bits mask of the register.
- * @param bn	number of consecutive bits concerned.
- * @param bp	position of the least significant bit conderned in the register.
- * @param v	value to write.
- */
-/* HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, */
-/*			       uint8_t bn, uint8_t bp, uint8_t v ) */
-/* { */
-/* #if defined HWA_CHECK_ACCESS */
-/*   if ( ra == ~0 ) */
-/*     HWA_ERR("invalid access"); */
-/* #endif */
-
-/* #if !defined HWA_NO_CHECK_USEFUL */
-/*   if ( bn == 0 ) */
-/*     HWA_ERR("no bit to be changed?"); */
-/* #endif */
-
-/*   /\*	Mask of bits to modify */
-/*    *\/ */
-/*   uint8_t wm = (1U<<bn)-1 ; */
-
-/* #if !defined HWA_NO_CHECK_LIMITS */
-/*   if (v > wm) */
-/*     HWA_ERR("value too high for number of bits"); */
-/* #endif */
-
-/*   wm <<= bp ; */
-/*   v <<= bp ; */
-
-/*   /\*	Check that we do not try to set non-writeable bits */
-/*    *\/ */
-/*   if ( (v & wm & rwm) != (v & wm) ) */
-/*     HWA_ERR("bits not writeable."); */
-
-/*   volatile uint8_t *p = (volatile uint8_t *)ra ; */
-
-/*   if ( ra < 0x40 &&	*/
-/*	  (wm==0x01 || wm==0x02 || wm==0x04 || wm==0x08 || */
-/*	wm==0x10 || wm==0x20 || wm==0x40 || wm==0x80) ) { */
-/*     /\* */
-/*	*  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use */
-/*	*  sbi/cbi */
-/*	* */
-/*	*  Note: the same for writing 2 bits (2 sbi/cbi), though that would avoid */
-/*	*  clobbering one register, is not interresting as sbi/cbi takes 2 cycles */
-/*	*  (ldi+out is 2 cycles) and it is sometimes required to have both bits */
-/*	*  written at the same time (e.g. TSM/PSR). */
-/*	*\/ */
-/*     if ( v ) */
-/*	 *p |= wm ; /\* sbi *\/ */
-/*     else { */
-/*	 if ( wm & rfm ) */
-/*	HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
-/*	 *p &= ~wm ; /\* cbi *\/ */
-/*     } */
-/*   } */
-/*   else { */
-/*     /\* */
-/*	*	Mask of bits to be read */
-/*	*	  = bits that are writeable and not to be modified and not flags */
-/*	*\/ */
-/*     uint8_t rm = rwm & ~wm & ~rfm ; */
-
-/*     if ( rm == 0 ) */
-/*	 /\* */
-/*	  *  Nothing to be read, just write the new value */
-/*	  *\/ */
-/*	 *p = v ; */
-/*     else { */
-/*	 /\* */
-/*	  *  Read-modify-write */
-/*	  *\/ */
-/*	 uint8_t sm = wm & v ;	   /\* what has to be set     *\/ */
-/*	 uint8_t cm = wm & (~v) ;  /\* what has to be cleared *\/ */
-/*	 *p = (*p & ~cm) | sm ; */
-/*     } */
-/*   } */
-/* } */
-
-
 /**
  * @ingroup private
  * @brief  Write one 8-bit hardware register using mask and value
@@ -230,8 +132,7 @@
  * @param mask	mask of bits concerned.
  * @param value	value to write.
  */
-HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
-				 uint8_t mask, uint8_t value )
+HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mask, uint8_t value )
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
@@ -244,13 +145,7 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
-  //  if ( (value & mask) != value ) {
   if ( value & (~mask) ) {
-    /* hw_asm("wdr"); */
-    /* *(volatile uint8_t*)0 = value ; */
-    /* *(volatile uint8_t*)0 = mask ; */
-    /* *(volatile uint8_t*)0 = value & mask ; */
-    /* hw_asm("wdr"); */
     HWA_ERR("value overflows mask");
   }
 #endif
@@ -298,13 +193,6 @@ HW_INLINE void _hw_write__r8_m ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 }
 
 
-HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
-			       uint8_t bn, uint8_t bp, uint8_t value )
-{
-  _hw_write__r8_m( ra, rwm, rfm, ((1U<<bn)-1)<<bp, value<<bp );
-}
-
-
 /**
  * @ingroup private
  * @brief  Write one 8-bit hardware register.
@@ -312,8 +200,7 @@ HW_INLINE void _hw_write__r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm,
 /* TODO: Atmel AVR8 does not have 16 bit access instructions. Could check
  *	sbi/cbi for 2 different bytes
  */
-HW_INLINE void _hw_write__r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
-			      uint8_t bn, uint8_t bp, uint16_t v )
+HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint8_t bn, uint8_t bp, uint16_t v )
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
@@ -395,8 +282,7 @@ HW_INLINE void _hw_write__r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm,
  * @param mask	mask of bits concerned.
  * @param value	value to write.
  */
-HW_INLINE void _hw_write__r32_m ( intptr_t ra, uint32_t rwm, uint32_t rfm,
-				  uint32_t mask, uint32_t value )
+HW_INLINE void _hw_write_r32 ( intptr_t ra, uint32_t rwm, uint32_t rfm, uint32_t mask, uint32_t value )
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
@@ -409,13 +295,7 @@ HW_INLINE void _hw_write__r32_m ( intptr_t ra, uint32_t rwm, uint32_t rfm,
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
-  //  if ( (value & mask) != value ) {
   if ( value & (~mask) ) {
-    /* hw_asm("wdr"); */
-    /* *(volatile uint32_t*)0 = value ; */
-    /* *(volatile uint32_t*)0 = mask ; */
-    /* *(volatile uint32_t*)0 = value & mask ; */
-    /* hw_asm("wdr"); */
     HWA_ERR("value overflows mask");
   }
 #endif
@@ -446,13 +326,6 @@ HW_INLINE void _hw_write__r32_m ( intptr_t ra, uint32_t rwm, uint32_t rfm,
     uint32_t sm = value ;     /* what has to be set	*/
     *p = (*p & ~cm) | sm ;
   }
-}
-
-
-HW_INLINE void _hw_write__r32 ( intptr_t ra, uint32_t rwm, uint32_t rfm,
-				uint8_t bn, uint8_t bp, uint32_t value )
-{
-  _hw_write__r32_m( ra, rwm, rfm, ((1ULL<<bn)-1)<<bp, value<<bp );
 }
 
 
