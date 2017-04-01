@@ -469,10 +469,6 @@
  *  * `vbp`: the position of the least significant bit of the group in the value
  *
  */
-/*  FIXME: fails without HW_ERR if p is a _pin1:
- *	_HW_REG_3(_pin1,hw_pin_pa6,307, hw_porta, 1, 6,port)
- *  -> Should HW_REG() be a method?
- */
 #if defined DOXYGEN
 #  define HW_REGISTER(object, reg)
 #else

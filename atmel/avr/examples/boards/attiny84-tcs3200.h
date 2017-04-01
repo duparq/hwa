@@ -85,7 +85,7 @@
  *
  *					class, id, parent, #of bits, position of lsb
  */
-#define _hw_def_PIN_OUTS		_io1a, 101, porta, 4, 2
+#define _hw_def_PIN_OUTS		_io1a, 1001, port0, 4, 2
 
 /*  Include HWA definitions
  */

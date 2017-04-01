@@ -21,9 +21,9 @@
  *
  * It is used in:
  *
- * * @ref attinyx4 : `compare00`, `compare01`
- * * @ref attinyx5 : `compare00`, `compare01`
- * * @ref atmegax8 : `compare00`, `compare01`, `compare20`, `compare21`
+ * * @ref attinyx4 : `counter0compare0`, `counter0compare1`
+ * * @ref attinyx5 : `counter0compare0`, `counter0compare1`
+ * * @ref atmegax8 : `counter0compare0`, `counter0compare1`, `counter2compare0`, `counter2compare1`
  */
 #define _hw_class__cmp8a
 

@@ -57,8 +57,8 @@ int main ( )
   
   hwa( write, HW_RELATIVE(COUNTER, OUTPUT), 0.5 * COUNT );
 
-  hwa( configure,       HW_RELATIVE(COUNTER, dtg0),
-       clock_div,       4,	// 1 | 2 | 4 | 8
+  hwa( configure,	HW_RELATIVE(COUNTER, dtg0),
+       clock_div,	4,	// 1 | 2 | 4 | 8
        HW_G2(OUTPUT,h), 3,	// 0..15
        HW_G2(OUTPUT,l), 9 );	// 0..15
 

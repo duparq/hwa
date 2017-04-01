@@ -26,7 +26,7 @@
 
 /*  The counter
  */
-#define PWM			compare00
+#define PWM			counter0compare0
 #define CLKDIV			64
 #define COUNTMODE		up_loop
 #define TOP			0xFF

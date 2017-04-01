@@ -426,18 +426,18 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `pcic0`	 | @ref atmelavr_pcica "_pcica"	   | Pin change interrupt controller
  * `prescaler0`	 | @ref atmelavr_psca "_psca"	   | hw_counter0/1/3 prescaler (PSC0)
  * `counter0` | @ref atmelavr_c8a "_c8a"	   | 8-bit counter-timer (T0)
- * `compare00`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 0 of hw_counter0 (OC0A)
- * `compare01`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 1 of hw_counter0 (OC0B)
+ * `counter0compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 0 of hw_counter0 (OC0A)
+ * `counter0compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 1 of hw_counter0 (OC0B)
  * `counter1` | @ref atmelavr_c16b "_c16b"	   | 16-bit counter-timer (T1)
- * `compare10`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter1 (OC1A)
- * `compare11`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter1 (OC1B)
- * `compare12`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter1 (OC1C)
- * `capture10`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter1 (ICP1)
+ * `counter1compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter1 (OC1A)
+ * `counter1compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter1 (OC1B)
+ * `counter1compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter1 (OC1C)
+ * `counter1capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter1 (ICP1)
  * `counter3` | @ref atmelavr_c16b "_c16b"	   | 16-bit counter-timer (T1)
- * `compare30`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter3 (OC3A)
- * `compare31`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter3 (OC3B)
- * `compare32`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter3 (OC3C)
- * `capture30`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter3 (ICP3)
+ * `counter3compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter3 (OC3A)
+ * `counter3compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter3 (OC3B)
+ * `counter3compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter3 (OC3C)
+ * `counter3capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter3 (ICP3)
  * `acmp0`	 | @ref atmelavr_acmpa "_acmpa"	   | Analog Comparator
  * `eeprom0`	 | @ref atmelavr_eeproma "_eeproma" | Eeprom memory
  * `flash0`	 | @ref atmelavr_flasha "_flasha"   | Flash memory
@@ -475,23 +475,23 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `prescaler0`	 | `counter0prescaler0` | `HW_RELATIVE(counter0, prescaler0)`
  * `prescaler0`	 | `counter1prescaler`	| `HW_RELATIVE(counter1, prescaler)`
  * `prescaler0`	 | `counter1prescaler0` | `HW_RELATIVE(counter1, prescaler0)`
- * `compare00`	 | `counter0compare0`	| `HW_RELATIVE(counter0, compare0)`
- * `compare01`	 | `counter0compare1`	| `HW_RELATIVE(counter0, compare1)`
- * `counter0` | `compare00counter`	   | `HW_RELATIVE(compare00, counter)`
- * `counter0` | `compare01counter`	   | `HW_RELATIVE(compare01, counter)`
- * `pin_compare00` | `compare00pin`		   | `HW_RELATIVE(compare00, pin)`
- * `pin_compare01` | `compare01pin`		   | `HW_RELATIVE(compare01, pin)`
- * `compare10`	 | `counter1compare0`	| `HW_RELATIVE(counter1, compare0)`
- * `compare11`	 | `counter1compare1`	| `HW_RELATIVE(counter1, compare1)`
- * `counter1` | `compare10counter`	   | `HW_RELATIVE(compare10, counter)`
- * `counter1` | `compare11counter`	   | `HW_RELATIVE(compare11, counter)`
- * `pin_compare10` | `compare10pin`		   | `HW_RELATIVE(compare10, pin)`
- * `pin_compare11` | `compare11pin`		   | `HW_RELATIVE(compare11, pin)`
- * `pin_capture10` | `capture10pin`		   | `HW_RELATIVE(capture10, pin)`
- * `counter2` | `compare20counter`	   | `HW_RELATIVE(compare20, counter)`
- * `counter2` | `compare21counter`	   | `HW_RELATIVE(compare21, counter)`
- * `pin_compare20` | `compare20pin`		   | `HW_RELATIVE(compare20, pin)`
- * `pin_compare21` | `compare21pin`		   | `HW_RELATIVE(compare21, pin)`
+ * `counter0compare0`	 | `counter0compare0`	| `HW_RELATIVE(counter0, compare0)`
+ * `counter0compare1`	 | `counter0compare1`	| `HW_RELATIVE(counter0, compare1)`
+ * `counter0` | `counter0compare0counter`	   | `HW_RELATIVE(counter0compare0, counter)`
+ * `counter0` | `counter0compare1counter`	   | `HW_RELATIVE(counter0compare1, counter)`
+ * `pin_counter0compare0` | `counter0compare0pin`		   | `HW_RELATIVE(counter0compare0, pin)`
+ * `pin_counter0compare1` | `counter0compare1pin`		   | `HW_RELATIVE(counter0compare1, pin)`
+ * `counter1compare0`	 | `counter1compare0`	| `HW_RELATIVE(counter1, compare0)`
+ * `counter1compare1`	 | `counter1compare1`	| `HW_RELATIVE(counter1, compare1)`
+ * `counter1` | `counter1compare0counter`	   | `HW_RELATIVE(counter1compare0, counter)`
+ * `counter1` | `counter1compare1counter`	   | `HW_RELATIVE(counter1compare1, counter)`
+ * `pin_counter1compare0` | `counter1compare0pin`		   | `HW_RELATIVE(counter1compare0, pin)`
+ * `pin_counter1compare1` | `counter1compare1pin`		   | `HW_RELATIVE(counter1compare1, pin)`
+ * `pin_counter1capture0` | `counter1capture0pin`		   | `HW_RELATIVE(counter1capture0, pin)`
+ * `counter2` | `counter2compare0counter`	   | `HW_RELATIVE(counter2compare0, counter)`
+ * `counter2` | `counter2compare1counter`	   | `HW_RELATIVE(counter2compare1, counter)`
+ * `pin_counter2compare0` | `counter2compare0pin`		   | `HW_RELATIVE(counter2compare0, pin)`
+ * `pin_counter2compare1` | `counter2compare1pin`		   | `HW_RELATIVE(counter2compare1, pin)`
  */
 
 
@@ -527,20 +527,20 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define _hw_irq_usb0			_irq, 10, usb0,	    ie,	  if
 #define _hw_irq_usb0_endpoint		_irq, 11, usb0,	    ieep, ifep
 #define _hw_irq_watchdog0		_irq, 12, watchdog0,	ie,	  if
-#define _hw_irq_capture10		_irq, 16, capture10,	    ie,	  if
-#define _hw_irq_counter1_capture	_irq, 16, capture10,	    ie,	  if
-#define _hw_irq_compare10		_irq, 17, compare10,	    ie,	  if
-#define _hw_irq_counter1_compare0	_irq, 17, compare10,	    ie,	  if
-#define _hw_irq_compare11		_irq, 18, compare11,	    ie,	  if
-#define _hw_irq_counter1_compare1	_irq, 18, compare11,	    ie,	  if
-#define _hw_irq_compare12		_irq, 19, compare12,	    ie,	  if
-#define _hw_irq_counter1_compare2	_irq, 19, compare12,	    ie,	  if
+#define _hw_irq_counter1capture0	_irq, 16, counter1capture0,	    ie,	  if
+#define _hw_irq_counter1_capture	_irq, 16, counter1capture0,	    ie,	  if
+#define _hw_irq_counter1compare0	_irq, 17, counter1compare0,	    ie,	  if
+#define _hw_irq_counter1_compare0	_irq, 17, counter1compare0,	    ie,	  if
+#define _hw_irq_counter1compare1	_irq, 18, counter1compare1,	    ie,	  if
+#define _hw_irq_counter1_compare1	_irq, 18, counter1compare1,	    ie,	  if
+#define _hw_irq_counter1compare2	_irq, 19, counter1compare2,	    ie,	  if
+#define _hw_irq_counter1_compare2	_irq, 19, counter1compare2,	    ie,	  if
 #define _hw_irq_counter1		_irq, 20, counter1, ie,	  if
 #define _hw_irq_counter1_overflow	_irq, 20, counter1, ie,	  if
-#define _hw_irq_compare00		_irq, 21, compare00,	    ie,	  if
-#define _hw_irq_counter0_compare0	_irq, 21, compare00,	    ie,	  if
-#define _hw_irq_compare01		_irq, 22, compare01,	    ie,	  if
-#define _hw_irq_counter0_compare1	_irq, 22, compare01,	    ie,	  if
+#define _hw_irq_counter0compare0	_irq, 21, counter0compare0,	    ie,	  if
+#define _hw_irq_counter0_compare0	_irq, 21, counter0compare0,	    ie,	  if
+#define _hw_irq_counter0compare1	_irq, 22, counter0compare1,	    ie,	  if
+#define _hw_irq_counter0_compare1	_irq, 22, counter0compare1,	    ie,	  if
 #define _hw_irq_counter0		_irq, 23, counter0, ie,	  if
 #define _hw_irq_counter0_overflow	_irq, 23, counter0, ie,	  if
 #define _hw_irq_spi0			_irq, 24, spi0,	    ie,	  if
@@ -549,17 +549,17 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define _hw_irq_adc0			_irq, 29, adc0,	    ie,	  if
 #define _hw_irq_eeprom0			_irq, 30, eeprom0,  ie,	  /* no irq flag */
 #define _hw_irq_eeprom0_ready		_irq, 30, eeprom0,  ie,
-#define _hw_irq_capture30		_irq, 31, capture30,	    ie,	  if
-#define _hw_irq_compare30		_irq, 32, compare30,	    ie,	  if
-#define _hw_irq_compare31		_irq, 33, compare31,	    ie,	  if
-#define _hw_irq_compare32		_irq, 34, compare32,	    ie,	  if
+#define _hw_irq_counter3capture0	_irq, 31, counter3capture0,	    ie,	  if
+#define _hw_irq_counter3compare0	_irq, 32, counter3compare0,	    ie,	  if
+#define _hw_irq_counter3compare1	_irq, 33, counter3compare1,	    ie,	  if
+#define _hw_irq_counter3compare2	_irq, 34, counter3compare2,	    ie,	  if
 #define _hw_irq_counter3		_irq, 35, counter3, ie,	  if
 #define _hw_irq_counter3_overflow	_irq, 35, counter3, ie,	  if
 #define _hw_irq_twi0			_irq, 36, twi0,	    ie,	  if
 #define _hw_irq_flash0			_irq, 37, flash0,   ie,	  if
-#define _hw_irq_compare40		_irq, 38, compare40,	    ie,	  if
-#define _hw_irq_compare41		_irq, 39, compare41,	    ie,	  if
-#define _hw_irq_compare42		_irq, 40, compare42,	    ie,	  if
+#define _hw_irq_counter4compare0	_irq, 38, counter4compare0,	    ie,	  if
+#define _hw_irq_counter4compare1	_irq, 39, counter4compare1,	    ie,	  if
+#define _hw_irq_counter4compare2	_irq, 40, counter4compare2,	    ie,	  if
 #define _hw_irq_counter4_overflow	_irq, 41, counter4, ieov, ifov
 #define _hw_irq_counter4_fault		_irq, 42, counter4, iefp, iffp
 
@@ -770,8 +770,8 @@ typedef struct {
  */
 #include "../classes/io0a_1.h"
 
-#define _hw_def_pin_compare31		_io0a
-#define _hw_def_pin_compare32		_io0a
+#define _hw_def_pin_counter3compare1	_io0a
+#define _hw_def_pin_counter3compare2	_io0a
 
 /*  Digital input disable bits for analog input pins
  */
@@ -840,19 +840,19 @@ typedef struct {
 #define _hw_pin_nint2			, pin_pd2
 #define _hw_pin_nint3			, pin_pd3
 #define _hw_pin_nint6			, pin_pe6
-#define _hw_pin_ncompare40		, pin_pc6
-#define _hw_pin_ncompare41		, pin_pb5
-#define _hw_pin_ncompare43		, pin_pd6
+#define _hw_pin_ncounter4compare0	, pin_pc6
+#define _hw_pin_ncounter4compare1	, pin_pb5
+#define _hw_pin_ncounter4compare3	, pin_pd6
 #define _hw_pin_nrts			, pin_pb7
-#define _hw_pin_compare00		, pin_pb7
-#define _hw_pin_compare01		, pin_pd0
-#define _hw_pin_compare10		, pin_pb5
-#define _hw_pin_compare11		, pin_pb6
-#define _hw_pin_compare12		, pin_pb7
-#define _hw_pin_compare30		, pin_pc6
-#define _hw_pin_compare40		, pin_pc7
-#define _hw_pin_compare41		, pin_pb6
-#define _hw_pin_compare43		, pin_pd7
+#define _hw_pin_counter0compare0	, pin_pb7
+#define _hw_pin_counter0compare1	, pin_pd0
+#define _hw_pin_counter1compare0	, pin_pb5
+#define _hw_pin_counter1compare1	, pin_pb6
+#define _hw_pin_counter1compare2	, pin_pb7
+#define _hw_pin_counter3compare0	, pin_pc6
+#define _hw_pin_counter4compare0	, pin_pc7
+#define _hw_pin_counter4compare1	, pin_pb6
+#define _hw_pin_counter4compare3	, pin_pd7
 #define _hw_pin_pdi			, pin_pb2
 #define _hw_pin_pdo			, pin_pb3
 #define _hw_pin_rxd1			, pin_pd2
@@ -1036,13 +1036,13 @@ typedef struct {
  */
 #define _hw_rel_counter0_prescaler0	prescaler0
 #define _hw_rel_counter0_prescaler	prescaler0
-#define _hw_rel_counter0_compare0	compare00
-#define _hw_rel_counter0_compare1	compare01
+#define _hw_rel_counter0_compare0	counter0compare0
+#define _hw_rel_counter0_compare1	counter0compare1
 
 
 /*******************************************************************************
  *									       *
- *	Counter 0 compare units hw_compare00, hw_compare01 (OCR0A, OCR0B)		       *
+ *	Counter 0 compare units hw_counter0compare0, hw_counter0compare1 (OCR0A, OCR0B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1050,44 +1050,44 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare00		_cmp8a, 151, 0
+#define _hw_def_counter0compare0	_cmp8a, 151, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare00_reg		_r8, 0x47, 0xFF, 0x00	/* OCR0A */
+#define _hw_reg_counter0compare0_reg	_r8, 0x47, 0xFF, 0x00	/* OCR0A */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare00_com		_xob1, counter0, ccra, 2, 6
-#define _hw_reg_compare00_force		_xob1, counter0, ccrb, 1, 7
-#define _hw_reg_compare00_ie		_xob1, counter0, imsk, 1, 1
-#define _hw_reg_compare00_if		_xob1, counter0, ifr,  1, 1
+#define _hw_reg_counter0compare0_com	_xob1, counter0, ccra, 2, 6
+#define _hw_reg_counter0compare0_force	_xob1, counter0, ccrb, 1, 7
+#define _hw_reg_counter0compare0_ie	_xob1, counter0, imsk, 1, 1
+#define _hw_reg_counter0compare0_if	_xob1, counter0, ifr,  1, 1
 
 /*	Relatives
  */
-#define _hw_rel_compare00_pin		pin_pb7
-#define _hw_rel_compare00_counter	counter0
+#define _hw_rel_counter0compare0_pin	pin_pb7
+#define _hw_rel_counter0compare0_counter	counter0
 
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare01		_cmp8a, 152, 0
+#define _hw_def_counter0compare1	_cmp8a, 152, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare01_reg		_r8, 0x48, 0xFF, 0x00	/* OCR0B */
+#define _hw_reg_counter0compare1_reg	_r8, 0x48, 0xFF, 0x00	/* OCR0B */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare01_com		_xob1, counter0, ccra, 2, 4
-#define _hw_reg_compare01_force		_xob1, counter0, ccrb, 1, 6
-#define _hw_reg_compare01_ie		_xob1, counter0, imsk, 1, 2
-#define _hw_reg_compare01_if		_xob1, counter0, ifr,  1, 2
+#define _hw_reg_counter0compare1_com	_xob1, counter0, ccra, 2, 4
+#define _hw_reg_counter0compare1_force	_xob1, counter0, ccrb, 1, 6
+#define _hw_reg_counter0compare1_ie	_xob1, counter0, imsk, 1, 2
+#define _hw_reg_counter0compare1_if	_xob1, counter0, ifr,  1, 2
 
 /*	Relatives
  */
-#define _hw_rel_compare01_pin		pin_pd0
-#define _hw_rel_compare01_counter	counter0
+#define _hw_rel_counter0compare1_pin	pin_pd0
+#define _hw_rel_counter0compare1_counter	counter0
 
 
 /*******************************************************************************
@@ -1123,15 +1123,15 @@ typedef struct {
  */
 #define _hw_rel_counter1_prescaler0	prescaler0
 #define _hw_rel_counter1_prescaler	prescaler0
-#define _hw_rel_counter1_compare0	compare10
-#define _hw_rel_counter1_compare1	compare11
-#define _hw_rel_counter1_compare2	compare12
-#define _hw_rel_counter1_capture0	capture10
+#define _hw_rel_counter1_compare0	counter1compare0
+#define _hw_rel_counter1_compare1	counter1compare1
+#define _hw_rel_counter1_compare2	counter1compare2
+#define _hw_rel_counter1_capture0	counter1capture0
 
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 0: hw_compare10 (OCR1A)			       *
+ *	Counter 1 compare unit 0: hw_counter1compare0 (OCR1A)			       *
  *									       *
  *******************************************************************************/
 
@@ -1139,82 +1139,82 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare10		_cmp16a, 154, 0
+#define _hw_def_counter1compare0	_cmp16a, 154, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare10_reg		_r16, 0x88, 0xFFFF, 0x0000	/* OCR1A */
+#define _hw_reg_counter1compare0_reg	_r16, 0x88, 0xFFFF, 0x0000	/* OCR1A */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare10_com		_xob1, counter1, ccra, 2, 6
-#define _hw_reg_compare10_force		_xob1, counter1, ccrc, 1, 7
-#define _hw_reg_compare10_ie		_xob1, counter1, imsk, 1, 1
-#define _hw_reg_compare10_if		_xob1, counter1, ifr,  1, 1
+#define _hw_reg_counter1compare0_com	_xob1, counter1, ccra, 2, 6
+#define _hw_reg_counter1compare0_force	_xob1, counter1, ccrc, 1, 7
+#define _hw_reg_counter1compare0_ie	_xob1, counter1, imsk, 1, 1
+#define _hw_reg_counter1compare0_if	_xob1, counter1, ifr,  1, 1
 
 /*	Relatives
  */
-#define _hw_rel_compare10_pin		pin_pb5
-#define _hw_rel_compare10_counter	counter1
+#define _hw_rel_counter1compare0_pin	pin_pb5
+#define _hw_rel_counter1compare0_counter	counter1
 
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 1: hw_compare11 (OCR1B)			       *
+ *	Counter 1 compare unit 1: hw_counter1compare1 (OCR1B)			       *
  *									       *
  *******************************************************************************/
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare11		_cmp16a, 155, 0
+#define _hw_def_counter1compare1	_cmp16a, 155, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare11_reg		_r16, 0x8A, 0xFFFF, 0x0000	/* OCR1B */
+#define _hw_reg_counter1compare1_reg	_r16, 0x8A, 0xFFFF, 0x0000	/* OCR1B */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare11_com		_xob1, counter1, ccra, 2, 4
-#define _hw_reg_compare11_force		_xob1, counter1, ccrc, 1, 6
-#define _hw_reg_compare11_ie		_xob1, counter1, imsk, 1, 2
-#define _hw_reg_compare11_if		_xob1, counter1, ifr,  1, 2
+#define _hw_reg_counter1compare1_com	_xob1, counter1, ccra, 2, 4
+#define _hw_reg_counter1compare1_force	_xob1, counter1, ccrc, 1, 6
+#define _hw_reg_counter1compare1_ie	_xob1, counter1, imsk, 1, 2
+#define _hw_reg_counter1compare1_if	_xob1, counter1, ifr,  1, 2
 
 /*	Relatives
  */
-#define _hw_rel_compare11_pin		pin_pb6
-#define _hw_rel_compare11_counter	counter1
+#define _hw_rel_counter1compare1_pin	pin_pb6
+#define _hw_rel_counter1compare1_counter	counter1
 
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 2: hw_compare12 (OCR1C)			       *
+ *	Counter 1 compare unit 2: hw_counter1compare2 (OCR1C)			       *
  *									       *
  *******************************************************************************/
 
 /*	Object				class, id, address
  */
-#define _hw_reg_compare12		_cmp16a, 413, 0
+#define _hw_reg_counter1compare2	_cmp16a, 413, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare12_reg		_r16, 0x8C, 0xFFFF, 0x0000
+#define _hw_reg_counter1compare2_reg	_r16, 0x8C, 0xFFFF, 0x0000
 
 /*	Object logical registers
  */
-#define _hw_reg_compare12_com		_xob1, counter1, ccra, 2, 2
-#define _hw_reg_compare12_force		_xob1, counter1, ccrc, 1, 5
-#define _hw_reg_compare12_ie		_xob1, counter1, imsk, 1, 3
-#define _hw_reg_compare12_if		_xob1, counter1, ifr,  1, 3
+#define _hw_reg_counter1compare2_com	_xob1, counter1, ccra, 2, 2
+#define _hw_reg_counter1compare2_force	_xob1, counter1, ccrc, 1, 5
+#define _hw_reg_counter1compare2_ie	_xob1, counter1, imsk, 1, 3
+#define _hw_reg_counter1compare2_if	_xob1, counter1, ifr,  1, 3
 
 /*	Relatives
  */
-#define _hw_rel_compare12_pin		pin_pb7
-#define _hw_rel_compare12_counter	counter1
+#define _hw_rel_counter1compare2_pin	pin_pb7
+#define _hw_rel_counter1compare2_counter	counter1
 
 
 /*******************************************************************************
  *									       *
- *	Counter 1 capture unit: capture10					       *
+ *	Counter 1 capture unit: counter1capture0					       *
  *									       *
  *******************************************************************************/
 
@@ -1222,24 +1222,24 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_capture10		_cap16a, 156, 0
+#define _hw_def_counter1capture0	_cap16a, 156, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_capture10_reg		_r16, 0x86, 0xFFFF, 0x0000	/* ICR1 */
+#define _hw_reg_counter1capture0_reg	_r16, 0x86, 0xFFFF, 0x0000	/* ICR1 */
 
 /*	Object logical registers
  */
-#define _hw_reg_capture10_acic		_xob1, acmp0, csr, 1, 2
-#define _hw_reg_capture10_icnc		_xob1, counter1, ccrb, 1, 7
-#define _hw_reg_capture10_ices		_xob1, counter1, ccrb, 1, 6
-#define _hw_reg_capture10_ie		_xob1, counter1, imsk, 1, 5
-#define _hw_reg_capture10_if		_xob1, counter1, ifr,  1, 5
+#define _hw_reg_counter1capture0_acic	_xob1, acmp0, csr, 1, 2
+#define _hw_reg_counter1capture0_icnc	_xob1, counter1, ccrb, 1, 7
+#define _hw_reg_counter1capture0_ices	_xob1, counter1, ccrb, 1, 6
+#define _hw_reg_counter1capture0_ie	_xob1, counter1, imsk, 1, 5
+#define _hw_reg_counter1capture0_if	_xob1, counter1, ifr,  1, 5
 
 /*	Relatives
  */
-#define _hw_rel_capture10_pin		pin_pd4
-#define _hw_rel_capture10_counter	counter1
+#define _hw_rel_counter1capture0_pin	pin_pd4
+#define _hw_rel_counter1capture0_counter	counter1
 
 
 /*******************************************************************************
@@ -1273,96 +1273,96 @@ typedef struct {
  */
 #define _hw_rel_counter3_prescaler0	prescaler0
 #define _hw_rel_counter3_prescaler	prescaler0
-#define _hw_rel_counter3_compare0	compare30
-#define _hw_rel_counter3_compare1	compare31
-#define _hw_rel_counter3_compare2	compare32
-#define _hw_rel_counter3_capture0	capture30
+#define _hw_rel_counter3_compare0	counter3compare0
+#define _hw_rel_counter3_compare1	counter3compare1
+#define _hw_rel_counter3_compare2	counter3compare2
+#define _hw_rel_counter3_capture0	counter3capture0
 
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 0: hw_compare30 (OCR3A)			       *
+ *	Counter 3 compare unit 0: hw_counter3compare0 (OCR3A)			       *
  *									       *
  *******************************************************************************/
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare30		_cmp16a, 158, 0
+#define _hw_def_counter3compare0	_cmp16a, 158, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare30_reg		_r16, 0x98, 0xFFFF, 0x0000	/* OCR1A */
+#define _hw_reg_counter3compare0_reg	_r16, 0x98, 0xFFFF, 0x0000	/* OCR1A */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare30_com		_xob1, counter3, ccra, 2, 6
-#define _hw_reg_compare30_force		_xob1, counter3, ccrc, 1, 7
-#define _hw_reg_compare30_ie		_xob1, counter3, imsk, 1, 1
-#define _hw_reg_compare30_if		_xob1, counter3, ifr,  1, 1
+#define _hw_reg_counter3compare0_com	_xob1, counter3, ccra, 2, 6
+#define _hw_reg_counter3compare0_force	_xob1, counter3, ccrc, 1, 7
+#define _hw_reg_counter3compare0_ie	_xob1, counter3, imsk, 1, 1
+#define _hw_reg_counter3compare0_if	_xob1, counter3, ifr,  1, 1
 
 /*	Relatives
  */
-#define _hw_rel_compare30_pin		pin_pc6
-#define _hw_rel_compare30_counter	counter3
+#define _hw_rel_counter3compare0_pin	pin_pc6
+#define _hw_rel_counter3compare0_counter	counter3
 
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 1: hw_compare31 (OCR3B)			       *
+ *	Counter 3 compare unit 1: hw_counter3compare1 (OCR3B)			       *
  *									       *
  *******************************************************************************/
 
 /*	Object				class, id, address
  */
-#define _hw_def_compare31		_cmp16a, 159, 0
+#define _hw_def_counter3compare1	_cmp16a, 159, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare31_reg		_r16, 0x9A, 0xFFFF, 0x0000	/* OCR1B */
+#define _hw_reg_counter3compare1_reg	_r16, 0x9A, 0xFFFF, 0x0000	/* OCR1B */
 
 /*	Object logical registers
  */
-#define _hw_reg_compare31_com		_xob1, counter3, ccra, 2, 4
-#define _hw_reg_compare31_force		_xob1, counter3, ccrc, 1, 6
-#define _hw_reg_compare31_ie		_xob1, counter3, imsk, 1, 2
-#define _hw_reg_compare31_if		_xob1, counter3, ifr,  1, 2
+#define _hw_reg_counter3compare1_com	_xob1, counter3, ccra, 2, 4
+#define _hw_reg_counter3compare1_force	_xob1, counter3, ccrc, 1, 6
+#define _hw_reg_counter3compare1_ie	_xob1, counter3, imsk, 1, 2
+#define _hw_reg_counter3compare1_if	_xob1, counter3, ifr,  1, 2
 
 /*	Relatives
  */
-#define _hw_rel_compare31_pin		pin_compare31
-#define _hw_rel_compare31_counter	counter3
+#define _hw_rel_counter3compare1_pin	pin_counter3compare1
+#define _hw_rel_counter3compare1_counter	counter3
 
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 2: hw_compare32 (OCR3C)			       *
+ *	Counter 3 compare unit 2: hw_counter3compare2 (OCR3C)			       *
  *									       *
  *******************************************************************************/
 
 /*	Object				class, id, address
  */
-#define _hw_reg_compare32		_cmp16a, 433, 0
+#define _hw_reg_counter3compare2	_cmp16a, 433, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_compare32_reg		_r16, 0x9C, 0xFFFF, 0x0000
+#define _hw_reg_counter3compare2_reg	_r16, 0x9C, 0xFFFF, 0x0000
 
 /*	Object logical registers
  */
-#define _hw_reg_compare32_com		_xob1, counter3, ccra, 2, 2
-#define _hw_reg_compare32_force		_xob1, counter3, ccrc, 1, 5
-#define _hw_reg_compare32_ie		_xob1, counter3, imsk, 1, 3
-#define _hw_reg_compare32_if		_xob1, counter3, ifr,  1, 3
+#define _hw_reg_counter3compare2_com	_xob1, counter3, ccra, 2, 2
+#define _hw_reg_counter3compare2_force	_xob1, counter3, ccrc, 1, 5
+#define _hw_reg_counter3compare2_ie	_xob1, counter3, imsk, 1, 3
+#define _hw_reg_counter3compare2_if	_xob1, counter3, ifr,  1, 3
 
 /*	Relatives
  */
-#define _hw_rel_compare32_pin		pin_compare32
-#define _hw_rel_compare32_counter	counter3
+#define _hw_rel_counter3compare2_pin	pin_counter3compare2
+#define _hw_rel_counter3compare2_counter	counter3
 
 
 /*******************************************************************************
  *									       *
- *	Counter 3 capture unit: capture30					       *
+ *	Counter 3 capture unit: counter3capture0					       *
  *									       *
  *******************************************************************************/
 
@@ -1370,24 +1370,24 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_capture30		_cap16b, 160, 0
+#define _hw_def_counter3capture0	_cap16b, 160, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg_capture30_reg		_r16, 0x96, 0xFFFF, 0x0000	/* ICR3 */
+#define _hw_reg_counter3capture0_reg	_r16, 0x96, 0xFFFF, 0x0000	/* ICR3 */
 
 /*	Object logical registers
  */
-#define _hw_reg_capture30_acic		_xob1, acmp0, csr, 1, 2
-#define _hw_reg_capture30_icnc		_xob1, counter3, ccrb, 1, 7
-#define _hw_reg_capture30_ices		_xob1, counter3, ccrb, 1, 6
-#define _hw_reg_capture30_ie		_xob1, counter3, imsk, 1, 5
-#define _hw_reg_capture30_if		_xob1, counter3, ifr,  1, 5
+#define _hw_reg_counter3capture0_acic	_xob1, acmp0, csr, 1, 2
+#define _hw_reg_counter3capture0_icnc	_xob1, counter3, ccrb, 1, 7
+#define _hw_reg_counter3capture0_ices	_xob1, counter3, ccrb, 1, 6
+#define _hw_reg_counter3capture0_ie	_xob1, counter3, imsk, 1, 5
+#define _hw_reg_counter3capture0_if	_xob1, counter3, ifr,  1, 5
 
 /*	Relatives
  */
-#define _hw_rel_capture30_pin		pin_pc7
-#define _hw_rel_capture30_counter	counter3
+#define _hw_rel_counter3capture0_pin	pin_pc7
+#define _hw_rel_counter3capture0_counter	counter3
 
 
 /*******************************************************************************
@@ -1407,7 +1407,7 @@ typedef struct {
 #define _hw_reg__acmpa_csr		_r8, 0x50, 0xDF, 0x10
 
 /*	Object hardware registers	class, address, write mask, flags mask
- *	  Required for _hw_capture10_acic
+ *	  Required for _hw_counter1capture0_acic
  */
 #define _hw_reg_acmp0_csr		_r8, 0x50, 0xDF, 0x10
 
@@ -1482,20 +1482,20 @@ typedef struct {
   hwa_p8a_t	portf ;
 
   hwa_c8a_t	counter0 ;
-  hwa_cmp8a_t	compare00 ;
-  hwa_cmp8a_t	compare01 ;
+  hwa_cmp8a_t	counter0compare0 ;
+  hwa_cmp8a_t	counter0compare1 ;
 
   hwa_c16b_t	counter1 ;
-  hwa_cmp16a_t	compare10 ;
-  hwa_cmp16a_t	compare11 ;
-  hwa_cmp16a_t	compare12 ;
-  hwa_cap16a_t	capture10 ;
+  hwa_cmp16a_t	counter1compare0 ;
+  hwa_cmp16a_t	counter1compare1 ;
+  hwa_cmp16a_t	counter1compare2 ;
+  hwa_cap16a_t	counter1capture0 ;
 
   hwa_c16b_t	counter3 ;
-  hwa_cmp16a_t	compare30 ;
-  hwa_cmp16a_t	compare31 ;
-  hwa_cmp16a_t	compare32 ;
-  hwa_cap16a_t	capture30 ;
+  hwa_cmp16a_t	counter3compare0 ;
+  hwa_cmp16a_t	counter3compare1 ;
+  hwa_cmp16a_t	counter3compare2 ;
+  hwa_cap16a_t	counter3capture0 ;
 
   hwa_acmpa_t	acmp0 ;
 } hwa_t ;
@@ -1543,20 +1543,20 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
   _hwa_setup( porte );
   _hwa_setup( portf );
 
-  _hwa_setup( compare00 );
-  _hwa_setup( compare01 );
+  _hwa_setup( counter0compare0 );
+  _hwa_setup( counter0compare1 );
   _hwa_setup( counter0 );
 
-  _hwa_setup( compare10 );
-  _hwa_setup( compare11 );
-  _hwa_setup( compare12 );
-  _hwa_setup( capture10 );
+  _hwa_setup( counter1compare0 );
+  _hwa_setup( counter1compare1 );
+  _hwa_setup( counter1compare2 );
+  _hwa_setup( counter1capture0 );
   _hwa_setup( counter1 );
 
-  _hwa_setup( compare30 );
-  _hwa_setup( compare31 );
-  _hwa_setup( compare32 );
-  _hwa_setup( capture30 );
+  _hwa_setup( counter3compare0 );
+  _hwa_setup( counter3compare1 );
+  _hwa_setup( counter3compare2 );
+  _hwa_setup( counter3capture0 );
   _hwa_setup( counter3 );
 
   _hwa_setup( acmp0 );
@@ -1586,20 +1586,20 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
   _hwa_init( porte );
   _hwa_init( portf );
 
-  _hwa_init( compare00 );
-  _hwa_init( compare01 );
+  _hwa_init( counter0compare0 );
+  _hwa_init( counter0compare1 );
   _hwa_init( counter0 );
 
-  _hwa_init( compare10 );
-  _hwa_init( compare11 );
-  _hwa_init( compare12 );
-  _hwa_init( capture10 );
+  _hwa_init( counter1compare0 );
+  _hwa_init( counter1compare1 );
+  _hwa_init( counter1compare2 );
+  _hwa_init( counter1capture0 );
   _hwa_init( counter1 );
 
-  _hwa_init( compare30 );
-  _hwa_init( compare31 );
-  _hwa_init( compare32 );
-  _hwa_init( capture30 );
+  _hwa_init( counter3compare0 );
+  _hwa_init( counter3compare1 );
+  _hwa_init( counter3compare2 );
+  _hwa_init( counter3capture0 );
   _hwa_init( counter3 );
 
   _hwa_init( acmp0 );
@@ -1634,20 +1634,20 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( portf );
 
   _hwa_commit( counter0 );
-  _hwa_commit( compare00 );
-  _hwa_commit( compare01 );
+  _hwa_commit( counter0compare0 );
+  _hwa_commit( counter0compare1 );
 
   _hwa_commit( counter1 );
-  _hwa_commit( compare10 );
-  _hwa_commit( compare11 );
-  _hwa_commit( compare12 );
-  _hwa_commit( capture10 );
+  _hwa_commit( counter1compare0 );
+  _hwa_commit( counter1compare1 );
+  _hwa_commit( counter1compare2 );
+  _hwa_commit( counter1capture0 );
 
   _hwa_commit( counter3 );
-  _hwa_commit( compare30 );
-  _hwa_commit( compare31 );
-  _hwa_commit( compare32 );
-  _hwa_commit( capture30 );
+  _hwa_commit( counter3compare0 );
+  _hwa_commit( counter3compare1 );
+  _hwa_commit( counter3compare2 );
+  _hwa_commit( counter3capture0 );
 
   _hwa_commit( acmp0 );
 }

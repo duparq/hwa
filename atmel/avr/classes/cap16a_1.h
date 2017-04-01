@@ -21,8 +21,8 @@
  *
  * It is used in:
  *
- *  * @ref attinyx4 : `capture10`
- *  * @ref atmegax8 : `capture10`
+ *  * @ref attinyx4 : `counter1capture0`
+ *  * @ref atmegax8 : `counter1capture0`
  */
 #define _hw_class__cap16a
 

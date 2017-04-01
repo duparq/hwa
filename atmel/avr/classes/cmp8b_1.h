@@ -23,7 +23,7 @@
  *
  * It is used in:
  *
- * * @ref attinyx5 : `compare10`, `compare11`
+ * * @ref attinyx5 : `counter1compare0`, `counter1compare1`
  */
 #define _hw_class__cmp8b
 

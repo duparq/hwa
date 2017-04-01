@@ -26,7 +26,7 @@
  *
  * It is used in:
  *
- *  * @ref atmegaxu4 : `capture30`
+ *  * @ref atmegaxu4 : `counter3capture0`
  */
 #define _hw_class__cap16b
 
