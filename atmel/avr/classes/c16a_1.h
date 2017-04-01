@@ -44,7 +44,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__c16a		, _hw_bn_c16a
+#define _hw_mthd_HW_BITS__c16a		, _hw_bn_c16a
 #define _hw_bn_c16a(o,i,a,...)		16
 
 /**

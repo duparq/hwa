@@ -287,7 +287,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  */
 #define _hwx_cfswuarta_kbps_1(x,o,k,v,...)				\
   _hw_##o##_##set_dt((hw_syshz + (v)/2) / (v)) ;			\
-  *(volatile uint8_t*)_HW_A(_HW_R(o,sr)) |= 0x08 ; /* Set SYNC */		\
+  *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) |= 0x08 ; /* Set SYNC */		\
   HW_X(_hwx_cfswuarta_kdatabits,_hw_is_databits_##__VA_ARGS__)(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kbps_0(x,o,k,...)			\
@@ -299,7 +299,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  */
 #define _hwx_cfswuarta_kcpb_1(x,o,k,v,...)				\
   _hw_##o##_##set_dt(v) ;						\
-  *(volatile uint8_t*)_HW_A(_HW_R(o,sr)) |= 0x08 ; /* Set SYNC */		\
+  *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) |= 0x08 ; /* Set SYNC */		\
   HW_X(_hwx_cfswuarta_kdatabits,_hw_is_databits_##__VA_ARGS__)(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kcpb_0(x,o,k,...)				\
@@ -490,7 +490,7 @@ typedef struct {
 
 #define _hw_mthd_hw_stat__swuarta	, _hw_stswuarta
 #define _hw_stswuarta(o,i,a,...)					\
-  HW_TX( (*(volatile _hw_swuarta_stat_t*)_HW_A(_HW_R(o,sr))), __VA_ARGS__)
+  HW_TX( (*(volatile _hw_swuarta_stat_t*)_HW_A(_HW_M(o,sr))), __VA_ARGS__)
 
 
 /**
@@ -506,8 +506,8 @@ typedef struct {
 #define _hw_clear__swuarta(o,i,a,...)		HW_TX(_hw_clear_swuarta(o),__VA_ARGS__)
 #define _hw_clear_swuarta( o )					\
   do {								\
-    *(volatile uint8_t*)_HW_A(_HW_R(o,sr)) &= 0xFE ; /* Clear RXC */	\
-    *(volatile uint8_t*)_HW_A(_HW_R(o,sr)) &= 0xFD ; /* Clear TXC */	\
+    *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) &= 0xFE ; /* Clear RXC */	\
+    *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) &= 0xFD ; /* Clear TXC */	\
   }while(0)
 
 /**

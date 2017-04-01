@@ -43,7 +43,7 @@
 #define _hw_rdad10__0(o,k,...)					\
   HW_G2(_hw_rdad10__khi8,HW_IS(hi8,k))(o,k,__VA_ARGS__)
 
-#define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_R(o,adc))+1))
+#define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_M(o,adc))+1))
 
 #define _hw_is_hi8_hi8			, 1
 
@@ -52,7 +52,7 @@
 #define _hw_rdad10__khi8_0(o,k,...)				\
   HW_G2(_hw_rdad10__klo8,HW_IS(lo8,k))(o,k,__VA_ARGS__)
 
-#define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_R(o,adc))))
+#define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_M(o,adc))))
 #define _hw_rdad10__klo8_0(o,k,...)	HW_E(optionnal parameter can be `lo8 | hi8` but not `k`)
 
 #define _hw_is_lo8_lo8			, 1

@@ -1175,7 +1175,7 @@ typedef struct {
 #  define _hw_def_swuart0		_swuarta, 137, 0
 #  define _hw_reg_swuart0_dtn		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
 #  define _hw_reg_swuart0_dt0		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#  define _hw_reg_swuart0__st		_HW_A(_HW_R(shared, gpior0))
+#  define _hw_reg_swuart0__st		_HW_A(_HW_M(shared, gpior0))
 #  define _hw_reg_swuart0_sr		_hw_reg_shared_gpior0
 #  define _hw_reg_swuart0_synced	_ob1, sr, 1, 0
 #endif
@@ -1212,7 +1212,7 @@ typedef struct {
 #  define _hw_def_swuart1		_swuarta, 138, 0
 #  define _hw_reg_swuart1_dtn		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
 #  define _hw_reg_swuart1_dt0		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#  define _hw_reg_swuart1__st		_HW_A(_HW_R(shared, gpior1))
+#  define _hw_reg_swuart1__st		_HW_A(_HW_M(shared, gpior1))
 #  define _hw_reg_swuart1_sr		_hw_reg_shared_gpior1
 #  define _hw_reg_swuart1_synced	_ob1, sr, 1, 0
 #endif

@@ -30,7 +30,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__io1a		, _hw_bn_io1a
+#define _hw_mthd_HW_BITS__io1a		, _hw_bn_io1a
 
 #define _hw_bn_io1a(o,i, cn,bn,bp,...)	       bn
 
@@ -47,7 +47,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bp__io1a		, _hw_bp_io1a
+#define _hw_mthd_HW_POSITION__io1a		, _hw_bp_io1a
 #define _hw_bp_io1a(o,i, cn,bn,bp,...)	       bp
 
 

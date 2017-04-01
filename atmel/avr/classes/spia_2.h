@@ -185,7 +185,7 @@
 #define _hw_wrspia(o,i,a,v,...)		HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__)
 
 /* #define _hw_wrspia(o,i,a,v,...)						\ */
-/*   HW_TX( __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_R(o,dr)), v ), __VA_ARGS__) */
+/*   HW_TX( __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_M(o,dr)), v ), __VA_ARGS__) */
 
 /* HW_INLINE uint8_t __hw_wrspia( intptr_t flag_addr, uint8_t flag_bp, intptr_t dr, uint8_t v ) */
 /* { */

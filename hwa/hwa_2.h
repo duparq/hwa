@@ -111,7 +111,7 @@
  * Syntax: `_hw( read, object, register );`
  * @hideinitializer
  */
-#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_R(o,r))
+#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_M(o,r))
 
 
 /**
@@ -121,7 +121,7 @@
  * Syntax: `_hw_atomic_read( object, register );`
  * @hideinitializer
  */
-#define _hw_atomic_read_reg(o,r)	_HW_SPEC(_hw_atomic_read, _HW_R(o,r))
+#define _hw_atomic_read_reg(o,r)	_HW_SPEC(_hw_atomic_read, _HW_M(o,r))
 
 
 /**
@@ -131,7 +131,7 @@
  * Syntax: `_hw_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, _HW_R(o,r), v,)
+#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, _HW_M(o,r), v,)
 
 
 /**
@@ -141,7 +141,7 @@
  * Syntax: `_hwa_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_R(o,r), v)
+#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_M(o,r), v)
 
 
 #define _hw_mthd_hw_read__m1		, _hw_read__m1
@@ -284,7 +284,7 @@
  *
  *	_hw_write_reg_m( o, r, m, v );
  */
-#define _hw_write_reg_m(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_R(o,r),m,v)
+#define _hw_write_reg_m(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_M(o,r),m,v)
 #define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hw_write##rc(a+ra,rwm,rfm,m,v)
 
 /**
@@ -294,7 +294,7 @@
  *
  *	_hwa_write_reg_m( o, r, m, v );
  */
-#define _hwa_write_reg_m(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_R(o,r),m,v)
+#define _hwa_write_reg_m(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_M(o,r),m,v)
 #define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hwa_write##rc(&hwa->o.r,rwm,rfm,m,v)
 
 
@@ -342,7 +342,7 @@
 /* #define _hwa_begin_reg_2(...)			_hwa_begin_reg_3(__VA_ARGS__) */
 /* #define _hwa_begin_reg_3(o,a,r, rc,ra, ... )	_hwa_begin_##rc( &hwa->o.r, a+ra ) */
 
-#define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_HW_HR(o,r))
+#define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_HW_R(o,r))
 #define _hwa_setup_reg_2(...)			_hwa_setup_reg_3(__VA_ARGS__)
 #define _hwa_setup_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_setup_##rt(&hwa->o.r, a+ra)
 
@@ -356,7 +356,7 @@
 /* #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__) */
 /* #define _hwa_init_reg_3(o,r, rc,ra,rwm,rfm, v)	_hwa_set_##rc( &hwa->o.r, v ) */
 
-#define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(_HW_HR(o,r),v)
+#define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(_HW_R(o,r),v)
 #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__)
 #define _hwa_init_reg_3(rt,ra,rwm,rfm,o,c,a,r,v)	_hwa_set_##rt( &hwa->o.r, v )
 
@@ -375,7 +375,7 @@
 /* #define _hwa_commit_hreg_3(rt,ra,rwm,rfm,o,c,a,r)	\ */
 /*   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit) */
 
-#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_R(o,r))
+#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_M(o,r))
 #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__)
 #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__)
 
@@ -392,7 +392,7 @@
  *
  * @hideinitializer
  */
-#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_HW_R(o,r))
+#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_HW_M(o,r))
 #define _hwa_mmask__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mmask)>>bp)&((1U<<bn)-1))
 
 
@@ -401,7 +401,7 @@
  * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_HW_R(o,r))
+#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_HW_M(o,r))
 #define _hwa_mvalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mvalue)>>bp)&((1U<<bn)-1))
 
 
@@ -410,7 +410,7 @@
  * @brief Get the last committed value for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_HW_R(o,r))
+#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_HW_M(o,r))
 #define _hwa_ovalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.ovalue)>>bp)&((1U<<bn)-1))
 
 
@@ -419,7 +419,7 @@
  * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modificapion mask (mmask).
  * @hideinitializer
  */
-#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_R(o,r),v)
+#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_M(o,r),v)
 #define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)			\
     hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
 

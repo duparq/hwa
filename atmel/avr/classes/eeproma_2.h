@@ -22,10 +22,10 @@
 #define _hw_mthd_hw_read__eeproma	, _hw_read_eeproma
 
 #define _hw_read_eeproma(o,i,a,addr,...)	\
-  HW_TX( _hw_rdeeproma( _HW_A(_HW_R(o,ar)),		\
-			_HW_A(_HW_R(o,re)),		\
-			_HW_RBP(o,re),		\
-			_HW_A(_HW_R(o,dr)),		\
+  HW_TX( _hw_rdeeproma( _HW_A(_HW_M(o,ar)),		\
+			_HW_A(_HW_M(o,re)),		\
+			_HW_MBP(o,re),		\
+			_HW_A(_HW_M(o,dr)),		\
 			addr),			\
 	 __VA_ARGS__)
 
@@ -56,10 +56,10 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
 
 #define _hw_eeproma_read_bytes(o,i,a,dst,src,n,...)		\
   HW_TX( _hw_eeproma_rdn( (uint8_t*)dst, (intptr_t)src, n,	\
-			  _HW_A(_HW_R(o,ar)),				\
-			  _HW_A(_HW_R(o,re)),				\
-			  _HW_RBP(o,re),			\
-			  _HW_A(_HW_R(o,dr)) ), __VA_ARGS__)
+			  _HW_A(_HW_M(o,ar)),				\
+			  _HW_A(_HW_M(o,re)),				\
+			  _HW_MBP(o,re),			\
+			  _HW_A(_HW_M(o,dr)) ), __VA_ARGS__)
 
 
 HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
@@ -88,10 +88,10 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
 
 #define _hw_write_eeproma(o,i,a,addr,v,...)		\
   HW_TX( _hw_wreeproma( addr, v,			\
-			_HW_A(_HW_R(o,ar)),			\
-			_HW_A(_HW_R(o,dr)),			\
-			_HW_A(_HW_R(o,mpe)), _HW_RBP(o,mpe),	\
-			_HW_A(_HW_R(o,pe)), _HW_RBP(o,pe) ),	\
+			_HW_A(_HW_M(o,ar)),			\
+			_HW_A(_HW_M(o,dr)),			\
+			_HW_A(_HW_M(o,mpe)), _HW_MBP(o,mpe),	\
+			_HW_A(_HW_M(o,pe)), _HW_MBP(o,pe) ),	\
 	 __VA_ARGS__)
 
 HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
@@ -124,10 +124,10 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
 
 #define _hw_eeproma_write_bytes(o,i,a,dst,src,n,...)		\
   HW_TX( _hw_eeproma_wrn( (intptr_t)(dst), (uint8_t*)(src), n,	\
-			  _HW_A(_HW_R(o,ar)),				\
-			  _HW_A(_HW_R(o,dr)),				\
-			  _HW_A(_HW_R(o,mpe)), _HW_RBP(o,mpe),	\
-			  _HW_A(_HW_R(o,pe)), _HW_RBP(o,pe) ),	\
+			  _HW_A(_HW_M(o,ar)),				\
+			  _HW_A(_HW_M(o,dr)),				\
+			  _HW_A(_HW_M(o,mpe)), _HW_MBP(o,mpe),	\
+			  _HW_A(_HW_M(o,pe)), _HW_MBP(o,pe) ),	\
 	 __VA_ARGS__)
 
 

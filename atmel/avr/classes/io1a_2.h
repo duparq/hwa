@@ -226,7 +226,7 @@
  * hw_toggle( pin_pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
-#define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_R(p,pin),__VA_ARGS__)
+#define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__)
 #define _hw_toggle_io1a_3(_m1,o,a,r,rc,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
   HW_TX(_hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,1,),__VA_ARGS__)
@@ -241,7 +241,7 @@
  * hwa_toggle( pin_pa0 );
  * @endcode
  */
-#define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_R(p,pin),__VA_ARGS__)
+#define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__)
 #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
   HW_TX(_hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)

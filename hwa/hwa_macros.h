@@ -510,20 +510,20 @@
 #if defined DOXYGEN
 #  define HW_REGISTER(object, reg)
 #else
-#  define HW_REGISTER(o,x)		_HW_R1(HW_O(o),x)
+#  define HW_REGISTER(o,x)		_HW_M1(HW_O(o),x)
 #endif
-#define _HW_R1(...)			_HW_R2(__VA_ARGS__)
-#define _HW_R2(c,...)			HW_X(_HW_R2,c)(c,__VA_ARGS__)
-#define _HW_R2_1(...)			// Error: return void 
-#define _HW_R2_0(c,o,i,a,r)		_HW_R4(_hw_reg_##c##_##r,o,c,a,r)
-#define _HW_R4(...)			_HW_R5(__VA_ARGS__)
-#define _HW_R5(t,...)			HW_X(_HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_R5_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
-#define _HW_R5_0(t,o,c,a,r)		_HW_R6(_hw_reg_##o##_##r,o,c,a,r)
-#define _HW_R6(...)			_HW_R7(__VA_ARGS__)
-#define _HW_R7(t,...)			HW_X(_HW_R7,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_R7_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
-#define _HW_R7_0(t,o,c,a,r)		HW_E(`o` has no register `r`)
+#define _HW_M1(...)			_HW_M2(__VA_ARGS__)
+#define _HW_M2(c,...)			HW_X(_HW_M2,c)(c,__VA_ARGS__)
+#define _HW_M2_1(...)			// Error: return void 
+#define _HW_M2_0(c,o,i,a,r)		_HW_M4(_hw_reg_##c##_##r,o,c,a,r)
+#define _HW_M4(...)			_HW_M5(__VA_ARGS__)
+#define _HW_M5(t,...)			HW_X(_HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_M5_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
+#define _HW_M5_0(t,o,c,a,r)		_HW_M6(_hw_reg_##o##_##r,o,c,a,r)
+#define _HW_M6(...)			_HW_M7(__VA_ARGS__)
+#define _HW_M7(t,...)			HW_X(_HW_M7,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_M7_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
+#define _HW_M7_0(t,o,c,a,r)		HW_E(`o` has no register `r`)
 
 
 /**
@@ -531,14 +531,14 @@
  * @brief Memory definition of a register (internal use, no error checking)
  * @hideinitializer
  */
-#define _HW_R(o,r)			__HW_R2(o,_hw_def_##o,r)
-#define __HW_R2(...)			__HW_R3(__VA_ARGS__)
-#define __HW_R3(o,c,i,a,r)		__HW_R4(_hw_reg_##c##_##r,o,c,a,r)
-#define __HW_R4(...)			__HW_R5(__VA_ARGS__)
-#define __HW_R5(t,...)			HW_X(__HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define __HW_R5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define __HW_R5_0(t,o,c,a,r)		__HW_R6(_hw_reg_##o##_##r,o,c,a,r)
-#define __HW_R6(...)			__HW_R5_1(__VA_ARGS__)
+#define _HW_M(o,r)			__HW_M2(o,_hw_def_##o,r)
+#define __HW_M2(...)			__HW_M3(__VA_ARGS__)
+#define __HW_M3(o,c,i,a,r)		__HW_M4(_hw_reg_##c##_##r,o,c,a,r)
+#define __HW_M4(...)			__HW_M5(__VA_ARGS__)
+#define __HW_M5(t,...)			HW_X(__HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define __HW_M5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
+#define __HW_M5_0(t,o,c,a,r)		__HW_M6(_hw_reg_##o##_##r,o,c,a,r)
+#define __HW_M6(...)			__HW_M5_1(__VA_ARGS__)
 
 
 /**
@@ -549,13 +549,13 @@
 /*  We know that 'o' is defined but we do not know if 'r' is a class register or
  *  an object register.
  */
-#define _HW_HR(o,r)			__HW_HR_2(o,_hw_def_##o,r)
-#define __HW_HR_2(...)			__HW_HR_3(__VA_ARGS__)
-#define __HW_HR_3(o,c,i,a,r)		__HW_HR_4(_hw_reg_##c##_##r,o,c,a,r)
-#define __HW_HR_4(...)			__HW_HR_5(__VA_ARGS__)
-#define __HW_HR_5(t,...)		HW_X(__HW_HR,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define __HW_HR_1(...)			__VA_ARGS__
-#define __HW_HR_0(z,o,c,a,r)		_hw_reg_##o##_##r,o,c,a,r
+#define _HW_R(o,r)			__HW_R2(o,_hw_def_##o,r)
+#define __HW_R2(...)			__HW_R3(__VA_ARGS__)
+#define __HW_R3(o,c,i,a,r)		__HW_R4(_hw_reg_##c##_##r,o,c,a,r)
+#define __HW_R4(...)			__HW_R5(__VA_ARGS__)
+#define __HW_R5(t,...)			HW_X(__HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define __HW_R5_1(...)			__VA_ARGS__
+#define __HW_R5_0(z,o,c,a,r)		_hw_reg_##o##_##r,o,c,a,r
 
 
 /*  Convert a register definition to a memory definition of class _m1 or _m2
@@ -621,21 +621,12 @@
 #if defined DOXYGEN
 #  define HW_BITS(object)
 #else
-#  define HW_BITS(...)			HW_MTHD(hw_bn, __VA_ARGS__,)
+#  define HW_BITS(...)			HW_MTHD(HW_BITS, __VA_ARGS__,)
 #endif
 
-#define _hw_mthd_hw_bn__m1		, _hw_bn__m1
+#define _hw_mthd_HW_BITS__m1		, _HW_BITS__m1
 
-#define _hw_bn__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
-
-
-/**
- * @ingroup private_mac
- * @brief Number of bits of the register `r` of @ref using_objects "object" `o`.
- * @hideinitializer
- */
-#define _HW_RBN(o,r)					_HW_SPEC(_HW_RBN,_HW_R(o,r))
-#define _HW_RBN__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
+#define _HW_BITS__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
 
 
 /**
@@ -648,12 +639,21 @@
 #if defined DOXYGEN
 #  define HW_POSITION(object)
 #else
-#  define HW_POSITION(...)				HW_MTHD(hw_bp, __VA_ARGS__,)
+#  define HW_POSITION(...)				HW_MTHD(HW_POSITION, __VA_ARGS__,)
 #endif
 
-#define _hw_mthd_hw_bp__m1		, _hw_bp__m1
+#define _hw_mthd_HW_POSITION__m1	, _HW_POSITION__m1
 
-#define _hw_bp__m1(o,a, r,rw,ra,rwm,rfm, bn,bp,...)	bp
+#define _HW_POSITION__m1(o,a, r,rw,ra,rwm,rfm, bn,bp,...)	bp
+
+
+/**
+ * @ingroup private_mac
+ * @brief Number of bits of the register `r` of @ref using_objects "object" `o`.
+ * @hideinitializer
+ */
+#define _HW_MBN(o,r)					_HW_SPEC(_HW_MBN,_HW_M(o,r))
+#define _HW_MBN__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
 
 
 /**
@@ -661,8 +661,8 @@
  * @brief Position of the least significant bit of the register `r` of @ref using_objects "object" `o`.
  * @hideinitializer
  */
-#define _HW_RBP(o,r)					_HW_SPEC(_HW_RBP,_HW_R(o,r))
-#define _HW_RBP__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
+#define _HW_MBP(o,r)					_HW_SPEC(_HW_MBP,_HW_M(o,r))
+#define _HW_MBP__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
 
 
 /**
@@ -695,8 +695,7 @@
  * @brief Class of the register `r` of object `o`.
  * @hideinitializer
  */
-#define _HW_RC(o,r)					_HW_SPEC(_HW_RC,_HW_R(o,r))
-#define _HW_RC__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)		rc
+#define _HW_RC(o,r)			HW_A0(_HW_R(o,r))
 
 
 /**
@@ -766,9 +765,9 @@
 #define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
 #define _HW_REL5(o,x,c,...)		HW_X(_HW_REL5,_hw_class_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL5_1(o,x,c,...)		HW_X(_HW_REL6,_hw_mthd_HW_REL_##c)(o,x,c,__VA_ARGS__)
+#define _HW_REL5_1(o,x,c,...)		HW_X(_HW_REL6,_hw_mthd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mthd_HW_REL_##c)(o,x,__VA_ARGS__)
+#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mthd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
 
 
 /**

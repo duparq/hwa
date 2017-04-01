@@ -177,7 +177,7 @@
  */
 #define _hw_mthd_hw_toggle__io1a	, _hw_toggle_io1a
 
-#define _hw_toggle_io1a(o,i,p,bn,bp,...)	HW_TX( _hw_toggle_io1a_2(_HW_A(_HW_R(p,_out)),(((1<<bn)-1)<<bp)), \
+#define _hw_toggle_io1a(o,i,p,bn,bp,...)	HW_TX( _hw_toggle_io1a_2(_HW_A(_HW_M(p,_out)),(((1<<bn)-1)<<bp)), \
 						       __VA_ARGS__)
 
 #define _hw_toggle_io1a_2(r,msk)					\

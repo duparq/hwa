@@ -36,25 +36,26 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__io1a		, _hw_bn_io1a
+#define _hw_mthd_HW_BITS__io1a			, _HW_BITS__io1a
 
-#define _hw_bn_io1a(o,i, cn,bn,bp,...)	       bn
+#define _HW_BITS__io1a(o,i, cn,bn,bp,...)	bn
 
 
 /**
  * @page atmelavr_io1a
  *
- * For a group of consecutive pins, the `hw_bp()` instruction gives the position
+ * For a group of consecutive pins, the `HW_POSITION()` instruction gives the position
  * of the least significant bit:
  *
  * @code
- * #if HW_ID(hw_pin_pa3) && (hw_bp(pin_pa3) != 3)
+ * #if HW_ID(hw_pin_pa3) && (HW_POSITION(pin_pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bp__io1a		, _hw_bp_io1a
-#define _hw_bp_io1a(o,i, cn,bn,bp,...)	       bp
+#define _hw_mthd_HW_POSITION__io1a		, _HW_POSITION__io1a
+
+#define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
 
 
 /**
@@ -69,7 +70,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_REL__io1a		, _HW_REL_io1a
+#define _hw_mthd_HW_RELATIVE__io1a		, _HW_REL_io1a
 
 #define _hw_is_port_port
 

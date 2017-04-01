@@ -49,7 +49,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__ad10b		, _hw_bn_ad10b
+#define _hw_mthd_HW_BITS__ad10b		, _hw_bn_ad10b
 #define _hw_bn_ad10b(o,i,a,...)		HW_TX(10,__VA_ARGS__)
 
 

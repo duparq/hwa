@@ -52,7 +52,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__ad10a		, _hw_bn_ad10a
+#define _hw_mthd_HW_BITS__ad10a		, _hw_bn_ad10a
 #define _hw_bn_ad10a(p,i,a,_)		10
 
 /**

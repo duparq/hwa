@@ -132,9 +132,9 @@
 			 "  andi %[r], %[wdp]"		"\n\t"		\
 			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
 			 : [r] "=&d" (reg)				\
-			 : [wdtcr] "I" (_HW_A(_HW_R(o, csr))-0x20), \
-			   [wdce] "I" (1<<_hw_bp(_HW_R(o, wdce))),	\
-			   [wde] "I" (1<<_hw_bp(_HW_R(o, wde))),	\
+			 : [wdtcr] "I" (_HW_A(_HW_M(o, csr))-0x20), \
+			   [wdce] "I" (1<<_hw_bp(_HW_M(o, wdce))),	\
+			   [wde] "I" (1<<_hw_bp(_HW_M(o, wde))),	\
 			   [wdp] "I" (0x27));				\
   } while(0)
 

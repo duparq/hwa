@@ -44,7 +44,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_hw_bn__c8c		, _hw_bn_c8c
+#define _hw_mthd_HW_BITS__c8c		, _hw_bn_c8c
 #define _hw_bn_c8c(o,i,a,...)		8
 
 /**
