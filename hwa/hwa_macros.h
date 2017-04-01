@@ -150,33 +150,23 @@
  *  * `f_0` if `c` is not "".
  */
 #define HW_X(...)			_HW_X2(__VA_ARGS__,,)
-#define _HW_X2(f,x,...)		_HW_X3(f,_hw_is_##x,0,)
+#define _HW_X2(f,x,...)			_HW_X3(f,_hw_is_##x,0,)
 #define _HW_X3(...)			_HW_X4(__VA_ARGS__)
 #define _HW_X4(f,x,y,...)		f##_##y
 
 
 /**
  * @ingroup private_mac
- * @brief Connect a generic instruction to an object's class method.
+ * @brief Connects a generic instruction to a method.
  * @hideinitializer
  *
  * @code
- * #define hw_myfunc(...)			HW_MTHD(_hw_myfunc, __VA_ARGS__,)
+ * #define hw_myfunc(...)			HW_MTHD(hw_myfunc, __VA_ARGS__,)
+ * #define _hw_mthd_hw_myfunc__aclass(...)	, _hw_myfunc_aclass
  * @endcode
  *
- * makes the instruction `hw_myfunc()` accept an object name as first argument
- * and expand as the method `_hw_myfunc` of the object's class.
- *
- * @code
- * #define _hw_mthd__hw_myfunc__myclass(...)	, _hw_myfunc_myclass
- * @endcode
- *
- * declares the method `_hw_myfunc()` for the class `_myclass`.
- *
- * If the object `myobject` pertains to the class `_myclass`, the instruction
- * `hw_myfunc( myboject, a0, a1 )` is expanded as: `_hw_myfunc_myclass(
- * hw_myobject,i,a, a0, a1, )` where `i` is the ID of `myobject` and `a` its
- * the base address, followed by the arguments passed to the instruction.
+ * makes the instruction `hw_myfunc()` accept an object of class `_aclass` as
+ * first argument and expand as `_hw_myfunc_aclass(o,i,a,...)`.
  *
  * `HW_MTHD()` verifies the existence of the object and its class method. An
  * explicit error message is produced if the object does not exist or if the
@@ -187,14 +177,7 @@
  * with `HW_TX()` or `HW_EOL()`.
  */
 
-/* If `HW_A0(_hw_mthd_##f##_##c)` is not ``, then there is no method f for class
- * c. Then try to determine the reason:
- *
- *   * p is not a HWA object
- *   * c has no method f
- *   * p is an error
- *
- * Note: an extra void argument must be added for single argument instructions
+/* Note: an extra void argument must be added for single argument instructions
  * in order to avoid a compiler warning.
  */
 
@@ -203,7 +186,6 @@
 /*  Get the definition of the object o. This will return the class in first
  *  position or void is an error occured.
  */
-//#define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,o,_hw_def_##o,__VA_ARGS__)
 #define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,HW_O(o),__VA_ARGS__)
 #define _HW_MTHD2(...)		_HW_MTHD3(__VA_ARGS__)
 #define _HW_MTHD3(f,c,...)	HW_X(_HW_MTHD3,c)(f,c,__VA_ARGS__)
@@ -211,7 +193,6 @@
 
 /*  Is there a method f for object o of class c?
  */
-//#define _HW_MTHD3(f,o,c,...)	HW_X(_HW_MTHD4,_hw_mthd_##f##_##c)(f,o,c,__VA_ARGS__)
 #define _HW_MTHD3_0(f,c,...)	HW_X(_HW_MTHD4,_hw_mthd_##f##_##c)(f,c,__VA_ARGS__)
 
 #define _HW_MTHD4_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
@@ -222,27 +203,12 @@
 #define _HW_MTHD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
 
 
-
-/* No method f for object o of class c. Is o an object?
- */
-#define x_HW_MTHD4_0(f,c,...)	HW_X(_HW_MTHD5,_hw_class_##c)(f,c,__VA_ARGS__)
-#define x_HW_MTHD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
-
-/* o is not an object. Is it a class name?
- */
-#define x_HW_MTHD5_0(f,c,o,...)	HW_X(_HW_MTHD6,_hw_class_##o)(f,c,o,__VA_ARGS__)
-
-/* Is there a method f for class c?
- */
-#define x_HW_MTHD6_1(f,o,oo,...)	HW_X(_HW_MTHD8,_hw_mthd_##f##_##o)(f,o,__VA_ARGS__)
-#define x_HW_MTHD8_0(f,c,...)	HW_E_CM(c,f)
-#define x_HW_MTHD8_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
-
-/* o is not an object and not a class name. Propagate or trigger an error.
- */
-#define x_HW_MTHD6_0(...)	HW_E(processing error)
-
 /**
+ * @ingroup private_mac
+ * @brief Connect a generic instruction to a method.
+ * @hideinitializer
+ *
+ * This is used for internal instructions.
  */
 #define _HW_MTHD(...)		__HW_MTHD1(__VA_ARGS__)
 #define __HW_MTHD1(f,o,...)	__HW_MTHD2(f,o,_hw_def_##o,__VA_ARGS__)
@@ -334,7 +300,7 @@
 
 /*  o is not an object, produce an error.
  */
-#define _HW_O4_0(o,...)	HW_X(_HW_O5,o)(o)
+#define _HW_O4_0(o,...)		HW_X(_HW_O5,o)(o)
 #define _HW_O5_0(o)		HW_E_O(o)
 #define _HW_O5_1(o)		HW_E_OM()
 
@@ -600,7 +566,7 @@
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
-#define _hw_mthd_HW_ADDRESS__m1		, _hw__a__m1
+#define _hw_mthd_HW_ADDRESS__m1		, _HW_ADDRESS__m1
 
 
 /**
@@ -608,7 +574,7 @@
  * @brief  Address of an object's register (internal use)
  * @hideinitializer
  */
-#define _HW_A(...)			_HW_SPEC(_hw__a, __VA_ARGS__)
+#define _HW_A(...)			_HW_SPEC(_HW_ADDRESS, __VA_ARGS__)
 
 
 /**
