@@ -27,14 +27,14 @@ values __before including the device header__ otherwise factory values will be
 assumed:
 
 @code
-#define HW_DEVICE_CLK_SRC               rc_8MHz
-#define HW_DEVICE_CLK_PSC               1
-#define HW_DEVICE_EXTERNAL_RESET        enabled
-#define HW_DEVICE_SELF_PROGRAMMING      enabled
-#define HW_DEVICE_DEBUG_WIRE            disabled
-#define HW_DEVICE_WATCHDOG_ALWAYS_ON    no
-#define HW_DEVICE_CLOCK_OUTPUT          disabled
-#define HW_DEVICE_BROWNOUT_DETECTION    2500_2900mV
+#define HW_DEVICE_CLK_SRC		rc_8MHz
+#define HW_DEVICE_CLK_PSC		1
+#define HW_DEVICE_EXTERNAL_RESET	enabled
+#define HW_DEVICE_SELF_PROGRAMMING	enabled
+#define HW_DEVICE_DEBUG_WIRE		disabled
+#define HW_DEVICE_WATCHDOG_ALWAYS_ON	no
+#define HW_DEVICE_CLOCK_OUTPUT		disabled
+#define HW_DEVICE_BROWNOUT_DETECTION	2500_2900mV
 
 #include <atmel/avr/attiny44a_pu.h>
 @endcode
@@ -81,16 +81,16 @@ Action arguments are lower-cased words.
 
 Action	    | Comments
 :-----------|:-----------
-`clear`     | Clear the object (usually an IRQ flag).
+`clear`	    | Clear the object (usually an IRQ flag).
 `configure` | Configure the object.
-`power`     | Power the object ON/OFF.
-`read`      | Read the object.
-`reset`     | Reset the object.
-`stat`      | Read the status of the object.
+`power`	    | Power the object ON/OFF.
+`read`	    | Read the object.
+`reset`	    | Reset the object.
+`stat`	    | Read the status of the object.
 `toggle`    | Toggle the state of the object (usually an I/O pin).
 `trigger`   | Trigger the object (start a ADC convertion...).
-`turn`      | Turn the object ON/OFF.
-`write`     | Write a value in the object.
+`turn`	    | Turn the object ON/OFF.
+`write`	    | Write a value in the object.
 
 
 Objects {#using_objects}
@@ -181,7 +181,7 @@ can spare a few program memory bytes and CPU cycles:
 HW_ISR( counter0, overflow, isr_naked )
 {
   hw( toggle, pin_pa0 );  // will use the `sbi` instruction, no register is altered
-  hw_asm("reti");         // produce the `reti` instruction
+  hw_asm("reti");	  // produce the `reti` instruction
 }
 @endcode
 

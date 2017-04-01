@@ -26,14 +26,14 @@
 
 /*  The counter
  */
-#define PWM                     compare00
-#define CLKDIV                  64
-#define COUNTMODE               up_loop
-#define TOP                     0xFF
+#define PWM			compare00
+#define CLKDIV			64
+#define COUNTMODE		up_loop
+#define TOP			0xFF
 
 /*  Compare strings
  */
-#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
+#define STRCMP(s1,s2)		__builtin_strcmp(s1,s2)
 
 
 /*  Store the hardware configuration into a HWA context
@@ -43,16 +43,16 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa( configure, HW_RELATIVE(PWM,counter),
-       clock,     prescaler_output(CLKDIV),
+       clock,	  prescaler_output(CLKDIV),
        countmode, COUNTMODE,
-       bottom,    0,
-       top,       TOP );
+       bottom,	  0,
+       top,	  TOP );
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( configure, PWM, output, clear_on_match_up_set_on_match_down );
@@ -74,8 +74,8 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
  */
 HW_ISR( HW_RELATIVE(PWM,counter), overflow )
 {
-  static uint8_t        duty ;
-  static uint8_t        phase ;
+  static uint8_t	duty ;
+  static uint8_t	phase ;
 
   if ( phase == 0 )
     hw( write, PWM, duty );
@@ -87,8 +87,8 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
   if ( duty==0 ) {
     phase = (phase + 1) & 3 ;
 
-    /*  In 'up_loop' counting mode, we must disconnect/reconnect the output of
-     *  the compare unit as it can not provide pulses of less than 1 cycle.
+    /*	In 'up_loop' counting mode, we must disconnect/reconnect the output of
+     *	the compare unit as it can not provide pulses of less than 1 cycle.
      */
     if ( !STRCMP(HW_QUOTE(COUNTMODE),"up_loop") ) {
 
@@ -98,24 +98,24 @@ HW_ISR( HW_RELATIVE(PWM,counter), overflow )
       setup_hwa_context( hwa );
 
       if ( phase == 2 ) {
-        /*
-         *  Change the compare output config from 'set_at_bottom_clear_on_match'
-         *  to 'disconnected'
-         */
-        hwa( configure, PWM, output, set_at_bottom_clear_on_match );
-        hwa_nocommit();
-        hwa( configure, PWM, output, disconnected );
-        hwa_commit();
+	/*
+	 *  Change the compare output config from 'set_at_bottom_clear_on_match'
+	 *  to 'disconnected'
+	 */
+	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
+	hwa_nocommit();
+	hwa( configure, PWM, output, disconnected );
+	hwa_commit();
       }
       else if ( phase == 0 ) {
-        /*
-         *  Change the compare output config from 'disconnected' to
-         *  'set_at_bottom_clear_on_match'
-         */
-        hwa( configure, PWM, output, disconnected );
-        hwa_nocommit();
-        hwa( configure, PWM, output, set_at_bottom_clear_on_match );
-        hwa_commit();
+	/*
+	 *  Change the compare output config from 'disconnected' to
+	 *  'set_at_bottom_clear_on_match'
+	 */
+	hwa( configure, PWM, output, disconnected );
+	hwa_nocommit();
+	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
+	hwa_commit();
       }
     }
   }

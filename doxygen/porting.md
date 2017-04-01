@@ -375,7 +375,7 @@ file `atmel/avr/classes/c8a_2.h`.
 First, the method has to be declared:
 
 @code
-#define _hw_mthd_hwa_config__c8a		, _hwa_config_c8a
+#define _hw_mthd_hwa_config__c8a	, _hwa_config_c8a
 @endcode
 
 The instruction `hwa( configure, counter0, ... )` will then be translated to

@@ -4,12 +4,12 @@
 #define E	_Pragma("GCC error \"Error\"")
 
 #define ISE(x)		_ISE2(x)
-#define _ISE2(x)	HW_GX(_ISE,_hw_is_##x)(x)
+#define _ISE2(x)	HW_X(_ISE,_hw_is_##x)(x)
 #define _ISE_0(x)	0
 #define _ISE_1(x)	1
 
 #define F(x)		_F(x)
-#define _F(x)		HW_GX(_F,x)(x)
+#define _F(x)		HW_X(_F,x)(x)
 
 H1: E;
 H2: HW_IS(e,E);

@@ -45,7 +45,7 @@
 
 #define _hwa_cfcmp8b(o,i,a, ...)						\
   do {									\
-    HW_GX(_hwa_cfcmp8b_kupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,) \
+    HW_X(_hwa_cfcmp8b_kupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,) \
       } while(0)
 
 #define _hwa_cfcmp8b_kupdate_1(o,kw,v,...)				\
@@ -58,7 +58,7 @@
   _hwa_cfcmp8b_kupdate_0(o,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_kupdate_0(o,kw,...)					\
-  HW_GX(_hwa_cfcmp8b_koutputh,_hw_cmp8b_koutputh_##kw)(o,kw,__VA_ARGS__)
+  HW_X(_hwa_cfcmp8b_koutputh,_hw_cmp8b_koutputh_##kw)(o,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `output` (or `output_h`)
@@ -77,7 +77,7 @@
 
 
 #define _hwa_cfcmp8b_koutputh_1(o,kw,v,...)				\
-  HW_GX(_hwa_cfcmp8b_voutputh,_hw_cmp8b_voutputh_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfcmp8b_voutputh,_hw_cmp8b_voutputh_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_voutputh_0(o,v,...)					\
   HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match`)
@@ -100,7 +100,7 @@
 #define _hw_cmp8b_voutputl_clear_at_bottom_set_on_match	, 1	// 1	  1
 
 #define _hwa_cfcmp8b_koutputl_1(o,kw,v,...)				\
-  HW_GX(_hwa_cfcmp8b_voutputl,_hw_cmp8b_voutputl_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfcmp8b_voutputl,_hw_cmp8b_voutputl_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_voutputl_0(o,v,...)				\
   HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_on_match)

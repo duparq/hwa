@@ -1,13 +1,13 @@
 
-#define E               _Pragma("GCC error \"This is an error\"")
+#define E		_Pragma("GCC error \"This is an error\"")
 
-#define _IS_VOID_       , 1
+#define _IS_VOID_	, 1
 
 /*  Return "1" if <c> is "", return "0" otherwise.
  */
-#define ISVOID(c)         _ISVOID2(c)
-#define _ISVOID2(c)       _ISVOID3(_IS_VOID_##c,0,)
-#define _ISVOID3(...)     _ISVOID4(__VA_ARGS__)
+#define ISVOID(c)	  _ISVOID2(c)
+#define _ISVOID2(c)	  _ISVOID3(_IS_VOID_##c,0,)
+#define _ISVOID3(...)	  _ISVOID4(__VA_ARGS__)
 #define _ISVOID4(v,x,...) x
 
 

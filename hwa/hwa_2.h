@@ -111,7 +111,7 @@
  * Syntax: `_hw( read, object, register );`
  * @hideinitializer
  */
-#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_REG(o,r))
+#define _hw_read_reg(o,r)		_HW_SPEC(_hw_read, _HW_R(o,r))
 
 
 /**
@@ -121,7 +121,7 @@
  * Syntax: `_hw_atomic_read( object, register );`
  * @hideinitializer
  */
-#define _hw_atomic_read_reg(o,r)	_HW_SPEC(_hw_atomic_read, _HW_REG(o,r))
+#define _hw_atomic_read_reg(o,r)	_HW_SPEC(_hw_atomic_read, _HW_R(o,r))
 
 
 /**
@@ -131,7 +131,7 @@
  * Syntax: `_hw_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, _HW_REG(o,r), v,)
+#define _hw_write_reg(o,r,v)		_HW_SPEC(_hw_write, _HW_R(o,r), v,)
 
 
 /**
@@ -141,7 +141,7 @@
  * Syntax: `_hwa_write_reg( object, register, value );`
  * @hideinitializer
  */
-#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_REG(o,r), v)
+#define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_R(o,r), v)
 
 
 #define _hw_mthd_hw_read__m1		, _hw_read__m1
@@ -238,9 +238,6 @@
     }									\
   } while(0)
 
-#define _hw_writep__m1(_0,_1,r,rc,ra,rwm,rfm, bn,bp, o,v)	\
-  _hw_write_##rc( o->r.a, rwm,rfm, bn,bp,v)
-
 
 #define _hw_write__xob1(o,r,bn,bp,v)	_hw_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
 #define _hw_write__xob1_2(...)		_hw_write__xob1_3(__VA_ARGS__)
@@ -287,7 +284,7 @@
  *
  *	_hw_write_reg_m( o, r, m, v );
  */
-#define _hw_write_reg_m(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_REG(o,r),m,v)
+#define _hw_write_reg_m(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_R(o,r),m,v)
 #define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hw_write##rc(a+ra,rwm,rfm,m,v)
 
 /**
@@ -297,7 +294,7 @@
  *
  *	_hwa_write_reg_m( o, r, m, v );
  */
-#define _hwa_write_reg_m(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_REG(o,r),m,v)
+#define _hwa_write_reg_m(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_R(o,r),m,v)
 #define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hwa_write##rc(&hwa->o.r,rwm,rfm,m,v)
 
 
@@ -315,25 +312,25 @@
 /**
  * @brief Initialize the HWA context registers addresses of an object
  */
-#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_OD(o))
+#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_O(o))
 
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value
  */
-#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_OD(o))
+#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_O(o))
 
 
 /**
  * @brief Solve the configuration of an object
  */
-#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_OD(o))
+#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_O(o))
 
 
 /**
  * @brief Commit the registers of an object
  */
-#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_OD(o))
+#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_O(o))
 
 
 /**
@@ -345,7 +342,7 @@
 /* #define _hwa_begin_reg_2(...)			_hwa_begin_reg_3(__VA_ARGS__) */
 /* #define _hwa_begin_reg_3(o,a,r, rc,ra, ... )	_hwa_begin_##rc( &hwa->o.r, a+ra ) */
 
-#define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_hw_hreg(o,r))
+#define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_HW_HR(o,r))
 #define _hwa_setup_reg_2(...)			_hwa_setup_reg_3(__VA_ARGS__)
 #define _hwa_setup_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_setup_##rt(&hwa->o.r, a+ra)
 
@@ -359,7 +356,7 @@
 /* #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__) */
 /* #define _hwa_init_reg_3(o,r, rc,ra,rwm,rfm, v)	_hwa_set_##rc( &hwa->o.r, v ) */
 
-#define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(_hw_hreg(o,r),v)
+#define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(_HW_HR(o,r),v)
 #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__)
 #define _hwa_init_reg_3(rt,ra,rwm,rfm,o,c,a,r,v)	_hwa_set_##rt( &hwa->o.r, v )
 
@@ -378,7 +375,7 @@
 /* #define _hwa_commit_hreg_3(rt,ra,rwm,rfm,o,c,a,r)	\ */
 /*   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit) */
 
-#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_REG(o,r))
+#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_R(o,r))
 #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__)
 #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__)
 
@@ -395,7 +392,7 @@
  *
  * @hideinitializer
  */
-#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_HW_REG(o,r))
+#define _hwa_mmask(o,r)					_HW_SPEC(_hwa_mmask,_HW_R(o,r))
 #define _hwa_mmask__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mmask)>>bp)&((1U<<bn)-1))
 
 
@@ -404,7 +401,7 @@
  * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_HW_REG(o,r))
+#define _hwa_mvalue(o,r)				_HW_SPEC(_hwa_mvalue,_HW_R(o,r))
 #define _hwa_mvalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mvalue)>>bp)&((1U<<bn)-1))
 
 
@@ -413,7 +410,7 @@
  * @brief Get the last committed value for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_HW_REG(o,r))
+#define _hwa_ovalue(o,r)				_HW_SPEC(_hwa_ovalue,_HW_R(o,r))
 #define _hwa_ovalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.ovalue)>>bp)&((1U<<bn)-1))
 
 
@@ -422,7 +419,7 @@
  * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modificapion mask (mmask).
  * @hideinitializer
  */
-#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_REG(o,r),v)
+#define _hwa_set_reg(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_R(o,r),v)
 #define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)			\
     hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
 
@@ -508,9 +505,9 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
  * @param bp	position of the least significant bit in the register.
  * @param v	value to write.
  */
-/* HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,  */
-/* 				uint8_t rwm, uint8_t rfm, */
-/* 				uint8_t bn, uint8_t bp, uint8_t v ) */
+/* HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,	 */
+/*				uint8_t rwm, uint8_t rfm, */
+/*				uint8_t bn, uint8_t bp, uint8_t v ) */
 /* { */
 /*   if (bn == 0) */
 /*     HWA_ERR("no bit to be changed?"); */
@@ -520,11 +517,11 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
 
 /*   uint8_t sm = ((1U<<bn)-1) << bp ;	/\* shifted mask	 *\/ */
 
-/*   //  *((volatile uint8_t*)0) = sm ; */
+/*   //	 *((volatile uint8_t*)0) = sm ; */
 
 /*   uint8_t sv = v << bp ;		/\* shifted value *\/ */
 
-/*   //  *((volatile uint8_t*)0) = sv ; */
+/*   //	 *((volatile uint8_t*)0) = sv ; */
 
 /*   if ((rwm & sm) != sm) */
 /*     HWA_ERR("bits not writeable."); */
@@ -534,7 +531,7 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
 
 /*   if ( sm & rfm ) */
 /*     if ( v == 0 ) */
-/*       HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
+/*	 HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
 
 /*   r->mmask |= sm ; */
 /*   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ; */

@@ -17,14 +17,14 @@
 
 /*  The counter
  */
-#define COUNTER                 counter0
-#define CLKDIV                  64
-#define COUNTMODE               up_loop
-#define PERIOD                  0.5
+#define COUNTER			counter0
+#define CLKDIV			64
+#define COUNTMODE		up_loop
+#define PERIOD			0.5
 
 /*  Compare strings
  */
-#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
+#define STRCMP(s1,s2)		__builtin_strcmp(s1,s2)
 
 
 /*  Service the counter overflow IRQ
@@ -54,7 +54,7 @@ int main ( )
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
   hwa( configure,  core0,
-       sleep,      enabled,
+       sleep,	   enabled,
        sleep_mode, idle );
 
   /*  Configure the counter to overflow every 0.001 s.
@@ -65,10 +65,10 @@ int main ( )
    *  mode.
    */
   hwa( configure, COUNTER,
-       clock,     prescaler_output(CLKDIV),
+       clock,	  prescaler_output(CLKDIV),
        countmode, COUNTMODE,
-       bottom,    0,
-       top,       compare0
+       bottom,	  0,
+       top,	  compare0
        );
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )

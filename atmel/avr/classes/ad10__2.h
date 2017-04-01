@@ -13,10 +13,10 @@
 /*	Turn ADC on / off
  */
 #define _hw_turn_ad10_(o,i,a, v, ...)			\
-  HW_GX(_hwx_turn_ad10_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+  HW_X(_hwx_turn_ad10_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 
 #define _hwa_turn_ad10_(o,i,a, v, ...)			\
-  HW_GX(_hwx_turn_ad10_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+  HW_X(_hwx_turn_ad10_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_ad10__0(x,o, v, ...)			\
   HW_E_ST(v)
@@ -34,7 +34,7 @@
 /*	Read the result of the conversion
  */
 #define _hw_rdad10_(o,i,a,...)					\
-  HW_GX(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
+  HW_X(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_rdad10__1(o,...)		_hw_read_reg(o, adc)
 
@@ -43,7 +43,7 @@
 #define _hw_rdad10__0(o,k,...)					\
   HW_G2(_hw_rdad10__khi8,HW_IS(hi8,k))(o,k,__VA_ARGS__)
 
-#define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_hw_ra(o,adc)+1))
+#define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_R(o,adc))+1))
 
 #define _hw_is_hi8_hi8			, 1
 
@@ -52,7 +52,7 @@
 #define _hw_rdad10__khi8_0(o,k,...)				\
   HW_G2(_hw_rdad10__klo8,HW_IS(lo8,k))(o,k,__VA_ARGS__)
 
-#define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_hw_ra(o,adc)))
+#define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_R(o,adc))))
 #define _hw_rdad10__klo8_0(o,k,...)	HW_E(optionnal parameter can be `lo8 | hi8` but not `k`)
 
 #define _hw_is_lo8_lo8			, 1

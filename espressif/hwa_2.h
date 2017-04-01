@@ -75,9 +75,9 @@
  *  given state.
  */
 #define _hw_power(o,i,a, ...)		\
-  HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
+  HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
 #define _hwa_power(o,i,a, ...)		\
-  HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
+  HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 

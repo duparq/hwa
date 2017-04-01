@@ -26,7 +26,7 @@
 
 /*  Compare strings
  */
-#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
+#define STRCMP(s1,s2)		__builtin_strcmp(s1,s2)
 
 
 /*  Service the compare-match IRQ

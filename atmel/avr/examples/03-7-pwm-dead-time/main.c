@@ -31,7 +31,7 @@
 
 
 #if ( COUNT*PWM_HZ*CLOCK_PSC != HW_G2(HZ,CLOCK_SRC) )
-#  error "PWM_HZ can not be achived with these settings"
+#  error "PWM_HZ can not be achieved"
 #endif
 
 
@@ -39,7 +39,7 @@ int main ( )
 {
   hwa_begin_from_reset();
 
-  hwa( configure, HW_REL(COUNTER, prescaler0),
+  hwa( configure, HW_RELATIVE(COUNTER, prescaler0),
        clock,	  CLOCK_SRC );
 
   hwa( configure, COUNTER,
@@ -47,22 +47,20 @@ int main ( )
        countmode, up_loop,
        bottom,	  0,
        top,	  compare2,
-       overflow,  at_bottom
-       );
+       overflow,  at_bottom );
 
-  hwa( write, HW_REL(COUNTER, compare2), COUNT-1 );
+  hwa( write, HW_RELATIVE(COUNTER, compare2), COUNT-1 );
 
-  hwa( configure, HW_REL(COUNTER, OUTPUT),
+  hwa( configure, HW_RELATIVE(COUNTER, OUTPUT),
        output_h,  set_at_bottom_clear_on_match,
        output_l,  clear_at_bottom_set_on_match );
   
-  hwa( write, HW_REL(COUNTER, OUTPUT), 0.5 * COUNT );
+  hwa( write, HW_RELATIVE(COUNTER, OUTPUT), 0.5 * COUNT );
 
-  hwa( configure, HW_REL(COUNTER, dtg0),
-       clock_div,  4,		// 1 | 2 | 4 | 8
+  hwa( configure,       HW_RELATIVE(COUNTER, dtg0),
+       clock_div,       4,	// 1 | 2 | 4 | 8
        HW_G2(OUTPUT,h), 3,	// 0..15
-       HW_G2(OUTPUT,l), 9	// 0..15
-       );
+       HW_G2(OUTPUT,l), 9 );	// 0..15
 
   hwa_commit();
 

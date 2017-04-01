@@ -400,14 +400,14 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `prescaler0`	 | `counter1prescaler0` | `HW_RELATIVE(counter1, prescaler0)`
  * `compare00`	 | `counter0compare0`	| `HW_RELATIVE(counter0, compare0)`
  * `compare01`	 | `counter0compare1`	| `HW_RELATIVE(counter0, compare1)`
- * `counter0`    | `compare00counter`	   | `HW_RELATIVE(compare00, counter)`
- * `counter0`    | `compare01counter`	   | `HW_RELATIVE(compare01, counter)`
+ * `counter0`	 | `compare00counter`	   | `HW_RELATIVE(compare00, counter)`
+ * `counter0`	 | `compare01counter`	   | `HW_RELATIVE(compare01, counter)`
  * `pin_compare00` | `compare00pin`		   | `HW_RELATIVE(compare00, pin)`
  * `pin_compare01` | `compare01pin`		   | `HW_RELATIVE(compare01, pin)`
  * `compare10`	 | `counter1compare0`	| `HW_RELATIVE(counter1, compare0)`
  * `compare11`	 | `counter1compare1`	| `HW_RELATIVE(counter1, compare1)`
- * `counter1`    | `compare10counter`	   | `HW_RELATIVE(compare10, counter)`
- * `counter1`    | `compare11counter`	   | `HW_RELATIVE(compare11, counter)`
+ * `counter1`	 | `compare10counter`	   | `HW_RELATIVE(compare10, counter)`
+ * `counter1`	 | `compare11counter`	   | `HW_RELATIVE(compare11, counter)`
  * `pin_compare10` | `compare10pin`		   | `HW_RELATIVE(compare10, pin)`
  * `pin_compare11` | `compare11pin`		   | `HW_RELATIVE(compare11, pin)`
  */
@@ -1173,9 +1173,9 @@ typedef struct {
 
 #if defined hw_swuart0_compare
 #  define _hw_def_swuart0		_swuarta, 137, 0
-#  define _hw_reg_swuart0_dtn		_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#  define _hw_reg_swuart0_dt0		_hw_rc(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
-#  define _hw_reg_swuart0__st		_hw_ra(shared, gpior0)
+#  define _hw_reg_swuart0_dtn		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#  define _hw_reg_swuart0_dt0		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#  define _hw_reg_swuart0__st		_HW_A(_HW_R(shared, gpior0))
 #  define _hw_reg_swuart0_sr		_hw_reg_shared_gpior0
 #  define _hw_reg_swuart0_synced	_ob1, sr, 1, 0
 #endif
@@ -1210,9 +1210,9 @@ typedef struct {
 
 #if defined hw_swuart1_compare
 #  define _hw_def_swuart1		_swuarta, 138, 0
-#  define _hw_reg_swuart1_dtn		_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#  define _hw_reg_swuart1_dt0		_hw_rc(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
-#  define _hw_reg_swuart1__st		_hw_ra(shared, gpior1)
+#  define _hw_reg_swuart1_dtn		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#  define _hw_reg_swuart1_dt0		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#  define _hw_reg_swuart1__st		_HW_A(_HW_R(shared, gpior1))
 #  define _hw_reg_swuart1_sr		_hw_reg_shared_gpior1
 #  define _hw_reg_swuart1_synced	_ob1, sr, 1, 0
 #endif

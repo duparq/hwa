@@ -64,14 +64,14 @@
 
 #define _hwa_cfspia(o,i,a,...)						\
   do {									\
-    HW_GX(_hwa_cfspia_kmode,_hw_is_mode_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_X(_hwa_cfspia_kmode,_hw_is_mode_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfspia_kmode_0(o,k,...)					\
   HW_E_VL(k,mode)
 
 #define _hwa_cfspia_kmode_1(o,k,v,...)				\
-  HW_GX(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vmode_0(o,v,...)					\
   HW_E_AVL(mode, v, master | slave | off)
@@ -87,7 +87,7 @@
       _hwa( configure, _HW_REL(o,pin_sck), direction, output );	\
     }								\
   }								\
-  HW_GX(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
+  HW_X(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 /*	Mandatory parameter `clock`
  */
@@ -105,7 +105,7 @@
   HW_E_VL(k,clock)
 
 #define _hwa_cfspia_kclock_1(o,k,v,...)					\
-  HW_GX(_hwa_cfspia_vclock,_hw_spia_clock_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfspia_vclock,_hw_spia_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
@@ -124,7 +124,7 @@
   HW_E_VL(k,sck_idle)
 
 #define _hwa_cfspia_ksck_idle_1(o,k,v,...)				\
-  HW_GX(_hwa_cfspia_vsck_idle,_hw_spia_sck_idle_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfspia_vsck_idle,_hw_spia_sck_idle_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfspia_vsck_idle_0(o,v,...)			\
   HW_E_AVL(sck_idle, v, low | high)
@@ -185,7 +185,7 @@
 #define _hw_wrspia(o,i,a,v,...)		HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__)
 
 /* #define _hw_wrspia(o,i,a,v,...)						\ */
-/*   HW_TX( __hw_wrspia( _hw_rap(o,if), _hw_ra(o,dr), v ), __VA_ARGS__) */
+/*   HW_TX( __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_R(o,dr)), v ), __VA_ARGS__) */
 
 /* HW_INLINE uint8_t __hw_wrspia( intptr_t flag_addr, uint8_t flag_bp, intptr_t dr, uint8_t v ) */
 /* { */
@@ -221,7 +221,7 @@
 #define _hw_mthd_hw_turn__spia		, _hw_turn_spia
 
 #define _hw_turn_spia(o,i,a, ...)					\
-  HW_GX(_hw_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_X(_hw_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
@@ -236,7 +236,7 @@
 #define _hw_mthd_hwa_turn__spia		, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,i,a, ...)					\
-  HW_GX(_hwa_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_X(_hwa_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\
@@ -251,7 +251,7 @@
  *
  * @code
  * if ( hw( read, HW_IRQFLAG( spi0 ) ) ) {  // Read "transfer complete" IRQ flag
- *   hw( turn, HW_IRQ( spi0, off ) );              // Disable transfer complete IRQs
+ *   hw( turn, HW_IRQ( spi0, off ) );		   // Disable transfer complete IRQs
  * }
  * @endcode
  *
@@ -261,7 +261,7 @@
  *
  * @code
  * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read transfer complete IRQ flag
- *   data = hw( read, spi0 );              // Read data and clear transfer complete IRQ flag
+ *   data = hw( read, spi0 );		   // Read data and clear transfer complete IRQ flag
  * @endcode
  *
  * The `hw(stat,)` instruction lets you read the `collision` flag:

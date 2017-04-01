@@ -22,14 +22,14 @@
  * hwa( configure, acmp0,
  * 
  *    [ edge,		 falling
- *    		       | rising
- *    		       | both, ]
+ *		       | rising
+ *		       | both, ]
  *
  *    [ positive_input,	 HW_PIN(ain0)
- *    		       | bandgap,    ]
+ *		       | bandgap,    ]
  *
  *    [ negative_input,	 HW_PIN(ain1)
- *    		       | HW_PIN(adc0..3) ] );
+ *		       | HW_PIN(adc0..3) ] );
  * @endcode
  */
 /*
@@ -50,11 +50,11 @@
 
 #define _hwa_cfacmpb(o,i,a,...)						\
   do {									\
-    HW_GX(_hwa_cfacmpb_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_X(_hwa_cfacmpb_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfacmpb_xedge_1(o,k,v,...)					\
-  HW_GX(_hwa_cfacmpb_vedge,_hw_acmpb_edge_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfacmpb_vedge,_hw_acmpb_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising | both)
@@ -73,7 +73,7 @@
 #define _hw_acmpb_posin_bandgap		, 1	/* ACBG */
 
 #define _hwa_cfacmpb_xposin_1(o,k,v,...)				\
-  HW_GX(_hwa_cfacmpb_vposin,_hw_acmpb_posin_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfacmpb_vposin,_hw_acmpb_posin_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_0(o,v,...)					\
   HW_E_AVL(positive_input, v, HW_PIN(ain0) | bandgap)

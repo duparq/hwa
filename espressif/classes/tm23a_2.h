@@ -60,27 +60,27 @@
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup( shared );						\
     _hwa_setup( o );							\
-    HW_GX(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_X(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
     hwa->commit = 1; _hwa_commit( o ); _hwa_commit( shared );	\
   }while(0)
 
 #define _hwa_cftm23a(o,i,a,...)						\
-  HW_GX(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) \
+  HW_X(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) \
 
 
 /*	Optionnal parameter `clock`
  */
 #define _hwa_cftm23a_kclock_1(o,k,v,...)				\
-  HW_GX(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_1(o,v,...)					\
   _hwa_write_reg(o,psc,HW_A1(_hw_tm23a_clock_##v));			\
-  HW_GX(_hwa_cftm23a_kcountmode,_hw_is_countmode_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_kcountmode,_hw_is_countmode_##__VA_ARGS__)(o,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
 #define _hwa_cftm23a_kclock_0(o,k,...)					\
-  HW_GX(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_clock_clock		, 1
 #define _hw_tm23a_clock_apb		, 0
@@ -92,17 +92,17 @@
 /*	Optionnal parameter `countmode`
  */
 #define _hwa_cftm23a_kcountmode_1(o,k,v,...)				\
-  HW_GX(_hwa_cftm23a_vcountmode,_hw_tm23a_countmode_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_vcountmode,_hw_tm23a_countmode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vcountmode_1(o,v,k,...)			\
   _hwa_write_reg(o,en,HW_A1(_hw_tm23a_countmode_##v));		\
   _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_countmode_##v));		\
-  HW_GX(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vcountmode_0(o,v,...)	HW_E_AVL(countmode, v, down | loop_down | stop)
 
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
-  HW_GX(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_countmode_countmode	, 1
 #define _hw_tm23a_countmode_stop	, 0, 0	/* en, arl */
@@ -117,10 +117,10 @@
 #define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E_AVL(bottom, v, 0)
 
 #define _hwa_cftm23a_vbottom_1(o,v,k,...)			\
-    HW_GX(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+    HW_X(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_kbottom_0(o,k,...)				\
-    HW_GX(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+    HW_X(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 #define _hw_is_bottom_bottom		, 1
 
@@ -128,10 +128,10 @@
  */
 #define _hwa_cftm23a_ktop_1(o,k,v,...)					\
     _hwa_write_reg(o,load,v);						\
-    HW_GX(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
+    HW_X(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
 
 #define _hwa_cftm23a_ktop_0(o,...)					\
-  HW_GX(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
 
 #define _hw_is_top_top			, 1
 
@@ -139,7 +139,7 @@
 /*	Optionnal parameter `irq_type`
  */
 #define _hwa_cftm23a_kirqtype_1(o,k,v,...)				\
-  HW_GX(_hwa_cftm23a_virqtype,_hw_tm23a_irqtype_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_virqtype,_hw_tm23a_irqtype_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_virqtype_1(o,v,...)			\
   _hwa_write_reg(o,ie, HW_A1(_hw_tm23a_irqtype_##v));		\
@@ -161,7 +161,7 @@
 /*	Optionnal parameter `action`
  */
 #define _hwa_cftm23a_kaction_1(o,k,v,...)				\
-  HW_GX(_hwa_cftm23a_vaction,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cftm23a_vaction,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vaction_1(o,v,...)					\
   _hwa_write_reg(o,irqtype,0);						\

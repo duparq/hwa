@@ -54,11 +54,11 @@
 
 #define _hwa_cfcoreb(o,i,a,...)					\
   do {									\
-    HW_GX(_hwa_cfcoreb_ksleep,_hw_is_sleep_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_X(_hwa_cfcoreb_ksleep,_hw_is_sleep_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfcoreb_ksleep_1(o,k,v,...)				\
-  HW_GX(_hwa_cfcoreb_vsleep,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfcoreb_vsleep,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcoreb_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
 #define _hwa_cfcoreb_vsleep_1(o,v,k,...)				\
@@ -75,7 +75,7 @@
 #define _hwa_cfcoreb_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcoreb_ksleepmode_1(o,k,v,...)				\
-  HW_GX(_hwa_cfcoreb_vsleepmode,_hw_sleepmode_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfcoreb_vsleepmode,_hw_sleepmode_##v)(o,v,__VA_ARGS__)
 
 #define _hw_sleepmode_idle		, 0
 #define _hw_sleepmode_adc_noise_reduction	, 1

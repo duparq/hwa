@@ -56,11 +56,11 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(c,o,i,a, ...)		HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
-#define _hwa_power(c,o,i,a, ...)	HW_GX(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
+#define _hw_power(c,o,i,a, ...)		HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
+#define _hwa_power(c,o,i,a, ...)	HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_ST(v)
-#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_GX(_hwx_pwr1,HW_G2(_hw_hasbits, _##o##_##prr))(o,x,v),__VA_ARGS__)
+#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_X(_hwx_pwr1,HW_G2(_hw_isa_reg, _##o##_##prr))(o,x,v),__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
  */
@@ -249,7 +249,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint16_t
       /*
        *  Read-modify-write
        */
-      uint16_t sm = mask & rwm & value ;	/* what has to be set     */
+      uint16_t sm = mask & rwm & value ;	/* what has to be set	  */
       uint16_t cm = mask & rwm & (~value) ;	/* what has to be cleared */
       *p = (*p & ~cm) | sm ;
     }
@@ -487,9 +487,9 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*	ISR
  */
-#define _hw_israttr_isr_interruptible		, __attribute__((interrupt))
+#define _hw_israttr_isr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_isr_non_interruptible	, 
-#define _hw_israttr_isr_naked			, __attribute__((naked))
+#define _hw_israttr_isr_naked		, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))

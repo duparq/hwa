@@ -17,14 +17,14 @@
 
 /*  The counter
  */
-#define COUNTER                 counter0
-#define CLKDIV                  64
-#define COUNTMODE               up_loop
-#define PERIOD                  0.5
+#define COUNTER			counter0
+#define CLKDIV			64
+#define COUNTMODE		up_loop
+#define PERIOD			0.5
 
 /*  Compare strings
  */
-#define STRCMP(s1,s2)           __builtin_strcmp(s1,s2)
+#define STRCMP(s1,s2)		__builtin_strcmp(s1,s2)
 
 
 int main ( )
@@ -44,10 +44,10 @@ int main ( )
    *  counting mode, at bottom in `updown_loop` counting mode.
    */
   hwa( configure, COUNTER,
-       clock,     prescaler_output(CLKDIV),
+       clock,	  prescaler_output(CLKDIV),
        countmode, COUNTMODE,
-       bottom,    0,
-       top,       compare0 );
+       bottom,	  0,
+       top,	  compare0 );
   
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * hw_syshz / CLKDIV / 2 );
@@ -64,8 +64,8 @@ int main ( )
       hw( clear, HW_IRQFLAG(COUNTER, overflow) );
       n++ ;
       if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
-        n = 0 ;
-        hw( toggle, PIN_LED );
+	n = 0 ;
+	hw( toggle, PIN_LED );
       }
     }
   }

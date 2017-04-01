@@ -49,13 +49,13 @@
 /*	Mandatory argument `sense`
  */
 #define _hwx_cfinta(x,o,k,...)					\
-  HW_GX(_hwx_cfinta_ksense,_hw_is_sense_##k)(x,o,k,__VA_ARGS__)
+  HW_X(_hwx_cfinta_ksense,_hw_is_sense_##k)(x,o,k,__VA_ARGS__)
 
 #define _hwx_cfinta_ksense_0(x,o,k,...)			\
   HW_E_VL(k,sense)
 
 #define _hwx_cfinta_ksense_1(x,o,k,v,...)				\
-  HW_GX(_hwx_cfinta_vsense,_hw_inta_sense_##v)(x,o,v,__VA_ARGS__)
+  HW_X(_hwx_cfinta_vsense,_hw_inta_sense_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfinta_vsense_0(x,o,v,...)					\
   HW_E_AVL(sense, v, low_level | edge | falling_edge | rising_edge)
