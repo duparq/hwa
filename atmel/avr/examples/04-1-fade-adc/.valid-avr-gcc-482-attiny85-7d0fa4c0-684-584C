@@ -1,0 +1,526 @@
+HW_DEVICE="attiny85"
+hw_syshz="8000000"
+PIN_LED="pin_pb0"
+PWM_PERIOD="0.0002"
+PWM_TMIN="0"
+PWM_TMAX="0.0002"
+COMPARE_MIN="(uint8_t)(0*8000000/8)"
+COMPARE_MAX="(uint8_t)(0.0002*8000000/8)"
+PIN_ANALOG_INPUT="pin_pb2"
+COUNTER="counter1"
+COUNTER_CLK_DIV="8"
+ADC_CLK_DIV="128"
+
+00000000 <__vectors>:
+   0:	0e c0       	rjmp	.+28     	; 0x1e <__ctors_end>
+   2:	1d c0       	rjmp	.+58     	; 0x3e <__bad_interrupt>
+   4:	1c c0       	rjmp	.+56     	; 0x3e <__bad_interrupt>
+   6:	1b c0       	rjmp	.+54     	; 0x3e <__bad_interrupt>
+   8:	79 c0       	rjmp	.+242    	; 0xfc <__vector_4>
+   a:	19 c0       	rjmp	.+50     	; 0x3e <__bad_interrupt>
+   c:	18 c0       	rjmp	.+48     	; 0x3e <__bad_interrupt>
+   e:	17 c0       	rjmp	.+46     	; 0x3e <__bad_interrupt>
+  10:	17 c0       	rjmp	.+46     	; 0x40 <__vector_8>
+  12:	93 c0       	rjmp	.+294    	; 0x13a <__vector_9>
+  14:	14 c0       	rjmp	.+40     	; 0x3e <__bad_interrupt>
+  16:	13 c0       	rjmp	.+38     	; 0x3e <__bad_interrupt>
+  18:	12 c0       	rjmp	.+36     	; 0x3e <__bad_interrupt>
+  1a:	11 c0       	rjmp	.+34     	; 0x3e <__bad_interrupt>
+  1c:	10 c0       	rjmp	.+32     	; 0x3e <__bad_interrupt>
+
+0000001e <__ctors_end>:
+  1e:	11 24       	eor	r1, r1
+  20:	1f be       	out	0x3f, r1	; 63
+  22:	cf e5       	ldi	r28, 0x5F	; 95
+  24:	d2 e0       	ldi	r29, 0x02	; 2
+  26:	de bf       	out	0x3e, r29	; 62
+  28:	cd bf       	out	0x3d, r28	; 61
+
+0000002a <__do_clear_bss>:
+  2a:	10 e0       	ldi	r17, 0x00	; 0
+  2c:	a0 e6       	ldi	r26, 0x60	; 96
+  2e:	b0 e0       	ldi	r27, 0x00	; 0
+  30:	01 c0       	rjmp	.+2      	; 0x34 <.do_clear_bss_start>
+
+00000032 <.do_clear_bss_loop>:
+  32:	1d 92       	st	X+, r1
+
+00000034 <.do_clear_bss_start>:
+  34:	a3 36       	cpi	r26, 0x63	; 99
+  36:	b1 07       	cpc	r27, r17
+  38:	e1 f7       	brne	.-8      	; 0x32 <.do_clear_bss_loop>
+  3a:	81 d0       	rcall	.+258    	; 0x13e <main>
+  3c:	35 c1       	rjmp	.+618    	; 0x2a8 <_exit>
+
+0000003e <__bad_interrupt>:
+  3e:	e0 cf       	rjmp	.-64     	; 0x0 <__vectors>
+
+00000040 <__vector_8>:
+
+/*  Service ADC "conversion completed" IRQ: compute duty
+ *  Make the ISR interruptible so that counter IRQs are serviced promptly.
+ */
+HW_ISR( hw_adc0, isr_interruptible )
+{
+  40:	78 94       	sei
+  42:	1f 92       	push	r1
+  44:	0f 92       	push	r0
+  46:	0f b6       	in	r0, 0x3f	; 63
+  48:	0f 92       	push	r0
+  4a:	11 24       	eor	r1, r1
+  4c:	8f 92       	push	r8
+  4e:	9f 92       	push	r9
+  50:	af 92       	push	r10
+  52:	bf 92       	push	r11
+  54:	cf 92       	push	r12
+  56:	df 92       	push	r13
+  58:	ef 92       	push	r14
+  5a:	ff 92       	push	r15
+  5c:	2f 93       	push	r18
+  5e:	3f 93       	push	r19
+  60:	4f 93       	push	r20
+  62:	5f 93       	push	r21
+  64:	6f 93       	push	r22
+  66:	7f 93       	push	r23
+  68:	8f 93       	push	r24
+  6a:	9f 93       	push	r25
+  6c:	af 93       	push	r26
+  6e:	bf 93       	push	r27
+  70:	ef 93       	push	r30
+  72:	ff 93       	push	r31
+
+HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
+{
+  uint16_t m = (1UL<<rbn)-1 ;
+  volatile uint16_t *p = (volatile uint16_t *)ra ;
+  return ((*p)>>rbp) & m ;
+  74:	64 b1       	in	r22, 0x04	; 4
+  76:	75 b1       	in	r23, 0x05	; 5
+  /*  Low-pass filter
+   */
+  const uint8_t			ns = 32 ;	/* # of samples	  */
+  static uint16_t		lpfsum ;	/* sum of samples */
+
+  lpfsum = lpfsum - (lpfsum + ns/2)/ns + adc ;
+  78:	80 91 60 00 	lds	r24, 0x0060
+  7c:	90 91 61 00 	lds	r25, 0x0061
+  80:	68 0f       	add	r22, r24
+  82:	79 1f       	adc	r23, r25
+  84:	40 96       	adiw	r24, 0x10	; 16
+  86:	25 e0       	ldi	r18, 0x05	; 5
+  88:	96 95       	lsr	r25
+  8a:	87 95       	ror	r24
+  8c:	2a 95       	dec	r18
+  8e:	e1 f7       	brne	.-8      	; 0x88 <__vector_8+0x48>
+  90:	68 1b       	sub	r22, r24
+  92:	79 0b       	sbc	r23, r25
+  94:	70 93 61 00 	sts	0x0061, r23
+  98:	60 93 60 00 	sts	0x0060, r22
+
+  /*  Compute duty in the range [COMPARE_MIN .. COMPARE_MAX] from lpfsum in the
+   *  range [0..ns*1023]
+   */
+  uint32_t tmp32 = lpfsum ;
+  9c:	80 e0       	ldi	r24, 0x00	; 0
+  9e:	90 e0       	ldi	r25, 0x00	; 0
+  tmp32 = (tmp32 * (COMPARE_MAX-COMPARE_MIN) + ns*1023/2) / (ns*1023) + COMPARE_MIN ;
+  a0:	28 ec       	ldi	r18, 0xC8	; 200
+  a2:	30 e0       	ldi	r19, 0x00	; 0
+  a4:	40 e0       	ldi	r20, 0x00	; 0
+  a6:	50 e0       	ldi	r21, 0x00	; 0
+  a8:	7f d0       	rcall	.+254    	; 0x1a8 <__umulsidi3>
+  aa:	49 01       	movw	r8, r18
+  ac:	5a 01       	movw	r10, r20
+  ae:	c5 01       	movw	r24, r10
+  b0:	b4 01       	movw	r22, r8
+  b2:	60 51       	subi	r22, 0x10	; 16
+  b4:	70 4c       	sbci	r23, 0xC0	; 192
+  b6:	8f 4f       	sbci	r24, 0xFF	; 255
+  b8:	9f 4f       	sbci	r25, 0xFF	; 255
+  ba:	20 ee       	ldi	r18, 0xE0	; 224
+  bc:	3f e7       	ldi	r19, 0x7F	; 127
+  be:	40 e0       	ldi	r20, 0x00	; 0
+  c0:	50 e0       	ldi	r21, 0x00	; 0
+  c2:	4e d0       	rcall	.+156    	; 0x160 <__udivmodsi4>
+    /* HW_ATOMIC( */
+    /*	      duty = tmp ; */
+    /*	      ); */
+  }
+  else
+    duty = tmp ;
+  c4:	20 93 62 00 	sts	0x0062, r18
+     *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles
+     *  (ldi+out is 2 cycles) and it is sometimes required to have both bits
+     *  written at the same time (e.g. TSM/PSR).
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  c8:	36 9a       	sbi	0x06, 6	; 6
+
+  /*  Start a new conversion
+   */
+  hw_trigger( hw_adc0 );
+}
+  ca:	ff 91       	pop	r31
+  cc:	ef 91       	pop	r30
+  ce:	bf 91       	pop	r27
+  d0:	af 91       	pop	r26
+  d2:	9f 91       	pop	r25
+  d4:	8f 91       	pop	r24
+  d6:	7f 91       	pop	r23
+  d8:	6f 91       	pop	r22
+  da:	5f 91       	pop	r21
+  dc:	4f 91       	pop	r20
+  de:	3f 91       	pop	r19
+  e0:	2f 91       	pop	r18
+  e2:	ff 90       	pop	r15
+  e4:	ef 90       	pop	r14
+  e6:	df 90       	pop	r13
+  e8:	cf 90       	pop	r12
+  ea:	bf 90       	pop	r11
+  ec:	af 90       	pop	r10
+  ee:	9f 90       	pop	r9
+  f0:	8f 90       	pop	r8
+  f2:	0f 90       	pop	r0
+  f4:	0f be       	out	0x3f, r0	; 63
+  f6:	0f 90       	pop	r0
+  f8:	1f 90       	pop	r1
+  fa:	18 95       	reti
+
+000000fc <__vector_4>:
+
+/*  Service counter-overflow IRQ: turn the LED on and enable the compare IRQ
+ *  that turns it off
+ */
+HW_ISR( COUNTER, overflow, isr_non_interruptible )
+{
+  fc:	1f 92       	push	r1
+  fe:	0f 92       	push	r0
+ 100:	0f b6       	in	r0, 0x3f	; 63
+ 102:	0f 92       	push	r0
+ 104:	11 24       	eor	r1, r1
+ 106:	8f 93       	push	r24
+  /*  No need to protect access to duty since interrupts are not allowed */
+
+  if ( duty ) {
+ 108:	80 91 62 00 	lds	r24, 0x0062
+ 10c:	88 23       	and	r24, r24
+ 10e:	59 f0       	breq	.+22     	; 0x126 <__vector_4+0x2a>
+ 110:	c0 9a       	sbi	0x18, 0	; 24
+    hw_write( PIN_LED, 1 );
+    if ( duty < COUNT_TOP ) {
+ 112:	80 91 62 00 	lds	r24, 0x0062
+ 116:	88 3c       	cpi	r24, 0xC8	; 200
+ 118:	38 f4       	brcc	.+14     	; 0x128 <__vector_4+0x2c>
+      hw_write( hw_rel(COUNTER, compare1), duty );
+ 11a:	80 91 62 00 	lds	r24, 0x0062
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+ 11e:	8b bd       	out	0x2b, r24	; 43
+      /*
+       *  Read-modify-write
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+ 120:	89 b7       	in	r24, 0x39	; 57
+ 122:	80 62       	ori	r24, 0x20	; 32
+ 124:	03 c0       	rjmp	.+6      	; 0x12c <__vector_4+0x30>
+    if ( v )
+      *p |= wm ; /* sbi */
+    else {
+      if ( wm & rfm )
+	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+      *p &= ~wm ; /* cbi */
+ 126:	c0 98       	cbi	0x18, 0	; 24
+      /*
+       *  Read-modify-write
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+ 128:	89 b7       	in	r24, 0x39	; 57
+ 12a:	8f 7d       	andi	r24, 0xDF	; 223
+ 12c:	89 bf       	out	0x39, r24	; 57
+  }
+  else {
+    hw_write( PIN_LED, 0 );
+    hw_turn_irq( COUNTER, compare1, off );
+  }
+}
+ 12e:	8f 91       	pop	r24
+ 130:	0f 90       	pop	r0
+ 132:	0f be       	out	0x3f, r0	; 63
+ 134:	0f 90       	pop	r0
+ 136:	1f 90       	pop	r1
+ 138:	18 95       	reti
+
+0000013a <__vector_9>:
+    if ( v )
+      *p |= wm ; /* sbi */
+    else {
+      if ( wm & rfm )
+	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+      *p &= ~wm ; /* cbi */
+ 13a:	c0 98       	cbi	0x18, 0	; 24
+ */
+#if hw_ra(hw_rel(PIN_LED,port), port) < 0x40
+HW_ISR( COUNTER, compare1, isr_naked )
+{
+  hw_write( PIN_LED, 0 );
+  hw_asm("reti");
+ 13c:	18 95       	reti
+
+0000013e <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+ 13e:	80 e2       	ldi	r24, 0x20	; 32
+ 140:	85 bf       	out	0x35, r24	; 53
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+ 142:	c2 9a       	sbi	0x18, 2	; 24
+ 144:	b8 9a       	sbi	0x17, 0	; 23
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+ 146:	84 e0       	ldi	r24, 0x04	; 4
+ 148:	89 bf       	out	0x39, r24	; 57
+ 14a:	84 ec       	ldi	r24, 0xC4	; 196
+ 14c:	80 bf       	out	0x30, r24	; 48
+ 14e:	88 ec       	ldi	r24, 0xC8	; 200
+ 150:	8d bd       	out	0x2d, r24	; 45
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+ 152:	38 9a       	sbi	0x07, 0	; 7
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+ 154:	8f ec       	ldi	r24, 0xCF	; 207
+ 156:	86 b9       	out	0x06, r24	; 6
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+ 158:	a4 9a       	sbi	0x14, 4	; 20
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+ 15a:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+ 15c:	88 95       	sleep
+ 15e:	fe cf       	rjmp	.-4      	; 0x15c <main+0x1e>
+
+00000160 <__udivmodsi4>:
+ 160:	a1 e2       	ldi	r26, 0x21	; 33
+ 162:	1a 2e       	mov	r1, r26
+ 164:	aa 1b       	sub	r26, r26
+ 166:	bb 1b       	sub	r27, r27
+ 168:	fd 01       	movw	r30, r26
+ 16a:	0d c0       	rjmp	.+26     	; 0x186 <__udivmodsi4_ep>
+
+0000016c <__udivmodsi4_loop>:
+ 16c:	aa 1f       	adc	r26, r26
+ 16e:	bb 1f       	adc	r27, r27
+ 170:	ee 1f       	adc	r30, r30
+ 172:	ff 1f       	adc	r31, r31
+ 174:	a2 17       	cp	r26, r18
+ 176:	b3 07       	cpc	r27, r19
+ 178:	e4 07       	cpc	r30, r20
+ 17a:	f5 07       	cpc	r31, r21
+ 17c:	20 f0       	brcs	.+8      	; 0x186 <__udivmodsi4_ep>
+ 17e:	a2 1b       	sub	r26, r18
+ 180:	b3 0b       	sbc	r27, r19
+ 182:	e4 0b       	sbc	r30, r20
+ 184:	f5 0b       	sbc	r31, r21
+
+00000186 <__udivmodsi4_ep>:
+ 186:	66 1f       	adc	r22, r22
+ 188:	77 1f       	adc	r23, r23
+ 18a:	88 1f       	adc	r24, r24
+ 18c:	99 1f       	adc	r25, r25
+ 18e:	1a 94       	dec	r1
+ 190:	69 f7       	brne	.-38     	; 0x16c <__udivmodsi4_loop>
+ 192:	60 95       	com	r22
+ 194:	70 95       	com	r23
+ 196:	80 95       	com	r24
+ 198:	90 95       	com	r25
+ 19a:	9b 01       	movw	r18, r22
+ 19c:	ac 01       	movw	r20, r24
+ 19e:	bd 01       	movw	r22, r26
+ 1a0:	cf 01       	movw	r24, r30
+ 1a2:	08 95       	ret
+
+000001a4 <__mulsidi3>:
+ 1a4:	68 94       	set
+ 1a6:	00 10       	cpse	r0, r0
+
+000001a8 <__umulsidi3>:
+ 1a8:	e8 94       	clt
+ 1aa:	a0 e0       	ldi	r26, 0x00	; 0
+ 1ac:	b0 e0       	ldi	r27, 0x00	; 0
+ 1ae:	ea ed       	ldi	r30, 0xDA	; 218
+ 1b0:	f0 e0       	ldi	r31, 0x00	; 0
+ 1b2:	1d c0       	rjmp	.+58     	; 0x1ee <__prologue_saves__+0x10>
+ 1b4:	ef ef       	ldi	r30, 0xFF	; 255
+ 1b6:	e7 f9       	bld	r30, 7
+ 1b8:	59 01       	movw	r10, r18
+ 1ba:	6a 01       	movw	r12, r20
+ 1bc:	5e 23       	and	r21, r30
+ 1be:	55 0f       	add	r21, r21
+ 1c0:	ee 08       	sbc	r14, r14
+ 1c2:	fe 2c       	mov	r15, r14
+ 1c4:	87 01       	movw	r16, r14
+ 1c6:	9b 01       	movw	r18, r22
+ 1c8:	ac 01       	movw	r20, r24
+ 1ca:	9e 23       	and	r25, r30
+ 1cc:	99 0f       	add	r25, r25
+ 1ce:	66 0b       	sbc	r22, r22
+ 1d0:	76 2f       	mov	r23, r22
+ 1d2:	cb 01       	movw	r24, r22
+ 1d4:	3b d0       	rcall	.+118    	; 0x24c <__muldi3>
+ 1d6:	cd b7       	in	r28, 0x3d	; 61
+ 1d8:	de b7       	in	r29, 0x3e	; 62
+ 1da:	ea e0       	ldi	r30, 0x0A	; 10
+ 1dc:	24 c0       	rjmp	.+72     	; 0x226 <__epilogue_restores__+0x10>
+
+000001de <__prologue_saves__>:
+ 1de:	2f 92       	push	r2
+ 1e0:	3f 92       	push	r3
+ 1e2:	4f 92       	push	r4
+ 1e4:	5f 92       	push	r5
+ 1e6:	6f 92       	push	r6
+ 1e8:	7f 92       	push	r7
+ 1ea:	8f 92       	push	r8
+ 1ec:	9f 92       	push	r9
+ 1ee:	af 92       	push	r10
+ 1f0:	bf 92       	push	r11
+ 1f2:	cf 92       	push	r12
+ 1f4:	df 92       	push	r13
+ 1f6:	ef 92       	push	r14
+ 1f8:	ff 92       	push	r15
+ 1fa:	0f 93       	push	r16
+ 1fc:	1f 93       	push	r17
+ 1fe:	cf 93       	push	r28
+ 200:	df 93       	push	r29
+ 202:	cd b7       	in	r28, 0x3d	; 61
+ 204:	de b7       	in	r29, 0x3e	; 62
+ 206:	ca 1b       	sub	r28, r26
+ 208:	db 0b       	sbc	r29, r27
+ 20a:	0f b6       	in	r0, 0x3f	; 63
+ 20c:	f8 94       	cli
+ 20e:	de bf       	out	0x3e, r29	; 62
+ 210:	0f be       	out	0x3f, r0	; 63
+ 212:	cd bf       	out	0x3d, r28	; 61
+ 214:	09 94       	ijmp
+
+00000216 <__epilogue_restores__>:
+ 216:	2a 88       	ldd	r2, Y+18	; 0x12
+ 218:	39 88       	ldd	r3, Y+17	; 0x11
+ 21a:	48 88       	ldd	r4, Y+16	; 0x10
+ 21c:	5f 84       	ldd	r5, Y+15	; 0x0f
+ 21e:	6e 84       	ldd	r6, Y+14	; 0x0e
+ 220:	7d 84       	ldd	r7, Y+13	; 0x0d
+ 222:	8c 84       	ldd	r8, Y+12	; 0x0c
+ 224:	9b 84       	ldd	r9, Y+11	; 0x0b
+ 226:	aa 84       	ldd	r10, Y+10	; 0x0a
+ 228:	b9 84       	ldd	r11, Y+9	; 0x09
+ 22a:	c8 84       	ldd	r12, Y+8	; 0x08
+ 22c:	df 80       	ldd	r13, Y+7	; 0x07
+ 22e:	ee 80       	ldd	r14, Y+6	; 0x06
+ 230:	fd 80       	ldd	r15, Y+5	; 0x05
+ 232:	0c 81       	ldd	r16, Y+4	; 0x04
+ 234:	1b 81       	ldd	r17, Y+3	; 0x03
+ 236:	aa 81       	ldd	r26, Y+2	; 0x02
+ 238:	b9 81       	ldd	r27, Y+1	; 0x01
+ 23a:	ce 0f       	add	r28, r30
+ 23c:	d1 1d       	adc	r29, r1
+ 23e:	0f b6       	in	r0, 0x3f	; 63
+ 240:	f8 94       	cli
+ 242:	de bf       	out	0x3e, r29	; 62
+ 244:	0f be       	out	0x3f, r0	; 63
+ 246:	cd bf       	out	0x3d, r28	; 61
+ 248:	ed 01       	movw	r28, r26
+ 24a:	08 95       	ret
+
+0000024c <__muldi3>:
+ 24c:	df 93       	push	r29
+ 24e:	cf 93       	push	r28
+ 250:	9f 92       	push	r9
+ 252:	a0 e4       	ldi	r26, 0x40	; 64
+ 254:	9a 2e       	mov	r9, r26
+ 256:	00 24       	eor	r0, r0
+ 258:	d0 01       	movw	r26, r0
+ 25a:	e0 01       	movw	r28, r0
+ 25c:	f0 01       	movw	r30, r0
+ 25e:	16 95       	lsr	r17
+ 260:	07 95       	ror	r16
+ 262:	f7 94       	ror	r15
+ 264:	e7 94       	ror	r14
+ 266:	d7 94       	ror	r13
+ 268:	c7 94       	ror	r12
+ 26a:	b7 94       	ror	r11
+ 26c:	a7 94       	ror	r10
+ 26e:	48 f4       	brcc	.+18     	; 0x282 <__stack+0x23>
+ 270:	10 68       	ori	r17, 0x80	; 128
+ 272:	a2 0f       	add	r26, r18
+ 274:	b3 1f       	adc	r27, r19
+ 276:	c4 1f       	adc	r28, r20
+ 278:	d5 1f       	adc	r29, r21
+ 27a:	e6 1f       	adc	r30, r22
+ 27c:	f7 1f       	adc	r31, r23
+ 27e:	08 1e       	adc	r0, r24
+ 280:	19 1e       	adc	r1, r25
+ 282:	22 0f       	add	r18, r18
+ 284:	33 1f       	adc	r19, r19
+ 286:	44 1f       	adc	r20, r20
+ 288:	55 1f       	adc	r21, r21
+ 28a:	66 1f       	adc	r22, r22
+ 28c:	77 1f       	adc	r23, r23
+ 28e:	88 1f       	adc	r24, r24
+ 290:	99 1f       	adc	r25, r25
+ 292:	9a 94       	dec	r9
+ 294:	21 f7       	brne	.-56     	; 0x25e <__muldi3+0x12>
+ 296:	9d 01       	movw	r18, r26
+ 298:	ae 01       	movw	r20, r28
+ 29a:	bf 01       	movw	r22, r30
+ 29c:	c0 01       	movw	r24, r0
+ 29e:	11 24       	eor	r1, r1
+ 2a0:	9f 90       	pop	r9
+ 2a2:	cf 91       	pop	r28
+ 2a4:	df 91       	pop	r29
+ 2a6:	08 95       	ret
+
+000002a8 <_exit>:
+ 2a8:	f8 94       	cli
+
+000002aa <__stop_program>:
+ 2aa:	ff cf       	rjmp	.-2      	; 0x2aa <__stop_program>

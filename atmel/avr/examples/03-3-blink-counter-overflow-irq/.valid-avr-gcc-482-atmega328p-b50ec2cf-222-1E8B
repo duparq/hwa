@@ -1,0 +1,157 @@
+HW_DEVICE="atmega328p"
+hw_syshz="16000000"
+PIN_LED="pin_pb5"
+COUNTER="counter0"
+CLKDIV="64"
+COUNTMODE="up_loop"
+PERIOD="0.5"
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 48 00 	jmp	0x90	; 0x90 <__vector_16>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	11 e0       	ldi	r17, 0x01	; 1
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	a1 30       	cpi	r26, 0x01	; 1
+  80:	b1 07       	cpc	r27, r17
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 5f 00 	call	0xbe	; 0xbe <main>
+  88:	0c 94 6d 00 	jmp	0xda	; 0xda <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <__vector_16>:
+
+/*  Service the counter overflow IRQ
+ */
+HW_ISR( COUNTER, overflow )
+{
+  90:	1f 92       	push	r1
+  92:	0f 92       	push	r0
+  94:	0f b6       	in	r0, 0x3f	; 63
+  96:	0f 92       	push	r0
+  98:	11 24       	eor	r1, r1
+  9a:	8f 93       	push	r24
+  static uint8_t n ;
+  n++ ;
+  9c:	80 91 00 01 	lds	r24, 0x0100
+  a0:	8f 5f       	subi	r24, 0xFF	; 255
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+  a2:	89 3f       	cpi	r24, 0xF9	; 249
+  a4:	18 f4       	brcc	.+6      	; 0xac <__vector_16+0x1c>
+/*  Service the counter overflow IRQ
+ */
+HW_ISR( COUNTER, overflow )
+{
+  static uint8_t n ;
+  n++ ;
+  a6:	80 93 00 01 	sts	0x0100, r24
+  aa:	03 c0       	rjmp	.+6      	; 0xb2 <__vector_16+0x22>
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+    n = 0 ;
+  ac:	10 92 00 01 	sts	0x0100, r1
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  b0:	1d 9a       	sbi	0x03, 5	; 3
+    hw_toggle( PIN_LED );
+  }
+}
+  b2:	8f 91       	pop	r24
+  b4:	0f 90       	pop	r0
+  b6:	0f be       	out	0x3f, r0	; 63
+  b8:	0f 90       	pop	r0
+  ba:	1f 90       	pop	r1
+  bc:	18 95       	reti
+
+000000be <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  be:	81 e0       	ldi	r24, 0x01	; 1
+  c0:	83 bf       	out	0x33, r24	; 51
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  c2:	25 9a       	sbi	0x04, 5	; 4
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  c4:	93 e0       	ldi	r25, 0x03	; 3
+  c6:	94 bd       	out	0x24, r25	; 36
+  c8:	9b e0       	ldi	r25, 0x0B	; 11
+  ca:	95 bd       	out	0x25, r25	; 37
+  cc:	9a ef       	ldi	r25, 0xFA	; 250
+  ce:	97 bd       	out	0x27, r25	; 39
+  d0:	80 93 6e 00 	sts	0x006E, r24
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  d4:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+  d6:	88 95       	sleep
+  d8:	fe cf       	rjmp	.-4      	; 0xd6 <main+0x18>
+
+000000da <_exit>:
+  da:	f8 94       	cli
+
+000000dc <__stop_program>:
+  dc:	ff cf       	rjmp	.-2      	; 0xdc <__stop_program>

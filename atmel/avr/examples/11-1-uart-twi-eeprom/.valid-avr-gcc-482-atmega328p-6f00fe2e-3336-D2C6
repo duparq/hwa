@@ -1,11 +1,6 @@
 HW_DEVICE="atmega328p"
 hw_syshz="16000000"
 
-build/nanodccduino/out.elf:     file format elf32-avr
-
-
-Disassembly of section .text:
-
 00000000 <__vectors>:
    0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
    4:	0c 94 51 00 	jmp	0xa2	; 0xa2 <__bad_interrupt>

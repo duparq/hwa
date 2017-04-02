@@ -1,0 +1,231 @@
+HW_DEVICE="attiny84"
+hw_syshz="8000000"
+PIN_LED="pin_pa6"
+REFERENCE="bandgap"
+PIN_ANALOG_INPUT="pin_pa0"
+EDGE="falling"
+COUNTER="counter0"
+COUNTER_CLK_DIV="64"
+COMPARE="compare0"
+ON_TIME="0.001"
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	17 c0       	rjmp	.+46     	; 0x32 <__bad_interrupt>
+   4:	16 c0       	rjmp	.+44     	; 0x32 <__bad_interrupt>
+   6:	15 c0       	rjmp	.+42     	; 0x32 <__bad_interrupt>
+   8:	14 c0       	rjmp	.+40     	; 0x32 <__bad_interrupt>
+   a:	13 c0       	rjmp	.+38     	; 0x32 <__bad_interrupt>
+   c:	12 c0       	rjmp	.+36     	; 0x32 <__bad_interrupt>
+   e:	11 c0       	rjmp	.+34     	; 0x32 <__bad_interrupt>
+  10:	10 c0       	rjmp	.+32     	; 0x32 <__bad_interrupt>
+  12:	10 c0       	rjmp	.+32     	; 0x34 <__vector_9>
+  14:	0e c0       	rjmp	.+28     	; 0x32 <__bad_interrupt>
+  16:	0d c0       	rjmp	.+26     	; 0x32 <__bad_interrupt>
+  18:	1f c0       	rjmp	.+62     	; 0x58 <__vector_12>
+  1a:	0b c0       	rjmp	.+22     	; 0x32 <__bad_interrupt>
+  1c:	0a c0       	rjmp	.+20     	; 0x32 <__bad_interrupt>
+  1e:	09 c0       	rjmp	.+18     	; 0x32 <__bad_interrupt>
+  20:	08 c0       	rjmp	.+16     	; 0x32 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+  2e:	2d d0       	rcall	.+90     	; 0x8a <main>
+  30:	3a c0       	rjmp	.+116    	; 0xa6 <_exit>
+
+00000032 <__bad_interrupt>:
+  32:	e6 cf       	rjmp	.-52     	; 0x0 <__vectors>
+
+00000034 <__vector_9>:
+ *    disable this IRQ
+ *    turn the LED off
+ *    turn analog comparator IRQ on
+ */
+HW_ISR( COUNTER, COMPARE )
+{
+  34:	1f 92       	push	r1
+  36:	0f 92       	push	r0
+  38:	0f b6       	in	r0, 0x3f	; 63
+  3a:	0f 92       	push	r0
+  3c:	11 24       	eor	r1, r1
+  3e:	8f 93       	push	r24
+       *  from here? All that should be looked after carefully again...
+       *  Simplifications in sight!
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+  40:	89 b7       	in	r24, 0x39	; 57
+  42:	8d 7f       	andi	r24, 0xFD	; 253
+  44:	89 bf       	out	0x39, r24	; 57
+    if ( v )
+      *p |= wm ; /* sbi */
+    else {
+      if ( wm & rfm )
+	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+      *p &= ~wm ; /* cbi */
+  46:	de 98       	cbi	0x1b, 6	; 27
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  48:	44 9a       	sbi	0x08, 4	; 8
+  4a:	43 9a       	sbi	0x08, 3	; 8
+  hw_turn_irq( COUNTER, COMPARE, off );
+  hw_write( PIN_LED, 0 );
+  hw_clear_irqf( hw_acmp0 );
+  hw_turn_irq( hw_acmp0, on );
+}
+  4c:	8f 91       	pop	r24
+  4e:	0f 90       	pop	r0
+  50:	0f be       	out	0x3f, r0	; 63
+  52:	0f 90       	pop	r0
+  54:	1f 90       	pop	r1
+  56:	18 95       	reti
+
+00000058 <__vector_12>:
+ *    turn the LED on
+ *    program a compare-match IRQ to occur in 1ms.
+ *	(maybe reset the prescaler)
+ */
+HW_ISR( hw_acmp0 )
+{
+  58:	1f 92       	push	r1
+  5a:	0f 92       	push	r0
+  5c:	0f b6       	in	r0, 0x3f	; 63
+  5e:	0f 92       	push	r0
+  60:	11 24       	eor	r1, r1
+  62:	8f 93       	push	r24
+    else {
+      if ( wm & rfm )
+	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+      *p &= ~wm ; /* cbi */
+  64:	43 98       	cbi	0x08, 3	; 8
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  66:	de 9a       	sbi	0x1b, 6	; 27
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = value ;
+  68:	81 e8       	ldi	r24, 0x81	; 129
+  6a:	83 bd       	out	0x23, r24	; 35
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+  6c:	12 be       	out	0x32, r1	; 50
+       *  from here? All that should be looked after carefully again...
+       *  Simplifications in sight!
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+  6e:	83 b5       	in	r24, 0x23	; 35
+  70:	8f 77       	andi	r24, 0x7F	; 127
+  72:	83 bd       	out	0x23, r24	; 35
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+  74:	82 e0       	ldi	r24, 0x02	; 2
+  76:	88 bf       	out	0x38, r24	; 56
+       *  from here? All that should be looked after carefully again...
+       *  Simplifications in sight!
+       */
+      uint8_t sm = wm & v ;     /* what has to be set     */
+      uint8_t cm = wm & (~v) ;  /* what has to be cleared */
+      *p = (*p & ~cm) | sm ;
+  78:	89 b7       	in	r24, 0x39	; 57
+  7a:	82 60       	ori	r24, 0x02	; 2
+  7c:	89 bf       	out	0x39, r24	; 57
+  if ( COUNTER_CLK_DIV > 1 )
+    hw_turn(hw_rel(COUNTER,prescaler0), on);
+
+  hw_clear_irqf( COUNTER, COMPARE );
+  hw_turn_irq( COUNTER, COMPARE, on );
+}
+  7e:	8f 91       	pop	r24
+  80:	0f 90       	pop	r0
+  82:	0f be       	out	0x3f, r0	; 63
+  84:	0f 90       	pop	r0
+  86:	1f 90       	pop	r1
+  88:	18 95       	reti
+
+0000008a <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  8a:	80 e2       	ldi	r24, 0x20	; 32
+  8c:	85 bf       	out	0x35, r24	; 53
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  8e:	d6 9a       	sbi	0x1a, 6	; 26
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  90:	83 e0       	ldi	r24, 0x03	; 3
+  92:	83 bf       	out	0x33, r24	; 51
+  94:	8d e7       	ldi	r24, 0x7D	; 125
+  96:	86 bf       	out	0x36, r24	; 54
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  98:	1e 9a       	sbi	0x03, 6	; 3
+  9a:	08 9a       	sbi	0x01, 0	; 1
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  9c:	8a e4       	ldi	r24, 0x4A	; 74
+  9e:	88 b9       	out	0x08, r24	; 8
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  a0:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+  a2:	88 95       	sleep
+  a4:	fe cf       	rjmp	.-4      	; 0xa2 <main+0x18>
+
+000000a6 <_exit>:
+  a6:	f8 94       	cli
+
+000000a8 <__stop_program>:
+  a8:	ff cf       	rjmp	.-2      	; 0xa8 <__stop_program>

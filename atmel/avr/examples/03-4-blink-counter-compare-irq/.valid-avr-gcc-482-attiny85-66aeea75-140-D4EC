@@ -1,0 +1,155 @@
+HW_DEVICE="attiny85"
+hw_syshz="16000000"
+PIN_LED="pin_pb0"
+COUNTER="counter0"
+CLKDIV="64"
+COUNTMODE="up_loop"
+COMPARE="compare0"
+PERIOD="0.5"
+
+00000000 <__vectors>:
+   0:	0e c0       	rjmp	.+28     	; 0x1e <__ctors_end>
+   2:	1d c0       	rjmp	.+58     	; 0x3e <__bad_interrupt>
+   4:	1c c0       	rjmp	.+56     	; 0x3e <__bad_interrupt>
+   6:	1b c0       	rjmp	.+54     	; 0x3e <__bad_interrupt>
+   8:	1a c0       	rjmp	.+52     	; 0x3e <__bad_interrupt>
+   a:	19 c0       	rjmp	.+50     	; 0x3e <__bad_interrupt>
+   c:	18 c0       	rjmp	.+48     	; 0x3e <__bad_interrupt>
+   e:	17 c0       	rjmp	.+46     	; 0x3e <__bad_interrupt>
+  10:	16 c0       	rjmp	.+44     	; 0x3e <__bad_interrupt>
+  12:	15 c0       	rjmp	.+42     	; 0x3e <__bad_interrupt>
+  14:	15 c0       	rjmp	.+42     	; 0x40 <__vector_10>
+  16:	13 c0       	rjmp	.+38     	; 0x3e <__bad_interrupt>
+  18:	12 c0       	rjmp	.+36     	; 0x3e <__bad_interrupt>
+  1a:	11 c0       	rjmp	.+34     	; 0x3e <__bad_interrupt>
+  1c:	10 c0       	rjmp	.+32     	; 0x3e <__bad_interrupt>
+
+0000001e <__ctors_end>:
+  1e:	11 24       	eor	r1, r1
+  20:	1f be       	out	0x3f, r1	; 63
+  22:	cf e5       	ldi	r28, 0x5F	; 95
+  24:	d2 e0       	ldi	r29, 0x02	; 2
+  26:	de bf       	out	0x3e, r29	; 62
+  28:	cd bf       	out	0x3d, r28	; 61
+
+0000002a <__do_clear_bss>:
+  2a:	10 e0       	ldi	r17, 0x00	; 0
+  2c:	a0 e6       	ldi	r26, 0x60	; 96
+  2e:	b0 e0       	ldi	r27, 0x00	; 0
+  30:	01 c0       	rjmp	.+2      	; 0x34 <.do_clear_bss_start>
+
+00000032 <.do_clear_bss_loop>:
+  32:	1d 92       	st	X+, r1
+
+00000034 <.do_clear_bss_start>:
+  34:	a1 36       	cpi	r26, 0x61	; 97
+  36:	b1 07       	cpc	r27, r17
+  38:	e1 f7       	brne	.-8      	; 0x32 <.do_clear_bss_loop>
+  3a:	1a d0       	rcall	.+52     	; 0x70 <main>
+  3c:	25 c0       	rjmp	.+74     	; 0x88 <_exit>
+
+0000003e <__bad_interrupt>:
+  3e:	e0 cf       	rjmp	.-64     	; 0x0 <__vectors>
+
+00000040 <__vector_10>:
+
+/*  Service the compare-match IRQ
+ */
+HW_ISR( COUNTER, COMPARE )
+{
+  40:	1f 92       	push	r1
+  42:	0f 92       	push	r0
+  44:	0f b6       	in	r0, 0x3f	; 63
+  46:	0f 92       	push	r0
+  48:	11 24       	eor	r1, r1
+  4a:	8f 93       	push	r24
+
+    if ( rm == 0 )
+      /*
+       *  Nothing to be read, just write the new value
+       */
+      *p = v ;
+  4c:	12 be       	out	0x32, r1	; 50
+  hw_clear( COUNTER );
+
+  static uint8_t n ;
+  n++ ;
+  4e:	80 91 60 00 	lds	r24, 0x0060
+  52:	8f 5f       	subi	r24, 0xFF	; 255
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+  54:	89 3f       	cpi	r24, 0xF9	; 249
+  56:	18 f4       	brcc	.+6      	; 0x5e <__vector_10+0x1e>
+HW_ISR( COUNTER, COMPARE )
+{
+  hw_clear( COUNTER );
+
+  static uint8_t n ;
+  n++ ;
+  58:	80 93 60 00 	sts	0x0060, r24
+  5c:	03 c0       	rjmp	.+6      	; 0x64 <__vector_10+0x24>
+  if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
+    n = 0 ;
+  5e:	10 92 60 00 	sts	0x0060, r1
+    /*
+     *  Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+     *  sbi/cbi
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  62:	b0 9a       	sbi	0x16, 0	; 22
+    hw_toggle( PIN_LED );
+  }
+}
+  64:	8f 91       	pop	r24
+  66:	0f 90       	pop	r0
+  68:	0f be       	out	0x3f, r0	; 63
+  6a:	0f 90       	pop	r0
+  6c:	1f 90       	pop	r1
+  6e:	18 95       	reti
+
+00000070 <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  70:	80 e2       	ldi	r24, 0x20	; 32
+  72:	85 bf       	out	0x35, r24	; 53
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  74:	b8 9a       	sbi	0x17, 0	; 23
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  76:	83 e0       	ldi	r24, 0x03	; 3
+  78:	83 bf       	out	0x33, r24	; 51
+  7a:	8a ef       	ldi	r24, 0xFA	; 250
+  7c:	89 bd       	out	0x29, r24	; 41
+  7e:	80 e1       	ldi	r24, 0x10	; 16
+  80:	89 bf       	out	0x39, r24	; 57
+
+  /*  Write this configuration into the hardware
+   */
+  hwa_commit();
+
+  hw_enable_interrupts();
+  82:	78 94       	sei
+
+  for(;;)
+    hw_sleep();
+  84:	88 95       	sleep
+  86:	fe cf       	rjmp	.-4      	; 0x84 <main+0x14>
+
+00000088 <_exit>:
+  88:	f8 94       	cli
+
+0000008a <__stop_program>:
+  8a:	ff cf       	rjmp	.-2      	; 0x8a <__stop_program>

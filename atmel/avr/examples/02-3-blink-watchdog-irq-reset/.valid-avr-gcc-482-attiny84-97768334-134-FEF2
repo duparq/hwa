@@ -1,0 +1,173 @@
+HW_DEVICE="attiny84"
+hw_syshz="8000000"
+PIN_LED="pin_pa6"
+TIMEOUT="250ms"
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1d c0       	rjmp	.+58     	; 0x44 <__vector_4>
+   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_clear_bss>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	01 c0       	rjmp	.+2      	; 0x38 <.do_clear_bss_start>
+
+00000036 <.do_clear_bss_loop>:
+  36:	1d 92       	st	X+, r1
+
+00000038 <.do_clear_bss_start>:
+  38:	a1 36       	cpi	r26, 0x61	; 97
+  3a:	b1 07       	cpc	r27, r17
+  3c:	e1 f7       	brne	.-8      	; 0x36 <.do_clear_bss_loop>
+  3e:	03 d0       	rcall	.+6      	; 0x46 <main>
+  40:	20 c0       	rjmp	.+64     	; 0x82 <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <__vector_4>:
+ *    instruction ourselves (otherwise avr-gcc does some register
+ *    initializations even though none is used).
+ */
+HW_ISR( hw_wdog0, isr_naked )
+{
+  hw_reti();
+  44:	18 95       	reti
+
+00000046 <main>:
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  46:	80 e3       	ldi	r24, 0x30	; 48
+	      sleep,	  enabled,
+	      sleep_mode, power_down );
+
+  /*  Go into sleep definitely if the watchdog triggered a reset.
+   */
+  if ( hw_stat( hw_core0 ).reset_by_watchdog ) {
+  48:	04 b6       	in	r0, 0x34	; 52
+  4a:	03 fe       	sbrs	r0, 3
+  4c:	09 c0       	rjmp	.+18     	; 0x60 <main+0x1a>
+  4e:	85 bf       	out	0x35, r24	; 53
+  50:	14 be       	out	0x34, r1	; 52
+  52:	88 e1       	ldi	r24, 0x18	; 24
+  54:	81 bd       	out	0x21, r24	; 33
+  56:	11 bc       	out	0x21, r1	; 33
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  58:	d6 9a       	sbi	0x1a, 6	; 26
+    /*	When the device is reset by the watchdog, the watchdog remains enabled
+     *	so we must stop it.
+     */
+    hwa_turn( hw_wdog0, off );
+    hwa_commit();
+    hw_sleep();
+  5a:	88 95       	sleep
+     *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles
+     *  (ldi+out is 2 cycles) and it is sometimes required to have both bits
+     *  written at the same time (e.g. TSM/PSR).
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  5c:	ce 9a       	sbi	0x19, 6	; 25
+  5e:	fe cf       	rjmp	.-4      	; 0x5c <main+0x16>
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  60:	85 bf       	out	0x35, r24	; 53
+  62:	8c e4       	ldi	r24, 0x4C	; 76
+  64:	81 bd       	out	0x21, r24	; 33
+      /*
+       *  Just 1 bit to be modified at C address < 0x40 (ASM address < 0x20): use
+       *  instruction CBI or SBI
+       */
+      if ( wm & r->mvalue )
+	*p |= wm ; /* sbi */
+  66:	d6 9a       	sbi	0x1a, 6	; 26
+   */
+  hwa_commit();
+
+  /*  MCU can't awake from sleep without interrupts!
+   */
+  hw_enable_interrupts();
+  68:	78 94       	sei
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  6a:	9c e4       	ldi	r25, 0x4C	; 76
+
+  static uint8_t count ;
+
+  for(;;) {
+    hw_sleep();
+  6c:	88 95       	sleep
+     *  clobbering one register, is not interresting as sbi/cbi takes 2 cycles
+     *  (ldi+out is 2 cycles) and it is sometimes required to have both bits
+     *  written at the same time (e.g. TSM/PSR).
+     */
+    if ( v )
+      *p |= wm ; /* sbi */
+  6e:	ce 9a       	sbi	0x19, 6	; 25
+     */
+    hwa_turn_irq( hw_wdog0, off );
+    hwa_nocommit();
+
+    hw_toggle( PIN_LED );
+    count++ ;
+  70:	80 91 60 00 	lds	r24, 0x0060
+  74:	8f 5f       	subi	r24, 0xFF	; 255
+  76:	80 93 60 00 	sts	0x0060, r24
+    if ( count < 19 ) {
+  7a:	83 31       	cpi	r24, 0x13	; 19
+  7c:	b8 f7       	brcc	.-18     	; 0x6c <main+0x26>
+     */
+    r->ovalue = ((r->ovalue & ~wm) | (r->mvalue & wm)) & ~rfm ;
+
+    /*  Write new value
+     */
+    *p = r->ovalue | (rfm & r->mmask & r->mvalue) ;
+  7e:	91 bd       	out	0x21, r25	; 33
+  80:	f5 cf       	rjmp	.-22     	; 0x6c <main+0x26>
+
+00000082 <_exit>:
+  82:	f8 94       	cli
+
+00000084 <__stop_program>:
+  84:	ff cf       	rjmp	.-2      	; 0x84 <__stop_program>
