@@ -1366,7 +1366,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
    *  has the address of the counter and does not know its name.
    */
   _hwa_solve( counter0 );
-  /* _hwa_solve( counter1 ); */
+  _hwa_solve( counter1 );
 
   _hwa_commit_reg( shared, gimsk );
   _hwa_commit_reg( shared, gifr	 );
