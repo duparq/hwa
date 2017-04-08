@@ -18,29 +18,32 @@ fi
 #
 MFD=$(cd $(dirname $0) ; pwd)
 
-compiled=0 ; passed=0 ; failed=0 ; skipped=0
+#  Load the examples-for-board function
+#
+. ${MFD}/examples-for-board.sh
+
+passed=0 ; failed=0 ; skipped=0 ; FAILS=""
 for BOARD in ${BOARDS} ; do
-
-    echo -e "\nChecking all examples in \"${PWD}\" for board \"${BOARD}\":"
-
-    for i in $(find */ -name "main.c" | sort) ; do
-	echo -n "$(dirname $i): "
-	cd $(dirname $i)
+    echo -e "Checking examples for board \"${BOARD}\":"
+    examples_for_board $BOARD
+    for E in $EXAMPLES ; do
+	echo -n "  $E: "
+	cd ${MFD}/../$E
 	bash ${MFD}/check.sh
 	R=$?
 	if [ $R -eq 0 ] ; then
-	    compiled=$((compiled+1))
 	    passed=$((passed+1))
 	elif [ $R -eq 4 ] ; then
 	    skipped=$((skipped+1))
 	elif [ $R -eq 6 ] ; then
 	    skipped=$((skipped+1))
 	else
-	    compiled=$((compiled+1))
 	    failed=$((failed+1))
+	    FAILS="$FAILS\n  $BOARD: $E"
 	fi
 	#echo "Result = " $R
 	cd - >/dev/null
     done
 done
-echo -e "\n$compiled compiled, $passed successed, $failed failed, $skipped skipped."
+echo -e "$passed succeeded, $failed failed, $skipped skipped."
+[ -n "$FAILS" ] && echo -e "Failed:$FAILS"
