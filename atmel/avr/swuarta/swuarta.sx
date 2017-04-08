@@ -1,10 +1,10 @@
 
+	;; -*- asm -*-
+
 /**
  * @file
  * @brief Implementation of _swuarta software UART
  */
-
-	;; -*- asm -*-
 
 	;; Software half-duplex UART using a timer-counter
 	;; 
