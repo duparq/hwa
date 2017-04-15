@@ -71,7 +71,7 @@ HW_ISR( acmp0 )
   hw( write, COUNTER, 0 );
 
   if ( COUNTER_CLK_DIV > 1 )
-    hw( turn,HW_RELATIVE(COUNTER,prescaler0), on);
+    hw( turn, HW_RELATIVE(COUNTER,prescaler0), on);
 
   hw( clear, HW_IRQFLAG(COUNTER,COMPARE) );
   hw( turn, HW_IRQ(COUNTER,COMPARE), on );
@@ -98,7 +98,7 @@ int main ( )
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
-#if HW_ID( REFERENCE )
+#if HW_ID(REFERENCE)
   hwa( configure, REFERENCE,
        mode,	  analog,
        direction, input );

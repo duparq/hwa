@@ -69,17 +69,20 @@
 /*  Optionnal parameter `positive_input`
  */
 #define _hw_is_positive_input_positive_input	, 1
-#define _hw_acmpb_posin_HW_PIN(ain0)		, 0	/* ACBG */
-#define _hw_acmpb_posin_bandgap		, 1	/* ACBG */
+#define _hw_is_bandgap_bandgap			, 1
 
 #define _hwa_cfacmpb_xposin_1(o,k,v,...)				\
-  HW_X(_hwa_cfacmpb_vposin,_hw_acmpb_posin_##v)(o,v,__VA_ARGS__)
+  HW_X(_hwa_cfacmpb_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfacmpb_vposin_0(o,v,...)					\
-  HW_E_AVL(positive_input, v, HW_PIN(ain0) | bandgap)
+#define _hwa_cfacmpb_vposin_bandgap_1(o,v,k,...)			\
+  _hwa_write_reg(o,acbg,1);						\
+  HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
-#define _hwa_cfacmpb_vposin_1(o,v,k,...)		\
-  _hwa_write_reg(o,acbg, HW_A1(_hw_acmpb_posin_##v));	\
+#define _hwa_cfacmpb_vposin_bandgap_0(o,v,k,...)			\
+  if ( HW_ID(v)==HW_ID(HW_PIN(ain0)) )					\
+    _hwa_write_reg(o,acbg,0);						\
+  else									\
+    HWA_ERR("`positive_input` can be `HW_PIN(ain0) | bandgap`, but not `"#v"`."); \
   HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpb_xposin_0(o,k,...)					\
@@ -106,10 +109,9 @@
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc3) ) )			\
       _hwa_write_reg(o,admux, 3);					\
     else								\
-      HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any "		\
-	      "analog input pin, but not`" #v "`.");			\
+      HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any analog input pin, but not `"#v"`."); \
   }									\
-    HW_EOL(__VA_ARGS__)
+  HW_EOL(__VA_ARGS__)
 
 
 #define _hw_mthd_hw_power__acmpb	, _hw_power
