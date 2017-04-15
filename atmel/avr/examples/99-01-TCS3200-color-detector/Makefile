@@ -22,10 +22,6 @@ CONFIG		=	HW_DEVICE			\
 			PIN_LED				\
 			PIN_TCS3200_S2			\
 			PIN_TCS3200_S3			\
-			PIN_OUTS			\
-			PIN_OUT0			\
-			PIN_OUT1			\
-			PIN_OUT2			\
-			PIN_OUT3
+			PIN_OUTS
 
 include ../Makefile

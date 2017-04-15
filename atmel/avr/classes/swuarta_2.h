@@ -132,7 +132,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart0_clk_div
-  _hwa( configure, HW_RELATIVE(hw_swuart0_compare,counter),
+  _hwa( configure, _HW_REL(hw_swuart0_compare,counter),
 	clock,	   prescaler_output(hw_swuart0_clk_div),
 	countmode, up_loop,
 	top,	   max );
@@ -142,9 +142,9 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart0_pin_rxd
   _hwa( configure, hw_swuart0_pin_rxd, direction, input );
-  hwa( clear, HW_IRQFLAG(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)) );
-  hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart0_pin_rxd,pcic)), on );
-  _hwa( turn, HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
+  hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart0_pin_rxd,pcic)) );
+  hwa( turn, HW_IRQ(_HW_REL(hw_swuart0_pin_rxd,pcic)), on );
+  _hwa( turn, _HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
 
   /*  TXD pin
@@ -179,7 +179,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart1_clk_div
-  _hwa( configure, HW_RELATIVE(hw_swuart1_compare,counter),
+  _hwa( configure, _HW_REL(hw_swuart1_compare,counter),
 	clock,	   prescaler_output(hw_swuart1_clk_div),
 	countmode, up_loop,
 	top,	   max );
@@ -189,9 +189,9 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart1_pin_rxd
   _hwa( configure, hw_swuart1_pin_rxd, direction, input );
-  hwa( clear, HW_IRQFLAG(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)) );
-  hwa( turn, HW_IRQ(HW_RELATIVE(hw_swuart1_pin_rxd,pcic)), on );
-  _hwa( turn, HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
+  hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart1_pin_rxd,pcic)) );
+  hwa( turn, HW_IRQ(_HW_REL(hw_swuart1_pin_rxd,pcic)), on );
+  _hwa( turn, _HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif
 
   /*  TXD pin

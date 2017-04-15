@@ -52,13 +52,6 @@
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
-/**
- * @ingroup public_ins_espressif
- * @brief True if strings s0 and s1 are equal
- */
-#define hw_streq(s0,s1)			(__builtin_strcmp(s0,s1)==0)
-
-
 #include "../hwa/hwa_2.h"
 
 

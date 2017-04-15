@@ -612,6 +612,8 @@ typedef struct {
 #define _hw_pin_do			, pin_pa5
 #define _hw_pin_di			, pin_pa6
 
+#define _hw_pin_icp			, pin_pa7
+
 #define _hw_pin_adc0			, pin_pa0
 #define _hw_pin_adc1			, pin_pa1
 #define _hw_pin_adc2			, pin_pa2
@@ -1145,7 +1147,7 @@ typedef struct {
 
 #  define _hw_class__swuarta
 
-/*	Object hw_swuart0
+/*	Object swuart0
  */
 #if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
 #  if !defined hw_swuart0_compare
@@ -1173,16 +1175,17 @@ typedef struct {
 #endif
 
 #if defined hw_swuart0_compare
+#  define _hw_rel_swuart0_compare	hw_swuart0_compare
 #  define _hw_def_swuart0		_swuarta, 137, 0
-#  define _hw_reg_swuart0_dtn		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
-#  define _hw_reg_swuart0_dt0		_HW_RC(HW_REL(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
+#  define _hw_reg_swuart0_dtn		_HW_RC(_HW_RV(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dtn, -1, 0x00
+#  define _hw_reg_swuart0_dt0		_HW_RC(_HW_RV(hw_swuart0_compare,counter),count), (intptr_t)&__hw_swuart0_dt0, -1, 0x00
 #  define _hw_reg_swuart0__st		_HW_A(_HW_M(shared, gpior0))
 #  define _hw_reg_swuart0_sr		_hw_reg_shared_gpior0
 #  define _hw_reg_swuart0_synced	_ob1, sr, 1, 0
 #endif
 
 
-/*	Object hw_swuart1
+/*	Object swuart1
  */
 #if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
 #  if !defined hw_swuart1_compare
@@ -1210,9 +1213,10 @@ typedef struct {
 #endif
 
 #if defined hw_swuart1_compare
+#  define _hw_rel_swuart1_compare	hw_swuart1_compare
 #  define _hw_def_swuart1		_swuarta, 138, 0
-#  define _hw_reg_swuart1_dtn		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
-#  define _hw_reg_swuart1_dt0		_HW_RC(HW_REL(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
+#  define _hw_reg_swuart1_dtn		_HW_RC(_HW_RV(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+#  define _hw_reg_swuart1_dt0		_HW_RC(_HW_RV(hw_swuart1_compare,counter),count), (intptr_t)&__hw_swuart1_dt0, -1, 0x00
 #  define _hw_reg_swuart1__st		_HW_A(_HW_M(shared, gpior1))
 #  define _hw_reg_swuart1_sr		_hw_reg_shared_gpior1
 #  define _hw_reg_swuart1_synced	_ob1, sr, 1, 0
@@ -1290,7 +1294,6 @@ typedef struct {
 #include "../classes/eeproma_2.h"
 #include "../classes/flasha_2.h"
 #include "../classes/swuarta_2.h"
-
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {

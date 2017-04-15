@@ -9,9 +9,10 @@
  *
  * TCS3200 color detector
  *
- * The microcontroller drives 4 LED connected to PIN_OUT0..3 according to one of
- * the 16 color regions it has been taught. It can also communicape with the
- * host through two host applicapions:
+ * The microcontroller outputs a color number in binary form on 4 LED connected
+ * to PIN_OUTS according to what it's has been taught previously.
+ *
+ * It can also communicate with the host through two host applications:
  *
  * `./tcs3200.py` to:
  *     - show status of device (threshold and regions)
@@ -26,8 +27,8 @@
  * `./display.py` to display (3D) the samples contained
  *		  in the provided files
  *
- * The same counter as the SWUART is used to compute the period of the TCS3200
- * output signal.
+ * The same counter as the software uart swuart0 is used to compute the period
+ * of the TCS3200 output signal.
  *
  * With S0=0 and S1=1, output frequency of the TCS is below 12 kHz, so
  * period is over 83 µs. With hw_syshz=8 MHz, this gives periods >660
@@ -46,12 +47,6 @@
 #if ! defined BOARD_TCS3200
 #  error Incompatible board
 #endif
-
-#define UART		swuart0
-
-#define COUNTER		HW_RELATIVE(hw_swuart0_compare,counter)
-#define CAPTURE		capture0
-#define COMPARE		compare1
 
 
 /*  Maximum period (minimum light level) required
@@ -76,8 +71,8 @@ static uint16_t HW_MEM_EEPROM	ee_tclear_max ;
 
 
 /*  Measure the output signal period of the sensor on channel S3,S2 in hw_syshz
- *  clock counts units. As we use period ratios, clock frequency has no
- *  incidence on the final results.
+ *  clock units. As we use period ratios, clock frequency has no incidence on
+ *  the final results.
  */
 static uint16_t measure ( uint8_t s3, uint8_t s2 )
 {
@@ -101,45 +96,45 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
 
   /*  Prepare to capture the date of the next rising edge
    */
-  hw( configure, HW_RELATIVE(COUNTER, CAPTURE), edge, rising );
-  hw( clear, HW_IRQFLAG(COUNTER, CAPTURE) );
+  hw( configure, CAPTURE, edge, rising );
+  hw( clear, HW_IRQFLAG(CAPTURE) );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
-  hw( write, HW_RELATIVE(COUNTER, COMPARE), hw( read,COUNTER) );
-  hw( clear, HW_IRQFLAG(COUNTER, COMPARE) );
+  hw( write, COMPARE, hw(read, COUNTER) );
+  hw( clear, HW_IRQFLAG(COMPARE) );
 
   for (;;) {
     /*
      *	Rising edge occured: continue below
      */
-    if ( hw( read, HW_IRQFLAG(COUNTER, CAPTURE) ) ) {
-      t = hw( read, HW_RELATIVE(COUNTER, CAPTURE) ) ;
+    if ( hw( read, HW_IRQFLAG(CAPTURE) ) ) {
+      t = hw( read, CAPTURE ) ;
       break ;
     }
     /*
      *	Compare-match occured: signal period is too long
      */
-    if ( hw( read, HW_IRQFLAG(COUNTER, COMPARE) ) )
+    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
       return 0xFFFF ;
   }
 
   /*  Now wait for the falling edge
    */
-  hw( configure, HW_RELATIVE(COUNTER, CAPTURE), edge, falling );
-  hw( clear, HW_IRQFLAG(COUNTER, CAPTURE) );
+  hw( configure, CAPTURE, edge, falling );
+  hw( clear, HW_IRQFLAG(CAPTURE) );
 
-  hw( write, HW_RELATIVE(COUNTER, COMPARE), t );
-  hw( clear, HW_IRQFLAG(COUNTER, COMPARE) );
+  hw( write, COMPARE, t );
+  hw( clear, HW_IRQFLAG(COMPARE) );
 
   for (;;) {
-    if ( hw( read, HW_IRQFLAG(COUNTER, CAPTURE) ) )
+    if ( hw( read, HW_IRQFLAG(CAPTURE) ) )
       /*
        *  Return the half-period
        */
-      return hw( read, HW_RELATIVE(COUNTER, CAPTURE) ) - t ;
-    if ( hw( read, HW_IRQFLAG(COUNTER, COMPARE) ) )
+      return hw( read, CAPTURE ) - t ;
+    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
       /*
        *  Half-period is too long
        */
@@ -225,7 +220,7 @@ main ( )
 
   /*  Capture used to compute the TCS output period
    */
-  hwa( configure, HW_RELATIVE(COUNTER,CAPTURE),
+  hwa( configure, CAPTURE,
        input,	  pin_icp,
        edge,	  rising );
 
@@ -451,7 +446,7 @@ main ( )
 	 *  Store tclear_max in eeprom
 	 */
 	/*
-	 *  Send a ' ' to indicape the host that we're now listening
+	 *  Send a ' ' to indicate the host that we're now listening
 	 */
 	hw( write,UART, ' ');
 

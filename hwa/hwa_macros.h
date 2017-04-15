@@ -233,7 +233,7 @@
  * @brief Returns `1` if the first element is the name of a HWA object, `0` if not.
  * @hideinitializer
  */
-#define HW_ISON(...)		HW_IS(,HW_G2(_hw_class,HW_G2(_hw_def,__VA_ARGS__)))
+#define HW_ISON(o)		HW_IS(,HW_G2(_hw_class,HW_G2(_hw_def,o)))
 
 
 /**
@@ -682,31 +682,32 @@
  * one counting unit, optionnal compare units, and optionnal capture
  * units. Output pins of the compare units are relatives of the compare units.
  * 
- * For example, the Atmel AVR ATmega328P has a compare output pin named OC0A that
- * is the output of the compare unit A of the TIM0 timer/counter. With HWA, TIM0 is
- * called `counter0` and its first compare unit (A) is called `oc00`.
+ * For example, the Atmel AVR ATmega328P has a compare output pin named OC0A
+ * that is the output of the compare unit A of the TIM0 timer/counter. With HWA,
+ * TIM0 is called `counter0` and its first compare unit (A) is called
+ * `counter0compare0`.
  * 
- *  * `HW_RELATIVE( counter0, compare0 )` returns `oc00`.
- *  * `HW_RELATIVE( oc00, counter )` returns `counter0`.
- *  * `HW_RELATIVE( oc00, pin )` returns `pin_pd6`.
+ *  * `HW_RELATIVE( counter0, compare0 )` returns `counter0compare0`.
+ *  * `HW_RELATIVE( counter0compare0, counter )` returns `counter0`.
+ *  * `HW_RELATIVE( counter0compare0, pin )` returns `pin_pd6`.
  * 
  * The `HW_RELATIVE()` instruction is useful to make the source code less
- * dependant of the affectation of the peripherals. For example, you define the
+ * dependant of the choice of the peripherals. For example, you define the
  * symbol PWM to hold the name of the compare unit whose output pin will produce
  * a PWM signal. You can configure its related objects, namely the counting unit
  * and the ouput pin, this way:
  * 
  * @code
- * #define PWM	oc00
+ * #define PWM	counter0compare0
  * ...
  * hwa( configure, PWM, set_at_bottom_clear_on_match );
  * hwa( configure, HW_RELATIVE(PWM,counter), countmode, up_loop );
  * hwa( write, PWM, (1U<<HW_BITS(PWM))/2 ); // 50% duty cycle
  * @endcode
  * 
- * If in the future you must use `oc21` instead of `oc00`, you just need to change
- * the definition of the PWM symbol accordingly and the rest of the code will
- * remain unchanged.
+ * If in the future you must use `counter2compare1` instead of
+ * `counter0compare0`, you just need to change the definition of the PWM symbol
+ * accordingly and the rest of the code will remain unchanged.
  *
  * @hideinitializer
  */
@@ -731,7 +732,6 @@
 #define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
 #define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mthd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
 
-
 /**
  * @ingroup private_ins
  * @brief Returns the name of the relative `x` of object `o`.
@@ -743,6 +743,17 @@
  */
 #define _HW_REL(o,x)			__HW_REL2(o,x)
 #define __HW_REL2(o,x)			_hw_rel_##o##_##x
+
+
+/**
+ * @ingroup private_ins
+ * @brief Returns the name of the relative `x` of object `o`.
+ * @hideinitializer
+ *
+ * An alternative to `_HW_REL()` used by class _swuarta.
+ */
+#define _HW_RV(o,x)			__HW_RV2(o,x)
+#define __HW_RV2(o,x)			_hw_rel_##o##_##x
 
 
 /**
