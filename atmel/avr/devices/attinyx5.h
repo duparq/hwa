@@ -26,15 +26,10 @@
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
  * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x001E`.
  *
- * Symbol		       | ATtiny25     | ATtiny45     | ATtiny85	     
- * :---------------------------|:------------:|:------------:|:-------------:
- * `HW_DEVICE`		       |	      |		     |attiny85_20pu 
- * `HW_DEVICE_SIGNATURE`       |0x1E,0x91,0x08|0x1E,0x92,0x06|0x1E,0x93,0x0B
- * `HW_DEVICE_FLASH_SIZE`      |2048	      |4096	     |8192	    
- * `HW_DEVICE_FLASH_PAGE_SIZE` |32	      |32	     |64	    
- * `HW_DEVICE_EEPROM_SIZE`     |128	      |256	     |512
- * `HW_DEVICE_EEPROM_PAGE_SIZE`|4	      |4	     |4
- * `HW_DEVICE_RAM_SIZE`	       |128	      |256	     |512
+ * See also:
+ *  * @subpage attiny25
+ *  * @subpage attiny45
+ *  * @subpage attiny85
  */
 #define HW_DEVICE_ATTINYX5
 #define HW_DEVICE_RAM_START		0x0060

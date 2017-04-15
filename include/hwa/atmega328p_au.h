@@ -11,7 +11,7 @@
 
 #ifndef HW_DEVICE
 
-#define HW_DEVICE			atmega328p
+#define HW_DEVICE			atmega328p_au
 #define HW_DEVICE_ATMEGA328P_AU
 #define HW_DEVICE_PACKAGE_32Q
 

@@ -20,21 +20,14 @@
  *
  * Symbol		    | Comments
  * :------------------------|:-----------
- * `HW_DEVICE_ATTINYX4`	    |Defined void.
- * `HW_DEVICE_ATTINY84`<br>`HW_DEVICE_ATTINY84_20PU`<br>...|Defined void depending on the HWA header included.
- * `HW_DEVICE_PACKAGE_8P3`  |Defined (void) depending on the packaging of the device.
+ * `HW_DEVICE_ATTINYX4`	    |Void.
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
  * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x0022`.
  *
- * Symbol		       | ATtiny24     | ATtiny44     | ATtiny84	     
- * :---------------------------|:------------:|:------------:|:-------------:
- * `HW_DEVICE`		       |	      |		     |attiny84
- * `HW_DEVICE_SIGNATURE`       |	      |		     |0x1E,0x93,0x0C
- * `HW_DEVICE_FLASH_SIZE`      |2048	      |4096	     |8192	    
- * `HW_DEVICE_FLASH_PAGE_SIZE` |32	      |32	     |64	    
- * `HW_DEVICE_EEPROM_SIZE`     |128	      |256	     |512
- * `HW_DEVICE_EEPROM_PAGE_SIZE`|4	      |4	     |4
- * `HW_DEVICE_RAM_SIZE`	       |128	      |256	     |512
+ * See also:
+ * * @subpage attiny24
+ * * @subpage attiny44
+ * * @subpage attiny84
  */
 #define HW_DEVICE_ATTINYX4
 #define HW_DEVICE_RAM_START		0x0060

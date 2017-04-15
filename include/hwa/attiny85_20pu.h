@@ -9,11 +9,20 @@
  * @brief ATtiny85-20PU header file
  */
 
-#ifndef HW_DEVICE
+/**
+ * @page attiny85_20pu ATtiny85-20PU
+ * @section attiny85_20pu_symbols Defined symbols
+ *
+ * Symbol		       | Value
+ * :---------------------------|:------------
+ * `HW_DEVICE_ATTINY85_20PU`   |Void.
+ * `HW_DEVICE_PACKAGE_8P3`     |Void.
+ *
+ * See also:
+ * * @ref attiny85
+ */
 
 #define HW_DEVICE_ATTINY85_20PU
 #define HW_DEVICE_PACKAGE_8P3
 
-#include "../../atmel/avr/devices/attiny85.h"
-
-#endif
+#include "attiny85.h"

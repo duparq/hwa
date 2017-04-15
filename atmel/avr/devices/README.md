@@ -2,19 +2,29 @@
 Atmel AVR8 devices {#atmelavr8_devices}
 ==================
 
-  * @subpage attinyx4
-    - include `hwa/attiny24a_pu.h`
-    - include `hwa/attiny44a_pu.h`
-    - include `hwa/attiny84a_pu.h`
+HWA supports the following 8-bit Atmel AVR devices.
 
-  * @subpage attinyx5
-    - include `hwa/attiny85_20pu.h`
+  * @subpage attinyx4 - Headers:
+    - `hwa/attiny24.h`
+    - `hwa/attiny24a_pu.h`
+    - `hwa/attiny44.h`
+    - `hwa/attiny44a_pu.h`
+    - `hwa/attiny84.h`
+    - `hwa/attiny84a_pu.h`
 
-  * @subpage atmegax8
-    - include `hwa/atmega328p_au.h`
+  * @subpage attinyx5 - Headers:
+    - `hwa/attiny25.h`
+    - `hwa/attiny25_20pu.h`
+    - `hwa/attiny45.h`
+    - `hwa/attiny45_20pu.h`
+    - `hwa/attiny85.h`
+    - `hwa/attiny85_20pu.h`
 
-  * @subpage atmegaxu4
-    - include `hwa/atmega32u4_mu.h`
+  * @subpage atmegax8 - Headers:
+    - `hwa/atmega328p_au.h`
+
+  * @subpage atmegaxu4 - Headers:
+    - `hwa/atmega32u4_mu.h`
 
 __Note__ See [that
 thread](http://www.avrfreaks.net/forum/avr-errata-unpublished-and-other-gotchas)

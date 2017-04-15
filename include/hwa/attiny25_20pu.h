@@ -6,23 +6,23 @@
 
 /**
  * @file
- * @brief ATtiny45-20PU header file
+ * @brief ATtiny25-20PU header file
  */
 
 /**
- * @page attiny45_20pu ATtiny45-20PU
- * @section attiny45_20pu_symbols Defined symbols
+ * @page attiny25_20pu ATtiny25-20PU
+ * @section attiny25_20pu_symbols Defined symbols
  *
  * Symbol		       | Value
  * :---------------------------|:------------
- * `HW_DEVICE_ATTINY45_20PU`   |Void.
+ * `HW_DEVICE_ATTINY25_20PU`   |Void.
  * `HW_DEVICE_PACKAGE_8P3`     |Void.
  *
  * See also:
- * * @ref attiny45
+ * * @ref attiny25
  */
 
-#define HW_DEVICE_ATTINY45_20PU
+#define HW_DEVICE_ATTINY25_20PU
 #define HW_DEVICE_PACKAGE_8P3
 
-#include "attiny45.h"
+#include "attiny25.h"

@@ -9,14 +9,22 @@
  * @brief ATtiny44A-PU header file
  */
 
-#ifndef HW_DEVICE
+/**
+ * @page attiny44a_pu ATtiny44A-PU
+ * @section attiny44a_pu_symbols Defined symbols
+ *
+ * Symbol		       | Value
+ * :---------------------------|:------------
+ * `HW_DEVICE_ATTINY44A_PU`    |Void.
+ * `HW_DEVICE_PACKAGE_14P3`    |Void.
+ *
+ * See also:
+ * @ref attiny44
+ */
 
 /*  ATTINY44A has the same signature as ATTINY44
  */
-#define HW_DEVICE			attiny44a_pu
 #define HW_DEVICE_ATTINY44A_PU
 #define HW_DEVICE_PACKAGE_14P3
 
-#include "../../atmel/avr/devices/attiny44.h"
-
-#endif
+#include "attiny44.h"

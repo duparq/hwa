@@ -6,17 +6,23 @@
 
 /**
  * @file
- * @brief ATtiny24A-PU header file
+ * @brief Atmel AVR ATtiny24A-PU
  */
 
-#ifndef HW_DEVICE
-
-/*  ATTINY24A has the same signature as ATTINY24
+/**
+ * @page attiny24a_pu ATtiny24A-PU
+ * @section attiny24a_pu_symbols Defined symbols
+ *
+ * Symbol		       | Value
+ * :---------------------------|:------------
+ * `HW_DEVICE_ATTINY24A_PU`    |Void.
+ * `HW_DEVICE_PACKAGE_14P3`    |Void.
+ *
+ * See also:
+ * @ref attiny24
  */
-#define HW_DEVICE			attiny24a_pu
+
 #define HW_DEVICE_ATTINY24A_PU
 #define HW_DEVICE_PACKAGE_14P3
 
-#include "../../atmel/avr/devices/attiny24.h"
-
-#endif
+#include "attiny24.h"

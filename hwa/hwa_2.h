@@ -485,7 +485,7 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
   r->mvalue = v ;
 }
 
-
+#if 0
 /**
  * @ingroup private_ins
  * @brief  Write into one 8-bit context register.
@@ -536,7 +536,7 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
 /*   r->mmask |= sm ; */
 /*   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ; */
 /* } */
-
+#endif
 
 /**
  * @ingroup private_ins

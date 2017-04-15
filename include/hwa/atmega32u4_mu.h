@@ -11,6 +11,7 @@
 
 #ifndef HW_DEVICE
 
+#define HW_DEVICE			atmega32u4_mu
 #define HW_DEVICE_ATMEGA32U4_MU
 #define HW_DEVICE_PACKAGE_44Q
 
