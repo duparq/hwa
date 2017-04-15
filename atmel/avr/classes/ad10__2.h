@@ -74,8 +74,7 @@ typedef union {
   };
 } _hw_ad10__status_t ;
 
-#define _hw_stat_ad10_(o,i,a,...)	HW_TX(_hw_ad10__status(_hw_read_reg(o,sra)), \
-					      __VA_ARGS__)
+#define _hw_stat_ad10_(o,i,a,...)	HW_TX(_hw_ad10__status(_hw_read_reg(o,sra)), __VA_ARGS__)
 
 HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
 {

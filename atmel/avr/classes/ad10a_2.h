@@ -142,7 +142,7 @@
   HW_X(_hwa_cfad10a_vtrigger,_hw_ad10a_trigger_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vtrigger_0(o,v,...)				\
-  HW_E_AVL(trigger, v, manual | auto | acmp0 | hw_int0 | hw_counter0_compare0 | hw_counter0_overflow | hw_counter1_compare1 | hw_counter1_overflow | hw_counter1_capture0)
+  HW_E_AVL(trigger, v, manual | auto | acmp0 | int0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
 
 #define _hwa_cfad10a_vtrigger_1(o,v,k,...)			\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10a_trigger_##v));		\
@@ -153,12 +153,12 @@
 #define _hw_ad10a_trigger_manual	, 0, 0	/* , ate, ts */
 #define _hw_ad10a_trigger_auto		, 1, 0
 #define _hw_ad10a_trigger_acmp0		, 1, 1
-#define _hw_ad10a_trigger_hw_int0	, 1, 2
-#define _hw_ad10a_trigger_hw_counter0_compare0	, 1, 3
-#define _hw_ad10a_trigger_hw_counter0_overflow	, 1, 4
-#define _hw_ad10a_trigger_hw_counter1_compare1	, 1, 5
-#define _hw_ad10a_trigger_hw_counter1_overflow	, 1, 6
-#define _hw_ad10a_trigger_hw_counter1_capture0	, 1, 7
+#define _hw_ad10a_trigger_int0		, 1, 2
+#define _hw_ad10a_trigger_counter0_compare0	, 1, 3
+#define _hw_ad10a_trigger_counter0_overflow	, 1, 4
+#define _hw_ad10a_trigger_counter1_compare1	, 1, 5
+#define _hw_ad10a_trigger_counter1_overflow	, 1, 6
+#define _hw_ad10a_trigger_counter1_capture0	, 1, 7
 
 /*  Mandatory parameter `vref`
  */
