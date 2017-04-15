@@ -47,3 +47,4 @@ for BOARD in ${BOARDS} ; do
 done
 echo -e "$passed succeeded, $failed failed, $skipped skipped."
 [ -n "$FAILS" ] && echo -e "Failed:$FAILS"
+exit 0
