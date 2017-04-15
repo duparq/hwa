@@ -11,7 +11,7 @@ fi
 #
 BOARDS=${BOARD}
 if [ -z "$BOARDS" ] ; then
-    BOARDS="attiny84 attiny85 nanodccduino pro-micro"
+    BOARDS="attiny84 attiny84-tcs3200 attiny85 nanodccduino pro-micro"
 fi
 
 #  Directory of this file
