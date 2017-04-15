@@ -52,7 +52,7 @@ int os_printf_plus(const char *format, ...)  __attribute__((format(printf, 1, 2)
   system_set_os_print(DEBUG_SDK); // int os_printf(const char *format, ...)
 
 
-// memory allocapion functions are "different" due to memory debugging functionality
+// memory allocation functions are "different" due to memory debugging functionality
 // added in SDK 1.4.0
 void vPortFree(void *ptr, char * file, int line);
 void *pvPortMalloc(size_t xWantedSize, char * file, int line);

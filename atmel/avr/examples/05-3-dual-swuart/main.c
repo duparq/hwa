@@ -28,7 +28,7 @@
  * in a Windows XP VirtualBoxed under Linux, so there must be a bug in the Linux
  * driver).
  *
- * @par Test applicapion
+ * @par Test application
  *
  *	./main.py -b BAUDRATE
  *

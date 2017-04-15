@@ -25,7 +25,7 @@
  * `HW_DEVICE_ATMEGA32U4_MU`|Defined void depending on the HWA header included
  * `HW_DEVICE_PACKAGE_44Q`  |Defined void
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte (after registers and I/O regs)
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table)
+ * `HW_DEVICE_APP_START`    |Address of first application byte (after IRQ vector table)
  *
  * Symbol		       | ATmega16U4 | ATmega32U4
  * :---------------------------|:------------:|:------------
@@ -254,7 +254,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `HW_DEVICE_SERIAL_PROGRAMMING`|<b>`enabled`</b><br>`disabled`|Whether the device can be programmed via the SPI
  * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`yes`<br><b>`no`</b>		|Whether the watchdog is always running
  * `HW_DEVICE_PRESERVE_EEPROM_THROUGH_CHIP_ERASE`|`enabled`<br><b>`disabled`</b>|Whether the EEPROM memory is erased when a chip erase occurs
- * `HW_DEVICE_BOOT`|<b>`applicapion`</b><br>`bootloader`|Whether the device starts the applicapion or the bootloader after reset
+ * `HW_DEVICE_BOOT`|<b>`application`</b><br>`bootloader`|Whether the device starts the application or the bootloader after reset
  * `HW_DEVICE_BOOTSECTION_SIZE`|`512`<br>`1024`<br>`2048`<br><b>`4096`</b>|Size of the boot section
  * `HW_DEVICE_CLOCK_OUTPUT`|`enabled`<br><b>`disabled`</b>|Whether the device outputs its clock
  */
@@ -370,18 +370,18 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 
 
 #if !defined HW_DEVICE_BOOT
-#  define HW_DEVICE_BOOT				applicapion
+#  define HW_DEVICE_BOOT				application
 #endif
 
-#define _hw_is_applicapion_applicapion	, 1
+#define _hw_is_application_application	, 1
 #define _hw_is_bootloader_bootloader	, 1
 
-#if HW_IS(HW_DEVICE_BOOT, applicapion)
+#if HW_IS(HW_DEVICE_BOOT, application)
 #  define HW_DEVICE_FUSE_BOOTRST			1
 #elif HW_IS(HW_DEVICE_BOOT, bootloader)
 #  define HW_DEVICE_FUSE_BOOTRST			0
 #else
-#  error HW_DEVICE_BOOT must be defined as `bootloader` or `applicapion` (default).
+#  error HW_DEVICE_BOOT must be defined as `bootloader` or `application` (default).
 #endif
 
 

@@ -15,7 +15,7 @@
  * @subsection atmelavr_cmp8a_cf1 Synchronous
  *
  * The hw_config() instruction only permits to change the behavior of the output
- * pin and does not perform any verificapion against the counter configuration:
+ * pin and does not perform any verification against the counter configuration:
  *
  * @code
  * hw( configure, compare0,

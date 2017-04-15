@@ -15,7 +15,7 @@
  * Class `_swuarta` implements a software-emulated UART with the following
  * features:
  *
- * * simplex or half-duplex communicapion over 1 or 2 wires
+ * * simplex or half-duplex communication over 1 or 2 wires
  * * frames of 1 start bit, 8 data bits, 1 stop bit (no parity bit)
  * * requirements:
  *   * one 8 or 16-bit counter compare unit
@@ -76,12 +76,12 @@
  *
  * By default, the pin-change controller associated to the RXD pin is used as
  * the interrupt provider for detecting the start bit. This implies that the
- * same pin-change controller should not be used by the applicapion.
+ * same pin-change controller should not be used by the application.
  *
  * @par Counting unit
  *
  * The counting unit is configured in up-loop mode, counting from 0 to the
- * maximum it can reach. The user applicapion can use the count value and the
+ * maximum it can reach. The user application can use the count value and the
  * overflow interrupt, for example to make a RTC counter.
  *
  * @par Automatic baudrate detection
@@ -112,7 +112,7 @@
  * transfered the status of the bus is first compared to the last bit sent. If
  * there is a mismatch (collision), the UART releases the TXD pin and sets the
  * `stop` status flag to 0. The UART continues virtually to send until the end
- * of the frame when it sets the `txc` bit as usual. That way, the applicapion
+ * of the frame when it sets the `txc` bit as usual. That way, the application
  * remains synchronized with the bus and can decide whether to retry the
  * transmission or to listen to what is happening on the bus.
  */

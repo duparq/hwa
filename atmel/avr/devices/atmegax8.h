@@ -25,7 +25,7 @@
  * `HW_DEVICE_ATMEGA48`<br>...<br>`HW_DEVICE_ATMEGA328P_AU` | Defined void depending on the HWA header included.
  * `HW_DEVICE_PACKAGE_32Q`  |Defined void depending on the packaging of the device.
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte (after registers and I/O regs): `0x0100`.
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table). See below.
+ * `HW_DEVICE_APP_START`    |Address of first application byte (after IRQ vector table). See below.
  *
  * Symbol		       | ATmega48(P)A | ATmega88(P)A | ATmega168(P)A | ATmega328(P)
  * :---------------------------|:------------:|:------------:|:-------------:|:------------:
@@ -247,7 +247,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`yes`<br><b>`no`</b>		|Whether the watchdog is always running
  * `HW_DEVICE_CLOCK_OUTPUT`	 |`enabled`<br><b>`disabled`</b>|Whether the device outputs its clock
  * `HW_DEVICE_BROWNOUT_DETECTION`|<b>`off`</b><br>`1700_2000mV`<br>`2500_2900mV`<br>`4100_4500mV`|Brown-out detection level
- * `HW_DEVICE_BOOT`|<b>`applicapion`</b><br>`bootloader`|Whether the device starts the applicapion or the bootloader after reset
+ * `HW_DEVICE_BOOT`|<b>`application`</b><br>`bootloader`|Whether the device starts the application or the bootloader after reset
  * `HW_DEVICE_BOOTSECTION_SIZE`|`512`<br>`1024`<br>`2048`<br><b>`4096`</b>|Size of the boot section
  */
 
@@ -336,23 +336,23 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
 #endif
 
-#define _hw_is_applicapion_applicapion	, 1
+#define _hw_is_application_application	, 1
 #define _hw_is_bootloader_bootloader	, 1
 
 /**
  * @def HW_DEVICE_BOOT
- * @brief Whether the device starts the bootloader (in the boot Flash) or the applicapion.
+ * @brief Whether the device starts the bootloader (in the boot Flash) or the application.
  * @hideinitializer
  */
 #if !defined HW_DEVICE_BOOT
-#  define HW_DEVICE_BOOT				applicapion
+#  define HW_DEVICE_BOOT				application
 #endif
-#if HW_IS(HW_DEVICE_BOOT, applicapion)
+#if HW_IS(HW_DEVICE_BOOT, application)
 #  define HW_DEVICE_FUSE_BOOTRST			1
 #elif HW_IS(HW_DEVICE_BOOT, bootloader)
 #  define HW_DEVICE_FUSE_BOOTRST			0
 #else
-#  error HW_DEVICE_BOOT must be defined as `bootloader` or `applicapion` (default).
+#  error HW_DEVICE_BOOT must be defined as `bootloader` or `application` (default).
 #endif
 
 

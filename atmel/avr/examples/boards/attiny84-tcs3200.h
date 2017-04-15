@@ -17,7 +17,7 @@
  * This is a ATTINY84A-PU on a breadboard with a USB/Serial adapter, a
  * TCS3200 color detector and 3 LED. No crystal.
  *
- * The serial communicapion uses 1 wire for RX/TX. The AVR communicapion
+ * The serial communication uses 1 wire for RX/TX. The AVR communication
  * pin is connected to the RXD pin of the serial adapter and a 1k resistor
  * is connected between the RXD and TXD pins (it could be replaced by a
  * diode, Schottky preferably).
@@ -69,7 +69,7 @@
 #define HW_DEVICE_BROWNOUT_DETECTION	2500_2900mV
 
 /*  Settings for building the Diabolo bootloader.
- *  (Settings for the host applicapion are in the board's Makefile)
+ *  (Settings for the host application are in the board's Makefile)
  */
 #define DIABOLO_PIN_RX			HW_PIN(2)
 #define DIABOLO_PIN_TX			HW_PIN(2)

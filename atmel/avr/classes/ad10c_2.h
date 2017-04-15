@@ -88,7 +88,7 @@
  *	     [ polarity,	 unipolar
  *			       | bipolar, ]
  *
- *	       //  Amplificapion (default is 1)
+ *	       //  Amplification (default is 1)
  *	       //
  *	     [ gain,		 1
  *			       | 20, ]

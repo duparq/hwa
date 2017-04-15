@@ -137,7 +137,7 @@ uart_putchar(char c, FILE *unused __attribute__((unused)) )
  * condition, going into master receiver mode), and transfer the data
  * from the device to the TWI master.  Multiple bytes can be
  * transfered by ACKing the client's transfer.	The last transfer will
- * be NACKed, which the client will take as an indicapion to not
+ * be NACKed, which the client will take as an indication to not
  * initiate further transfers.
  */
 int

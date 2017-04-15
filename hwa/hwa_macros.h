@@ -127,7 +127,7 @@
  * @ingroup private_mac
  * @brief Expands to 1 if the first element of the list is void, 0 otherwise.
  *
- * This is a more elaborate verificapion than `HW_IS(,x)` since it also accepts
+ * This is a more elaborate verification than `HW_IS(,x)` since it also accepts
  * x to begin with a left bracket.
  *
  * @hideinitializer

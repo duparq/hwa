@@ -53,7 +53,7 @@
 #define HW_DEVICE_CLOCK_OUTPUT		disabled
 
 /*  Settings for building the Diabolo bootloader
- *  Settings for the Diabolo applicapion are in the board's Makefile
+ *  Settings for the Diabolo application are in the board's Makefile
  */
 #define DIABOLO_PIN_RX			HW_PIN(rxd)
 #define DIABOLO_PIN_TX			HW_PIN(txd)

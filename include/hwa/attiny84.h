@@ -15,6 +15,7 @@
  *
  * Symbol		       | Value
  * :---------------------------|:------------
+ * `HW_DEVICE`                 |attiny84
  * `HW_DEVICE_ATTINY84`        |Void.
  * `HW_DEVICE_SIGNATURE`       |0x1E,0x93,0x0C
  * `HW_DEVICE_FLASH_SIZE`      |8192
@@ -28,6 +29,7 @@
  * * @ref attinyx4
  */
 
+#define HW_DEVICE			attiny84
 #define HW_DEVICE_ATTINY84
 #define HW_DEVICE_SIGNATURE		0x1E,0x93,0x0C
 #define HW_DEVICE_FLASH_SIZE		8192

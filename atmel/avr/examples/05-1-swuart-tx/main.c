@@ -10,7 +10,7 @@
  * Send a '.' on TXD every 0.1s. Can use hardware UART as well as software
  * UART.
  *
- * Test applicapion:
+ * Test application:
  *
  *     ./main.py -b <BAUDRATE>
  *

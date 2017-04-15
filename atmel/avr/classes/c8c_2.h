@@ -335,7 +335,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
     else /* top == ocra */ {
       /*
        *  FIXME: a change of output_mode from one of the 4 modes below to
-       *  'disconnected' causes a useless modificapion of wgm from 7 to 2. As
+       *  'disconnected' causes a useless modification of wgm from 7 to 2. As
        *  wgm2 is not in the same register as wgm1:0, this generates useless
        *  code.
        */

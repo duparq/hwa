@@ -10,7 +10,7 @@
  * @par A simple interface between software UART and USI configured as SPI master.
  *
  * This is a variant of the previous example, showing how using
- * `spimaster0_swclk` instead of `usi0` can simplify the applicapion.
+ * `spimaster0_swclk` instead of `usi0` can simplify the application.
  * 
  * @par nRF24L01+ module wiring
  *
@@ -24,7 +24,7 @@
  * has to be connected to pin MOSI/DI of the MCU, and pin MOSI, input of the
  * nRF, has to be connected to pin MISO/DO of the MCU.
  *
- * @par Test applicapion
+ * @par Test application
  *
  *     ../09-1-swuart-usi-spi-master-nrf24l01+/main.py
  * 

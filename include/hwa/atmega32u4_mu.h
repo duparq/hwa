@@ -1,4 +1,7 @@
 
+#ifndef HWA_H
+#define HWA_H
+
 /* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
@@ -8,8 +11,6 @@
  * @file
  * @brief Atmel AVR ATmega32U4-MU
  */
-
-#ifndef HW_DEVICE
 
 #define HW_DEVICE			atmega32u4_mu
 #define HW_DEVICE_ATMEGA32U4_MU

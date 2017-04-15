@@ -22,7 +22,7 @@
  * :------------------------|:-----------
  * `HW_DEVICE_ATTINYX4`	    |Void.
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x0022`.
+ * `HW_DEVICE_APP_START`    |Address of first application byte (after IRQ vector table): `0x0022`.
  *
  * See also:
  * * @subpage attiny24

@@ -24,7 +24,7 @@
  * `HW_DEVICE_ATTINY85`<br>`HW_DEVICE_ATTINY85_20PU` | Defined void depending on the HWA header included.
  * `HW_DEVICE_PACKAGE_8P3`  |Defined (void) depending on the packaging of the device.
  * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
- * `HW_DEVICE_APP_START`    |Address of first applicapion byte (after IRQ vector table): `0x001E`.
+ * `HW_DEVICE_APP_START`    |Address of first application byte (after IRQ vector table): `0x001E`.
  *
  * See also:
  *  * @subpage attiny25

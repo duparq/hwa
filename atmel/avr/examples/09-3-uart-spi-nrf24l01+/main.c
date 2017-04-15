@@ -16,7 +16,7 @@
  *	      SCL <- SCK  (5)(6)  MOSI -> MOSI
  *	     MISO <- MISO (7)(8)  IRQ
  *
- * @par Test applicapion
+ * @par Test application
  *
  *     ./main.py
  * 

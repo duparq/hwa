@@ -70,7 +70,7 @@
 #define HW_DEVICE_FUSE_EBX		0xC
 
 /*  Settings for building the Diabolo bootloader
- *  Settings for the Diabolo applicapion are in the board's Makefile
+ *  Settings for the Diabolo application are in the board's Makefile
  */
 #define DIABOLO_PIN_RX			pin_rxd
 #define DIABOLO_PIN_TX			pin_rxd
@@ -100,7 +100,7 @@ THIS IS NOT DONE YET
 
 /*  Settings for the Diabolo bootloader
  *    BPS and RESET_SIGNAL are only used by `make` to provide
- *    settings to the Diabolo applicapion on the host.
+ *    settings to the Diabolo application on the host.
  */
 #define DIABOLO_PIN_RX			pin_rxd
 #define DIABOLO_PIN_TX			pin_rxd

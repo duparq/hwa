@@ -376,7 +376,7 @@ main ( )
 	 */
 	/*
 	 *  Processing a sample can make the MCU busy for a long time compared
-	 *  to communicapion data rate and characters may be missed if the host
+	 *  to communication data rate and characters may be missed if the host
 	 *  sends several meanwhile. So, the host will have to wait a ' '
 	 *  indicaping that we're listening before it completes the command.
 	 */
