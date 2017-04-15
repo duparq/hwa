@@ -22,6 +22,8 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 06-1-swuart-adc"
 	EXAMPLES="${EXAMPLES} 07-1-swuart-eeprom-read-write"
 	EXAMPLES="${EXAMPLES} 08-1-swuart-flash-read-write"
+	EXAMPLES="${EXAMPLES} 09-1-swuart-usi-spi-master-nrf24l01+"
+	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
     fi
     if [ ${BOARD} = attiny84-tcs3200 ] ; then
@@ -45,6 +47,8 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 06-1-swuart-adc"
 	EXAMPLES="${EXAMPLES} 07-1-swuart-eeprom-read-write"
 	EXAMPLES="${EXAMPLES} 08-1-swuart-flash-read-write"
+	EXAMPLES="${EXAMPLES} 09-1-swuart-usi-spi-master-nrf24l01+"
+	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
     fi
     if [ ${BOARD} = nanodccduino ] ; then
