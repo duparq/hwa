@@ -9,6 +9,7 @@
  * @brief I/O
  */
 
+#define _hw_mthd_hw_configure__io1a	, _hw_cfio1a
 #define _hw_mthd_hwa_configure__io1a	, _hwa_cfio1a
 #define _hw_mthd_hw_read__io1a		, _hw_read_io1a
 #define _hw_mthd_hw_write__io1a		, _hw_write_io1a
@@ -19,23 +20,20 @@
 /**
  * @page atmelavr_io1a
  * @section atmelavr_io1a_config Configuration
- * @subsection atmelavr_io1a_cf1 Synchronous
  *
  * @code
  * hw( configure, pin_pa0,
  *
- *	    [ mode,	   analog,
- *			 | digital, ]
+ *   [ mode,        analog,
+ *                | digital, ]
  *
- *	    [ direction,   input,
- *			 | output, ]
+ *   [ direction,   input,
+ *                | output, ]
  *
- *	    [ pullup,	   on,
- *			 | off ]
- *	      );
+ *   [ pullup,      on,
+ *                | off ] );
  * @endcode
  */
-#define _hw_mthd_hw_configure__io1a	, _hw_cfio1a
 
 /*  Optionnal parameter `mode`
  */
@@ -116,20 +114,18 @@
 
 /**
  * @page atmelavr_io1a
- * @subsection atmelavr_io1a_cf2 Asynchronous
  *
  * @code
  * hwa( configure, pin_pa0,
  *
- *	     [ mode,	    analog,
- *			  | digital, ]
+ *    [ mode,        analog,
+ *                 | digital, ]
  *
- *	     [ direction,   input,
- *			  | output, ]
+ *    [ direction,   input,
+ *                 | output, ]
  *
- *	     [ pullup,	    on,
- *			  | off ]
- *	       );
+ *    [ pullup,      on,
+ *                 | off ] );
  * @endcode
  */
 #define _hwa_cfio1a( o,i, p,bn,bp, ...)					\
@@ -205,7 +201,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw_write( pin_pa0, value );
+ * hw( write, pin_pa0, value );
  * @endcode
  */
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)	HW_TX( _hw_write_reg_m(p, port, ((1<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
@@ -213,7 +209,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hwa_write( pin_pa0, value );
+ * hwa( write, pin_pa0, value );
  * @endcode
  */
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
@@ -223,7 +219,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw_toggle( pin_pa0 );	//  Toggle one or several consecutive pins at once
+ * hw( toggle, pin_pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
 #define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
@@ -235,10 +231,10 @@
 /**
  * @page atmelavr_io1a
  * @code
- * // All the pins of the same I/O port toggled in the same transaction will be
- * // toggled at once by the `hwa_commit()` instruction.
+ * // All the pins of the same I/O port are toggled at once by the
+ * // following `hwa_commit()` instruction.
  * //
- * hwa_toggle( pin_pa0 );
+ * hwa( toggle, pin_pa0 );
  * @endcode
  */
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
