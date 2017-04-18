@@ -21,7 +21,7 @@
  *    * `HW_REL( counter0, compare0 )` and <br>
  *	`HW_REL( counter0, compare1 )`
  *
- *  * one capture unit of class @ref atmelavr_dtga "_cap16a":
+ *  * one capture unit of class @ref atmelavr_cap16a "_cap16a":
  *    * `HW_REL( counter0, capture0 )`
  *
  * It is used by:
