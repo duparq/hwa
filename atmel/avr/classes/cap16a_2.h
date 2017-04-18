@@ -12,24 +12,21 @@
 /**
  * @page atmelavr_cap16a
  * @section atmelavr_cap16a_config Configuration
- * @subsection atmelavr_cap16a_cf1 Synchronous
- *
- * __Note__ Currently, only `edge` configuration is implemented for the synchronous
- * method.
  *
  * @code
- * hw( configure, capture0,
+ * hw( configure, counter0capture0,
  *
- *	     [input,	pin_icp	     // NOT IMPLEMENTED YET
- *		      | acmp0, ]
+ *   [ input,     pin_icp      // NOT IMPLEMENTED YET
+ *              | acmp0, ]
  *
- *	     [edge,	falling
- *		      | rising, ]
+ *   [ edge,      falling
+ *              | rising, ]
  *
- *	     [filter,	on	     // NOT IMPLEMENTED YET
- *		      | off ]
- *	     );
+ *   [ filter,    on           // NOT IMPLEMENTED YET
+ *              | off ] );
  * @endcode
+ */
+/*  TODO: complete this.
  */
 #define _hw_mthd_hw_configure__cap16a	, _hw_cfcap16a
 
@@ -61,43 +58,33 @@
 
 /**
  * @page atmelavr_cap16a
- * @subsection atmelavr_cap16a_cf2 Asynchronous
  * @code
- * hwa( configure, capture0,
+ * hwa( configure, counter0capture0,
  *
- *	       input,	 pin_icp
- *		       | acmp0,
+ *    [ input,     pin_icp
+ *               | acmp0, ]
  *
- *	       edge,	 falling
- *		       | rising,
+ *    [ edge,      falling
+ *               | rising, ]
  *
- *	     [ filter,	 on
- *		       | off ]
- *	     );
+ *    [ filter,    on
+ *               | off ] );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cap16a	, _hwa_cfcap16a
+#define _hw_mthd_hwa_configure__cap16a		, _hwa_cfcap16a
 
-#define _hwa_cfcap16a(o,i,a,...)						\
-  do {									\
-    HW_X(_hwa_cfcap16a_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__,,) \
-      } while(0)
+#define _hwa_cfcap16a(o,i,a,...) do { HW_X(_hwa_cfcap16a_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__) } while(0)
 
-#define _hwa_cfcap16a_kinput_0(o,k,...)					\
-  HW_E_VL(k,input)
-
-#define _hwa_cfcap16a_kinput_1(o,k,v,...)				\
-  HW_X(_hwa_cfcap16a_vinput,hw_cap16a_input_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfcap16a_vinput_0(o,v,...)					\
-  HW_E_AVL(input, v, pin_icp | acmp0)
-
+#define _hwa_cfcap16a_kinput_0(o,k,...)		\
+  HW_X(_hwa_cfcap16a_kedge,_hw_is_edge_##k)(o,k,__VA_ARGS__) //HW_E_VL(k,input)
+#define _hwa_cfcap16a_kinput_1(o,k,v,...)	HW_X(_hwa_cfcap16a_vinput,hw_cap16a_input_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfcap16a_vinput_0(o,v,...)		HW_E_AVL(input, v, pin_icp | acmp0)
 #define _hwa_cfcap16a_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_cap16a_input_##v);			\
   HW_X(_hwa_cfcap16a_kedge,_hw_is_edge_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcap16a_kedge_0(o,k,...)					\
-  HW_E_VL(k,edge)
+  HW_X(_hwa_cfcap16a_kfilter,_hw_is_filter_##k)(o,k,__VA_ARGS__) //  HW_E_VL(k,edge)
 
 #define _hwa_cfcap16a_kedge_1(o,k,v,...)				\
   HW_X(_hwa_cfcap16a_vedge,hw_cap16a_edge_##v)(o,v,__VA_ARGS__)
@@ -132,7 +119,7 @@
  * @endcode
  */
 #define _hw_mthd_hw_read__cap16a	, _hw_read_cap16a
-#define _hw_read_cap16a(o,i,a,...)		HW_TX( _hw_read_reg(o,reg), __VA_ARGS__ )
+#define _hw_read_cap16a(o,i,a,...)	HW_TX( _hw_read_reg(o,reg), __VA_ARGS__ )
 
 
 /**
@@ -164,9 +151,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( capture0 ) ) ) {	// Read capture IRQ flag
- *   hw( clear, HW_IRQFLAG( capture0 ) );		// Clear capture IRQ flag
- *   hw( turn, HW_IRQ( capture0, off ) );		// Disable capture IRQs
+ * if ( hw( read, HW_IRQFLAG( capture0 ) ) ) {  // Read capture IRQ flag
+ *   hw( clear, HW_IRQFLAG( capture0 ) );       // Clear capture IRQ flag
+ *   hw( turn, HW_IRQ( capture0, off ) );       // Disable capture IRQs
  * }
  * @endcode
  */
@@ -185,7 +172,7 @@
   hwa->o.config.edge   = 0xFF ;			\
   hwa->o.config.filter = 0xFF
 
-#define _hwa_init__cap16a(o,i,a)			_hwa_init_reg(o,reg,0)
+#define _hwa_init__cap16a(o,i,a)		_hwa_init_reg(o,reg,0)
 
 #define _hwa_commit__cap16a(o,i,a)		_hwa_commit_reg(o,reg)
 

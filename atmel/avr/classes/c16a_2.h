@@ -451,12 +451,14 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
 
   /*	Solve the configuration of the capture input
    */
-  if ( ic0->config.input != 0xFF ) {
+  //  if ( ic0->config.input != 0xFF ) {
+  if ( ic0->config.input != 0xFF )
     ic0->solved.acic = ic0->config.input-1 ;
+  if ( ic0->config.edge != 0xFF )
     ic0->solved.ices = ic0->config.edge-1 ;
-    if ( ic0->config.filter != 0xFF )
-      ic0->solved.icnc = ic0->config.filter ;
-  }
+  if ( ic0->config.filter != 0xFF )
+    ic0->solved.icnc = ic0->config.filter ;
+  //}
 
 
   /*	Check the validity of the configuration
