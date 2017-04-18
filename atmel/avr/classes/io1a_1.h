@@ -32,7 +32,7 @@
  *
  * @code
  * #if HW_ID(pin_pa3) && (HW_BITS(pin_pa3) != 1)
- * #  HWA is damaged!
+ * #  error HWA is damaged!
  * #endif
  * @endcode
  */

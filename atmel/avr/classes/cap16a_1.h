@@ -15,9 +15,9 @@
  * A class `_cap16a` object is a 16-bit capture unit. It has the following
  * relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( capture0, counter )`
+ *  * one counter, whose name is given by `HW_RELATIVE( capture0, counter )`
  *
- *  * one input pin, whose name is given by `HW_REL( capture0, pin )`
+ *  * one input pin, whose name is given by `HW_RELATIVE( capture0, pin )`
  *
  * It is used in:
  *
@@ -40,7 +40,8 @@
  * @endcode
  */
 #define _hw_mthd_HW_BITS__cap16a		, _hw_bn_cap16a
-#define _hw_bn_cap16a(o,i,a,...)			16
+
+#define _hw_bn_cap16a(...)			16
 
 
 /**
