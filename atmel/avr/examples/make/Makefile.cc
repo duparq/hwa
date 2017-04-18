@@ -287,7 +287,7 @@ else
 endif
 
 %.bin: %.elf
-	@$(OBJCOPY) -O binary $^ $@
+	@$(OBJCOPY) --gap-fill=0xFF -O binary $^ $@
 
 # @$(OBJCOPY) --only-section .text --only-section .data	\
 # 	-O binary --gap-fill=0xFF $(PADTO) $^ $@
