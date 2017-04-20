@@ -605,6 +605,11 @@ typedef struct {
 #define _hw_pin_do			, pin_pa5
 #define _hw_pin_di			, pin_pa6
 
+#define _hw_pin_counter0compare0	, pin_pb2
+#define _hw_pin_counter0compare1	, pin_pa7
+#define _hw_pin_counter1compare0	, pin_pa6
+#define _hw_pin_counter1compare1	, pin_pa5
+#define _hw_pin_counter1capture0	, pin_pa7
 #define _hw_pin_icp			, pin_pa7
 
 #define _hw_pin_adc0			, pin_pa0
@@ -832,7 +837,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter0compare0_pin	pin_pb2
+#define _hw_rel_counter0compare0_pin		pin_pb2
 #define _hw_rel_counter0compare0_counter	counter0
 
 /*	Object				class, id, address
@@ -852,7 +857,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter0compare1_pin	pin_pa7
+#define _hw_rel_counter0compare1_pin		pin_pa7
 #define _hw_rel_counter0compare1_counter	counter0
 
 
@@ -918,7 +923,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1compare0_pin	pin_pa6
+#define _hw_rel_counter1compare0_pin		pin_pa6
 #define _hw_rel_counter1compare0_counter	counter1
 
 /*	Object				class, id, address
@@ -938,7 +943,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1compare1_pin	pin_pa5
+#define _hw_rel_counter1compare1_pin		pin_pa5
 #define _hw_rel_counter1compare1_counter	counter1
 
 
@@ -968,7 +973,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1capture0_pin	pin_pa7
+#define _hw_rel_counter1capture0_pin		pin_pa7
 #define _hw_rel_counter1capture0_counter	counter1
 
 
