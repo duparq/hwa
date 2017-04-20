@@ -41,6 +41,7 @@
 #define HW_E_P(x)		HW_E(`x` is not a pin)
 #define HW_E_OM()		HW_E(missing object name)
 #define HW_E_T(x)		HW_E(unrecognized token `x`)
+#define HW_E_G(x)		HW_E(garbage parameters starting with `x`)
 
 #define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
@@ -49,6 +50,7 @@
 #define HW_E_AVM(a)		HW_E(missing value for `a`)
 #define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
 #define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter `a` can be `l` but not `v`)
+#define HW_E_OKVL(k,v,l)	HW_E(value `v` for optionnal parameter `k` is not l)
 #define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
 #define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
 #define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
@@ -81,6 +83,15 @@
  */
 #define HW_A2(...)		_HW_A2_2(__VA_ARGS__,,,)
 #define _HW_A2_2(a0,a1,a2,...)	a2
+
+
+/**
+ * @ingroup private_mac
+ * @brief Element a2 of the list a0,a1,a2,...
+ * @hideinitializer
+ */
+#define HW_TL(...)		_HW_TL2(__VA_ARGS__)
+#define _HW_TL2(a0,...)		__VA_ARGS__
 
 
 /**
@@ -395,6 +406,21 @@
 
 /*  Internal use only version
  */
+#define _hw(...)		__hw1(__VA_ARGS__,)
+#define __hw1(f,o,...)		__hw2(f,HW_O(o),__VA_ARGS__)
+#define __hw2(...)		__hw3(__VA_ARGS__)
+#define __hw3(f,c,...)		HW_X(__hw4,c)(f,c,__VA_ARGS__)
+#define __hw4_1(...)		// An error has been emitted. Stop here.
+
+/*  Look for a method x_f for object o of class c.
+ */
+#define __hw4_0(f,c,...)	HW_X(__hw41,_hw_mthd_hw_##f##_##c)(f,c,__VA_ARGS__)
+#define __hw41_1(f,c,...)	HW_A1(_hw_mthd_hw_##f##_##c)(__VA_ARGS__)
+#define __hw41_0(f,c,o,...)	HW_E_OCM(o,c,hw_##f)
+
+
+/*  Internal use only version
+ */
 #define _hwa(...)		__hwa1(__VA_ARGS__,)
 #define __hwa1(f,o,...)		__hwa2(f,HW_O(o),__VA_ARGS__)
 #define __hwa2(...)		__hwa3(__VA_ARGS__)
@@ -410,7 +436,57 @@
 #define __hwa41_1(f,c,...)	HW_A1(_hw_mthd_hwa_##f##_##c)(__VA_ARGS__)
 #define __hwa41_0(f,c,o,...)	HW_E_OCM(o,c,hwa_##f)
 
-  
+#if 0
+/**
+ * @ingroup public_ins_obj
+ * @brief Implement methods of an object.
+ * @hideinitializer
+ *
+ * The optionnal argument `static` can be specified to have the methods prefixed
+ * with the `static` keyword.
+ *
+ * @code
+ * HW_IMPLEMENT(sensor0);
+ * @endcode
+ * @code
+ * HW_IMPLEMENT(sensor0,static);
+ * @endcode
+ */
+/*    Do not use hw() to keep it enabled for expansion.
+ */
+#define HW_IMPLEMENT(...)	_HW_IMP1(__VA_ARGS__,,)
+#define _HW_IMP1(o,...)		_HW_IMP2(HW_O(o),__VA_ARGS__)
+#define _HW_IMP2(...)		_HW_IMP3(__VA_ARGS__)
+#define _HW_IMP3(c,...)		HW_X(_HW_IMP4,c)(c,__VA_ARGS__)
+#define _HW_IMP4_1(...)		// An error message has been emitted. Stop here.
+#define _HW_IMP4_0(c,...)	HW_X(_HW_IMP5,_hw_implement_##c)(c,__VA_ARGS__)
+#define _HW_IMP5_0(c,o,...)	HW_E_OCM(o,c,HW_IMPLEMENT)
+#define _HW_IMP5_1(c,o,i,a,p,...)	HW_X(_HW_IMP6,_hw_implement_prefix_##p)(c,o,i,a,p)
+#define _HW_IMP6_1(c,...)	HW_A1(_hw_implement_##c)(__VA_ARGS__)
+#define _HW_IMP6_0(c,o,i,a,p)	HW_E_VL(p, static or "" )
+
+#define _hw_implement_prefix_		, 1
+#define _hw_implement_prefix_static	, 1
+
+
+/**
+ * @ingroup public_ins_obj
+ * @brief Check the definition of an external object.
+ * @hideinitializer
+ *
+ * @code
+ * HW_CHECK(sensor0);
+ * @endcode
+ */
+#define HW_CHECK(o)		_HW_CHK2(HW_O(o))
+#define _HW_CHK2(...)		_HW_CHK3(__VA_ARGS__)
+#define _HW_CHK3(c,...)		HW_X(_HW_CHK4,c)(c,__VA_ARGS__)
+#define _HW_CHK4_1(...)		// An error message has been emitted.
+#define _HW_CHK4_0(c,...)	HW_X(_HW_CHK5,_hw_check_##c)(c,__VA_ARGS__)
+#define _HW_CHK5_0(c,o,...)	HW_E_OCM(o,c,HW_CHECK)
+#define _HW_CHK5_1(c,...)	HW_A1(_hw_check_##c)(__VA_ARGS__)
+#endif
+
 
 /*  Define wich classes are hardware bits
  */
