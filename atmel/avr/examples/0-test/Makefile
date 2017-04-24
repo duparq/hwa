@@ -1,6 +1,6 @@
 
 #	Source files
 #
-SOURCES		=	main.c
+SOURCES		=	test-bcdport.c
 
 include ../Makefile
