@@ -149,8 +149,8 @@
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
-    _hwa( configure, HW_PIN(usck), direction, output );	\
-    _hwa( configure, HW_PIN(do),   direction, output );	\
+    _hwa( configure, _HW_PIN(o,ck), direction, output );		\
+    _hwa( configure, _HW_PIN(o,do), direction, output );		\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  2 );			\
     _hwa_write_reg( o, clk, 1 );			\
