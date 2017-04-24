@@ -204,7 +204,8 @@
  * hw( write, pin_pa0, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)	HW_TX( _hw_write_reg_m(p, port, ((1<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
+#define _hw_write_io1a(o,i, p,bn,bp, v,...)	\
+  HW_TX( _hw_write_reg_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
 
 /**
  * @page atmelavr_io1a
@@ -225,7 +226,7 @@
 #define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__)
 #define _hw_toggle_io1a_3(_m1,o,a,r,rc,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,1,),__VA_ARGS__)
+  HW_TX(_hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,(1UL<<bn)-1,),__VA_ARGS__)
 
 
 /**
@@ -240,7 +241,7 @@
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__)
 #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__)
+  HW_TX(_hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp,(1UL<<bn)-1),__VA_ARGS__)
 
 
 /**
