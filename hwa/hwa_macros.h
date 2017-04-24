@@ -845,6 +845,14 @@
 
 
 /**
+ * @ingroup private_ins
+ * @brief Returns the canonical name of pin `p` of object `o`.
+ * @hideinitializer
+ */
+#define _HW_PIN(o,p)		HW_A1(_hw_pin_##o##_##p,)
+
+
+/**
  * @ingroup public_ins_obj
  * @brief Returns the structure of the status of the @ref using_objects "object".
  * @hideinitializer
