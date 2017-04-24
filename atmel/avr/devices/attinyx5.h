@@ -608,6 +608,9 @@ typedef struct {
 #define _hw_pin_usck			, pin_pb2
 #define _hw_pin_do			, pin_pb1
 #define _hw_pin_di			, pin_pb0
+#define _hw_pin_usi0_ck			, pin_pb2
+#define _hw_pin_usi0_do			, pin_pb1
+#define _hw_pin_usi0_di			, pin_pb0
 
 #define _hw_pin_adc0			, pin_pb5
 #define _hw_pin_adc1			, pin_pb2
