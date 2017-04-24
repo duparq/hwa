@@ -92,7 +92,7 @@
  * `HW_DEVICE_CLK_PSC`	 |<b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
  */
 #ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				rc_8Mhz
+#  define HW_DEVICE_CLK_SRC				rc_8MHz
 #endif
 
 #if HW_IS(external,HW_DEVICE_CLK_SRC)
@@ -604,6 +604,10 @@ typedef struct {
 #define _hw_pin_usck			, pin_pa4
 #define _hw_pin_do			, pin_pa5
 #define _hw_pin_di			, pin_pa6
+
+#define _hw_pin_usi0_ck			, pin_pa4
+#define _hw_pin_usi0_do			, pin_pa5
+#define _hw_pin_usi0_di			, pin_pa6
 
 #define _hw_pin_counter0compare0	, pin_pb2
 #define _hw_pin_counter0compare1	, pin_pa7
