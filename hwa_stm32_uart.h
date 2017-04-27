@@ -1,40 +1,226 @@
-#ifndef HWA_UART_H
-#define HWA_UART_H
+#ifndef HWA_STM32_UART_H
+#define HWA_STM32_UART_H
 
-/********************************************************************************
- *										*
- *				User definitions				*
- *										*
- *				Synchronous functions				*
- *										*
- ********************************************************************************/
 
-#define hw_uart_rx_ready(pname)			\
-  _hw_uart_rx_ready(pname)
+/************************************************************************
+ *									*
+ *			Internal definitions				*
+ *									*
+ ************************************************************************/
 
-#define _hw_uart_rx_ready(pname)		\
-  (HWA_BITS(*HWA_##pname##_SR, 0b1, 5) != 0)
+#define HWA_UART1_BASE			HWA_APB2+0x3800 /* 0x40013800 */
+#define HWA_UART2_BASE			HWA_APB1+0x4400 /* 0x40004400 */
+#define HWA_UART3_BASE			HWA_APB1+0x4800 /* 0x40004800 */
+#define HWA_UART4_BASE			HWA_APB1+0x4c00 /* 0x40004c00 */
+#define HWA_UART5_BASE			HWA_APB1+0x5000 /* 0x40005000 */
 
-#define hw_uart_data(pname)			\
-  _hw_uart_data(pname)
+#define HWA_UART_HWA_SR			volatile, u16, 0x00, 0x00C0, 0x0360
+#define HWA_UART_HWA_DR			volatile, u16, 0x04, 0x0000, 0x01FF
+#define HWA_UART_HWA_BRR		volatile, u16, 0x08, 0x0000, 0xFFFF
+#define HWA_UART_HWA_CR1		volatile, u16, 0x0C, 0x0000, 0x3FFF
+#define HWA_UART_HWA_CR2		volatile, u16, 0x10, 0x0000, 0x7F7F
+#define HWA_UART_HWA_CR3		volatile, u16, 0x14, 0x0000, 0x07FF
+#define HWA_UART_HWA_GTPR		volatile, u16, 0x18, 0x0000, 0xFFFF
 
-#define hw_uart_txreg(pname)			\
-  _hw_uart_data(pname)
+/*	Register bits definitions
+ */
+#define HWA_UART_TXC			HWA_SR, 0b1, 6
+#define HWA_UART_RXQNE			HWA_SR, 0b1, 5
+#define HWA_UART_IDLE			HWA_SR, 0b1, 4
 
-#define hw_uart_rxreg(pname)			\
-  _hw_uart_data(pname)
+#define HWA_UART_UE			HWA_CR1, 0b1, 13
+#define HWA_UART_M			HWA_CR1, 0b1, 12
+#define HWA_UART_PCE			HWA_CR1, 0b1, 10
+#define HWA_UART_PS			HWA_CR1, 0b1, 9
+#define HWA_UART_TXEIE			HWA_CR1, 0b1, 7
+#define HWA_UART_TCIE			HWA_CR1, 0b1, 6
+#define HWA_UART_RXNEIE			HWA_CR1, 0b1, 5
+#define HWA_UART_TE			HWA_CR1, 0b1, 3
+#define HWA_UART_RE			HWA_CR1, 0b1, 2
 
-#define hw_uart_tx_ready(pname)			\
-  _hw_uart_tx_ready(pname)
+#define HWA_UART_UE			HWA_CR1, 0b1, 13
+#define HWA_UART_M			HWA_CR1, 0b1, 12
+#define HWA_UART_PCE			HWA_CR1, 0b1, 10
+#define HWA_UART_PS			HWA_CR1, 0b1, 9
+#define HWA_UART_TXEIE			HWA_CR1, 0b1, 7
+#define HWA_UART_TCIE			HWA_CR1, 0b1, 6
+#define HWA_UART_RXNEIE			HWA_CR1, 0b1, 5
+#define HWA_UART_TE			HWA_CR1, 0b1, 3
+#define HWA_UART_RE			HWA_CR1, 0b1, 2
 
-#define hw_uart_getchar(pname)			\
-  hw_##pname##_getchar()
+#define HWA_UART_SBK			HWA_CR1, 0b1, 0
 
-#define hw_uart_putchar(pname, byte)		\
-  do {						\
-    while ( !hw_uart_tx_ready(pname) ) {}	\
-    *hw_uart_txreg(pname) = byte ;		\
-  } while(0)
+#define HWA_UART_STOP			HWA_CR2, 0b11, 12
+
+#define HWA_UART_IRQF_TXC		HWA_UART_TXC
+
+
+/*	Convenient registers
+ */
+#define HWA_UART_HWA_BAUD		, u32, -1, 0, 0xFFFFFFFF
+#define HWA_UART_HWA_BAUDTOL		, u16, -1, 0, 0xFFFF
+
+/*	Pins
+ */
+#define HWA_UART1_TX			PA9
+#define HWA_UART1_RX			PA10
+
+
+typedef struct {
+  HWA_PDCL()
+  HWA_VDCL(HWA_UART, HWA_SR);
+  HWA_VDCL(HWA_UART, HWA_BRR);
+  HWA_VDCL(HWA_UART, HWA_CR1);
+  HWA_VDCL(HWA_UART, HWA_CR2);
+  HWA_VDCL(HWA_UART, HWA_CR3);
+  HWA_VDCL(HWA_UART, HWA_GTPR);
+
+  HWA_VDCL(HWA_UART, HWA_BAUD);
+  HWA_VDCL(HWA_UART, HWA_BAUDTOL);
+} HWA_UART ;
+
+
+#define hwa_begin_uart(reset)			\
+  hwa_uart_begin(HWA_UART1, reset)		\
+  hwa_uart_begin(HWA_UART2, reset)		\
+  hwa_uart_begin(HWA_UART3, reset)		\
+  hwa_uart_begin(HWA_UART4, reset)		\
+  hwa_uart_begin(HWA_UART5, reset)
+
+#define hwa_uart_begin(pname, reset)		\
+  HWA_PINIT(HWA_UART, pname);			\
+  HWA_VINIT(HWA_UART, pname, HWA_SR, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_BRR, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_CR1, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_CR2, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_CR3, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_GTPR, reset);	\
+  HWA_VINIT(HWA_UART, pname, HWA_BAUD, 0);	\
+  HWA_VINIT(HWA_UART, pname, HWA_BAUDTOL, 0);
+
+#define hwa_commit_uart()			\
+  hwa_uart_commit(HWA_CORE0, HWA_UART1);	\
+  hwa_uart_commit(HWA_CORE0, HWA_UART2);	\
+  hwa_uart_commit(HWA_CORE0, HWA_UART3);	\
+  hwa_uart_commit(HWA_CORE0, HWA_UART4);	\
+  hwa_uart_commit(HWA_CORE0, HWA_UART5);
+
+
+inline void
+hwa_uart_commit ( HWA_CORE *core, HWA_UART *p )
+{
+  if ( !p->used )
+    return ;
+
+  /*	RM0008 Rev11 p. 747: BAUD = PCLK / (16 * USARTDIV)
+   *
+   *	USARTDIV = PCLK / (16 * BAUD)
+   *
+   *	PCLK == PCLK2 (i.e. APB2 clock, 72 MHz max) for USART1,
+   *	PCLK == PCLK1 (36 MHz max) for all other.
+   *
+   *	USARTDIV is coded '12.4': 12 bits mantissa, 4 bits fraction, thus the
+   *	16 bit value of this DIVISOR can be computed as:
+   *		DIVISOR = (16 * PCLK) / (16 * BAUD)
+   *	thus:
+   *		DIVISOR = PCLK / BAUD
+   *
+   *	To get the nearest rounded value:
+   *		DIVISOR = (PCLK + (BAUD+1)/2) / BAUD
+   */
+  if ( HWA_VREG(p, HWA_BAUD, mvmask) ) {
+    u32 baudrate = HWA_NVAL(p, HWA_BAUD, 0) ;
+    if ( baudrate != 0 ) {
+      u32 clkhz ;
+
+      if ( p->hwaddr == HWA_UART1_BASE )
+	clkhz = HWA_NVAL(core, HWA_APB2HZ, 0) ;
+      else
+	clkhz = HWA_NVAL(core, HWA_APB1HZ, 0) ;
+
+      if ( clkhz == 0 )
+	HWA_ERROR("Bus frequency not set.");
+    
+      u16 divisor = (clkhz + (baudrate+1)/2) / baudrate ;
+
+      //    HWA_VBSET(HWA_UART, p, HWA_UART_BRR, divisor);
+      HWA_VBSET(HWA_UART, p, HWA_BRR, -1, 0, divisor);
+    }
+  }
+
+  HWA_COMMIT(core, HWA_UART, p, HWA_SR,   -1, 0);
+  HWA_COMMIT(core, HWA_UART, p, HWA_BRR,  -1, 0);
+  HWA_COMMIT(core, HWA_UART, p, HWA_CR1,  -1, 0);
+  HWA_COMMIT(core, HWA_UART, p, HWA_CR2,  -1, 0);
+  HWA_COMMIT(core, HWA_UART, p, HWA_CR3,  -1, 0);
+  HWA_COMMIT(core, HWA_UART, p, HWA_BAUD, -1, 0);
+
+  p->used = 0 ;
+}
+
+
+/************************************************************************
+ *									*
+ *			Synchronous actions				*
+ *									*
+ ************************************************************************/
+
+
+#define hw_uart_data(pname)		HW_HR(HWA_UART, pname, HWA_DR)
+#define hw_uart_set_data(pname, value)	HW_HR(HWA_UART, pname, HWA_DR) = value
+//#define hw_uart_txq_full(pname)		(HW_HBGET(HWA_UART, pname, SR_TXE) == 0)
+#define hw_uart_txc(pname)		(HW_HBGET(HWA_UART, pname, TC) != 0)
+//#define hw_uart_rxq_empty(pname)	(HW_HBGET(HWA_UART, pname, SR_RXNE) == 0)
+
+/* #define hwa_def_uart_write(pname)				\ */
+/*   inline void HWA_G3(hw, pname, write) ( u8 *ptr, u16 n ) {	\ */
+/*     while(n--) {						\ */
+/*       while ( hw_uart_txq_full(pname) ) { }			\ */
+/*       hw_uart_data(pname) = *ptr++ ;				\ */
+/*     }								\ */
+/*   } */
+
+/* #define hwa_def_uart_read(pname)				\ */
+/*   inline void HWA_G3(hw, pname, read) ( u8 *ptr, u16 n ) {	\ */
+/*     while(n--) {						\ */
+/*       while ( hw_uart_rxq_empty(pname) ) { }			\ */
+/*       *ptr++ = hw_uart_data(pname) ;				\ */
+/*     }								\ */
+/*   } */
+
+/* #define hwa_def_uart_write(pname)			\ */
+/*   inline void HWA_G3(hw, pname, write) ( u8 c ) {	\ */
+/*     while ( hw_uart_txq_full(pname) ) { }		\ */
+/*     hw_uart_data(pname) = c ;				\ */
+/*   } */
+
+/* hwa_def_uart_write(HWA_UART1) */
+/* hwa_def_uart_write(HWA_UART2) */
+/* hwa_def_uart_write(HWA_UART3) */
+/* hwa_def_uart_write(HWA_UART4) */
+/* hwa_def_uart_write(HWA_UART5) */
+
+/* hwa_def_uart_read(HWA_UART1) */
+/* hwa_def_uart_read(HWA_UART2) */
+/* hwa_def_uart_read(HWA_UART3) */
+/* hwa_def_uart_read(HWA_UART4) */
+/* hwa_def_uart_read(HWA_UART5) */
+
+/* #define hw_uart_write(pname, ptr, n)	HWA_G3(hw, pname, write)(ptr, n) */
+/* #define hw_uart_read(pname, ptr, n)	HWA_G3(hw, pname, read)(ptr, n) */
+
+//#define hw_uart_write(pname, c)		HWA_G3(hw, pname, write)(c)
+
+#define hw_uart_read(pname)		HW_HR(HWA_UART, pname, HWA_DR)
+#define hw_uart_write(pname, c)		HW_HR(HWA_UART, pname, HWA_DR) = c
+#define hw_uart_break(pname)		HW_HBSET(HWA_UART, pname, HWA_UART_SBK, 1)
+
+#define hw_uart_turn_irq(pname, irq, state)				\
+  HW_HBSET(HWA_UART, pname, HWA_UART_IRQ_##irq, HWA_STATE_##state)
+
+#define hw_uart_clr_irq(pname, irq)\
+  HW_HBSET(HWA_UART, pname, HWA_UART_IRQF_##irq, 0)
+
 
 /********************************************************************************
  *										*
@@ -44,247 +230,95 @@
  *										*
  ********************************************************************************/
 
-#define hwa_uart_turn_irq(pname, irq, state)	\
-  _hwa_uart_turn_irq(pname, irq, state)
+#define HWA_UART_MODE_ASYNC		0
+#define HWA_UART_LINES_RXTX		0b11
+#define HWA_UART_LINES_RX		0b10
+#define HWA_UART_LINES_TX		0b01
 
-#define hwa_uart_turn_rx(pname, state)		\
-  _hwa_uart_turn_rx(pname, state)
-
-#define hwa_uart_turn_tx(pname, state)		\
-  _hwa_uart_turn_tx(pname, state)
-
-#define hwa_uart_set_baudrate(pname, baudrate)	\
-  _hwa_uart_set_baudrate(pname, baudrate)
-
-#define hwa_uart_set_databits(pname, nb)		\
-  _hwa_uart_set_databits(pname, nb)
-
-#define hwa_uart_set_parity(pname, p)			\
-  _hwa_uart_set_parity(pname, p)
-
-#define hwa_uart_turn_hwctrl(pname, hwctrl)				\
-  _hwa_uart_turn_hwctrl(pname, hwctrl)
-
-/********************************************************************************
- *										*
- *				Internal definitions				*
- *										*
- ********************************************************************************/
-
-#define HWA_USART1				HWA_APB2+0x3800 /* 0x40013800 */
-#define HWA_USART2				HWA_APB1+0x4400 /* 0x40004400 */
-#define HWA_USART3				HWA_APB1+0x4800 /* 0x40004800 */
-#define HWA_UART4				HWA_APB1+0x4c00 /* 0x40004c00 */
-#define HWA_UART5				HWA_APB1+0x5000 /* 0x40005000 */
-
-#define HWA_IRQN_USART1				37
-
-#if 0
-#define HW_UART_SR(pname)			(*(volatile u32 *)(HWA_##pname+0x00))
-#define HW_UART_DR(pname)			(*(volatile u32 *)(HWA_##pname+0x04))
-#define HW_UART_BRR(pname)			(*(volatile u32 *)(HWA_##pname+0x08))
-#define HW_UART_CR1(pname)			(*(volatile u32 *)(HWA_##pname+0x0C))
-#define HW_UART_CR2(pname)			(*(volatile u32 *)(HWA_##pname+0x10))
-#define HW_UART_CR3(pname)			(*(volatile u32 *)(HWA_##pname+0x14))
-#define HW_UART_GTPR(pname)			(*(volatile u32 *)(HWA_##pname+0x18))
-#endif
-
-#define HWA_USART1_SR			((volatile u32 *)(HWA_USART1+0x00))
-#define HWA_USART1_DR			((volatile u32 *)(HWA_USART1+0x04))
-#define HWA_USART1_BRR			((volatile u32 *)(HWA_USART1+0x08))
-#define HWA_USART1_CR1			((volatile u32 *)(HWA_USART1+0x0C))
-#define HWA_USART1_CR2			((volatile u32 *)(HWA_USART1+0x10))
-#define HWA_USART1_CR3			((volatile u32 *)(HWA_USART1+0x14))
-#define HWA_USART1_GTPR			((volatile u32 *)(HWA_USART1+0x18))
-
-#define HWA_USART2_SR			((volatile u32 *)(HWA_USART2+0x00))
-#define HWA_USART2_DR			((volatile u32 *)(HWA_USART2+0x04))
-#define HWA_USART2_BRR			((volatile u32 *)(HWA_USART2+0x08))
-#define HWA_USART2_CR1			((volatile u32 *)(HWA_USART2+0x0C))
-#define HWA_USART2_CR2			((volatile u32 *)(HWA_USART2+0x10))
-#define HWA_USART2_CR3			((volatile u32 *)(HWA_USART2+0x14))
-#define HWA_USART2_GTPR			((volatile u32 *)(HWA_USART2+0x18))
-
-#define HWA_USART3_SR			((volatile u32 *)(HWA_USART3+0x00))
-#define HWA_USART3_DR			((volatile u32 *)(HWA_USART3+0x04))
-#define HWA_USART3_BRR			((volatile u32 *)(HWA_USART3+0x08))
-#define HWA_USART3_CR1			((volatile u32 *)(HWA_USART3+0x0C))
-#define HWA_USART3_CR2			((volatile u32 *)(HWA_USART3+0x10))
-#define HWA_USART3_CR3			((volatile u32 *)(HWA_USART3+0x14))
-#define HWA_USART3_GTPR			((volatile u32 *)(HWA_USART3+0x18))
-
-#define HWA_UART4_SR			((volatile u32 *)(HWA_UART4+0x00))
-#define HWA_UART4_DR			((volatile u32 *)(HWA_UART4+0x04))
-#define HWA_UART4_BRR			((volatile u32 *)(HWA_UART4+0x08))
-#define HWA_UART4_CR1			((volatile u32 *)(HWA_UART4+0x0C))
-#define HWA_UART4_CR2			((volatile u32 *)(HWA_UART4+0x10))
-#define HWA_UART4_CR3			((volatile u32 *)(HWA_UART4+0x14))
-#define HWA_UART4_GTPR			((volatile u32 *)(HWA_UART4+0x18))
-
-#define HWA_UART5_SR			((volatile u32 *)(HWA_UART5+0x00))
-#define HWA_UART5_DR			((volatile u32 *)(HWA_UART5+0x04))
-#define HWA_UART5_BRR			((volatile u32 *)(HWA_UART5+0x08))
-#define HWA_UART5_CR1			((volatile u32 *)(HWA_UART5+0x0C))
-#define HWA_UART5_CR2			((volatile u32 *)(HWA_UART5+0x10))
-#define HWA_UART5_CR3			((volatile u32 *)(HWA_UART5+0x14))
-#define HWA_UART5_GTPR			((volatile u32 *)(HWA_UART5+0x18))
-
-/*	Registers declarations: pname, type, address, reset value, write mask
- */
-#define hwa_uart_begin_uart(pname, state)				\
-  HWA_DECL(pname##_SR,   u32, HWA_##pname+0x00, 0x00000000, 0x00000360, state) \
-  HWA_DECL(pname##_DR,   u32, HWA_##pname+0x04, 0x00000000, 0x00000100, state) \
-  HWA_DECL(pname##_BRR,  u32, HWA_##pname+0x08, 0x00000000, 0x0000FFFF, state) \
-  HWA_DECL(pname##_CR1,  u32, HWA_##pname+0x0C, 0x00000000, 0x000003FF, state) \
-  HWA_DECL(pname##_CR2,  u32, HWA_##pname+0x10, 0x00000000, 0x00007F7F, state) \
-  HWA_DECL(pname##_CR3,  u32, HWA_##pname+0x14, 0x00000000, 0x000007FF, state) \
-  HWA_DECL(pname##_GTPR, u32, HWA_##pname+0x18, 0x00000000, 0x0000FFFF, state)
-
-  /* _HWA_UART_DEF_GETCHAR(pname) */
-
-/* _HWA_UART_DEF_GETCHAR(USART1) */
-/* _HWA_UART_DEF_GETCHAR(USART2) */
-/* _HWA_UART_DEF_GETCHAR(USART3) */
-/* _HWA_UART_DEF_GETCHAR(UART4) */
-/* _HWA_UART_DEF_GETCHAR(UART5) */
-
-#define hwa_uart_begin(state)			\
-  hwa_uart_begin_uart(USART1, state)		\
-  hwa_uart_begin_uart(USART2, state)		\
-  hwa_uart_begin_uart(USART3, state)		\
-  hwa_uart_begin_uart(UART4, state)		\
-  hwa_uart_begin_uart(UART5, state)
-
-#define hwa_uart_commit_uart(dry, pname)		\
-  HWA_COMMIT(dry, pname##_SR)				\
-  HWA_COMMIT(dry, pname##_DR)				\
-  HWA_COMMIT(dry, pname##_BRR)			\
-  HWA_COMMIT(dry, pname##_CR1)			\
-  HWA_COMMIT(dry, pname##_CR2)			\
-  HWA_COMMIT(dry, pname##_CR3)			\
-  HWA_COMMIT(dry, pname##_GTPR)
-
-#define hwa_uart_commit(dry, )			\
-  hwa_uart_commit_uart(dry, USART1)		\
-  hwa_uart_commit_uart(dry, USART2)		\
-  hwa_uart_commit_uart(dry, USART3)		\
-  hwa_uart_commit_uart(dry, UART4)		\
-  hwa_uart_commit_uart(dry, UART5)
+#define HWA_UART_NBITS_8BITS		0
+#define HWA_UART_NBITS_9BITS		1
+#define HWA_UART_PARITY_NOPARITY	0
+#define HWA_UART_PARITY_EVENPARITY	1
+#define HWA_UART_PARITY_ODDPARITY	2
+#define HWA_UART_STOPS_0STOP5		0b101
+#define HWA_UART_STOPS_1STOP		0b100
+#define HWA_UART_STOPS_1STOP5		0b111
+#define HWA_UART_STOPS_2STOP		0b110
 
 
-/*	RM0008 Rev11 p. 747: BAUD = PCLK / (16 * USARTDIV)
- *
- *	USARTDIV = PCLK / (16 * BAUD)
- *
- *	PCLK == PCLK2 (i.e. APB2 clock, 72 MHz max) for USART1,
- *	PCLK == PCLK1 (36 MHz max) for all other.
- *
- *	USARTDIV is coded '12.4': 12 bits mantissa, 4 bits fraction, thus the
- *	16 bit value of this DIVISOR can be computed as:
- *		DIVISOR = (16 * PCLK) / (16 * BAUD)
- *	thus:
- *		DIVISOR = PCLK / BAUD
- *
- *	To get the nearest rounded value:
- *		DIVISOR = (PCLK + (BAUD+1)/2) / BAUD
- */
-#define _hwa_uart_set_baudrate(pname, baudrate)				\
-  if (HWA_##pname == HWA_USART1) {					\
-    HWA_SET(pname##_BRR, 0xffff, 0, (APB2_HZ + (baudrate+1)/2) / baudrate); \
-  } else {								\
-    HWA_SET(pname##_BRR, 0xffff, 0, (APB1_HZ + (baudrate+1)/2) / baudrate); \
-  }
+#define hwa_uart_set_mode(pptr, mode, lines, nbits, parity, stops)	\
+  do {									\
+    hwa_prph_turn_clk(pptr, ON);					\
+    /*									\
+     *	Start configuration from RESET defaults				\
+     */									\
+    HWA_VINIT(HWA_UART, pptr, HWA_CR1, 1);				\
+    HWA_VINIT(HWA_UART, pptr, HWA_CR2, 1);				\
+    HWA_VINIT(HWA_UART, pptr, HWA_CR3, 1);				\
+									\
+    if (HWA_UART_MODE_##mode == HWA_UART_MODE_ASYNC) {			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_UE, 1);				\
+    } else {								\
+      HWA_ERROR("UART Mode not supported yet.");			\
+    }									\
+    									\
+    if ( HWA_UART_LINES_##lines & 0b10 ) {				\
+      hwa_gpio_config_pin(HWA_G2(pptr, RX), INPUT);			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_RE, 1);				\
+    }									\
+    else {								\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_RE, 0);				\
+    }									\
+    									\
+    if ( HWA_UART_LINES_##lines & 0b01 ) {				\
+      hwa_gpio_config_pin(HWA_G2(pptr, TX), ALTOUTPUT);			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_TE, 1);				\
+    }									\
+    else {								\
+      hwa_gpio_config_pin(HWA_G2(pptr, TX), INPUT);			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_TE, 0);				\
+    }									\
+    									\
+    if (HWA_UART_NBITS_##nbits == HWA_UART_NBITS_8BITS)			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_M, 0);				\
+    else								\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_M, 1);				\
+    									\
+    if (HWA_UART_PARITY_##parity == HWA_UART_PARITY_NOPARITY)		\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_PCE, 0);			\
+    else if (HWA_UART_PARITY_##parity == HWA_UART_PARITY_EVENPARITY) {	\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_PCE, 1);			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_PS, 0);				\
+    } else {								\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_PCE, 1);			\
+      HWA_VBSET(HWA_UART, pptr, HWA_UART_PS, 1);				\
+    }									\
+    									\
+    HWA_VBSET(HWA_UART, pptr, HWA_UART_STOP, HWA_UART_STOPS_##stops);	\
+    									\
+  } while(0)
 
 
-#define _hwa_uart_set_databits(pname, nb)		\
-  HWA_SET(pname##_CR1, 0b1,  12, HWA_UARTM_##nb)
+#define hwa_uart_set_baud(pptr, baudrate, baudtol)		\
+  do {								\
+    hwa_prph_turn_clk(pptr, ON);				\
+    HWA_VBSET(HWA_UART, pptr, HWA_BAUD, -1, 0, baudrate);	\
+    HWA_VBSET(HWA_UART, pptr, HWA_BAUDTOL, -1, 0, baudtol);	\
+  } while(0)
 
-#define HWA_UARTM_8				0
-#define HWA_UARTM_9				1
 
-#define _hwa_uart_turn_irq(pname, irq, state)				\
-  HWA_SET(pname##_CR1, 0b1, HWA_UART_IRQBIT_##irq, HWA_STATE_##state)
+#define rem_hwa_uart_turn_irq(pptr, irq, state)				\
+  HWA_VBSET(HWA_UART, pptr, HWA_CR2, 0b1, HWA_UART_IRQ_##irq, HWA_STATE_##state)
 
-#define HWA_UART_IRQBIT_RX			5
+#define hwa_uart_turn_irq(pptr, irq, state)				\
+  HWA_VBSET(HWA_UART, pptr, HWA_UART_IRQ_##irq, HWA_STATE_##state)
 
-#define _hwa_uart_turn_rx(pname, state)			\
-  HWA_SET(pname##_CR1, 0b1, 2, HWA_STATE_##state)
+/* #define HWA_UART_IRQ_TX			7 */
+/* #define HWA_UART_IRQ_TXC		6 */
+/* #define HWA_UART_IRQ_RX			5 */
 
-#define _hwa_uart_turn_tx(pname, state)			\
-  HWA_SET(pname##_CR1, 0b1, 3, HWA_STATE_##state)
-
-#define hwa_uart_config_txpin(pname, mode)				\
-  _hwa_gpio_config_pins(PORTA, 1<<9, HWA_UART_TXPIN_ALTOUTPUT_##mode);
-
-#define HWA_UART_TXPIN_ALTOUTPUT_PUSHPULL_10MHZ		0b10010
-#define HWA_UART_TXPIN_ALTOUTPUT_PUSHPULL_2MHZ		0b10100
-#define HWA_UART_TXPIN_ALTOUTPUT_PUSHPULL_50MHZ		0b10110
-#define HWA_UART_TXPIN_ALTOUTPUT_OPENDRAIN_10MHZ	0b11010
-#define HWA_UART_TXPIN_ALTOUTPUT_OPENDRAIN_2MHZ		0b11100
-#define HWA_UART_TXPIN_ALTOUTPUT_OPENDRAIN_50MHZ	0b11110
-
-#define hwa_uart_config_rxpin(pname, mode)				\
-  _hwa_gpio_config_pins(PORTA, 1<<10, HWA_UART_RXPIN_INPUT_##mode);
-#define HWA_UART_RXPIN_INPUT_FLOATING			0b01000
-#define HWA_UART_RXPIN_INPUT_PULLDOWN			0b10000
-#define HWA_UART_RXPIN_INPUT_PULLUP			0b10001
-
-#define hwa_uart_set_stopbits(pname, nb)			\
-  HWA_SET(pname##_CR2, 0b11, 12, HWA_UART_SB_##nb)
-#define HWA_UART_SB_0_5				0b01
-#define HWA_UART_SB_1				0b00
-#define HWA_UART_SB_1_5				0b11
-#define HWA_UART_SB_2				0b10
-
-#define _hwa_uart_set_parity(pname, p)			\
-  HWA_SET(pname##_CR2, 0b11,  9, HWA_UART_PARITY_##p)
-#define HWA_UART_PARITY_NONE			0b00
-#define HWA_UART_PARITY_EVEN			0b10
-#define HWA_UART_PARITY_ODD			0b11
-
-#define _hwa_uart_turn_hwctrl(pname, hwctrl)				\
-  if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_OFF) {		\
-    HWA_SET(pname##_CR3, 0b1,   9, 0);					\
-    HWA_SET(pname##_CR3, 0b1,   8, 0);					\
-  } else if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_CTS_ON) {	\
-    HWA_SET(pname##_CR3, 0b1,   9, 1);					\
-  } else if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_CTS_OFF) {	\
-    HWA_SET(pname##_CR3, 0b1,   9, 0);					\
-  } else if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_RTS_ON) {	\
-    HWA_SET(pname##_CR3, 0b1,   8, 1);					\
-  } else if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_RTS_OFF) {	\
-    HWA_SET(pname##_CR3, 0b1,   8, 0);					\
-    HWA_SET(pname##_CR3, 0b1,   8, 1);					\
-  } else if (HWA_UART_HWCTRL_##hwctrl == HWA_UART_HWCTRL_ON) {		\
-    HWA_SET(pname##_CR3, 0b1,   9, 1);					\
-    HWA_SET(pname##_CR3, 0b1,   8, 1);					\
-  }
-
-#define HWA_UART_HWCTRL_OFF		0
-#define HWA_UART_HWCTRL_CTS_ON		1
-#define HWA_UART_HWCTRL_CTS_OFF		2
-#define HWA_UART_HWCTRL_RTS_ON		3
-#define HWA_UART_HWCTRL_RTS_OFF		4
-#define HWA_UART_HWCTRL_ON		5
-
-#define _hw_uart_data(pname)			\
-  HWA_##pname##_DR
-
-#define _hw_uart_tx_ready(pname)		\
-  (HWA_BITS(*HWA_##pname##_SR, 0b1, 7) != 0)
-
-#define _HW_UART_DEF_GETCHAR(pname)		\
-  inline u8					\
-  hw_##pname##_getchar()			\
-  {						\
-    while ( !hw_uart_rx_ready(pname) ) {}	\
-    return *hw_uart_rxreg(pname) ;		\
-  }
-
-_HW_UART_DEF_GETCHAR(USART1)
-_HW_UART_DEF_GETCHAR(USART2)
-_HW_UART_DEF_GETCHAR(USART3)
-_HW_UART_DEF_GETCHAR(UART4)
-_HW_UART_DEF_GETCHAR(UART5)
+#define HWA_UART_IRQ_TX			HWA_CR1, 0b1, 7
+#define HWA_UART_IRQ_TXC		HWA_CR1, 0b1, 6
+#define HWA_UART_IRQ_RX			HWA_CR1, 0b1, 5
 
 #endif

@@ -2,16 +2,10 @@
 /*	This file is included by hwa.c
 */
 
-#include "types.h"
 #include "hwa.h"
-#include "xfuncs.h"
 
-extern unsigned long _sidata;
-extern unsigned long _edata;
-extern unsigned long _sdata;
-
-extern u32 _ebss[] ;
-extern u32 _sbss[] ;
+extern u32 _sbss [] ;
+extern u32 _ebss [] ;
 
 extern void (*const isr_vector[]) (void) ;
 
@@ -20,45 +14,43 @@ extern void	main(void);
 
 #define WEAK	__attribute__((weak))
 
-#if defined HWA_ISR_FAULTBITS
-u32	hwa_faultbits[3] ;
-
-static void hwa_faultbit ( u8 fb )
-{
-  xassert(fb < 8*sizeof(hwa_faultbits));
-
-  u8 b = 2 - fb / 32 ;
-  u8 n = fb % 32 ;
-  hwa_faultbits[b] |= (1<<n) ;
 
 #if defined HWA_ISR_FAULT_LOOP
-  isr_loop();
-#elif defined HWA_ISR_FAULT_EXIT
-  hwa_exit(HWA_EXIT_ESR + n);
-#endif
-}
-
-#endif
-
-
-#if defined HWA_ISR_FAULTBITS
-#  define ESR(n) { hwa_faultbit(n); }
-#  define ISR(n) { hwa_faultbit(10 + n); }
-#elif defined HWA_ISR_FAULT_LOOP
-void __attribute__((noreturn)) isr_loop ( ) {  while(1) {} }
 #  define ESR(n) { isr_loop(); }
 #  define ISR(n) { isr_loop(); }
 #elif defined HWA_ISR_FAULT_EXIT
 #  define ESR(n) { hwa_exit(HWA_EXIT_ESR + n); }
 #  define ISR(n) { hwa_exit(HWA_EXIT_ISR + n); }
 #elif defined HWA_ISR_FAULT_RETURN
-void isr_return ( ) {}
+//#  define HWA_ISR_FAULT_DEFAULT	isr_return
 #  define ESR(n) { isr_return(); }
 #  define ISR(n) { isr_return(); }
+//#  define ESR(n) ;
+//#  define ISR(n) ;
 #else
 #  define ESR(n) ;
 #  define ISR(n) ;
 #endif
+
+
+void __attribute__((noreturn))
+isr_loop ( )
+{
+  while(1) {}
+}
+
+
+void __attribute__((noreturn))
+isr_exit ( )
+{
+  hwa_exit(HWA_EXIT_ISR);
+}
+
+
+void
+isr_return ( )
+{
+}
 
 
 void
@@ -68,12 +60,12 @@ HWA_ESR_RESET ( )
    *
    *	Note: this is done by GDB.
    */
-#if 0 && START >= HWA_RAM_START && START <= HWA_RAM_END
-    __asm__ volatile (
-		      "mov sp,%[stackptr]"
-		      :: [stackptr] "r" (isr_vector[0]) : "sp"
-		      );
-#endif
+/* #if START >= HWA_RAM_START && START <= HWA_RAM_END */
+/*     __asm__ volatile ( */
+/* 		      "mov sp,%[stackptr]" */
+/* 		      :: [stackptr] "r" (isr_vector[0]) : "sp" */
+/* 		      ); */
+/* #endif */
 
   /*	When booting from SRAM, in the application initialization code, you have
    *	to relocate the vector table in SRAM using the NVIC exception table and
@@ -81,9 +73,7 @@ HWA_ESR_RESET ( )
    *
    *	Note: having it done by GDB does not work.
    */
-    *(u32*)0xE000ED08 = (u32)&isr_vector ;	/* SCB_VTOR */
-    /* *(u32*)0xE000ED08 = 0x08000000 ; */
-
+    *(u32*)0xE000ED08 = (u32)isr_vector ;	/* SCB_VTOR */
 
   /*	Zero-fill the bss segment.
    */
@@ -109,11 +99,7 @@ HWA_ESR_RESET ( )
     *dst = *src ;
 #endif
 
-#ifdef ROMLIB
-  // rom_main();
-#else
   main();
-#endif
   hwa_exit(HWA_EXIT_MAIN);
 }
 
