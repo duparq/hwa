@@ -71,8 +71,8 @@
 #define _hwx_pwr1_0(o,x,v)	HW_E(`o` does not support power management)
 
 
-#define _hw_mthd_hw_power		, _hw_power
-#define _hw_mthd_hwa_power		, _hwa_power
+#define _hw_mtd_hw_power		, _hw_power
+#define _hw_mtd_hwa_power		, _hwa_power
 
 
 /**
@@ -377,7 +377,7 @@ HW_INLINE void _hwa_commit__r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Boo
 #define _hw_read__r8(ra,rbn,rbp) (((*(volatile uint8_t*)(ra))>>(rbp))&((1U<<(rbn))-1))
 
 
-#define _hw_mthd_hw_read__r16		, _hw_read_r16
+#define _hw_mtd_hw_read__r16		, _hw_read_r16
 //#define _hw_read_r16(o,a,wm,fm,...)	_hw_read__r16(a,16,0)
 #define _hw_read_r16(o,a,wm,fm,...)	*(volatile uint16_t*)a
 
@@ -506,10 +506,10 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*  Clear an interrupt flag by writing 1 into it
  */
-#define _hw_mthd_hw_clear__m1		, _hw_clear_m1
+#define _hw_mtd_hw_clear__m1		, _hw_clear_m1
 
 #define _hw_clear_m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,...)	_hw_write_##rc(ra,rwm,rfm,rbn,rbp,1)
 
-#define _hw_mthd_hwa_clear__m1		, _hwa_clear_m1
+#define _hw_mtd_hwa_clear__m1		, _hwa_clear_m1
 
 #define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1)

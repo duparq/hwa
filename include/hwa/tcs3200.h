@@ -64,8 +64,8 @@
  */
 #define _hw_class__tcs3200
 
-#define _hw_mthd_hw_configure__tcs3200	, _hw_cft3k2
-#define _hw_mthd_hwa_configure__tcs3200	, _hwa_cft3k2
+#define _hw_mtd_hw_configure__tcs3200	, _hw_cft3k2
+#define _hw_mtd_hwa_configure__tcs3200	, _hwa_cft3k2
 
 
 #define _hw_t3k2_fq_0			, 0, 0	/* S1, S0 */

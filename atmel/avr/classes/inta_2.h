@@ -24,7 +24,7 @@
  *		     | rising_edge  );
  * @endcode
  */
-#define _hw_mthd_hw_configure__inta	, _hw_cfinta
+#define _hw_mtd_hw_configure__inta	, _hw_cfinta
 #define _hw_cfinta( o,i,a, ...)		_hwx_cfinta(_hw,o,__VA_ARGS__,)
 
 
@@ -42,7 +42,7 @@
  *		      | rising_edge  );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__inta	, _hwa_cfinta
+#define _hw_mtd_hwa_configure__inta	, _hwa_cfinta
 #define _hwa_cfinta( o,i,a, ...)	_hwx_cfinta(_hwa,o,__VA_ARGS__,)
 
 

@@ -53,7 +53,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__spia	, _hwa_cfspia
+#define _hw_mtd_hwa_configure__spia	, _hwa_cfspia
 
 /*	Mandatory parameter `mode`
  */
@@ -171,7 +171,7 @@
  * hw( read, spi0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__spia		, _hw_read_spia
+#define _hw_mtd_hw_read__spia		, _hw_read_spia
 #define _hw_read_spia(o,i,a,...)	HW_TX(_hw_read_reg(o,dr),__VA_ARGS__)
 
 
@@ -181,7 +181,7 @@
  * hw_write( spi0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__spia		, _hw_wrspia
+#define _hw_mtd_hw_write__spia		, _hw_wrspia
 #define _hw_wrspia(o,i,a,v,...)		HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__)
 
 /* #define _hw_wrspia(o,i,a,v,...)						\ */
@@ -204,7 +204,7 @@
 /*  * hwa_write( spi0, value ); */
 /*  * @endcode */
 /*  *\/ */
-/* #define _hw_mthd_hwa_write__spia	, _hwa_write_spia */
+/* #define _hw_mtd_hwa_write__spia	, _hwa_write_spia */
 /* #define _hwa_write_spia(o,i,a,v)	_hwa_write_reg(o,dr,v) */
 
 
@@ -218,7 +218,7 @@
  * hw_turn( spi0, on | off );
  * @endcode
  */
-#define _hw_mthd_hw_turn__spia		, _hw_turn_spia
+#define _hw_mtd_hw_turn__spia		, _hw_turn_spia
 
 #define _hw_turn_spia(o,i,a, ...)					\
   HW_X(_hw_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
@@ -233,7 +233,7 @@
  * hwa_turn( spi0, on | off );
  * @endcode
  */
-#define _hw_mthd_hwa_turn__spia		, _hwa_turn_spia
+#define _hw_mtd_hwa_turn__spia		, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,i,a, ...)					\
   HW_X(_hwa_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
@@ -281,8 +281,8 @@
  *   n_collisions++ ;
  * @endcode
  */
-#define _hw_mthd_hw_stat__spia		, _hw_stat_spia
-#define _hw_mthd_hw_stat_t__spia	, _hw_statt_spia
+#define _hw_mtd_hw_stat__spia		, _hw_stat_spia
+#define _hw_mtd_hw_stat_t__spia	, _hw_statt_spia
 
 #define _hw_statt_spia(o,i,a,...)	HW_TX(_hw_spia_stat_t, __VA_ARGS__)
 

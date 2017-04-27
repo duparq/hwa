@@ -172,14 +172,14 @@
  * @hideinitializer
  *
  * @code
- * #define hw_myfunc(...)			HW_MTHD(hw_myfunc, __VA_ARGS__,)
- * #define _hw_mthd_hw_myfunc__aclass(...)	, _hw_myfunc_aclass
+ * #define hw_myfunc(...)			HW_MTD(hw_myfunc, __VA_ARGS__,)
+ * #define _hw_mtd_hw_myfunc__aclass(...)	, _hw_myfunc_aclass
  * @endcode
  *
  * makes the instruction `hw_myfunc()` accept an object of class `_aclass` as
  * first argument and expand as `_hw_myfunc_aclass(o,i,a,...)`.
  *
- * `HW_MTHD()` verifies the existence of the object and its class method. An
+ * `HW_MTD()` verifies the existence of the object and its class method. An
  * explicit error message is produced if the object does not exist or if the
  * method is not supported by its class.
  *
@@ -192,26 +192,26 @@
  * in order to avoid a compiler warning.
  */
 
-#define HW_MTHD(...)		_HW_MTHD1(__VA_ARGS__)
+#define HW_MTD(...)		_HW_MTD1(__VA_ARGS__)
 
 /*  Get the definition of the object o. This will return the class in first
  *  position or void is an error occured.
  */
-#define _HW_MTHD1(f,o,...)	_HW_MTHD2(f,HW_O(o),__VA_ARGS__)
-#define _HW_MTHD2(...)		_HW_MTHD3(__VA_ARGS__)
-#define _HW_MTHD3(f,c,...)	HW_X(_HW_MTHD3,c)(f,c,__VA_ARGS__)
-#define _HW_MTHD3_1(...)	//HW_E_OM()
+#define _HW_MTD1(f,o,...)	_HW_MTD2(f,HW_O(o),__VA_ARGS__)
+#define _HW_MTD2(...)		_HW_MTD3(__VA_ARGS__)
+#define _HW_MTD3(f,c,...)	HW_X(_HW_MTD3,c)(f,c,__VA_ARGS__)
+#define _HW_MTD3_1(...)	//HW_E_OM()
 
 /*  Is there a method f for object o of class c?
  */
-#define _HW_MTHD3_0(f,c,...)	HW_X(_HW_MTHD4,_hw_mthd_##f##_##c)(f,c,__VA_ARGS__)
+#define _HW_MTD3_0(f,c,...)	HW_X(_HW_MTD4,_hw_mtd_##f##_##c)(f,c,__VA_ARGS__)
 
-#define _HW_MTHD4_1(f,c,...)	HW_A1(_hw_mthd_##f##_##c)(__VA_ARGS__)
+#define _HW_MTD4_1(f,c,...)	HW_A1(_hw_mtd_##f##_##c)(__VA_ARGS__)
 
 /*  Is there a method f for object o?
  */
-#define _HW_MTHD4_0(f,c,o,...)	HW_X(_HW_MTHD5,_hw_mthd_##f##_##o)(f,c,o,__VA_ARGS__)
-#define _HW_MTHD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
+#define _HW_MTD4_0(f,c,o,...)	HW_X(_HW_MTD5,_hw_mtd_##f##_##o)(f,c,o,__VA_ARGS__)
+#define _HW_MTD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
 
 
 /**
@@ -221,10 +221,10 @@
  *
  * This is used for internal instructions.
  */
-#define _HW_MTHD(...)		__HW_MTHD1(__VA_ARGS__)
-#define __HW_MTHD1(f,o,...)	__HW_MTHD2(f,o,_hw_def_##o,__VA_ARGS__)
-#define __HW_MTHD2(...)		__HW_MTHD3(__VA_ARGS__)
-#define __HW_MTHD3(f,o,c,...)	HW_A1(_hw_mthd_##f##_##c)(o,__VA_ARGS__)
+#define _HW_MTD(...)		__HW_MTD1(__VA_ARGS__)
+#define __HW_MTD1(f,o,...)	__HW_MTD2(f,o,_hw_def_##o,__VA_ARGS__)
+#define __HW_MTD2(...)		__HW_MTD3(__VA_ARGS__)
+#define __HW_MTD3(f,o,c,...)	HW_A1(_hw_mtd_##f##_##c)(o,__VA_ARGS__)
 
 
 
@@ -394,13 +394,13 @@
 
 /*  Look for a method x_f for object o of class c.
  */
-#define _hwx4_0(h,f,c,...)	HW_X(_hwx5,_hw_mthd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
-#define _hwx5_1(h,f,c,...)	HW_A1(_hw_mthd_##h##_##f##_##c)(__VA_ARGS__)
+#define _hwx4_0(h,f,c,...)	HW_X(_hwx5,_hw_mtd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
+#define _hwx5_1(h,f,c,...)	HW_A1(_hw_mtd_##h##_##f##_##c)(__VA_ARGS__)
 
 /*  Look for a global method
  */
-#define _hwx5_0(h,f,...)	HW_X(_hwx6,_hw_mthd_##h##_##f)(h,f,__VA_ARGS__)
-#define _hwx6_1(h,f,...)	HW_A1(_hw_mthd_##h##_##f)(__VA_ARGS__)
+#define _hwx5_0(h,f,...)	HW_X(_hwx6,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
+#define _hwx6_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
 #define _hwx6_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
 
 
@@ -414,8 +414,8 @@
 
 /*  Look for a method x_f for object o of class c.
  */
-#define __hw4_0(f,c,...)	HW_X(__hw41,_hw_mthd_hw_##f##_##c)(f,c,__VA_ARGS__)
-#define __hw41_1(f,c,...)	HW_A1(_hw_mthd_hw_##f##_##c)(__VA_ARGS__)
+#define __hw4_0(f,c,...)	HW_X(__hw41,_hw_mtd_hw_##f##_##c)(f,c,__VA_ARGS__)
+#define __hw41_1(f,c,...)	HW_A1(_hw_mtd_hw_##f##_##c)(__VA_ARGS__)
 #define __hw41_0(f,c,o,...)	HW_E_OCM(o,c,hw_##f)
 
 
@@ -432,8 +432,8 @@
 
 /*  Look for a method x_f for object o of class c.
  */
-#define __hwa4_0(f,c,...)	HW_X(__hwa41,_hw_mthd_hwa_##f##_##c)(f,c,__VA_ARGS__)
-#define __hwa41_1(f,c,...)	HW_A1(_hw_mthd_hwa_##f##_##c)(__VA_ARGS__)
+#define __hwa4_0(f,c,...)	HW_X(__hwa41,_hw_mtd_hwa_##f##_##c)(f,c,__VA_ARGS__)
+#define __hwa41_1(f,c,...)	HW_A1(_hw_mtd_hwa_##f##_##c)(__VA_ARGS__)
 #define __hwa41_0(f,c,o,...)	HW_E_OCM(o,c,hwa_##f)
 
 #if 0
@@ -631,14 +631,14 @@
 #if defined DOXYGEN
 #  define HW_ADDRESS(object)
 #else
-#  define HW_ADDRESS(...)		HW_MTHD(HW_ADDRESS, __VA_ARGS__,)
+#  define HW_ADDRESS(...)		HW_MTD(HW_ADDRESS, __VA_ARGS__,)
 #endif
 
 
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
-#define _hw_mthd_HW_ADDRESS__m1		, _HW_ADDRESS__m1
+#define _hw_mtd_HW_ADDRESS__m1		, _HW_ADDRESS__m1
 
 
 /**
@@ -659,10 +659,10 @@
 #if defined DOXYGEN
 #  define HW_BITS(object)
 #else
-#  define HW_BITS(...)			HW_MTHD(HW_BITS, __VA_ARGS__,)
+#  define HW_BITS(...)			HW_MTD(HW_BITS, __VA_ARGS__,)
 #endif
 
-#define _hw_mthd_HW_BITS__m1		, _HW_BITS__m1
+#define _hw_mtd_HW_BITS__m1		, _HW_BITS__m1
 
 #define _HW_BITS__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
 
@@ -677,10 +677,10 @@
 #if defined DOXYGEN
 #  define HW_POSITION(object)
 #else
-#  define HW_POSITION(...)				HW_MTHD(HW_POSITION, __VA_ARGS__,)
+#  define HW_POSITION(...)				HW_MTD(HW_POSITION, __VA_ARGS__,)
 #endif
 
-#define _hw_mthd_HW_POSITION__m1	, _HW_POSITION__m1
+#define _hw_mtd_HW_POSITION__m1	, _HW_POSITION__m1
 
 #define _HW_POSITION__m1(o,a, r,rw,ra,rwm,rfm, bn,bp,...)	bp
 
@@ -804,9 +804,9 @@
 #define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
 #define _HW_REL5(o,x,c,...)		HW_X(_HW_REL5,_hw_class_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL5_1(o,x,c,...)		HW_X(_HW_REL6,_hw_mthd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
+#define _HW_REL5_1(o,x,c,...)		HW_X(_HW_REL6,_hw_mtd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mthd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
+#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mtd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
 
 /**
  * @ingroup private_ins

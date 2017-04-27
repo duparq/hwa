@@ -36,7 +36,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_BITS__io1a			, _HW_BITS__io1a
+#define _hw_mtd_HW_BITS__io1a			, _HW_BITS__io1a
 
 #define _HW_BITS__io1a(o,i, cn,bn,bp,...)	bn
 
@@ -53,7 +53,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_POSITION__io1a		, _HW_POSITION__io1a
+#define _hw_mtd_HW_POSITION__io1a		, _HW_POSITION__io1a
 
 #define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
 
@@ -70,7 +70,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_RELATIVE__io1a		, _HW_REL_io1a
+#define _hw_mtd_HW_RELATIVE__io1a		, _HW_REL_io1a
 
 #define _hw_is_port_port
 

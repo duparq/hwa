@@ -60,7 +60,7 @@
  *    );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c16a	, _hwa_cfc16a
+#define _hw_mtd_hwa_configure__c16a	, _hwa_cfc16a
 
 /*  Mandatory argument `clock`
  *
@@ -622,7 +622,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
  * hw( read, counter0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__c16a		, _hw_read_c16a
+#define _hw_mtd_hw_read__c16a		, _hw_read_c16a
 #define _hw_read_c16a(o,i,a,...)	HW_TX(_hw_read_reg(o,count),__VA_ARGS__)
 
 
@@ -632,7 +632,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
  * hw( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__c16a		, _hw_write_c16a
+#define _hw_mtd_hw_write__c16a		, _hw_write_c16a
 #define _hw_write_c16a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,count,v),__VA_ARGS__)
 
 /**
@@ -641,7 +641,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
  * hwa( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__c16a	, _hwa_write_c16a
+#define _hw_mtd_hwa_write__c16a	, _hwa_write_c16a
 #define _hwa_write_c16a(o,i,a,v)	_hwa_write_reg(o,count,v)
 
 

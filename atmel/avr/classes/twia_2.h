@@ -33,7 +33,7 @@
  *	    );
  * @endcode
  */
-#define _hw_mthd_hw_configure__twia	, _hw_cftwia
+#define _hw_mtd_hw_configure__twia	, _hw_cftwia
 #define _hw_cftwia( o,i,a, ... )		_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
 /**
@@ -56,7 +56,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__twia	, _hwa_cftwia
+#define _hw_mtd_hwa_configure__twia	, _hwa_cftwia
 #define _hwa_cftwia( o,i,a, ... )		_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 \
 
@@ -185,15 +185,15 @@
  * hw( tx_stop, twi0 [,irq] );		// Transmit STOP condition
  * @endcode
  */
-#define _hw_mthd_hw_tx_start__twia	, _hw_twia_txstart
+#define _hw_mtd_hw_tx_start__twia	, _hw_twia_txstart
 #define _hw_twia_txstart(o,i,a,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
-#define _hw_mthd_hw_tx_stop__twia	, _hw_twia_txstop
+#define _hw_mtd_hw_tx_stop__twia	, _hw_twia_txstop
 #define _hw_twia_txstop(o,i,a,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
-#define _hw_mthd_hw_tx_slaw__twia	, _hw_twia_txslaw
+#define _hw_mtd_hw_tx_slaw__twia	, _hw_twia_txslaw
 #define _hw_twia_txslaw(o,i,a,...)	HW_X(_hw_twia_txslawv,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
 #define _hw_twia_txslawv_0(o,v,k,...)					\
@@ -205,7 +205,7 @@
   } while(0)
 
 
-#define _hw_mthd_hw_tx_slar__twia	, _hw_twia_txslar
+#define _hw_mtd_hw_tx_slar__twia	, _hw_twia_txslar
 #define _hw_twia_txslar(o,i,a,...)	HW_G2(_hw_twia_vtxslar,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
 #define _hw_twia_vtxslar_0(o,v,k,...)					\
@@ -217,7 +217,7 @@
   } while(0)
 
 
-#define _hw_mthd_hw_tx_data__twia	, _hw_twia_txdata
+#define _hw_mtd_hw_tx_data__twia	, _hw_twia_txdata
 #define _hw_twia_txdata(o,i,a,...)	HW_G2(_hw_twia_txdatav,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_twia_txdatav_1(...)		HW_E(missing value)
 #define _hw_twia_txdatav_0(o,v,k,...)					\
@@ -227,7 +227,7 @@
   } while(0)
 
 
-#define _hw_mthd_hw_tx_read__twia	, _hw_twia_txread
+#define _hw_mtd_hw_tx_read__twia	, _hw_twia_txread
 #define _hw_twia_txread(o,i,a,...)	HW_X(_hw_twia_txread_ack,_hw_is_ack_##__VA_ARGS__)(o,__VA_ARGS__,,)
 #define _hw_twia_txread_ack_1(o,ok,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
 #define _hw_twia_txread_ack_0(o,...)	HW_X(_hw_twia_txread_nack,_hw_is_nack_##__VA_ARGS__)(o,__VA_ARGS__)
@@ -253,7 +253,7 @@
  * uint8_t byte = hw( read, twi0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__twia		, _hw_rdtwia
+#define _hw_mtd_hw_read__twia		, _hw_rdtwia
 #define _hw_rdtwia(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__)
 
 
@@ -273,7 +273,7 @@
  *
  * Predefined TWI status symbols are:
  */
-#define _hw_mthd_hw_stat__twia		, _hw_stat_twia
+#define _hw_mtd_hw_stat__twia		, _hw_stat_twia
 #define _hw_stat_twia(o,i,a,...)	HW_TX((_hw_read_reg(o,sr)&0xF8), __VA_ARGS__)
 
 

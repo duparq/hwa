@@ -31,7 +31,7 @@
  *	       );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__corea	, _hwa_cfcorea
+#define _hw_mtd_hwa_configure__corea	, _hwa_cfcorea
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
@@ -112,7 +112,7 @@
  * }
  * @endcode
  */
-#define _hw_mthd_hw_stat__corea		, _hw_stat_corea
+#define _hw_mtd_hw_stat__corea		, _hw_stat_corea
 
 /*  FIXME intf0 should be there
  */
@@ -154,7 +154,7 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define _hw_mthd_hwa_clear__corea	, _hwa_clear_corea
+#define _hw_mtd_hwa_clear__corea	, _hwa_clear_corea
 
 #define _hwa_clear_corea(o,i,a,...)	_hwa_write_reg(o,allrf,0)
 

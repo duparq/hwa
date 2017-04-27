@@ -39,7 +39,7 @@
  *  seems acceptable to make the configuration instructions of the ADC or of the
  *  ACMP drive the analog multiplexer.
  */
-#define _hw_mthd_hwa_configure__acmpa	, _hwa_cfacmpa
+#define _hw_mtd_hwa_configure__acmpa	, _hwa_cfacmpa
 
 /*  Optionnal parameter `edge`
  */

@@ -3,8 +3,8 @@
 
 #define _hw_class__tcs3200a
 
-#define _hw_mthd_hwa_configure__tcs3200a	, _hwa_cft3k2a
-#define _hw_mthd_hw_read_channel__tcs3200a	, _hw_rdt3k2a
+#define _hw_mtd_hwa_configure__tcs3200a	, _hwa_cft3k2a
+#define _hw_mtd_hw_read_channel__tcs3200a	, _hw_rdt3k2a
 
 /* TODO
  *  * Verify that the capture/compare have the same counting unit
@@ -52,7 +52,7 @@
 
 #define HW_IMPLEMENT(...)		hw(implement,__VA_ARGS__)
 
-#define _hw_mthd_hw_implement__tcs3200a		, _hw_imt3k2a
+#define _hw_mtd_hw_implement__tcs3200a		, _hw_imt3k2a
 
 #define _hw_imt3k2a(o,i,a,...)		HW_X(_hw_imt3k2a,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_imt3k2a_0(o,g,...)		HW_E_G(g)

@@ -28,7 +28,7 @@
  */
 /*  TODO: complete this.
  */
-#define _hw_mthd_hw_configure__cap16a	, _hw_cfcap16a
+#define _hw_mtd_hw_configure__cap16a	, _hw_cfcap16a
 
 #define hw_cap16a_input_pin_icp			, 1
 #define hw_cap16a_input_acmp0			, 2
@@ -71,7 +71,7 @@
  *               | off ] );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cap16a		, _hwa_cfcap16a
+#define _hw_mtd_hwa_configure__cap16a		, _hwa_cfcap16a
 
 #define _hwa_cfcap16a(o,i,a,...) do { HW_X(_hwa_cfcap16a_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__) } while(0)
 
@@ -118,7 +118,7 @@
  * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cap16a	, _hw_read_cap16a
+#define _hw_mtd_hw_read__cap16a	, _hw_read_cap16a
 #define _hw_read_cap16a(o,i,a,...)	HW_TX( _hw_read_reg(o,reg), __VA_ARGS__ )
 
 
@@ -129,7 +129,7 @@
  * hw_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cap16a	, _hw_write_cap16a
+#define _hw_mtd_hw_write__cap16a	, _hw_write_cap16a
 #define _hw_write_cap16a(o,i,a,v,...)		HW_TX( _hw_write_reg(o,reg,v), __VA_ARGS__ )
 
 /**
@@ -139,7 +139,7 @@
  * hwa_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cap16a	, _hwa_write_cap16a
+#define _hw_mtd_hwa_write__cap16a	, _hwa_write_cap16a
 #define _hwa_write_cap16a(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,reg,v), __VA_ARGS__ )
 
 

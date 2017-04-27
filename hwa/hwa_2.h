@@ -144,15 +144,15 @@
 #define _hwa_write_reg(o,r,v)		_HW_SPEC(_hwa_write, _HW_M(o,r), v)
 
 
-#define _hw_mthd_hw_read__m1		, _hw_read__m1
-#define _hw_mthd_hw_read__m2		, _hw_read__m2
-#define _hw_mthd_hw_write__m1		, _hw_write__m1
-#define _hw_mthd_hw_write__m2		, _hw_write__m2
-#define _hw_mthd_hwa_write__m1		, _hwa_write__m1
-#define _hw_mthd_hwa_write__m2		, _hwa_write__m2
-#define _hw_mthd_hwa_write__r8		, _hwa_write__r8
-#define _hw_mthd_hwa_write__oreg	, _hwa_write_oreg
-#define _hw_mthd_hwa_write__xob1	, _hwa__write__xob1
+#define _hw_mtd_hw_read__m1		, _hw_read__m1
+#define _hw_mtd_hw_read__m2		, _hw_read__m2
+#define _hw_mtd_hw_write__m1		, _hw_write__m1
+#define _hw_mtd_hw_write__m2		, _hw_write__m2
+#define _hw_mtd_hwa_write__m1		, _hwa_write__m1
+#define _hw_mtd_hwa_write__m2		, _hwa_write__m2
+#define _hw_mtd_hwa_write__r8		, _hwa_write__r8
+#define _hw_mtd_hwa_write__oreg	, _hwa_write_oreg
+#define _hw_mtd_hwa_write__xob1	, _hwa__write__xob1
 
 
 /**

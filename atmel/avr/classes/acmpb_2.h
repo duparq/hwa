@@ -39,7 +39,7 @@
  *  seems acceptable to make the configuration instructions of the ADC or the
  *  ACMP drive the analog multiplexer transparently.
  */
-#define _hw_mthd_hwa_configure__acmpb	, _hwa_cfacmpb
+#define _hw_mtd_hwa_configure__acmpb	, _hwa_cfacmpb
 
 /*  Optionnal parameter `edge`
  */
@@ -114,8 +114,8 @@
   HW_EOL(__VA_ARGS__)
 
 
-#define _hw_mthd_hw_power__acmpb	, _hw_power
-#define _hw_mthd_hwa_power__acmpb	, _hwa_power
+#define _hw_mtd_hw_power__acmpb	, _hw_power
+#define _hw_mtd_hwa_power__acmpb	, _hwa_power
 
 
 /*******************************************************************************

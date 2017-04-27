@@ -265,8 +265,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  *	     );
  * @endcode
  */
-#define _hw_mthd_hw_configure__swuarta	, _hw_cfswuarta
-#define _hw_mthd_hwa_configure__swuarta	, _hwa_cfswuarta
+#define _hw_mtd_hw_configure__swuarta	, _hw_cfswuarta
+#define _hw_mtd_hwa_configure__swuarta	, _hwa_cfswuarta
 
 /*  Configuration of the relatives is easier inside a function to handle
  *  undeclared pins.
@@ -406,7 +406,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  * uint8_t byte = hw( read, UART ); // Clears the 'rxc' status flag
  * @endcode
  */
-#define _hw_mthd_hw_read__swuarta	, _hw_swuarta_read
+#define _hw_mtd_hw_read__swuarta	, _hw_swuarta_read
 #define _hw_swuarta_read(o,i,a,...)	HW_TX(_hw_##o##_getbyte(),__VA_ARGS__)
 
 #if defined hw_swuart0_pin_rxd
@@ -436,7 +436,7 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
  * hw_write( UART, '#' ); // Clears the 'txc' status flag
  * @endcode
  */
-#define _hw_mthd_hw_write__swuarta	, _hw_swuarta_write
+#define _hw_mtd_hw_write__swuarta	, _hw_swuarta_write
 #define _hw_swuarta_write(o,i,a,v,...)	HW_TX(_hw_##o##_putbyte(v),__VA_ARGS__)
 
 #if defined hw_swuart0_pin_txd
@@ -485,10 +485,10 @@ typedef struct {
 } _hw_swuarta_stat_t ;
 
 
-#define _hw_mthd_hw_stat_t__swuarta	, _hw_sttswuarta
+#define _hw_mtd_hw_stat_t__swuarta	, _hw_sttswuarta
 #define _hw_sttswuarta(o,i,a,...)	HW_TX( _hw_swuarta_stat_t, __VA_ARGS__)
 
-#define _hw_mthd_hw_stat__swuarta	, _hw_stswuarta
+#define _hw_mtd_hw_stat__swuarta	, _hw_stswuarta
 #define _hw_stswuarta(o,i,a,...)					\
   HW_TX( (*(volatile _hw_swuarta_stat_t*)_HW_A(_HW_M(o,sr))), __VA_ARGS__)
 
@@ -502,7 +502,7 @@ typedef struct {
  *`hw( clear, UART )`;
  * @endcode
  */
-#define _hw_mthd_hw_clear__swuarta	, _hw_clear__swuarta
+#define _hw_mtd_hw_clear__swuarta	, _hw_clear__swuarta
 #define _hw_clear__swuarta(o,i,a,...)		HW_TX(_hw_clear_swuarta(o),__VA_ARGS__)
 #define _hw_clear_swuarta( o )					\
   do {								\
@@ -521,7 +521,7 @@ typedef struct {
  * hw( reset, UART );
  * @endcode
  */
-#define _hw_mthd_hw_reset__swuarta	, _hw_swuarta_reset
+#define _hw_mtd_hw_reset__swuarta	, _hw_swuarta_reset
 #define _hw_swuarta_reset(o,i,a,...)		HW_TX(_hw_##o##_##reset(),__VA_ARGS__)
 
 

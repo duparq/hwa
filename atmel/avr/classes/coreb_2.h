@@ -33,7 +33,7 @@
  *	       );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__coreb	, _hwa_cfcoreb
+#define _hw_mtd_hwa_configure__coreb	, _hwa_cfcoreb
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
@@ -124,7 +124,7 @@
  * }
  * @endcode
  */
-#define _hw_mthd_hw_stat__coreb		, _hw_stat_coreb
+#define _hw_mtd_hw_stat__coreb		, _hw_stat_coreb
 
 typedef union {
   uint8_t	  byte ;
@@ -145,7 +145,7 @@ typedef union {
 } _hw_coreb_stat_t ;
 
 
-#define _hw_mthd_hw_stat_t__coreb	, _hw_coreb_stat_t
+#define _hw_mtd_hw_stat_t__coreb	, _hw_coreb_stat_t
 #define _hw_stat_coreb(o,i,a,...)	HW_TX(_hw_coreb_stat(_hw_read_reg(o, mcusr)),__VA_ARGS__)
 
 
@@ -166,7 +166,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define _hw_mthd_hwa_clear__coreb	, _hwa_clear__coreb
+#define _hw_mtd_hwa_clear__coreb	, _hwa_clear__coreb
 
 #define _hwa_clear__coreb(o,i,a,...)	_hwa_write_reg(o,allrf,0)
 

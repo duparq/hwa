@@ -80,7 +80,7 @@ extern void ets_isr_unmask(unsigned intr);
  * @endcode
  * @hideinitializer
  */
-#define _hw_mthd_os_handle_irq__irq	, _os_handle_irq
+#define _hw_mtd_os_handle_irq__irq	, _os_handle_irq
 
 #define os_handle_irq(...)		_os_handleirq_2(hw_irqx(__VA_ARGS__,))
 #define _os_handleirq_2(...)		HW_G2(_os_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)

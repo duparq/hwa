@@ -42,7 +42,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_BITS__c8b		, _hw_bn_c8b
+#define _hw_mtd_HW_BITS__c8b		, _hw_bn_c8b
 #define _hw_bn_c8b(o,i,a,...)		8
 
 /**

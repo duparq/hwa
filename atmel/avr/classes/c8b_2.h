@@ -57,7 +57,7 @@
  *     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c8b	, _hwa_cfc8b
+#define _hw_mtd_hwa_configure__c8b	, _hwa_cfc8b
 
 /*  Mandatory argument `clock`
  *
@@ -188,7 +188,7 @@
  * hw( read, counter0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__c8b		, _hw_c8brd
+#define _hw_mtd_hw_read__c8b		, _hw_c8brd
 #define _hw_c8brd(o,i,a,...)		HW_TX( _hw_read_reg(o,count), __VA_ARGS__)
 
 /**
@@ -197,7 +197,7 @@
  * hw( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__c8b		, _hw_c8bwr
+#define _hw_mtd_hw_write__c8b		, _hw_c8bwr
 #define _hw_c8bwr(o,i,a,v,...)		HW_TX( _hw_write_reg(o,count,v), __VA_ARGS__)
 
 /**
@@ -206,7 +206,7 @@
  * hwa( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__c8b		, _hwa_c8bwr
+#define _hw_mtd_hwa_write__c8b		, _hwa_c8bwr
 #define _hwa_c8bwr(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,count,v), __VA_ARGS__)
 
 

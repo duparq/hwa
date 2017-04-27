@@ -30,7 +30,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hw_configure__cap16b	, _hw_cfcap16b
+#define _hw_mtd_hw_configure__cap16b	, _hw_cfcap16b
 
 #define hw_cap16b_input_pin_icp			, 1
 #define hw_cap16b_input_acmp0			, 2
@@ -74,7 +74,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cap16b	, _hwa_cfcap16b
+#define _hw_mtd_hwa_configure__cap16b	, _hwa_cfcap16b
 
 #define _hwa_cfcap16b(o,i,a,...)						\
   do {									\
@@ -129,7 +129,7 @@
  * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cap16b	, _hw_read_cap16a
+#define _hw_mtd_hw_read__cap16b	, _hw_read_cap16a
 
 
 /**
@@ -139,7 +139,7 @@
  * hw_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cap16b	, _hw_write_cap16a
+#define _hw_mtd_hw_write__cap16b	, _hw_write_cap16a
 
 /**
  * @page atmelavr_cap16b
@@ -148,7 +148,7 @@
  * hwa_write( capture0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cap16b	, _hwa_write_cap16a
+#define _hw_mtd_hwa_write__cap16b	, _hwa_write_cap16a
 
 
 /**

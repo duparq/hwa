@@ -312,19 +312,19 @@ where:
    cleared by writing 1 into it)
 
 
-Class methods {#porting_cmthd}
+Class methods {#porting_cmtd}
 =============
 
 A class method is "called" when a generic instruction is applied to an object
 whose class has declared that it supports the instruction by the means of a
-symbol made of the prefix `_hw_mthd_`, the instruction name, an underscore `_`,
+symbol made of the prefix `_hw_mtd_`, the instruction name, an underscore `_`,
 the class name.
 
 For example, to declare that the class `_wdoga` supports the generic instruction
 `hw(reset,...)`, the following symbol must be defined:
 
 @code
-#define _hw_mthd_hw_reset__wdoga	, _hw_rstwdoga
+#define _hw_mtd_hw_reset__wdoga	, _hw_rstwdoga
 @endcode
 
 The definition contains two elements:
@@ -375,7 +375,7 @@ file `atmel/avr/classes/c8a_2.h`.
 First, the method has to be declared:
 
 @code
-#define _hw_mthd_hwa_config__c8a	, _hwa_config_c8a
+#define _hw_mtd_hwa_config__c8a	, _hwa_config_c8a
 @endcode
 
 The instruction `hwa( configure, counter0, ... )` will then be translated to

@@ -32,7 +32,7 @@
  * @endcode
  */
 
-#define _hw_mthd_hwa_configure__cmp8b	, _hwa_cfcmp8b
+#define _hw_mtd_hwa_configure__cmp8b	, _hwa_cfcmp8b
 
 
 /*  Optionnal argument `update`
@@ -123,7 +123,7 @@
  * hw_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cmp8b	, _hw_wrcmp8b
+#define _hw_mtd_hw_write__cmp8b	, _hw_wrcmp8b
 #define _hw_wrcmp8b(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v), __VA_ARGS__)
 
 /**
@@ -133,7 +133,7 @@
  * hwa_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cmp8b	, _hwa_wrcmp8b
+#define _hw_mtd_hwa_write__cmp8b	, _hwa_wrcmp8b
 #define _hwa_wrcmp8b(o,i,a,v,...)	HW_TX(_hwa_write_reg(o,reg,v), __VA_ARGS__)
 
 
@@ -146,7 +146,7 @@
  * uint16_t ocr = hw( read, compare0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cmp8b		, _hw_read_cmp8b
+#define _hw_mtd_hw_read__cmp8b		, _hw_read_cmp8b
 #define _hw_read_cmp8b(o,i,a,...)	HW_TX(_hw_read_reg(o,reg),__VA_ARGS__)
 
 

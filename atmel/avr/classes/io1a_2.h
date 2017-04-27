@@ -9,12 +9,12 @@
  * @brief I/O
  */
 
-#define _hw_mthd_hw_configure__io1a	, _hw_cfio1a
-#define _hw_mthd_hwa_configure__io1a	, _hwa_cfio1a
-#define _hw_mthd_hw_read__io1a		, _hw_read_io1a
-#define _hw_mthd_hw_write__io1a		, _hw_write_io1a
-#define _hw_mthd_hwa_write__io1a	, _hwa_write_io1a
-#define _hw_mthd_hw_toggle__io1a	, _hw_toggle_io1a
+#define _hw_mtd_hw_configure__io1a	, _hw_cfio1a
+#define _hw_mtd_hwa_configure__io1a	, _hwa_cfio1a
+#define _hw_mtd_hw_read__io1a		, _hw_read_io1a
+#define _hw_mtd_hw_write__io1a		, _hw_write_io1a
+#define _hw_mtd_hwa_write__io1a	, _hwa_write_io1a
+#define _hw_mtd_hw_toggle__io1a	, _hw_toggle_io1a
 
 
 /**

@@ -152,7 +152,7 @@
 
 #if !defined __ASSEMBLER__
 
-#define _hw_mthd_hw_turn__irq		, _hw_turn_irq
+#define _hw_mtd_hw_turn__irq		, _hw_turn_irq
 
 /**
  * @ingroup private_ins
@@ -166,7 +166,7 @@
   HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
-#define _hw_mthd_hwa_turn__irq		, _hwa_turn_irq
+#define _hw_mtd_hwa_turn__irq		, _hwa_turn_irq
 
 /**
  * @ingroup private_ins
@@ -185,7 +185,7 @@
  * @brief  Clears an IRQ flag.
  * @hideinitializer
  */
-#define _hw_mthd_hw_clear__irq		, _hw_clear_irq
+#define _hw_mtd_hw_clear__irq		, _hw_clear_irq
 
 #define _hw_clear_irq(v,p,e,f,...)	HW_TX(_hw_write_reg(p,f,1),__VA_ARGS__)
 
@@ -195,7 +195,7 @@
  * @brief  Clears an irq flag.
  * @hideinitializer
  */
-#define _hw_mthd_hwa_clear__irq		, _hwa_clear_irq
+#define _hw_mtd_hwa_clear__irq		, _hwa_clear_irq
 
 #define _hwa_clear_irq(v,p,e,f,...)	HW_TX(_hwa_write_reg(p,f,1),__VA_ARGS__)
 

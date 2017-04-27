@@ -32,7 +32,7 @@
  * @endcode
  */
 
-#define _hw_mthd_hwa_configure__dtga	, _hwa_cfdtga
+#define _hw_mtd_hwa_configure__dtga	, _hwa_cfdtga
 
 
 /*  Optionnal argument `clock_div`

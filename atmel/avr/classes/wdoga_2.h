@@ -38,7 +38,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__wdoga	, _hwa_cfwdoga
+#define _hw_mtd_hwa_configure__wdoga	, _hwa_cfwdoga
 
 /*    Optionnal argument `timeout`
  */
@@ -101,7 +101,7 @@
  *		      | off );
  * @endcode
  */
-#define _hw_mthd_hw_turn__wdoga		, _hw_turn_wdoga
+#define _hw_mtd_hw_turn__wdoga		, _hw_turn_wdoga
 
 #define _hw_turn_wdoga(o,i,a, v)			\
   HW_X(_hw_turn_wdoga,_hw_state_##v)(o,v)
@@ -147,7 +147,7 @@
  *		       | off );
  * @endcode
  */
-#define _hw_mthd_hwa_turn__wdoga	, _hwa_turn_wdoga
+#define _hw_mtd_hwa_turn__wdoga	, _hwa_turn_wdoga
 
 #define _hwa_turn_wdoga(o,i,a, ...)					\
   HW_X(_hwa_turn_wdoga,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__,)
@@ -177,7 +177,7 @@
  * hw_reset( watchdog0 );
  * @endcode
  */
-#define _hw_mthd_hw_reset__wdoga	, _hw_rstwdoga
+#define _hw_mtd_hw_reset__wdoga	, _hw_rstwdoga
 
 #define _hw_rstwdoga(o,i,a,...)			HW_TX(hw_asm("wdr"::),__VA_ARGS__)
 

@@ -47,8 +47,8 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hw_config__tm23a	, _hw_cftm23a
-#define _hw_mthd_hwa_config__tm23a	, _hwa_cftm23a
+#define _hw_mtd_hw_config__tm23a	, _hw_cftm23a
+#define _hw_mtd_hwa_config__tm23a	, _hwa_cftm23a
 
 #define _hw_cftm23a(o,i,a,...)						\
   do{									\
@@ -198,7 +198,7 @@
  * uint32_t count = hw( read, timer0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__tm23a		, _hw_rdtm23a
+#define _hw_mtd_hw_read__tm23a		, _hw_rdtm23a
 #define _hw_rdtm23a(o,i,a,...)		HW_TX(_hw_read_reg(o,_count),__VA_ARGS__)
 
 
@@ -211,7 +211,7 @@
  * hw_write( timer0, VALUE );
  * @endcode
  */
-#define _hw_mthd_hw_write__tm23a	, _hw_wrtm23a
+#define _hw_mtd_hw_write__tm23a	, _hw_wrtm23a
 #define _hw_wrtm23a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,_count,v),__VA_ARGS__)
 
 

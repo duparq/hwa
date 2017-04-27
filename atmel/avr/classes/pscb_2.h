@@ -35,7 +35,7 @@
  *
  * __Note 5__ The PLL is never stopped once it has been turned on.
  */
-#define _hw_mthd_hwa_configure__pscb	, _hwa_cfpscb
+#define _hw_mtd_hwa_configure__pscb	, _hwa_cfpscb
 
 /*  Mandatory argument `clock`
  *
@@ -90,7 +90,7 @@
  * hw_reset( prescaler0 );
  * @endcode
  */
-#define _hw_mthd_hw_reset__pscb		, _hw_pscb_reset
+#define _hw_mtd_hw_reset__pscb		, _hw_pscb_reset
 
 #define _hw_pscb_reset(o,i,a, ...)	_hw_write_reg(o,psr,1)
 

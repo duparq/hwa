@@ -33,7 +33,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hw_configure__cmp8a	, _hw_cfcmp8a
+#define _hw_mtd_hw_configure__cmp8a	, _hw_cfcmp8a
 
 /*  Mandatory parameter `output`
  */
@@ -98,7 +98,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__cmp8a	, _hwa_cfcmp8a
+#define _hw_mtd_hwa_configure__cmp8a	, _hwa_cfcmp8a
 
 /*  Optionnal parameter `update`
  */
@@ -149,7 +149,7 @@
  * hw_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__cmp8a	, _hw_write_cmp8a
+#define _hw_mtd_hw_write__cmp8a	, _hw_write_cmp8a
 #define _hw_write_cmp8a(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v),__VA_ARGS__)
 
 
@@ -160,7 +160,7 @@
  * hwa_write( compare0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__cmp8a	, _hwa_write_cmp8a
+#define _hw_mtd_hwa_write__cmp8a	, _hwa_write_cmp8a
 #define _hwa_write_cmp8a(o,i,a,v,...)		HW_TX(_hwa_write_reg(o,reg,v),__VA_ARGS__)
 
 
@@ -173,7 +173,7 @@
  * uint16_t ocr = hw( read, compare0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__cmp8a		, _hw_read_cmp8a
+#define _hw_mtd_hw_read__cmp8a		, _hw_read_cmp8a
 #define _hw_read_cmp8a(o,i,a,...)		HW_TX(_hw_read_reg(o,reg),__VA_ARGS__)
 
 
@@ -187,7 +187,7 @@
  * hw_trigger( compare0 );
  * @endcode
  */
-#define _hw_mthd_hw_trigger__cmp8a	, _hw_trigger_cmp8a
+#define _hw_mtd_hw_trigger__cmp8a	, _hw_trigger_cmp8a
 #define _hw_trigger_cmp8a(o,i,a)			_hw_write_reg(o,force,1)
 
 /**
@@ -197,7 +197,7 @@
  * hwa_trigger( compare0 );
  * @endcode
  */
-#define _hw_mthd_hwa_trigger__cmp8a	, _hwa_trigger_cmp8a
+#define _hw_mtd_hwa_trigger__cmp8a	, _hwa_trigger_cmp8a
 #define _hwa_trigger_cmp8a(o,i,a)		_hwa_write_reg(o,force,1)
 
 

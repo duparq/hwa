@@ -56,7 +56,7 @@
  *    );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__c8a	, _hwa_cfc8a
+#define _hw_mtd_hwa_configure__c8a	, _hwa_cfc8a
 
 /*  Mandatory argument `clock`
  *
@@ -566,7 +566,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hw( read, counter0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__c8a		, _hw_read_c8a
+#define _hw_mtd_hw_read__c8a		, _hw_read_c8a
 #define _hw_read_c8a(o,i,a,...)		HW_TX(_hw_read_reg(o,count),__VA_ARGS__)
 
 
@@ -576,7 +576,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hw( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hw_write__c8a		, _hw_write_c8a
+#define _hw_mtd_hw_write__c8a		, _hw_write_c8a
 #define _hw_write_c8a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,count,v),__VA_ARGS__)
 
 /**
@@ -585,7 +585,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hwa( write, counter0, value );
  * @endcode
  */
-#define _hw_mthd_hwa_write__c8a		, _hwa_write_c8a
+#define _hw_mtd_hwa_write__c8a		, _hwa_write_c8a
 #define _hwa_write_c8a(o,i,a,v,...)	HW_TX(_hwa_write_reg(o,count,v),__VA_ARGS__)
 
 

@@ -41,8 +41,8 @@
  * `hw(configure,)` or `hwa(configure,...)` instruction on the I/O pin.
  *
  */
-#define _hw_mthd_hw_config__uarta	, _hw_cfuarta
-#define _hw_mthd_hwa_config__uarta	, _hwa_cfuarta
+#define _hw_mtd_hw_config__uarta	, _hw_cfuarta
+#define _hw_mtd_hwa_config__uarta	, _hwa_cfuarta
 
 #define _hw_cfuarta(o,i,a,...)						\
   do{									\
@@ -152,7 +152,7 @@
  * uint8_t byte = hw( read, uart0 );
  * @endcode
  */
-/* #define _hw_mthd_hw_read__uarta	, _hw_rduarta */
+/* #define _hw_mtd_hw_read__uarta	, _hw_rduarta */
 /* #define _hw_rduarta(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__) */
 
 
@@ -168,14 +168,14 @@
  * hw_write( uart0, '#' );
  * @endcode
  */
-/* #define _hw_mthd_hw_write__uarta	, _hw_wruarta */
+/* #define _hw_mtd_hw_write__uarta	, _hw_wruarta */
 /* #define _hw_wruarta(o,i,a,v,...)	HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__) */
 
 
 /*  Power management
  */
-/* #define _hw_mthd_hw_power__uarta	, _hw_power */
-/* #define _hw_mthd_hwa_power__uarta	, _hwa_power */
+/* #define _hw_mtd_hw_power__uarta	, _hw_power */
+/* #define _hw_mtd_hwa_power__uarta	, _hwa_power */
 
 
 /*
@@ -220,10 +220,10 @@
 /*   }; */
 /* } _hw_uarta_stat_t ; */
 
-/* #define _hw_mthd_hw_stat_t__uarta	, _hw_sttuarta */
+/* #define _hw_mtd_hw_stat_t__uarta	, _hw_sttuarta */
 /* #define _hw_sttuarta(o,i,a,...)		HW_TX( _hw_uarta_stat_t, __VA_ARGS__) */
 
-/* #define _hw_mthd_hw_stat__uarta	, _hw_stuarta */
+/* #define _hw_mtd_hw_stat__uarta	, _hw_stuarta */
 /* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read_reg(o,csra)), \ */
 /*					      __VA_ARGS__) */
 

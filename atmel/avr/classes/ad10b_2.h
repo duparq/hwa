@@ -69,7 +69,7 @@
  *		 | temperature );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__ad10b	, _hwa_cfad10b
+#define _hw_mtd_hwa_configure__ad10b	, _hwa_cfad10b
 
 /*	Mandatory parameter 'clock'
  */
@@ -228,8 +228,8 @@
 
 /*  Power management
  */
-#define _hw_mthd_hw_power__ad10b	, _hw_power
-#define _hw_mthd_hwa_power__ad10b	, _hwa_power
+#define _hw_mtd_hw_power__ad10b	, _hw_power
+#define _hw_mtd_hwa_power__ad10b	, _hwa_power
 
 
 /**
@@ -247,7 +247,7 @@
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mthd_hw_turn__ad10b		, _hw_turn_ad10_
+#define _hw_mtd_hw_turn__ad10b		, _hw_turn_ad10_
 
 
 /**
@@ -257,7 +257,7 @@
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mthd_hwa_turn__ad10b	, _hwa_turn_ad10_
+#define _hw_mtd_hwa_turn__ad10b	, _hwa_turn_ad10_
 
 
 /**
@@ -268,7 +268,7 @@
  * hw( trigger, adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_trigger__ad10b	, _hw_trigger_ad10_
+#define _hw_mtd_hw_trigger__ad10b	, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10b
@@ -277,7 +277,7 @@
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define _hw_mthd_hwa_trigger__ad10b	, _hwa_trigger_ad10_
+#define _hw_mtd_hwa_trigger__ad10b	, _hwa_trigger_ad10_
 
 
 /**
@@ -288,7 +288,7 @@
  * uint16_t adc = hw( read, adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__ad10b		, _hw_rdad10_
+#define _hw_mtd_hw_read__ad10b		, _hw_rdad10_
 
 /**
  * @page atmelavr_ad10b
@@ -297,7 +297,7 @@
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_atomic_read__ad10b	, _hw_ardad10_
+#define _hw_mtd_hw_atomic_read__ad10b	, _hw_ardad10_
 
 
 /**
@@ -323,7 +323,7 @@
  *   hw_trigger( adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_stat__ad10b		, _hw_stat_ad10_
+#define _hw_mtd_hw_stat__ad10b		, _hw_stat_ad10_
 
 
 /*******************************************************************************

@@ -102,7 +102,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__ad10c	, _hwa_cfad10c
+#define _hw_mtd_hwa_configure__ad10c	, _hwa_cfad10c
 
 /*  Mandatory parameter `clock`
  */
@@ -357,7 +357,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mthd_hw_turn__ad10c		, _hw_turn_ad10_
+#define _hw_mtd_hw_turn__ad10c		, _hw_turn_ad10_
 
 /**
  * @page atmelavr_ad10c
@@ -365,7 +365,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mthd_hwa_turn__ad10c	, _hwa_turn_ad10_
+#define _hw_mtd_hwa_turn__ad10c	, _hwa_turn_ad10_
 
 
 /**
@@ -376,7 +376,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( trigger, adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_trigger__ad10c	, _hw_trigger_ad10_
+#define _hw_mtd_hw_trigger__ad10c	, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10c
@@ -384,7 +384,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define _hw_mthd_hwa_trigger__ad10c	, _hwa_trigger_ad10_
+#define _hw_mtd_hwa_trigger__ad10c	, _hwa_trigger_ad10_
 
 
 /**
@@ -400,7 +400,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint8_t adc = hw( read, adc0, lo8 | hi8 );
  * @endcode
  */
-#define _hw_mthd_hw_read__ad10c		, _hw_rdad10_
+#define _hw_mtd_hw_read__ad10c		, _hw_rdad10_
 
 
 /**
@@ -413,7 +413,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_atomic_read__ad10c	, _hw_ardad10_
+#define _hw_mtd_hw_atomic_read__ad10c	, _hw_ardad10_
 
 
 /**
@@ -439,7 +439,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *   hw_trigger( adc0 );
  * @endcode
  */
-#define _hw_mthd_hw_stat__ad10c		, _hw_stat_ad10_
+#define _hw_mtd_hw_stat__ad10c		, _hw_stat_ad10_
 
 
 /*******************************************************************************

@@ -40,7 +40,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mthd_HW_BITS__cmp16a		, _hw_bn_cmp16a
+#define _hw_mtd_HW_BITS__cmp16a		, _hw_bn_cmp16a
 #define _hw_bn_cmp16a(o,i,a,...)			16
 
 

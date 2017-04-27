@@ -33,7 +33,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__usia	, _hwa_cfusia
+#define _hw_mtd_hwa_configure__usia	, _hwa_cfusia
 
 #define _hw_usia_mode_disconnected	, 1
 #define _hw_usia_mode_spi_master	, 2
@@ -95,7 +95,7 @@
  * uint8_t byte = hw( read, usi0 );
  * @endcode
  */
-#define _hw_mthd_hw_read__usia		, _hw_rdusia
+#define _hw_mtd_hw_read__usia		, _hw_rdusia
 
 /*  FIXME: the datasheet advices using br instead of dr but does not tell at
  *  what moment br is valid. Reading br returns weird values...
@@ -110,7 +110,7 @@
  * hw_write( usi0, 'A' );
  * @endcode
  */
-#define _hw_mthd_hw_write__usia		, _hw_wrusia
+#define _hw_mtd_hw_write__usia		, _hw_wrusia
 
 #define _hw_wrusia(o,i,a,v,...)		HW_TX( _hw_write_reg( o, dr, v ), __VA_ARGS__ )
 
@@ -126,7 +126,7 @@
 
  /* FIXME: 2 types of clocking should be handled. Look at the datasheet. */
 
-#define _hw_mthd_hw_trigger__usia	, _hw_tgusia
+#define _hw_mtd_hw_trigger__usia	, _hw_tgusia
 
 #define _hw_tgusia(o,i,a,...)		HW_TX( _hw_write_reg(o,tc,1),__VA_ARGS__ )
 
@@ -142,7 +142,7 @@
  * hw( configure, SPI );
  * @endcode
  */
-#define _hw_mthd_hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
+#define _hw_mtd_hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(p,i,o,...)		\
   HW_TX( _hwa_docfspimswclk(o), __VA_ARGS__ )
@@ -167,7 +167,7 @@
  * uint8_t byte = hw( read, SPI );
  * @endcode
  */
-#define _hw_mthd_hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
+#define _hw_mtd_hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
 
 #define _hw_rdspimswclk(o,i,usio,...)		HW_TX( _hw_read_reg( usio, dr ), __VA_ARGS__ )
 
@@ -180,7 +180,7 @@
  * hw_write( spimaster0_swclk, 'A' );
  * @endcode
  */
-#define _hw_mthd_hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
+#define _hw_mtd_hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
 
 #define _hw_wrspimswclk(p,i,usin,v,...)			\
   HW_TX(						\
@@ -196,7 +196,7 @@
 
 /*	Configuration of USI as SPI master with counter0_overflow clock
  */
-#define _hw_mthd_hwa_configure_usia_spimaster_c0clk	, _hwa_cfspimc0clk
+#define _hw_mtd_hwa_configure_usia_spimaster_c0clk	, _hwa_cfspimc0clk
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
@@ -209,13 +209,13 @@
   } while(0)
 
 
-#define _hw_mthd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
+#define _hw_mtd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
 #define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
   _hw_write_reg(##usin, dr, v )
 
 
-#define _hw_mthd_hw_read_usia_spimaster_c0clk	, _hw_read_usia
+#define _hw_mtd_hw_read_usia_spimaster_c0clk	, _hw_read_usia
 
 
 /*******************************************************************************
