@@ -13,6 +13,13 @@
  *										*
  ********************************************************************************/
 
+#define hw_gpio_config_pin(pinname, mode)				\
+  do {									\
+    hwa_gpio_begin(HWA_BEGIN_STATE_UNKNOWN);				\
+    hwa_gpio_config_pin(pinname, mode) ;				\
+    hwa_gpio_commit();							\
+  } while(0)
+
 #define hw_gpio_read(portname)			\
   *HWA_PTR_##portname##_IDR
 
@@ -58,20 +65,25 @@
  */
 #define HWA_GPIO_MODE_INPUT_ANALOG				0b00000
 #define HWA_GPIO_MODE_INPUT_FLOATING				0b01000
+#define HWA_GPIO_MODE_INPUT					0b01000
 #define HWA_GPIO_MODE_INPUT_PULLDOWN				0b10000
 #define HWA_GPIO_MODE_INPUT_PULLUP				0b10001
 #define HWA_GPIO_MODE_OUTPUT_PUSHPULL_10MHZ			0b00010
 #define HWA_GPIO_MODE_OUTPUT_PUSHPULL_2MHZ			0b00100
 #define HWA_GPIO_MODE_OUTPUT_PUSHPULL_50MHZ			0b00110
+#define HWA_GPIO_MODE_OUTPUT					0b00110
 #define HWA_GPIO_MODE_OUTPUT_OPENDRAIN_10MHZ			0b01010
 #define HWA_GPIO_MODE_OUTPUT_OPENDRAIN_2MHZ			0b01100
 #define HWA_GPIO_MODE_OUTPUT_OPENDRAIN_50MHZ			0b01110
+#define HWA_GPIO_MODE_OUTPUT_OPENDRAIN				0b01110
 #define HWA_GPIO_MODE_ALTOUTPUT_PUSHPULL_10MHZ			0b10010
 #define HWA_GPIO_MODE_ALTOUTPUT_PUSHPULL_2MHZ			0b10100
 #define HWA_GPIO_MODE_ALTOUTPUT_PUSHPULL_50MHZ			0b10110
+#define HWA_GPIO_MODE_ALTOUTPUT					0b10110
 #define HWA_GPIO_MODE_ALTOUTPUT_OPENDRAIN_10MHZ			0b11010
 #define HWA_GPIO_MODE_ALTOUTPUT_OPENDRAIN_2MHZ			0b11100
 #define HWA_GPIO_MODE_ALTOUTPUT_OPENDRAIN_50MHZ			0b11110
+#define HWA_GPIO_MODE_ALTOUTPUT_OPENDRAIN			0b11110
 
 
 /********************************************************************************
@@ -146,16 +158,20 @@
   hwa_gpio_begin_port(PORTE, state);
 
 #define hwa_gpio_commit_port(pname)		\
-  HWA_COMMIT(pname##_CRL);			\
-  HWA_COMMIT(pname##_CRH);			\
-  HWA_COMMIT(pname##_ODR);
+  do {						\
+    HWA_COMMIT(pname##_CRL);			\
+    HWA_COMMIT(pname##_CRH);			\
+    HWA_COMMIT(pname##_ODR);			\
+  } while(0)
 
 #define hwa_gpio_commit()			\
-  hwa_gpio_commit_port(PORTA);			\
-  hwa_gpio_commit_port(PORTB);			\
-  hwa_gpio_commit_port(PORTC);			\
-  hwa_gpio_commit_port(PORTD);			\
-  hwa_gpio_commit_port(PORTE);
+  do {						\
+    hwa_gpio_commit_port(PORTA);		\
+    hwa_gpio_commit_port(PORTB);		\
+    hwa_gpio_commit_port(PORTC);		\
+    hwa_gpio_commit_port(PORTD);		\
+    hwa_gpio_commit_port(PORTE);		\
+  } while(0)
 
 
 #define _hwa_gpio_config_bit(bitnum, portname, mask, mmode)		\

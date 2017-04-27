@@ -45,6 +45,7 @@
 
 
 #define HWA_BEGIN_STATE_				0
+#define HWA_BEGIN_STATE_UNKNOWN				0
 #define HWA_BEGIN_STATE_RESET				1
 
 /*!	\def hwa_set_commit_policy(policy)

@@ -128,7 +128,7 @@ void (*const isr_vector[]) (void) = {
 
   /*	Exceptions
    */
-  (void *)0x20005000,	/* Use 2KB stack (0x800 bytes). */
+  (void *)0x20005000,	/* "Use 2KB stack (0x800 bytes)." */
   ESR_RESET,		/* Use main() as reset vector for now. */
 
   ESR_NMI,
