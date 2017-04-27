@@ -47,7 +47,7 @@ typedef struct {
   HWA_COMMIT(HWA_CORE0, HWA_FLASH, HWA_FLASH0, HWA_ACR);
 
 #define hw_flash_wait_ready()\
-  while ( HW_HTST(HWA_FLASH, HWA_FLASH0, HWA_FLASH_BSY) ) {}
+  while ( HW_TSTHB(HWA_FLASH, HWA_FLASH0, HWA_FLASH_BSY) ) {}
 
 
 #endif

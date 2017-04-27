@@ -90,6 +90,6 @@ typedef struct {
  ************************************************************************/
 
 #define hwa_prph_turn_clk(pname, state)				\
-  HWA_VBSET(HWA_PRPH, HWA_PRPH0, HWA_G2(HWA_PRPH_APBENR, pname), HWA_STATE_##state)
+  HWA_SETVB(HWA_PRPH, HWA_PRPH0, HWA_G2(HWA_PRPH_APBENR, pname), HWA_STATE_##state)
 
 #endif

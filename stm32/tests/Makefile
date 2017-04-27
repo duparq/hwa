@@ -1,22 +1,12 @@
 
-# all:
-# 	cd .. && make
-
-# %:
-# 	cd .. && make $@
-
-test:	build/test
-
-
-
 #	Nom de base des fichiers "exécutables"
 #
-PROJECT		=	test
+PROJECT		=	project
 
 #	Liste des fichiers sources (.c) nécessaires pour
 #	produire l'exécutable
 #
-SOURCES		=	../hwa/hwa.c		\
+SOURCES		=	../../hwa.c		\
 			test.c
 
 MCU		=	stm32
@@ -29,6 +19,7 @@ DEFINES		+= -DHWA_DBG
 DEFINES		+= -DHWA_DEVICE=$(MCU)
 DEFINES		+= -DNO_DATA_INIT
 
+
 CFLAGS		+= -std=c99
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
@@ -37,7 +28,8 @@ CFLAGS		+= -g
 CFLAGS		+= -pipe
 CFLAGS		+= -Os
 
-INCLUDES	+= -I$(PWD)/hwa -I$(PWD)/inc -I$(PWD)/lib
+#INCLUDES	+= -I$(PWD)/inc -I$(PWD)/hwa
+INCLUDES	+= -I../..
 
 LDFLAGS		= $(CFLAGS)
 LDFLAGS		+= -Wl,--gc-sections
@@ -59,27 +51,27 @@ CFLAGS		+= $(INCLUDES)
 ODUMP		= $(ARCH)objdump
 
 
-all: elf lst size
+all: elf lst
 
-elf: $(BUILDIR)/$(PROJECT)
+elf: $(BUILDIR)/$(PROJECT).elf
 lst: $(BUILDIR)/$(PROJECT).lst
 
-$(BUILDIR)/$(PROJECT): $(OBJECTS) Makefile
+$(BUILDIR)/$(PROJECT).elf: $(OBJECTS) Makefile
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 $(BUILDIR)/%.$(MCU).o : %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-size: $(BUILDIR)/$(PROJECT)
+size: $(BUILDIR)/$(PROJECT).elf
 	@$(SIZE) $<
 
-%.lst : %
+%.lst : %.elf
 	$(ODUMP) -S -z -j.vectors -j.app_head -j.text -j.rodata -j.bss -j.data $^ >$@
 
+%.cp:	%.c
+	$(CPP) $(CFLAGS) $^ |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
 
-#	Nettoie le répertoire
-#
 clean:
 	@find . '(' 			\
 		-name '*~' 		\
@@ -95,5 +87,5 @@ clean:
 		-o -name '*.out'	\
 		-o -name '*.elf'	\
 		-o -name '*.hex'	\
-		-o -name 'build'	\
 		')' -exec rm -rf {} ';'
+	@rm -rf $(BUILDIR)

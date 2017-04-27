@@ -17,6 +17,23 @@
 #define HWA_RAM_END			0x20005000
 
 
+typedef enum {
+  HWA_EXIT_ESR			= 63000,
+  HWA_EXIT_ISR			= 64000,
+  HWA_EXIT_MAIN			= 65000
+} HwaExitValue ;
+
+void __attribute__((noreturn))	hwa_exit ( HwaExitValue xv __attribute__((unused)) ) ;
+
+
+extern void (*const isr_vector[]) (void) ;
+#if !defined __unix__
+extern int main ( ) __attribute__((noreturn));
+#else
+extern int main ( int, char** );
+#endif
+
+
 /*	Load from modules
  */
 #include "hwa_stm32_core.h"
@@ -27,8 +44,9 @@
 #include "hwa_stm32_timer.h"
 #include "hwa_stm32_irq.h"
 #include "hwa_stm32_uart.h"
+#include "hwa_stm32_afio.h"
 
-#include "hwa_stm32_delay.h"
+//#include "hwa_stm32_delay.h"
 
 
 /*	Init HWA structure
@@ -61,5 +79,28 @@
     hwa_commit_uart();			\
     hwa_commit_irq();			\
   } while(0)
+
+
+
+/*	Delays
+ */
+#define hw_nops(n)			_hw_nops(n/4)
+
+inline void
+_hw_nops ( u32 cycles )
+{
+  __asm__
+    __volatile__
+    (
+     "		mov	r0, %[cycles]"	"\n\t"
+     "1:"				"\n\t"
+     "		subs	r0, #1"		"\n\t"
+     "		bne.n	1b"		"\n\t"
+     :
+     : [cycles] "r" (cycles)
+     : "r0", "cc"
+     ) ;
+}
+
 
 #endif
