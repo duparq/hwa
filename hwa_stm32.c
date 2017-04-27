@@ -21,9 +21,9 @@ esr_reset ( )
   /*	Zero fill the bss segment.
    */
 #ifdef ZERO_ALL_RAM
-  for ( u32 *p = (u32*)0x20000000 ; p < (u32*)0x20050000 ; p++ )
+  for ( u32 *p = (u32*)0x02000000 ; p < (u32*)0x20050000 ; p++ )
     *p = 0 ;
-#elif !defined NO_BSS_INIT
+#else
   for ( u32 *p = &_sbss ; p < &_ebss ; p++ )
     *p = 0 ;
 #endif

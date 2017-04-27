@@ -115,6 +115,9 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 #define HWA_GLUE3_(a,b,c)		a##b##c
 #define HWA_GLUE3(a,b,c)		HWA_GLUE3_(a,b,c)
 
+#define HWA_GLUE4_(a,b,c,d)		a##b##c##d
+#define HWA_GLUE4(a,b,c,d)		HWA_GLUE4_(a,b,c,d)
+
 #define HWA_STR_(x)			#x
 #define HWA_STR(x)			HWA_STR_(x)
 
@@ -179,6 +182,12 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 
 #define HWA_BITS(reg, mask, shift)		\
   (((reg) & ((mask) << (shift)))>> (shift))
+
+#define HW_REGBITS(pname, reg, mask, shift)			\
+  ((*HWA_GLUE4(HWA_PTR_, pname, _, reg)) & ((mask)<<(shift)))
+
+#define HW_REG(pname, reg)			\
+  *HWA_GLUE4(HWA_PTR_,pname,_,reg)
 
 /*	Commit if commit policy is set to 'auto'
  */

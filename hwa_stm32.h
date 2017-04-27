@@ -18,6 +18,7 @@
 #include "hwa_stm32_pwr.h"
 #include "hwa_stm32_rcc.h"
 #include "hwa_stm32_rtc.h"
+#include "hwa_stm32_spi.h"
 #include "hwa_stm32_systick.h"
 #include "hwa_stm32_timer.h"
 #include "hwa_stm32_uart.h"
@@ -29,6 +30,7 @@
   hwa_pwr_begin(HWA_BEGIN_STATE_##state);				\
   hwa_rcc_begin(HWA_BEGIN_STATE_##state);				\
   hwa_rtc_begin(HWA_BEGIN_STATE_##state);				\
+  hwa_spi_begin(HWA_BEGIN_STATE_##state);				\
   hwa_systick_begin(HWA_BEGIN_STATE_##state);				\
   hwa_timer_begin(HWA_BEGIN_STATE_##state);				\
   hwa_uart_begin(HWA_BEGIN_STATE_##state);
@@ -40,6 +42,7 @@
   hwa_pwr_commit();							\
   hwa_rcc_commit();							\
   hwa_rtc_commit();							\
+  hwa_spi_commit();							\
   hwa_systick_commit();							\
   hwa_timer_commit();							\
   hwa_uart_commit();

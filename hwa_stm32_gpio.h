@@ -1,6 +1,10 @@
 #ifndef HWA_GPIO_H
 #define HWA_GPIO_H
 
+#define HW_SPLITPORT_SPI1_MOSI		PORTA, 7
+#define HW_SPLITPORT_SPI1_MISO		PORTA, 6
+#define HW_SPLITPORT_SPI1_SCK		PORTA, 5
+
 /********************************************************************************
  *										*
  *				User definitions				*
@@ -13,6 +17,9 @@
   *HWA_PTR_##portname##_IDR
 
 #define hw_gpio_set_pin(pinname, value)					\
+  hw_gpio_set_pins(HW_PORTNAME(pinname), 1<<HW_PINNUM(pinname), (value)<<HW_PINNUM(pinname))
+
+#define hwac_gpio_set_pin(pinname, value)				\
   hw_gpio_set_pins(HW_PORTNAME(pinname), 1<<HW_PINNUM(pinname), (value)<<HW_PINNUM(pinname))
 
 #define hw_gpio_set_pins(portname, mask, value)	\
@@ -40,7 +47,10 @@
   _hwa_gpio_config_pins(portname, mask, HWA_GPIO_MODE_##mode);
 
 #define hwa_gpio_config_port(portname, mode)	\
-  hwa_gpio_config_pins(portname, 0xffffU, mode)
+  hwa_gpio_config_pins(portname, 0xffff, mode)
+
+#define hwa_gpio_set_pin(pinname, value)				\
+  _hwa_gpio_set_pins(HW_PORTNAME(pinname), 1<<HW_PINNUM(pinname), (value)<<HW_PINNUM(pinname))
 
 /*	mode[4:3] = CNF[1:0],
  *	mode[2:1] = MODE[1:0],

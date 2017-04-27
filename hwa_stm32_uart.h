@@ -271,7 +271,7 @@
   HWA_PTR_##pname##_DR
 
 #define _hw_uart_tx_ready(pname)		\
-  (HWA_BITS(*HWA_PTR_##pname_SR, 0b1, 7) != 0)
+  (HWA_BITS(*HWA_PTR_##pname##_SR, 0b1, 7) != 0)
 
 #define _HW_UART_DEF_GETCHAR(pname)		\
   inline u8					\

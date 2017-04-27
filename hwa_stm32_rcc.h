@@ -10,19 +10,6 @@
  *										*
  ********************************************************************************/
 
-#define hw_wait_lse_ready()\
-  do {								\
-    while ( ((*HWA_PTR_RCC_BDCR) & (1<<1)) == 0 ){}		\
-  } while(0)
-
-#define hwac_bd_reset()				\
-  do {						\
-    HWA_SET(RCC_BDCR, 0b1, 16, 1);		\
-    HWA_COMMIT(RCC_BDCR);			\
-    HWA_SET(RCC_BDCR, 0b1, 16, 0);		\
-    HWA_COMMIT(RCC_BDCR);			\
-  } while(0)
-
 /* #define hw_disable_and_clear_irqs()		\ */
 /*   *HWA_PTR_RCC_CIR = 0x009F0000 ; */
 
@@ -238,15 +225,6 @@
 
 #define hwac_turn_clk(pname, state)		\
   _hwac_turn_clk(pname, state)
-  
-/*	Low-speed external oscillator (used by RTC)
- */
-#define hwa_turn_lse(state)			\
-  HWA_SET(RCC_BDCR, 0b1, 0, HWA_STATE_##state)
-
-#define hwac_turn_lse(state)			\
-  HWA_SET(RCC_BDCR, 0b1, 0, HWA_STATE_##state)	\
-  HWA_COMMIT(RCC_BDCR)
 
 /* #define hwa_commit_clk(pname)			\ */
 /*   _hwa_commit_clk(pname) */
@@ -331,15 +309,47 @@
 /* #define _hwa_commit_clk(pname)			\ */
 /*   HWA_COMMIT_VA(HWA_ARGS_CKEN_##pname) */
 
-#define HWA_ARGS_CKEN_PORTA			RCC_APB2ENR, 0b1, 2
-#define HWA_ARGS_CKEN_PORTB			RCC_APB2ENR, 0b1, 3
-#define HWA_ARGS_CKEN_PORTC			RCC_APB2ENR, 0b1, 4
-#define HWA_ARGS_CKEN_PORTD			RCC_APB2ENR, 0b1, 5
-#define HWA_ARGS_CKEN_PORTE			RCC_APB2ENR, 0b1, 6
+#define HWA_ARGS_CKEN_TIMER11			RCC_APB2ENR, 0b1, 21
+#define HWA_ARGS_CKEN_TIMER10			RCC_APB2ENR, 0b1, 20
+#define HWA_ARGS_CKEN_TIMER9			RCC_APB2ENR, 0b1, 19
+#define HWA_ARGS_CKEN_ADC3			RCC_APB2ENR, 0b1, 15
 #define HWA_ARGS_CKEN_USART1			RCC_APB2ENR, 0b1, 14
+#define HWA_ARGS_CKEN_TIMER8			RCC_APB2ENR, 0b1, 13
+#define HWA_ARGS_CKEN_SPI1			RCC_APB2ENR, 0b1, 12
+#define HWA_ARGS_CKEN_TIMER1			RCC_APB2ENR, 0b1, 11
+#define HWA_ARGS_CKEN_ADC2			RCC_APB2ENR, 0b1, 10
+#define HWA_ARGS_CKEN_ADC1			RCC_APB2ENR, 0b1, 9
+#define HWA_ARGS_CKEN_PORTG			RCC_APB2ENR, 0b1, 8
+#define HWA_ARGS_CKEN_PORTF			RCC_APB2ENR, 0b1, 7
+#define HWA_ARGS_CKEN_PORTE			RCC_APB2ENR, 0b1, 6
+#define HWA_ARGS_CKEN_PORTD			RCC_APB2ENR, 0b1, 5
+#define HWA_ARGS_CKEN_PORTC			RCC_APB2ENR, 0b1, 4
+#define HWA_ARGS_CKEN_PORTB			RCC_APB2ENR, 0b1, 3
+#define HWA_ARGS_CKEN_PORTA			RCC_APB2ENR, 0b1, 2
+#define HWA_ARGS_CKEN_AFIO			RCC_APB2ENR, 0b1, 0
+
+#define HWA_ARGS_CKEN_DAC			RCC_APB1ENR, 0b1, 29
+#define HWA_ARGS_CKEN_PWR			RCC_APB1ENR, 0b1, 28
+#define HWA_ARGS_CKEN_BKP			RCC_APB1ENR, 0b1, 27
+#define HWA_ARGS_CKEN_CAN			RCC_APB1ENR, 0b1, 25
+#define HWA_ARGS_CKEN_USB			RCC_APB1ENR, 0b1, 23
+#define HWA_ARGS_CKEN_I2C2			RCC_APB1ENR, 0b1, 22
+#define HWA_ARGS_CKEN_I2C1			RCC_APB1ENR, 0b1, 21
+#define HWA_ARGS_CKEN_UART5			RCC_APB1ENR, 0b1, 20
+#define HWA_ARGS_CKEN_UART4			RCC_APB1ENR, 0b1, 19
+#define HWA_ARGS_CKEN_USART3			RCC_APB1ENR, 0b1, 18
+#define HWA_ARGS_CKEN_USART2			RCC_APB1ENR, 0b1, 17
+#define HWA_ARGS_CKEN_SPI3			RCC_APB1ENR, 0b1, 15
+#define HWA_ARGS_CKEN_SPI2			RCC_APB1ENR, 0b1, 14
+#define HWA_ARGS_CKEN_WWDG			RCC_APB1ENR, 0b1, 11
+#define HWA_ARGS_CKEN_TIMER14			RCC_APB1ENR, 0b1, 8
+#define HWA_ARGS_CKEN_TIMER13			RCC_APB1ENR, 0b1, 7
+#define HWA_ARGS_CKEN_TIMER12			RCC_APB1ENR, 0b1, 6
+#define HWA_ARGS_CKEN_TIMER7			RCC_APB1ENR, 0b1, 5
+#define HWA_ARGS_CKEN_TIMER6			RCC_APB1ENR, 0b1, 4
+#define HWA_ARGS_CKEN_TIMER5			RCC_APB1ENR, 0b1, 3
+#define HWA_ARGS_CKEN_TIMER4			RCC_APB1ENR, 0b1, 2
+#define HWA_ARGS_CKEN_TIMER3			RCC_APB1ENR, 0b1, 1
 #define HWA_ARGS_CKEN_TIMER2			RCC_APB1ENR, 0b1, 0
-#define HWA_ARGS_CKEN_PWR			RCC_APB1ENR, 0b1, 28	/* PWREN */
-#define HWA_ARGS_CKEN_BKP			RCC_APB1ENR, 0b1, 27	/* BKPEN */
-#define HWA_ARGS_CKEN_RTC			RCC_BDCR, 0b1, 15	/* RTCEN */
 
 #endif

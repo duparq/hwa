@@ -29,7 +29,7 @@ void		hwa_error_rt_4 ( const char *msg ) { hwa_error_rt(msg); }
 
 extern void	main(void);
 
-#define WEAK	__attribute__((weak))
+#define WEAK	__attribute__((weak, noreturn))
 
 void WEAK	exit ( int status __attribute__((unused)) ) ;
 
