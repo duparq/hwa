@@ -10,6 +10,19 @@
  *										*
  ********************************************************************************/
 
+#define hw_wait_lse_ready()\
+  do {								\
+    while ( ((*HWA_PTR_RCC_BDCR) & (1<<1)) == 0 ){}		\
+  } while(0)
+
+#define hwac_bd_reset()				\
+  do {						\
+    HWA_SET(RCC_BDCR, 0b1, 16, 1);		\
+    HWA_COMMIT(RCC_BDCR);			\
+    HWA_SET(RCC_BDCR, 0b1, 16, 0);		\
+    HWA_COMMIT(RCC_BDCR);			\
+  } while(0)
+
 /* #define hw_disable_and_clear_irqs()		\ */
 /*   *HWA_PTR_RCC_CIR = 0x009F0000 ; */
 
@@ -225,6 +238,15 @@
 
 #define hwac_turn_clk(pname, state)		\
   _hwac_turn_clk(pname, state)
+  
+/*	Low-speed external oscillator (used by RTC)
+ */
+#define hwa_turn_lse(state)			\
+  HWA_SET(RCC_BDCR, 0b1, 0, HWA_STATE_##state)
+
+#define hwac_turn_lse(state)			\
+  HWA_SET(RCC_BDCR, 0b1, 0, HWA_STATE_##state)	\
+  HWA_COMMIT(RCC_BDCR)
 
 /* #define hwa_commit_clk(pname)			\ */
 /*   _hwa_commit_clk(pname) */
@@ -316,5 +338,8 @@
 #define HWA_ARGS_CKEN_PORTE			RCC_APB2ENR, 0b1, 6
 #define HWA_ARGS_CKEN_USART1			RCC_APB2ENR, 0b1, 14
 #define HWA_ARGS_CKEN_TIMER2			RCC_APB1ENR, 0b1, 0
+#define HWA_ARGS_CKEN_PWR			RCC_APB1ENR, 0b1, 28	/* PWREN */
+#define HWA_ARGS_CKEN_BKP			RCC_APB1ENR, 0b1, 27	/* BKPEN */
+#define HWA_ARGS_CKEN_RTC			RCC_BDCR, 0b1, 15	/* RTCEN */
 
 #endif

@@ -40,7 +40,7 @@
   _hwa_gpio_config_pins(portname, mask, HWA_GPIO_MODE_##mode);
 
 #define hwa_gpio_config_port(portname, mode)	\
-  hwa_gpio_config_pins(portname, 0xffff, mode)
+  hwa_gpio_config_pins(portname, 0xffffU, mode)
 
 /*	mode[4:3] = CNF[1:0],
  *	mode[2:1] = MODE[1:0],

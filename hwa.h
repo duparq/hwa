@@ -29,10 +29,16 @@
 #define hwa_begin(state)						\
   u8 hwa_commit_policy __attribute__((unused)) = HWA_COMMIT_POLICY_WHEN_ASKED ; \
   u8 hwa_checking_policy __attribute__((unused)) = HWA_CHECKING_POLICY_COMPILE_TIME ; \
+  _hwa_begin(state)
+
+#define rem_hwa_begin(state)						\
+  u8 hwa_commit_policy __attribute__((unused)) = HWA_COMMIT_POLICY_WHEN_ASKED ; \
+  u8 hwa_checking_policy __attribute__((unused)) = HWA_CHECKING_POLICY_COMPILE_TIME ; \
   hwa_flash_begin(HWA_BEGIN_STATE_##state);				\
   hwa_gpio_begin(HWA_BEGIN_STATE_##state);				\
   hwa_irq_begin(HWA_BEGIN_STATE_##state);				\
   hwa_rcc_begin(HWA_BEGIN_STATE_##state);				\
+  hwa_rtc_begin(HWA_BEGIN_STATE_##state);				\
   hwa_systick_begin(HWA_BEGIN_STATE_##state);				\
   hwa_timer_begin(HWA_BEGIN_STATE_##state);				\
   hwa_uart_begin(HWA_BEGIN_STATE_##state);
@@ -67,14 +73,7 @@
  */
 #define hwa_commit()							\
   if (0) { HWA_WARN_CT(1, "Compiler should have discarded this!"); }	\
-  hwa_flash_commit();							\
-  hwa_gpio_commit();							\
-  hwa_irq_commit();							\
-  hwa_rcc_commit();							\
-  hwa_systick_commit();							\
-  hwa_timer_commit();							\
-  hwa_uart_commit();
-
+  _hwa_commit();
 
 /*	Turn on/off peripheral.
  */
@@ -145,22 +144,9 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
   { extern void HWA_GLUE2(hwa_error_rt_, num)(void);	\
     HWA_GLUE2(hwa_error_rt_, num)(); }
 
-/*	Declares register pointer
- */
-/* #define HWA_PDCL(reg, type, addr)					\ */
-/*   volatile type * const HWA_PTR_##reg __attribute__((unused)) = (volatile type *)(addr) ; */
-
 /*	Declares 'virtual' registers associated to real register
  *	Register declaration: name, type, address, reset value, write mask
  */
-#define rem_HWA_XDECL(reg, type, addr, reset_value, wmask, initialised)	\
-  u8	HWA_##reg##_initialised = initialised ;				\
-  type	HWA_##reg##_ovalue = initialised ? reset_value : ~reset_value ;	/* last commited value */ \
-  type	HWA_##reg##_value = reset_value ;				/* new value */ \
-  type	HWA_##reg##_mmask = 0 ;						/* modif mask */ \
-  type	HWA_##reg##_wmask = wmask ;					/* reg write mask */ \
-  volatile type * const HWA_PTR_##reg = (volatile type *)(addr) ;
-
 #define HWA_DECL(reg, type, addr, reset_value, wmask, initialised)	\
   u8	HWA_##reg##_initialised = initialised ;				\
   type	HWA_##reg##_ovalue = initialised ? reset_value : ~reset_value ;	/* last commited value */ \

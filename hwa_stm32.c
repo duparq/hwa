@@ -12,7 +12,7 @@ esr_reset ( )
    *	offset register.
    */
 #ifdef RUN_FROM_RAM
-  if ( (((u32)isr_vector) & 0xFF000000) == 0x02000000 ) {
+  if ( (((u32)isr_vector) & 0xFF000000) == 0x20000000 ) {
     __asm__ volatile("mov sp,%0" : : "r"(isr_vector[0]));
     *HWA_PTR_SCB_VTOR = (u32)isr_vector;
   }
@@ -21,9 +21,9 @@ esr_reset ( )
   /*	Zero fill the bss segment.
    */
 #ifdef ZERO_ALL_RAM
-  for ( u32 *p = (u32*)0x02000000 ; p < (u32*)0x02050000 ; p++ )
+  for ( u32 *p = (u32*)0x20000000 ; p < (u32*)0x20050000 ; p++ )
     *p = 0 ;
-#else
+#elif !defined NO_BSS_INIT
   for ( u32 *p = &_sbss ; p < &_ebss ; p++ )
     *p = 0 ;
 #endif
