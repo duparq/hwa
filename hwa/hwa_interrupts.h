@@ -89,15 +89,15 @@
  * The `HW_ISR(...)` instruction accepts 2 optionnal arguments after the
  * designation of the IRQ:
  *
- * @li `isr_naked`: ask the compiler to not initialize any register. You have to
+ * @li `naked`: ask the compiler to not initialize any register. You have to
  *   put the `reti` instruction yourself.
- * @li `isr_interruptible`: ask the compiler to enable the interrupts as soon as
+ * @li `interruptible`: ask the compiler to enable the interrupts as soon as
  *   possible.
- * @li `isr_non_interruptible`: can be use to assert that the interrupts are not
+ * @li `non_interruptible`: can be use to assert that the interrupts are not
  *   enabled.
  *
  * @code
- * HW_ISR( object [, reason] [, isr_naked ] [, isr_interruptible | isr_non_interruptible] )
+ * HW_ISR( object [, reason] [, naked ] [, interruptible | non_interruptible] )
  * {
  *    ... // Service the ISR
  *

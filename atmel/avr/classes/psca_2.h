@@ -13,11 +13,11 @@
  * @page atmelavr_psca
  * @section atmelavr_psca_reset Reset
  *
- * The hw_reset() instruction resets the prescaler immediately without stopping
+ * The `reset` action resets the prescaler immediately without stopping
  * it:
  *
  * @code
- * hw_reset( prescaler0 );
+ * hw( reset, prescaler0 );
  * @endcode
  */
 #define _hw_mtd_hw_reset__psca		, _hw_psca_reset
@@ -31,16 +31,16 @@
  * @page atmelavr_psca
  * @section atmelavr_psca_stop Stop
  *
- * The hw_turn() instruction can reset and stop the prescaler:
+ * The `turn` action can reset and stop the prescaler:
  *
  * @code
- * hw_turn( prescaler0, off );	//  Reset and halt the prescaler
+ * hw( turn, prescaler0, off );	//  Reset and halt the prescaler
  * @endcode
  *
  * or release it:
  *
  * @code
- * hw_turn( prescaler0, on );	//  Release the prescaler
+ * hw( turn, prescaler0, on );	//  Release the prescaler
  * @endcode
  */
 #define _hw_mtd_hw_turn__psca		, _hw_psca_turn
@@ -68,8 +68,7 @@
  *
  * @code
  * hwa( configure, prescaler0,
- *
- *	       clock,	system );
+ *      clock,     system      );
  * @endcode
  */
 #define _hw_mtd_hwa_configure__psca	, _hwa_cfpsca

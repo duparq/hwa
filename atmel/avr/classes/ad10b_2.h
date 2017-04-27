@@ -228,7 +228,7 @@
 
 /*  Power management
  */
-#define _hw_mtd_hw_power__ad10b	, _hw_power
+#define _hw_mtd_hw_power__ad10b		, _hw_power
 #define _hw_mtd_hwa_power__ad10b	, _hwa_power
 
 
@@ -240,8 +240,7 @@
  * analog multiplexer.
  *
  * __Note__ This is not related to power management. Assuming the target device
- * supports it, use `hw_power()` or `hwa_power()` if you want power the ADC
- * on/off.
+ * supports it, use the `power` action if you want to power the ADC on/off.
  *
  * @code
  * hw( turn, adc0, on | off );

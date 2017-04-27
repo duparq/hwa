@@ -31,7 +31,7 @@
  *    instruction ourselves (otherwise avr-gcc does some register
  *    initializations even though none is used).
  */
-HW_ISR( watchdog0, isr_naked )
+HW_ISR( watchdog0, naked )
 {
   hw_asm("reti");
 }

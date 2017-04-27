@@ -97,8 +97,8 @@
  * @section atmelavr_wdoga_turn Turning on/off
  *
  * @code
- * hw_turn( watchdog0,	 on
- *		      | off );
+ * hw( turn watchdog0,   on
+ *                     | off );
  * @endcode
  */
 #define _hw_mtd_hw_turn__wdoga		, _hw_turn_wdoga
@@ -143,8 +143,8 @@
  * @page atmelavr_wdoga
  *
  * @code
- * hwa_turn( watchdog0,	  on
- *		       | off );
+ * hwa( turn, watchdog0,   on
+ *                       | off );
  * @endcode
  */
 #define _hw_mtd_hwa_turn__wdoga	, _hwa_turn_wdoga

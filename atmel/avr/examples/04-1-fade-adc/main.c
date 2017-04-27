@@ -69,7 +69,7 @@ static volatile count_t		duty ;
 /*  Service ADC "conversion completed" IRQ: compute duty
  *  Make the ISR interruptible so that counter IRQs are serviced promptly.
  */
-HW_ISR( adc0, isr_interruptible )
+HW_ISR( adc0, interruptible )
 {
   /*  Get the new value
    */
@@ -109,7 +109,7 @@ HW_ISR( adc0, isr_interruptible )
 /*  Service counter-overflow IRQ: turn the LED on and enable the compare IRQ
  *  that turns it off
  */
-HW_ISR( COUNTER, overflow, isr_non_interruptible )
+HW_ISR( COUNTER, overflow, non_interruptible )
 {
   /*  No need to protect access to duty since interrupts are not allowed */
 
@@ -135,7 +135,7 @@ HW_ISR( COUNTER, overflow, isr_non_interruptible )
  *  spare a few bytes and have a faster code using a naked ISR.
  */
 #if HW_ADDRESS(HW_REGISTER(HW_RELATIVE(PIN_LED,port),port)) < 0x40
-HW_ISR( COUNTER, compare1, isr_naked )
+HW_ISR( COUNTER, compare1, naked )
 {
   hw( write, PIN_LED, 0 );
   hw_asm("reti");

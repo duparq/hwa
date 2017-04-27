@@ -1230,8 +1230,8 @@ typedef struct {
  *
  * @section attinyx4_pwr Power Management
  *
- * The following peripherals can be turned on/off with the `hw_power()` and `hwa_power()`
- * instructions to manage power consumption of the device:
+ * The following peripherals can be powered on/off with the `power` action to
+ * manage power consumption of the device:
  *
  * * `counter0`
  * * `counter1`
@@ -1240,7 +1240,7 @@ typedef struct {
  * * `acmp0`
  *
  * @code
- * hw_power( counter0, off );
+ * hw( power, counter0, off );
  * @endcode
  */
 

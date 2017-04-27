@@ -44,17 +44,9 @@
 
 
 
-/**
- * @brief Power a peripheral on/off.
- *
- * This is a generic method that can be implemented by all peripheral
+/* This is a generic method that can be implemented by all peripheral
  * classes. An object supports power management if it has a logical register
  * named `prr`.
- *
- * This definition handles both hw_power() and hwa_power().
- */
-/*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
- *  given state.
  */
 #define _hw_power(c,o,i,a, ...)		HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
 #define _hwa_power(c,o,i,a, ...)	HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
@@ -487,9 +479,9 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*	ISR
  */
-#define _hw_israttr_isr_interruptible	, __attribute__((interrupt))
-#define _hw_israttr_isr_non_interruptible	, 
-#define _hw_israttr_isr_naked		, __attribute__((naked))
+#define _hw_israttr_non_interruptible	,
+#define _hw_israttr_interruptible	, __attribute__((interrupt))
+#define _hw_israttr_naked		, __attribute__((naked))
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))

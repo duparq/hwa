@@ -215,7 +215,7 @@
  * When the SPI is turned on, it takes control of the MOSI and MISO pins.
  *
  * @code
- * hw_turn( spi0, on | off );
+ * hw( turn, spi0, on | off );
  * @endcode
  */
 #define _hw_mtd_hw_turn__spia		, _hw_turn_spia
@@ -230,7 +230,7 @@
 /**
  * @page atmelavr_spia
  * @code
- * hwa_turn( spi0, on | off );
+ * hwa( turn, spi0, on | off );
  * @endcode
  */
 #define _hw_mtd_hwa_turn__spia		, _hwa_turn_spia

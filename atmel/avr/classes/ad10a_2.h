@@ -377,7 +377,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /*  Power management
  */
-#define _hw_mtd_hw_power__ad10a	, _hw_power
+#define _hw_mtd_hw_power__ad10a		, _hw_power
 #define _hw_mtd_hwa_power__ad10a	, _hwa_power
 
 

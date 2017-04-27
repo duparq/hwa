@@ -350,8 +350,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * analog multiplexer.
  *
  * __Note__ This is not related to power management. Assuming the target device
- * supports it, use `hw_power()` or `hwa_power()` if you want power the ADC
- * on/off.
+ * supports it, use the `power` action if you want to power the ADC on/off.
  *
  * @code
  * hw( turn, adc0, on | off );
