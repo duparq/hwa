@@ -6,6 +6,7 @@
 build/
 doxygen/html/
 exclude/
+private/
 trash/
 MEMO*
 TODO*
