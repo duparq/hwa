@@ -10,12 +10,23 @@
  * @file
  * @brief Colour detector TCS3200.
  *
- * @page tcs3200 Class _tcs3200: colour detector
+ * @page tcs3200 TCS3200 colour detector
  *
  * A class `_tcs3200` object is colour light-to-frequency converter, also
  * called 'colour detector'.
  *
+ * The measurement of the output signal frequency is left to the user.
+ *
  * The following declarations create a device called `sensor0`.
+ *
+ * @code
+ * #define _hw_def_sensor0              _tcs3200, 0, 0
+ * #define _hw_rel_sensor0_s0           pin_pa0
+ * #define _hw_rel_sensor0_s1           pin_pa1
+ * #define _hw_rel_sensor0_s2           pin_pa2
+ * #define _hw_rel_sensor0_s3           pin_pa3
+ * #define _hw_rel_sensor0_oe           pin_pa4
+ * @endcode
  *
  * * `_hw_rel_sensor0_s1` and `_hw_rel_sensor0_s0` must be declared if you want
  * the `configure` action to be able to change the frequency range of the
@@ -26,17 +37,6 @@
  *
  * * `_hw_rel_sensor0_oe` must be declared if you want the `configure` action to
  * be able to control the signal output.
- *
- * The measurement of the output signal frequency is left to the user.
- *
- * @code
- * #define _hw_def_sensor0              _tcs3200, 0, 0
- * #define _hw_rel_sensor0_s0           pin_pa0
- * #define _hw_rel_sensor0_s1           pin_pa1
- * #define _hw_rel_sensor0_s2           pin_pa2
- * #define _hw_rel_sensor0_s3           pin_pa3
- * #define _hw_rel_sensor0_oe           pin_pa4
- * @endcode
  *
  * @section tcs3200_cf Configuration
  *

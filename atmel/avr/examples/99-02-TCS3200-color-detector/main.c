@@ -10,13 +10,15 @@
  * TCS3200 color detector
  *
  * This is an alternate version of the 99-01-TCS3200-color-detector that uses
- * the class _tcs3200a provided by HWA.
+ * the class `_tcs3200` provided by HWA.
  *
  * @par boards/attiny84-tcs3200.h
  * @include boards/attiny84-tcs3200.h
  *
  * @par config.h
  * @include config.h
+ *
+ * @par main.c
  */
 
 #include "config.h"
