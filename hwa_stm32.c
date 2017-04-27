@@ -3,7 +3,7 @@
 */
 
 void
-esr_reset ( )
+ESR_RESET ( )
 {
   /*	STM32 bug : when booting from RAM, SP is not loaded.
    */
@@ -48,79 +48,79 @@ esr_reset ( )
 
 /*	Exceptions
  */
-void WEAK esr_nmi(void)			ESR(1)
-void WEAK esr_hard_fault(void)		ESR(2)
-void WEAK esr_mem_manage(void)		ESR(3)
-void WEAK esr_bus_fault(void)		ESR(4)
-void WEAK esr_usage_fault(void)		ESR(5)
-void WEAK esr_sv_call(void)		ESR(6)
-void WEAK esr_debug_monitor(void)	ESR(7)
-void WEAK esr_pend_sv(void)		ESR(8)
-void WEAK esr_systick(void)		ESR(9)
+void WEAK ESR_NMI(void)			ESR(1)
+void WEAK ESR_HARD_FAULT(void)		ESR(2)
+void WEAK ESR_MEM_MANAGE(void)		ESR(3)
+void WEAK ESR_BUS_FAULT(void)		ESR(4)
+void WEAK ESR_USAGE_FAULT(void)		ESR(5)
+void WEAK ESR_SV_CALL(void)		ESR(6)
+void WEAK ESR_DEBUG_MONITOR(void)	ESR(7)
+void WEAK ESR_PEND_SV(void)		ESR(8)
+void WEAK ESR_SYSTICK(void)		ESR(9)
 
 
 /*	Interrupts
  */
-void WEAK isr_wwdg(void)		ISR(0)
-void WEAK isr_pvd(void)			ISR(1)
-void WEAK isr_tamper(void)		ISR(2)
-void WEAK isr_rtc(void)			ISR(3)
-void WEAK isr_flash(void)		ISR(4)
-void WEAK isr_rcc(void)			ISR(5)
-void WEAK isr_exti0(void)		ISR(6)
-void WEAK isr_exti1(void)		ISR(7)
-void WEAK isr_exti2(void)		ISR(8)
-void WEAK isr_exti3(void)		ISR(9)
-void WEAK isr_exti4(void)		ISR(10)
-void WEAK isr_dma1_channel1(void)	ISR(11)
-void WEAK isr_dma1_channel2(void)	ISR(12)
-void WEAK isr_dma1_channel3(void)	ISR(13)
-void WEAK isr_dma1_channel4(void)	ISR(14)
-void WEAK isr_dma1_channel5(void)	ISR(15)
-void WEAK isr_dma1_channel6(void)	ISR(16)
-void WEAK isr_dma1_channel7(void)	ISR(17)
-void WEAK isr_adc1_2(void)		ISR(18)
-void WEAK isr_usb_hp_can_tx(void)	ISR(19)
-void WEAK isr_usb_lp_can_rx0(void)	ISR(20)
-void WEAK isr_can_rx1(void)		ISR(21)
-void WEAK isr_can_sce(void)		ISR(22)
-void WEAK isr_exti9_5(void)		ISR(23)
-void WEAK isr_tim1_brk(void)		ISR(24)
-void WEAK isr_tim1_up(void)		ISR(25)
-void WEAK isr_tim1_trg_com(void)	ISR(26)
-void WEAK isr_tim1_cc(void)		ISR(27)
-void WEAK isr_tim2(void)		ISR(28)
-void WEAK isr_tim3(void)		ISR(29)
-void WEAK isr_tim4(void)		ISR(30)
-void WEAK isr_i2c1_ev(void)		ISR(31)
-void WEAK isr_i2c1_er(void)		ISR(32)
-void WEAK isr_i2c2_ev(void)		ISR(33)
-void WEAK isr_i2c2_er(void)		ISR(34)
-void WEAK isr_spi1(void)		ISR(35)
-void WEAK isr_spi2(void)		ISR(36)
-void WEAK isr_usart1(void)		ISR(37)
-void WEAK isr_usart2(void)		ISR(38)
-void WEAK isr_usart3(void)		ISR(39)
-void WEAK isr_exti15_10(void)		ISR(40)
-void WEAK isr_rtc_alarm(void)		ISR(41)
-void WEAK isr_usb_wakeup(void)		ISR(42)
-void WEAK isr_tim8_brk(void)		ISR(43)
-void WEAK isr_tim8_up(void)		ISR(44)
-void WEAK isr_tim8_trg_com(void)	ISR(45)
-void WEAK isr_tim8_cc(void)		ISR(46)
-void WEAK isr_adc3(void)		ISR(47)
-void WEAK isr_fsmc(void)		ISR(48)
-void WEAK isr_sdio(void)		ISR(49)
-void WEAK isr_tim5(void)		ISR(50)
-void WEAK isr_spi3(void)		ISR(51)
-void WEAK isr_usart4(void)		ISR(52)
-void WEAK isr_usart5(void)		ISR(53)
-void WEAK isr_tim6(void)		ISR(54)
-void WEAK isr_tim7(void)		ISR(55)
-void WEAK isr_dma2_channel1(void)	ISR(56)
-void WEAK isr_dma2_channel2(void)	ISR(57)
-void WEAK isr_dma2_channel3(void)	ISR(58)
-void WEAK isr_dma2_channel4_5(void)	ISR(59)
+void WEAK ISR_WWDG(void)		ISR(0)
+void WEAK ISR_PVD(void)			ISR(1)
+void WEAK ISR_TAMPER(void)		ISR(2)
+void WEAK ISR_RTC(void)			ISR(3)
+void WEAK ISR_FLASH(void)		ISR(4)
+void WEAK ISR_RCC(void)			ISR(5)
+void WEAK ISR_EXTI0(void)		ISR(6)
+void WEAK ISR_EXTI1(void)		ISR(7)
+void WEAK ISR_EXTI2(void)		ISR(8)
+void WEAK ISR_EXTI3(void)		ISR(9)
+void WEAK ISR_EXTI4(void)		ISR(10)
+void WEAK ISR_DMA1_CHANNEL1(void)	ISR(11)
+void WEAK ISR_DMA1_CHANNEL2(void)	ISR(12)
+void WEAK ISR_DMA1_CHANNEL3(void)	ISR(13)
+void WEAK ISR_DMA1_CHANNEL4(void)	ISR(14)
+void WEAK ISR_DMA1_CHANNEL5(void)	ISR(15)
+void WEAK ISR_DMA1_CHANNEL6(void)	ISR(16)
+void WEAK ISR_DMA1_CHANNEL7(void)	ISR(17)
+void WEAK ISR_ADC1_2(void)		ISR(18)
+void WEAK ISR_USB_HP_CAN_TX(void)	ISR(19)
+void WEAK ISR_USB_LP_CAN_RX0(void)	ISR(20)
+void WEAK ISR_CAN_RX1(void)		ISR(21)
+void WEAK ISR_CAN_SCE(void)		ISR(22)
+void WEAK ISR_EXTI9_5(void)		ISR(23)
+void WEAK ISR_TIM1_BRK(void)		ISR(24)
+void WEAK ISR_TIM1_UP(void)		ISR(25)
+void WEAK ISR_TIM1_TRG_COM(void)	ISR(26)
+void WEAK ISR_TIM1_CC(void)		ISR(27)
+void WEAK ISR_TIM2(void)		ISR(28)
+void WEAK ISR_TIM3(void)		ISR(29)
+void WEAK ISR_TIM4(void)		ISR(30)
+void WEAK ISR_I2C1_EV(void)		ISR(31)
+void WEAK ISR_I2C1_ER(void)		ISR(32)
+void WEAK ISR_I2C2_EV(void)		ISR(33)
+void WEAK ISR_I2C2_ER(void)		ISR(34)
+void WEAK ISR_SPI1(void)		ISR(35)
+void WEAK ISR_SPI2(void)		ISR(36)
+void WEAK ISR_USART1(void)		ISR(37)
+void WEAK ISR_USART2(void)		ISR(38)
+void WEAK ISR_USART3(void)		ISR(39)
+void WEAK ISR_EXTI15_10(void)		ISR(40)
+void WEAK ISR_RTC_ALARM(void)		ISR(41)
+void WEAK ISR_USB_WAKEUP(void)		ISR(42)
+void WEAK ISR_TIM8_BRK(void)		ISR(43)
+void WEAK ISR_TIM8_UP(void)		ISR(44)
+void WEAK ISR_TIM8_TRG_COM(void)	ISR(45)
+void WEAK ISR_TIM8_CC(void)		ISR(46)
+void WEAK ISR_ADC3(void)		ISR(47)
+void WEAK ISR_FSMC(void)		ISR(48)
+void WEAK ISR_SDIO(void)		ISR(49)
+void WEAK ISR_TIM5(void)		ISR(50)
+void WEAK ISR_SPI3(void)		ISR(51)
+void WEAK ISR_USART4(void)		ISR(52)
+void WEAK ISR_USART5(void)		ISR(53)
+void WEAK ISR_TIM6(void)		ISR(54)
+void WEAK ISR_TIM7(void)		ISR(55)
+void WEAK ISR_DMA2_CHANNEL1(void)	ISR(56)
+void WEAK ISR_DMA2_CHANNEL2(void)	ISR(57)
+void WEAK ISR_DMA2_CHANNEL3(void)	ISR(58)
+void WEAK ISR_DMA2_CHANNEL4_5(void)	ISR(59)
 
 
 __attribute__ ((section(".vectors")))
@@ -129,158 +129,158 @@ void (*const isr_vector[]) (void) = {
   /*	Exceptions
    */
   (void *)0x20005000,	/* Use 2KB stack (0x800 bytes). */
-  esr_reset,		/* Use main() as reset vector for now. */
+  ESR_RESET,		/* Use main() as reset vector for now. */
 
-  esr_nmi,
-  esr_hard_fault,
-  esr_mem_manage,
-  esr_bus_fault,
-  esr_usage_fault,
+  ESR_NMI,
+  ESR_HARD_FAULT,
+  ESR_MEM_MANAGE,
+  ESR_BUS_FAULT,
+  ESR_USAGE_FAULT,
   0, 0, 0, 0,		/* Reserved */
-  esr_sv_call,
-  esr_debug_monitor,
+  ESR_SV_CALL,
+  ESR_DEBUG_MONITOR,
   0,			/* Reserved */
-  esr_pend_sv,
-  esr_systick,
+  ESR_PEND_SV,
+  ESR_SYSTICK,
 
   /*	Interrupts
    */
-  isr_wwdg,		/* IRQ 0 */
-  isr_pvd,		/* IRQ 1 */
-  isr_tamper,		/* IRQ 2 */
-  isr_rtc,		/* IRQ 3 */
-  isr_flash,		/* IRQ 4 */
-  isr_rcc,		/* IRQ 5 */
-  isr_exti0,		/* IRQ 6 */
-  isr_exti1,		/* IRQ 7 */
-  isr_exti2,		/* IRQ 8 */
-  isr_exti3,		/* IRQ 9 */
-  isr_exti4,		/* IRQ 10 */
-  isr_dma1_channel1,	/* IRQ 11 */
-  isr_dma1_channel2,	/* IRQ 12 */
-  isr_dma1_channel3,	/* IRQ 13 */
-  isr_dma1_channel4,	/* IRQ 14 */
-  isr_dma1_channel5,	/* IRQ 15 */
-  isr_dma1_channel6,	/* IRQ 16 */
-  isr_dma1_channel7,	/* IRQ 17 */
-  isr_adc1_2,		/* IRQ 18 */
-  isr_usb_hp_can_tx,	/* IRQ 19 */
-  isr_usb_lp_can_rx0,	/* IRQ 20 */
-  isr_can_rx1,		/* IRQ 21 */
-  isr_can_sce,		/* IRQ 22 */
-  isr_exti9_5,		/* IRQ 23 */
-  isr_tim1_brk,		/* IRQ 24 */
-  isr_tim1_up,		/* IRQ 25 */
-  isr_tim1_trg_com,	/* IRQ 26 */
-  isr_tim1_cc,		/* IRQ 27 */
-  isr_tim2,		/* IRQ 28 */
-  isr_tim3,		/* IRQ 29 */
-  isr_tim4,		/* IRQ 30 */
-  isr_i2c1_ev,		/* IRQ 31 */
-  isr_i2c1_er,		/* IRQ 32 */
-  isr_i2c2_ev,		/* IRQ 33 */
-  isr_i2c2_er,		/* IRQ 34 */
-  isr_spi1,		/* IRQ 35 */
-  isr_spi2,		/* IRQ 36 */
-  isr_usart1,		/* IRQ 37 */
-  isr_usart2,		/* IRQ 38 */
-  isr_usart3,		/* IRQ 39 */
-  isr_exti15_10,	/* IRQ 40 */
-  isr_rtc_alarm,	/* IRQ 41 */
-  isr_usb_wakeup,	/* IRQ 42 */
-  isr_tim8_brk,		/* IRQ 43 */
-  isr_tim8_up,		/* IRQ 44 */
-  isr_tim8_trg_com,	/* IRQ 45 */
-  isr_tim8_cc,		/* IRQ 46 */
-  isr_adc3,		/* IRQ 47 */
-  isr_fsmc,		/* IRQ 48 */
-  isr_sdio,		/* IRQ 49 */
+  ISR_WWDG,		/* IRQ 0 */
+  ISR_PVD,		/* IRQ 1 */
+  ISR_TAMPER,		/* IRQ 2 */
+  ISR_RTC,		/* IRQ 3 */
+  ISR_FLASH,		/* IRQ 4 */
+  ISR_RCC,		/* IRQ 5 */
+  ISR_EXTI0,		/* IRQ 6 */
+  ISR_EXTI1,		/* IRQ 7 */
+  ISR_EXTI2,		/* IRQ 8 */
+  ISR_EXTI3,		/* IRQ 9 */
+  ISR_EXTI4,		/* IRQ 10 */
+  ISR_DMA1_CHANNEL1,	/* IRQ 11 */
+  ISR_DMA1_CHANNEL2,	/* IRQ 12 */
+  ISR_DMA1_CHANNEL3,	/* IRQ 13 */
+  ISR_DMA1_CHANNEL4,	/* IRQ 14 */
+  ISR_DMA1_CHANNEL5,	/* IRQ 15 */
+  ISR_DMA1_CHANNEL6,	/* IRQ 16 */
+  ISR_DMA1_CHANNEL7,	/* IRQ 17 */
+  ISR_ADC1_2,		/* IRQ 18 */
+  ISR_USB_HP_CAN_TX,	/* IRQ 19 */
+  ISR_USB_LP_CAN_RX0,	/* IRQ 20 */
+  ISR_CAN_RX1,		/* IRQ 21 */
+  ISR_CAN_SCE,		/* IRQ 22 */
+  ISR_EXTI9_5,		/* IRQ 23 */
+  ISR_TIM1_BRK,		/* IRQ 24 */
+  ISR_TIM1_UP,		/* IRQ 25 */
+  ISR_TIM1_TRG_COM,	/* IRQ 26 */
+  ISR_TIM1_CC,		/* IRQ 27 */
+  ISR_TIM2,		/* IRQ 28 */
+  ISR_TIM3,		/* IRQ 29 */
+  ISR_TIM4,		/* IRQ 30 */
+  ISR_I2C1_EV,		/* IRQ 31 */
+  ISR_I2C1_ER,		/* IRQ 32 */
+  ISR_I2C2_EV,		/* IRQ 33 */
+  ISR_I2C2_ER,		/* IRQ 34 */
+  ISR_SPI1,		/* IRQ 35 */
+  ISR_SPI2,		/* IRQ 36 */
+  ISR_USART1,		/* IRQ 37 */
+  ISR_USART2,		/* IRQ 38 */
+  ISR_USART3,		/* IRQ 39 */
+  ISR_EXTI15_10,	/* IRQ 40 */
+  ISR_RTC_ALARM,	/* IRQ 41 */
+  ISR_USB_WAKEUP,	/* IRQ 42 */
+  ISR_TIM8_BRK,		/* IRQ 43 */
+  ISR_TIM8_UP,		/* IRQ 44 */
+  ISR_TIM8_TRG_COM,	/* IRQ 45 */
+  ISR_TIM8_CC,		/* IRQ 46 */
+  ISR_ADC3,		/* IRQ 47 */
+  ISR_FSMC,		/* IRQ 48 */
+  ISR_SDIO,		/* IRQ 49 */
 #ifdef RUN_FROM_RAM
   (void*)0xF108F85F,	/* @0x0108: workaround for boot issue in RAM mode. */
 #else
-  isr_tim5,		/* IRQ 50 */
+  ISR_TIM5,		/* IRQ 50 */
 #endif
-  isr_spi3,		/* IRQ 51 */
-  isr_usart4,		/* IRQ 52 */
-  isr_usart5,		/* IRQ 53 */
-  isr_tim6,		/* IRQ 54 */
-  isr_tim7,		/* IRQ 55 */
-  isr_dma2_channel1,	/* IRQ 56 */
-  isr_dma2_channel2,	/* IRQ 57 */
-  isr_dma2_channel3,	/* IRQ 58 */
-  isr_dma2_channel4_5,	/* IRQ 59 */
+  ISR_SPI3,		/* IRQ 51 */
+  ISR_USART4,		/* IRQ 52 */
+  ISR_USART5,		/* IRQ 53 */
+  ISR_TIM6,		/* IRQ 54 */
+  ISR_TIM7,		/* IRQ 55 */
+  ISR_DMA2_CHANNEL1,	/* IRQ 56 */
+  ISR_DMA2_CHANNEL2,	/* IRQ 57 */
+  ISR_DMA2_CHANNEL3,	/* IRQ 58 */
+  ISR_DMA2_CHANNEL4_5,	/* IRQ 59 */
 };
 
 
 #if ISR_DEFAULT == ISR_DEFAULT_EXIT
-#pragma weak esr_nmi			= isr_exit
-#pragma weak esr_hard_fault		= isr_exit
-#pragma weak esr_mem_manage		= isr_exit
-#pragma weak esr_bus_fault		= isr_exit
-#pragma weak esr_usage_fault		= isr_exit
-#pragma weak esr_sv_call		= isr_exit
-#pragma weak esr_debug_monitor		= isr_exit
-#pragma weak esr_pend_sv		= isr_exit
-#pragma weak esr_systick		= isr_exit
+#pragma weak ESR_NMI			= ISR_EXIT
+#pragma weak ESR_HARD_FAULT		= ISR_EXIT
+#pragma weak ESR_MEM_MANAGE		= ISR_EXIT
+#pragma weak ESR_BUS_FAULT		= ISR_EXIT
+#pragma weak ESR_USAGE_FAULT		= ISR_EXIT
+#pragma weak ESR_SV_CALL		= ISR_EXIT
+#pragma weak ESR_DEBUG_MONITOR		= ISR_EXIT
+#pragma weak ESR_PEND_SV		= ISR_EXIT
+#pragma weak ESR_SYSTICK		= ISR_EXIT
 
-#pragma weak isr_wwdg			= isr_exit
-#pragma weak isr_pvd			= isr_exit
-#pragma weak isr_tamper			= isr_exit
-#pragma weak isr_rtc			= isr_exit
-#pragma weak isr_flash			= isr_exit
-#pragma weak isr_rcc			= isr_exit
-#pragma weak isr_exti0			= isr_exit
-#pragma weak isr_exti1			= isr_exit
-#pragma weak isr_exti2			= isr_exit
-#pragma weak isr_exti3			= isr_exit
-#pragma weak isr_exti4			= isr_exit
-#pragma weak isr_dma1_channel1		= isr_exit
-#pragma weak isr_dma1_channel2		= isr_exit
-#pragma weak isr_dma1_channel3		= isr_exit
-#pragma weak isr_dma1_channel4		= isr_exit
-#pragma weak isr_dma1_channel5		= isr_exit
-#pragma weak isr_dma1_channel6		= isr_exit
-#pragma weak isr_dma1_channel7		= isr_exit
-#pragma weak isr_adc1_2			= isr_exit
-#pragma weak isr_usb_hp_can_tx		= isr_exit
-#pragma weak isr_usb_lp_can_rx0		= isr_exit
-#pragma weak isr_can_rx1		= isr_exit
-#pragma weak isr_can_sce		= isr_exit
-#pragma weak isr_exti9_5		= isr_exit
-#pragma weak isr_tim1_brk		= isr_exit
-#pragma weak isr_tim1_up		= isr_exit
-#pragma weak isr_tim1_trg_com		= isr_exit
-#pragma weak isr_tim1_cc		= isr_exit
-#pragma weak isr_tim2			= isr_exit
-#pragma weak isr_tim3			= isr_exit
-#pragma weak isr_tim4			= isr_exit
-#pragma weak isr_i2c1_ev		= isr_exit
-#pragma weak isr_i2c1_er		= isr_exit
-#pragma weak isr_i2c2_ev		= isr_exit
-#pragma weak isr_i2c2_er		= isr_exit
-#pragma weak isr_spi1			= isr_exit
-#pragma weak isr_spi2			= isr_exit
-#pragma weak isr_usart1			= isr_exit
-#pragma weak isr_usart2			= isr_exit
-#pragma weak isr_usart3			= isr_exit
-#pragma weak isr_exti15_10		= isr_exit
-#pragma weak isr_rtc_alarm		= isr_exit
-#pragma weak isr_usb_wakeup		= isr_exit
-#pragma weak isr_tim8_brk		= isr_exit
-#pragma weak isr_tim8_up		= isr_exit
-#pragma weak isr_tim8_trg_com		= isr_exit
-#pragma weak isr_tim8_cc		= isr_exit
-#pragma weak isr_adc3			= isr_exit
-#pragma weak isr_fsmc			= isr_exit
-#pragma weak isr_sdio			= isr_exit
-#pragma weak isr_tim5			= isr_exit
-#pragma weak isr_spi3			= isr_exit
-#pragma weak isr_usart4			= isr_exit
-#pragma weak isr_usart5			= isr_exit
-#pragma weak isr_tim6			= isr_exit
-#pragma weak isr_tim7			= isr_exit
-#pragma weak isr_dma2_channel1		= isr_exit
-#pragma weak isr_dma2_channel2		= isr_exit
-#pragma weak isr_dma2_channel3		= isr_exit
-#pragma weak isr_dma2_channel4_5	= isr_exit
+#pragma weak ISR_WWDG			= ISR_EXIT
+#pragma weak ISR_PVD			= ISR_EXIT
+#pragma weak ISR_TAMPER			= ISR_EXIT
+#pragma weak ISR_RTC			= ISR_EXIT
+#pragma weak ISR_FLASH			= ISR_EXIT
+#pragma weak ISR_RCC			= ISR_EXIT
+#pragma weak ISR_EXTI0			= ISR_EXIT
+#pragma weak ISR_EXTI1			= ISR_EXIT
+#pragma weak ISR_EXTI2			= ISR_EXIT
+#pragma weak ISR_EXTI3			= ISR_EXIT
+#pragma weak ISR_EXTI4			= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL1		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL2		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL3		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL4		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL5		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL6		= ISR_EXIT
+#pragma weak ISR_DMA1_CHANNEL7		= ISR_EXIT
+#pragma weak ISR_ADC1_2			= ISR_EXIT
+#pragma weak ISR_USB_HP_CAN_TX		= ISR_EXIT
+#pragma weak ISR_USB_LP_CAN_RX0		= ISR_EXIT
+#pragma weak ISR_CAN_RX1		= ISR_EXIT
+#pragma weak ISR_CAN_SCE		= ISR_EXIT
+#pragma weak ISR_EXTI9_5		= ISR_EXIT
+#pragma weak ISR_TIM1_BRK		= ISR_EXIT
+#pragma weak ISR_TIM1_UP		= ISR_EXIT
+#pragma weak ISR_TIM1_TRG_COM		= ISR_EXIT
+#pragma weak ISR_TIM1_CC		= ISR_EXIT
+#pragma weak ISR_TIM2			= ISR_EXIT
+#pragma weak ISR_TIM3			= ISR_EXIT
+#pragma weak ISR_TIM4			= ISR_EXIT
+#pragma weak ISR_I2C1_EV		= ISR_EXIT
+#pragma weak ISR_I2C1_ER		= ISR_EXIT
+#pragma weak ISR_I2C2_EV		= ISR_EXIT
+#pragma weak ISR_I2C2_ER		= ISR_EXIT
+#pragma weak ISR_SPI1			= ISR_EXIT
+#pragma weak ISR_SPI2			= ISR_EXIT
+#pragma weak ISR_USART1			= ISR_EXIT
+#pragma weak ISR_USART2			= ISR_EXIT
+#pragma weak ISR_USART3			= ISR_EXIT
+#pragma weak ISR_EXTI15_10		= ISR_EXIT
+#pragma weak ISR_RTC_ALARM		= ISR_EXIT
+#pragma weak ISR_USB_WAKEUP		= ISR_EXIT
+#pragma weak ISR_TIM8_BRK		= ISR_EXIT
+#pragma weak ISR_TIM8_UP		= ISR_EXIT
+#pragma weak ISR_TIM8_TRG_COM		= ISR_EXIT
+#pragma weak ISR_TIM8_CC		= ISR_EXIT
+#pragma weak ISR_ADC3			= ISR_EXIT
+#pragma weak ISR_FSMC			= ISR_EXIT
+#pragma weak ISR_SDIO			= ISR_EXIT
+#pragma weak ISR_TIM5			= ISR_EXIT
+#pragma weak ISR_SPI3			= ISR_EXIT
+#pragma weak ISR_USART4			= ISR_EXIT
+#pragma weak ISR_USART5			= ISR_EXIT
+#pragma weak ISR_TIM6			= ISR_EXIT
+#pragma weak ISR_TIM7			= ISR_EXIT
+#pragma weak ISR_DMA2_CHANNEL1		= ISR_EXIT
+#pragma weak ISR_DMA2_CHANNEL2		= ISR_EXIT
+#pragma weak ISR_DMA2_CHANNEL3		= ISR_EXIT
+#pragma weak ISR_DMA2_CHANNEL4_5	= ISR_EXIT
 #endif

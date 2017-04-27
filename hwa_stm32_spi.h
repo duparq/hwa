@@ -53,6 +53,43 @@
   HWA_GLUE3(HWA_PTR_,pname,_DR)
 
 
+/**
+ * @brief  Set SPI baudrate
+ *
+ * @param  pname: SPI1, SPI2, or SPI3
+ * @param  rate: PCLK divided by 2, 4, 8, 16, 32, 64, 128, 256
+ * @note   SPI1 is clocked by PCLK2, SPI2 and SPI3 are clocked by PCLK1
+ * @retval None
+ */
+#define hw_spi_set_baudrate(pname, rate)		\
+  do {							\
+    u32 clk ;						\
+    if (HW_REGAD(pname, CR1) == HWA_PTR_SPI1_CR1)	\
+      clk = PCLK2_HZ ;					\
+    else						\
+      clk = PCLK1_HZ ;					\
+    if (clk / rate == 2) {				\
+      HW_SET(pname, CR1, 0b111, 3, 0x0);		\
+    } else if (clk / rate == 4) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x1);		\
+    } else if (clk / rate == 8) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x2);		\
+    } else if (clk / rate == 16) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x3);		\
+    } else if (clk / rate == 32) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x4);		\
+    } else if (clk / rate == 64) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x5);		\
+    } else if (clk / rate == 128) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x6);		\
+    } else if (clk / rate == 256) {			\
+      HW_SET(pname, CR1, 0b111, 3, 0x7);		\
+    } else {						\
+      HWA_ERROR_CT(1, "Invalid baudrate");		\
+    }							\
+  } while(0)
+
+
 /********************************************************************************
  *										*
  *				User definitions				*
@@ -249,6 +286,29 @@
 
 
 /**
+ * @brief  Turn SPI IRQ ON/OFF
+ *
+ * @param  pname: SPI1, SPI2, or SPI3
+ * @param  irq: TX, RX, ERR
+ * @param  state: ON or OFF
+ * @retval None
+ */
+#define hwa_spi_turn_irq(pname, irq, state)		\
+  HWA_VSET(pname, CR2, 0b1, HWA_SPI_IRQ_##irq, HWA_STATE_##state)
+
+#define hw_spi_turn_irq(pname, irq, state)		\
+  HW_SET(pname, CR2, 0b1, HWA_SPI_IRQ_##irq, HWA_STATE_##state)
+
+#define HWA_SPI_IRQ_TX			7
+#define HWA_SPI_IRQ_RX			6
+#define HWA_SPI_IRQ_ERR			5
+
+
+#define _hwa_spi_turn_crc_calculator(pname, state)	\
+  HWA_SET(pname##_CR1, 0b1, 13, state) /* CRCEN */
+
+
+/**
  * @brief  Turn SPI ON/OFF
  *
  * @param  pname: SPI1, SPI2, or SPI3
@@ -302,9 +362,9 @@
 #define HWA_PTR_SPI3_I2SCFGR		((volatile u16 *)(HWA_PTR_SPI3+0x1C))
 #define HWA_PTR_SPI3_I2SPR		((volatile u16 *)(HWA_PTR_SPI3+0x20))
 
-#define HWA_IRQN_SPI1			?
-#define HWA_IRQN_SPI2			?
-#define HWA_IRQN_SPI3			?
+#define HWA_IRQN_SPI1			35
+#define HWA_IRQN_SPI2			36
+#define HWA_IRQN_SPI3			51
 
 
 #define hwa_spi_begin(state)			\

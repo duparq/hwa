@@ -93,7 +93,7 @@ exit ( int status __attribute__((unused)) )
 }
 
 
-/*	Include specific device code
+/*	Include device-specific code
  */
 #define HWA_INCC_STM32		"hwa_stm32.c"
 

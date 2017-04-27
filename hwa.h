@@ -118,6 +118,12 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 #define HWA_GLUE4_(a,b,c,d)		a##b##c##d
 #define HWA_GLUE4(a,b,c,d)		HWA_GLUE4_(a,b,c,d)
 
+#define HWA_GLUE5_(a,b,c,d,e)		a##b##c##d##e
+#define HWA_GLUE5(a,b,c,d,e)		HWA_GLUE5_(a,b,c,d,e)
+
+#define HWA_VREG(pname,reg,vreg)	HWA_##pname##_##reg##_##vreg
+//#define HWA_VREG(pname,reg,vreg)	HWA_VREG_(pname,reg,vreg)
+
 #define HWA_STR_(x)			#x
 #define HWA_STR(x)			HWA_STR_(x)
 
@@ -177,6 +183,25 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
     HWA_COMMIT(reg);							\
   }
 
+#define HWA_VSET(pname, reg, mask, shift, val)			\
+  if ( HWA_VREG(pname,reg,initialised) == 0 ) {			\
+    HWA_VREG(pname,reg,mmask) |= ((mask) << (shift)) ;		\
+    HWA_VREG(pname,reg,value) =					\
+      (HWA_VREG(pname,reg,value) & ~((mask) << (shift)))	\
+      | ((val) << (shift)) ;					\
+  } else {							\
+    if ( (u32)(HWA_VREG(pname,reg,value) & ((mask) << (shift)))	\
+	 != (u32)((val) << (shift)) ) {				\
+      HWA_VREG(pname,reg,mmask) |= ((mask) << (shift)) ;	\
+      HWA_VREG(pname,reg,value) =				\
+	(HWA_VREG(pname,reg,value)				\
+	 & ~((mask) << (shift))) | ((val) << (shift)) ;		\
+    }								\
+  }								\
+  if ( hwa_commit_policy == HWA_COMMIT_POLICY_ALWAYS) {		\
+    HWA_COMMIT(pname##_##reg);						\
+  }
+
 #define HWA_SET_VA(args...)			\
   HWA_SET(args)
 
@@ -188,6 +213,12 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 
 #define HW_REG(pname, reg)			\
   *HWA_GLUE4(HWA_PTR_,pname,_,reg)
+
+#define HW_REGAD(pname, reg)			\
+  HWA_GLUE4(HWA_PTR_,pname,_,reg)
+
+#define HW_SET(pname, reg, mask, shift, value)				\
+  HW_REG(pname, reg) = (HW_REG(pname, reg) & ~((mask) << (shift))) | ((value) << (shift)) ;
 
 /*	Commit if commit policy is set to 'auto'
  */
@@ -220,6 +251,10 @@ __attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 
 #define _HWA_COMMIT_VA(a, b, c)			\
   HWA_COMMIT(a)
+
+
+#define HWA_ISR(pname)				\
+  void HWA_GLUE2(ISR_,pname)()
 
 
 #include "hwa_gpio_ports.h"

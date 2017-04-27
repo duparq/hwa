@@ -1,6 +1,12 @@
 #ifndef HWA_SYSTICK_H
 #define HWA_SYSTICK_H
 
+#define hw_systick_get_elapsed()\
+  (*HWA_PTR_SYSTICK_VALUE)
+ 
+#define hw_systick_set_value(value)	\
+  *HWA_PTR_SYSTICK_VALUE=value
+
 /********************************************************************************
  *										*
  *				User definitions				*
@@ -23,9 +29,6 @@
  
 #define hwa_systick_set_reload_value(value)	\
   *HWA_PTR_SYSTICK_LOAD=value
-
-#define hwa_systick_get_value()			\
-  (*HWA_PTR_SYSTICK_VALUE)
 
 #define hwa_systick_flag_is_set()			\
   (HWA_BITS(*HWA_PTR_SYSTICK_CTRL, 0b1, 16) != 0)
