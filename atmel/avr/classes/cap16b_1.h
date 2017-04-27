@@ -20,9 +20,9 @@
  * A class `_cap16b` object is a 16-bit capture unit. It has the following
  * relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( capture0, counter )`
+ *  * one counter, whose name is given by `HW_RELATIVE( capture0, counter )`
  *
- *  * one input pin, whose name is given by `HW_REL( capture0, pin )`
+ *  * one input pin, whose name is given by `HW_RELATIVE( capture0, pin )`
  *
  * It is used in:
  *

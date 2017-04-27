@@ -15,11 +15,11 @@
  * A class `_cmp8b` object is an 8-bit compare unit with waveform generator that
  * drives two complementary outputs. It has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( compare0, counter )`
+ *  * one counter, whose name is given by `HW_RELATIVE( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_REL( compare0, pin_h )`
+ *  * one output pin, whose name is given by `HW_RELATIVE( compare0, pin_h )`
  *
- *  * one complementary output pin, whose name is given by `HW_REL( compare0, pin_l )`
+ *  * one complementary output pin, whose name is given by `HW_RELATIVE( compare0, pin_l )`
  *
  * It is used in:
  *

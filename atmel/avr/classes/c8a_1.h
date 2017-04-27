@@ -15,11 +15,11 @@
  * A class `_c8a` object is an 8-bit counting unit that has 3 relative objects:
  *
  *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `HW_REL( counter0, prescaler )`
+ *    * `HW_RELATIVE( counter0, prescaler )`
  *
  *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a "_cmp8a":
- *    * `HW_REL( counter0, compare0 )` and <br>
- *	`HW_REL( counter0, compare1 )`
+ *    * `HW_RELATIVE( counter0, compare0 )` and <br>
+ *	`HW_RELATIVE( counter0, compare1 )`
  *
  * It is used in:
  *

@@ -15,9 +15,9 @@
  * A class `_cmp16a` object is a 16-bit counter compare unit with waveform
  * generator. It has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_REL( compare0, counter )`
+ *  * one counter, whose name is given by `HW_RELATIVE( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_REL( compare0, pin )`
+ *  * one output pin, whose name is given by `HW_RELATIVE( compare0, pin )`
  *
  * It is used in:
  *

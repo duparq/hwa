@@ -15,14 +15,14 @@
  * A class `_c8b` object is an 8-bit counting unit that has 4 relative objects:
  *
  *  * one prescaler of class @ref atmelavr_pscb "_pscb":
- *    * `HW_REL( counter0, prescaler )`
+ *    * `HW_RELATIVE( counter0, prescaler )`
  *
  *  * two compare units with waveform generators, of class @ref atmelavr_cmp8b "_cmp8b":
- *    * `HW_REL( counter0, compare0 )` and <br>
- *	`HW_REL( counter0, compare1 )`
+ *    * `HW_RELATIVE( counter0, compare0 )` and <br>
+ *	`HW_RELATIVE( counter0, compare1 )`
  *
  *  * one dead time generator of class @ref atmelavr_dtga "_dtga":
- *    * `HW_REL( counter0, dtg )`
+ *    * `HW_RELATIVE( counter0, dtg )`
  *
  * It is used in:
  *

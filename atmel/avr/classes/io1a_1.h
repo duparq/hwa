@@ -18,8 +18,8 @@
  *
  * `_io1a` objects have the following relative objects:
  *
- *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_REL( pin_pa0, port )`
- *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_REL( pin_pa0, pcic )`
+ *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_RELATIVE( pin_pa0, port )`
+ *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_RELATIVE( pin_pa0, pcic )`
  */
 #define _hw_class__io1a
 
@@ -61,7 +61,7 @@
 /**
  * @page atmelavr_io1a
  *
- * The `HW_REL()` instruction is usefull to retrieve the name of the I/O port
+ * The `HW_RELATIVE()` instruction is usefull to retrieve the name of the I/O port
  * associated to the I/O:
  *
  * @code
