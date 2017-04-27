@@ -130,7 +130,7 @@ uart_putchar(char c, FILE *unused __attribute__((unused)) )
  * transfered.
  * Address bits exceeding 256 are transfered in the
  * E2/E1/E0 bits (subaddress bits) of the device selector.
- * Address is sent in two dedicaped 8 bit transfers
+ * Address is sent in two dedicated 8 bit transfers
  * for 16 bit address devices (larger EEPROM devices)
  *
  * The second bus cycle will reselect the device (repeated start
