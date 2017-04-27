@@ -92,8 +92,8 @@ typedef struct {
   HWA_VINIT(HWA_CLOCK, HWA_CLOCK0, HWA_APB1HZ, reset);	\
   HWA_VINIT(HWA_CLOCK, HWA_CLOCK0, HWA_APB2HZ, reset);
 
-#define hwa_commit_clock()						\
-  _hwa_clock_commit(hwa_nocommit, HWA_P(HWA_CLOCK0), HWA_P(HWA_FLASH0))
+#define hwa_commit_clock(dry)						\
+  _hwa_clock_commit(dry, HWA_CLOCK0, HWA_FLASH0)
 
 
 /*	Minimal settings: SYSHZ
@@ -107,11 +107,11 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
   if ( !p->used )
     return ;
 
-  u32 syshz = HWA_NVALP(p, HWA_SYSHZ) ;
-  u32 hsehz = HWA_NVALP(p, HWA_HSEHZ) ;
-  u32 ahbhz = HWA_NVALP(p, HWA_AHBHZ) ;
-  u32 apb1hz = HWA_NVALP(p, HWA_APB1HZ) ;
-  u32 apb2hz = HWA_NVALP(p, HWA_APB2HZ) ;
+  u32 syshz = HWA_NVAL(p, HWA_SYSHZ) ;
+  u32 hsehz = HWA_NVAL(p, HWA_HSEHZ) ;
+  u32 ahbhz = HWA_NVAL(p, HWA_AHBHZ) ;
+  u32 apb1hz = HWA_NVAL(p, HWA_APB1HZ) ;
+  u32 apb2hz = HWA_NVAL(p, HWA_APB2HZ) ;
 
   /*	If this module is used, SYSHZ must be specified.
    */
@@ -122,7 +122,7 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
    */
   if ( ahbhz == HWA_NONE ) {
     ahbhz = syshz ;
-    HWA_VSETP(HWA_CLOCK, p, HWA_AHBHZ, -1, 0, ahbhz);
+    HWA_VSET(HWA_CLOCK, p, HWA_AHBHZ, -1, 0, ahbhz);
   }
 
   if ( apb1hz == HWA_NONE ) {
@@ -130,30 +130,30 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
       apb1hz = ahbhz / 2 ;
     else
       apb1hz = ahbhz ;
-    HWA_VSETP(HWA_CLOCK, p, HWA_APB1HZ, -1, 0, apb1hz);
+    HWA_VSET(HWA_CLOCK, p, HWA_APB1HZ, -1, 0, apb1hz);
     /* HWA_WARN(""); */
   }
 
   if ( apb2hz == HWA_NONE ) {
     apb2hz = ahbhz ;
-    HWA_VSETP(HWA_CLOCK, p, HWA_APB2HZ, -1, 0, apb2hz);
+    HWA_VSET(HWA_CLOCK, p, HWA_APB2HZ, -1, 0, apb2hz);
   }
 
 
-  if (HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, mvmask) == 0)
+  if (HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, mvmask) == 0)
     sw = 0xFF ;
   else
-    sw = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, mvalue) ;
+    sw = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, mvalue) ;
 
-  if (HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, mvmask) == 0)
+  if (HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, mvmask) == 0)
     pllsrc = 0xFF ;
   else
-    pllsrc = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, mvalue) ;
+    pllsrc = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, mvalue) ;
 
-  if (HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, mvmask) == 0)
+  if (HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, mvmask) == 0)
     pllmul = 0 ;
   else
-    pllmul = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, mvalue) + 2;
+    pllmul = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, mvalue) + 2;
 
   /*	Try SW = HSE
    */
@@ -229,11 +229,11 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
        || syshz < 4000000 || syshz > 72000000 )
     HWA_ERROR("Invalid SYSCLK configuration.");
 
-  HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, sw);
+  HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_SW, sw);
   if ( pllsrc != 0xFF )
-    HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, pllsrc);
+    HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_SRC, pllsrc);
   if ( pllmul != 0 )
-    HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, pllmul-2);
+    HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_PLL_MUL, pllmul-2);
 
   /*	If HSE is used, HSE OSC must be started
    */
@@ -241,17 +241,17 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
        || (sw == HWA_CLOCK_CFGR_SW_PLL
 	   && (pllsrc == HWA_CLOCK_CFGR_PLL_SRC_HSE
 	       || pllsrc == HWA_CLOCK_CFGR_PLL_SRC_HSE_DIV2)))
-    HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CR_HSE_ON, 1);
+    HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CR_HSE_ON, 1);
 
   /*	AHB prescaler (HPRE)
    *	Possible values: 1, 2, 4, 8, 16, 64, 128, 256, 512
    *
    *	Reset value (1) is valid in any case.
    */
-  if ( HWA_VREGP(p, HWA_AHBHZ, mvmask) != 0 )
+  if ( HWA_VREG(p, HWA_AHBHZ, mvmask) != 0 )
     hpre = syshz / ahbhz ;
   else {
-    if ( HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, ovmask) == 0 ) {
+    if ( HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, ovmask) == 0 ) {
       /* hpre = 1 ; */
       HWA_ERROR("HPRE setting is needed.");
     }
@@ -259,7 +259,7 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
       /*
        *	Decode HPRE from hardware setting
        */
-      hpre = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, ovalue) ;
+      hpre = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, ovalue) ;
       if ( (hpre & 0b1000) == 0 )
 	hpre = 1 ;
       else
@@ -300,15 +300,15 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
     if 
       }
 #endif
-  HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, hpre);
+  HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_HPRE, hpre);
 
 
   /*	APB1 prescaler (PPRE1): APB1_HZ < 36 MHz
    */
-  if ( HWA_VREGP(p, HWA_APB1HZ, mvmask) )
+  if ( HWA_VREG(p, HWA_APB1HZ, mvmask) )
     ppre1 = ahbhz / apb1hz ;
   else {
-    if ( HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ovmask) == 0 ) {
+    if ( HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ovmask) == 0 ) {
       /* if ( ahbhz > 36000000 ) */
       /* 	ppre1 = 2 ; */
       /* else */
@@ -319,7 +319,7 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
       /*
        *	Decode PPRE1 from hardware setting
        */
-      ppre1 = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ovalue) ;
+      ppre1 = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ovalue) ;
       if ( (ppre1 & 0b100) == 0 )
 	ppre1 = 1 ;
       else
@@ -350,15 +350,15 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
   if ( apb1hz > 36000000 )
     HWA_ERROR("APB1 frequency > 36 MHz.");
 
-  HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ppre1);
+  HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE1, ppre1);
 
 
   /*	APB2 prescaler (PPRE2)
    */
-  if ( HWA_VREGP(p, HWA_APB2HZ, mvmask) )
+  if ( HWA_VREG(p, HWA_APB2HZ, mvmask) )
     ppre2 = ahbhz / apb2hz ;
   else {
-    if ( HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ovmask) == 0 ) {
+    if ( HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ovmask) == 0 ) {
       HWA_ERROR("PPRE2 setting is needed.");
       /* ppre2 = 1 ; */
     }
@@ -366,7 +366,7 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
       /*
        *	Decode PPRE2 from hardware setting
        */
-      ppre2 = HWA_VBITSP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ovalue) ;
+      ppre2 = HWA_VBITS(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ovalue) ;
       if ( (ppre2 & 0b100) == 0 )
 	ppre2 = 1 ;
       else
@@ -391,30 +391,30 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
   else
     HWA_ERROR("PPRE2 invalid.");
 
-  HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ppre2);
+  HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CFGR_PPRE2, ppre2);
 
-  HWA_VSETP(HWA_CLOCK, p, HWA_SYSHZ, -1, 0, syshz);
-  HWA_VSETP(HWA_CLOCK, p, HWA_AHBHZ, -1, 0, ahbhz);
-  HWA_VSETP(HWA_CLOCK, p, HWA_APB1HZ, -1, 0, apb1hz);
-  HWA_VSETP(HWA_CLOCK, p, HWA_APB2HZ, -1, 0, apb2hz);
+  HWA_VSET(HWA_CLOCK, p, HWA_SYSHZ, -1, 0, syshz);
+  HWA_VSET(HWA_CLOCK, p, HWA_AHBHZ, -1, 0, ahbhz);
+  HWA_VSET(HWA_CLOCK, p, HWA_APB1HZ, -1, 0, apb1hz);
+  HWA_VSET(HWA_CLOCK, p, HWA_APB2HZ, -1, 0, apb2hz);
 
-  /* if ( HWA_VREGP(p, HWA_APB1HZ, mvalue) != apb1hz ) */
+  /* if ( HWA_VREG(p, HWA_APB1HZ, mvalue) != apb1hz ) */
   /*   HWA_ERROR("HWA Error."); */
 
-  /* if ( HWA_VREGP(p, HWA_APB1HZ, mvmask) ) { */
+  /* if ( HWA_VREG(p, HWA_APB1HZ, mvmask) ) { */
   /*   HWA_WARN("MVMASK."); */
-  /*   if ( HWA_VREGP(p, HWA_APB1HZ, mvalue) != apb1hz ) */
+  /*   if ( HWA_VREG(p, HWA_APB1HZ, mvalue) != apb1hz ) */
   /*     HWA_WARN("MVALUE."); */
   /* } */
-  /* else if ( HWA_VREGP(p, HWA_APB1HZ, ovmask) ) */
+  /* else if ( HWA_VREG(p, HWA_APB1HZ, ovmask) ) */
   /*   HWA_WARN("OVMASK."); */
   /* else */
   /*   HWA_WARN("NONE."); */
 
-  /* if (HWA_NVALP(HWA_CLOCK, p, HWA_APB1HZ) != apb1hz ) */
+  /* if (HWA_NVAL(HWA_CLOCK, p, HWA_APB1HZ) != apb1hz ) */
   /*   HWA_ERROR("HWA Error."); */
 
-  /* if (HWA_NVALP(HWA_CLOCK, p, HWA_APB1HZ) == HWA_NVALP(HWA_HCLOCK, p, HWA_AHBHZ)) */
+  /* if (HWA_NVAL(HWA_CLOCK, p, HWA_APB1HZ) == HWA_NVAL(HWA_HCLOCK, p, HWA_AHBHZ)) */
   /*   HWA_WARN("NO CLKMUL"); */
   /* else  */
   /*   HWA_WARN("CLKMUL"); */
@@ -426,18 +426,18 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
    *	from 1 on the AHB clock. Refer to Reading the Flash memory on page 52
    *	section for more details.
    */
-  if ( HWA_VBITSP(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, mvmask) == 0 ) {
+  if ( HWA_VBITS(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, mvmask) == 0 ) {
     if (syshz < 24000000)
-      HWA_VSETP(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_0WS);
+      HWA_VSET(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_0WS);
     else if (syshz < 48000000)
-      HWA_VSETP(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_1WS);
+      HWA_VSET(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_1WS);
     else
-      HWA_VSETP(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_2WS);
+      HWA_VSET(HWA_FLASH, flash, HWA_FLASH_ACR_LATENCY, HWA_FLASH_ACR_LATENCY_2WS);
   }
 
   /*	Commit flash latency before SYSCLK switch to high-speed.
    */
-  HWA_COMMITP(HWA_FLASH, flash, HWA_ACR);
+  HWA_COMMIT(HWA_FLASH, flash, HWA_ACR);
 #endif
 
   /*	RM0008: The PLL configuration (selection of HSI oscillator divided by 2 or HSE
@@ -448,28 +448,28 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
    */
   /*	Set PLL and other device clocks configuration (PLL not enabled yet)
    */
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_CFGR);
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_CR);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_CFGR);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_CR);
 
   /*	Enable PLL. Sysclock will be switched automatically to PLL when PLL
    *	and its source are ready. No need to wait!
    */
   if ( sw == HWA_CLOCK_CFGR_SW_PLL ) {
-    HWA_VSETP(HWA_CLOCK, p, HWA_CLOCK_CR_PLL_ON, 1);
-    HWA_COMMITP(dry, HWA_CLOCK, p, HWA_CR);
+    HWA_VSET(HWA_CLOCK, p, HWA_CLOCK_CR_PLL_ON, 1);
+    HWA_COMMIT(dry, HWA_CLOCK, p, HWA_CR);
   }
 
-  ahbhz = HWA_NVALP(p, HWA_AHBHZ) ;
+  ahbhz = HWA_NVAL(p, HWA_AHBHZ) ;
   if ( ahbhz == HWA_NONE )
     HWA_ERROR("");
 
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_SYSHZ);
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_HSEHZ);
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_AHBHZ);
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_APB1HZ);
-  HWA_COMMITP(dry, HWA_CLOCK, p, HWA_APB2HZ);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_SYSHZ);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_HSEHZ);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_AHBHZ);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_APB1HZ);
+  HWA_COMMIT(dry, HWA_CLOCK, p, HWA_APB2HZ);
 
-  ahbhz = HWA_NVALP(p, HWA_AHBHZ) ;
+  ahbhz = HWA_NVAL(p, HWA_AHBHZ) ;
   if ( ahbhz == HWA_NONE )
     HWA_ERROR("");
 
@@ -491,17 +491,17 @@ _hwa_clock_commit ( u8 dry, HWA_CLOCK *p, HWA_FLASH *flash __attribute__((unused
  ************************************************************************/
 
 #define hwa_clock_set_xso_hz(hz)\
-  HWA_VSETP(HWA_CLOCK, HWA_P(HWA_CLOCK0), HWA_HSEHZ, -1, 0, hz)
+  HWA_VSET(HWA_CLOCK, HWA_CLOCK0, HWA_HSEHZ, -1, 0, hz)
 
 #define hwa_clock_set_sys_hz(hz)\
-  HWA_VSETP(HWA_CLOCK, HWA_P(HWA_CLOCK0), HWA_SYSHZ, -1, 0, hz)
+  HWA_VSET(HWA_CLOCK, HWA_CLOCK0, HWA_SYSHZ, -1, 0, hz)
 
-#define hwa_clock_set_ahb_hz(hz)	HWA_VSETP(HWA_CLOCK, HWA_P(HWA_CLOCK0), AHBHZ, -1, 0, hz)
-#define hwa_clock_set_apb1_hz(hz)	HWA_VSETP(HWA_CLOCK, HWA_P(HWA_CLOCK0), APB1HZ, -1, 0, hz)
-#define hwa_clock_set_apb2_hz(hz)	HWA_VSETP(HWA_CLOCK, HWA_P(HWA_CLOCK0), APB2HZ, -1, 0, hz)
+#define hwa_clock_set_ahb_hz(hz)	HWA_VSET(HWA_CLOCK, HWA_CLOCK0, AHBHZ, -1, 0, hz)
+#define hwa_clock_set_apb1_hz(hz)	HWA_VSET(HWA_CLOCK, HWA_CLOCK0, APB1HZ, -1, 0, hz)
+#define hwa_clock_set_apb2_hz(hz)	HWA_VSET(HWA_CLOCK, HWA_CLOCK0, APB2HZ, -1, 0, hz)
 
-/* #define hwa_clock_set_ahb_hz(hz)	HWA_XSETP(HWA_P(CLOCK0), ahb_hz, hz) */
-/* #define hwa_clock_set_apb1_hz(hz)	HWA_XSETP(HWA_P(CLOCK0), apb1_hz, hz) */
-/* #define hwa_clock_set_apb2_hz(hz)	HWA_XSETP(HWA_P(CLOCK0), apb2_hz, hz) */
+/* #define hwa_clock_set_ahb_hz(hz)	HWA_XSET((CLOCK0), ahb_hz, hz) */
+/* #define hwa_clock_set_apb1_hz(hz)	HWA_XSET((CLOCK0), apb1_hz, hz) */
+/* #define hwa_clock_set_apb2_hz(hz)	HWA_XSET((CLOCK0), apb2_hz, hz) */
 
 #endif

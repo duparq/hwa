@@ -54,7 +54,10 @@ assert_failed ( const char *file __attribute__ ((unused)),
 }
 
 
-void __attribute__((noreturn, weak))
+void
+#if !defined DEBUG
+__attribute__((noreturn, weak))
+#endif
 exit ( int status __attribute__((unused)) )
 {
   while(1) {}
@@ -72,7 +75,7 @@ HWA_ESR_RESET ( )
    */
 #ifdef RUN_FROM_RAM
   if ( (((u32)isr_vector) & 0xFF000000) == 0x20000000 ) {
-    __asm__ volatile("mov sp,%0" : : "r"(isr_vector[0]));
+    __asm__ volatile("mov sp,%[sp]" : : [sp] "r" (isr_vector[0]) );
 
     /* #define HWA_SCB	0xE000ED00 */
     /* #define HWA_SCB_VTOR	((volatile u32 *)(HWA_SCB+8)) /\* 0xE000ED08 *\/ */
@@ -105,7 +108,6 @@ HWA_ESR_RESET ( )
     *dst = *src ;
 #endif
 
-  //  hwa_init_system();
   main();
   exit(1);
 }

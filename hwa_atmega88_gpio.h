@@ -15,7 +15,7 @@
   do {						\
     hwa_gpio_begin(UNKNOWN);			\
     hwa_gpio_config_pin(pinname, mode) ;	\
-    hwa_gpio_commit();				\
+    hwa_gpio_commit(dry, );				\
   } while(0)
 
 #define hw_gpio_write_pin(pinname, value)				\
@@ -23,13 +23,13 @@
 		     (value)<<HWA_PINNUM(pinname))
 
 #define hw_gpio_write_pins(pname, mask, value)				\
-  HWA_HREG(pname, PORT) = (HWA_HREG(pname, PIN) & (u8)~(mask)) | ((value) & (mask)) ;
+  HW_HREG(pname, PORT) = (HW_HREG(pname, PIN) & (u8)~(mask)) | ((value) & (mask)) ;
 
 #define hw_gpio_toggle_pin(pinname)					\
   hw_gpio_toggle_pins(HWA_PORTNAME(pinname), 1<<HWA_PINNUM(pinname))
 
 #define hw_gpio_toggle_pins(portname, mask)				\
-  HWA_HREG(pname, PORT) = (HWA_HREG(pname, PIN) ^ ((value) & (mask)) ;
+  HW_HREG(pname, PORT) = (HW_HREG(pname, PIN) ^ ((value) & (mask)) ;
 
 
 /********************************************************************************
@@ -102,7 +102,7 @@
   HWA_VDCL(u8, PORTD, PORT, 0, 0xFF, state);
 
 
-#define hwa_gpio_commit()			\
+#define hwa_gpio_commit(dry, )			\
   do {						\
     HWA_COMMIT(u8, PORTB, DDR);			\
     HWA_COMMIT(u8, PORTB, PORT);		\

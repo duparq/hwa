@@ -29,7 +29,7 @@
 #define hwa_pwr_begin(state)						\
   HWA_DECL(PWR_CR, u32, HWA_PWR+0x00, 0x00000000, 0x000001FF, state)
 
-#define hwa_pwr_commit()			\
+#define hwa_pwr_commit(dry, )			\
   HWA_COMMIT(PWR_CR)
 
 

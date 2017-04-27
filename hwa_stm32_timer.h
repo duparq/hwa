@@ -122,11 +122,11 @@ typedef struct {
   HWA_VINIT(HWA_TIMER, pname, HWA_CLKHZ, reset);		\
   HWA_VINIT(HWA_TIMER, pname, HWA_IRQHZ, reset);
 
-#define hwa_commit_timer()						\
-  _hwa_timer_commit(hwa_nocommit, HWA_P(HWA_TIMER2), HWA_P(HWA_CLOCK0)); \
-  _hwa_timer_commit(hwa_nocommit, HWA_P(HWA_TIMER3), HWA_P(HWA_CLOCK0)); \
-  _hwa_timer_commit(hwa_nocommit, HWA_P(HWA_TIMER4), HWA_P(HWA_CLOCK0)); \
-  _hwa_timer_commit(hwa_nocommit, HWA_P(HWA_TIMER5), HWA_P(HWA_CLOCK0));
+#define hwa_commit_timer(dry)						\
+  _hwa_timer_commit(dry, HWA_TIMER2, HWA_CLOCK0); \
+  _hwa_timer_commit(dry, HWA_TIMER3, HWA_CLOCK0); \
+  _hwa_timer_commit(dry, HWA_TIMER4, HWA_CLOCK0); \
+  _hwa_timer_commit(dry, HWA_TIMER5, HWA_CLOCK0);
 
 
 inline u32
@@ -166,10 +166,10 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
   /*	Mode
    */
   /* if ( p->mode == HWA_TIMER_MODE_PERIODIC_IRQ ) { */
-  u8 mode = HWA_NVALP(p, HWA_MODE) ;
-  u8 clk = HWA_NVALP(p, HWA_CLK) ;
-  u32 clkhz = HWA_NVALP(p, HWA_CLKHZ) ;
-  u32 irqhz = HWA_NVALP(p, HWA_IRQHZ) ;
+  u8 mode = HWA_NVAL(p, HWA_MODE) ;
+  u8 clk = HWA_NVAL(p, HWA_CLK) ;
+  u32 clkhz = HWA_NVAL(p, HWA_CLKHZ) ;
+  u32 irqhz = HWA_NVAL(p, HWA_IRQHZ) ;
 
   if ( mode == 0xFF )
     HWA_ERROR("Timer mode not set.");
@@ -180,10 +180,10 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
     if ( irqhz == HWA_NONE )
       HWA_ERROR("PERIODIC_IRQ mode needs IRQHZ to be set.");
     
-    HWA_VSETP(HWA_TIMER, p, HWA_TIMER_CR1_CMS, HWA_TIMER_CR1_CMS_0);
-    HWA_VSETP(HWA_TIMER, p, HWA_TIMER_CR1_DIR, HWA_TIMER_CR1_DIR_UP);
-    HWA_VSETP(HWA_TIMER, p, HWA_TIMER_CR1_OPM, HWA_TIMER_CR1_OPM_LOOP);
-    HWA_VSETP(HWA_TIMER, p, HWA_TIMER_DIER_UIE, 1);
+    HWA_VSET(HWA_TIMER, p, HWA_TIMER_CR1_CMS, HWA_TIMER_CR1_CMS_0);
+    HWA_VSET(HWA_TIMER, p, HWA_TIMER_CR1_DIR, HWA_TIMER_CR1_DIR_UP);
+    HWA_VSET(HWA_TIMER, p, HWA_TIMER_CR1_OPM, HWA_TIMER_CR1_OPM_LOOP);
+    HWA_VSET(HWA_TIMER, p, HWA_TIMER_DIER_UIE, 1);
   }
   else
     HWA_ERROR("Timer mode not supported.");
@@ -195,9 +195,9 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
   u32	pscdiv ;	/* PSC+1 */
   u32	arrdiv ;	/* ARR+1 */
   if ( clk == 0xFF || clk == HWA_TIMER_CLK_APB1_PSC ) {
-    HWA_VSETP(HWA_TIMER, p, HWA_TIMER_SMCR_SMS, 0);
-    srchz = HWA_NVALP(c, HWA_APB1HZ) ;
-    if (HWA_NVALP(c, HWA_APB1HZ) != HWA_NVALP(c, HWA_AHBHZ))
+    HWA_VSET(HWA_TIMER, p, HWA_TIMER_SMCR_SMS, 0);
+    srchz = HWA_NVAL(c, HWA_APB1HZ) ;
+    if (HWA_NVAL(c, HWA_APB1HZ) != HWA_NVAL(c, HWA_AHBHZ))
       srchz *= 2 ;
     srcdiv = srchz / irqhz ;
     if ( srcdiv * irqhz != srchz )
@@ -216,7 +216,7 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
       pscdiv = srcdiv/arrdiv ;
       clkhz = srchz/pscdiv ;
     }
-    HWA_HREGP(HWA_TIMER, p, HWA_ARR) = arrdiv-1 ;
+    HWA_HREG(HWA_TIMER, p, HWA_ARR) = arrdiv-1 ;
   }
 
   /*	Prescaler
@@ -227,15 +227,15 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
     if ( pscdiv * clkhz != srchz )
       HWA_WARN("Prescaler value error.");
 
-    HWA_HREGP(HWA_TIMER, p, HWA_PSC) = (u16)pscdiv-1 ;
+    HWA_HREG(HWA_TIMER, p, HWA_PSC) = (u16)pscdiv-1 ;
   }
   else
     HWA_WARN("Prescaler value error.");
 
-  HWA_COMMITP(dry, HWA_TIMER, p, HWA_CR1);
-  HWA_COMMITP(dry, HWA_TIMER, p, HWA_CR2);
-  HWA_COMMITP(dry, HWA_TIMER, p, HWA_SMCR);
-  HWA_COMMITP(dry, HWA_TIMER, p, HWA_DIER);
+  HWA_COMMIT(dry, HWA_TIMER, p, HWA_CR1);
+  HWA_COMMIT(dry, HWA_TIMER, p, HWA_CR2);
+  HWA_COMMIT(dry, HWA_TIMER, p, HWA_SMCR);
+  HWA_COMMIT(dry, HWA_TIMER, p, HWA_DIER);
 
   p->used = 0 ;
 }
@@ -248,10 +248,10 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
  ************************************************************************/
 
 /* #define hw_timer_read_count(mname)		\ */
-/*   HWA_HREG(mname, CNT) */
+/*   HW_HREG(mname, CNT) */
 
 #define hw_timer_write_count(pname, count)	\
-  HWA_HREG(HWA_TIMER, pname, CNT) = count ;
+  HW_HREG(HWA_TIMER, pname, CNT) = count ;
 
 #define hw_timer_clr_irq(pname, irq)					\
   HWA_HSET(HWA_TIMER, pname, SR, 0b1, HWA_G2(HWA_TIMER_IRQ, irq), 0)
@@ -268,26 +268,26 @@ _hwa_timer_commit ( u8 dry, HWA_TIMER *p, HWA_CLOCK *c )
 
 #define hwa_timer_set_mode(pname, mode)			\
   hwa_prph_turn_clk(pname, ON);					\
-  HWA_VSETP(HWA_TIMER, HWA_P(pname), HWA_MODE, -1, 0, HWA_TIMER_MODE_##mode);
+  HWA_VSET(HWA_TIMER, pname, HWA_MODE, -1, 0, HWA_TIMER_MODE_##mode);
 
 #define hwa_timer_set_irqhz(pname, hz)				\
   hwa_prph_turn_clk(pname, ON);					\
-  HWA_VSETP(HWA_TIMER, HWA_P(pname), HWA_IRQHZ, -1, 0, hz);
+  HWA_VSET(HWA_TIMER, pname, HWA_IRQHZ, -1, 0, hz);
 
 /* #define hwa_timer_connect_clk(pname, aclk)		\ */
 /*   hwa_prph_turn_clk(pname, ON);				\ */
-/*   HWA_XSETP(HWA_P(pname), clk, HWA_TIMER_CLK_##aclk); */
+/*   HWA_XSET((pname), clk, HWA_TIMER_CLK_##aclk); */
 
 /* #define hwa_timer_set_clk_hz(pname, hz)		\ */
 /*   hwa_prph_turn_clk(pname, ON);			\ */
-/*   HWA_XSETP(HWA_P(pname), clkhz, hz); */
+/*   HWA_XSET((pname), clkhz, hz); */
 
 #define hwa_timer_turn_irq(pname, irq, state)				\
   hwa_prph_turn_clk(pname, ON);						\
-  HWA_VSETP(HWA_TIMER, HWA_P(pname), HWA_DIER, 0b1, HWA_TIMER_IRQ_##irq, HWA_STATE_##state)
+  HWA_VSET(HWA_TIMER, pname, HWA_DIER, 0b1, HWA_TIMER_IRQ_##irq, HWA_STATE_##state)
 
 #define hwa_timer_turn(pname, pstat)					\
   hwa_prph_turn_clk(pname, ON);						\
-  HWA_VSETP(HWA_TIMER, HWA_P(pname), HWA_TIMER_CR1_CEN, HWA_STATE_##pstat)
+  HWA_VSET(HWA_TIMER, pname, HWA_TIMER_CR1_CEN, HWA_STATE_##pstat)
 
 #endif

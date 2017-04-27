@@ -42,6 +42,8 @@
 #define HWA_SPI_CR1_CPOL		HWA_CR1, 0b1,   1
 #define HWA_SPI_CR1_CPHA		HWA_CR1, 0b1,   0
 
+#define HWA_SPI_CR2_SSOE		HWA_CR2, 0b1,   2
+
 #define HWA_SPI_SR_BSY			HWA_SR, 0b1, 7
 #define HWA_SPI_SR_OVR			HWA_SR, 0b1, 6
 #define HWA_SPI_SR_MODF			HWA_SR, 0b1, 5
@@ -76,10 +78,10 @@ typedef struct {
   HWA_VINIT(HWA_SPI, pname, HWA_CR2, reset);		\
   HWA_VINIT(HWA_SPI, pname, HWA_BAUDRATE, 0);
 
-#define hwa_commit_spi()						\
-  _hwa_spi_commit(hwa_nocommit, HWA_P(HWA_SPI1), HWA_P(HWA_CLOCK0));	\
-  _hwa_spi_commit(hwa_nocommit, HWA_P(HWA_SPI2), HWA_P(HWA_CLOCK0));	\
-  _hwa_spi_commit(hwa_nocommit, HWA_P(HWA_SPI3), HWA_P(HWA_CLOCK0));
+#define hwa_commit_spi(dry)			\
+  _hwa_spi_commit(dry, HWA_SPI1, HWA_CLOCK0);	\
+  _hwa_spi_commit(dry, HWA_SPI2, HWA_CLOCK0);	\
+  _hwa_spi_commit(dry, HWA_SPI3, HWA_CLOCK0);
 
 
 inline s8
@@ -112,13 +114,13 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
   if ( !p->used )
     return ;
 
-  u32 baudrate = HWA_NVALP(p, HWA_BAUDRATE) ;
+  u32 baudrate = HWA_NVAL(p, HWA_BAUDRATE) ;
   if ( baudrate != HWA_NONE ) {
     u32 clkhz ;
     if ( p->hwaddr == HWA_SPI1_BASE )
-      clkhz = HWA_NVALP(c, HWA_APB2HZ) ;
+      clkhz = HWA_NVAL(c, HWA_APB2HZ) ;
     else
-      clkhz = HWA_NVALP(c, HWA_APB1HZ) ;
+      clkhz = HWA_NVAL(c, HWA_APB1HZ) ;
 
     if ( clkhz == HWA_NONE )
       HWA_ERROR("Bus clock speed not set.");
@@ -126,12 +128,12 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
     s8 psc = hwa_log2( clkhz / baudrate ) ;
     if ( psc < 1 || psc > 8 )
       HWA_ERROR("Can not find prescaler value for baudrate.");
-    HWA_VSETP(HWA_SPI, p, HWA_SPI_CR1_BR, psc-1);
+    HWA_VSET(HWA_SPI, p, HWA_SPI_CR1_BR, psc-1);
   }
 
-  HWA_COMMITP(dry, HWA_SPI, p, HWA_CR1, -1, 0);
-  HWA_COMMITP(dry, HWA_SPI, p, HWA_CR2, -1, 0);
-  HWA_COMMITP(dry, HWA_SPI, p, HWA_BAUDRATE, -1, 0);
+  HWA_COMMIT(dry, HWA_SPI, p, HWA_CR1, -1, 0);
+  HWA_COMMIT(dry, HWA_SPI, p, HWA_CR2, -1, 0);
+  HWA_COMMIT(dry, HWA_SPI, p, HWA_BAUDRATE, -1, 0);
 
   p->used = 0 ;
 }
@@ -149,8 +151,8 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  *
  * @param  pname: SPI1, SPI2, or SPI3
  */
-#define hw_spi_data(pname)		HWA_HREG(HWA_SPI, pname, HWA_DR)
-#define hw_spi_set_data(pname, value)	HWA_HREG(HWA_SPI, pname, HWA_DR) = value
+#define hw_spi_data(pname)		HW_HREG(HWA_SPI, pname, HWA_DR)
+#define hw_spi_set_data(pname, value)	HW_HREG(HWA_SPI, pname, HWA_DR) = value
 
 /**
  * @brief  Check if SPI can transmit
@@ -217,33 +219,35 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
     hwa_gpio_config_pin(HWA_G2(pname, SCK), ALTOUTPUT);			\
   									\
     if (HWA_SPI_MODE_##mode == HWA_SPI_MODE_MASTER) {			\
-      HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_SSI, 1);		\
-      HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_MSTR, 1);		\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_SSM, 1);		\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_SSI, 1);		\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_MSTR, 1);		\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR2_SSOE, 1);		\
     } else								\
       HWA_ERROR("SPI Mode not supported yet.");				\
     									\
     if (HWA_SPI_DIR_##dir == HWA_SPI_DIR_2LINES_RXTX) {			\
       hwa_gpio_config_pin(HWA_G2(pname, MOSI), ALTOUTPUT);		\
       hwa_gpio_config_pin(HWA_G2(pname, MISO), INPUT_PULLUP);		\
-      HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_SPE, 1);		\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_SPE, 1);		\
     } else {								\
       HWA_WARN("SPI DIR not tested yet.");				\
       if (HWA_SPI_DIR_##dir == HWA_SPI_DIR_2LINES_RX) {			\
 	hwa_gpio_config_pin(HWA_G2(pname, MOSI), ALTOUTPUT);		\
 	hwa_gpio_config_pin(HWA_G2(pname, MISO), INPUT_PULLUP);		\
-	HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_RXONLY, 1);	\
+	HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_RXONLY, 1);	\
       } else if (HWA_SPI_DIR_##dir == HWA_SPI_DIR_1LINE_RX) {		\
-	HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_BIDIMODE, 1);	\
+	HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_BIDIMODE, 1);	\
       } else if (HWA_SPI_DIR_##dir == HWA_SPI_DIR_1LINE_TX) {		\
-	HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_BIDIMODE, 1);	\
-	HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_BIDIOE, 1);	\
+	HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_BIDIMODE, 1);	\
+	HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_BIDIOE, 1);	\
       }									\
     }									\
     									\
-    HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_DFF, HWA_SPI_DATASIZE_##size); \
-    HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_LSBFIRST, HWA_SPI_SHIFT_##shift); \
-    HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_CPOL, HWA_SPI_CLKIDLE_##clkidle); \
-    HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_CPHA, HWA_SPI_CLKSAMPLE_##clkedge); \
+    HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_DFF, HWA_SPI_DATASIZE_##size); \
+    HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_LSBFIRST, HWA_SPI_SHIFT_##shift); \
+    HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_CPOL, HWA_SPI_CLKIDLE_##clkidle); \
+    HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_CPHA, HWA_SPI_CLKSAMPLE_##clkedge); \
   } while(0)
 
 #if 0
@@ -276,7 +280,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
 
 #define hwa_spi_set_baudrate(pname, baudrate)				\
   hwa_prph_turn_clk(pname, ON);						\
-  HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_BAUDRATE, -1, 0, baudrate);
+  HWA_VSET(HWA_SPI, pname, HWA_BAUDRATE, -1, 0, baudrate);
 
 
 /**
@@ -289,9 +293,9 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
 #define hwa_spi_set_datasize(pname, size)		\
   do {							\
     if ( size == 8 )					\
-      HWA_VSETP(HWA_SPI, pname, HWA_SPI_CR1_DFF, 0);	\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_DFF, 0);	\
     else if ( size == 16 )				\
-      HWA_VSETP(HWA_SPI, pname, HWA_SPI_CR1_DFF, 1);	\
+      HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_DFF, 1);	\
     else						\
       HWA_ERROR("Format not supported.");		\
   }
@@ -305,7 +309,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  * @retval None
  */
 #define hwa_spi_set_clk_idle_state(pname, state)			\
-  HWA_VSETP(HWA_SPI, pname, HWA_SPI_CR1_CPOL, HWA_SPI_CLK_IDLE_##state)
+  HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_CPOL, HWA_SPI_CLK_IDLE_##state)
 
 #define HWA_SPI_CLK_IDLE_LOW		0
 #define HWA_SPI_CLK_IDLE_HIGH		1
@@ -319,7 +323,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  * @retval None
  */
 #define hwa_spi_set_clk_phase(pname, phase)				\
-  HWA_VSETP(HWA_SPI, pname, HWA_SPI_CR1_CPHA, HWA_SPI_CLK_PHASE_##phase)
+  HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_CPHA, HWA_SPI_CLK_PHASE_##phase)
 
 #define HWA_SPI_CLK_PHASE_EDGE1		0
 #define HWA_SPI_CLK_PHASE_EDGE2		1
@@ -333,7 +337,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  * @retval None
  */
 #define hwa_spi_set_slave_management(pname, mode)		\
-  HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_SSM, HWA_SPI_NSS_##mode)
+  HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_SSM, HWA_SPI_NSS_##mode)
 
 #define HWA_SPI_NSS_HARDWARE		0
 #define HWA_SPI_NSS_SOFTWARE		1
@@ -348,7 +352,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  * @retval None
  */
 #define hwa_spi_turn_irq(pname, irq, state)		\
-  HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_CR2, 0b1, HWA_SPI_IRQ_##irq, HWA_STATE_##state)
+  HWA_VSET(HWA_SPI, pname, HWA_CR2, 0b1, HWA_SPI_IRQ_##irq, HWA_STATE_##state)
 
 #define HWA_SPI_IRQ_TX			7
 #define HWA_SPI_IRQ_RX			6
@@ -363,7 +367,7 @@ _hwa_spi_commit ( u8 dry, HWA_SPI *p, HWA_CLOCK *c )
  * @retval None
  */
 #define hwa_spi_turn(pname, state)		\
-  HWA_VSETP(HWA_SPI, HWA_P(pname), HWA_SPI_CR1_SPE, HWA_STATE_##state)
+  HWA_VSET(HWA_SPI, pname, HWA_SPI_CR1_SPE, HWA_STATE_##state)
 
 
 

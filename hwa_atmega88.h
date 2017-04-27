@@ -18,9 +18,9 @@
   hwa_begin_timer(state);			\
   hwa_begin_watchdog(state);
 
-#define hwa_commit_device()			\
-  hwa_commit_gpio();				\
-  hwa_commit_timer();				\
-  hwa_commit_watchdog();
+#define hwa_commit_device(dry)			\
+  hwa_commit_gpio(dry);				\
+  hwa_commit_timer(dry);				\
+  hwa_commit_watchdog(dry);
 
 #endif

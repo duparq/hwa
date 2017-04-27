@@ -75,45 +75,35 @@ typedef struct {
   HWA_VINIT(HWA_GPIO, pname, HWA_ODR, reset);	\
   HWA_VINIT(HWA_GPIO, pname, HWA_BSRR, 1);	/* Never need to read BSRR */
 
-#define hwa_commit_gpio()					\
+#define hwa_commit_gpio(dry)					\
   do {								\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTA));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTB));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTC));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTD));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTE));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTF));	\
-    _hwa_commit_gpio_port(HWA_P(HWA_PORTG));	\
+    _hwa_commit_gpio_port(dry, HWA_PORTA);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTB);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTC);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTD);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTE);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTF);	\
+    _hwa_commit_gpio_port(dry, HWA_PORTG);	\
   } while(0)
 
-#define _hwa_commit_gpio_port(p)\
+#define _hwa_commit_gpio_port(dry, p)		\
   do {\
-  HWA_COMMITP(hwa_nocommit, HWA_GPIO, p, HWA_CRL);\
-  HWA_COMMITP(hwa_nocommit, HWA_GPIO, p, HWA_CRH);\
-  HWA_COMMITP(hwa_nocommit, HWA_GPIO, p, HWA_ODR);\
-  HWA_COMMITP(hwa_nocommit, HWA_GPIO, p, HWA_BSRR);\
+  HWA_COMMIT(dry, HWA_GPIO, p, HWA_CRL);\
+  HWA_COMMIT(dry, HWA_GPIO, p, HWA_CRH);\
+  HWA_COMMIT(dry, HWA_GPIO, p, HWA_ODR);\
+  HWA_COMMIT(dry, HWA_GPIO, p, HWA_BSRR);\
   } while(0)
-
-
-/* inline void */
-/* _hwa_commit_gpio_port ( u8 dry, HWA_GPIO *p ) */
-/* { */
-/*   HWA_COMMITP(dry, HWA_GPIO, p, HWA_CRL); */
-/*   HWA_COMMITP(dry, HWA_GPIO, p, HWA_CRH); */
-/*   HWA_COMMITP(dry, HWA_GPIO, p, HWA_ODR); */
-/*   HWA_COMMITP(dry, HWA_GPIO, p, HWA_BSRR); */
-/* } */
 
 
 #define _hwa_gpio_config_bit(p, bitnum, mask, mode)			\
   if ( (mask) & (1<<(bitnum)) ) {					\
     if ( bitnum < 8 )							\
-      HWA_VSETP(HWA_GPIO, p, HWA_CRL, 0b1111, 4*(bitnum&0x07), mode>>1); \
+      HWA_VSET(HWA_GPIO, p, HWA_CRL, 0b1111, 4*(bitnum&0x07), mode>>1); \
     else								\
-      HWA_VSETP(HWA_GPIO, p, HWA_CRH, 0b1111, 4*(bitnum&0x07), mode>>1); \
+      HWA_VSET(HWA_GPIO, p, HWA_CRH, 0b1111, 4*(bitnum&0x07), mode>>1); \
     if ( mode == HWA_GPIO_MODE_INPUT_PULLDOWN				\
 	 || mode == HWA_GPIO_MODE_INPUT_PULLUP)				\
-      HWA_VSETP(HWA_GPIO, p, HWA_ODR, 0b1, bitnum, mode&1);		\
+      HWA_VSET(HWA_GPIO, p, HWA_ODR, 0b1, bitnum, mode&1);		\
   }
 
 
@@ -127,20 +117,20 @@ typedef struct {
   do {						\
     hwa_gpio_begin(UNKNOWN);			\
     hwa_gpio_config_pin(pin, mode) ;		\
-    hwa_gpio_commit();				\
+    hwa_gpio_commit(dry, );				\
   } while(0)
 
 #define hw_gpio_read_port(pname)		\
-  HWA_HREG(HWA_GPIO, pname, HWA_IDR)
+  HW_HREG(HWA_GPIO, pname, HWA_IDR)
 
 #define hw_gpio_read_pins(pname, mask, shift)			\
-  ((HWA_HREG(HWA_GPIO, pname, HWA_IDR) & ((u16)(mask)<<(shift))) >> shift)
+  ((HW_HREG(HWA_GPIO, pname, HWA_IDR) & ((u16)(mask)<<(shift))) >> shift)
 
 #define hw_gpio_read_pin(pin)					\
   hw_gpio_read_pins(HWA_PORTNAME(pin), 0b1, HWA_PINNUM(pin))
 
 #define hw_gpio_write_port(pname, value)	\
-  HWA_HREG(HWA_GPIO, pname, HWA_ODR) = value
+  HW_HREG(HWA_GPIO, pname, HWA_ODR) = value
 
 /*	Set state of portlines.
  *	For each bit set to 1 in the upper word of BSSR
@@ -152,11 +142,18 @@ typedef struct {
  *	lower word of BSSR is 1.
  */
 #define hw_gpio_write_pins(pname, mask, value)				\
-  HWA_HREG(HWA_GPIO, pname, HWA_BSRR) = ((u32)(mask)<<16) | ((u16)(value) & (mask))
+  HW_HREG(HWA_GPIO, pname, HWA_BSRR) = ((u32)(mask)<<16) | ((u16)(value) & (mask))
+
+/* #define hwa_gpio_write_pins(pname, mask, value)				\ */
+/*   HW_VSET(HWA_GPIO, pname, HWA_BSRR, 0xFFFF, 0, ((u32)(mask)<<16) | ((u16)(value) & (mask))) */
 
 #define hw_gpio_write_pin(pin, value)				\
   hw_gpio_write_pins(HWA_PORTNAME(pin), 1<<HWA_PINNUM(pin),	\
 		     (value)<<HWA_PINNUM(pin))
+
+/* #define hwa_gpio_write_pin(pin, value)				\ */
+/*   hwa_gpio_write_pins(HWA_PORTNAME(pin), 1<<HWA_PINNUM(pin),	\ */
+/* 		      (value)<<HWA_PINNUM(pin)) */
 
 #define hw_gpio_toggle_pin(pin)					\
   hw_gpio_toggle_pins(HWA_PORTNAME(pin), 1<<HWA_PINNUM(pin))
@@ -182,7 +179,7 @@ typedef struct {
 		      (value)<<HWA_PINNUM(pin))
 
 #define hwa_gpio_write_pins(pname, mask, value)		\
-  HWA_VSETP(HWA_GPIO, HWA_P(pname), HWA_BSRR,		\
+  HWA_VSET(HWA_GPIO, pname, HWA_BSRR,		\
 	    ((u32)(mask)<<16) | (mask), 0,		\
 	    ((u32)(mask)<<16) | ((mask) & (value)))
 
@@ -191,22 +188,22 @@ typedef struct {
  */
 #define hwa_gpio_config_pins(pname, mask, mode)			\
   hwa_prph_turn_clk(pname, ON);						\
-  _hwa_gpio_config_bit(HWA_P(pname),  0, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  1, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  2, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  3, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  4, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  5, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  6, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  7, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  8, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname),  9, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 10, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 11, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 12, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 13, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 14, mask, HWA_GPIO_MODE_##mode)	\
-  _hwa_gpio_config_bit(HWA_P(pname), 15, mask, HWA_GPIO_MODE_##mode)
+  _hwa_gpio_config_bit((pname),  0, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  1, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  2, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  3, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  4, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  5, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  6, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  7, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  8, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname),  9, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 10, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 11, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 12, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 13, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 14, mask, HWA_GPIO_MODE_##mode)	\
+  _hwa_gpio_config_bit((pname), 15, mask, HWA_GPIO_MODE_##mode)
 
 
 #endif

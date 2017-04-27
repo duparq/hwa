@@ -276,7 +276,7 @@
 /* HWA_VDCL(RCC, BDCR,     0x00000000, 0x00018305, state)	\ */
 /* HWA_VDCL(RCC, CSR,      0x0C000000, 0xFD000001, state) */
 
-#define hwa_rcc_commit()			\
+#define hwa_rcc_commit(dry, )			\
   do {						\
     HWA_COMMIT(RCC, CR, -1, 0);			\
     HWA_COMMIT(RCC, CFGR);			\

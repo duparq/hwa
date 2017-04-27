@@ -80,26 +80,26 @@ typedef struct {
   HWA_VINIT(HWA_NVIC, HWA_NVIC0, HWA_IPR11, reset);		\
   HWA_VINIT(HWA_NVIC, HWA_NVIC0, HWA_IPR12, reset);
 
-#define hwa_commit_irq(reset)				\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER0);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER1);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER2);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISPR0);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISPR1);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISPR2);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR0 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR1 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR2 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR3 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR4 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR5 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR6 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR7 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR8 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR9 );		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR10);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR11);		\
-  HWA_COMMITP(hwa_nocommit, HWA_NVIC, HWA_P(HWA_NVIC0), HWA_IPR12);
+#define hwa_commit_irq(dry)					\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISER0);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISER1);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISER2);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISPR0);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISPR1);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_ISPR2);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR0 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR1 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR2 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR3 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR4 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR5 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR6 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR7 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR8 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR9 );		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR10);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR11);		\
+  HWA_COMMIT(dry, HWA_NVIC, HWA_NVIC0, HWA_IPR12);
 
 
 /************************************************************************
@@ -111,8 +111,8 @@ typedef struct {
 #define HWA_ISR(mname, pname, flags)					\
   static void HWA_G2(ISR, pname)(u16 flags);				\
   void HWA_G2(HWA_ISR, pname)() {					\
-    u16 sr = HWA_HREG(mname, pname, HWA_SR) ;				\
-    HWA_HREG(mname, pname, HWA_SR) = 0 ;				\
+    u16 sr = HW_HREG(mname, pname, HWA_SR) ;				\
+    HW_HREG(mname, pname, HWA_SR) = 0 ;				\
     HWA_G2(ISR, pname)(sr) ;						\
   }									\
   static void HWA_G2(ISR, pname)(u16 flags __attribute__((unused)))
@@ -135,11 +135,11 @@ typedef struct {
   do {									\
     u16 irqn = HWA_G2(HWA_IRQN, pname) ;				\
     if (irqn < 32)							\
-      HWA_VSETP(HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER0, 0b1, ((irqn)   &0x1f), HWA_STATE_##state); \
+      HWA_VSET(HWA_NVIC, HWA_NVIC0, HWA_ISER0, 0b1, ((irqn)   &0x1f), HWA_STATE_##state); \
     else if (irqn < 64)							\
-      HWA_VSETP(HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER1, 0b1, ((irqn-32)&0x1f), HWA_STATE_##state); \
+      HWA_VSET(HWA_NVIC, HWA_NVIC0, HWA_ISER1, 0b1, (irqn-32)&0x1f, HWA_STATE_##state); \
     else if (irqn < 68)							\
-      HWA_VSETP(HWA_NVIC, HWA_P(HWA_NVIC0), HWA_ISER2, 0b1, ((irqn-64)&0x1f), HWA_STATE_##state); \
+      HWA_VSET(HWA_NVIC, HWA_NVIC0, HWA_ISER2, 0b1, (irqn-64)&0x1f, HWA_STATE_##state); \
     else								\
       HWA_ERROR("Bad irq number.");					\
   } while(0)

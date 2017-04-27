@@ -92,7 +92,7 @@
   HWA_DECL(RTC_ALRH, u32, HWA_RTC+0x20, 0xFFFF, 0xFFFF, state)	\
   HWA_DECL(RTC_ALRL, u32, HWA_RTC+0x24, 0xFFFF, 0xFFFF, state)
 
-#define hwa_rtc_commit()			\
+#define hwa_rtc_commit(dry, )			\
   HWA_COMMIT(RTC_CRH)				\
   HWA_COMMIT(RTC_CRL)				\
   HWA_COMMIT(RTC_PRLH)				\

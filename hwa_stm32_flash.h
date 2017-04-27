@@ -33,7 +33,7 @@ typedef struct {
   HWA_PINIT(HWA_FLASH, HWA_FLASH0);			\
   HWA_VINIT(HWA_FLASH, HWA_FLASH0, HWA_ACR, reset);
 
-#define hwa_commit_flash()			\
-  HWA_COMMITP(hwa_nocommit, HWA_FLASH, HWA_P(HWA_FLASH0), HWA_ACR);
+#define hwa_commit_flash(dry)			\
+  HWA_COMMIT(dry, HWA_FLASH, HWA_FLASH0, HWA_ACR);
 
 #endif

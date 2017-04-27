@@ -155,21 +155,21 @@
   hwa_uart_begin_uart(UART4, state)		\
   hwa_uart_begin_uart(UART5, state)
 
-#define hwa_uart_commit_uart(pname)		\
-  HWA_COMMIT(pname##_SR)				\
-  HWA_COMMIT(pname##_DR)				\
-  HWA_COMMIT(pname##_BRR)			\
-  HWA_COMMIT(pname##_CR1)			\
-  HWA_COMMIT(pname##_CR2)			\
-  HWA_COMMIT(pname##_CR3)			\
-  HWA_COMMIT(pname##_GTPR)
+#define hwa_uart_commit_uart(dry, pname)		\
+  HWA_COMMIT(dry, pname##_SR)				\
+  HWA_COMMIT(dry, pname##_DR)				\
+  HWA_COMMIT(dry, pname##_BRR)			\
+  HWA_COMMIT(dry, pname##_CR1)			\
+  HWA_COMMIT(dry, pname##_CR2)			\
+  HWA_COMMIT(dry, pname##_CR3)			\
+  HWA_COMMIT(dry, pname##_GTPR)
 
-#define hwa_uart_commit()			\
-  hwa_uart_commit_uart(USART1)			\
-  hwa_uart_commit_uart(USART2)			\
-  hwa_uart_commit_uart(USART3)			\
-  hwa_uart_commit_uart(UART4)			\
-  hwa_uart_commit_uart(UART5)
+#define hwa_uart_commit(dry, )			\
+  hwa_uart_commit_uart(dry, USART1)		\
+  hwa_uart_commit_uart(dry, USART2)		\
+  hwa_uart_commit_uart(dry, USART3)		\
+  hwa_uart_commit_uart(dry, UART4)		\
+  hwa_uart_commit_uart(dry, UART5)
 
 
 /*	RM0008 Rev11 p. 747: BAUD = PCLK / (16 * USARTDIV)

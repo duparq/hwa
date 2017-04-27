@@ -12,7 +12,7 @@
  ********************************************************************************/
 
 #define hw_timer_set_count(pname, value)	\
-  HWA_HREG(pname, CNT) = value ;
+  HW_HREG(pname, CNT) = value ;
 
 #define HWA_TIMER_COUNT_MAX(pname)\
   HWA_G3(HWA, pname, COUNT_MAX)
@@ -34,7 +34,7 @@
 
 #define hwa_timer_set_mode(pname, mode)					\
   do {									\
-    if (&HWA_HREG(pname, CRA) == &HWA_HREG(TIMER2, CRA)) {		\
+    if (&HW_HREG(pname, CRA) == &HW_HREG(TIMER2, CRA)) {		\
       if ( HWA_TIMER_MODE_##mode == HWA_TIMER_MODE_LOOP_UP ) /* WGM=000 */{ \
 	HWA_VSET(u8, pname, CRA, 0b11, 0, 0b00);			\
 	HWA_VSET(u8, pname, CRB, 0b1,  3, 0);				\
@@ -49,7 +49,7 @@
 
 #define hwa_timer_set_clk(pname, clk)					\
   do {									\
-    if (&HWA_HREG(pname, CRA) == &HWA_HREG(TIMER2, CRA)) {		\
+    if (&HW_HREG(pname, CRA) == &HW_HREG(TIMER2, CRA)) {		\
       HWA_VSET(u8, TIMER2, ASSR, 0b11, 5, HWA_TIMER2_CLK_##clk);	\
     } else {								\
       HWA_ERROR_CT(2, "Timer not handle yet.");				\
@@ -79,7 +79,7 @@ inline u16 HWA_TIMER2_psc_floor(u16 psc) {		\
 
 #define hwa_timer_set_psc(pname, psc)				\
   do {								\
-    if (&HWA_HREG(pname, CRA) == &HWA_HREG(TIMER2, CRA)) {	\
+    if (&HW_HREG(pname, CRA) == &HW_HREG(TIMER2, CRA)) {	\
       if ( psc == 0 ) {						\
 	HWA_VSET(u8, TIMER2, CRB, 0b111, 0, 0b000);		\
       } else if ( psc == 1 ) {					\
@@ -116,7 +116,7 @@ inline u16 HWA_TIMER2_psc_floor(u16 psc) {		\
 
 #define hwa_timer_set_clk_hz(pname, hz)					\
   do {									\
-    if (&HWA_HREG(pname, CRA) == &HWA_HREG(TIMER2, CRA)) {		\
+    if (&HW_HREG(pname, CRA) == &HW_HREG(TIMER2, CRA)) {		\
       if (HWA_VBITS(TIMER2, ASSR, vmask, 0b11, 5) != 0b11 ) {		\
 	HWA_ERROR_CT(1, "Unknown timer mode.");				\
       } else {								\
@@ -141,7 +141,7 @@ inline u16 HWA_TIMER2_psc_floor(u16 psc) {		\
  */
 #define hwa_timer_turn_irq(pname, irq, state)			\
   do {								\
-    if (&HWA_HREG(pname, CRA) == &HWA_HREG(TIMER2, CRA)) {	\
+    if (&HW_HREG(pname, CRA) == &HW_HREG(TIMER2, CRA)) {	\
       if ( HWA_TIMER_IRQ_##irq == HWA_TIMER_IRQ_OVERFLOW ) {	\
 	HWA_VSET(u8, TIMER2, IMSK, 0b1, 0, HWA_STATE_##state);	\
       } else {							\
@@ -186,7 +186,7 @@ inline u16 HWA_TIMER2_psc_floor(u16 psc) {		\
   HWA_VDCL(u8, pname, ASSR, 0, 0x07, state);	\
   HWA_VDCL(u8, pname, IMSK, 0, 0x07, state)
 
-#define hwa_timer_commit()			\
+#define hwa_timer_commit(dry, )			\
   hwa_timer_commit_timer(TIMER2)
 
 #define hwa_timer_commit_timer(pname)		\

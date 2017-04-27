@@ -24,6 +24,8 @@
 #include "hwa_stm32_timer.h"
 #include "hwa_stm32_irq.h"
 
+#include "hwa_stm32_delay.h"
+
 
 /*	Init HWA structure
  */
@@ -43,15 +45,15 @@
  *	* peripheral clocks
  *	* gpio configuration
  */
-#define hwa_commit_device()			\
+#define hwa_commit_device(dry)			\
   do {						\
-    hwa_commit_clock();				\
-    hwa_commit_flash();				\
-    hwa_commit_prph();				\
-    hwa_commit_gpio();				\
-    hwa_commit_spi();				\
-    hwa_commit_timer();				\
-    hwa_commit_irq();				\
+    hwa_commit_clock(dry);			\
+    hwa_commit_flash(dry);			\
+    hwa_commit_prph(dry);			\
+    hwa_commit_gpio(dry);			\
+    hwa_commit_spi(dry);			\
+    hwa_commit_timer(dry);			\
+    hwa_commit_irq(dry);			\
   } while(0)
 
 #endif

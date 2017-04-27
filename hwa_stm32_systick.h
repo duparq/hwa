@@ -57,7 +57,7 @@ HWA_DECL(SYSTICK_CALIB, u32, HWA_SYSTICK+0xC, 0x00000000, 0x00000000, state) /* 
 #endif
 
 
-#define hwa_systick_commit()			\
+#define hwa_systick_commit(dry, )			\
   HWA_COMMIT(SYSTICK_CTRL)
 #if 0
 HWA_COMMIT(SYSTICK_LOAD)			

@@ -65,7 +65,7 @@
 #define hwa_watchdog_begin(state)		\
   HWA_VDCL(u8, WATCHDOG, CR, 0, 0xFF, state);
 
-#define hwa_watchdog_commit()						\
+#define hwa_watchdog_commit(dry, )						\
   do {									\
     if ( HWA_WATCHDOG_CR_mmask ) {					\
       if ( HWA_WATCHDOG_CR_mmask != HWA_WATCHDOG_CR_wmask		\

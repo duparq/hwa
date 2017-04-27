@@ -71,9 +71,9 @@ typedef struct {
   HWA_VINIT(HWA_PRPH, HWA_PRPH0, HWA_APB1ENR, reset);
 
 
-#define hwa_commit_prph()			\
-  HWA_COMMITP(hwa_nocommit, HWA_PRPH, HWA_P(HWA_PRPH0), HWA_APB2ENR);	\
-  HWA_COMMITP(hwa_nocommit, HWA_PRPH, HWA_P(HWA_PRPH0), HWA_APB1ENR);
+#define hwa_commit_prph(dry)			\
+  HWA_COMMIT(dry, HWA_PRPH, HWA_PRPH0, HWA_APB2ENR);	\
+  HWA_COMMIT(dry, HWA_PRPH, HWA_PRPH0, HWA_APB1ENR);
 
 
 /************************************************************************
@@ -90,6 +90,6 @@ typedef struct {
  ************************************************************************/
 
 #define hwa_prph_turn_clk(pname, state)				\
-  HWA_VSETP(HWA_PRPH, HWA_P(HWA_PRPH0), HWA_G2(HWA_PRPH_APBENR, pname), HWA_STATE_##state)
+  HWA_VSET(HWA_PRPH, HWA_PRPH0, HWA_G2(HWA_PRPH_APBENR, pname), HWA_STATE_##state)
 
 #endif
