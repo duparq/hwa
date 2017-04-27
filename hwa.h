@@ -1,276 +1,259 @@
 #ifndef HWA_H
 #define HWA_H
 
-/*!	\mainpage	HWA: Hardware Abstraction Facility
- */
-
-/*!	\file hwa.h
- *	\brief Main include file for HWA facilities.
- */
-
-/********************************************************************************
- *										*
- *				User definitions				*
- *										*
- ********************************************************************************/
-
-/*!	\def hwa_begin(state)
- *
- *	\brief Start a new HWA configuration session.
- *
- *	If the optionnal parameter 'RESET' is used, hardware registers are
- *	supposed to contain reset values, helping optimization of the code.
- *
- *	@param state can be:
- *	\li '' : unknown hardware state.
- *	\li RESET : hardware in reset state.
- */
-
-#define hwa_begin(state)						\
-  u8 hwa_commit_policy __attribute__((unused)) = HWA_COMMIT_POLICY_WHEN_ASKED ; \
-  u8 hwa_checking_policy __attribute__((unused)) = HWA_CHECKING_POLICY_COMPILE_TIME ; \
-  _hwa_begin(state)
-
-#define rem_hwa_begin(state)						\
-  u8 hwa_commit_policy __attribute__((unused)) = HWA_COMMIT_POLICY_WHEN_ASKED ; \
-  u8 hwa_checking_policy __attribute__((unused)) = HWA_CHECKING_POLICY_COMPILE_TIME ; \
-  hwa_flash_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_gpio_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_irq_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_rcc_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_rtc_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_systick_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_timer_begin(HWA_BEGIN_STATE_##state);				\
-  hwa_uart_begin(HWA_BEGIN_STATE_##state);
-
-
-#define HWA_BEGIN_STATE_				0
-#define HWA_BEGIN_STATE_UNKNOWN				0
-#define HWA_BEGIN_STATE_RESET				1
-
-/*!	\def hwa_set_commit_policy(policy)
- *
- *	\brief Select HWA commitment policy.
- *
- *	@param policy can be:
- *	\li WHEN_ASKED	: let the user decide when to commit.
- *	\li AUTO	: let HWA commit some registers automatically.
- *	\li ALWAYS	: HWA will commit after every modification (no optimization).
- */
-#define hwa_set_commit_policy(policy)			\
-  hwa_commit_policy = HWA_COMMIT_POLICY_##policy ;
-#define HWA_COMMIT_POLICY_WHEN_ASKED			0
-#define HWA_COMMIT_POLICY_AUTO				1
-#define HWA_COMMIT_POLICY_ALWAYS			2
-
-
-#define hwa_set_checking_policy(policy)			\
-  hwa_checking_policy = HWA_CHECKING_POLICY_##policy ;
-#define HWA_CHECKING_POLICY_NONE			0
-#define HWA_CHECKING_POLICY_COMPILE_TIME		1
-#define HWA_CHECKING_POLICY_RUN_TIME			2
-
-/*	Write virtual registers to real registers
- */
-#define hwa_commit()							\
-  if (0) { HWA_WARN_CT(1, "Compiler should have discarded this!"); }	\
-  _hwa_commit();
-
-/*	Turn on/off peripheral.
- */
-#define hwa_turn(name, state)			\
-  hwa_turn_(name, state)
-
-#define hwa_turn_(name, state)				\
-  HWA_SET_VA(HWA_TURN_ARGS_##name, HWA_STATE_##state)
-
-#define HWA_TURN_ARGS_USART1			USART1_CR1, 0b1, 13
-
-
-/*	Reset peripheral
- */
-#define hwa_reset(name)				\
-  hwa_reset_(name)
-
-#define hwa_reset_(name)			\
-  HWA_SET_VA(HWA_RESET_ARGS_##name, 1)
-
-#define HWA_RESET_ARGS_USART1			RCC_APB2RSTR, 0b1, 14
-
-
-/********************************************************************************
- *										*
- *				Internal definitions				*
- *										*
- ********************************************************************************/
-
 #include "types.h"
 
-__attribute__((noreturn)) void exit ( int status __attribute__((unused)) ) ;
 
-/*	Useful definitions
+/*	Begin a HWA session.
+ *	Structure hwa_t is defined in device-specific header.
  */
-#define HWA_GLUE2_(a,b)			a##b
-#define HWA_GLUE2(a,b)			HWA_GLUE2_(a,b)
+#define hwa_begin(reset)						\
+  u8	hwa_nocommit = 0 ; /* Will warn if hwa_commit() is not called */ \
+  hwa_begin_device(HWA_BEGIN_##reset)
 
-#define HWA_GLUE3_(a,b,c)		a##b##c
-#define HWA_GLUE3(a,b,c)		HWA_GLUE3_(a,b,c)
+#define HWA_BEGIN_			0
+#define HWA_BEGIN_RESET			1
 
-#define HWA_GLUE4_(a,b,c,d)		a##b##c##d
-#define HWA_GLUE4(a,b,c,d)		HWA_GLUE4_(a,b,c,d)
 
-#define HWA_GLUE5_(a,b,c,d,e)		a##b##c##d##e
-#define HWA_GLUE5(a,b,c,d,e)		HWA_GLUE5_(a,b,c,d,e)
+/*	Commit configuration to hardware.
+ */
+#define hwa_commit()							\
+  do {									\
+    if (0) { HWA_WARN("Did you forget to turn compiler optimization on?"); } \
+    hwa_nocommit = 0 ;							\
+    hwa_commit_device();						\
+  } while(0)
 
-#define HWA_VREG(pname,reg,vreg)	HWA_##pname##_##reg##_##vreg
-//#define HWA_VREG(pname,reg,vreg)	HWA_VREG_(pname,reg,vreg)
+#define hwa_nocommit()							\
+  do {									\
+    if (0) { HWA_WARN("Did you forget to turn compiler optimization on?"); } \
+    hwa_nocommit = 1 ;							\
+    hwa_commit_device();						\
+  } while(0)
 
-#define HWA_STR_(x)			#x
-#define HWA_STR(x)			HWA_STR_(x)
-
-#define HWA_1of2(x,y)			x
-#define HWA_2of2(x,y)			y
 
 #define HWA_STATE_OFF			0
 #define HWA_STATE_ON			1
 
-/*	Warnings & errors
- */
-#define HWA_WARN_CT(num, msg)						\
-  { extern void __attribute__((warning("Check #" HWA_STR(num) " failed"))) \
-      HWA_GLUE2(hwa_warn_ct_, num)(void);				\
-    HWA_GLUE2(hwa_warn_ct_, num)(); }
+#define HWA_NONE			0xFFFFFFFF
 
-#define HWA_WARN_RT(num, msg)				\
-  { extern void HWA_GLUE2(hwa_warn_rt_, num)(void);	\
-    HWA_GLUE2(hwa_warn_rt_, num)(); }
+extern void hwa_warn();
 
-#define HWA_ERROR_CT(num, msg)						\
-  { extern void __attribute__((error("Check #" HWA_STR(num) " failed"))) \
-      HWA_GLUE2(hwa_error_ct_, num)(void);				\
-    HWA_GLUE2(hwa_error_ct_, num)(); }
-
-#define HWA_ERROR_RT(num, msg)				\
-  { extern void HWA_GLUE2(hwa_error_rt_, num)(void);	\
-    HWA_GLUE2(hwa_error_rt_, num)(); }
-
-/*	Declares 'virtual' registers associated to real register
- *	Register declaration: name, type, address, reset value, write mask
- */
-#define HWA_DECL(reg, type, addr, reset_value, wmask, initialised)	\
-  u8	HWA_##reg##_initialised = initialised ;				\
-  type	HWA_##reg##_ovalue = initialised ? reset_value : ~reset_value ;	/* last commited value */ \
-  type	HWA_##reg##_value = reset_value ;				/* new value */ \
-  type	HWA_##reg##_mmask = 0 ;						/* modif mask */ \
-  type	HWA_##reg##_wmask = wmask ;					/* reg write mask */
-
-/*	Record register modification.
- *	If the commit policy is 'ALWAYS', apply modifications immediately on the
- *	real register.
- *	If the register real value is known (initialised != 0), only record modifications
- *	which would have an effect.
- */
-#define HWA_SET(reg, mask, shift, value)				\
-  if ( HWA_##reg##_initialised == 0 ) {					\
-    HWA_##reg##_mmask |= ((mask) << (shift)) ;				\
-    HWA_##reg##_value = (HWA_##reg##_value & ~((mask) << (shift))) | ((value) << (shift)) ; \
-  } else {								\
-    if ( (u32)(HWA_##reg##_value & ((mask) << (shift))) != (u32)((value) << (shift)) ) { \
-      HWA_##reg##_mmask |= ((mask) << (shift)) ;			\
-      HWA_##reg##_value = (HWA_##reg##_value & ~((mask) << (shift))) | ((value) << (shift)) ; \
-    }									\
-  }									\
-  if ( hwa_commit_policy == HWA_COMMIT_POLICY_ALWAYS) {			\
-    HWA_COMMIT(reg);							\
-  }
-
-#define HWA_VSET(pname, reg, mask, shift, val)			\
-  if ( HWA_VREG(pname,reg,initialised) == 0 ) {			\
-    HWA_VREG(pname,reg,mmask) |= ((mask) << (shift)) ;		\
-    HWA_VREG(pname,reg,value) =					\
-      (HWA_VREG(pname,reg,value) & ~((mask) << (shift)))	\
-      | ((val) << (shift)) ;					\
-  } else {							\
-    if ( (u32)(HWA_VREG(pname,reg,value) & ((mask) << (shift)))	\
-	 != (u32)((val) << (shift)) ) {				\
-      HWA_VREG(pname,reg,mmask) |= ((mask) << (shift)) ;	\
-      HWA_VREG(pname,reg,value) =				\
-	(HWA_VREG(pname,reg,value)				\
-	 & ~((mask) << (shift))) | ((val) << (shift)) ;		\
-    }								\
-  }								\
-  if ( hwa_commit_policy == HWA_COMMIT_POLICY_ALWAYS) {		\
-    HWA_COMMIT(pname##_##reg);						\
-  }
-
-#define HWA_SET_VA(args...)			\
-  HWA_SET(args)
-
-#define HWA_BITS(reg, mask, shift)		\
-  (((reg) & ((mask) << (shift)))>> (shift))
-
-#define HW_REGBITS(pname, reg, mask, shift)			\
-  ((*HWA_GLUE4(HWA_PTR_, pname, _, reg)) & ((mask)<<(shift)))
-
-#define HW_REG(pname, reg)			\
-  *HWA_GLUE4(HWA_PTR_,pname,_,reg)
-
-#define HW_REGAD(pname, reg)			\
-  HWA_GLUE4(HWA_PTR_,pname,_,reg)
-
-#define HW_SET(pname, reg, mask, shift, value)				\
-  HW_REG(pname, reg) = (HW_REG(pname, reg) & ~((mask) << (shift))) | ((value) << (shift)) ;
-
-/*	Commit if commit policy is set to 'auto'
- */
-#define HWA_COMMIT_AUTO(reg, mask, shift)				\
-  if ( hwa_commit_policy == HWA_COMMIT_POLICY_AUTO			\
-       && HWA_BITS(HWA_GLUE3(HWA_, reg, _mmask), mask, shift) != 0)	\
-    HWA_COMMIT(reg);							\
-
-/*	Update real register if needed (mmask != 0).
- *
- *	The unmodified part of the writable register value is loaded the first
- *	time the register has to be modified (unless the modification applies to
- *	all the writable bits, i.e. mmask == wmask, reading the real register
- *	would then be useless).
- */
-#define HWA_COMMIT(reg)							\
-  if ( HWA_##reg##_mmask ) {						\
-    if ( HWA_##reg##_initialised == 0					\
-	 && HWA_##reg##_mmask != HWA_##reg##_wmask ) {			\
-      HWA_##reg##_value |= *HWA_PTR_##reg & ~HWA_##reg##_mmask ;	\
-    }									\
-    HWA_##reg##_initialised = 1 ;					\
-    HWA_##reg##_ovalue = HWA_##reg##_value ;				\
-    *HWA_PTR_##reg = HWA_##reg##_value ;				\
-    HWA_##reg##_mmask = 0 ;						\
-  }
-
-#define HWA_COMMIT_VA(args...)			\
-  _HWA_COMMIT_VA(args)
-
-#define _HWA_COMMIT_VA(a, b, c)			\
-  HWA_COMMIT(a)
-
-
-#define HWA_ISR(pname)				\
-  void HWA_GLUE2(ISR_,pname)()
-
-
-#include "hwa_gpio_ports.h"
-
-/*	Include specific device definitions
- */
-#define HWA_INC_STM32		"hwa_stm32.h"
-
-#define _HWA_INC(dev)		HWA_INC_##dev
-#define HWA_INC(dev)		_HWA_INC(dev)
-
-#if defined HWA_DEVICE
-#include HWA_INC(HWA_DEVICE)
+#define HWA_WARN(msg)			HWA_WARN_(msg, __LINE__)
+#if defined HWA_DEBUG
+#  define HWA_WARN_(msg, num)		hwa_warn()
 #else
-#error "HWA: undefined symbol HWA_DEVICE."
+#  define HWA_WARN_(msg, num)			\
+  do {						\
+    void __attribute__((noinline, warning(msg)))	\
+      HWA_G2(hwa_warn, num)(void){hwa_warn();}	\
+    HWA_G2(hwa_warn, num)();			\
+  } while(0)
 #endif
+
+#define HWA_ERROR(msg)			HWA_ERROR_(msg, __LINE__)
+#if defined HWA_DEBUG
+#  define HWA_ERROR_(msg, num)		hwa_warn()
+#else
+#define HWA_ERROR_(msg, num)			\
+  do {						\
+    extern void __attribute__((error(msg)))	\
+      HWA_G2(hwa_error, num)(void);		\
+    HWA_G2(hwa_error, num)();			\
+  } while(0)
+#endif
+
+#define HWA_(x, va...)			va##x
+
+#define HWA_G2(a,b)			HWA_G2_(a,b)
+#define HWA_G2_(a,b)			a##_##b
+
+#define HWA_G3(a,b,c)			HWA_G3_(a,b,c)
+#define HWA_G3_(a,b,c)			a##_##b##_##c
+
+#define HWA_STR(x)			HWA_STR_(x)
+#define HWA_STR_(x)			#x
+
+#define HWA_1ST(va...)			HWA_1ST_(va)
+#define HWA_1ST_(a, ...)		a
+
+#define HWA_2ND(va...)			HWA_2ND_(va, 0)
+#define HWA_2ND_(a, b, ...)		b
+
+#define HWA_3RD(va...)			HWA_3RD_(va, 0)
+#define HWA_3RD_(a, b, c, ...)		c
+
+#define HWA_4TH(va...)			HWA_4TH_(va, 0)
+#define HWA_4TH_(a, b, c, d, ...)	d
+
+#define HWA_5TH(va...)			HWA_5TH_(va, 0)
+#define HWA_5TH_(a, b, c, d, e, ...)	e
+
+#define HWA_P(pname)			HWA_P_(pname)
+#define HWA_P_(pname)			pname##_P
+/* #define HWA_VPTR(pname)			hwa_##pname */
+
+/*	Mask corresponding to bits definition.
+ *
+ *	'bdef' must expand to 'mname, rname, bits, shift'
+ */
+/* #define HWA_MASK(bdef...)			HWA_MASK_(bdef) */
+/* #define HWA_MASK_(mname, rname, bits, shift)	((bits)<<(shift)) */
+
+/*	Integer type of hardware register.
+ */
+#define HWA_VTYPE(mname, rname)		HWA_2ND(mname##_##rname)
+
+/*	Address of hardware register.
+ */
+#define HWA_VADDR(mname, rname)		HWA_3RD(mname##_##rname)
+
+/*	Reset value of hardware register.
+ */
+#define HWA_HINIT(mname, rname)		HWA_4TH(mname##_##rname)
+
+/*	Writeable bits mask in hardware register.
+ */
+#define HWA_HWMASK(mname, rname)	HWA_5TH(mname##_##rname)
+
+
+/*	Mandatory declarations for virtual peripheral structure
+ */
+#define HWA_PDCL(pname)				\
+  u32	hwaddr ;\
+  u8	used
+
+
+/*	Initialise virtual peripheral structure
+ */
+#define HWA_PINIT(mname, pname)			\
+  mname pname##_ST ;				\
+  mname *pname##_P = &pname##_ST ;		\
+  pname##_P->hwaddr = pname##_BASE ;		\
+  pname##_P->used = 0
+
+/*	Hardware register (lvalue).
+ *
+ *	'HWA_##mname##_##rname' must expand to 'volatile, type, address, ...'
+ */
+#define HWA_HREG(mname, pname, rname)		HWA_HREG_(pname, mname##_##rname)
+#define HWA_HREG_(va...)			HWA_HREG__(va...)
+#define HWA_HREG__(pname, volatile, type, addr, ...)	(*((volatile type *)(pname##_BASE+addr)))
+
+#define HWA_HREGP(mname, p, rname)		HWA_HREGP_(p, mname##_##rname)
+#define HWA_HREGP_(va...)			HWA_HREGP__(va...)
+#define HWA_HREGP__(p, volatile, type, addr, ...)	\
+  (*((volatile type *)(p->hwaddr+(intptr_t)addr)))
+
+/*	Write hardware register bits
+ */
+#define HWA_HSET(va...)			HWA_HSET_(va)
+#define HWA_HSET_(mname, pname, rname, mask, shift, value)		\
+  HWA_HREG(mname, pname, rname) =					\
+    (HWA_HREG(mname, pname, rname) & ~((mask) << (shift))) | ((value) << (shift)) ;
+
+#define HWA_HGET(va...)			HWA_HGET_(va)
+#define HWA_HGET_(mname, pname, rname, mask, shift)			\
+  (HWA_HREG(mname, pname, rname) & ((bits)<<(shift)) >> (shift))
+
+
+/*	Virtual register (lvalue).
+ */
+/* #define HWA_VREG(pname,rname,vname)	hwa_##pname->rname##_##vname */
+#define HWA_VREGP(p,rname,vname)	p->rname##_##vname
+
+/*	Future value of hardware register bits or -1 if unknown (rvalue).
+ *
+ *	'bdef' must expand to 'mname, rname, bits, shift'
+ */
+#define HWA_NVALP(p, rname)						\
+  (HWA_VREGP(p, rname, mvmask) ? HWA_VREGP(p, rname, mvalue) :		\
+   HWA_VREGP(p, rname, ovmask) ? HWA_VREGP(p, rname, ovalue) : HWA_NONE)
+
+/*	Virtual register declaration
+ */
+#define HWA_VDCL(mname, rname)			\
+  HWA_VTYPE(mname, rname) rname##_mvmask, rname##_mvalue, rname##_ovmask, rname##_ovalue
+
+
+/*	Virtual register initialisation
+ */
+#define HWA_VINIT(mname, pname, rname, reset)				\
+  do {									\
+    HWA_P(pname)->rname##_mvmask	= 0 ;				\
+    HWA_P(pname)->rname##_mvalue	= 0 ;				\
+    HWA_P(pname)->rname##_ovmask = reset ? HWA_HWMASK(mname, rname) : 0 ; \
+    HWA_P(pname)->rname##_ovalue = reset ? HWA_HINIT(mname, rname) : 0 ; \
+  } while(0)
+
+
+/*	Virtual 'sub-register' bits value (rvalue).
+ *	mname is not used but kept for consistancy with VSETP, VCOMMITP
+ */
+#define HWA_VBITSP(va...)		HWA_VBITSP_(va)
+#define HWA_VBITSP_(mname, ptr, rname, bits, shift, vname)		\
+  (((HWA_VREGP(ptr, rname, vname)) & ((bits)<<(shift))) >> (shift))
+
+
+#define HWA_VSETP(va...)			HWA_VSETP_(va)
+#define HWA_VSETP_(mname, ptr, rname, bits, shift, val)			\
+  do {									\
+    HWA_VTYPE(mname, rname) mmask = (bits) << (shift) ;			\
+    HWA_VTYPE(mname, rname) vmask = (val) << (shift) ;			\
+    if ( (HWA_HWMASK(mname, rname) & mmask) != mmask )			\
+      HWA_ERROR("Try to modify not writeable bits.");			\
+    if ( (HWA_VREGP(ptr, rname, mvmask) & mmask) != 0			\
+	 && (HWA_VREGP(ptr, rname, mvalue) & mmask) != vmask )		\
+      HWA_ERROR("Previous affectation with different value not committed."); \
+    if ( ((HWA_VREGP(ptr, rname, ovmask) & mmask) == mmask		\
+	  && (HWA_VREGP(ptr, rname, ovalue) & mmask) != vmask)		\
+	 || (HWA_VREGP(ptr, rname, ovmask) & mmask) != mmask) {		\
+      ptr->used = 1 ;							\
+      HWA_VREGP(ptr, rname, mvmask) |= mmask ;				\
+      HWA_VREGP(ptr, rname, mvalue) =					\
+	(HWA_VREGP(ptr, rname, mvalue) & ~mmask)			\
+	| (mmask & vmask) ;						\
+    }									\
+  } while(0)
+
+
+/*	Write bits designed by mask from virtual to hardware register.
+ *
+ *	va must expand to 'mname, rname [, mask]'
+ *	-1 is appended so that will be used as 'mask' if none given
+ */
+#define HWA_COMMITP(va...)		HWA_COMMITP_(va, -1)
+#define HWA_COMMITP_(dry, mname, ptr, rname, mask, ...)			\
+  do {									\
+    HWA_VTYPE(mname, rname) m = HWA_VREGP(ptr, rname, mvmask) & (mask) ; \
+    if ( m != 0 ) {							\
+      if ( m != HWA_HWMASK(mname, rname)				\
+	   && HWA_VREGP(ptr, rname, ovmask) != HWA_HWMASK(mname, rname) ) { \
+	if ( dry == 0 && HWA_VADDR(mname, rname) != -1 )		\
+	  HWA_VREGP(ptr, rname, ovalue) = HWA_HREGP(mname, ptr, rname) ; \
+	HWA_VREGP(ptr, rname, ovmask) = HWA_HWMASK(mname, rname) ;	\
+	HWA_VREGP(ptr, rname, mvalue) =					\
+	  (HWA_VREGP(ptr, rname, ovalue) & ~HWA_VREGP(ptr, rname, mvmask)) \
+	  | (HWA_VREGP(ptr, rname, mvalue) & HWA_VREGP(ptr, rname, mvmask)) ; \
+      }									\
+      HWA_VREGP(ptr, rname, ovalue) =					\
+	(HWA_VREGP(ptr, rname, ovalue) & ~m)				\
+	| (HWA_VREGP(ptr, rname, mvalue) & m) ;				\
+      if ( dry == 0 && HWA_VADDR(mname, rname) != -1 )			\
+	HWA_HREGP(mname, ptr, rname) = HWA_VREGP(ptr, rname, ovalue) ;	\
+      HWA_VREGP(ptr, rname, mvmask) &= ~m ;				\
+      HWA_VREGP(ptr, rname, ovmask) |= m ;				\
+    }									\
+  } while(0)
+
+
+/*	Include device-specific definitions from "hwa_device.h"
+ */
+#ifndef HWA_DEVICE
+#  error "HWA_DEVICE not defined."
+#endif
+
+#include HWA_STR(HWA_G2(hwa, HWA_DEVICE).h)
+
 
 #endif
