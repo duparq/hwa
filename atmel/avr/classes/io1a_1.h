@@ -13,20 +13,20 @@
  * @page atmelavr_io1a Class _io1a: General Purpose Input/Output
  *
  * A class `_io1a` object is a single or a group of consecutive pins inside the
- * same I/O port. An `_io1a` object can be configured as analog input if it has
- * a `_did` logical register.
+ * same I/O port.
  *
- * `_io1a` objects have the following relative objects:
- *
- *  * one port, of class @ref atmelavr_p8a "_p8a": `HW_RELATIVE( pin_pa0, port )`
- *  * one interrupt controller, of class @ref atmelavr_pcica "_pcica": `HW_RELATIVE( pin_pa0, pcic )`
+ * The instruction `HW_PIN()` can be used to get the canonical name of an I/O
+ * definition:
+ * @code
+ * hw( read, HW_PIN(int0) );
+ * hw( write, HW_PIN(1), 0 );
+ * @endcode
  */
 #define _hw_class__io1a
 
 
 /**
  * @page atmelavr_io1a
- * @par Instructions that do not produce C code:
  *
  * The `HW_BITS()` instruction returns the number of bits of an I/O definition:
  *
@@ -57,24 +57,27 @@
 
 #define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
 
-
 /**
  * @page atmelavr_io1a
+ * @section atmelavr_io1a_rel Relatives
  *
- * The `HW_RELATIVE()` instruction is usefull to retrieve the name of the I/O port
- * associated to the I/O:
+ * `_io1a` objects have the following relatives:
  *
- * @code
- * #if HW_ID(pin_pa3) && HW_ID(HW_RELATIVE(pin_pa3,port)) != HW_ID(porta)
- * #  Pin PA3 should be a PORTA pin!
- * #endif
- * @endcode
+ *  * `port`: the I/O port the object pertains to:
+ *     @code
+ *     HW_RELATIVE( pin_pa0, port )
+ *     @endcode
+ *  * `pcic`: the pin-change interrupt controller:
+ *     @code
+ *     HW_RELATIVE( pin_pa0, pcic )
+ *     @endcode
  */
-#define _hw_mtd_HW_RELATIVE__io1a		, _HW_REL_io1a
+/*  Class-defined HW_RELATIVE()
+ */
+#define _hw_mtd_HW_RELATIVE__io1a	, _HW_REL_io1a
 
 #define _hw_is_port_port
 
 #define _HW_REL_io1a(o,x,...)		HW_X(_HW_REL_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)
-
 #define _HW_REL_io1a_1(o,x,i,p,...)	p
 #define _HW_REL_io1a_0(o,x,...)		HW_E_OO(o,x)

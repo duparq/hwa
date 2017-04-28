@@ -868,7 +868,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = ../atmel/avr/examples/ \
+EXAMPLE_PATH           = ../atmel/avr/examples
 
 		       	 # ../include/hwa/atmel/avr/attiny85_20pu.h \
                          # ../atmel/avr/devices/attiny85.h \

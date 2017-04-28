@@ -13,8 +13,8 @@
 #define _hw_mtd_hwa_configure__io1a	, _hwa_cfio1a
 #define _hw_mtd_hw_read__io1a		, _hw_read_io1a
 #define _hw_mtd_hw_write__io1a		, _hw_write_io1a
-#define _hw_mtd_hwa_write__io1a	, _hwa_write_io1a
-#define _hw_mtd_hw_toggle__io1a	, _hw_toggle_io1a
+#define _hw_mtd_hwa_write__io1a		, _hwa_write_io1a
+#define _hw_mtd_hw_toggle__io1a		, _hw_toggle_io1a
 
 
 /**
@@ -232,8 +232,8 @@
 /**
  * @page atmelavr_io1a
  * @code
- * // All the pins of the same I/O port are toggled at once by the
- * // following `hwa_commit()` instruction.
+ * // All the pins of the same object are toggled at once by the
+ * // following `hwa_commit()`.
  * //
  * hwa( toggle, pin_pa0 );
  * @endcode
@@ -251,14 +251,16 @@
  * Creating an I/O definition allows giving a set of consecutive pins a name
  * that tells their role and benefit of the generic read/write instructions.
  *
- * A class `_io1a` I/O definition named `mypins` is created with:
+ * A class `_io1a` object named `mypins` is created with:
  *
+ * @code
  *     #define _hw_pin_mypins		_io1a, id, port, bn, bp
+ * @endcode
  *
  * where:
  *
  * * `id` is a unique number identifying the object. If you're not going to use
- *	  the `HW_ID()` instruction, any value (or even none) is OK.
+ *   the `HW_ID()` instruction with this object, any value (or even none) is OK.
  *
  * * `port` is the name of the object holding the pin, e.g.: `porta`.
  *
