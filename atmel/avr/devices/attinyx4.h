@@ -695,7 +695,7 @@ typedef struct {
 
 #define _hw_reg_int0_sc			_xob1, core0,  mcucr, 2, 0
 #define _hw_reg_int0_ie			_xob1, shared, gimsk, 1, 6
-#define _hw_reg_int0_if			_xob1, shared, gifr,	 1, 6
+#define _hw_reg_int0_if			_xob1, shared, gifr,  1, 6
 
 
 /*******************************************************************************
@@ -717,7 +717,7 @@ typedef struct {
 /*	Object logical registers
  */
 #define _hw_reg_pcic0_ie		_xob1, shared, gimsk, 1, 4
-#define _hw_reg_pcic0_if		_xob1, shared, gifr,	 1, 4
+#define _hw_reg_pcic0_if		_xob1, shared, gifr,  1, 4
 
 /*	Object				class, id, address
  */
@@ -730,7 +730,7 @@ typedef struct {
 /*	Object logical registers
  */
 #define _hw_reg_pcic1_ie		_xob1, shared, gimsk, 1, 5
-#define _hw_reg_pcic1_if		_xob1, shared, gifr,	 1, 5
+#define _hw_reg_pcic1_if		_xob1, shared, gifr,  1, 5
 
 
 /*******************************************************************************
