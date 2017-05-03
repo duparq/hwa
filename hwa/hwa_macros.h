@@ -42,6 +42,7 @@
 #define HW_E_OM()		HW_E(missing object name)
 #define HW_E_T(x)		HW_E(unrecognized token `x`)
 #define HW_E_G(x)		HW_E(garbage parameters starting with `x`)
+#define HW_E_K(k,x)		HW_E(expected `k` instead of `x`)
 
 #define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
@@ -609,7 +610,8 @@
 #define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r16,ra,rwm,rfm,16,0
 #define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r32,ra,rwm,rfm,32,0
 #define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_m1,o,0,r,_hw_reg_##o##_##r,bn,bp
-#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,r)	_m1,to,0,tr,_hw_reg_##to##_##tr,bn,bp
+//#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,r)	_m1,to,0,tr,_hw_reg_##to##_##tr,bn,bp
+#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,r)	_m1,to,HW_A2(_hw_def_##to),tr,_hw_reg_##to##_##tr,bn,bp
 #define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_m1,o,a,r,_hw_reg_##c##_##r,bn,bp
 #define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
   _m2,o,a, r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2

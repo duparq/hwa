@@ -198,7 +198,7 @@
  * This structure is used in the HWA context to store one 8-bit hardware
  * register.
  */
-typedef struct hwa_r8_t
+typedef struct
 {
   intptr_t	a ;		/*!< Address of hardware register.		*/
   uint8_t	mmask ;		/*!< Modified bits mask.			*/
@@ -207,29 +207,22 @@ typedef struct hwa_r8_t
   uint8_t	ovalue ;	/*!< Hardware known value mask.			*/
 } hwa_r8_t ;
 
-
-/**
- * @brief 16-bit HWA context register.
- *
- * This structure is used in the HWA context to store one 16-bit hardware
- * register.
- */
-typedef struct hwa_r16_t
+typedef struct
 {
-  intptr_t	a ;		/*!< Address of hardware register.		*/
-  uint16_t	mmask ;		/*!< Modified bits mask.			*/
-  uint16_t	mvalue ;	/*!< Modified value mask.			*/
-  uint16_t	omask ;		/*!< Hardware known bits mask.			*/
-  uint16_t	ovalue ;	/*!< Hardware known value mask.			*/
+  intptr_t	a ;
+  uint16_t	mmask ;
+  uint16_t	mvalue ;
+  uint16_t	omask ;
+  uint16_t	ovalue ;
 } hwa_r16_t ;
 
-typedef struct rem_hwa_r32_t
+typedef struct
 {
-  intptr_t	a ;		/*!< Address of hardware register.		*/
-  uint32_t	mmask ;		/*!< Modified bits mask.			*/
-  uint32_t	mvalue ;	/*!< Modified value mask.			*/
-  uint32_t	omask ;		/*!< Hardware known bits mask.			*/
-  uint32_t	ovalue ;	/*!< Hardware known value mask.			*/
+  intptr_t	a ;
+  uint32_t	mmask ;
+  uint32_t	mvalue ;
+  uint32_t	omask ;
+  uint32_t	ovalue ;
 } hwa_r32_t ;
 
 

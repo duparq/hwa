@@ -1,0 +1,67 @@
+
+define connect
+  target remote localhost:3333
+end
+
+define reload
+  mon reset
+  mon halt
+  mon reset init
+  load PROJECT
+
+  # Vector table is in RAM
+  # monitor mdw 0xE000ED08 1
+  #
+  monitor mww 0xE000ED08 0x20000000
+
+  # Pour booter correctement en RAM (STM32 bug)
+  # si le vecteur d'interruptions n'est pas modifié
+  #
+  # monitor mww 0x20000108 0xf108f85f
+
+  set $sp = *(int*)0x20000000
+  set $pc = *(int*)0x20000004
+
+  echo VECTORS =\ 
+  print /x *0xE000ED08
+  echo SP =\ 
+  print /x $sp
+  echo PC =\ 
+  print /x $pc
+end
+
+define _reload
+  loadproject
+  continue
+end
+
+# monitor poll
+# monitor sleep 100
+# monitor jtag_nsrst_delay 500
+
+define hook-step
+  mon cortex_m3 maskisr on
+end
+
+define hookpost-step
+  mon cortex_m3 maskisr off
+end
+
+connect
+
+# needed for gdb 6.8 and higher
+#
+#set mem inaccessible-by-default off
+#set remote hardware-watchpoint-limit 6
+#set remote hardware-breakpoint-limit 6
+
+#file PROJECT
+
+# mon reset
+# mon halt
+
+#reload
+
+# br die
+# br main
+# continue

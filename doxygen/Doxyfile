@@ -786,6 +786,7 @@ INPUT                  = defgroups.txt \
                          ../include/ \
                          ../atmel/ \
                          ../espressif/ \
+                         ../st/ \
                          ../hwa/ \
                          devices.md \
                          using.md \
