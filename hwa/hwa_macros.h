@@ -41,7 +41,9 @@
 #define HW_E_P(x)		HW_E(`x` is not a pin)
 #define HW_E_OM()		HW_E(missing object name)
 #define HW_E_T(x)		HW_E(unrecognized token `x`)
+#define HW_E_V()		HW_E(missing value)
 #define HW_E_G(x)		HW_E(garbage parameters starting with `x`)
+#define HW_E_K(k,x)		HW_E(expected `k` instead of `x`)
 
 #define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
@@ -195,12 +197,12 @@
 #define HW_MTD(...)		_HW_MTD1(__VA_ARGS__)
 
 /*  Get the definition of the object o. This will return the class in first
- *  position or void is an error occured.
+ *  position or void if an error occured.
  */
 #define _HW_MTD1(f,o,...)	_HW_MTD2(f,HW_O(o),__VA_ARGS__)
 #define _HW_MTD2(...)		_HW_MTD3(__VA_ARGS__)
 #define _HW_MTD3(f,c,...)	HW_X(_HW_MTD3,c)(f,c,__VA_ARGS__)
-#define _HW_MTD3_1(...)	//HW_E_OM()
+#define _HW_MTD3_1(...)		//HW_E_OM() /* An error has been emitted by HW_O */
 
 /*  Is there a method f for object o of class c?
  */
@@ -295,23 +297,14 @@
  * If successful, returns the definition starting with a class name followed by the object
  * name: c,o,... Otherwise, triggers an error and returns a void token.
  */
-
-/*  If o starts with a class name, job's done.
- */
 #define HW_O(object)		_HW_O1(object)
 #define _HW_O1(...)		HW_X(_HW_O2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
-#define _HW_O2_1(...)		__VA_ARGS__
-
-/*  Is o an object's name?
- */
-#define _HW_O2_0(o)		_HW_O3(o,_hw_def_##o)
+#define _HW_O2_1(...)		__VA_ARGS__		/*  Class name found, job's done. */
+#define _HW_O2_0(o)		_HW_O3(o,_hw_def_##o)	/*  Is o an object's name? */
 #define _HW_O3(...)		_HW_O4(__VA_ARGS__)
 #define _HW_O4(o,...)		HW_X(_HW_O4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _HW_O4_1(o,c,...)	c,o,__VA_ARGS__
-
-/*  o is not an object, produce an error.
- */
-#define _HW_O4_0(o,...)		HW_X(_HW_O5,o)(o)
+#define _HW_O4_0(o,...)		HW_X(_HW_O5,o)(o)	/*  o is not an object, produce an error. */
 #define _HW_O5_0(o)		HW_E_O(o)
 #define _HW_O5_1(o)		HW_E_OM()
 
@@ -390,18 +383,23 @@
 /*  Do not proceed further in case of error
  */
 #define _hwx3(h,f,c,...)	HW_X(_hwx4,c)(h,f,c,__VA_ARGS__)
-#define _hwx4_1(...)		// HW_E_OM()
+#define _hwx4_1(...)		// HW_E_OM() /* An error has already been emitted by HW_O */
 
-/*  Look for a method x_f for object o of class c.
+/*  Look for a class method x_f for object o of class c.
  */
 #define _hwx4_0(h,f,c,...)	HW_X(_hwx5,_hw_mtd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
 #define _hwx5_1(h,f,c,...)	HW_A1(_hw_mtd_##h##_##f##_##c)(__VA_ARGS__)
 
+/*  Look for a method x_f for object o.
+ */
+#define _hwx5_0(h,f,c,o,...)	HW_X(_hwx6,_hw_mtd_##h##_##f##_##o)(h,f,c,o,__VA_ARGS__)
+#define _hwx6_1(h,f,c,o,...)	HW_A1(_hw_mtd_##h##_##f##_##o)(__VA_ARGS__)
+
 /*  Look for a global method
  */
-#define _hwx5_0(h,f,...)	HW_X(_hwx6,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
-#define _hwx6_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
-#define _hwx6_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
+#define _hwx6_0(h,f,...)	HW_X(_hwx7,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
+#define _hwx7_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
+#define _hwx7_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
 
 
 /*  Internal use only version
@@ -578,6 +576,11 @@
 #define __HW_M5_0(t,o,c,a,r)		__HW_M6(_hw_reg_##o##_##r,o,c,a,r)
 #define __HW_M6(...)			__HW_M5_1(__VA_ARGS__)
 
+/* #define __HW_M5_0(t,o,c,a,r)		__HW_M7(_hw_reg_##o##_##r,o,c,a,r) */
+/* #define __HW_M7(...)			__HW_M8(__VA_ARGS__) */
+/* #define __HW_M8(t,...)			HW_X(__HW_M9,_hw_isa_reg_##t)(t,__VA_ARGS__) */
+/* #define __HW_M9_1( */
+
 
 /**
  * @ingroup private_ins
@@ -609,7 +612,17 @@
 #define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r16,ra,rwm,rfm,16,0
 #define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r32,ra,rwm,rfm,32,0
 #define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_m1,o,0,r,_hw_reg_##o##_##r,bn,bp
-#define _hw_r2m__xob1(to,tr,bn,bp, o,c,a,r)	_m1,to,0,tr,_hw_reg_##to##_##tr,bn,bp
+
+/*  External object register can be a register of the target object's class
+ */
+#define _hw_r2m__xob1(to,tr,bn,bp,o,c,a,r)		_hw_r2m__xob12(_hw_reg_##to##_##tr,_hw_def_##to,to,tr,bn,bp)
+#define _hw_r2m__xob12(...)				_hw_r2m__xob13(__VA_ARGS__)
+#define _hw_r2m__xob13(t,...)				HW_X(_hw_r2m__xob13,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _hw_r2m__xob13_1(rc,ra,rwm,rfm,c,i,a,o,r,bn,bp)	_m1,o,a,r,rc,ra,rwm,rfm,bn,bp
+#define _hw_r2m__xob13_0(x,c,i,a,o,r,bn,bp)		_hw_r2m__xob16(_hw_reg_##c##_##r,c,i,a,o,r,bn,bp)
+#define _hw_r2m__xob16(...)				_hw_r2m__xob17(__VA_ARGS__)
+#define _hw_r2m__xob17(rc,ra,rwm,rfm,c,i,a,o,r,bn,bp)	_m1,o,a,r,rc,ra,rwm,rfm,bn,bp
+
 #define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_m1,o,a,r,_hw_reg_##c##_##r,bn,bp
 #define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
   _m2,o,a, r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2
@@ -639,6 +652,7 @@
  * different between C and assembler.
  */
 #define _hw_mtd_HW_ADDRESS__m1		, _HW_ADDRESS__m1
+#define _hw_mtd_HW_ADDRESS__r32		, _HW_ADDRESS__r32
 
 
 /**
