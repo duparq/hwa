@@ -48,23 +48,17 @@
  * classes. An object supports power management if it has a logical register
  * named `prr`.
  */
-#define _hw_power(c,o,i,a, ...)		HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
-#define _hwa_power(c,o,i,a, ...)	HW_X(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
-
-#define _hwx_pwr_0(o,x,v, ...)		HW_E_ST(v)
-#define _hwx_pwr_1(o,x,v, ...)		HW_TX(HW_X(_hwx_pwr1,HW_G2(_hw_isa_reg, _##o##_##prr))(o,x,v),__VA_ARGS__)
-
-/*  Register prr exists, process the instruction
- */
-#define _hwx_pwr1_1(o,x,v)	x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
-
-/*  Register prr does not exist
- */
-#define _hwx_pwr1_0(o,x,v)	HW_E(`o` does not support power management)
-
-
 #define _hw_mtd_hw_power		, _hw_power
 #define _hw_mtd_hwa_power		, _hwa_power
+
+#define _hw_power(c,o,i,a,v,g,...)	HW_X(_hwx_pwr1,g)(_hw,o,v,g)
+#define _hwa_power(c,o,i,a,v,g,...)	HW_X(_hwx_pwr1,g)(_hwa,o,v,g)
+#define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
+#define _hwx_pwr1_1(x,o,v,g)		HW_X(_hwx_pwr2,_hw_state_v)(x,o,v)
+#define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
+#define _hwx_pwr2_1(x,o,v)		HW_X(_hwx_pwr3,HW_G2(_hw_isa_reg, _hw_reg_##o##_##prr))(x,o,v)
+#define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
+#define _hwx_pwr3_1(x,o,v)		x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
 
 
 /**
