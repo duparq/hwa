@@ -118,8 +118,7 @@ $(BOARDS)/build/$(BOARD): $(BOARDS)/build/$(BOARD).c $(BOARDS)/$(BOARD).h
 ################################################################################
 
 .PHONY: all
-#all:	deps bin lst size stat
-all:	deps bin lst size
+all:	deps bin lst size crc32
 
 hex:	$(OUT).hex
 bin:	$(OUT).bin
@@ -321,6 +320,10 @@ stat:	$(OUT).bin
 	  echo "Install Python if you want Diabolo to stat your application."	;\
 	fi
 
+.PHONY: crc32
+crc32:	$(OUT).bin
+	@echo -n "CRC32: " ; crc32 $^
+
 
 ################################################################################
 #									       #
@@ -432,6 +435,6 @@ ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset))
   include $(MFD)Makefile.$(PROG_SW)
 endif
 
-ifneq (,$(filter $(MAKECMDGOALS), openocd gdb))
+ifneq (,$(filter $(MAKECMDGOALS), openocd gdb run))
   include $(MFD)Makefile.gdb
 endif

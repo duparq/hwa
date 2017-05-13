@@ -10,13 +10,12 @@
  */
 
 /**
- * @page stm32f103_io1a Class _io1a: General Purpose Input/Output
+ * @page stm32_io1a Class _io1a: General Purpose Input/Output
  *
- * A class `_io1a` object is a single or a group of consecutive pins inside the
- * same GPIO port.
+ * A class `_io1a` object is a group of consecutive pins inside the same GPIO
+ * port. It can also be a single pin.
  *
- * The instruction `HW_PIN()` can be used to get the canonical name of an I/O
- * definition:
+ * `HW_PIN()` returns the canonical name of an I/O definition:
  * @code
  * hw( read, HW_PIN(int0) );
  * hw( write, HW_PIN(1), 0 );
@@ -26,10 +25,9 @@
 
 
 /**
- * @page stm32f103_io1a
+ * @page stm32_io1a
  *
- * The `HW_BITS()` instruction returns the number of bits of an I/O definition:
- *
+ * `HW_BITS()` returns the number of bits of an I/O definition:
  * @code
  * #if HW_ID(pin_pa3) && (HW_BITS(pin_pa3) != 1)
  * #  error HWA is damaged!
@@ -42,11 +40,9 @@
 
 
 /**
- * @page stm32f103_io1a
+ * @page stm32_io1a
  *
- * For a group of consecutive pins, the `HW_POSITION()` instruction gives the position
- * of the least significant bit:
- *
+ * `HW_POSITION()` returns the position of the least significant bit:
  * @code
  * #if HW_ID(pin_pa3) && (HW_POSITION(pin_pa3) != 3)
  * #  HWA is damaged!
@@ -58,17 +54,14 @@
 #define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
 
 /**
- * @page stm32f103_io1a
- * @section stm32f103_io1a_rel Relatives
+ * @page stm32_io1a
  *
- * `_io1a` objects have the following relatives:
+ * `_io1a` objects have a relative `port` that represent the GPIO port the I/O
+ * definition pertains to.
  *
- *  * `port`: the I/O port the object pertains to:
- *     @code
- *     HW_RELATIVE( pin_pa0, port )
- *     @endcode
- */
-/*  Class-defined HW_RELATIVE()
+ * @code
+ * hw( power, HW_RELATIVE(pin_pa0,port), on );	// Power the GPIO port of pin PA0 on
+ * @endcode
  */
 #define _hw_mtd_HW_RELATIVE__io1a	, _HW_REL_io1a
 

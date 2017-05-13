@@ -13,8 +13,9 @@
  * output, then in an infinite loop it toggles the LED state and waits for half
  * the period to be elapsed.
  *
- * To try the program, you have to have an openocd server running (run `make
- * openocd` in one terminal). Then `make run`. The LED should blink.
+ * To try the program, run `make openocd` in one terminal, and `make gdb` in
+ * another one. In `gdb` type `reload` to load the program (it executes from
+ * RAM) and `continue` to run it. The LED should blink.
  *
  * Symbols:
  *
@@ -24,7 +25,7 @@
  *   lead to `BOARD_H` defined as `<boards/mini-stm32-v3.0.h>`. See @ref
  *   stm32_boards for the list of board definition files provided.
  *
- * * `PIN_LED1` is the name of the I/O pin at which a LED1 is connected. It is
+ * * `PIN_LED1` is the name of the I/O pin at which LED1 is connected. It is
  *   defined in the target board header file.
  *
  * * `PERIOD` is the blinking period.
@@ -40,15 +41,26 @@
 
 int main ( )
 {
-  hw( power, HW_RELATIVE(PIN_LED1,port), on );
+  hwa_begin_from_reset();
+  
+  hwa( power, HW_RELATIVE(PIN_LED1,port), on );
 
-  hw( configure, PIN_LED1,
-      mode,	 digital,
-      direction, output,
-      frequency, 50MHz );
+  hwa( configure, PIN_LED1,
+       mode,	  digital,
+       direction, output,
+       frequency, 50MHz );
+
+  hwa_commit();
 
   for(;;) {
-    hw( toggle, PIN_LED1 );
+    hwa( write, PIN_LED1, 1 );
+    hwa_commit();
+
+    hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
+
+    hwa( write, PIN_LED1, 0 );
+    hwa_commit();
+
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
   }
 }

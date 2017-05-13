@@ -10,7 +10,7 @@
  */
 
 /**
- * @page stm32f103_p16a Class _p16a: 16-bit GPIO port
+ * @page stm32_p16a Class _p16a: 16-bit GPIO port
  *
  * A class `_p16a` object is a 16-bit GPIO port.
  */
@@ -37,6 +37,8 @@ typedef struct {
   hwa_r32_t bsrr;
   hwa_r32_t brr ;
   hwa_r32_t lckr;
+
+  uint32_t	toggles ;
 } hwa_p16a_t ;
 
 #endif

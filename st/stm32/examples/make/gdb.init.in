@@ -4,9 +4,10 @@ define connect
 end
 
 define reload
-  mon reset
-  mon halt
-  mon reset init
+#  mon reset
+#  mon halt
+  mon reset halt
+#  mon reset init
   load PROJECT
 
   # Vector table is in RAM
@@ -30,15 +31,6 @@ define reload
   print /x $pc
 end
 
-define _reload
-  loadproject
-  continue
-end
-
-# monitor poll
-# monitor sleep 100
-# monitor jtag_nsrst_delay 500
-
 define hook-step
   mon cortex_m3 maskisr on
 end
@@ -48,6 +40,7 @@ define hookpost-step
 end
 
 connect
+reload
 
 # needed for gdb 6.8 and higher
 #

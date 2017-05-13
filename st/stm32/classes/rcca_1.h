@@ -14,14 +14,14 @@
  */
 #define _hw_class__rcca
 
-/*	Class registers			class, address, wm, fm
- */
-//#define _hw_reg__rcca_apb2enr		_r32, 0x18, 0x0038FFFD, 0
+#define _hw_class__hsea
 
 
 #if !defined __ASSEMBLER__
 
 typedef struct {
+  hwa_r32_t cr ;
+  hwa_r32_t cfgr ;
   hwa_r32_t apb2enr ;
 } hwa_rcca_t ;
 

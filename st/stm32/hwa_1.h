@@ -39,14 +39,9 @@
 
 
 /*  Address of a memory definition
- *
- *	C and assembler address differ!
  */
-#if defined __ASSEMBLER__
-#  define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
-#else
-#  define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra)
-#endif
+#define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra)
+#define _HW_ADDRESS__r32(ra,rwm,rfm,o,c,a,r)		(a+ra)
 
 
 /*  _hw_isr_(...): address (vector) of ISR

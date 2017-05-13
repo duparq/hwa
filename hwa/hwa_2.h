@@ -338,10 +338,6 @@
  * @brief Create a HWA register
  * @hideinitializer
  */
-/* #define _hwa_begin_reg(o,a,r)			_hwa_begin_reg_2(o,a,r,_##o##_##r) */
-/* #define _hwa_begin_reg_2(...)			_hwa_begin_reg_3(__VA_ARGS__) */
-/* #define _hwa_begin_reg_3(o,a,r, rc,ra, ... )	_hwa_begin_##rc( &hwa->o.r, a+ra ) */
-
 #define _hwa_setup_reg(o,r)			_hwa_setup_reg_2(_HW_R(o,r))
 #define _hwa_setup_reg_2(...)			_hwa_setup_reg_3(__VA_ARGS__)
 #define _hwa_setup_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_setup_##rt(&hwa->o.r, a+ra)
@@ -352,10 +348,6 @@
  * @brief Initialize an HWA register of an object with its reset value
  * @hideinitializer
  */
-/* #define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(o,r,_##o##_##r,v) */
-/* #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__) */
-/* #define _hwa_init_reg_3(o,r, rc,ra,rwm,rfm, v)	_hwa_set_##rc( &hwa->o.r, v ) */
-
 #define _hwa_init_reg(o,r,v)			_hwa_init_reg_2(_HW_R(o,r),v)
 #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__)
 #define _hwa_init_reg_3(rt,ra,rwm,rfm,o,c,a,r,v)	_hwa_set_##rt( &hwa->o.r, v )
@@ -366,21 +358,18 @@
  * @brief Commit one object hardware register
  * @hideinitializer
  */
-/* #define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(&hwa->o.r,_##o##_##r) */
-/* #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__) */
-/* #define _hwa_commit_reg_3(p,rc,ra,rwm,rfm)	_hwa_commit_##rc(p,rwm,rfm,hwa->commit) */
-
-/* #define _hwa_commit_hreg(o,r)			_hwa_commit_hreg_2(_hw_hreg(o,r)) */
-/* #define _hwa_commit_hreg_2(...)			_hwa_commit_hreg_3(__VA_ARGS__) */
-/* #define _hwa_commit_hreg_3(rt,ra,rwm,rfm,o,c,a,r)	\ */
-/*   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit) */
-
 #define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_M(o,r))
 #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__)
 #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__)
 
 #define _hwa_commit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit)
+
+#define _hwa_nocommit_reg(o,r)			_hwa_nocommit_reg_2(_HW_M(o,r))
+#define _hwa_nocommit_reg_2(...)		_hwa_nocommit_reg_3(__VA_ARGS__)
+#define _hwa_nocommit_reg_3(rt,...)		_hwa_nocommit_reg_##rt(__VA_ARGS__)
+#define _hwa_nocommit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
+  _hwa_commit_##rt(&hwa->o.r,rwm,rfm,0)
 
 
 /**
@@ -485,58 +474,6 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
   r->mvalue = v ;
 }
 
-#if 0
-/**
- * @ingroup private_ins
- * @brief  Write into one 8-bit context register.
- *
- * Write value `v` into `bn` consecutive bits starting at least significant
- * position `bp` of the context register pointed by `r`. Trying to write `1`s
- * into non-writeable bits triggers an error.
- *
- * The mask of modified values `mmask` is set according to `bn` and `bp` even if
- * the value is not modified. `_hwa_commit__r8()` will check if the register has
- * effectively been modified.
- *
- * @param r	register pointer.
- * @param rwm	writeable bits mask of the register.
- * @param rfm	flag bits mask of the register.
- * @param bn	number of consecutive bits concerned.
- * @param bp	position of the least significant bit in the register.
- * @param v	value to write.
- */
-/* HW_INLINE void _hwa_write__r8 ( hwa_r8_t *r,	 */
-/*				uint8_t rwm, uint8_t rfm, */
-/*				uint8_t bn, uint8_t bp, uint8_t v ) */
-/* { */
-/*   if (bn == 0) */
-/*     HWA_ERR("no bit to be changed?"); */
-
-/*   if (v > (1U<<bn)-1) */
-/*     HWA_ERR("value too high for number of bits."); */
-
-/*   uint8_t sm = ((1U<<bn)-1) << bp ;	/\* shifted mask	 *\/ */
-
-/*   //	 *((volatile uint8_t*)0) = sm ; */
-
-/*   uint8_t sv = v << bp ;		/\* shifted value *\/ */
-
-/*   //	 *((volatile uint8_t*)0) = sv ; */
-
-/*   if ((rwm & sm) != sm) */
-/*     HWA_ERR("bits not writeable."); */
-
-/*   if ((r->mmask & sm) != 0 && (r->mvalue & sm) != sv) */
-/*     HWA_ERR("committing is required before setting a new value."); */
-
-/*   if ( sm & rfm ) */
-/*     if ( v == 0 ) */
-/*	 HWA_ERR("flag bit can only be cleared by writing 1 into it."); */
-
-/*   r->mmask |= sm ; */
-/*   r->mvalue = (r->mvalue & ~sm) | (sm & sv) ; */
-/* } */
-#endif
 
 /**
  * @ingroup private_ins
@@ -574,7 +511,6 @@ HW_INLINE void _hwa_write_r8 ( hwa_r8_t *r, uint8_t rwm, uint8_t rfm, uint8_t ms
   r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
 }
 
-
 HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, uint16_t msk, uint16_t v )
 {
   if (v & ~msk)
@@ -593,7 +529,6 @@ HW_INLINE void _hwa_write_r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, uint16
   r->mmask |= msk ;
   r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
 }
-
 
 HW_INLINE void _hwa_write_r32 ( hwa_r32_t *r, uint32_t rwm, uint32_t rfm, uint32_t msk, uint32_t v )
 {

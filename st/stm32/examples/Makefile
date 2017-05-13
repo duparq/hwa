@@ -64,8 +64,7 @@ endif
 .PHONY: clean
 clean:
 ifeq (,$(BOARD))
-	@echo Cleaning $(abspath $(PWD)/build)		;\
-	find . -name 'build' -prune -exec rm -rf {} ';'	;\
+	@find . -name 'build' -prune -exec rm -rf {} ';'	;\
 	find . '(' 					\
 		-name '*~' 				\
 		-o -name '*.cp.*'			\

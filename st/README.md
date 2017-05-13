@@ -1,5 +1,5 @@
 
-STMicroelectronics {#stm}
-==================
+ST Microelectronics {#st}
+===================
 
   * @subpage stm32
