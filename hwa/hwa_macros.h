@@ -343,7 +343,7 @@
 #if defined DOXYGEN
 #  define hw(action,object,...)
 #else
-#  define hw(...)		_hwx1(hw,__VA_ARGS__,,)
+#  define hw(...)		_hwx1(hw,__VA_ARGS__,,,)
 #endif
 
 
@@ -373,7 +373,7 @@
 #if defined DOXYGEN
 #  define hwa(action,object,...)
 #else
-#  define hwa(...)		_hwx1(hwa,__VA_ARGS__,,)
+#  define hwa(...)		_hwx1(hwa,__VA_ARGS__,,,)
 #endif
 
 
