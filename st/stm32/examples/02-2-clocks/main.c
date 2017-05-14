@@ -7,15 +7,20 @@
 /**
  * @example
  *
- * This program enables the LED port, configures the LED pin as a digital
- * output, then in an infinite loop it toggles the LED state and waits for half
- * the period to be elapsed.
+ * This program:
+ *  * Starts the high-speed external oscillator.
+ *  * Configures the PLL source and multiplier.
+ *  * Connects the SYSCLK to the PLL.
+ *  * Enables the LED port.
+ *  * Configures the LED pin as a digital output.
+ *  * Toggles the LED in an infinite loop.
  *
  * @par main.c
  */
 #include BOARD_H
 
-#define SYSHZ		72e6	// Desired frequency for the system clock
+#define SYSHZ		72e6	// Desired frequency for the SYSCLK signal
+#define COREHZ		9e6	// Desired frequency for the core
 
 #define PERIOD		0.5	// Blinking period
 
@@ -37,12 +42,14 @@ int main ( )
    *    while ( !hw(stat,pll).ready ) {} : waits for the PLL to be locked.
    */
   hwa( power, hse, on );
-  hwa( connect, pll, hse );
+
+  hwa( connect, pll, hse/2 );
+
   hwa( write, pll, (SYSHZ / HW_DEVICE_HSEHZ) );
   hwa( connect, sysclk, pll );
   hwa_commit();
 
-  /*  Now turn the PLL on and the hardware will use it as sysclk when the PLL is
+  /*  Now turn the PLL on and the hardware will use it as SYSCLK when the PLL is
    *  locked.
    */
   hwa( turn, pll, on );
@@ -59,11 +66,13 @@ int main ( )
        direction, output,
        frequency, 50MHz );
 
+  hwa( write, ahbprescaler, SYSHZ / COREHZ );
+
   hwa_commit();
 
 
   for(;;) {
     hw( toggle, PIN_LED1 );
-    hw_waste_cycles( PERIOD/2 * SYSHZ );
+    hw_waste_cycles( PERIOD/2 * COREHZ );
   }
 }

@@ -14,8 +14,6 @@
  */
 #define _hw_class__rcca
 
-#define _hw_class__hsea
-
 
 #if !defined __ASSEMBLER__
 

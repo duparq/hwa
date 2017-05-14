@@ -52,7 +52,7 @@
 /*	Object registers
  */
 #define _hw_reg_rcc_cr			_r32, 0x00, 0x010D00F9, 0
-#define _hw_reg_rcc_cfgr		_r32, 0x04, 0x077FFFC3, 0
+#define _hw_reg_rcc_cfgr		_r32, 0x04, 0x077FFFF3, 0
 #define _hw_reg_rcc_apb2enr		_r32, 0x18, 0x0038FFFD, 0
 
 #define _hw_reg_rcc_pllrdy		_ob1, cr, 1, 25
@@ -80,17 +80,18 @@
 #define _hw_reg_rcc_sw			_ob1, cfgr, 2,  0
 
 
-/*	HSE oscillator
+/*	Convenient objects
  */
-#define _hw_def_hse			_hsea, 100, 0
-
+#define _hw_def_hse			_obj, 0, 0
 #define _hw_reg_hse_cken		_xob1, rcc, cr, 1, 16	/* convenient */
 
-#define _hw_class__sysclka
-#define _hw_def_sysclk			_sysclka, 100, 0
-
-#define _hw_class__plla
-#define _hw_def_pll			_plla, 100, 0
+#define _hw_def_sysclk			_obj, 0, 0
+#define _hw_def_pll			_obj, 0, 0
+#define _hw_def_usbprescaler		_obj, 0, 0
+#define _hw_def_ahbprescaler		_obj, 0, 0
+#define _hw_def_apb1prescaler		_obj, 0, 0
+#define _hw_def_apb2prescaler		_obj, 0, 0
+#define _hw_def_adcprescaler		_obj, 0, 0
 
 
 /*******************************************************************************
