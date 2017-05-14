@@ -12,6 +12,24 @@
 
 /**
  * @ingroup public_ins
+ * @brief Trigger an error after code generation.
+ * @hideinitializer
+ */
+#define HWA_ERR(msg)		_HWA_ERR_2(msg, __COUNTER__)
+#define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
+#define _HWA_ERR_3(msg, num)						\
+  do {									\
+    extern void __attribute__((error(msg))) hwa_error_##num(void); \
+      hwa_error_##num();						\
+  } while(0)
+
+
+#define HWA_E(s)		_HWA_ERR_2(HW_QUOTE(HWA: s.), __COUNTER__)
+#define HWA_E_VL(v,l)		HWA_E(`v` is not `l`)
+
+
+/**
+ * @ingroup public_ins
  * @brief Insert inline assembler code
  * @hideinitializer
  *

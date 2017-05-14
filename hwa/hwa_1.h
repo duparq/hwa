@@ -61,6 +61,14 @@
 #define _hw_state_enabled		, 1, 0
 #define _hw_state_disabled		, 0, 1
 
+
+/**
+ * @ingroup private_def
+ * @brief Generic object class.
+ */
+#define _hw_class__obj
+
+
 /**
  * @ingroup private_def
  * @brief 8-bit hardware register class.
@@ -176,20 +184,6 @@
 #else
 # define HW_EXTERN_C
 #endif
-
-
-/**
- * @ingroup public_ins
- * @brief Trigger an error after code generation.
- * @hideinitializer
- */
-#define HWA_ERR(msg)		_HWA_ERR_2(msg, __COUNTER__)
-#define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
-#define _HWA_ERR_3(msg, num)						\
-  do {									\
-    extern void __attribute__((error(msg))) hwa_error_##num(void); \
-      hwa_error_##num();						\
-  } while(0)
 
 
 /**
