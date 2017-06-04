@@ -21,7 +21,7 @@
  * to the RXD pin of the serial adapter and a 1k resistor is connected between
  * the RXD and TXD pins. Alternately, RX can be tied to VCC through a 1k
  * resistor and a Schottky diode connected between TXD (anode) and RXD
- * (caphode).
+ * (cathode).
  *
  * @par Serial adapter wiring
  *

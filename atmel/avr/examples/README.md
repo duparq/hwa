@@ -19,7 +19,7 @@ ATtiny45/85 devices.
 
 The `main.c` file of each example project gives informations about what it does
 and how you can test it. A Python application, usually named `main.py`, is
-provided in the directory of the examples that need to communicape with the
+provided in the directory of the examples that need to communicate with the
 host.
 
 A build system is also provided, that uses GNU Make and a few other GNU
@@ -35,7 +35,7 @@ Toolchain
 To be able to compile the example projects, you need a properly configured
 avr-gcc toolchain and GNU Make. Python2.7 + pySerial are required if you want to
 check the CRC of the binary code produced, use the Diabolo bootloader or for
-testing the examples that communicape.
+testing the examples that communicate.
 
 __GNU/Linux__ users usually only have to install the required packages their
 distribution provides.
@@ -66,7 +66,7 @@ tested using:
  * Pyserial: installed from the bash command line: `/c/Python27/Scripts/pip install pyserial`
 
  * Optionnally: [wxPython](http://www.wxpython.org/download.php) for companion
-   applications that have graphical capablities.
+   applications that have graphical capabilities.
 
 
 Once all this is downloaded and installed, update your PATH, e.g.:

@@ -69,7 +69,7 @@
  */
 #define _hw_c16b_clock_none		, 0
 #define _hw_c16b_clock_syshz		, 1
-#define _hw_c16b_clock_prescaler_output_1	, 1	/* Useful for concap */
+#define _hw_c16b_clock_prescaler_output_1	, 1	/* Useful for concat */
 #define _hw_c16b_clock_prescaler_output_8	, 2
 #define _hw_c16b_clock_prescaler_output_64	, 3
 #define _hw_c16b_clock_prescaler_output_256	, 4

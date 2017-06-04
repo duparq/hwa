@@ -166,7 +166,7 @@ main ( )
     }
     else {
       /*
-       *  First byte of command must be '='. Send '!' as error indicapor and
+       *  First byte of command must be '='. Send '!' as error indicator and
        *  wait for '\n' as error acknowledgement.
        */
       do {

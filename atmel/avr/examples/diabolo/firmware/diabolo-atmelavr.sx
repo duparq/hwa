@@ -43,7 +43,7 @@
 	
 #if !defined HW_DEVICE_FUSE_BOOTRST
 	;;
-	;; Device without boot section: allocape enough pages
+	;; Device without boot section: allocate enough pages
 	;; for Diabolo at end of flash memory
 	;;
 	NBLPAGES  = 10
