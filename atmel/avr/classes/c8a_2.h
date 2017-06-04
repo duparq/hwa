@@ -11,48 +11,55 @@
 
 /**
  * @page atmelavr_c8a
- * @section atmelavr_c8a_config Configuration
+ * @section atmelavr_c8a_cf Configure
  *
- * __Note__ If the optionnal argument `overflow` is not stated, an acceptable value
+ * @note If the optionnal argument `overflow` is not stated, an acceptable value
  * will be selected according to the configuration of the compare units found in
  * the HWA context. If `overflow` is stated, the validity of its value will be
  * verified.
  *
+ * @note `sysclk` can be used instead of `ioclk`.
+ *
  * @code
  * hwa( configure, counter0,
  *
- *	//  How the counter is clocked
- *	//
- *	clock,	     none			 // No clock, the counter is stopped
- *		   | prescaler_output(	   0	 // No clock, the counter is stopped
- *				      |	   1	 // System clock
- *				      |	   8	 // System clock divided by 8
- *				      |	  64	 // System clock divided by 64
- *				      |	 256	 // System clock divided by 256
- *				      | 1024 )	 // System clock divided by 1024
- *		   | ext_rising			 // External input, rising edge
- *		   | ext_falling,		 // External input, falling edge
+ *      //  How the counter is clocked
+ *      //
+ *      clock,       none                        // No clock, the counter is stopped
+ *                 | prescaler_output(     0     // No clock, the counter is stopped
+ *                                    |    1     // I/O clock
+ *                                    |    8     // I/O clock divided by 8
+ *                                    |   64     // I/O clock divided by 64
+ *                                    |  256     // I/O clock divided by 256
+ *                                    | 1024 )   // I/O clock divided by 1024
+ *                 | ioclk                       // I/O clock
+ *                 | ioclk /    8                // I/O clock divided by 8
+ *                 | ioclk /   64                // I/O clock divided by 64
+ *                 | ioclk /  256                // I/O clock divided by 256
+ *                 | ioclk / 1024 )              // I/O clock divided by 1024
+ *                 | ext_rising                  // External input, rising edge
+ *                 | ext_falling,                // External input, falling edge
  *
- *	//  How does this counter count
- *	//
- *	countmode,   up_loop			 // Count up and loop
- *		   | updown_loop,		 // Count up and down alternately
+ *      //  How does this counter count
+ *      //
+ *      countmode,   up_loop                     // Count up and loop
+ *                 | updown_loop,                // Count up and down alternately
  *
- *	//  Class _c8a counters all count from 0
- *	//
- *    [ bottom,	     0, ]
+ *      //  Class _c8a counters all count from 0
+ *      //
+ *    [ bottom,      0, ]
  *
- *	//  The maximum value the counter reaches (the default is `max`)
- *	//
- *    [ top,	     0xFF | 0x00FF | 255	 // Hardware fixed value 0xFF
- *		   | max			 // Hardware fixed value 0xFF
- *		   | compare0,]			 // Value stored in the compare0 unit
+ *      //  The maximum value the counter reaches (the default is `max`)
+ *      //
+ *    [ top,         0xFF | 0x00FF | 255         // Hardware fixed value 0xFF
+ *                 | max                         // Hardware fixed value 0xFF
+ *                 | compare0,]                  // Value stored in the compare0 unit
  *
- *	//  When the overflow flag is set
- *	//
- *    [ overflow,    at_bottom			 // When the counter resets to bottom
- *		   | at_top			 // When the counter reaches the top value
- *		   | at_max ]			 // When the counter reaches its max value
+ *      //  When the overflow flag is set
+ *      //
+ *    [ overflow,    at_bottom                   // When the counter resets to bottom
+ *                 | at_top                      // When the counter reaches the top value
+ *                 | at_max ]                    // When the counter reaches its max value
  *    );
  * @endcode
  */
@@ -63,16 +70,19 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c8a_clock_none		, 0
+#define _hw_c8a_clock_none			, 0
 #define _hw_c8a_clock_prescaler_output_0	, 0
-#define _hw_c8a_clock_prescaler_output_1	, 1	/* Useful for concap */
-#define _hw_c8a_clock_prescaler_output_8	, 2
-#define _hw_c8a_clock_prescaler_output_64	, 3
-#define _hw_c8a_clock_prescaler_output_256	, 4
-#define _hw_c8a_clock_prescaler_output_1024	, 5
-#define _hw_c8a_clock_ext_rising	, 6
-#define _hw_c8a_clock_ext_falling	, 7
-#define _hw_c8a_clock_prescaler_output(x)	HW_G2(_hw_c8a_clock_prescaler_output,x)
+#define _hw_c8a_clock_prescaler_output_1	, 1024		/* Useful for concat */
+#define _hw_c8a_clock_prescaler_output_8	, (1024/8)
+#define _hw_c8a_clock_prescaler_output_64	, (1024/64)
+#define _hw_c8a_clock_prescaler_output_256	, (1024/256)
+#define _hw_c8a_clock_prescaler_output_1024	, (1024/1024)
+#define _hw_c8a_clock_ext_rising		, 6
+#define _hw_c8a_clock_ext_falling		, 7
+#define _hw_c8a_clock_prescaler_output(x)	, 1024.0/(x)
+
+#define _hw_c8a_clock_ioclk			, 1024.0
+#define _hw_c8a_clock_sysclk			, 1024.0
 
 #define _hwa_cfc8a(o,i,a, ...)					\
   do { HW_X(_hwa_cfc8a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
@@ -87,10 +97,29 @@
   HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 ) | ext_falling | ext_rising)
 
 #define _hwa_cfc8a_vclock_1(o,v,k,...)				\
-  hwa->o.config.clock = HW_A1(_hw_c8a_clock_##v);		\
+  _hwa_cfc8a_vclock(&hwa->o, HW_A1(_hw_c8a_clock_##v));		\
   HW_X(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
-/*  Optionnal argument `countmode`
+HW_INLINE void _hwa_cfc8a_vclock( hwa_c8a_t *o, float v )
+{
+  if ( v==0 || v==6 || v==7 )
+    o->config.clock = v ;
+  else if ( v == 1024 )
+    o->config.clock = 1 ;
+  else if ( v == 1024/8 )
+    o->config.clock = 2 ;
+  else if ( v == 1024/64 )
+    o->config.clock = 3 ;
+  else if ( v == 1024/256 )
+    o->config.clock = 4 ;
+  else if ( v == 1024/1024 )
+    o->config.clock = 5 ;
+  else
+    HWA_E(value of `clock` must be in (`none`, `prescaler_output(0|1|8|64|256|1024)`, `ext_falling`, `ext_rising`, `ioclk`, `ioclk/8`, `ioclk/64`, `ioclk/256`, `ioclk/1024`));
+}
+
+
+/*  Mandatory argument `countmode`
  */
 #define _hw_c8a_countmode_up_loop	, 1
 #define _hw_c8a_countmode_up_loop	, 1
@@ -408,13 +437,13 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
   /*	Check the validity of the configuration
    */
-  if ( p->config.clock != 0xFF || compare0->config.output != 0xFF \
+  if ( /* p->config.clock != 0xFF || */ compare0->config.output != 0xFF	\
        || compare1->config.output != 0xFF ) {
 
-    if ( p->config.clock == 0xFF ) {
-      // HWA_ERR("configuration of counter is required.");
-      return 3 ;
-    }
+    /* if ( p->config.clock == 0xFF ) { */
+    /*   // HWA_ERR("configuration of counter is required."); */
+    /*   return 3 ; */
+    /* } */
 
     /*	Compare output A
      */
@@ -554,16 +583,10 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 /**
  * @page atmelavr_c8a
- * @section atmelavr_c8a_cnt Count value
+ * @section atmelavr_rdc8a Read
  *
- * The count value is accessible for reading and writing through the following
- * instructions:
- */
-
-/**
- * @page atmelavr_c8a
  * @code
- * hw( read, counter0 );
+ * uint8_t n = hw( read, counter0 );      // Get the count
  * @endcode
  */
 #define _hw_mtd_hw_read__c8a		, _hw_read_c8a
@@ -572,6 +595,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 /**
  * @page atmelavr_c8a
+ * @section atmelavr_wrc8a Write
  * @code
  * hw( write, counter0, value );
  * @endcode
@@ -581,6 +605,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 /**
  * @page atmelavr_c8a
+ * <br>
  * @code
  * hwa( write, counter0, value );
  * @endcode
@@ -592,7 +617,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 /**
  * @page atmelavr_c8a
- * @section atmelavr_c8a_st Status
+ * @section atmelavr_stc8a Status
  *
  * The overflow flag can be accessed through interrupt-related instructions:
  *
