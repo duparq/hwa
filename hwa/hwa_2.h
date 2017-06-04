@@ -26,6 +26,7 @@
 
 #define HWA_E(s)		_HWA_ERR_2(HW_QUOTE(HWA: s.), __COUNTER__)
 #define HWA_E_VL(v,l)		HWA_E(`v` is not `l`)
+#define HWA_E_NIL(v,l)		HWA_E(`v` is not in `l`)
 
 
 /**

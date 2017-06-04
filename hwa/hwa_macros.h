@@ -53,9 +53,13 @@
 #define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
 #define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter `a` can be `l` but not `v`)
 #define HW_E_OKVL(k,v,l)	HW_E(value `v` for optionnal parameter `k` is not l)
+#define HW_E_OKMV(k,v,l)	HW_E(value of optionnal parameter `k` must be `l` not `v`)
 #define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
 #define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
 #define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
+
+#define HW_E_ML(l)		HW_E(expected one argument in `l`)
+#define HW_E_NIL(v,l)		HW_E(`v` is not in `l`)
 
 #define HW_ERROR		HW_E
 
