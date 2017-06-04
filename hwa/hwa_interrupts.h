@@ -81,6 +81,9 @@
 #define _HW_IRQF_0(...)		__VA_ARGS__
 
 
+#if !defined __ASSEMBLER__
+
+
 /**
  * @ingroup public_ins_obj
  * @brief Declares the ISR for @ref using_objects "object"'s IRQ "...".
@@ -150,15 +153,47 @@
 #define _HW_ISR8_0(v,a1,a2,x,...)	HW_E_T(x) void hw_isr_error_##x()
 
 
-#if !defined __ASSEMBLER__
+/**
+ * @ingroup public_ins_obj
+ * @brief Declares the ISR for @ref using_objects "object"'s IRQ "...".
+ * @hideinitializer
+ *
+ * The `HW_VOID_ISR(...)` declares an ISR that doen nothing. This is useful for
+ * example when the interrupt is used to wake the core up.
+ *
+ * @code
+ * HW_VOID_ISR( object [, reason] )
+ * @endcode
+ */
+//#define HW_VOID_ISR(...)		HW_ISR(__VA_ARGS__,naked,){ hw_asm("reti");}
 
-#define _hw_mtd_hw_turn__irq		, _hw_turn_irq
+#if defined DOXYGEN
+#  define HW_VOID_ISR(object, ...)
+#else
+#  define HW_VOID_ISR(...)		_HW_VISR1(__VA_ARGS__,,,)
+#endif
+
+#define _HW_VISR1(x,...)	HW_G2(_HW_VISR2,HW_IS(_irq,x))(x,__VA_ARGS__)
+#define _HW_VISR2_1(...)	_HW_VISR11(__VA_ARGS__)
+#define _HW_VISR2_0(o,x,...)	HW_G2(_HW_VISR3,HW_IS(_irq,_hw_irq_##o##_##x))(o,x,__VA_ARGS__)
+#define _HW_VISR3_1(o,x,...)	_HW_VISR11(_hw_irq_##o##_##x,__VA_ARGS__)
+#define _HW_VISR3_0(o,...)	HW_G2(_HW_VISR4,HW_ISON(o))(o,__VA_ARGS__)
+#define _HW_VISR4_0(o,...)	HW_PE(o,HW_E_O(o)) void hw_isr_error_##o()
+#define _HW_VISR4_1(o,...)	HW_E(`o` has no IRQ named `` or `HW_QUOTE(__VA_ARGS__)`.) _HW_VISR_X_
+
+#define _HW_VISR11(...)			_HW_VISR12(__VA_ARGS__)
+#define _HW_VISR12(i,o,v,e,f,g,...)	HW_X(_HW_VISR13,g)(v,g,__VA_ARGS__)
+#define _HW_VISR13_0(v,g,...)		HW_E_G(g)
+#define _HW_VISR13_1(v,...)		_HW_VISR_(v)
+
 
 /**
  * @ingroup private_ins
  * @brief  Turns an IRQ on/off.
  * @hideinitializer
  */
+#define _hw_mtd_hw_turn__irq		, _hw_turn_irq
+
 #define _hw_turn_irq(o,v,e,f, ...)					\
   HW_X(_hw_turn_irq_vstate,_hw_state_##__VA_ARGS__)(o,e, __VA_ARGS__,)
 #define _hw_turn_irq_vstate_0(o,e,x, ...)	HW_E_ST(x)

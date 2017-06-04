@@ -489,6 +489,12 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
   void __vector_##v(void)
 
+/*  Void ISR
+ */
+#define _HW_VISR_(v)							\
+  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
+  void __vector_##v(void) { hw_asm("reti"); }
+
 
 /*  Clear an interrupt flag by writing 1 into it
  */
