@@ -448,7 +448,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define _hw_irq_counter1_compare1	_irq, counter1compare1,	 7, ie,	 if
 #define _hw_irq_counter1compare1_	_irq, counter1compare1,	 7, ie,	 if
 #define _hw_irq_counter1_overflow	_irq, counter1,	 8, ie,	 if
-#define _hw_irq_counter1		_irq, counter1,	 8, ie,	 if
+#define _hw_irq_counter1_		_irq, counter1,	 8, ie,	 if
 #define _hw_irq_counter0_compare0	_irq, counter0compare0,	 9, ie,	 if
 #define _hw_irq_counter0compare0_	_irq, counter0compare0,	 9, ie,	 if
 #define _hw_irq_counter0_compare1	_irq, counter0compare1,	10, ie,	 if
