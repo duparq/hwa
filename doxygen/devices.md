@@ -1,6 +1,6 @@
 
-Supported devices {#support}
-=================
+Devices {#devices}
+=======
 
 [TOC]
 

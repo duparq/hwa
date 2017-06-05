@@ -5,7 +5,7 @@ Using HWA {#using}
 [TOC]
 
 This section gives general informations about how to use HWA, whatever the
-target device. Look at the @ref support "Supported devices" page for
+target device. Look at the @ref devices "Supported devices" page for
 device-specific documentation.
 
 

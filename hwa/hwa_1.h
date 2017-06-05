@@ -24,21 +24,21 @@
 
 /**
  * @ingroup public_def
- * @brief Defined if the packaging of the device is device_package. See the @ref support "device-specific documentation" for details.
+ * @brief Defined if the packaging of the device is device_package. See the @ref devices "device-specific documentation" for details.
  * @hideinitializer
  */
 #  define HW_DEVICE_PACKAGE_device_package
 
 /**
  * @ingroup public_def
- * @brief The device vendor. See the @ref support "device-specific documentation" for details.
+ * @brief The device vendor. See the @ref devices "device-specific documentation" for details.
  * @hideinitializer
  */
 #  define HW_DEVICE_VENDOR
 
 /**
  * @ingroup public_def
- * @brief The device architecture. See the @ref support "device-specific documentation" for details.
+ * @brief The device architecture. See the @ref devices "device-specific documentation" for details.
  * @hideinitializer
  */
 #  define HW_DEVICE_ARCH
