@@ -13,7 +13,6 @@
 
 /**
  * @page stm32f103 STM32F103
- * @section stm32f103_dev Supported devices
  *
  *  * @subpage stm32f103rbt6
  *  * @subpage stm32f103c8t6
@@ -45,39 +44,110 @@
  *									       *
  *******************************************************************************/
 
+/**
+ * @page stm32f103
+ * @section stm32f103_rcc Clocks control
+ *
+ * Low-, medium-, high- and XL-density devices hold a RCC of class @ref
+ * stm32_rcca "_rcca" that holds hardware registers shared by several objects to
+ * access the device's RCC in order to configure various clocks in the device:
+ *
+ *  * @ref stm32_hsia "hsi": 8 MHz internal RC oscillator.
+ *  * @ref stm32_hsea "hse": crystal external oscillator.
+ *  * @ref stm32_plla "pll": PLL multiplying HSI or HSE clock.
+ *  * @ref stm32_sclka "sysclk": connected to HSI, PLL, or HSE, clocks
+ *    * @ref stm32_ahba "ahb": clocks
+ *      * sdio
+ *      * fsmc
+ *      * core
+ *      * memory
+ *      * dma
+ *      * Cortex system timer
+ *      * FCLK Cortex free running clock
+ *      * @ref stm32_apba "apb1" (low-speed): clocks (36 MHz max.)
+ *        * counter2..7, counter12..14
+ *        * APB1 peripherals
+ *      * @ref stm32_apba "apb2" (high-speed): clocks
+ *        * counter1, counter8..11
+ *        * adc and other APB2 peripherals
+ *    * i2s2
+ *    * i2s3
+ *
+ * The RCC is also used transparently by several other objects to enable/disable
+ * their clocking for power management purpose.
+ *
+ * @note Connectivity line devices hold a RCC of class `_rccb`. Not implemented yet.
+ */
+
 #include "../classes/rcca_1.h"
 
 #define _hw_def_rcc			_rcca, 100, 0x40021000
 
 /*	Object registers
  */
-#define _hw_reg_rcc_cr			_r32, 0x00, 0x010D00F9, 0
-#define _hw_reg_rcc_cfgr		_r32, 0x04, 0x077FFFF3, 0
-#define _hw_reg_rcc_apb2enr		_r32, 0x18, 0x0038FFFD, 0
+/* #define _hw_reg_rcc_cr			_r32, 0x00, 0x010D00F9, 0 */
+/* #define _hw_reg_rcc_cfgr		_r32, 0x04, 0x077FFFF3, 0 */
+/* #define _hw_reg_rcc_apb2enr		_r32, 0x18, 0x0038FFFD, 0 */
 
-#define _hw_reg_rcc_pllrdy		_ob1, cr, 1, 25
-#define _hw_reg_rcc_pllon		_ob1, cr, 1, 24
-#define _hw_reg_rcc_csson		_ob1, cr, 1, 19
-#define _hw_reg_rcc_hsebyp		_ob1, cr, 1, 18
-#define _hw_reg_rcc_hserdy		_ob1, cr, 1, 17
-#define _hw_reg_rcc_hseon		_ob1, cr, 1, 16
-#define _hw_reg_rcc_hsical		_ob1, cr, 8,  8
-#define _hw_reg_rcc_hsitrim		_ob1, cr, 5,  3
-#define _hw_reg_rcc_hsirdy		_ob1, cr, 1,  1
-#define _hw_reg_rcc_hsion		_ob1, cr, 1,  0
+/* #define _hw_reg_rcc_pllrdy		_ob1, cr, 1, 25 */
+/* #define _hw_reg_rcc_pllon		_ob1, cr, 1, 24 */
+/* #define _hw_reg_rcc_csson		_ob1, cr, 1, 19 */
+/* #define _hw_reg_rcc_hsebyp		_ob1, cr, 1, 18 */
+/* #define _hw_reg_rcc_hserdy		_ob1, cr, 1, 17 */
+/* #define _hw_reg_rcc_hseon		_ob1, cr, 1, 16 */
+/* #define _hw_reg_rcc_hsical		_ob1, cr, 8,  8 */
+/* #define _hw_reg_rcc_hsitrim		_ob1, cr, 5,  3 */
+/* #define _hw_reg_rcc_hsirdy		_ob1, cr, 1,  1 */
+/* #define _hw_reg_rcc_hsion		_ob1, cr, 1,  0 */
 
-#define _hw_reg_rcc_mco			_ob1, cfgr, 3, 24
-#define _hw_reg_rcc_usbpre		_ob1, cfgr, 1, 22
-#define _hw_reg_rcc_pllmul		_ob1, cfgr, 4, 18
-#define _hw_reg_rcc_pllxtpre		_ob1, cfgr, 1, 17
-#define _hw_reg_rcc_pllsrc		_ob1, cfgr, 1, 16
-#define _hw_reg_rcc_pllxtpresrc		_ob1, cfgr, 2, 16	/* convenient */
-#define _hw_reg_rcc_adcpre		_ob1, cfgr, 2, 14
-#define _hw_reg_rcc_ppre2		_ob1, cfgr, 3, 11
-#define _hw_reg_rcc_ppre1		_ob1, cfgr, 3,  8
-#define _hw_reg_rcc_hpre		_ob1, cfgr, 4,  4
-#define _hw_reg_rcc_sws			_ob1, cfgr, 2,  2
-#define _hw_reg_rcc_sw			_ob1, cfgr, 2,  0
+/* #define _hw_reg_rcc_mco			_ob1, cfgr, 3, 24 */
+/* #define _hw_reg_rcc_usbpre		_ob1, cfgr, 1, 22 */
+/* #define _hw_reg_rcc_pllmul		_ob1, cfgr, 4, 18 */
+/* #define _hw_reg_rcc_pllxtpre		_ob1, cfgr, 1, 17 */
+/* #define _hw_reg_rcc_pllsrc		_ob1, cfgr, 1, 16 */
+/* #define _hw_reg_rcc_pllxtpresrc		_ob1, cfgr, 2, 16	/\* convenient *\/ */
+/* #define _hw_reg_rcc_adcpre		_ob1, cfgr, 2, 14 */
+/* #define _hw_reg_rcc_ppre2		_ob1, cfgr, 3, 11 */
+/* #define _hw_reg_rcc_apb2		_ob1, cfgr, 3, 11	/\* convenient *\/ */
+/* #define _hw_reg_rcc_apb2prescaler	_ob1, cfgr, 3, 11	/\* convenient *\/ */
+/* #define _hw_reg_rcc_ppre1		_ob1, cfgr, 3,  8 */
+/* #define _hw_reg_rcc_apb1		_ob1, cfgr, 3,  8	/\* convenient *\/ */
+/* #define _hw_reg_rcc_apb1prescaler	_ob1, cfgr, 3,  8	/\* convenient *\/ */
+/* #define _hw_reg_rcc_hpre		_ob1, cfgr, 4,  4 */
+/* #define _hw_reg_rcc_sws			_ob1, cfgr, 2,  2 */
+/* #define _hw_reg_rcc_sw			_ob1, cfgr, 2,  0 */
+
+#define _hw_reg__rcca_cr		_r32, 0x00, 0x010D00F9, 0
+#define _hw_reg__rcca_cfgr		_r32, 0x04, 0x077FFFF3, 0
+#define _hw_reg__rcca_apb2enr		_r32, 0x18, 0x0038FFFD, 0
+
+#define _hw_reg__rcca_pllrdy		_cb1, cr, 1, 25
+#define _hw_reg__rcca_pllon		_cb1, cr, 1, 24
+#define _hw_reg__rcca_csson		_cb1, cr, 1, 19
+#define _hw_reg__rcca_hsebyp		_cb1, cr, 1, 18
+#define _hw_reg__rcca_hserdy		_cb1, cr, 1, 17
+#define _hw_reg__rcca_hseon		_cb1, cr, 1, 16
+#define _hw_reg__rcca_hsical		_cb1, cr, 8,  8
+#define _hw_reg__rcca_hsitrim		_cb1, cr, 5,  3
+#define _hw_reg__rcca_hsirdy		_cb1, cr, 1,  1
+#define _hw_reg__rcca_hsion		_cb1, cr, 1,  0
+
+#define _hw_reg__rcca_mco		_cb1, cfgr, 3, 24
+#define _hw_reg__rcca_usbpre		_cb1, cfgr, 1, 22
+#define _hw_reg__rcca_pllmul		_cb1, cfgr, 4, 18
+#define _hw_reg__rcca_pllxtpre		_cb1, cfgr, 1, 17
+#define _hw_reg__rcca_pllsrc		_cb1, cfgr, 1, 16
+#define _hw_reg__rcca_pllxtpresrc	_cb1, cfgr, 2, 16	/* convenient */
+#define _hw_reg__rcca_adcpre		_cb1, cfgr, 2, 14
+#define _hw_reg__rcca_ppre2		_cb1, cfgr, 3, 11
+#define _hw_reg__rcca_apb2		_cb1, cfgr, 3, 11	/* convenient */
+#define _hw_reg__rcca_apb2prescaler	_cb1, cfgr, 3, 11	/* convenient */
+#define _hw_reg__rcca_ppre1		_cb1, cfgr, 3,  8
+#define _hw_reg__rcca_apb1		_cb1, cfgr, 3,  8	/* convenient */
+#define _hw_reg__rcca_apb1prescaler	_cb1, cfgr, 3,  8	/* convenient */
+#define _hw_reg__rcca_hpre		_cb1, cfgr, 4,  4
+#define _hw_reg__rcca_sws		_cb1, cfgr, 2,  2
+#define _hw_reg__rcca_sw		_cb1, cfgr, 2,  0
 
 
 /*	Convenient objects
@@ -85,13 +155,14 @@
 #define _hw_def_hse			_obj, 0, 0
 #define _hw_reg_hse_cken		_xob1, rcc, cr, 1, 16	/* convenient */
 
-#define _hw_def_sysclk			_obj, 0, 0
-#define _hw_def_pll			_obj, 0, 0
+#define _hw_def_hsi			_obj, 0, 0
+#define _hw_reg_hsi_cken		_xob1, rcc, cr, 1,  0	/* convenient */
+
 #define _hw_def_usbprescaler		_obj, 0, 0
-#define _hw_def_ahbprescaler		_obj, 0, 0
-#define _hw_def_apb1prescaler		_obj, 0, 0
-#define _hw_def_apb2prescaler		_obj, 0, 0
 #define _hw_def_adcprescaler		_obj, 0, 0
+
+#define _hw_def_apb1			_apba, 0, 0
+#define _hw_def_apb2			_apba, 0, 0
 
 
 /*******************************************************************************
@@ -104,9 +175,14 @@
  * @page stm32f103
  * @section stm32f103_pins Ports and pins
  *
- * Up to 7 GPIO ports of class @ref stm32_p16a "_p16a".
+ * Up to 7 GPIO ports of class @ref stm32_p16a "_p16a", each holding 16 GPIO
+ * pins of class @ref stm32_io1a "_io1a":
  *
- * Each GPIO port drives up to 16 GPIO pins of class @ref stm32_io1a "_io1a".
+ *  * @ref stm32_p16a "port0" (PORTA): @ref stm32_io1a "pin_pa0..15"
+ *  * @ref stm32_p16a "port1" (PORTB): @ref stm32_io1a "pin_pb0..15"
+ *  * @ref stm32_p16a "port2" (PORTC): @ref stm32_io1a "pin_pc0..15"
+ *  * @ref stm32_p16a "port3" (PORTD): @ref stm32_io1a "pin_pd0..15"
+ *  * @ref stm32_p16a "port4" (PORTE): @ref stm32_io1a "pin_pe0..15"
  */
 
 #include "../classes/p16a_1.h"
@@ -115,12 +191,12 @@
 /*	Objects				class, id, address
  */
 #define _hw_def_port0			_p16a, 100, 0x40010800
-#define _hw_def_port1			_p16a, 100, 0x40010c00
+#define _hw_def_port1			_p16a, 100, 0x40010C00
 #define _hw_def_port2			_p16a, 100, 0x40011000
-#define _hw_def_port3			_p16a, 100, 0x40014000
+#define _hw_def_port3			_p16a, 100, 0x40011400
 #define _hw_def_port4			_p16a, 100, 0x40011800
-#define _hw_def_port5			_p16a, 100, 0x40011c00
-#define _hw_def_port6			_p16a, 100, 0x40012000
+/* #define _hw_def_port5			_p16a, 100, 0x40011C00 */
+/* #define _hw_def_port6			_p16a, 100, 0x40012000 */
 
 /*	Object registers
  */
@@ -129,8 +205,8 @@
 #define _hw_reg_port2_cken		_xob1, rcc, apb2enr, 1, 4	/* convenient */
 #define _hw_reg_port3_cken		_xob1, rcc, apb2enr, 1, 5	/* convenient */
 #define _hw_reg_port4_cken		_xob1, rcc, apb2enr, 1, 6	/* convenient */
-#define _hw_reg_port5_cken		_xob1, rcc, apb2enr, 1, 7	/* convenient */
-#define _hw_reg_port6_cken		_xob1, rcc, apb2enr, 1, 8	/* convenient */
+/* #define _hw_reg_port5_cken		_xob1, rcc, apb2enr, 1, 7	/\* convenient *\/ */
+/* #define _hw_reg_port6_cken		_xob1, rcc, apb2enr, 1, 8	/\* convenient *\/ */
 
 /*  Pins				class, id, peripheral, bn, bp
  */
@@ -224,41 +300,41 @@
 #define _hw_def_pin_pe15		_io1a, 111, port4,  1, 15
 #define _hw_def_porte			_io1a, 112, port4, 16,  0
 
-#define _hw_def_pin_pf0			_io1a, 104, port5,  1,  0
-#define _hw_def_pin_pf1			_io1a, 105, port5,  1,  1
-#define _hw_def_pin_pf2			_io1a, 106, port5,  1,  2
-#define _hw_def_pin_pf3			_io1a, 107, port5,  1,  3
-#define _hw_def_pin_pf4			_io1a, 108, port5,  1,  4
-#define _hw_def_pin_pf5			_io1a, 109, port5,  1,  5
-#define _hw_def_pin_pf6			_io1a, 110, port5,  1,  6
-#define _hw_def_pin_pf7			_io1a, 111, port5,  1,  7
-#define _hw_def_pin_pf8			_io1a, 111, port5,  1,  8
-#define _hw_def_pin_pf9			_io1a, 111, port5,  1,  9
-#define _hw_def_pin_pf10		_io1a, 111, port5,  1, 10
-#define _hw_def_pin_pf11		_io1a, 111, port5,  1, 11
-#define _hw_def_pin_pf12		_io1a, 111, port5,  1, 12
-#define _hw_def_pin_pf13		_io1a, 111, port5,  1, 13
-#define _hw_def_pin_pf14		_io1a, 111, port5,  1, 14
-#define _hw_def_pin_pf15		_io1a, 111, port5,  1, 15
-#define _hw_def_portf			_io1a, 112, port5, 16,  0
+/* #define _hw_def_pin_pf0			_io1a, 104, port5,  1,  0 */
+/* #define _hw_def_pin_pf1			_io1a, 105, port5,  1,  1 */
+/* #define _hw_def_pin_pf2			_io1a, 106, port5,  1,  2 */
+/* #define _hw_def_pin_pf3			_io1a, 107, port5,  1,  3 */
+/* #define _hw_def_pin_pf4			_io1a, 108, port5,  1,  4 */
+/* #define _hw_def_pin_pf5			_io1a, 109, port5,  1,  5 */
+/* #define _hw_def_pin_pf6			_io1a, 110, port5,  1,  6 */
+/* #define _hw_def_pin_pf7			_io1a, 111, port5,  1,  7 */
+/* #define _hw_def_pin_pf8			_io1a, 111, port5,  1,  8 */
+/* #define _hw_def_pin_pf9			_io1a, 111, port5,  1,  9 */
+/* #define _hw_def_pin_pf10		_io1a, 111, port5,  1, 10 */
+/* #define _hw_def_pin_pf11		_io1a, 111, port5,  1, 11 */
+/* #define _hw_def_pin_pf12		_io1a, 111, port5,  1, 12 */
+/* #define _hw_def_pin_pf13		_io1a, 111, port5,  1, 13 */
+/* #define _hw_def_pin_pf14		_io1a, 111, port5,  1, 14 */
+/* #define _hw_def_pin_pf15		_io1a, 111, port5,  1, 15 */
+/* #define _hw_def_portf			_io1a, 112, port5, 16,  0 */
 
-#define _hw_def_pin_pg0			_io1a, 104, port6,  1,  0
-#define _hw_def_pin_pg1			_io1a, 105, port6,  1,  1
-#define _hw_def_pin_pg2			_io1a, 106, port6,  1,  2
-#define _hw_def_pin_pg3			_io1a, 107, port6,  1,  3
-#define _hw_def_pin_pg4			_io1a, 108, port6,  1,  4
-#define _hw_def_pin_pg5			_io1a, 109, port6,  1,  5
-#define _hw_def_pin_pg6			_io1a, 110, port6,  1,  6
-#define _hw_def_pin_pg7			_io1a, 111, port6,  1,  7
-#define _hw_def_pin_pg8			_io1a, 111, port6,  1,  8
-#define _hw_def_pin_pg9			_io1a, 111, port6,  1,  9
-#define _hw_def_pin_pg10		_io1a, 111, port6,  1, 10
-#define _hw_def_pin_pg11		_io1a, 111, port6,  1, 11
-#define _hw_def_pin_pg12		_io1a, 111, port6,  1, 12
-#define _hw_def_pin_pg13		_io1a, 111, port6,  1, 13
-#define _hw_def_pin_pg14		_io1a, 111, port6,  1, 14
-#define _hw_def_pin_pg15		_io1a, 111, port6,  1, 15
-#define _hw_def_portg			_io1a, 112, port6, 16,  0
+/* #define _hw_def_pin_pg0			_io1a, 104, port6,  1,  0 */
+/* #define _hw_def_pin_pg1			_io1a, 105, port6,  1,  1 */
+/* #define _hw_def_pin_pg2			_io1a, 106, port6,  1,  2 */
+/* #define _hw_def_pin_pg3			_io1a, 107, port6,  1,  3 */
+/* #define _hw_def_pin_pg4			_io1a, 108, port6,  1,  4 */
+/* #define _hw_def_pin_pg5			_io1a, 109, port6,  1,  5 */
+/* #define _hw_def_pin_pg6			_io1a, 110, port6,  1,  6 */
+/* #define _hw_def_pin_pg7			_io1a, 111, port6,  1,  7 */
+/* #define _hw_def_pin_pg8			_io1a, 111, port6,  1,  8 */
+/* #define _hw_def_pin_pg9			_io1a, 111, port6,  1,  9 */
+/* #define _hw_def_pin_pg10		_io1a, 111, port6,  1, 10 */
+/* #define _hw_def_pin_pg11		_io1a, 111, port6,  1, 11 */
+/* #define _hw_def_pin_pg12		_io1a, 111, port6,  1, 12 */
+/* #define _hw_def_pin_pg13		_io1a, 111, port6,  1, 13 */
+/* #define _hw_def_pin_pg14		_io1a, 111, port6,  1, 14 */
+/* #define _hw_def_pin_pg15		_io1a, 111, port6,  1, 15 */
+/* #define _hw_def_portg			_io1a, 112, port6, 16,  0 */
 
 /* #if defined HW_DEVICE_PACKAGE_LQFP64 */
 /* # */
@@ -300,8 +376,8 @@ typedef struct {
   hwa_p16a_t	port2 ;
   hwa_p16a_t	port3 ;
   hwa_p16a_t	port4 ;
-  hwa_p16a_t	port5 ;
-  hwa_p16a_t	port6 ;
+  /* hwa_p16a_t	port5 ; */
+  /* hwa_p16a_t	port6 ; */
 } hwa_t ;
 
 #include "../hwa_2.h"
@@ -313,6 +389,12 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
   _hwa_setup( rcc );
   _hwa_setup( port0 );
+  _hwa_setup( port1 );
+  _hwa_setup( port2 );
+  _hwa_setup( port3 );
+  _hwa_setup( port4 );
+  /* _hwa_setup( port5 ); */
+  /* _hwa_setup( port6 ); */
 }
 
 
@@ -320,6 +402,12 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init( rcc );
   _hwa_init( port0 );
+  _hwa_init( port1 );
+  _hwa_init( port2 );
+  _hwa_init( port3 );
+  _hwa_init( port4 );
+  /* _hwa_init( port5 ); */
+  /* _hwa_init( port6 ); */
 }
 
 
@@ -327,6 +415,12 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
   _hwa_commit( rcc );
   _hwa_commit( port0 );
+  _hwa_commit( port1 );
+  _hwa_commit( port2 );
+  _hwa_commit( port3 );
+  _hwa_commit( port4 );
+  /* _hwa_commit( port5 ); */
+  /* _hwa_commit( port6 ); */
 }
 
 #endif /* !defined __ASSEMBLER__ */

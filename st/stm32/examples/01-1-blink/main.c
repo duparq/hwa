@@ -13,8 +13,7 @@
  * output, then in an infinite loop it toggles the LED state and waits for half
  * the period to be elapsed.
  *
- * To try the program, you have to have an openocd server running (run `make
- * openocd` in one terminal). Then `make run`. The LED should blink.
+ * `make run` to try the program. The LED should blink.
  *
  * Symbols:
  *

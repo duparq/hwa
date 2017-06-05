@@ -9,13 +9,7 @@
  *
  * @par Blink a LED using a software loop
  *
- * This program enables the LED port, configures the LED pin as a digital
- * output, then in an infinite loop it toggles the LED state and waits for half
- * the period to be elapsed.
- *
- * To try the program, run `make openocd` in one terminal, and `make gdb` in
- * another one. In `gdb` type `reload` to load the program (it executes from
- * RAM) and `continue` to run it. The LED should blink.
+ * This is a variation of the 01-1-blink program using the hwa() instructions.
  *
  * Symbols:
  *
@@ -42,7 +36,7 @@
 int main ( )
 {
   hwa_begin_from_reset();
-  
+
   hwa( power, HW_RELATIVE(PIN_LED1,port), on );
 
   hwa( configure, PIN_LED1,

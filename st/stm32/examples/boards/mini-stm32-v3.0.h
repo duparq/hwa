@@ -35,7 +35,7 @@
 #define HW_DEVICE_HSEHZ			8e6
 #define HW_DEVICE_LSEHZ			32768
 
-/*  The pin at which the LED is connected. The target device name indicapes its
+/*  The pin at which the LED is connected. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.
  */
 #define PIN_LED1			pin_pa2

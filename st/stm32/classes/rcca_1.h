@@ -10,7 +10,7 @@
  */
 
 /**
- * @page stm32_rcca Class _rcca: clocking control
+ * @page stm32_rcca Class _rcca: Reset and Clock Control (RCC)
  */
 #define _hw_class__rcca
 

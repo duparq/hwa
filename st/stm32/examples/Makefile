@@ -121,15 +121,6 @@ all-examples:
 	done ; echo "$$passed succeeded, $$fails failed."
 
 
-#  Validate all the examples
-#
-.PHONY: validate-all-examples
-validate-all-examples:
-	@for i in ??-* ; do echo $$i	;\
-	(cd $$i ; $(MAKE) -s validate )	;\
-	done
-
-
 #  This target automatically takes the name of the target 
 #  that was not found in this Makefile
 #

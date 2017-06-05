@@ -7,9 +7,8 @@
 /**
  * @example
  *
- * This program enables the LED port, configures the LED pin as a digital
- * output, then in an infinite loop it toggles the LED state and waits for half
- * the period to be elapsed.
+ * This program blinks a LED after it has configured the system clock to use the
+ * PLL driven by the HSE.
  *
  * @par main.c
  */

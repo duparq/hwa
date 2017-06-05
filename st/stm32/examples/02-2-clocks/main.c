@@ -29,50 +29,59 @@ int main ( )
 {
   hwa_begin_from_reset();
 
-  /*  After RESET, the core is clocked at 8 MHz by the HSI RC oscillator.
-   *
-   *  * Start the high-speed external oscillator.
-   *  * Configure the PLL source and multiplier (must be done before it is
-   *    enabled).
-   *  * Prepare the connection of the sysclk to the pll. The hardware waits for
-   *    the clocks to be stable before switching.
-   *
-   *  Alternately, we could check ourselves the clocks:
-   *    while ( !hw(stat,hse).ready ) {} : waits for the HSE to be stable.
-   *    while ( !hw(stat,pll).ready ) {} : waits for the PLL to be locked.
+  /*  Start the high-speed external oscillator.
    */
   hwa( power, hse, on );
 
-  hwa( connect, pll, hse/2 );
+  /* Configure the PLL source and multiplier (must be done before it is enabled).
+   */
+  hwa( configure,  pll,
+       source,     hse/2,
+       multiplier, SYSHZ/HW_DEVICE_HSEHZ );
 
-  hwa( write, pll, (SYSHZ / HW_DEVICE_HSEHZ) );
+  /* Prepare the connection of the sysclk to the pll. The hardware will wait for
+   * the PLL to be locked before actually switching.
+   */
   hwa( connect, sysclk, pll );
   hwa_commit();
 
-  /*  Now turn the PLL on and the hardware will use it as SYSCLK when the PLL is
-   *  locked.
+  /*  Turn the PLL on.
    */
   hwa( turn, pll, on );
   hwa_commit();
 
-  /*  Power the GPIO port
+  /* Wait for the PLL to be locked.
    */
-  hwa( power, HW_RELATIVE(PIN_LED1,port), on );
+  while ( ! hw(stat,pll).ready ) {}
+
+  /* Now that the SYSCLK is driven by the PLL, the HSI can be stopped.
+   */
+  hwa( power, hsi, off );
+
+  /*  Configure the AHB
+   */
+  hwa( configure, ahb,
+       clock,     sysclk,
+       prescaler, SYSHZ/COREHZ );
+  hwa_commit();
 
   /*  Configure the GPIO pin
    */
+  hwa( power,     HW_RELATIVE(PIN_LED1,port), on );
+  hwa_commit();
+
   hwa( configure, PIN_LED1,
        mode,      digital,
        direction, output,
        frequency, 50MHz );
-
-  hwa( write, ahbprescaler, SYSHZ / COREHZ );
-
   hwa_commit();
 
+  /*  Wait for the HSI to actually stop.
+   */
+  while ( hw(stat,hsi).ready ) {}
 
   for(;;) {
     hw( toggle, PIN_LED1 );
-    hw_waste_cycles( PERIOD/2 * COREHZ );
+    hw_waste_cycles( PERIOD*COREHZ/2 );
   }
 }

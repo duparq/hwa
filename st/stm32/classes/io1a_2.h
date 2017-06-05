@@ -20,8 +20,9 @@
 
 /**
  * @page stm32_io1a
- * @section stm32_cfio1a Configure
+ * @section Actions
  *
+ * `configure`:
  * @code
  * hw | hwa( configure,   pin_pa0,
  *
@@ -29,7 +30,7 @@
  *
  *         [ direction,   input ] );    // Default
  * @endcode
- *
+ * <br>
  * @code
  * hw | hwa( configure,   pin_pa0,
  *
@@ -43,7 +44,7 @@
  *         [ pulldown,    on
  *                      | off, ] );     // Default
  * @endcode
- *
+ * <br>
  * @code
  * hw | hwa( configure,   pin_pa0,
  *
@@ -119,38 +120,40 @@
 HW_INLINE void _hwa_do_cfio1a_( hwa_r32_t *r, uint8_t i, uint8_t mode )
 {
   i *= 4 ;
-  uint32_t msk = 0x0F << i ;
-  uint32_t v = mode << i ;
+  uint32_t msk = 0x0FUL << i ;
+  uint32_t v = ((uint32_t)mode) << i ;
   r->mmask |= msk ;
   r->mvalue = (r->mvalue & ~msk) | (msk & v) ;
 }
 
+
 HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
 {
-  if ( mask & 0x0001 ) _hwa_do_cfio1a_(&p->crl, 0,mode);
-  if ( mask & 0x0002 ) _hwa_do_cfio1a_(&p->crl, 1,mode);
-  if ( mask & 0x0004 ) _hwa_do_cfio1a_(&p->crl, 2,mode);
-  if ( mask & 0x0008 ) _hwa_do_cfio1a_(&p->crl, 3,mode);
-  if ( mask & 0x0010 ) _hwa_do_cfio1a_(&p->crl, 4,mode);
-  if ( mask & 0x0020 ) _hwa_do_cfio1a_(&p->crl, 5,mode);
-  if ( mask & 0x0040 ) _hwa_do_cfio1a_(&p->crl, 6,mode);
-  if ( mask & 0x0080 ) _hwa_do_cfio1a_(&p->crl, 7,mode);
-  if ( mask & 0x0100 ) _hwa_do_cfio1a_(&p->crl, 8,mode);
-  if ( mask & 0x0200 ) _hwa_do_cfio1a_(&p->crl, 9,mode);
-  if ( mask & 0x0400 ) _hwa_do_cfio1a_(&p->crl,10,mode);
-  if ( mask & 0x0800 ) _hwa_do_cfio1a_(&p->crl,11,mode);
-  if ( mask & 0x1000 ) _hwa_do_cfio1a_(&p->crl,12,mode);
-  if ( mask & 0x2000 ) _hwa_do_cfio1a_(&p->crl,13,mode);
-  if ( mask & 0x4000 ) _hwa_do_cfio1a_(&p->crl,14,mode);
-  if ( mask & 0x8000 ) _hwa_do_cfio1a_(&p->crl,15,mode);
+  if ( mask & 0x0001 ) _hwa_do_cfio1a_(&p->crl,0,mode);
+  if ( mask & 0x0002 ) _hwa_do_cfio1a_(&p->crl,1,mode);
+  if ( mask & 0x0004 ) _hwa_do_cfio1a_(&p->crl,2,mode);
+  if ( mask & 0x0008 ) _hwa_do_cfio1a_(&p->crl,3,mode);
+  if ( mask & 0x0010 ) _hwa_do_cfio1a_(&p->crl,4,mode);
+  if ( mask & 0x0020 ) _hwa_do_cfio1a_(&p->crl,5,mode);
+  if ( mask & 0x0040 ) _hwa_do_cfio1a_(&p->crl,6,mode);
+  if ( mask & 0x0080 ) _hwa_do_cfio1a_(&p->crl,7,mode);
+
+  if ( mask & 0x0100 ) _hwa_do_cfio1a_(&p->crh,0,mode);
+  if ( mask & 0x0200 ) _hwa_do_cfio1a_(&p->crh,1,mode);
+  if ( mask & 0x0400 ) _hwa_do_cfio1a_(&p->crh,2,mode);
+  if ( mask & 0x0800 ) _hwa_do_cfio1a_(&p->crh,3,mode);
+  if ( mask & 0x1000 ) _hwa_do_cfio1a_(&p->crh,4,mode);
+  if ( mask & 0x2000 ) _hwa_do_cfio1a_(&p->crh,5,mode);
+  if ( mask & 0x4000 ) _hwa_do_cfio1a_(&p->crh,6,mode);
+  if ( mask & 0x8000 ) _hwa_do_cfio1a_(&p->crh,7,mode);
 }
 
 
 
 /**
  * @page stm32_io1a
- * @section stm32_rdio1a Read
- *
+ * <br>
+ * `read`:
  * @code
  * uint8_t value = hw( read, pin_pa0 );
  * @endcode
@@ -162,19 +165,15 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
 
 /**
  * @page stm32_io1a
- * @section stm32_wrio1a Write
- *
+ * <br>
+ * `write`:
  * @code
- * hw( write, pin_pa0, 0 );
- * @endcode
- *
- * @code
- * hwa( write, pin_pa0, 1 );
+ * hw | hwa( write, pin_pa0, 0 );
  * @endcode
  *
  * @note HWA does not write the ODR of the port. It writes the BSRR so that
- * atomicity is guaranted and interrupt service routines can write the port
- * without conflict.
+ * atomicity is guaranted and concurrent tasks can write the port without
+ * conflict.
  */
 /*  Writing pins can be done two ways:
  *   * writing the ODR
@@ -199,12 +198,13 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
 
 /**
  * @page stm32_io1a
- * @section stm32_tgio1a Toggle
+ * <br>
+ * `toggle`:
  * @code
  * hw( toggle, pin_pa0 );       //  Toggle one or several consecutive pins at once
  * @endcode
  */
-/*  Use the BSRR instead of a Read-Modify-Write on the ODR.
+/*  Use the BSRR instead of a read-modify-write on the ODR.
  */
 #define _hw_tgio1a(o,i,p,bn,bp,g,...)		HW_X(_hw_tgio1a,g)(p,bn,bp,g)
 #define _hw_tgio1a_0(p,bn,bp,g)			HW_E_G(g)
@@ -217,11 +217,15 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
 
 /**
  * @page stm32_io1a
+ * <br>
  * @code
  * hwa( toggle, pin_pa0 );      //  Register pin_pa0 for toggling
  * hwa( toggle, pin_pa4 );      //  Register pin_pa4 for toggling
  * hwa_commit();                //  Commit all registered pins at once
  * @endcode
+ *
+ * @note `toggle` is not atomic: it reads the ODR, then sets/resets the relevant
+ * bits through the BSRR. The ODR is not written directly.
  */
 #define _hwa_tgio1a(o,i,p,bn,bp,g,...)		HW_X(_hwa_tgio1a,g)(p,bn,bp,g)
 #define _hwa_tgio1a_0(p,bn,bp,g)		HW_E_G(g)
@@ -257,9 +261,5 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
  *
  * hw( write, pin_outs, 5 );                            // Sets pins 5 & 3, clears pins 6 & 4.
  * @endcode
- */
-
-/**
- * @page stm32_io1a
  * <br>
  */
