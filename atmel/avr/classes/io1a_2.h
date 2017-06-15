@@ -22,7 +22,7 @@
  * @section atmelavr_io1a_config Configuration
  *
  * @code
- * hw( configure, pin_pa0,
+ * hw( configure, pa0,
  *
  *   [ mode,        analog,
  *                | digital, ]
@@ -116,7 +116,7 @@
  * @page atmelavr_io1a
  *
  * @code
- * hwa( configure, pin_pa0,
+ * hwa( configure, pa0,
  *
  *    [ mode,        analog,
  *                 | digital, ]
@@ -190,7 +190,7 @@
  * Class `_io1a` I/O objects can be read and written with the following instructions:
  *
  * @code
- * uint8_t value = hw( read, pin_pa0 );
+ * uint8_t value = hw( read, pa0 );
  * @endcode
  */
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
@@ -201,7 +201,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw( write, pin_pa0, value );
+ * hw( write, pa0, value );
  * @endcode
  */
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)	\
@@ -210,7 +210,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hwa( write, pin_pa0, value );
+ * hwa( write, pa0, value );
  * @endcode
  */
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
@@ -220,7 +220,7 @@
 /**
  * @page atmelavr_io1a
  * @code
- * hw( toggle, pin_pa0 );	//  Toggle one or several consecutive pins at once
+ * hw( toggle, pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
 #define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
@@ -235,7 +235,7 @@
  * // All the pins of the same object are toggled at once by the
  * // following `hwa_commit()`.
  * //
- * hwa( toggle, pin_pa0 );
+ * hwa( toggle, pa0 );
  * @endcode
  */
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)

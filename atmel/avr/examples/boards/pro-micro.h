@@ -111,30 +111,30 @@ THIS IS NOT DONE YET
  */
 #define ARDUINO
 
-#define PIN_D2				pin_pd2	// INT0
-#define PIN_D3				pin_pd3	// OC2B INT1
-#define PIN_D4				pin_pd4	//	T0
-#define PIN_D5				pin_pd5	// OC0B T1
-#define PIN_D6				pin_pd6	// OC0A AIN0
-#define PIN_D7				pin_pd7	//	AIN1
-#define PIN_D8				pin_pb0	// ICP1
-#define PIN_D9				pin_pb1	// OC1A
-#define PIN_D10				pin_pb2	// OC1B
-#define PIN_D11				pin_pb3	// OC2A MOSI
-#define PIN_D12				pin_pb4
-#define PIN_D13				pin_pb5
+#define PIN_D2				pd2	// INT0
+#define PIN_D3				pd3	// OC2B INT1
+#define PIN_D4				pd4	//	T0
+#define PIN_D5				pd5	// OC0B T1
+#define PIN_D6				pd6	// OC0A AIN0
+#define PIN_D7				pd7	//	AIN1
+#define PIN_D8				pb0	// ICP1
+#define PIN_D9				pb1	// OC1A
+#define PIN_D10				pb2	// OC1B
+#define PIN_D11				pb3	// OC2A MOSI
+#define PIN_D12				pb4
+#define PIN_D13				pb5
 
 #define PIN_ANALOG_INPUT		HW_PIN(adc0)
 
-#define PIN_LED				pin_pb5
+#define PIN_LED				pb5
 
 #endif
 
 
 #define ARDUINO
 
-#define PIN_LED_GREEN			pin_pd5
-#define PIN_LED_YELLOW			pin_pb0
+#define PIN_LED_GREEN			pd5
+#define PIN_LED_YELLOW			pb0
 
 #define PIN_LED				PIN_LED_YELLOW
 

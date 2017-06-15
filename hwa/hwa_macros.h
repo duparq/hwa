@@ -336,7 +336,7 @@
  * does not support the action.
  *
  * @code
- * hw( configure, pin_pa0, direction, output );
+ * hw( configure, pa0, direction, output );
  * hw( write, counter0, 0 );
  * @endcode
  */
@@ -370,7 +370,7 @@
  * the context in a known state.
  *
  * @code
- * hwa( configure, pin_pa0, direction, output );
+ * hwa( configure, pa0, direction, output );
  * hwa( write, counter0, 0 );
  * @endcode
  */
@@ -783,7 +783,7 @@
  * 
  *  * `HW_RELATIVE( counter0, compare0 )` returns `counter0compare0`.
  *  * `HW_RELATIVE( counter0compare0, counter )` returns `counter0`.
- *  * `HW_RELATIVE( counter0compare0, pin )` returns `pin_pd6`.
+ *  * `HW_RELATIVE( counter0compare0, pin )` returns `pd6`.
  * 
  * The `HW_RELATIVE()` instruction is useful to make the source code less
  * dependant of the choice of the peripherals. For example, you define the

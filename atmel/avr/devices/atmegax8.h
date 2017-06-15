@@ -618,31 +618,31 @@ typedef struct {
  * HWA name	| 32qfp/mlf   | Class			   | Atmel name
  * -------------|-------------|----------------------------|-----------
  * `portb`	|	      | @ref atmelavr_io1a "_io1a" | PORTB
- * `pin_pb0` | `pin_12` | @ref atmelavr_io1a "_io1a" | PB0
- * `pin_pb1` | `pin_13` | @ref atmelavr_io1a "_io1a" | PB1
- * `pin_pb2` | `pin_14` | @ref atmelavr_io1a "_io1a" | PB2
- * `pin_pb3` | `pin_15` | @ref atmelavr_io1a "_io1a" | PB3
- * `pin_pb4` | `pin_16` | @ref atmelavr_io1a "_io1a" | PB4
- * `pin_pb5` | `pin_17` | @ref atmelavr_io1a "_io1a" | PB5
- * `pin_pb6` | `pin_7`	| @ref atmelavr_io1a "_io1a" | PB6
- * `pin_pb7` | `pin_8`	| @ref atmelavr_io1a "_io1a" | PB7
+ * `pb0` | `HW_PIN(12)` | @ref atmelavr_io1a "_io1a" | PB0
+ * `pb1` | `HW_PIN(13)` | @ref atmelavr_io1a "_io1a" | PB1
+ * `pb2` | `HW_PIN(14)` | @ref atmelavr_io1a "_io1a" | PB2
+ * `pb3` | `HW_PIN(15)` | @ref atmelavr_io1a "_io1a" | PB3
+ * `pb4` | `HW_PIN(16)` | @ref atmelavr_io1a "_io1a" | PB4
+ * `pb5` | `HW_PIN(17)` | @ref atmelavr_io1a "_io1a" | PB5
+ * `pb6` | `HW_PIN(7)`	| @ref atmelavr_io1a "_io1a" | PB6
+ * `pb7` | `HW_PIN(8)`	| @ref atmelavr_io1a "_io1a" | PB7
  * `portc`	|	      | @ref atmelavr_io1a "_io1a" | PORTC
- * `pin_pc0` | `pin_23` | @ref atmelavr_io1a "_io1a" | PC0
- * `pin_pc1` | `pin_24` | @ref atmelavr_io1a "_io1a" | PC1
- * `pin_pc2` | `pin_25` | @ref atmelavr_io1a "_io1a" | PC2
- * `pin_pc3` | `pin_26` | @ref atmelavr_io1a "_io1a" | PC3
- * `pin_pc4` | `pin_27` | @ref atmelavr_io1a "_io1a" | PC4
- * `pin_pc5` | `pin_28` | @ref atmelavr_io1a "_io1a" | PC5
- * `pin_pc6` | `pin_29` | @ref atmelavr_io1a "_io1a" | PC6
+ * `pc0` | `HW_PIN(23)` | @ref atmelavr_io1a "_io1a" | PC0
+ * `pc1` | `HW_PIN(24)` | @ref atmelavr_io1a "_io1a" | PC1
+ * `pc2` | `HW_PIN(25)` | @ref atmelavr_io1a "_io1a" | PC2
+ * `pc3` | `HW_PIN(26)` | @ref atmelavr_io1a "_io1a" | PC3
+ * `pc4` | `HW_PIN(27)` | @ref atmelavr_io1a "_io1a" | PC4
+ * `pc5` | `HW_PIN(28)` | @ref atmelavr_io1a "_io1a" | PC5
+ * `pc6` | `HW_PIN(29)` | @ref atmelavr_io1a "_io1a" | PC6
  * `portd`	|	      | @ref atmelavr_io1a "_io1a" | PORTD
- * `pin_pd0` | `pin_30` | @ref atmelavr_io1a "_io1a" | PD0
- * `pin_pd1` | `pin_31` | @ref atmelavr_io1a "_io1a" | PD1
- * `pin_pd2` | `pin_32` | @ref atmelavr_io1a "_io1a" | PD2
- * `pin_pd3` | `pin_1`	| @ref atmelavr_io1a "_io1a" | PD3
- * `pin_pd4` | `pin_2`	| @ref atmelavr_io1a "_io1a" | PD4
- * `pin_pd5` | `pin_9`	| @ref atmelavr_io1a "_io1a" | PD5
- * `pin_pd6` | `pin_10` | @ref atmelavr_io1a "_io1a" | PD6
- * `pin_pd7` | `pin_11` | @ref atmelavr_io1a "_io1a" | PD7
+ * `pd0` | `HW_PIN(30)` | @ref atmelavr_io1a "_io1a" | PD0
+ * `pd1` | `HW_PIN(31)` | @ref atmelavr_io1a "_io1a" | PD1
+ * `pd2` | `HW_PIN(32)` | @ref atmelavr_io1a "_io1a" | PD2
+ * `pd3` | `HW_PIN(1)`	| @ref atmelavr_io1a "_io1a" | PD3
+ * `pd4` | `HW_PIN(2)`	| @ref atmelavr_io1a "_io1a" | PD4
+ * `pd5` | `HW_PIN(9)`	| @ref atmelavr_io1a "_io1a" | PD5
+ * `pd6` | `HW_PIN(10)` | @ref atmelavr_io1a "_io1a" | PD6
+ * `pd7` | `HW_PIN(11)` | @ref atmelavr_io1a "_io1a" | PD7
  */
 
 /*	Objects				class, id, address
@@ -657,203 +657,203 @@ typedef struct {
 /*  Pins				class, id, port, bn, bp
  */
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT)
-#  define _hw_def_pin_pb0		_io1a, 105, port0, 1, 0
+#  define _hw_def_pb0		_io1a, 105, port0, 1, 0
 #endif
-#define _hw_def_pin_pb1			_io1a, 106, port0, 1, 1
-#define _hw_def_pin_pb2			_io1a, 107, port0, 1, 2
-#define _hw_def_pin_pb3			_io1a, 108, port0, 1, 3
-#define _hw_def_pin_pb4			_io1a, 109, port0, 1, 4
-#define _hw_def_pin_pb5			_io1a, 110, port0, 1, 5
+#define _hw_def_pb1			_io1a, 106, port0, 1, 1
+#define _hw_def_pb2			_io1a, 107, port0, 1, 2
+#define _hw_def_pb3			_io1a, 108, port0, 1, 3
+#define _hw_def_pb4			_io1a, 109, port0, 1, 4
+#define _hw_def_pb5			_io1a, 110, port0, 1, 5
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_def_pin_pb6		_io1a, 111, port0, 1, 6
+#  define _hw_def_pb6		_io1a, 111, port0, 1, 6
 #endif
 #if !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define _hw_def_pin_pb7		_io1a, 112, port0, 1, 7
+#  define _hw_def_pb7		_io1a, 112, port0, 1, 7
 #endif
 #define _hw_def_portb			_io1a, 113, port0, 8, 0
 
-#define _hw_def_pin_pc0			_io1a, 114, port1, 1, 0
-#define _hw_def_pin_pc1			_io1a, 115, port1, 1, 1
-#define _hw_def_pin_pc2			_io1a, 116, port1, 1, 2
-#define _hw_def_pin_pc3			_io1a, 117, port1, 1, 3
-#define _hw_def_pin_pc4			_io1a, 118, port1, 1, 4
-#define _hw_def_pin_pc5			_io1a, 119, port1, 1, 5
+#define _hw_def_pc0			_io1a, 114, port1, 1, 0
+#define _hw_def_pc1			_io1a, 115, port1, 1, 1
+#define _hw_def_pc2			_io1a, 116, port1, 1, 2
+#define _hw_def_pc3			_io1a, 117, port1, 1, 3
+#define _hw_def_pc4			_io1a, 118, port1, 1, 4
+#define _hw_def_pc5			_io1a, 119, port1, 1, 5
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET)
-#  define _hw_def_pin_pc6		_io1a, 120, port1, 1, 6
+#  define _hw_def_pc6		_io1a, 120, port1, 1, 6
 #endif
 #define _hw_def_portc			_io1a, 121, port1, 7, 0
 
-#define _hw_def_pin_pd0			_io1a, 122, port2, 1, 0
-#define _hw_def_pin_pd1			_io1a, 123, port2, 1, 1
-#define _hw_def_pin_pd2			_io1a, 124, port2, 1, 2
-#define _hw_def_pin_pd3			_io1a, 125, port2, 1, 3
-#define _hw_def_pin_pd4			_io1a, 126, port2, 1, 4
-#define _hw_def_pin_pd5			_io1a, 127, port2, 1, 5
-#define _hw_def_pin_pd6			_io1a, 128, port2, 1, 6
-#define _hw_def_pin_pd7			_io1a, 129, port2, 1, 7
+#define _hw_def_pd0			_io1a, 122, port2, 1, 0
+#define _hw_def_pd1			_io1a, 123, port2, 1, 1
+#define _hw_def_pd2			_io1a, 124, port2, 1, 2
+#define _hw_def_pd3			_io1a, 125, port2, 1, 3
+#define _hw_def_pd4			_io1a, 126, port2, 1, 4
+#define _hw_def_pd5			_io1a, 127, port2, 1, 5
+#define _hw_def_pd6			_io1a, 128, port2, 1, 6
+#define _hw_def_pd7			_io1a, 129, port2, 1, 7
 #define _hw_def_portd			_io1a, 130, port2, 8, 0
 
-#define _hw_def_pin_adc6		_io1a, 336
-#define _hw_def_pin_adc7		_io1a, 337
+#define _hw_def_adc6		_io1a, 336
+#define _hw_def_adc7		_io1a, 337
 
 /*  Digital input disable bits for analog input pins
  */
-#define _hw_reg_pin_pc0_did		_xob1, shared, did0, 1, 0	/* ADC0 */
-#define _hw_reg_pin_pc1_did		_xob1, shared, did0, 1, 1	/* ADC1 */
-#define _hw_reg_pin_pc2_did		_xob1, shared, did0, 1, 2	/* ADC2 */
-#define _hw_reg_pin_pc3_did		_xob1, shared, did0, 1, 3	/* ADC3 */
-#define _hw_reg_pin_pc4_did		_xob1, shared, did0, 1, 4	/* ADC4 */
-#define _hw_reg_pin_pc5_did		_xob1, shared, did0, 1, 5	/* ADC5 */
+#define _hw_reg_pc0_did		_xob1, shared, did0, 1, 0	/* ADC0 */
+#define _hw_reg_pc1_did		_xob1, shared, did0, 1, 1	/* ADC1 */
+#define _hw_reg_pc2_did		_xob1, shared, did0, 1, 2	/* ADC2 */
+#define _hw_reg_pc3_did		_xob1, shared, did0, 1, 3	/* ADC3 */
+#define _hw_reg_pc4_did		_xob1, shared, did0, 1, 4	/* ADC4 */
+#define _hw_reg_pc5_did		_xob1, shared, did0, 1, 5	/* ADC5 */
 
-#define _hw_reg_pin_pd6_did		_xob1, shared, did1, 1, 0	/* AIN0 */
-#define _hw_reg_pin_pd7_did		_xob1, shared, did1, 1, 1	/* AIN1 */
+#define _hw_reg_pd6_did		_xob1, shared, did1, 1, 0	/* AIN0 */
+#define _hw_reg_pd7_did		_xob1, shared, did1, 1, 1	/* AIN1 */
 
 /*  Relative pin change controllers
  */
-#define _hw_rel_pin_pb0_pcic		pcic0
-#define _hw_rel_pin_pb1_pcic		pcic0
-#define _hw_rel_pin_pb2_pcic		pcic0
-#define _hw_rel_pin_pb3_pcic		pcic0
-#define _hw_rel_pin_pb4_pcic		pcic0
-#define _hw_rel_pin_pb5_pcic		pcic0
-#define _hw_rel_pin_pb6_pcic		pcic0
-#define _hw_rel_pin_pb7_pcic		pcic0
+#define _hw_rel_pb0_pcic		pcic0
+#define _hw_rel_pb1_pcic		pcic0
+#define _hw_rel_pb2_pcic		pcic0
+#define _hw_rel_pb3_pcic		pcic0
+#define _hw_rel_pb4_pcic		pcic0
+#define _hw_rel_pb5_pcic		pcic0
+#define _hw_rel_pb6_pcic		pcic0
+#define _hw_rel_pb7_pcic		pcic0
 
-#define _hw_rel_pin_pc0_pcic		pcic1
-#define _hw_rel_pin_pc1_pcic		pcic1
-#define _hw_rel_pin_pc2_pcic		pcic1
-#define _hw_rel_pin_pc3_pcic		pcic1
-#define _hw_rel_pin_pc4_pcic		pcic1
-#define _hw_rel_pin_pc5_pcic		pcic1
-#define _hw_rel_pin_pc6_pcic		pcic1
+#define _hw_rel_pc0_pcic		pcic1
+#define _hw_rel_pc1_pcic		pcic1
+#define _hw_rel_pc2_pcic		pcic1
+#define _hw_rel_pc3_pcic		pcic1
+#define _hw_rel_pc4_pcic		pcic1
+#define _hw_rel_pc5_pcic		pcic1
+#define _hw_rel_pc6_pcic		pcic1
 
-#define _hw_rel_pin_pd0_pcic		pcic2
-#define _hw_rel_pin_pd1_pcic		pcic2
-#define _hw_rel_pin_pd2_pcic		pcic2
-#define _hw_rel_pin_pd3_pcic		pcic2
-#define _hw_rel_pin_pd4_pcic		pcic2
-#define _hw_rel_pin_pd5_pcic		pcic2
-#define _hw_rel_pin_pd6_pcic		pcic2
-#define _hw_rel_pin_pd7_pcic		pcic2
+#define _hw_rel_pd0_pcic		pcic2
+#define _hw_rel_pd1_pcic		pcic2
+#define _hw_rel_pd2_pcic		pcic2
+#define _hw_rel_pd3_pcic		pcic2
+#define _hw_rel_pd4_pcic		pcic2
+#define _hw_rel_pd5_pcic		pcic2
+#define _hw_rel_pd6_pcic		pcic2
+#define _hw_rel_pd7_pcic		pcic2
 
 /*  Canonical pin names
  */
-#define _hw_pin_sck			, pin_pb5
-#define _hw_pin_miso			, pin_pb4
-#define _hw_pin_mosi			, pin_pb3
-#define _hw_pin_ss			, pin_pb2
+#define _hw_pin_sck			, pb5
+#define _hw_pin_miso			, pb4
+#define _hw_pin_mosi			, pb3
+#define _hw_pin_ss			, pb2
 
-#define _hw_pin_counter0compare0	, pin_pd6
-#define _hw_pin_counter0compare1	, pin_pd5
-#define _hw_pin_counter1compare0	, pin_pb1
-#define _hw_pin_counter1compare1	, pin_pb2
-#define _hw_pin_counter1capture0	, pin_pb0
-#define _hw_pin_counter2compare0	, pin_pb3
-#define _hw_pin_counter2compare1	, pin_pd3
+#define _hw_pin_counter0compare0	, pd6
+#define _hw_pin_counter0compare1	, pd5
+#define _hw_pin_counter1compare0	, pb1
+#define _hw_pin_counter1compare1	, pb2
+#define _hw_pin_counter1capture0	, pb0
+#define _hw_pin_counter2compare0	, pb3
+#define _hw_pin_counter2compare1	, pd3
 
-#define _hw_pin_adc0			, pin_pc0
-#define _hw_pin_adc1			, pin_pc1
-#define _hw_pin_adc2			, pin_pc2
-#define _hw_pin_adc3			, pin_pc3
-#define _hw_pin_adc4			, pin_pc4
-#define _hw_pin_adc5			, pin_pc5
+#define _hw_pin_adc0			, pc0
+#define _hw_pin_adc1			, pc1
+#define _hw_pin_adc2			, pc2
+#define _hw_pin_adc3			, pc3
+#define _hw_pin_adc4			, pc4
+#define _hw_pin_adc5			, pc5
 #define _hw_pin_adc6			, pin_adc6
 #define _hw_pin_adc7			, pin_adc7
 
-#define _hw_pin_ain1			, pin_pd7
-#define _hw_pin_ain0			, pin_pd6
+#define _hw_pin_ain1			, pd7
+#define _hw_pin_ain0			, pd6
 
-#define _hw_pin_scl			, pin_pc5
-#define _hw_pin_sda			, pin_pc4
+#define _hw_pin_scl			, pc5
+#define _hw_pin_sda			, pc4
 
-#define _hw_pin_txd			, pin_pd1
-#define _hw_pin_rxd			, pin_pd0
+#define _hw_pin_txd			, pd1
+#define _hw_pin_rxd			, pd0
 
 #if defined HW_DEVICE_PACKAGE_28P
 #
-#  define _hw_pin_1			, pin_pc6
-#  define _hw_pin_2			, pin_pd0
-#  define _hw_pin_3			, pin_pd1
-#  define _hw_pin_4			, pin_pd2
-#  define _hw_pin_5			, pin_pd3
-#  define _hw_pin_6			, pin_pd4
-#  define _hw_pin_9			, pin_pb6
-#  define _hw_pin_10			, pin_pb7
-#  define _hw_pin_11			, pin_pd5
-#  define _hw_pin_12			, pin_pd6
-#  define _hw_pin_13			, pin_pd7
-#  define _hw_pin_14			, pin_pb0
-#  define _hw_pin_15			, pin_pb1
-#  define _hw_pin_16			, pin_pb2
-#  define _hw_pin_17			, pin_pb3
-#  define _hw_pin_18			, pin_pb4
-#  define _hw_pin_19			, pin_pb5
-#  define _hw_pin_23			, pin_pc0
-#  define _hw_pin_24			, pin_pc1
-#  define _hw_pin_25			, pin_pc2
-#  define _hw_pin_26			, pin_pc3
-#  define _hw_pin_27			, pin_pc4
-#  define _hw_pin_28			, pin_pc5
+#  define _hw_pin_1			, pc6
+#  define _hw_pin_2			, pd0
+#  define _hw_pin_3			, pd1
+#  define _hw_pin_4			, pd2
+#  define _hw_pin_5			, pd3
+#  define _hw_pin_6			, pd4
+#  define _hw_pin_9			, pb6
+#  define _hw_pin_10			, pb7
+#  define _hw_pin_11			, pd5
+#  define _hw_pin_12			, pd6
+#  define _hw_pin_13			, pd7
+#  define _hw_pin_14			, pb0
+#  define _hw_pin_15			, pb1
+#  define _hw_pin_16			, pb2
+#  define _hw_pin_17			, pb3
+#  define _hw_pin_18			, pb4
+#  define _hw_pin_19			, pb5
+#  define _hw_pin_23			, pc0
+#  define _hw_pin_24			, pc1
+#  define _hw_pin_25			, pc2
+#  define _hw_pin_26			, pc3
+#  define _hw_pin_27			, pc4
+#  define _hw_pin_28			, pc5
 #
 #elif defined HW_DEVICE_PACKAGE_28Q
 #
-#  define _hw_pin_1			, pin_pd3
-#  define _hw_pin_2			, pin_pd4
+#  define _hw_pin_1			, pd3
+#  define _hw_pin_2			, pd4
 /* #  define _hw_pin_3			, pin_ */
 /* #  define _hw_pin_4			, pin_ */
-#  define _hw_pin_5			, pin_pb6
-#  define _hw_pin_6			, pin_pb7
-#  define _hw_pin_7			, pin_pd5
-#  define _hw_pin_8			, pin_pd6
-#  define _hw_pin_9			, pin_pd7
-#  define _hw_pin_10			, pin_pb0
-#  define _hw_pin_11			, pin_pb1
-#  define _hw_pin_12			, pin_pb2
-#  define _hw_pin_13			, pin_pb3
-#  define _hw_pin_14			, pin_pb4
-#  define _hw_pin_15			, pin_pb5
+#  define _hw_pin_5			, pb6
+#  define _hw_pin_6			, pb7
+#  define _hw_pin_7			, pd5
+#  define _hw_pin_8			, pd6
+#  define _hw_pin_9			, pd7
+#  define _hw_pin_10			, pb0
+#  define _hw_pin_11			, pb1
+#  define _hw_pin_12			, pb2
+#  define _hw_pin_13			, pb3
+#  define _hw_pin_14			, pb4
+#  define _hw_pin_15			, pb5
 /* #  define _hw_pin_16			, pin_ */
 /* #  define _hw_pin_17			, pin_ */
 /* #  define _hw_pin_18			, pin_ */
-#  define _hw_pin_19			, pin_pc0
-#  define _hw_pin_20			, pin_pc1
-#  define _hw_pin_21			, pin_pc2
-#  define _hw_pin_22			, pin_pc3
-#  define _hw_pin_23			, pin_pc4
-#  define _hw_pin_24			, pin_pc5
-#  define _hw_pin_25			, pin_pc6
-#  define _hw_pin_26			, pin_pd0
-#  define _hw_pin_27			, pin_pd1
-#  define _hw_pin_28			, pin_pd2
+#  define _hw_pin_19			, pc0
+#  define _hw_pin_20			, pc1
+#  define _hw_pin_21			, pc2
+#  define _hw_pin_22			, pc3
+#  define _hw_pin_23			, pc4
+#  define _hw_pin_24			, pc5
+#  define _hw_pin_25			, pc6
+#  define _hw_pin_26			, pd0
+#  define _hw_pin_27			, pd1
+#  define _hw_pin_28			, pd2
 #
 #elif defined HW_DEVICE_PACKAGE_32Q
 #
-#  define _hw_pin_1			, pin_pd3
-#  define _hw_pin_2			, pin_pd4
-#  define _hw_pin_7			, pin_pb6
-#  define _hw_pin_8			, pin_pb7
-#  define _hw_pin_9			, pin_pd5
-#  define _hw_pin_10			, pin_pd6
-#  define _hw_pin_11			, pin_pd7
-#  define _hw_pin_12			, pin_pb0
-#  define _hw_pin_13			, pin_pb1
-#  define _hw_pin_14			, pin_pb2
-#  define _hw_pin_15			, pin_pb3
-#  define _hw_pin_16			, pin_pb4
-#  define _hw_pin_17			, pin_pb5
+#  define _hw_pin_1			, pd3
+#  define _hw_pin_2			, pd4
+#  define _hw_pin_7			, pb6
+#  define _hw_pin_8			, pb7
+#  define _hw_pin_9			, pd5
+#  define _hw_pin_10			, pd6
+#  define _hw_pin_11			, pd7
+#  define _hw_pin_12			, pb0
+#  define _hw_pin_13			, pb1
+#  define _hw_pin_14			, pb2
+#  define _hw_pin_15			, pb3
+#  define _hw_pin_16			, pb4
+#  define _hw_pin_17			, pb5
 #  define _hw_pin_19			, pin_adc6
 #  define _hw_pin_22			, pin_adc7
-#  define _hw_pin_23			, pin_pc0
-#  define _hw_pin_24			, pin_pc1
-#  define _hw_pin_25			, pin_pc2
-#  define _hw_pin_26			, pin_pc3
-#  define _hw_pin_27			, pin_pc4
-#  define _hw_pin_28			, pin_pc5
-#  define _hw_pin_29			, pin_pc6
-#  define _hw_pin_30			, pin_pd0
-#  define _hw_pin_31			, pin_pd1
-#  define _hw_pin_32			, pin_pd2
+#  define _hw_pin_23			, pc0
+#  define _hw_pin_24			, pc1
+#  define _hw_pin_25			, pc2
+#  define _hw_pin_26			, pc3
+#  define _hw_pin_27			, pc4
+#  define _hw_pin_28			, pc5
+#  define _hw_pin_29			, pc6
+#  define _hw_pin_30			, pd0
+#  define _hw_pin_31			, pd1
+#  define _hw_pin_32			, pd2
 #
 #endif
 
@@ -1079,7 +1079,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter0compare0_pin	pin_pd6
+#define _hw_rel_counter0compare0_pin	pd6
 #define _hw_rel_counter0compare0_counter	counter0
 
 
@@ -1100,7 +1100,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter0compare1_pin	pin_pd5
+#define _hw_rel_counter0compare1_pin	pd5
 #define _hw_rel_counter0compare1_counter	counter0
 
 
@@ -1167,7 +1167,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1compare0_pin	pin_pb1
+#define _hw_rel_counter1compare0_pin	pb1
 #define _hw_rel_counter1compare0_counter	counter1
 
 
@@ -1188,7 +1188,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1compare1_pin	pin_pb2
+#define _hw_rel_counter1compare1_pin	pb2
 #define _hw_rel_counter1compare1_counter	counter1
 
 
@@ -1218,7 +1218,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter1capture0_pin	pin_pb0
+#define _hw_rel_counter1capture0_pin	pb0
 #define _hw_rel_counter1capture0_counter	counter1
 
 
@@ -1304,7 +1304,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter2compare0_pin	pin_pb3
+#define _hw_rel_counter2compare0_pin	pb3
 #define _hw_rel_counter2compare0_counter	counter2
 
 
@@ -1325,7 +1325,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_counter2compare1_pin	pin_pd3
+#define _hw_rel_counter2compare1_pin	pd3
 #define _hw_rel_counter2compare1_counter	counter2
 
 
@@ -1363,10 +1363,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_spi0_pin_mosi		pin_pb3
-#define _hw_rel_spi0_pin_miso		pin_pb4
-#define _hw_rel_spi0_pin_sck		pin_pb5
-#define _hw_rel_spi0_pin_ss		pin_pb2
+#define _hw_rel_spi0_pin_mosi		pb3
+#define _hw_rel_spi0_pin_miso		pb4
+#define _hw_rel_spi0_pin_sck		pb5
+#define _hw_rel_spi0_pin_ss		pb2
 
 
 /*******************************************************************************
@@ -1445,8 +1445,8 @@ typedef struct {
 
 /*	Relatives
  */
-#define _hw_rel_twi0_pin_scl		pin_pc5
-#define _hw_rel_twi0_pin_sda		pin_pc4
+#define _hw_rel_twi0_pin_scl		pc5
+#define _hw_rel_twi0_pin_sda		pc4
 
 
 /*******************************************************************************

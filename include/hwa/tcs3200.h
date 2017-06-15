@@ -21,11 +21,11 @@
  *
  * @code
  * #define _hw_def_sensor0              _tcs3200, 0, 0
- * #define _hw_rel_sensor0_s0           pin_pa0
- * #define _hw_rel_sensor0_s1           pin_pa1
- * #define _hw_rel_sensor0_s2           pin_pa2
- * #define _hw_rel_sensor0_s3           pin_pa3
- * #define _hw_rel_sensor0_oe           pin_pa4
+ * #define _hw_rel_sensor0_s0           pa0
+ * #define _hw_rel_sensor0_s1           pa1
+ * #define _hw_rel_sensor0_s2           pa2
+ * #define _hw_rel_sensor0_s3           pa3
+ * #define _hw_rel_sensor0_oe           pa4
  * @endcode
  *
  * * `_hw_rel_sensor0_s1` and `_hw_rel_sensor0_s0` must be declared if you want

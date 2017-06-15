@@ -49,11 +49,11 @@ int main ( )
 
   /*  Power the GPIO port
    */
-  hwa( power, HW_RELATIVE(PIN_LED1,port), on );
+  hwa( power, HW_RELATIVE(LED1,port), on );
 
   /*  Configure the GPIO pin
    */
-  hwa( configure, PIN_LED1,
+  hwa( configure, LED1,
        mode,      digital,
        direction, output,
        frequency, 50MHz );
@@ -62,7 +62,7 @@ int main ( )
 
 
   for(;;) {
-    hw( toggle, PIN_LED1 );
+    hw( toggle, LED1 );
     hw_waste_cycles( PERIOD/2 * SYSHZ );
   }
 }

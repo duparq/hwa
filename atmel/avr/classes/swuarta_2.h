@@ -53,14 +53,14 @@
  *
  * Symbol | Example | Comment
  * :------|:--------|:-------
- * `hw_swuart0_pin_txd` | `pin_pa0`	 | Pin used for TXD (optionnal)
+ * `hw_swuart0_pin_txd` | `pa0`	 | Pin used for TXD (optionnal)
  * `hw_swuart0_pin_rxd` | `HW_PIN(5)`		 | Pin used for RXD (optionnal)
  * `hw_swuart0_starter` | `HW_RELATIVE(HW_PIN(5),pcic)` | Interrupt provider for the start condition
  * `hw_swuart0_compare` | `counter0compare0`<br>`counter0compare1`<br>...    | Counter compare unit used for bit timing
  * `hw_swuart0_clk_div` | `1`<br>`8`<br>...	 | Counter prescaler setting (division of `sysclk`)
  * `hw_swuart0_autosync`| `5_1`<br>`9_1`<br>`10_1` | Synchronization method (optionnal)
  * `hw_swuart0_check_tx`|			  | Bus collision detection (optionnal)
- * `hw_swuart0_pin_dbg` | `pin_pa3`		 | Pin used for debugging (optionnal)
+ * `hw_swuart0_pin_dbg` | `pa3`		 | Pin used for debugging (optionnal)
  *
  * @par Pins
  *

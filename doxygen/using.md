@@ -105,7 +105,7 @@ confusing:
  * `adc0` ;
  * `uart0` ;
  * `porta`, `portb` ;
- * `pin_pa0`...
+ * `pa0`...
 
 Instructions that return objects names (`HW_RELATIVE()`, `HW_PIN()`) or those
 that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_REGISTER()`) can
@@ -129,7 +129,7 @@ require an object name that may be followed by an event name. For example:
  * `HW_IRQ(counter0)`;
  * `HW_IRQ(counter0, overflow)`;
  * `HW_IRQ(counter0, compare0)`;
- * `HW_IRQ(pin_pa0, change)`;
+ * `HW_IRQ(pa0, change)`;
  * ...
 
 
@@ -180,7 +180,7 @@ can spare a few program memory bytes and CPU cycles:
 @code
 HW_ISR( counter0, overflow, isr_naked )
 {
-  hw( toggle, pin_pa0 );  // will use the `sbi` instruction, no register is altered
+  hw( toggle, pa0 );  // will use the `sbi` instruction, no register is altered
   hw_asm("reti");	  // produce the `reti` instruction
 }
 @endcode

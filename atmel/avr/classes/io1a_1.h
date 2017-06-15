@@ -31,7 +31,7 @@
  * The `HW_BITS()` instruction returns the number of bits of an I/O definition:
  *
  * @code
- * #if HW_ID(pin_pa3) && (HW_BITS(pin_pa3) != 1)
+ * #if HW_ID(pa3) && (HW_BITS(pa3) != 1)
  * #  error HWA is damaged!
  * #endif
  * @endcode
@@ -48,7 +48,7 @@
  * of the least significant bit:
  *
  * @code
- * #if HW_ID(pin_pa3) && (HW_POSITION(pin_pa3) != 3)
+ * #if HW_ID(pa3) && (HW_POSITION(pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -65,11 +65,11 @@
  *
  *  * `port`: the I/O port the object pertains to:
  *     @code
- *     HW_RELATIVE( pin_pa0, port )
+ *     HW_RELATIVE( pa0, port )
  *     @endcode
  *  * `pcic`: the pin-change interrupt controller:
  *     @code
- *     HW_RELATIVE( pin_pa0, pcic )
+ *     HW_RELATIVE( pa0, pcic )
  *     @endcode
  */
 /*  Class-defined HW_RELATIVE()

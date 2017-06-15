@@ -29,7 +29,7 @@
  *
  * `HW_BITS()` returns the number of bits of an I/O definition:
  * @code
- * #if HW_ID(pin_pa3) && (HW_BITS(pin_pa3) != 1)
+ * #if HW_ID(pa3) && (HW_BITS(pa3) != 1)
  * #  error HWA is damaged!
  * #endif
  * @endcode
@@ -44,7 +44,7 @@
  *
  * `HW_POSITION()` returns the position of the least significant bit:
  * @code
- * #if HW_ID(pin_pa3) && (HW_POSITION(pin_pa3) != 3)
+ * #if HW_ID(pa3) && (HW_POSITION(pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -60,7 +60,7 @@
  * definition pertains to.
  *
  * @code
- * hw( power, HW_RELATIVE(pin_pa0,port), on );	// Power the GPIO port of pin PA0 on
+ * hw( power, HW_RELATIVE(pa0,port), on );	// Power the GPIO port of pin PA0 on
  * @endcode
  */
 #define _hw_mtd_HW_RELATIVE__io1a	, _HW_REL_io1a

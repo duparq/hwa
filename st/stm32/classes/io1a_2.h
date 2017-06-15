@@ -24,7 +24,7 @@
  *
  * `configure`:
  * @code
- * hw | hwa( configure,   pin_pa0,
+ * hw | hwa( configure,   pa0,
  *
  *           mode,        analog,
  *
@@ -32,7 +32,7 @@
  * @endcode
  * <br>
  * @code
- * hw | hwa( configure,   pin_pa0,
+ * hw | hwa( configure,   pa0,
  *
  *           mode,        digital,
  *
@@ -46,7 +46,7 @@
  * @endcode
  * <br>
  * @code
- * hw | hwa( configure,   pin_pa0,
+ * hw | hwa( configure,   pa0,
  *
  *           mode,        digital,
  *
@@ -155,7 +155,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
  * <br>
  * `read`:
  * @code
- * uint8_t value = hw( read, pin_pa0 );
+ * uint8_t value = hw( read, pa0 );
  * @endcode
  */
 #define _hw_rdio1a(o,i,p,bn,bp,...)	HW_X(_hw_rdio1a,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
@@ -168,7 +168,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
  * <br>
  * `write`:
  * @code
- * hw | hwa( write, pin_pa0, 0 );
+ * hw | hwa( write, pa0, 0 );
  * @endcode
  *
  * @note HWA does not write the ODR of the port. It writes the BSRR so that
@@ -201,7 +201,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
  * <br>
  * `toggle`:
  * @code
- * hw( toggle, pin_pa0 );       //  Toggle one or several consecutive pins at once
+ * hw( toggle, pa0 );       //  Toggle one or several consecutive pins at once
  * @endcode
  */
 /*  Use the BSRR instead of a read-modify-write on the ODR.
@@ -219,8 +219,8 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
  * @page stm32_io1a
  * <br>
  * @code
- * hwa( toggle, pin_pa0 );      //  Register pin_pa0 for toggling
- * hwa( toggle, pin_pa4 );      //  Register pin_pa4 for toggling
+ * hwa( toggle, pa0 );      //  Register pa0 for toggling
+ * hwa( toggle, pa4 );      //  Register pa4 for toggling
  * hwa_commit();                //  Commit all registered pins at once
  * @endcode
  *

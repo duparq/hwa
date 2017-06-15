@@ -18,7 +18,7 @@
  * a single or several pins) that a class `_pcica` object monitors:
  *
  * @code
- * hw( turn, pcic0, pin_pa0, on | off );
+ * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
 #define _hw_mtd_hw_turn__pcica		, _hw_tnpcica
@@ -30,7 +30,7 @@
 /**
  * @page atmelavr_pcica
  * @code
- * hw( turn, pcic0, pin_pa0, on | off );
+ * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
 #define _hw_mtd_hwa_turn__pcica	, _hwa_tnpcica

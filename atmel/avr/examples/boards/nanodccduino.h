@@ -63,30 +63,30 @@
  */
 #define ARDUINO
 
-#define PIN_D2				pin_pd2	// INT0
-#define PIN_D3				pin_pd3	// OC2B INT1
-#define PIN_D4				pin_pd4	//	T0
-#define PIN_D5				pin_pd5	// OC0B T1
-#define PIN_D6				pin_pd6	// OC0A AIN0
-#define PIN_D7				pin_pd7	//	AIN1
-#define PIN_D8				pin_pb0	// ICP1
-#define PIN_D9				pin_pb1	// OC1A
-#define PIN_D10				pin_pb2	// OC1B SS
-#define PIN_D11				pin_pb3	// OC2A MOSI
-#define PIN_D12				pin_pb4	//	MISO
-#define PIN_D13				pin_pb5	//	SCK
+#define PIN_D2				pd2	// INT0
+#define PIN_D3				pd3	// OC2B INT1
+#define PIN_D4				pd4	//	T0
+#define PIN_D5				pd5	// OC0B T1
+#define PIN_D6				pd6	// OC0A AIN0
+#define PIN_D7				pd7	//	AIN1
+#define PIN_D8				pb0	// ICP1
+#define PIN_D9				pb1	// OC1A
+#define PIN_D10				pb2	// OC1B SS
+#define PIN_D11				pb3	// OC2A MOSI
+#define PIN_D12				pb4	//	MISO
+#define PIN_D13				pb5	//	SCK
 
-#define PIN_A5				pin_pc5	// SCL
-#define PIN_A4				pin_pc4	// SDA
+#define PIN_A5				pc5	// SCL
+#define PIN_A4				pc4	// SDA
 
-#define PIN_SS				pin_pb2
-#define PIN_MOSI			pin_pb3
-#define PIN_MISO			pin_pb4
-#define PIN_SCK				pin_pb5
+#define PIN_SS				pb2
+#define PIN_MOSI			pb3
+#define PIN_MISO			pb4
+#define PIN_SCK				pb5
 
 #define PIN_ANALOG_INPUT		HW_PIN(adc0)
 
-#define PIN_LED				pin_pb5
+#define PIN_LED				pb5
 
 /*  Pins for hw_swuart1
  */

@@ -17,7 +17,7 @@
  * definitions:
  *
  * @code
- * hw/hwa( configure, pin_pa0,
+ * hw/hwa( configure, pa0,
  *
  *		[ function,    FUNCTION, ] // FUNCTION is dependent of the I/O that is configured.
  *
@@ -129,7 +129,7 @@
  * The instruction `read` returns the state of the I/O object:
  *
  * @code
- * uint8_t value = hw( read, pin_pa0 );
+ * uint8_t value = hw( read, pa0 );
  * @endcode
  */
 #define _hw_mtd_hw_read__io1a		, _hw_read_io1a
@@ -145,7 +145,7 @@
  * The instruction `hw_write()` changes the state of the I/O object:
  *
  * @code
- * hw_write( pin_pa0, value );
+ * hw_write( pa0, value );
  * @endcode
  */
 #define _hw_mtd_hw_write__io1a		, _hw_write_io1a
@@ -159,7 +159,7 @@
  * @page esp8266_io1a
  *
  * @code
- * hwa_write( pin_pa0, value );
+ * hwa_write( pa0, value );
  * @endcode
  */
 #define _hw_mtd_hwa_write__io1a	, _hwa_write_io1a
@@ -172,7 +172,7 @@
 /**
  * @page esp8266_io1a
  * @code
- * hw_toggle( pin_pa0 );	//  Toggle one or several consecutive pins at once
+ * hw_toggle( pa0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
 #define _hw_mtd_hw_toggle__io1a	, _hw_toggle_io1a
@@ -189,7 +189,7 @@
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
  * //
- * hwa_toggle( pin_pa0 );
+ * hwa_toggle( pa0 );
  * @endcode
  */
 

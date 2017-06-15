@@ -38,8 +38,9 @@
 /*  The pin at which the LED is connected. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.
  */
-#define PIN_LED1			pin_pa2
-#define PIN_LED2			pin_pa3
+#define LED				pa2
+#define LED1				pa2
+#define LED2				pa3
 
 
 /*  Include HWA definitions
