@@ -47,7 +47,7 @@
 
 #define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
-#define HW_E_ST(x)		HW_E(`x` is not `on | off`)
+#define HW_E_ST(x)		HW_E(`x` is not in (on, off))
 #define HW_E_VL(v,l)		HW_E(`v` is not `l`)
 #define HW_E_AVM(a)		HW_E(missing value for `a`)
 #define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
