@@ -41,10 +41,6 @@ atmelavr_swuarta "software UART for Atmel AVR microcontrollers" (see
 `atmel/avr/swuarta/`) and a @ref atmelavr_diabolo "bootloader" (see
 `atmel/avr/examples/diabolo`) are examples of that usage.
 
-
-Short example
-=============
-
 Here is an example of how to use a watchdog interrupt to make a LED blink with
 an Atmel AVR device:
 
@@ -109,9 +105,6 @@ an Atmel AVR device:
     }
 
 
-Other examples
-==============
-
 The `vendor/architecture/examples/` directories (e.g. `atmel/avr/examples/`)
 contain HWA example projects.
 
@@ -124,12 +117,12 @@ Supported devices
 
  * HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8.
 
- * Support of ATmega32U4 has been started.
+ * Support of ATmega32U4 has been started but needs to be rewritten.
 
- * Support of Espressif's ESP8266 has been started.
+ * Support of Espressif's ESP8266 has been started but needs to be rewritten.
 
- * ST's STM32F103 is the device that initiated the writing of HWA. The code now
-needs to be rewritten.
+ * ST's STM32F103 is the device that initiated the writing of HWA. The code is
+   being rewritten.
 
 
 Documentation
