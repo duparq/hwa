@@ -38,6 +38,25 @@
 #define HW_DEVICE_LSIHZ			40*1000
 
 
+
+/*******************************************************************************
+ *									       *
+ *	Interrupts							       *
+ *									       *
+ *******************************************************************************/
+
+/**
+ * @page attinyx4
+ * @section attinyx4_interrupts Interrupts
+ * 
+ * Interrupt name	  | Comments
+ * :----------------------|------------------------
+ * `systick`		  | SysTick timer reached 0
+ *
+ */
+#define _hw_irq_systick_		_irq, systick, 1, ie, if
+
+
 /*******************************************************************************
  *									       *
  *	Clocks								       *
@@ -358,6 +377,18 @@
 /* #endif */
 
 
+/*******************************************************************************
+ *									       *
+ *	SysTick								       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/stka_1.h"
+
+#define _hw_def_systick			_stka, 101, 0xE000E010
+
+
+
 #if !defined __ASSEMBLER__
 
 /**
@@ -378,12 +409,14 @@ typedef struct {
   hwa_p16a_t	port4 ;
   /* hwa_p16a_t	port5 ; */
   /* hwa_p16a_t	port6 ; */
+  hwa_stka_t	systick ;
 } hwa_t ;
 
 #include "../hwa_2.h"
 #include "../classes/rcca_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p16a_2.h"
+#include "../classes/stka_2.h"
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
@@ -395,6 +428,7 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
   _hwa_setup( port4 );
   /* _hwa_setup( port5 ); */
   /* _hwa_setup( port6 ); */
+  _hwa_setup( systick );
 }
 
 
@@ -408,6 +442,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
   _hwa_init( port4 );
   /* _hwa_init( port5 ); */
   /* _hwa_init( port6 ); */
+  _hwa_init( systick );
 }
 
 
@@ -421,6 +456,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( port4 );
   /* _hwa_commit( port5 ); */
   /* _hwa_commit( port6 ); */
+  _hwa_commit( systick );
 }
 
 #endif /* !defined __ASSEMBLER__ */
