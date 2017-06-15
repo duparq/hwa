@@ -81,9 +81,6 @@
 #define _HW_IRQF_0(...)		__VA_ARGS__
 
 
-#if !defined __ASSEMBLER__
-
-
 /**
  * @ingroup public_ins_obj
  * @brief Declares the ISR for @ref using_objects "object"'s IRQ "...".
@@ -151,6 +148,9 @@
 #define _HW_ISR7_1(v,a1,a2,...)	HW_X(_HW_ISR8,__VA_ARGS__)(v,a1,a2,__VA_ARGS__,)
 #define _HW_ISR8_1(v,a1,a2,...)	_HW_ISR_(v, HW_A1(_hw_israttr_##a1) HW_A1(_hw_israttr_##a2))
 #define _HW_ISR8_0(v,a1,a2,x,...)	HW_E_T(x) void hw_isr_error_##x()
+
+
+#if !defined __ASSEMBLER__
 
 
 /**
