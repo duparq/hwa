@@ -567,15 +567,15 @@ typedef struct {
 
 #define _hw_def_port0			_p8a, 102, 0x36
 
-#define _hw_def_pb0			_io1a, 104, port0, 1, 0
-#define _hw_def_pb1			_io1a, 105, port0, 1, 1
-#define _hw_def_pb2			_io1a, 106, port0, 1, 2
-#define _hw_def_pb3			_io1a, 107, port0, 1, 3
-#define _hw_def_pb4			_io1a, 108, port0, 1, 4
+#define _hw_def_pb0			_io1a, 103, port0, 1, 0
+#define _hw_def_pb1			_io1a, 104, port0, 1, 1
+#define _hw_def_pb2			_io1a, 105, port0, 1, 2
+#define _hw_def_pb3			_io1a, 106, port0, 1, 3
+#define _hw_def_pb4			_io1a, 107, port0, 1, 4
 #if HW_DEVICE_RSTDISBL == 0
 #  define _hw_def_pb5		_io1a, 109, port0, 1, 5
 #endif
-#define _hw_def_portb			_io1a, 103, port0, 6, 0
+#define _hw_def_portb			_io1a, 108, port0, 6, 0
 
 /*  Digital input disable bits for analog input pins
  */
@@ -638,7 +638,7 @@ typedef struct {
 /*	Object				class, id, address
  */
 #include "../classes/corea_1.h"
-#define _hw_def_core0			_corea, 101, 0
+#define _hw_def_core0			_corea, 109, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
