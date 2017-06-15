@@ -31,10 +31,6 @@
 #define _hw_mtd_hw_configure__apba	, _hw_cfapba
 #define _hw_mtd_hwa_configure__apba	, _hwa_cfapba
 
-#define _hw_is_clock_clock		, 1
-#define _hw_is_prescaler_prescaler	, 1
-#define _hw_is_ahb_ahb		, 1
-
 #define _hw_cfapba(o,i,a,k,...)		do{ HW_X(_hwx_cfapba_k,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfapba(o,i,a,k,...)	do{ HW_X(_hwx_cfapba_k,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 

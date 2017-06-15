@@ -60,10 +60,6 @@
  * @endcode
  */
 
-#define _hw_is_mode_mode		, 1
-#define _hw_is_direction_direction	, 1
-#define _hw_is_frequency_frequency	, 1
-
 #define _hw_cfio1a_mode_analog		, 1
 #define _hw_cfio1a_mode_digital		, 1
 

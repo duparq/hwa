@@ -34,9 +34,6 @@
 #define _hw_mtd_hw_configure__plla	, _hw_cfplla
 #define _hw_mtd_hwa_configure__plla	, _hwa_cfplla
 
-#define _hw_is_source_source		, 1
-#define _hw_is_multiplier_multiplier	, 1
-
 #define _hw_cfplla(o,i,a,k,...)		do{ HW_X(_hwx_cfplla_k,k)(_hw,k,__VA_ARGS__) }while(0)
 #define _hwa_cfplla(o,i,a,k,...)	do{ HW_X(_hwx_cfplla_k,k)(_hwa,k,__VA_ARGS__) }while(0)
 
