@@ -5,8 +5,8 @@ HWA
 Introduction
 ============
 
-HWA<sup><a href="#hwa">*</a></sup> is a set of C-preprocessor definitions
-designed to help developers write hardware-related code that:
+HWA is a set of C-preprocessor definitions designed to help developers write
+hardware-related code that:
 
  * is concise and easy to read,
  * is easier to port between different targets,
@@ -105,11 +105,30 @@ an Atmel AVR device:
     }
 
 
-The `vendor/architecture/examples/` directories (e.g. `atmel/avr/examples/`)
-contain HWA example projects.
+You'll find several other example projects in the
+`vendor/architecture/examples/` directories (e.g. `atmel/avr/examples/`).
 
 Each `examples/` directory contains a `README.md` file that explains how to
 compile the examples.
+
+
+Documentation
+=============
+
+A ready-made documentation is available
+[here](http://duparq.free.fr/hwa/index.html). Start with the @ref using page.
+
+To build the documentation from sources, you need to have
+[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make installed. You
+then just need to run `make` in the HWA base directory and open the
+`doxygen/html/index.html` page.
+
+
+Status
+======
+
+__WARNING!__ The development of HWA is very chaotic and this project is subject
+to heavy changes of the code base.
 
 
 Supported devices
@@ -117,24 +136,11 @@ Supported devices
 
  * HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8.
 
- * Support of ATmega32U4 has been started but needs to be rewritten.
-
- * Support of Espressif's ESP8266 has been started but needs to be rewritten.
-
  * ST's STM32F103 is the device that initiated the writing of HWA. The code is
    being rewritten.
 
-
-Documentation
-=============
-
-You can browse a ready-made documentation from [this web
-page](http://duparq.free.fr/hwa/index.html). Start with the @ref using page.
-
-To build the documentation in HTML format from sources, you need to have
-[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make installed (see
-below). You then just need to run `make` in the HWA base directory. You'll start
-with the `doxygen/html/index.html` page.
+ * Support of ATmega32U4 and Espressif's ESP8266 has been started but needs to
+   be rewritten.
 
 
 Organization of the source tree
@@ -145,13 +151,6 @@ The base source code of HWA is in the `hwa/` directory.
 Device-related source codes are stored in `vendor/architecture/` directories
 (`atmel/avr/`, `st/stm32/`, `espressif/`, ...) where you'll find `classes/`,
 `devices/`, and `examples/` directories.
-
-
-Status
-======
-
-__WARNING!__ The development of HWA is very chaotic and this project is subject
-to heavy changes of the code-base.
 
 
 Hosting
@@ -172,11 +171,5 @@ License
 =======
 
 HWA is free software. See the @ref license "license" page for license information.
-
-<hr>
-
-<a name="hwa"><sup>*</sup></a>: pronounced "Wah!" <i>a statement or exclamation, in
-several languages that shows pleasure, appreciation and surprise.</i> --
-Wikipedia.
 
 <br>

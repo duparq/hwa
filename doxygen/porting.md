@@ -287,29 +287,38 @@ stored in the bit 2 of the `csr` hardware register of the analog comparator
 Interrupts {#porting_irqs}
 ==========
 
-Interrupts are objects of the `_irq` class. The interrupt for the event
-`overflow` of the `counter0` is defined with something like:
+Interrupts are objects of the `_irq` class.
+
+For the ATtinyX4, the interrupt for the event `overflow` of the `counter0` is
+defined like this (the second definition considers that there is no need for the
+event name to be specified):
 
 @code
-#define _hw_irq_counter0_overflow	_irq, 4, irqe, irqf
-@endcode
-
-or considering that there is no need for the event name to be specified:
-
-@code
-#define _hw_irq_counter0_		_irq, 4, irqe, irqf
+#define _hw_irq_counter0_overflow       _irq, counter0, 11, ie,  if
+#define _hw_irq_counter0_               _irq, counter0, 11, ie,  if
 @endcode
 
 where:
 
- * `4` is the vector number of the IRQ, counting from 0, so this is the
-   vector number Atmel gives minus 1
+ * `counter0` is the IRQ name
 
- * `irqe` is the name of the logical register (class `_cb1` or `_ob1`) that
+ * `11` is the vector number of the IRQ, counting from 0, so this is the vector
+   number Atmel gives minus 1. This is used by HWA to build the name of the ISR.
+
+ * `ie` is the name of the logical register (class `_cb1` or `_ob1`) that
    enables/disables the IRQ
 
- * `irqf` is the name of the logical register that signals the IRQ (and that is
+ * `if` is the name of the logical register that signals the IRQ (and that is
    cleared by writing 1 into it)
+
+For the STM32, the SysTick timer alarm is defined like this:
+
+@code
+#define _hw_irq_systick_alarm           _irq, systick, esr_systick, ie, if
+@endcode
+
+where `esr_systick` is the name of the ISR.
+
 
 
 Class methods {#porting_cmtd}
@@ -337,13 +346,13 @@ The definition contains two elements:
 Then, HWA will expand the instruction
 
 @code
-hw( reset, wdog0 )
+hw( reset, watchdog0 )
 @endcode
 
 to
 
 @code
-_hw_rstwdoga( wdog0, 100, 0x0000, )
+_hw_rstwdoga( watchdog0, 100, 0x0000, )
 @endcode
 
 where the arguments are:
@@ -366,20 +375,20 @@ Parsing arguments lists {#porting_parseargs}
 =======================
 
 The processing of variable length lists of arguments, made of key/value pairs,
-is a feature of HWA that helps make it little verbose while still
-self-explaining.
+is a feature of HWA that helps writing source code that is both concise and
+clear.
 
-Let's see how the `_c8a` class implements the `hwa_config()` instruction, in the
-file `atmel/avr/classes/c8a_2.h`.
+Let's see how the `_c8a` class implements the asychronous `configure` action
+(`hwa(configure,counter0,...)`) in the file `atmel/avr/classes/c8a_2.h`.
 
 First, the method has to be declared:
 
 @code
-#define _hw_mtd_hwa_config__c8a	, _hwa_config_c8a
+#define _hw_mtd_hwa_configure__c8a	, _hwa_cfc8a
 @endcode
 
 The instruction `hwa( configure, counter0, ... )` will then be translated to
-`_hwa_config_c8a(o,i,a,...)` where:
+`_hwa_cfc8a(o,i,a,...)` where:
 
  * `o` is the name of the object: "counter0";
 
@@ -387,102 +396,110 @@ The instruction `hwa( configure, counter0, ... )` will then be translated to
 
  * `a` is the base address of the object;
 
- * `...` represents the arguments that followed the object name in the
-   `hwa_config()` instruction.
+ * `...` represents the arguments following the object name.
 
 We want the first argument that follows the object name to be the keyword
 "clock" and the next argument to be a value for "clock". There is the definition
-of `_hwa_config_c8a(...)`:
+of `_hwa_cfc8a(...)`:
 
 @code
-#define _hwa_config_c8a(o,i,a, ...)						\
-  do { HW_G2(_hwa_cfc8a_kclock,HW_IS(clock,__VA_ARGS__))(o,__VA_ARGS__,,) } while(0)
+#define _hwa_cfc8a(o,i,a, ...)						\
+  do { HW_X(_hwa_cfc8a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
 @endcode
 
 The `do { ... } while(0)` block is there so that the expansion of the
 instruction remains a block even though it develops as several statements.
 
-`HW_G2()` concatenates its first two arguments, that is, `_hwa_cfc8a_kclock` and
-the result of the expansion of `HW_IS(clock,__VA_ARGS__)`.
+`HW_X()` concatenates `_1` to its first argument, if the result of the expansion
+of `_hw_is_clock_##``__VA_ARGS__` begins with a void
+element. Otherwise, it concatenates `_0`.
 
-If the first argument of the `__VA_ARGS__` list is `clock`, then
-`HW_IS(clock,__VA_ARGS__)` expands to `1`, otherwise it expands to `0`.
-
-For that, `HW_IS()` requires the following definition:
+For that to work, the following definition is required:
 
 @code
-#define _hw_is_clock_clock		, 1
+#define _hw_is_clock_clock              , 1
 @endcode
 
 Then, if the first argument of the `__VA_ARGS__` list is "clock",
-`HW_G2(_hwa_cfc8a_kclock,HW_IS(clock,__VA_ARGS__))` expands to
+`HW_X(_hwa_cfc8a_kclock,_hw_is_clock_##``__VA_ARGS__)` expands to
 `_hwa_cfc8a_kclock_1`, otherwise it expands to `_hwa_cfc8a_kclock_0`.
 
 After that, `_hwa_cfc8a_kclock_0` or `_hwa_cfc8a_kclock_1` is concatenated with
 `(o,__VA_ARGS__,,)`. The `i` and `a` parameters are dropped since the processing
-of the `hwa_config()` instruction does not need the id or the address of the
+of the `configure` action does not need the id or the address of the
 object. Two more void elements are added to the end of the arguments list in
 order to ensure that it always has at least 4; this will make further processing
 simpler.
 
 If the argument `k` is not "clock", `_hwa_cfc8a_kclock_0(o,__VA_ARGS__,,)`
-produces an error explaining that `k` should have been "clock":
+produces an error explaining that `k` is not the word "clock":
 
 @code
-#define _hwa_cfc8a_kclock_0(o,k,...)					\
-  HW_ERR("expected `clock` instead of `" #k "`.")
+#define _hwa_cfc8a_kclock_0(o,k,...)    HW_E_VL(k,clock)
 @endcode
 
-If the argument `k` is "clock", `_hwa_cfc8a_kclock_1(o,__VA_ARGS__,,)`
-continues the processing of the arguments to verify that the following argument
-`v` is an acceptable value for "clock":
+If `k` is "clock", `_hwa_cfc8a_kclock_1(o,__VA_ARGS__,,)` continues the
+processing of the arguments to verify that the following argument `v` is an
+acceptable value for the "clock" key:
 
 @code
-#define _hwa_cfc8a_kclock_1(o,k,v,...)					\
-  HW_G2(_hwa_cfc8a_vclock,HW_IS(,_hw_c8a_clock_##v))(o,v,__VA_ARGS__)
+#define _hwa_cfc8a_kclock_1(o,k,v,...)                                  \
+  HW_X(_hwa_cfc8a_vclock,_hw_c8a_clock_##v)(o,v,__VA_ARGS__)
 @endcode
 
-`HW_IS(,_hw_c8a_clock_##%v)` expands to `1` for any value of `v` that makes
-`_hw_c8a_clock_##%v` expand with a void element in first position. For example:
+and
 
 @code
-#define _hw_c8a_clock_prescaler_output_64	, 3
+#define _hw_c8a_clock_prescaler_output_0	, 0
+#define _hw_c8a_clock_prescaler_output_1	, 1024
+#define _hw_c8a_clock_prescaler_output_8	, (1024/8)
+#define _hw_c8a_clock_prescaler_output_64	, (1024/64)
+#define _hw_c8a_clock_prescaler_output_256	, (1024/256)
+#define _hw_c8a_clock_prescaler_output_1024	, (1024/1024)
+#define _hw_c8a_clock_prescaler_output(x)	, 1024.0/(x)
 @endcode
 
-makes "prescaler_output_64" a valid value.
+define the acceptable values. For instance, `prescaler_output_64` is a valid
+value as well as `prescaler_output(64)`.
 
 Then, if `v` is valid, the processing continues with
 `_hwa_cfc8a_vclock_1(o,v,k,...)` where `v` is the validated symbolic value for
 the "clock" key, `k` is the next key, and `...` the remaining arguments in the
-list. The numerical value corresponding to `v` is stored in the 'config'
-structure in the HWA context of the object `o` in order to be processed later
-and the processing of the following key, that should be "countmode", begins:
+list.
+
+The numerical value corresponding to `v` is stored in the 'config' structure in
+the HWA context of the object `o` in order to be processed later and the
+processing of the following key, that should be "countmode", begins:
 
 @code
-#define _hwa_cfc8a_vclock_1(o,v,k,...)				\
-  hwa->o.config.clock = HW_A1(_hw_c8a_clock_##v);		\
-  HW_G2(_hwa_cfc8a_kmode,HW_IS(countmode,k))(o,k,__VA_ARGS__)
+#define _hwa_cfc8a_vclock_1(o,v,k,...)                          \
+  _hwa_cfc8a_vclock(&hwa->o, HW_A1(_hw_c8a_clock_##v));         \
+  HW_X(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+
+HW_INLINE void _hwa_cfc8a_vclock( hwa_c8a_t *o, float v )
+{
+  if ( v==0 || v==6 || v==7 )
+    o->config.clock = v ;
+  else if ( v == 1024 )
+    o->config.clock = 1 ;
+  else if ( v == 1024/8 )
+    o->config.clock = 2 ;
+  else if ( v == 1024/64 )
+    o->config.clock = 3 ;
+  else if ( v == 1024/256 )
+    o->config.clock = 4 ;
+  else if ( v == 1024/1024 )
+    o->config.clock = 5 ;
+  else
+    HWA_E(value of `clock` must be in (`none`, `prescaler_output(0|1|8|64|256|1024)`, `ext_falling`, `ext_rising`, `ioclk`, `ioclk/8`, `ioclk/64`, `ioclk/256`, `ioclk/1024`));
+}
 @endcode
 
 `HW_A1(_hw_c8a_clock_##%v)` expands to the element _a1_ of the list '(_a0_, _a1_,
 ...)'.
 
-With the definition:
-
-@code
-#define _hw_c8a_clock_prescaler_output_64	, 3
-@endcode
-
-if `v` is "prescaler_output_64", `_hw_c8a_clock_##%v` expands to ",3" and
-`HW_A1(_hw_c8a_clock_##%v)` expands to "3", the numerical value stored in the
-context.
-
-The following definition allows the programmer to type `prescaler_output(64)`
-instead of `prescaler_output_64` (the same for any other valid value):
-
-@code
-#define _hw_c8a_clock_prescaler_output(x)	HW_G2(_hw_c8a_clock_prescaler_output,x)
-@endcode
+`_hwa_cfc8a_vclock()` checks that the provided value, when using
+`prescaler_output()`, is valid.
 
 
 Solving the configuration {#porting_solve}
@@ -494,10 +511,11 @@ the compare units have an incidence on the values to be written in the logical
 register `wgm` of the counting unit. Thus, contrary to other simpler objects,
 `_hwa_cfc8a()` does not immediately set logical register values according to the
 parsed arguments but only stores the configuration in the context as will the
-configuration instructions for the compare units. Later, the `_hwa_solve()`
-instruction will process the values stored in the context to compute the values
-of the registers and verify that the whole configuration is valid before the
-`_hwa_commit()` instruction effectively writes the registers into the hardware.
+configuration instructions for the compare units. The `hwa_commit()` instruction
+will call `_hwa_solve()` to process the values stored in the context, compute
+the values of the registers, and verify that the whole configuration is valid
+before the `_hwa_commit()` instruction effectively writes the registers into the
+hardware.
 
 
 Macro argument names {#porting_macargs}

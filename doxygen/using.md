@@ -81,25 +81,23 @@ Action arguments are lower-cased words.
 
 Action	    | Comments
 :-----------|:-----------
-`clear`	    | Clear the object (usually an IRQ flag).
-`configure` | Configure the object.
 `power`	    | Power the object ON/OFF.
-`read`	    | Read the object.
+`configure` | Configure the object.
+`write`	    | Write a value in the object.
+`clear`	    | Clear the object (usually an IRQ flag).
 `reset`	    | Reset the object.
+`read`	    | Read the object.
 `stat`	    | Read the status of the object.
 `toggle`    | Toggle the state of the object (usually an I/O pin).
 `trigger`   | Trigger the object (start a ADC convertion...).
 `turn`	    | Turn the object ON/OFF.
-`write`	    | Write a value in the object.
 
 
 Objects {#using_objects}
 =======
 
 Object arguments can be peripheral controller names or canonical I/O pin names
-(i.e. the name used for the basic I/O function). They are lower cased and end
-with a number, except I/O ports that can end with a letter if a number would be
-confusing:
+(i.e. the name used for the basic I/O function). They are lower cased:
 
  * `counter0`, `counter1` ;
  * `adc0` ;
@@ -115,15 +113,9 @@ be used as object arguments too.
 Interrupts {#using_interrupts}
 ==========
 
-Interrupts are objects that support the following instructions:
-
- * `HW_IRQ(...)`: returns the definition of an IRQ;
- * `hw|hwa( turn, HW_IRQ(...), on|off )`: enable or disable an IRQ;
- * `hw|hwa( clear, HW_IRQFLAG(...) )`: clears an IRQ flag;
- * `hw( read, HW_IRQFLAG(...) )`: read an IRQ flag.
-
-Interrupt definitions (`HW_IRQ(...)`) and interrupt flags (`HW_IRQFLAG(...)`)
-require an object name that may be followed by an event name. For example:
+Interrupts are objects returned by the `HW_IRQ(...)` instruction. The first
+argument must be an object name, the optionnal second argument must be an event
+name:
 
  * `HW_IRQ(watchdog0)`;
  * `HW_IRQ(counter0)`;
@@ -132,23 +124,34 @@ require an object name that may be followed by an event name. For example:
  * `HW_IRQ(pa0, change)`;
  * ...
 
-
-Interrupt Service Routine {#using_isr}
--------------------------
-
-Interrupt service routines are declared with the `HW_ISR()` instruction.
-
-For example, as the USI can trigger several different interrupt requests, the
-event name is required:
+Interrupts can be enabled and disabled with the `turn` action:
 
 @code
-HW_ISR( usi0, txc )
-{
-  // code to handle the transmit-complete IRQ of the USI
-}
+hw( turn, HW_IRQ(counter0, overflow), on );     // Enable counter0 overflow interrupts
 @endcode
 
-The watchdog can only trigger one "anonymous" IRQ:
+@code
+hw( turn, HW_IRQ(counter0, overflow), off );    // Disable counter0 overflow interrupts
+@endcode
+
+
+The `HW_IRQFLAG(...)` instruction can be used to acces an interrupt flag. The
+arguments are the same as for `HW_IRQ(...)`.
+
+IRQ flags can be read and cleared:
+
+@code
+if( hw(read, HW_IRQFLAG(counter0,overflow)) )
+    hw(toggle, LED);
+@endcode
+
+@code
+hw(clear, HW_IRQFLAG(counter0,overflow));
+@endcode
+
+
+Interrupt service routines are declared with the `HW_ISR()` instruction,
+using the same arguments as for `HW_IRQ()`:
 
 @code
 HW_ISR( watchdog0 )
@@ -157,31 +160,39 @@ HW_ISR( watchdog0 )
 }
 @endcode
 
+As the USI can trigger several different interrupt requests, the event name is
+required:
 
-`HW_ISR()` accepts a few optionnal parameters:
+@code
+HW_ISR( usi0, txc )
+{
+  // code to handle the transmit-complete IRQ of the USI
+}
+@endcode
 
- * `isr_naked`
- * `isr_interruptible`
- * `isr_noninterruptible`
 
-`isr_interruptible` and `isr_noninterruptible` tell the compiler to make the ISR
+With some devices, `HW_ISR()` accepts the following optionnal parameters:
+
+ * `naked`
+ * `interruptible`
+ * `noninterruptible`
+
+`interruptible` and `noninterruptible` tell the compiler to make the ISR
 interruptible or not. Depending on the target device, these parameters may or
-may not produce code. For example, `isr_noninterruptible` will not produce code
+may not produce code. For example, `noninterruptible` will not produce code
 for the Atmel AVR devices since these targets automatically disable the
 interrupts when an ISR is entered.
 
-`isr_naked` makes the ISR have a naked body: the compiler will not generate any
-entry or exit code (you have to provide the instruction for exiting your ISR
-yourself).
-
-For example, if you are sure that your ISR does not alter any CPU register, you
-can spare a few program memory bytes and CPU cycles:
+`naked` makes the ISR have a naked body: the compiler will not generate any
+entry or exit code. That permits sparing a few program memory bytes and CPU
+cycles. You then must ensure that your ISR does not alter any CPU register and
+you have to provide the instruction for exiting the ISR yourself:
 
 @code
-HW_ISR( counter0, overflow, isr_naked )
+HW_ISR( counter0, overflow, naked )
 {
-  hw( toggle, pa0 );  // will use the `sbi` instruction, no register is altered
-  hw_asm("reti");	  // produce the `reti` instruction
+  hw( toggle, pa0 );    // will use the `sbi` instruction, no register is altered
+  hw_asm("reti");       // produce the `reti` instruction
 }
 @endcode
 
@@ -190,5 +201,5 @@ HW_ISR( counter0, overflow, isr_naked )
 Examples {#using_examples}
 ========
 
-The <a href="examples.html">examples provided with HWA</a> page gives a list of
-examples projects demonstrating the usage of HWA.
+See the <a href="examples.html">Examples</a> page for a list of examples
+projects that demonstrate the usage of HWA.
