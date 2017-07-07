@@ -2,47 +2,45 @@
 HWA
 ===
 
-Introduction
-============
-
 HWA is a set of C-preprocessor definitions designed to help developers write
 hardware-related code that:
 
  * is concise and easy to read,
- * is easier to port between different targets,
- * produces efficient binary code.
+ * produces efficient binary code,
+ * simplifies the process of porting the code to a different target.
 
 To achieve these goals, HWA provides:
 
  * a set of objects that represent the hardware,
 
  * generic instructions that accept various types and various numbers of
-   mandatory and optionnal arguments,
+   mandatory and optionnal arguments, that put the focus on the expected result
+   rather than on the values to be written in registers,
 
  * an error-checking mechanism that tries to produce messages that help the
-   developer to solve the problem,
+   developer to solve the problems,
 
  * a transactional processing mechanism that allows further optimization of the
    machine code.
 
+There is actually no penalty in using HWA, either in terms of size, execution
+speed or memory used. Because it is not a library, using HWA does not affect
+negatively the efficiency of the binary code produced as HWA helps the
+compiler's optimizers produce a binary that is at least as efficient as if the
+developer had written smart accesses to hardware registers himself.
+
 Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
-should be able to compile your source code.
-
-Contrary to a library (such as used by the Arduinos), the use of HWA does not
-affect the efficiency of the binary code produced. Using HWA, the compiler's
-optimizers make the binary code as efficient as if you wrote smart accesses to
-hardware registers yourself. So, there is no penalty in using HWA, either in
-terms of size, execution speed or memory used.
+should be able to compile the source code.
 
 As the C-preprocessor can be used to parse assembler source, a few features of
 HWA can be used for assembler programming. The implementation of a @ref
 atmelavr_swuarta "software UART for Atmel AVR microcontrollers" (see
 `atmel/avr/swuarta/`) and a @ref atmelavr_diabolo "bootloader" (see
-`atmel/avr/examples/diabolo`) are examples of that usage.
+`atmel/avr/examples/diabolo`) are examples of such a usage.
 
 Here is an example of how to use a watchdog interrupt to make a LED blink with
-an Atmel AVR device:
+an Atmel AVR ATtiny44A-PU:
 
 
     //  Load HWA definitions for the target device
@@ -105,7 +103,7 @@ an Atmel AVR device:
     }
 
 
-You'll find several other example projects in the
+Several other example projects are provided in the
 `vendor/architecture/examples/` directories (e.g. `atmel/avr/examples/`).
 
 Each `examples/` directory contains a `README.md` file that explains how to
@@ -118,10 +116,9 @@ Documentation
 A ready-made documentation is available
 [here](http://duparq.free.fr/hwa/index.html). Start with the @ref using page.
 
-To build the documentation from sources, you need to have
-[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make installed. You
-then just need to run `make` in the HWA base directory and open the
-`doxygen/html/index.html` page.
+Building the documentation from sources requires
+[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make` in the
+HWA base directory and open the `doxygen/html/index.html` page.
 
 
 Status
@@ -143,13 +140,13 @@ Supported devices
    be rewritten.
 
 
-Organization of the source tree
-===============================
+Organization of the code
+========================
 
 The base source code of HWA is in the `hwa/` directory.
 
-Device-related source codes are stored in `vendor/architecture/` directories
-(`atmel/avr/`, `st/stm32/`, `espressif/`, ...) where you'll find `classes/`,
+Device-related sources are stored in `vendor/architecture/` directories
+(`atmel/avr/`, `st/stm32/`, `espressif/`, ...) where are stored `classes/`,
 `devices/`, and `examples/` directories.
 
 
@@ -162,9 +159,8 @@ HWA is hosted on [Github](http://github.com/duparq/hwa).
 Feedback
 ========
 
-Feedbacks will be greatly appreciated. For any bug report, question or if you
-think you have an idea that would enhance HWA, please use my gmail address
-(duparq) and put HWA in the object.
+Feedbacks will be greatly appreciated. For any bug report, question or
+suggestion, please use my gmail address (duparq) and put HWA in the object.
 
 
 License
