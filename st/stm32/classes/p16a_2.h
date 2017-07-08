@@ -9,6 +9,20 @@
  * @brief GPIO port
  */
 
+/**
+ * @page stm32_p16a
+ *
+ * `power`:
+ * @code
+ * hw | hwa( power, port0,   on
+ *                         | off );
+ * @endcode
+ * <br>
+ * @code
+ * hw | hwa( power, HW_RELATIVE(pa0,port),   on
+ *                                         | off );
+ * @endcode
+ */
 
 /*******************************************************************************
  *									       *
