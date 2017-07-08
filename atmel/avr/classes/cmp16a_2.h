@@ -60,13 +60,13 @@
 
 #define _hw_cfcmp16a(o,i,a, ...)						\
   do {									\
-    HW_X(_hw_cfcmp16a_xoutput,_hw_is_output_##__VA_ARGS__)(o,__VA_ARGS__,); \
+    HW_Y(_hw_cfcmp16a_xoutput,_hw_is_output_##__VA_ARGS__)(o,__VA_ARGS__,); \
   }while(0)
 
 #define _hw_cfcmp16a_xoutput_0(o,k,...)					\
   HW_E_VL(k,output)
 #define _hw_cfcmp16a_xoutput_1(o,k,v,...)				\
-  HW_X(_hw_cfcmp16a_voutput,_hw_cmp16a_output_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hw_cfcmp16a_voutput,_hw_cmp16a_output_##v)(o,v,__VA_ARGS__)
 #define _hw_cfcmp16a_voutput_0(o,v,...)					\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)
 #define _hw_cfcmp16a_voutput_1(o,v,...)				\
@@ -108,26 +108,26 @@
 
 #define _hwa_cfcmp16a(o,i,a,...)						\
   do {									\
-    HW_X(_hwa_cfcmp16a_xupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,); \
+    HW_Y(_hwa_cfcmp16a_xupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,); \
   }while(0)
 
 #define _hwa_cfcmp16a_xupdate_0(o,k,...)					\
-  HW_X(_hwa_cfcmp16a_xoutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfcmp16a_xoutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcmp16a_xupdate_1(o,k,v,...)					\
-  HW_X(_hwa_cfcmp16a_vupdate,_hw_cmp16a_update_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcmp16a_vupdate,_hw_cmp16a_update_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfcmp16a_vupdate_0(o,v,...)			\
   HW_E_AVL(update mode of `o`, v, `immediately | at_bottom | at_top`)
 
 #define _hwa_cfcmp16a_vupdate_1(o,v,k,...)			\
   hwa->o.config.update = HW_A1(_hw_cmp16a_update_##v);\
-  HW_X(_hwa_cfcmp16a_xoutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfcmp16a_xoutput,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcmp16a_xoutput_0(o,...)	\
   HW_TX(,__VA_ARGS__)
 
 #define _hwa_cfcmp16a_xoutput_1(o,k,v,...)				\
-  HW_X(_hwa_cfcmp16a_voutput,_hw_cmp16a_output_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcmp16a_voutput,_hw_cmp16a_output_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp16a_voutput_0(o,v,...)			\
   HW_E_AVL(output mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)

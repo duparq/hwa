@@ -43,7 +43,7 @@
 
 /*	Verify that a state is given
  */
-#define _hwx_tnpcica1_1(x,o,io,v,...)	HW_X(_hwx_tnpcica2,_hw_state_##v)(x,o,io,v,__VA_ARGS__)
+#define _hwx_tnpcica1_1(x,o,io,v,...)	HW_Y(_hwx_tnpcica2,_hw_state_##v)(x,o,io,v,__VA_ARGS__)
 
 #define _hwx_tnpcica2_0(x,o,io,v,...)	HW_E_ST(v)
 #define _hwx_tnpcica2_1(x,o,io,v,...)	HW_TX(_hwx_tnpcica2_2(x,o,_hw_def_##io,v),__VA_ARGS__)

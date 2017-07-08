@@ -75,12 +75,12 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
 #define _hw_mtd_hw_power		, _hw_power
 #define _hw_mtd_hwa_power		, _hwa_power
 
-#define _hw_power(c,o,i,a,v,g,...)	HW_X(_hwx_pwr1,g)(_hw,o,v,g)
-#define _hwa_power(c,o,i,a,v,g,...)	HW_X(_hwx_pwr1,g)(_hwa,o,v,g)
+#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hw,o,v,g)
+#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hwa,o,v,g)
 #define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
-#define _hwx_pwr1_1(x,o,v,g)		HW_X(_hwx_pwr2,_hw_state_##v)(x,o,v)
+#define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2,_hw_state_##v)(x,o,v)
 #define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_X(_hwx_pwr3,HW_G2(_hw_isa_reg, _hw_reg_##o##_##cken))(x,o,v)
+#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3,HW_G2(_hw_isa_reg, _hw_reg_##o##_##cken))(x,o,v)
 #define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
 #define _hwx_pwr3_1(x,o,v)		x##_write_reg(o,cken,HW_A1(_hw_state_##v))
 

@@ -79,20 +79,20 @@
 #define _hw_c16a_clock_prescaler_output(x)	HW_G2(_hw_c16a_clock_prescaler_output,x)
 
 #define _hwa_cfc16a(o,i,a, ...)					\
-  do { HW_X(_hwa_cfc16a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfc16a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc16a_kclock_0(o,k,...)				\
   HW_E_VL(k,clock)
 
 #define _hwa_cfc16a_kclock_1(o,k,v,...)				\
-  HW_X(_hwa_cfc16a_vclock,_hw_c16a_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_vclock,_hw_c16a_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 ) | ext_falling | ext_rising)
 
 #define _hwa_cfc16a_vclock_1(o,v,k,...)					\
   hwa->o.config.clock = HW_A1(_hw_c16a_clock_##v);				\
-  HW_X(_hwa_cfc16a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `countmode`
  */
@@ -105,14 +105,14 @@
   HW_E_VL(k,countmode)
 
 #define _hwa_cfc16a_kmode_1(o,k,v,...)					\
-  HW_X(_hwa_cfc16a_vmode,_hw_c16a_countmode_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_vmode,_hw_c16a_countmode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vmode_0(o,v,...)					\
   HW_E_AVL(countmode, v, up_loop | updown_loop)
 
 #define _hwa_cfc16a_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c16a_countmode_##v);			\
-  HW_X(_hwa_cfc16a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
@@ -123,10 +123,10 @@
   HW_E_AVL(bottom, v, `0`)
 
 #define _hwa_cfc16a_vbottom_1(o,v,k,...)	\
-  HW_X(_hwa_cfc16a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfc16a_kbottom_0(o,k,...)				\
-  HW_X(_hwa_cfc16a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `top`
  */
@@ -139,17 +139,17 @@
 #define _hw_c16a_top_compare0		, 6
 
 #define _hwa_cfc16a_ktop_1(o,k,v,...)					\
-  HW_X(_hwa_cfc16a_vtop,_hw_c16a_top_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_vtop,_hw_c16a_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vtop_0(o,v,...)					\
   HW_E_AVL(top, v, fixed_0xFF | fixed_0x1FF | fixed_0x3FF | fixed_0xFFFF | max | capture0 | compare0)
 
 #define _hwa_cfc16a_vtop_1(o,v,k,...)					\
   hwa->o.config.top = HW_A1(_hw_c16a_top_##v);				\
-  HW_X(_hwa_cfc16a_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfc16a_ktop_0(o,k,...)					\
-  HW_X(_hwa_cfc16a_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `overflow`
  */
@@ -158,7 +158,7 @@
 #define _hw_c16a_overflow_at_max	, 2
 
 #define _hwa_cfc16a_koverflow_1(o,k,v,...)				\
-  HW_X(_hwa_cfc16a_voverflow,_hw_c16a_overflow_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_voverflow,_hw_c16a_overflow_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_voverflow_0(o,v,...)				\
   HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)

@@ -50,11 +50,11 @@
 
 #define _hwa_cfacmpa(o,i,a,...)						\
   do {									\
-    HW_X(_hwa_cfacmpa_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfacmpa_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
   } while(0)
 
 #define _hwa_cfacmpa_xedge_1(o,k,v,...)				\
-  HW_X(_hwa_cfacmpa_vedge,_hw_acmpa_edge_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfacmpa_vedge,_hw_acmpa_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising | both)
@@ -72,7 +72,7 @@
 #define _hw_is_bandgap_bandgap			, 1
 
 #define _hwa_cfacmpa_xposin_1(o,k,v,...)				\
-  HW_X(_hwa_cfacmpa_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfacmpa_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpa_vposin_bandgap_1(o,v,k,...)			\
   _hwa_write_reg(o,acbg,1);						\

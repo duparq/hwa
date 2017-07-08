@@ -13,10 +13,10 @@
 /*	Turn ADC on / off
  */
 #define _hw_turn_ad10_(o,i,a, v, ...)			\
-  HW_X(_hwx_turn_ad10_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+  HW_Y(_hwx_turn_ad10_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 
 #define _hwa_turn_ad10_(o,i,a, v, ...)			\
-  HW_X(_hwx_turn_ad10_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+  HW_Y(_hwx_turn_ad10_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_ad10__0(x,o, v, ...)			\
   HW_E_ST(v)
@@ -34,7 +34,7 @@
 /*	Read the result of the conversion
  */
 #define _hw_rdad10_(o,i,a,...)					\
-  HW_X(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
+  HW_Y(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_rdad10__1(o,...)		_hw_read_reg(o, adc)
 

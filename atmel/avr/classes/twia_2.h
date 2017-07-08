@@ -69,11 +69,11 @@
     x( configure, HW_REL(o,pin_sda), direction, output );		\
     x( write, HW_REL(o,pin_scl), 1 );					\
     x( write, HW_REL(o,pin_sda), 1 );					\
-    HW_X(_hwx_cftwia_ksclhz,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
+    HW_Y(_hwx_cftwia_ksclhz,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
   } while(0)
 
 #define _hwx_cftwia_ksclhz_1(x,o,k,v,...)			\
-  HW_X(_hwx_cftwia_vsclhz,v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cftwia_vsclhz,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vsclhz_1(x,o,v,...)		HW_E_VM(sclhz)
 
@@ -112,7 +112,7 @@
 /*	Optionnal argument `slave_address`
  */
 #define _hwx_cftwia_ksladdr_1(x,o,k,v,...)			\
-  HW_X(_hwx_cftwia_vsladdr,v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cftwia_vsladdr,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vsladdr_1(x,o,v,...)	HW_E_VM(slave_address)
 
@@ -130,7 +130,7 @@
 /*	Optionnal argument `general_call`
  */
 #define _hwx_cftwia_kgcall_1(x,o,k,v,...)				\
-  HW_X(_hwx_cftwia_vgcall,_hw_state_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cftwia_vgcall,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vgcall_0(x,o,v,...)					\
   HW_E_AVL(general_call, v, enabled | disabled)
@@ -147,7 +147,7 @@
 /*	Optionnal argument `slave_address_mask`
  */
 #define _hwx_cftwia_kslam_1(x,o,k,v,...)			\
-  HW_X(_hwx_cftwia_vslam,v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cftwia_vslam,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vslam_1(x,o,v,...)		HW_E_VM(slave_address_mask)
 
@@ -186,22 +186,22 @@
  * @endcode
  */
 #define _hw_mtd_hw_tx_start__twia	, _hw_twia_txstart
-#define _hw_twia_txstart(o,i,a,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
+#define _hw_twia_txstart(o,i,a,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
 #define _hw_mtd_hw_tx_stop__twia	, _hw_twia_txstop
-#define _hw_twia_txstop(o,i,a,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
+#define _hw_twia_txstop(o,i,a,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
 #define _hw_mtd_hw_tx_slaw__twia	, _hw_twia_txslaw
-#define _hw_twia_txslaw(o,i,a,...)	HW_X(_hw_twia_txslawv,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txslaw(o,i,a,...)	HW_Y(_hw_twia_txslawv,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
 #define _hw_twia_txslawv_0(o,v,k,...)					\
   do {									\
     if ( ((uint8_t)(v)) > 127 )						\
       HWA_ERR("slave address must be in the range 0..127.");		\
     _hw_write_reg(o,dr,((v)<<1)+0);					\
-    HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
+    HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
   } while(0)
 
 
@@ -213,7 +213,7 @@
     if ( ((uint8_t)(v)) > 127 )						\
       HWA_ERR("slave address must be in the range 0..127.");		\
     _hw_write_reg(o,dr,((v)<<1)+1);					\
-    HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
+    HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
   } while(0)
 
 
@@ -223,15 +223,15 @@
 #define _hw_twia_txdatav_0(o,v,k,...)					\
   do {									\
     _hw_write_reg(o,dr,v);						\
-    HW_X(_hw_twia_txend,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
+    HW_Y(_hw_twia_txend,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
 #define _hw_mtd_hw_tx_read__twia	, _hw_twia_txread
-#define _hw_twia_txread(o,i,a,...)	HW_X(_hw_twia_txread_ack,_hw_is_ack_##__VA_ARGS__)(o,__VA_ARGS__,,)
-#define _hw_twia_txread_ack_1(o,ok,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
-#define _hw_twia_txread_ack_0(o,...)	HW_X(_hw_twia_txread_nack,_hw_is_nack_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _hw_twia_txread_nack_1(o,ok,k,...)	HW_X(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
+#define _hw_twia_txread(o,i,a,...)	HW_Y(_hw_twia_txread_ack,_hw_is_ack_##__VA_ARGS__)(o,__VA_ARGS__,,)
+#define _hw_twia_txread_ack_1(o,ok,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
+#define _hw_twia_txread_ack_0(o,...)	HW_Y(_hw_twia_txread_nack,_hw_is_nack_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txread_nack_1(o,ok,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
 #define _hw_twia_txread_nack_0(o,k,...)	HW_E_VL(k, ack | nack)
 
 #define _hw_is_ack_ack			, 1

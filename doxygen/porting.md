@@ -404,13 +404,13 @@ of `_hwa_cfc8a(...)`:
 
 @code
 #define _hwa_cfc8a(o,i,a, ...)						\
-  do { HW_X(_hwa_cfc8a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
 @endcode
 
 The `do { ... } while(0)` block is there so that the expansion of the
 instruction remains a block even though it develops as several statements.
 
-`HW_X()` concatenates `_1` to its first argument, if the result of the expansion
+`HW_Y()` concatenates `_1` to its first argument, if the result of the expansion
 of `_hw_is_clock_##``__VA_ARGS__` begins with a void
 element. Otherwise, it concatenates `_0`.
 
@@ -421,7 +421,7 @@ For that to work, the following definition is required:
 @endcode
 
 Then, if the first argument of the `__VA_ARGS__` list is "clock",
-`HW_X(_hwa_cfc8a_kclock,_hw_is_clock_##``__VA_ARGS__)` expands to
+`HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##``__VA_ARGS__)` expands to
 `_hwa_cfc8a_kclock_1`, otherwise it expands to `_hwa_cfc8a_kclock_0`.
 
 After that, `_hwa_cfc8a_kclock_0` or `_hwa_cfc8a_kclock_1` is concatenated with
@@ -444,7 +444,7 @@ acceptable value for the "clock" key:
 
 @code
 #define _hwa_cfc8a_kclock_1(o,k,v,...)                                  \
-  HW_X(_hwa_cfc8a_vclock,_hw_c8a_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_vclock,_hw_c8a_clock_##v)(o,v,__VA_ARGS__)
 @endcode
 
 and
@@ -474,7 +474,7 @@ processing of the following key, that should be "countmode", begins:
 @code
 #define _hwa_cfc8a_vclock_1(o,v,k,...)                          \
   _hwa_cfc8a_vclock(&hwa->o, HW_A1(_hw_c8a_clock_##v));         \
-  HW_X(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 HW_INLINE void _hwa_cfc8a_vclock( hwa_c8a_t *o, float v )
 {

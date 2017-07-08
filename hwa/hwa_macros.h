@@ -149,7 +149,7 @@
  *
  * @hideinitializer
  */
-#define HW_IS_VOID(...)		HW_X(_HW_IS_VOID_BKT,_hw_is__bkt __VA_ARGS__)(__VA_ARGS__)
+#define HW_IS_VOID(...)		HW_Y(_HW_IS_VOID_BKT,_hw_is__bkt __VA_ARGS__)(__VA_ARGS__)
 
 #define _HW_IS_VOID_BKT_1(...)	0
 #define _HW_IS_VOID_BKT_0(...)	HW_IS(,__VA_ARGS__)
@@ -162,14 +162,14 @@
  * @brief Concatenates '_1' or '_0' to the first argument according to the second.
  * @hideinitializer
  *
- * `HW_X(f,c)` expands to:
+ * `HW_Y(f,c)` expands to:
  *  * `f_1` if `c` is "",
  *  * `f_0` if `c` is not "".
  */
-#define HW_X(...)			_HW_X2(__VA_ARGS__,,)
-#define _HW_X2(f,x,...)			_HW_X3(f,_hw_is_##x,0,)
-#define _HW_X3(...)			_HW_X4(__VA_ARGS__)
-#define _HW_X4(f,x,y,...)		f##_##y
+#define HW_Y(...)			_HW_Y2(__VA_ARGS__,,)
+#define _HW_Y2(f,x,...)			_HW_Y3(f,_hw_is_##x,0,)
+#define _HW_Y3(...)			_HW_Y4(__VA_ARGS__)
+#define _HW_Y4(f,x,y,...)		f##_##y
 
 
 /**
@@ -205,18 +205,18 @@
  */
 #define _HW_MTD1(f,o,...)	_HW_MTD2(f,HW_O(o),__VA_ARGS__)
 #define _HW_MTD2(...)		_HW_MTD3(__VA_ARGS__)
-#define _HW_MTD3(f,c,...)	HW_X(_HW_MTD3,c)(f,c,__VA_ARGS__)
+#define _HW_MTD3(f,c,...)	HW_Y(_HW_MTD3,c)(f,c,__VA_ARGS__)
 #define _HW_MTD3_1(...)		//HW_E_OM() /* An error has been emitted by HW_O */
 
 /*  Is there a method f for object o of class c?
  */
-#define _HW_MTD3_0(f,c,...)	HW_X(_HW_MTD4,_hw_mtd_##f##_##c)(f,c,__VA_ARGS__)
+#define _HW_MTD3_0(f,c,...)	HW_Y(_HW_MTD4,_hw_mtd_##f##_##c)(f,c,__VA_ARGS__)
 
 #define _HW_MTD4_1(f,c,...)	HW_A1(_hw_mtd_##f##_##c)(__VA_ARGS__)
 
 /*  Is there a method f for object o?
  */
-#define _HW_MTD4_0(f,c,o,...)	HW_X(_HW_MTD5,_hw_mtd_##f##_##o)(f,c,o,__VA_ARGS__)
+#define _HW_MTD4_0(f,c,o,...)	HW_Y(_HW_MTD5,_hw_mtd_##f##_##o)(f,c,o,__VA_ARGS__)
 #define _HW_MTD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
 
 
@@ -261,7 +261,7 @@
  * This is used to help detecting and propagating errors, or ensuring that
  * there is no remaining elements in a list at the end of its parsing.
  */
-#define HW_TX(result, ...)	HW_X(_HW_TX,__VA_ARGS__)((result),__VA_ARGS__,)
+#define HW_TX(result, ...)	HW_Y(_HW_TX,__VA_ARGS__)((result),__VA_ARGS__,)
 #define _HW_TX_0(result,x,...)	HW_E_T(x)
 #define _HW_TX_1(result, ...)	_HW_TX_2 result
 #define _HW_TX_2(...)		__VA_ARGS__
@@ -275,7 +275,7 @@
  * This is used to ensure that there is no remaining elements in a list at the
  * end of its parsing.
  */
-#define HW_EOL(...)		HW_X(_HW_EOL,__VA_ARGS__)(__VA_ARGS__,)
+#define HW_EOL(...)		HW_Y(_HW_EOL,__VA_ARGS__)(__VA_ARGS__,)
 #define _HW_EOL_0(x,...)	HW_E_T(x)
 #define _HW_EOL_1(...)
 
@@ -302,13 +302,13 @@
  * name: c,o,... Otherwise, triggers an error and returns a void token.
  */
 #define HW_O(object)		_HW_O1(object)
-#define _HW_O1(...)		HW_X(_HW_O2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
+#define _HW_O1(...)		HW_Y(_HW_O2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
 #define _HW_O2_1(...)		__VA_ARGS__		/*  Class name found, job's done. */
 #define _HW_O2_0(o)		_HW_O3(o,_hw_def_##o)	/*  Is o an object's name? */
 #define _HW_O3(...)		_HW_O4(__VA_ARGS__)
-#define _HW_O4(o,...)		HW_X(_HW_O4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _HW_O4(o,...)		HW_Y(_HW_O4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _HW_O4_1(o,c,...)	c,o,__VA_ARGS__
-#define _HW_O4_0(o,...)		HW_X(_HW_O5,o)(o)	/*  o is not an object, produce an error. */
+#define _HW_O4_0(o,...)		HW_Y(_HW_O5,o)(o)	/*  o is not an object, produce an error. */
 #define _HW_O5_0(o)		HW_E_O(o)
 #define _HW_O5_1(o)		HW_E_OM()
 
@@ -386,22 +386,22 @@
 
 /*  Do not proceed further in case of error
  */
-#define _hwx3(h,f,c,...)	HW_X(_hwx4,c)(h,f,c,__VA_ARGS__)
+#define _hwx3(h,f,c,...)	HW_Y(_hwx4,c)(h,f,c,__VA_ARGS__)
 #define _hwx4_1(...)		// HW_E_OM() /* An error has already been emitted by HW_O */
 
 /*  Look for a class method x_f for object o of class c.
  */
-#define _hwx4_0(h,f,c,...)	HW_X(_hwx5,_hw_mtd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
+#define _hwx4_0(h,f,c,...)	HW_Y(_hwx5,_hw_mtd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
 #define _hwx5_1(h,f,c,...)	HW_A1(_hw_mtd_##h##_##f##_##c)(__VA_ARGS__)
 
 /*  Look for a method x_f for object o.
  */
-#define _hwx5_0(h,f,c,o,...)	HW_X(_hwx6,_hw_mtd_##h##_##f##_##o)(h,f,c,o,__VA_ARGS__)
+#define _hwx5_0(h,f,c,o,...)	HW_Y(_hwx6,_hw_mtd_##h##_##f##_##o)(h,f,c,o,__VA_ARGS__)
 #define _hwx6_1(h,f,c,o,...)	HW_A1(_hw_mtd_##h##_##f##_##o)(__VA_ARGS__)
 
 /*  Look for a global method
  */
-#define _hwx6_0(h,f,...)	HW_X(_hwx7,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
+#define _hwx6_0(h,f,...)	HW_Y(_hwx7,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
 #define _hwx7_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
 #define _hwx7_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
 
@@ -411,12 +411,12 @@
 #define _hw(...)		__hw1(__VA_ARGS__,)
 #define __hw1(f,o,...)		__hw2(f,HW_O(o),__VA_ARGS__)
 #define __hw2(...)		__hw3(__VA_ARGS__)
-#define __hw3(f,c,...)		HW_X(__hw4,c)(f,c,__VA_ARGS__)
+#define __hw3(f,c,...)		HW_Y(__hw4,c)(f,c,__VA_ARGS__)
 #define __hw4_1(...)		// An error has been emitted. Stop here.
 
 /*  Look for a method x_f for object o of class c.
  */
-#define __hw4_0(f,c,...)	HW_X(__hw41,_hw_mtd_hw_##f##_##c)(f,c,__VA_ARGS__)
+#define __hw4_0(f,c,...)	HW_Y(__hw41,_hw_mtd_hw_##f##_##c)(f,c,__VA_ARGS__)
 #define __hw41_1(f,c,...)	HW_A1(_hw_mtd_hw_##f##_##c)(__VA_ARGS__)
 #define __hw41_0(f,c,o,...)	HW_E_OCM(o,c,hw_##f)
 
@@ -429,12 +429,12 @@
 
 /*  Do not proceed further in case of error
  */
-#define __hwa3(f,c,...)		HW_X(__hwa4,c)(f,c,__VA_ARGS__)
+#define __hwa3(f,c,...)		HW_Y(__hwa4,c)(f,c,__VA_ARGS__)
 #define __hwa4_1(...)		//HW_E(processing error: HW_QUOTE(__hwa4_0(f,c,__VA_ARGS__)))
 
 /*  Look for a method x_f for object o of class c.
  */
-#define __hwa4_0(f,c,...)	HW_X(__hwa41,_hw_mtd_hwa_##f##_##c)(f,c,__VA_ARGS__)
+#define __hwa4_0(f,c,...)	HW_Y(__hwa41,_hw_mtd_hwa_##f##_##c)(f,c,__VA_ARGS__)
 #define __hwa41_1(f,c,...)	HW_A1(_hw_mtd_hwa_##f##_##c)(__VA_ARGS__)
 #define __hwa41_0(f,c,o,...)	HW_E_OCM(o,c,hwa_##f)
 
@@ -459,11 +459,11 @@
 #define HW_IMPLEMENT(...)	_HW_IMP1(__VA_ARGS__,,)
 #define _HW_IMP1(o,...)		_HW_IMP2(HW_O(o),__VA_ARGS__)
 #define _HW_IMP2(...)		_HW_IMP3(__VA_ARGS__)
-#define _HW_IMP3(c,...)		HW_X(_HW_IMP4,c)(c,__VA_ARGS__)
+#define _HW_IMP3(c,...)		HW_Y(_HW_IMP4,c)(c,__VA_ARGS__)
 #define _HW_IMP4_1(...)		// An error message has been emitted. Stop here.
-#define _HW_IMP4_0(c,...)	HW_X(_HW_IMP5,_hw_implement_##c)(c,__VA_ARGS__)
+#define _HW_IMP4_0(c,...)	HW_Y(_HW_IMP5,_hw_implement_##c)(c,__VA_ARGS__)
 #define _HW_IMP5_0(c,o,...)	HW_E_OCM(o,c,HW_IMPLEMENT)
-#define _HW_IMP5_1(c,o,i,a,p,...)	HW_X(_HW_IMP6,_hw_implement_prefix_##p)(c,o,i,a,p)
+#define _HW_IMP5_1(c,o,i,a,p,...)	HW_Y(_HW_IMP6,_hw_implement_prefix_##p)(c,o,i,a,p)
 #define _HW_IMP6_1(c,...)	HW_A1(_hw_implement_##c)(__VA_ARGS__)
 #define _HW_IMP6_0(c,o,i,a,p)	HW_E_VL(p, static or "" )
 
@@ -482,9 +482,9 @@
  */
 #define HW_CHECK(o)		_HW_CHK2(HW_O(o))
 #define _HW_CHK2(...)		_HW_CHK3(__VA_ARGS__)
-#define _HW_CHK3(c,...)		HW_X(_HW_CHK4,c)(c,__VA_ARGS__)
+#define _HW_CHK3(c,...)		HW_Y(_HW_CHK4,c)(c,__VA_ARGS__)
 #define _HW_CHK4_1(...)		// An error message has been emitted.
-#define _HW_CHK4_0(c,...)	HW_X(_HW_CHK5,_hw_check_##c)(c,__VA_ARGS__)
+#define _HW_CHK4_0(c,...)	HW_Y(_HW_CHK5,_hw_check_##c)(c,__VA_ARGS__)
 #define _HW_CHK5_0(c,o,...)	HW_E_OCM(o,c,HW_CHECK)
 #define _HW_CHK5_1(c,...)	HW_A1(_hw_check_##c)(__VA_ARGS__)
 #endif
@@ -553,15 +553,15 @@
 #  define HW_REGISTER(o,x)		_HW_M1(HW_O(o),x)
 #endif
 #define _HW_M1(...)			_HW_M2(__VA_ARGS__)
-#define _HW_M2(c,...)			HW_X(_HW_M2,c)(c,__VA_ARGS__)
+#define _HW_M2(c,...)			HW_Y(_HW_M2,c)(c,__VA_ARGS__)
 #define _HW_M2_1(...)			// Error: return void 
 #define _HW_M2_0(c,o,i,a,r)		_HW_M4(_hw_reg_##c##_##r,o,c,a,r)
 #define _HW_M4(...)			_HW_M5(__VA_ARGS__)
-#define _HW_M5(t,...)			HW_X(_HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_M5(t,...)			HW_Y(_HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
 #define _HW_M5_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
 #define _HW_M5_0(t,o,c,a,r)		_HW_M6(_hw_reg_##o##_##r,o,c,a,r)
 #define _HW_M6(...)			_HW_M7(__VA_ARGS__)
-#define _HW_M7(t,...)			HW_X(_HW_M7,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_M7(t,...)			HW_Y(_HW_M7,_hw_isa_reg_##t)(t,__VA_ARGS__)
 #define _HW_M7_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
 #define _HW_M7_0(t,o,c,a,r)		HW_E(`o` has no register `r`)
 
@@ -575,14 +575,14 @@
 #define __HW_M2(...)			__HW_M3(__VA_ARGS__)
 #define __HW_M3(o,c,i,a,r)		__HW_M4(_hw_reg_##c##_##r,o,c,a,r)
 #define __HW_M4(...)			__HW_M5(__VA_ARGS__)
-#define __HW_M5(t,...)			HW_X(__HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define __HW_M5(t,...)			HW_Y(__HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
 #define __HW_M5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
 #define __HW_M5_0(t,o,c,a,r)		__HW_M6(_hw_reg_##o##_##r,o,c,a,r)
 #define __HW_M6(...)			__HW_M5_1(__VA_ARGS__)
 
 /* #define __HW_M5_0(t,o,c,a,r)		__HW_M7(_hw_reg_##o##_##r,o,c,a,r) */
 /* #define __HW_M7(...)			__HW_M8(__VA_ARGS__) */
-/* #define __HW_M8(t,...)			HW_X(__HW_M9,_hw_isa_reg_##t)(t,__VA_ARGS__) */
+/* #define __HW_M8(t,...)			HW_Y(__HW_M9,_hw_isa_reg_##t)(t,__VA_ARGS__) */
 /* #define __HW_M9_1( */
 
 
@@ -598,7 +598,7 @@
 #define __HW_R2(...)			__HW_R3(__VA_ARGS__)
 #define __HW_R3(o,c,i,a,r)		__HW_R4(_hw_reg_##c##_##r,o,c,a,r)
 #define __HW_R4(...)			__HW_R5(__VA_ARGS__)
-#define __HW_R5(t,...)			HW_X(__HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define __HW_R5(t,...)			HW_Y(__HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
 #define __HW_R5_1(...)			__VA_ARGS__
 #define __HW_R5_0(z,o,c,a,r)		_hw_reg_##o##_##r,o,c,a,r
 
@@ -621,7 +621,7 @@
  */
 #define _hw_r2m__xob1(to,tr,bn,bp,o,c,a,r)		_hw_r2m__xob12(_hw_reg_##to##_##tr,_hw_def_##to,to,tr,bn,bp)
 #define _hw_r2m__xob12(...)				_hw_r2m__xob13(__VA_ARGS__)
-#define _hw_r2m__xob13(t,...)				HW_X(_hw_r2m__xob13,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _hw_r2m__xob13(t,...)				HW_Y(_hw_r2m__xob13,_hw_isa_reg_##t)(t,__VA_ARGS__)
 #define _hw_r2m__xob13_1(rc,ra,rwm,rfm,c,i,a,o,r,bn,bp)	_m1,o,a,r,rc,ra,rwm,rfm,bn,bp
 #define _hw_r2m__xob13_0(x,c,i,a,o,r,bn,bp)		_hw_r2m__xob16(_hw_reg_##c##_##r,c,i,a,o,r,bn,bp)
 #define _hw_r2m__xob16(...)				_hw_r2m__xob17(__VA_ARGS__)
@@ -812,7 +812,7 @@
 #define HW_RELATIVE(object,x)		_HW_REL1(object,x)
 #define HW_REL(o,x)			_HW_REL1(o,x)
 #define _HW_REL1(...)			_HW_REL2(__VA_ARGS__)
-#define _HW_REL2(o,x)			HW_X(_HW_REL2,o)(o,x)
+#define _HW_REL2(o,x)			HW_Y(_HW_REL2,o)(o,x)
 #define _HW_REL2_1(o,x)			HW_E_OM()
 #define _HW_REL2_0(o,x)			HW_G2(_HW_REL3,HW_ISON(o))(o,x)
 #define _HW_REL3_0(o,x)			HW_E_O(o)
@@ -820,9 +820,9 @@
 #define _HW_REL4_1(o,x)			_hw_rel_##o##_##x
 #define _HW_REL4_0(o,x)			_HW_REL4(o,x,_hw_def_##o)
 #define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
-#define _HW_REL5(o,x,c,...)		HW_X(_HW_REL5,_hw_class_##c)(o,x,c,__VA_ARGS__)
+#define _HW_REL5(o,x,c,...)		HW_Y(_HW_REL5,_hw_class_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL5_1(o,x,c,...)		HW_X(_HW_REL6,_hw_mtd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
+#define _HW_REL5_1(o,x,c,...)		HW_Y(_HW_REL6,_hw_mtd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
 #define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mtd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
 
@@ -857,7 +857,7 @@
  */
 #define HW_PIN(p)		_HW_PIN1(p,_hw_pin_##p,)
 #define _HW_PIN1(...)		_HW_PIN2(__VA_ARGS__)
-#define _HW_PIN2(o,x,...)	HW_X(_HW_PIN,x)(o,__VA_ARGS__)
+#define _HW_PIN2(o,x,...)	HW_Y(_HW_PIN,x)(o,__VA_ARGS__)
 #define _HW_PIN_0(o,...)	HW_E_P(o)
 #define _HW_PIN_1(o,p,...)	p
 

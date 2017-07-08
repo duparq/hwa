@@ -87,17 +87,17 @@
 #define _hw_c8b_clock_prescaler_output(x)	HW_G2(_hw_c8b_clock_prescaler_output,x)
 
 #define _hwa_cfc8b(o,i,a, ...)						\
-  do { HW_X(_hwa_cfc8b_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfc8b_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8b_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_X(_hwa_cfc8b_vclock,_hw_c8b_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_Y(_hwa_cfc8b_vclock,_hw_c8b_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 ))
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
   _hwa_write_reg(o, cs, HW_A1(_hw_c8b_clock_##v));			\
-  HW_X(_hwa_cfc8b_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `countmode`
  */
@@ -115,7 +115,7 @@
   _hwa_cfc8b_kcountmode_0(o,__VA_ARGS__)
 
 #define _hwa_cfc8b_kcountmode_0(o,k,...)				\
-  HW_X(_hwa_cfc8b_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
@@ -131,7 +131,7 @@
   _hwa_cfc8b_kbottom_0(o,__VA_ARGS__)
 
 #define _hwa_cfc8b_kbottom_0(o,k,...)				\
-  HW_X(_hwa_cfc8b_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `top`
@@ -144,7 +144,7 @@
 #define _hw_c8b_top_compare2		, 1
 
 #define _hwa_cfc8b_ktop_1(o,k,v,...)					\
-  HW_X(_hwa_cfc8b_vtop,_hw_c8b_top_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_vtop,_hw_c8b_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vtop_0(o,v,...)\
   HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
@@ -154,7 +154,7 @@
   _hwa_cfc8b_ktop_0(v,__VA_ARGS__)
 
 #define _hwa_cfc8b_ktop_0(o,k,...)					\
-  HW_X(_hwa_cfc8b_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `overflow`

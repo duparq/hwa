@@ -40,6 +40,6 @@ typedef struct {
 #define _hw_stthsi(o,i,a,...)		HW_TX( _hw_sthsi_t, __VA_ARGS__)
 
 #define _hw_mtd_hw_stat_hsi		, _hw_sthsi
-#define _hw_sthsi(o,i,a,g,...)		HW_X(_hw_sthsi1,g)(g)
+#define _hw_sthsi(o,i,a,g,...)		HW_Y(_hw_sthsi1,g)(g)
 #define _hw_sthsi1_0(g)			HW_E_G(g)
 #define _hw_sthsi1_1(g)			(*(volatile _hw_sthsi_t*)_HW_A(_HW_R(rcc,cr)))

@@ -26,11 +26,11 @@
 #define _hw_mtd_hw_write_adcprescaler	, _hw_wradcpsc
 #define _hw_mtd_hwa_write_adcprescaler	, _hwa_wradcpsc
 
-#define _hw_wradcpsc(i,a,v,g,...)	HW_X(_hwx_wradcpsc1,g)(_hw,v,g)
-#define _hwa_wradcpsc(i,a,v,g,...)	HW_X(_hwx_wradcpsc1,g)(_hwa,v,g)
+#define _hw_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1,g)(_hw,v,g)
+#define _hwa_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1,g)(_hwa,v,g)
 
 #define _hwx_wradcpsc1_0(h,v,g)		HW_E_G(g)
-#define _hwx_wradcpsc1_1(h,v,g)		HW_X(_hwx_wradcpsc2,v)(h,v)
+#define _hwx_wradcpsc1_1(h,v,g)		HW_Y(_hwx_wradcpsc2,v)(h,v)
 #define _hwx_wradcpsc2_1(h,v)		HW_E_V()
 #define _hwx_wradcpsc2_0(h,v)				\
   do{							\
