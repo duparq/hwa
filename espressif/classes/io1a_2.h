@@ -198,30 +198,6 @@
 /* #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\ */
 /*   HW_TX(_hwa_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__) */
 
-
-/**
- * @page esp8266_io1a
- * @section esp8266_io1a_def Creating a I/O definition
- *
- * Creating an I/O definition allows giving a name to a set of consecutive pins
- * and benefit of the generic read/write instructions.
- *
- * A class `_io1a` I/O definition named `mypins` is created with:
- *
- *     #define _hw_pin_mypins		_io1a, id, port, bn, bp
- *
- * where:
- *
- * * `id` is a unique number identifying the object. If you're not going to use
- *	  the `hw_id()` instruction, any value (or even none) is OK.
- *
- * * `port` is the name of the I/O port object holding the pin, e.g.: `port0`.
- *
- * * `bn` is the number of consecutive bits the I/O definition contains.
- *
- * * `bp` is the position of the least significant bit in the port.
- */
-
 /**
  * @page esp8266_io1a
  * <br>

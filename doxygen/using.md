@@ -197,6 +197,38 @@ HW_ISR( counter0, overflow, naked )
 @endcode
 
 
+How to create a I/O definition {#using_defio}
+==============================
+
+Creating an I/O definition allows giving a set of pins a name that can be used
+with the HWA instructions.
+
+The `_io1a` class handles one set of consecutive pins inside one GPIO port.
+
+A class `_io1a` object named `mypins` is created with:
+
+@code
+#define _hw_def_mypins       _io1a, id, port, bn, bp
+@endcode
+
+where:
+
+* `id` is a unique number identifying the object. If you're not going to use
+  the `HW_ID()` instruction with this object, any value (or even none) is OK.
+
+* `port` is the name of the object holding the pin, e.g.: `port0`.
+
+* `bn` is the number of consecutive bits the GPIO definition contains.
+
+* `bp` is the position of the least significant bit in the port.
+
+
+@code
+#define _hw_def_outputs      _io1a, , port0, 4, 3    // Pins 6,5,4,3 of port0
+
+hw( write, outputs, 5 );                             // Sets pins 5 & 3, clears pins 6 & 4.
+@endcode
+
 
 Examples {#using_examples}
 ========

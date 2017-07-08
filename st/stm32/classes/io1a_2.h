@@ -230,32 +230,5 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint16_t mask, uint8_t mode )
 
 /**
  * @page stm32_io1a
- * @section stm32_io1a_def How to create a I/O definition
- *
- * Creating an I/O definition allows giving a set of consecutive pins a name
- * that tells their role and use the HWA generic instructions.
- *
- * A class `_io1a` object named `mypins` is created with:
- *
- * @code
- * #define _hw_pin_mypins       _io1a, id, port, bn, bp
- * @endcode
- *
- * where:
- *
- * * `id` is a unique number identifying the object. If you're not going to use
- *   the `HW_ID()` instruction with this object, any value (or even none) is OK.
- *
- * * `port` is the name of the object holding the pin, e.g.: `port0`.
- *
- * * `bn` is the number of consecutive bits the GPIO definition contains.
- *
- * * `bp` is the position of the least significant bit in the port.
- *
- * @code
- * #define _hw_pin_outs         _io1a, , port0, 4, 3    // Pins 6,5,4,3 of port0
- *
- * hw( write, pin_outs, 5 );                            // Sets pins 5 & 3, clears pins 6 & 4.
- * @endcode
  * <br>
  */

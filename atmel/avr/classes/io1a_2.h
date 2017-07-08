@@ -246,30 +246,5 @@
 
 /**
  * @page atmelavr_io1a
- * @section atmelavr_io1a_def Creating a I/O definition
- *
- * Creating an I/O definition allows giving a set of consecutive pins a name
- * that tells their role and benefit of the generic read/write instructions.
- *
- * A class `_io1a` object named `mypins` is created with:
- *
- * @code
- *     #define _hw_pin_mypins		_io1a, id, port, bn, bp
- * @endcode
- *
- * where:
- *
- * * `id` is a unique number identifying the object. If you're not going to use
- *   the `HW_ID()` instruction with this object, any value (or even none) is OK.
- *
- * * `port` is the name of the object holding the pin, e.g.: `porta`.
- *
- * * `bn` is the number of consecutive bits the GPIO definition contains.
- *
- * * `bp` is the position of the least significant bit in the port.
- */
-
-/**
- * @page atmelavr_io1a
  * <br>
  */
