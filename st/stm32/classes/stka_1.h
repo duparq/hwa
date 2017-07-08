@@ -30,6 +30,7 @@
 #define _hw_reg__stka_noref		_cb1, calib, 1, 31
 #define _hw_reg__stka_skew		_cb1, calib, 1, 30
 #define _hw_reg__stka_tenms		_cb1, calib, 24, 0
+#define _hw_reg__stka_onems		_cb1, calib, 24, 0	// PM0056 fix
 
 
 #if !defined __ASSEMBLER__

@@ -11,6 +11,7 @@
 
 /**
  * @page stm32_stka
+ * __Actions__
  *
  * `configure`:
  * @code
@@ -78,8 +79,8 @@
  * hw | hwa ( turn, systick, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__stka	, _hw_tnstka
-#define _hw_mtd_hwa_turn__stka	, _hwa_tnstka
+#define _hw_mtd_hw_turn__stka		, _hw_tnstka
+#define _hw_mtd_hwa_turn__stka		, _hwa_tnstka
 
 #define _hw_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hw,o,__VA_ARGS__) }while(0)
 #define _hwa_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hwa,o,__VA_ARGS__) }while(0)
@@ -88,6 +89,19 @@
 #define _hwx_tnstka_0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_tnstka_1(h,o,v,g,...)				\
   h##_write_reg(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+
+
+/**
+ * @page stm32_stka
+ * <br>
+ * `read:`
+ * @code
+ * hw( read, systick );
+ * @endcode
+ */
+#define _hw_mtd_hw_read__stka		, _hw_rdstka
+
+#define _hw_rdstka(o,i,a,...)		_hw_read_reg(o,current)
 
 
 /**
@@ -107,6 +121,34 @@
  * if ( hw(read, HW_IRQFLAG(systick)) )    // Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
+ * <br>
+ */
+
+
+/**
+ * @page stm32_stka
+ * <br>
+ * __Registers__
+ *
+ * According to PM0056, the `_stka` class SysTick timer has a `tenms` logical
+ * register that holds the factory calibration value for a 10 ms period.
+ *
+ * In fact, for the STM32F103, the value is 9000. Then, the calibration value minus
+ * 1 gives a 1 ms period (yes, ONE ms) when the systick is clocked at 9 MHz (72
+ * MHz / 8).
+ *
+ * For that reason, HWA also provides a `onems` logical register that is the
+ * same but maybe less confusing.
+ *
+ * @code
+ * //  1 ms period when AHB is clocked at 9 MHz
+ * //
+ * hw( configure, systick,
+ *     clock,     ahb,
+ *     reload,    (hw(read, HW_REGISTER(systick,onems)) - 1) & 0xFFFFFF,
+ *     run,       yes );
+ * @endcode
+ *
  * <br>
  */
 

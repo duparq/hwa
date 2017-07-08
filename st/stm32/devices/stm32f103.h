@@ -46,15 +46,17 @@
  *******************************************************************************/
 
 /**
- * @page attinyx4
- * @section attinyx4_interrupts Interrupts
+ * @page stm32f103
+ * @section stm32f103_interrupts Interrupts
  * 
  * Interrupt name	  | Comments
  * :----------------------|------------------------
  * `systick`		  | SysTick timer reached 0
+ * `systick,alarm`	  | SysTick timer reached 0
  *
  */
-#define _hw_irq_systick_		_irq, systick, 1, ie, if
+#define _hw_irq_systick_		_irq, systick, esr_systick, ie, if
+#define _hw_irq_systick_alarm		_irq, systick, esr_systick, ie, if
 
 
 /*******************************************************************************
@@ -65,7 +67,7 @@
 
 /**
  * @page stm32f103
- * @section stm32f103_rcc Clocks control
+ * @section stm32f103_rcc Clocks
  *
  * Low-, medium-, high- and XL-density devices hold a RCC of class @ref
  * stm32_rcca "_rcca" that holds hardware registers shared by several objects to
@@ -102,87 +104,6 @@
 
 #define _hw_def_rcc			_rcca, 101, 0x40021000
 
-/*	Object registers
- */
-/* #define _hw_reg_rcc_cr			_r32, 0x00, 0x010D00F9, 0 */
-/* #define _hw_reg_rcc_cfgr		_r32, 0x04, 0x077FFFF3, 0 */
-/* #define _hw_reg_rcc_apb2enr		_r32, 0x18, 0x0038FFFD, 0 */
-
-/* #define _hw_reg_rcc_pllrdy		_ob1, cr, 1, 25 */
-/* #define _hw_reg_rcc_pllon		_ob1, cr, 1, 24 */
-/* #define _hw_reg_rcc_csson		_ob1, cr, 1, 19 */
-/* #define _hw_reg_rcc_hsebyp		_ob1, cr, 1, 18 */
-/* #define _hw_reg_rcc_hserdy		_ob1, cr, 1, 17 */
-/* #define _hw_reg_rcc_hseon		_ob1, cr, 1, 16 */
-/* #define _hw_reg_rcc_hsical		_ob1, cr, 8,  8 */
-/* #define _hw_reg_rcc_hsitrim		_ob1, cr, 5,  3 */
-/* #define _hw_reg_rcc_hsirdy		_ob1, cr, 1,  1 */
-/* #define _hw_reg_rcc_hsion		_ob1, cr, 1,  0 */
-
-/* #define _hw_reg_rcc_mco			_ob1, cfgr, 3, 24 */
-/* #define _hw_reg_rcc_usbpre		_ob1, cfgr, 1, 22 */
-/* #define _hw_reg_rcc_pllmul		_ob1, cfgr, 4, 18 */
-/* #define _hw_reg_rcc_pllxtpre		_ob1, cfgr, 1, 17 */
-/* #define _hw_reg_rcc_pllsrc		_ob1, cfgr, 1, 16 */
-/* #define _hw_reg_rcc_pllxtpresrc		_ob1, cfgr, 2, 16	/\* convenient *\/ */
-/* #define _hw_reg_rcc_adcpre		_ob1, cfgr, 2, 14 */
-/* #define _hw_reg_rcc_ppre2		_ob1, cfgr, 3, 11 */
-/* #define _hw_reg_rcc_apb2		_ob1, cfgr, 3, 11	/\* convenient *\/ */
-/* #define _hw_reg_rcc_apb2prescaler	_ob1, cfgr, 3, 11	/\* convenient *\/ */
-/* #define _hw_reg_rcc_ppre1		_ob1, cfgr, 3,  8 */
-/* #define _hw_reg_rcc_apb1		_ob1, cfgr, 3,  8	/\* convenient *\/ */
-/* #define _hw_reg_rcc_apb1prescaler	_ob1, cfgr, 3,  8	/\* convenient *\/ */
-/* #define _hw_reg_rcc_hpre		_ob1, cfgr, 4,  4 */
-/* #define _hw_reg_rcc_sws			_ob1, cfgr, 2,  2 */
-/* #define _hw_reg_rcc_sw			_ob1, cfgr, 2,  0 */
-
-#define _hw_reg__rcca_cr		_r32, 0x00, 0x010D00F9, 0
-#define _hw_reg__rcca_cfgr		_r32, 0x04, 0x077FFFF3, 0
-#define _hw_reg__rcca_apb2enr		_r32, 0x18, 0x0038FFFD, 0
-
-#define _hw_reg__rcca_pllrdy		_cb1, cr, 1, 25
-#define _hw_reg__rcca_pllon		_cb1, cr, 1, 24
-#define _hw_reg__rcca_csson		_cb1, cr, 1, 19
-#define _hw_reg__rcca_hsebyp		_cb1, cr, 1, 18
-#define _hw_reg__rcca_hserdy		_cb1, cr, 1, 17
-#define _hw_reg__rcca_hseon		_cb1, cr, 1, 16
-#define _hw_reg__rcca_hsical		_cb1, cr, 8,  8
-#define _hw_reg__rcca_hsitrim		_cb1, cr, 5,  3
-#define _hw_reg__rcca_hsirdy		_cb1, cr, 1,  1
-#define _hw_reg__rcca_hsion		_cb1, cr, 1,  0
-
-#define _hw_reg__rcca_mco		_cb1, cfgr, 3, 24
-#define _hw_reg__rcca_usbpre		_cb1, cfgr, 1, 22
-#define _hw_reg__rcca_pllmul		_cb1, cfgr, 4, 18
-#define _hw_reg__rcca_pllxtpre		_cb1, cfgr, 1, 17
-#define _hw_reg__rcca_pllsrc		_cb1, cfgr, 1, 16
-#define _hw_reg__rcca_pllxtpresrc	_cb1, cfgr, 2, 16	/* convenient */
-#define _hw_reg__rcca_adcpre		_cb1, cfgr, 2, 14
-#define _hw_reg__rcca_ppre2		_cb1, cfgr, 3, 11
-#define _hw_reg__rcca_apb2		_cb1, cfgr, 3, 11	/* convenient */
-#define _hw_reg__rcca_apb2prescaler	_cb1, cfgr, 3, 11	/* convenient */
-#define _hw_reg__rcca_ppre1		_cb1, cfgr, 3,  8
-#define _hw_reg__rcca_apb1		_cb1, cfgr, 3,  8	/* convenient */
-#define _hw_reg__rcca_apb1prescaler	_cb1, cfgr, 3,  8	/* convenient */
-#define _hw_reg__rcca_hpre		_cb1, cfgr, 4,  4
-#define _hw_reg__rcca_sws		_cb1, cfgr, 2,  2
-#define _hw_reg__rcca_sw		_cb1, cfgr, 2,  0
-
-
-/*	Convenient objects
- */
-#define _hw_def_hse			_obj, 102, 0
-#define _hw_reg_hse_cken		_xob1, rcc, cr, 1, 16	/* convenient */
-
-#define _hw_def_hsi			_obj, 103, 0
-#define _hw_reg_hsi_cken		_xob1, rcc, cr, 1,  0	/* convenient */
-
-#define _hw_def_usbprescaler		_obj, 104, 0
-#define _hw_def_adcprescaler		_obj, 105, 0
-
-#define _hw_def_apb1			_apba, 106, 0
-#define _hw_def_apb2			_apba, 107, 0
-
 
 /*******************************************************************************
  *									       *
@@ -194,8 +115,7 @@
  * @page stm32f103
  * @section stm32f103_pins Ports and pins
  *
- * Up to 7 GPIO ports of class @ref stm32_p16a "_p16a", each holding 16 GPIO
- * pins of class @ref stm32_io1a "_io1a":
+ * STM32 devices have up to 7 GPIO ports each holding 16 GPIO pins:
  *
  *  * @ref stm32_p16a "port0" (PORTA): @ref stm32_io1a "pa0..15"
  *  * @ref stm32_p16a "port1" (PORTB): @ref stm32_io1a "pb0..15"
@@ -382,6 +302,13 @@
  *	SysTick								       *
  *									       *
  *******************************************************************************/
+
+/**
+ * @page stm32f103
+ * @section stm32f103_systick SysTick timer
+ * The Cortex-M3 processor has a @ref stm32_stka "24 bit system timer".
+ * 
+ */
 
 #include "../classes/stka_1.h"
 

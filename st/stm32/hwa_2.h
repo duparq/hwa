@@ -13,21 +13,36 @@
  * @ingroup public_ins_stm32
  * @brief Puts the core in sleep mode.
  */
-//#define hw_sleep()			hw_asm("sleep")
+#define hw_sleep_until_irq()		hw_asm("wfi")
+#define hw_sleep_until_event()		hw_asm("wfe")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Allows program interruption.
  */
-//#define hw_enable_interrupts()		hw_asm("sei")
+#define hw_enable_interrupts()		hw_asm("cpsie i")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Prevents program interruption.
  */
-//#define hw_disable_interrupts()		hw_asm("cli")
+#define hw_disable_interrupts()		hw_asm("cpsid i")
+
+
+/**
+ * @ingroup public_ins_stm32
+ * @brief Allows program interruption.
+ */
+#define hw_enable_fault_exceptions()	hw_asm("cpsie f")
+
+
+/**
+ * @ingroup public_ins_stm32
+ * @brief Prevents program interruption.
+ */
+#define hw_disable_fault_exceptions()	hw_asm("cpsid f")
 
 
 /**
@@ -150,3 +165,39 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   volatile uint32_t *p = (volatile uint32_t *)ra ;
   return ((*p)>>rbp) & m ;
 }
+
+
+/*******************************************************************************
+ *									       *
+ *	ISR								       *
+ *									       *
+ *******************************************************************************/
+
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((used))
+#endif
+
+
+/*  ISR
+ */
+#define _HW_ISR_(v,...)						\
+  HW_EXTERN_C void v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void v(void)
+
+
+/*  Void ISR
+ */
+#define _HW_VISR_(v)			HW_EXTERN_C void v(void); void v(void) { }
+
+
+/*  Clear an interrupt flag by writing 1 into it
+ */
+/* #define _hw_mtd_hw_clear__m1		, _hw_clear_m1 */
+
+/* #define _hw_clear_m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,...)	_hw_write_##rc(ra,rwm,rfm,rbn,rbp,1) */
+
+/* #define _hw_mtd_hwa_clear__m1		, _hwa_clear_m1 */
+
+/* #define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1) */

@@ -13,9 +13,9 @@
  */
 #include BOARD_H
 
-#define AHBHZ		8000000		// The HSI runs at 8 MHz
+#define AHBHZ		HW_DEVICE_HSIHZ		// The HSI runs at 8 MHz
 
-#define PERIOD		0.5		// Blinking period
+#define PERIOD		0.5			// Blinking period
 
 
 int main ( )
@@ -36,10 +36,8 @@ int main ( )
    */
   hwa( configure, systick,
        clock,     ahb/8,
-       reload,    PERIOD/2 * AHBHZ/8,
+       reload,    PERIOD/2 * AHBHZ/8 - 1,
        run,       yes );
-
-  //hwa( turn, systick, on );
 
   hwa_commit();
 
