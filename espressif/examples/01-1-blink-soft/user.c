@@ -1,5 +1,6 @@
 
-#include <hwa/modules/esp-wroom-02.h>
+#include "../boards/esp-wroom-02.h"
+//#include BOARD_H
 
 #define LED		gpio5
 
@@ -10,9 +11,9 @@
 void ICACHE_FLASH_ATTR every10ms ( )
 {
   if ( hw( read, LED ) == 0 )
-    hw_write( LED, 1 );
+    hw( write, LED, 1 );
   else
-    hw_write( LED, 0 );
+    hw( write, LED, 0 );
 }
 
 
@@ -21,9 +22,8 @@ void ICACHE_FLASH_ATTR user_init()
   /*  Configure the LED output
    */
   hw( configure, LED,
-	     function,	gpio,			// Optionnal
-	     direction, output_when_awake
-	     );
+      function,	 gpio,			// Optionnal
+      direction, output_when_awake );
 
   /*  Trigger a function call every 10 ms (about)
    */

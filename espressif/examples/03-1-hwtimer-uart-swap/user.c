@@ -1,5 +1,5 @@
 
-#include <hwa/modules/esp-wroom-02.h>
+#include "../boards/esp-wroom-02.h"
 
 #define LED		gpio4
 
@@ -22,7 +22,7 @@ void IROM every100ms ( )
  */
 void IRAM ev_timer ( )
 {
-  hw_toggle( LED );
+  hw( toggle, LED );
 }
 
 
@@ -32,16 +32,15 @@ void IROM user_init()
 
   /*  Install user IRQ handlers
    */
-  os_handle_irq( hw_timer1, irq, ev_timer );
-  os_handle_irq( hw_timer1, nmi, ev_timer );
+  os_handle_irq( HW_IRQ(timer1, irq), ev_timer );
+  os_handle_irq( HW_IRQ(timer1, nmi), ev_timer );
 
   //  hwa_begin();
   hwa_begin_from_reset();
 
   hwa( configure, LED,
-	      function,	gpio,
-	      direction, output_when_awake
-	     );
+       function,  gpio,
+       direction, output_when_awake );
 
   /*  Configure the UART
    */
@@ -49,20 +48,18 @@ void IROM user_init()
   hwa( configure, gpio13, function, uart0_rxd );
 
   hwa( configure, uart0,
-	      baudrate,	  115200,
-	      databits,	  8,
-	      parity,	  none,
-	      stopbits,	  1
-	      );
+       baudrate,  115200,
+       databits,  8,
+       parity,    none,
+       stopbits,  1 );
 
   /*  Configure the timer1 to trigger a NMI interrupt every 10 ms
    */
   hwa( configure, timer1,
-	      clock,	 apb_div_16,
-	      countmode, loop_down,
-	      top,	 0.5 + 0.01*hw_apbhz/16,
-	      action,	 irq
-	      );
+       clock,     apb_div_16,
+       countmode, loop_down,
+       top,       0.5 + 0.01*hw_apbhz/16,
+       action,    irq );
 
   hwa_commit();
 

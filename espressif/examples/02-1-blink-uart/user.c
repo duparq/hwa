@@ -1,5 +1,5 @@
 
-#include <hwa/modules/esp-wroom-02.h>
+#include "../boards/esp-wroom-02.h"
 
 #define LED		gpio5
 
@@ -24,7 +24,7 @@ void IROM every10ms ( )
        *  TXD has been set low for 100 ms. Release it now: connect pin GPIO1 to
        *  the TXD signal
        */
-      hw( configure, gpio1, function, hw_uart0_txd );
+      hw( configure, gpio1, function, uart0_txd );
   }
 
   count++ ;
@@ -39,7 +39,7 @@ void IROM every10ms ( )
     /*
      *	Turn LED on
      */
-    hw_write( LED, 1 );
+    hw( write, LED, 1 );
     /*
      *	Turn TXD low for 100 ms: connect pin GPIO1 to the GPIO1 signal
      */
@@ -50,7 +50,7 @@ void IROM every10ms ( )
     /*
      *	Turn LED off
      */
-    hw_write( LED, 0 );
+    hw( write, LED, 0 );
     /*
      *	Send message
      */
@@ -62,29 +62,28 @@ void IROM every10ms ( )
 void IROM user_init()
 {
   hw( configure, LED,
-	     function,	gpio,			// Optionnal
-	     direction, output_when_awake
-	     );
+      function,	 gpio,			// Optionnal
+      direction, output_when_awake );
 
   /*  Pin GPIO1 is also used as pin TXD of hw_uart0
    *  We want a low level on that pin when used as a GPIO
    */
   hw( configure, gpio1,
-	     function,	   gpio,		// Optionnal
-	     direction,	   output );
-  hw_write( gpio1, 0 );
+      function,	 gpio,			// Optionnal
+      direction, output );
+  hw( write, gpio1, 0 );
 
   /*  Configure the UART
    *	Note: the OS has already configured the RXD and TXD pins
    */
   hw( configure, uart0,
-	     baudrate,	  9600,
-	     databits,	  8,
-	     parity,	  none,
-	     stopbits,	  1,
-	     /* pin_txd,     hw_gpio1, */
-	     /* pin_rxd,     hw_gpio3, */
-	     );
+      baudrate,	 9600,
+      databits,	 8,
+      parity,	 none,
+      stopbits,	 1,
+      /* pin_txd,     hw_gpio1, */
+      /* pin_rxd,     hw_gpio3, */
+      );
 
   os_printf("Hello World!\n");
 

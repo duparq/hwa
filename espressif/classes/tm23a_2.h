@@ -16,39 +16,38 @@
  * @code
  * hwa( configure, timer0,
  *
- *	       //  Clock source
- *	       //
- *	     [ clock,	    apb			   // APB clock
- *			  | apb_div(  1		   // APB clock
- *				    | 2		   // APB clock divided by 2
- *				    | 4		   // APB clock divided by 4
- *				    | ...
- *				    | 256 ), ]	   // APB clock divided by 256
+ *      //  Clock source
+ *      //
+ *    [ clock,       apb                    // APB clock
+ *                 | apb_div(  1            // APB clock
+ *                           | 2            // APB clock divided by 2
+ *                           | 4            // APB clock divided by 4
+ *                           | ...
+ *                           | 256 ), ]     // APB clock divided by 256
  *
- *	       //  Counting mode
- *	       //
- *	     [ countmode,   stop		   // Stop
- *			  | down		   // Count down to 0 and stop
- *			  | loop_down, ]	   // Count down to 0 and reload
+ *      //  Counting mode
+ *      //
+ *    [ countmode,   stop                   // Stop
+ *                 | down                   // Count down to 0 and stop
+ *                 | loop_down, ]           // Count down to 0 and reload
  *
- *	       //  Class _tm23a timers all count from top down to 0
- *	       //
- *	     [ bottom,	    0, ]
+ *      //  Class _tm23a timers all count from top down to 0
+ *      //
+ *    [ bottom,      0, ]
  *
- *	       //  The value the counter loads after 0 is reached
- *	       //
- *	     [ top,	    VALUE, ]		   // VALUE: 0 .. 0x7FFFFF
+ *      //  The value the counter loads after 0 is reached
+ *      //
+ *    [ top,         VALUE, ]               // VALUE: 0 .. 0x7FFFFF
  *
- *	       //  Action triggered after 0 is reached
- *	       //
- *	     [ action,	    none
- *			  | irq
- *			  | nmi	 ]
- *	     );
+ *      //  Action triggered after 0 is reached
+ *      //
+ *    [ action,      none
+ *                 | irq
+ *                 | nmi  ] );
  * @endcode
  */
-#define _hw_mtd_hw_config__tm23a	, _hw_cftm23a
-#define _hw_mtd_hwa_config__tm23a	, _hwa_cftm23a
+#define _hw_mtd_hw_configure__tm23a	, _hw_cftm23a
+#define _hw_mtd_hwa_configure__tm23a	, _hwa_cftm23a
 
 #define _hw_cftm23a(o,i,a,...)						\
   do{									\
@@ -127,7 +126,7 @@
 /*	Optionnal parameter `top`
  */
 #define _hwa_cftm23a_ktop_1(o,k,v,...)					\
-    _hwa_write_reg(o,load,v);						\
+  _hwa_write_reg(o,load,(uint32_t)(v));					\
     HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
 
 #define _hwa_cftm23a_ktop_0(o,...)					\
@@ -167,14 +166,14 @@
   _hwa_write_reg(o,irqtype,0);						\
   if ( HW_A1(_hw_tm23a_action_##v) == HW_A1(_hw_tm23a_action_none ) ) {	\
     _hwa_write_reg(o,ie,0);						\
-    ets_isr_mask(1<<HW_A1(_hw_irq_##o##_irq));				\
+    ets_isr_mask(1<<HW_A2(_hw_irq_##o##_irq));				\
   }									\
   else {								\
     _hwa_write_reg(o,ie,1);						\
     if ( HW_A1(_hw_tm23a_action_##v) == HW_A1(_hw_tm23a_action_irq ) )	\
-      ets_isr_unmask(1<<HW_A1(_hw_irq_##o##_irq));			\
+      ets_isr_unmask(1<<HW_A2(_hw_irq_##o##_irq));			\
     else								\
-      ets_isr_mask(1<<HW_A1(_hw_irq_##o##_irq));			\
+      ets_isr_mask(1<<HW_A2(_hw_irq_##o##_irq));			\
   }									\
   HW_EOL(__VA_ARGS__)
 

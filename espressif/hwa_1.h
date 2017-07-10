@@ -57,5 +57,9 @@
  * @ingroup espressif_public_gen_macros
  * @brief Address of a register of an object
  */
-#define _hw__ra__m1(o,oa, r,rc,ra,...)	(oa+ra)
+//#define _hw__ra__m1(o,oa, r,rc,ra,...)	(oa+ra)
 
+/*  Address of a memory definition
+ */
+#define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra)
+#define _HW_ADDRESS__r32(ra,rwm,rfm,o,c,a,r)		(a+ra)

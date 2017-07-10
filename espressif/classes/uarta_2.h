@@ -41,8 +41,8 @@
  * `hw(configure,)` or `hwa(configure,...)` instruction on the I/O pin.
  *
  */
-#define _hw_mtd_hw_config__uarta	, _hw_cfuarta
-#define _hw_mtd_hwa_config__uarta	, _hwa_cfuarta
+#define _hw_mtd_hw_configure__uarta	, _hw_cfuarta
+#define _hw_mtd_hwa_configure__uarta	, _hwa_cfuarta
 
 #define _hw_cfuarta(o,i,a,...)						\
   do{									\

@@ -34,26 +34,24 @@
  * __Note__ `direction` and `pullup` should only be used when FUNCTION is
  * `gpio`. There is no checking here.
  */
-#define _hw_mtd_hw_config__io1a	, _hw_cfio1a
-#define _hw_mtd_hwa_config__io1a	, _hwa_cfio1a
+#define _hw_mtd_hw_configure__io1a		, _hw_cfio1a
+#define _hw_mtd_hwa_configure__io1a		, _hwa_cfio1a
 
 #define _hw_cfio1a( o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
 #define _hw_cfio1a2(...)			_hw_cfio1a3( __VA_ARGS__ )
 #define _hw_cfio1a3( o,cf,p,bn,bp, ...)					\
   do{									\
     typedef struct {							\
-      uint8_t commit ;							\
-      hwa_shared_t hw_shared ;						\
-      hwa_p16a_t p ;							\
-      hwa_pcfa_t cf ;							\
+      uint8_t		commit ;					\
+      hwa_shared_t	shared ;					\
+      hwa_p16a_t	p ;						\
+      hwa_pcfa_t	cf ;						\
     } hwa_t ;								\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
-    _hwa_setup( shared );						\
-    _hwa_setup( p );							\
-    _hwa_setup( cf );							\
+    _hwa_setup( shared ); _hwa_setup( p ); _hwa_setup( cf );		\
     HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##__VA_ARGS__)(o,cf,p,bn,bp,__VA_ARGS__,,); \
-    hwa->commit = 1; _hwa_commit( shared );				\
-    _hwa_commit( p ); _hwa_commit( cf );				\
+    hwa->commit = 1;							\
+    _hwa_commit( shared ); _hwa_commit( p ); _hwa_commit( cf );		\
   }while(0)
 
 #define _hwa_cfio1a( o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
@@ -64,12 +62,12 @@
 /*  Optionnal parameter `function`
  */
 #define _hwa_cfio1a_kfunction_1(o,cf,p,bn,bp,k,v,...)				\
-  HW_Y(_hwa_cfio1a_vfunction,_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+  HW_Y(_hwa_cfio1a_vfunction,_hw_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 
-#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _##o##_fns)
+#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _hw_##o##_fns)
 
 #define _hwa_cfio1a_vfunction_1(o,cf,p,bn,bp,v,k,...)			\
-  _hwa_write_reg( cf, fn, HW_A1(_##o##_fn_##v) );			\
+  _hwa_write_reg( cf, fn, HW_A1(_hw_##o##_fn_##v) );			\
   HW_A2(_##o##_fn_##v) /* Optionnal supplement of actions, e.g. swap  */ \
   HW_Y(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
@@ -129,13 +127,13 @@
  * The instruction `read` returns the state of the I/O object:
  *
  * @code
- * uint8_t value = hw( read, pa0 );
+ * uint8_t value = hw( read, gpio0 );
  * @endcode
  */
 #define _hw_mtd_hw_read__io1a		, _hw_read_io1a
 
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
-  HW_TX( ((_hw_read_reg(p, _in) & (((1<<bn)-1)<<bp))>>bp),	\
+  HW_TX( ((_hw_read_reg(p, _in) & (((1UL<<bn)-1)<<bp))>>bp),	\
 	 __VA_ARGS__)
 
 
@@ -145,13 +143,13 @@
  * The instruction `hw_write()` changes the state of the I/O object:
  *
  * @code
- * hw_write( pa0, value );
+ * hw( write, gpio0, value );
  * @endcode
  */
-#define _hw_mtd_hw_write__io1a		, _hw_write_io1a
+#define _hw_mtd_hw_write__io1a		, _hw_wrio1a
 
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)			\
-  HW_TX( _hw_write_reg_m(p, _out, ((1<<bn)-1)<<bp, (v)<<bp),	\
+#define _hw_wrio1a(o,i, p,bn,bp, v,...)			\
+  HW_TX( _hw_write_reg_m(p, _out, ((1UL<<bn)-1)<<bp, (v)<<bp),	\
 	 __VA_ARGS__ )
 
 
@@ -159,29 +157,26 @@
  * @page esp8266_io1a
  *
  * @code
- * hwa_write( pa0, value );
+ * hwa( write, gpio0, value );
  * @endcode
  */
-#define _hw_mtd_hwa_write__io1a	, _hwa_write_io1a
+#define _hw_mtd_hwa_write__io1a		, _hwa_wrio1a
 
-#define _hwa_write_io1a(o,i, p,bn,bp, v, ...)				\
-  HW_TX(_hwa_write_reg_m(&hwa->p._out, ((1<<bn)-1)<<bp, (v)<<bp)),	\
+#define _hwa_wrio1a(o,i, p,bn,bp, v, ...)				\
+  HW_TX(_hwa_write_reg_m(&hwa->p._out, ((1UL<<bn)-1)<<bp, (v)<<bp)),	\
     __VA_ARGS__)
 
 
 /**
  * @page esp8266_io1a
  * @code
- * hw_toggle( pa0 );	//  Toggle one or several consecutive pins at once
+ * hw( toggle, gpio0 );	//  Toggle one or several consecutive pins at once
  * @endcode
  */
-#define _hw_mtd_hw_toggle__io1a	, _hw_toggle_io1a
+#define _hw_mtd_hw_toggle__io1a		, _hw_tgio1a
 
-#define _hw_toggle_io1a(o,i,p,bn,bp,...)	HW_TX( _hw_toggle_io1a_2(_HW_A(_HW_M(p,_out)),(((1<<bn)-1)<<bp)), \
-						       __VA_ARGS__)
-
-#define _hw_toggle_io1a_2(r,msk)					\
-  *(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
+#define _hw_tgio1a(o,i,p,bn,bp,...)	HW_TX( _hw_tgio1a_2(_HW_A(_HW_R(p,_out)),(((1UL<<bn)-1)<<bp)), __VA_ARGS__)
+#define _hw_tgio1a_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /*
  * @page esp8266_io1a

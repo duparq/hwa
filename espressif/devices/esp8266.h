@@ -56,14 +56,14 @@
  *
  *						class, vector, object, ie, if
  */
-#define _hw_irq_timer1_nmi		_irq, nmi, timer1, ie,
-#define _hw_irq_timer1_irq		_irq,	9, timer1, ie,
+#define _hw_irq_timer1_nmi			_irq, timer1, nmi, ie,
+#define _hw_irq_timer1_irq			_irq, timer1,	9, ie,
 
 
 /*  ESP8266 interrupts are processed through OS calls to user service routines
  */
-#define _os_handleirq_hw_timer1_nmi(fn)		NmiTimSetFunc(fn)
-#define _os_handleirq_hw_timer1_9(fn)		ets_isr_attach(9, fn, 0)
+#define _os_handleirq_timer1_nmi(fn)		NmiTimSetFunc(fn)
+#define _os_handleirq_timer1_9(fn)		ets_isr_attach(9, fn, 0)
 
 extern void NmiTimSetFunc(void (*isr)(void));
 extern void ets_isr_unmask(unsigned intr);
@@ -76,18 +76,18 @@ extern void ets_isr_unmask(unsigned intr);
  * The `os_handle_irq()` instruction declares a user ISR for an IRQ.
  *
  * @code
- * os_handle_irq( hw_timer1, irq, ev_timer );
+ * os_handle_irq( HW_IRQ(timer1, irq), ev_timer );
  * @endcode
  * @hideinitializer
  */
 #define _hw_mtd_os_handle_irq__irq	, _os_handle_irq
 
-#define os_handle_irq(...)		_os_handleirq_2(hw_irqx(__VA_ARGS__,))
+#define os_handle_irq(...)		_os_handleirq_2(__VA_ARGS__,)
 #define _os_handleirq_2(...)		HW_G2(_os_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
 #define _os_handleirq_0(...)		__VA_ARGS__
 #define _os_handleirq_1(t,...)		_os_handle_irq(__VA_ARGS__)
 
-#define _os_handle_irq(v,o,ie,if,fn,...)	HW_TX(_os_handleirq_##o##_##v(fn),__VA_ARGS__)
+#define _os_handle_irq(o,v,ie,if,fn,...)	HW_TX(_os_handleirq_##o##_##v(fn),__VA_ARGS__)
 
 
 /*******************************************************************************
@@ -102,7 +102,7 @@ extern void ets_isr_unmask(unsigned intr);
 /*	Object				class, id, address
  */
 #define _hw_class__shared
-#define _hw_reg_shared			_shared, 0x3FF00000, 0x3FF00000
+#define _hw_def_shared			_shared, 0x3FF00000, 0x3FF00000
 
 /*	Object hardware registers	class, address, write mask, w1tc mask
  */
