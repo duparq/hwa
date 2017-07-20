@@ -182,9 +182,9 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 
 /*  ISR
  */
-#define _HW_ISR_(v,...)						\
-  HW_EXTERN_C void v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
-  void v(void)
+#define _HW_ISR_(v,...)							\
+  HW_EXTERN_C void hw_isr_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void hw_isr_##v(void)
 
 
 /*  Void ISR

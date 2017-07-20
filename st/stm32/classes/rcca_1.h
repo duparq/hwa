@@ -19,6 +19,7 @@
 #define _hw_reg__rcca_cr		_r32, 0x00, 0x010D00F9, 0
 #define _hw_reg__rcca_cfgr		_r32, 0x04, 0x077FFFF3, 0
 #define _hw_reg__rcca_apb2enr		_r32, 0x18, 0x0038FFFD, 0
+#define _hw_reg__rcca_apb1enr		_r32, 0x1C, 0x3AFED3FF, 0
 
 #define _hw_reg__rcca_pllrdy		_cb1, cr, 1, 25
 #define _hw_reg__rcca_pllon		_cb1, cr, 1, 24
@@ -72,6 +73,7 @@ typedef struct {
   hwa_r32_t cr ;
   hwa_r32_t cfgr ;
   hwa_r32_t apb2enr ;
+  hwa_r32_t apb1enr ;
 } hwa_rcca_t ;
 
 #endif
