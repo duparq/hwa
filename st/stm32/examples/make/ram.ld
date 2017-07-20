@@ -5,7 +5,7 @@ MEMORY
 	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
 }
 
-EXTERN (isr_vector)
+EXTERN (hw_vectors)
 
 SECTIONS
 {
