@@ -26,7 +26,7 @@
  */
 HW_ISR( COUNTER )
 {
-  hw(write,HW_REGISTER(COUNTER,if),0) ;
+  hw( write, register(COUNTER,if), 0) ;
   hw( toggle, LED );
 }
 
@@ -63,7 +63,7 @@ int main ( )
 
   /*  Power on the controllers we use
    */
-  hwa( power, HW_RELATIVE(LED1,port), on );
+  hwa( power, relative(LED1,ports), on );
   hwa( power, COUNTER, on );
   hwa_commit();
 
@@ -82,13 +82,13 @@ int main ( )
   /*      direction, up_loop, */
   /*      prescaler, (uint16_t)(0.001*AHBHZ)-1, */
   /*      top,       (uint16_t)(PERIOD/2 / 0.001)-1 ); */
-  hwa( write, HW_REGISTER(COUNTER,dir), 0 );
-  hwa( write, HW_REGISTER(COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
-  hwa( write, HW_REGISTER(COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 );
-  hwa( write, HW_REGISTER(COUNTER,cen), 1 );
+  hwa( write, register(COUNTER,dir), 0 );
+  hwa( write, register(COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
+  hwa( write, register(COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 );
+  hwa( write, register(COUNTER,cen), 1 );
 
-  hwa( turn, HW_IRQ(COUNTER), on );
-  hwa( nvic_turn, HW_IRQ(COUNTER), on );
+  hwa( turn, irq(COUNTER), on );
+  hwa( nvic_turn, irq(COUNTER), on );
   hwa_commit();
 
   /*  Toggle the LED between sleeps

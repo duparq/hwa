@@ -93,7 +93,7 @@
 
 /**
  * @ingroup private_mac
- * @brief Element a2 of the list a0,a1,a2,...
+ * @brief Elements a1,... of the list a0,a1,...
  * @hideinitializer
  */
 #define HW_TL(...)		_HW_TL2(__VA_ARGS__)
@@ -309,8 +309,40 @@
 #define _HW_O4(o,...)		HW_Y(_HW_O4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _HW_O4_1(o,c,...)	c,o,__VA_ARGS__
 #define _HW_O4_0(o,...)		HW_Y(_HW_O5,o)(o)	/*  o is not an object, produce an error. */
-#define _HW_O5_0(o)		HW_E_O(o)
 #define _HW_O5_1(o)		HW_E_OM()
+//#define _HW_O5_0(o)		HW_E_O(o)
+
+/*  Handle shorcuts:
+ *   * irq()
+ *   * relative()
+ *   * register()
+ */
+#define _HW_O5_0(o)		HW_Y(_HW_O6,_hw_o_##o)(o)
+#define _HW_O6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
+#define _HW_O6_1(o)		HW_TL(_hw_o_##o)	/* expand shorcut */
+
+#define _hw_o_irq(...)		, HW_IRQ(__VA_ARGS__)
+
+#define _hw_o_relative(o,r)	, _HW_O7(HW_RELATIVE(o,r))
+#define _HW_O7(o)		_HW_O8(o)
+#define _HW_O8(o)		HW_Y(_HW_O8,o)(o)
+#define _HW_O8_1(o)		/* HW_RELATIVE() has emitted an error */
+#define _HW_O8_0(o)		_HW_O8_2(o,_hw_def_##o)
+#define _HW_O8_2(...)		_HW_O4_1(__VA_ARGS__)
+
+#define _hw_o_register(o,r)	, _HW_O11(o,r,_hw_def_##o)
+#define _HW_O11(...)		_HW_O12(__VA_ARGS__)
+#define _HW_O12(o,r,...)	HW_Y(_HW_O12,_hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
+#define _HW_O12_0(o,...)	HW_E_O(o)
+#define _HW_O12_1(o,r,c,i,a)	_HW_O13(_hw_reg_##c##_##r,o,c,a,r)
+#define _HW_O13(...)		_HW_O14(__VA_ARGS__)
+#define _HW_O14(t,...)		HW_Y(_HW_O14,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_O14_1(t,...)	_hw_r2m_##t(__VA_ARGS__)
+#define _HW_O14_0(t,o,c,a,r)	_HW_O15(_hw_reg_##o##_##r,o,c,a,r)
+#define _HW_O15(...)		_HW_O16(__VA_ARGS__)
+#define _HW_O16(t,...)		HW_Y(_HW_O16,_hw_isa_reg_##t)(t,__VA_ARGS__)
+#define _HW_O16_1(t,...)	_hw_r2m_##t(__VA_ARGS__)
+#define _HW_O16_0(t,o,c,a,r)	HW_E(`o` has no register `r`)
 
 
 /**
