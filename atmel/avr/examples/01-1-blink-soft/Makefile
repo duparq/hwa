@@ -8,4 +8,4 @@ CONFIG		=	HW_DEVICE	\
 			PIN_LED		\
 			PERIOD
 
-include ../Makefile
+include ../make/Makefile

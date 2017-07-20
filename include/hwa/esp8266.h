@@ -12,5 +12,5 @@
 #ifndef HW_DEVICE
 #  define HW_DEVICE				esp8266
 #  define HW_DEVICE_ESP8266
-#  include "../../espressif/devices/esp8266.h"
+#  include "../../espressif/esp8266/devices/esp8266.h"
 #endif

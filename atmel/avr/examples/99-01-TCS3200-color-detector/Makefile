@@ -24,4 +24,4 @@ CONFIG		=	HW_DEVICE			\
 			PIN_TCS3200_S3			\
 			PIN_OUTS
 
-include ../Makefile
+include ../make/Makefile

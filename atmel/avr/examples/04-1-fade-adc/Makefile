@@ -16,4 +16,4 @@ CONFIG		=	HW_DEVICE		\
 			COUNTER_CLK_DIV		\
 			ADC_CLK_DIV
 
-include ../Makefile
+include ../make/Makefile

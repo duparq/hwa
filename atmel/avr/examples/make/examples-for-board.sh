@@ -4,7 +4,7 @@ examples_for_board() {
     BOARD="$1"
     EXAMPLES=""
 
-    if [ ${BOARD} = attiny84 ] ; then
+    if [ ${BOARD} = "attiny84" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink-soft"
 	EXAMPLES="${EXAMPLES} 02-1-blink-watchdog-stat"
 	EXAMPLES="${EXAMPLES} 02-2-blink-watchdog-irq"
@@ -26,10 +26,10 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
     fi
-    if [ ${BOARD} = attiny84-tcs3200 ] ; then
+    if [ ${BOARD} = "attiny84-tcs3200" ] ; then
 	EXAMPLES="99-01-TCS3200-color-detector"
     fi
-    if [ ${BOARD} = attiny85 ] ; then
+    if [ ${BOARD} = "attiny85" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink-soft"
 	EXAMPLES="${EXAMPLES} 02-1-blink-watchdog-stat"
 	EXAMPLES="${EXAMPLES} 02-2-blink-watchdog-irq"
@@ -51,7 +51,7 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
     fi
-    if [ ${BOARD} = nanodccduino ] ; then
+    if [ ${BOARD} = "nanodccduino" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink-soft"
 	EXAMPLES="${EXAMPLES} 02-1-blink-watchdog-stat"
 	EXAMPLES="${EXAMPLES} 02-2-blink-watchdog-irq"

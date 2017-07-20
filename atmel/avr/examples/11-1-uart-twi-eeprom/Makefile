@@ -8,4 +8,4 @@ BOARD		= 	nanodccduino
 CONFIG		=	HW_DEVICE			\
 			hw_syshz
 
-include ../Makefile
+include ../make/Makefile

@@ -18,7 +18,7 @@ CONFIG		=	HW_DEVICE			\
 			hw_swuart1_clk_div		\
 			PIN_LED
 
-include ../Makefile
+include ../make/Makefile
 
 
 #	Get the sync method for main.py

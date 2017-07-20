@@ -11,4 +11,4 @@ CONFIG		=	HW_DEVICE	\
 			PWM_HZ		\
 			OUTPUT
 
-include ../Makefile
+include ../make/Makefile

@@ -12,7 +12,7 @@ CONFIG		=	HW_DEVICE			\
 			hw_swuart0_compare		\
 			hw_swuart0_clk_div
 
-include ../Makefile
+include ../make/Makefile
 
 perfs:
 	@get() { echo 0x$$(avr-nm build/${BOARD}/out.elf | grep " a $$1\$$" | cut -d' ' -f1); } ;\

@@ -15,7 +15,7 @@ CONFIG		=	HW_DEVICE			\
 			UART				\
 			OSCCAL
 
-include ../Makefile
+include ../make/Makefile
 
 #	Get the sync method for main.py
 #

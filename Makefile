@@ -1,12 +1,17 @@
 
-CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
+.PHONY: default
+default:
+	@echo "make doc | examples | check | clean"
 
 #  Produce HTML documentation
 #
 .PHONY: doc
 doc:
-	@cd $(CWD)doxygen && $(MAKE) --no-print-directory
+	@cd doxygen && $(MAKE) --no-print-directory
 
+
+#  Remove all built files
+#
 .PHONY:clean
 clean:
 	@find . '(' 			\
@@ -19,23 +24,24 @@ clean:
 	@rm -rf doxygen/html
 
 
-#  Remove all produced files + examples validation data
-#
-.PHONY: realclean
-realclean: clean
-	@find . -name '.valid-*' -exec rm -rf {} ';'
-
-
 #  Compile all the examples
 #
-.PHONY: all-examples
-all-examples:
-	@cd $(CWD)atmel/avr/examples && $(MAKE) --no-print-directory all-examples
+.PHONY: examples
+examples:
+	@fails=0								;\
+	(cd atmel/avr/examples         && bash make/make-all.sh)		;\
+	fails=$$(($$fails+$$?))							;\
+	(cd st/stm32/examples          && bash make/make-all.sh)		;\
+	fails=$$(($$fails+$$?))							;\
+	(cd espressif/esp8266/examples && bash make/make-all.sh)		;\
+	fails=$$(($$fails+$$?))							;\
+	echo "All examples: $$fails fails."
 
 
-#  Check that all the examples machine codes have the same CRC for the same
-#  configuration
+#  Verify the examples CRCs
 #
-.PHONY: check-all-examples
-check-all-examples:
-	@cd $(CWD)atmel/avr/examples && $(MAKE) --no-print-directory check-all-examples
+.PHONY: check
+check:
+	@cd atmel/avr/examples         && $(MAKE) --no-print-directory check-all-examples
+	@cd st/stm32/examples          && $(MAKE) --no-print-directory check-all-examples
+	@cd espressif/esp8266/examples && $(MAKE) --no-print-directory check-all-examples

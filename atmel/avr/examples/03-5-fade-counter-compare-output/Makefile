@@ -11,4 +11,4 @@ CONFIG		=	HW_DEVICE	\
 			COMPARE		\
 			TOP
 
-include ../Makefile
+include ../make/Makefile

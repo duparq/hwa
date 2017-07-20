@@ -7,4 +7,4 @@ CONFIG		=	HW_DEVICE			\
 			hw_syshz			\
 			NRF_CSN
 
-include ../Makefile
+include ../make/Makefile

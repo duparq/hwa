@@ -15,4 +15,4 @@ CONFIG		=	HW_DEVICE			\
 			SPI				\
 			NRF_CSN
 
-include ../Makefile
+include ../make/Makefile

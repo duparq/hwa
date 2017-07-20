@@ -15,4 +15,4 @@ CONFIG		=	HW_DEVICE			\
 			USI				\
 			NRF_CSN
 
-include ../Makefile
+include ../make/Makefile

@@ -14,4 +14,4 @@ CONFIG		=	HW_DEVICE		\
 			COMPARE			\
 			ON_TIME
 
-include ../Makefile
+include ../make/Makefile

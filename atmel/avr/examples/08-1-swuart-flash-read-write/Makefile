@@ -12,4 +12,4 @@ CONFIG		=	HW_DEVICE			\
 			hw_swuart0_compare		\
 			hw_swuart0_clk_div
 
-include ../Makefile
+include ../make/Makefile

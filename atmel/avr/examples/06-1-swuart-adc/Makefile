@@ -15,4 +15,4 @@ CONFIG		=	HW_DEVICE			\
 			PIN_ANALOG_INPUT		\
 			PIN_LED
 
-include ../Makefile
+include ../make/Makefile
