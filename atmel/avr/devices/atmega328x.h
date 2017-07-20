@@ -39,13 +39,13 @@
  *	FIXME: there's a problem with avrdude reading/writing unprogrammed
  *	fuses of extended byte as 0 instead of 1.
  */
-#define HW_DEVICE_FUSE_FUSE_EB			\
+#define HW_DEVICE_FUSE_EB			\
   /* 0xF8 | */					\
   HW_DEVICE_FUSE_BODLEVEL
 
 /*  Default: 0xD9
  */
-#define HW_DEVICE_FUSE_FUSE_HB			\
+#define HW_DEVICE_FUSE_HB			\
   HW_DEVICE_FUSE_RSTDISBL<<7 |			\
   HW_DEVICE_FUSE_DWEN<<6 |			\
   HW_DEVICE_FUSE_SPIEN<<5 |			\
@@ -56,7 +56,7 @@
 
 /*  Default: 0x62
  */
-#define HW_DEVICE_FUSE_FUSE_LB			\
+#define HW_DEVICE_FUSE_LB			\
   HW_DEVICE_FUSE_CKDIV8<<7 |			\
   HW_DEVICE_FUSE_CKOUT<<6 |			\
   HW_DEVICE_FUSE_SUT10<<4 |			\
