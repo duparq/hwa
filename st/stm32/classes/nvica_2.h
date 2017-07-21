@@ -12,28 +12,44 @@
 /**
  * @page stm32_nvica
  *
- * The NVIC is not used directly but through instructions acting on `HW_IRQ`
- * objects.
- *
  * __Actions__
  *
- * * `nvic_turn` is used to turn an IRQ on/off at the NVIC level
+ * `turn`: turn an IRQ on/off at the NVIC level
  * @code
- * hw | hwa ( nvic_turn, HW_IRQ(counter2),   on
- *                                         | off );
+ * hw | hwa ( turn, nvic, HW_IRQ(counter2),   on
+ *                                          | off );
+ * @endcode
+ *
+ * This instruction also accepts the `irq()` shortcut:
+ * @code
+ * hw | hwa ( turn, nvic, irq(counter2),   on
+ *                                       | off );
  * @endcode
  *
  * <br>
  */
 
-#define _hw_mtd_hw_nvic_turn__irq		, _hw_nvictn
-#define _hw_mtd_hwa_nvic_turn__irq		, _hwa_nvictn
+#define _hw_mtd_hw_turn__nvica		, _hw_nvictn
+#define _hw_mtd_hwa_turn__nvica		, _hwa_nvictn
 
 #define _hw_nvictn(...)				do{ _hwx_nvictn(_hw,__VA_ARGS__,,); }while(0)
 #define _hwa_nvictn(...)			do{ _hwx_nvictn(_hwa,__VA_ARGS__,,); }while(0)
 
-#define _hwx_nvictn(h,o,v,e,f,...)		HW_Y(_hwx_nvictn_vstate,_hw_state_##__VA_ARGS__)(h,o,v,__VA_ARGS__)
-#define _hwx_nvictn_vstate_0(h,o,v,x, ...)	HW_E_ST(x)
+#define _hwx_nvictn(h,o,i,a,x,...)		HW_Y(_hwx_nvictn,_hw_is__irq_##x)(h,x,__VA_ARGS__)
+#define _hwx_nvictn_1(h,c,o,v,e,f,x,...)	HW_Y(_hwx_nvictn_vstate,_hw_state_##x)(h,o,v,x,__VA_ARGS__)
+
+#define _hwx_nvictn_0(h,x,...)			HW_Y(_hwx_nvictn0,_hw_isf_irq_##x)(h,x,__VA_ARGS__)
+
+#define _hw_isf_irq_irq(...)			, HW_IRQ(__VA_ARGS__)
+
+#define _hwx_nvictn0_0(h,o,...)			HW_E_O(o)
+#define _hwx_nvictn0_1(h,x,...)			_hwx_nvictn0_2(h,HW_TL(_hw_isf_irq_##x),__VA_ARGS__)
+#define _hwx_nvictn0_2(...)			_hwx_nvictn0_3(__VA_ARGS__)
+#define _hwx_nvictn0_3(h,x,...)			HW_Y(_hwx_nvictn03,x)(h,x,__VA_ARGS__)
+#define _hwx_nvictn03_0(...)			_hwx_nvictn_1(__VA_ARGS__)
+#define _hwx_nvictn03_1(...)
+
+#define _hwx_nvictn_vstate_0(h,o,i,a,v,x, ...)	HW_E_ST(x)
 #define _hwx_nvictn_vstate_1(h,o,v,x, ...)	HW_TX(HW_G2(_hwx_nvictn_vstate1,HW_A1(_hw_state_##x))(h,o,v), __VA_ARGS__)
 
 #define _hwx_nvictn_vstate1_1(h,o,v)		h##_nvic_enable(v)

@@ -67,9 +67,10 @@ put the context in a known state usually before following actions modify
 it. This allows the production of machine code that avoids writing values that
 already are in the registers.
 
-Using a HWA context allows the best optimization of the machine code to
-access the hardware, particularly with microcontrollers that have hardware
-registers shared by several peripheral controllers.
+Using a HWA context allows the best optimization of the machine code to access
+the hardware, particularly with microcontrollers that have hardware registers
+shared by several peripheral controllers or logical registers spread accross two
+hardware registers.
 
 See also: <a href="modules.html">instructions sorted by category</a>.
 
@@ -107,7 +108,22 @@ Object arguments can be peripheral controller names or canonical I/O pin names
 
 Instructions that return objects names (`HW_RELATIVE()`, `HW_PIN()`) or those
 that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_REGISTER()`) can
-be used as object arguments too.
+be used as object arguments too and the `hw()` and `hwa()` instructions also
+accept the following shortcuts:
+
+ * `relative()` or `rel()` for `HW_RELATIVE()`
+ * `register()` or `reg()` for `HW_REGISTER()`
+ * `irq()` for `HW_IRQ()`
+
+For example, the following statements are equivalent:
+
+@code
+hw( turn, HW_IRQ(counter0, overflow), on );     // Enable counter0 overflow interrupts
+@endcode
+
+@code
+hw( turn, irq(counter0, overflow), on );        // Enable counter0 overflow interrupts
+@endcode
 
 
 Interrupts {#using_interrupts}
@@ -235,3 +251,5 @@ Examples {#using_examples}
 
 See the <a href="examples.html">Examples</a> page for a list of examples
 projects that demonstrate the usage of HWA.
+
+<br>

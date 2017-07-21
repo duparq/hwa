@@ -7,7 +7,7 @@
 /**
  * @example
  *
- * This program blinks a LED using the SysTick timer exception.
+ * This program blinks a LED using a counter reload event.
  *
  * @par main.c
  */
@@ -63,7 +63,7 @@ int main ( )
 
   /*  Power on the controllers we use
    */
-  hwa( power, relative(LED1,ports), on );
+  hwa( power, relative(LED1,port), on );
   hwa( power, COUNTER, on );
   hwa_commit();
 
@@ -88,7 +88,7 @@ int main ( )
   hwa( write, register(COUNTER,cen), 1 );
 
   hwa( turn, irq(COUNTER), on );
-  hwa( nvic_turn, irq(COUNTER), on );
+  hwa( turn, nvic, irq(COUNTER), on );
   hwa_commit();
 
   /*  Toggle the LED between sleeps
@@ -98,7 +98,7 @@ int main ( )
     hw_sleep_until_irq();	// hw_sleep_until_event() is OK too.
     n++ ;
     if ( n>20 )
-      //      hw( nvic_turn, HW_IRQ(COUNTER), off );
+      //      hw( turn, nvic, irq(COUNTER), off );
       hw( power, COUNTER, off );
   }
 }

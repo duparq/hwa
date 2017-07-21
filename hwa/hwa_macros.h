@@ -324,6 +324,7 @@
 #define _hw_o_irq(...)		, HW_IRQ(__VA_ARGS__)
 
 #define _hw_o_relative(o,r)	, _HW_O7(HW_RELATIVE(o,r))
+#define _hw_o_rel(o,r)		, _HW_O7(HW_RELATIVE(o,r))
 #define _HW_O7(o)		_HW_O8(o)
 #define _HW_O8(o)		HW_Y(_HW_O8,o)(o)
 #define _HW_O8_1(o)		/* HW_RELATIVE() has emitted an error */
@@ -331,6 +332,7 @@
 #define _HW_O8_2(...)		_HW_O4_1(__VA_ARGS__)
 
 #define _hw_o_register(o,r)	, _HW_O11(o,r,_hw_def_##o)
+#define _hw_o_reg(o,r)		, _HW_O11(o,r,_hw_def_##o)
 #define _HW_O11(...)		_HW_O12(__VA_ARGS__)
 #define _HW_O12(o,r,...)	HW_Y(_HW_O12,_hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
 #define _HW_O12_0(o,...)	HW_E_O(o)
