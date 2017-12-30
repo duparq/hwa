@@ -1,0 +1,102 @@
+
+#	-*- makefile -*-
+
+#  Programming hardware must be known
+#
+ifeq (,$(PROG_HW))
+  $(error PROG_HW is not defined)
+endif
+
+install: write-fuses write-flash
+
+
+#  Get the partno parameter from the DEVICE name
+#
+#	List avrdude known devices: "DEVICE = PARTNO"
+#	Remove spaces
+#	Extract the matching device name
+#
+ifneq (,$(DEVICE))
+$(OUT).avrdude: $(OUT).hwa
+	@echo "RULE: $@ $<"
+	@avrdude -c usbasp -p \? 2>&1 \
+	| sed -r -e 's/( )+//g'\
+	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
+
+-include $(OUT).avrdude
+endif
+
+
+#  Reset the microcontroller (link checking)
+#
+.PHONY: reset
+reset:
+	avrdude -p $(PARTNO) -c $(PROG_HW) -v
+
+
+#  Erase flash memory
+#
+.PHONY: erase
+erase:
+	avrdude -p $(PARTNO) -c $(PROG_HW) -e
+
+
+#  Program flash memory
+#
+.PHONY: write-flash
+write-flash: $(OUT).elf
+	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:w:$^
+
+
+#  Check programming
+#
+.PHONY: verify
+verify: $(OUT).elf
+	avrdude -p $(PARTNO) -c $(PROG_HW) -U flash:v:$^
+
+
+#  Read flash memory
+#
+.PHONY: read-flash
+read-flash:
+	avrdude -p $(PARTNO) -c $(PROG_HW)\
+		-U flash:r:$(OUTDIR)/flash.bin:r
+
+
+#  Read eeprom
+#
+.PHONY: read-eeprom
+read-eeprom:
+	avrdude -p $(PARTNO) -c $(PROG_HW)\
+		-U eeprom:r:$(OUTDIR)/eeprom.bin:r
+
+
+#  Read fuses
+#
+.PHONY: read-fuses
+read-fuses:
+	avrdude -p $(PARTNO) -c $(PROG_HW) -v \
+		-U efuse:r:-:h		\
+		-U hfuse:r:-:h		\
+		-U lfuse:r:-:h		\
+		-U lock:r:-:h		\
+		-U calibration:r:-:h	\
+		2>/dev/null >$(OUTDIR)/fuses.hex
+
+
+#  Write fuses
+#
+.PHONY: write-fuses
+write-fuses: $(INC_HWA)
+	@\
+	FUSES=""											;\
+	if [ "$$DEVICE_FUSE_EB" != "HW_DEVICE_FUSE_EB" ] ; then						\
+	    FUSES=$${FUSES}$$(printf " -U efuse:w:0x%02X:m " $$(($$(echo $(DEVICE_FUSE_EB)))) )	;\
+	fi												;\
+	if [ "$$DEVICE_FUSE_HB" != "HW_DEVICE_FUSE_HB" ] ; then						\
+	    FUSES=$${FUSES}$$(printf " -U hfuse:w:0x%02X:m " $$(($$(echo $(DEVICE_FUSE_HB)))) )	;\
+	fi												;\
+	if [ "$$DEVICE_FUSE_LB" != "HW_DEVICE_FUSE_LB" ] ; then						\
+	    FUSES=$${FUSES}$$(printf " -U lfuse:w:0x%02X:m " $$(($$(echo $(DEVICE_FUSE_LB)))) )	;\
+	fi												;\
+	avrdude -p $(PARTNO) -c $(PROG_HW) $$FUSES

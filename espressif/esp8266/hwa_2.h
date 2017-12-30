@@ -67,10 +67,8 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(o,i,a, ...)		\
-  HW_Y(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hw,__VA_ARGS__,)
-#define _hwa_power(o,i,a, ...)		\
-  HW_Y(_hwx_pwr,_hw_state_##__VA_ARGS__)(o,_hwa,__VA_ARGS__,)
+#define _hw_power(o,i,a,v,...)		HW_Y(_hwx_pwr,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
+#define _hwa_power(o,i,a,v,...)		HW_Y(_hwx_pwr,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 

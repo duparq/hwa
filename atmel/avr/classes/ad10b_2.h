@@ -13,6 +13,9 @@
  */
 #include "ad10__2.h"
 
+#define _hw_mtd_hw_prescaler_max__ad10b		, hw_ad10_prescaler_max
+#define _hw_mtd_hw_prescaler_min__ad10b		, hw_ad10_prescaler_min
+
 /**
  * @page atmelavr_ad10b
  * @section atmelavr_ad10b_config1 Configuration
@@ -29,13 +32,7 @@
  *	//
  *	clock,	   min				// choose the nearest 50 kHz
  *		 | max				// choose the nearest 200 kHz
- *		 | sysclk_div(	  2		
- *			      |	  4		
- *			      |	  8		
- *			      |	 16		
- *			      |	 32		
- *			      |	 64		
- *			      | 128 ),		
+ *		 | ioclk / 2**n,		// with n in 1..7
  *						
  *	//  How a conversation is started	
  *	//					
@@ -73,85 +70,39 @@
 
 /*	Mandatory parameter 'clock'
  */
-#define _hwa_cfad10b(o,i,a,...)						\
+#define _hwa_cfad10b(o,i,a,k,...)					\
   do {									\
     _hwa_write_reg( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfad10b_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfad10b_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfad10b_kclock_0(o,k,...)			\
   HW_E_VL(k,clock)
 #define _hwa_cfad10b_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10b_vclock,_hw_ad10b_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_vclock,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, min | max | sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
+  HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 #define _hwa_cfad10b_vclock_1(o,v,k,...)				\
-  if ( HW_A1(_hw_ad10b_clock_##v) == HW_A1(_hw_ad10b_clock_min) ) {	\
-    if ( hw_syshz / 128 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_128));	\
-    else if ( hw_syshz / 64 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_64));	\
-    else if ( hw_syshz / 32 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_32));	\
-    else if ( hw_syshz / 16 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_16));	\
-    else if ( hw_syshz / 8 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_8));	\
-    else if ( hw_syshz / 4 >= 50000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_4));	\
-    else								\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_2));	\
-  }									\
-  else if ( HW_A1(_hw_ad10b_clock_##v) == HW_A1(_hw_ad10b_clock_max) ) { \
-    if ( hw_syshz / 2 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_2));	\
-    else if ( hw_syshz / 4 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_4));	\
-    else if ( hw_syshz / 8 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_8));	\
-    else if ( hw_syshz / 16 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_16));	\
-    else if ( hw_syshz / 32 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_32));	\
-    else if ( hw_syshz / 64 <= 200000 )					\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_64));	\
-    else								\
-      _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_sysclk_div_128));	\
-  }									\
-  else									\
-    _hwa_write_reg(o,ps, HW_A1(_hw_ad10b_clock_##v));			\
+  _hwa_write_reg(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
   HW_Y(_hwa_cfad10b_ktrigger,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
-
-#define _hw_is_clock_clock		, 1
-#define _hw_ad10b_clock_sysclk_div_2	, 0	/* , ps */
-#define _hw_ad10b_clock_sysclk_div_4	, 2
-#define _hw_ad10b_clock_sysclk_div_8	, 3
-#define _hw_ad10b_clock_sysclk_div_16	, 4
-#define _hw_ad10b_clock_sysclk_div_32	, 5
-#define _hw_ad10b_clock_sysclk_div_64	, 6
-#define _hw_ad10b_clock_sysclk_div_128	, 7
-#define _hw_ad10b_clock_min		, 8
-#define _hw_ad10b_clock_max		, 9
-#define _hw_ad10b_clock_sysclk_div(x)		HW_G2(_hw_ad10b_clock_sysclk_div,x)
 
 /*	Mandatory parameter 'trigger'
  */
 #define _hwa_cfad10b_ktrigger_0(o,k,...)		\
   HW_E_VL(k,trigger)
-#define _hwa_cfad10b_ktrigger_1(o,k,...)				\
-  HW_Y(_hwa_cfad10b_vtrigger,_hw_ad10b_trigger_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hwa_cfad10b_ktrigger_1(o,k,v,...)				\
+  HW_Y(_hwa_cfad10b_vtrigger,_hw_ad10b_trigger_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | int0 | acmp0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
-#define _hwa_cfad10b_vtrigger_1(o,v,...)				\
+#define _hwa_cfad10b_vtrigger_1(o,v,k,...)				\
   _hwa_write_reg(o,ate, HW_A1(_hw_ad10b_trigger_##v));			\
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10b_trigger_##v));			\
-  HW_Y(_hwa_cfad10b_kvref,_hw_is_vref_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_kvref,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_trigger_trigger		, 1
-#define _hw_ad10b_trigger_manual	, 0, 0	/* , ate, ts */
-#define _hw_ad10b_trigger_auto		, 1, 0
-#define _hw_ad10b_trigger_acmp0		, 1, 1
-#define _hw_ad10b_trigger_int0		, 1, 2
+#define _hw_ad10b_trigger_manual		, 0, 0	/* , ate, ts */
+#define _hw_ad10b_trigger_auto			, 1, 0
+#define _hw_ad10b_trigger_acmp0			, 1, 1
+#define _hw_ad10b_trigger_int0			, 1, 2
 #define _hw_ad10b_trigger_counter0_compare0	, 1, 3
 #define _hw_ad10b_trigger_counter0_overflow	, 1, 4
 #define _hw_ad10b_trigger_counter1_compare1	, 1, 5
@@ -167,33 +118,31 @@
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
   _hwa_cfad10b_align(o,__VA_ARGS__)
 
-#define _hw_is_vref_vref		, 1
 #define _hw_ad10b_vref_vcc		, 1	/* , refs */
 #define _hw_ad10b_vref_pin_aref		, 0
 #define _hw_ad10b_vref_bandgap		, 3
 
 /*	Optionnal parameter 'align'
  */
-#define _hwa_cfad10b_align(o,...)					\
-  HW_Y(_hwa_cfad10b_kalign,_hw_is_align_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hwa_cfad10b_align(o,k,...)				\
+  HW_Y(_hwa_cfad10b_kalign,_hw_is_align_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfad10b_kalign_0(o,...)		\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
-#define _hwa_cfad10b_kalign_1(o,k,...)					\
-  HW_Y(_hwa_cfad10b_valign,_hw_ad10b_align_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hwa_cfad10b_kalign_1(o,k,v,...)				\
+  HW_Y(_hwa_cfad10b_valign,_hw_ad10b_align_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_valign_0(o,v,...)				\
   HW_E_AVL(align, v, left | right)
 #define _hwa_cfad10b_valign_1(o,v,...)			\
   _hwa_write_reg(o,lar, HW_A1(_hw_ad10b_align_##v));	\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
 
-#define _hw_is_align_align		, 1
 #define _hw_ad10b_align_left		, 1	/* , lar */
 #define _hw_ad10b_align_right		, 0
 
 /*	Mandatory parameter 'input'
  */
-#define _hwa_cfad10b_kinput(o,...)					\
-  HW_Y(_hwa_cfad10b_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hwa_cfad10b_kinput(o,k,...)					\
+  HW_Y(_hwa_cfad10b_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfad10b_kinput_0(o,k,...)			\
   HW_E_VL(k,input)
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
@@ -220,7 +169,6 @@
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
   HW_TX(__VA_ARGS__)
 
-#define _hw_is_input_input		, 1
 #define _hw_ad10b_input_temperature	, 8	/* , mux */
 #define _hw_ad10b_input_bandgap		, 14
 #define _hw_ad10b_input_ground		, 15

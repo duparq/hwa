@@ -44,7 +44,7 @@ int main ( )
    *  counting mode, at bottom in `updown_loop` counting mode.
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(CLKDIV),
+       clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
        top,	  compare0 );

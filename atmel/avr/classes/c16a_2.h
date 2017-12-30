@@ -21,42 +21,37 @@
  * @code
  * hwa( configure, counter0,
  *
- *	//  How the counter is clocked
- *	//
- *	clock,	     none			// No clock, the counter is stopped
- *		   | prescaler_output(	   0	// No clock, the counter is stopped
- *				      |	   1	// System clock
- *				      |	   8	// System clock divided by 8
- *				      |	  64	// System clock divided by 64
- *				      |	 256	// System clock divided by 256
- *				      | 1024 )	// System clock divided by 1024
- *		   | ext_rising			// External input, rising edge
- *		   | ext_falling,		// External input, falling edge
+ *      //  How the counter is clocked
+ *      //
+ *      clock,       none                       // No clock, the counter is stopped
+ *                 | ioclk [/ 8|64|256|1024]    // I/O clock
+ *                 | external_rising            // External input, rising edge
+ *                 | external_falling,          // External input, falling edge
  *
- *	//  How does this counter count
- *	//
- *	countmode,   up_loop			// Count up and loop
- *		   | updown_loop,		// Count up and down alternately
+ *      //  How does this counter count
+ *      //
+ *      countmode,   up_loop                    // Count up and loop
+ *                 | updown_loop,               // Count up and down alternately
  *
- *	//  Class _c16a counters all count from 0
- *	//
- *    [ bottom,	     0, ]
+ *      //  Class _c16a counters all count from 0
+ *      //
+ *    [ bottom,      0, ]
  *
- *	//  The maximum value the counter reaches (the default is `max`)
- *	//
- *    [ top,	     0xFF | 0x00FF | 255	// Hardware fixed value 0x00FF
- *		   | 0x1FF | 0x01FF | 511	// Hardware fixed value 0x01FF
- *		   | 0x3FF | 0x03FF | 1023	// Hardware fixed value 0x03FF
- *		   | 0xFFFF | 65535		// Hardware fixed value 0xFFFF
- *		   | max			// Hardware fixed value 0xFFFF
- *		   | compare0			// Value stored in the compare0 unit
- *		   | capture0, ]		// Value stored in the capture0 unit
+ *      //  The maximum value the counter reaches (the default is `max`)
+ *      //
+ *    [ top,         0xFF | 0x00FF | 255        // Hardware fixed value 0x00FF
+ *                 | 0x1FF | 0x01FF | 511       // Hardware fixed value 0x01FF
+ *                 | 0x3FF | 0x03FF | 1023      // Hardware fixed value 0x03FF
+ *                 | 0xFFFF | 65535             // Hardware fixed value 0xFFFF
+ *                 | max                        // Hardware fixed value 0xFFFF
+ *                 | compare0                   // Value stored in the compare0 unit
+ *                 | capture0, ]                // Value stored in the capture0 unit
  *
- *	//  When the overflow flag is set
- *	//
- *    [ overflow,    at_bottom			// When the counter resets to bottom
- *		   | at_top			// When the counter reaches the top value
- *		   | at_max ]			// When the counter reaches its max value
+ *      //  When the overflow flag is set
+ *      //
+ *    [ overflow,    at_bottom                  // When the counter resets to bottom
+ *                 | at_top                     // When the counter reaches the top value
+ *                 | at_max ]                   // When the counter reaches its max value
  *    );
  * @endcode
  */
@@ -67,38 +62,26 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c16a_clock_none		, 0
-#define _hw_c16a_clock_syshz		, 1
-#define _hw_c16a_clock_prescaler_output_1	, 1	/* Useful for concat */
-#define _hw_c16a_clock_prescaler_output_8	, 2
-#define _hw_c16a_clock_prescaler_output_64	, 3
-#define _hw_c16a_clock_prescaler_output_256	, 4
-#define _hw_c16a_clock_prescaler_output_1024	, 5
-#define _hw_c16a_clock_ext_rising	, 6
-#define _hw_c16a_clock_ext_falling	, 7
-#define _hw_c16a_clock_prescaler_output(x)	HW_G2(_hw_c16a_clock_prescaler_output,x)
-
-#define _hwa_cfc16a(o,i,a, ...)					\
-  do { HW_Y(_hwa_cfc16a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+#define _hwa_cfc16a(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfc16a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc16a_kclock_0(o,k,...)				\
   HW_E_VL(k,clock)
 
 #define _hwa_cfc16a_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfc16a_vclock,_hw_c16a_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16a_vclock,_hw_c1clk_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16a_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 ) | ext_falling | ext_rising)
+  HW_E_AVL(clock, v, none | ioclk [/ 8|64|256|1024] | external_falling | external_rising)
 
 #define _hwa_cfc16a_vclock_1(o,v,k,...)					\
-  hwa->o.config.clock = HW_A1(_hw_c16a_clock_##v);				\
+  hwa->o.config.clock = HW_VF(_hw_c1clk_##v);				\
   HW_Y(_hwa_cfc16a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+
 
 /*  Optionnal argument `countmode`
  */
 #define _hw_c16a_countmode_up_loop	, 1
-#define _hw_c16a_countmode_up_loop	, 1
-#define _hw_c16a_countmode_updown_loop	, 2
 #define _hw_c16a_countmode_updown_loop	, 2
 
 #define _hwa_cfc16a_kmode_0(o,k,...)					\
@@ -113,6 +96,7 @@
 #define _hwa_cfc16a_vmode_1(o,v,k,...)					\
   hwa->o.config.countmode = HW_A1(_hw_c16a_countmode_##v);			\
   HW_Y(_hwa_cfc16a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+
 
 /*  Optionnal argument `bottom`
  */
@@ -130,10 +114,10 @@
 
 /*  Optionnal argument `top`
  */
-#define _hw_c16a_top_fixed_0xFF			, 1
-#define _hw_c16a_top_fixed_0x1FF			, 2
-#define _hw_c16a_top_fixed_0x3FF			, 3
-#define _hw_c16a_top_fixed_0xFFFF		, 4
+#define _hw_c16a_top_fixed_0xFF		, 1
+#define _hw_c16a_top_fixed_0x1FF	, 2
+#define _hw_c16a_top_fixed_0x3FF	, 3
+#define _hw_c16a_top_fixed_0xFFFF	, 4
 #define _hw_c16a_top_max		, 4
 #define _hw_c16a_top_capture0		, 5
 #define _hw_c16a_top_compare0		, 6

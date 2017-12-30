@@ -37,14 +37,13 @@
 
 /*  Optionnal parameter `mode`
  */
-#define _hw_is_mode_mode		, 1
 #define hw_cfio1a_mode_digital		, 0
 #define hw_cfio1a_mode_analog		, 1
 
-#define _hw_cfio1a( o,i, p,bn,bp, ...)					\
+#define _hw_cfio1a( o,i, p,bn,bp, k,...)				\
   do{									\
      uint8_t analog = 0xFF ;						\
-     HW_Y(_hw_cfio1a_kmode,_hw_is_mode_##__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__,,); \
+     HW_Y(_hw_cfio1a_kmode,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__,,); \
   }while(0)
 
 #define _hw_cfio1a_kmode_1(o,p,bn,bp,k,v,...)				\
@@ -75,7 +74,6 @@
 
 /*  Optionnal parameter `direction`
  */
-#define _hw_is_direction_direction	, 1
 #define hw_cfio1a_direction_input	, 0	/* , ddr */
 #define hw_cfio1a_direction_output	, 1
 
@@ -96,8 +94,6 @@
 
 /*  Optionnal parameter `pullup`
  */
-#define _hw_is_pullup_pullup		, 1
-
 #define _hw_cfio1a_kpullup_0(o,p,bn,bp,...)\
   HW_EOL(__VA_ARGS__)
 
@@ -128,10 +124,8 @@
  *                 | off ] );
  * @endcode
  */
-#define _hwa_cfio1a( o,i, p,bn,bp, ...)					\
-  do {									\
-    HW_Y(_hwa_cfio1a_kmode,_hw_is_mode_##__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__,,); \
-  } while(0)
+#define _hwa_cfio1a( o,i, p,bn,bp,k,...)				\
+  do { HW_Y(_hwa_cfio1a_kmode,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfio1a_kmode_1(o,p,bn,bp,k,v,...)				\
   HW_Y(_hwa_cfio1a_vmode,hw_cfio1a_mode_##v)(o,p,bn,bp,v,__VA_ARGS__)

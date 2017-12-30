@@ -19,5 +19,3 @@ PROG_HW		=	usbasp
 export LDFLAGS PROG_SW PROG_HW
 
 include ../../Makefile
-
-setup: burn write-fuses

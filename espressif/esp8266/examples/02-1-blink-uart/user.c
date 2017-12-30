@@ -1,10 +1,22 @@
 
-#include BOARD_H
+/*
+ *    https://github.com/pfalcon/esp-open-sdk/issues/279
+ *
+ *    cd esp-open-sdk/sdk
+ *    ../xtensa-lx106-elf/bin/esptool.py -p /dev/ttyUSB0 write_flash -ff 40m -fm dout -fs 32m 0x3e000 bin/blank.bin 0x3fc000 bin/esp_init_data_default.bin 0x3fe000 bin/blank.bin
+ *    cd esp-open-sdk/examples/blinky
+ *    ../../xtensa-lx106-elf/bin/esptool.py -p /dev/ttyUSB0 write_flash -ff 40m -fm dout -fs 32m 0 blinky-0x00000.bin 0x10000 blinky-0x10000.bin
+ *    python miniterm.py /dev/ttyUSB0 74880
+ */
 
-#define LED		gpio5
+#include BOARD_H
 
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
+
+#if !defined LED
+#  define LED		gpio5
+#endif
 
 
 /*  Function called every 10 ms
@@ -35,11 +47,9 @@ void IROM every10ms ( )
    */
   count = 0 ;
 
-  if ( hw( read, LED ) == 0 ) {
-    /*
-     *	Turn LED on
-     */
-    hw( write, LED, 1 );
+  hw( toggle, LED );
+  
+  if ( hw( read, LED ) == 1 ) {
     /*
      *	Turn TXD low for 100 ms: connect pin GPIO1 to the GPIO1 signal
      */
@@ -47,10 +57,6 @@ void IROM every10ms ( )
     hw( configure, gpio1, function, gpio );
   }
   else {
-    /*
-     *	Turn LED off
-     */
-    hw( write, LED, 0 );
     /*
      *	Send message
      */
@@ -62,31 +68,31 @@ void IROM every10ms ( )
 void IROM user_init()
 {
   hw( configure, LED,
-      function,	 gpio,			// Optionnal
-      direction, output_when_awake );
-
-  /*  Pin GPIO1 is also used as pin TXD of hw_uart0
-   *  We want a low level on that pin when used as a GPIO
-   */
-  hw( configure, gpio1,
-      function,	 gpio,			// Optionnal
+      function,	 gpio,
       direction, output );
+
+  /*  Pin GPIO1 is used alternatively as a GPIO and as pin TXD of hw_uart0.
+   *
+   *  After RESET, it is connected to uart0_txd so that we can send messages
+   *  with os_printf().
+   *
+   *  We want a low level on that pin when used as a GPIO.
+   */
   hw( write, gpio1, 0 );
 
   /*  Configure the UART
    *	Note: the OS has already configured the RXD and TXD pins
    */
-  hw( configure, uart0,
-      baudrate,	 9600,
-      databits,	 8,
-      parity,	 none,
-      stopbits,	 1,
-      /* pin_txd,     hw_gpio1, */
-      /* pin_rxd,     hw_gpio3, */
-      );
+  /* hw( configure, uart0, */
+  /*     baudrate,	 9600, */
+  /*     databits,	 8, */
+  /*     parity,	 none, */
+  /*     stopbits,	 1, */
+  /*     /\* pin_txd,     hw_gpio1, *\/ */
+  /*     /\* pin_rxd,     hw_gpio3, *\/ */
+  /*     ); */
 
   os_printf("Hello World!\n");
-
 
   /*  Trigger a function call every 10 ms (about)
    */

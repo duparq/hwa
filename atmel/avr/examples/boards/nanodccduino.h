@@ -57,11 +57,12 @@
  */
 #define DIABOLO_PIN_RX			HW_PIN(rxd)
 #define DIABOLO_PIN_TX			HW_PIN(txd)
-#define DIABOLO_SYNC			5+1
+#define DIABOLO_SYNC			5_1
 
 /*  Board pins
  */
 #define ARDUINO
+#define NANODCCDUINO
 
 #define PIN_D2				pd2	// INT0
 #define PIN_D3				pd3	// OC2B INT1

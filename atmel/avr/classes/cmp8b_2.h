@@ -40,12 +40,9 @@
  *    Add a second void argument to the end of the list so that there are always
  *    at least 2 arguments following the last non-void argument.
  */
-#define _hw_is_update_update		, 1
-#define _hw_is_at_top_at_top		, 1
-
-#define _hwa_cfcmp8b(o,i,a, ...)						\
+#define _hwa_cfcmp8b(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfcmp8b_kupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,) \
+    HW_Y(_hwa_cfcmp8b_kupdate,_hw_is_update_##k)(o,k,__VA_ARGS__,)	\
       } while(0)
 
 #define _hwa_cfcmp8b_kupdate_1(o,kw,v,...)				\
@@ -92,8 +89,6 @@
 
 /*  Optionnal argument `output_l`
  */
-#define _hw_is_output_l_output_l	, 1
-
 /*								// COM	  PWM
  */
 #define _hw_cmp8b_voutputl_disconnected	, 0	// 0,2,3  0,1

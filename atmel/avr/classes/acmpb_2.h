@@ -43,14 +43,13 @@
 
 /*  Optionnal parameter `edge`
  */
-#define _hw_is_edge_edge		, 1
 #define _hw_acmpb_edge_falling		, 2	/* ACIS */
 #define _hw_acmpb_edge_rising		, 3
 #define _hw_acmpb_edge_both		, 0
 
-#define _hwa_cfacmpb(o,i,a,...)						\
+#define _hwa_cfacmpb(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfacmpb_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfacmpb_xedge,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfacmpb_xedge_1(o,k,v,...)					\
@@ -68,9 +67,6 @@
 
 /*  Optionnal parameter `positive_input`
  */
-#define _hw_is_positive_input_positive_input	, 1
-#define _hw_is_bandgap_bandgap			, 1
-
 #define _hwa_cfacmpb_xposin_1(o,k,v,...)				\
   HW_Y(_hwa_cfacmpb_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
@@ -90,8 +86,6 @@
 
 /*  Optionnal parameter `negative_input`
  */
-#define _hw_is_negative_input_negative_input	, 1
-
 #define _hwa_cfacmpb_xnegin_0(o,...)		HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfacmpb_xnegin_1(o,k,v,...)				\

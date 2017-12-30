@@ -12,7 +12,7 @@ MFD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
 #
 .PHONY: all
 #all:	deps bin lst size crc32
-all:	deps size
+all:	deps lst size
 
 #  Directory of boards
 #
@@ -31,12 +31,11 @@ endif
 
 #  Paths
 #
-ESP		:= $(HOME)/dev/esp8266
-SDK		?= $(ESP)/esp-open-sdk
-IOT_SDK		?= $(ESP)/esp_iot_sdk_v1.4.0
-ESPTOOL		?= python $(SDK)/esptool/esptool.py
+SDK		?= $(HOME)/dev/esp8266/esp-open-sdk
+SDKBIN		:= $(SDK)/xtensa-lx106-elf/bin
+IOT_SDK		?= $(SDK)/sdk
 IOT_SDK_LIBDIR	?= $(IOT_SDK)/lib
-PATH		:= $(SDK)/xtensa-lx106-elf/bin:$(PATH)
+PATH		:= $(SDKBIN):$(PATH)
 
 #  Output directory and files basename
 #
@@ -72,8 +71,8 @@ CPP		:= $(ARCH)cpp
 CC		:= $(ARCH)gcc
 AR		:= $(ARCH)ar
 AS		:= $(ARCH)as
-OBJCOPY		:= $(ARCH)objcopy
-ODUMP		:= $(ARCH)objdump
+OC		:= $(ARCH)objcopy
+OD		:= $(ARCH)objdump
 GDB		:= $(ARCH)gdb
 SIZE		:= $(ARCH)size
 
@@ -123,7 +122,8 @@ $(BOARDS)/build/$(BOARD).c:
 #
 $(BOARDS)/build/$(BOARD): $(BOARDS)/build/$(BOARD).c $(BOARDS)/$(BOARD).h
 #	@echo "RULE: $@ : $^"
-	@avr-cpp -I$(MFD)../../../../include					\
+#	@avr-cpp -I$(MFD)../../../../include					
+	@avr-cpp $(INCLUDES)					\
 		-D__ASSEMBLER__							\
 		-imacros $(BOARDS)/$(BOARD).h $(BOARDS)/build/$(BOARD).c | grep '^DEVICE' >$@
 
@@ -226,7 +226,7 @@ CFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
 CFLAGS		+= -ftrack-macro-expansion=0
 CFLAGS		+= -ffunction-sections
 CFLAGS		+= -fpack-struct
-CFLAGS		+= -g
+#CFLAGS		+= -g
 CFLAGS		+= -Os
 CFLAGS		+= -O2
 CFLAGS		+= $(DEFINES)
@@ -259,36 +259,31 @@ OBJECTS		:= $(OBJECTS:.sx=.o)
 OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
 LDFLAGS		+= -nostdlib
-LDFLAGS		+= -Wl,--no-check-sections
-LDFLAGS		+= -u call_user_start
-LDFLAGS		+= -Wl,-static
+#LDFLAGS		+= -Wl,--no-check-sections
+#LDFLAGS		+= -u call_user_start
+#LDFLAGS		+= -Wl,-static
 
 #	Libraries used in this project, mainly provided by the IOT_SDK
 #
-LIBS		 = -lc
-LIBS		+= -lgcc
-LIBS		+= -lhal
+LIBS		+= -Wl,--start-group
+LIBS		+= -lc
+# LIBS		+= -lhal
 LIBS		+= -lpp
 LIBS		+= -lphy
 LIBS		+= -lnet80211
 LIBS		+= -llwip
 LIBS		+= -lwpa
 LIBS		+= -lmain
+LIBS		+= -Wl,--end-group
+LIBS		+= -lgcc
 
 #	Linker script
 #
-LD_SCRIPT	?= $(IOT_SDK)/ld/eagle.app.v6.ld
+LD_SCRIPT	?= eagle.app.v6.ld
 
-$(OUT).a: $(OBJECTS)
+$(OUT).elf: $(OBJECTS)
 #	@echo "RULE: $@ : $^"
-	@$(AR) cru $@ $^
-
-#	ELF output
-#
-$(OUT).elf: $(OUT).a $(LD_SCRIPT)
-#	@echo "RULE: $@ : $^"
-	@$(LD) -L$(IOT_SDK_LIBDIR) -T$(LD_SCRIPT) $(LDFLAGS) \
-		-Wl,--start-group $(LIBS) $(OUT).a -Wl,--end-group -o $@
+	$(LD) -T$(LD_SCRIPT) $(LDFLAGS) $(LIBS) -o $@ $<
 
 
 ################################################################################
@@ -297,12 +292,12 @@ $(OUT).elf: $(OUT).a $(LD_SCRIPT)
 #									       #
 ################################################################################
 
-bin:	$(OUT).0x00000.bin $(OUT).0x40000.bin
+bin:	$(OUT).0x00000.bin $(OUT).0x10000.bin
 lst:	$(OUT).lst
 
-$(OUT).0x00000.bin $(OUT).0x40000.bin: $(OUT).elf
+$(OUT).0x00000.bin $(OUT).0x10000.bin: $(OUT).elf
 #	@echo "RULE: $@ : $^"
-	@$(ESPTOOL) elf2image $< -o $(OUT).
+	@esptool.py elf2image $< -o $(OUT).
 
 #  Object dump flags:
 #
@@ -312,7 +307,7 @@ $(OUT).0x00000.bin $(OUT).0x40000.bin: $(OUT).elf
 #  --no-show-raw-insn: no machine code
 #
 %.lst: %.elf
-	@$(ODUMP) -d $^ >$@
+	@$(OD) -d $^ >$@
 
 #  Size of the generated binary
 #
@@ -376,7 +371,7 @@ validate: $(OUT).cfg $(OUT).bin #$(OUT).ccversion
 	          if(x!=0){print "$(CC)-"m[1]m[2]m[3]}}')				;\
 	  rm -f .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-*				;\
 	  cp $(OUT).cfg .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC			;\
-	  $(ODUMP) -d $(OUT).elf >>.valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC	;\
+	  $(OD) -d $(OUT).elf >>.valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC	;\
 	  echo Validation: .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC	;\
 	else										\
 	  echo "Python is required to validate the application."			;\
@@ -397,23 +392,38 @@ check: $(OUT).cfg $(OUT).bin
 #									       #
 ################################################################################
 
-install: $(OUT).0x00000.bin $(OUT).0x40000.bin
+.PHONY: flashinit
+flashinit:
+	cd $(IOT_SDK) ; $(SDKBIN)/esptool.py		\
+		write_flash				\
+		-ff 40m					\
+		-fm dout				\
+		-fs 32m					\
+		0x3e000 bin/blank.bin			\
+		0x3fc000 bin/esp_init_data_default.bin	\
+		0x3fe000 bin/blank.bin
+
+install: $(OUT).0x00000.bin $(OUT).0x10000.bin
 #	@echo "RULE: $@ : $^"
 	@ARGS=""	;\
 	X=0x00000	;\
 	if ! test -f /tmp/$$X.bin || ! diff -q $(OUT).$$X.bin /tmp/$$X.bin >/dev/null ; then \
 	  ARGS="$$ARGS $$X $(OUT).$$X.bin"	;\
 	fi					;\
-	X=0x40000	;\
+	X=0x10000	;\
 	if ! test -f /tmp/$$X.bin || ! diff -q $(OUT).$$X.bin /tmp/$$X.bin >/dev/null ; then \
 	  ARGS="$$ARGS $$X $(OUT).$$X.bin"	;\
 	fi					;\
 	if test -n "$$ARGS" ; then				\
-	  $(ESPTOOL) --baud 460800 write_flash $$ARGS		\
+	  esptool.py --baud 460800 write_flash			\
+		--flash_freq 40m				\
+		--flash_mode dout				\
+		--flash_size 32m				\
+		$$ARGS		\
 	  && (cp -a $(OUT).0x00000.bin /tmp/0x00000.bin		;\
-	      cp -a $(OUT).0x40000.bin /tmp/0x40000.bin)	;\
-	else						\
-	  echo Nothing new to be programmed		;\
+	      cp -a $(OUT).0x10000.bin /tmp/0x10000.bin)	;\
+	else							\
+	  echo Nothing new to be programmed			;\
 	fi
 
 

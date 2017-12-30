@@ -99,23 +99,23 @@ main ( )
    *  the delay at 16 MHz.
    */
   hwa( configure, COUNTER,
-	      clock,	 prescaler_output(1024),
-	      countmode, updown_loop,
-	      bottom,	 0,
-	      top,	 compare0
-	      );
+       clock,     ioclk / 1024,
+       countmode, updown_loop,
+       bottom,    0,
+       top,       compare0 );
+
   hwa( write, HW_RELATIVE(COUNTER, compare0), 0.02 * hw_syshz / 1024 / 2 );
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)
    */
   hwa( configure, adc0,
-	      clock,   sysclk_div(128),
-	      trigger, manual,
-	      vref,    vcc,
-	      align,   right,
-	      input,   PIN_ANALOG_INPUT
-	      );
+       clock,     ioclk / 128,
+       trigger,   manual,
+       vref,      vcc,
+       align,     right,
+       input,     PIN_ANALOG_INPUT );
+
   hwa( turn, HW_IRQ(adc0), on );
 
   /*  Write this configuration into the hardware

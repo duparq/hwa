@@ -16,21 +16,21 @@
  * @code
  * hwa( configure, prescaler0,
  *
- *	       clock,	system
- *		      | pll_32MHz
- *		      | pll_64MHz );
+ *      clock,   ioclk
+ *             | pll_32MHz
+ *             | pll_64MHz );
  * @endcode
  *
  * __Note 1__ `pll_32MHz` is not available when the PLL is used as system clock
- * (`HW_DEVICE_CLK_SRC` is `rc_pll_16MHz`).
+ * (`HW_DEVICE_CLK_SRC` is "`rc_pll_16MHz`").
  *
  * __Note 2__ `pll_64MHz` is not available when supply voltage is below 2.7 V
- * (`HW_DEVICE_BODLEVEL` is `1700_2000mV`).
+ * (`HW_DEVICE_BODLEVEL` is "`1700_2000mV`").
  *
  * __Note 3__ It is highly recommended that the counter is stopped whenever the
- * prescaler clock is switched between `pll_32MHz` and `pll_64MHz`.
+ * prescaler clock is switched between "`pll_32MHz`" and "`pll_64MHz`".
  *
- * __Note 4__ Turning the PLL on requires a special prcmp8adure that taked about
+ * __Note 4__ Turning the PLL on requires a special procedure that taked about
  * 100 µs to execute.
  *
  * __Note 5__ The PLL is never stopped once it has been turned on.
@@ -45,26 +45,24 @@
  *    The `clock` value is stored in the `config` part of the context. The
  *    `commit` function handles the hardware configuration.
  */
-#define _hwa_cfpscb(o,i,a, ...)						\
-  do { HW_Y(_hwa_cfpscb_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,) } while(0)
-
-#define _hw_is_clock_clock		, 1
+#define _hwa_cfpscb(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfpscb_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,) } while(0)
 
 #define _hwa_cfpscb_kclock_0(o,k,...)		HW_E_VL(k,clock)
 #define _hwa_cfpscb_kclock_1(o,k,v,...)		HW_Y(_hwa_cfpscb_vclock,_hw_pscb_clock_##v)(o,v,__VA_ARGS__)
 
-#define _hw_pscb_clock_system		, 0
+#define _hw_pscb_clock_ioclk			, 0
 #define _hw_pscb_clock_pll_32MHz		, 1
 #define _hw_pscb_clock_pll_64MHz		, 2
 
 #define _hwa_cfpscb_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, system | pll_32MHz | pll_64MHz)
+  HW_E_AVL(clock, v, ioclk | pll_32MHz | pll_64MHz)
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
 #  define _hwa_cfpscb_vclock_1(o,v,...)					\
   if ( HW_A1(_hw_pscb_clock_##v) == HW_A1(_hw_pscb_clock_pll_32MHz) )	\
     HWA_ERR( "`pll_32MHz` is not available when PLL is used as system clock." ); \
-  _hwa_write_reg( o, pcke, HW_A1(_hw_pscb_clock_##v) != HW_A1(_hw_pscb_clock_system) ); \
+  _hwa_write_reg( o, pcke, HW_A1(_hw_pscb_clock_##v) != HW_A1(_hw_pscb_clock_ioclk) ); \
   HW_EOL(__VA_ARGS__)
 #else
 #  define _hwa_cfpscb_vclock_1(o,v,...)					\
@@ -117,10 +115,10 @@
 #else
 #  define _hwa_commit__pscb(o,i,a)					\
   if ( hwa->o.config.clock != 0xFF ) {					\
-    if ( hwa->o.config.clock == HW_A1(_hw_pscb_clock_system) )		\
+    if ( hwa->o.config.clock == HW_A1(_hw_pscb_clock_ioclk) )		\
       _hwa_write_reg( o, pcke, 0 );					\
     else if ( _hwa_ovalue( o, plle ) == 0 ) {				\
-      /* PLL start prcmp8adure (once started, it is never stopped). */	\
+      /* PLL start procedure (once started, it is never stopped). */	\
       _hwa_write_reg(o,plle,1);						\
       _hwa_commit_reg(o,pllcsr);					\
       hw_waste_cycles(100e-6 * hw_syshz);				\

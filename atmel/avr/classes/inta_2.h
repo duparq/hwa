@@ -63,7 +63,6 @@
 #define _hwx_cfinta_vsense_1(x,o,v,...)				\
   HW_TX( x##_write_reg(o,sc,HW_A1(_hw_inta_sense_##v)), __VA_ARGS__ )
 
-#define _hw_is_sense_sense		, 1
 #define _hw_inta_sense_low_level	, 0
 #define _hw_inta_sense_edge		, 1
 #define _hw_inta_sense_falling_edge	, 2

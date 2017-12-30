@@ -10,8 +10,8 @@
  */
 
 /**
- * @page esp8266_io1a
- * @section esp8266_io1a_config Configuration
+ * @page espressif_io1a
+ * @section espressif_io1a_config Configuration
  *
  * The `hw(configure,)` and `hwa(configure,...)` instructions configure _io1a class I/O
  * definitions:
@@ -37,9 +37,9 @@
 #define _hw_mtd_hw_configure__io1a		, _hw_cfio1a
 #define _hw_mtd_hwa_configure__io1a		, _hwa_cfio1a
 
-#define _hw_cfio1a( o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
+#define _hw_cfio1a(o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
 #define _hw_cfio1a2(...)			_hw_cfio1a3( __VA_ARGS__ )
-#define _hw_cfio1a3( o,cf,p,bn,bp, ...)					\
+#define _hw_cfio1a3(o,cf,p,bn,bp,k,...)				\
   do{									\
     typedef struct {							\
       uint8_t		commit ;					\
@@ -49,15 +49,15 @@
     } hwa_t ;								\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup( shared ); _hwa_setup( p ); _hwa_setup( cf );		\
-    HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##__VA_ARGS__)(o,cf,p,bn,bp,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__,,); \
     hwa->commit = 1;							\
     _hwa_commit( shared ); _hwa_commit( p ); _hwa_commit( cf );		\
   }while(0)
 
-#define _hwa_cfio1a( o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
+#define _hwa_cfio1a(o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
 #define _hwa_cfio1a2(...)			_hwa_cfio1a3( __VA_ARGS__ )
-#define _hwa_cfio1a3( o,cf,p,bn,bp, ...)				\
-  HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##__VA_ARGS__)(o,cf,p,bn,bp,__VA_ARGS__,,); \
+#define _hwa_cfio1a3(o,cf,p,bn,bp,k,...)				\
+  HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__,,)
 
 /*  Optionnal parameter `function`
  */
@@ -73,8 +73,6 @@
 
 #define _hwa_cfio1a_kfunction_0(o,cf,p,bn,bp,k,...)				\
   HW_Y(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
-
-#define _hw_is_function_function	, 1
 
 
 /*  Optionnal parameter `direction`
@@ -93,7 +91,6 @@
 #define _hwa_cfio1a_kdirection_0(o,cf,p,bn,bp,k,...)				\
   HW_Y(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hw_is_direction_direction	, 1
 #define _hw_cfio1a_direction_input	, 0	/* oex */
 #define _hw_cfio1a_direction_output_when_awake	, 1
 #define _hw_cfio1a_direction_output_when_sleeping	, 2
@@ -113,7 +110,6 @@
 #define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
 #define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)		HW_EOL(__VA_ARGS__)
 
-#define _hw_is_pullup_pullup		, 1
 #define _hw_cfio1a_pullup_off		, 0	/* pux */
 #define _hw_cfio1a_pullup_when_sleeping	, 1
 #define _hw_cfio1a_pullup_when_awake	, 2
@@ -121,8 +117,8 @@
 
 
 /**
- * @page esp8266_io1a
- * @section esp8266_io1a_read State
+ * @page espressif_io1a
+ * @section espressif_io1a_read State
  *
  * The instruction `read` returns the state of the I/O object:
  *
@@ -138,7 +134,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  *
  * The instruction `hw_write()` changes the state of the I/O object:
  *
@@ -154,7 +150,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  *
  * @code
  * hwa( write, gpio0, value );
@@ -168,7 +164,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  * @code
  * hw( toggle, gpio0 );	//  Toggle one or several consecutive pins at once
  * @endcode
@@ -179,7 +175,7 @@
 #define _hw_tgio1a_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /*
- * @page esp8266_io1a
+ * @page espressif_io1a
  * @code
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
@@ -194,6 +190,6 @@
 /*   HW_TX(_hwa_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1),__VA_ARGS__) */
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  * <br>
  */

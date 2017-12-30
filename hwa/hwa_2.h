@@ -25,6 +25,7 @@
 
 
 #define HWA_E(s)		_HWA_ERR_2(HW_QUOTE(HWA: s.), __COUNTER__)
+#define HWA_E_INTERNAL()	HWA_E(internal error)
 #define HWA_E_VL(v,l)		HWA_E(`v` is not `l`)
 #define HWA_E_NIL(v,l)		HWA_E(`v` is not in `l`)
 
@@ -172,6 +173,7 @@
 #define _hw_mtd_hwa_write__r8		, _hwa_write__r8 /* FIXME */
 #define _hw_mtd_hwa_write__oreg		, _hwa_write_oreg
 #define _hw_mtd_hwa_write__xob1		, _hwa__write__xob1
+#define _hw_mtd_hwa_write__xob2		, _hwa__write__xob2
 
 
 /**
@@ -264,6 +266,10 @@
   _hw_write_##rc( ra, rwm,rfm, bn,bp, v )
 
 
+#define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /* Internal use */
+#define _hwa_write_2(x,...)		_hwa_write_##x(__VA_ARGS__)
+
+
 #define _hwa_write__m1(...)	_hwa_write__m1_x(__VA_ARGS__,)
 
 #define _hwa_write__m1_x(o,a, r,rc,ra,rwm,rfm, bn,bp, v, ...)	\
@@ -274,7 +280,7 @@
 		       r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
   do {									\
     _hwa_write_##rc1(&hwa->o.r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
-      _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
+    _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
   } while(0)
 
 
@@ -284,16 +290,29 @@
 #define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write_reg(o,r,v) HW_EOL(__VA_ARGS__)
 
 
-#define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
+//#define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
+#define _hwa_write__xob1(o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
 #define _hwa_write__xob1_2(...)		_hwa_write__xob1_3(__VA_ARGS__)
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
 
-/*  Added for io1a_2.h:
+/*  Added for atmel/avr/classes/io1a_2.h:
+ *    _hwa(write,_##o##_##did, 1);
  *    _hwa_write(_##o##_##did, 1);
+ *	-> _hwa__write__xob1(hw_shared, did, 1, 0, 1,);
+ *  FIXME: keep?
+ */
+#define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(o,r,bn,bp,v)
+
+
+/*  Added for espressif/esp8266/io1b_2.h:
+ *	_hwa(write,_hw_reg_##o##_fn,HW_A1(_hw_##o##_fn_##v) );
  *	_hwa__write__xob1(hw_shared, did, 1, 0, 1,);
  */
-#define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(,o,r,bn,bp,v)
+#define _hwa_write__xob2(o,r1,rbn1,rbp1,vbp1,r2,rbn2,rbp2,vbp2,v)	\
+  _hwa_write_xob2_2(_m2,o,r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2,v)
+#define _hwa_write_xob2_2(...)			_hwa_write_xob2_3(__VA_ARGS__)
+#define _hwa_write_xob2_3(mx,o,...)		_hwa_write_##mx(o,0,__VA_ARGS__)
 
 
 /**

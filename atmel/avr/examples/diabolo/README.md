@@ -65,10 +65,10 @@ tools.
 Using the Diabolo host application
 ----------------------------------
 
-Once you have installed Diabolo, you can check that everything works with the
-`host/diabolo.py` application.
+Once you have installed Diabolo on your microcontroller, you can check that
+everything works with the `software/diabolo.py` application.
 
-Assuming you only have one USB-Serial adapter, that should display the status of
+Assuming you have only one USB-Serial adapter, that should display the status of
 your device:
 
     python diabolo.py
@@ -78,3 +78,11 @@ and that should dump the program memory entirely:
     python diabolo.py --read-flash --full --hexdump
 
 Type `python diabolo.py --help` for a description of the command line arguments.
+
+
+Known problems
+--------------
+
+Diabolo launches the application by jumping to the address the immediately
+follows the interrupt vectors. That fails if the application uses PROGMEM data
+and GCC stores it at that address.

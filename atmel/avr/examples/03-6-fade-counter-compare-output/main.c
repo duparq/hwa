@@ -49,7 +49,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
   /*  Configure the counter to count between 0 and 0xFF
    */
   hwa( configure, HW_RELATIVE(PWM,counter),
-       clock,	  prescaler_output(CLKDIV),
+       clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
        top,	  TOP );

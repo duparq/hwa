@@ -96,10 +96,9 @@
  * `HW_DEVICE_CLK_SRC_HZ`| Positive integer |Clock frequency for `external` and `xosc` clock source
  * `HW_DEVICE_CLK_PSC`	 | <b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
  */
-#define _hw_is_external_external	, 1
 #define _hw_is_rc_8MHz_rc_8MHz				, 1
-#define _hw_is_low_freq_xosc_low_freq_xosc, 1
-#define _hw_is_low_power_xosc_low_power_xosc, 1
+#define _hw_is_low_freq_xosc_low_freq_xosc		, 1
+#define _hw_is_low_power_xosc_low_power_xosc		, 1
 
 
 #ifndef HW_DEVICE_CLK_SRC
@@ -424,20 +423,20 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `int3`	 | @ref atmelavr_inta "_inta"	   | External interrupt INT3
  * `int6`	 | @ref atmelavr_inta "_inta"	   | External interrupt INT6
  * `pcic0`	 | @ref atmelavr_pcica "_pcica"	   | Pin change interrupt controller
- * `prescaler0`	 | @ref atmelavr_psca "_psca"	   | hw_counter0/1/3 prescaler (PSC0)
+ * `prescaler0`	 | @ref atmelavr_psca "_psca"	   | counter0/1/3 prescaler (PSC0)
  * `counter0` | @ref atmelavr_c8a "_c8a"	   | 8-bit counter-timer (T0)
- * `counter0compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 0 of hw_counter0 (OC0A)
- * `counter0compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 1 of hw_counter0 (OC0B)
+ * `counter0compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 0 of counter0 (OC0A)
+ * `counter0compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	   | Compare unit 1 of counter0 (OC0B)
  * `counter1` | @ref atmelavr_c16b "_c16b"	   | 16-bit counter-timer (T1)
- * `counter1compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter1 (OC1A)
- * `counter1compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter1 (OC1B)
- * `counter1compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter1 (OC1C)
- * `counter1capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter1 (ICP1)
+ * `counter1compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of counter1 (OC1A)
+ * `counter1compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of counter1 (OC1B)
+ * `counter1compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of counter1 (OC1C)
+ * `counter1capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of counter1 (ICP1)
  * `counter3` | @ref atmelavr_c16b "_c16b"	   | 16-bit counter-timer (T1)
- * `counter3compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of hw_counter3 (OC3A)
- * `counter3compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of hw_counter3 (OC3B)
- * `counter3compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of hw_counter3 (OC3C)
- * `counter3capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of hw_counter3 (ICP3)
+ * `counter3compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 0 of counter3 (OC3A)
+ * `counter3compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 1 of counter3 (OC3B)
+ * `counter3compare2`	 | @ref atmelavr_cmp16a "_cmp16a"	   | Compare unit 2 of counter3 (OC3C)
+ * `counter3capture0`	 | @ref atmelavr_cap16a "_cap16a"	   | Capture unit of counter3 (ICP3)
  * `acmp0`	 | @ref atmelavr_acmpa "_acmpa"	   | Analog Comparator
  * `eeprom0`	 | @ref atmelavr_eeproma "_eeproma" | Eeprom memory
  * `flash0`	 | @ref atmelavr_flasha "_flasha"   | Flash memory
@@ -1042,7 +1041,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 0 compare units hw_counter0compare0, hw_counter0compare1 (OCR0A, OCR0B)		       *
+ *	Counter 0 compare units counter0compare0, counter0compare1 (OCR0A, OCR0B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1092,7 +1091,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 counting unit: hw_counter1				       *
+ *	Counter 1 counting unit: counter1				       *
  *									       *
  *******************************************************************************/
 
@@ -1131,7 +1130,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 0: hw_counter1compare0 (OCR1A)			       *
+ *	Counter 1 compare unit 0: counter1compare0 (OCR1A)			       *
  *									       *
  *******************************************************************************/
 
@@ -1160,7 +1159,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 1: hw_counter1compare1 (OCR1B)			       *
+ *	Counter 1 compare unit 1: counter1compare1 (OCR1B)			       *
  *									       *
  *******************************************************************************/
 
@@ -1187,7 +1186,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare unit 2: hw_counter1compare2 (OCR1C)			       *
+ *	Counter 1 compare unit 2: counter1compare2 (OCR1C)			       *
  *									       *
  *******************************************************************************/
 
@@ -1244,7 +1243,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 3 counting unit: hw_counter3				       *
+ *	Counter 3 counting unit: counter3				       *
  *									       *
  *******************************************************************************/
 
@@ -1281,7 +1280,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 0: hw_counter3compare0 (OCR3A)			       *
+ *	Counter 3 compare unit 0: counter3compare0 (OCR3A)			       *
  *									       *
  *******************************************************************************/
 
@@ -1308,7 +1307,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 1: hw_counter3compare1 (OCR3B)			       *
+ *	Counter 3 compare unit 1: counter3compare1 (OCR3B)			       *
  *									       *
  *******************************************************************************/
 
@@ -1335,7 +1334,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 3 compare unit 2: hw_counter3compare2 (OCR3C)			       *
+ *	Counter 3 compare unit 2: counter3compare2 (OCR3C)			       *
  *									       *
  *******************************************************************************/
 
@@ -1502,6 +1501,7 @@ typedef struct {
 
 
 #include "../hwa_2.h"
+#include "../classes/c1_2.h"
 #include "../classes/corec_2.h"
 #include "../classes/wdogb_2.h"
 #include "../classes/io0a_2.h"

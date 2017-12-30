@@ -21,36 +21,37 @@
  * @code
  * hwa( configure, acmp0,
  * 
- *    [ edge,		 falling
- *		       | rising
- *		       | both,	 ]
+ *    [ edge,             falling
+ *                      | rising
+ *                      | both, ]
  *
- *    [ positive_input,	 HW_PIN(ain0)
- *		       | bandgap,    ]
+ *    [ positive_input,   HW_PIN(ain0)
+ *                      | bandgap, ]
  *
- *    [ negative_input,	 HW_PIN(ain1)
- *		       | HW_PIN(adc0..7) ] );
+ *    [ negative_input,   HW_PIN(ain1)
+ *                      | HW_PIN(adc0..7) ] );
  * @endcode
  */
 /*
- *  NOTE: another solution could be the creation of an object `admux0` for
- *  the analog multiplexer that's shared between the ADC and the ACMP but the
- *  ADC and ACMP can not use the analog multiplexer at the same time. Then, it
- *  seems acceptable to make the configuration instructions of the ADC or of the
- *  ACMP drive the analog multiplexer.
+ *  FIXME
+ *
+ *  Another solution could be the creation of an object `admux0` for the analog
+ *  multiplexer that's shared between the ADC and the ACMP but the ADC and ACMP
+ *  can not use the analog multiplexer at the same time. Then, it seems
+ *  acceptable to make the configuration instructions of the ADC or of the ACMP
+ *  drive the analog multiplexer.
  */
 #define _hw_mtd_hwa_configure__acmpa	, _hwa_cfacmpa
 
 /*  Optionnal parameter `edge`
  */
-#define _hw_is_edge_edge		, 1
 #define _hw_acmpa_edge_falling		, 2	/* ACIS */
 #define _hw_acmpa_edge_rising		, 3
 #define _hw_acmpa_edge_both		, 0
 
-#define _hwa_cfacmpa(o,i,a,...)						\
+#define _hwa_cfacmpa(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfacmpa_xedge,_hw_is_edge_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfacmpa_xedge,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfacmpa_xedge_1(o,k,v,...)				\
@@ -68,9 +69,6 @@
 
 /*  Optionnal parameter `positive_input`
  */
-#define _hw_is_positive_input_positive_input	, 1
-#define _hw_is_bandgap_bandgap			, 1
-
 #define _hwa_cfacmpa_xposin_1(o,k,v,...)				\
   HW_Y(_hwa_cfacmpa_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
@@ -90,8 +88,6 @@
 
 /*  Optionnal parameter `negative_input`
  */
-#define _hw_is_negative_input_negative_input	, 1
-
 #define _hwa_cfacmpa_xnegin_0(o,...)		HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfacmpa_xnegin_1(o,k,v,...)				\

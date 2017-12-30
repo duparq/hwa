@@ -1,6 +1,6 @@
 
 /*  This file is part of the HWA project.
- *  Copyright (c) 2012,2015 Christophe Duparquet.
+ *  Copyright (c) 2012,2015,2017 Christophe Duparquet.
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
@@ -63,7 +63,7 @@
  *  This is used for reading as well as for writing.
  *  Return the received byte.
  */
-uint8_t spi_tfr( uint8_t v )
+uint8_t spi ( uint8_t v )
 {
   hw( write, spi0, v );
   while( !hw( read, HW_IRQFLAG(spi0) ) ) {}
@@ -80,7 +80,7 @@ uint8_t uart_rx()
 }
 
 
-/*  Wait that the transmit buffer of the UART is not full and write one byte
+/*  Wait until the transmit buffer of the UART is not full, then write one byte
  *  into it.
  */
 void uart_tx( uint8_t c )
@@ -103,13 +103,15 @@ main ( )
   hwa( configure, UART,
        bps,	  115200 );
 
-  /*  Configure the USI as SPI master clocked by software
+  /*  Configure the SPI as master
    */
   hwa( configure,     spi0,
-       mode,	      master,
-       clock,	      sysclk_div(128), 
-       sck_idle,      low,
-       sampling_edge, rising );
+       function,      master,
+       clock,	      ioclk / 128,
+       /* mode,          0, */
+       idle_state,    low,
+       sampling_edge, rising,
+       data_order,    msb_first );
 
   /*  Configure nRF CSN pin
    */
@@ -153,13 +155,13 @@ main ( )
       hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
 	c = uart_rx();
-	spi_tfr( c );
+	spi( c );
       }
 
       /*  Send reply to host and deselect SPI slave
        */
       while ( nrx-- ) {
-	c = spi_tfr(0);
+	c = spi(0);
 	uart_tx(c);
       }
       hw( write, NRF_CSN, 1 );

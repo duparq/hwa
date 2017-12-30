@@ -13,17 +13,19 @@
  * @page atmelavr_flasha
  * @section atmelavr_eeproma_read Read operations
  *
- * The `read` instruction reads one byte at given memory address:
+ * `read`: reads one byte at given memory address:
  *
  * @code
  * uint8_t byte = hw( read, flash0, addr ); // Read byte at address addr
  * @endcode
  */
 #define _hw_mtd_hw_read__flasha	, _hw_read_flasha
-#define _hw_read_flasha(o,i,a,addr,...)		HW_TX( _hw_flashardbyte(addr), __VA_ARGS__)
+#define _hw_read_flasha(o,i,a,addr,...)		HW_TX( _hw_flashardbyte((intptr_t)(addr)), __VA_ARGS__)
 
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 {
+  /* FIXME: Z (R31:R30) is not modified by LPM but GCC considers it is as it reloads
+     Z even if it does not change */
   uint8_t r ;
   hw_asm("    lpm %[r], Z"	"\n"
 	 :
@@ -38,13 +40,12 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 /**
  * @page atmelavr_flasha
  *
- * The `hw_read_bytes()` instruction reads multiple bytes from given memory
- * address:
+ * `read_bytes`: reads multiple bytes from given memory address:
  *
  * @code
  * uint8_t dst[10];
  * uint8_t count = sizeof(dst);
- * hw_read_bytes( flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
+ * hw( read_bytes, flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
  * @endcode
  */
 

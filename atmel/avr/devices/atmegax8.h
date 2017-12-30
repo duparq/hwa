@@ -74,7 +74,6 @@
  * `HW_DEVICE_CLK_SRC_HZ`| Positive integer |Clock frequency for `external` and `xosc` clock source
  * `HW_DEVICE_CLK_PSC`	 | <b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
  */
-#define _hw_is_external_external	, 1
 #define _hw_is_rc_8MHz_rc_8MHz			, 1
 #define _hw_is_rc_128kHz_rc_128kHz		, 1
 #define _hw_is_low_freq_xosc_low_freq_xosc	, 1
@@ -380,16 +379,16 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `pcic2`	 | @ref atmelavr_pcica "_pcica" | Pin change interrupt controller
  * `watchdog0`	 | @ref atmelavr_wdogb "_wdogb" | Watchdog (WDG)
  * `counter0` | @ref atmelavr_c8a "_c8a"	| 8-bit counter-timer (T0)
- * `counter0compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 0 of hw_counter0 (OC0A)
- * `counter0compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 1 of hw_counter0 (OC0B)
+ * `counter0compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 0 of counter0 (OC0A)
+ * `counter0compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 1 of counter0 (OC0B)
  * `counter1` | @ref atmelavr_c16a "_c16a"	| 16-bit counter-timer (T1)
- * `counter1compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	| Compare unit 0 of hw_counter1 (OC1A)
- * `counter1compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	| Compare unit 1 of hw_counter1 (OC1B)
- * `counter1capture0`	 | @ref atmelavr_cap16a "_cap16a"	| Capture unit 0 of hw_counter1 (ICP1)
+ * `counter1compare0`	 | @ref atmelavr_cmp16a "_cmp16a"	| Compare unit 0 of counter1 (OC1A)
+ * `counter1compare1`	 | @ref atmelavr_cmp16a "_cmp16a"	| Compare unit 1 of counter1 (OC1B)
+ * `counter1capture0`	 | @ref atmelavr_cap16a "_cap16a"	| Capture unit 0 of counter1 (ICP1)
  * `counter2` | @ref atmelavr_c8c "_c8c"	| 8-bit counter-timer (T2)
- * `counter2compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 0 of hw_counter2 (OC2A)
- * `counter2compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 1 of hw_counter2 (OC2B)
- * `prescaler0`	 | @ref atmelavr_psca "_psca"	| hw_counter0/hw_counter1 prescaler (PSC0)
+ * `counter2compare0`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 0 of counter2 (OC2A)
+ * `counter2compare1`	 | @ref atmelavr_cmp8a "_cmp8a"	| Compare unit 1 of counter2 (OC2B)
+ * `prescaler0`	 | @ref atmelavr_psca "_psca"	| counter0/counter1 prescaler (PSC0)
  * `spi0`	 | @ref atmelavr_spia "_spia"	| Serial Peripheral Interface
  * `uart0`	 | @ref atmelavr_uarta "_uarta" | Universal Asynchronous Receiver Transmitter
  * `twi0`	 | @ref atmelavr_twia "_twia"	| 2-wire Serial Interface
@@ -1056,7 +1055,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 0 compare units hw_counter0compare0, hw_counter0compare1 (OCR0A, OCR0B)		       *
+ *	Counter 0 compare units counter0compare0, counter0compare1 (OCR0A, OCR0B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1106,7 +1105,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	hw_counter1: counter 1 counting unit				       *
+ *	counter1: counter 1 counting unit				       *
  *									       *
  *******************************************************************************/
 
@@ -1144,7 +1143,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare units hw_counter1compare0, hw_counter1compare1 (OCR1A, OCR1B)		       *
+ *	Counter 1 compare units counter1compare0, counter1compare1 (OCR1A, OCR1B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1224,9 +1223,9 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	hw_prescaler2: hw_counter2 prescaler					       *
+ *	prescaler2: counter2 prescaler					       *
  *									       *
- *	hw_prescaler0 and hw_prescaler2 share the same tsm bit			       *
+ *	prescaler0 and prescaler2 share the same tsm bit		       *
  *									       *
  *******************************************************************************/
 
@@ -1283,7 +1282,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 2 compare units hw_counter2compare0, hw_counter2compare1 (OCR2A, OCR2B)		       *
+ *	Counter 2 compare units counter2compare0, counter2compare1 (OCR2A, OCR2B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1355,6 +1354,7 @@ typedef struct {
 #define _hw_reg_spi0_mstr		_ob1, cr, 1, 4
 #define _hw_reg_spi0_cpol		_ob1, cr, 1, 3
 #define _hw_reg_spi0_cpha		_ob1, cr, 1, 2
+#define _hw_reg_spi0_mode		_ob1, cr, 2, 2	/* convenient */
 
 #define _hw_reg_spi0_if			_ob1, sr, 1, 7
 #define _hw_reg_spi0_wpol		_ob1, sr, 1, 6
@@ -1723,6 +1723,7 @@ typedef struct {
 
 
 #include "../hwa_2.h"
+#include "../classes/c1_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p8a_2.h"
 #include "../classes/coreb_2.h"

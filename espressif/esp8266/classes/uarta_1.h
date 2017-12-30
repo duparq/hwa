@@ -10,7 +10,7 @@
  */
 
 /**
- * @page esp8266_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
+ * @page espressif_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
  *
  * A class `_uarta` object is a UART.
  *

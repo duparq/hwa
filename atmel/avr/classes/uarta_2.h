@@ -43,10 +43,8 @@
  *	     );
  * @endcode
  */
-#define _hwa_cfuarta(o,i,a,...)						\
-  do {									\
-    HW_Y(_hwa_cfuarta_kbps,_hw_is_bps_##__VA_ARGS__)(o,__VA_ARGS__,,)	\
-      } while(0)
+#define _hwa_cfuarta(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfuarta_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hw_mtd_hwa_configure__uarta	, _hwa_cfuarta
 
@@ -80,8 +78,6 @@
 #define _hwa_cfuarta_kbps_0(o,k,...)					\
   HW_Y(_hwa_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_bps_bps			, 1
-
 /*	Optionnal parameter `databits`
  */
 #define _hwa_cfuarta_kdatabits_1(o,k,v,...)				\
@@ -96,8 +92,6 @@
 
 #define _hwa_cfuarta_kdatabits_0(o,k,...)				\
   HW_Y(_hwa_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
-
-#define _hw_is_databits_databits	, 1
 
 #define _hw_uarta_csz_5			, 0
 #define _hw_uarta_csz_6			, 1
@@ -120,8 +114,6 @@
 #define _hwa_cfuarta_kparity_0(o,k,...)					\
   HW_Y(_hwa_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_parity_parity		, 1
-
 #define _hw_uarta_pm_none		, 0
 #define _hw_uarta_pm_even		, 2
 #define _hw_uarta_pm_odd		, 3
@@ -141,8 +133,6 @@
 #define _hwa_cfuarta_kstopbits_0(o,k,...)				\
   HW_Y(_hwa_cfuarta_kreceiver,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_stopbits_stopbits	, 1
-
 #define _hw_uarta_sbs_1			, 0
 #define _hw_uarta_sbs_2			, 1
 
@@ -161,8 +151,6 @@
 #define _hwa_cfuarta_kreceiver_0(o,k,...)				\
   HW_Y(_hwa_cfuarta_ktransmitter,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_receiver_receiver	, 1
-
 /*	Optionnal parameter `transmitter`
  */
 #define _hwa_cfuarta_ktransmitter_1(o,k,v,...)				\
@@ -177,8 +165,6 @@
 
 #define _hwa_cfuarta_ktransmitter_0(o,...)	\
   _hwa_cfuarta_end(o,__VA_ARGS__)
-
-#define _hw_is_transmitter_transmitter	, 1
 
 #define _hwa_cfuarta_end(o,...)			\
   _hwa_write_reg(o,brr,	 hwa->o.config.brr );	\

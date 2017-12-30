@@ -18,27 +18,15 @@
  * the HWA context. If `overflow` is stated, the validity of its value will be
  * verified.
  *
- * @note `sysclk` can be used instead of `ioclk`.
- *
  * @code
  * hwa( configure, counter0,
  *
  *      //  How the counter is clocked
  *      //
  *      clock,       none                        // No clock, the counter is stopped
- *                 | prescaler_output(     0     // No clock, the counter is stopped
- *                                    |    1     // I/O clock
- *                                    |    8     // I/O clock divided by 8
- *                                    |   64     // I/O clock divided by 64
- *                                    |  256     // I/O clock divided by 256
- *                                    | 1024 )   // I/O clock divided by 1024
- *                 | ioclk                       // I/O clock
- *                 | ioclk /    8                // I/O clock divided by 8
- *                 | ioclk /   64                // I/O clock divided by 64
- *                 | ioclk /  256                // I/O clock divided by 256
- *                 | ioclk / 1024 )              // I/O clock divided by 1024
- *                 | ext_rising                  // External input, rising edge
- *                 | ext_falling,                // External input, falling edge
+ *                 | ioclk [/ 8|64|256|1024]     // I/O clock
+ *                 | external_rising             // External input, rising edge
+ *                 | external_falling,           // External input, falling edge
  *
  *      //  How does this counter count
  *      //
@@ -70,60 +58,25 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c8a_clock_none			, 0
-#define _hw_c8a_clock_prescaler_output_0	, 0
-#define _hw_c8a_clock_prescaler_output_1	, 1024		/* Useful for concat */
-#define _hw_c8a_clock_prescaler_output_8	, (1024/8)
-#define _hw_c8a_clock_prescaler_output_64	, (1024/64)
-#define _hw_c8a_clock_prescaler_output_256	, (1024/256)
-#define _hw_c8a_clock_prescaler_output_1024	, (1024/1024)
-#define _hw_c8a_clock_ext_rising		, 6
-#define _hw_c8a_clock_ext_falling		, 7
-#define _hw_c8a_clock_prescaler_output(x)	, 1024.0/(x)
-
-#define _hw_c8a_clock_ioclk			, 1024.0
-#define _hw_c8a_clock_sysclk			, 1024.0
-
-#define _hwa_cfc8a(o,i,a, ...)					\
-  do { HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+#define _hwa_cfc8a(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8a_kclock_0(o,k,...)			\
   HW_E_VL(k,clock)
 
 #define _hwa_cfc8a_kclock_1(o,k,v,...)					\
-  HW_Y(_hwa_cfc8a_vclock,_hw_c8a_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_vclock,_hw_c1clk_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8a_vclock_0(o,v,...)				\
-  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 64 | 256 | 1024 ) | ext_falling | ext_rising)
+  HW_E_AVL(clock, v, none | ioclk [/ 8|64|256|1024] | external_falling | external_rising)
 
 #define _hwa_cfc8a_vclock_1(o,v,k,...)				\
-  _hwa_cfc8a_vclock(&hwa->o, HW_A1(_hw_c8a_clock_##v));		\
+  hwa->o.config.clock = HW_VF(_hw_c1clk_##v);			\
   HW_Y(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
-
-HW_INLINE void _hwa_cfc8a_vclock( hwa_c8a_t *o, float v )
-{
-  if ( v==0 || v==6 || v==7 )
-    o->config.clock = v ;
-  else if ( v == 1024 )
-    o->config.clock = 1 ;
-  else if ( v == 1024/8 )
-    o->config.clock = 2 ;
-  else if ( v == 1024/64 )
-    o->config.clock = 3 ;
-  else if ( v == 1024/256 )
-    o->config.clock = 4 ;
-  else if ( v == 1024/1024 )
-    o->config.clock = 5 ;
-  else
-    HWA_E(value of `clock` must be in (`none`, `prescaler_output(0|1|8|64|256|1024)`, `ext_falling`, `ext_rising`, `ioclk`, `ioclk/8`, `ioclk/64`, `ioclk/256`, `ioclk/1024`));
-}
-
 
 /*  Mandatory argument `countmode`
  */
 #define _hw_c8a_countmode_up_loop	, 1
-#define _hw_c8a_countmode_up_loop	, 1
-#define _hw_c8a_countmode_updown_loop	, 2
 #define _hw_c8a_countmode_updown_loop	, 2
 
 #define _hwa_cfc8a_kmode_0(o,k,...)			\

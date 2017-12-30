@@ -133,12 +133,12 @@
  * According to PM0056, the `_stka` class SysTick timer has a `tenms` logical
  * register that holds the factory calibration value for a 10 ms period.
  *
- * In fact, for the STM32F103, the value is 9000. Then, the calibration value minus
- * 1 gives a 1 ms period (yes, ONE ms) when the systick is clocked at 9 MHz (72
- * MHz / 8).
+ * In fact, for the STM32F103, the value of `tenms` is 9000. Then, the
+ * calibration value minus 1 gives a 1 ms period (yes, ONE ms) when the SysTick
+ * is clocked at 9 MHz (72 MHz / 8).
  *
  * For that reason, HWA also provides a `onems` logical register that is the
- * same but maybe less confusing.
+ * same as `tenms` but maybe less confusing.
  *
  * @code
  * //  1 ms period when AHB is clocked at 9 MHz

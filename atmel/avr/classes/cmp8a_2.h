@@ -37,8 +37,6 @@
 
 /*  Mandatory parameter `output`
  */
-#define _hw_is_output_output		, 1
-
 #define _hw_cmp8a_output_disconnected	, 0, 0	/* code, COM */ /* Non-PWM */
 #define _hw_cmp8a_output_toggle_on_match	, 1, 1			/* Non-PWM */
 #define _hw_cmp8a_output_clear_on_match	, 2, 2			/* Non-PWM */
@@ -50,11 +48,9 @@
 #define _hw_cmp8a_output_clear_on_match_up_set_on_match_down	, 6, 2	/* Phase correct PWM */
 #define _hw_cmp8a_output_set_on_match_up_clear_on_match_down	, 7, 3
 
-//#define _hw_is_disconnected_disconnected	, 1
-
-#define _hw_cfcmp8a(o,i,a, ...)						\
+#define _hw_cfcmp8a(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hw_cfcmp8a_koutput,_hw_is_output_##__VA_ARGS__)(o,__VA_ARGS__,,);	\
+    HW_Y(_hw_cfcmp8a_koutput,_hw_is_output_##k)(o,k,__VA_ARGS__,,);	\
   }while(0)
 
 #define _hw_cfcmp8a_koutput_0(o,k,...)		\
@@ -102,15 +98,13 @@
 
 /*  Optionnal parameter `update`
  */
-#define _hw_is_update_update		, 1
-
 #define _hw_cmp8a_update_immediately	, 0
 #define _hw_cmp8a_update_at_bottom	, 1
 #define _hw_cmp8a_update_at_top		, 2
 
-#define _hwa_cfcmp8a(o,i,a,...)						\
+#define _hwa_cfcmp8a(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfcmp8a_kupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,); \
+    HW_Y(_hwa_cfcmp8a_kupdate,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
 
 #define _hwa_cfcmp8a_kupdate_0(o,k,...)				\

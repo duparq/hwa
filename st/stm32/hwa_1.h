@@ -24,30 +24,6 @@
 #endif
 
 
-/*  Keywords
- */
-#define _hw_is_ahb_ahb			, 1
-#define _hw_is_bottom_bottom		, 1
-#define _hw_is_clock_clock		, 1
-#define _hw_is_countmode_countmode	, 1
-#define _hw_is_direction_direction	, 1
-#define _hw_is_edge_edge		, 1
-#define _hw_is_filter_filter		, 1
-#define _hw_is_frequency_frequency	, 1
-#define _hw_is_input_input		, 1
-#define _hw_is_mode_mode		, 1
-#define _hw_is_multiplier_multiplier	, 1
-#define _hw_is_overflow_overflow	, 1
-#define _hw_is_port_port		, 1
-#define _hw_is_prescaler_prescaler	, 1
-#define _hw_is_reload_reload		, 1
-#define _hw_is_run_run			, 1
-#define _hw_is_source_source		, 1
-#define _hw_is_sysclk_sysclk		, 1
-#define _hw_is_top_top			, 1
-#define _hw_is_update_update		, 1
-
-
 /*  Address of a memory definition
  */
 #define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra)

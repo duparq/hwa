@@ -15,14 +15,46 @@
  *
  * `configure`:
  * @code
- * hw | hwa ( configure,   systick,
+ * hw | hwa ( configure,   counter2,
  *
- *          [ clock,       ahb             // Clock source
- *                       | ahb/8 ],
+ *            function,    timer
+ *                       | encoder
+ *                       | slave,
+ *
+ *            //  How the counter is clocked
+ *            //
+ *            clock,       from_apb1       // Internal clock (CK_INT)
+ *                       | channel1
+ *                       | channel2
+ *                       | external
+ *                       | encode(channel1,channel2)
+ *                       | xor(channel1,channel2,channel3)
+ *
+ *            //  How the counter is reset (slave mode)
+ *            //
+ *          [ reset,       counter1
+ *                       | counter2
+ *                       | counter3
+ *                       | counter4
+ *                       | counter5
+ *                       | counter8
+ *
+ *            //  Not used for 'encoder' mode
+ *            //
+ *          [ direction,   up_loop
+ *                       | down_loop
+ *                       | updown, ]
  *
  *          [ reload,      x, ]            // Any value in 0..0xFFFFFF
  *
- *          [ run,         yes | no ] );   
+ *          [ run,         yes
+ *                       | no ] );
+ * @endcode
+ *
+ * Counter used as encoder:
+ * @code
+ * hw | hwa ( configure,   encoder(counter2),
+ *          );
  * @endcode
  */
 #define _hw_class__c16a
@@ -30,10 +62,15 @@
 #define _hw_mtd_hw_configure__c16a	, _hw_cfc16a
 #define _hw_mtd_hwa_configure__c16a	, _hwa_cfc16a
 
-#define _hw_cfc16a_clk_ahb		, 17
+#define _hw_cfc16a_clk_from_apb1	, 17
 
+#if 0
 #define _hw_cfc16a(o,i,a,k,...)		do{ HW_Y(_hwx_cfc16a_k,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfc16a(o,i,a,k,...)	do{ HW_Y(_hwx_cfc16a_k,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#else
+#define _hw_cfc16a(o,i,a,k,...)		HW_E_TBI()
+#define _hwa_cfc16a(o,i,a,k,...)	HW_E_TBI()
+#endif
 
 /*  At least one keyword
  */
@@ -43,7 +80,7 @@
 /*  Optionnal parameter `clock`
  */
 #define _hwx_cfc16a_kclk_1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vclk,_hw_cfc16a_clk_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfc16a_vclk_0(h,o,v,...)	HW_E_NIL(v,(ahb, ahb/8))
+#define _hwx_cfc16a_vclk_0(h,o,v,...)	HW_E_NIL(v,(apb1))
 #define _hwx_cfc16a_vclk_1(h,o,v,...)	_hwx_cfc16a_vclk_2(h,o,v,_hw_cfc16a_clk_##v,__VA_ARGS__)
 #define _hwx_cfc16a_vclk_2(...)		_hwx_cfc16a_vclk_3(__VA_ARGS__)
 #define _hwx_cfc16a_vclk_3(h,o,v,z,xv,k,...)				\
@@ -57,18 +94,17 @@
 /*  Optionnal parameter `reload`
  */
 #define _hwx_cfc16a_krld_1(h,o,k0,v,k,...)			\
-  h##_write_reg(o,reload,(uint32_t)(v));			\
+  h##_write_reg(o,arr,(uint32_t)(v));				\
   HW_Y(_hwx_cfc16a_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfc16a_krld_0(h,o,k,...)	HW_Y(_hwx_cfc16a_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
-/*  Optionnal parameter `enabled`
+/*  Optionnal parameter `run`
  */
 #define _hwx_cfc16a_krn_0(h,o,k,...)	HW_EOL(k)
 #define _hwx_cfc16a_krn_1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vrn,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfc16a_vrn_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_cfc16a_vrn_1(h,o,v,g,...)				\
-  h##_write_reg(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_cfc16a_vrn_1(h,o,v,g,...)	h##_write_reg(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -87,8 +123,7 @@
 
 #define _hwx_tnc16a(h,o,v,...)		HW_Y(_hwx_tnc16a,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnc16a_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_tnc16a_1(h,o,v,g,...)				\
-  h##_write_reg(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_tnc16a_1(h,o,v,g,...)	h##_write_reg(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -130,25 +165,6 @@
  * <br>
  * __Registers__
  *
- * According to PM0056, the `_c16a` class SysTick timer has a `tenms` logical
- * register that holds the factory calibration value for a 10 ms period.
- *
- * In fact, for the STM32F103, the value is 9000. Then, the calibration value minus
- * 1 gives a 1 ms period (yes, ONE ms) when the systick is clocked at 9 MHz (72
- * MHz / 8).
- *
- * For that reason, HWA also provides a `onems` logical register that is the
- * same but maybe less confusing.
- *
- * @code
- * //  1 ms period when AHB is clocked at 9 MHz
- * //
- * hw( configure, systick,
- *     clock,     ahb,
- *     reload,    (hw(read, HW_REGISTER(systick,onems)) - 1) & 0xFFFFFF,
- *     run,       yes );
- * @endcode
- *
  * <br>
  */
 
@@ -168,10 +184,10 @@
   _hwa_setup_reg( o, arr )
 
 #define _hwa_init__c16a(o,i,a)			\
-  _hwa_init_reg( o, cr1,  0x00000000 );	\
-  _hwa_init_reg( o, cr2,  0x00000000 );	\
-  _hwa_init_reg( o, dier, 0x00000000 );	\
-  _hwa_init_reg( o, psc,  0x00000000 );	\
+  _hwa_init_reg( o, cr1,  0x00000000 );		\
+  _hwa_init_reg( o, cr2,  0x00000000 );		\
+  _hwa_init_reg( o, dier, 0x00000000 );		\
+  _hwa_init_reg( o, psc,  0x00000000 );		\
   _hwa_init_reg( o, arr,  0x00000000 )
 
 #define _hwa_commit__c16a(o,i,a)		\

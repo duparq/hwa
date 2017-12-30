@@ -10,6 +10,123 @@
  */
 
 
+#define _hw_ad10_clock_ioclk			, _hwa_ad10_clkdiv, 1.0
+#define _hw_ad10_clock_min			, _hwa_ad10_clkmin, 1.0
+#define _hw_ad10_clock_max			, _hwa_ad10_clkmax, 1.0
+
+
+/*	Compute min / max acceptable value of clock prescaler
+ */
+#define HW_PRESCALER_MAX(o)			hw(prescaler_max,o)
+#define HW_PRESCALER_MIN(o)			hw(prescaler_min,o)
+
+#define hw_ad10_prescaler_max(o,i,a,...)	_hw_ad10_prescaler_max()
+#define hw_ad10_prescaler_min(o,i,a,...)	_hw_ad10_prescaler_min()
+
+HW_INLINE uint8_t _hw_ad10_prescaler_max()
+{
+  if ( hw_syshz / 128 >= 50000 )
+    return 128 ;
+  if ( hw_syshz / 64 >= 50000 )
+    return 64 ;
+  if ( hw_syshz / 32 >= 50000 )
+    return 32 ;
+  if ( hw_syshz / 16 >= 50000 )
+    return 16 ;
+  if ( hw_syshz / 8 >= 50000 )
+    return 8 ;
+  if ( hw_syshz / 4 >= 50000 )
+    return 4 ;
+
+  return 2 ;
+}
+
+HW_INLINE uint8_t _hw_ad10_prescaler_min()
+{
+  if ( hw_syshz / 2 < 200000 )
+    return 2 ;
+  if ( hw_syshz / 4 < 200000 )
+    return 4 ;
+  if ( hw_syshz / 8 < 200000 )
+    return 8 ;
+  if ( hw_syshz / 16 < 200000 )
+    return 16 ;
+  if ( hw_syshz / 32 >= 50000 )
+    return 32 ;
+  if ( hw_syshz / 64 >= 50000 )
+    return 64 ;
+
+  return 128 ;
+}
+
+
+HW_INLINE uint8_t _hwa_ad10_clkdiv( float v )
+{
+  uint8_t	ps = 0 ;
+
+  if ( v == 1.0 / 128 )
+    ps = 7 ;
+  else if ( v == 1.0 / 64 )
+    ps = 6 ;
+  else if ( v == 1.0 / 32 )
+    ps = 5 ;
+  else if ( v == 1.0 / 16 )
+    ps = 4 ;
+  else if ( v == 1.0 / 8 )
+    ps = 3 ;
+  else if ( v == 1.0 / 4 )
+    ps = 2 ;
+  else if ( v == 1.0 / 2 )
+    ps = 1 ;
+  else
+    HWA_E(value of `clock` must be in (`ioclk/2**n` with n in [1..7]));
+
+  return ps ;
+}
+
+HW_INLINE uint8_t _hwa_ad10_clkmin( float v )
+{
+  if ( v != 1.0 )
+    HWA_E(value of `clock` must be in (`ioclk/2**n` with n in [1..7]));
+
+  if ( hw_syshz / 128 >= 50000 )
+    return 7 ;
+  if ( hw_syshz / 64 >= 50000 )
+    return 6 ;
+  if ( hw_syshz / 32 >= 50000 )
+    return 5 ;
+  if ( hw_syshz / 16 >= 50000 )
+    return 4 ;
+  if ( hw_syshz / 8 >= 50000 )
+    return 3 ;
+  if ( hw_syshz / 4 >= 50000 )
+    return 2 ;
+
+  return 1 ;
+}
+
+HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
+{
+  if ( v != 1 )
+    HWA_E(value of `clock` must be in (`ioclk/2**n` with n in [1..7]));
+
+  if ( hw_syshz / 2 < 200000 )
+    return 1 ;
+  if ( hw_syshz / 4 < 200000 )
+    return 2 ;
+  if ( hw_syshz / 8 < 200000 )
+    return 3 ;
+  if ( hw_syshz / 16 < 200000 )
+    return 4 ;
+  if ( hw_syshz / 32 >= 50000 )
+    return 5 ;
+  if ( hw_syshz / 64 >= 50000 )
+    return 6 ;
+
+  return 7 ;
+}
+
+
 /*	Turn ADC on / off
  */
 #define _hw_turn_ad10_(o,i,a, v, ...)			\
@@ -45,8 +162,6 @@
 
 #define _hw_rdad10__khi8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_M(o,adc))+1))
 
-#define _hw_is_hi8_hi8			, 1
-
 /*  Optionnal argument `lo8`
  */
 #define _hw_rdad10__khi8_0(o,k,...)				\
@@ -54,8 +169,6 @@
 
 #define _hw_rdad10__klo8_1(o,k,...)	(*(volatile uint8_t*)(_HW_A(_HW_M(o,adc))))
 #define _hw_rdad10__klo8_0(o,k,...)	HW_E(optionnal parameter can be `lo8 | hi8` but not `k`)
-
-#define _hw_is_lo8_lo8			, 1
 
 
 /*	Read the ADC result with interrupts disabled and restore state as soon

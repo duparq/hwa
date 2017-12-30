@@ -119,7 +119,7 @@ int main ( )
   /*  Configure the counter to count from 0 to max
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(COUNTER_CLK_DIV),
+       clock,	  ioclk / COUNTER_CLK_DIV,
        countmode, up_loop );
 
   /*  Prepare the compare value for the PIN_LED pulse

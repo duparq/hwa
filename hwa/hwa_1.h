@@ -62,6 +62,88 @@
 #define _hw_state_disabled		, 0, 1
 
 
+/*  Keywords
+ */
+#define _hw_is_					, 1
+#define _hw_is_0_0				, 1
+#define _hw_is_16_16_				, 1
+#define _hw_is_8_8_				, 1
+#define _hw_is__				, 1
+#define _hw_is__io1a__io1a			, 1
+#define _hw_is_ack_ack				, 1
+#define _hw_is_action_action			, 1
+#define _hw_is_ahb_ahb				, 1
+#define _hw_is_align_align			, 1
+#define _hw_is_at_bottom_at_bottom		, 1
+#define _hw_is_at_top_at_top			, 1
+#define _hw_is_bandgap_bandgap			, 1
+#define _hw_is_bottom_bottom			, 1
+#define _hw_is_bps_baudrate			, 1
+#define _hw_is_bps_bps				, 1
+#define _hw_is_clock_clock			, 1
+#define _hw_is_countmode_countmode		, 1
+#define _hw_is_cpb_cpb				, 1
+#define _hw_is_data_order_data_order		, 1
+#define _hw_is_databits_databits		, 1
+#define _hw_is_direction_direction		, 1
+#define _hw_is_disabled_disabled		, 1
+#define _hw_is_disconnected_disconnected	, 1
+#define _hw_is_edge_edge			, 1
+#define _hw_is_enabled_enabled			, 1
+#define _hw_is_external_external		, 1
+#define _hw_is_filter_filter			, 1
+#define _hw_is_frequency_frequency		, 1
+#define _hw_is_function_function		, 1
+#define _hw_is_gain_gain			, 1
+#define _hw_is_general_call_general_call	, 1
+#define _hw_is_gpio_gpio			, 1
+#define _hw_is_hi8_hi8				, 1
+#define _hw_is_idle_state_idle_state		, 1
+#define _hw_is_input_input			, 1
+#define _hw_is_ioclk_ioclk			, 1
+#define _hw_is_irq_irq				, 1
+#define _hw_is_irq_type_irq_type		, 1
+#define _hw_is_lo8_lo8				, 1
+#define _hw_is_mode_mode			, 1
+#define _hw_is_multiplier_multiplier		, 1
+#define _hw_is_nack_nack			, 1
+#define _hw_is_negative_input_negative_input	, 1
+#define _hw_is_no_no				, 1
+#define _hw_is_off_off				, 1
+#define _hw_is_output_l_output_l		, 1
+#define _hw_is_output_output			, 1
+#define _hw_is_overflow_overflow		, 1
+#define _hw_is_parity_parity			, 1
+#define _hw_is_polarity_polarity		, 1
+#define _hw_is_port_port			, 1
+#define _hw_is_positive_input_positive_input	, 1
+#define _hw_is_prescaler_prescaler		, 1
+#define _hw_is_pulldown_pulldown		, 1
+#define _hw_is_pullup_pullup			, 1
+#define _hw_is_receiver_receiver		, 1
+#define _hw_is_reload_reload			, 1
+#define _hw_is_run_run				, 1
+#define _hw_is_sampling_edge_sampling_edge	, 1
+#define _hw_is_sclhz_sclhz			, 1
+#define _hw_is_sense_sense			, 1
+#define _hw_is_slave_address_mask_slave_address_mask	, 1
+#define _hw_is_slave_address_slave_address	, 1
+#define _hw_is_sleep_mode_sleep_mode		, 1
+#define _hw_is_sleep_sleep			, 1
+#define _hw_is_source_source			, 1
+#define _hw_is_stopbits_stopbits		, 1
+#define _hw_is_sysclk_sysclk			, 1
+#define _hw_is_timeout_timeout			, 1
+#define _hw_is_top_top				, 1
+#define _hw_is_transmitter_transmitter		, 1
+#define _hw_is_trigger_trigger			, 1
+#define _hw_is_up_loop_up_loop			, 1
+#define _hw_is_update_update			, 1
+#define _hw_is_var_var				, 1
+#define _hw_is_vref_vref			, 1
+#define _hw_is_yes_yes				, 1
+
+
 /**
  * @ingroup private_def
  * @brief Generic object class.

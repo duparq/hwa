@@ -183,13 +183,13 @@ int main ( )
   /*  Configure the counter prescaler
    */
   hwa( configure, HW_RELATIVE(COUNTER,prescaler),
-       clock,	  system );
+       clock,	  ioclk );
 
   /*  Configure the counter to overflow periodically and trigger an interrupt
    *  The counter overflow ISR manages the compare IRQ
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(COUNTER_CLK_DIV),
+       clock,	  ioclk / COUNTER_CLK_DIV,
        countmode, up_loop,
        bottom,	  0,
        top,	  TOP_OBJ,
@@ -202,7 +202,7 @@ int main ( )
    *  IRQ. The ISR will start a new conversion after its hard job is done.
    */
   hwa( configure, adc0,
-       clock,	  sysclk_div(ADC_CLK_DIV),
+       clock,	  ioclk / ADC_CLK_DIV,
        trigger,	  manual,
        vref,	  vcc,
        align,	  right,

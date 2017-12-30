@@ -1,7 +1,7 @@
 
 /*	-*- c -*-
  *
- *	Implements software UARTS hw_swuart0 hw_swuart1
+ *	Implements software UARTS swuart0 & swuart1
  */
 
 #include "../avrx.sx"
@@ -18,7 +18,7 @@
 #define DATA(x)			HW_G3(__hw,UART,x)
 
 
-/*	hw_swuart0
+/*	swuart0
  */
 #if defined hw_swuart0_compare
 #  undef UART
@@ -30,7 +30,7 @@
 #  include "swuarta.sx"
 #endif
 
-/*	hw_swuart1
+/*	swuart1
  */
 #if defined hw_swuart1_compare
 #  undef UART

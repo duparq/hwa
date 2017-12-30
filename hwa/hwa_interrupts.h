@@ -184,7 +184,7 @@
 #define _HW_VISR11(...)			_HW_VISR12(__VA_ARGS__)
 #define _HW_VISR12(i,o,v,e,f,g,...)	HW_Y(_HW_VISR13,g)(v,g,__VA_ARGS__)
 #define _HW_VISR13_0(v,g,...)		HW_E_G(g)
-#define _HW_VISR13_1(v,...)		_HW_VISR_(v)
+#define _HW_VISR13_1(v,...)		_HW_VISR_(v) (void)0 //extern int hw_foo
 
 
 /**
@@ -192,27 +192,23 @@
  * @brief  Turns an IRQ on/off.
  * @hideinitializer
  */
-#define _hw_mtd_hw_turn__irq		, _hw_turn_irq
+#define _hw_mtd_hw_turn__irq		, _hw_tnirq
 
-#define _hw_turn_irq(o,v,e,f, ...)					\
-  HW_Y(_hw_turn_irq_vstate,_hw_state_##__VA_ARGS__)(o,e, __VA_ARGS__,)
-#define _hw_turn_irq_vstate_0(o,e,x, ...)	HW_E_ST(x)
-#define _hw_turn_irq_vstate_1(o,e,v, ...)			\
-  HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
+#define _hw_tnirq(o,v,e,f,vv,...)	HW_Y(_hw_tnirq,_hw_state_##vv)(o,e,vv,__VA_ARGS__)
+#define _hw_tnirq_0(o,e,x, ...)		HW_E_ST(x)
+#define _hw_tnirq_1(o,e,v, ...)		HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
-#define _hw_mtd_hwa_turn__irq		, _hwa_turn_irq
+#define _hw_mtd_hwa_turn__irq		, _hwa_tnirq
 
 /**
  * @ingroup private_ins
  * @brief  Turns an IRQ on/off.
  * @hideinitializer
  */
-#define _hwa_turn_irq(o,v,e,f, ...)					\
-  HW_Y(_hwa_turn_irq_vstate,_hw_state_##__VA_ARGS__)(o,e, __VA_ARGS__,)
-#define _hwa_turn_irq_vstate_0(o,e,x, ...)	HW_E_ST(x)
-#define _hwa_turn_irq_vstate_1(o,e,v, ...)			\
-  HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
+#define _hwa_tnirq(o,v,e,f,vv,...)	HW_Y(_hwa_tnirq,_hw_state_##vv)(o,e,vv,__VA_ARGS__)
+#define _hwa_tnirq_0(o,e,x, ...)	HW_E_ST(x)
+#define _hwa_tnirq_1(o,e,v, ...)	HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
 
 
 /**

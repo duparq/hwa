@@ -13,7 +13,7 @@
  * @page atmelavr_psca Class _psca: clock prescaler
  *
  * A class `_psca` object is a resettable clock prescaler connected to the
- * system clock.
+ * I/O clock.
  *
  * It is used in:
  *

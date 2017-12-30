@@ -54,7 +54,7 @@ second argument. Additional arguments may follow.
 result.
 
 `hwa()` is used for asynchronous actions. Asynchronous actions can only be used
-after a _HWA context_ has been created with the `hwa_begin()` or the
+after a _HWA contexternal_ has been created with the `hwa_begin()` or the
 `hwa_begin_from_reset()` instruction.
 
 The following asynchronous actions are then memorized into the context until the

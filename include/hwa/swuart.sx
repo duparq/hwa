@@ -15,4 +15,4 @@
  */
 
 #include "../../hwa/hwa_1.h"
-#include HW_QUOTE(../../atmel/avr/swuarta/hw_swuarts.sx)
+#include HW_QUOTE(../../atmel/avr/swuarta/swuarts.sx)

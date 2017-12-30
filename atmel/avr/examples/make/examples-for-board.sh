@@ -25,6 +25,7 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-1-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
+	EXAMPLES="${EXAMPLES} 12-1-oled"
     fi
     if [ ${BOARD} = "attiny84-tcs3200" ] ; then
 	EXAMPLES="99-01-TCS3200-color-detector"
@@ -50,6 +51,7 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-1-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 09-2-swuart-usi-spi-master-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
+	EXAMPLES="${EXAMPLES} 12-1-oled"
     fi
     if [ ${BOARD} = "nanodccduino" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink-soft"
@@ -72,5 +74,6 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-3-uart-spi-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
 	EXAMPLES="${EXAMPLES} 11-1-uart-twi-eeprom"
+	EXAMPLES="${EXAMPLES} 12-1-oled"
     fi
 }

@@ -9,7 +9,7 @@
  *
  * This example is meant to validate the porting of HWA to the Atmel AVR ATtinyX5.
  *
- * Generate a complementary PWM signal with dead time using hw_counter1.
+ * Generate a complementary PWM signal with dead time using counter1.
  */
 
 #include BOARD_H
@@ -17,20 +17,19 @@
 #  error This example does work only with ATtinyX5s
 #endif
 
-#define COUNTER			counter1	// hw_counter1
-#define CLOCK_SRC		system		// system | pll_32MHz | pll_64MHz
+#define COUNTER			counter1	// counter1
+#define CLOCK_SRC		ioclk		// ioclk | pll_32MHz | pll_64MHz
 #define CLOCK_PSC		16		// power of 2 in the range 1..16384
 #define PWM_HZ			20000		// frequency of generated signals
 #define OUTPUT			compare0	// compare unit
 
-
 #define COUNT			HW_G2(HZ,CLOCK_SRC)/CLOCK_PSC/PWM_HZ
-#define HZ_system		hw_syshz
+#define HZ_ioclk		hw_syshz
 #define HZ_pll_32MHz		32000000
 #define HZ_pll_64MHz		64000000
 
 
-#if ( COUNT*PWM_HZ*CLOCK_PSC != HW_G2(HZ,CLOCK_SRC) )
+#if COUNT*PWM_HZ*CLOCK_PSC != HW_G2(HZ,CLOCK_SRC)
 #  error "PWM_HZ can not be achieved"
 #endif
 
@@ -43,7 +42,7 @@ int main ( )
        clock,	  CLOCK_SRC );
 
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(CLOCK_PSC),
+       clock,	  ioclk / CLOCK_PSC,
        countmode, up_loop,
        bottom,	  0,
        top,	  compare2,
@@ -58,7 +57,7 @@ int main ( )
   hwa( write, HW_RELATIVE(COUNTER, OUTPUT), 0.5 * COUNT );
 
   hwa( configure,	HW_RELATIVE(COUNTER, dtg0),
-       clock_div,	4,	// 1 | 2 | 4 | 8
+       prescaler,	4,	// 1 | 2 | 4 | 8
        HW_G2(OUTPUT,h), 3,	// 0..15
        HW_G2(OUTPUT,l), 9 );	// 0..15
 

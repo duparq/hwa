@@ -38,11 +38,9 @@
 
 /*	Optionnal parameter `sleep`
  */
-#define _hw_is_sleep_sleep		, 1
-
-#define _hwa_cfcorea(o,i,a,...)					\
+#define _hwa_cfcorea(o,i,a,k,...)					\
   do {									\
-      HW_Y(_hwa_cfcorea_ksleep,_hw_is_sleep_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfcorea_ksleep,_hw_is_sleep_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfcorea_ksleep_0(o,v,...)					\
@@ -60,7 +58,6 @@
 
 /*	Optionnal parameter `sleep_mode`
  */
-#define _hw_is_sleep_mode_sleep_mode	, 1
 #define hw_sleepmode_idle			, 0
 #define hw_sleepmode_adc_noise_reduction	, 1
 #define hw_sleepmode_power_down			, 2

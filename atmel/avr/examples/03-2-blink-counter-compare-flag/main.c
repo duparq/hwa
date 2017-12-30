@@ -39,12 +39,11 @@ int main ( )
 
   /*  Configure the counter to count from 0 to its max and loop
    */
-  hwa( configure,    COUNTER,
-       clock,	  HW_G2(prescaler_output, CLKDIV),
+  hwa( configure, COUNTER,
+       clock,	  ioclk / CLKDIV,
        countmode, up_loop,
        bottom,	  0,
-       top,	  max,
-       );
+       top,	  max );
 
   /*  Configure the compare unit to match when 0.001 s has elapsed
    */

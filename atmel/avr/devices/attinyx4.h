@@ -75,11 +75,10 @@
  * defined by the user, HWA will define them with the factory values.
  *
  */
-#define _hw_is_external_external	, 1
 #define _hw_is_rc_8MHz_rc_8MHz			, 1
 #define _hw_is_rc_128kHz_rc_128kHz		, 1
 #define _hw_is_low_freq_xosc_low_freq_xosc	, 1
-#define _hw_is_xosc_xosc		, 1
+#define _hw_is_xosc_xosc			, 1
 
 /**
  * @page attinyx4
@@ -346,38 +345,38 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * @page attinyx4
  * @section attinyx4_object Peripherals
  * 
- * Object name	 |Class				  | Comments
+ * Object name   |Class                           | Comments
  * :-------------|--------------------------------|:--------------------------------------
- * `core0`	 |@ref atmelavr_corea "_corea"	  | The core
- * `int0`	 |@ref atmelavr_inta "_inta"	  | External interrupt INT0
- * `port0`	 |@ref atmelavr_p8a "_p8a"	  | General purpose I/O port A (PORT0)
- * `port1`	 |@ref atmelavr_p8a "_p8a"	  | General purpose I/O port B (PORT1)
- * `pcic0`	 |@ref atmelavr_pcica "_pcica"	  | Pin change interrupt controller
- * `pcic1`	 |@ref atmelavr_pcica "_pcica"	  | Pin change interrupt controller
- * `watchdog0`	 |@ref atmelavr_wdoga "_wdoga"	  | Watchdog (WDG)
- * `prescaler0`	 |@ref atmelavr_psca "_psca"	  | hw_counter0/hw_counter1 prescaler (PSC0)
- * `counter0` |@ref atmelavr_c8a "_c8a"	  | 8-bit counter-timer (T0)
- * `counter0compare0`	 |@ref atmelavr_cmp8a "_cmp8a"	  | Compare unit 0 of hw_counter0 (OC0A)
- * `counter0compare1`	 |@ref atmelavr_cmp8a "_cmp8a"	  | Compare unit 1 of hw_counter0 (OC0B)
- * `counter1` |@ref atmelavr_c16a "_c16a"	  | 16-bit counter-timer (T1)
- * `counter1compare0`	 |@ref atmelavr_cmp16a "_cmp16a"	  | Compare unit 0 of hw_counter1 (OC1A)
- * `counter1compare1`	 |@ref atmelavr_cmp16a "_cmp16a"	  | Compare unit 1 of hw_counter1 (OC1B)
- * `counter1capture0`	 |@ref atmelavr_cap16a "_cap16a"	  | Capture unit 0 of hw_counter1 (ICP)
- * `usi0`	 |@ref atmelavr_usia "_usia"	  | Universal Serial Interface
- * `acmp0`	 |@ref atmelavr_acmpa "_acmpa"	  | Analog Comparator
- * `adc0`	 |@ref atmelavr_ad10a "_ad10a"	  | 10-bit Analog to Digital Converter
- * `eeprom0`	 |@ref atmelavr_eeproma "_eeproma"| Eeprom memory
- * `flash0`	 |@ref atmelavr_flasha "_flasha"  | Flash memory
+ * `core0`       |@ref atmelavr_corea "_corea"    | The core
+ * `int0`        |@ref atmelavr_inta "_inta"      | External interrupt INT0
+ * `port0`       |@ref atmelavr_p8a "_p8a"        | General purpose I/O port A (PORT0)
+ * `port1`       |@ref atmelavr_p8a "_p8a"        | General purpose I/O port B (PORT1)
+ * `pcic0`       |@ref atmelavr_pcica "_pcica"    | Pin change interrupt controller
+ * `pcic1`       |@ref atmelavr_pcica "_pcica"    | Pin change interrupt controller
+ * `watchdog0`   |@ref atmelavr_wdoga "_wdoga"    | Watchdog (WDG)
+ * `prescaler0`  |@ref atmelavr_psca "_psca"      | counter0/counter1 prescaler (PSC0)
+ * `counter0`    |@ref atmelavr_c8a "_c8a"        | 8-bit counter-timer (T0)
+ * `counter0compare0`|@ref atmelavr_cmp8a "_cmp8a"| Compare unit 0 of counter0 (OC0A)
+ * `counter0compare1`|@ref atmelavr_cmp8a "_cmp8a"| Compare unit 1 of counter0 (OC0B)
+ * `counter1`    |@ref atmelavr_c16a "_c16a"      | 16-bit counter-timer (T1)
+ * `counter1compare0`|@ref atmelavr_cmp16a "_cmp16a"| Compare unit 0 of counter1 (OC1A)
+ * `counter1compare1`|@ref atmelavr_cmp16a "_cmp16a"| Compare unit 1 of counter1 (OC1B)
+ * `counter1capture0`|@ref atmelavr_cap16a "_cap16a"| Capture unit 0 of counter1 (ICP)
+ * `usi0`        |@ref atmelavr_usia "_usia"      | Universal Serial Interface
+ * `acmp0`       |@ref atmelavr_acmpa "_acmpa"    | Analog Comparator
+ * `adc0`        |@ref atmelavr_ad10a "_ad10a"    | 10-bit Analog to Digital Converter
+ * `eeprom0`     |@ref atmelavr_eeproma "_eeproma"| Eeprom memory
+ * `flash0`      |@ref atmelavr_flasha "_flasha"  | Flash memory
  *
  * @subsection attinyx4_swobj Software-emulated peripherals
  * 
  * HWA provides the following software-emulated peripherals:
  * 
- * Name			  | Class		  | Comments
+ * Name                   | Class                 | Comments
  * :----------------------|-----------------------|:--------------------------------------
  * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart0`              | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`              | @ref atmelavr_swuarta "_swuarta" | Software UART
  *
  * @subsection attinyx4_objrel Aliases and relations
  *
@@ -385,24 +384,24 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * name. There are the existing relations between the device's objects and their
  * different names:
  *
- * Name		 | Aliases		 | Relations
+ * Name          | Aliases               | Relations
  * :-------------|-----------------------|:--------------------------------------
- * `prescaler0`	 | `counter0prescaler`	| `HW_RELATIVE(counter0, prescaler)`
- * `prescaler0`	 | `counter0prescaler0` | `HW_RELATIVE(counter0, prescaler0)`
- * `prescaler0`	 | `counter1prescaler`	| `HW_RELATIVE(counter1, prescaler)`
- * `prescaler0`	 | `counter1prescaler0` | `HW_RELATIVE(counter1, prescaler0)`
- * `counter0compare0`	 | `counter0compare0`	| `HW_RELATIVE(counter0, compare0)`
- * `counter0compare1`	 | `counter0compare1`	| `HW_RELATIVE(counter0, compare1)`
- * `counter0`	 | `counter0compare0counter`	   | `HW_RELATIVE(counter0compare0, counter)`
- * `counter0`	 | `counter0compare1counter`	   | `HW_RELATIVE(counter0compare1, counter)`
- * `pin_counter0compare0` | `counter0compare0pin`		   | `HW_RELATIVE(counter0compare0, pin)`
- * `pin_counter0compare1` | `counter0compare1pin`		   | `HW_RELATIVE(counter0compare1, pin)`
- * `counter1compare0`	 | `counter1compare0`	| `HW_RELATIVE(counter1, compare0)`
- * `counter1compare1`	 | `counter1compare1`	| `HW_RELATIVE(counter1, compare1)`
- * `counter1`	 | `counter1compare0counter`	   | `HW_RELATIVE(counter1compare0, counter)`
- * `counter1`	 | `counter1compare1counter`	   | `HW_RELATIVE(counter1compare1, counter)`
- * `pin_counter1compare0` | `counter1compare0pin`		   | `HW_RELATIVE(counter1compare0, pin)`
- * `pin_counter1compare1` | `counter1compare1pin`		   | `HW_RELATIVE(counter1compare1, pin)`
+ * `prescaler0`  | `counter0prescaler`  | `HW_RELATIVE(counter0, prescaler)`
+ * `prescaler0`  | `counter0prescaler0` | `HW_RELATIVE(counter0, prescaler0)`
+ * `prescaler0`  | `counter1prescaler`  | `HW_RELATIVE(counter1, prescaler)`
+ * `prescaler0`  | `counter1prescaler0` | `HW_RELATIVE(counter1, prescaler0)`
+ * `counter0compare0`    | `counter0compare0`   | `HW_RELATIVE(counter0, compare0)`
+ * `counter0compare1`    | `counter0compare1`   | `HW_RELATIVE(counter0, compare1)`
+ * `counter0`    | `counter0compare0counter`       | `HW_RELATIVE(counter0compare0, counter)`
+ * `counter0`    | `counter0compare1counter`       | `HW_RELATIVE(counter0compare1, counter)`
+ * `pin_counter0compare0` | `counter0compare0pin`                  | `HW_RELATIVE(counter0compare0, pin)`
+ * `pin_counter0compare1` | `counter0compare1pin`                  | `HW_RELATIVE(counter0compare1, pin)`
+ * `counter1compare0`    | `counter1compare0`   | `HW_RELATIVE(counter1, compare0)`
+ * `counter1compare1`    | `counter1compare1`   | `HW_RELATIVE(counter1, compare1)`
+ * `counter1`    | `counter1compare0counter`       | `HW_RELATIVE(counter1compare0, counter)`
+ * `counter1`    | `counter1compare1counter`       | `HW_RELATIVE(counter1compare1, counter)`
+ * `pin_counter1compare0` | `counter1compare0pin`                  | `HW_RELATIVE(counter1compare0, pin)`
+ * `pin_counter1compare1` | `counter1compare1pin`                  | `HW_RELATIVE(counter1compare1, pin)`
  */
 
 
@@ -904,7 +903,7 @@ typedef struct {
 
 /*******************************************************************************
  *									       *
- *	Counter 1 compare units hw_counter1compare0, hw_counter1compare1 (OCR1A, OCR1B)		       *
+ *	Counter 1 compare units counter1compare0, counter1compare1 (OCR1A, OCR1B)		       *
  *									       *
  *******************************************************************************/
 
@@ -1279,6 +1278,7 @@ typedef struct {
 } hwa_t ;
 
 #include "../hwa_2.h"
+#include "../classes/c1_2.h"
 #include "../classes/corea_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p8a_2.h"

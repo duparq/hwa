@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 /*  The UART and its baudrate
- *  Use software UART hw_swuart0 for devices that do not have a hardware UART
+ *  Use software UART swuart0 for devices that do not have a hardware UART
  */
 #define UART				swuart0
 #define BPS				115200
@@ -18,7 +18,7 @@
  */
 #include BOARD_H
 
-/*  Remove definitions for hw_swuart0 if it is not the chosen UART to avoid
+/*  (FIXME) Remove definitions for swuart0 if it is not the chosen UART to avoid
  *  including useless code
  */
 #if HW_ID(UART) != HW_ID(swuart0)

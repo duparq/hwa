@@ -10,7 +10,7 @@
  */
 
 /**
- * @page esp8266_io1a Class _io1a: General Purpose I/O definition
+ * @page espressif_io1a Class _io1a: General Purpose I/O definition
  *
  * A class `_io1a` object is a single or a group of consecutive pins inside the
  * same I/O port.
@@ -19,7 +19,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  * @par Instructions that do not produce C code:
  *
  * The `hw_bn()` instruction returns the number of bits of an I/O definition:
@@ -36,7 +36,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  *
  * For a group of consecutive pins, the `hw_bp()` instruction gives the position
  * of the least significant bit:
@@ -52,7 +52,7 @@
 
 
 /**
- * @page esp8266_io1a
+ * @page espressif_io1a
  *
  * The `hw_rel()` instruction is usefull to retrieve the name of the I/O port
  * associated to the I/O:
@@ -64,8 +64,6 @@
  * @endcode
  */
 #define _hw_mtd_hw_rel__io1a		, _hw_rel_io1a
-
-#define _hw_is_port_port
 
 #define _hw_rel_io1a(o,x,...)	\
   HW_Y(_hw_rel_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)

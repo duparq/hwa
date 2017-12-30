@@ -39,8 +39,8 @@
 #define _hw_cfcap16a_kw_edge		, _hw_cfcap16a_edge
 //#define _hw_cfcap16a_kw_		, _hw_cfcap16a_
 
-#define _hw_cfcap16a(o,i,a,...)						\
-  HW_Y(_hw_cfcap16akw1,_hw_cfcap16a_kw_##__VA_ARGS__)(o,__VA_ARGS__,)
+#define _hw_cfcap16a(o,i,a,k,...)					\
+  HW_Y(_hw_cfcap16akw1,_hw_cfcap16a_kw_##k)(o,k,__VA_ARGS__,)
 
 #define _hw_cfcap16akw1_0(o,kw,...)					\
   HW_E_VL(k,input | edge | filter)
@@ -73,7 +73,8 @@
  */
 #define _hw_mtd_hwa_configure__cap16a		, _hwa_cfcap16a
 
-#define _hwa_cfcap16a(o,i,a,...) do { HW_Y(_hwa_cfcap16a_kinput,_hw_is_input_##__VA_ARGS__)(o,__VA_ARGS__) } while(0)
+#define _hwa_cfcap16a(o,i,a,k,...) \
+  do { HW_Y(_hwa_cfcap16a_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__) } while(0)
 
 #define _hwa_cfcap16a_kinput_0(o,k,...)		\
   HW_Y(_hwa_cfcap16a_kedge,_hw_is_edge_##k)(o,k,__VA_ARGS__) //HW_E_VL(k,input)

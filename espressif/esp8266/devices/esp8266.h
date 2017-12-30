@@ -10,6 +10,7 @@
  */
 
 #include "../hwa_1.h"
+#include "os.h"
 
 /**
  * @page esp8266 ESP8266
@@ -29,15 +30,15 @@
 
 /**
  * @page esp8266
- * @section esp8266_peripherals Peripherals
+ * @section espressif_peripherals Peripherals
  *
  * __Note__ All the peripherals are not completely implemented yet.
  *
- * Object name		  | Class		  | Comments
- * :----------------------|-----------------------|:--------------------------------------
- * `port0`	 | @ref espressif_p16a "_p16a"	  | General purpose I/O port
- * `timer1`	 | @ref espressif_tm23a "_tm23a"  | 23-bit timer
- * `uart0`	 | @ref esp8266_uarta "_uarta"	  | UART
+ * Object name	| Class		                 | Comments
+ * :------------|--------------------------------|:-----------------------------
+ * `port0`	| @ref espressif_p16a "_p16a"	 | General purpose I/O port
+ * `timer1`	| @ref espressif_tm23a "_tm23a"  | 23-bit timer
+ * `uart0`	| @ref espressif_uarta "_uarta"	 | UART
  */
 
 
@@ -47,47 +48,17 @@
  *									       *
  *******************************************************************************/
 /**
- * @ingroup esp8266_interrupts
+ * @ingroup espressif_interrupts
  * @brief Definition of the interrupts
  */
 /*  Interrupt definitions
  *
  *  'vector' is used to store the type of interrupt
  *
- *						class, vector, object, ie, if
+ *						class, object, vector, ie, if
  */
 #define _hw_irq_timer1_nmi			_irq, timer1, nmi, ie,
 #define _hw_irq_timer1_irq			_irq, timer1,	9, ie,
-
-
-/*  ESP8266 interrupts are processed through OS calls to user service routines
- */
-#define _os_handleirq_timer1_nmi(fn)		NmiTimSetFunc(fn)
-#define _os_handleirq_timer1_9(fn)		ets_isr_attach(9, fn, 0)
-
-extern void NmiTimSetFunc(void (*isr)(void));
-extern void ets_isr_unmask(unsigned intr);
-
-
-/**
- * @ingroup public_irq_instructions
- * @brief Declaration of an ISR
- *
- * The `os_handle_irq()` instruction declares a user ISR for an IRQ.
- *
- * @code
- * os_handle_irq( HW_IRQ(timer1, irq), ev_timer );
- * @endcode
- * @hideinitializer
- */
-#define _hw_mtd_os_handle_irq__irq	, _os_handle_irq
-
-#define os_handle_irq(...)		_os_handleirq_2(__VA_ARGS__,)
-#define _os_handleirq_2(...)		HW_G2(_os_handleirq,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _os_handleirq_0(...)		__VA_ARGS__
-#define _os_handleirq_1(t,...)		_os_handle_irq(__VA_ARGS__)
-
-#define _os_handle_irq(o,v,ie,if,fn,...)	HW_TX(_os_handleirq_##o##_##v(fn),__VA_ARGS__)
 
 
 /*******************************************************************************
@@ -147,6 +118,7 @@ typedef struct {
  */
 #include "../classes/p16a_1.h"
 #include "../classes/io1a_1.h"
+#include "../classes/io1b_1.h"
 
 /*	Object				class, id, address
  */
@@ -200,34 +172,38 @@ typedef struct {
 
 /**
  * @page esp8266
- * @section esp8266_pins Pins
+ * @section espressif_pins Pins
  *
- * Each pin can be connected to different signals with the `hw(configure,)` or
- * `hwa(configure,...)` instruction.
+ * Each pin can be connected to different signals with the `configure` action:
  *
- * Pin	  | HWA name	    | Class			  | Functions
- * -------|-----------------|-----------------------------|-------------
- * GPIO0  | `gpio0`	| @ref esp8266_io1a "_io1a" | `gpio` / `spi_cs2` / `clk_out`
- * GPIO1  | `gpio1`	| @ref esp8266_io1a "_io1a" | `gpio` / `uart0_txd` / `spi_cs1` / `clk_rtc`
- * GPIO2  | `gpio2`	| @ref esp8266_io1a "_io1a" | `gpio` / `i2so_ws` / `uart1_txd` / `uart0_txd`
- * GPIO3  | `gpio3`	| @ref esp8266_io1a "_io1a" | `gpio` / `uart0_rxd` / `i2so_data` / `fn_clk_xtal`
- * GPIO4  | `gpio4`	| @ref esp8266_io1a "_io1a" | `gpio` / `clk_xtal`
- * GPIO5  | `gpio5`	| @ref esp8266_io1a "_io1a" | `gpio` / `clk_rtc`
- * GPIO6  | `gpio6`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_clk` / `spi_clk` / `uart1_cts`
- * GPIO7  | `gpio7`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data0` / `spi_q` / `uart1_txd`
- * GPIO8  | `gpio8`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data1` / `spi_d` / `uart1_rxd`
- * GPIO9  | `gpio9`	| @ref esp8266_io1a "_io1a" | `gpio` / `sd_data2` / `spi_hd` / `hspi_hd`
- * GPIO10 | `gpio10` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_data3` / `spi_wp` / `hspi_wp`
- * GPIO11 | `gpio11` | @ref esp8266_io1a "_io1a" | `gpio` / `sd_cmd` / `spi_cs0` / `uart1_rts`
- * GPIO12 | `gpio12` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdi` / `i2si_data` / `hspiq_miso` / `uart0_dtr`
- * GPIO13 | `gpio13` | @ref esp8266_io1a "_io1a" | `gpio` / `mtck` / `i2s_bck` / `hspi_mosi` / `uart0_cts`
- * GPIO14 | `gpio14` | @ref esp8266_io1a "_io1a" | `gpio` / `mtms` / `i2si_ws` / `hspi_clk` / `uart0_dsr`
- * GPIO15 | `gpio15` | @ref esp8266_io1a "_io1a" | `gpio` / `mtdo` / `i2so_bck` / `hspi_cs` / `uart0_rts`
- * GPIO16 | `gpio16` | @ref esp8266_io1a "_io1a" | `gpio` / `xpd_dcdc` / `ext_wakeup` / `deep_sleep` / `bt_xtal_en`
+ * Pin    | HWA name | Class                     | Functions
+ * -------|----------|---------------------------|-------------
+ * GPIO0  | `gpio0`  | @ref espressif_io1a "_io1a" | `gpio`,`spi_cs2`,`clk_out`
+ * GPIO1  | `gpio1`  | @ref espressif_io1a "_io1a" | `gpio`,`uart0_txd`,`spi_cs1`,`clk_rtc`
+ * GPIO2  | `gpio2`  | @ref espressif_io1a "_io1a" | `gpio`,`i2so_ws`,`uart1_txd`,`uart0_txd`
+ * GPIO3  | `gpio3`  | @ref espressif_io1a "_io1a" | `gpio`,`uart0_rxd`,`i2so_data`,`fn_clk_xtal`
+ * GPIO4  | `gpio4`  | @ref espressif_io1a "_io1a" | `gpio`,`clk_xtal`
+ * GPIO5  | `gpio5`  | @ref espressif_io1a "_io1a" | `gpio`,`clk_rtc`
+ * GPIO6  | `gpio6`  | @ref espressif_io1a "_io1a" | `gpio`,`sd_clk`,`spi_clk`,`uart1_cts`
+ * GPIO7  | `gpio7`  | @ref espressif_io1a "_io1a" | `gpio`,`sd_data0`,`spi_q`,`uart1_txd`
+ * GPIO8  | `gpio8`  | @ref espressif_io1a "_io1a" | `gpio`,`sd_data1`,`spi_d`,`uart1_rxd`
+ * GPIO9  | `gpio9`  | @ref espressif_io1a "_io1a" | `gpio`,`sd_data2`,`spi_hd`,`hspi_hd`
+ * GPIO10 | `gpio10` | @ref espressif_io1a "_io1a" | `gpio`,`sd_data3`,`spi_wp`,`hspi_wp`
+ * GPIO11 | `gpio11` | @ref espressif_io1a "_io1a" | `gpio`,`sd_cmd`,`spi_cs0`,`uart1_rts`
+ * GPIO12 | `gpio12` | @ref espressif_io1a "_io1a" | `gpio`,`mtdi`,`i2si_data`,`hspiq_miso`,`uart0_dtr`
+ * GPIO13 | `gpio13` | @ref espressif_io1a "_io1a" | `gpio`,`mtck`,`i2s_bck`,`hspi_mosi`,`uart0_cts`
+ * GPIO14 | `gpio14` | @ref espressif_io1a "_io1a" | `gpio`,`mtms`,`i2si_ws`,`hspi_clk`,`uart0_dsr`
+ * GPIO15 | `gpio15` | @ref espressif_io1a "_io1a" | `gpio`,`mtdo`,`i2so_bck`,`hspi_cs`,`uart0_rts`
+ * GPIO16 | `gpio16` | @ref espressif_io1b "_io1b" | `gpio`,`xpd_dcdc`,`external_wakeup`,`deep_sleep`,`bt_xtal_en`
  */
 
 
-/*	Pins				class, id, port, bn, bp
+/*	Pins
+ *
+ *	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class.
+ *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
+ *
+ *					class, id, port, bn, bp
  */
 #define _hw_def_gpio0			_io1a, 102, port0, 1, 0
 #define _hw_def_gpio1			_io1a, 103, port0, 1, 1
@@ -246,12 +222,7 @@ typedef struct {
 #define _hw_def_gpio14			_io1a, 116, port0, 1, 14
 #define _hw_def_gpio15			_io1a, 117, port0, 1, 15
 
-
-/*	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class
- *
- *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
- */
-#define _hw_def_gpio16			_io1b, 118, port1, 1, 0
+#define _hw_def_gpio16			_io1b, 118, rtc, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -279,20 +250,17 @@ typedef struct {
  */
 #define _hw_class__ionum
 
-#define _hw_is_var_var			, 1
-
 #define hw_pin_gpio(x)			HW_Y(hw_pin_gpio_var,_hw_is_var_##x)(x)
-
 #define hw_pin_gpio_var_0(x)		hw_pin_gpio##x
-
 #define hw_pin_gpio_var_1(x)		_ionum, 0, /* hw_port */, x
 
 
 /*  Pin configuration objects
  *
- *	Each pin has a _pcfa object that handles its configuration.
+ *	Each pin has a _pcf object that handles its configuration.
  */
 #include "../classes/pcfa_1.h"
+#include "../classes/pcfb_1.h"
 
 #define _hw_def_gpio12_cf		_pcfa, 119, 0x60000804
 #define _hw_def_gpio13_cf		_pcfa, 120, 0x60000808
@@ -318,8 +286,8 @@ typedef struct {
  *
  *	The value is the value of bits 8,5,4 (fn) in the I/O cf register.
  *
- *	The symbol _pinname_fns is used to build the error message when an
- *	unavailable function is chosen with hw_config().
+ *	The symbol _pinname_fns is used to build the error message when the
+ *	'config' action asks for an unavailable function.
  */
 #define _hw_gpio0_fn_gpio		, 0
 #define _hw_gpio0_fn_spi_cs2		, 1
@@ -422,10 +390,41 @@ typedef struct {
 #define _hw_gpio16_fn_xpd_dcdc		, 0
 #define _hw_gpio16_fn_rtc_gpio0		, 1
 #define _hw_gpio16_fn_gpio		, 1
-#define _hw_gpio16_fn_ext_wakeup	, 2
+#define _hw_gpio16_fn_external_wakeup	, 2
 #define _hw_gpio16_fn_deep_sleep	, 3
 #define _hw_gpio16_fn_bt_xtal_en	, 4
-#define _hw_gpio16_fns			"`gpio`, `xpd_dcdc`, `ext_wakeup`, `deep_sleep`, or `bt_xtal_en`"
+#define _hw_gpio16_fns			"`gpio`, `xpd_dcdc`, `external_wakeup`, `deep_sleep`, or `bt_xtal_en`"
+
+
+/*******************************************************************************
+ *									       *
+ *	RTC								       *
+ *									       *
+ *	The RTC handles the GPIO16 pin					       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/rtca_1.h"
+
+#define _hw_def_rtc			_rtca, 101, 0x60000700
+
+/* #define _hw_reg__rtca__store0		_r32, 0x30, 0xFFFFFFFF, 0 */
+/* #define _hw_reg__rtca__store1		_r32, 0x34, 0xFFFFFFFF, 0 */
+/* #define _hw_reg__rtca__store2		_r32, 0x38, 0xFFFFFFFF, 0 */
+/* #define _hw_reg__rtca__store3		_r32, 0x3C, 0xFFFFFFFF, 0 */
+
+#define _hw_reg_rtc__gpioout		_r32, 0x68, 0xFFFFFFFF, 0
+#define _hw_reg_rtc__gpioen		_r32, 0x74, 0xFFFFFFFF, 0
+#define _hw_reg_rtc__gpioin		_r32, 0x8C, 0xFFFFFFFF, 0
+#define _hw_reg_rtc__gpiocf		_r32, 0x90, 0xFFFFFFFF, 0
+#define _hw_reg_rtc__gpiocr		_r32, 0xA0, 0xFFFFFFFF, 0
+
+#define _hw_reg_gpio16_fn		_xob2, rtc, _gpiocr, 1, 6, 2, _gpiocr, 2, 0, 0
+#define _hw_reg_gpio16_spd		_xob1, rtc, _gpiocr, 1, 5
+#define _hw_reg_gpio16_pd		_xob1, rtc, _gpiocr, 1, 3
+#define _hw_reg_gpio16_pdx		_xob2, rtc, _gpiocr, 1, 5, 1, _gpiocr, 1, 3, 0 /* convenient */
+#define _hw_reg_gpio16_oe		_xob1, rtc, _gpioen, 1, 0 /* convenient */
+#define _hw_reg_gpio16_cf		_xob1, rtc, _gpiocf, 1, 0 /* convenient */
 
 
 /*******************************************************************************
@@ -514,7 +513,7 @@ typedef struct {
  *	 * 8F-ESP8266__Interface__UART_Registers_v0.1			       *
  *	 * Arduino/cores/esp8266/HardwareSerial.h			       *
  *	 * Arduino/cores/esp8266/HardwareSerial.cpp			       *
- *	 * Arduino/cores/esp8266/esp8266_peri.h				       *
+ *	 * Arduino/cores/esp8266/espressif_peri.h				       *
  *									       *
  *******************************************************************************/
 
@@ -652,8 +651,8 @@ typedef struct {
   uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
 
   hwa_shared_t	shared ;
-
   hwa_p16a_t	port0 ;
+  hwa_rtca_t	rtc ;
   hwa_pcfa_t	gpio0_cf ;
   hwa_pcfa_t	gpio1_cf ;
   hwa_pcfa_t	gpio2_cf ;
@@ -670,16 +669,19 @@ typedef struct {
   hwa_pcfa_t	gpio13_cf ;
   hwa_pcfa_t	gpio14_cf ;
   hwa_pcfa_t	gpio15_cf ;
+  hwa_pcfa_t	gpio16_cf ;
   hwa_tm23a_t	timer1 ;
   hwa_uarta_t	uart0 ;
 } hwa_t ;
 
 
 #include "../hwa_2.h"
-//#include "../classes/iocfa_2.h"
+#include "../classes/rtca_2.h"
 #include "../classes/pcfa_2.h"
+#include "../classes/pcfb_2.h"
 #include "../classes/p16a_2.h"
 #include "../classes/io1a_2.h"
+#include "../classes/io1b_2.h"
 #include "../classes/tm23a_2.h"
 #include "../classes/uarta_2.h"
 
@@ -688,6 +690,7 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
   _hwa_setup( shared );
   _hwa_setup( port0 );
+  _hwa_setup( rtc );
   _hwa_setup( gpio0_cf );
   _hwa_setup( gpio1_cf );
   _hwa_setup( gpio2_cf );
@@ -714,6 +717,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init( shared );
   _hwa_init( port0 );
+  _hwa_init( rtc );
   /* _hwa_init( gpio0_cf ); */
   /* _hwa_init( gpio1_cf ); */
   /* _hwa_init( gpio2_cf ); */
@@ -753,8 +757,9 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( gpio13_cf );
   _hwa_commit( gpio14_cf );
   _hwa_commit( gpio15_cf );
-  _hwa_commit( port0 );
 
+  _hwa_commit( port0 );
+  _hwa_commit( rtc );
   _hwa_commit( timer1 );
   _hwa_commit( uart0 );
 

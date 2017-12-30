@@ -9,6 +9,43 @@
  * @brief 8-bit counter
  */
 
+HW_INLINE uint8_t _hw_c8cck_none( float v )
+{
+  if ( v != 0 )
+    HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|32|64|128|256|512|1024]`, `external_osc`));
+
+  return 0 ;
+}
+
+HW_INLINE uint8_t _hw_c8cck_ioclk( float v )
+{
+  if ( v == 1.0 )
+    return 1 ;
+  if ( v == 1.0/8 )
+    return 2 ;
+  if ( v == 1.0/32 )
+    return 3 ;
+  if ( v == 1.0/64 )
+    return 4 ;
+  if ( v == 1.0/128 )
+    return 5 ;
+  if ( v == 1.0/256 )
+    return 6 ;
+  if ( v == 1.0/1024 )
+    return 7 ;
+
+  HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|32|64|128|256|512|1024]`, `external_osc`));
+  return 0 ;
+}
+
+HW_INLINE uint8_t _hw_c8cck_xosc( float v )
+{
+  if ( v != 0 )
+    HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|32|64|128|256|512|1024]`, `external_osc`));
+
+  return 8 ;
+}
+
 /**
  * @page atmelavr_c8c
  * @section atmelavr_c8c_config Configuration
@@ -21,41 +58,34 @@
  * @code
  * hwa( configure, counter0,
  * 
- *	       //  How the counter is clocked
- *	       //
- *	       clock,	    none			// No clock, the counter is stopped
- *			  | prescaler_output(	  0	// No clock, the counter is stopped
- *					     |	  1	// System clock
- *					     |	  8	// System clock divided by 8
- *					     |	 32	// System clock divided by 32
- *					     |	 64	// System clock divided by 64
- *					     |	128	// System clock divided by 128
- *					     |	256	// System clock divided by 256
- *					     |	512	// System clock divided by 512
- *					     | 1024 )	// System clock divided by 1024
- *			  | ext_xosc,			// Crystal between pins TOSC1-TOSC2
+ *      //  How the counter is clocked
+ *      //
+ *      clock,       none                       // No clock, the counter is stopped
+ *                 | ioclk [/ 8|32|64|128       // I/O clock [divided]
+ *                             |256|512|1024]   //
+ *                 | external_xosc,                  // Crystal between pins TOSC1-TOSC2
  *
- *	       //  How does this counter count
- *	       //
- *	       countmode,   up_loop			// Count up and loop
- *			  | updown_loop,		// Count up and down alternately
+ *      //  How does this counter count
+ *      //
+ *      countmode,   up_loop                    // Count up and loop
+ *                 | updown_loop,               // Count up and down alternately
  *
- *	       //  Class _c8c counters all count from 0
- *	       //
- *	     [ bottom,	    0, ]
+ *      //  Class _c8c counters all count from 0
+ *      //
+ *    [ bottom,     0, ]
  *
- *	       //  The maximum value the counter reaches (the default is `max`)
- *	       //
- *	     [ top,	    fixed_0xFF			// Hardware fixed value 0xFF
- *			  | max				// Hardware fixed value 0xFF
- *			  | compare0, ]			// Value stored in the compare0 unit
+ *      //  The maximum value the counter reaches (the default is `max`)
+ *      //
+ *    [ top,        fixed_0xFF                  // Hardware fixed value 0xFF
+ *                | max                         // Hardware fixed value 0xFF
+ *                | compare0, ]                 // Value stored in the compare0 unit
  *
- *	       //  When the overflow flag is set
- *	       //
- *	     [ overflow,    at_bottom			// When the counter resets to bottom
- *			  | at_top			// When the counter reaches the top value
- *			  | at_max ]			// When the counter reaches its max value
- *	       );
+ *      //  When the overflow flag is set
+ *      //
+ *    [ overflow,    at_bottom                  // When the counter resets to bottom
+ *                | at_top                      // When the counter reaches the top value
+ *                | at_max ]                    // When the counter reaches its max value
+ *      );
  * @endcode
  */
 #define _hw_mtd_hwa_configure__c8c	, _hwa_config_c8c
@@ -65,20 +95,8 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_c8c_clock_none		, 0
-#define _hw_c8c_clock_prescaler_output_0	, 0
-#define _hw_c8c_clock_prescaler_output_1	, 1
-#define _hw_c8c_clock_prescaler_output_8	, 2
-#define _hw_c8c_clock_prescaler_output_32	, 3
-#define _hw_c8c_clock_prescaler_output_64	, 4
-#define _hw_c8c_clock_prescaler_output_128	, 5
-#define _hw_c8c_clock_prescaler_output_256	, 6
-#define _hw_c8c_clock_prescaler_output_1024	, 7
-#define _hw_c8c_clock_ext_xosc		, 8
-#define _hw_c8c_clock_prescaler_output(x)	HW_G2(_hw_c8c_clock_prescaler_output,x)
-
-#define _hwa_config_c8c(o,i,a, ...)						\
-  do { HW_Y(_hwa_cfc8c_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+#define _hwa_config_c8c(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfc8c_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8c_kclock_0(o,k,...)					\
   HW_E_VL(k,clock)
@@ -87,17 +105,19 @@
   HW_Y(_hwa_cfc8c_vclock,_hw_c8c_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 8 | 32 | 64 | 128 | 256 | 512 | 1024 ) | ext_xosc)
+  HW_E_AVL(clock, v, none | ioclk [/ 8|32|64|128|256|512|1024] | external_xosc)
 
-#define _hwa_cfc8c_vclock_1(o,v,k,...)				\
-  hwa->o.config.clock = HW_A1(_hw_c8c_clock_##v);		\
+#define _hwa_cfc8c_vclock_1(o,v,k,...)					\
+  hwa->o.config.clock = HW_VF(_hw_c8c_clock_##v);			\
   HW_Y(_hwa_cfc8c_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+
+#define _hw_c8c_clock_none		, _hw_c8cck_none, 0
+#define _hw_c8c_clock_ioclk		, _hw_c8cck_ioclk, 1.0
+#define _hw_c8c_clock_external_xosc		, _hw_c8cck_xosc, 0
 
 /*  Optionnal argument `countmode`
  */
 #define _hw_c8c_countmode_up_loop	, 1
-#define _hw_c8c_countmode_up_loop	, 1
-#define _hw_c8c_countmode_updown_loop	, 2
 #define _hw_c8c_countmode_updown_loop	, 2
 
 #define _hwa_cfc8c_kmode_0(o,k,...)					\

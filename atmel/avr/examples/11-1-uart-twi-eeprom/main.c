@@ -8,19 +8,19 @@
  * @example
  * 
  * This is a translation of the twitest.c example taken from avr-libc (the
- * original file is provided is this directory):
+ * original file is provided in the `avr-libc` subdirectory):
  *
  * > Simple demo program that talks to a 24Cxx I<sup>2</sup>C EEPROM using the
  * > builtin TWI interface of an ATmega device.
  *
- * __Note__ This version leads to a binary file bigger of 20 bytes compared to the
- * orignal `avr-libc/twitest.c`. It seems that GCC does not make the same
- * register assigments and sometimes puts useless code such as `eor r25, r25`
- * and later `ldi r25, 0`. Why?
+ * __Note__ (FIXME) This version leads to a binary file bigger of 20 bytes
+ * compared to the orignal `avr-libc/twitest.c`. It seems that GCC does not make
+ * the same register assigments and sometimes puts useless code such as `eor
+ * r25, r25` followed by `ldi r25, 0`. Why?
  *
- * __Note__ Revision 2016-06-29: use `hw_cmd()` instead of `hw_command()`. The
- * binary code is now 3474 bytes long with avr-gcc-4.9.2 (was 3336 with
- * avr-gcc-4.8.2). WHY?
+ * __Note__ Revision 2016-06-29: use `hw_cmd()` instead of
+ * `hw_command()`. The binary code is now 3474 bytes long with avr-gcc-4.9.2
+ * (was 3336 with avr-gcc-4.8.2). WHY?
  *
  * __Note__ Revision 2017-02-19 (not tested): use `hw()` instead of `hw_cmd()`. The
  * binary code is now 3338 bytes long with avr-gcc-4.9.2.

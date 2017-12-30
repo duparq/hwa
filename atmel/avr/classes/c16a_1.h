@@ -99,7 +99,7 @@ typedef struct {
   /*  Registers used for high-level configuration
    */
   struct {
-    uint8_t	clock, countmode, top, overflow ;
+    uint8_t	clock,countmode, top, overflow ;
   } config ;
 
   /*  Registers used for configuration resolution

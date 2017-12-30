@@ -21,66 +21,56 @@
  *  mode by hardware as soon as the SS pin goes low.
 
  * @code
- * hwa( configure, spi0,
+ * hwa( configure,       spi0,
  *
- *	       //  Mode
- *	       //
- *	       mode,		master
- *			      | slave
- *			      | off,
+ *      function,        master
+ *                     | slave
+ *                     | off,
  *
- *	       //  Clock frequency
- *	       //
- *	       clock,		sysclk_div(    2
- *					   |   4
- *					   |   8
- *					   |  16
- *					   |  32
- *					   |  64
- *					   | 128 ),
+ *      //  Clock frequency
+ *      //
+ *      clock,           ioclk / (    2
+ *                                |   4
+ *                                |   8
+ *                                |  16
+ *                                |  32
+ *                                |  64
+ *                                | 128 ),
  *
- *	       //  State of SCK when idle
- *	       //
- *	       sck_idle,	low
- *			      | high,
+ *    [ mode,            0 | 1 | 2 | 3, ]
  *
- *	       //  Sampling clock edge
- *	       //
- *	       sampling_edge,	falling
- *			      | rising
- *			      | first
- *			      | second
- *	     );
+ *      //  State of SCK when idle
+ *      //
+ * |  [ idle_state,      low
+ *                     | high,
+ *
+ *      //  Sampling clock edge
+ *      //
+ *      sampling_edge,   falling
+ *                     | rising, ]
+ *
+ *    [ data_order,      lsb_first
+ *                     | msb_first ] );
  * @endcode
  */
 #define _hw_mtd_hwa_configure__spia	, _hwa_cfspia
 
-/*	Mandatory parameter `mode`
- */
-#define _hw_is_mode_mode		, 1
-#define _hw_spia_mode_master		, 1, 1	/* , en , mstr */
-#define _hw_spia_mode_slave		, 1, 0
-#define _hw_spia_mode_off		, 0, 0
-
-#define _hwa_cfspia(o,i,a,...)						\
+#define _hwa_cfspia(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfspia_kmode,_hw_is_mode_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    const float ioclk = 1.0 ;						\
+    HW_Y(_hwa_cfspia_kfunction,_hw_is_function_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
-#define _hwa_cfspia_kmode_0(o,k,...)					\
-  HW_E_VL(k,mode)
-
-#define _hwa_cfspia_kmode_1(o,k,v,...)				\
-  HW_Y(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfspia_vmode_0(o,v,...)					\
-  HW_E_AVL(mode, v, master | slave | off)
-
-#define _hwa_cfspia_vmode_1(o,v,k,...)				\
-  _hwa_write_reg(o,en, HW_A1(_hw_spia_mode_##v));		\
-  _hwa_write_reg(o,mstr, HW_A2(_hw_spia_mode_##v));		\
-  if ( HW_A1(_hw_spia_mode_##v) == 1 ) {			\
-    if ( HW_A2(_hw_spia_mode_##v) == 0 )			\
+/*	Mandatory parameter `function`
+ */
+#define _hwa_cfspia_kfunction_0(o,k,...)	HW_E_VL(k,function)
+#define _hwa_cfspia_kfunction_1(o,k,v,...)	HW_Y(_hwa_cfspia_vfunction,_hw_spia_function_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_vfunction_0(o,v,...)	HW_E_AVL(function, v, master | slave | off)
+#define _hwa_cfspia_vfunction_1(o,v,k,...)				\
+  _hwa_write_reg(o,en, HW_A1(_hw_spia_function_##v));		\
+  _hwa_write_reg(o,mstr, HW_A2(_hw_spia_function_##v));		\
+  if ( HW_A1(_hw_spia_function_##v) == 1 ) {			\
+    if ( HW_A2(_hw_spia_function_##v) == 0 )			\
       _hwa( configure, _HW_REL(o,pin_miso), direction, output );	\
     else {							\
       _hwa( configure, _HW_REL(o,pin_mosi), direction, output );	\
@@ -89,75 +79,91 @@
   }								\
   HW_Y(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
+#define _hw_spia_function_master	, 1, 1	/* , en , mstr */
+#define _hw_spia_function_slave		, 1, 0
+#define _hw_spia_function_off		, 0, 0
+
 /*	Mandatory parameter `clock`
  */
-#define _hw_is_clock_clock		, 1
-#define _hw_spia_clock_sysclk_div_2	, 4	/* , xpr */
-#define _hw_spia_clock_sysclk_div_4	, 0
-#define _hw_spia_clock_sysclk_div_8	, 5
-#define _hw_spia_clock_sysclk_div_16	, 1
-#define _hw_spia_clock_sysclk_div_32	, 6
-#define _hw_spia_clock_sysclk_div_64	, 2
-#define _hw_spia_clock_sysclk_div_128	, 3
-#define _hw_spia_clock_sysclk_div(x)		HW_G2(_hw_spia_clock_sysclk_div,x)
+#define _hwa_cfspia_kclock_0(o,k,...)	HW_E_VL(k,clock)
+#define _hwa_cfspia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfspia_vclock,_hw_is_ioclk_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_vclock_0(o,v,...)	HW_E_AVL(clock, v, ioclk / (2|4|8|16|32|64|128 ))
+#define _hwa_cfspia_vclock_1(o,v,k,...)					\
+  _hwa_write_reg(o,xpr, _hwa_cpspia_clk(v));				\
+  HW_G2(_hwa_cfspia_kmode,HW_IS(mode,k))(o,k,__VA_ARGS__)
 
-#define _hwa_cfspia_kclock_0(o,k,...)			\
-  HW_E_VL(k,clock)
+HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
+{
+  if ( v == 1.0 / 2 )
+    return 4 ;
+  else if ( v == 1.0 / 4 )
+    return 0 ;
+  else if ( v == 1.0 / 8 )
+    return 5 ;
+  else if ( v == 1.0 / 16 )
+    return 1 ;
+  else if ( v == 1.0 / 32 )
+    return 6 ;
+  else if ( v == 1.0 / 64 )
+    return 2 ;
+  else if ( v == 1.0 / 128 )
+    return 3 ;
+  else
+    HWA_E_NIL(clock, ioclk / (2|4|8|16|32|64|128 ));
+  return 0 ;
+}
 
-#define _hwa_cfspia_kclock_1(o,k,v,...)					\
-  HW_Y(_hwa_cfspia_vclock,_hw_spia_clock_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfspia_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
-
-#define _hwa_cfspia_vclock_1(o,v,k,...)				\
-  _hwa_write_reg(o,xpr, HW_A1(_hw_spia_clock_##v));			\
-  HW_G2(_hwa_cfspia_ksck_idle,HW_IS(sck_idle,k))(o,k,__VA_ARGS__)
-
-/*	Mandatory parameter `sck_idle`
+/*	Optionnal parameter `mode`
  */
-#define _hw_is_sck_idle_sck_idle	, 1
-#define _hw_spia_sck_idle_low		, 0	/* , cpol */
-#define _hw_spia_sck_idle_high		, 1
+#define _hwa_cfspia_kmode_0(o,k,...)	HW_G2(_hwa_cfspia_kidle,HW_IS(idle_state,k))(o,k,__VA_ARGS__)
+#define _hwa_cfspia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_vmode_0(o,v,...)	HW_E_AVL(mode, v, (0|1|2|3))
+#define _hwa_cfspia_vmode_1(o,v,k,...)					\
+  _hwa_write_reg(o,mode,HW_A1(_hw_spia_mode_##v));			\
+  HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)
 
-#define _hwa_cfspia_ksck_idle_0(o,k,...)		\
-  HW_E_VL(k,sck_idle)
+#define _hw_spia_mode_0			, 0	/* , mode */
+#define _hw_spia_mode_1			, 1
+#define _hw_spia_mode_2			, 2
+#define _hw_spia_mode_3			, 3
 
-#define _hwa_cfspia_ksck_idle_1(o,k,v,...)				\
-  HW_Y(_hwa_cfspia_vsck_idle,_hw_spia_sck_idle_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfspia_vsck_idle_0(o,v,...)			\
-  HW_E_AVL(sck_idle, v, low | high)
-
-#define _hwa_cfspia_vsck_idle_1(o,v,k,...)				\
-  _hwa_write_reg(o,cpol, HW_A1(_hw_spia_sck_idle_##v));		\
-  HW_G2(_hwa_cfspia_ksampling_edge,HW_IS(sampling_edge,k))(o,v,k,__VA_ARGS__)
-
-/*	Mandatory parameter `sampling_edge`
+/*	Optionnal parameter `idle_state`
  */
-#define _hw_is_sampling_edge_sampling_edge	, 1
-#define _hw_spia_sck_idle_low_sampling_edge_rising	, 0	/* , cpol */
-#define _hw_spia_sck_idle_low_sampling_edge_falling	, 1
-#define _hw_spia_sck_idle_high_sampling_edge_rising	, 1
-#define _hw_spia_sck_idle_high_sampling_edge_falling	, 0
-#define _hw_spia_sck_idle_low_sampling_edge_first	, 0
-#define _hw_spia_sck_idle_low_sampling_edge_second	, 1
-#define _hw_spia_sck_idle_high_sampling_edge_first	, 0
-#define _hw_spia_sck_idle_high_sampling_edge_second	, 1
+#define _hw_spia_idle_low		, 0	/* , cpol */
+#define _hw_spia_idle_high		, 1
 
-#define _hwa_cfspia_ksampling_edge_0(o,v,k,...)			\
-  HW_E_VL(k,sampling_edge)
+#define _hwa_cfspia_kidle_0(o,k,...)	HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)
+#define _hwa_cfspia_kidle_1(o,k,v,...)	HW_Y(_hwa_cfspia_vidle,_hw_spia_idle_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_vidle_0(o,v,...)	HW_E_AVL(idle_state, v, low | high)
+#define _hwa_cfspia_vidle_1(o,v,k,...)				\
+  _hwa_write_reg(o,cpol, HW_A1(_hw_spia_idle_##v));		\
+  HW_G2(_hwa_cfspia_ksampling,HW_IS(sampling_edge,k))(o,v,k,__VA_ARGS__)
 
-#define _hwa_cfspia_ksampling_edge_1(o,idle,k,v,...)			\
-  HW_G2(_hwa_cfspia_vsampling_edge,					\
-	HW_IS(,_hw_spia_sck_idle_##idle##_sampling_edge_##v))(o,idle,v,__VA_ARGS__)
+/*	Mandatory parameter `sampling_edge` following `idle_state`
+ */
+#define _hw_spia_idle_low_sampling_rising	, 0	/* , cpol */
+#define _hw_spia_idle_low_sampling_falling	, 1
+#define _hw_spia_idle_high_sampling_rising	, 1
+#define _hw_spia_idle_high_sampling_falling	, 0
 
-#define _hwa_cfspia_vsampling_edge_0(o,idle,v,...)			\
-  HW_E_AVL(sampling_edge, v, low | high)
+#define _hwa_cfspia_ksampling_0(o,v,k,...)	HW_E_VL(k,sampling_edge)
+#define _hwa_cfspia_ksampling_1(o,i,k,v,...)	HW_G2(_hwa_cfspia_vsampling,HW_IS(,_hw_spia_idle_##i##_sampling_##v))(o,i,v,__VA_ARGS__)
+#define _hwa_cfspia_vsampling_0(o,i,v,...)	HW_E_AVL(sampling_edge, v, rising|falling)
+#define _hwa_cfspia_vsampling_1(o,i,v,k,...)				\
+  _hwa_write_reg(o,cpha, HW_A1(_hw_spia_idle_##i##_sampling_##v));	\
+  HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)  
 
-#define _hwa_cfspia_vsampling_edge_1(o,idle,v,k,...)			\
-  HW_TX( _hwa_write_reg(o,cpha, HW_A1(_hw_spia_sck_idle_##idle##_sampling_edge_##v)),\
-	 __VA_ARGS__)
+/*	Optionnal parameter `data_order`
+ */
+#define _hwa_cfspia_korder_0(o,...)	HW_EOL(__VA_ARGS__)
+#define _hwa_cfspia_korder_1(o,k,v,...)	HW_Y(_hwa_cfspia_vorder,_hw_spia_order_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_vorder_0(o,v,...)	HW_E_AVL(order, v, (lsb_first|msb_first))
+#define _hwa_cfspia_vorder_1(o,v,k,...)			\
+  _hwa_write_reg(o,dord,HW_A1(_hw_spia_order_##v));	\
+  HW_EOL(__VA_ARGS__)
+
+#define _hw_spia_order_msb_first		, 0	/* , order */
+#define _hw_spia_order_lsb_first		, 1
 
 
 /**
@@ -178,7 +184,7 @@
 /**
  * @page atmelavr_spia
  * @code
- * hw_write( spi0, value );
+ * hw(_write, spi0, value );
  * @endcode
  */
 #define _hw_mtd_hw_write__spia		, _hw_wrspia
@@ -220,8 +226,8 @@
  */
 #define _hw_mtd_hw_turn__spia		, _hw_turn_spia
 
-#define _hw_turn_spia(o,i,a, ...)					\
-  HW_Y(_hw_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_turn_spia(o,i,a,k,...)				\
+  HW_Y(_hw_turn_spia,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
@@ -235,8 +241,8 @@
  */
 #define _hw_mtd_hwa_turn__spia		, _hwa_turn_spia
 
-#define _hwa_turn_spia(o,i,a, ...)					\
-  HW_Y(_hwa_turn_spia,_hw_state_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hwa_turn_spia(o,i,a,k,...)				\
+  HW_Y(_hwa_turn_spia,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\
@@ -250,9 +256,8 @@
  * Reading the "transfer complete" flag:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( spi0 ) ) ) {  // Read "transfer complete" IRQ flag
- *   hw( turn, HW_IRQ( spi0, off ) );		   // Disable transfer complete IRQs
- * }
+ * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read "transfer complete" IRQ flag
+ *   hw( turn, HW_IRQ( spi0, off ) );     // Disable transfer complete IRQs
  * @endcode
  *
  * The "transfer complete" flag is cleared by hardware when the corresponding
@@ -261,7 +266,7 @@
  *
  * @code
  * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read transfer complete IRQ flag
- *   data = hw( read, spi0 );		   // Read data and clear transfer complete IRQ flag
+ *   data = hw( read, spi0 );             // Read data and clear transfer complete IRQ flag
  * @endcode
  *
  * The `hw(stat,)` instruction lets you read the `collision` flag:
@@ -339,7 +344,7 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *
  *  * `en`: spi enable
  *  * `dord`: data order
- *  * `mstr`: master/slave mode
+ *  * `mstr`: master/slave
  *  * `cpol`: clock polarity
  *  * `cpha`: clock phase
  *  * `xpr`: clock prescaler

@@ -57,6 +57,7 @@
 #define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
 #define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
 #define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
+#define HW_E_TBI(f)		HW_E(instruction is not implemented yet)
 
 #define HW_E_ML(l)		HW_E(expected one argument in `l`)
 #define HW_E_NIL(v,l)		HW_E(`v` is not in `l`)
@@ -130,15 +131,6 @@
 #define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)	HW_A1(_hw_is_##x##_##y,0)
 
-#define _hw_is_0_0			, 1
-#define _hw_is_				, 1
-#define _hw_is__			, 1
-#define _hw_is_enabled_enabled		, 1
-#define _hw_is_disabled_disabled	, 1
-#define _hw_is_yes_yes			, 1
-#define _hw_is_no_no			, 1
-#define _hw_is_off_off			, 1
-
 
 /**
  * @ingroup private_mac
@@ -170,6 +162,18 @@
 #define _HW_Y2(f,x,...)			_HW_Y3(f,_hw_is_##x,0,)
 #define _HW_Y3(...)			_HW_Y4(__VA_ARGS__)
 #define _HW_Y4(f,x,y,...)		f##_##y
+
+
+/**
+ * @ingroup private_mac
+ * @brief Expand the argument to a function call
+ * @hideinitializer
+ *
+ * The first argument is ignored, the second is the name of the function, the
+ * third is the argument of the function.
+ */
+#define HW_VF(...)			_HW_VF2(__VA_ARGS__)
+#define _HW_VF2(x,f,a)			f(a)
 
 
 /**
@@ -777,8 +781,6 @@
 #define _hw_uintt2_1(n)			uint16_t
 #define _hw_uintt2_0(n)			HW_E_VL(n,8|16) uint8_t
 
-#define _hw_is_8_8_			, 1
-#define _hw_is_16_16_			, 1
 
 /**
  * @ingroup private_ins

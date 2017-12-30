@@ -65,7 +65,7 @@ int main ( )
    *  mode.
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(CLKDIV),
+       clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
        top,	  compare0

@@ -237,8 +237,6 @@ $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
 
 #  Object files list (from source files list)
 #
-#OBJECTS		 = $(SOURCES:.c=.$(DEVICE).o)
-#OBJECTS		:= $(OBJECTS:.sx=.$(DEVICE).o)
 OBJECTS		:= $(SOURCES:.c=.o)
 OBJECTS		:= $(OBJECTS:.sx=.o)
 OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
@@ -255,6 +253,15 @@ LDFLAGS		+= -Wl,--gc-sections
 #LDFLAGS		+= -L/usr/lib/avr/lib
 #LDFLAGS		+= -L/home/indy/dev/avr/toolchain/current/install/avr/lib
 #LDFLAGS		+= -lm
+#LDFLAGS		+= -Wl,--section-start=.flash=.etext
+
+#  Use a special linker script in the source directory, based on the DEVICE used.
+#    ATmega328:     avr5.ld
+#    ATtinyX4 / X5: avr25.ld
+#
+ifneq (,$(LOCALLD))
+  LDFLAGS	+= -Tavr$(shell echo __AVR_ARCH__ | avr-cpp -mmcu=$(DEVICE) | tail -1).ld
+endif
 
 
 $(OUT).elf: $(OBJECTS) $(LDSCRIPT)
@@ -268,28 +275,11 @@ $(OUT).elf: $(OBJECTS) $(LDSCRIPT)
 #									       #
 ################################################################################
 
-hex:	$(OUT).hex
 bin:	$(OUT).bin
 lst:	$(OUT).lst
 
-#  PADTO is used to fill unused flash memory space with 0xFF bytes
-#
-ifneq (,$(DEVICE_FLASH_SIZE))
-#  $(info PADTO=$(DEVICE_FLASH_SIZE))
-  PADTO = --pad-to $(DEVICE_FLASH_SIZE)
-else
-  PADTO =
-endif
-
 %.bin: %.elf
 	@$(OBJCOPY) --gap-fill=0xFF -O binary $^ $@
-
-# @$(OBJCOPY) --only-section .text --only-section .data	\
-# 	-O binary --gap-fill=0xFF $(PADTO) $^ $@
-
-%.hex: %.elf
-	@$(OBJCOPY) --only-section .text --only-section .data	\
-		-O ihex --gap-fill=0xFF $^ $@
 
 #  Object dump flags:
 #

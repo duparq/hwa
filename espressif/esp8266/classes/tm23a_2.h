@@ -49,7 +49,7 @@
 #define _hw_mtd_hw_configure__tm23a	, _hw_cftm23a
 #define _hw_mtd_hwa_configure__tm23a	, _hwa_cftm23a
 
-#define _hw_cftm23a(o,i,a,...)						\
+#define _hw_cftm23a(o,i,a,k,...)					\
   do{									\
     typedef struct {							\
       uint8_t commit ;							\
@@ -59,12 +59,11 @@
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup( shared );						\
     _hwa_setup( o );							\
-    HW_Y(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cftm23a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
     hwa->commit = 1; _hwa_commit( o ); _hwa_commit( shared );	\
   }while(0)
 
-#define _hwa_cftm23a(o,i,a,...)						\
-  HW_Y(_hwa_cftm23a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) \
+#define _hwa_cftm23a(o,i,a,k,...)	HW_Y(_hwa_cftm23a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,)
 
 
 /*	Optionnal parameter `clock`
@@ -72,16 +71,15 @@
 #define _hwa_cftm23a_kclock_1(o,k,v,...)				\
   HW_Y(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cftm23a_vclock_1(o,v,...)					\
+#define _hwa_cftm23a_vclock_1(o,v,k,...)				\
   _hwa_write_reg(o,psc,HW_A1(_hw_tm23a_clock_##v));			\
-  HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
 #define _hwa_cftm23a_kclock_0(o,k,...)					\
   HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_clock_clock		, 1
 #define _hw_tm23a_clock_apb		, 0
 #define _hw_tm23a_clock_apb_div_1	, 0
 #define _hw_tm23a_clock_apb_div_16	, 1
@@ -103,7 +101,6 @@
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_countmode_countmode	, 1
 #define _hw_tm23a_countmode_stop	, 0, 0	/* en, arl */
 #define _hw_tm23a_countmode_down	, 1, 0
 #define _hw_tm23a_countmode_loop_down	, 1, 1
@@ -121,18 +118,14 @@
 #define _hwa_cftm23a_kbottom_0(o,k,...)				\
     HW_Y(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_bottom_bottom		, 1
-
 /*	Optionnal parameter `top`
  */
-#define _hwa_cftm23a_ktop_1(o,k,v,...)					\
+#define _hwa_cftm23a_ktop_1(o,k,v,kk,...)				\
   _hwa_write_reg(o,load,(uint32_t)(v));					\
-    HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##kk)(o,kk,__VA_ARGS__)
 
-#define _hwa_cftm23a_ktop_0(o,...)					\
-  HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##__VA_ARGS__)(o,__VA_ARGS__)
-
-#define _hw_is_top_top			, 1
+#define _hwa_cftm23a_ktop_0(o,k,...)					\
+  HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##k)(o,k,__VA_ARGS__)
 
 #if 0
 /*	Optionnal parameter `irq_type`
@@ -150,7 +143,6 @@
 #define _hwa_cftm23a_kirqtype_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
-#define _hw_is_irq_type_irq_type	, 1
 #define _hw_tm23a_irqtype_edge		, 1, 0 /* enable, type */
 #define _hw_tm23a_irqtype_level		, 1, 1
 #define _hw_tm23a_irqtype_none		, 0, 0
@@ -182,7 +174,6 @@
 #define _hwa_cftm23a_kaction_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
-#define _hw_is_action_action		, 1
 #define _hw_tm23a_action_none		, 0
 #define _hw_tm23a_action_irq		, 1
 #define _hw_tm23a_action_nmi		, 2

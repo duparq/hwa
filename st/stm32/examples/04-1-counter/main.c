@@ -78,14 +78,16 @@ int main ( )
   /*  Configure the counter
    */
   /* hwa( configure, COUNTER, */
-  /*      clock,     internal, */
+  /*      clock,     from_apb1, */
   /*      direction, up_loop, */
   /*      prescaler, (uint16_t)(0.001*AHBHZ)-1, */
-  /*      top,       (uint16_t)(PERIOD/2 / 0.001)-1 ); */
+  /*      reload,    (uint16_t)(PERIOD/2 / 0.001)-1 ); */
+
   hwa( write, register(COUNTER,dir), 0 );
   hwa( write, register(COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
   hwa( write, register(COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 );
-  hwa( write, register(COUNTER,cen), 1 );
+  //  hwa( write, register(COUNTER,cen), 1 );
+  hwa( turn, COUNTER, on );
 
   hwa( turn, irq(COUNTER), on );
   hwa( turn, nvic, irq(COUNTER), on );

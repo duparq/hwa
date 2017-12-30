@@ -9,6 +9,52 @@
  * @brief 8-bit counter
  */
 
+HW_INLINE uint8_t _hw_c8bck_none( float v )
+{
+  if ( v != 0 )
+    HWA_E(value of `clock` must be in (`none`, `ioclk/2**n` with n in [1..14], `external_falling`, `external_rising`));
+
+  return 0 ;
+}
+
+HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
+{
+  if ( v == 16384 )
+    return 1 ;
+  if ( v == 8192 )
+    return 2 ;
+  if ( v == 4096 )
+    return 3 ;
+  if ( v == 2048 )
+    return 4 ;
+  if ( v == 1024 )
+    return 5 ;
+  if ( v == 512 )
+    return 6 ;
+  if ( v == 256 )
+    return 7 ;
+  if ( v == 128 )
+    return 8 ;
+  if ( v == 64 )
+    return 9 ;
+  if ( v == 32 )
+    return 10 ;
+  if ( v == 16 )
+    return 11 ;
+  if ( v == 8 )
+    return 12 ;
+  if ( v == 4 )
+    return 13 ;
+  if ( v == 2 )
+    return 14 ;
+  if ( v == 1 )
+    return 15 ;
+
+  HWA_E(value of `clock` must be in (`none`, `ioclk/2**n` with n in [1..14], `external_falling`, `external_rising`));
+
+  return 0 ;
+}
+
 /**
  * @page atmelavr_c8b
  * @section atmelavr_c8b_acfg Configuration
@@ -23,22 +69,7 @@
  *	//  Clock source
  *	//
  *	clock,	     none			 // No clock, counter stopped
- *		   | prescaler_output(	    0	 // No clock, counter stopped
- *				      |	    1	 // System clock
- *				      |	    2	 // System clock divided by 2
- *				      |	    4	 // System clock divided by 4
- *				      |	    8
- *				      |	   16
- *				      |	   32
- *				      |	   64
- *				      |	  128
- *				      |	  256
- *				      |	  512
- *				      |	 1024
- *				      |	 2048
- *				      |	 4096
- *				      |	 8192
- *				      | 16384 ),  // System clock divided by 16384
+ *                 | ioclk [/ 2**{n}]            // I/O clock [divided], n in [ 0..14 ]
  *
  *	//  Class _c8b counters all loop from 0 to top
  *	//
@@ -57,54 +88,31 @@
  *     );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__c8b	, _hwa_cfc8b
+#define _hw_mtd_hwa_configure__c8b		, _hwa_cfc8b
 
 /*  Mandatory argument `clock`
  *
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hw_is_clock_clock		,  1
-#define _hw_c8b_clock_none		,  0	/* , CS */
-#define _hw_c8b_clock_stop		,  0
-#define _hw_c8b_clock_0			,  0
-#define _hw_c8b_clock_prescaler_output_0	,  0
-#define _hw_c8b_clock_prescaler_output_1	,  1
-#define _hw_c8b_clock_prescaler_output_2	,  2
-#define _hw_c8b_clock_prescaler_output_4	,  3
-#define _hw_c8b_clock_prescaler_output_8	,  4
-#define _hw_c8b_clock_prescaler_output_16	,  5
-#define _hw_c8b_clock_prescaler_output_32	,  6
-#define _hw_c8b_clock_prescaler_output_64	,  7
-#define _hw_c8b_clock_prescaler_output_128	,  8
-#define _hw_c8b_clock_prescaler_output_256	,  9
-#define _hw_c8b_clock_prescaler_output_512	, 10
-#define _hw_c8b_clock_prescaler_output_1024	, 11
-#define _hw_c8b_clock_prescaler_output_2048	, 12
-#define _hw_c8b_clock_prescaler_output_4096	, 13
-#define _hw_c8b_clock_prescaler_output_8192	, 14
-#define _hw_c8b_clock_prescaler_output_16384	, 15
-#define _hw_c8b_clock_prescaler_output(x)	HW_G2(_hw_c8b_clock_prescaler_output,x)
-
-#define _hwa_cfc8b(o,i,a, ...)						\
-  do { HW_Y(_hwa_cfc8b_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
+#define _hwa_cfc8b(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfc8b_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8b_kclock_0(o,k,...)		HW_E_VL(k,clock)
 #define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_Y(_hwa_cfc8b_vclock,_hw_c8b_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, none | prescaler_output( 0 | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096 | 8192 | 16384 ))
+  HW_E_AVL(clock, v, `none` | `ioclk [/ 2**n]` with n in {0..14})
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
-  _hwa_write_reg(o, cs, HW_A1(_hw_c8b_clock_##v));			\
+  _hwa_write_reg(o, cs, HW_VF(_hw_c8b_clock_##v));				\
   HW_Y(_hwa_cfc8b_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+
+#define _hw_c8b_clock_none			, _hw_c8bck_none, 0
+#define _hw_c8b_clock_ioclk			, _hw_c8bck_ioclk, 16384.0
 
 /*  Optionnal argument `countmode`
  */
-#define _hw_is_countmode_countmode	, 1
-#define _hw_is_up_loop_up_loop		, 1
-#define _hw_is_up_up_loop_loop		, 1
-
 #define _hwa_cfc8b_kcountmode_1(o,k,v,...)				\
   HW_G2(_hwa_cfc8b_vcountmode,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
 
@@ -119,8 +127,6 @@
 
 /*  Optionnal argument `bottom`
  */
-#define _hw_is_bottom_bottom		, 1
-
 #define _hwa_cfc8b_kbottom_1(o,k,v,...)				\
     HW_G2(_hwa_cfc8b_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
@@ -136,7 +142,6 @@
 
 /*  Optionnal argument `top`
  */
-#define _hw_is_top_top			, 1	/* , CTC */
 #define _hw_c8b_top_0xFF		, 0
 #define _hw_c8b_top_0x00FF		, 0
 #define _hw_c8b_top_255			, 0
@@ -159,9 +164,6 @@
 
 /*  Optionnal argument `overflow`
  */
-#define _hw_is_overflow_overflow	, 1
-#define _hw_is_at_bottom_at_bottom	, 1
-
 #define _hwa_cfc8b_koverflow_1(o,k,v,...)				\
     HW_G2(_hwa_cfc8b_voverflow,HW_IS(at_bottom,v))(o,v,__VA_ARGS__)
 

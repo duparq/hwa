@@ -33,9 +33,6 @@
  *	     );
  * @endcode
  */
-#define _hw_is_update_update		, 1
-#define _hw_is_output_output		, 1
-
 #define _hw_cmp16a_update_immediately	, 0
 #define _hw_cmp16a_update_at_bottom	, 1
 #define _hw_cmp16a_update_at_top	, 2
@@ -54,13 +51,11 @@
 #define _hw_cmp16a_output_set_on_match_up_clear_on_match_down	, 7, 3
 
 
-#define _hw_is_disconnected_disconnected	, 1
-
 #define _hw_mtd_hw_configure__cmp16a	, _hw_cfcmp16a
 
-#define _hw_cfcmp16a(o,i,a, ...)						\
+#define _hw_cfcmp16a(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hw_cfcmp16a_xoutput,_hw_is_output_##__VA_ARGS__)(o,__VA_ARGS__,); \
+    HW_Y(_hw_cfcmp16a_xoutput,_hw_is_output_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
 
 #define _hw_cfcmp16a_xoutput_0(o,k,...)					\
@@ -106,9 +101,9 @@
  */
 #define _hw_mtd_hwa_configure__cmp16a	, _hwa_cfcmp16a
 
-#define _hwa_cfcmp16a(o,i,a,...)						\
+#define _hwa_cfcmp16a(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfcmp16a_xupdate,_hw_is_update_##__VA_ARGS__)(o,__VA_ARGS__,); \
+    HW_Y(_hwa_cfcmp16a_xupdate,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
 
 #define _hwa_cfcmp16a_xupdate_0(o,k,...)					\

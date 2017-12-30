@@ -34,9 +34,9 @@ Any C compiler compatible with the
 should be able to compile the source code.
 
 As the C-preprocessor can be used to parse assembler source, a few features of
-HWA can be used for assembler programming. The implementation of a @ref
-atmelavr_swuarta "software UART for Atmel AVR microcontrollers" (see
-`atmel/avr/swuarta/`) and a @ref atmelavr_diabolo "bootloader" (see
+HWA can be used for assembler programming. The implementation of a [software
+UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
+`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
 `atmel/avr/examples/diabolo`) are examples of such a usage.
 
 Here is an example of how to use a watchdog interrupt to make a LED blink with
@@ -114,7 +114,8 @@ Documentation
 =============
 
 A ready-made documentation is available
-[here](http://duparq.free.fr/hwa/index.html). Start with the @ref using page.
+[here](http://duparq.free.fr/hwa/index.html). Start with the [Using
+HWA](using.html) page.
 
 Building the documentation from sources requires
 [Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make` in the
@@ -131,13 +132,16 @@ to heavy changes of the code base.
 Supported devices
 =================
 
- * HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8.
+ * HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8:
+   * ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
+   * ATtiny25, ATtiny45, ATtiny85,
+   * ATmega328P
+   * ATmega32U4 needs probably some updates
 
- * ST's STM32F103 is the device that initiated the writing of HWA. The code is
-   being rewritten.
+ * Very partial support of ST's STM32F103:
+   * STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
 
- * Support of ATmega32U4 and Espressif's ESP8266 has been started but needs to
-   be rewritten.
+ * Very partial support of Espressif's ESP8266
 
 
 Organization of the code
@@ -146,8 +150,8 @@ Organization of the code
 The base source code of HWA is in the `hwa/` directory.
 
 Device-related sources are stored in `vendor/architecture/` directories
-(`atmel/avr/`, `st/stm32/`, `espressif/`, ...) where are stored `classes/`,
-`devices/`, and `examples/` directories.
+(`atmel/avr/`, `st/stm32/`, `espressif/esp8266/`, ...) where are stored
+`classes/`, `devices/`, and `examples/` directories.
 
 
 Hosting

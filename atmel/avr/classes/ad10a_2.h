@@ -13,6 +13,9 @@
  */
 #include "ad10__2.h"
 
+#define _hw_mtd_hw_prescaler_max__ad10a		, hw_ad10_prescaler_max
+#define _hw_mtd_hw_prescaler_min__ad10a		, hw_ad10_prescaler_min
+
 /**
  * @page atmelavr_ad10a
  * @section atmelavr_ad10a_cf Configuration
@@ -25,47 +28,43 @@
  * @code
  * hwa( configure, adc0,
  * 
- *	//  Clock source: the resulting clock frequency should be in
- *	//  the 50..200 kHz range for maximum resolution, and in all
- *	//  case lower than 1 MHz.
- *	//
- *	clock,	      sysclk_div(    2
- *				 |   4
- *				 |   8
- *				 |  16
- *				 |  32
- *				 |  64
- *				 | 128 ),
+ *      //  Clock source: the resulting clock frequency should be in
+ *      //  the 50..200 kHz range for maximum resolution, and in all
+ *      //  case lower than 1 MHz.
+ *      //
+ *      clock,     min                       // choose the nearest 50 kHz
+ *               | max                       // choose the nearest 200 kHz
+ *               | ioclk / 2**n,             // with n in 1..7
  *
- *	//  How a conversation is started
- *	//
- *	trigger,      manual			// with the `trigger` instruction
- *		    | auto			// as soon as a consersion is completed
- *		    | acmp0			// ANA_COMP interrupt request
- *		    | int0			// INT0 interrupt request
- *		    | counter0_compare0		// TIMER0_COMPA interrupt request
- *		    | counter0_overflow		// TIMER0_OVF interrupt request
- *		    | counter1_compare1		// TIMER1_COMPB interrupt request
- *		    | counter1_overflow		// TIMER1_OVF interrupt request
- *		    | counter1_capture,		// TIMER1_CAPT interrupt request
+ *      //  How a conversation is started
+ *      //
+ *      trigger,   manual                    // with the `trigger` action
+ *               | auto                      // as soon as a conversion is completed
+ *               | acmp0                     // ANA_COMP interrupt request
+ *               | int0                      // INT0 interrupt request
+ *               | counter0_compare0         // TIMER0_COMPA interrupt request
+ *               | counter0_overflow         // TIMER0_OVF interrupt request
+ *               | counter1_compare1         // TIMER1_COMPB interrupt request
+ *               | counter1_overflow         // TIMER1_OVF interrupt request
+ *               | counter1_capture,         // TIMER1_CAPT interrupt request
  *
- *	//  Voltage reference
- *	//
- *	vref,	      vcc			// Vcc
- *		    | pin_aref			// Voltage on AREF pin
- *		    | bandgap,			// Internal 1.1V bandgap
+ *      //  Voltage reference
+ *      //
+ *      vref,      vcc                       // Vcc
+ *               | pin_aref                  // Voltage on AREF pin
+ *               | bandgap,                  // Internal 1.1V bandgap
  * 
- *	//  Result alignment (default is `right`)
- *	//
- *    [ align,	      left
- *		    | right, ]
+ *      //  Result alignment (default is `right`)
+ *      //
+ *    [ align,     left
+ *               | right, ]
  *
- *	//  Input
- *	//
- *	input,	      HW_PIN(adc0..7)
- *		    | agnd
- *		    | bandgap
- *		    | temperature );
+ *      //  Input
+ *      //
+ *      input,     HW_PIN(adc0..7)
+ *               | agnd
+ *               | bandgap
+ *               | temperature );
  * @endcode
  *
  * @subsection atmelavr_ad10a_cf2 Differential mode
@@ -98,40 +97,38 @@
  *	negative_input,	  HW_PIN(adc0..7) );
  * @endcode
  */
+
+/* FIXME
+ *
+ * Use HW_IRQ(...) or irq() for trigger?
+ */
+
 #define _hw_mtd_hwa_configure__ad10a	, _hwa_cfad10a
 
 /*  Mandatory parameter `clock`
  */
-#define _hwa_cfad10a(o,i,a,...)						\
+#define _hwa_cfad10a(o,i,a,k,...)					\
   do {									\
     uint8_t gain __attribute__((unused)) = 1 ;				\
     uint8_t input1 __attribute__((unused)) = 0xFF ;			\
     uint8_t input2 __attribute__((unused)) = 0xFF ;			\
     _hwa_write_reg( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfad10a_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfad10a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfad10a_kclock_0(o,k,...)					\
   HW_E_VL(k,clock)
 
 #define _hwa_cfad10a_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10a_vclock,_hw_ad10a_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vclock,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, sysclk_div( 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 ))
+  HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 
 #define _hwa_cfad10a_vclock_1(o,v,k,...)				\
-  _hwa_write_reg(o,ps, HW_A1(_hw_ad10a_clock_##v));			\
+  _hwa_write_reg(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
   HW_Y(_hwa_cfad10a_ktrigger,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
-#define _hw_ad10a_clock_sysclk_div_2	, 1	/* , ps */
-#define _hw_ad10a_clock_sysclk_div_4	, 2
-#define _hw_ad10a_clock_sysclk_div_8	, 3
-#define _hw_ad10a_clock_sysclk_div_16	, 4
-#define _hw_ad10a_clock_sysclk_div_32	, 5
-#define _hw_ad10a_clock_sysclk_div_64	, 6
-#define _hw_ad10a_clock_sysclk_div_128	, 7
-#define _hw_ad10a_clock_sysclk_div(x)		HW_G2(_hw_ad10a_clock_sysclk_div,x)
 
 /*  Mandatory parameter `trigger`
  */
@@ -149,7 +146,6 @@
   _hwa_write_reg(o,ts, HW_A2(_hw_ad10a_trigger_##v));		\
   HW_Y(_hwa_cfad10a_kvref,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_trigger_trigger		, 1
 #define _hw_ad10a_trigger_manual	, 0, 0	/* , ate, ts */
 #define _hw_ad10a_trigger_auto		, 1, 0
 #define _hw_ad10a_trigger_acmp0		, 1, 1
@@ -175,7 +171,6 @@
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
   HW_Y(_hwa_cfad10a_kalign,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_vref_vref		, 1
 #define _hw_ad10a_vref_vcc		, 0	/* , refs */
 #define _hw_ad10a_vref_pin_aref		, 1
 #define _hw_ad10a_vref_bandgap		, 2
@@ -194,7 +189,6 @@
 #define _hwa_cfad10a_kalign_0(o,k,...)					\
   HW_Y(_hwa_cfad10a_kpolarity,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_align_align		, 1
 #define _hw_ad10a_align_left		, 1	/* , lar */
 #define _hw_ad10a_align_right		, 0
 
@@ -213,14 +207,11 @@
 #define _hwa_cfad10a_kpolarity_0(o,k,...)			\
   HW_Y(_hwa_cfad10a_kgain,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_polarity_polarity	, 1
 #define _hw_ad10a_polarity_unipolar	, 0	/* , bin */
 #define _hw_ad10a_polarity_bipolar	, 1
 
 /*  Optionnal parameter `gain`
  */
-#define _hw_is_gain_gain		, 1
-
 #define _hwa_cfad10a_kgain_1(o,k,v,...)					\
   gain = (uint8_t)(v) ;							\
   if ( gain != 1 && gain != 20 )					\
@@ -259,7 +250,6 @@
 #define _hwa_cfad10a_kinput_0(o,k,...)					\
   HW_G2(_hwa_cfad10a_kpositive_input,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
-#define _hw_is_input_input		, 1
 #define _hw_ad10a_input_bandgap		, 0x21	/* , mux */
 #define _hw_ad10a_input_ground		, 0x20
 #define _hw_ad10a_input_temperature	, 0x22
@@ -292,9 +282,6 @@
   uint8_t negative_input = HW_A1(_hw_ad10a_input_##v);		\
   HW_TX(_hwa_write_reg(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )), \
 	__VA_ARGS__);
-
-#define _hw_is_positive_input_positive_input	, 1
-#define _hw_is_negative_input_negative_input	, 1
 
 
 /*	Check the combination of differential inputs & gain, return the MUX

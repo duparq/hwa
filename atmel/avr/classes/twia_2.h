@@ -13,11 +13,11 @@
  * @page atmelavr_twia
  * @section atmelavr_twia_cf Configuration
  *
- * __Note__ Configuring the TWI enables it and configures the SCL and SDA pins as
- * high-level outputs.
+ * __Note__ When configured, the TWI takes control of the SCL and SDA
+ * pins. These pins do not need to be configured.
  *
  * @code
- * hw( configure, twi0,
+ * hw | hwa( configure, twi0,
  *
  *	      //  scl speed
  *	      //
@@ -34,41 +34,16 @@
  * @endcode
  */
 #define _hw_mtd_hw_configure__twia	, _hw_cftwia
-#define _hw_cftwia( o,i,a, ... )		_hwx_cftwia( _hw, o, __VA_ARGS__,, )
+#define _hw_cftwia( o,i,a, ... )	_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
-/**
- * @page atmelavr_twia
- *
- * @code
- * hwa( configure, twi0,
- *
- *	       //  scl speed
- *	       //
- *	     [ sclhz,		     <value>, ]
- *
- *	     [ slave_address,	     <value>, ]
- *
- *	     [ general_call,	     enabled
- *				   | disabled, ]
- *
- *	     [ slave_address_mask,   <value> ]
- *
- *	     );
- * @endcode
- */
 #define _hw_mtd_hwa_configure__twia	, _hwa_cftwia
-#define _hwa_cftwia( o,i,a, ... )		_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
-\
+#define _hwa_cftwia( o,i,a, ... )	_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 
 /*	Optionnal argument `sclhz`
  */
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
     /*	Configure I/Os */						\
-    x( configure, HW_REL(o,pin_scl), direction, output );		\
-    x( configure, HW_REL(o,pin_sda), direction, output );		\
-    x( write, HW_REL(o,pin_scl), 1 );					\
-    x( write, HW_REL(o,pin_sda), 1 );					\
     HW_Y(_hwx_cftwia_ksclhz,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
   } while(0)
 
@@ -107,8 +82,6 @@
 #define _hwx_cftwia_ksclhz_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_ksladdr,HW_IS(slave_address,k))(x,o,k,__VA_ARGS__)
 
-#define _hw_is_sclhz_sclhz		, 1
-
 /*	Optionnal argument `slave_address`
  */
 #define _hwx_cftwia_ksladdr_1(x,o,k,v,...)			\
@@ -125,8 +98,6 @@
 #define _hwx_cftwia_ksladdr_0(x,o,k,...)				\
   HW_G2(_hwx_cftwia_kgcall,HW_IS(general_call,k))(x,o,k,__VA_ARGS__)
 
-#define _hw_is_slave_address_slave_address	, 1
-
 /*	Optionnal argument `general_call`
  */
 #define _hwx_cftwia_kgcall_1(x,o,k,v,...)				\
@@ -142,8 +113,6 @@
 #define _hwx_cftwia_kgcall_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
-#define _hw_is_general_call_general_call	, 1
-
 /*	Optionnal argument `slave_address_mask`
  */
 #define _hwx_cftwia_kslam_1(x,o,k,v,...)			\
@@ -158,8 +127,6 @@
 
 #define _hwx_cftwia_kslam_0(x,o,...)		\
   HW_EOL(__VA_ARGS__)
-
-#define _hw_is_slave_address_mask_slave_address_mask	, 1
 
 
 /**
@@ -177,12 +144,12 @@
  * character.
  *
  * @code
- * hw( tx_start, twi0 [,irq] );		// Transmit START condition
- * hw( tx_slaw, twi0, SLA [,irq] );		// Transmit SLA slave address + write bit
- * hw( tx_slar, twi0, SLA [,irq] );		// Transmit SLA slave address + read bit
- * hw( tx_data, twi0, DATA [,irq] );	// Transmit DATA
- * hw( tx_read, twi0, ack | nack [,irq] );	// Receive one byte, send ACK or NACK
- * hw( tx_stop, twi0 [,irq] );		// Transmit STOP condition
+ * hw( tx_start, twi0 [,irq] );              // Transmit START condition
+ * hw( tx_slaw,  twi0, SLA [,irq] );         // Transmit SLA slave address + write bit
+ * hw( tx_slar,  twi0, SLA [,irq] );         // Transmit SLA slave address + read bit
+ * hw( tx_data,  twi0, DATA [,irq] );        // Transmit DATA
+ * hw( tx_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
+ * hw( tx_stop,  twi0 [,irq] );              // Transmit STOP condition
  * @endcode
  */
 #define _hw_mtd_hw_tx_start__twia	, _hw_twia_txstart
@@ -228,19 +195,15 @@
 
 
 #define _hw_mtd_hw_tx_read__twia	, _hw_twia_txread
-#define _hw_twia_txread(o,i,a,...)	HW_Y(_hw_twia_txread_ack,_hw_is_ack_##__VA_ARGS__)(o,__VA_ARGS__,,)
+#define _hw_twia_txread(o,i,a,k,...)	HW_Y(_hw_twia_txread_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
 #define _hw_twia_txread_ack_1(o,ok,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
-#define _hw_twia_txread_ack_0(o,...)	HW_Y(_hw_twia_txread_nack,_hw_is_nack_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txread_ack_0(o,k,...)	HW_Y(_hw_twia_txread_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
 #define _hw_twia_txread_nack_1(o,ok,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
 #define _hw_twia_txread_nack_0(o,k,...)	HW_E_VL(k, ack | nack)
 
-#define _hw_is_ack_ack			, 1
-#define _hw_is_nack_nack		, 1
 
 #define _hw_twia_txend_0(o,v,...)	HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v), __VA_ARGS__ )
 #define _hw_twia_txend_1(o,v,k,...)	HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v##ie), __VA_ARGS__ )
-
-#define _hw_is_irq_irq			, 1
 
 
 /**

@@ -1,10 +1,12 @@
 
 #include BOARD_H
 
-#define LED		gpio4
-
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
+
+#if !defined LED
+#  define LED		gpio4
+#endif
 
 extern void user_uart_wait_tx_fifo_empty();
 
@@ -32,15 +34,15 @@ void IROM user_init()
 
   /*  Install user IRQ handlers
    */
-  os_handle_irq( HW_IRQ(timer1, irq), ev_timer );
-  os_handle_irq( HW_IRQ(timer1, nmi), ev_timer );
+  os_set_isr( HW_IRQ(timer1, irq), ev_timer );
+  os_set_isr( HW_IRQ(timer1, nmi), ev_timer );
 
   //  hwa_begin();
   hwa_begin_from_reset();
 
   hwa( configure, LED,
        function,  gpio,
-       direction, output_when_awake );
+       direction, output /* output_when_awake */ );
 
   /*  Configure the UART
    */

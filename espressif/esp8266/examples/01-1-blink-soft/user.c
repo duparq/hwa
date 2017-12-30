@@ -1,13 +1,18 @@
 
 #include BOARD_H
 
-#define LED		gpio5
+#define IROM		__attribute__((section (".irom.text")))
+#define IRAM
+
+#if !defined LED
+#  define LED		gpio2
+#endif
 
 
 /*  Function called every 250 ms
  *   * toggle the LED on/off every 200 ms
  */
-void ICACHE_FLASH_ATTR every10ms ( )
+void IROM every10ms ( )
 {
   if ( hw( read, LED ) == 0 )
     hw( write, LED, 1 );
@@ -16,13 +21,13 @@ void ICACHE_FLASH_ATTR every10ms ( )
 }
 
 
-void ICACHE_FLASH_ATTR user_init()
+void IROM user_init()
 {
   /*  Configure the LED output
    */
   hw( configure, LED,
       function,	 gpio,			// Optionnal
-      direction, output_when_awake );
+      direction, output /* output_when_awake */ );
 
   /*  Trigger a function call every 10 ms (about)
    */

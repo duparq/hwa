@@ -38,6 +38,7 @@
 #define _hw_reg__c16a_cnt		_r32, 0x24, 0x0000FFFF, 0
 #define _hw_reg__c16a_psc		_r32, 0x28, 0x0000FFFF, 0
 #define _hw_reg__c16a_arr		_r32, 0x2C, 0x0000FFFF, 0
+#define _hw_reg__c16a_reload		_r32, 0x2C, 0x0000FFFF, 0	// Synonym
 #define _hw_reg__c16a_ccr1		_r32, 0x34, 0x0000FFFF, 0
 #define _hw_reg__c16a_ccr2		_r32, 0x38, 0x0000FFFF, 0
 #define _hw_reg__c16a_ccr3		_r32, 0x3C, 0x0000FFFF, 0
@@ -53,6 +54,7 @@
 #define _hw_reg__c16a_urs		_cb1, cr1, 1, 2
 #define _hw_reg__c16a_udis		_cb1, cr1, 1, 1
 #define _hw_reg__c16a_cen		_cb1, cr1, 1, 0
+#define _hw_reg__c16a_enable		_cb1, cr1, 1, 0		// Synonym
 
 #define _hw_reg__c16a_ti1s		_cb1, cr2, 1, 7
 #define _hw_reg__c16a_mms		_cb1, cr2, 3, 4

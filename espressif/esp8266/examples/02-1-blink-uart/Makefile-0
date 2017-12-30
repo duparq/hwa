@@ -1,0 +1,37 @@
+
+MFD	:= $(dir $(lastword $(MAKEFILE_LIST)))
+
+SDK	?= $(HOME)/dev/esp8266/esp-open-sdk
+PATH	:= $(SDK)/xtensa-lx106-elf/bin:${PATH}
+
+BOARD	:= wemos-d1
+
+CC	:= xtensa-lx106-elf-gcc
+LD	:= xtensa-lx106-elf-ld
+
+CFLAGS	+= -Os
+CFLAGS	+= -mlongcalls
+CFLAGS	+= -I.
+CFLAGS	+= -I../boards
+CFLAGS	+= -I$(MFD)../../../../include 
+
+CFLAGS	+= 
+CFLAGS	+= -DBOARD_H=\"../boards/$(BOARD).h\"
+
+LDLIBS	= -nostdlib -Wl,--start-group -lmain -lnet80211 -lwpa -llwip -lpp -lphy -lc -Wl,--end-group -lgcc
+
+LDFLAGS = -Teagle.app.v6.ld
+
+user-0x00000.bin: user
+	esptool.py elf2image $^
+
+# user.elf: user.o
+# 	$(LD) $(LDFLAGS) $(LIBS) -o $@ $^
+
+user: user.c
+
+install: user-0x00000.bin
+	esptool.py -p /dev/ttyUSB0 write_flash -ff 80m -fm dout -fs 32m 0 user-0x00000.bin 0x10000 user-0x10000.bin
+
+clean:
+	rm -f user.elf user.o user-0x00000.bin user-0x10000.bin

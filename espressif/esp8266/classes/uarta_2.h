@@ -10,8 +10,8 @@
  */
 
 /**
- * @page esp8266_uarta
- * @section esp8266_uarta_config Configuration
+ * @page espressif_uarta
+ * @section espressif_uarta_config Configuration
  *
  * @code
  * hw/hwa( configure, uart0,
@@ -44,19 +44,17 @@
 #define _hw_mtd_hw_configure__uarta	, _hw_cfuarta
 #define _hw_mtd_hwa_configure__uarta	, _hwa_cfuarta
 
-#define _hw_cfuarta(o,i,a,...)						\
+#define _hw_cfuarta(o,i,a,k,...)					\
   do{									\
     typedef struct { uint8_t commit ; hwa_uarta_t o ; } hwa_t ;		\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup( o );							\
-    HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##__VA_ARGS__)(o,__VA_ARGS__,,);	\
+    HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,,);		\
     hwa->commit = 1 ; _hwa_commit( o );					\
   }while(0)
 
-#define _hwa_cfuarta(o,i,a,...)						\
-  do{									\
-    HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##__VA_ARGS__)(o,__VA_ARGS__,,);	\
-  }while(0)
+#define _hwa_cfuarta(o,i,a,k,...)					\
+  do{ HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 /*	Optionnal parameter `bps`
  */
@@ -65,15 +63,12 @@
 
 #define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
-#define _hwx_cfuarta_vbps_0(o,v,...)					\
+#define _hwx_cfuarta_vbps_0(o,v,k,...)					\
   _hwa_write_reg(o, clkdiv, (int)(0.5 + hw_apbhz*1.0/(v)) );		\
-  HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##__VA_ARGS__)(o,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kbps_0(o,k,...)					\
   HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
-
-#define _hw_is_bps_bps			, 1
-#define _hw_is_bps_baudrate		, 1
 
 /*	Optionnal parameter `databits`
  */
@@ -88,8 +83,6 @@
 
 #define _hwx_cfuarta_kdatabits_0(o,k,...)			\
   HW_Y(_hwx_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
-
-#define _hw_is_databits_databits	, 1
 
 #define _hw_uarta_databits_5		, 0
 #define _hw_uarta_databits_6		, 1
@@ -110,8 +103,6 @@
 #define _hwx_cfuarta_kparity_0(o,k,...)					\
     HW_Y(_hwx_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
-#define _hw_is_parity_parity		, 1
-
 #define _hw_uarta_parity_none		, 0
 #define _hw_uarta_parity_even		, 2
 #define _hw_uarta_parity_odd		, 3
@@ -130,8 +121,6 @@
 #define _hwx_cfuarta_kstopbits_0(o,k,...)	\
   HW_EOL(__VA_ARGS__)
 
-#define _hw_is_stopbits_stopbits	, 1
-
 #define _hw_uarta_stopbits_0		, 0
 #define _hw_uarta_stopbits_1		, 1
 #define _hw_uarta_stopbits_1_5		, 2
@@ -139,8 +128,8 @@
 
 
 /*
- * @page esp8266_uarta
- * @section esp8266_uarta_data Data
+ * @page espressif_uarta
+ * @section espressif_uarta_data Data
  *
  * The `read` returns the content of the data register but it does not
  * verify that the transmit buffer of the UART is not empty before reading
@@ -157,7 +146,7 @@
 
 
 /*
- * @page esp8266_uarta
+ * @page espressif_uarta
  *
  * The `hw_write()` instruction writes a character into the data registerbut it
  * does not verify that the transmit buffer of the UART is not full before
@@ -179,8 +168,8 @@
 
 
 /*
- * @page esp8266_uarta
- * @section esp8266_uarta_stat Status
+ * @page espressif_uarta
+ * @section espressif_uarta_stat Status
  *
  * The UART status contains the following flags:
  *  * `pe` or `parity_error`
@@ -263,6 +252,6 @@
   _hwa_commit_reg( o, _ie )
 
 /**
- * @page esp8266_uarta
+ * @page espressif_uarta
  * <br>
  */

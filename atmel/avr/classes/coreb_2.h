@@ -50,11 +50,9 @@
 
 /*	Optionnal parameter `sleep`
  */
-#define _hw_is_sleep_sleep		, 1
-
-#define _hwa_cfcoreb(o,i,a,...)					\
+#define _hwa_cfcoreb(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfcoreb_ksleep,_hw_is_sleep_##__VA_ARGS__)(o,__VA_ARGS__,,); \
+    HW_Y(_hwa_cfcoreb_ksleep,_hw_is_sleep_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfcoreb_ksleep_1(o,k,v,...)				\
@@ -70,8 +68,6 @@
 
 /*	Optionnal parameter `sleep_mode`
  */
-#define _hw_is_sleep_mode_sleep_mode	, 1
-
 #define _hwa_cfcoreb_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcoreb_ksleepmode_1(o,k,v,...)				\

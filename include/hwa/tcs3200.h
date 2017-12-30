@@ -78,10 +78,6 @@
 #define _hw_t3k2_fl_blue		, 1, 0	/* S3, S2 */
 #define _hw_t3k2_fl_green		, 1, 1	/* S3, S2 */
 
-#define _hw_is_frequency_frequency	, 1
-#define _hw_is_filter_filter		, 1
-#define _hw_is_output_output		, 1
-
 #define _hw_cft3k2(...)			do { _hwx_cft3k2(_hw,__VA_ARGS__) }while(0)
 #define _hwa_cft3k2(...)		do { _hwx_cft3k2(_hwa,__VA_ARGS__) }while(0)
 

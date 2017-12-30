@@ -38,9 +38,9 @@ DIABOLO_OPTS	 += --keep-txd-low=$(DIABOLO_KEEP_TXD_LOW)
 
 #DIABOLO_OPTS	 += --char-delay=$(DIABOLO_CHAR_DELAY)
 
-ifneq (,$(DIABOLO_SYNC))
-  DIABOLO_OPTS	 += --sync=$(DIABOLO_SYNC)
-endif
+# ifneq (,$(DIABOLO_SYNC))
+#   DIABOLO_OPTS	 += --sync=$(DIABOLO_SYNC)
+# endif
 
 DIABOLO_OPTS	 += --mcu=$(DEVICE)
 
@@ -57,7 +57,7 @@ erase:
 
 .PHONY: install
 install: $(OUT).bin
-	@$(diabolo) $(DIABOLO_OPTS)		\
+	$(diabolo) $(DIABOLO_OPTS)		\
 		--cache=/tmp/diabolo-cache.bin	\
 		--burn-flash $<
 

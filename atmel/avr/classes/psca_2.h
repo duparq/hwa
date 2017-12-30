@@ -64,31 +64,29 @@
  * @page atmelavr_psca
  * @section atmelavr_psca_acfg Configuration
  *
- * `_psca` class prescalers are all clocked by the system clock.
+ * `_psca` class prescalers are all clocked by the I/O clock.
  *
  * @code
  * hwa( configure, prescaler0,
- *      clock,     system      );
+ *      clock,     ioclk       );
  * @endcode
  */
 #define _hw_mtd_hwa_configure__psca	, _hwa_cfpsca
 
 /*  Mandatory argument `clock`
  */
-#define _hwa_cfpsca(o,i,a, ...)						\
-  do { HW_Y(_hwa_cfpsca_kclock,_hw_is_clock_##__VA_ARGS__)(o,__VA_ARGS__,,) } while(0)
-
-#define _hw_is_clock_clock		, 1
+#define _hwa_cfpsca(o,i,a,k,...)					\
+  do { HW_Y(_hwa_cfpsca_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfpsca_kclock_0(o,k,...)		HW_E_VL(k,clock)
 
 #define _hwa_cfpsca_kclock_1(o,k,v,...)					\
   HW_Y(_hwa_cfpsca_vclock,_hw_psca_clock_##v)(o,v,__VA_ARGS__)
 
-#define _hw_psca_clock_system		, 0
+#define _hw_psca_clock_ioclk		, 0
 
 #define _hwa_cfpsca_vclock_0(o,v,...)					\
-  HW_E_AVL(`clock`, v, `system`)
+  HW_E_AVL(`clock`, v, `ioclk`)
 
 #define _hwa_cfpsca_vclock_1(o,v,...)					\
   HW_EOL(__VA_ARGS__)

@@ -15,7 +15,7 @@
  * A class `_pscb` object is a resettable clock prescaler that can be connected
  * to one of 3 possible clocks:
  *
- *  * `system`;
+ *  * `ioclk`;
  *  * `pll_32MHz`;
  *  * `pll_64MHz`;
  *

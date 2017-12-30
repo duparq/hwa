@@ -64,7 +64,7 @@ int main ( )
   /*  Configure the compare unit to match every 0.001 s.
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(CLKDIV),
+       clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
        top,	  max );

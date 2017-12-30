@@ -88,7 +88,7 @@ int main ( )
   /*  Configure the counter to count between 0 and TOP
    */
   hwa( configure, COUNTER,
-       clock,	  prescaler_output(CLKDIV),
+       clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
        top,	  TOP );
