@@ -25,17 +25,17 @@
 
 HW_INLINE uint8_t _hw_ad10_prescaler_max()
 {
-  if ( hw_syshz / 128 >= 50000 )
+  if ( HW_SYSHZ / 128 >= 50000 )
     return 128 ;
-  if ( hw_syshz / 64 >= 50000 )
+  if ( HW_SYSHZ / 64 >= 50000 )
     return 64 ;
-  if ( hw_syshz / 32 >= 50000 )
+  if ( HW_SYSHZ / 32 >= 50000 )
     return 32 ;
-  if ( hw_syshz / 16 >= 50000 )
+  if ( HW_SYSHZ / 16 >= 50000 )
     return 16 ;
-  if ( hw_syshz / 8 >= 50000 )
+  if ( HW_SYSHZ / 8 >= 50000 )
     return 8 ;
-  if ( hw_syshz / 4 >= 50000 )
+  if ( HW_SYSHZ / 4 >= 50000 )
     return 4 ;
 
   return 2 ;
@@ -43,17 +43,17 @@ HW_INLINE uint8_t _hw_ad10_prescaler_max()
 
 HW_INLINE uint8_t _hw_ad10_prescaler_min()
 {
-  if ( hw_syshz / 2 < 200000 )
+  if ( HW_SYSHZ / 2 < 200000 )
     return 2 ;
-  if ( hw_syshz / 4 < 200000 )
+  if ( HW_SYSHZ / 4 < 200000 )
     return 4 ;
-  if ( hw_syshz / 8 < 200000 )
+  if ( HW_SYSHZ / 8 < 200000 )
     return 8 ;
-  if ( hw_syshz / 16 < 200000 )
+  if ( HW_SYSHZ / 16 < 200000 )
     return 16 ;
-  if ( hw_syshz / 32 >= 50000 )
+  if ( HW_SYSHZ / 32 >= 50000 )
     return 32 ;
-  if ( hw_syshz / 64 >= 50000 )
+  if ( HW_SYSHZ / 64 >= 50000 )
     return 64 ;
 
   return 128 ;
@@ -89,17 +89,17 @@ HW_INLINE uint8_t _hwa_ad10_clkmin( float v )
   if ( v != 1.0 )
     HWA_E(value of `clock` must be in (`ioclk/2**n` with n in [1..7]));
 
-  if ( hw_syshz / 128 >= 50000 )
+  if ( HW_SYSHZ / 128 >= 50000 )
     return 7 ;
-  if ( hw_syshz / 64 >= 50000 )
+  if ( HW_SYSHZ / 64 >= 50000 )
     return 6 ;
-  if ( hw_syshz / 32 >= 50000 )
+  if ( HW_SYSHZ / 32 >= 50000 )
     return 5 ;
-  if ( hw_syshz / 16 >= 50000 )
+  if ( HW_SYSHZ / 16 >= 50000 )
     return 4 ;
-  if ( hw_syshz / 8 >= 50000 )
+  if ( HW_SYSHZ / 8 >= 50000 )
     return 3 ;
-  if ( hw_syshz / 4 >= 50000 )
+  if ( HW_SYSHZ / 4 >= 50000 )
     return 2 ;
 
   return 1 ;
@@ -110,17 +110,17 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
   if ( v != 1 )
     HWA_E(value of `clock` must be in (`ioclk/2**n` with n in [1..7]));
 
-  if ( hw_syshz / 2 < 200000 )
+  if ( HW_SYSHZ / 2 < 200000 )
     return 1 ;
-  if ( hw_syshz / 4 < 200000 )
+  if ( HW_SYSHZ / 4 < 200000 )
     return 2 ;
-  if ( hw_syshz / 8 < 200000 )
+  if ( HW_SYSHZ / 8 < 200000 )
     return 3 ;
-  if ( hw_syshz / 16 < 200000 )
+  if ( HW_SYSHZ / 16 < 200000 )
     return 4 ;
-  if ( hw_syshz / 32 >= 50000 )
+  if ( HW_SYSHZ / 32 >= 50000 )
     return 5 ;
-  if ( hw_syshz / 64 >= 50000 )
+  if ( HW_SYSHZ / 64 >= 50000 )
     return 6 ;
 
   return 7 ;

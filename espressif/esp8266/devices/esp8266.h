@@ -15,8 +15,8 @@
 /**
  * @page esp8266 ESP8266
  */
-#define hw_syshz				80000000
-#define hw_apbhz				hw_syshz
+#define HW_SYSHZ				80000000
+#define hw_apbhz				HW_SYSHZ
 
 #define hw_uptime_us				(*(volatile uint32_t*)0x3ff20c00)
 #define hw_uptime				(hw_uptime_us / 1e6)

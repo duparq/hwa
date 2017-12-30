@@ -24,7 +24,7 @@
 #define OUTPUT			compare0	// compare unit
 
 #define COUNT			HW_G2(HZ,CLOCK_SRC)/CLOCK_PSC/PWM_HZ
-#define HZ_ioclk		hw_syshz
+#define HZ_ioclk		HW_SYSHZ
 #define HZ_pll_32MHz		32000000
 #define HZ_pll_64MHz		64000000
 

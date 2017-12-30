@@ -80,7 +80,7 @@ static void write_usi ( char c )
   hw( clear, HW_IRQFLAG(USI,txc) );
   do {
     hw( trigger, USI );
-    // hw_waste_cycles( 50e-6 * hw_syshz );
+    // hw_waste_cycles( 50e-6 * HW_SYSHZ );
   }
   while ( !hw( read, HW_IRQFLAG(USI,txc) ) );
 }

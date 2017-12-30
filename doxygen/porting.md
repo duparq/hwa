@@ -46,7 +46,7 @@ produces C code:
 
  2. The device file then processes and defines symbols related to the fuse
     bytes. These are treated early since they permit to compute the system clock
-    frequency `hw_syshz` that is often necessary.
+    frequency `HW_SYSHZ` that is often necessary.
 
  3. Then comes the list of the peripherals for the documentation and the
     definitions of the interrupts.

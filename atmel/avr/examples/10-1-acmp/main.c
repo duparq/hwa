@@ -37,7 +37,7 @@
 
 /*  The time the LED is turned on in counter units
  */
-#define ON_TIME_COUNT		ON_TIME * hw_syshz / COUNTER_CLK_DIV
+#define ON_TIME_COUNT		ON_TIME * HW_SYSHZ / COUNTER_CLK_DIV
 
 
 /*  Service counter-compare0 IRQ:

@@ -286,7 +286,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 /*  Process arg `bps`
  */
 #define _hwx_cfswuarta_kbps_1(x,o,k,v,kk,...)				\
-  _hw_##o##_##set_dt((hw_syshz + (v)/2) / (v)) ;			\
+  _hw_##o##_##set_dt((HW_SYSHZ + (v)/2) / (v)) ;			\
   *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) |= 0x08 ; /* Set SYNC */		\
   HW_Y(_hwx_cfswuarta_kdatabits,_hw_is_databits_##kk)(x,o,kk,__VA_ARGS__)
 

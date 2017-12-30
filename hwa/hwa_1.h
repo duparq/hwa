@@ -47,7 +47,7 @@
  * @ingroup public_def
  * @brief The CPU clock frequency (cpu cycles per second).
  */
-#  define hw_syshz
+#  define HW_SYSHZ
 
 #endif /* defined DOXYGEN */
 

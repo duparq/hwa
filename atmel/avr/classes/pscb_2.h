@@ -121,7 +121,7 @@
       /* PLL start procedure (once started, it is never stopped). */	\
       _hwa_write_reg(o,plle,1);						\
       _hwa_commit_reg(o,pllcsr);					\
-      hw_waste_cycles(100e-6 * hw_syshz);				\
+      hw_waste_cycles(100e-6 * HW_SYSHZ);				\
       while( !_hw_read_reg(o,plock) ) {}				\
       _hwa_write_reg(o,pcke,1);						\
     }									\

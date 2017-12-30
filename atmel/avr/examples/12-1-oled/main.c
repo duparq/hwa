@@ -550,9 +550,9 @@ int main ( )
        countmode, up_loop,
        top,       compare0 );
 
-#if hw_syshz == 8000000
+#if HW_SYSHZ == 8000000
   hwa( write, counter0compare0, 125 );
-#elif hw_syshz == 16000000
+#elif HW_SYSHZ == 16000000
   hwa( write, counter0compare0, 250 );
 #else
 #  error could not generate 1 kHz compare events
@@ -585,7 +585,7 @@ int main ( )
   /*
    *  Release the RESET pin of the display after 10 ms.
    */
-  hw_waste_cycles( 0.01 * hw_syshz );
+  hw_waste_cycles( 0.01 * HW_SYSHZ );
   hwa( write, DPY_RST, 1 );
   hwa_commit();
 #endif
@@ -597,7 +597,7 @@ int main ( )
 #if defined LED
       hw( toggle, LED );
 #endif
-      hw_waste_cycles(0.5*hw_syshz);
+      hw_waste_cycles(0.5*HW_SYSHZ);
     }
 
   dpybuffer_clear();

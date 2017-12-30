@@ -31,7 +31,7 @@
  * of the TCS3200 output signal.
  *
  * With S0=0 and S1=1, output frequency of the TCS is below 12 kHz, so
- * period is over 83 µs. With hw_syshz=8 MHz, this gives periods >660
+ * period is over 83 µs. With HW_SYSHZ=8 MHz, this gives periods >660
  * counter units. As the counter has 16 bits, the lowest period it can
  * measure is about 122 Hz. Experience shows that it is enough.
  *
@@ -70,7 +70,7 @@ static region_t HW_MEM_EEPROM	ee_regions[16] ;
 static uint16_t HW_MEM_EEPROM	ee_tclear_max ;
 
 
-/*  Measure the output signal period of the sensor on channel S3,S2 in hw_syshz
+/*  Measure the output signal period of the sensor on channel S3,S2 in HW_SYSHZ
  *  clock units. As we use period ratios, clock frequency has no incidence on
  *  the final results.
  */

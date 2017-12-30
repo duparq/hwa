@@ -137,10 +137,10 @@
 #endif
 #if HW_DEVICE_CLK_PSC == 8
 #  define HW_DEVICE_CKDIV8			0
-#  define hw_syshz				hw_syshz_base/8
+#  define HW_SYSHZ				hw_syshz_base/8
 #elif HW_DEVICE_CLK_PSC == 1
 #  define HW_DEVICE_CKDIV8			1
-#  define hw_syshz				hw_syshz_base
+#  define HW_SYSHZ				hw_syshz_base
 #else
 #  error HW_DEVICE_CLK_PSC can be `8`, or `1`.
 #endif

@@ -35,7 +35,7 @@
  * @brief Expands to the CPU clock frequency (cpu cycles per second).
  */
 #if defined DOXYGEN
-#  define hw_syshz
+#  define HW_SYSHZ
 #endif
 
 

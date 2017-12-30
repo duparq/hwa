@@ -70,9 +70,9 @@ int main ( )
        top,	  max );
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV/2 );
+    hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV/2 );
   else /* up_loop */
-    hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*hw_syshz/CLKDIV );
+    hwa( write, HW_RELATIVE(COUNTER, COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV );
 
   /*  Enable compare IRQ
    */

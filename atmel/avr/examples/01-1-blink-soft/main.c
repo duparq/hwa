@@ -25,7 +25,7 @@
  *
  * * `PERIOD` is the blinking period.
  *
- * * `hw_syshz` is the CPU frequency, computed by HWA from the device
+ * * `HW_SYSHZ` is the CPU frequency, computed by HWA from the device
  *    configuration fuses.
  *
  * @par main.c
@@ -41,6 +41,6 @@ int main ( )
 
   for(;;) {
     hw( toggle, PIN_LED );
-    hw_waste_cycles( PERIOD/2 * hw_syshz );
+    hw_waste_cycles( PERIOD/2 * HW_SYSHZ );
   }
 }

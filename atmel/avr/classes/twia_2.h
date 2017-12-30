@@ -54,12 +54,12 @@
 
 #define _hwx_cftwia_vsclhz_0(x,o,v,k,...)				\
   uint32_t br=0, psc=0, pscreg=0 ;					\
-  float brpsc = ((1.0*hw_syshz / v)-16)/2 ;				\
+  float brpsc = ((1.0*HW_SYSHZ / v)-16)/2 ;				\
   if ( brpsc < 256 ) {							\
     psc = 1 ;								\
     pscreg = 0 ;							\
     br = (uint32_t)(0.5 + brpsc) ;					\
-    if ( brpsc < 1 && hw_syshz != v*(16+2*psc*br) )			\
+    if ( brpsc < 1 && HW_SYSHZ != v*(16+2*psc*br) )			\
       HWA_ERR("can not find a configuration for `sclhz = " #v "`.");	\
   } else if ( brpsc < 4*256 ) {						\
     psc = 4 ;								\

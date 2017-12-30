@@ -51,7 +51,7 @@ main ( )
 
     /*	Wait for 0.1s
      */
-    hw_waste_cycles( 0.1 * hw_syshz );
+    hw_waste_cycles( 0.1 * HW_SYSHZ );
 
     /*	Send a '.'
      */

@@ -57,10 +57,10 @@
 #define _hwa_cfuarta_vbps_1(o,v,...)	HW_E_VM(bps)
 
 #define _hwa_cfuarta_vbps_0(o,v,k,...)					\
-  uint32_t brr8 = (hw_syshz / 8 + (v/2)) / v ;				\
-  uint32_t brr16 = (hw_syshz / 16 + (v/2)) / v ;			\
-  float e16 = 1.0 * hw_syshz / (16*brr16) / v ;				\
-  float e8 = 1.0 * hw_syshz / (8*brr8) / v ;				\
+  uint32_t brr8 = (HW_SYSHZ / 8 + (v/2)) / v ;				\
+  uint32_t brr16 = (HW_SYSHZ / 16 + (v/2)) / v ;			\
+  float e16 = 1.0 * HW_SYSHZ / (16*brr16) / v ;				\
+  float e8 = 1.0 * HW_SYSHZ / (8*brr8) / v ;				\
   if ( e16 < 1.0 ) e16 = 2.0 - e16 ;					\
   if ( e8 < 1.0 ) e8 = 2.0 - e8 ;					\
   if ( e8 < e16 && brr8 > 0 && brr8 < 0x1000 ) {			\

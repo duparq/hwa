@@ -134,10 +134,10 @@
 
 #if HW_DEVICE_CLK_PSC == 8
 #  define HW_DEVICE_CKDIV8				0
-#  define hw_syshz					hw_syshz_base/8
+#  define HW_SYSHZ					hw_syshz_base/8
 #elif HW_DEVICE_CLK_PSC == 1
 #  define HW_DEVICE_CKDIV8				1
-#  define hw_syshz					hw_syshz_base
+#  define HW_SYSHZ					hw_syshz_base
 #else
 HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #endif
