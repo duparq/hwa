@@ -26,44 +26,44 @@
  * @code
  * hwa( configure, adc0,
  * 
- *	//  Clock source: the resulting clock frequency should be in
- *	//  the 50..200 kHz range for maximum resolution, and in all
- *	//  case lower than 1 MHz.
- *	//
- *	clock,	   min				// choose the nearest 50 kHz
- *		 | max				// choose the nearest 200 kHz
- *		 | ioclk / 2**n,		// with n in 1..7
- *						
- *	//  How a conversation is started	
- *	//					
- *	trigger,   manual			// with the `trigger` instruction
- *		 | auto				// as soon as a consersion is completed
- *		 | acmp0			// ANA_COMP interrupt request
- *		 | int0				// INT0 interrupt request
- *		 | counter0_compare0		// TIMER0_COMPA interrupt request
- *		 | counter0_overflow		// TIMER0_OVF interrupt request
- *		 | counter1_compare1		// TIMER1_COMPB interrupt request
- *		 | counter1_overflow		// TIMER1_OVF interrupt request
- *		 | counter1_capture,		// TIMER1_CAPT interrupt request
- *						
- *	//  Voltage reference			
- *	//					
- *	vref,	   vcc				// Vcc
- *		 | pin_avcc			// Voltage on AVCC pin
- *		 | pin_aref			// Voltage on AREF pin
- *		 | bandgap_1100mV,		// Internal 1.1V bandgap
+ *      //  Clock source: the resulting clock frequency should be in
+ *      //  the 50..200 kHz range for maximum resolution, and in all
+ *      //  case lower than 1 MHz.
+ *      //
+ *      clock,     min                          // choose the nearest 50 kHz
+ *               | max                          // choose the nearest 200 kHz
+ *               | ioclk / 2**n,                // with n in 1..7
+ *                                              
+ *      //  How a conversation is started       
+ *      //                                      
+ *      trigger,   manual                       // with the `trigger` instruction
+ *               | auto                         // as soon as a consersion is completed
+ *               | acmp0                        // ANA_COMP interrupt request
+ *               | int0                         // INT0 interrupt request
+ *               | counter0_compare0            // TIMER0_COMPA interrupt request
+ *               | counter0_overflow            // TIMER0_OVF interrupt request
+ *               | counter1_compare1            // TIMER1_COMPB interrupt request
+ *               | counter1_overflow            // TIMER1_OVF interrupt request
+ *               | counter1_capture,            // TIMER1_CAPT interrupt request
+ *                                              
+ *      //  Voltage reference                   
+ *      //                                      
+ *      vref,      vcc                          // Vcc
+ *               | pin_avcc                     // Voltage on AVCC pin
+ *               | pin_aref                     // Voltage on AREF pin
+ *               | bandgap_1100mV,              // Internal 1.1V bandgap
  * 
- *	//  Result alignment (default is `right`)
- *	//
- *    [ align,	   left
- *		 | right, ]
+ *      //  Result alignment (default is `right`)
+ *      //
+ *    [ align,     left
+ *               | right, ]
  *
- *	//  Input
- *	//
- *	input,	   HW_PIN(adc0..7)
- *		 | agnd
- *		 | bandgap_1100mV
- *		 | temperature );
+ *      //  Input
+ *      //
+ *      input,     HW_PIN(adc0..7)
+ *               | agnd
+ *               | bandgap_1100mV
+ *               | temperature );
  * @endcode
  */
 #define _hw_mtd_hwa_configure__ad10b	, _hwa_cfad10b
