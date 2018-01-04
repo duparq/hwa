@@ -94,7 +94,7 @@ $(BOARDS)/build/$(BOARD).c:
 	@echo "DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)" >>$@
 	@echo "DEVICE_FUSE_HB=HW_QUOTE(HW_DEVICE_FUSE_HB)" >>$@
 	@echo "DEVICE_FUSE_LB=HW_QUOTE(HW_DEVICE_FUSE_LB)" >>$@
-	@echo "DEVICE_SYSHZ=hw_syshz" >>$@
+	@echo "DEVICE_SYSHZ=HW_SYSHZ" >>$@
 
 #  Load informations about the target device
 #
