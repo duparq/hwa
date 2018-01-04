@@ -101,8 +101,8 @@
   HW_Y(_hw_cfio1a_vpullup,_hw_state_##v)(o,p,bn,bp,v,__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_1(o,p,bn,bp,v,...)			\
-    _hw_write_reg_m(p,port,((1<<bn)-1)<<bp, HW_A1(hw_state_##v)?((1U<<bn)-1)<<bp:0); \
-    HW_EOL(__VA_ARGS__)
+  _hw_write_reg_m(p,port,((1<<bn)-1)<<bp, HW_A1(_hw_state_##v)?((1U<<bn)-1)<<bp:0 ); \
+  HW_EOL(__VA_ARGS__)
 
 #define _hw_cfio1a_vpullup_0(o,p,bn,bp,v,...)			\
   HW_E_AVL(pullup, v, on | off)
