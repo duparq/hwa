@@ -21,8 +21,8 @@
 
 #include BOARD_H
 
-#define DPY_DX			64		// Display columns (64 / 128)
-#define DPY_DY			48		// Display lines (48 / 64)
+#define DPY_DX			128		// Display columns (64 / 128)
+#define DPY_DY			64		// Display lines (48 / 64)
 
 #if defined HW_DEVICE_ATTINYX5
 #  define DPY_SPI
