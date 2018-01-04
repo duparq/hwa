@@ -51,7 +51,7 @@
  *	vref,	   vcc				// Vcc
  *		 | pin_avcc			// Voltage on AVCC pin
  *		 | pin_aref			// Voltage on AREF pin
- *		 | bandgap,			// Internal 1.1V bandgap
+ *		 | bandgap_1100mV,		// Internal 1.1V bandgap
  * 
  *	//  Result alignment (default is `right`)
  *	//
@@ -62,7 +62,7 @@
  *	//
  *	input,	   HW_PIN(adc0..7)
  *		 | agnd
- *		 | bandgap
+ *		 | bandgap_1100mV
  *		 | temperature );
  * @endcode
  */
@@ -113,14 +113,14 @@
  */
 #define _hwa_cfad10b_kvref_0(o,k,...)		HW_E_VL(k,vref)
 #define _hwa_cfad10b_kvref_1(o,k,v,...)		HW_Y(_hwa_cfad10b_vvref,_hw_ad10b_vref_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | pin_avcc | pin_aref | bandgap)
+#define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | pin_avcc | pin_aref | bandgap_1100mV)
 #define _hwa_cfad10b_vvref_1(o,v,...)			\
   _hwa_write_reg(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
   _hwa_cfad10b_align(o,__VA_ARGS__)
 
 #define _hw_ad10b_vref_vcc		, 1	/* , refs */
 #define _hw_ad10b_vref_pin_aref		, 0
-#define _hw_ad10b_vref_bandgap		, 3
+#define _hw_ad10b_vref_bandgap_1100mV	, 3
 
 /*	Optionnal parameter 'align'
  */
@@ -166,11 +166,11 @@
     _hwa_write_reg(o,mux, 7);						\
   else									\
     HWA_ERR("`input` can be 'HW_PIN(adc0..7)' (or synonyms), "		\
-	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
+	    "`temperature`, `bandgap_1100mV`, or `ground`  but not `"#v"`."); \
   HW_TX(__VA_ARGS__)
 
 #define _hw_ad10b_input_temperature	, 8	/* , mux */
-#define _hw_ad10b_input_bandgap		, 14
+#define _hw_ad10b_input_bandgap_1100mV	, 14
 #define _hw_ad10b_input_ground		, 15
 
 
