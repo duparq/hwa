@@ -96,7 +96,7 @@ main ( )
   /*  Wait for UART synchronization, then send the prompt
    */
   while ( !hw(stat,UART).sync )
-    hw_sleep();
+    hw_sleep_until_irq();
   hw( write, UART, '$');
 
   for(;;) {
@@ -105,7 +105,7 @@ main ( )
      *	  put the MCU into sleep mode, an interrupt will awake it
      *	  process incomming bytes
      */
-    hw_sleep();
+    hw_sleep_until_irq();
     if ( hw(stat,UART).rxc ) {
       /*
        *  MCU awakened by SWUART that has received a stop bit

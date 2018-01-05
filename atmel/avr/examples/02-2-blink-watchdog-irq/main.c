@@ -62,7 +62,7 @@ int main ( )
   /*  Sleep between interrupts
    */
   for(;;)
-    hw_sleep();
+    hw_sleep_until_irq();
     
   return 0 ;
 }

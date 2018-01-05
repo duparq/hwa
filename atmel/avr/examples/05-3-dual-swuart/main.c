@@ -91,7 +91,7 @@ main ( )
     hw( reset, swuart0 );
     hw( reset, swuart1 );
     for(;;) {
-      hw_sleep();
+      hw_sleep_until_irq();
       if ( hw(stat,swuart0).sync ) {
 	hw( write, swuart0, '$');     /* signal the synchronization */
 	hw( write, HW_REGISTER(swuart1, dt0), hw( read, HW_REGISTER(swuart0, dt0) ) );
@@ -115,7 +115,7 @@ main ( )
      *	Send on one UART what has been received from the other
      */
     for(;;) {
-      hw_sleep();
+      hw_sleep_until_irq();
       if ( hw(stat,swuart0).rxc ) {
 	/*
 	 *  UART0 -> UART0 + UART1

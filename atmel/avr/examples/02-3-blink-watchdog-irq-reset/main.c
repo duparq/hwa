@@ -65,7 +65,7 @@ int main ( )
      */
     hwa( turn, watchdog0, off );
     hwa_commit();
-    hw_sleep();
+    hw_sleep_until_irq();
     for (;;)			/* This should */
       hw( toggle, PIN_LED );	/* not happen  */
   }
@@ -89,7 +89,7 @@ int main ( )
   static uint8_t count ;
 
   for(;;) {
-    hw_sleep();
+    hw_sleep_until_irq();
 
     /*	When watchdog action is 'irq_or_reset', a timeout automatically disables
      *	the IRQ so that next timeout will reset the device. Load the context

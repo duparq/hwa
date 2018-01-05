@@ -29,7 +29,7 @@
  * @ingroup public_ins_espressif
  * @brief Put the core in sleep mode.
  */
-#define hw_sleep()			hw_asm("sleep")
+#define hw_sleep_until_irq()			hw_asm("sleep")
 
 /**
  * @ingroup public_ins_espressif

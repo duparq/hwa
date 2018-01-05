@@ -79,7 +79,7 @@ main ( )
     /*	Wait for UART synchronization, then send the prompt
      */
     while ( !hw(stat,UART).sync )
-      hw_sleep();
+      hw_sleep_until_irq();
 
     hw( write, UART, '$');
 
@@ -94,7 +94,7 @@ main ( )
       /*  Wait for a command
        */
       while ( !hw(stat,UART).rxc )
-	hw_sleep();
+	hw_sleep_until_irq();
 
       uint8_t byte = hw( read, UART );
 

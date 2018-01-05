@@ -16,7 +16,7 @@
  * @code
  * hwa( configure, core0,
  *
- *	       //  Whether the `hw_sleep()` instruction will put the core in
+ *	       //  Whether the `hw_sleep_until_irq()` instruction will put the core in
  *	       //  sleep mode or not
  *	       //
  *	     [ sleep,	     enabled,
@@ -80,10 +80,10 @@
  * @page atmelavr_corea
  * @section atmelavr_corea_sleep Sleep
  *
- * If enabled, the `hw_sleep()` instruction puts the core into sleeping mode
+ * If enabled, the `hw_sleep_until_irq()` instruction puts the core into sleeping mode
  *
  * @code
- * hw_sleep();
+ * hw_sleep_until_irq();
  * @endcode
  */
 

@@ -140,5 +140,5 @@ int main ( )
   hw_enable_interrupts();
 
   for(;;)
-    hw_sleep();
+    hw_sleep_until_irq();
 }

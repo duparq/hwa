@@ -127,7 +127,7 @@ main ( )
   /*  Wait for UART synchronization, then send the prompt
    */
   while ( !hw(stat,UART).sync )
-    hw_sleep();
+    hw_sleep_until_irq();
   hw( write, UART, '$' );
 
   /*  Main loop:
@@ -135,7 +135,7 @@ main ( )
    *	Send new data to host
    */
   for(;;) {
-    hw_sleep();
+    hw_sleep_until_irq();
     if ( x_adc ) {
       uint16_t x ;
       do {

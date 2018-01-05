@@ -13,7 +13,7 @@
  * @ingroup public_ins_atmelavr
  * @brief Puts the core in sleep mode.
  */
-#define hw_sleep()			hw_asm("sleep")
+#define hw_sleep_until_irq()			hw_asm("sleep")
 
 
 /**
