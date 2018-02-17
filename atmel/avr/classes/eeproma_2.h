@@ -11,9 +11,9 @@
 
 /**
  * @page atmelavr_eeproma _eeproma
- * @section atmelavr_eeproma_rw Read and write
+ * __Actions__
  *
- * The `read` instruction reads one byte at given memory address:
+ * `read`:
  *
  * @code
  * uint8_t byte = hw( read, eeprom0, 0x42 );  // read byte at address 0x42
@@ -43,13 +43,12 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
 /**
  * @page atmelavr_eeproma _eeproma
  *
- * The `hw_read_bytes()` instruction reads multiple bytes from given memory
- * address:
+ * `read_bytes`:
  *
  * @code
  * uint16_t address = 0x00F8 ;
  * uint8_t bytes[8] ;
- * hw_read_bytes( eeprom0, &bytes, address, sizeof(bytes) );
+ * hw( read_bytes, eeprom0, &bytes, address, sizeof(bytes) );
  * @endcode
  */
 #define _hw_mtd_hw_read_bytes__eeproma	, _hw_eeproma_read_bytes
@@ -78,10 +77,10 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
 /**
  * @page atmelavr_eeproma _eeproma
  *
- * The `hw_write()` instruction writes one byte at given memory address:
+ * `write`:
  *
  * @code
- * hw_write( eeprom0, 0x42, 42 );  // Write 42 at address 0x42
+ * hw( write, eeprom0, 0x42, 42 );  // Write 42 at address 0x42
  * @endcode
  */
 #define _hw_mtd_hw_write__eeproma	, _hw_write_eeproma
@@ -112,12 +111,11 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
 /**
  * @page atmelavr_eeproma _eeproma
  *
- * The `hw_write_bytes()` instruction writes multiple bytes at given
- * memory address:
+ * `write_bytes`:
  *
  * @code
  * extern uint8_t bytes[42] ;
- * hw_write_bytes( eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100
+ * hw( write_bytes, eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100
  * @endcode
  */
 #define _hw_mtd_hw_write_bytes__eeproma	, _hw_eeproma_write_bytes
