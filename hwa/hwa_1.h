@@ -69,6 +69,7 @@
 #define _hw_is_16_16_				, 1
 #define _hw_is_8_8_				, 1
 #define _hw_is__				, 1
+#define _hw_is__fake__fake			, 1
 #define _hw_is__io1a__io1a			, 1
 #define _hw_is_ack_ack				, 1
 #define _hw_is_action_action			, 1

@@ -422,7 +422,7 @@
 #define _hwx1(h,f,o,...)	_hwx2(h,f,HW_O(o),__VA_ARGS__)
 #define _hwx2(...)		_hwx3(__VA_ARGS__)
 
-/*  Do not proceed further in case of error
+/*  Do not proceed further if the expansion of the object has triggered an error
  */
 #define _hwx3(h,f,c,...)	HW_Y(_hwx4,c)(h,f,c,__VA_ARGS__)
 #define _hwx4_1(...)		// HW_E_OM() /* An error has already been emitted by HW_O */
@@ -441,7 +441,15 @@
  */
 #define _hwx6_0(h,f,...)	HW_Y(_hwx7,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
 #define _hwx7_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
-#define _hwx7_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
+
+/*  The _fake class accepts all methods (and does nothing)
+ */
+#define _hwx7_0(h,f,c,o,...)	HW_Y(_hwx8,_hw_is__fake_##c)(h,f,c,o,__VA_ARGS__)
+#define _hwx8_1(...)
+
+/*  There is an error
+ */
+#define _hwx8_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
 
 
 /*  Internal use only version
