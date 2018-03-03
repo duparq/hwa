@@ -72,9 +72,9 @@ int main ( )
        );
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2 );
+    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2 );
   else
-    hwa( write, HW_RELATIVE(COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
+    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
 
   hwa( turn, HW_IRQ(COUNTER,overflow), on );
 

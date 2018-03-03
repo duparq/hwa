@@ -39,7 +39,7 @@
 
 int main ( )
 {
-  hw( power, HW_RELATIVE(LED1,port), on );
+  hw( power, (LED1,port), on );
 
   hw( configure, LED1,
       mode,	 digital,

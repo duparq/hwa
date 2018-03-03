@@ -11,8 +11,8 @@
  *
  * Changes versus method 1:
  *
- *   * define PWM as `hw_ocXY` and use `HW_RELATIVE()` to retrieve the name of the
- *     counter;
+ *   * define PWM as `hw_ocXY` and use `(PWM,counter)` to retrieve the name of
+ *     the counter;
  *
  *   * use a HWA context in the ISR and the couple `hwa_nocommit()` /
  *     `hwa_commit()` to write the changes to the hardware;
@@ -48,7 +48,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 
   /*  Configure the counter to count between 0 and 0xFF
    */
-  hwa( configure, HW_RELATIVE(PWM,counter),
+  hwa( configure, (PWM,counter),
        clock,	  ioclk / CLKDIV,
        countmode, COUNTMODE,
        bottom,	  0,
@@ -61,7 +61,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 
   /*  Enable overflow IRQ
    */
-  hwa( turn, HW_IRQ(HW_RELATIVE(PWM,counter),overflow), on );
+  hwa( turn, HW_IRQ((PWM,counter),overflow), on );
 }
 
 
@@ -72,7 +72,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( HW_RELATIVE(PWM,counter), overflow )
+HW_ISR( (PWM,counter), overflow )
 {
   static uint8_t	duty ;
   static uint8_t	phase ;

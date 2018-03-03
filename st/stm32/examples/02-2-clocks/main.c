@@ -67,7 +67,7 @@ int main ( )
 
   /*  Configure the GPIO pin
    */
-  hwa( power, HW_RELATIVE(LED1,port), on );
+  hwa( power, (LED1,port), on );
   hwa_commit();
 
   hwa( configure, LED1,

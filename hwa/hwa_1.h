@@ -70,6 +70,7 @@
 #define _hw_is_8_8_				, 1
 #define _hw_is__				, 1
 #define _hw_is__fake__fake			, 1
+#define _hw_is__irq__irq			, 1
 #define _hw_is__io1a__io1a			, 1
 #define _hw_is_ack_ack				, 1
 #define _hw_is_action_action			, 1
@@ -143,6 +144,8 @@
 #define _hw_is_var_var				, 1
 #define _hw_is_vref_vref			, 1
 #define _hw_is_yes_yes				, 1
+
+#define _hw_isa_leftbkt(...)			, 1
 
 
 /**

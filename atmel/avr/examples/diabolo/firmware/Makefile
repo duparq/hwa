@@ -18,4 +18,4 @@ PROG_HW		=	usbasp
 
 export LDFLAGS PROG_SW PROG_HW
 
-include ../../Makefile
+include ../../make/Makefile

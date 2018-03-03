@@ -49,7 +49,7 @@ int main ( )
 
   /*  Power the GPIO port
    */
-  hwa( power, HW_RELATIVE(LED1,port), on );
+  hwa( power, (LED1,port), on );
 
   /*  Configure the GPIO pin
    */

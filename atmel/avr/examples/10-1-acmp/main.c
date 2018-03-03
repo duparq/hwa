@@ -66,12 +66,12 @@ HW_ISR( acmp0 )
   hw( write, PIN_LED, 1 );
 
   if ( COUNTER_CLK_DIV > 1 )
-    hw( turn, HW_RELATIVE(COUNTER,prescaler0), off );
+    hw( turn, (COUNTER,prescaler0), off );
 
   hw( write, COUNTER, 0 );
 
   if ( COUNTER_CLK_DIV > 1 )
-    hw( turn, HW_RELATIVE(COUNTER,prescaler0), on);
+    hw( turn, (COUNTER,prescaler0), on);
 
   hw( clear, HW_IRQFLAG(COUNTER,COMPARE) );
   hw( turn, HW_IRQ(COUNTER,COMPARE), on );
@@ -124,7 +124,7 @@ int main ( )
 
   /*  Prepare the compare value for the PIN_LED pulse
    */
-  hwa( write, HW_RELATIVE(COUNTER,COMPARE), ON_TIME_COUNT );
+  hwa( write, (COUNTER,COMPARE), ON_TIME_COUNT );
 
   /*  Configure the analog comparator
    */

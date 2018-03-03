@@ -13,10 +13,10 @@
  */
 #include BOARD_H
 
-#define SYSHZ		36e6			// Desired frequency for the SYSCLK signal
-#define AHBHZ		9e6			// Desired frequency for the core (and systick)
+#define SYSHZ		36e6		// Desired frequency for the SYSCLK signal
+#define AHBHZ		9e6		// Desired frequency for the core (and systick)
 
-#define PERIOD		0.5			// Blinking period
+#define PERIOD		0.5		// Blinking period
 
 
 /*  The IRQ is used only to wake the core up.
@@ -56,7 +56,7 @@ int main ( )
 
   /*  Configure the GPIO pin
    */
-  hwa( power, HW_RELATIVE(LED1,port), on );
+  hwa( power, (LED1,port), on );
   hwa_commit();
 
   hwa( configure, LED1,

@@ -300,13 +300,21 @@
  * @hideinitializer
  *
  * The argument can be an object name, an object definition starting with a
- * class name, or an error.
+ * class name, an object's relative using the '(...)' notation, or an
+ * error.
  *
  * If successful, returns the definition starting with a class name followed by the object
  * name: c,o,... Otherwise, triggers an error and returns a void token.
  */
 #define HW_O(object)		_HW_O1(object)
-#define _HW_O1(...)		HW_Y(_HW_O2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
+
+/*  Catch notation (...) for relatives
+ */
+#define _HW_O1(...)		HW_Y(_HW_O1,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
+#define _HW_O1_0(...)		HW_Y(_HW_O2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
+#define _HW_O1_1(...)		_HW_O1_2 __VA_ARGS__
+#define _HW_O1_2(...)		_HW_O7(HW_RLX(__VA_ARGS__))
+
 #define _HW_O2_1(...)		__VA_ARGS__		/*  Class name found, job's done. */
 #define _HW_O2_0(o)		_HW_O3(o,_hw_def_##o)	/*  Is o an object's name? */
 #define _HW_O3(...)		_HW_O4(__VA_ARGS__)
@@ -314,21 +322,26 @@
 #define _HW_O4_1(o,c,...)	c,o,__VA_ARGS__
 #define _HW_O4_0(o,...)		HW_Y(_HW_O5,o)(o)	/*  o is not an object, produce an error. */
 #define _HW_O5_1(o)		HW_E_OM()
-//#define _HW_O5_0(o)		HW_E_O(o)
 
 /*  Handle shorcuts:
  *   * irq()
  *   * relative()
  *   * register()
  */
-#define _HW_O5_0(o)		HW_Y(_HW_O6,_hw_o_##o)(o)
-#define _HW_O6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
-#define _HW_O6_1(o)		HW_TL(_hw_o_##o)	/* expand shorcut */
+//#define _HW_O5_0(o)		HW_Y(_HW_O6,_hw_o_##o)(o)
+//#define _HW_O6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
+//#define _HW_O6_1(o)		HW_TL(_hw_o_##o)	/* expand shorcut */
+
+#define _HW_O5_0(o)		_HW_O5_2(o,_hw_o_##o)
+#define _HW_O5_2(...)		_HW_O5_3(__VA_ARGS__)
+#define _HW_O5_3(o,x,...)	HW_Y(_HW_O6,x)(x,__VA_ARGS__)
+#define _HW_O6_0(o,...)		HW_E_O(o)		/* o is not recognized as an object */
+#define _HW_O6_1(x,...)		__VA_ARGS__
 
 #define _hw_o_irq(...)		, HW_IRQ(__VA_ARGS__)
-
 #define _hw_o_relative(o,r)	, _HW_O7(HW_RELATIVE(o,r))
 #define _hw_o_rel(o,r)		, _HW_O7(HW_RELATIVE(o,r))
+
 #define _HW_O7(o)		_HW_O8(o)
 #define _HW_O8(o)		HW_Y(_HW_O8,o)(o)
 #define _HW_O8_1(o)		/* HW_RELATIVE() has emitted an error */
@@ -337,6 +350,7 @@
 
 #define _hw_o_register(o,r)	, _HW_O11(o,r,_hw_def_##o)
 #define _hw_o_reg(o,r)		, _HW_O11(o,r,_hw_def_##o)
+
 #define _HW_O11(...)		_HW_O12(__VA_ARGS__)
 #define _HW_O12(o,r,...)	HW_Y(_HW_O12,_hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
 #define _HW_O12_0(o,...)	HW_E_O(o)
@@ -851,7 +865,7 @@
  */
 /*  Check the object name,
  *  look for an object relative,
- *  look for a class-defined HW_REL() method.
+ *  look for a class-defined HW_RELATIVE() method.
  */
 #define HW_RELATIVE(object,x)		_HW_REL1(object,x)
 #define HW_REL(o,x)			_HW_REL1(o,x)
@@ -869,6 +883,42 @@
 #define _HW_REL5_1(o,x,c,...)		HW_Y(_HW_REL6,_hw_mtd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
 #define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
 #define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mtd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
+
+
+/* Returns the name of a relative object using a path made of up to 4 objects.
+ * 
+ *   `HW_RLX(counter0,compare0,counter,compare1)` returns `counter0compare1`.
+ *
+ * This is used by the HW_O() macro to expand the (object,...) object name.
+ */
+#define HW_RLX(...)			_HW_RL2(__VA_ARGS__,,)
+#define _HW_RL2(o,x,...)		HW_Y(_HW_RL2,o)(o,x,__VA_ARGS__)
+#define _HW_RL2_1(o,x,...)		HW_E_OM()
+#define _HW_RL2_0(o,x,...)		HW_G2(_HW_RL3,HW_ISON(o))(o,x,__VA_ARGS__)
+#define _HW_RL3_0(o,x,...)		HW_E_O(o)
+#define _HW_RL3_1(o,x,...)		_HW_RL4(_HW_REL3_1(o,x),__VA_ARGS__)
+
+#define _HW_RL4(...)			_HW_RL40(__VA_ARGS__)
+#define _HW_RL40(x,...)			HW_Y(_HW_RL4,x)(x,__VA_ARGS__)
+#define _HW_RL4_1(...)		
+#define _HW_RL4_0(o,x,...)		HW_Y(_HW_RL40,x)(o,x,__VA_ARGS__)
+#define _HW_RL40_1(o,...)		o
+#define _HW_RL40_0(o,x,...)		_HW_RL5(_HW_REL3_1(o,x),__VA_ARGS__)
+
+#define _HW_RL5(...)			_HW_RL50(__VA_ARGS__)
+#define _HW_RL50(x,...)			HW_Y(_HW_RL5,x)(x,__VA_ARGS__)
+#define _HW_RL5_1(...)		
+#define _HW_RL5_0(o,x,...)		HW_Y(_HW_RL50,x)(o,x,__VA_ARGS__)
+#define _HW_RL50_1(o,...)		o
+#define _HW_RL50_0(o,x,...)		_HW_RL6(_HW_REL3_1(o,x),__VA_ARGS__)
+
+#define _HW_RL6(...)			_HW_RL60(__VA_ARGS__)
+#define _HW_RL60(x,...)			HW_Y(_HW_RL6,x)(x,__VA_ARGS__)
+#define _HW_RL6_1(...)		
+#define _HW_RL6_0(o,x,...)		HW_Y(_HW_RL60,x)(o,x,__VA_ARGS__)
+#define _HW_RL60_1(o,...)		o
+#define _HW_RL60_0(o,x,...)
+
 
 /**
  * @ingroup private_ins

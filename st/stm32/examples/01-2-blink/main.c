@@ -37,7 +37,7 @@ int main ( )
 {
   hwa_begin_from_reset();
 
-  hwa( power, HW_RELATIVE(LED1,port), on );
+  hwa( power, (LED1,port), on );
 
   hwa( configure, LED1,
        mode,	  digital,

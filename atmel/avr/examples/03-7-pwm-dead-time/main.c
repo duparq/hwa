@@ -38,7 +38,7 @@ int main ( )
 {
   hwa_begin_from_reset();
 
-  hwa( configure, HW_RELATIVE(COUNTER, prescaler0),
+  hwa( configure, (COUNTER, prescaler0),
        clock,	  CLOCK_SRC );
 
   hwa( configure, COUNTER,
@@ -48,15 +48,15 @@ int main ( )
        top,	  compare2,
        overflow,  at_bottom );
 
-  hwa( write, HW_RELATIVE(COUNTER, compare2), COUNT-1 );
+  hwa( write, (COUNTER, compare2), COUNT-1 );
 
-  hwa( configure, HW_RELATIVE(COUNTER, OUTPUT),
+  hwa( configure, (COUNTER, OUTPUT),
        output_h,  set_at_bottom_clear_on_match,
        output_l,  clear_at_bottom_set_on_match );
   
-  hwa( write, HW_RELATIVE(COUNTER, OUTPUT), 0.5 * COUNT );
+  hwa( write, (COUNTER, OUTPUT), 0.5 * COUNT );
 
-  hwa( configure,	HW_RELATIVE(COUNTER, dtg0),
+  hwa( configure,	(COUNTER, dtg0),
        prescaler,	4,	// 1 | 2 | 4 | 8
        HW_G2(OUTPUT,h), 3,	// 0..15
        HW_G2(OUTPUT,l), 9 );	// 0..15
