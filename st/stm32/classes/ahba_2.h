@@ -58,17 +58,15 @@
 /*  Mandatory parameter `prescaler`
  */
 #define _hwx_cfahba_kpsc_0(h,k,...)	HW_E_K(prescaler,k)
-#define _hwx_cfahba_kpsc_1(h,k,v,g,...)	_hwx_cfahba_vpsc1_1(h,v,g) HW_EOL(g)
-#define _hwx_cfahba_vpsc1_1(h,v,g)	HW_Y(_hwx_cfahba_vpsc2,v)(h,v)
-#define _hwx_cfahba_vpsc2_1(h,v)	HW_E_V()
-#define _hwx_cfahba_vpsc2_0(h,v)				\
-  if      ( v ==   1 ) h##_write_reg(rcc,hpre, 0);		\
-  else if ( v ==   2 ) h##_write_reg(rcc,hpre, 8);		\
-  else if ( v ==   4 ) h##_write_reg(rcc,hpre, 9);		\
-  else if ( v ==   8 ) h##_write_reg(rcc,hpre,10);		\
-  else if ( v ==  16 ) h##_write_reg(rcc,hpre,11);		\
-  else if ( v ==  64 ) h##_write_reg(rcc,hpre,12);		\
-  else if ( v == 128 ) h##_write_reg(rcc,hpre,13);		\
-  else if ( v == 256 ) h##_write_reg(rcc,hpre,14);		\
-  else if ( v == 512 ) h##_write_reg(rcc,hpre,15);		\
+#define _hwx_cfahba_kpsc_1(h,k,v,g,...)	_hwx_cfahba_vpsc(h,v) HW_EOL(g)
+#define _hwx_cfahba_vpsc(h,v)					\
+  if      ( (v+0) ==   1 ) h##_write_reg(rcc,hpre, 0);		\
+  else if ( (v+0) ==   2 ) h##_write_reg(rcc,hpre, 8);		\
+  else if ( (v+0) ==   4 ) h##_write_reg(rcc,hpre, 9);		\
+  else if ( (v+0) ==   8 ) h##_write_reg(rcc,hpre,10);		\
+  else if ( (v+0) ==  16 ) h##_write_reg(rcc,hpre,11);		\
+  else if ( (v+0) ==  64 ) h##_write_reg(rcc,hpre,12);		\
+  else if ( (v+0) == 128 ) h##_write_reg(rcc,hpre,13);		\
+  else if ( (v+0) == 256 ) h##_write_reg(rcc,hpre,14);		\
+  else if ( (v+0) == 512 ) h##_write_reg(rcc,hpre,15);		\
   else HWA_E_NIL(v,(1, 2, 4, 8, 16, 64, 128, 256, 512));

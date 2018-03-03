@@ -13,10 +13,8 @@
  */
 #include BOARD_H
 
-#define SYSHZ		36e6			// Desired frequency for the SYSCLK signal
-#define AHBHZ		9e6			// Desired frequency for the core (and systick)
-
-#define ONEMS		0.001 * AHBHZ
+#define SYSHZ		(36*1000*1000)		// Desired frequency for the SYSCLK signal
+#define AHBHZ		(9*1000*1000)		// Desired frequency for the core (and systick)
 
 #define COUNTER		counter2
 #define PERIOD		0.5			// Blinking period
@@ -63,7 +61,7 @@ int main ( )
 
   /*  Power on the controllers we use
    */
-  hwa( power, relative(LED1,port), on );
+  hwa( power, (LED1,port), on );
   hwa( power, COUNTER, on );
   hwa_commit();
 
