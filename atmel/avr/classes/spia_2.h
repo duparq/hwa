@@ -67,16 +67,16 @@
 #define _hwa_cfspia_kfunction_1(o,k,v,...)	HW_Y(_hwa_cfspia_vfunction,_hw_spia_function_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vfunction_0(o,v,...)	HW_E_AVL(function, v, master | slave | off)
 #define _hwa_cfspia_vfunction_1(o,v,k,...)				\
-  _hwa_write_reg(o,en, HW_A1(_hw_spia_function_##v));		\
-  _hwa_write_reg(o,mstr, HW_A2(_hw_spia_function_##v));		\
-  if ( HW_A1(_hw_spia_function_##v) == 1 ) {			\
-    if ( HW_A2(_hw_spia_function_##v) == 0 )			\
-      _hwa( configure, _HW_REL(o,pin_miso), direction, output );	\
-    else {							\
-      _hwa( configure, _HW_REL(o,pin_mosi), direction, output );	\
-      _hwa( configure, _HW_REL(o,pin_sck), direction, output );	\
-    }								\
-  }								\
+  _hwa_write_reg(o,en, HW_A1(_hw_spia_function_##v));			\
+  _hwa_write_reg(o,mstr, HW_A2(_hw_spia_function_##v));			\
+  if ( HW_A1(_hw_spia_function_##v) == 1 ) {				\
+    if ( HW_A2(_hw_spia_function_##v) == 0 ) {				\
+      _hwa( configure, _HW_REL(o,pin_miso), function, digital_output );	\
+    } else {								\
+      _hwa( configure, _HW_REL(o,pin_mosi), function, digital_output );	\
+      _hwa( configure, _HW_REL(o,pin_sck), function, digital_output );	\
+    }									\
+  }									\
   HW_Y(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 #define _hw_spia_function_master	, 1, 1	/* , en , mstr */

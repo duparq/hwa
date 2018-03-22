@@ -224,13 +224,13 @@ main ( )
        input,	  pin_icp,
        edge,	  rising );
 
-  hwa( configure, PIN_TCS3200_S2, direction, output );
+  hwa( configure, PIN_TCS3200_S2, function, digital_output );
   hwa( write, PIN_TCS3200_S2, 0 );
 
-  hwa( configure, PIN_TCS3200_S3, direction, output );
+  hwa( configure, PIN_TCS3200_S3, function, digital_output );
   hwa( write, PIN_TCS3200_S3, 0 );
 
-  hwa( configure, PIN_OUTS, direction, output );
+  hwa( configure, PIN_OUTS, function, digital_output );
   hwa( write, PIN_OUTS, 0 );
 
   hwa_commit();

@@ -93,22 +93,20 @@ int main ( )
 
   /*  Configure LED pin
    */
-  hwa( configure, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, function, digital_output );
 
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
 #if HW_ID(REFERENCE)
   hwa( configure, REFERENCE,
-       mode,	  analog,
-       direction, input );
+       function,  analog_input );
 #endif
 
   /*  Configure INPUT_NEG pin in analog mode (disable digital input buffer)
    */
   hwa( configure, PIN_ANALOG_INPUT,
-       mode,	  analog,
-       direction, input );
+       function,  analog_input );
 
   /*  Check that the counter can handle the ON_TIME value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.

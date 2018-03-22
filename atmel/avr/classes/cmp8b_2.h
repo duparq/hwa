@@ -209,9 +209,9 @@
     _hwa_write_reg(o,mode,3);						\
   }									\
   if ( hwa->o.config.outputh != 0xFF && hwa->o.config.outputh != 0 )	\
-    _hwa( configure, _HW_REL(o,pin_h), direction, output );		\
+    _hwa( configure, _HW_REL(o,pin_h), function, digital_output );	\
   if ( hwa->o.config.outputl != 0xFF && hwa->o.config.outputl != 0 )	\
-    _hwa( configure, _HW_REL(o,pin_l), direction, output );			\
+    _hwa( configure, _HW_REL(o,pin_l), function, digital_output );	\
   }
 
 

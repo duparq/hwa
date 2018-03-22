@@ -141,7 +141,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  RXD pin
    */
 #  if defined hw_swuart0_pin_rxd
-  _hwa( configure, hw_swuart0_pin_rxd, direction, input );
+  _hwa( configure, hw_swuart0_pin_rxd, function, digital_input );
   hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart0_pin_rxd,pcic)) );
   hwa( turn, HW_IRQ(_HW_REL(hw_swuart0_pin_rxd,pcic)), on );
   _hwa( turn, _HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
@@ -152,14 +152,14 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd) != HW_ID(hw_swuart0_pin_rxd)
-  _hwa( configure, hw_swuart0_pin_txd, direction, output );
+  _hwa( configure, hw_swuart0_pin_txd, function, digital_output );
   _hwa( write, hw_swuart0_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart0_pin_dbg
-  _hwa( configure, hw_swuart0_pin_dbg, direction, output );
+  _hwa( configure, hw_swuart0_pin_dbg, function, digital_output );
 #  endif
 }
 #endif
@@ -188,7 +188,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  RXD pin
    */
 #  if defined hw_swuart1_pin_rxd
-  _hwa( configure, hw_swuart1_pin_rxd, direction, input );
+  _hwa( configure, hw_swuart1_pin_rxd, function, digital_input );
   hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart1_pin_rxd,pcic)) );
   hwa( turn, HW_IRQ(_HW_REL(hw_swuart1_pin_rxd,pcic)), on );
   _hwa( turn, _HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
@@ -199,14 +199,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
 #  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd) != HW_ID(hw_swuart1_pin_rxd)
-  _hwa( configure, hw_swuart1_pin_txd, direction, output );
+  _hwa( configure, hw_swuart1_pin_txd, function, digital_output );
   _hwa( write, hw_swuart1_pin_txd, 1 );
 #  endif
 
   /*	DBG pin
    */
 #  if defined hw_swuart1_pin_dbg
-  _hwa( configure, hw_swuart1_pin_dbg, direction, output );
+  _hwa( configure, hw_swuart1_pin_dbg, function, digital_output );
 #  endif
 }
 #endif

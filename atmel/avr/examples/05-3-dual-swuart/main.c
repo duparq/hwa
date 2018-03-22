@@ -62,7 +62,7 @@ main ( )
   hwa( configure, swuart0 );
   hwa( configure, swuart1 );
 
-  hwa( configure, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, function, digital_output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */

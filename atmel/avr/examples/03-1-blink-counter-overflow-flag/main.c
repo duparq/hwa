@@ -36,7 +36,7 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( configure, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, function, digital_output );
 
   /*  Configure the counter to overflow every 0.001 s.
    *  The compare unit `output0` (OCxA) is used to store the top value.

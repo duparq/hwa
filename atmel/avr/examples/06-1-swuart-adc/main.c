@@ -80,7 +80,7 @@ main ( )
 
   /*  Configure LED pin
    */
-  hwa( configure, PIN_LED, direction, output );
+  hwa( configure, PIN_LED, function, digital_output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */

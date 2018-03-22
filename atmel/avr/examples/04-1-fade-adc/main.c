@@ -164,15 +164,14 @@ int main ( )
   /*  Configure LED pin
    */
   hwa( configure, PIN_LED,
-       direction, output   );
+       function, digital_output   );
 
   /*  Configure analog input pin in analog mode (disable digital input buffer)
    *  and enable the internal pull-up resistor
    */
   hwa( configure, PIN_ANALOG_INPUT,
-       mode,	  analog,
-       direction, input,
-       pullup,	  on	   );
+       function,  analog_input,
+       pullup,	  on );
 
   /*  Check that the counter can handle the top value. This must be done
    *  here since the C preprocessor does not allow floats in expressions.
