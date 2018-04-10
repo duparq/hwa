@@ -2,42 +2,55 @@
 HWA
 ===
 
-HWA is a set of C-preprocessor definitions designed to help developers write
-hardware-related code that:
+HWA is a set of C definitions designed to help developers write hardware-related
+code that:
 
- * is concise and easy to read,
+ * is pleasant to read and write,
  * produces efficient binary code,
- * simplifies the process of porting the code to a different target.
+ * is easier to port to a different target.
 
 To achieve these goals, HWA provides:
 
  * a set of objects that represent the hardware,
 
- * generic instructions that accept various types and various numbers of
-   mandatory and optionnal arguments, that put the focus on the expected result
-   rather than on the values to be written in registers,
+ * a single object-oriented generic instruction, `hw(...)`, that can act on all
+   hardware objects and accepts various types and various numbers of mandatory
+   and optionnal arguments, putting the focus on the expected result rather than
+   on the values to be written in registers,
+
+ * a transactional processing mechanism with the `hwa(...)` instruction that
+   allows further optimization of the binary code produced,
 
  * an error-checking mechanism that tries to produce messages that help the
-   developer to solve the problems,
+   developer solve the problems.
 
- * a transactional processing mechanism that allows further optimization of the
-   machine code.
+Because it is not a library, using HWA does not affect negatively the efficiency
+of the binary code produced either in terms of size, execution speed or memory
+used. HWA helps the compiler's optimizers produce a binary that is at least as
+efficient as if the developer had written smart accesses to hardware registers
+himself.
 
-There is actually no penalty in using HWA, either in terms of size, execution
-speed or memory used. Because it is not a library, using HWA does not affect
-negatively the efficiency of the binary code produced as HWA helps the
-compiler's optimizers produce a binary that is at least as efficient as if the
-developer had written smart accesses to hardware registers himself.
+HWA relies heavily on macro definitions to implement its object-oriented generic
+programming mechanism. As the C-preprocessor can be used to parse assembler
+source, a few features of HWA can be used for assembler programming. The
+implementation of a [software UART for Atmel AVR
+microcontrollers](atmelavr_swuarta.html) (see `atmel/avr/swuarta/`) and the
+[Diabolo bootloader](atmelavr_diabolo.html) (see `atmel/avr/examples/diabolo`)
+are examples of such a usage.
 
 Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
 should be able to compile the source code.
 
-As the C-preprocessor can be used to parse assembler source, a few features of
-HWA can be used for assembler programming. The implementation of a [software
-UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
-`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
-`atmel/avr/examples/diabolo`) are examples of such a usage.
+
+Examples
+========
+
+Several example projects are provided in the `vendor/architecture/examples/`
+directories (e.g. `atmel/avr/examples/`).
+
+Each `examples/` directory contains a `README.md` file that explains how to
+compile the examples.
 
 Here is an example of how to use a watchdog interrupt to make a LED blink with
 an Atmel AVR ATtiny44A-PU:
@@ -101,13 +114,6 @@ an Atmel AVR ATtiny44A-PU:
 
       return 0 ;
     }
-
-
-Several other example projects are provided in the
-`vendor/architecture/examples/` directories (e.g. `atmel/avr/examples/`).
-
-Each `examples/` directory contains a `README.md` file that explains how to
-compile the examples.
 
 
 Documentation
