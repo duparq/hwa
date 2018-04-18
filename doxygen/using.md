@@ -54,7 +54,7 @@ second argument. Additional arguments may follow.
 result.
 
 `hwa()` is used for asynchronous actions. Asynchronous actions can only be used
-after a _HWA contexternal_ has been created with the `hwa_begin()` or the
+after a _HWA context has been created with the `hwa_begin()` or the
 `hwa_begin_from_reset()` instruction.
 
 The following asynchronous actions are then memorized into the context until the
@@ -107,13 +107,13 @@ Object arguments can be peripheral controller names or canonical I/O pin names
  * `pa0`...
 
 Instructions that return objects names (`HW_RELATIVE()`, `HW_PIN()`) or those
-that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_REGISTER()`) can
-be used as object arguments too and the `hw()` and `hwa()` instructions also
-accept the following shortcuts:
+that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_IRQMASK()`,
+`HW_REGISTER()`) can be used as the object argument and the `hw()` and `hwa()`
+instructions also accept the following shortcuts:
 
- * `relative()` or `rel()` for `HW_RELATIVE()`
- * `register()` or `reg()` for `HW_REGISTER()`
+ * `()`, `rel()`, or `relative()` for `HW_RELATIVE()`
  * `irq()` for `HW_IRQ()`
+ * `reg()` or `register()` for `HW_REGISTER()`
 
 For example, the following statements are equivalent:
 
@@ -157,14 +157,11 @@ arguments are the same as for `HW_IRQ(...)`.
 IRQ flags can be read and cleared:
 
 @code
-if( hw(read, HW_IRQFLAG(counter0,overflow)) )
+if( hw(read, HW_IRQFLAG(counter0,overflow)) ) {
+    hw(clear, HW_IRQFLAG(counter0,overflow));
     hw(toggle, LED);
+}
 @endcode
-
-@code
-hw(clear, HW_IRQFLAG(counter0,overflow));
-@endcode
-
 
 Interrupt service routines are declared with the `HW_ISR()` instruction,
 using the same arguments as for `HW_IRQ()`:
@@ -176,8 +173,8 @@ HW_ISR( watchdog0 )
 }
 @endcode
 
-As the USI can trigger several different interrupt requests, the event name is
-required:
+As the USI `usi0` can trigger several different interrupt requests, the event
+name is required:
 
 @code
 HW_ISR( usi0, txc )
@@ -213,15 +210,16 @@ HW_ISR( counter0, overflow, naked )
 @endcode
 
 
-How to create a I/O definition {#using_defio}
-==============================
+Creating an I/O object {#using_defio}
+======================
 
-Creating an I/O definition allows giving a set of pins a name that can be used
-with the HWA instructions.
+Creating an I/O abject allows giving a name to a set of pins of one I/O
+port. That object name can be used with the actions `read`, `write`, and
+`toggle`.
 
 The `_io1a` class handles one set of consecutive pins inside one GPIO port.
 
-A class `_io1a` object named `mypins` is created with:
+An object named `mypins`, of class `_io1a`, is created with:
 
 @code
 #define _hw_def_mypins       _io1a, id, port, bn, bp
