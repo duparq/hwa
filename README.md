@@ -13,10 +13,10 @@ To achieve these goals, HWA provides:
 
  * a set of objects that represent the hardware,
 
- * a single object-oriented generic instruction, `hw(...)`, that can act on all
-   hardware objects and accepts various types and various numbers of mandatory
-   and optionnal arguments, putting the focus on the expected result rather than
-   on the values to be written in registers,
+ * one single object-oriented generic instruction, `hw(...)`, that can act on
+   all hardware objects and accepts various types and various numbers of
+   mandatory and optionnal arguments, putting the focus on the expected result
+   rather than on the values to be written in registers,
 
  * a transactional processing mechanism with the `hwa(...)` instruction that
    allows further optimization of the binary code produced,
@@ -110,7 +110,7 @@ an Atmel AVR ATtiny44A-PU:
       //  Sleep between interrupts
       //
       for(;;)
-        hw_sleep();
+        hw_sleep_until_irq();
 
       return 0 ;
     }
@@ -121,7 +121,7 @@ Documentation
 
 A ready-made documentation is available
 [here](http://duparq.free.fr/hwa/index.html). Start with the [Using
-HWA](using.html) page.
+HWA](http://duparq.free.fr/hwa/using.html) page.
 
 Building the documentation from sources requires
 [Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make` in the
