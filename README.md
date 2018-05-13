@@ -12,31 +12,27 @@ code that:
 To achieve these goals, HWA provides:
 
  * a set of objects that represent the hardware,
-
  * one single object-oriented generic instruction, `hw(...)`, that can act on
    all hardware objects and accepts various types and various numbers of
    mandatory and optionnal arguments, putting the focus on the expected result
    rather than on the values to be written in registers,
-
  * a transactional processing mechanism with the `hwa(...)` instruction that
    allows further optimization of the binary code produced,
-
  * an error-checking mechanism that tries to produce messages that help the
    developer solve the problems.
 
 Because it is not a library, using HWA does not affect negatively the efficiency
-of the binary code produced either in terms of size, execution speed or memory
+of the binary code produced either in terms of size, execution speed, or memory
 used. HWA helps the compiler's optimizers produce a binary that is at least as
 efficient as if the developer had written smart accesses to hardware registers
 himself.
 
-HWA relies heavily on macro definitions to implement its object-oriented generic
-programming mechanism. As the C-preprocessor can be used to parse assembler
-source, a few features of HWA can be used for assembler programming. The
-implementation of a [software UART for Atmel AVR
-microcontrollers](atmelavr_swuarta.html) (see `atmel/avr/swuarta/`) and the
-[Diabolo bootloader](atmelavr_diabolo.html) (see `atmel/avr/examples/diabolo`)
-are examples of such a usage.
+HWA relies heavily on macro definitions to implement object-oriented generic
+instructions. As the C preprocessor can be used to parse assembly language code,
+a few features of HWA can be used for assembly programming. The implementation
+of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
+`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
+`atmel/avr/examples/diabolo`) are examples of such a usage.
 
 Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
