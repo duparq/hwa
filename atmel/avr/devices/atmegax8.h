@@ -693,8 +693,8 @@ typedef struct {
 #define _hw_def_pd7			_io1a, 125, port2, 1, 7
 #define _hw_def_portd			_io1a, 126, port2, 8, 0
 
-#define _hw_def_adc6		_io1a, 336
-#define _hw_def_adc7		_io1a, 337
+#define _hw_def_pin_adc6		_io1a, 336
+#define _hw_def_pin_adc7		_io1a, 337
 
 /*  Digital input disable bits for analog input pins
  */
