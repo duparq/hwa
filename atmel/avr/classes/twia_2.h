@@ -11,10 +11,12 @@
 
 /**
  * @page atmelavr_twia
- * @section atmelavr_twia_cf Configuration
+ * __Actions__
  *
- * __Note__ When configured, the TWI takes control of the SCL and SDA
- * pins. These pins do not need to be configured.
+ * `configure`:
+ *
+ * __Note__ When configured, the TWI takes control of the SCL and SDA pins until
+ * the TWI is turned off. These pins do not need to be configured.
  *
  * @code
  * hw | hwa( configure, twi0,
@@ -43,7 +45,7 @@
  */
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
-    /*	Configure I/Os */						\
+    /*	The 'TWEN' bit that makes the TWI take control of the I/O pins is set by the 'bus_' actions */ 									\
     HW_Y(_hwx_cftwia_ksclhz,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
   } while(0)
 
@@ -129,38 +131,71 @@
   HW_EOL(__VA_ARGS__)
 
 
+/*  Submitted by gotnone via GitHub */
 /**
  * @page atmelavr_twia
- * @section Commands
- *
- * Class `_twia` peripherals are driven using the `hw()` instruction.
- * An optionnal `irq` parameter can be used to have the command enable the IRQ.
- *
- * __Note__ HWA verifies to some extent the nature of the given parameters. As all
- * this is implemented using macro definitions, some care must be taken
- * regarding how the parameters are written in order to avoid strange
- * behavior. For example, if the DATA parameter is `*ptr`, you must rewrite it
- * as `(*ptr)` or use a temporary, as the preprocessor can not process the `*`
- * character.
- *
+ * <br>
+ * `turn`:
  * @code
- * hw( tx_start, twi0 [,irq] );              // Transmit START condition
- * hw( tx_slaw,  twi0, SLA [,irq] );         // Transmit SLA slave address + write bit
- * hw( tx_slar,  twi0, SLA [,irq] );         // Transmit SLA slave address + read bit
- * hw( tx_data,  twi0, DATA [,irq] );        // Transmit DATA
- * hw( tx_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
- * hw( tx_stop,  twi0 [,irq] );              // Transmit STOP condition
+ * hw( turn, twi0, on | off );
+ * @endcode
+ * @code
+ * hwa( turn, twi0, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_tx_start__twia	, _hw_twia_txstart
+#define _hw_mtd_hw_turn__twia		, _hw_tntwia_
+#define _hw_mtd_hwa_turn__twia		, _hwa_tntwia_
+
+#define _hw_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+#define _hwa_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+#define _hwx_tntwia__0(x,o, v, ...)	HW_E_ST(v)
+#define _hwx_tntwia__1(x,o, v, ...)	HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+
+
+/**
+ * @page atmelavr_twia
+ *
+ * `bus_...`:
+ *
+ * @code
+ * hw( bus_start, twi0 [,irq] );              // Transmit START condition
+ * @endcode
+ * @code
+ * hw( bus_slaw,  twi0, SLA [,irq] );         // Transmit SLA slave address + write bit
+ * @endcode
+ * @code
+ * hw( bus_slar,  twi0, SLA [,irq] );         // Transmit SLA slave address + read bit
+ * @endcode
+ * @code
+ * hw( bus_data,  twi0, DATA [,irq] );        // Transmit DATA
+ * @endcode
+ * @code
+ * hw( bus_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
+ * @endcode
+ * @code
+ * hw( bus_stop,  twi0 [,irq] );              // Transmit STOP condition
+ * @endcode
+ *
+ * The optionnal `irq` parameter can be used to have the command enable the IRQ.
+ *
+ * These actions set the 'TWEN' bit so that the TWI takes control of the I/O pins.
+ *
+ * __Note__ HWA verifies to some extent the nature of the given parameters. As
+ * all this is implemented using macro definitions, some care must be taken
+ * regarding how the parameters are written in order to avoid a strange behavior
+ * of the compiler. For example, if the DATA parameter is `*ptr`, you must
+ * rewrite it as `(*ptr)` or use a temporary, as the preprocessor can not
+ * process the `*` character.
+ */
+#define _hw_mtd_hw_bus_start__twia	, _hw_twia_txstart
 #define _hw_twia_txstart(o,i,a,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
-#define _hw_mtd_hw_tx_stop__twia	, _hw_twia_txstop
+#define _hw_mtd_hw_bus_stop__twia	, _hw_twia_txstop
 #define _hw_twia_txstop(o,i,a,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
-#define _hw_mtd_hw_tx_slaw__twia	, _hw_twia_txslaw
+#define _hw_mtd_hw_bus_slaw__twia	, _hw_twia_txslaw
 #define _hw_twia_txslaw(o,i,a,...)	HW_Y(_hw_twia_txslawv,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
 #define _hw_twia_txslawv_0(o,v,k,...)					\
@@ -172,7 +207,7 @@
   } while(0)
 
 
-#define _hw_mtd_hw_tx_slar__twia	, _hw_twia_txslar
+#define _hw_mtd_hw_bus_slar__twia	, _hw_twia_txslar
 #define _hw_twia_txslar(o,i,a,...)	HW_G2(_hw_twia_vtxslar,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
 #define _hw_twia_vtxslar_0(o,v,k,...)					\
@@ -184,7 +219,7 @@
   } while(0)
 
 
-#define _hw_mtd_hw_tx_data__twia	, _hw_twia_txdata
+#define _hw_mtd_hw_bus_data__twia	, _hw_twia_txdata
 #define _hw_twia_txdata(o,i,a,...)	HW_G2(_hw_twia_txdatav,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
 #define _hw_twia_txdatav_1(...)		HW_E(missing value)
 #define _hw_twia_txdatav_0(o,v,k,...)					\
@@ -194,7 +229,7 @@
   } while(0)
 
 
-#define _hw_mtd_hw_tx_read__twia	, _hw_twia_txread
+#define _hw_mtd_hw_bus_read__twia	, _hw_twia_txread
 #define _hw_twia_txread(o,i,a,k,...)	HW_Y(_hw_twia_txread_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
 #define _hw_twia_txread_ack_1(o,ok,k,...)	HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
 #define _hw_twia_txread_ack_0(o,k,...)	HW_Y(_hw_twia_txread_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
@@ -208,9 +243,7 @@
 
 /**
  * @page atmelavr_twia
- * @section atmelavr_twia_data Data
- *
- * The `read` returns the content of the data register.
+ * `read`:
  *
  * @code
  * uint8_t byte = hw( read, twi0 );
@@ -223,10 +256,10 @@
 
 /**
  * @page atmelavr_twia
- * @section atmelavr_twia_stat Status
+ * `stat`:
  *
- * The `hw(stat,)` instruction returns the status flags of the TWI as a byte
- * whose value can be compared to HWA predefined symbols:
+ * The `stat` action returns the status flags of the TWI as a byte whose value
+ * can be compared to HWA predefined symbols:
  *
  * @code
  * if ( hw(stat,twi0) == HW_TWI_START ) {
@@ -387,7 +420,7 @@
  *    * `HW_TWI_BUS_ERROR`: illegal start or stop condition
  */
 #define HW_TWI_BUS_ERROR		0x00
-
+ 
 
 
 /*******************************************************************************
@@ -422,7 +455,10 @@
 
 /**
  * @page atmelavr_twia
- * @section atmelavr_twia_internals Internals
+ * <br>
+ * __Registers__
+ *
+ * <br>
  *
  * Class `_twia` objects hold the following hardware registers:
  *

@@ -25,6 +25,9 @@
  * __Note__ Revision 2017-02-19 (not tested): use `hw()` instead of `hw_cmd()`. The
  * binary code is now 3338 bytes long with avr-gcc-4.9.2.
  *
+ * __Note__ Revision 2018-09-26 (not tested): the binary code is now 3180 bytes
+ * long with avr-gcc-5.4.0, the same length as with the original twitest.c.
+ *
  * @par main.c
  **/
 
@@ -163,7 +166,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     return -1;
 
  begin:
-  hw( tx_start, TWI );			/* send start condition */
+  hw( bus_start, TWI );			/* send start condition */
 
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
@@ -182,7 +185,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
   /* Note [10]
    */
-  hw( tx_slaw, TWI, sla>>1 );		/* send SLA+W */
+  hw( bus_slaw, TWI, sla>>1 );		/* send SLA+W */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -202,7 +205,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #ifdef WORD_ADDRESS_16BIT
 
-  hw( tx_data, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
+  hw( bus_data, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -221,7 +224,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #endif
 
-  hw( tx_data, TWI, eeaddr );		/* lowest 8 bits of addr */
+  hw( bus_data, TWI, eeaddr );		/* lowest 8 bits of addr */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -242,7 +245,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
    * Note [12]
    * Next cycle(s): master receiver mode
    */
-  hw( tx_start, TWI );			/* send (rep.) start condition */
+  hw( bus_start, TWI );			/* send (rep.) start condition */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -257,7 +260,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 	goto error;
     }
 
-  hw( tx_slar, TWI, sla>>1 );		/* send SLA+R */
+  hw( bus_slar, TWI, sla>>1 );		/* send SLA+R */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -279,9 +282,9 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
   for ( ; len>0 ; len-- ) {
 
     if (len == 1)
-      hw( tx_read, TWI, nack );		/* ask last byte, send NACK*/
+      hw( bus_read, TWI, nack );		/* ask last byte, send NACK*/
     else
-      hw( tx_read, TWI, ack );		/* ask one more byte, send ACK*/
+      hw( bus_read, TWI, ack );		/* ask one more byte, send ACK*/
 
     while( !hw(read, HW_IRQFLAG(TWI)) ) {} /* wait for transmission */
     switch( (twst=hw(stat,TWI)) )
@@ -303,7 +306,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
  quit:
   /* Note [14]
    */
-  hw( tx_stop, TWI );			/* send stop condition */
+  hw( bus_stop, TWI );			/* send stop condition */
   return rv;
 
  error:
@@ -358,7 +361,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   /* Note [15] */
 
-  hw( tx_start, TWI );			/* send start condition */
+  hw( bus_start, TWI );			/* send start condition */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -374,7 +377,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 				/* NB: do /not/ send stop condition */
     }
 
-  hw( tx_slaw, TWI, sla>>1 );		/* send SLA+W */
+  hw( bus_slaw, TWI, sla>>1 );		/* send SLA+W */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -392,7 +395,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 
 #ifdef WORD_ADDRESS_16BIT
-  hw( tx_data, TWI, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
+  hw( bus_data, TWI, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -410,7 +413,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 #endif
 
-  hw( tx_data, TWI, eeaddr );		/* low 8 bits of addr */
+  hw( bus_data, TWI, eeaddr );		/* low 8 bits of addr */
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -430,7 +433,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   for ( ; len>0 ; len-- ) {
 
-    hw( tx_data, TWI, (*buf++) );
+    hw( bus_data, TWI, (*buf++) );
 
     while( !hw(read, HW_IRQFLAG(TWI)) ) {} /* wait for transmission */
     switch( (twst=hw(stat,TWI)) )
@@ -448,7 +451,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
   }
 
  quit:
-  hw( tx_stop, TWI );			/* send stop condition */
+  hw( bus_stop, TWI );			/* send stop condition */
   return rv;
 
  error:
