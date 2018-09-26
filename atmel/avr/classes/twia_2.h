@@ -15,8 +15,9 @@
  *
  * `configure`:
  *
- * __Note__ When configured, the TWI takes control of the SCL and SDA pins until
- * the TWI is turned off. These pins do not need to be configured.
+ * __Note__ The `configure` action does not make the TWI take control of the SCL
+ * and SDA pins until a `bus_` action is triggered. Then, it keeps control over
+ * these pins until the TWI is turned off.
  *
  * @code
  * hw | hwa( configure, twi0,
