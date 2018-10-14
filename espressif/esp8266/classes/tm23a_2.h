@@ -29,7 +29,7 @@
  *      //
  *    [ countmode,   stop                   // Stop
  *                 | down                   // Count down to 0 and stop
- *                 | loop_down, ]           // Count down to 0 and reload
+ *                 | down_loop, ]           // Count down to 0 and reload
  *
  *      //  Class _tm23a timers all count from top down to 0
  *      //
@@ -96,14 +96,14 @@
   _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_countmode_##v));		\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vcountmode_0(o,v,...)	HW_E_AVL(countmode, v, down | loop_down | stop)
+#define _hwa_cftm23a_vcountmode_0(o,v,...)	HW_E_AVL(countmode, v, down | down_loop | stop)
 
 #define _hwa_cftm23a_kcountmode_0(o,k,...)			\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hw_tm23a_countmode_stop	, 0, 0	/* en, arl */
 #define _hw_tm23a_countmode_down	, 1, 0
-#define _hw_tm23a_countmode_loop_down	, 1, 1
+#define _hw_tm23a_countmode_down_loop	, 1, 1
 
 /*	Optionnal parameter `bottom`
  */

@@ -35,7 +35,7 @@
 /* #define PIN_14				gpio5  */
 /* #define PIN_17				gpio16 */
 
-#define LED				gpio16
+#define PIN_LED				gpio16
 
 #include <hwa/esp8266.h>
 

@@ -1,4 +1,16 @@
 
+/**
+ * @example
+ *
+ * @par Toggle the function of gpio1 between gpio and (uart0,txd).
+ *
+ * Toggle the LED on/off every 200 ms
+ * When the LED is turned on, turn TXD (gpio1) low for 100 ms
+ * When the LED if turned off, uart0 sends "ON\n" on TXD
+ *
+ * @par user.c
+ */
+
 /*
  *    https://github.com/pfalcon/esp-open-sdk/issues/279
  *
@@ -14,8 +26,8 @@
 #define IROM		__attribute__((section (".irom.text")))
 #define IRAM
 
-#if !defined LED
-#  define LED		gpio5
+#if !defined PIN_LED
+#  define PIN_LED	gpio5
 #endif
 
 
@@ -47,9 +59,9 @@ void IROM every10ms ( )
    */
   count = 0 ;
 
-  hw( toggle, LED );
+  hw( toggle, PIN_LED );
   
-  if ( hw( read, LED ) == 1 ) {
+  if ( hw( read, PIN_LED ) == 1 ) {
     /*
      *	Turn TXD low for 100 ms: connect pin GPIO1 to the GPIO1 signal
      */
@@ -67,7 +79,7 @@ void IROM every10ms ( )
 
 void IROM user_init()
 {
-  hw( configure, LED, mode, digital_output );
+  hw( configure, PIN_LED, mode, digital_output );
 
   /*  Pin GPIO1 is used alternatively as a GPIO and as pin TXD of hw_uart0.
    *
