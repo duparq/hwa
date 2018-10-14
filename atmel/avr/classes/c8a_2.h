@@ -235,10 +235,10 @@
        */								\
       if ( hwa->compare0.config.output != 0xFF				\
 	   && hwa->compare0.config.output != HW_A1(_hw_cmp8a_output_disconnected) ) \
-	_hwa( configure, _HW_REL(compare0,pin), function, digital_output ); \
+	_hwa( configure, _HW_REL(compare0,pin), mode, digital_output ); \
       if ( hwa->compare1.config.output != 0xFF				\
 	   && hwa->compare1.config.output != HW_A1(_hw_cmp8a_output_disconnected) ) \
-	_hwa( configure, _HW_REL(compare1,pin), function, digital_output ); \
+	_hwa( configure, _HW_REL(compare1,pin), mode, digital_output ); \
     }									\
   } while(0)
 

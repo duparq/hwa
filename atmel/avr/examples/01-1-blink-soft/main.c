@@ -37,7 +37,7 @@
 
 int main ( )
 {
-  hw( configure, PIN_LED, function, digital_output );
+  hw( configure, PIN_LED, mode, digital_output );
 
   for(;;) {
     hw( toggle, PIN_LED );

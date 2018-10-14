@@ -13,107 +13,154 @@
  * @page espressif_io1a
  * @section espressif_io1a_config Configuration
  *
- * The `hw(configure,)` and `hwa(configure,...)` instructions configure _io1a class I/O
- * definitions:
+ * __Actions__
+ *
+ * `configure`:
  *
  * @code
- * hw/hwa( configure, pa0,
+ * hw | hwa( configure,   gpio0,
  *
- *		[ function,    FUNCTION, ] // FUNCTION is dependent of the I/O that is configured.
+ *         [ function,    gpio, ]                                       // Default
  *
- *		[ direction,   input
- *			     | output_when_awake
- *			     | output,		 ]
+ *         [ mode,        digital_input | digital_input_floating        // Default
+ *                      | digital_input_pullup
+ *                      | digital_input_pullup_when_awake
+ *                      | digital_input_pullup_when_sleeping
+ *                      | digital_output | digital_output_pushpull
+ *                      | digital_output_when_awake | digital_output_pushpull_when_awake
+ *                      | digital_output_when_sleeping | digital_output_pushpull_when_sleeping
+ *                      | analog_input,
  *
- *		[ pullup,      on
- *			     | when_awake
- *			     | off,	  ]
- *		  );
+ *         [ pullup,      off
+ *                      | when_awake
+ *                      | when_sleeping
+ *                      | on, ] );
  * @endcode
+ * <br>
+ * @code
+ * // ALTERNATE_FUNCTION is a signal name, such as 'int0' or '(uart0,tx)'.
+ * //
+ * hw | hwa( configure,   pa0,
  *
- * __Note__ `direction` and `pullup` should only be used when FUNCTION is
- * `gpio`. There is no checking here.
+ *           function,    ALTERNATE_FUNCTION );
+ * @endcode
+ * <br>
  */
 #define _hw_mtd_hw_configure__io1a		, _hw_cfio1a
 #define _hw_mtd_hwa_configure__io1a		, _hwa_cfio1a
 
-#define _hw_cfio1a(o,i, p,bn,bp, ...)		_hw_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
-#define _hw_cfio1a2(...)			_hw_cfio1a3( __VA_ARGS__ )
-#define _hw_cfio1a3(o,cf,p,bn,bp,k,...)				\
-  do{									\
-    typedef struct {							\
-      uint8_t		commit ;					\
-      hwa_shared_t	shared ;					\
-      hwa_p16a_t	p ;						\
-      hwa_pcfa_t	cf ;						\
-    } hwa_t ;								\
-    hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
-    _hwa_setup( shared ); _hwa_setup( p ); _hwa_setup( cf );		\
-    HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__,,); \
-    hwa->commit = 1;							\
-    _hwa_commit( shared ); _hwa_commit( p ); _hwa_commit( cf );		\
+#define _hw_cfio1a(o,i, p,bn,bp, ...)		_hwx_cfio1a1( _hw, o, o##_cf, p,bn,bp, __VA_ARGS__)
+#define _hwa_cfio1a(o,i, p,bn,bp, ...)		_hwx_cfio1a1( _hwa, o, o##_cf, p,bn,bp, __VA_ARGS__)
+
+#define _hwx_cfio1a1(...)			_hwx_cfio1a2(__VA_ARGS__)
+#define _hwx_cfio1a2(x,...)			x##_cfio1a1(__VA_ARGS__)
+
+/*  Create a local minimal context, apply the asynchronous action on it, and
+ *  commit.
+ */
+#define _hw_cfio1a1(o,cf,p,...)					\
+  do {								\
+    struct {							\
+      uint8_t		commit ;				\
+      hwa_shared_t	shared ;				\
+      hwa_p16a_t	p ;					\
+      hwa_pcfa_t	cf ;					\
+    } st ;							\
+    hwa_t *hwa = (hwa_t*)&st ;					\
+    _hwa_setup( shared ); _hwa_setup( p ); _hwa_setup( cf );	\
+    _hwa_cfio1a1(o,cf,p,__VA_ARGS__);				\
+    st.commit = 1 ;						\
+    _hwa_commit( shared ); _hwa_commit( p ); _hwa_commit( cf );	\
   }while(0)
 
-#define _hwa_cfio1a(o,i, p,bn,bp, ...)		_hwa_cfio1a2( o, o##_cf, p,bn,bp, __VA_ARGS__)
-#define _hwa_cfio1a2(...)			_hwa_cfio1a3( __VA_ARGS__ )
-#define _hwa_cfio1a3(o,cf,p,bn,bp,k,...)				\
-  HW_Y(_hwa_cfio1a_kfunction,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__,,)
-
-/*  Optionnal parameter `function`
+/*  Key 'function'
  */
-#define _hwa_cfio1a_kfunction_1(o,cf,p,bn,bp,k,v,...)				\
-  HW_Y(_hwa_cfio1a_vfunction,_hw_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a1(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kfn,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfio1a_vfunction_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _hw_##o##_fns)
-
-#define _hwa_cfio1a_vfunction_1(o,cf,p,bn,bp,v,k,...)			\
+#define _hwa_cfio1a_kfn_0(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_kfn_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfn,_hw_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_vfn_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _hw_##o##_fns)
+#define _hwa_cfio1a_vfn_1(o,cf,p,bn,bp,v,k,...)				\
   _hwa_write_reg( cf, fn, HW_A1(_hw_##o##_fn_##v) );			\
   HW_A2(_##o##_fn_##v) /* Optionnal supplement of actions, e.g. swap  */ \
-  HW_Y(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfio1a_kfunction_0(o,cf,p,bn,bp,k,...)				\
-  HW_Y(_hwa_cfio1a_kdirection,_hw_is_direction_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
-
-
-/*  Optionnal parameter `direction`
+/*  Key 'mode'
  */
-#define _hwa_cfio1a_kdirection_1(o,cf,p,bn,bp,k,v,...)				\
-  HW_Y(_hwa_cfio1a_vdirection,_hw_cfio1a_direction_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hw_cfio1a_md_digital_input				, di
+#define _hw_cfio1a_md_digital_input_floating			, dif
+#define _hw_cfio1a_md_digital_input_pullup			, dipu
+#define _hw_cfio1a_md_digital_input_pullup_when_awake		, dipuwa
+#define _hw_cfio1a_md_digital_input_pullup_when_sleeping	, dipuws
+#define _hw_cfio1a_md_digital_output				, dopp
+#define _hw_cfio1a_md_digital_output_pushpull			, dopp
+#define _hw_cfio1a_md_digital_output_when_awake			, doppwa
+#define _hw_cfio1a_md_digital_output_pushpull_when_awake	, doppwa
+#define _hw_cfio1a_md_digital_output_when_sleeping		, doppws
+#define _hw_cfio1a_md_digital_output_pushpull_when_sleeping	, doppws
+#define _hw_cfio1a_md_analog_input				, ai
 
-#define _hwa_cfio1a_vdirection_0(o,cf,p,bn,bp,v,...)	HW_E_AVL(direction, v, input | output | output_when_awake)
+#define _hwa_cfio1a_kmd_0(o,cf,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
+#define _hwa_cfio1a_kmd_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vmd,_hw_cfio1a_md_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_vmd_0(o,cf,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating, digital_input_pullup, \
+							     digital_input_pullup_when_awake, \
+							     digital_output, digital_output_pushpull, \
+							     digital_output_when_awake, digital_output_pushpull_when_awake, \
+							     digital_output_when_sleeping, digital_output_pushpull_when_sleeping,\
+							     analog_input) )
+#define _hwa_cfio1a_vmd_1(o,cf,p,bn,bp,v,...)	HW_G2(_hwa_cfio1a,HW_A1(_hw_cfio1a_md_##v))(o,cf,p,bn,bp,__VA_ARGS__)
 
-#define _hwa_cfio1a_vdirection_1(o,cf,p,bn,bp,v,k,...)			\
-  _hwa_write_reg( cf, oex, HW_A1(_hw_cfio1a_direction_##v) );	\
-  if ( HW_A1(_hw_cfio1a_direction_##v) != 0 )				\
-    _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  HW_Y(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_di(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 0 );						\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfio1a_kdirection_0(o,cf,p,bn,bp,k,...)				\
-  HW_Y(_hwa_cfio1a_kpullup,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_dif(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 0 );						\
+  _hwa_write_reg( cf, pux, 0 /* pull-up off */ );			\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
-#define _hw_cfio1a_direction_input	, 0	/* oex */
-#define _hw_cfio1a_direction_output_when_awake	, 1
-#define _hw_cfio1a_direction_output_when_sleeping	, 2
-#define _hw_cfio1a_direction_output	, 3
+#define _hwa_cfio1a_dipu(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 0 /* input */ );				\
+  _hwa_write_reg( cf, pux, 3 /* pull-up on */ );			\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_dipuwa(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 0 /* input */ );				\
+  _hwa_write_reg( cf, pux, 2 /* pull-up when awake */ );		\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_dipuws(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 0 /* input */ );				\
+  _hwa_write_reg( cf, pux, 1 /* pull-up when sleeping */ );		\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_dopp(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 3 /* output */ );				\
+  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_doppwa(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 1 /* output when awake */ );			\
+  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_doppws(o,cf,p,bn,bp,k,...)				\
+  _hwa_write_reg( cf, oex, 2 /* output when sleeping */ );		\
+  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 
-/*  Optionnal parameter `pullup`
+/*  Key `pullup`
  */
-#define _hwa_cfio1a_kpullup_1(o,cf,p,bn,bp,k,v,...)				\
-    HW_Y(_hwa_cfio1a_vpullup0,_hw_cfio1a_pullup_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hw_cfio1a_pu_off			, 0	/* pux */
+#define _hw_cfio1a_pu_when_sleeping		, 1
+#define _hw_cfio1a_pu_when_awake		, 2
+#define _hw_cfio1a_pu_on			, 3
 
-#define _hwa_cfio1a_vpullup_1(o,cf,p,bn,bp,v,...)	\
-    _hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pullup_##v) );	\
-    HW_EOL(__VA_ARGS__)
-
-#define _hwa_cfio1a_vpullup_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
-#define _hwa_cfio1a_vpullup0_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, on | off | when_awake)
-#define _hwa_cfio1a_kpullup_0(o,cf,p,bn,bp,...)		HW_EOL(__VA_ARGS__)
-
-#define _hw_cfio1a_pullup_off		, 0	/* pux */
-#define _hw_cfio1a_pullup_when_sleeping	, 1
-#define _hw_cfio1a_pullup_when_awake	, 2
-#define _hw_cfio1a_pullup_on		, 3
+#define _hwa_cfio1a_kpu_0(o,cf,p,bn,bp,...)	HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1a_kpu_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vpu,_hw_cfio1a_pu_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_vpu_1(o,cf,p,bn,bp,v,...)	_hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pu_##v) ); HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1a_vpu_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, (on,off,when_awake,when_sleeping))
 
 
 /**

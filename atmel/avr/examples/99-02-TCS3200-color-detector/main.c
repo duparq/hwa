@@ -202,10 +202,10 @@ main ( )
    */
   hwa( configure, CAPTURE, input, pin_icp );
 
-  hwa( configure, PIN_TCS3200_S2, function, digital_output );
-  hwa( configure, PIN_TCS3200_S3, function, digital_output );
+  hwa( configure, PIN_TCS3200_S2, mode, digital_output );
+  hwa( configure, PIN_TCS3200_S3, mode, digital_output );
 
-  hwa( configure, PIN_OUTS, function, digital_output );
+  hwa( configure, PIN_OUTS, mode, digital_output );
 
   hwa( write, PIN_OUTS, 0 );
 

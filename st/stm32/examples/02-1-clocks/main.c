@@ -54,9 +54,8 @@ int main ( )
   /*  Configure the GPIO pin
    */
   hwa( configure, LED1,
-       mode,      digital,
-       direction, output,
-       frequency, 50MHz );
+       mode,      digital_output,
+       frequency, lowest );
 
   hwa_commit();
 

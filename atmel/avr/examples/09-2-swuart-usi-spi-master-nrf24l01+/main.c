@@ -89,7 +89,7 @@ main ( )
 
   /*  Configure nRF CSN pin
    */
-  hwa( configure, NRF_CSN, function, digital_output );
+  hwa( configure, NRF_CSN, mode, digital_output );
   hwa( write,  NRF_CSN, 1 );
 
   /*  Write this configuration into the hardware

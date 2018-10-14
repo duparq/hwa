@@ -116,6 +116,7 @@
 #define _hw_is_output_output			, 1
 #define _hw_is_overflow_overflow		, 1
 #define _hw_is_parity_parity			, 1
+#define _hw_is_pcic_pcic			, 1
 #define _hw_is_polarity_polarity		, 1
 #define _hw_is_port_port			, 1
 #define _hw_is_positive_input_positive_input	, 1

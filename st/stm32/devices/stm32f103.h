@@ -331,6 +331,15 @@
 /* #endif */
 
 
+/*  Mappings
+ */
+#define _hw_map_pa0			(pa0,wkup,usart2_cts,adc12_in0,timer2_channel1,etr)
+#define _hw_map_pa0_pa0			, 
+
+#define _hw_gpio0_fn_spi_cs2		, 1
+#define _hw_gpio0_fn_clk_out		, 4 /* RESET */
+#define _hw_gpio0_fns			"`gpio`, `spi_cs2`, or `clk_out`"
+
 /*******************************************************************************
  *									       *
  *	SysTick								       *

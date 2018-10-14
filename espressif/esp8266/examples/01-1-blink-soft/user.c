@@ -25,9 +25,7 @@ void IROM user_init()
 {
   /*  Configure the LED output
    */
-  hw( configure, LED,
-      function,	 gpio,			// Optionnal
-      direction, output /* output_when_awake */ );
+  hw( configure, LED, mode, digital_output );
 
   /*  Trigger a function call every 10 ms (about)
    */

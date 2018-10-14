@@ -27,76 +27,77 @@
  * @code
  * hw | hwa( configure,   pa0,
  *
- *           function,    digital_input        // Default
- *                      | digital_output
- *                      | analog_input,
+ *         [ function,    gpio, ]                       // Default
  *
- *         [ pullup,      on,
- *                      | off ] );
+ *           mode,        digital_input
+ *                      | digital_input_floating        // Default
+ *                      | digital_input_pullup
+ *                      | digital_output | digital_output_pushpull
+ *                      | analog_input
+ *                      | analog_input_floating
+ *                      | analog_input_pullup );
  * @endcode
  *
- * __Note__: a `digital_output` set high makes the pull-up enabled when
- *           switching to an input mode.
+ * @note a digital output in high state enables the pull-up when switched to an
+ *       input mode.
  */
 
 #define _hw_cfio1a(...)		_hwx_cfio1a(_hw,__VA_ARGS__,,)
 #define _hwa_cfio1a(...)	_hwx_cfio1a(_hwa,__VA_ARGS__,,)
 
-/*  Mandatory argument 'function'
- *
- *  FIXME: consider esp8266.h for pin functions
+/*  Atmel AVR peripheral controllers are responsible of their I/O pins
+ *  configuration, so there is no need for a 'function' argument as it is always
+ *  'gpio'. 
  */
-#define _hw_cfio1a_fn_digital_input	, vfndi
-#define _hw_cfio1a_fn_digital_output	, vfndo
-#define _hw_cfio1a_fn_analog_input	, vfnai
 
-#define _hwx_cfio1a(x,o,i,p,bn,bp,k,...)				\
-  HW_Y(_hwx_cfio1a_kfn,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+/*  Key 'function'
+ */
+#define _hw_cfio1a_fn_gpio
 
-#define _hwx_cfio1a_kfn_0(x,o,p,bn,bp,k,...)	\
-  HW_E_NIL(k, (function) )
+#define _hwx_cfio1a(x,o,i,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kfn,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kmd,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vfn,_hw_cfio1a_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfio1a_vfn_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (gpio) )
+#define _hwx_cfio1a_vfn_1(x,o,p,bn,bp,v,k,...)	HW_Y(_hwx_cfio1a_kmd,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwx_cfio1a_kfn_1(x,o,p,bn,bp,k,v,...)	\
-  HW_Y(_hwx_cfio1a_vfn,_hw_cfio1a_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+/*  Key 'mode'
+ */
+#define _hw_cfio1a_md_digital_input		, di
+#define _hw_cfio1a_md_digital_input_floating	, dif
+#define _hw_cfio1a_md_digital_input_pullup	, dipu
+#define _hw_cfio1a_md_digital_output		, do
+#define _hw_cfio1a_md_digital_output_pushpull	, do
+#define _hw_cfio1a_md_analog_input		, ai
+#define _hw_cfio1a_md_analog_input_floating	, aif
+#define _hw_cfio1a_md_analog_input_pullup	, aipu
 
-#define _hwx_cfio1a_vfn_0(x,o,p,bn,bp,v,...)			\
-  HW_E_NIL(v, (digital_input|digital_output|analog_input) )
+#define _hwx_cfio1a_kmd_0(x,o,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
+#define _hwx_cfio1a_kmd_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vmd,_hw_cfio1a_md_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfio1a_vmd_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input|digital_output|analog_input) )
+#define _hwx_cfio1a_vmd_1(x,o,p,bn,bp,v,...)	HW_G2(_hwx_cfio1a,HW_A1(_hw_cfio1a_md_##v))(x,o,p,bn,bp,__VA_ARGS__)
 
-#define _hwx_cfio1a_vfn_1(x,o,p,bn,bp,v,...)	\
-  HW_G2(_hwx_cfio1a,HW_A1(_hw_cfio1a_fn_##v))(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_vfndi(x,o,p,bn,bp,k,...)				\
+#define _hwx_cfio1a_dif(x,o,p,bn,bp,k,...)				\
   x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  HW_Y(_hwx_cfio1a_kpullup,_hw_is_pullup_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+  x##_write_reg_m(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_vfndo(x,o,p,bn,bp,k,...)				\
-  x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);		\
+#define _hwx_cfio1a_dipu(x,o,p,bn,bp,k,...)				\
+  x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_reg_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_vfnai(x,o,p,bn,bp,...)				\
-  HW_Y(_hwx_cfio1a_vfnai,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_vfnai_0(x,o,p,bn,bp,...)	\
-  HW_E(pin `o` does not support analog_input)
+#define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
+#define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, _hw_reg_##o##_##did, 1); HW_EOL(__VA_ARGS__)
+/* x##_write_reg(o,did,1); DOES NOT WORK: 'o' is not a regular object */
 
-#define _hwx_cfio1a_vfnai_1(x,o,p,bn,bp,k,...)				\
-  /* x##_write_reg(o,did,1); DOES NOT WORK: 'o' is not a regular object */ \
+#define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
+#define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)				\
   x( write, _hw_reg_##o##_##did, 1);					\
-  HW_Y(_hwx_cfio1a_kpullup,_hw_is_pullup_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
-
-/*  Optionnal argument `pullup`
- */
-#define _hwx_cfio1a_kpullup_0(x,o,p,bn,bp,...)	\
-  HW_EOL(__VA_ARGS__)
-
-#define _hwx_cfio1a_kpullup_1(x,o,p,bn,bp,k,v,...)			\
-  HW_Y(_hwx_cfio1a_vpullup,_hw_state_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
-
-#define _hwx_cfio1a_vpullup_1(x,o,p,bn,bp,v,...)			\
-  x##_write_reg_m(p,port,((1<<bn)-1)<<bp, HW_A1(_hw_state_##v)?((1U<<bn)-1)<<bp:0 ); \
-  HW_EOL(__VA_ARGS__)
-
-#define _hwx_cfio1a_vpullup_0(x,o,p,bn,bp,v,...)	\
-  HW_E_NIL(v, (on|off))
+  x##_write_reg_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
 
 
 /**

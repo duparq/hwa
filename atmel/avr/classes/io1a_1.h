@@ -74,8 +74,10 @@
  */
 /*  Class-defined HW_RELATIVE()
  */
-#define _hw_mtd_HW_RELATIVE__io1a	, _HW_REL_io1a
+#define _hw_mtd_HW_RELATIVE__io1a	, _hw_io1arl1
 
-#define _HW_REL_io1a(o,x,...)		HW_Y(_HW_REL_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)
-#define _HW_REL_io1a_1(o,x,i,p,...)	p
-#define _HW_REL_io1a_0(o,x,...)		HW_E_OO(o,x)
+#define _hw_io1arl1(o,x,...)		HW_Y(_hw_io1arl1,_hw_is_port_##x)(o,x,__VA_ARGS__)
+#define _hw_io1arl1_1(o,x,i,p,...)	p
+#define _hw_io1arl1_0(o,x,...)		HW_Y(_hw_io1arl2,_hw_is_pcic_##x)(o,x,__VA_ARGS__)
+#define _hw_io1arl2_1(o,x,i,p,...)	_hw_##p##_pcic
+#define _hw_io1arl2_0(o,x,...)		HW_E_OO(o,x)

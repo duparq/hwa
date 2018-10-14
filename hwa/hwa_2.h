@@ -350,25 +350,25 @@
 /**
  * @brief Initialize the HWA context registers addresses of an object
  */
-#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_O(o))
+#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_OD(o))
 
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value
  */
-#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_O(o))
+#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_OD(o))
 
 
 /**
  * @brief Solve the configuration of an object
  */
-#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_O(o))
+#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_OD(o))
 
 
 /**
  * @brief Commit the registers of an object
  */
-#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_O(o))
+#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_OD(o))
 
 
 /**

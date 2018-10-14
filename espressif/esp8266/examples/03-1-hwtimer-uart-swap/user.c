@@ -40,9 +40,7 @@ void IROM user_init()
   //  hwa_begin();
   hwa_begin_from_reset();
 
-  hwa( configure, LED,
-       function,  gpio,
-       direction, output /* output_when_awake */ );
+  hwa( configure, LED, mode, digital_output );
 
   /*  Configure the UART
    */

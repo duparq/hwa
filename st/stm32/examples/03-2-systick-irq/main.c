@@ -60,9 +60,8 @@ int main ( )
   hwa_commit();
 
   hwa( configure, LED1,
-       mode,      digital,
-       direction, output,
-       frequency, 50MHz );
+       mode,      digital_output,
+       frequency, lowest );
   hwa_commit();
 
   /*  Configure the system tick timer

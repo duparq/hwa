@@ -42,9 +42,8 @@ int main ( )
   hw( power, (LED1,port), on );
 
   hw( configure, LED1,
-      mode,	 digital,
-      direction, output,
-      frequency, 50MHz );
+      mode,	 digital_output,
+      frequency, lowest );
 
   for(;;) {
     hw( toggle, LED1 );

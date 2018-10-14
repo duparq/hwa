@@ -709,6 +709,9 @@ typedef struct {
 #define _hw_reg_pd7_did		_xob1, shared, did1, 1, 1	/* AIN1 */
 
 /*  Relative pin change controllers
+ *
+ *  FIXME: these declarations are necessary for _HW_REL() since it does not look
+ *  for class method (i.e. _swarta).
  */
 #define _hw_rel_pb0_pcic		pcic0
 #define _hw_rel_pb1_pcic		pcic0
@@ -736,6 +739,11 @@ typedef struct {
 #define _hw_rel_pd6_pcic		pcic2
 #define _hw_rel_pd7_pcic		pcic2
 
+/* #define _hw_port0_pcic			pcic0 */
+/* #define _hw_port1_pcic			pcic1 */
+/* #define _hw_port2_pcic			pcic2 */
+
+
 /*  Canonical pin names
  */
 #define _hw_pin_sck			, pb5
@@ -757,8 +765,8 @@ typedef struct {
 #define _hw_pin_adc3			, pc3
 #define _hw_pin_adc4			, pc4
 #define _hw_pin_adc5			, pc5
-#define _hw_pin_adc6			, pin_adc6
-#define _hw_pin_adc7			, pin_adc7
+#define _hw_pin_adc6			, pin_adc6	/* keep the pin_ prefix */
+#define _hw_pin_adc7			, pin_adc7	/* since adcX would name an ADC */
 
 #define _hw_pin_ain1			, pd7
 #define _hw_pin_ain0			, pd6

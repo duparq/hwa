@@ -46,7 +46,8 @@
  */
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
-    /*	The 'TWEN' bit that makes the TWI take control of the I/O pins is set by the 'bus_' actions */ 									\
+    /*	The 'TWEN' bit that makes the TWI take control of the */	\
+    /*  I/O pins is set by the 'bus_' actions */			\
     HW_Y(_hwx_cftwia_ksclhz,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
   } while(0)
 

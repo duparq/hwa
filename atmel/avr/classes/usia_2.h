@@ -79,9 +79,9 @@
   _hwa_write_reg( o, wm, 1 );					\
   _hwa_write_reg( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
-    _hwa( configure, HW_PIN(usck), function, digital_output );		\
-    _hwa( configure, HW_PIN(do),   function, digital_output );		\
-    _hwa( configure, HW_PIN(di),   function, digital_input  );		\
+    _hwa( configure, HW_PIN(usck), mode, digital_output );		\
+    _hwa( configure, HW_PIN(do),   mode, digital_output );		\
+    _hwa( configure, HW_PIN(di),   mode, digital_input  );		\
     _hwa_write_reg( o, clk, 1 );				\
   }								\
   else								\
@@ -150,8 +150,8 @@
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
-    _hwa( configure, _HW_PIN(o,ck), function, digital_output );		\
-    _hwa( configure, _HW_PIN(o,do), function, digital_output );		\
+    _hwa( configure, _HW_PIN(o,ck), mode, digital_output );		\
+    _hwa( configure, _HW_PIN(o,do), mode, digital_output );		\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  2 );			\
     _hwa_write_reg( o, clk, 1 );			\
@@ -201,9 +201,9 @@
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
-    _hwa( configure, HW_PIN(usck), function, digital_output );	\
-    _hwa( configure, HW_PIN(do),   function, digital_output );	\
-    _hwa( configure, HW_PIN(di),   function, digital_input  );	\
+    _hwa( configure, HW_PIN(usck), mode, digital_output );	\
+    _hwa( configure, HW_PIN(do),   mode, digital_output );	\
+    _hwa( configure, HW_PIN(di),   mode, digital_input  );	\
     _hwa_write_reg( o, wm,  1 );			\
     _hwa_write_reg( o, cs,  1 );			\
     _hwa_write_reg( o, clk, 0 );			\

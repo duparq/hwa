@@ -50,6 +50,11 @@ The two most important instructions are `hw()` and `hwa()`. Both take an @ref
 using_actions "action" as first argument and an @ref using_objects "object" as
 second argument. Additional arguments may follow.
 
+
+@code
+hw( <ACTION>, <OBJECT> [,...] );
+@endcode
+
 `hw()` is used for synchronous actions, i.e. actions that produce an immediate
 result.
 
@@ -66,6 +71,15 @@ The `hwa_nocommit()` instruction does not produce machine code but is useful to
 put the context in a known state usually before following actions modify
 it. This allows the production of machine code that avoids writing values that
 already are in the registers.
+
+@code
+hwa_begin_from_reset()
+hwa( <ACTION1>, <OBJECT1> [,...] );
+hwa( <ACTION2>, <OBJECT2> [,...] );
+...
+hwa( <ACTIONN>, <OBJECTN> [,...] );
+hwa_commit();
+@endcode
 
 Using a HWA context allows the best optimization of the machine code to access
 the hardware, particularly with microcontrollers that have hardware registers
@@ -210,38 +224,84 @@ HW_ISR( counter0, overflow, naked )
 @endcode
 
 
-Creating an I/O object {#using_defio}
+Defining an I/O object {#using_defio}
 ======================
 
-Creating an I/O abject allows giving a name to a set of pins of one I/O
-port. That object name can be used with the actions `read`, `write`, and
-`toggle`.
+`HW_IO()` allows using hw() or hwa() to act on a set of consecutive pins of
+one I/O port.
 
-The `_io1a` class handles one set of consecutive pins inside one GPIO port.
+`HW_IO()` requires 3 arguments: `HW_IO( port, number, position )` where
 
-An object named `mypins`, of class `_io1a`, is created with:
-
-@code
-#define _hw_def_mypins       _io1a, id, port, bn, bp
-@endcode
-
-where:
-
-* `id` is a unique number identifying the object. If you're not going to use
-  the `HW_ID()` instruction with this object, any value (or even none) is OK.
-
-* `port` is the name of the object holding the pin, e.g.: `port0`.
-
-* `bn` is the number of consecutive bits the GPIO definition contains.
-
-* `bp` is the position of the least significant bit in the port.
-
+ * `port` is the name of the port controller (`port0`, `port1`...). Notice that
+   it is not the port name (`porta`, `portb`...);
+ * `number` is the number of consecutive bits;
+ * `position` is the position of the least significant bit.
 
 @code
-#define _hw_def_outputs      _io1a, , port0, 4, 3    // Pins 6,5,4,3 of port0
+#define pins                    HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
 
-hw( write, outputs, 5 );                             // Sets pins 5 & 3, clears pins 6 & 4.
+hw( configure, pins, mode, digital_output );            // Sets pins 6..4 as outputs
+hw( write, pins, 5 );                                   // Sets pins 5 & 3, clears pins 6 & 4.
 @endcode
+
+
+Pin configuration {#using_cfpin}
+=================
+
+HWA tries to provide a syntax that is as independent as possible from the target
+device and consistent accross various controllers.
+
+For the configuration of the device's pins, we'll try to apply the following.
+
+`function` can be:
+ * gpio
+ * (CONTROLLER,SIGNAL)
+
+`function` tells the function of the pin (or the signal that drives the
+pin). This can be a digital I/O, one signal of a peripheral controller, such as
+(uart0,tx), (counter0,clock)... If `function` is not specified, `gpio` is
+assumed.
+
+
+`mode` tells how the pin behaves, electrically:
+
+ * AVR
+    *  digital_input | digital_input_floating
+    *  digital_input_pullup
+    *  digital_output | digital_output_pushpull
+    *  analog_input
+    *  analog_input_floating
+    *  analog_input_pullup
+
+ * STM32
+    *  digital_input | digital_input_floating
+    *  digital_input_pullup
+    *  digital_input_pulldown
+    *  digital_output | digital_output_pushpull
+    *  digital_output_opendrain
+    *  analog_input
+
+ * ESP8266:
+    *  digital_input | digital_input_floating
+    *  digital_input_pullup
+    *  digital_input_pullup_when_awake
+    *  digital_output | digital_output_pushpull
+    *  digital_output_when_awake | digital_output_pushpull_when_awake
+    *  analog_input
+ 
+
+@code
+hw( configure, pin,
+    function,  gpio,
+    mode,      output_push_pull );
+@endcode
+
+
+@code
+hw( configure, pin,
+    function,  (uart0,rxd) );
+@endcode
+
 
 
 Examples {#using_examples}

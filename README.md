@@ -166,7 +166,8 @@ Feedback
 ========
 
 Feedbacks will be greatly appreciated. For any bug report, question or
-suggestion, please use my gmail address (duparq) and put HWA in the object.
+suggestion, please open a new issue on [Github](http://github.com/duparq/hwa),
+or use my gmail address (duparq) and put HWA in the object.
 
 
 License

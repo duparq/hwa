@@ -40,9 +40,8 @@ int main ( )
   hwa( power, (LED1,port), on );
 
   hwa( configure, LED1,
-       mode,	  digital,
-       direction, output,
-       frequency, 50MHz );
+       mode,	  digital_output,
+       frequency, lowest );
 
   hwa_commit();
 

@@ -37,7 +37,7 @@ int main ( )
 
   /*  Configure the LED pin
    */
-  hwa( configure, PIN_LED, function, digital_output );
+  hwa( configure, PIN_LED, mode, digital_output );
 
   /*  Configure the watchdog to trigger an IRQ every TIMEOUT
    */

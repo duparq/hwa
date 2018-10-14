@@ -67,9 +67,7 @@ void IROM every10ms ( )
 
 void IROM user_init()
 {
-  hw( configure, LED,
-      function,	 gpio,
-      direction, output );
+  hw( configure, LED, mode, digital_output );
 
   /*  Pin GPIO1 is used alternatively as a GPIO and as pin TXD of hw_uart0.
    *

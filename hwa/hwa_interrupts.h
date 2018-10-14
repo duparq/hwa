@@ -31,8 +31,8 @@
  *
  * @hideinitializer
  */
-/*  HW_IRQ() uses its own copy of HW_O so that 'hwa( turn, irq(COUNTER), on );'
-    does not fail as hwa() already uses HW_O to expand the object.
+/*  HW_IRQ() uses its own copy of HW_OD so that 'hwa( turn, irq(COUNTER), on );'
+    does not fail as hwa() already uses HW_OD to expand the object.
  */
 #define HW_IRQ(...)		_HW_IRQ1(__VA_ARGS__,,)
 #define _HW_IRQ1(o,...)		_HW_IRQ2(HW_aO(o),__VA_ARGS__)
@@ -44,7 +44,7 @@
 #define _HW_IRQ4_0(o,x,...)	HW_E(`o` has no IRQ named `x`.)
 
 
-/*  Copy of HW_O()
+/*  Copy of HW_OD()
  */
 #define HW_aO(object)		_HW_aO1(object)
 
@@ -156,7 +156,7 @@
 /*  Get the definition of the object
  */
 #define HW_ISR(...)		_HW_ISR1(__VA_ARGS__,,,)
-#define _HW_ISR1(o,...)		_HW_ISR2(HW_O(o),__VA_ARGS__)
+#define _HW_ISR1(o,...)		_HW_ISR2(HW_OD(o),__VA_ARGS__)
 #define _HW_ISR2(...)		_HW_ISR3(__VA_ARGS__)
 
 #define _HW_ISR3(c,...)		HW_Y(_HW_ISR3,c)(c,__VA_ARGS__)
