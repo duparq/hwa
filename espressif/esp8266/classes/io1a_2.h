@@ -78,12 +78,17 @@
 #define _hwa_cfio1a1(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kfn,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_kfn_0(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfio1a_kfn_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfn,_hw_##o##_fn_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfio1a_vfn_0(o,cf,p,bn,bp,v,...)	HW_E_IOFN(o, function, v, _hw_##o##_fns)
-#define _hwa_cfio1a_vfn_1(o,cf,p,bn,bp,v,k,...)				\
-  _hwa_write_reg( cf, fn, HW_A1(_hw_##o##_fn_##v) );			\
-  HW_A2(_##o##_fn_##v) /* Optionnal supplement of actions, e.g. swap  */ \
-  HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1a_kfn_1(o,cf,p,bn,bp,k,v,...)	_hwa_cfio1a_kfn_2(o,cf,p,bn,bp,v,_HW_UBKT(v),__VA_ARGS__)
+#define _hwa_cfio1a_kfn_2(...)			_hwa_cfio1a_kfn_3(__VA_ARGS__)
+#define _hwa_cfio1a_kfn_3(o,cf,p,bn,bp,v,x,...)	HW_Y(_hwa_cfio1a_vfn,_hw_pf_##o##_##x)(o,cf,p,bn,bp,v,x,__VA_ARGS__)
+#define _hwa_cfio1a_vfn_0(o,cf,p,bn,bp,v,x,...)	HW_E_NIL(v, _hw_pf_##o)
+#define _hwa_cfio1a_vfn_1(o,cf,p,bn,bp,v,x,k,...)			\
+  _hwa_write_reg( cf, fn, HW_A1(_hw_pf_##o##_##x) );			\
+  HW_A2(_hw_pf_##o##_##x) /* Optionnal supplement of actions, e.g. swap  */ \
+  HW_Y(_hwa_cfio1a_vfn1,_hw_is_gpio_##x)(o,cf,p,bn,bp,v,x,k,__VA_ARGS__)
+
+#define _hwa_cfio1a_vfn1_1(o,cf,p,bn,bp,v,x,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_vfn1_0(o,cf,p,bn,bp,v,x,...)	HW_EOL(__VA_ARGS__)
 
 /*  Key 'mode'
  */
@@ -183,38 +188,35 @@
 /**
  * @page espressif_io1a
  *
- * The instruction `hw_write()` changes the state of the I/O object:
+ * `write`:
  *
  * @code
  * hw( write, gpio0, value );
  * @endcode
+ * <br>
+ * @code
+ * hwa( write, gpio0, value );
+ * @endcode
+ * <br>
  */
-#define _hw_mtd_hw_write__io1a		, _hw_wrio1a
+#define _hw_mtd_hw_write__io1a			, _hw_wrio1a
 
-#define _hw_wrio1a(o,i, p,bn,bp, v,...)			\
-  HW_TX( _hw_write_reg_m(p, _out, ((1UL<<bn)-1)<<bp, (v)<<bp),	\
-	 __VA_ARGS__ )
+#define _hw_wrio1a(o,i, p,bn,bp, v,...)		HW_TX( _hw_write_reg_m(p, _out, ((1UL<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
+
+#define _hw_mtd_hwa_write__io1a			, _hwa_wrio1a
+
+#define _hwa_wrio1a(o,i, p,bn,bp, v, ...)	HW_TX( _hwa_write__r32(&hwa->p._out,0xFFFFFFFF,bn,bp,v), __VA_ARGS__ )
 
 
 /**
  * @page espressif_io1a
  *
- * @code
- * hwa( write, gpio0, value );
- * @endcode
- */
-#define _hw_mtd_hwa_write__io1a		, _hwa_wrio1a
-
-#define _hwa_wrio1a(o,i, p,bn,bp, v, ...)				\
-  HW_TX(_hwa_write_reg_m(&hwa->p._out, ((1UL<<bn)-1)<<bp, (v)<<bp)),	\
-    __VA_ARGS__)
-
-
-/**
- * @page espressif_io1a
+ * `toggle`:
+ *
  * @code
  * hw( toggle, gpio0 );	//  Toggle one or several consecutive pins at once
  * @endcode
+ * <br>
  */
 #define _hw_mtd_hw_toggle__io1a		, _hw_tgio1a
 

@@ -39,7 +39,7 @@ void IROM every10ms ( )
   if ( hw( read, PIN_LED ) == 0 )
     hw( write, PIN_LED, 1 );
   else
-    hw( write, PIN_LED, 0 );
+    hw( write, PIN_LED, 1 );
 }
 
 

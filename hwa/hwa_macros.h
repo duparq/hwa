@@ -924,6 +924,22 @@
 #define HW_XB(...)		__VA_ARGS__
 
 
+/**
+ * @ingroup private_ins
+ * @brief Return a single argument or concat 2 arguments inside brackets
+ * @hideinitializer
+ */
+#define _HW_UBKT(...)			HW_Y(_HW_UBKT,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
+#define _HW_UBKT_0(...)			__VA_ARGS__
+#define _HW_UBKT_1(...)			_HW_UBKT1 __VA_ARGS__
+#define _HW_UBKT1(...)			_HW_UBKT2(__VA_ARGS__,,)
+#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3,x)(a,x,__VA_ARGS__)
+#define _HW_UBKT3_1(a,...)		a
+#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4,x)(a,b,x,__VA_ARGS__)
+#define _HW_UBKT4_1(a,b,...)		a##b
+#define _HW_UBKT4_0(...)		HW_E((__VA_ARGS__):too many arguments)
+
+
 /* Returns the name of a relative object using a path made of up to 4 objects.
  * 
  *   `HW_RLX(counter0,compare0,counter,compare1)` returns `counter0compare1`.

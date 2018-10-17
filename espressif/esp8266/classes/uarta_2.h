@@ -64,7 +64,7 @@
 #define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
 #define _hwx_cfuarta_vbps_0(o,v,k,...)					\
-  _hwa_write_reg(o, clkdiv, (int)(0.5 + hw_apbhz*1.0/(v)) );		\
+  _hwa_write_reg(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
   HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kbps_0(o,k,...)					\

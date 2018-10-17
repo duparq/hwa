@@ -77,8 +77,8 @@
 #define _hwa_cfio1b_kmd_0(o,k,...)	HW_E_NIL(k, (mode) )
 #define _hwa_cfio1b_kmd_1(o,k,v,...)	HW_Y(_hwa_cfio1b_vmd,_hw_cfio1b_md_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfio1b_vmd_0(o,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating, \
-							     digital_input_pulldown, digital_input_pulldown_when_awake, \
-							     digital_output, digital_output_pushpull) )
+						     digital_input_pulldown, digital_input_pulldown_when_awake, \
+						     digital_output, digital_output_pushpull) )
 #define _hwa_cfio1b_vmd_1(o,v,...)	HW_G2(_hwa_cfio1b,HW_A1(_hw_cfio1b_md_##v))(o,__VA_ARGS__)
 
 #define _hwa_cfio1b_di(o,k,...)				\

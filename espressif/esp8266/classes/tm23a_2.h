@@ -19,11 +19,9 @@
  *      //  Clock source
  *      //
  *    [ clock,       apb                    // APB clock
- *                 | apb_div(  1            // APB clock
- *                           | 2            // APB clock divided by 2
- *                           | 4            // APB clock divided by 4
- *                           | ...
- *                           | 256 ), ]     // APB clock divided by 256
+ *                 | apb /   1              // APB clock
+ *                         | 16             // APB clock divided by 16
+ *                         | 256, ]         // APB clock divided by 256
  *
  *      //  Counting mode
  *      //
@@ -66,27 +64,24 @@
 #define _hwa_cftm23a(o,i,a,k,...)	HW_Y(_hwa_cftm23a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,)
 
 
-/*	Optionnal parameter `clock`
+/*  Key `clock`
  */
-#define _hwa_cftm23a_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cftm23a_vclock_1(o,v,k,...)				\
-  _hwa_write_reg(o,psc,HW_A1(_hw_tm23a_clock_##v));			\
+#define _hwa_cftm23a_kclock_0(o,k,...)		HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_kclock_1(o,k,v,...)	HW_Y(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cftm23a_vclock_1(o,v,...)		_hwa_cftm23a_vclock_2(o,v,_hw_tm23a_clock_##v,__VA_ARGS__)
+#define _hwa_cftm23a_vclock_2(...)		_hwa_cftm23a_vclock_3(__VA_ARGS__)
+#define _hwa_cftm23a_vclock_3(o,v,z,x,k,...)				\
+  if      (     x == 1 ) _hwa_write_reg(o,psc,0);			\
+  else if (  16*x == 1 ) _hwa_write_reg(o,psc,1);			\
+  else if ( 256*x == 1 ) _hwa_write_reg(o,psc,2);			\
+  else HWA_E_NIL(v,(apb, apb/16, apb/256));				\
   HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
-#define _hwa_cftm23a_kclock_0(o,k,...)					\
-  HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+#define _hw_tm23a_clock_apb		, 1
 
-#define _hw_tm23a_clock_apb		, 0
-#define _hw_tm23a_clock_apb_div_1	, 0
-#define _hw_tm23a_clock_apb_div_16	, 1
-#define _hw_tm23a_clock_apb_div_256	, 2
-#define _hw_tm23a_clock_apb_div(x)		HW_G2(_hw_tm23a_clock_apb_div,x)
-
-/*	Optionnal parameter `countmode`
+/*  Key `countmode`
  */
 #define _hwa_cftm23a_kcountmode_1(o,k,v,...)				\
   HW_Y(_hwa_cftm23a_vcountmode,_hw_tm23a_countmode_##v)(o,v,__VA_ARGS__)
@@ -105,20 +100,14 @@
 #define _hw_tm23a_countmode_down	, 1, 0
 #define _hw_tm23a_countmode_down_loop	, 1, 1
 
-/*	Optionnal parameter `bottom`
+/*  Key `bottom`
  */
-#define _hwa_cftm23a_kbottom_1(o,k,v,...)			\
-  HW_G2(_hwa_cftm23a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
-
+#define _hwa_cftm23a_kbottom_1(o,k,v,...)	HW_G2(_hwa_cftm23a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 #define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E_AVL(bottom, v, 0)
+#define _hwa_cftm23a_vbottom_1(o,v,k,...)	HW_Y(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_kbottom_0(o,k,...)		HW_Y(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vbottom_1(o,v,k,...)			\
-    HW_Y(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
-
-#define _hwa_cftm23a_kbottom_0(o,k,...)				\
-    HW_Y(_hwa_cftm23a_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
-
-/*	Optionnal parameter `top`
+/*  Key `top`
  */
 #define _hwa_cftm23a_ktop_1(o,k,v,kk,...)				\
   _hwa_write_reg(o,load,(uint32_t)(v));					\
@@ -149,7 +138,7 @@
 #endif
 
 
-/*	Optionnal parameter `action`
+/*  Key `action`
  */
 #define _hwa_cftm23a_kaction_1(o,k,v,...)				\
   HW_Y(_hwa_cftm23a_vaction,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)

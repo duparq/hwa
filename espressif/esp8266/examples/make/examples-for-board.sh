@@ -6,7 +6,7 @@ examples_for_board() {
 
     if [ ${BOARD} = "esp-wroom-02" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink-soft"
-	EXAMPLES="${EXAMPLES} 02-1-blink-uart"
-	EXAMPLES="${EXAMPLES} 03-1-hwtimer-uart-swap"
+	EXAMPLES="${EXAMPLES} 02-1-uart-pin-txd-function"
+	EXAMPLES="${EXAMPLES} 03-1-uart-pins-hwtimer"
     fi
 }

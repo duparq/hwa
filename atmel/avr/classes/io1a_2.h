@@ -117,7 +117,7 @@
 /**
  * @page atmelavr_io1a
  *
- * `write`
+ * `write`:
  *
  * @code
  * hw | hwa( write, pa0, value );
