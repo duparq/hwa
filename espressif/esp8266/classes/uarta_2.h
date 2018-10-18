@@ -14,32 +14,30 @@
  * @section espressif_uarta_config Configuration
  *
  * @code
- * hw/hwa( configure, uart0,
+ * hw | hwa( configure, uart0,
  *
- *		  //  Transfer rate in bits per second
- *		  //
- *	      [	  bps
- *		| baudrate,    BPS, ]
- *	 
- *		  //  Number of data bits in frame. Default is `8`.
- *		  //
- *		[ databits,    5 | 6 | 7 | 8, ]
- *	 
- *		  //  Parity. Default is `none`.
- *		  //
- *		[ parity,      none
- *			     | even
- *			     | odd, ]
- *	 
- *		  //  Number of stop bits in frame. Default is `1`.
- *		  //
- *		[ stopbits,    1 | 2, ]
- *		);
+ *           //  Transfer rate in bits per second
+ *           //
+ *         [   bps
+ *           | baudrate,  BPS, ]
+ *         
+ *           //  Number of data bits in frame. Default is `8`.
+ *           //
+ *         [ databits,    5 | 6 | 7 | 8, ]
+ *         
+ *           //  Parity. Default is `none`.
+ *           //
+ *         [ parity,      none
+ *                      | even
+ *                      | odd, ]
+ *         
+ *           //  Number of stop bits in frame. Default is `1`.
+ *           //
+ *         [ stopbits,    1 | 2, ] );
  * @endcode
  *
  * __Note__ You must connect the I/O pins to the proper UART signals using the
- * `hw(configure,)` or `hwa(configure,...)` instruction on the I/O pin.
- *
+ * `configure` action on the I/O pin.
  */
 #define _hw_mtd_hw_configure__uarta	, _hw_cfuarta
 #define _hw_mtd_hwa_configure__uarta	, _hwa_cfuarta
