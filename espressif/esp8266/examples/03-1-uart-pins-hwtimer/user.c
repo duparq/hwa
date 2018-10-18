@@ -75,7 +75,7 @@ void IROM user_init_2 ( )
    */
   hwa( configure, timer1,
        clock,     apb/256,
-       countmode, down_loop,
+       direction, down_loop,
        top,       0.5 + 0.1*HW_APBHZ/256,
        action,    irq );
 

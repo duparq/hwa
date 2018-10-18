@@ -100,7 +100,7 @@ main ( )
    */
   hwa( configure, COUNTER,
        clock,     ioclk / 1024,
-       countmode, updown_loop,
+       direction, updown_loop,
        bottom,    0,
        top,       compare0 );
 

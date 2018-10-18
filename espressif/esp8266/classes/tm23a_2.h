@@ -25,7 +25,7 @@
  *
  *      //  Counting mode
  *      //
- *    [ countmode,   stop                   // Stop
+ *    [ direction,   stop                   // Stop
  *                 | down                   // Count down to 0 and stop
  *                 | down_loop, ]           // Count down to 0 and reload
  *
@@ -66,7 +66,7 @@
 
 /*  Key `clock`
  */
-#define _hwa_cftm23a_kclock_0(o,k,...)		HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_kclock_0(o,k,...)		HW_Y(_hwa_cftm23a_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 #define _hwa_cftm23a_kclock_1(o,k,v,...)	HW_Y(_hwa_cftm23a_vclock,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_1(o,v,...)		_hwa_cftm23a_vclock_2(o,v,_hw_tm23a_clock_##v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_2(...)		_hwa_cftm23a_vclock_3(__VA_ARGS__)
@@ -75,30 +75,30 @@
   else if (  16*x == 1 ) _hwa_write_reg(o,psc,1);			\
   else if ( 256*x == 1 ) _hwa_write_reg(o,psc,2);			\
   else HWA_E_NIL(v,(apb, apb/16, apb/256));				\
-  HW_Y(_hwa_cftm23a_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cftm23a_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
 #define _hw_tm23a_clock_apb		, 1
 
-/*  Key `countmode`
+/*  Key `direction`
  */
-#define _hwa_cftm23a_kcountmode_1(o,k,v,...)				\
-  HW_Y(_hwa_cftm23a_vcountmode,_hw_tm23a_countmode_##v)(o,v,__VA_ARGS__)
+#define _hwa_cftm23a_kdirection_1(o,k,v,...)				\
+  HW_Y(_hwa_cftm23a_vdirection,_hw_tm23a_direction_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cftm23a_vcountmode_1(o,v,k,...)			\
-  _hwa_write_reg(o,en,HW_A1(_hw_tm23a_countmode_##v));		\
-  _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_countmode_##v));		\
+#define _hwa_cftm23a_vdirection_1(o,v,k,...)			\
+  _hwa_write_reg(o,en,HW_A1(_hw_tm23a_direction_##v));		\
+  _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_direction_##v));		\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vcountmode_0(o,v,...)	HW_E_AVL(countmode, v, down | down_loop | stop)
+#define _hwa_cftm23a_vdirection_0(o,v,...)	HW_E_AVL(direction, v, down | down_loop | stop)
 
-#define _hwa_cftm23a_kcountmode_0(o,k,...)			\
+#define _hwa_cftm23a_kdirection_0(o,k,...)			\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hw_tm23a_countmode_stop	, 0, 0	/* en, arl */
-#define _hw_tm23a_countmode_down	, 1, 0
-#define _hw_tm23a_countmode_down_loop	, 1, 1
+#define _hw_tm23a_direction_stop	, 0, 0	/* en, arl */
+#define _hw_tm23a_direction_down	, 1, 0
+#define _hw_tm23a_direction_down_loop	, 1, 1
 
 /*  Key `bottom`
  */

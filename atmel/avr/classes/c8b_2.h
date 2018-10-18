@@ -73,7 +73,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *
  *	//  Class _c8b counters all loop from 0 to top
  *	//
- *    [ countmode,   up_loop, ]
+ *    [ direction,   up_loop, ]
  *    [ bottom,	     0,	      ]
  *
  *	//  The maximum value the counter reaches (the default is `max`)
@@ -106,23 +106,23 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
   _hwa_write_reg(o, cs, HW_VF(_hw_c8b_clock_##v));				\
-  HW_Y(_hwa_cfc8b_kcountmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 #define _hw_c8b_clock_none			, _hw_c8bck_none, 0
 #define _hw_c8b_clock_ioclk			, _hw_c8bck_ioclk, 16384.0
 
-/*  Optionnal argument `countmode`
+/*  Optionnal argument `direction`
  */
-#define _hwa_cfc8b_kcountmode_1(o,k,v,...)				\
-  HW_G2(_hwa_cfc8b_vcountmode,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
+#define _hwa_cfc8b_kdirection_1(o,k,v,...)				\
+  HW_G2(_hwa_cfc8b_vdirection,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfc8b_vcountmode_0(o,v,...)				\
-  HW_E_AVL(`countmode`, v, `up_loop`)
+#define _hwa_cfc8b_vdirection_0(o,v,...)				\
+  HW_E_AVL(`direction`, v, `up_loop`)
 
-#define _hwa_cfc8b_vcountmode_1(o,v,...)	\
-  _hwa_cfc8b_kcountmode_0(o,__VA_ARGS__)
+#define _hwa_cfc8b_vdirection_1(o,v,...)	\
+  _hwa_cfc8b_kdirection_0(o,__VA_ARGS__)
 
-#define _hwa_cfc8b_kcountmode_0(o,k,...)				\
+#define _hwa_cfc8b_kdirection_0(o,k,...)				\
   HW_Y(_hwa_cfc8b_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`

@@ -43,7 +43,7 @@ int main ( )
 
   hwa( configure, COUNTER,
        clock,	  ioclk / CLOCK_PSC,
-       countmode, up_loop,
+       direction, up_loop,
        bottom,	  0,
        top,	  compare2,
        overflow,  at_bottom );

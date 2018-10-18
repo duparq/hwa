@@ -134,7 +134,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
 #  if defined hw_swuart0_clk_div
   _hwa( configure, _HW_REL(hw_swuart0_compare,counter),
 	clock,	   ioclk / hw_swuart0_clk_div,
-	countmode, up_loop,
+	direction, up_loop,
 	top,	   max );
 #  endif
 
@@ -181,7 +181,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #  if defined hw_swuart1_clk_div
   _hwa( configure, _HW_REL(hw_swuart1_compare,counter),
 	clock,	   ioclk / hw_swuart1_clk_div,
-	countmode, up_loop,
+	direction, up_loop,
 	top,	   max );
 #  endif
 

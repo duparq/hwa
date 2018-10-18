@@ -886,7 +886,7 @@
  * #define PWM	counter0compare0
  * ...
  * hwa( configure, PWM, set_at_bottom_clear_on_match );
- * hwa( configure, HW_RELATIVE(PWM,counter), countmode, up_loop );
+ * hwa( configure, HW_RELATIVE(PWM,counter), direction, up_loop );
  * hwa( write, PWM, (1U<<HW_BITS(PWM))/2 ); // 50% duty cycle
  * @endcode
  * 

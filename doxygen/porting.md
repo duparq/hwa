@@ -469,12 +469,12 @@ make any expression starting with "none", "ioclk", "external_rising" or
 Then, if `v` is valid, the processing continues with
 `_hwa_cfc8a_vclock_1(o,v,k,...)` where `v` is the symbolic value for the "clock"
 key that is known to be valid, `k` is the next key to be processed - that could
-be "countmode", and `...` the remaining arguments in the list:
+be "direction", and `...` the remaining arguments in the list:
 
 @code
 #define _hwa_cfc8a_vclock_1(o,v,k,...)				\
   hwa->o.config.clock = HW_VF(_hw_cclk1_##v);			\
-  HW_Y(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_kmode,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 @endcode
 
 The `HW_VF()` call is responsible for processing the value that has to be stored

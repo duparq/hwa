@@ -50,7 +50,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
    */
   hwa( configure, (PWM,counter),
        clock,	  ioclk / CLKDIV,
-       countmode, COUNTMODE,
+       direction, COUNTMODE,
        bottom,	  0,
        top,	  TOP );
 

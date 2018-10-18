@@ -30,7 +30,7 @@
  *
  *      //  How does this counter count
  *      //
- *      countmode,   up_loop                     // Count up and loop
+ *      direction,   up_loop                     // Count up and loop
  *                 | updown_loop,                // Count up and down alternately
  *
  *      //  Class _c8a counters all count from 0
@@ -72,24 +72,24 @@
 
 #define _hwa_cfc8a_vclock_1(o,v,k,...)				\
   hwa->o.config.clock = HW_VF(_hw_c1clk_##v);			\
-  HW_Y(_hwa_cfc8a_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_kmode,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
-/*  Mandatory argument `countmode`
+/*  Mandatory argument `direction`
  */
-#define _hw_c8a_countmode_up_loop	, 1
-#define _hw_c8a_countmode_updown_loop	, 2
+#define _hw_c8a_direction_up_loop	, 1
+#define _hw_c8a_direction_updown_loop	, 2
 
 #define _hwa_cfc8a_kmode_0(o,k,...)			\
-  HW_E_VL(k,countmode)
+  HW_E_VL(k,direction)
 
 #define _hwa_cfc8a_kmode_1(o,k,v,...)					\
-  HW_Y(_hwa_cfc8a_vmode,_hw_c8a_countmode_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_vmode,_hw_c8a_direction_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8a_vmode_0(o,v,...)					\
-  HW_E_AVL(countmode, v, up_loop | updown_loop)
+  HW_E_AVL(direction, v, up_loop | updown_loop)
 
 #define _hwa_cfc8a_vmode_1(o,v,k,...)				\
-  hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_##v);	\
+  hwa->o.config.direction = HW_A1(_hw_c8a_direction_##v);	\
   HW_Y(_hwa_cfc8a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
@@ -140,10 +140,10 @@
   HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)
 
 #define _hwa_cfc8a_voverflow_1(o,v,...)					\
-  if ( hwa->o.config.countmode == HW_A1(_hw_c8a_countmode_up_loop)	\
+  if ( hwa->o.config.direction == HW_A1(_hw_c8a_direction_up_loop)	\
        && HW_A1(_hw_c8a_overflow_##v) == HW_A1(_hw_c8a_overflow_at_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `at_bottom` "	\
-	    "when countmode is `up_loop`.");				\
+	    "when direction is `up_loop`.");				\
   HW_TX(hwa->o.config.overflow = HW_A1(_hw_c8a_overflow_##v); ,__VA_ARGS__)
 
 #define _hwa_cfc8a_koverflow_0(o,...)		\
@@ -268,9 +268,9 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
    */
   uint8_t overflow = p->config.overflow ;
   if ( overflow == 0xFF && p->config.top == HW_A1(_hw_c8a_top_compare0) ) {
-    if ( p->config.countmode == HW_A1(_hw_c8a_countmode_up_loop) )
+    if ( p->config.direction == HW_A1(_hw_c8a_direction_up_loop) )
       overflow = HW_A1(_hw_c8a_overflow_at_top);
-    else /* if ( p->config.countmode == HW_A1(_hw_c8a_countmode_up_loop) ) */
+    else /* if ( p->config.direction == HW_A1(_hw_c8a_direction_up_loop) ) */
       overflow = HW_A1(_hw_c8a_overflow_at_bottom);
   }
 
@@ -302,7 +302,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   /*	Determine WGM
    */
   uint8_t wgm = 0xFF ;
-  if ( p->config.countmode == HW_A1(_hw_c8a_countmode_up_loop) ) {
+  if ( p->config.direction == HW_A1(_hw_c8a_direction_up_loop) ) {
     if ( p->config.top == HW_A1(_hw_c8a_top_0xFF) ) {
       if ( compare_update == HW_A1(_hw_cmp8a_update_at_bottom)
 	   || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match)
@@ -331,7 +331,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 	wgm = 2 ;
     }
   }
-  else /* countmode == updown_loop */ {
+  else /* direction == updown_loop */ {
     if ( p->config.top == HW_A1(_hw_c8a_top_0xFF) )
       wgm = 1 ;
     else /* top == ocra */
@@ -597,7 +597,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   _hwa_setup_reg( o, imsk);			\
   _hwa_setup_reg( o, ifr);			\
   hwa->o.config.clock	  = 0xFF;		\
-  hwa->o.config.countmode = 0xFF;		\
+  hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 
@@ -612,7 +612,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 
 /* hwa->o.config.clock	   = HW_A1(_hw_c8a_clock_none);		\ */
-/* hwa->o.config.countmode = HW_A1(_hw_c8a_countmode_up_loop);	\ */
+/* hwa->o.config.direction = HW_A1(_hw_c8a_direction_up_loop);	\ */
 /* hwa->o.config.top	   = HW_A1(_hw_c8a_top_max);		\ */
 /* hwa->o.config.overflow  = HW_A1(_hw_c8a_overflow_at_max) */
 

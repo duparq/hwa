@@ -71,7 +71,7 @@ typedef struct {
   /*  Registers used for high-level configuration
    */
   struct {
-    uint8_t	clock, countmode, top, overflow ;
+    uint8_t	clock, direction, top, overflow ;
   } config ;
 
   /*  Computed logical register values

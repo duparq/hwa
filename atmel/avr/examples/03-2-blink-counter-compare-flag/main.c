@@ -41,7 +41,7 @@ int main ( )
    */
   hwa( configure, COUNTER,
        clock,	  ioclk / CLKDIV,
-       countmode, up_loop,
+       direction, up_loop,
        bottom,	  0,
        top,	  max );
 

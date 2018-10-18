@@ -66,7 +66,7 @@ int main ( )
    */
   hwa( configure, COUNTER,
        clock,	  ioclk / CLKDIV,
-       countmode, COUNTMODE,
+       direction, COUNTMODE,
        bottom,	  0,
        top,	  compare0
        );

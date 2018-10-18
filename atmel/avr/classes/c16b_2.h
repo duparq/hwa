@@ -30,7 +30,7 @@
  *
  *      //  How does this counter count
  *      //
- *      countmode,   up_loop                    // Count up and loop
+ *      direction,   up_loop                    // Count up and loop
  *                 | updown_loop,               // Count up and down alternately
  *
  *      //  Class _c16b counters all count from 0
@@ -76,24 +76,24 @@
 
 #define _hwa_cfc16b_vclock_1(o,v,k,...)					\
   hwa->o.config.clock = HW_VF(_hw_c1clk_##v);				\
-  HW_Y(_hwa_cfc16b_kmode,_hw_is_countmode_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc16b_kmode,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
-/*  Optionnal argument `countmode`
+/*  Optionnal argument `direction`
  */
-#define _hw_c16b_countmode_up_loop	, 1
-#define _hw_c16b_countmode_updown_loop	, 2
+#define _hw_c16b_direction_up_loop	, 1
+#define _hw_c16b_direction_updown_loop	, 2
 
 #define _hwa_cfc16b_kmode_0(o,k,...)					\
-  HW_E_VL(k,countmode)
+  HW_E_VL(k,direction)
 
 #define _hwa_cfc16b_kmode_1(o,k,v,...)					\
-  HW_Y(_hwa_cfc16b_vmode,_hw_c16b_countmode_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc16b_vmode,_hw_c16b_direction_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc16b_vmode_0(o,v,...)					\
-  HW_E_AVL(countmode, v, up_loop | updown_loop)
+  HW_E_AVL(direction, v, up_loop | updown_loop)
 
 #define _hwa_cfc16b_vmode_1(o,v,k,...)					\
-  hwa->o.config.countmode = HW_A1(_hw_c16b_countmode_##v);			\
+  hwa->o.config.direction = HW_A1(_hw_c16b_direction_##v);			\
   HW_Y(_hwa_cfc16b_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
@@ -294,9 +294,9 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
    */
   uint8_t overflow = c->config.overflow ;
   if ( overflow == 0xFF && c->config.top == HW_A1(_hw_c16b_top_compare0) ) {
-    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) )
+    if ( c->config.direction == HW_A1(_hw_c16b_direction_up_loop) )
       overflow = HW_A1(_hw_c16b_overflow_at_top);
-    else /* if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) ) */
+    else /* if ( c->config.direction == HW_A1(_hw_c16b_direction_up_loop) ) */
       overflow = HW_A1(_hw_c16b_overflow_at_bottom);
   }
 
@@ -349,12 +349,12 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
   /*	Determine WGM
    */
   uint8_t wgm = 0xFF ;
-  if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop)
+  if ( c->config.direction == HW_A1(_hw_c16b_direction_up_loop)
        && c->config.top == HW_A1(_hw_c16b_top_compare0)
        && overflow == HW_A1(_hw_c16b_overflow_at_top) )
     wgm = 15 ;
   else	  
-    if ( c->config.countmode == HW_A1(_hw_c16b_countmode_up_loop) ) {
+    if ( c->config.direction == HW_A1(_hw_c16b_direction_up_loop) ) {
       if ( c->config.top == HW_A1(_hw_c16b_top_0xFFFF) )
 	wgm = 0 ;
       else if (c->config.top == HW_A1(_hw_c16b_top_0xFF) )
@@ -469,9 +469,9 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
 
   /*	Check the validity of the configuration
    */
-  if ( c->config.countmode != 0xFF || compare0->config.output != 0xFF || compare1->config.output != 0xFF ) {
+  if ( c->config.direction != 0xFF || compare0->config.output != 0xFF || compare1->config.output != 0xFF ) {
 
-    if ( c->config.countmode == 0xFF )
+    if ( c->config.direction == 0xFF )
       return 3 ; // HWA_ERR("configuration of counter is required.");
 
     /*	Check compare output A
@@ -680,7 +680,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
   _hwa_setup_reg( o, imsk     );		\
   _hwa_setup_reg( o, ifr      );		\
   hwa->o.config.clock	  = 0xFF;		\
-  hwa->o.config.countmode = 0xFF;		\
+  hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 

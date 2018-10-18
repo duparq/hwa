@@ -118,7 +118,7 @@ int main ( )
    */
   hwa( configure, COUNTER,
        clock,	  ioclk / COUNTER_CLK_DIV,
-       countmode, up_loop );
+       direction, up_loop );
 
   /*  Prepare the compare value for the PIN_LED pulse
    */
