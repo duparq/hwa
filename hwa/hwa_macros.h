@@ -1036,8 +1036,19 @@
  *   ++n_collisions;
  * @endcode
  */
-#define hw_stat_t(object)		hw(stat_t,object)
+#define hw_stat_t(object)	hw(stat_t,object)
 
+
+/**
+ * @ingroup public_ins_obj
+ * @brief A fake object that accepts all kinds of actions without doing anything.
+ *
+ * This is useful for compiling code for a target that does not implement non
+ * vital hardware.
+ *
+ * @hideinitializer
+ */
+#define HW_FAKE_OBJECT		_fake, 0, 0
 
 
 #if defined DOXYGEN
