@@ -64,7 +64,6 @@
 
 /*  Keywords
  */
-#define _hw_is_					, 1
 #define _hw_is_0_0				, 1
 #define _hw_is_16_16_				, 1
 #define _hw_is_8_8_				, 1
@@ -241,6 +240,19 @@
  *  the generic instructions designed for objects.
  */
 #define _hw_class__oreg
+
+
+/*
+ * @ingroup private_def
+ * @brief The _fake class accepts all kinds of actions and does nothing at all.
+ *
+ * The `fake` object accepts all kinds of actions without doing anything.
+ *
+ * This is useful for compiling code for a target that does not implement non
+ * vital hardware.
+ */
+#define _hw_class__fake
+#define _hw_def_fake		_fake, 0, 0
 
 
 #if !defined __ASSEMBLER__

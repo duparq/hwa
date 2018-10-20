@@ -606,9 +606,3 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwa_write__r8(ra,rwm,rfm,bn,bp,v)	_hwa_write_r8(ra,rwm,rfm,((1UL<<bn)-1)<<bp,((uint8_t)(v))<<bp)
 #define _hwa_write__r16(ra,rwm,rfm,bn,bp,v)	_hwa_write_r16(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)
 #define _hwa_write__r32(ra,rwm,rfm,bn,bp,v)	_hwa_write_r32(ra,rwm,rfm,((1ULL<<bn)-1)<<bp,(v)<<bp)
-
-
-/*
- * The _fake class accepts all kinds of actions and does nothing at all.
- */
-#define _hw_class__fake

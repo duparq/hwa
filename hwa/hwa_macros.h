@@ -160,7 +160,7 @@
  *  * `f_0` if `c` is not "".
  */
 #define HW_Y(...)			_HW_Y2(__VA_ARGS__,,)
-#define _HW_Y2(f,x,...)			_HW_Y3(f,_hw_is_##x,0,)
+#define _HW_Y2(f,x,...)			_HW_Y3(f,_hw_is__##x,0,)
 #define _HW_Y3(...)			_HW_Y4(__VA_ARGS__)
 #define _HW_Y4(f,x,y,...)		f##_##y
 
@@ -321,36 +321,32 @@
 #define _HW_OD3(...)		_HW_OD4(__VA_ARGS__)
 #define _HW_OD4(o,...)		HW_Y(_HW_OD4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _HW_OD4_1(o,c,...)	c,o,__VA_ARGS__
-#define _HW_OD4_0(o,...)		HW_Y(_HW_OD5,o)(o)	/*  o is not an object, produce an error. */
-#define _HW_OD5_1(o)		HW_E_OM()
 
 /*  Handle shorcuts:
  *   * irq()
  *   * relative()
  *   * register()
  */
-//#define _HW_OD5_0(o)		HW_Y(_HW_OD6,_hw_o_##o)(o)
-//#define _HW_OD6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
-//#define _HW_OD6_1(o)		HW_TL(_hw_o_##o)	/* expand shorcut */
-
-#define _HW_OD5_0(o)		_HW_OD5_2(o,_hw_o_##o)
-#define _HW_OD5_2(...)		_HW_OD5_3(__VA_ARGS__)
-#define _HW_OD5_3(o,x,...)	HW_Y(_HW_OD6,x)(o,x,__VA_ARGS__)
-#define _HW_OD6_0(o,...)		HW_E_O(o)		/* o is not recognized as an object */
-#define _HW_OD6_1(o,x,...)	__VA_ARGS__
+#define _HW_OD4_0(o,...)	_HW_OD4_2(o,_hw_o_##o)
+#define _HW_OD4_2(...)		_HW_OD4_3(__VA_ARGS__)
+#define _HW_OD4_3(o,...)	HW_Y(_HW_OD5,__VA_ARGS__)(o,__VA_ARGS__)
+#define _HW_OD5_1(o,x,...)	__VA_ARGS__
+#define _HW_OD5_0(o,...)	HW_Y(_HW_OD6,o)(o)
+#define _HW_OD6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
+#define _HW_OD6_1(o)		HW_E_OM()		/* missing object name */
 
 #define _hw_o_irq(...)		, HW_IRQ(__VA_ARGS__)
 #define _hw_o_relative(o,r)	, _HW_OD7(HW_RELATIVE(o,r))
 #define _hw_o_rel(o,r)		, _HW_OD7(HW_RELATIVE(o,r))
+#define _hw_o_register(o,r)	, _HW_OD11(o,r,_hw_def_##o)
+#define _hw_o_reg(o,r)		, _HW_OD11(o,r,_hw_def_##o)
+#define _hw_o_HW_IO(...)	, _HW_OD21(__VA_ARGS__)
 
 #define _HW_OD7(o)		_HW_OD8(o)
 #define _HW_OD8(o)		HW_Y(_HW_OD8,o)(o)
 #define _HW_OD8_1(o)		/* HW_RELATIVE() has emitted an error */
 #define _HW_OD8_0(o)		_HW_OD8_2(o,_hw_def_##o)
 #define _HW_OD8_2(...)		_HW_OD4_1(__VA_ARGS__)
-
-#define _hw_o_register(o,r)	, _HW_OD11(o,r,_hw_def_##o)
-#define _hw_o_reg(o,r)		, _HW_OD11(o,r,_hw_def_##o)
 
 #define _HW_OD11(...)		_HW_OD12(__VA_ARGS__)
 #define _HW_OD12(o,r,...)	HW_Y(_HW_OD12,_hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
@@ -367,9 +363,7 @@
 
 /* Process I/O definition HW_IO(...)
  */
-#define _hw_o_HW_IO(...)	, _HW_OD21(__VA_ARGS__)
-
-#define _HW_OD21(io,...)		_HW_OD22(io,_hw_def_##io,__VA_ARGS__)
+#define _HW_OD21(io,...)	_HW_OD22(io,_hw_def_##io,__VA_ARGS__)
 #define _HW_OD22(...)		_HW_OD23(__VA_ARGS__)
 #define _HW_OD23(io,c,...)	HW_Y(_HW_OD23,_hw_class_##c)(io,c,__VA_ARGS__)
 #define _HW_OD23_1(p,c,i,a,b,d)	_io1a,HW_IO(p,b,d),0,p,b,d
@@ -1037,18 +1031,6 @@
  * @endcode
  */
 #define hw_stat_t(object)	hw(stat_t,object)
-
-
-/**
- * @ingroup public_ins_obj
- * @brief A fake object that accepts all kinds of actions without doing anything.
- *
- * This is useful for compiling code for a target that does not implement non
- * vital hardware.
- *
- * @hideinitializer
- */
-#define HW_FAKE_OBJECT		_fake, 0, 0
 
 
 #if defined DOXYGEN
