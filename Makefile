@@ -19,6 +19,7 @@ clean:
 		-o -name '*.cp.*'	\
 		-o -name '*.pyc'	\
 		-o -name '*.bak'	\
+		-o -name 'failed'	\
 		')' -exec rm -rf {} ';'
 	@find . -name 'build' -prune -exec rm -rf {} ';'
 	@rm -rf doxygen/html
@@ -28,14 +29,18 @@ clean:
 #
 .PHONY: examples
 examples:
-	@fails=0								;\
+	@FAILS=$$(mktemp) ; export FAILS					;\
 	(cd atmel/avr/examples         && bash make/make-all.sh)		;\
-	fails=$$(($$fails+$$?))							;\
 	(cd st/stm32/examples          && bash make/make-all.sh)		;\
-	fails=$$(($$fails+$$?))							;\
 	(cd espressif/esp8266/examples && bash make/make-all.sh)		;\
-	fails=$$(($$fails+$$?))							;\
-	echo "All examples: $$fails fails."
+	fails=$$(cat $$FAILS | wc -l)						;\
+	if [ $$fails -eq 0 ] ; then						\
+	    echo "Success." ; echo						;\
+	else									\
+	    echo "$$fails examples failed:"					;\
+	    cat $$FAILS	; echo							;\
+	fi									;\
+	rm $$FAILS
 
 
 #  Verify the examples CRCs

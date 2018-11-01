@@ -9,6 +9,11 @@ if [ ! -d make ] ; then
     exit 1
 fi
 
+if [ ! -f "${FAILS}" ] ; then
+    echo "FAILS is not a file"
+    exit 1 ;
+fi
+
 #  If no board name is given, do it for all boards
 #
 BOARDS=${BOARD}
@@ -33,6 +38,7 @@ for BOARD in ${BOARDS} ; do
 	       passed=$((passed+1))
 	   else
 	       echo failed
+	       echo "  $i BOARD=${BOARD}" >>${FAILS}
 	       fails=$((fails+1))
 	   fi
 	   cd - >/dev/null
