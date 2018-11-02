@@ -210,7 +210,7 @@
 
 
 #define _hw_mtd_hw_bus_slar__twia	, _hw_twia_txslar
-#define _hw_twia_txslar(o,i,a,...)	HW_G2(_hw_twia_vtxslar,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_twia_txslar(o,i,a,...)	HW_Y(_hw_twia_vtxslar,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
 #define _hw_twia_vtxslar_0(o,v,k,...)					\
   do {									\
@@ -222,7 +222,7 @@
 
 
 #define _hw_mtd_hw_bus_data__twia	, _hw_twia_txdata
-#define _hw_twia_txdata(o,i,a,...)	HW_G2(_hw_twia_txdatav,HW_IS_VOID(__VA_ARGS__))(o,__VA_ARGS__)
+#define _hw_twia_txdata(o,i,a,...)	HW_Y(_hw_twia_txdatav,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txdatav_1(...)		HW_E(missing value)
 #define _hw_twia_txdatav_0(o,v,k,...)					\
   do {									\

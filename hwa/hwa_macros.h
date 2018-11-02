@@ -135,23 +135,6 @@
 
 /**
  * @ingroup private_mac
- * @brief Expands to 1 if the first element of the list is void, 0 otherwise.
- *
- * This is a more elaborate verification than `HW_IS(,x)` since it also accepts
- * x to begin with a left bracket.
- *
- * @hideinitializer
- */
-#define HW_IS_VOID(...)		HW_Y(_HW_IS_VOID_BKT,_hw_is__bkt __VA_ARGS__)(__VA_ARGS__)
-
-#define _HW_IS_VOID_BKT_1(...)	0
-#define _HW_IS_VOID_BKT_0(...)	HW_IS(,__VA_ARGS__)
-
-#define _hw_is__bkt(...)
-
-
-/**
- * @ingroup private_mac
  * @brief Concatenates '_1' or '_0' to the first argument according to the second.
  * @hideinitializer
  *
@@ -159,10 +142,14 @@
  *  * `f_1` if `c` is "",
  *  * `f_0` if `c` is not "".
  */
-#define HW_Y(...)			_HW_Y2(__VA_ARGS__,,)
-#define _HW_Y2(f,x,...)			_HW_Y3(f,_hw_is__##x,0,)
-#define _HW_Y3(...)			_HW_Y4(__VA_ARGS__)
-#define _HW_Y4(f,x,y,...)		f##_##y
+#define HW_Y(...)			_HW_Y00(__VA_ARGS__,,)
+#define _HW_Y00(f,x,...)		_HW_Y01(f,_hw_isa_leftbkt x,0,x)
+#define _HW_Y01(...)			_HW_Y2(__VA_ARGS__)
+#define _HW_Y2(f,x,y,...)		_HW_Y2_##y(f,__VA_ARGS__,)
+#define _HW_Y2_1(f,...)			f##_0
+#define _HW_Y2_0(f,x,...)		_HW_Y03(f,_hw_is__##x,0,)
+#define _HW_Y03(...)			_HW_Y04(__VA_ARGS__)
+#define _HW_Y04(f,x,y,...)		f##_##y
 
 
 /**
