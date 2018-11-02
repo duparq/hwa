@@ -631,19 +631,9 @@
  * @brief Memory definition of a register (internal use, no error checking)
  * @hideinitializer
  */
-#define _HW_M(o,r)			__HW_M2(o,_hw_def_##o,r)
-#define __HW_M2(...)			__HW_M3(__VA_ARGS__)
-#define __HW_M3(o,c,i,a,r)		__HW_M4(_hw_reg_##c##_##r,o,c,a,r)
-#define __HW_M4(...)			__HW_M5(__VA_ARGS__)
-#define __HW_M5(t,...)			HW_Y(__HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define __HW_M5_1(t,...)		_hw_r2m_##t(__VA_ARGS__)
-#define __HW_M5_0(t,o,c,a,r)		__HW_M6(_hw_reg_##o##_##r,o,c,a,r)
-#define __HW_M6(...)			__HW_M5_1(__VA_ARGS__)
-
-/* #define __HW_M5_0(t,o,c,a,r)		__HW_M7(_hw_reg_##o##_##r,o,c,a,r) */
-/* #define __HW_M7(...)			__HW_M8(__VA_ARGS__) */
-/* #define __HW_M8(t,...)			HW_Y(__HW_M9,_hw_isa_reg_##t)(t,__VA_ARGS__) */
-/* #define __HW_M9_1( */
+#define _HW_M(o,r)			__HW_M02(_HW_R(o,r))
+#define __HW_M02(...)			__HW_M03(__VA_ARGS__)
+#define __HW_M03(t,...)			_hw_r2m_##t(__VA_ARGS__)
 
 
 /**

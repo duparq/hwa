@@ -396,16 +396,21 @@
  * @brief Commit one object hardware register
  * @hideinitializer
  */
-#define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_M(o,r))
-#define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__)
-#define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__)
+/* #define _hwa_commit_reg(o,r)			_hwa_commit_reg_2(_HW_M(o,r)) */
+/* #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__) */
+/* #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__) */
+
+#define _hwa_commit_reg(o,r)			_HW_SPEC(_hwa_commit_reg,_HW_M(o,r))
 
 #define _hwa_commit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit)
 
-#define _hwa_nocommit_reg(o,r)			_hwa_nocommit_reg_2(_HW_M(o,r))
-#define _hwa_nocommit_reg_2(...)		_hwa_nocommit_reg_3(__VA_ARGS__)
-#define _hwa_nocommit_reg_3(rt,...)		_hwa_nocommit_reg_##rt(__VA_ARGS__)
+/* #define _hwa_nocommit_reg(o,r)			_hwa_nocommit_reg_2(_HW_M(o,r)) */
+/* #define _hwa_nocommit_reg_2(...)		_hwa_nocommit_reg_3(__VA_ARGS__) */
+/* #define _hwa_nocommit_reg_3(rt,...)		_hwa_nocommit_reg_##rt(__VA_ARGS__) */
+
+#define _hwa_nocommit_reg(o,r)			_HW_SPEC(_hwa_nocommit_reg,_HW_M(o,r))
+
 #define _hwa_nocommit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
   _hwa_commit_##rt(&hwa->o.r,rwm,rfm,0)
 
