@@ -40,7 +40,7 @@ typedef struct {
 } _hw_sthse_t ;
 
 #define _hw_mtd_hw_stat_t_hse		, _hw_stthse
-#define _hw_stthse(o,i,a,...)		HW_TX( _hw_sthse_t, __VA_ARGS__)
+#define _hw_stthse(o,i,a,...)		 _hw_sthse_t HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hw_stat_hse		, _hw_sthse
 #define _hw_sthse(i,a,g,...)		HW_Y(_hw_sthse1,g)(g)

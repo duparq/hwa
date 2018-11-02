@@ -130,7 +130,7 @@
 #define _hw_mtd_hw_read__io1b		, _hw_read_io1b
 
 #define _hw_read_io1b(o,i, p,bn,bp,...)				\
-  HW_TX( ((_hw_read_reg(p, _gpioin) & (((1UL<<bn)-1)<<bp))>>bp), __VA_ARGS__)
+   ((_hw_read_reg(p, _gpioin) & (((1UL<<bn)-1)<<bp))>>bp) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -145,7 +145,7 @@
 #define _hw_mtd_hw_write__io1b		, _hw_wrio1b
 
 #define _hw_wrio1b(o,i, p,bn,bp, v,...)			\
-  HW_TX( _hw_write_reg_m(p, _gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
+   _hw_write_reg_m(p, _gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -158,7 +158,7 @@
 #define _hw_mtd_hwa_write__io1b		, _hwa_wrio1b
 
 #define _hwa_wrio1b(o,i, p,bn,bp, v, ...)				\
-  HW_TX(_hwa_write_reg_m(&hwa->p._gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp)), __VA_ARGS__)
+  _hwa_write_reg_m(&hwa->p._gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -169,7 +169,7 @@
  */
 #define _hw_mtd_hw_toggle__io1b		, _hw_tgio1b
 
-#define _hw_tgio1b(o,i,p,bn,bp,...)	HW_TX( _hw_tgio1b_2(_HW_A(_HW_R(p,_gpioout)),(((1UL<<bn)-1)<<bp)), __VA_ARGS__)
+#define _hw_tgio1b(o,i,p,bn,bp,...)	 _hw_tgio1b_2(_HW_A(_HW_R(p,_gpioout)),(((1UL<<bn)-1)<<bp)) HW_EOL(__VA_ARGS__)
 #define _hw_tgio1b_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /**

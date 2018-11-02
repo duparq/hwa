@@ -26,4 +26,4 @@ extern void ets_isr_unmask(unsigned intr);
 #define _os_setisr_0(...)		__VA_ARGS__
 #define _os_setisr_1(t,...)		_os_set_isr(__VA_ARGS__)
 
-#define _os_set_isr(o,v,ie,if,fn,...)	HW_TX(_os_setisr_##o##_##v(fn),__VA_ARGS__)
+#define _os_set_isr(o,v,ie,if,fn,...)	_os_setisr_##o##_##v(fn) HW_EOL(__VA_ARGS__)

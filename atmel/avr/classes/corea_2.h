@@ -132,7 +132,7 @@ typedef union {
 } _hw_corea_stat_t ;
 
 
-#define _hw_stat_corea(o,i,a,...)	HW_TX(_hw_corea_stat(_hw_read_reg(o, mcusr)),__VA_ARGS__)
+#define _hw_stat_corea(o,i,a,...)	_hw_corea_stat(_hw_read_reg(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 {

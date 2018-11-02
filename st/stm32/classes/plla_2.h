@@ -147,7 +147,7 @@ typedef struct {
 } _hw_stplla_t ;
 
 #define _hw_mtd_hw_stat_t__plla		, _hw_sttplla
-#define _hw_sttplla(o,i,a,...)		HW_TX( _hw_stplla_t, __VA_ARGS__)
+#define _hw_sttplla(o,i,a,...)		 _hw_stplla_t HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hw_stat__plla		, _hw_stplla
 #define _hw_stplla(o,i,a,g,...)		HW_Y(_hw_stplla1,g)(g)

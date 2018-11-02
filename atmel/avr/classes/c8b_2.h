@@ -191,7 +191,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hw_read__c8b		, _hw_c8brd
-#define _hw_c8brd(o,i,a,...)		HW_TX( _hw_read_reg(o,count), __VA_ARGS__)
+#define _hw_c8brd(o,i,a,...)		 _hw_read_reg(o,count) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -200,7 +200,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hw_write__c8b		, _hw_c8bwr
-#define _hw_c8bwr(o,i,a,v,...)		HW_TX( _hw_write_reg(o,count,v), __VA_ARGS__)
+#define _hw_c8bwr(o,i,a,v,...)		 _hw_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -209,7 +209,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hwa_write__c8b		, _hwa_c8bwr
-#define _hwa_c8bwr(o,i,a,v,...)		HW_TX( _hwa_write_reg(o,count,v), __VA_ARGS__)
+#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
 
 
 /**

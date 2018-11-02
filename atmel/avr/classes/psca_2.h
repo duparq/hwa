@@ -22,7 +22,7 @@
  */
 #define _hw_mtd_hw_reset__psca		, _hw_psca_reset
 
-#define _hw_psca_reset(o,i,a,...)	HW_TX(_hw_resetpsca(o),__VA_ARGS__)
+#define _hw_psca_reset(o,i,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
 
 #define _hw_resetpsca(o)		_hw_write_reg(o,psr,1)
 
@@ -44,9 +44,9 @@
  * @endcode
  */
 #define _hw_mtd_hw_turn__psca		, _hw_psca_turn
-#define _hw_psca_turn(o,i,a,v,...)	HW_TX(HW_G2(_hw_turnpsca,	\
-						    HW_IS(,_hw_state_##v))(o,v), \
-					      __VA_ARGS__)
+#define _hw_psca_turn(o,i,a,v,...)			\
+  HW_G2(_hw_turnpsca, HW_IS(,_hw_state_##v))(o,v)	\
+  HW_EOL(__VA_ARGS__)
 
 #define _hw_turnpsca_0(o,v)		HW_E_VL(v, on | off)
 #define _hw_turnpsca_1(o,v)		HW_G2(_hw_turnpsca_1,HW_A1(_hw_state_##v))(o)

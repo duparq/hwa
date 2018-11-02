@@ -175,7 +175,7 @@
  */
 #define _hw_mtd_hw_reset__wdoga	, _hw_rstwdoga
 
-#define _hw_rstwdoga(o,i,a,...)			HW_TX(hw_asm("wdr"::),__VA_ARGS__)
+#define _hw_rstwdoga(o,i,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 
 
 /**

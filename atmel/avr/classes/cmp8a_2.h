@@ -60,7 +60,7 @@
 #define _hw_cfcmp8a_voutput_0(o,v,...)					\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)
 #define _hw_cfcmp8a_voutput_1(o,v,...)					\
-  HW_TX(_hw_write_reg(o, com, HW_A2(_hw_cmp8a_output_##v)),__VA_ARGS__)
+  _hw_write_reg(o, com, HW_A2(_hw_cmp8a_output_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -122,7 +122,7 @@
 /*  Optionnal parameter `output`
  */
 #define _hwa_cfcmp8a_koutput_0(o,...)		\
-  HW_TX(,__VA_ARGS__)
+   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcmp8a_koutput_1(o,k,v,...)					\
   HW_Y(_hwa_cfcmp8a_voutput,_hw_cmp8a_output_##v)(o,v,__VA_ARGS__)
@@ -130,7 +130,7 @@
 #define _hwa_cfcmp8a_voutput_0(o,v,...)			\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)
 #define _hwa_cfcmp8a_voutput_1(o,v,...)					\
-  HW_TX(hwa->o.config.output = HW_A1(_hw_cmp8a_output_##v),__VA_ARGS__)
+  hwa->o.config.output = HW_A1(_hw_cmp8a_output_##v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -144,7 +144,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__cmp8a	, _hw_write_cmp8a
-#define _hw_write_cmp8a(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v),__VA_ARGS__)
+#define _hw_write_cmp8a(o,i,a,v,...)		_hw_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -155,7 +155,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_write__cmp8a	, _hwa_write_cmp8a
-#define _hwa_write_cmp8a(o,i,a,v,...)		HW_TX(_hwa_write_reg(o,reg,v),__VA_ARGS__)
+#define _hwa_write_cmp8a(o,i,a,v,...)		_hwa_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -168,7 +168,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__cmp8a		, _hw_read_cmp8a
-#define _hw_read_cmp8a(o,i,a,...)		HW_TX(_hw_read_reg(o,reg),__VA_ARGS__)
+#define _hw_read_cmp8a(o,i,a,...)		_hw_read_reg(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**

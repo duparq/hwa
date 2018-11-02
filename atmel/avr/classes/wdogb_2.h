@@ -175,7 +175,7 @@
  */
 #define _hw_mtd_hw_reset__wdogb	, _hw_rstwdogb
 
-#define _hw_rstwdogb(o,i,a,...)			HW_TX(hw_asm("wdr"::),__VA_ARGS__)
+#define _hw_rstwdogb(o,i,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 
 
 /**

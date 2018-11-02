@@ -178,7 +178,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__tm23a		, _hw_rdtm23a
-#define _hw_rdtm23a(o,i,a,...)		HW_TX(_hw_read_reg(o,_count),__VA_ARGS__)
+#define _hw_rdtm23a(o,i,a,...)		_hw_read_reg(o,_count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -191,7 +191,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__tm23a	, _hw_wrtm23a
-#define _hw_wrtm23a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,_count,v),__VA_ARGS__)
+#define _hw_wrtm23a(o,i,a,v,...)	_hw_write_reg(o,_count,v) HW_EOL(__VA_ARGS__)
 
 
 /*******************************************************************************

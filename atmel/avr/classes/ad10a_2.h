@@ -245,7 +245,7 @@
   else									\
     HWA_ERR("`input` can be `HW_PIN(adc0..7)` (or synonyms), "		\
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
-  HW_TX(__VA_ARGS__)
+  HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfad10a_kinput_0(o,k,...)					\
   HW_G2(_hwa_cfad10a_kpositive_input,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
@@ -278,10 +278,10 @@
 #define _hwa_cfad10a_vnegative_input_0(o,v,...)		\
   HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..7)' or synonyms)
 
-#define _hwa_cfad10a_vnegative_input_1(o,v,...)		\
-  uint8_t negative_input = HW_A1(_hw_ad10a_input_##v);		\
-  HW_TX(_hwa_write_reg(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )), \
-	__VA_ARGS__);
+#define _hwa_cfad10a_vnegative_input_1(o,v,...)				\
+  uint8_t negative_input = HW_A1(_hw_ad10a_input_##v);			\
+  _hwa_write_reg(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )); \
+  HW_EOL(__VA_ARGS__)
 
 
 /*	Check the combination of differential inputs & gain, return the MUX

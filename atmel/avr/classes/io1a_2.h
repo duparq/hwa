@@ -95,9 +95,10 @@
 
 #define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)				\
-  x( write, _hw_reg_##o##_##did, 1);					\
-  x##_write_reg_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)			\
+  x( write, _hw_reg_##o##_##did, 1);				\
+  x##_write_reg_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
+  HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -110,8 +111,8 @@
  * @endcode
  */
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
-  HW_TX( ((_hw_read_reg(p, pin) & (((1<<bn)-1)<<bp))>>bp),	\
-	 __VA_ARGS__)
+  ((_hw_read_reg(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
+  HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -123,11 +124,13 @@
  * hw | hwa( write, pa0, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)	\
-  HW_TX( _hw_write_reg_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp), __VA_ARGS__ )
+#define _hw_write_io1a(o,i, p,bn,bp, v,...)		\
+  _hw_write_reg_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
+  HW_EOL(__VA_ARGS__)
 
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
-  HW_TX(_hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v),__VA_ARGS__)
+  _hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v)	\
+  HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -142,13 +145,13 @@
 #define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__)
 #define _hw_toggle_io1a_3(_m1,o,a,r,rc,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,(1UL<<bn)-1,),__VA_ARGS__)
+  _hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,(1UL<<bn)-1,) HW_EOL(__VA_ARGS__)
 
 
 #define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
 #define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__)
 #define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  HW_TX(_hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp,(1UL<<bn)-1),__VA_ARGS__)
+  _hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp,(1UL<<bn)-1) HW_EOL(__VA_ARGS__)
 
 
 /**

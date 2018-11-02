@@ -218,7 +218,7 @@
   else									\
     HWA_ERR("`input` can be 'HW_PIN(adc0..3)' (or synonyms), "		\
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
-  HW_TX(__VA_ARGS__)
+  HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfad10c_kinput(o,k,...)					\
   HW_Y(_hwa_cfad10c_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__)
@@ -230,26 +230,25 @@
 
 /*	Process 'positive_input' & 'negative_input' in differential mode
  */
-#define _hwa_cfad10c_kpositive_input_0(o,k,...)				\
+#define _hwa_cfad10c_kpositive_input_0(o,k,...)	\
   HW_E_VL(k,input | positive_input)
 #define _hwa_cfad10c_kpositive_input_1(o,k,v,...)			\
   HW_Y(_hwa_cfad10c_vpositive_input,_hw_ad10c_input_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfad10c_vpositive_input_0(o,v,...)				\
+#define _hwa_cfad10c_vpositive_input_0(o,v,...)			\
   HW_E_AVL(`positive_input`, v, 'HW_PIN(adc0..3)' or synonyms)
 #define _hwa_cfad10c_vpositive_input_1(o,v,k,...)			\
-  uint8_t positive_input = HW_A1(_hw_ad10c_input_##v);		\
+  uint8_t positive_input = HW_A1(_hw_ad10c_input_##v);			\
   HW_G2(_hwa_cfad10c_knegative_input,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
-#define _hwa_cfad10c_knegative_input_0(o,k,...)				\
+#define _hwa_cfad10c_knegative_input_0(o,k,...)	\
   HW_E_VL(k,negative_input)
 #define _hwa_cfad10c_knegative_input_1(o,k,v,...)			\
   HW_Y(_hwa_cfad10c_vnegative_input,_hw_ad10c_input_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfad10c_vnegative_input_0(o,v,...)		\
+#define _hwa_cfad10c_vnegative_input_0(o,v,...)			\
   HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..3)' or synonyms)
-#define _hwa_cfad10c_vnegative_input_1(o,v,...)		\
-  uint8_t negative_input = HW_A1(_hw_ad10c_input_##v);		\
-  HW_TX(_hwa_write_reg(o,mux,						\
-		       _hwa_ad10c_compute_mux( positive_input, negative_input, gain )), \
-	__VA_ARGS__);
+#define _hwa_cfad10c_vnegative_input_1(o,v,...)				\
+  uint8_t negative_input = HW_A1(_hw_ad10c_input_##v);			\
+  _hwa_write_reg(o,mux,_hwa_ad10c_compute_mux(positive_input,negative_input,gain)); \
+  HW_EOL(__VA_ARGS__)
 
 
 /*	Check the combination of differential inputs & gain,

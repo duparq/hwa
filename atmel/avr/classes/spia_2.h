@@ -178,7 +178,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * @endcode
  */
 #define _hw_mtd_hw_read__spia		, _hw_read_spia
-#define _hw_read_spia(o,i,a,...)	HW_TX(_hw_read_reg(o,dr),__VA_ARGS__)
+#define _hw_read_spia(o,i,a,...)	_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -188,10 +188,10 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * @endcode
  */
 #define _hw_mtd_hw_write__spia		, _hw_wrspia
-#define _hw_wrspia(o,i,a,v,...)		HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__)
+#define _hw_wrspia(o,i,a,v,...)		_hw_write_reg(o,dr,v) HW_EOL(__VA_ARGS__)
 
 /* #define _hw_wrspia(o,i,a,v,...)						\ */
-/*   HW_TX( __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_M(o,dr)), v ), __VA_ARGS__) */
+/*    __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_M(o,dr)), v ) HW_EOL(__VA_ARGS__) */
 
 /* HW_INLINE uint8_t __hw_wrspia( intptr_t flag_addr, uint8_t flag_bp, intptr_t dr, uint8_t v ) */
 /* { */
@@ -231,7 +231,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
-  HW_TX(_hw_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+  _hw_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_spia
@@ -246,7 +246,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\
-  HW_TX(_hwa_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+  _hwa_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -289,7 +289,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hw_mtd_hw_stat__spia		, _hw_stat_spia
 #define _hw_mtd_hw_stat_t__spia	, _hw_statt_spia
 
-#define _hw_statt_spia(o,i,a,...)	HW_TX(_hw_spia_stat_t, __VA_ARGS__)
+#define _hw_statt_spia(o,i,a,...)	_hw_spia_stat_t HW_EOL(__VA_ARGS__)
 
 typedef union {
   uint8_t	  byte ;
@@ -300,7 +300,7 @@ typedef union {
   };
 } _hw_spia_stat_t ;
 
-#define _hw_stat_spia(o,i,a,...)	HW_TX(_hw_spia_stat(_hw_read_reg(o, sr)), __VA_ARGS__)
+#define _hw_stat_spia(o,i,a,...)	_hw_spia_stat(_hw_read_reg(o, sr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
 {

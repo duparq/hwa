@@ -139,7 +139,7 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
   HW_E_ST(v)
 
 #define _hwx_turn_ad10__1(x,o, v, ...)					\
-  HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+  x##_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /*	Start a conversion
@@ -187,7 +187,7 @@ typedef union {
   };
 } _hw_ad10__status_t ;
 
-#define _hw_stat_ad10_(o,i,a,...)	HW_TX(_hw_ad10__status(_hw_read_reg(o,sra)), __VA_ARGS__)
+#define _hw_stat_ad10_(o,i,a,...)	_hw_ad10__status(_hw_read_reg(o,sra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
 {

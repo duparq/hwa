@@ -367,7 +367,7 @@ The additional void arguments serve two purposes:
 
  * the first one is a reasonably sufficient way to verify that there is no
    remaining argument in the list after the processing of the instruction, using
-   the `HW_EOL()` or `HW_TX()` macro:
+   the `HW_EOL()` macro:
 
 @code
 HW_EOL(__VA_ARGS__)	// Produce an error if first argument in __VA_ARGS__ is not void

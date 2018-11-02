@@ -127,7 +127,7 @@
 #define _hwx_cftwia_vslam_0(x,o,v,...)					\
   if ( v < 0 || v > 127 )						\
     HWA_ERR("value of `slave_address_mask` must be in the range 0..127."); \
-  HW_TX( x##_write_reg( o, slam, v ), __VA_ARGS__)
+   x##_write_reg( o, slam, v ) HW_EOL(__VA_ARGS__)
 
 #define _hwx_cftwia_kslam_0(x,o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -151,7 +151,7 @@
 #define _hw_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 #define _hwa_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 #define _hwx_tntwia__0(x,o, v, ...)	HW_E_ST(v)
-#define _hwx_tntwia__1(x,o, v, ...)	HW_TX(x##_write_reg(o, en, HW_A1(_hw_state_##v)),__VA_ARGS__)
+#define _hwx_tntwia__1(x,o, v, ...)	x##_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -239,8 +239,8 @@
 #define _hw_twia_txread_nack_0(o,k,...)	HW_E_VL(k, ack | nack)
 
 
-#define _hw_twia_txend_0(o,v,...)	HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v), __VA_ARGS__ )
-#define _hw_twia_txend_1(o,v,k,...)	HW_TX( _hw_write_reg(o,cr,_hw_twia_cr_##v##ie), __VA_ARGS__ )
+#define _hw_twia_txend_0(o,v,...)	 _hw_write_reg(o,cr,_hw_twia_cr_##v) HW_EOL(__VA_ARGS__)
+#define _hw_twia_txend_1(o,v,k,...)	 _hw_write_reg(o,cr,_hw_twia_cr_##v##ie) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -252,7 +252,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__twia		, _hw_rdtwia
-#define _hw_rdtwia(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__)
+#define _hw_rdtwia(o,i,a,...)		_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__)
 
 
 
@@ -272,7 +272,7 @@
  * Predefined TWI status symbols are:
  */
 #define _hw_mtd_hw_stat__twia		, _hw_stat_twia
-#define _hw_stat_twia(o,i,a,...)	HW_TX((_hw_read_reg(o,sr)&0xF8), __VA_ARGS__)
+#define _hw_stat_twia(o,i,a,...)	(_hw_read_reg(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
 
 
 /** @page atmelavr_twia

@@ -119,7 +119,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__cmp8b	, _hw_wrcmp8b
-#define _hw_wrcmp8b(o,i,a,v,...)		HW_TX(_hw_write_reg(o,reg,v), __VA_ARGS__)
+#define _hw_wrcmp8b(o,i,a,v,...)		_hw_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_cmp8b
@@ -129,7 +129,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_write__cmp8b	, _hwa_wrcmp8b
-#define _hwa_wrcmp8b(o,i,a,v,...)	HW_TX(_hwa_write_reg(o,reg,v), __VA_ARGS__)
+#define _hwa_wrcmp8b(o,i,a,v,...)	_hwa_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -142,7 +142,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__cmp8b		, _hw_read_cmp8b
-#define _hw_read_cmp8b(o,i,a,...)	HW_TX(_hw_read_reg(o,reg),__VA_ARGS__)
+#define _hw_read_cmp8b(o,i,a,...)	_hw_read_reg(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**

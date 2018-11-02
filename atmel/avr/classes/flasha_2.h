@@ -20,7 +20,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__flasha	, _hw_read_flasha
-#define _hw_read_flasha(o,i,a,addr,...)		HW_TX( _hw_flashardbyte((intptr_t)(addr)), __VA_ARGS__)
+#define _hw_read_flasha(o,i,a,addr,...)		 _hw_flashardbyte((intptr_t)(addr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 {
@@ -52,7 +52,7 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
 #define _hw_mtd_hw_read_bytes__flasha	, _hw_read_bytes_flasha
 
 #define _hw_read_bytes_flasha(o,i,a,dst,addr,n,...)	\
-  HW_TX( _hw_flashardbytes(dst,addr,n), __VA_ARGS__)
+   _hw_flashardbytes(dst,addr,n) HW_EOL(__VA_ARGS__)
 
 /**
  * @brief Store into dst count bytes read from Flash memory address addr
@@ -99,13 +99,13 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  */
 
 #define _hw_mtd_hw_load_buffer__flasha	, _hw_flasha_load_buffer
-#define _hw_flasha_load_buffer(o,i,a,src,...)	HW_TX(_hw_flasha_ldpgbf(o,src),__VA_ARGS__)
+#define _hw_flasha_load_buffer(o,i,a,src,...)	_hw_flasha_ldpgbf(o,src) HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hw_erase_page__flasha	, _hw_flasha_erase_page
-#define _hw_flasha_erase_page(o,i,a,src,...)	HW_TX(_hw_flasha_pgers(o,src),__VA_ARGS__)
+#define _hw_flasha_erase_page(o,i,a,src,...)	_hw_flasha_pgers(o,src) HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hw_write_page__flasha	, _hw_flasha_write_page
-#define _hw_flasha_write_page(o,i,a,src,...)	HW_TX(_hw_flasha_pgwrt(o,src),__VA_ARGS__)
+#define _hw_flasha_write_page(o,i,a,src,...)	_hw_flasha_pgwrt(o,src) HW_EOL(__VA_ARGS__)
 
 
 #if !defined HW_DEVICE_FUSE_BOOTRST

@@ -68,7 +68,7 @@
 #define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | compare0 | external_rising | external_falling)
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\
-  HW_TX(_hwa_docfusia(o,mode,clock),__VA_ARGS__);
+  _hwa_docfusia(o,mode,clock) HW_EOL(__VA_ARGS__);
 
 #define _hwa_docfusia( o, mode, clock )				\
   if ( mode != HW_A1(_hw_usia_mode_spi_master)			\
@@ -101,7 +101,7 @@
 /*  FIXME: the datasheet advices using br instead of dr but does not tell at
  *  what moment br is valid. Reading br returns weird values...
  */
-#define _hw_rdusia(o,i,a,...)		HW_TX( _hw_read_reg( o, dr ), __VA_ARGS__ )
+#define _hw_rdusia(o,i,a,...)		 _hw_read_reg( o, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -113,7 +113,7 @@
  */
 #define _hw_mtd_hw_write__usia		, _hw_wrusia
 
-#define _hw_wrusia(o,i,a,v,...)		HW_TX( _hw_write_reg( o, dr, v ), __VA_ARGS__ )
+#define _hw_wrusia(o,i,a,v,...)		 _hw_write_reg( o, dr, v ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -129,7 +129,7 @@
 
 #define _hw_mtd_hw_trigger__usia	, _hw_tgusia
 
-#define _hw_tgusia(o,i,a,...)		HW_TX( _hw_write_reg(o,tc,1),__VA_ARGS__ )
+#define _hw_tgusia(o,i,a,...)		 _hw_write_reg(o,tc,1) HW_EOL(__VA_ARGS__)
 
 
 
@@ -146,7 +146,7 @@
 #define _hw_mtd_hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(p,i,o,...)		\
-  HW_TX( _hwa_docfspimswclk(o), __VA_ARGS__ )
+   _hwa_docfspimswclk(o) HW_EOL(__VA_ARGS__)
 
 #define _hwa_docfspimswclk( o )			\
   do {							\
@@ -170,7 +170,7 @@
  */
 #define _hw_mtd_hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
 
-#define _hw_rdspimswclk(o,i,usio,...)		HW_TX( _hw_read_reg( usio, dr ), __VA_ARGS__ )
+#define _hw_rdspimswclk(o,i,usio,...)		 _hw_read_reg( usio, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -183,15 +183,15 @@
  */
 #define _hw_mtd_hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
 
-#define _hw_wrspimswclk(p,i,usin,v,...)			\
-  HW_TX(						\
-	do {						\
-	  _hw_write_reg(usin, dr, v );			\
-	  _hw_write_reg(usin, ifov, 1 );			\
-	  do						\
-	    _hw_write_reg(usin, tc, 1);			\
-	  while( _hw_read_reg(usin, ifov) == 0 );	\
-	}while(0), __VA_ARGS__ )
+#define _hw_wrspimswclk(p,i,usin,v,...)		\
+  do {						\
+    _hw_write_reg(usin, dr, v );		\
+    _hw_write_reg(usin, ifov, 1 );		\
+    do						\
+      _hw_write_reg(usin, tc, 1);		\
+    while( _hw_read_reg(usin, ifov) == 0 );	\
+  }while(0)					\
+    HW_EOL( __VA_ARGS__ )
 
 
 

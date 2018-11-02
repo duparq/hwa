@@ -167,7 +167,7 @@
   else									\
     HWA_ERR("`input` can be 'HW_PIN(adc0..7)' (or synonyms), "		\
 	    "`temperature`, `bandgap_1100mV`, or `ground`  but not `"#v"`."); \
-  HW_TX(__VA_ARGS__)
+  HW_EOL(__VA_ARGS__)
 
 #define _hw_ad10b_input_temperature	, 8	/* , mux */
 #define _hw_ad10b_input_bandgap_1100mV	, 14

@@ -50,7 +50,7 @@
 #define _hwx_nvictn03_1(...)
 
 #define _hwx_nvictn_vstate_0(h,o,i,a,v,x, ...)	HW_E_ST(x)
-#define _hwx_nvictn_vstate_1(h,o,v,x, ...)	HW_TX(HW_G2(_hwx_nvictn_vstate1,HW_A1(_hw_state_##x))(h,o,v), __VA_ARGS__)
+#define _hwx_nvictn_vstate_1(h,o,v,x, ...)	HW_G2(_hwx_nvictn_vstate1,HW_A1(_hw_state_##x))(h,o,v) HW_EOL(__VA_ARGS__)
 
 #define _hwx_nvictn_vstate1_1(h,o,v)		h##_nvic_enable(v)
 #define _hwx_nvictn_vstate1_0(h,o,v)		h##_nvic_disable(v)

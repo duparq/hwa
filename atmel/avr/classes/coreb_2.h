@@ -84,7 +84,7 @@
   HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down | power_save | standby | extended_standby)
 
 #define _hwa_cfcoreb_vsleepmode_1(o,v,...)	\
-  HW_TX(_hwa_write_reg( o, sm, HW_A1(_hw_sleepmode_##v)),__VA_ARGS__)
+  _hwa_write_reg( o, sm, HW_A1(_hw_sleepmode_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -142,7 +142,7 @@ typedef union {
 
 
 #define _hw_mtd_hw_stat_t__coreb	, _hw_coreb_stat_t
-#define _hw_stat_coreb(o,i,a,...)	HW_TX(_hw_coreb_stat(_hw_read_reg(o, mcusr)),__VA_ARGS__)
+#define _hw_stat_coreb(o,i,a,...)	_hw_coreb_stat(_hw_read_reg(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 
 HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )

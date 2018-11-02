@@ -50,7 +50,7 @@
  * @endcode
  */
 #define _hw_mtd_HW_BITS__ad10b		, _hw_bn_ad10b
-#define _hw_bn_ad10b(o,i,a,...)		HW_TX(10,__VA_ARGS__)
+#define _hw_bn_ad10b(o,i,a,...)		10 HW_EOL(__VA_ARGS__)
 
 
 /**

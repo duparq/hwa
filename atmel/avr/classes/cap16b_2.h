@@ -55,7 +55,7 @@
 #define _hw_cfcap16b_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 #define _hw_cfcap16b_vedge_1(o,v,...)			\
-  HW_TX(_hw_write_reg(o, ices, HW_A1(hw_cap16b_edge_##v)-1),__VA_ARGS__)
+  _hw_write_reg(o, ices, HW_A1(hw_cap16b_edge_##v)-1) HW_EOL(__VA_ARGS__)
 
 
 /**

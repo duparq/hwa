@@ -196,7 +196,7 @@
  *
  * __Note__ For instructions that accept a variable-length list of arguments,
  * it is advised to add a void argument to the list and check it after parsing
- * with `HW_TX()` or `HW_EOL()`.
+ * with `HW_EOL(__VA_ARGS__)`.
  */
 
 /* Note: an extra void argument must be added for single argument instructions
@@ -260,28 +260,14 @@
 
 /**
  * @ingroup private_mac
- * @brief Returns the first argument if the second is void, an error otherwise.
- * @hideinitializer
- *
- * This is used to help detecting and propagating errors, or ensuring that
- * there is no remaining elements in a list at the end of its parsing.
- */
-#define HW_TX(result, ...)	HW_Y(_HW_TX,__VA_ARGS__)((result),__VA_ARGS__,)
-#define _HW_TX_0(result,x,...)	HW_E_T(x)
-#define _HW_TX_1(result, ...)	_HW_TX_2 result
-#define _HW_TX_2(...)		__VA_ARGS__
-
-
-/**
- * @ingroup private_mac
  * @brief Trigger an error if the first argument is not void.
  * @hideinitializer
  *
  * This is used to ensure that there is no remaining elements in a list at the
  * end of its parsing.
  */
-#define HW_EOL(...)		HW_Y(_HW_EOL,__VA_ARGS__)(__VA_ARGS__,)
-#define _HW_EOL_0(x,...)	HW_E_T(x)
+#define HW_EOL(...)		HW_Y(_HW_EOL,__VA_ARGS__)(__VA_ARGS__)
+#define _HW_EOL_0(...)		HW_E_T(__VA_ARGS__)
 #define _HW_EOL_1(...)
 
 

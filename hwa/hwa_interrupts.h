@@ -241,7 +241,7 @@
 
 #define _hw_tnirq(o,v,e,f,vv,...)	HW_Y(_hw_tnirq,_hw_state_##vv)(o,e,vv,__VA_ARGS__)
 #define _hw_tnirq_0(o,e,x, ...)		HW_E_ST(x)
-#define _hw_tnirq_1(o,e,v, ...)		HW_TX(_hw_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
+#define _hw_tnirq_1(o,e,v, ...)		_hw_write_reg(o,e, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 #define _hw_mtd_hwa_turn__irq		, _hwa_tnirq
@@ -253,7 +253,7 @@
  */
 #define _hwa_tnirq(o,v,e,f,vv,...)	HW_Y(_hwa_tnirq,_hw_state_##vv)(o,e,vv,__VA_ARGS__)
 #define _hwa_tnirq_0(o,e,x, ...)	HW_E_ST(x)
-#define _hwa_tnirq_1(o,e,v, ...)	HW_TX(_hwa_write_reg(o,e, HW_A1(_hw_state_##v)), __VA_ARGS__)
+#define _hwa_tnirq_1(o,e,v, ...)	_hwa_write_reg(o,e, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -263,7 +263,7 @@
  */
 #define _hw_mtd_hw_clear__irq		, _hw_clear_irq
 
-#define _hw_clear_irq(v,p,e,f,...)	HW_TX(_hw_write_reg(p,f,1),__VA_ARGS__)
+#define _hw_clear_irq(v,p,e,f,...)	_hw_write_reg(p,f,1) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -273,7 +273,7 @@
  */
 #define _hw_mtd_hwa_clear__irq		, _hwa_clear_irq
 
-#define _hwa_clear_irq(v,p,e,f,...)	HW_TX(_hwa_write_reg(p,f,1),__VA_ARGS__)
+#define _hwa_clear_irq(v,p,e,f,...)	_hwa_write_reg(p,f,1) HW_EOL(__VA_ARGS__)
 
 
 #endif /* !defined __ASSEMBLER__ */

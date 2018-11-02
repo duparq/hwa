@@ -148,7 +148,7 @@
   HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)
 
 #define _hwa_cfc16a_voverflow_1(o,v,...)				\
-  HW_TX(hwa->o.config.overflow = HW_A1(_hw_c16a_overflow_##v),__VA_ARGS__)
+  hwa->o.config.overflow = HW_A1(_hw_c16a_overflow_##v) HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfc16a_koverflow_0(o,...)	\
   HW_EOL(__VA_ARGS__)
@@ -607,7 +607,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define _hw_mtd_hw_read__c16a		, _hw_read_c16a
-#define _hw_read_c16a(o,i,a,...)	HW_TX(_hw_read_reg(o,count),__VA_ARGS__)
+#define _hw_read_c16a(o,i,a,...)	_hw_read_reg(o,count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -617,7 +617,7 @@ HW_INLINE uint8_t _hwa_solve_c16a ( hwa_c16a_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define _hw_mtd_hw_write__c16a		, _hw_write_c16a
-#define _hw_write_c16a(o,i,a,v,...)	HW_TX(_hw_write_reg(o,count,v),__VA_ARGS__)
+#define _hw_write_c16a(o,i,a,v,...)	_hw_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c16a

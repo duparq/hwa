@@ -140,7 +140,7 @@
  * @endcode
  */
 /* #define _hw_mtd_hw_read__uarta	, _hw_rduarta */
-/* #define _hw_rduarta(o,i,a,...)		HW_TX(_hw_read_reg(o,dr),__VA_ARGS__) */
+/* #define _hw_rduarta(o,i,a,...)		_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__) */
 
 
 /*
@@ -156,7 +156,7 @@
  * @endcode
  */
 /* #define _hw_mtd_hw_write__uarta	, _hw_wruarta */
-/* #define _hw_wruarta(o,i,a,v,...)	HW_TX(_hw_write_reg(o,dr,v),__VA_ARGS__) */
+/* #define _hw_wruarta(o,i,a,v,...)	_hw_write_reg(o,dr,v) HW_EOL(__VA_ARGS__) */
 
 
 /*  Power management
@@ -208,7 +208,7 @@
 /* } _hw_uarta_stat_t ; */
 
 /* #define _hw_mtd_hw_stat_t__uarta	, _hw_sttuarta */
-/* #define _hw_sttuarta(o,i,a,...)		HW_TX( _hw_uarta_stat_t, __VA_ARGS__) */
+/* #define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
 
 /* #define _hw_mtd_hw_stat__uarta	, _hw_stuarta */
 /* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read_reg(o,csra)), \ */
