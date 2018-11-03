@@ -10,8 +10,10 @@ if [ ! -d make ] ; then
 fi
 
 if [ ! -f "${FAILS}" ] ; then
-    echo "FAILS is not a file"
-    exit 1 ;
+    LOCAL=true
+    FAILS=$(mktemp); export FAILS ;
+else
+    LOCAL=""
 fi
 
 #  If no board name is given, do it for all boards
@@ -25,13 +27,14 @@ BOARDS=${BOARD}
 
 export BOARD	# used by make
 passed=0
-fails=0
+total=0
 for BOARD in ${BOARDS} ; do
     examples_for_board ${BOARD}
     if [ -n "${EXAMPLES}" ] ; then
 	echo Building examples for board ${BOARD}
 	for i in ${EXAMPLES}
 	do echo -n "  $i: "
+	   total=$(($total + 1))
 	   cd $i
 	   if make -s all >/dev/null 2>&1 ; then
 	       echo success
@@ -39,10 +42,16 @@ for BOARD in ${BOARDS} ; do
 	   else
 	       echo failed
 	       echo "  $i BOARD=${BOARD}" >>${FAILS}
-	       fails=$((fails+1))
 	   fi
 	   cd - >/dev/null
 	done
     fi
-done ; echo "$passed succeeded, $fails failed." ; echo
+done
+
+fails=$(cat ${FAILS} | wc -l)
+echo "$passed/$total succeeded." ; echo
+if [ -n "$LOCAL" ] ; then
+    rm ${FAILS}
+fi
+
 exit $fails
