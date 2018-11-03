@@ -285,10 +285,7 @@
 #endif
 
 
-/**
- * @brief 8-bit HWA context register.
- *
- * This structure is used in the HWA context to store one 8-bit hardware
+/* This structure is used in the HWA context to store one 8-bit hardware
  * register.
  */
 typedef struct
