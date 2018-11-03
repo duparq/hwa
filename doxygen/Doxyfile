@@ -791,6 +791,7 @@ INPUT                  = defgroups.txt \
                          devices.md \
                          using.md \
                          porting.md \
+                         internals.md \
                          hwa_license.md \
                          ./
 

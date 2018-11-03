@@ -337,38 +337,35 @@
 
 
 /**
- * @ingroup private_mac
- * @brief Specialize instruction `f` for class `c`: _HW_SP(f,c,...) -> f_c(...)
- * @hideinitializer
- *
- *  This is an alternative to _HW_SPEC() that is useful to allow _HW_SPEC() expansion.
- */
-#define _HW_SP(...)			__HW_SP_2(__VA_ARGS__)
-#define __HW_SP_2(f,c,...)		f##_##c(__VA_ARGS__)
-
-
-/**
  * @brief Initialize the HWA context registers addresses of an object
  */
-#define _hwa_setup(o)			_HW_SP(_hwa_setup,_HW_OD(o))
+#define _hwa_setup(o)			_hwa_setup00( o, _hw_def_##o )
+#define _hwa_setup00(...)		_hwa_setup01(__VA_ARGS__)
+#define _hwa_setup01(o,c,i,a)		_hwa_setup_##c(o,i,a)
 
 
 /**
  * @brief Initialize the HWA context registers of an object with their reset value
  */
-#define _hwa_init(o)			_HW_SP(_hwa_init,_HW_OD(o))
+#define _hwa_init(o)			_hwa_init00( o, _hw_def_##o )
+#define _hwa_init00(...)		_hwa_init01(__VA_ARGS__)
+#define _hwa_init01(o,c,i,a)		_hwa_init_##c(o,i,a)
 
 
 /**
  * @brief Solve the configuration of an object
  */
-#define _hwa_solve(o)			_HW_SP(_hwa_solve,_HW_OD(o))
+#define _hwa_solve(o)			_hwa_solve00( o, _hw_def_##o )
+#define _hwa_solve00(...)		_hwa_solve01(__VA_ARGS__)
+#define _hwa_solve01(o,c,i,a)		_hwa_solve_##c(o,i,a)
 
 
 /**
  * @brief Commit the registers of an object
  */
-#define _hwa_commit(o)			_HW_SP(_hwa_commit,_HW_OD(o))
+#define _hwa_commit(o)			_hwa_commit00( o, _hw_def_##o )
+#define _hwa_commit00(...)		_hwa_commit01(__VA_ARGS__)
+#define _hwa_commit01(o,c,i,a)		_hwa_commit_##c(o,i,a)
 
 
 /**

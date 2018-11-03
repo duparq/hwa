@@ -522,30 +522,3 @@ will call `_hwa_solve()` to process the values stored in the context, compute
 the values of the registers, and verify that the whole configuration is valid
 before the `_hwa_commit()` instruction effectively writes the registers into the
 hardware.
-
-
-Macro argument names {#porting_macargs}
-====================
-
-HWA uses the following standardized argument names in its macro definitions:
-
- * `o`: name of the object
- * `c`: class of the object
- * `i`: id of the object
- * `a`: base address of the object
- * `f`: name of the function
- * `t`: type
- * `r`: name of a register
- * `ra`: relative address of the register
- * `rwm`: register writeable bits mask
- * `rfm`: register flags mask
- * `bn`: number of bits
- * `bp`: position of least significant bit
- * `rbn`: number of bits of a logical register
- * `rbp`: position of least significant bit of a logical register in the
-   hardware register
- * `vbn`: number of bits in the value
- * `vbp`: position of least significant bit in the value
- * `x`: "hw" or "hwa" prefix
-
-<br>
