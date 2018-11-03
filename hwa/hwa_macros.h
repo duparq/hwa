@@ -692,8 +692,8 @@
 /* This is defined in the vendor-specific file since the address can be
  * different between C and assembler.
  */
-#define _hw_mtd_HW_ADDRESS__m1		, _HW_ADDRESS__m1
-#define _hw_mtd_HW_ADDRESS__r32		, _HW_ADDRESS__r32
+#define _hw_mtd_HW_ADDRESS__m1		, _HW_A__m1
+#define _hw_mtd_HW_ADDRESS__r32		, _HW_A__r32
 
 
 /**
@@ -701,7 +701,7 @@
  * @brief  Address of an object's register (internal use)
  * @hideinitializer
  */
-#define _HW_A(...)			_HW_SPEC(_HW_ADDRESS, __VA_ARGS__)
+#define _HW_A(...)			_HW_SPEC(_HW_A, __VA_ARGS__)
 
 
 /**

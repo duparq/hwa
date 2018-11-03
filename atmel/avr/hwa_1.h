@@ -29,9 +29,9 @@
  *	C and assembler address differ!
  */
 #if defined __ASSEMBLER__
-#  define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
+#  define _HW_A__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
 #else
-#  define _HW_ADDRESS__m1(o,a,r,rc,ra,...)		(a+ra)
+#  define _HW_A__m1(o,a,r,rc,ra,...)		(a+ra)
 #endif
 
 
