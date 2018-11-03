@@ -195,7 +195,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  */
 #define _hw_rdio1a(o,i,p,bn,bp,...)	HW_Y(_hw_rdio1a,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
 #define _hw_rdio1a_0(p,bn,bp,g,...)	HW_E_G(g)
-#define _hw_rdio1a_1(p,bn,bp,...)	( (_hw_read_reg(p,idr) & ((1UL<<bn)-1)) >> bp )
+#define _hw_rdio1a_1(p,bn,bp,...)	( (_hw_read_or(p,idr) & ((1UL<<bn)-1)) >> bp )
 
 
 /**
@@ -225,7 +225,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
 #define _hwx_wrio1a1_1(x,p,bn,bp,v,g)		HW_E_V()
 #define _hwx_wrio1a1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrio1a2,g)(x,p,bn,bp,v,g)
 #define _hwx_wrio1a2_0(x,p,bn,bp,v,g)		HW_E_G(g)
-#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)		x##_write_reg_m( p, bsrr, 0xffffffff, \
+#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)		x##_write_orm( p, bsrr, 0xffffffff, \
 								 ((((1UL<<bn)-1)<<bp) & (~(v##UL))<<bp)<<16 | \
 								 ((((1UL<<bn)-1)<<bp) & ( (v))<<bp) )
 

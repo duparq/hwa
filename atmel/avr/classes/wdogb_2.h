@@ -109,7 +109,7 @@
 
 #define _hw_turn_wdogb_1(o, v)		HW_G2(_hw_turn_wdogb, v)(o)
 
-#define _hw_turn_wdogb_on(o)		_hw_write_reg(o,wde,1)
+#define _hw_turn_wdogb_on(o)		_hw_write_or(o,wde,1)
 
 /*  Disable the watchdog by clearing WDE. That special sequence must be
  *  respected.
@@ -123,7 +123,7 @@
 #define _hw_turn_wdogb_off(o)						\
   do {									\
     uint8_t reg ;							\
-    _hw_write_reg( core0, mcusr, 0 );				\
+    _hw_write_or( core0, mcusr, 0 );				\
     __asm__ __volatile__("  in	 %[r], %[wdtcr]"	"\n\t"		\
 			 "  ori	 %[r], %[wdce]|%[wde]"	"\n\t"		\
 			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
@@ -156,7 +156,7 @@
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_turn_wdogb_on(o,i,a)		\
-  _hwa_write_reg(o,wde,1)
+  _hwa_write_or(o,wde,1)
 
 #define _hwa_turn_wdogb_off(o,i,a)			\
   /* Action completed when committing */		\
@@ -203,11 +203,11 @@
  *******************************************************************************/
 
 #define _hwa_setup__wdogb(o,i,a)		\
-  _hwa_setup_reg( o, csr );			\
+  _hwa_setup_or( o, csr );			\
   hwa->o.config.action = 0xFF ;			\
   hwa->o.config.timeout = 0xFF
 
-#define _hwa_init__wdogb(o,i,a)			_hwa_init_reg( o, csr, 0x00 )
+#define _hwa_init__wdogb(o,i,a)			_hwa_init_or( o, csr, 0x00 )
 
 /**
  * @brief Commit the configuration of a _wdogb class watchdog
@@ -227,31 +227,31 @@
 	if ( HW_DEVICE_FUSE_WDTON == 0 )				\
 	  HWA_ERR( "watchdog can not be turned off because "		\
 		   "HW_DEVICE_WATCHDOG_ALWAYS_ON is `enabled`." );	\
-	_hwa_write_reg( o, wdrf, 0 );					\
-	_hwa_commit_reg( o, wdrf );					\
-	_hwa_write_reg( o, if, 1 );	/* was not in _wodga */		\
-	_hwa_write_reg( o, wdce, 1 );					\
-	_hwa_write_reg( o, wde,	 1 );					\
-	_hwa_commit_reg( o, csr );					\
-	_hwa_write_reg( o, ie, 0 );					\
-	_hwa_write_reg( o, wdce, 0 );					\
-	_hwa_write_reg( o, wde, 0 );					\
-	_hwa_write_reg( o, wdp, 0 );					\
+	_hwa_write_or( o, wdrf, 0 );					\
+	_hwa_commit_or( o, wdrf );					\
+	_hwa_write_or( o, if, 1 );	/* was not in _wodga */		\
+	_hwa_write_or( o, wdce, 1 );					\
+	_hwa_write_or( o, wde,	 1 );					\
+	_hwa_commit_or( o, csr );					\
+	_hwa_write_or( o, ie, 0 );					\
+	_hwa_write_or( o, wdce, 0 );					\
+	_hwa_write_or( o, wde, 0 );					\
+	_hwa_write_or( o, wdp, 0 );					\
       }									\
       else {								\
 	/* Configure it */						\
-	_hwa_write_reg( o, wdce, 1 );	/* was not in _wodga */		\
-	_hwa_write_reg( o, wde,	 1 );	/* was not in _wodga */		\
-	_hwa_commit_reg( o, csr );	/* was not in _wodga */		\
-	_hwa_write_reg( o, wdce, 0 );	/* was not in _wodga */		\
-	_hwa_write_reg( o, eie, hwa->o.config.action );			\
+	_hwa_write_or( o, wdce, 1 );	/* was not in _wodga */		\
+	_hwa_write_or( o, wde,	 1 );	/* was not in _wodga */		\
+	_hwa_commit_or( o, csr );	/* was not in _wodga */		\
+	_hwa_write_or( o, wdce, 0 );	/* was not in _wodga */		\
+	_hwa_write_or( o, eie, hwa->o.config.action );			\
 	if ( hwa->o.config.timeout != 0xFF )				\
-	  _hwa_write_reg( o, wdp, hwa->o.config.timeout );		\
+	  _hwa_write_or( o, wdp, hwa->o.config.timeout );		\
       }									\
       /* hwa->o.config.action = 0xFF ; */				\
       /* hwa->o.config.timeout = 0xFF ; */				\
     }									\
-    _hwa_commit_reg( o, csr );						\
+    _hwa_commit_or( o, csr );						\
   } while(0)
 
 

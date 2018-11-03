@@ -65,7 +65,7 @@
 #define _hw_cfcmp16a_voutput_0(o,v,...)					\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match | clear_on_match_up_set_on_match_down | set_on_match_up_clear_on_match_down`)
 #define _hw_cfcmp16a_voutput_1(o,v,...)				\
-  _hw_write_reg(o, com, HW_A2(_hw_cmp16a_output_##v)) HW_EOL(__VA_ARGS__)
+  _hw_write_or(o, com, HW_A2(_hw_cmp16a_output_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -141,7 +141,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__cmp16a	, _hw_write_cmp16a
-#define _hw_write_cmp16a(o,i,a,v,...)		_hw_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_cmp16a(o,i,a,v,...)		_hw_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -152,7 +152,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_write__cmp16a	, _hwa_write_cmp16a
-#define _hwa_write_cmp16a(o,i,a,v,...)		_hwa_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_cmp16a(o,i,a,v,...)		_hwa_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -165,7 +165,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__cmp16a	, _hw_read_cmp16a
-#define _hw_read_cmp16a(o,i,a,...)			_hw_read_reg(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cmp16a(o,i,a,...)			_hw_read_or(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -179,7 +179,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_trigger__cmp16a	, _hw_trigger_cmp16a
-#define _hw_trigger_cmp16a(o,i,a)			_hw_write_reg(o,force,1)
+#define _hw_trigger_cmp16a(o,i,a)			_hw_write_or(o,force,1)
 
 /**
  * @page atmelavr_cmp16a
@@ -189,7 +189,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_trigger__cmp16a	, _hwa_trigger_cmp16a
-#define _hwa_trigger_cmp16a(o,i,a)			_hwa_write_reg(o,force,1)
+#define _hwa_trigger_cmp16a(o,i,a)			_hwa_write_or(o,force,1)
 
 
 /**
@@ -215,13 +215,13 @@
  *******************************************************************************/
 
 #define _hwa_setup__cmp16a(o,i,a)			\
-  _hwa_setup_reg( o, reg );			\
+  _hwa_setup_or( o, reg );			\
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 
-#define _hwa_init__cmp16a(o,i,a)			_hwa_init_reg( o, reg, 0x00 )
+#define _hwa_init__cmp16a(o,i,a)			_hwa_init_or( o, reg, 0x00 )
 
-#define _hwa_commit__cmp16a(o,i,a)			_hwa_commit_reg( o, reg )
+#define _hwa_commit__cmp16a(o,i,a)			_hwa_commit_or( o, reg )
 
 
 /**

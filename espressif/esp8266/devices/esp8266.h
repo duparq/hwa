@@ -94,16 +94,16 @@ typedef struct {
 
 
 #define _hwa_setup__shared(o,i,a)	\
-  _hwa_setup_reg( o, _edgeie );	\
-  _hwa_setup_reg( o, _swap )
+  _hwa_setup_or( o, _edgeie );	\
+  _hwa_setup_or( o, _swap )
 
 #define _hwa_init__shared(o,i,a)	\
   /* _edgeie is UNKNOWN and 0 causes errors */	\
-  _hwa_init_reg( o, _swap, 0 )
+  _hwa_init_or( o, _swap, 0 )
 
 #define _hwa_commit__shared(o,i,a)	\
-  _hwa_commit_reg( o, _edgeie );	\
-  _hwa_commit_reg( o, _swap )
+  _hwa_commit_or( o, _edgeie );	\
+  _hwa_commit_or( o, _swap )
 
 #endif
 
@@ -295,7 +295,7 @@ typedef struct {
 #define _hw_pf_gpio0_clk_out		, 4 /* RESET */
 
 #define _hw_pf_gpio1			(gpio, (uart0,txd), (spi0,cs1), clk_rtc)
-#define _hw_pf_gpio1_uart0txd		, 0, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_pf_gpio1_uart0txd		, 0, _hwa_write_or( uart0, swap, 0 );
 #define _hw_pf_gpio1_spi0cs1		, 1
 #define _hw_pf_gpio1_gpio		, 3
 #define _hw_pf_gpio1_clk_rtc		, 4
@@ -304,10 +304,10 @@ typedef struct {
 #define _hw_pf_gpio2_gpio		, 0
 #define _hw_pf_gpio2_i2so_ws		, 1
 #define _hw_pf_gpio2_uart1_txd		, 2
-#define _hw_pf_gpio2_uart0_txd		, 4, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_pf_gpio2_uart0_txd		, 4, _hwa_write_or( uart0, swap, 0 );
 
 #define _hw_pf_gpio3			(gpio, (uart0,rxd), (i2so,data), fn_clk_xtal)
-#define _hw_pf_gpio3_uart0rxd		, 0, _hwa_write_reg( uart0, swap, 0 );
+#define _hw_pf_gpio3_uart0rxd		, 0, _hwa_write_or( uart0, swap, 0 );
 #define _hw_pf_gpio3_i2sodata		, 1
 #define _hw_pf_gpio3_gpio		, 3
 #define _hw_pf_gpio3_clk_xtal		, 4
@@ -369,7 +369,7 @@ typedef struct {
 #define _hw_pf_gpio13_hspi0mosi		, 2
 #define _hw_pf_gpio13_gpio		, 3
 #define _hw_pf_gpio13_uart0cts		, 4
-#define _hw_pf_gpio13_uart0rxd		, 4, _hwa_write_reg( uart0, swap, 1 );
+#define _hw_pf_gpio13_uart0rxd		, 4, _hwa_write_or( uart0, swap, 1 );
 
 #define _hw_pf_gpio14			(gpio, mtms, (i2si,ws), (hspi0,clk), (uart0,dsr))
 #define _hw_pf_gpio14_mtms		, 0
@@ -384,7 +384,7 @@ typedef struct {
 #define _hw_pf_gpio15_hspi0cs		, 2
 #define _hw_pf_gpio15_gpio		, 3
 #define _hw_pf_gpio15_uart0rts		, 4
-#define _hw_pf_gpio15_uart0txd		, 4, _hwa_write_reg( uart0, swap, 1 );
+#define _hw_pf_gpio15_uart0txd		, 4, _hwa_write_or( uart0, swap, 1 );
 
 #define _hw_pf_gpio16			(gpio, xpd_dcdc, external_wakeup, deep_sleep, bt_xtal_en)
 #define _hw_pf_gpio16_xpd_dcdc		, 0
@@ -763,7 +763,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( timer1 );
   _hwa_commit( uart0 );
 
-  //  _hwa_commit_reg( shared, _edgeie ); /* Process IRQ at last */
+  //  _hwa_commit_or( shared, _edgeie ); /* Process IRQ at last */
   _hwa_commit( shared );
 }
 

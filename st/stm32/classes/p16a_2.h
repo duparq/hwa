@@ -31,29 +31,29 @@
  *******************************************************************************/
 
 #define _hwa_setup__p16a(o,i,a)			\
-  _hwa_setup_reg( o, crl  );			\
-  _hwa_setup_reg( o, crh  );			\
-  _hwa_setup_reg( o, odr  );			\
-  _hwa_setup_reg( o, bsrr );			\
-  _hwa_setup_reg( o, brr  );			\
-  _hwa_setup_reg( o, lckr );			\
+  _hwa_setup_or( o, crl  );			\
+  _hwa_setup_or( o, crh  );			\
+  _hwa_setup_or( o, odr  );			\
+  _hwa_setup_or( o, bsrr );			\
+  _hwa_setup_or( o, brr  );			\
+  _hwa_setup_or( o, lckr );			\
   hwa->o.toggles = 0
 
 #define _hwa_init__p16a(o,i,a)			\
-  _hwa_init_reg( o, crl,  0x44444444 );		\
-  _hwa_init_reg( o, crh,  0x44444444 );		\
-  _hwa_init_reg( o, odr,  0x00000000 );		\
-  _hwa_init_reg( o, bsrr, 0x00000000 );		\
-  _hwa_init_reg( o, brr,  0x00000000 );		\
-  _hwa_init_reg( o, lckr, 0x00000000 )
+  _hwa_init_or( o, crl,  0x44444444 );		\
+  _hwa_init_or( o, crh,  0x44444444 );		\
+  _hwa_init_or( o, odr,  0x00000000 );		\
+  _hwa_init_or( o, bsrr, 0x00000000 );		\
+  _hwa_init_or( o, brr,  0x00000000 );		\
+  _hwa_init_or( o, lckr, 0x00000000 )
 
 #define _hwa_commit__p16a(o,i,a)					\
-  _hwa_commit_reg( o, crl  );						\
-  _hwa_commit_reg( o, crh  );						\
-  _hwa_commit_reg( o, odr  );						\
-  _hwa_commit_reg( o, bsrr );						\
-  _hwa_commit_reg( o, brr  );						\
-  _hwa_commit_reg( o, lckr );						\
+  _hwa_commit_or( o, crl  );						\
+  _hwa_commit_or( o, crh  );						\
+  _hwa_commit_or( o, odr  );						\
+  _hwa_commit_or( o, bsrr );						\
+  _hwa_commit_or( o, brr  );						\
+  _hwa_commit_or( o, lckr );						\
   _hwa_commit_toggles( &hwa->o )
 
 

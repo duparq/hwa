@@ -33,7 +33,7 @@
 #define _hwx_wrusbpsc1_0(h,v,g)		HW_E_G(g)
 #define _hwx_wrusbpsc1_1(h,v,g)				\
   do{							\
-    if      (v-1+1==  1) h##_write_reg(rcc,usbpre,1);	\
-    else if (v-1+1==1.5) h##_write_reg(rcc,usbpre,0);	\
+    if      (v-1+1==  1) h##_write_or(rcc,usbpre,1);	\
+    else if (v-1+1==1.5) h##_write_or(rcc,usbpre,0);	\
     else HWA_E_VL(v,1 | 1.5);				\
   }while(0)

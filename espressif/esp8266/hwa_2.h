@@ -77,7 +77,7 @@
 
 /*  Register prr exists, process the instruction
  */
-#define _hwx_pwr1_0(o,x,v)	x##_write_reg(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr1_0(o,x,v)	x##_write_or(o,prr,HW_A1(_hw_state_##v)==0)
 
 /*  Register prr does not exist
  */
@@ -91,10 +91,10 @@
  */
 #define HW_ATOMIC(...)				\
   do{						\
-    uint8_t s = _hw_read_reg(core0,sreg);	\
+    uint8_t s = _hw_read_or(core0,sreg);	\
     hw_disable_interrupts();			\
     { __VA_ARGS__ }				\
-    _hw_write_reg(core0,sreg,s) ;		\
+    _hw_write_or(core0,sreg,s) ;		\
   }while(0)
 
 
@@ -545,10 +545,10 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_reg(core0,sreg);
+    uint8_t s = _hw_read_or(core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
-    _hw_write_reg(core0,sreg,s);
+    _hw_write_or(core0,sreg,s);
     uint8_t hb = *ph ;
     v = (hb << 8) | lb ;
   }

@@ -36,5 +36,5 @@
   do{							\
     if ( v-1!=1 && v-1!=3 && v-1!=5 && v-1!=7 )		\
       HWA_E_VL(v,2|4|6|8);				\
-    h##_write_reg(rcc,adcpre,(v-2)/3);			\
+    h##_write_or(rcc,adcpre,(v-2)/3);			\
   }while(0)

@@ -76,28 +76,28 @@
 #define _hwx_cfio1a_vmd_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input|digital_output|analog_input) )
 #define _hwx_cfio1a_vmd_1(x,o,p,bn,bp,v,...)	HW_G2(_hwx_cfio1a,HW_A1(_hw_cfio1a_md_##v))(x,o,p,bn,bp,__VA_ARGS__)
 
-#define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dif(x,o,p,bn,bp,k,...)				\
-  x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_reg_m(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
+  x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_orm(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dipu(x,o,p,bn,bp,k,...)				\
-  x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_reg_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
+  x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_orm(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_reg_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
 #define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, _hw_reg_##o##_##did, 1); HW_EOL(__VA_ARGS__)
-/* x##_write_reg(o,did,1); DOES NOT WORK: 'o' is not a regular object */
+/* x##_write_or(o,did,1); DOES NOT WORK: 'o' is not a regular object */
 
 #define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
 #define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)			\
   x( write, _hw_reg_##o##_##did, 1);				\
-  x##_write_reg_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
+  x##_write_orm(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
   HW_EOL(__VA_ARGS__)
 
 
@@ -111,7 +111,7 @@
  * @endcode
  */
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
-  ((_hw_read_reg(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
+  ((_hw_read_or(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
   HW_EOL(__VA_ARGS__)
 
 
@@ -125,7 +125,7 @@
  * @endcode
  */
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)		\
-  _hw_write_reg_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
+  _hw_write_orm(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\

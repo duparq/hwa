@@ -119,7 +119,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__cmp8b	, _hw_wrcmp8b
-#define _hw_wrcmp8b(o,i,a,v,...)		_hw_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrcmp8b(o,i,a,v,...)		_hw_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_cmp8b
@@ -129,7 +129,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_write__cmp8b	, _hwa_wrcmp8b
-#define _hwa_wrcmp8b(o,i,a,v,...)	_hwa_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_wrcmp8b(o,i,a,v,...)	_hwa_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -142,7 +142,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__cmp8b		, _hw_read_cmp8b
-#define _hw_read_cmp8b(o,i,a,...)	_hw_read_reg(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cmp8b(o,i,a,...)	_hw_read_or(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -168,12 +168,12 @@
  *******************************************************************************/
 
 #define _hwa_setup__cmp8b(o,i,a)			\
-  _hwa_setup_reg( o, reg );			\
+  _hwa_setup_or( o, reg );			\
   hwa->o.config.outputh = 0xFF ;			\
   hwa->o.config.outputl = 0xFF ;
 
 
-#define _hwa_init__cmp8b(o,i,a)			_hwa_init_reg( o, reg, 0x00 );
+#define _hwa_init__cmp8b(o,i,a)			_hwa_init_or( o, reg, 0x00 );
 
 #define _hwa_solve_cmp8b(o)						\
   if ( hwa->o.config.outputh != 0xFF || hwa->o.config.outputl != 0xFF ) {	\
@@ -181,32 +181,32 @@
     if ( hwa->o.config.outputh != HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_on_match) ) \
       HWA_ERR("`output_h` must be `set_at_bottom_clear_on_match` "	\
 	      "when `output_l` is `clear_at_bottom_set_on_match`.");	\
-    _hwa_write_reg(o,pwm,1);						\
-    _hwa_write_reg(o,mode,1);						\
+    _hwa_write_or(o,pwm,1);						\
+    _hwa_write_or(o,mode,1);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_disconnected) ) { \
-    _hwa_write_reg(o,pwm,0);					\
-    _hwa_write_reg(o,mode,0);						\
+    _hwa_write_or(o,pwm,0);					\
+    _hwa_write_or(o,mode,0);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_toggle_on_match) ) { \
-    _hwa_write_reg(o,pwm,0);					\
-    _hwa_write_reg(o,mode,1);						\
+    _hwa_write_or(o,pwm,0);					\
+    _hwa_write_or(o,mode,1);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_on_match) ) { \
-    _hwa_write_reg(o,pwm,0);					\
-    _hwa_write_reg(o,mode,2);						\
+    _hwa_write_or(o,pwm,0);					\
+    _hwa_write_or(o,mode,2);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_on_match) ) { \
-    _hwa_write_reg(o,pwm,0);					\
-    _hwa_write_reg(o,mode,3);						\
+    _hwa_write_or(o,pwm,0);					\
+    _hwa_write_or(o,mode,3);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_on_match) ) { \
-    _hwa_write_reg(o,pwm,1);						\
-    _hwa_write_reg(o,mode,2);						\
+    _hwa_write_or(o,pwm,1);						\
+    _hwa_write_or(o,mode,2);						\
   }									\
   else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_at_bottom_set_on_match) ) { \
-    _hwa_write_reg(o,pwm,1);						\
-    _hwa_write_reg(o,mode,3);						\
+    _hwa_write_or(o,pwm,1);						\
+    _hwa_write_or(o,mode,3);						\
   }									\
   if ( hwa->o.config.outputh != 0xFF && hwa->o.config.outputh != 0 )	\
     _hwa( configure, _HW_REL(o,pin_h), mode, digital_output );	\
@@ -215,7 +215,7 @@
   }
 
 
-#define _hwa_commit__cmp8b(o,i,a)		_hwa_commit_reg(o,reg);
+#define _hwa_commit__cmp8b(o,i,a)		_hwa_commit_or(o,reg);
 
 
 /**

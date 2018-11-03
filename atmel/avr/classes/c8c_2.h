@@ -265,10 +265,10 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
       /*								\
        *  Write solved registers					\
        */								\
-      if ( hwa->o.solved.cs != 0xFF ) _hwa_write_reg( o, cs, hwa->o.solved.cs ); \
-      if ( hwa->o.solved.wgm != 0xFF ) _hwa_write_reg( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write_reg( compare0, com, hwa->compare0.solved.com ); \
-      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write_reg( compare1, com, hwa->compare1.solved.com ); \
+      if ( hwa->o.solved.cs != 0xFF ) _hwa_write_or( o, cs, hwa->o.solved.cs ); \
+      if ( hwa->o.solved.wgm != 0xFF ) _hwa_write_or( o, wgm, hwa->o.solved.wgm ); \
+      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write_or( compare0, com, hwa->compare0.solved.com ); \
+      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write_or( compare1, com, hwa->compare1.solved.com ); \
       /*								\
        *  Configure used compare outputs as i/o outputs			\
        */								\
@@ -592,7 +592,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @endcode
  */
 #define _hw_mtd_hw_read__c8c		, _hw_read_c8c
-#define _hw_read_c8c(o,i,a,...)		_hw_read_reg(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_read_c8c(o,i,a,...)		_hw_read_or(o,count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -602,7 +602,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @endcode
  */
 #define _hw_mtd_hw_write__c8c		, _hw_write_c8c
-#define _hw_write_c8c(o,i,a,v,...)	_hw_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_c8c(o,i,a,v,...)	_hw_write_or(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8c
@@ -611,7 +611,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @endcode
  */
 #define _hw_mtd_hwa_write__c8c		, _hwa_write_c8c
-#define _hwa_write_c8c(o,i,a,v)		_hwa_write_reg(o,count,v)
+#define _hwa_write_c8c(o,i,a,v)		_hwa_write_or(o,count,v)
 
 #if 0
 /**
@@ -624,7 +624,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @endcode
  */
 #define _hw_mtd_hw_clear__c8c		, _hw_clear_c8c
-#define _hw_clear_c8c(o,i,a,...)	_hw_write_reg(o,count,0) HW_EOL(__VA_ARGS__)
+#define _hw_clear_c8c(o,i,a,...)	_hw_write_or(o,count,0) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8c
@@ -634,7 +634,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @endcode
  */
 #define _hw_mtd_hwa_clear__c8c		, _hwa_clear_c8c
-#define _hwa_clear_c8c(o,i,a,...)	_hwa_write_reg(o,count,0) HW_EOL(__VA_ARGS__)
+#define _hwa_clear_c8c(o,i,a,...)	_hwa_write_or(o,count,0) HW_EOL(__VA_ARGS__)
 #endif
 
 
@@ -660,11 +660,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  *******************************************************************************/
 
 #define _hwa_setup__c8c(o,i,a)			\
-  _hwa_setup_reg( o, ccra);			\
-  _hwa_setup_reg( o, ccrb);			\
-  _hwa_setup_reg( o, count);			\
-  _hwa_setup_reg( o, imsk);			\
-  _hwa_setup_reg( o, ifr);			\
+  _hwa_setup_or( o, ccra);			\
+  _hwa_setup_or( o, ccrb);			\
+  _hwa_setup_or( o, count);			\
+  _hwa_setup_or( o, imsk);			\
+  _hwa_setup_or( o, ifr);			\
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
@@ -672,11 +672,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 
 #define _hwa_init__c8c(o,i,a)					\
-  _hwa_init_reg( o, ccra,  0x00 );				\
-  _hwa_init_reg( o, ccrb,  0x00 );				\
-  _hwa_init_reg( o, count, 0x00 );				\
-  _hwa_init_reg( o, imsk,  0x00 );				\
-  _hwa_init_reg( o, ifr,   0x00 )
+  _hwa_init_or( o, ccra,  0x00 );				\
+  _hwa_init_or( o, ccrb,  0x00 );				\
+  _hwa_init_or( o, count, 0x00 );				\
+  _hwa_init_or( o, imsk,  0x00 );				\
+  _hwa_init_or( o, ifr,   0x00 )
 
 
   /* hwa->o.config.clock     = HW_A1(_hw_c8c_clock_none);		\ */
@@ -686,12 +686,12 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 
 #define _hwa_commit__c8c(o,i,a)			\
-  /* _hwa_commit_reg( o, gtccr); */			\
-  _hwa_commit_reg( o, ccra);			\
-  _hwa_commit_reg( o, ccrb);			\
-  _hwa_commit_reg( o, count);			\
-  _hwa_commit_reg( o, imsk);			\
-  _hwa_commit_reg( o, ifr)
+  /* _hwa_commit_or( o, gtccr); */			\
+  _hwa_commit_or( o, ccra);			\
+  _hwa_commit_or( o, ccrb);			\
+  _hwa_commit_or( o, count);			\
+  _hwa_commit_or( o, imsk);			\
+  _hwa_commit_or( o, ifr)
   
 
 /**

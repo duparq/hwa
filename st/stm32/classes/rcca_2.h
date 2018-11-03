@@ -40,19 +40,19 @@
  *******************************************************************************/
 
 #define _hwa_setup__rcca(o,i,a)			\
-  _hwa_setup_reg( o, cr      );			\
-  _hwa_setup_reg( o, cfgr    );			\
-  _hwa_setup_reg( o, apb2enr );			\
-  _hwa_setup_reg( o, apb1enr )
+  _hwa_setup_or( o, cr      );			\
+  _hwa_setup_or( o, cfgr    );			\
+  _hwa_setup_or( o, apb2enr );			\
+  _hwa_setup_or( o, apb1enr )
 
 #define _hwa_init__rcca(o,i,a)			\
-  _hwa_init_reg( o, cr,      0x00000083 );	\
-  _hwa_init_reg( o, cfgr,    0x00000000 );	\
-  _hwa_init_reg( o, apb2enr, 0x00000000 );	\
-  _hwa_init_reg( o, apb1enr, 0x00000000 )
+  _hwa_init_or( o, cr,      0x00000083 );	\
+  _hwa_init_or( o, cfgr,    0x00000000 );	\
+  _hwa_init_or( o, apb2enr, 0x00000000 );	\
+  _hwa_init_or( o, apb1enr, 0x00000000 )
 
 #define _hwa_commit__rcca(o,i,a)		\
-  _hwa_commit_reg( o, cr      );		\
-  _hwa_commit_reg( o, cfgr    );		\
-  _hwa_commit_reg( o, apb2enr );		\
-  _hwa_commit_reg( o, apb1enr )
+  _hwa_commit_or( o, cr      );		\
+  _hwa_commit_or( o, cfgr    );		\
+  _hwa_commit_or( o, apb2enr );		\
+  _hwa_commit_or( o, apb1enr )

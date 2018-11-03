@@ -83,7 +83,7 @@
 #define _hwa_cfio1a_kfn_3(o,cf,p,bn,bp,v,x,...)	HW_Y(_hwa_cfio1a_vfn,_hw_pf_##o##_##x)(o,cf,p,bn,bp,v,x,__VA_ARGS__)
 #define _hwa_cfio1a_vfn_0(o,cf,p,bn,bp,v,x,...)	HW_E_NIL(v, _hw_pf_##o)
 #define _hwa_cfio1a_vfn_1(o,cf,p,bn,bp,v,x,k,...)			\
-  _hwa_write_reg( cf, fn, HW_A1(_hw_pf_##o##_##x) );			\
+  _hwa_write_or( cf, fn, HW_A1(_hw_pf_##o##_##x) );			\
   HW_A2(_hw_pf_##o##_##x) /* Optionnal supplement of actions, e.g. swap  */ \
   HW_Y(_hwa_cfio1a_vfn1,_hw_is_gpio_##x)(o,cf,p,bn,bp,v,x,k,__VA_ARGS__)
 
@@ -116,42 +116,42 @@
 #define _hwa_cfio1a_vmd_1(o,cf,p,bn,bp,v,...)	HW_G2(_hwa_cfio1a,HW_A1(_hw_cfio1a_md_##v))(o,cf,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfio1a_di(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 0 );						\
+  _hwa_write_or( cf, oex, 0 );						\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_dif(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 0 );						\
-  _hwa_write_reg( cf, pux, 0 /* pull-up off */ );			\
+  _hwa_write_or( cf, oex, 0 );						\
+  _hwa_write_or( cf, pux, 0 /* pull-up off */ );			\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_dipu(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 0 /* input */ );				\
-  _hwa_write_reg( cf, pux, 3 /* pull-up on */ );			\
+  _hwa_write_or( cf, oex, 0 /* input */ );				\
+  _hwa_write_or( cf, pux, 3 /* pull-up on */ );			\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_dipuwa(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 0 /* input */ );				\
-  _hwa_write_reg( cf, pux, 2 /* pull-up when awake */ );		\
+  _hwa_write_or( cf, oex, 0 /* input */ );				\
+  _hwa_write_or( cf, pux, 2 /* pull-up when awake */ );		\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_dipuws(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 0 /* input */ );				\
-  _hwa_write_reg( cf, pux, 1 /* pull-up when sleeping */ );		\
+  _hwa_write_or( cf, oex, 0 /* input */ );				\
+  _hwa_write_or( cf, pux, 1 /* pull-up when sleeping */ );		\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_dopp(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 3 /* output */ );				\
-  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  _hwa_write_or( cf, oex, 3 /* output */ );				\
+  _hwa_write_orm( p, _enb, 1UL<<bp, 1UL<<bp );			\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_doppwa(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 1 /* output when awake */ );			\
-  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  _hwa_write_or( cf, oex, 1 /* output when awake */ );			\
+  _hwa_write_orm( p, _enb, 1UL<<bp, 1UL<<bp );			\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfio1a_doppws(o,cf,p,bn,bp,k,...)				\
-  _hwa_write_reg( cf, oex, 2 /* output when sleeping */ );		\
-  _hwa_write_reg_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
+  _hwa_write_or( cf, oex, 2 /* output when sleeping */ );		\
+  _hwa_write_orm( p, _enb, 1UL<<bp, 1UL<<bp );			\
   HW_Y(_hwa_cfio1a_kpu,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 
@@ -164,7 +164,7 @@
 
 #define _hwa_cfio1a_kpu_0(o,cf,p,bn,bp,...)	HW_EOL(__VA_ARGS__)
 #define _hwa_cfio1a_kpu_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vpu,_hw_cfio1a_pu_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfio1a_vpu_1(o,cf,p,bn,bp,v,...)	_hwa_write_reg( cf, pux, HW_A1(_hw_cfio1a_pu_##v) ); HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1a_vpu_1(o,cf,p,bn,bp,v,...)	_hwa_write_or( cf, pux, HW_A1(_hw_cfio1a_pu_##v) ); HW_EOL(__VA_ARGS__)
 #define _hwa_cfio1a_vpu_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, (on,off,when_awake,when_sleeping))
 
 
@@ -181,7 +181,7 @@
 #define _hw_mtd_hw_read__io1a		, _hw_read_io1a
 
 #define _hw_read_io1a(o,i, p,bn,bp,...)			\
-  ((_hw_read_reg(p, _in) & (((1UL<<bn)-1)<<bp))>>bp)	\
+  ((_hw_read_or(p, _in) & (((1UL<<bn)-1)<<bp))>>bp)	\
   HW_EOL(__VA_ARGS__)
 
 
@@ -201,7 +201,7 @@
  */
 #define _hw_mtd_hw_write__io1a			, _hw_wrio1a
 
-#define _hw_wrio1a(o,i, p,bn,bp, v,...)		 _hw_write_reg_m(p, _out, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
+#define _hw_wrio1a(o,i, p,bn,bp, v,...)		 _hw_write_orm(p, _out, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hwa_write__io1a			, _hwa_wrio1a
 

@@ -79,8 +79,8 @@
     br = (uint32_t)(0.5 + brpsc/64) ;					\
   } else								\
     HWA_ERR("value of `sclhz` is too low.");				\
-  x##_write_reg( o, psc, pscreg );					\
-  x##_write_reg( o, br, br );						\
+  x##_write_or( o, psc, pscreg );					\
+  x##_write_or( o, br, br );						\
   HW_G2(_hwx_cftwia_ksladdr,HW_IS(slave_address,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cftwia_ksclhz_0(x,o,k,...)					\
@@ -96,7 +96,7 @@
 #define _hwx_cftwia_vsladdr_0(x,o,v,k,...)				\
   if ( v < 0 || v > 127 )						\
     HWA_ERR("value of `slave_address` must be in the range 0..127.");	\
-  x##_write_reg( o, sla, v );						\
+  x##_write_or( o, sla, v );						\
   HW_G2(_hwx_cftwia_kgcall,HW_IS(general_call,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cftwia_ksladdr_0(x,o,k,...)				\
@@ -111,7 +111,7 @@
   HW_E_AVL(general_call, v, enabled | disabled)
 
 #define _hwx_cftwia_vgcall_1(x,o,v,k,...)				\
-  x##_write_reg( o, gce, HW_A1(_hw_state_##v );				\
+  x##_write_or( o, gce, HW_A1(_hw_state_##v );				\
 		 HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cftwia_kgcall_0(x,o,k,...)					\
@@ -127,7 +127,7 @@
 #define _hwx_cftwia_vslam_0(x,o,v,...)					\
   if ( v < 0 || v > 127 )						\
     HWA_ERR("value of `slave_address_mask` must be in the range 0..127."); \
-   x##_write_reg( o, slam, v ) HW_EOL(__VA_ARGS__)
+   x##_write_or( o, slam, v ) HW_EOL(__VA_ARGS__)
 
 #define _hwx_cftwia_kslam_0(x,o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -151,7 +151,7 @@
 #define _hw_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 #define _hwa_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia_,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 #define _hwx_tntwia__0(x,o, v, ...)	HW_E_ST(v)
-#define _hwx_tntwia__1(x,o, v, ...)	x##_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
+#define _hwx_tntwia__1(x,o, v, ...)	x##_write_or(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -204,7 +204,7 @@
   do {									\
     if ( ((uint8_t)(v)) > 127 )						\
       HWA_ERR("slave address must be in the range 0..127.");		\
-    _hw_write_reg(o,dr,((v)<<1)+0);					\
+    _hw_write_or(o,dr,((v)<<1)+0);					\
     HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
   } while(0)
 
@@ -216,7 +216,7 @@
   do {									\
     if ( ((uint8_t)(v)) > 127 )						\
       HWA_ERR("slave address must be in the range 0..127.");		\
-    _hw_write_reg(o,dr,((v)<<1)+1);					\
+    _hw_write_or(o,dr,((v)<<1)+1);					\
     HW_Y(_hw_twia_txend,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
   } while(0)
 
@@ -226,7 +226,7 @@
 #define _hw_twia_txdatav_1(...)		HW_E(missing value)
 #define _hw_twia_txdatav_0(o,v,k,...)					\
   do {									\
-    _hw_write_reg(o,dr,v);						\
+    _hw_write_or(o,dr,v);						\
     HW_Y(_hw_twia_txend,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
@@ -239,8 +239,8 @@
 #define _hw_twia_txread_nack_0(o,k,...)	HW_E_VL(k, ack | nack)
 
 
-#define _hw_twia_txend_0(o,v,...)	 _hw_write_reg(o,cr,_hw_twia_cr_##v) HW_EOL(__VA_ARGS__)
-#define _hw_twia_txend_1(o,v,k,...)	 _hw_write_reg(o,cr,_hw_twia_cr_##v##ie) HW_EOL(__VA_ARGS__)
+#define _hw_twia_txend_0(o,v,...)	 _hw_write_or(o,cr,_hw_twia_cr_##v) HW_EOL(__VA_ARGS__)
+#define _hw_twia_txend_1(o,v,k,...)	 _hw_write_or(o,cr,_hw_twia_cr_##v##ie) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -252,7 +252,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__twia		, _hw_rdtwia
-#define _hw_rdtwia(o,i,a,...)		_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__)
+#define _hw_rdtwia(o,i,a,...)		_hw_read_or(o,dr) HW_EOL(__VA_ARGS__)
 
 
 
@@ -272,7 +272,7 @@
  * Predefined TWI status symbols are:
  */
 #define _hw_mtd_hw_stat__twia		, _hw_stat_twia
-#define _hw_stat_twia(o,i,a,...)	(_hw_read_reg(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
+#define _hw_stat_twia(o,i,a,...)	(_hw_read_or(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
 
 
 /** @page atmelavr_twia
@@ -432,27 +432,27 @@
  *******************************************************************************/
 
 #define _hwa_setup__twia(o,i,a)			\
-  _hwa_setup_reg( o, br	 );			\
-  _hwa_setup_reg( o, cr	 );			\
-  _hwa_setup_reg( o, sr	 );			\
-  _hwa_setup_reg( o, ar	 );			\
-  _hwa_setup_reg( o, amr )
+  _hwa_setup_or( o, br	 );			\
+  _hwa_setup_or( o, cr	 );			\
+  _hwa_setup_or( o, sr	 );			\
+  _hwa_setup_or( o, ar	 );			\
+  _hwa_setup_or( o, amr )
 
 
 #define _hwa_init__twia(o,i,a)			\
-  _hwa_init_reg( o, br,	 0x00 );		\
-  _hwa_init_reg( o, cr,	 0x00 );		\
-  _hwa_init_reg( o, sr,	 0xF8 );		\
-  _hwa_init_reg( o, ar,	 0xFE );		\
-  _hwa_init_reg( o, amr, 0x00 )
+  _hwa_init_or( o, br,	 0x00 );		\
+  _hwa_init_or( o, cr,	 0x00 );		\
+  _hwa_init_or( o, sr,	 0xF8 );		\
+  _hwa_init_or( o, ar,	 0xFE );		\
+  _hwa_init_or( o, amr, 0x00 )
 
 
 #define _hwa_commit__twia(o,i,a)		\
-  _hwa_commit_reg( o, br  );			\
-  _hwa_commit_reg( o, cr  );			\
-  _hwa_commit_reg( o, sr  );			\
-  _hwa_commit_reg( o, ar  );			\
-  _hwa_commit_reg( o, amr )
+  _hwa_commit_or( o, br  );			\
+  _hwa_commit_or( o, cr  );			\
+  _hwa_commit_or( o, sr  );			\
+  _hwa_commit_or( o, ar  );			\
+  _hwa_commit_or( o, amr )
   
 
 /**

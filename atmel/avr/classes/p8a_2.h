@@ -17,16 +17,16 @@
  *******************************************************************************/
 
 #define _hwa_setup__p8a(o,i,a)			\
-  _hwa_setup_reg( o, port );			\
-  _hwa_setup_reg( o, ddr  )
+  _hwa_setup_or( o, port );			\
+  _hwa_setup_or( o, ddr  )
 
 #define _hwa_init__p8a(o,i,a)			\
-  _hwa_init_reg( o, port, 0x00 );		\
-  _hwa_init_reg( o, ddr,  0x00 )
+  _hwa_init_or( o, port, 0x00 );		\
+  _hwa_init_or( o, ddr,  0x00 )
 
 #define _hwa_commit__p8a(o,i,a)		\
-  _hwa_commit_reg( o, port );			\
-  _hwa_commit_reg( o, ddr  )
+  _hwa_commit_or( o, port );			\
+  _hwa_commit_or( o, ddr  )
 
 
 /**

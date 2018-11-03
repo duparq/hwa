@@ -81,9 +81,9 @@
 #define _hwx_cnplla2_0(h,v,xv)		HW_E_NIL(v,(hsi/2, hse, hse/2))
 #define _hwx_cnplla2_1(...)		_hwx_cnplla3(__VA_ARGS__)
 #define _hwx_cnplla3(h,v,z,xv)						\
-  if      ( 2*xv == 17 ) h##_write_reg(rcc,pllsrc,0);			\
-  else if (   xv == 19 ) h##_write_reg(rcc,pllxtpresrc,1); /* pllxtpre=0, pllsrc=1 */ \
-  else if ( 2*xv == 19 ) h##_write_reg(rcc,pllxtpresrc,3); /* pllxtpre=1, pllsrc=1 */ \
+  if      ( 2*xv == 17 ) h##_write_or(rcc,pllsrc,0);			\
+  else if (   xv == 19 ) h##_write_or(rcc,pllxtpresrc,1); /* pllxtpre=0, pllsrc=1 */ \
+  else if ( 2*xv == 19 ) h##_write_or(rcc,pllxtpresrc,3); /* pllxtpre=1, pllsrc=1 */ \
   else HWA_E_NIL(v,(hsi/2, hse, hse/2));
 
 
@@ -107,7 +107,7 @@
 #define _hwx_wrplla_1(h,v,g)				\
   if (v-1+1<2 || v-1+1>16)				\
     HWA_ERR("HWA: value must be in the range 2..16.");	\
-  else h##_write_reg(rcc,pllmul,((uint8_t)(v)-2));
+  else h##_write_or(rcc,pllmul,((uint8_t)(v)-2));
 
 
 /**
@@ -128,7 +128,7 @@
 #define _hwx_tnplla_0(h,v,g)		HW_E_G(g)
 #define _hwx_tnplla_1(h,v,g)		HW_Y(_hwx_tnplla2,_hw_state_##v)(h,v)
 #define _hwx_tnplla2_0(h,v)		HW_E_ST(v)
-#define _hwx_tnplla2_1(h,v)		h##_write_reg(rcc,pllon,HW_A1(_hw_state_##v))
+#define _hwx_tnplla2_1(h,v)		h##_write_or(rcc,pllon,HW_A1(_hw_state_##v))
 
 
 /**

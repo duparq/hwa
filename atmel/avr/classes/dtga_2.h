@@ -62,7 +62,7 @@
   HW_E_AVL(psc, v, 1 | 2 | 4 | 8)
 
 #define _hwa_cfdtga_vpsc_1(o,v,...)		\
-  _hwa_write_reg(o,psc,HW_A1(_hw_dtga_vpsc_##v));\
+  _hwa_write_or(o,psc,HW_A1(_hw_dtga_vpsc_##v));\
   _hwa_cfdtga_kpsc_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kpsc_0(o,k,...)				\
@@ -79,7 +79,7 @@
  */
 #define _hwa_cfdtga_kcompare0h_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_reg(o,compare0_h,v);					\
+    _hwa_write_or(o,compare0_h,v);					\
   else									\
     HWA_ERR("`compare0_h` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare0h_0(o,__VA_ARGS__)
@@ -94,7 +94,7 @@
  */
 #define _hwa_cfdtga_kcompare0l_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_reg(o,compare0_l,v);					\
+    _hwa_write_or(o,compare0_l,v);					\
   else									\
     HWA_ERR("`compare0_l` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare0l_0(o,__VA_ARGS__)
@@ -109,7 +109,7 @@
  */
 #define _hwa_cfdtga_kcompare1h_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_reg(o,compare1_h,v);					\
+    _hwa_write_or(o,compare1_h,v);					\
   else									\
     HWA_ERR("`compare1_h` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare1h_0(o,__VA_ARGS__)
@@ -124,7 +124,7 @@
  */
 #define _hwa_cfdtga_kcompare1l_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_reg(o,compare1_l,v);					\
+    _hwa_write_or(o,compare1_l,v);					\
   else									\
     HWA_ERR("`compare1_l` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare1l_0(o,__VA_ARGS__)
@@ -142,19 +142,19 @@
  *******************************************************************************/
 
 #define _hwa_setup__dtga(o,i,a)			\
-  _hwa_setup_reg( o, dtps );			\
-  _hwa_setup_reg( o, dta );			\
-  _hwa_setup_reg( o, dtb );
+  _hwa_setup_or( o, dtps );			\
+  _hwa_setup_or( o, dta );			\
+  _hwa_setup_or( o, dtb );
 
 #define _hwa_init__dtga(o,i,a)			\
-  _hwa_init_reg( o, dtps, 0x00 );		\
-  _hwa_init_reg( o, dta, 0x00 );		\
-  _hwa_init_reg( o, dtb, 0x00 );
+  _hwa_init_or( o, dtps, 0x00 );		\
+  _hwa_init_or( o, dta, 0x00 );		\
+  _hwa_init_or( o, dtb, 0x00 );
 
 #define _hwa_commit__dtga(o,i,a)		\
-  _hwa_commit_reg(o,dtps);			\
-  _hwa_commit_reg(o,dta);			\
-  _hwa_commit_reg(o,dtb);
+  _hwa_commit_or(o,dtps);			\
+  _hwa_commit_or(o,dta);			\
+  _hwa_commit_or(o,dtb);
 
 
 /**

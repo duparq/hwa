@@ -71,9 +71,9 @@
 #define _hwa_cftm23a_vclock_1(o,v,...)		_hwa_cftm23a_vclock_2(o,v,_hw_tm23a_clock_##v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_2(...)		_hwa_cftm23a_vclock_3(__VA_ARGS__)
 #define _hwa_cftm23a_vclock_3(o,v,z,x,k,...)				\
-  if      (     x == 1 ) _hwa_write_reg(o,psc,0);			\
-  else if (  16*x == 1 ) _hwa_write_reg(o,psc,1);			\
-  else if ( 256*x == 1 ) _hwa_write_reg(o,psc,2);			\
+  if      (     x == 1 ) _hwa_write_or(o,psc,0);			\
+  else if (  16*x == 1 ) _hwa_write_or(o,psc,1);			\
+  else if ( 256*x == 1 ) _hwa_write_or(o,psc,2);			\
   else HWA_E_NIL(v,(apb, apb/16, apb/256));				\
   HW_Y(_hwa_cftm23a_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
@@ -87,8 +87,8 @@
   HW_Y(_hwa_cftm23a_vdirection,_hw_tm23a_direction_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vdirection_1(o,v,k,...)			\
-  _hwa_write_reg(o,en,HW_A1(_hw_tm23a_direction_##v));		\
-  _hwa_write_reg(o,arl,HW_A2(_hw_tm23a_direction_##v));		\
+  _hwa_write_or(o,en,HW_A1(_hw_tm23a_direction_##v));		\
+  _hwa_write_or(o,arl,HW_A2(_hw_tm23a_direction_##v));		\
   HW_Y(_hwa_cftm23a_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vdirection_0(o,v,...)	HW_E_AVL(direction, v, down | down_loop | stop)
@@ -110,7 +110,7 @@
 /*  Key `top`
  */
 #define _hwa_cftm23a_ktop_1(o,k,v,kk,...)				\
-  _hwa_write_reg(o,load,(uint32_t)(v));					\
+  _hwa_write_or(o,load,(uint32_t)(v));					\
   HW_Y(_hwa_cftm23a_kaction,_hw_is_action_##kk)(o,kk,__VA_ARGS__)
 
 #define _hwa_cftm23a_ktop_0(o,k,...)					\
@@ -123,8 +123,8 @@
   HW_Y(_hwa_cftm23a_virqtype,_hw_tm23a_irqtype_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_virqtype_1(o,v,...)			\
-  _hwa_write_reg(o,ie, HW_A1(_hw_tm23a_irqtype_##v));		\
-  _hwa_write_reg(o,irqtype,HW_A2(_hw_tm23a_irqtype_##v));	\
+  _hwa_write_or(o,ie, HW_A1(_hw_tm23a_irqtype_##v));		\
+  _hwa_write_or(o,irqtype,HW_A2(_hw_tm23a_irqtype_##v));	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cftm23a_virqtype_0(o,v,...)	HW_E_AVL(irq_type, v, edge | level)
@@ -144,13 +144,13 @@
   HW_Y(_hwa_cftm23a_vaction,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vaction_1(o,v,...)					\
-  _hwa_write_reg(o,irqtype,0);						\
+  _hwa_write_or(o,irqtype,0);						\
   if ( HW_A1(_hw_tm23a_action_##v) == HW_A1(_hw_tm23a_action_none ) ) {	\
-    _hwa_write_reg(o,ie,0);						\
+    _hwa_write_or(o,ie,0);						\
     ets_isr_mask(1<<HW_A2(_hw_irq_##o##_irq));				\
   }									\
   else {								\
-    _hwa_write_reg(o,ie,1);						\
+    _hwa_write_or(o,ie,1);						\
     if ( HW_A1(_hw_tm23a_action_##v) == HW_A1(_hw_tm23a_action_irq ) )	\
       ets_isr_unmask(1<<HW_A2(_hw_irq_##o##_irq));			\
     else								\
@@ -178,7 +178,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__tm23a		, _hw_rdtm23a
-#define _hw_rdtm23a(o,i,a,...)		_hw_read_reg(o,_count) HW_EOL(__VA_ARGS__)
+#define _hw_rdtm23a(o,i,a,...)		_hw_read_or(o,_count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -191,7 +191,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__tm23a	, _hw_wrtm23a
-#define _hw_wrtm23a(o,i,a,v,...)	_hw_write_reg(o,_count,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrtm23a(o,i,a,v,...)	_hw_write_or(o,_count,v) HW_EOL(__VA_ARGS__)
 
 
 /*******************************************************************************
@@ -201,31 +201,31 @@
  *******************************************************************************/
 
 #define _hwa_setup__tm23a(o,i,a)		\
-  _hwa_setup_reg( o, _load );			\
-  _hwa_setup_reg( o, _ctrl );			\
+  _hwa_setup_or( o, _load );			\
+  _hwa_setup_or( o, _ctrl );			\
 
 //  hwa->o.config.action = 0xFF
 
 #define _hwa_init__tm23a(o,i,a)			\
-    _hwa_init_reg( o, _load, 0 );		\
-    _hwa_init_reg( o, _ctrl, 0 )
+    _hwa_init_or( o, _load, 0 );		\
+    _hwa_init_or( o, _ctrl, 0 )
 
 #define _hwa_commit__tm23a(o,i,a)					\
-    _hwa_commit_reg( o, _load );					\
-    _hwa_commit_reg( o, _ctrl );					\
+    _hwa_commit_or( o, _load );					\
+    _hwa_commit_or( o, _ctrl );					\
 
     /* if ( hwa->o.config.action != 0xFF					\ */
     /*	 && hwa->o.config.action != HW_A1(_hw_tm23a_action_none ) ) {	\ */
-    /*	 _hwa_write_reg(o,ie,1);						\ */
-    /*	 /\* _hwa_commit_reg( shared, _edgeie ); *\/				\ */
+    /*	 _hwa_write_or(o,ie,1);						\ */
+    /*	 /\* _hwa_commit_or( shared, _edgeie ); *\/				\ */
     /* }									\ */
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_irq) )		\ */
     /*	 ets_isr_unmask(1<<HW_A1(_hw_irq_##o##_irq))			\ */
 
 
     /* if ( hwa->o.config.action == HW_A1(_hw_tm23a_action_none) ) {	\ */
-    /*	 _hwa_write_reg(o,ie,0);						\ */
-    /*	 _hwa_commit_reg( shared, _edgeie );				\ */
+    /*	 _hwa_write_or(o,ie,0);						\ */
+    /*	 _hwa_commit_or( shared, _edgeie );				\ */
     /* }									\ */
 
 

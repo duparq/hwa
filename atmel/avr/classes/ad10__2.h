@@ -139,13 +139,13 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
   HW_E_ST(v)
 
 #define _hwx_turn_ad10__1(x,o, v, ...)					\
-  x##_write_reg(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
+  x##_write_or(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /*	Start a conversion
  */
-#define _hw_trigger_ad10_(o,i,a,...)	_hw_write_reg( o, sc, 1 )
-#define _hwa_trigger_ad10_(o,i,a,...)	_hwa_write_reg( o, sc, 1 )
+#define _hw_trigger_ad10_(o,i,a,...)	_hw_write_or( o, sc, 1 )
+#define _hwa_trigger_ad10_(o,i,a,...)	_hwa_write_or( o, sc, 1 )
 
 
 /*	Read the result of the conversion
@@ -153,7 +153,7 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
 #define _hw_rdad10_(o,i,a,...)					\
   HW_Y(_hw_rdad10_,__VA_ARGS__)(o,__VA_ARGS__,)
 
-#define _hw_rdad10__1(o,...)		_hw_read_reg(o, adc)
+#define _hw_rdad10__1(o,...)		_hw_read_or(o, adc)
 
 /*  Optionnal argument `hi8`
  */
@@ -174,7 +174,7 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
 /*	Read the ADC result with interrupts disabled and restore state as soon
  *	as possible.
  */
-#define _hw_ardad10_(o,i,a,...)		_hw_atomic_read_reg(o, adc)
+#define _hw_ardad10_(o,i,a,...)		_hw_atomic_read_or(o, adc)
 
 /*	Status
  */
@@ -187,7 +187,7 @@ typedef union {
   };
 } _hw_ad10__status_t ;
 
-#define _hw_stat_ad10_(o,i,a,...)	_hw_ad10__status(_hw_read_reg(o,sra)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_ad10_(o,i,a,...)	_hw_ad10__status(_hw_read_or(o,sra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
 {
@@ -204,16 +204,16 @@ HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__ad10_(o)			\
-  _hwa_setup_reg( o, admux );			\
-  _hwa_setup_reg( o, sra   );			\
-  _hwa_setup_reg( o, srb   )
+  _hwa_setup_or( o, admux );			\
+  _hwa_setup_or( o, sra   );			\
+  _hwa_setup_or( o, srb   )
 
 #define _hwa_init__ad10_(o)			\
-  _hwa_init_reg( o, admux, 0x00 );		\
-  _hwa_init_reg( o, sra,   0x00 );		\
-  _hwa_init_reg( o, srb,   0x00 )
+  _hwa_init_or( o, admux, 0x00 );		\
+  _hwa_init_or( o, sra,   0x00 );		\
+  _hwa_init_or( o, srb,   0x00 )
 
 #define _hwa_commit__ad10_(o)			\
-  _hwa_commit_reg( o, admux );			\
-  _hwa_commit_reg( o, sra   );			\
-  _hwa_commit_reg( o, srb   )
+  _hwa_commit_or( o, admux );			\
+  _hwa_commit_or( o, sra   );			\
+  _hwa_commit_or( o, srb   )

@@ -47,8 +47,8 @@
 #define _hwx_cfstka_vclk_1(h,o,v,...)	_hwx_cfstka_vclk_2(h,o,v,_hw_cfstka_clk_##v,__VA_ARGS__)
 #define _hwx_cfstka_vclk_2(...)		_hwx_cfstka_vclk_3(__VA_ARGS__)
 #define _hwx_cfstka_vclk_3(h,o,v,z,xv,k,...)				\
-  if      ( 8*xv == 17 ) h##_write_reg(o,clksource,0);			\
-  else if (   xv == 17 ) h##_write_reg(o,clksource,1);			\
+  if      ( 8*xv == 17 ) h##_write_or(o,clksource,0);			\
+  else if (   xv == 17 ) h##_write_or(o,clksource,1);			\
   else HWA_E_NIL(v,(ahb/8, ahb));					\
   HW_Y(_hwx_cfstka_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
@@ -57,7 +57,7 @@
 /*  Optionnal parameter `reload`
  */
 #define _hwx_cfstka_krld_1(h,o,k0,v,k,...)			\
-  h##_write_reg(o,reload,(uint32_t)(v));			\
+  h##_write_or(o,reload,(uint32_t)(v));			\
   HW_Y(_hwx_cfstka_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfstka_krld_0(h,o,k,...)	HW_Y(_hwx_cfstka_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
@@ -68,7 +68,7 @@
 #define _hwx_cfstka_krn_1(h,o,k,v,...)	HW_Y(_hwx_cfstka_vrn,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfstka_vrn_0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_cfstka_vrn_1(h,o,v,g,...)				\
-  h##_write_reg(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+  h##_write_or(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -88,7 +88,7 @@
 #define _hwx_tnstka(h,o,v,...)		HW_Y(_hwx_tnstka,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnstka_0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_tnstka_1(h,o,v,g,...)				\
-  h##_write_reg(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+  h##_write_or(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -101,7 +101,7 @@
  */
 #define _hw_mtd_hw_read__stka		, _hw_rdstka
 
-#define _hw_rdstka(o,i,a,...)		_hw_read_reg(o,current)
+#define _hw_rdstka(o,i,a,...)		_hw_read_or(o,current)
 
 
 /**
@@ -161,16 +161,16 @@
  *******************************************************************************/
 
 #define _hwa_setup__stka(o,i,a)			\
-  _hwa_setup_reg( o, ctrl );			\
-  _hwa_setup_reg( o, load );			\
-  _hwa_setup_reg( o, val  )
+  _hwa_setup_or( o, ctrl );			\
+  _hwa_setup_or( o, load );			\
+  _hwa_setup_or( o, val  )
 
 #define _hwa_init__stka(o,i,a)			\
-  _hwa_init_reg( o, ctrl, 0x00000000 );		\
-  _hwa_init_reg( o, load, 0x00000000 );		\
-  _hwa_init_reg( o, val,  0x00000000 )
+  _hwa_init_or( o, ctrl, 0x00000000 );		\
+  _hwa_init_or( o, load, 0x00000000 );		\
+  _hwa_init_or( o, val,  0x00000000 )
 
 #define _hwa_commit__stka(o,i,a)		\
-  _hwa_commit_reg( o, ctrl );			\
-  _hwa_commit_reg( o, load );			\
-  _hwa_commit_reg( o, val  )
+  _hwa_commit_or( o, ctrl );			\
+  _hwa_commit_or( o, load );			\
+  _hwa_commit_or( o, val  )

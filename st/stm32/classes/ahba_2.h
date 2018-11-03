@@ -60,13 +60,13 @@
 #define _hwx_cfahba_kpsc_0(h,k,...)	HW_E_K(prescaler,k)
 #define _hwx_cfahba_kpsc_1(h,k,v,g,...)	_hwx_cfahba_vpsc(h,v) HW_EOL(g)
 #define _hwx_cfahba_vpsc(h,v)					\
-  if      ( (v+0) ==   1 ) h##_write_reg(rcc,hpre, 0);		\
-  else if ( (v+0) ==   2 ) h##_write_reg(rcc,hpre, 8);		\
-  else if ( (v+0) ==   4 ) h##_write_reg(rcc,hpre, 9);		\
-  else if ( (v+0) ==   8 ) h##_write_reg(rcc,hpre,10);		\
-  else if ( (v+0) ==  16 ) h##_write_reg(rcc,hpre,11);		\
-  else if ( (v+0) ==  64 ) h##_write_reg(rcc,hpre,12);		\
-  else if ( (v+0) == 128 ) h##_write_reg(rcc,hpre,13);		\
-  else if ( (v+0) == 256 ) h##_write_reg(rcc,hpre,14);		\
-  else if ( (v+0) == 512 ) h##_write_reg(rcc,hpre,15);		\
+  if      ( (v+0) ==   1 ) h##_write_or(rcc,hpre, 0);		\
+  else if ( (v+0) ==   2 ) h##_write_or(rcc,hpre, 8);		\
+  else if ( (v+0) ==   4 ) h##_write_or(rcc,hpre, 9);		\
+  else if ( (v+0) ==   8 ) h##_write_or(rcc,hpre,10);		\
+  else if ( (v+0) ==  16 ) h##_write_or(rcc,hpre,11);		\
+  else if ( (v+0) ==  64 ) h##_write_or(rcc,hpre,12);		\
+  else if ( (v+0) == 128 ) h##_write_or(rcc,hpre,13);		\
+  else if ( (v+0) == 256 ) h##_write_or(rcc,hpre,14);		\
+  else if ( (v+0) == 512 ) h##_write_or(rcc,hpre,15);		\
   else HWA_E_NIL(v,(1, 2, 4, 8, 16, 64, 128, 256, 512));

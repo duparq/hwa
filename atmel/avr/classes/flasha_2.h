@@ -115,13 +115,13 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  */
 #define _hw_flasha_pgers(o, ptr)					\
   do {									\
-    _hw_write_reg( o, csr, 1<<_HW_MBP(o, pgers) | 1<<_HW_MBP(o, spmen) ); \
+    _hw_write_or( o, csr, 1<<_HW_BP_OR(o, pgers) | 1<<_HW_BP_OR(o, spmen) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
 
 #define _hw_flasha_pgwrt(o, ptr)					\
   do {									\
-    _hw_write_reg( o, csr, 1<<_HW_MBP(o, pgwrt) | 1<<_HW_MBP(o, spmen) ); \
+    _hw_write_or( o, csr, 1<<_HW_BP_OR(o, pgwrt) | 1<<_HW_BP_OR(o, spmen) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
 
@@ -140,8 +140,8 @@ HW_INLINE void _hw_flasha_spm( intptr_t ptr )
 #define _hw_flasha_ldpgbf(o, src)				\
   do {								\
     hw_asm("CSR = " HW_QUOTE(_HW_A(_HW_M(o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(_HW_MBP(o, rwwsre)) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(_HW_MBP(o, spmen)) "\n"	\
+	   "BP_RWWSRE = " HW_QUOTE(_HW_BP_OR(o, rwwsre)) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(_HW_BP_OR(o, spmen)) "\n"	\
 	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
     __hw_flasha_ldpgbf( src );					\
@@ -210,13 +210,13 @@ HW_INLINE void __hw_flasha_ldpgbf( void *src )
 #define _hw_flasha_pgers(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_MBP(o, pgers) | 1<<_HW_MBP(o, spmen) ); \
+    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_BP_OR(o, pgers) | 1<<_HW_BP_OR(o, spmen) ); \
   }while(0)
 
 #define _hw_flasha_pgwrt(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_MBP(o, pgwrt) | 1<<_HW_MBP(o, spmen) ); \
+    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_BP_OR(o, pgwrt) | 1<<_HW_BP_OR(o, spmen) ); \
   }while(0)
 
 /**
@@ -272,8 +272,8 @@ HW_INLINE void __hw_flasha_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 #define _hw_flasha_ldpgbf(o, src)				\
   do {								\
     hw_asm("CSR = " HW_QUOTE(_HW_A(_HW_M(o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(_HW_MBP(o, rwwsre)) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(_HW_MBP(o, spmen)) "\n"	\
+	   "BP_RWWSRE = " HW_QUOTE(_HW_BP_OR(o, rwwsre)) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(_HW_BP_OR(o, spmen)) "\n"	\
 	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
     __hw_flasha_ldpgbf( src );					\

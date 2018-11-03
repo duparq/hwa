@@ -60,11 +60,11 @@
 HW_INLINE void __hw_nvic_enable ( uint8_t v )
 {
   if ( v < 32 )
-    _hw_write_reg_m(nvic, iser0, (1UL<<v), (1UL<<v));
+    _hw_write_orm(nvic, iser0, (1UL<<v), (1UL<<v));
   else if ( v < 64 )
-    _hw_write_reg_m(nvic, iser1, (1UL<<(v-32)), (1UL<<(v-32)));
+    _hw_write_orm(nvic, iser1, (1UL<<(v-32)), (1UL<<(v-32)));
   else if ( v < 96 )
-    _hw_write_reg_m(nvic, iser2, (1UL<<(v-64)), (1UL<<(v-64)));
+    _hw_write_orm(nvic, iser2, (1UL<<(v-64)), (1UL<<(v-64)));
   else
     HWA_E(interrupt not supported);
 }
@@ -74,11 +74,11 @@ HW_INLINE void __hw_nvic_enable ( uint8_t v )
 HW_INLINE void __hwa_nvic_enable ( hwa_t *hwa, uint8_t v )
 {
   if ( v < 32 )
-    _hwa_write_reg_m(nvic, iser0, (1UL<<v), (1UL<<v));
+    _hwa_write_orm(nvic, iser0, (1UL<<v), (1UL<<v));
   else if ( v < 64 )
-    _hwa_write_reg_m(nvic, iser1, (1UL<<(v-32)), (1UL<<(v-32)));
+    _hwa_write_orm(nvic, iser1, (1UL<<(v-32)), (1UL<<(v-32)));
   else if ( v < 96 )
-    _hwa_write_reg_m(nvic, iser2, (1UL<<(v-64)), (1UL<<(v-64)));
+    _hwa_write_orm(nvic, iser2, (1UL<<(v-64)), (1UL<<(v-64)));
   else
     HWA_E(interrupt not supported);
 }
@@ -88,11 +88,11 @@ HW_INLINE void __hwa_nvic_enable ( hwa_t *hwa, uint8_t v )
 HW_INLINE void __hw_nvic_disable ( uint8_t v )
 {
   if ( v < 32 )
-    _hw_write_reg_m(nvic, icer0, (1UL<<v), (1UL<<v));
+    _hw_write_orm(nvic, icer0, (1UL<<v), (1UL<<v));
   else if ( v < 64 )
-    _hw_write_reg_m(nvic, icer1, (1UL<<(v-32)), (1UL<<(v-32)));
+    _hw_write_orm(nvic, icer1, (1UL<<(v-32)), (1UL<<(v-32)));
   else if ( v < 96 )
-    _hw_write_reg_m(nvic, icer2, (1UL<<(v-64)), (1UL<<(v-64)));
+    _hw_write_orm(nvic, icer2, (1UL<<(v-64)), (1UL<<(v-64)));
   else
     HWA_E(interrupt not supported);
 }
@@ -102,11 +102,11 @@ HW_INLINE void __hw_nvic_disable ( uint8_t v )
 HW_INLINE void __hwa_nvic_disable ( hwa_t *hwa, uint8_t v )
 {
   if ( v < 32 )
-    _hwa_write_reg_m(nvic, icer0, (1UL<<v), (1UL<<v));
+    _hwa_write_orm(nvic, icer0, (1UL<<v), (1UL<<v));
   else if ( v < 64 )
-    _hwa_write_reg_m(nvic, icer1, (1UL<<(v-32)), (1UL<<(v-32)));
+    _hwa_write_orm(nvic, icer1, (1UL<<(v-32)), (1UL<<(v-32)));
   else if ( v < 96 )
-    _hwa_write_reg_m(nvic, icer2, (1UL<<(v-64)), (1UL<<(v-64)));
+    _hwa_write_orm(nvic, icer2, (1UL<<(v-64)), (1UL<<(v-64)));
   else
     HWA_E(interrupt not supported);
 }
@@ -120,25 +120,25 @@ HW_INLINE void __hwa_nvic_disable ( hwa_t *hwa, uint8_t v )
  *******************************************************************************/
 
 #define _hwa_setup__nvica(o,i,a)		\
-  _hwa_setup_reg( o, iser0 );			\
-  _hwa_setup_reg( o, iser1 );			\
-  _hwa_setup_reg( o, iser2 );			\
-  _hwa_setup_reg( o, icer0 );			\
-  _hwa_setup_reg( o, icer1 );			\
-  _hwa_setup_reg( o, icer2 );			\
+  _hwa_setup_or( o, iser0 );			\
+  _hwa_setup_or( o, iser1 );			\
+  _hwa_setup_or( o, iser2 );			\
+  _hwa_setup_or( o, icer0 );			\
+  _hwa_setup_or( o, icer1 );			\
+  _hwa_setup_or( o, icer2 );			\
 
 #define _hwa_init__nvica(o,i,a)			\
-  _hwa_init_reg( o, iser0, 0x00000000 );	\
-  _hwa_init_reg( o, iser1, 0x00000000 );	\
-  _hwa_init_reg( o, iser2, 0x00000000 );	\
-  _hwa_init_reg( o, icer0, 0x00000000 );	\
-  _hwa_init_reg( o, icer1, 0x00000000 );	\
-  _hwa_init_reg( o, icer2, 0x00000000 );	\
+  _hwa_init_or( o, iser0, 0x00000000 );	\
+  _hwa_init_or( o, iser1, 0x00000000 );	\
+  _hwa_init_or( o, iser2, 0x00000000 );	\
+  _hwa_init_or( o, icer0, 0x00000000 );	\
+  _hwa_init_or( o, icer1, 0x00000000 );	\
+  _hwa_init_or( o, icer2, 0x00000000 );	\
 
 #define _hwa_commit__nvica(o,i,a)		\
-  _hwa_commit_reg( o, iser0 );			\
-  _hwa_commit_reg( o, iser1 );			\
-  _hwa_commit_reg( o, iser2 );			\
-  _hwa_commit_reg( o, icer0 );			\
-  _hwa_commit_reg( o, icer1 );			\
-  _hwa_commit_reg( o, icer2 )
+  _hwa_commit_or( o, iser0 );			\
+  _hwa_commit_or( o, iser1 );			\
+  _hwa_commit_or( o, iser2 );			\
+  _hwa_commit_or( o, icer0 );			\
+  _hwa_commit_or( o, icer1 );			\
+  _hwa_commit_or( o, icer2 )

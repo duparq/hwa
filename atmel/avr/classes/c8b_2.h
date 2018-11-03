@@ -105,7 +105,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   HW_E_AVL(clock, v, `none` | `ioclk [/ 2**n]` with n in {0..14})
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
-  _hwa_write_reg(o, cs, HW_VF(_hw_c8b_clock_##v));				\
+  _hwa_write_or(o, cs, HW_VF(_hw_c8b_clock_##v));				\
   HW_Y(_hwa_cfc8b_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 #define _hw_c8b_clock_none			, _hw_c8bck_none, 0
@@ -155,7 +155,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
 
 #define _hwa_cfc8b_vtop_1(o,v,...)\
-  _hwa_write_reg(o, ctc, HW_A1(_hw_c8b_top_##v));	\
+  _hwa_write_or(o, ctc, HW_A1(_hw_c8b_top_##v));	\
   _hwa_cfc8b_ktop_0(v,__VA_ARGS__)
 
 #define _hwa_cfc8b_ktop_0(o,k,...)					\
@@ -191,7 +191,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hw_read__c8b		, _hw_c8brd
-#define _hw_c8brd(o,i,a,...)		 _hw_read_reg(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_c8brd(o,i,a,...)		 _hw_read_or(o,count) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -200,7 +200,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hw_write__c8b		, _hw_c8bwr
-#define _hw_c8bwr(o,i,a,v,...)		 _hw_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hw_c8bwr(o,i,a,v,...)		 _hw_write_or(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -209,7 +209,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define _hw_mtd_hwa_write__c8b		, _hwa_c8bwr
-#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write_or(o,count,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -257,40 +257,40 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
 #define _hwa_solve_c8b(counter, compare0, compare1)			\
     _hwa_solve_cmp8b( compare0 );					\
     _hwa_solve_cmp8b( compare1 );					\
-    if ( _hwa_mmask(compare0, pwm) && _hwa_mmask(compare1, pwm)		\
-	 && _hwa_mvalue(compare0, pwm) != _hwa_mvalue(compare1, pwm) )	\
+    if ( _hwa_mmask_or(compare0, pwm) && _hwa_mmask_or(compare1, pwm)		\
+	 && _hwa_mvalue_or(compare0, pwm) != _hwa_mvalue_or(compare1, pwm) )	\
       HWA_ERR("used compare outputs must be in the same NORMAL or PWM mode."); \
-    else if ( _hwa_mmask(counter, ctc) && _hwa_mvalue(counter, ctc)==0	\
-	      && (   (_hwa_mmask(compare0, pwm) && _hwa_mvalue(compare1, pwm)) \
-		     || (_hwa_mmask(compare1, pwm) && _hwa_mvalue(compare1, pwm))) ) \
+    else if ( _hwa_mmask_or(counter, ctc) && _hwa_mvalue_or(counter, ctc)==0	\
+	      && (   (_hwa_mmask_or(compare0, pwm) && _hwa_mvalue_or(compare1, pwm)) \
+		     || (_hwa_mmask_or(compare1, pwm) && _hwa_mvalue_or(compare1, pwm))) ) \
       HWA_ERR("`top` must be `compare2` for `" #counter "` when using the PWM mode."); \
-    if ( _hwa_mvalue(counter, ie)==1					\
-	 && _hwa_mvalue(counter, ctc)==1				\
-	 && _hwa_mvalue(compare0, pwm) == 0				\
-	 && _hwa_mvalue(compare1, pwm) == 0 ) {				\
-      if ( _hwa_mmask(compare0, pwm)==1 || _hwa_mmask(compare1, pwm)== 1 ) \
+    if ( _hwa_mvalue_or(counter, ie)==1					\
+	 && _hwa_mvalue_or(counter, ctc)==1				\
+	 && _hwa_mvalue_or(compare0, pwm) == 0				\
+	 && _hwa_mvalue_or(compare1, pwm) == 0 ) {				\
+      if ( _hwa_mmask_or(compare0, pwm)==1 || _hwa_mmask_or(compare1, pwm)== 1 ) \
 	HWA_ERR("`" #counter "` does not trigger overflow IRQs when not using PWM mode for outputs."); \
       else								\
-	if ( _hwa_mmask(compare0, pwm)==0 )				\
-	  _hwa_write_reg(compare0,pwm,1);				\
+	if ( _hwa_mmask_or(compare0, pwm)==0 )				\
+	  _hwa_write_or(compare0,pwm,1);				\
 	else								\
-	  _hwa_write_reg(compare1,pwm,1);				\
+	  _hwa_write_or(compare1,pwm,1);				\
     }
 
 #define _hwa_setup__c8b(o,i,a)			\
-  _hwa_setup_reg( o, ccr      );		\
-  _hwa_setup_reg( o, count    );		\
-  _hwa_setup_reg( o, compare2 );
+  _hwa_setup_or( o, ccr      );		\
+  _hwa_setup_or( o, count    );		\
+  _hwa_setup_or( o, compare2 );
 
 #define _hwa_init__c8b(o,i,a)			\
-  _hwa_init_reg( o, ccr, 0	);		\
-  _hwa_init_reg( o, count, 0	);		\
-  _hwa_init_reg( o, compare2, 0 );
+  _hwa_init_or( o, ccr, 0	);		\
+  _hwa_init_or( o, count, 0	);		\
+  _hwa_init_or( o, compare2, 0 );
 
 #define _hwa_commit__c8b(o,i,a)			\
-  _hwa_commit_reg( o, ccr      );		\
-  _hwa_commit_reg( o, count    );		\
-  _hwa_commit_reg( o, compare2 );
+  _hwa_commit_or( o, ccr      );		\
+  _hwa_commit_or( o, count    );		\
+  _hwa_commit_or( o, compare2 );
 
 
 /**

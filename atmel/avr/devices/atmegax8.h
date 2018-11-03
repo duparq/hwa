@@ -1757,15 +1757,15 @@ typedef struct {
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
-  _hwa_setup_reg( shared, eimsk );
-  _hwa_setup_reg( shared, eifr	);
-  _hwa_setup_reg( shared, eicr	);
-  _hwa_setup_reg( shared, gtccr );
-  _hwa_setup_reg( shared, prr	);
-  _hwa_setup_reg( shared, did1	);
-  _hwa_setup_reg( shared, did0	);
-  _hwa_setup_reg( shared, pcicr	 );
-  _hwa_setup_reg( shared, pcifr	 );
+  _hwa_setup_or( shared, eimsk );
+  _hwa_setup_or( shared, eifr	);
+  _hwa_setup_or( shared, eicr	);
+  _hwa_setup_or( shared, gtccr );
+  _hwa_setup_or( shared, prr	);
+  _hwa_setup_or( shared, did1	);
+  _hwa_setup_or( shared, did0	);
+  _hwa_setup_or( shared, pcicr	 );
+  _hwa_setup_or( shared, pcifr	 );
 
   _hwa_setup( core0 );
   _hwa_setup( port0 );
@@ -1799,15 +1799,15 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
-  _hwa_init_reg( shared, eimsk, 0 );
-  _hwa_init_reg( shared, eifr,	0 );
-  _hwa_init_reg( shared, eicr,	0 );
-  _hwa_init_reg( shared, gtccr, 0 );
-  _hwa_init_reg( shared, prr,	0 );
-  _hwa_init_reg( shared, did1,	0 );
-  _hwa_init_reg( shared, did0,	0 );
-  _hwa_init_reg( shared, pcicr, 0 );
-  _hwa_init_reg( shared, pcifr, 0 );
+  _hwa_init_or( shared, eimsk, 0 );
+  _hwa_init_or( shared, eifr,	0 );
+  _hwa_init_or( shared, eicr,	0 );
+  _hwa_init_or( shared, gtccr, 0 );
+  _hwa_init_or( shared, prr,	0 );
+  _hwa_init_or( shared, did1,	0 );
+  _hwa_init_or( shared, did0,	0 );
+  _hwa_init_or( shared, pcicr, 0 );
+  _hwa_init_or( shared, pcifr, 0 );
 
   _hwa_init( core0 );
   _hwa_init( port0 );
@@ -1845,22 +1845,22 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_solve( counter1 );
   _hwa_solve( counter2 );
 
-  _hwa_commit_reg( shared, eimsk );
-  _hwa_commit_reg( shared, eifr	 );
-  _hwa_commit_reg( shared, eicr	 );
+  _hwa_commit_or( shared, eimsk );
+  _hwa_commit_or( shared, eifr	 );
+  _hwa_commit_or( shared, eicr	 );
   _hwa_commit( core0 );
-  _hwa_commit_reg( shared, prr	 );
+  _hwa_commit_or( shared, prr	 );
   _hwa_commit( watchdog0 );
   _hwa_commit( port0 );
   _hwa_commit( port1 );
   _hwa_commit( port2 );
-  _hwa_commit_reg( shared, pcifr );
-  _hwa_commit_reg( shared, pcicr );
+  _hwa_commit_or( shared, pcifr );
+  _hwa_commit_or( shared, pcicr );
   _hwa_commit( pcic0 );
   _hwa_commit( pcic1 );
   _hwa_commit( pcic2 );
 
-  _hwa_commit_reg( shared, gtccr );
+  _hwa_commit_or( shared, gtccr );
   _hwa_commit( counter0 );
   _hwa_commit( counter0compare0 );
   _hwa_commit( counter0compare1 );
@@ -1878,9 +1878,9 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit( uart0 );
   _hwa_commit( twi0  );
   _hwa_commit( acmp0 );
-  _hwa_commit_reg( shared, did1	 );
+  _hwa_commit_or( shared, did1	 );
   _hwa_commit( adc0 );
-  _hwa_commit_reg( shared, did0	 );
+  _hwa_commit_or( shared, did0	 );
 }
 
 #endif /* !defined __ASSEMBLER__ */

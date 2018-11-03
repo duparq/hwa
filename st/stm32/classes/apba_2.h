@@ -53,9 +53,9 @@
 #define _hwx_cfapba_vpsc1_1(h,o,v,g)		HW_Y(_hwx_cfapba_vpsc2,v)(h,o,v)
 #define _hwx_cfapba_vpsc2_1(h,o,v)		HW_E_V()
 #define _hwx_cfapba_vpsc2_0(h,o,v)				\
-    if      ( v ==  1 ) h##_write_reg(rcc,o,0);	\
-    else if ( v ==  2 ) h##_write_reg(rcc,o,4);	\
-    else if ( v ==  4 ) h##_write_reg(rcc,o,5);	\
-    else if ( v ==  8 ) h##_write_reg(rcc,o,6);	\
-    else if ( v == 16 ) h##_write_reg(rcc,o,7);	\
+    if      ( v ==  1 ) h##_write_or(rcc,o,0);	\
+    else if ( v ==  2 ) h##_write_or(rcc,o,4);	\
+    else if ( v ==  4 ) h##_write_or(rcc,o,5);	\
+    else if ( v ==  8 ) h##_write_or(rcc,o,6);	\
+    else if ( v == 16 ) h##_write_or(rcc,o,7);	\
     else HWA_E_NIL(v,(1, 2, 4, 8, 16));

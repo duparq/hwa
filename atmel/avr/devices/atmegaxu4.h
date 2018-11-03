@@ -1522,18 +1522,18 @@ typedef struct {
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
-  _hwa_setup_reg( shared, eimsk );
-  _hwa_setup_reg( shared, eifr	);
-  _hwa_setup_reg( shared, eicra );
-  _hwa_setup_reg( shared, eicrb );
-  _hwa_setup_reg( shared, gtccr );
-  _hwa_setup_reg( shared, prr0	);
-  _hwa_setup_reg( shared, prr1	);
-  _hwa_setup_reg( shared, did0	);
-  _hwa_setup_reg( shared, did1	);
-  _hwa_setup_reg( shared, did2	);
-  _hwa_setup_reg( shared, pcicr );
-  _hwa_setup_reg( shared, pcifr );
+  _hwa_setup_or( shared, eimsk );
+  _hwa_setup_or( shared, eifr	);
+  _hwa_setup_or( shared, eicra );
+  _hwa_setup_or( shared, eicrb );
+  _hwa_setup_or( shared, gtccr );
+  _hwa_setup_or( shared, prr0	);
+  _hwa_setup_or( shared, prr1	);
+  _hwa_setup_or( shared, did0	);
+  _hwa_setup_or( shared, did1	);
+  _hwa_setup_or( shared, did2	);
+  _hwa_setup_or( shared, pcicr );
+  _hwa_setup_or( shared, pcifr );
 
   _hwa_setup( core0 );
   _hwa_setup( watchdog0 );
@@ -1565,18 +1565,18 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
-  _hwa_init_reg( shared, eimsk, 0 );
-  _hwa_init_reg( shared, eifr,	0 );
-  _hwa_init_reg( shared, eicra, 0 );
-  _hwa_init_reg( shared, eicrb, 0 );
-  _hwa_init_reg( shared, gtccr, 0 );
-  _hwa_init_reg( shared, prr0,	0 );
-  _hwa_init_reg( shared, prr1,	0 );
-  _hwa_init_reg( shared, did0,	0 );
-  _hwa_init_reg( shared, did1,	0 );
-  _hwa_init_reg( shared, did2,	0 );
-  _hwa_init_reg( shared, pcicr, 0 );
-  _hwa_init_reg( shared, pcifr, 0 );
+  _hwa_init_or( shared, eimsk, 0 );
+  _hwa_init_or( shared, eifr,	0 );
+  _hwa_init_or( shared, eicra, 0 );
+  _hwa_init_or( shared, eicrb, 0 );
+  _hwa_init_or( shared, gtccr, 0 );
+  _hwa_init_or( shared, prr0,	0 );
+  _hwa_init_or( shared, prr1,	0 );
+  _hwa_init_or( shared, did0,	0 );
+  _hwa_init_or( shared, did1,	0 );
+  _hwa_init_or( shared, did2,	0 );
+  _hwa_init_or( shared, pcicr, 0 );
+  _hwa_init_or( shared, pcifr, 0 );
 
   _hwa_init( core0 );
   _hwa_init( watchdog0 );
@@ -1612,18 +1612,18 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_solve( counter1 );
   _hwa_solve( counter3 );
 
-  _hwa_commit_reg( shared, eimsk );
-  _hwa_commit_reg( shared, eifr	 );
-  _hwa_commit_reg( shared, eicra );
-  _hwa_commit_reg( shared, eicrb );
-  _hwa_commit_reg( shared, pcifr );
-  _hwa_commit_reg( shared, pcicr );
-  _hwa_commit_reg( shared, gtccr );
-  _hwa_commit_reg( shared, prr0	 );
-  _hwa_commit_reg( shared, prr1	 );
-  _hwa_commit_reg( shared, did0	 );
-  _hwa_commit_reg( shared, did1	 );
-  _hwa_commit_reg( shared, did2	 );
+  _hwa_commit_or( shared, eimsk );
+  _hwa_commit_or( shared, eifr	 );
+  _hwa_commit_or( shared, eicra );
+  _hwa_commit_or( shared, eicrb );
+  _hwa_commit_or( shared, pcifr );
+  _hwa_commit_or( shared, pcicr );
+  _hwa_commit_or( shared, gtccr );
+  _hwa_commit_or( shared, prr0	 );
+  _hwa_commit_or( shared, prr1	 );
+  _hwa_commit_or( shared, did0	 );
+  _hwa_commit_or( shared, did1	 );
+  _hwa_commit_or( shared, did2	 );
 
   _hwa_commit( core0 );
   _hwa_commit( watchdog0 );

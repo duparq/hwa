@@ -53,7 +53,7 @@
 #define _hw_cfcap16a_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 #define _hw_cfcap16a_vedge_1(o,v,...)			\
-  _hw_write_reg(o, ices, HW_A1(hw_cap16a_edge_##v)-1) HW_EOL(__VA_ARGS__)
+  _hw_write_or(o, ices, HW_A1(hw_cap16a_edge_##v)-1) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -120,7 +120,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__cap16a	, _hw_read_cap16a
-#define _hw_read_cap16a(o,i,a,...)	 _hw_read_reg(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cap16a(o,i,a,...)	 _hw_read_or(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -131,7 +131,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__cap16a	, _hw_write_cap16a
-#define _hw_write_cap16a(o,i,a,v,...)		 _hw_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_cap16a(o,i,a,v,...)		 _hw_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_cap16a
@@ -141,7 +141,7 @@
  * @endcode
  */
 #define _hw_mtd_hwa_write__cap16a	, _hwa_write_cap16a
-#define _hwa_write_cap16a(o,i,a,v,...)		 _hwa_write_reg(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_cap16a(o,i,a,v,...)		 _hwa_write_or(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -168,14 +168,14 @@
  *******************************************************************************/
 
 #define _hwa_setup__cap16a(o,i,a)		\
-  _hwa_setup_reg( o, reg      );		\
+  _hwa_setup_or( o, reg      );		\
   hwa->o.config.input  = 0xFF ;			\
   hwa->o.config.edge   = 0xFF ;			\
   hwa->o.config.filter = 0xFF
 
-#define _hwa_init__cap16a(o,i,a)		_hwa_init_reg(o,reg,0)
+#define _hwa_init__cap16a(o,i,a)		_hwa_init_or(o,reg,0)
 
-#define _hwa_commit__cap16a(o,i,a)		_hwa_commit_reg(o,reg)
+#define _hwa_commit__cap16a(o,i,a)		_hwa_commit_or(o,reg)
 
 
 /**

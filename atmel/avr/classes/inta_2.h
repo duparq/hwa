@@ -61,7 +61,7 @@
   HW_E_AVL(sense, v, low_level | edge | falling_edge | rising_edge)
 
 #define _hwx_cfinta_vsense_1(x,o,v,...)				\
-   x##_write_reg(o,sc,HW_A1(_hw_inta_sense_##v)) HW_EOL(__VA_ARGS__)
+   x##_write_or(o,sc,HW_A1(_hw_inta_sense_##v)) HW_EOL(__VA_ARGS__)
 
 #define _hw_inta_sense_low_level	, 0
 #define _hw_inta_sense_edge		, 1

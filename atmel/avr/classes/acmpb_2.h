@@ -59,7 +59,7 @@
   HW_E_AVL(edge, v, falling | rising | both)
 
 #define _hwa_cfacmpb_vedge_1(o,v,k,...)			\
-  _hwa_write_reg(o,acis, HW_A1(_hw_acmpb_edge_##v));	\
+  _hwa_write_or(o,acis, HW_A1(_hw_acmpb_edge_##v));	\
   HW_G2(_hwa_cfacmpb_xposin,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpb_xedge_0(o,k,...)					\
@@ -71,12 +71,12 @@
   HW_Y(_hwa_cfacmpb_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_bandgap_1(o,v,k,...)			\
-  _hwa_write_reg(o,acbg,1);						\
+  _hwa_write_or(o,acbg,1);						\
   HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_bandgap_0(o,v,k,...)			\
   if ( HW_ID(v)==HW_ID(HW_PIN(ain0)) )					\
-    _hwa_write_reg(o,acbg,0);						\
+    _hwa_write_or(o,acbg,0);						\
   else									\
     HWA_ERR("`positive_input` can be `HW_PIN(ain0) | bandgap`, but not `"#v"`."); \
   HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
@@ -90,18 +90,18 @@
 
 #define _hwa_cfacmpb_xnegin_1(o,k,v,...)				\
   if ( HW_ID(v)==HW_ID(HW_PIN(ain1)) ) {					\
-    _hwa_write_reg(o,acme,0);						\
+    _hwa_write_or(o,acme,0);						\
   } else {								\
-    _hwa_write_reg(o,acme,1);						\
-    _hwa_write_reg(o,aden,0);						\
+    _hwa_write_or(o,acme,1);						\
+    _hwa_write_or(o,aden,0);						\
     if ( HW_ID(v) == HW_ID( HW_PIN(adc0) ) )				\
-      _hwa_write_reg(o,admux, 0);					\
+      _hwa_write_or(o,admux, 0);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc1) ) )			\
-      _hwa_write_reg(o,admux, 1);					\
+      _hwa_write_or(o,admux, 1);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc2) ) )			\
-      _hwa_write_reg(o,admux, 2);					\
+      _hwa_write_or(o,admux, 2);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc3) ) )			\
-      _hwa_write_reg(o,admux, 3);					\
+      _hwa_write_or(o,admux, 3);					\
     else								\
       HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any analog input pin, but not `"#v"`."); \
   }									\
@@ -118,9 +118,9 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__acmpb(o,i,a)	_hwa_setup_reg( o, csr )
-#define _hwa_init__acmpb(o,i,a)		_hwa_init_reg( o, csr, 0x00 )
-#define _hwa_commit__acmpb(o,i,a)	_hwa_commit_reg( o, csr )
+#define _hwa_setup__acmpb(o,i,a)	_hwa_setup_or( o, csr )
+#define _hwa_init__acmpb(o,i,a)		_hwa_init_or( o, csr, 0x00 )
+#define _hwa_commit__acmpb(o,i,a)	_hwa_commit_or( o, csr )
 
 /**
  * @page atmelavr_acmpb

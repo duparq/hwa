@@ -62,7 +62,7 @@
 #define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
 #define _hwx_cfuarta_vbps_0(o,v,k,...)					\
-  _hwa_write_reg(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
+  _hwa_write_or(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
   HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kbps_0(o,k,...)					\
@@ -76,7 +76,7 @@
 #define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E_AVL(databits, v, 5 | 6 | 7 | 8)
 
 #define _hwx_cfuarta_vdatabits_1(o,v,k,...)			\
-  _hwa_write_reg(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
+  _hwa_write_or(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
   HW_Y(_hwx_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kdatabits_0(o,k,...)			\
@@ -95,7 +95,7 @@
 #define _hwx_cfuarta_vparity_0(o,v,...)		HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
-  _hwa_write_reg(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
+  _hwa_write_or(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
   HW_Y(_hwx_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kparity_0(o,k,...)					\
@@ -113,7 +113,7 @@
 #define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E_AVL(stopbits, v, 1 | 1_5 | 2)
 
 #define _hwx_cfuarta_vstopbits_1(o,v,k,...)			\
-  _hwa_write_reg(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
+  _hwa_write_or(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfuarta_kstopbits_0(o,k,...)	\
@@ -140,7 +140,7 @@
  * @endcode
  */
 /* #define _hw_mtd_hw_read__uarta	, _hw_rduarta */
-/* #define _hw_rduarta(o,i,a,...)		_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__) */
+/* #define _hw_rduarta(o,i,a,...)		_hw_read_or(o,dr) HW_EOL(__VA_ARGS__) */
 
 
 /*
@@ -156,7 +156,7 @@
  * @endcode
  */
 /* #define _hw_mtd_hw_write__uarta	, _hw_wruarta */
-/* #define _hw_wruarta(o,i,a,v,...)	_hw_write_reg(o,dr,v) HW_EOL(__VA_ARGS__) */
+/* #define _hw_wruarta(o,i,a,v,...)	_hw_write_or(o,dr,v) HW_EOL(__VA_ARGS__) */
 
 
 /*  Power management
@@ -211,7 +211,7 @@
 /* #define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
 
 /* #define _hw_mtd_hw_stat__uarta	, _hw_stuarta */
-/* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read_reg(o,csra)), \ */
+/* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read_or(o,csra)), \ */
 /*					      __VA_ARGS__) */
 
 /* HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte ) */
@@ -229,25 +229,25 @@
  *******************************************************************************/
 
 #define _hwa_setup__uarta(o,i,a)		\
-  _hwa_setup_reg( o, _ie );			\
-  _hwa_setup_reg( o, _ic );			\
-  _hwa_setup_reg( o, _clkdiv );			\
-  _hwa_setup_reg( o, _conf0 );			\
-  _hwa_setup_reg( o, _conf1 )
+  _hwa_setup_or( o, _ie );			\
+  _hwa_setup_or( o, _ic );			\
+  _hwa_setup_or( o, _clkdiv );			\
+  _hwa_setup_or( o, _conf0 );			\
+  _hwa_setup_or( o, _conf1 )
 
 #define _hwa_init__uarta(o,i,a)					\
-  _hwa_init_reg( o, _ie,	 0 );				\
-  _hwa_init_reg( o, _ic,	 0 );				\
-  _hwa_init_reg( o, _clkdiv,	 0 /* 0x2B6 seems wrong */ );	\
-  _hwa_init_reg( o, _conf0,   0x1C );				\
-  _hwa_init_reg( o, _conf1, 0x6060 )
+  _hwa_init_or( o, _ie,	 0 );				\
+  _hwa_init_or( o, _ic,	 0 );				\
+  _hwa_init_or( o, _clkdiv,	 0 /* 0x2B6 seems wrong */ );	\
+  _hwa_init_or( o, _conf0,   0x1C );				\
+  _hwa_init_or( o, _conf1, 0x6060 )
 
 #define _hwa_commit__uarta(o,i,a)		\
-  _hwa_commit_reg( o, _clkdiv );		\
-  _hwa_commit_reg( o, _conf0 );			\
-  _hwa_commit_reg( o, _conf1 );			\
-  _hwa_commit_reg( o, _ic );			\
-  _hwa_commit_reg( o, _ie )
+  _hwa_commit_or( o, _clkdiv );		\
+  _hwa_commit_or( o, _conf0 );			\
+  _hwa_commit_or( o, _conf1 );			\
+  _hwa_commit_or( o, _ic );			\
+  _hwa_commit_or( o, _ie )
 
 /**
  * @page espressif_uarta

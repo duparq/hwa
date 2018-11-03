@@ -60,7 +60,7 @@
 
 #define _hwa_cfcoreb_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
 #define _hwa_cfcoreb_vsleep_1(o,v,k,...)				\
-  _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
+  _hwa_write_or( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcoreb_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfcoreb_ksleep_0(o,k,...)					\
@@ -84,7 +84,7 @@
   HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down | power_save | standby | extended_standby)
 
 #define _hwa_cfcoreb_vsleepmode_1(o,v,...)	\
-  _hwa_write_reg( o, sm, HW_A1(_hw_sleepmode_##v)) HW_EOL(__VA_ARGS__)
+  _hwa_write_or( o, sm, HW_A1(_hw_sleepmode_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -142,7 +142,7 @@ typedef union {
 
 
 #define _hw_mtd_hw_stat_t__coreb	, _hw_coreb_stat_t
-#define _hw_stat_coreb(o,i,a,...)	_hw_coreb_stat(_hw_read_reg(o, mcusr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_coreb(o,i,a,...)	_hw_coreb_stat(_hw_read_or(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 
 HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
@@ -164,7 +164,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  */
 #define _hw_mtd_hwa_clear__coreb	, _hwa_clear__coreb
 
-#define _hwa_clear__coreb(o,i,a,...)	_hwa_write_reg(o,allrf,0)
+#define _hwa_clear__coreb(o,i,a,...)	_hwa_write_or(o,allrf,0)
 
 
 /*******************************************************************************
@@ -174,24 +174,24 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__coreb(o,i,a)		\
-  _hwa_setup_reg( o, mcucr  );			\
-  _hwa_setup_reg( o, mcusr  );			\
-  _hwa_setup_reg( o, smcr   );			\
-  _hwa_setup_reg( o, osccal )
+  _hwa_setup_or( o, mcucr  );			\
+  _hwa_setup_or( o, mcusr  );			\
+  _hwa_setup_or( o, smcr   );			\
+  _hwa_setup_or( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
 #define _hwa_init__coreb(o,i,a)			\
-  _hwa_init_reg( o, mcucr,  0x00 );		\
-  _hwa_init_reg( o, smcr,   0x00 );		\
-  _hwa_init_reg( o, osccal, 0x00 )
+  _hwa_init_or( o, mcucr,  0x00 );		\
+  _hwa_init_or( o, smcr,   0x00 );		\
+  _hwa_init_or( o, osccal, 0x00 )
 
 
 #define _hwa_commit__coreb(o,i,a)		\
-  _hwa_commit_reg( o, mcucr  );			\
-  _hwa_commit_reg( o, mcusr  );			\
-  _hwa_commit_reg( o, smcr   );			\
-  _hwa_commit_reg( o, osccal )
+  _hwa_commit_or( o, mcucr  );			\
+  _hwa_commit_or( o, mcusr  );			\
+  _hwa_commit_or( o, smcr   );			\
+  _hwa_commit_or( o, osccal )
 
 
 /**

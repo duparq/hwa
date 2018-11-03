@@ -53,7 +53,7 @@
   HW_E_AVL(sleep, v, enabled | disabled)
 
 #define _hwa_cfcorea_vsleep_1(o,v,k,...)				\
-  _hwa_write_reg( o, se, HW_A1(_hw_state_##v) );			\
+  _hwa_write_or( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcorea_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `sleep_mode`
@@ -72,7 +72,7 @@
   HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down)
 
 #define _hwa_cfcorea_vsleepmode_1(o,v,...)		\
-  _hwa_write_reg( o, sm, HW_A1(hw_sleepmode_##v) );	\
+  _hwa_write_or( o, sm, HW_A1(hw_sleepmode_##v) );	\
   HW_EOL(__VA_ARGS__)
 
 
@@ -132,7 +132,7 @@ typedef union {
 } _hw_corea_stat_t ;
 
 
-#define _hw_stat_corea(o,i,a,...)	_hw_corea_stat(_hw_read_reg(o, mcusr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_corea(o,i,a,...)	_hw_corea_stat(_hw_read_or(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 {
@@ -153,7 +153,7 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  */
 #define _hw_mtd_hwa_clear__corea	, _hwa_clear_corea
 
-#define _hwa_clear_corea(o,i,a,...)	_hwa_write_reg(o,allrf,0)
+#define _hwa_clear_corea(o,i,a,...)	_hwa_write_or(o,allrf,0)
 
 
 
@@ -164,20 +164,20 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__corea(o,i,a)		\
-  _hwa_setup_reg( o, mcucr  );			\
-  _hwa_setup_reg( o, mcusr  );			\
-  _hwa_setup_reg( o, osccal )
+  _hwa_setup_or( o, mcucr  );			\
+  _hwa_setup_or( o, mcusr  );			\
+  _hwa_setup_or( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
 #define _hwa_init__corea(o,i,a)			\
-  _hwa_init_reg( o, mcucr,  0x00 );		\
-  _hwa_init_reg( o, osccal, 0x00 )
+  _hwa_init_or( o, mcucr,  0x00 );		\
+  _hwa_init_or( o, osccal, 0x00 )
 
 #define _hwa_commit__corea(o,i,a)		\
-  _hwa_commit_reg( o, mcucr  );			\
-  _hwa_commit_reg( o, mcusr  );			\
-  _hwa_commit_reg( o, osccal )
+  _hwa_commit_or( o, mcucr  );			\
+  _hwa_commit_or( o, mcusr  );			\
+  _hwa_commit_or( o, osccal )
 
 
 /**

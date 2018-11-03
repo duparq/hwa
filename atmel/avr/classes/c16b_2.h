@@ -183,14 +183,14 @@
       /*								\
        *  Write solved registers					\
        */								\
-      if ( hwa->o.solved.cs != 0xFF ) _hwa_write_reg( o, cs, hwa->o.solved.cs ); \
-      if ( hwa->o.solved.wgm != 0xFF ) _hwa_write_reg( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write_reg( compare0, com, hwa->compare0.solved.com ); \
-      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write_reg( compare1, com, hwa->compare1.solved.com ); \
-      if ( hwa->compare2.solved.com != 0xFF ) _hwa_write_reg( compare2, com, hwa->compare2.solved.com ); \
-      if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write_reg( ic0, acic, hwa->ic0.solved.acic ); \
-      if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write_reg( ic0, ices, hwa->ic0.solved.ices ); \
-      if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write_reg( ic0, icnc, hwa->ic0.solved.icnc ); \
+      if ( hwa->o.solved.cs != 0xFF ) _hwa_write_or( o, cs, hwa->o.solved.cs ); \
+      if ( hwa->o.solved.wgm != 0xFF ) _hwa_write_or( o, wgm, hwa->o.solved.wgm ); \
+      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write_or( compare0, com, hwa->compare0.solved.com ); \
+      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write_or( compare1, com, hwa->compare1.solved.com ); \
+      if ( hwa->compare2.solved.com != 0xFF ) _hwa_write_or( compare2, com, hwa->compare2.solved.com ); \
+      if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write_or( ic0, acic, hwa->ic0.solved.acic ); \
+      if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write_or( ic0, ices, hwa->ic0.solved.ices ); \
+      if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write_or( ic0, icnc, hwa->ic0.solved.icnc ); \
       /*								\
        *  Configure used compare outputs as I/O outputs			\
        */								\
@@ -629,7 +629,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define _hw_mtd_hw_read__c16b		, _hw_read_c16b
-#define _hw_read_c16b(o,i,a,...)	_hw_read_reg(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_read_c16b(o,i,a,...)	_hw_read_or(o,count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -639,7 +639,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define _hw_mtd_hw_write__c16b		, _hw_write_c16b
-#define _hw_write_c16b(o,i,a,v,...)	_hw_write_reg(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_c16b(o,i,a,v,...)	_hw_write_or(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c16b
@@ -648,7 +648,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define _hw_mtd_hwa_write__c16b	, _hwa_write_c16b
-#define _hwa_write_c16b(o,i,a,v)	_hwa_write_reg(o,count,v)
+#define _hwa_write_c16b(o,i,a,v)	_hwa_write_or(o,count,v)
 
 
 /**
@@ -673,31 +673,31 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  *******************************************************************************/
 
 #define _hwa_setup__c16b(o,i,a)		\
-  _hwa_setup_reg( o, ccra     );		\
-  _hwa_setup_reg( o, ccrb     );		\
-  _hwa_setup_reg( o, ccrc     );		\
-  _hwa_setup_reg( o, count    );		\
-  _hwa_setup_reg( o, imsk     );		\
-  _hwa_setup_reg( o, ifr      );		\
+  _hwa_setup_or( o, ccra     );		\
+  _hwa_setup_or( o, ccrb     );		\
+  _hwa_setup_or( o, ccrc     );		\
+  _hwa_setup_or( o, count    );		\
+  _hwa_setup_or( o, imsk     );		\
+  _hwa_setup_or( o, ifr      );		\
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 
 #define _hwa_init__c16b(o,i,a)			\
-  _hwa_init_reg( o, ccra, 0x00 );		\
-  _hwa_init_reg( o, ccrb, 0x00	   );		\
-  _hwa_init_reg( o, ccrc, 0x00	   );		\
-  _hwa_init_reg( o, count, 0x00	   );		\
-  _hwa_init_reg( o, imsk, 0x00	   );		\
-  _hwa_init_reg( o, ifr, 0x00	   )
+  _hwa_init_or( o, ccra, 0x00 );		\
+  _hwa_init_or( o, ccrb, 0x00	   );		\
+  _hwa_init_or( o, ccrc, 0x00	   );		\
+  _hwa_init_or( o, count, 0x00	   );		\
+  _hwa_init_or( o, imsk, 0x00	   );		\
+  _hwa_init_or( o, ifr, 0x00	   )
 
 #define _hwa_commit__c16b(o,i,a)		\
-  _hwa_commit_reg( o, ccra     );		\
-  _hwa_commit_reg( o, ccrb     );		\
-  _hwa_commit_reg( o, ccrc     );		\
-  _hwa_commit_reg( o, count    );		\
-  _hwa_commit_reg( o, imsk     )
+  _hwa_commit_or( o, ccra     );		\
+  _hwa_commit_or( o, ccrb     );		\
+  _hwa_commit_or( o, ccrc     );		\
+  _hwa_commit_or( o, count    );		\
+  _hwa_commit_or( o, imsk     )
 
 /**
  * @page atmelavr_c16b

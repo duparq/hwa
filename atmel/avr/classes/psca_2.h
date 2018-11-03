@@ -24,7 +24,7 @@
 
 #define _hw_psca_reset(o,i,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
 
-#define _hw_resetpsca(o)		_hw_write_reg(o,psr,1)
+#define _hw_resetpsca(o)		_hw_write_or(o,psr,1)
 
 
 /**
@@ -53,11 +53,11 @@
 
 /*  Stopping the prescaler requires setting its `tsm` and `psr` bits to 1
  */
-#define _hw_turnpsca_1_0(o)		_hw_write_reg(o,tsmpsr,3)
+#define _hw_turnpsca_1_0(o)		_hw_write_or(o,tsmpsr,3)
 
 /*  Releasing the prescaler requires setting its `tsm` bit to 0
  */
-#define _hw_turnpsca_1_1(o)		_hw_write_reg(o,tsm,0)
+#define _hw_turnpsca_1_1(o)		_hw_write_or(o,tsm,0)
 
 
 /**

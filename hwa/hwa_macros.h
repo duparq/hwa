@@ -214,20 +214,6 @@
 
 /**
  * @ingroup private_mac
- * @brief Connect a generic instruction to a method.
- * @hideinitializer
- *
- * This is used for internal instructions.
- */
-#define _HW_MTD(...)		__HW_MTD1(__VA_ARGS__)
-#define __HW_MTD1(f,o,...)	__HW_MTD2(f,o,_hw_def_##o,__VA_ARGS__)
-#define __HW_MTD2(...)		__HW_MTD3(__VA_ARGS__)
-#define __HW_MTD3(f,o,c,...)	HW_A1(_hw_mtd_##f##_##c)(o,__VA_ARGS__)
-
-
-
-/**
- * @ingroup private_mac
  * @brief Specialize instruction `f` for class `c`: _HW_SPEC(f,c,...) -> f_c(...)
  * @hideinitializer
  *
@@ -236,6 +222,7 @@
  */
 #define _HW_SPEC(...)		__HW_SPEC_2(__VA_ARGS__)
 #define __HW_SPEC_2(f,c,...)	f##_##c(__VA_ARGS__)
+
 
 /**
  * @ingroup private_mac
@@ -758,7 +745,7 @@
  * @brief Number of bits of the register `r` of @ref using_objects "object" `o`.
  * @hideinitializer
  */
-#define _HW_MBN(o,r)					_HW_SPEC(_HW_MBN,_HW_M(o,r))
+#define _HW_BN_OR(o,r)					_HW_SPEC(_HW_MBN,_HW_M(o,r))
 #define _HW_MBN__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
 
 
@@ -767,7 +754,7 @@
  * @brief Position of the least significant bit of the register `r` of @ref using_objects "object" `o`.
  * @hideinitializer
  */
-#define _HW_MBP(o,r)					_HW_SPEC(_HW_MBP,_HW_M(o,r))
+#define _HW_BP_OR(o,r)					_HW_SPEC(_HW_MBP,_HW_M(o,r))
 #define _HW_MBP__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
 
 

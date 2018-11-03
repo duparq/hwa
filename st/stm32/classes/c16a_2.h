@@ -84,8 +84,8 @@
 #define _hwx_cfc16a_vclk_1(h,o,v,...)	_hwx_cfc16a_vclk_2(h,o,v,_hw_cfc16a_clk_##v,__VA_ARGS__)
 #define _hwx_cfc16a_vclk_2(...)		_hwx_cfc16a_vclk_3(__VA_ARGS__)
 #define _hwx_cfc16a_vclk_3(h,o,v,z,xv,k,...)				\
-  if      ( 8*xv == 17 ) h##_write_reg(o,clksource,0);			\
-  else if (   xv == 17 ) h##_write_reg(o,clksource,1);			\
+  if      ( 8*xv == 17 ) h##_write_or(o,clksource,0);			\
+  else if (   xv == 17 ) h##_write_or(o,clksource,1);			\
   else HWA_E_NIL(v,(ahb/8, ahb));					\
   HW_Y(_hwx_cfc16a_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
@@ -94,7 +94,7 @@
 /*  Optionnal parameter `reload`
  */
 #define _hwx_cfc16a_krld_1(h,o,k0,v,k,...)			\
-  h##_write_reg(o,arr,(uint32_t)(v));				\
+  h##_write_or(o,arr,(uint32_t)(v));				\
   HW_Y(_hwx_cfc16a_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfc16a_krld_0(h,o,k,...)	HW_Y(_hwx_cfc16a_krn,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
@@ -104,7 +104,7 @@
 #define _hwx_cfc16a_krn_0(h,o,k,...)	HW_EOL(k)
 #define _hwx_cfc16a_krn_1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vrn,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfc16a_vrn_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_cfc16a_vrn_1(h,o,v,g,...)	h##_write_reg(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_cfc16a_vrn_1(h,o,v,g,...)	h##_write_or(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -123,7 +123,7 @@
 
 #define _hwx_tnc16a(h,o,v,...)		HW_Y(_hwx_tnc16a,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnc16a_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_tnc16a_1(h,o,v,g,...)	h##_write_reg(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_tnc16a_1(h,o,v,g,...)	h##_write_or(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -136,7 +136,7 @@
  */
 #define _hw_mtd_hw_read__c16a		, _hw_rdc16a
 
-#define _hw_rdc16a(o,i,a,...)		_hw_read_reg(o,current)
+#define _hw_rdc16a(o,i,a,...)		_hw_read_or(o,current)
 
 
 /**
@@ -177,22 +177,22 @@
  *******************************************************************************/
 
 #define _hwa_setup__c16a(o,i,a)			\
-  _hwa_setup_reg( o, cr1 );			\
-  _hwa_setup_reg( o, cr2 );			\
-  _hwa_setup_reg( o, dier );			\
-  _hwa_setup_reg( o, psc );			\
-  _hwa_setup_reg( o, arr )
+  _hwa_setup_or( o, cr1 );			\
+  _hwa_setup_or( o, cr2 );			\
+  _hwa_setup_or( o, dier );			\
+  _hwa_setup_or( o, psc );			\
+  _hwa_setup_or( o, arr )
 
 #define _hwa_init__c16a(o,i,a)			\
-  _hwa_init_reg( o, cr1,  0x00000000 );		\
-  _hwa_init_reg( o, cr2,  0x00000000 );		\
-  _hwa_init_reg( o, dier, 0x00000000 );		\
-  _hwa_init_reg( o, psc,  0x00000000 );		\
-  _hwa_init_reg( o, arr,  0x00000000 )
+  _hwa_init_or( o, cr1,  0x00000000 );		\
+  _hwa_init_or( o, cr2,  0x00000000 );		\
+  _hwa_init_or( o, dier, 0x00000000 );		\
+  _hwa_init_or( o, psc,  0x00000000 );		\
+  _hwa_init_or( o, arr,  0x00000000 )
 
 #define _hwa_commit__c16a(o,i,a)		\
-  _hwa_commit_reg( o, cr1 );			\
-  _hwa_commit_reg( o, cr2 );			\
-  _hwa_commit_reg( o, dier );			\
-  _hwa_commit_reg( o, psc );			\
-  _hwa_commit_reg( o, arr  )
+  _hwa_commit_or( o, cr1 );			\
+  _hwa_commit_or( o, cr2 );			\
+  _hwa_commit_or( o, dier );			\
+  _hwa_commit_or( o, psc );			\
+  _hwa_commit_or( o, arr  )

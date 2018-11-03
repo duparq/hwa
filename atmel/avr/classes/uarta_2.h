@@ -167,13 +167,13 @@
   _hwa_cfuarta_end(o,__VA_ARGS__)
 
 #define _hwa_cfuarta_end(o,...)			\
-  _hwa_write_reg(o,brr,	 hwa->o.config.brr );	\
-  _hwa_write_reg(o,2x,	 hwa->o.config.u2x );	\
-  _hwa_write_reg(o,csz,	 hwa->o.config.csz );	\
-  _hwa_write_reg(o,pm,	 hwa->o.config.pm  );	\
-  _hwa_write_reg(o,sbs,	 hwa->o.config.sbs );	\
-  _hwa_write_reg(o,rxen, hwa->o.config.rxen );	\
-  _hwa_write_reg(o,txen, hwa->o.config.txen );	\
+  _hwa_write_or(o,brr,	 hwa->o.config.brr );	\
+  _hwa_write_or(o,2x,	 hwa->o.config.u2x );	\
+  _hwa_write_or(o,csz,	 hwa->o.config.csz );	\
+  _hwa_write_or(o,pm,	 hwa->o.config.pm  );	\
+  _hwa_write_or(o,sbs,	 hwa->o.config.sbs );	\
+  _hwa_write_or(o,rxen, hwa->o.config.rxen );	\
+  _hwa_write_or(o,txen, hwa->o.config.txen );	\
    HW_EOL(__VA_ARGS__)
 
 
@@ -192,7 +192,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_read__uarta		, _hw_rduarta
-#define _hw_rduarta(o,i,a,...)		_hw_read_reg(o,dr) HW_EOL(__VA_ARGS__)
+#define _hw_rduarta(o,i,a,...)		_hw_read_or(o,dr) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -208,7 +208,7 @@
  * @endcode
  */
 #define _hw_mtd_hw_write__uarta	, _hw_wruarta
-#define _hw_wruarta(o,i,a,v,...)	_hw_write_reg(o,dr,v) HW_EOL(__VA_ARGS__)
+#define _hw_wruarta(o,i,a,v,...)	_hw_write_or(o,dr,v) HW_EOL(__VA_ARGS__)
 
 
 /*  Power management
@@ -263,7 +263,7 @@ typedef union {
 #define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__)
 
 #define _hw_mtd_hw_stat__uarta		, _hw_stuarta
-#define _hw_stuarta(o,i,a,...)		__hw_stuarta(_hw_read_reg(o,csra)) HW_EOL(__VA_ARGS__)
+#define _hw_stuarta(o,i,a,...)		__hw_stuarta(_hw_read_or(o,csra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
 {
@@ -280,10 +280,10 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__uarta(o,i,a)			\
-  _hwa_setup_reg( o, ubrr );				\
-  _hwa_setup_reg( o, csra );				\
-  _hwa_setup_reg( o, csrb );				\
-  _hwa_setup_reg( o, csrc );				\
+  _hwa_setup_or( o, ubrr );				\
+  _hwa_setup_or( o, csra );				\
+  _hwa_setup_or( o, csrb );				\
+  _hwa_setup_or( o, csrc );				\
   hwa->o.config.brr  = 0 ;				\
   hwa->o.config.u2x  = 0 ;				\
   hwa->o.config.csz  = HW_A1(_hw_uarta_csz_8) ;		\
@@ -293,16 +293,16 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
   hwa->o.config.txen = 1
 
 #define _hwa_init__uarta(o,i,a)			\
-  _hwa_init_reg( o, ubrr, 0x00 );		\
-  _hwa_init_reg( o, csra, 0x20 );		\
-  _hwa_init_reg( o, csrb, 0x00 );		\
-  _hwa_init_reg( o, csrc, 0x06 )
+  _hwa_init_or( o, ubrr, 0x00 );		\
+  _hwa_init_or( o, csra, 0x20 );		\
+  _hwa_init_or( o, csrb, 0x00 );		\
+  _hwa_init_or( o, csrc, 0x06 )
 
 #define _hwa_commit__uarta(o,i,a)		\
-  _hwa_commit_reg( o, ubrr );			\
-  _hwa_commit_reg( o, csra );			\
-  _hwa_commit_reg( o, csrb );			\
-  _hwa_commit_reg( o, csrc )
+  _hwa_commit_or( o, ubrr );			\
+  _hwa_commit_or( o, csra );			\
+  _hwa_commit_or( o, csrb );			\
+  _hwa_commit_or( o, csrc )
 
 /**
  * @page atmelavr_uarta
