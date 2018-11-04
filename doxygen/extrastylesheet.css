@@ -1,9 +1,4 @@
 
-code {
-    color: #228822;
-    /* background-color: #EEEEEE;  */
-}
-
 .title {
     font-size: 180%;
     /* color: #AAAAAA; */
@@ -32,6 +27,7 @@ h3 {
 
 div.contents {
     max-width: 900px;
+    margin-bottom: 1in;
 }
 
 
@@ -44,13 +40,6 @@ table.doxtable {
     margin-left: 40px;
     margin-top: 12px;
     margin-bottom: 12px;
-}
-
-
-div.fragment {
-    margin-left: 20px;
-    margin-right: 40px;
-    background-color: #EFF7FF;
 }
 
 
@@ -74,4 +63,30 @@ h1.glow, h2.glow, h3.glow, h4.glow, h5.glow, h6.glow {
 
 .contents a:visited {
     color: #4B64DF;
+}
+
+body, table, div, p, dl {
+    font-size: 12px;
+    font-family: sans-serif;
+    line-height: 22px;
+}
+
+div.textblock {
+    margin-bottom: 5em;
+}
+
+div.fragment {
+    padding: 0.5em;
+    margin-left: 1em;
+    margin-top: 1em;
+    margin-right: 2em;
+    margin-bottom: 1em;
+    background-color: #EFF7FF;
+    box-shadow: .25em .25em 0.25em #888;
+}
+
+code {
+    color: #a8200b;
+    font-weight: bold;
+    font-family: monospace;
 }
