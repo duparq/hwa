@@ -1,4 +1,3 @@
 
-include ../Makefile
-
-all:	doc
+all:
+	@cd .. && $(MAKE) --no-print-directory doc
