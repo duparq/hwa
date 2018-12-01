@@ -19,7 +19,7 @@
  * * @ref attinyx4 : `watchdog0`
  * * @ref attinyx5 : `watchdog0`
  */
-#define _hw_class__wdoga
+#define hw_class__wdoga
 
 
 #if !defined __ASSEMBLER__

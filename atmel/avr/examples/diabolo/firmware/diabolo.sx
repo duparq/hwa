@@ -94,43 +94,43 @@
 
 	;; Hardware registers
 	;;
-	MCUSR	   = HW_ADDRESS(HW_REGISTER(core0, mcusr))
-	 BP_EXTRF  = HW_POSITION(HW_REGISTER(core0, extrf))
-	 BP_PORF   = HW_POSITION(HW_REGISTER(core0, porf))
+	MCUSR	   = HW_ADDRESS((core0, mcusr))
+	 BP_EXTRF  = HW_POSITION((core0, extrf))
+	 BP_PORF   = HW_POSITION((core0, porf))
 
-	SPMCSR	   = HW_ADDRESS(HW_REGISTER(flash0, csr))
-	 BP_RWWSRE = HW_POSITION(HW_REGISTER(flash0, rwwsre))
-	 BP_BLBSET = HW_POSITION(HW_REGISTER(flash0, blbset))
-	 BP_PGWRT  = HW_POSITION(HW_REGISTER(flash0, pgwrt))
-	 BP_PGERS  = HW_POSITION(HW_REGISTER(flash0, pgers))
-	 BP_SPMEN  = HW_POSITION(HW_REGISTER(flash0, spmen))
+	SPMCSR	   = HW_ADDRESS((flash0, csr))
+	 BP_RWWSRE = HW_POSITION((flash0, rwwsre))
+	 BP_BLBSET = HW_POSITION((flash0, blbset))
+	 BP_PGWRT  = HW_POSITION((flash0, pgwrt))
+	 BP_PGERS  = HW_POSITION((flash0, pgers))
+	 BP_SPMEN  = HW_POSITION((flash0, spmen))
 
-	EEARL	   = HW_ADDRESS(HW_REGISTER(eeprom0, ar))+0
-	EEARH	   = HW_ADDRESS(HW_REGISTER(eeprom0, ar))+1
-	EEDR	   = HW_ADDRESS(HW_REGISTER(eeprom0, dr))
-	EECR	   = HW_ADDRESS(HW_REGISTER(eeprom0, cr))
+	EEARL	   = HW_ADDRESS((eeprom0, ar))+0
+	EEARH	   = HW_ADDRESS((eeprom0, ar))+1
+	EEDR	   = HW_ADDRESS((eeprom0, dr))
+	EECR	   = HW_ADDRESS((eeprom0, cr))
 
-#define AP_EEMPE   HW_ADDRESS(HW_REGISTER(eeprom0,mpe)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
-#define AP_EEPE	   HW_ADDRESS(HW_REGISTER(eeprom0,pe)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
-#define AP_EERE	   HW_ADDRESS(HW_REGISTER(eeprom0,re)), HW_POSITION(HW_REGISTER(eeprom0,mpe))
+#define AP_EEMPE   HW_ADDRESS((eeprom0,mpe)), HW_POSITION((eeprom0,mpe))
+#define AP_EEPE	   HW_ADDRESS((eeprom0,pe)), HW_POSITION((eeprom0,mpe))
+#define AP_EERE	   HW_ADDRESS((eeprom0,re)), HW_POSITION((eeprom0,mpe))
 
 	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
-	RXDPORT	   = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_RX,port), port))
-	RXDPIN	   = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_RX,port), pin))
-	RXDDR	   = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_RX,port), ddr))
-	 BP_RXD	   = HW_POSITION(DIABOLO_PIN_RX)
-	TXDPORT	   = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_TX,port), port))
-	TXDDR	   = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_TX,port), ddr))
-	 BP_TXD	   = HW_POSITION(DIABOLO_PIN_TX)
+	RXDPORT	   = HW_ADDRESS((DIABOLO_PIN_RX,port,port))
+	RXDPIN	   = HW_ADDRESS((DIABOLO_PIN_RX,port,pin))
+	RXDDR	   = HW_ADDRESS((DIABOLO_PIN_RX,port,ddr))
+	BP_RXD	   = HW_POSITION(DIABOLO_PIN_RX)
+	TXDPORT	   = HW_ADDRESS((DIABOLO_PIN_TX,port,port))
+	TXDDR	   = HW_ADDRESS((DIABOLO_PIN_TX,port,ddr))
+	BP_TXD	   = HW_POSITION(DIABOLO_PIN_TX)
 
 	;; Debug pin
 	;;
 #if defined DIABOLO_PIN_DBG
 
-	DBGPORT	  = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_DBG,port), port))
-	DBGPIN	  = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_DBG,port), pin))
-	DBGDDR	  = HW_ADDRESS(HW_REGISTER((DIABOLO_PIN_DBG,port), ddr))
+	DBGPORT	  = HW_ADDRESS((DIABOLO_PIN_DBG,port,port))
+	DBGPIN	  = HW_ADDRESS((DIABOLO_PIN_DBG,port,pin))
+	DBGDDR	  = HW_ADDRESS((DIABOLO_PIN_DBG,port,ddr))
 	DBGBIT	  = HW_POSITION(DIABOLO_PIN_DBG)
 
 #  define DBGDDR1	sbi	DBGDDR, DBGBIT

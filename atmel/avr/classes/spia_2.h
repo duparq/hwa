@@ -53,31 +53,31 @@
  *                     | msb_first ] );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__spia	, _hwa_cfspia
+#define hwa_configure__spia	, _hwa_cfspia
 
 #define _hwa_cfspia(o,i,a,k,...)					\
   do {									\
     const float ioclk = 1.0 ;						\
-    HW_Y(_hwa_cfspia_kfunction,_hw_is_function_##k)(o,k,__VA_ARGS__,,);	\
+    HW_Y(_hwa_cfspia_kfunction_,_hw_is_function_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 /*	Mandatory parameter `function`
  */
 #define _hwa_cfspia_kfunction_0(o,k,...)	HW_E_VL(k,function)
-#define _hwa_cfspia_kfunction_1(o,k,v,...)	HW_Y(_hwa_cfspia_vfunction,_hw_spia_function_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_kfunction_1(o,k,v,...)	HW_Y(_hwa_cfspia_vfunction_,_hw_spia_function_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vfunction_0(o,v,...)	HW_E_AVL(function, v, master | slave | off)
 #define _hwa_cfspia_vfunction_1(o,v,k,...)				\
-  _hwa_write_or(o,en, HW_A1(_hw_spia_function_##v));			\
-  _hwa_write_or(o,mstr, HW_A2(_hw_spia_function_##v));			\
+  _hwa_write(o,en, HW_A1(_hw_spia_function_##v));			\
+  _hwa_write(o,mstr, HW_A2(_hw_spia_function_##v));			\
   if ( HW_A1(_hw_spia_function_##v) == 1 ) {				\
     if ( HW_A2(_hw_spia_function_##v) == 0 ) {				\
-      _hwa( configure, _HW_REL(o,pin_miso), mode, digital_output );	\
+      _hwa( configure, (o,pin_miso), mode, digital_output );	\
     } else {								\
-      _hwa( configure, _HW_REL(o,pin_mosi), mode, digital_output );	\
-      _hwa( configure, _HW_REL(o,pin_sck), mode, digital_output );	\
+      _hwa( configure, (o,pin_mosi), mode, digital_output );	\
+      _hwa( configure, (o,pin_sck), mode, digital_output );	\
     }									\
   }									\
-  HW_Y(_hwa_cfspia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfspia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 #define _hw_spia_function_master	, 1, 1	/* , en , mstr */
 #define _hw_spia_function_slave		, 1, 0
@@ -86,10 +86,10 @@
 /*	Mandatory parameter `clock`
  */
 #define _hwa_cfspia_kclock_0(o,k,...)	HW_E_VL(k,clock)
-#define _hwa_cfspia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfspia_vclock,_hw_is_ioclk_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfspia_vclock_,_hw_is_ioclk_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vclock_0(o,v,...)	HW_E_AVL(clock, v, ioclk / (2|4|8|16|32|64|128 ))
 #define _hwa_cfspia_vclock_1(o,v,k,...)					\
-  _hwa_write_or(o,xpr, _hwa_cpspia_clk(v));				\
+  _hwa_write(o,xpr, _hwa_cpspia_clk(v));				\
   HW_G2(_hwa_cfspia_kmode,HW_IS(mode,k))(o,k,__VA_ARGS__)
 
 HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
@@ -116,10 +116,10 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 /*	Optionnal parameter `mode`
  */
 #define _hwa_cfspia_kmode_0(o,k,...)	HW_G2(_hwa_cfspia_kidle,HW_IS(idle_state,k))(o,k,__VA_ARGS__)
-#define _hwa_cfspia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfspia_vmode,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfspia_vmode_,_hw_spia_mode_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vmode_0(o,v,...)	HW_E_AVL(mode, v, (0|1|2|3))
 #define _hwa_cfspia_vmode_1(o,v,k,...)					\
-  _hwa_write_or(o,mode,HW_A1(_hw_spia_mode_##v));			\
+  _hwa_write(o,mode,HW_A1(_hw_spia_mode_##v));			\
   HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)
 
 #define _hw_spia_mode_0			, 0	/* , mode */
@@ -133,10 +133,10 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hw_spia_idle_high		, 1
 
 #define _hwa_cfspia_kidle_0(o,k,...)	HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)
-#define _hwa_cfspia_kidle_1(o,k,v,...)	HW_Y(_hwa_cfspia_vidle,_hw_spia_idle_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_kidle_1(o,k,v,...)	HW_Y(_hwa_cfspia_vidle_,_hw_spia_idle_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vidle_0(o,v,...)	HW_E_AVL(idle_state, v, low | high)
 #define _hwa_cfspia_vidle_1(o,v,k,...)				\
-  _hwa_write_or(o,cpol, HW_A1(_hw_spia_idle_##v));		\
+  _hwa_write(o,cpol, HW_A1(_hw_spia_idle_##v));		\
   HW_G2(_hwa_cfspia_ksampling,HW_IS(sampling_edge,k))(o,v,k,__VA_ARGS__)
 
 /*	Mandatory parameter `sampling_edge` following `idle_state`
@@ -150,16 +150,16 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hwa_cfspia_ksampling_1(o,i,k,v,...)	HW_G2(_hwa_cfspia_vsampling,HW_IS(,_hw_spia_idle_##i##_sampling_##v))(o,i,v,__VA_ARGS__)
 #define _hwa_cfspia_vsampling_0(o,i,v,...)	HW_E_AVL(sampling_edge, v, rising|falling)
 #define _hwa_cfspia_vsampling_1(o,i,v,k,...)				\
-  _hwa_write_or(o,cpha, HW_A1(_hw_spia_idle_##i##_sampling_##v));	\
+  _hwa_write(o,cpha, HW_A1(_hw_spia_idle_##i##_sampling_##v));	\
   HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)  
 
 /*	Optionnal parameter `data_order`
  */
 #define _hwa_cfspia_korder_0(o,...)	HW_EOL(__VA_ARGS__)
-#define _hwa_cfspia_korder_1(o,k,v,...)	HW_Y(_hwa_cfspia_vorder,_hw_spia_order_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfspia_korder_1(o,k,v,...)	HW_Y(_hwa_cfspia_vorder_,_hw_spia_order_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfspia_vorder_0(o,v,...)	HW_E_AVL(order, v, (lsb_first|msb_first))
 #define _hwa_cfspia_vorder_1(o,v,k,...)			\
-  _hwa_write_or(o,dord,HW_A1(_hw_spia_order_##v));	\
+  _hwa_write(o,dord,HW_A1(_hw_spia_order_##v));	\
   HW_EOL(__VA_ARGS__)
 
 #define _hw_spia_order_msb_first		, 0	/* , order */
@@ -177,8 +177,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw( read, spi0 );
  * @endcode
  */
-#define _hw_mtd_hw_read__spia		, _hw_read_spia
-#define _hw_read_spia(o,i,a,...)	_hw_read_or(o,dr) HW_EOL(__VA_ARGS__)
+#define hw_read__spia		, _hw_read_spia
+#define _hw_read_spia(o,i,a,...)	_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -187,11 +187,11 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw(_write, spi0, value );
  * @endcode
  */
-#define _hw_mtd_hw_write__spia		, _hw_wrspia
-#define _hw_wrspia(o,i,a,v,...)		_hw_write_or(o,dr,v) HW_EOL(__VA_ARGS__)
+#define hw_write__spia		, _hw_wrspia
+#define _hw_wrspia(o,i,a,v,...)		_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
 
 /* #define _hw_wrspia(o,i,a,v,...)						\ */
-/*    __hw_wrspia( _hw_rap(o,if), _HW_A(_HW_M(o,dr)), v ) HW_EOL(__VA_ARGS__) */
+/*    __hw_wrspia( _hw_rap(o,if), HW_ADDRESS((o,dr)), v ) HW_EOL(__VA_ARGS__) */
 
 /* HW_INLINE uint8_t __hw_wrspia( intptr_t flag_addr, uint8_t flag_bp, intptr_t dr, uint8_t v ) */
 /* { */
@@ -210,8 +210,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 /*  * hwa_write( spi0, value ); */
 /*  * @endcode */
 /*  *\/ */
-/* #define _hw_mtd_hwa_write__spia	, _hwa_write_spia */
-/* #define _hwa_write_spia(o,i,a,v)	_hwa_write_or(o,dr,v) */
+/* #define hwa_write__spia	, _hwa_write_spia */
+/* #define _hwa_write_spia(o,i,a,v)	_hwa_write(o,dr,v) */
 
 
 /**
@@ -224,14 +224,14 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw( turn, spi0, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__spia		, _hw_turn_spia
+#define hw_turn__spia		, _hw_turn_spia
 
 #define _hw_turn_spia(o,i,a,k,...)				\
-  HW_Y(_hw_turn_spia,_hw_state_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hw_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hw_turn_spia_1(o,v, ...)				\
-  _hw_write_or(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
+  _hw_write(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_spia
@@ -239,14 +239,14 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hwa( turn, spi0, on | off );
  * @endcode
  */
-#define _hw_mtd_hwa_turn__spia		, _hwa_turn_spia
+#define hwa_turn__spia		, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,i,a,k,...)				\
-  HW_Y(_hwa_turn_spia,_hw_state_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
 #define _hwa_turn_spia_1(o,v, ...)				\
-  _hwa_write_or(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
+  _hwa_write(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -256,8 +256,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * Reading the "transfer complete" flag:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read "transfer complete" IRQ flag
- *   hw( turn, HW_IRQ( spi0, off ) );     // Disable transfer complete IRQs
+ * if ( hw( read, irqflag( spi0 ) ) )  // Read "transfer complete" IRQ flag
+ *   hw( turn, irq( spi0, off ) );     // Disable transfer complete IRQs
  * @endcode
  *
  * The "transfer complete" flag is cleared by hardware when the corresponding
@@ -265,7 +265,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * flag has been read:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( spi0 ) ) )  // Read transfer complete IRQ flag
+ * if ( hw( read, irqflag( spi0 ) ) )  // Read transfer complete IRQ flag
  *   data = hw( read, spi0 );             // Read data and clear transfer complete IRQ flag
  * @endcode
  *
@@ -286,8 +286,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  *   n_collisions++ ;
  * @endcode
  */
-#define _hw_mtd_hw_stat__spia		, _hw_stat_spia
-#define _hw_mtd_hw_stat_t__spia	, _hw_statt_spia
+#define hw_stat__spia		, _hw_stat_spia
+#define hw_stat_t__spia	, _hw_statt_spia
 
 #define _hw_statt_spia(o,i,a,...)	_hw_spia_stat_t HW_EOL(__VA_ARGS__)
 
@@ -300,7 +300,7 @@ typedef union {
   };
 } _hw_spia_stat_t ;
 
-#define _hw_stat_spia(o,i,a,...)	_hw_spia_stat(_hw_read_or(o, sr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_spia(o,i,a,...)	_hw_spia_stat(_hw_read(o, sr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
 {
@@ -317,16 +317,16 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__spia(o,i,a)		\
-  _hwa_setup_or( o, cr );			\
-  _hwa_setup_or( o, sr )
+  _hwa_setup_r( o, cr );			\
+  _hwa_setup_r( o, sr )
 
 #define _hwa_init__spia(o,i,a)			\
-  _hwa_init_or( o, cr, 0x00 );			\
-  _hwa_init_or( o, sr, 0x00 )
+  _hwa_init_r( o, cr, 0x00 );			\
+  _hwa_init_r( o, sr, 0x00 )
 
 #define _hwa_commit__spia(o,i,a)		\
-  _hwa_commit_or( o, cr );			\
-  _hwa_commit_or( o, sr )
+  _hwa_commit_r( o, cr );			\
+  _hwa_commit_r( o, sr )
 
 
 

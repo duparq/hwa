@@ -55,7 +55,7 @@
  * :------|:--------|:-------
  * `hw_swuart0_pin_txd` | `pa0`	 | Pin used for TXD (optionnal)
  * `hw_swuart0_pin_rxd` | `HW_PIN(5)`		 | Pin used for RXD (optionnal)
- * `hw_swuart0_starter` | `HW_RELATIVE(HW_PIN(5),pcic)` | Interrupt provider for the start condition
+ * `hw_swuart0_starter` | `(HW_PIN(5),pcic)` | Interrupt provider for the start condition
  * `hw_swuart0_compare` | `counter0compare0`<br>`counter0compare1`<br>...    | Counter compare unit used for bit timing
  * `hw_swuart0_clk_div` | `1`<br>`8`<br>...	 | Counter prescaler setting (division of `ioclk`)
  * `hw_swuart0_autosync`| `5_1`<br>`9_1`<br>`10_1` | Synchronization method (optionnal)
@@ -132,7 +132,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart0_clk_div
-  _hwa( configure, _HW_REL(hw_swuart0_compare,counter),
+  _hwa( configure, (hw_swuart0_compare,counter),
 	clock,	   ioclk / hw_swuart0_clk_div,
 	direction, up_loop,
 	top,	   max );
@@ -142,9 +142,9 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart0_pin_rxd
   _hwa( configure, hw_swuart0_pin_rxd, mode, digital_input );
-  hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart0_pin_rxd,pcic)) );
-  hwa( turn, HW_IRQ(_HW_REL(hw_swuart0_pin_rxd,pcic)), on );
-  _hwa( turn, _HW_REL(hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
+  hwa( clear, irqflag((hw_swuart0_pin_rxd,pcic)) );
+  hwa( turn, irq((hw_swuart0_pin_rxd,pcic)), on );
+  _hwa( turn, (hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
 
   /*  TXD pin
@@ -179,7 +179,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   /*  Configure the counter if its clock prescaling is defined
    */
 #  if defined hw_swuart1_clk_div
-  _hwa( configure, _HW_REL(hw_swuart1_compare,counter),
+  _hwa( configure, (hw_swuart1_compare,counter),
 	clock,	   ioclk / hw_swuart1_clk_div,
 	direction, up_loop,
 	top,	   max );
@@ -189,9 +189,9 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart1_pin_rxd
   _hwa( configure, hw_swuart1_pin_rxd, mode, digital_input );
-  hwa( clear, HW_IRQFLAG(_HW_REL(hw_swuart1_pin_rxd,pcic)) );
-  hwa( turn, HW_IRQ(_HW_REL(hw_swuart1_pin_rxd,pcic)), on );
-  _hwa( turn, _HW_REL(hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
+  hwa( clear, irqflag((hw_swuart1_pin_rxd,pcic)) );
+  hwa( turn, irq((hw_swuart1_pin_rxd,pcic)), on );
+  _hwa( turn, (hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif
 
   /*  TXD pin
@@ -265,8 +265,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  *	     );
  * @endcode
  */
-#define _hw_mtd_hw_configure__swuarta	, _hw_cfswuarta
-#define _hw_mtd_hwa_configure__swuarta	, _hwa_cfswuarta
+#define hw_configure__swuarta	, _hw_cfswuarta
+#define hwa_configure__swuarta	, _hwa_cfswuarta
 
 /*  Configuration of the relatives is easier inside a function to handle
  *  undeclared pins.
@@ -275,38 +275,38 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 #define _hwa_cfswuarta(o,i,a,k,...)					\
   do {									\
     _hw_##o##_config_relatives( hwa );					\
-    HW_Y(_hwx_cfswuarta_kbps,_hw_is_bps_##k)(_hwa,o,k,__VA_ARGS__,);	\
+    HW_Y(_hwx_cfswuarta_kbps_,_hw_is_bps_##k)(_hwa,o,k,__VA_ARGS__,);	\
   } while(0)
 
 #define _hw_cfswuarta(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwx_cfswuarta_kbps,_hw_is_bps_##k)(_hw,o,k,__VA_ARGS__,);	\
+    HW_Y(_hwx_cfswuarta_kbps_,_hw_is_bps_##k)(_hw,o,k,__VA_ARGS__,);	\
   } while(0)
 
 /*  Process arg `bps`
  */
 #define _hwx_cfswuarta_kbps_1(x,o,k,v,kk,...)				\
   _hw_##o##_##set_dt((HW_SYSHZ + (v)/2) / (v)) ;			\
-  *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) |= 0x08 ; /* Set SYNC */		\
-  HW_Y(_hwx_cfswuarta_kdatabits,_hw_is_databits_##kk)(x,o,kk,__VA_ARGS__)
+  *(volatile uint8_t*)HW_ADDRESS((o,sr)) |= 0x08 ; /* Set SYNC */	\
+  HW_Y(_hwx_cfswuarta_kdatabits_,_hw_is_databits_##kk)(x,o,kk,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kbps_0(x,o,k,...)			\
-  HW_Y(_hwx_cfswuarta_kcpb,_hw_is_cpb_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_kcpb_,_hw_is_cpb_##k)(x,o,k,__VA_ARGS__)
 
 /*  Process arg `cpb`
  */
 #define _hwx_cfswuarta_kcpb_1(x,o,k,v,kk,...)				\
   _hw_##o##_##set_dt(v) ;						\
-  *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) |= 0x08 ; /* Set SYNC */		\
-  HW_Y(_hwx_cfswuarta_kdatabits,_hw_is_databits_##kk)(x,o,kk,__VA_ARGS__)
+  *(volatile uint8_t*)HW_ADDRESS((o,sr)) |= 0x08 ; /* Set SYNC */		\
+  HW_Y(_hwx_cfswuarta_kdatabits_,_hw_is_databits_##kk)(x,o,kk,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kcpb_0(x,o,k,...)				\
-  HW_Y(_hwx_cfswuarta_kdatabits,_hw_is_databits_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_kdatabits_,_hw_is_databits_##k)(x,o,k,__VA_ARGS__)
 
 /*  Process arg `databits`
  */
 #define _hwx_cfswuarta_kdatabits_1(x,o,k,v,...)				\
-  HW_Y(_hwx_cfswuarta_vdatabits,_hw_swuarta_csz_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_vdatabits_,_hw_swuarta_csz_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vdatabits_0(x,o,v,...)	\
   HW_E_AVL(`databits`, v, `8`)
@@ -315,14 +315,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kdatabits_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kdatabits_0(x,o,k,...)				\
-  HW_Y(_hwx_cfswuarta_kparity,_hw_is_parity_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_kparity_,_hw_is_parity_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_swuarta_csz_8		, 0
 
 /*  Process arg `parity`
  */
 #define _hwx_cfswuarta_kparity_1(x,o,k,v,...)				\
-  HW_Y(_hwx_cfswuarta_vparity,_hw_swuarta_pm_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_vparity_,_hw_swuarta_pm_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vparity_0(x,o,v,...)	\
   HW_E_AVL(`parity`, v, `none`)
@@ -331,14 +331,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kparity_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kparity_0(x,o,k,...)				\
-  HW_Y(_hwx_cfswuarta_kstopbits,_hw_is_stopbits_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_kstopbits_,_hw_is_stopbits_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_swuarta_pm_none		, 0
 
 /*  Process arg `stopbits`
  */
 #define _hwx_cfswuarta_kstopbits_1(x,o,k,v,...)				\
-  HW_Y(_hwx_cfswuarta_vstopbits,_hw_swuarta_sbs_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_vstopbits_,_hw_swuarta_sbs_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vstopbits_0(x,o,v,...)	\
   HW_E_AVL(`stopbits`, v, `1`)
@@ -347,14 +347,14 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kstopbits_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kstopbits_0(x,o,k,...)				\
-  HW_Y(_hwx_cfswuarta_kreceiver,_hw_is_receiver_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_kreceiver_,_hw_is_receiver_##k)(x,o,k,__VA_ARGS__)
 
 #define _hw_swuarta_sbs_1		, 0
 
 /*  Process arg `receiver`
  */
 #define _hwx_cfswuarta_kreceiver_1(x,o,k,v,...)				\
-  HW_Y(_hwx_cfswuarta_vreceiver,_hw_state_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_vreceiver_,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vreceiver_0(x,o,v,...)	\
   HW_E_AVL(receiver, v, enabled | disabled)
@@ -364,12 +364,12 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
   _hwx_cfswuarta_kreceiver_0(x,o,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kreceiver_0(x,o,k,...)				\
-  HW_Y(_hwx_cfswuarta_ktransmitter,_hw_is_transmitter_##k)(x,o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_ktransmitter_,_hw_is_transmitter_##k)(x,o,k,__VA_ARGS__)
 
 /*  Process arg `transmitter`
  */
 #define _hwx_cfswuarta_ktransmitter_1(x,o,k,v,...)			\
-  HW_Y(_hwx_cfswuarta_vtransmitter,_hw_state_##v)(x,o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfswuarta_vtransmitter_,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vtransmitter_0(x,o,v,...)	\
   HW_E_AVL(`transmitter`, v, `enabled`)
@@ -395,7 +395,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  * uint8_t byte = hw( read, UART ); // Clears the 'rxc' status flag
  * @endcode
  */
-#define _hw_mtd_hw_read__swuarta	, _hw_swuarta_read
+#define hw_read__swuarta	, _hw_swuarta_read
 #define _hw_swuarta_read(o,i,a,...)	_hw_##o##_getbyte() HW_EOL(__VA_ARGS__)
 
 #if defined hw_swuart0_pin_rxd
@@ -425,7 +425,7 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
  * hw_write( UART, '#' ); // Clears the 'txc' status flag
  * @endcode
  */
-#define _hw_mtd_hw_write__swuarta	, _hw_swuarta_write
+#define hw_write__swuarta	, _hw_swuarta_write
 #define _hw_swuarta_write(o,i,a,v,...)	_hw_##o##_putbyte(v) HW_EOL(__VA_ARGS__)
 
 #if defined hw_swuart0_pin_txd
@@ -474,12 +474,12 @@ typedef struct {
 } _hw_swuarta_stat_t ;
 
 
-#define _hw_mtd_hw_stat_t__swuarta	, _hw_sttswuarta
-#define _hw_sttswuarta(o,i,a,...)	 _hw_swuarta_stat_t HW_EOL(__VA_ARGS__)
+#define hw_stat_t__swuarta		, _hw_sttswuarta
+#define _hw_sttswuarta(o,i,a,...)	_hw_swuarta_stat_t HW_EOL(__VA_ARGS__)
 
-#define _hw_mtd_hw_stat__swuarta	, _hw_stswuarta
+#define hw_stat__swuarta		, _hw_stswuarta
 #define _hw_stswuarta(o,i,a,...)					\
-   (*(volatile _hw_swuarta_stat_t*)_HW_A(_HW_M(o,sr))) HW_EOL(__VA_ARGS__)
+  (*(volatile _hw_swuarta_stat_t*)HW_ADDRESS((o,sr))) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -491,12 +491,12 @@ typedef struct {
  *`hw( clear, UART )`;
  * @endcode
  */
-#define _hw_mtd_hw_clear__swuarta	, _hw_clear__swuarta
-#define _hw_clear__swuarta(o,i,a,...)		_hw_clear_swuarta(o) HW_EOL(__VA_ARGS__)
+#define hw_clear__swuarta		, _hw_clear__swuarta
+#define _hw_clear__swuarta(o,i,a,...)	_hw_clear_swuarta(o) HW_EOL(__VA_ARGS__)
 #define _hw_clear_swuarta( o )					\
   do {								\
-    *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) &= 0xFE ; /* Clear RXC */	\
-    *(volatile uint8_t*)_HW_A(_HW_M(o,sr)) &= 0xFD ; /* Clear TXC */	\
+    *(volatile uint8_t*)HW_ADDRESS((o,sr)) &= 0xFE ; /* Clear RXC */	\
+    *(volatile uint8_t*)HW_ADDRESS((o,sr)) &= 0xFD ; /* Clear TXC */	\
   }while(0)
 
 /**
@@ -510,8 +510,8 @@ typedef struct {
  * hw( reset, UART );
  * @endcode
  */
-#define _hw_mtd_hw_reset__swuarta	, _hw_swuarta_reset
-#define _hw_swuarta_reset(o,i,a,...)		_hw_##o##_##reset() HW_EOL(__VA_ARGS__)
+#define hw_reset__swuarta		, _hw_swuarta_reset
+#define _hw_swuarta_reset(o,i,a,...)	_hw_##o##_##reset() HW_EOL(__VA_ARGS__)
 
 
 /**

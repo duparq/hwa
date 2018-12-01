@@ -113,7 +113,7 @@ uint8_t twst;
  * debug/test output), and TWI clock.
  */
 void
-ioinit(void)
+ioinit_o(void)
 {
   DDRC = 0x30 ;
   PORTC = 0x30 ;
@@ -550,7 +550,7 @@ main(void)
   uint8_t b[16];
   uint8_t x;
 
-  ioinit();
+  ioinit_o();
 
   stdout = &mystdout;
 

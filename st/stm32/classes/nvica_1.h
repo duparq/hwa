@@ -12,15 +12,15 @@
 /**
  * @page stm32_nvica Class _nvica: Nested Vectored Interrupt Controller (NVIC)
  */
-#define _hw_class__nvica
+#define hw_class__nvica
 
-#define _hw_reg__nvica_iser0		_r32, 0x00, 0xFFFFFFFF, 0xFFFFFFFF
-#define _hw_reg__nvica_iser1		_r32, 0x04, 0xFFFFFFFF, 0xFFFFFFFF
-#define _hw_reg__nvica_iser2		_r32, 0x08, 0x0000FFFF, 0x0000FFFF
+#define hw_reg__nvica_iser0		_r32, 0x00, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_reg__nvica_iser1		_r32, 0x04, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_reg__nvica_iser2		_r32, 0x08, 0x0000FFFF, 0x0000FFFF
 
-#define _hw_reg__nvica_icer0		_r32, 0x80, 0xFFFFFFFF, 0xFFFFFFFF
-#define _hw_reg__nvica_icer1		_r32, 0x84, 0xFFFFFFFF, 0xFFFFFFFF
-#define _hw_reg__nvica_icer2		_r32, 0x88, 0x0000FFFF, 0x0000FFFF
+#define hw_reg__nvica_icer0		_r32, 0x80, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_reg__nvica_icer1		_r32, 0x84, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_reg__nvica_icer2		_r32, 0x88, 0x0000FFFF, 0x0000FFFF
 
 
 #if !defined __ASSEMBLER__

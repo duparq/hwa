@@ -59,18 +59,18 @@ hw( <ACTION>, <OBJECT> [,...] );
 result.
 
 `hwa()` is used for asynchronous actions. Asynchronous actions can only be used
-after a _HWA context has been created with the `hwa_begin()` or the
+after a _HWA context_ has been created with the `hwa_begin()` or the
 `hwa_begin_from_reset()` instruction.
 
-The following asynchronous actions are then memorized into the context until the
-the `hwa_commit()` instruction or the `hwa_nocommit()` instruction is met.
+Once the context is created, the asynchronous actions are memorized until the
+the `hwa_commit_o()` instruction or the `hwa_nocommit()` instruction is met.
 
 The `hwa_commit()` instruction triggers the production of the machine code.
 
 The `hwa_nocommit()` instruction does not produce machine code but is useful to
-put the context in a known state usually before following actions modify
-it. This allows the production of machine code that avoids writing values that
-already are in the registers.
+put the context in a known state usually before new actions modify it. This
+allows the production of machine code that avoids writing values that already
+are in the registers.
 
 @code
 hwa_begin_from_reset()
@@ -114,71 +114,50 @@ Objects {#using_objects}
 Object arguments can be peripheral controller names or canonical I/O pin names
 (i.e. the name used for the basic I/O function). They are lower cased:
 
- * `counter0`, `counter1` ;
- * `adc0` ;
- * `uart0` ;
- * `porta`, `portb` ;
+ * `counter0`, `counter1`... ;
+ * `uart0`, `uart1`... ;
+ * `porta`, `portb`... ;
  * `pa0`...
 
-Instructions that return objects names (`HW_RELATIVE()`, `HW_PIN()`) or those
-that return object definitions (`HW_IRQ()`, `HW_IRQFLAG()`, `HW_IRQMASK()`,
-`HW_REGISTER()`) can be used as the object argument and the `hw()` and `hwa()`
-instructions also accept the following shortcuts:
+Object arguments can also be a list of objects that provide a path to a target
+object (the only way to access logical or hard registers) :
 
- * `()`, `rel()`, or `relative()` for `HW_RELATIVE()`
- * `irq()` for `HW_IRQ()`
- * `reg()` or `register()` for `HW_REGISTER()`
+ * `(counter0,compare0)`: the compare unit #0 of the counter0;
+ * `(counter0,compare0,counter)`: counter0;
+ * `(counter0,count)`: the `count` register of counter0...
 
-For example, the following statements are equivalent:
-
-@code
-hw( turn, HW_IRQ(counter0, overflow), on );     // Enable counter0 overflow interrupts
-@endcode
-
-@code
-hw( turn, irq(counter0, overflow), on );        // Enable counter0 overflow interrupts
-@endcode
 
 
 Interrupts {#using_interrupts}
 ==========
 
-Interrupts are objects returned by the `HW_IRQ(...)` instruction. The first
-argument must be an object name, the optionnal second argument must be an event
-name:
+IRQs, their flags and masks are objects that can be accessed using a particular
+notation:
 
- * `HW_IRQ(watchdog0)`;
- * `HW_IRQ(counter0)`;
- * `HW_IRQ(counter0, overflow)`;
- * `HW_IRQ(counter0, compare0)`;
- * `HW_IRQ(pa0, change)`;
- * ...
+ * `irq(counter0)` or `irq(counter0,overflow)`: the overflow IRQ of counter0;
+ * `irq(counter0,compare0)`: the compare0 IRQ of counter0;
+ * `irq((counter0,compare0))`: the IRQ of the compare unit #0 of counter0;
+ * `irqflag(counter0)`: the flag of the counter0 overflow IRQ;
+ * `irqmask(counter0)`: the mask of the counter0 overflow IRQ;
 
-Interrupts can be enabled and disabled with the `turn` action:
+IRQs can be turned on and off.
+IRQ flags can be read and cleared.
+
+Examples:
 
 @code
-hw( turn, HW_IRQ(counter0, overflow), on );     // Enable counter0 overflow interrupts
+hw( clear, irqflag(counter0, overflow) );
+hw( turn, irq(counter0, overflow), on );
 @endcode
 
 @code
-hw( turn, HW_IRQ(counter0, overflow), off );    // Disable counter0 overflow interrupts
-@endcode
-
-
-The `HW_IRQFLAG(...)` instruction can be used to acces an interrupt flag. The
-arguments are the same as for `HW_IRQ(...)`.
-
-IRQ flags can be read and cleared:
-
-@code
-if( hw(read, HW_IRQFLAG(counter0,overflow)) ) {
-    hw(clear, HW_IRQFLAG(counter0,overflow));
+if( hw(read, irqflag(counter0,overflow)) ) {
+    hw(clear, irqflag(counter0,overflow));
     hw(toggle, LED);
 }
 @endcode
 
-Interrupt service routines are declared with the `HW_ISR()` instruction,
-using the same arguments as for `HW_IRQ()`:
+Interrupt service routines are declared with the `HW_ISR()` instruction:
 
 @code
 HW_ISR( watchdog0 )
@@ -249,7 +228,7 @@ Pin configuration {#using_cfpin}
 =================
 
 HWA tries to provide a syntax that is as independent as possible from the target
-device and consistent accross various controllers.
+device and consistent accross various peripheral controllers.
 
 For the configuration of the device's pins, we'll try to apply the following.
 

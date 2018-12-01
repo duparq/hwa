@@ -20,7 +20,7 @@
  * * @ref attinyx5 : `pcic0`
  * * @ref atmegax8 : `pcic0`, `pcic1`, `pcic2`
  */
-#define _hw_class__pcica
+#define hw_class__pcica
 
 
 /**

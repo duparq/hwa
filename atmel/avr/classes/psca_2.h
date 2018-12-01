@@ -20,11 +20,11 @@
  * hw( reset, prescaler0 );
  * @endcode
  */
-#define _hw_mtd_hw_reset__psca		, _hw_psca_reset
+#define hw_reset__psca		, _hw_psca_reset
 
 #define _hw_psca_reset(o,i,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
 
-#define _hw_resetpsca(o)		_hw_write_or(o,psr,1)
+#define _hw_resetpsca(o)		_hw_write(o,psr,1)
 
 
 /**
@@ -43,7 +43,7 @@
  * hw( turn, prescaler0, on );	//  Release the prescaler
  * @endcode
  */
-#define _hw_mtd_hw_turn__psca		, _hw_psca_turn
+#define hw_turn__psca		, _hw_psca_turn
 #define _hw_psca_turn(o,i,a,v,...)			\
   HW_G2(_hw_turnpsca, HW_IS(,_hw_state_##v))(o,v)	\
   HW_EOL(__VA_ARGS__)
@@ -53,11 +53,11 @@
 
 /*  Stopping the prescaler requires setting its `tsm` and `psr` bits to 1
  */
-#define _hw_turnpsca_1_0(o)		_hw_write_or(o,tsmpsr,3)
+#define _hw_turnpsca_1_0(o)		_hw_write(o,tsmpsr,3)
 
 /*  Releasing the prescaler requires setting its `tsm` bit to 0
  */
-#define _hw_turnpsca_1_1(o)		_hw_write_or(o,tsm,0)
+#define _hw_turnpsca_1_1(o)		_hw_write(o,tsm,0)
 
 
 /**
@@ -71,17 +71,17 @@
  *      clock,     ioclk       );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__psca	, _hwa_cfpsca
+#define hwa_configure__psca	, _hwa_cfpsca
 
 /*  Mandatory argument `clock`
  */
 #define _hwa_cfpsca(o,i,a,k,...)					\
-  do { HW_Y(_hwa_cfpsca_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfpsca_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfpsca_kclock_0(o,k,...)		HW_E_VL(k,clock)
 
 #define _hwa_cfpsca_kclock_1(o,k,v,...)					\
-  HW_Y(_hwa_cfpsca_vclock,_hw_psca_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfpsca_vclock_,_hw_psca_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hw_psca_clock_ioclk		, 0
 

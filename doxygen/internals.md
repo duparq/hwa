@@ -5,56 +5,47 @@ Internals {#internals}
 A few notes about how HWA works internally.
 
 
-Call-tree
----------
+Macro dependencies
+------------------
 
-HWA macros and their dependencies.
+    HW_X()    _HW_FC
+     |         (f,c,)
+     |           |
+     |           |
+     |--         |==      _hw_read(o,r)
+     |--         |==      _hw_atomic_read(o,r)
+     |--         |==      _hw_write(o,r,v)
+     |--         |==      _hw_write_m(o,r,m,v)
+     |--         |==      _hwa_write(o,r,v)
+     |--         |==      _hwa_write_m(o,r,m,v)
+     |--         |==      _hwa_mmask(o,r)
+     |--         |==      _hwa_mvalue(o,r)
+     |--         |==      _hwa_ovalue(o,r)
+     |
+     |--                  _hwa_setup_r(o,r)
+     |--                  _hwa_init_r(o,r,v)
+     |--                  _hwa_commit_r(o,r)
+     |--                  _hwa_nocommit_r(o,r)
+     |
+     |--                  _hw(...)
+     |--                  _hwa(...)
+     |
+     |--                  HW_ID(o)
+     |--                  HW_ISR(oo [,reason] [,naked] ... )
+     |--                  HW_VOID_ISR(o [,reason])
+     |
+     |---------HW_F()
+     |           |
+     |           |==      HW_ADDRESS(oo)
+     |           |==      HW_BIT(oo)
+     |           |==      HW_POSITION(oo)
+     |--         |==      hw(...)
+     |--         |==      hwa(...)
 
-
-    _HW_SPEC  P  _HW_R        HW_ISON(o)
-     (f,t,)       (o,r)
-      |            |           |--                HW_VOID_ISR(o [,reason])
-      |            |           |--                HW_ID(o)
-      |            |           |--                HW_RELATIVE(o1,o2)
-      |            |           |--HW_RLX(oo)
-      |            |--_HW_M    |   |--HW_OD(oo)
-      |            |   (o,r)   |   |   |
-      |            |    |      |   |   |--        _hw(f,oo,...)
-      |            |    |      |   |   |--        _hwa(f,oo,...)
-      |            |    |      |   |   |--        hw(f,oo,...)
-      |            |    |      |   |   |--        hwa(f,oo,...)
-      |            |    |      |   |   |--        HW_REGISTER(oo,r)
-      |            |    |      |   |   |--        HW_ISR(oo [,reason] [,naked] ... )
-      |            |    |      |   |--HW_aO  /* HW_OD copy */
-      |            |    |      |   |   |--HW_IRQ(o [,reason])
-      |            |    |--    |   |       |--    HW_IRQMASK(o [,reason])
-      |            |    |--    |   |       |--    HW_IRQFLAG(o [,reason])
-      |            |    |      |   |--HW_MTD(f,oo)
-      |            |    |      |   |   |--        HW_ADDRESS(oo)
-      |            |    |      |   |   |--        HW_BIT(oo)
-      |            |    |      |   |   |--        HW_POSITION(oo)
-      |--          |    |--    |                  _HW_A(rx|mx)
-      |--          |    |--    |                  _HW_BN_OR(o,r)
-      |--          |    |--    |                  _HW_BP_OR(o,r)
-      |--          |    |--    |                  _hw_read_or(o,r)
-      |--          |    |--    |                  _hw_atomic_read_or(o,r)
-      |--          |    |--    |                  _hw_write_or(o,r,v)
-      |--          |    |--    |                  _hw_write_orm(o,r,m,v)
-      |--          |    |--    |                  _hwa_write_or(o,r,v)
-      |--          |    |--    |                  _hwa_write_orm(o,r,m,v)
-      |--          |    |--    |                  _hwa_commit_or(o,r)
-      |--          |    |--    |                  _hwa_nocommit_or(o,r)
-      |--          |    |--    |                  _hwa_mmask_or(o,r)
-      |--          |    |--    |                  _hwa_mvalue_or(o,r)
-      |--          |    |--    |                  _hwa_ovalue_or(o,r)
-      |--          |    |--    |                  _hwa_set_or(o,r,v)
-                   |--         |                  _hwa_setup_or(o,r)
-                   |--         |                  _hwa_init_or(o,r,v)
-  
-                                                  _hwa_setup(o)
-                                                  _hwa_init(o)
-                                                  _hwa_solve(o)
-                                                  _hwa_commit(o)
+                          _hwa_setup_o(o)
+                          _hwa_init_o(o)
+                          _hwa_solve_o(o)
+                          _hwa_commit_o(o)
 
 
 
@@ -63,25 +54,23 @@ Macro argument names
 
 HWA uses the following standardized argument names in its macro definitions:
 
- * `o`: name of the object
- * `oo`: path of an object (object name and optionnal list of relatives)
- * `ox`: definition of an object (expansion)
- * `c`: class of the object
- * `i`: id of the object
- * `a`: base address of the object
- * `f`: name of the function
- * `t`: type
- * `r`: name of a register
- * `rx`: definition of a register (expansion)
- * `ra`: relative address of the register 
- * `rwm`: register writeable bits mask
- * `rfm`: register flags mask
+ * `a`: address of the object
  * `bn`: number of bits
  * `bp`: position of least significant bit
+ * `c`: class of the object
+ * `f`: name of the function
+ * `h`: "hw" or "hwa" prefix
+ * `i`: id of the object
+ * `n`: name of the object, may be a path
+ * `o`: name of a single object
+ * `r`: name of a register
+ * `ra`: relative address of the register 
  * `rbn`: number of bits of a logical register
  * `rbp`: position of least significant bit of a logical register in the
           hardware register
+ * `rwm`: register writeable bits mask
+ * `rfm`: register flags mask
+ * `rx`: definition of a register (expansion)
+ * `t`: type
  * `vbn`: number of bits in the value
  * `vbp`: position of least significant bit in the value
- * `h`: "hw" or "hwa" prefix
- * `mx`: definition of a memory location (expansion)

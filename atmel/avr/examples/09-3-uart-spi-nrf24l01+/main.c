@@ -66,7 +66,7 @@
 uint8_t spi ( uint8_t v )
 {
   hw( write, spi0, v );
-  while( !hw( read, HW_IRQFLAG(spi0) ) ) {}
+  while( !hw( read, irqflag(spi0) ) ) {}
   return hw( read, spi0 );
 }
 
@@ -75,7 +75,7 @@ uint8_t spi ( uint8_t v )
  */
 uint8_t uart_rx()
 {
-  while ( !hw( read, HW_IRQFLAG(UART,rxc) ) ) {}
+  while ( !hw( read, irqflag(UART,rxc) ) ) {}
   return hw( read, UART );
 }
 
@@ -85,7 +85,7 @@ uint8_t uart_rx()
  */
 void uart_tx( uint8_t c )
 {
-  while ( !hw( read, HW_IRQFLAG(UART,txqnf) ) ) {}
+  while ( !hw( read, irqflag(UART,txqnf) ) ) {}
   hw( write, UART, c );
 }
 

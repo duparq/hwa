@@ -13,8 +13,8 @@
  */
 #include "ad10__2.h"
 
-#define _hw_mtd_hw_prescaler_max__ad10b		, hw_ad10_prescaler_max
-#define _hw_mtd_hw_prescaler_min__ad10b		, hw_ad10_prescaler_min
+#define hw_prescaler_max__ad10b		, hw_ad10_prescaler_max
+#define hw_prescaler_min__ad10b		, hw_ad10_prescaler_min
 
 /**
  * @page atmelavr_ad10b
@@ -66,38 +66,38 @@
  *               | temperature );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__ad10b	, _hwa_cfad10b
+#define hwa_configure__ad10b	, _hwa_cfad10b
 
 /*	Mandatory parameter 'clock'
  */
 #define _hwa_cfad10b(o,i,a,k,...)					\
   do {									\
-    _hwa_write_or( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfad10b_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
+    _hwa_write( o, en, 1 ); /* turn the ADC on */			\
+    HW_Y(_hwa_cfad10b_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfad10b_kclock_0(o,k,...)			\
   HW_E_VL(k,clock)
 #define _hwa_cfad10b_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10b_vclock,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_vclock_,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 #define _hwa_cfad10b_vclock_1(o,v,k,...)				\
-  _hwa_write_or(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
-  HW_Y(_hwa_cfad10b_ktrigger,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
+  HW_Y(_hwa_cfad10b_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 /*	Mandatory parameter 'trigger'
  */
 #define _hwa_cfad10b_ktrigger_0(o,k,...)		\
   HW_E_VL(k,trigger)
 #define _hwa_cfad10b_ktrigger_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10b_vtrigger,_hw_ad10b_trigger_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_vtrigger_,_hw_ad10b_trigger_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | int0 | acmp0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
 #define _hwa_cfad10b_vtrigger_1(o,v,k,...)				\
-  _hwa_write_or(o,ate, HW_A1(_hw_ad10b_trigger_##v));			\
-  _hwa_write_or(o,ts, HW_A2(_hw_ad10b_trigger_##v));			\
-  HW_Y(_hwa_cfad10b_kvref,_hw_is_vref_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o,ate, HW_A1(_hw_ad10b_trigger_##v));			\
+  _hwa_write(o,ts, HW_A2(_hw_ad10b_trigger_##v));			\
+  HW_Y(_hwa_cfad10b_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10b_trigger_manual		, 0, 0	/* , ate, ts */
 #define _hw_ad10b_trigger_auto			, 1, 0
@@ -112,10 +112,10 @@
 /*	Mandatory parameter 'vref'
  */
 #define _hwa_cfad10b_kvref_0(o,k,...)		HW_E_VL(k,vref)
-#define _hwa_cfad10b_kvref_1(o,k,v,...)		HW_Y(_hwa_cfad10b_vvref,_hw_ad10b_vref_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfad10b_kvref_1(o,k,v,...)		HW_Y(_hwa_cfad10b_vvref_,_hw_ad10b_vref_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | pin_avcc | pin_aref | bandgap_1100mV)
 #define _hwa_cfad10b_vvref_1(o,v,...)			\
-  _hwa_write_or(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
+  _hwa_write(o,refs, HW_A1(_hw_ad10b_vref_##v));	\
   _hwa_cfad10b_align(o,__VA_ARGS__)
 
 #define _hw_ad10b_vref_vcc		, 1	/* , refs */
@@ -125,15 +125,15 @@
 /*	Optionnal parameter 'align'
  */
 #define _hwa_cfad10b_align(o,k,...)				\
-  HW_Y(_hwa_cfad10b_kalign,_hw_is_align_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfad10b_kalign_0(o,...)		\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
 #define _hwa_cfad10b_kalign_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10b_valign,_hw_ad10b_align_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10b_valign_,_hw_ad10b_align_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfad10b_valign_0(o,v,...)				\
   HW_E_AVL(align, v, left | right)
 #define _hwa_cfad10b_valign_1(o,v,...)			\
-  _hwa_write_or(o,lar, HW_A1(_hw_ad10b_align_##v));	\
+  _hwa_write(o,lar, HW_A1(_hw_ad10b_align_##v));	\
   _hwa_cfad10b_kinput(o,__VA_ARGS__)
 
 #define _hw_ad10b_align_left		, 1	/* , lar */
@@ -142,28 +142,28 @@
 /*	Mandatory parameter 'input'
  */
 #define _hwa_cfad10b_kinput(o,k,...)					\
-  HW_Y(_hwa_cfad10b_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__)
-#define _hwa_cfad10b_kinput_0(o,k,...)			\
+  HW_Y(_hwa_cfad10b_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfad10b_kinput_0(o,k,...)		\
   HW_E_VL(k,input)
 #define _hwa_cfad10b_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10b_input_##v)) )				\
-    _hwa_write_or(o,mux, HW_A1(_hw_ad10b_input_##v,0));		\
+    _hwa_write(o,mux, HW_A1(_hw_ad10b_input_##v,0));			\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc0) ) )		\
-    _hwa_write_or(o,mux, 0);						\
+    _hwa_write(o,mux, 0);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc1) ) )		\
-    _hwa_write_or(o,mux, 1);						\
+    _hwa_write(o,mux, 1);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc2) ) )		\
-    _hwa_write_or(o,mux, 2);						\
+    _hwa_write(o,mux, 2);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc3) ) )		\
-    _hwa_write_or(o,mux, 3);						\
+    _hwa_write(o,mux, 3);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc4) ) )		\
-    _hwa_write_or(o,mux, 4);						\
+    _hwa_write(o,mux, 4);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc5) ) )		\
-    _hwa_write_or(o,mux, 5);						\
+    _hwa_write(o,mux, 5);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc6) ) )		\
-    _hwa_write_or(o,mux, 6);						\
+    _hwa_write(o,mux, 6);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc7) ) )		\
-    _hwa_write_or(o,mux, 7);						\
+    _hwa_write(o,mux, 7);						\
   else									\
     HWA_ERR("`input` can be 'HW_PIN(adc0..7)' (or synonyms), "		\
 	    "`temperature`, `bandgap_1100mV`, or `ground`  but not `"#v"`."); \
@@ -176,8 +176,8 @@
 
 /*  Power management
  */
-#define _hw_mtd_hw_power__ad10b		, _hw_power
-#define _hw_mtd_hwa_power__ad10b	, _hwa_power
+#define hw_power__ad10b		, _hw_power
+#define hwa_power__ad10b	, _hwa_power
 
 
 /**
@@ -194,7 +194,7 @@
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__ad10b		, _hw_turn_ad10_
+#define hw_turn__ad10b		, _hw_turn_ad10_
 
 
 /**
@@ -204,7 +204,7 @@
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mtd_hwa_turn__ad10b	, _hwa_turn_ad10_
+#define hwa_turn__ad10b	, _hwa_turn_ad10_
 
 
 /**
@@ -215,7 +215,7 @@
  * hw( trigger, adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_trigger__ad10b	, _hw_trigger_ad10_
+#define hw_trigger__ad10b	, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10b
@@ -224,7 +224,7 @@
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define _hw_mtd_hwa_trigger__ad10b	, _hwa_trigger_ad10_
+#define hwa_trigger__ad10b	, _hwa_trigger_ad10_
 
 
 /**
@@ -235,7 +235,7 @@
  * uint16_t adc = hw( read, adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_read__ad10b		, _hw_rdad10_
+#define hw_read__ad10b		, _hw_rdad10_
 
 /**
  * @page atmelavr_ad10b
@@ -244,7 +244,7 @@
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_atomic_read__ad10b	, _hw_ardad10_
+#define hw_atomic_read__ad10b	, _hw_ardad10_
 
 
 /**
@@ -255,8 +255,8 @@
  *
  * @code
  * hw( trigger, adc0 );
- * while ( !hw( read, HW_IRQFLAG(adc0) ) ) {}
- * hw( clear, HW_IRQFLAG(adc0) );
+ * while ( !hw( read, irqflag(adc0) ) ) {}
+ * hw( clear, irqflag(adc0) );
  * uint16_t result = hw( read, adc0 );
  * @endcode
  *
@@ -270,7 +270,7 @@
  *   hw_trigger( adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_stat__ad10b		, _hw_stat_ad10_
+#define hw_stat__ad10b		, _hw_stat_ad10_
 
 
 /*******************************************************************************

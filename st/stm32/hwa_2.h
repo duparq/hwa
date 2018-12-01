@@ -72,17 +72,17 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
  * classes. An object supports power management if it has a logical register
  * named `cken`.
  */
-#define _hw_mtd_hw_power		, _hw_power
-#define _hw_mtd_hwa_power		, _hwa_power
+#define hw_power		, _hw_power
+#define hwa_power		, _hwa_power
 
-#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hw,o,v,g)
-#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hwa,o,v,g)
-#define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
-#define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2,_hw_state_##v)(x,o,v)
-#define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3,HW_G2(_hw_isa_reg, _hw_reg_##o##_##cken))(x,o,v)
-#define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
-#define _hwx_pwr3_1(x,o,v)		x##_write_or(o,cken,HW_A1(_hw_state_##v))
+#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
+#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
+#define _hwx_pwr1_0(h,o,v,g)		HW_E_G(g)
+#define _hwx_pwr1_1(h,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_##v)(h,o,v)
+#define _hwx_pwr2_0(h,o,v)		HW_E_ST(v)
+#define _hwx_pwr2_1(h,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_reg_##o##_##cken))(h,o,v)
+#define _hwx_pwr3_0(h,o,v)		HW_E(`o` does not support power management)
+#define _hwx_pwr3_1(h,o,v)		h##_write(o,cken,HW_A1(_hw_state_##v))
 
 
 HW_INLINE void _hw_write_r32 ( intptr_t ra, uint32_t rwm, uint32_t rfm, uint32_t mask, uint32_t value )
@@ -165,39 +165,3 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   volatile uint32_t *p = (volatile uint32_t *)ra ;
   return ((*p)>>rbp) & m ;
 }
-
-
-/*******************************************************************************
- *									       *
- *	ISR								       *
- *									       *
- *******************************************************************************/
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((used))
-#endif
-
-
-/*  ISR
- */
-#define _HW_ISR_(v,...)							\
-  HW_EXTERN_C void hw_isr_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
-  void hw_isr_##v(void)
-
-
-/*  Void ISR
- */
-#define _HW_VISR_(v)			HW_EXTERN_C void v(void); void v(void) { }
-
-
-/*  Clear an interrupt flag by writing 1 into it
- */
-/* #define _hw_mtd_hw_clear__m1		, _hw_clear_m1 */
-
-/* #define _hw_clear_m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,...)	_hw_write_##rc(ra,rwm,rfm,rbn,rbp,1) */
-
-/* #define _hw_mtd_hwa_clear__m1		, _hwa_clear_m1 */
-
-/* #define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1) */

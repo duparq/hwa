@@ -57,8 +57,8 @@
  *
  *						class, object, vector, ie, if
  */
-#define _hw_irq_timer1_nmi			_irq, timer1, nmi, ie,
-#define _hw_irq_timer1_irq			_irq, timer1,	9, ie,
+#define hw_irq_timer1_nmi			_irq, timer1, nmi, ie,
+#define hw_irq_timer1_irq			_irq, timer1,	9, ie,
 
 
 /*******************************************************************************
@@ -72,13 +72,13 @@
 
 /*	Object				class, id, address
  */
-#define _hw_class__shared
-#define _hw_def_shared			_shared, 0x3FF00000, 0x3FF00000
+#define hw_class__shared
+#define hw_shared			_shared, 0x3FF00000, 0x3FF00000
 
 /*	Object hardware registers	class, address, write mask, w1tc mask
  */
-#define _hw_reg_shared__edgeie		_r32, 0x04, 0xFFFFFFFF, 0
-#define _hw_reg_shared__swap		_r32, 0x28, 0xFFFFFFFF, 0
+#define hw_reg_shared__edgeie		_r32, 0x04, 0xFFFFFFFF, 0
+#define hw_reg_shared__swap		_r32, 0x28, 0xFFFFFFFF, 0
 
 #if !defined __ASSEMBLER__
 /*
@@ -94,16 +94,16 @@ typedef struct {
 
 
 #define _hwa_setup__shared(o,i,a)	\
-  _hwa_setup_or( o, _edgeie );	\
-  _hwa_setup_or( o, _swap )
+  _hwa_setup_r( o, _edgeie );	\
+  _hwa_setup_r( o, _swap )
 
 #define _hwa_init__shared(o,i,a)	\
   /* _edgeie is UNKNOWN and 0 causes errors */	\
-  _hwa_init_or( o, _swap, 0 )
+  _hwa_init_r( o, _swap, 0 )
 
 #define _hwa_commit__shared(o,i,a)	\
-  _hwa_commit_or( o, _edgeie );	\
-  _hwa_commit_or( o, _swap )
+  _hwa_commit_r( o, _edgeie );	\
+  _hwa_commit_r( o, _swap )
 
 #endif
 
@@ -122,7 +122,7 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_port0			_p16a, 101, 0x60000300
+#define hw_port0			_p16a, 101, 0x60000300
 
 
 /*	Class hardware registers	class, address, write mask, flags mask
@@ -133,35 +133,35 @@ typedef struct {
  *	  * 0D-ESP8266__Pin_List__Release_15-11-2014.ods
  *	  * ESP8266_RTOS_SDK/blob/master/examples/driver_lib/driver/gpio.c
  */
-#define _hw_reg__p16a__out		_r32, 0x00, 0xFFFFFFFF, 0
-#define _hw_reg__p16a__outw1ts		_r32, 0x04, 0x0000FFFF, 0
-#define _hw_reg__p16a__outw1tc		_r32, 0x08, 0x0000FFFF, 0
-#define _hw_reg__p16a__enb		_r32, 0x0C, 0x003FFFFF, 0
-#define _hw_reg__p16a__enbw1ts		_r32, 0x10, 0x0000FFFF, 0
-#define _hw_reg__p16a__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
-#define _hw_reg__p16a__in		_r32, 0x18, 0x00000000, 0
-#define _hw_reg__p16a__ie		_r32, 0x1C, 0x0000FFFF, 0
-#define _hw_reg__p16a__iew1ts		_r32, 0x20, 0x0000FFFF, 0
-#define _hw_reg__p16a__iew1tc		_r32, 0x24, 0x0000FFFF, 0
+#define hw_reg__p16a__out		_r32, 0x00, 0xFFFFFFFF, 0
+#define hw_reg__p16a__outw1ts		_r32, 0x04, 0x0000FFFF, 0
+#define hw_reg__p16a__outw1tc		_r32, 0x08, 0x0000FFFF, 0
+#define hw_reg__p16a__enb		_r32, 0x0C, 0x003FFFFF, 0
+#define hw_reg__p16a__enbw1ts		_r32, 0x10, 0x0000FFFF, 0
+#define hw_reg__p16a__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
+#define hw_reg__p16a__in		_r32, 0x18, 0x00000000, 0
+#define hw_reg__p16a__ie		_r32, 0x1C, 0x0000FFFF, 0
+#define hw_reg__p16a__iew1ts		_r32, 0x20, 0x0000FFFF, 0
+#define hw_reg__p16a__iew1tc		_r32, 0x24, 0x0000FFFF, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define _hw_reg__p16a_btsel		_cb1, _out,	16, 16
-#define _hw_reg__p16a_out		_cb1, _out,	16,  0
-#define _hw_reg__p16a_outw1ts		_cb1, _outw1ts, 16,  0
-#define _hw_reg__p16a_outw1tc		_cb1, _outw1tc, 16,  0
+#define hw_reg__p16a_btsel		_cb1, _out,	16, 16
+#define hw_reg__p16a_out		_cb1, _out,	16,  0
+#define hw_reg__p16a_outw1ts		_cb1, _outw1ts, 16,  0
+#define hw_reg__p16a_outw1tc		_cb1, _outw1tc, 16,  0
 
-#define _hw_reg__p16a_sdiosel		_cb1, _enb,	 6, 16
-#define _hw_reg__p16a_enb		_cb1, _enb,	16,  0
-#define _hw_reg__p16a_enbw1ts		_cb1, _enbw1ts, 16,  0
-#define _hw_reg__p16a_enbw1tc		_cb1, _enbw1tc, 16,  0
+#define hw_reg__p16a_sdiosel		_cb1, _enb,	 6, 16
+#define hw_reg__p16a_enb		_cb1, _enb,	16,  0
+#define hw_reg__p16a_enbw1ts		_cb1, _enbw1ts, 16,  0
+#define hw_reg__p16a_enbw1tc		_cb1, _enbw1tc, 16,  0
 
-#define _hw_reg__p16a_strapping		_cb1, _in,	16, 16
-#define _hw_reg__p16a_in		_cb1, _in,	16,  0
+#define hw_reg__p16a_strapping		_cb1, _in,	16, 16
+#define hw_reg__p16a_in		_cb1, _in,	16,  0
 
-#define _hw_reg__p16a_ie		_cb1, _ie,	16, 16
-#define _hw_reg__p16a_iew1ts		_cb1, _iew1ts,	16, 16
-#define _hw_reg__p16a_iew1tc		_cb1, _iew1tc,	16, 16
+#define hw_reg__p16a_ie		_cb1, _ie,	16, 16
+#define hw_reg__p16a_iew1ts		_cb1, _iew1ts,	16, 16
+#define hw_reg__p16a_iew1tc		_cb1, _iew1tc,	16, 16
 
 
 /*******************************************************************************
@@ -205,24 +205,24 @@ typedef struct {
  *
  *					class, id, port, bn, bp
  */
-#define _hw_def_gpio0			_io1a, 102, port0, 1, 0
-#define _hw_def_gpio1			_io1a, 103, port0, 1, 1
-#define _hw_def_gpio2			_io1a, 104, port0, 1, 2
-#define _hw_def_gpio3			_io1a, 105, port0, 1, 3
-#define _hw_def_gpio4			_io1a, 106, port0, 1, 4
-#define _hw_def_gpio5			_io1a, 107, port0, 1, 5
-#define _hw_def_gpio6			_io1a, 108, port0, 1, 6
-#define _hw_def_gpio7			_io1a, 109, port0, 1, 7
-#define _hw_def_gpio8			_io1a, 110, port0, 1, 8
-#define _hw_def_gpio9			_io1a, 111, port0, 1, 9
-#define _hw_def_gpio10			_io1a, 112, port0, 1, 10
-#define _hw_def_gpio11			_io1a, 113, port0, 1, 11
-#define _hw_def_gpio12			_io1a, 114, port0, 1, 12
-#define _hw_def_gpio13			_io1a, 115, port0, 1, 13
-#define _hw_def_gpio14			_io1a, 116, port0, 1, 14
-#define _hw_def_gpio15			_io1a, 117, port0, 1, 15
+#define hw_gpio0			_io1a, 102, port0, 1, 0
+#define hw_gpio1			_io1a, 103, port0, 1, 1
+#define hw_gpio2			_io1a, 104, port0, 1, 2
+#define hw_gpio3			_io1a, 105, port0, 1, 3
+#define hw_gpio4			_io1a, 106, port0, 1, 4
+#define hw_gpio5			_io1a, 107, port0, 1, 5
+#define hw_gpio6			_io1a, 108, port0, 1, 6
+#define hw_gpio7			_io1a, 109, port0, 1, 7
+#define hw_gpio8			_io1a, 110, port0, 1, 8
+#define hw_gpio9			_io1a, 111, port0, 1, 9
+#define hw_gpio10			_io1a, 112, port0, 1, 10
+#define hw_gpio11			_io1a, 113, port0, 1, 11
+#define hw_gpio12			_io1a, 114, port0, 1, 12
+#define hw_gpio13			_io1a, 115, port0, 1, 13
+#define hw_gpio14			_io1a, 116, port0, 1, 14
+#define hw_gpio15			_io1a, 117, port0, 1, 15
 
-#define _hw_def_gpio16			_io1b, 118, rtc, 1, 0
+#define hw_gpio16			_io1b, 118, rtc, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -248,9 +248,9 @@ typedef struct {
 
 /*  Pin designed by a number stored in a variable
  */
-#define _hw_class__ionum
+#define hw_class__ionum
 
-#define hw_pin_gpio(x)			HW_Y(hw_pin_gpio_var,_hw_is_var_##x)(x)
+#define hw_pin_gpio(x)			HW_Y(hw_pin_gpio_var_,_hw_is_var_##x)(x)
 #define hw_pin_gpio_var_0(x)		hw_pin_gpio##x
 #define hw_pin_gpio_var_1(x)		_ionum, 0, /* hw_port */, x
 
@@ -262,22 +262,22 @@ typedef struct {
 #include "../classes/pcfa_1.h"
 #include "../classes/pcfb_1.h"
 
-#define _hw_def_gpio12_cf		_pcfa, 119, 0x60000804
-#define _hw_def_gpio13_cf		_pcfa, 120, 0x60000808
-#define _hw_def_gpio14_cf		_pcfa, 121, 0x6000080C
-#define _hw_def_gpio15_cf		_pcfa, 122, 0x60000810
-#define _hw_def_gpio3_cf		_pcfa, 123, 0x60000814
-#define _hw_def_gpio1_cf		_pcfa, 124, 0x60000818
-#define _hw_def_gpio6_cf		_pcfa, 125, 0x6000081c
-#define _hw_def_gpio7_cf		_pcfa, 126, 0x60000820
-#define _hw_def_gpio8_cf		_pcfa, 127, 0x60000824
-#define _hw_def_gpio9_cf		_pcfa, 128, 0x60000828
-#define _hw_def_gpio10_cf		_pcfa, 129, 0x6000082c
-#define _hw_def_gpio11_cf		_pcfa, 130, 0x60000830
-#define _hw_def_gpio0_cf		_pcfa, 131, 0x60000834
-#define _hw_def_gpio2_cf		_pcfa, 132, 0x60000838
-#define _hw_def_gpio4_cf		_pcfa, 133, 0x6000083C
-#define _hw_def_gpio5_cf		_pcfa, 134, 0x60000840
+#define hw_gpio12_cf		_pcfa, 119, 0x60000804
+#define hw_gpio13_cf		_pcfa, 120, 0x60000808
+#define hw_gpio14_cf		_pcfa, 121, 0x6000080C
+#define hw_gpio15_cf		_pcfa, 122, 0x60000810
+#define hw_gpio3_cf		_pcfa, 123, 0x60000814
+#define hw_gpio1_cf		_pcfa, 124, 0x60000818
+#define hw_gpio6_cf		_pcfa, 125, 0x6000081c
+#define hw_gpio7_cf		_pcfa, 126, 0x60000820
+#define hw_gpio8_cf		_pcfa, 127, 0x60000824
+#define hw_gpio9_cf		_pcfa, 128, 0x60000828
+#define hw_gpio10_cf		_pcfa, 129, 0x6000082c
+#define hw_gpio11_cf		_pcfa, 130, 0x60000830
+#define hw_gpio0_cf		_pcfa, 131, 0x60000834
+#define hw_gpio2_cf		_pcfa, 132, 0x60000838
+#define hw_gpio4_cf		_pcfa, 133, 0x6000083C
+#define hw_gpio5_cf		_pcfa, 134, 0x60000840
 
 
 /*  Pin functions
@@ -295,7 +295,7 @@ typedef struct {
 #define _hw_pf_gpio0_clk_out		, 4 /* RESET */
 
 #define _hw_pf_gpio1			(gpio, (uart0,txd), (spi0,cs1), clk_rtc)
-#define _hw_pf_gpio1_uart0txd		, 0, _hwa_write_or( uart0, swap, 0 );
+#define _hw_pf_gpio1_uart0txd		, 0, _hwa_write( uart0, swap, 0 );
 #define _hw_pf_gpio1_spi0cs1		, 1
 #define _hw_pf_gpio1_gpio		, 3
 #define _hw_pf_gpio1_clk_rtc		, 4
@@ -304,10 +304,10 @@ typedef struct {
 #define _hw_pf_gpio2_gpio		, 0
 #define _hw_pf_gpio2_i2so_ws		, 1
 #define _hw_pf_gpio2_uart1_txd		, 2
-#define _hw_pf_gpio2_uart0_txd		, 4, _hwa_write_or( uart0, swap, 0 );
+#define _hw_pf_gpio2_uart0_txd		, 4, _hwa_write( uart0, swap, 0 );
 
 #define _hw_pf_gpio3			(gpio, (uart0,rxd), (i2so,data), fn_clk_xtal)
-#define _hw_pf_gpio3_uart0rxd		, 0, _hwa_write_or( uart0, swap, 0 );
+#define _hw_pf_gpio3_uart0rxd		, 0, _hwa_write( uart0, swap, 0 );
 #define _hw_pf_gpio3_i2sodata		, 1
 #define _hw_pf_gpio3_gpio		, 3
 #define _hw_pf_gpio3_clk_xtal		, 4
@@ -369,7 +369,7 @@ typedef struct {
 #define _hw_pf_gpio13_hspi0mosi		, 2
 #define _hw_pf_gpio13_gpio		, 3
 #define _hw_pf_gpio13_uart0cts		, 4
-#define _hw_pf_gpio13_uart0rxd		, 4, _hwa_write_or( uart0, swap, 1 );
+#define _hw_pf_gpio13_uart0rxd		, 4, _hwa_write( uart0, swap, 1 );
 
 #define _hw_pf_gpio14			(gpio, mtms, (i2si,ws), (hspi0,clk), (uart0,dsr))
 #define _hw_pf_gpio14_mtms		, 0
@@ -384,7 +384,7 @@ typedef struct {
 #define _hw_pf_gpio15_hspi0cs		, 2
 #define _hw_pf_gpio15_gpio		, 3
 #define _hw_pf_gpio15_uart0rts		, 4
-#define _hw_pf_gpio15_uart0txd		, 4, _hwa_write_or( uart0, swap, 1 );
+#define _hw_pf_gpio15_uart0txd		, 4, _hwa_write( uart0, swap, 1 );
 
 #define _hw_pf_gpio16			(gpio, xpd_dcdc, external_wakeup, deep_sleep, bt_xtal_en)
 #define _hw_pf_gpio16_xpd_dcdc		, 0
@@ -405,25 +405,25 @@ typedef struct {
 
 #include "../classes/rtca_1.h"
 
-#define _hw_def_rtc			_rtca, 101, 0x60000700
+#define hw_rtc			_rtca, 101, 0x60000700
 
-/* #define _hw_reg__rtca__store0		_r32, 0x30, 0xFFFFFFFF, 0 */
-/* #define _hw_reg__rtca__store1		_r32, 0x34, 0xFFFFFFFF, 0 */
-/* #define _hw_reg__rtca__store2		_r32, 0x38, 0xFFFFFFFF, 0 */
-/* #define _hw_reg__rtca__store3		_r32, 0x3C, 0xFFFFFFFF, 0 */
+/* #define hw_reg__rtca__store0		_r32, 0x30, 0xFFFFFFFF, 0 */
+/* #define hw_reg__rtca__store1		_r32, 0x34, 0xFFFFFFFF, 0 */
+/* #define hw_reg__rtca__store2		_r32, 0x38, 0xFFFFFFFF, 0 */
+/* #define hw_reg__rtca__store3		_r32, 0x3C, 0xFFFFFFFF, 0 */
 
-#define _hw_reg_rtc__gpioout		_r32, 0x68, 0xFFFFFFFF, 0
-#define _hw_reg_rtc__gpioen		_r32, 0x74, 0xFFFFFFFF, 0
-#define _hw_reg_rtc__gpioin		_r32, 0x8C, 0xFFFFFFFF, 0
-#define _hw_reg_rtc__gpiocf		_r32, 0x90, 0xFFFFFFFF, 0
-#define _hw_reg_rtc__gpiocr		_r32, 0xA0, 0xFFFFFFFF, 0
+#define hw_reg_rtc__gpioout		_r32, 0x68, 0xFFFFFFFF, 0
+#define hw_reg_rtc__gpioen		_r32, 0x74, 0xFFFFFFFF, 0
+#define hw_reg_rtc__gpioin		_r32, 0x8C, 0xFFFFFFFF, 0
+#define hw_reg_rtc__gpiocf		_r32, 0x90, 0xFFFFFFFF, 0
+#define hw_reg_rtc__gpiocr		_r32, 0xA0, 0xFFFFFFFF, 0
 
-#define _hw_reg_gpio16_fn		_xob2, rtc, _gpiocr, 1, 6, 2, _gpiocr, 2, 0, 0
-#define _hw_reg_gpio16_spd		_xob1, rtc, _gpiocr, 1, 5
-#define _hw_reg_gpio16_pd		_xob1, rtc, _gpiocr, 1, 3
-#define _hw_reg_gpio16_pdx		_xob2, rtc, _gpiocr, 1, 5, 1, _gpiocr, 1, 3, 0 /* convenient */
-#define _hw_reg_gpio16_oe		_xob1, rtc, _gpioen, 1, 0 /* convenient */
-#define _hw_reg_gpio16_cf		_xob1, rtc, _gpiocf, 1, 0 /* convenient */
+#define hw_reg_gpio16_fn		_xob2, rtc, _gpiocr, 1, 6, 2, _gpiocr, 2, 0, 0
+#define hw_reg_gpio16_spd		_xob1, rtc, _gpiocr, 1, 5
+#define hw_reg_gpio16_pd		_xob1, rtc, _gpiocr, 1, 3
+#define hw_reg_gpio16_pdx		_xob2, rtc, _gpiocr, 1, 5, 1, _gpiocr, 1, 3, 0 /* convenient */
+#define hw_reg_gpio16_oe		_xob1, rtc, _gpioen, 1, 0 /* convenient */
+#define hw_reg_gpio16_cf		_xob1, rtc, _gpiocf, 1, 0 /* convenient */
 
 
 /*******************************************************************************
@@ -440,29 +440,29 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_timer1			_tm23a, 135, 0x60000600
+#define hw_timer1			_tm23a, 135, 0x60000600
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
-#define _hw_reg__tm23a__load		_r32, 0x00, 0x7FFFFF, 0
-#define _hw_reg__tm23a__count		_r32, 0x04, 0x0,      0
-#define _hw_reg__tm23a__ctrl		_r32, 0x08, 0x0CD,    0
-#define _hw_reg__tm23a__flags		_r32, 0x0C, 0x1,      0x1
+#define hw_reg__tm23a__load		_r32, 0x00, 0x7FFFFF, 0
+#define hw_reg__tm23a__count		_r32, 0x04, 0x0,      0
+#define hw_reg__tm23a__ctrl		_r32, 0x08, 0x0CD,    0
+#define hw_reg__tm23a__flags		_r32, 0x0C, 0x1,      0x1
 
 /*	Class logical registers
  */
-#define _hw_reg__tm23a_int		_cb1, _ctrl,  1, 8	// Interrupt status
-#define _hw_reg__tm23a_en		_cb1, _ctrl,  1, 7	// Enable timer
-#define _hw_reg__tm23a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
-#define _hw_reg__tm23a_psc		_cb1, _ctrl,  2, 2	// Prescaler
-#define _hw_reg__tm23a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
+#define hw_reg__tm23a_int		_cb1, _ctrl,  1, 8	// Interrupt status
+#define hw_reg__tm23a_en		_cb1, _ctrl,  1, 7	// Enable timer
+#define hw_reg__tm23a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
+#define hw_reg__tm23a_psc		_cb1, _ctrl,  2, 2	// Prescaler
+#define hw_reg__tm23a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
 
-#define _hw_reg__tm23a_load		_cb1, _load,  23, 0	// Reload value
-#define _hw_reg__tm23a_count		_cb1, _count, 23, 0	// Count
+#define hw_reg__tm23a_load		_cb1, _load,  23, 0	// Reload value
+#define hw_reg__tm23a_count		_cb1, _count, 23, 0	// Count
 
-#define _hw_reg__tm23a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
+#define hw_reg__tm23a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-#define _hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
+#define hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -477,30 +477,30 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define _hw_def_timer2			_tm32a, 136, 0x60000620
+#define hw_timer2			_tm32a, 136, 0x60000620
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg__tm32a__load		_r32, 0x00, 0xFFFFFFFF, 0
-#define _hw_reg__tm32a__count		_r32, 0x04, 0x00000000, 0
-#define _hw_reg__tm32a__ctrl		_r32, 0x08, 0x000000CD, 0
-#define _hw_reg__tm32a__flags		_r32, 0x0C, 0x00000001, 1
-#define _hw_reg__tm32a__alarm		_r32, 0x10, 0xFFFFFFFF, 0
+#define hw_reg__tm32a__load		_r32, 0x00, 0xFFFFFFFF, 0
+#define hw_reg__tm32a__count		_r32, 0x04, 0x00000000, 0
+#define hw_reg__tm32a__ctrl		_r32, 0x08, 0x000000CD, 0
+#define hw_reg__tm32a__flags		_r32, 0x0C, 0x00000001, 1
+#define hw_reg__tm32a__alarm		_r32, 0x10, 0xFFFFFFFF, 0
 
 /*	Class logical registers
  */
-#define _hw_reg__tm32a_int		_cb1, _ctrl,  1, 8	// Interrupt status
-#define _hw_reg__tm32a_en		_cb1, _ctrl,  1, 7	// Enable timer
-#define _hw_reg__tm32a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
-#define _hw_reg__tm32a_psc		_cb1, _ctrl,  2, 2	// Prescaler
-#define _hw_reg__tm32a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
+#define hw_reg__tm32a_int		_cb1, _ctrl,  1, 8	// Interrupt status
+#define hw_reg__tm32a_en		_cb1, _ctrl,  1, 7	// Enable timer
+#define hw_reg__tm32a_arl		_cb1, _ctrl,  1, 6	// Auto-reload after 0
+#define hw_reg__tm32a_psc		_cb1, _ctrl,  2, 2	// Prescaler
+#define hw_reg__tm32a_irqtype		_cb1, _ctrl,  1, 0	// 0:Edge/1:Level interrupt
 
-#define _hw_reg__tm32a_load		_cb1, _load,  32, 0	// Reload value
-#define _hw_reg__tm32a_count		_cb1, _count, 32, 0	// Count
+#define hw_reg__tm32a_load		_cb1, _load,  32, 0	// Reload value
+#define hw_reg__tm32a_count		_cb1, _count, 32, 0	// Count
 
-#define _hw_reg__tm32a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
+#define hw_reg__tm32a_ifclr		_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-//#define _hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
+//#define hw_reg_timer1_ie		_xob1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -520,117 +520,117 @@ typedef struct {
 
 /*	Objects				class, id, address
  */
-#define _hw_def_uart0			_uarta, 137, 0x60000000
-#define _hw_def_uart1			_uarta, 138, 0x60000F00
+#define hw_uart0			_uarta, 137, 0x60000000
+#define hw_uart1			_uarta, 138, 0x60000F00
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
-#define _hw_reg__uarta__fifo		_r32, 0x00, 0x0, 0
-#define _hw_reg__uarta__ir		_r32, 0x04, 0x0, 0		// IRQ raw
-#define _hw_reg__uarta__if		_r32, 0x08, 0x0, 0		// IRQ stat
-#define _hw_reg__uarta__ie		_r32, 0x0C, 0x1FF, 0		// IRQ enable
-#define _hw_reg__uarta__ic		_r32, 0x10, 0x1FF, 0x1FF	// IRQ clear
-#define _hw_reg__uarta__clkdiv		_r32, 0x14, 0xFFFFF, 0
-#define _hw_reg__uarta__autobaud	_r32, 0x18, 0xFF01, 0
-#define _hw_reg__uarta__stat		_r32, 0x1C, 0x0, 0
-#define _hw_reg__uarta__conf0		_r32, 0x20, 0x01FE61FF, 0
-#define _hw_reg__uarta__conf1		_r32, 0x24, 0xFFFF7F7F, 0
-#define _hw_reg__uarta__lopulse		_r32, 0x28, 0x0, 0
-#define _hw_reg__uarta__hipulse		_r32, 0x2C, 0x0, 0
-#define _hw_reg__uarta__pulsnum		_r32, 0x30, 0x0, 0
-#define _hw_reg__uarta__date		_r32, 0x78, 0xFFFFFFFF, 0
-#define _hw_reg__uarta__id		_r32, 0x7C, 0xFFFFFFFF, 0
+#define hw_reg__uarta__fifo		_r32, 0x00, 0x0, 0
+#define hw_reg__uarta__ir		_r32, 0x04, 0x0, 0		// IRQ raw
+#define hw_reg__uarta__if		_r32, 0x08, 0x0, 0		// IRQ stat
+#define hw_reg__uarta__ie		_r32, 0x0C, 0x1FF, 0		// IRQ enable
+#define hw_reg__uarta__ic		_r32, 0x10, 0x1FF, 0x1FF	// IRQ clear
+#define hw_reg__uarta__clkdiv		_r32, 0x14, 0xFFFFF, 0
+#define hw_reg__uarta__autobaud	_r32, 0x18, 0xFF01, 0
+#define hw_reg__uarta__stat		_r32, 0x1C, 0x0, 0
+#define hw_reg__uarta__conf0		_r32, 0x20, 0x01FE61FF, 0
+#define hw_reg__uarta__conf1		_r32, 0x24, 0xFFFF7F7F, 0
+#define hw_reg__uarta__lopulse		_r32, 0x28, 0x0, 0
+#define hw_reg__uarta__hipulse		_r32, 0x2C, 0x0, 0
+#define hw_reg__uarta__pulsnum		_r32, 0x30, 0x0, 0
+#define hw_reg__uarta__date		_r32, 0x78, 0xFFFFFFFF, 0
+#define hw_reg__uarta__id		_r32, 0x7C, 0xFFFFFFFF, 0
 
 /*	Class logical registers
  */
-#define _hw_reg__uarta_rxqcnt		_cb1, _fifo, 8, 0	// RX fifo read position
+#define hw_reg__uarta_rxqcnt		_cb1, _fifo, 8, 0	// RX fifo read position
 
-#define _hw_reg__uarta_irrxto		_cb1, _ir, 1, 8		// IRQ RX timeout
-#define _hw_reg__uarta_irrxbrk		_cb1, _ir, 1, 7		// IRQ break detected
-#define _hw_reg__uarta_ircts		_cb1, _ir, 1, 6		// IRQ CTS changed
-#define _hw_reg__uarta_irdsr		_cb1, _ir, 1, 5		// IRQ DSR changed
-#define _hw_reg__uarta_irrxof		_cb1, _ir, 1, 4		// IRQ RX overflow
-#define _hw_reg__uarta_irrxfe		_cb1, _ir, 1, 3		// IRQ frame error
-#define _hw_reg__uarta_irrxpe		_cb1, _ir, 1, 2		// IRQ parity error
-#define _hw_reg__uarta_irtxqe		_cb1, _ir, 1, 1		// IRQ TX fifo empty
-#define _hw_reg__uarta_irrxqf		_cb1, _ir, 1, 0		// IRQ RX fifo full
+#define hw_reg__uarta_irrxto		_cb1, _ir, 1, 8		// IRQ RX timeout
+#define hw_reg__uarta_irrxbrk		_cb1, _ir, 1, 7		// IRQ break detected
+#define hw_reg__uarta_ircts		_cb1, _ir, 1, 6		// IRQ CTS changed
+#define hw_reg__uarta_irdsr		_cb1, _ir, 1, 5		// IRQ DSR changed
+#define hw_reg__uarta_irrxof		_cb1, _ir, 1, 4		// IRQ RX overflow
+#define hw_reg__uarta_irrxfe		_cb1, _ir, 1, 3		// IRQ frame error
+#define hw_reg__uarta_irrxpe		_cb1, _ir, 1, 2		// IRQ parity error
+#define hw_reg__uarta_irtxqe		_cb1, _ir, 1, 1		// IRQ TX fifo empty
+#define hw_reg__uarta_irrxqf		_cb1, _ir, 1, 0		// IRQ RX fifo full
 
-#define _hw_reg__uarta_ifrxto		_cb1, _if, 1, 8		// IRQ RX timeout
-#define _hw_reg__uarta_ifrxbrk		_cb1, _if, 1, 7		// IRQ break detected
-#define _hw_reg__uarta_ifcts		_cb1, _if, 1, 6		// IRQ CTS changed
-#define _hw_reg__uarta_ifdsr		_cb1, _if, 1, 5		// IRQ DSR changed
-#define _hw_reg__uarta_ifrxof		_cb1, _if, 1, 4		// IRQ RX overflow
-#define _hw_reg__uarta_ifrxfe		_cb1, _if, 1, 3		// IRQ frame error
-#define _hw_reg__uarta_ifrxpe		_cb1, _if, 1, 2		// IRQ parity error
-#define _hw_reg__uarta_iftxqe		_cb1, _if, 1, 1		// IRQ TX fifo empty
-#define _hw_reg__uarta_ifrxqf		_cb1, _if, 1, 0		// IRQ RX fifo full
+#define hw_reg__uarta_ifrxto		_cb1, _if, 1, 8		// IRQ RX timeout
+#define hw_reg__uarta_ifrxbrk		_cb1, _if, 1, 7		// IRQ break detected
+#define hw_reg__uarta_ifcts		_cb1, _if, 1, 6		// IRQ CTS changed
+#define hw_reg__uarta_ifdsr		_cb1, _if, 1, 5		// IRQ DSR changed
+#define hw_reg__uarta_ifrxof		_cb1, _if, 1, 4		// IRQ RX overflow
+#define hw_reg__uarta_ifrxfe		_cb1, _if, 1, 3		// IRQ frame error
+#define hw_reg__uarta_ifrxpe		_cb1, _if, 1, 2		// IRQ parity error
+#define hw_reg__uarta_iftxqe		_cb1, _if, 1, 1		// IRQ TX fifo empty
+#define hw_reg__uarta_ifrxqf		_cb1, _if, 1, 0		// IRQ RX fifo full
 
-#define _hw_reg__uarta_ierxto		_cb1, _ie, 1, 8		// IRQ RX timeout
-#define _hw_reg__uarta_ierxbrk		_cb1, _ie, 1, 7		// IRQ break detected
-#define _hw_reg__uarta_iects		_cb1, _ie, 1, 6		// IRQ CTS changed
-#define _hw_reg__uarta_iedsr		_cb1, _ie, 1, 5		// IRQ DSR changed
-#define _hw_reg__uarta_ierxof		_cb1, _ie, 1, 4		// IRQ RX overflow
-#define _hw_reg__uarta_ierxfe		_cb1, _ie, 1, 3		// IRQ frame error
-#define _hw_reg__uarta_ierxpe		_cb1, _ie, 1, 2		// IRQ parity error
-#define _hw_reg__uarta_ietxqe		_cb1, _ie, 1, 1		// IRQ TX fifo empty
-#define _hw_reg__uarta_ierxqf		_cb1, _ie, 1, 0		// IRQ RX fifo full
+#define hw_reg__uarta_ierxto		_cb1, _ie, 1, 8		// IRQ RX timeout
+#define hw_reg__uarta_ierxbrk		_cb1, _ie, 1, 7		// IRQ break detected
+#define hw_reg__uarta_iects		_cb1, _ie, 1, 6		// IRQ CTS changed
+#define hw_reg__uarta_iedsr		_cb1, _ie, 1, 5		// IRQ DSR changed
+#define hw_reg__uarta_ierxof		_cb1, _ie, 1, 4		// IRQ RX overflow
+#define hw_reg__uarta_ierxfe		_cb1, _ie, 1, 3		// IRQ frame error
+#define hw_reg__uarta_ierxpe		_cb1, _ie, 1, 2		// IRQ parity error
+#define hw_reg__uarta_ietxqe		_cb1, _ie, 1, 1		// IRQ TX fifo empty
+#define hw_reg__uarta_ierxqf		_cb1, _ie, 1, 0		// IRQ RX fifo full
 
-#define _hw_reg__uarta_icrxto		_cb1, _ic, 1, 8		// IRQ RX timeout
-#define _hw_reg__uarta_icrxbrk		_cb1, _ic, 1, 7		// IRQ break detected
-#define _hw_reg__uarta_iccts		_cb1, _ic, 1, 6		// IRQ CTS changed
-#define _hw_reg__uarta_icdsr		_cb1, _ic, 1, 5		// IRQ DSR changed
-#define _hw_reg__uarta_icrxof		_cb1, _ic, 1, 4		// IRQ RX overflow
-#define _hw_reg__uarta_icrxfe		_cb1, _ic, 1, 3		// IRQ frame error
-#define _hw_reg__uarta_icrxpe		_cb1, _ic, 1, 2		// IRQ parity error
-#define _hw_reg__uarta_ictxqe		_cb1, _ic, 1, 1		// IRQ TX fifo empty
-#define _hw_reg__uarta_icrxqf		_cb1, _ic, 1, 0		// IRQ RX fifo full
+#define hw_reg__uarta_icrxto		_cb1, _ic, 1, 8		// IRQ RX timeout
+#define hw_reg__uarta_icrxbrk		_cb1, _ic, 1, 7		// IRQ break detected
+#define hw_reg__uarta_iccts		_cb1, _ic, 1, 6		// IRQ CTS changed
+#define hw_reg__uarta_icdsr		_cb1, _ic, 1, 5		// IRQ DSR changed
+#define hw_reg__uarta_icrxof		_cb1, _ic, 1, 4		// IRQ RX overflow
+#define hw_reg__uarta_icrxfe		_cb1, _ic, 1, 3		// IRQ frame error
+#define hw_reg__uarta_icrxpe		_cb1, _ic, 1, 2		// IRQ parity error
+#define hw_reg__uarta_ictxqe		_cb1, _ic, 1, 1		// IRQ TX fifo empty
+#define hw_reg__uarta_icrxqf		_cb1, _ic, 1, 0		// IRQ RX fifo full
 
-#define _hw_reg__uarta_clkdiv		_cb1, _clkdiv, 20, 0	// Baudrate divider
+#define hw_reg__uarta_clkdiv		_cb1, _clkdiv, 20, 0	// Baudrate divider
 
-#define _hw_reg__uarta_stxd		_cb1, _stat, 1, 31	// TX PIN Level
-#define _hw_reg__uarta_srtsn		_cb1, _stat, 1, 30	// RTS PIN Level
-#define _hw_reg__uarta_sdtrn		_cb1, _stat, 1, 29	// DTR PIN Level
-#define _hw_reg__uarta_stxcnt		_cb1, _stat, 8, 16	// TX FIFO COUNT (8bit)
-#define _hw_reg__uarta_srxd		_cb1, _stat, 1, 15	// RX PIN Level
-#define _hw_reg__uarta_sctsn		_cb1, _stat, 1, 14	// CTS PIN Level
-#define _hw_reg__uarta_sdsrn		_cb1, _stat, 1, 13	// DSR PIN Level
-#define _hw_reg__uarta_srxcnt		_cb1, _stat, 8,	 0	// RX FIFO COUNT (8bit)
+#define hw_reg__uarta_stxd		_cb1, _stat, 1, 31	// TX PIN Level
+#define hw_reg__uarta_srtsn		_cb1, _stat, 1, 30	// RTS PIN Level
+#define hw_reg__uarta_sdtrn		_cb1, _stat, 1, 29	// DTR PIN Level
+#define hw_reg__uarta_stxcnt		_cb1, _stat, 8, 16	// TX FIFO COUNT (8bit)
+#define hw_reg__uarta_srxd		_cb1, _stat, 1, 15	// RX PIN Level
+#define hw_reg__uarta_sctsn		_cb1, _stat, 1, 14	// CTS PIN Level
+#define hw_reg__uarta_sdsrn		_cb1, _stat, 1, 13	// DSR PIN Level
+#define hw_reg__uarta_srxcnt		_cb1, _stat, 8,	 0	// RX FIFO COUNT (8bit)
 
-#define _hw_reg__uarta_cdtri		_cb1, _conf0, 1, 24	// Invert DTR
-#define _hw_reg__uarta_crtsi		_cb1, _conf0, 1, 23	// Invert RTS
-#define _hw_reg__uarta_ctxi		_cb1, _conf0, 1, 22	// Invert TX
-#define _hw_reg__uarta_cdsri		_cb1, _conf0, 1, 21	// Invert DSR
-#define _hw_reg__uarta_cctsi		_cb1, _conf0, 1, 20	// Invert CTS
-#define _hw_reg__uarta_crxi		_cb1, _conf0, 1, 19	// Invert RX
-#define _hw_reg__uarta_ctxrst		_cb1, _conf0, 1, 18	// Reset TX FIFO
-#define _hw_reg__uarta_crxrst		_cb1, _conf0, 1, 17	// Reset RX FIFO
-#define _hw_reg__uarta_ctxhfe		_cb1, _conf0, 1, 15	// Enable TX harware flow
-#define _hw_reg__uarta_clbe		_cb1, _conf0, 1, 14	// Enable loopback
-#define _hw_reg__uarta_cbrk		_cb1, _conf0, 1,  8	// Keep TXD low (BRK)
-#define _hw_reg__uarta_cswdtr		_cb1, _conf0, 1,  7	// Assert DTR
-#define _hw_reg__uarta_cswrts		_cb1, _conf0, 1,  6	// Assert RTS
-#define _hw_reg__uarta_csbn		_cb1, _conf0, 2,  4	// StopBits Count (2bit) 0:disable, 1:1bit, 2:1.5bit, 3:2bit
-#define _hw_reg__uarta_cbn		_cb1, _conf0, 2,  2	// DataBits Count (2bin) 0:5bit, 1:6bit, 2:7bit, 3:8bit
-#define _hw_reg__uarta_cpae		_cb1, _conf0, 1,  1	// Parity Enable
-#define _hw_reg__uarta_cpa		_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
-#define _hw_reg__uarta_cpx		_cb1, _conf0, 2,  0	// HWA convenience
+#define hw_reg__uarta_cdtri		_cb1, _conf0, 1, 24	// Invert DTR
+#define hw_reg__uarta_crtsi		_cb1, _conf0, 1, 23	// Invert RTS
+#define hw_reg__uarta_ctxi		_cb1, _conf0, 1, 22	// Invert TX
+#define hw_reg__uarta_cdsri		_cb1, _conf0, 1, 21	// Invert DSR
+#define hw_reg__uarta_cctsi		_cb1, _conf0, 1, 20	// Invert CTS
+#define hw_reg__uarta_crxi		_cb1, _conf0, 1, 19	// Invert RX
+#define hw_reg__uarta_ctxrst		_cb1, _conf0, 1, 18	// Reset TX FIFO
+#define hw_reg__uarta_crxrst		_cb1, _conf0, 1, 17	// Reset RX FIFO
+#define hw_reg__uarta_ctxhfe		_cb1, _conf0, 1, 15	// Enable TX harware flow
+#define hw_reg__uarta_clbe		_cb1, _conf0, 1, 14	// Enable loopback
+#define hw_reg__uarta_cbrk		_cb1, _conf0, 1,  8	// Keep TXD low (BRK)
+#define hw_reg__uarta_cswdtr		_cb1, _conf0, 1,  7	// Assert DTR
+#define hw_reg__uarta_cswrts		_cb1, _conf0, 1,  6	// Assert RTS
+#define hw_reg__uarta_csbn		_cb1, _conf0, 2,  4	// StopBits Count (2bit) 0:disable, 1:1bit, 2:1.5bit, 3:2bit
+#define hw_reg__uarta_cbn		_cb1, _conf0, 2,  2	// DataBits Count (2bin) 0:5bit, 1:6bit, 2:7bit, 3:8bit
+#define hw_reg__uarta_cpae		_cb1, _conf0, 1,  1	// Parity Enable
+#define hw_reg__uarta_cpa		_cb1, _conf0, 1,  0	// Parity 0:even, 1:odd
+#define hw_reg__uarta_cpx		_cb1, _conf0, 2,  0	// HWA convenience
 
-#define _hw_reg__uarta_ctoe		_cb1, _conf1, 1, 31	// RX TimeOut Enable
-#define _hw_reg__uarta_ctot		_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
-#define _hw_reg__uarta_crxhfe		_cb1, _conf1, 1, 23	// RX Harware Flow Enable
-#define _hw_reg__uarta_crxhft		_cb1, _conf1, 7, 16	// RX Harware Flow Treshold (7bit)
-#define _hw_reg__uarta_cfet		_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
-#define _hw_reg__uarta_cfft		_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
+#define hw_reg__uarta_ctoe		_cb1, _conf1, 1, 31	// RX TimeOut Enable
+#define hw_reg__uarta_ctot		_cb1, _conf1, 7, 24	// RX TimeOut Treshold (7bit)
+#define hw_reg__uarta_crxhfe		_cb1, _conf1, 1, 23	// RX Harware Flow Enable
+#define hw_reg__uarta_crxhft		_cb1, _conf1, 7, 16	// RX Harware Flow Treshold (7bit)
+#define hw_reg__uarta_cfet		_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
+#define hw_reg__uarta_cfft		_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
 
-#define _hw_reg__uarta_swap		_xob1, shared, _swap, 1, 2
+#define hw_reg__uarta_swap		_xob1, shared, _swap, 1, 2
 
-// #define _hw_reg__uarta_		_cb1, _, 1,	//
+// #define hw_reg__uarta_		_cb1, _, 1,	//
 
 /*  Relatives
  */
 //#define hw_uart0pin_txd			hw_gpio1
 //#define hw_uart0pin_rxd			hw_gpio3
-#define _hw_rel_uart0_txd		gpio1
+#define hw_uart0_txd		gpio1
 
 
 /*******************************************************************************
@@ -685,83 +685,83 @@ typedef struct {
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
-  _hwa_setup( shared );
-  _hwa_setup( port0 );
-  _hwa_setup( rtc );
-  _hwa_setup( gpio0_cf );
-  _hwa_setup( gpio1_cf );
-  _hwa_setup( gpio2_cf );
-  _hwa_setup( gpio3_cf );
-  _hwa_setup( gpio4_cf );
-  _hwa_setup( gpio5_cf );
-  _hwa_setup( gpio6_cf );
-  _hwa_setup( gpio7_cf );
-  _hwa_setup( gpio8_cf );
-  _hwa_setup( gpio9_cf );
-  _hwa_setup( gpio10_cf );
-  _hwa_setup( gpio11_cf );
-  _hwa_setup( gpio12_cf );
-  _hwa_setup( gpio13_cf );
-  _hwa_setup( gpio14_cf );
-  _hwa_setup( gpio15_cf );
+  _hwa_setup_o( shared );
+  _hwa_setup_o( port0 );
+  _hwa_setup_o( rtc );
+  _hwa_setup_o( gpio0_cf );
+  _hwa_setup_o( gpio1_cf );
+  _hwa_setup_o( gpio2_cf );
+  _hwa_setup_o( gpio3_cf );
+  _hwa_setup_o( gpio4_cf );
+  _hwa_setup_o( gpio5_cf );
+  _hwa_setup_o( gpio6_cf );
+  _hwa_setup_o( gpio7_cf );
+  _hwa_setup_o( gpio8_cf );
+  _hwa_setup_o( gpio9_cf );
+  _hwa_setup_o( gpio10_cf );
+  _hwa_setup_o( gpio11_cf );
+  _hwa_setup_o( gpio12_cf );
+  _hwa_setup_o( gpio13_cf );
+  _hwa_setup_o( gpio14_cf );
+  _hwa_setup_o( gpio15_cf );
 
-  _hwa_setup( timer1 );
-  _hwa_setup( uart0 );
+  _hwa_setup_o( timer1 );
+  _hwa_setup_o( uart0 );
 }
 
 
 HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
-  _hwa_init( shared );
-  _hwa_init( port0 );
-  _hwa_init( rtc );
-  /* _hwa_init( gpio0_cf ); */
-  /* _hwa_init( gpio1_cf ); */
-  /* _hwa_init( gpio2_cf ); */
-  /* _hwa_init( gpio3_cf ); */
-  /* _hwa_init( gpio4_cf ); */
-  /* _hwa_init( gpio5_cf ); */
-  /* _hwa_init( gpio6_cf ); */
-  /* _hwa_init( gpio7_cf ); */
-  /* _hwa_init( gpio8_cf ); */
-  /* _hwa_init( gpio9_cf ); */
-  /* _hwa_init( gpio10_cf ); */
-  /* _hwa_init( gpio11_cf ); */
-  /* _hwa_init( gpio12_cf ); */
-  /* _hwa_init( gpio13_cf ); */
-  /* _hwa_init( gpio14_cf ); */
-  /* _hwa_init( gpio15_cf ); */
-  _hwa_init( timer1 );
-  _hwa_init( uart0 );
+  _hwa_init_o( shared );
+  _hwa_init_o( port0 );
+  _hwa_init_o( rtc );
+  /* _hwa_init_o( gpio0_cf ); */
+  /* _hwa_init_o( gpio1_cf ); */
+  /* _hwa_init_o( gpio2_cf ); */
+  /* _hwa_init_o( gpio3_cf ); */
+  /* _hwa_init_o( gpio4_cf ); */
+  /* _hwa_init_o( gpio5_cf ); */
+  /* _hwa_init_o( gpio6_cf ); */
+  /* _hwa_init_o( gpio7_cf ); */
+  /* _hwa_init_o( gpio8_cf ); */
+  /* _hwa_init_o( gpio9_cf ); */
+  /* _hwa_init_o( gpio10_cf ); */
+  /* _hwa_init_o( gpio11_cf ); */
+  /* _hwa_init_o( gpio12_cf ); */
+  /* _hwa_init_o( gpio13_cf ); */
+  /* _hwa_init_o( gpio14_cf ); */
+  /* _hwa_init_o( gpio15_cf ); */
+  _hwa_init_o( timer1 );
+  _hwa_init_o( uart0 );
 }
 
 
 HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
-  _hwa_commit( gpio0_cf );
-  _hwa_commit( gpio1_cf );
-  _hwa_commit( gpio2_cf );
-  _hwa_commit( gpio3_cf );
-  _hwa_commit( gpio4_cf );
-  _hwa_commit( gpio5_cf );
-  _hwa_commit( gpio6_cf );
-  _hwa_commit( gpio7_cf );
-  _hwa_commit( gpio8_cf );
-  _hwa_commit( gpio9_cf );
-  _hwa_commit( gpio10_cf );
-  _hwa_commit( gpio11_cf );
-  _hwa_commit( gpio12_cf );
-  _hwa_commit( gpio13_cf );
-  _hwa_commit( gpio14_cf );
-  _hwa_commit( gpio15_cf );
+  _hwa_commit_o( gpio0_cf );
+  _hwa_commit_o( gpio1_cf );
+  _hwa_commit_o( gpio2_cf );
+  _hwa_commit_o( gpio3_cf );
+  _hwa_commit_o( gpio4_cf );
+  _hwa_commit_o( gpio5_cf );
+  _hwa_commit_o( gpio6_cf );
+  _hwa_commit_o( gpio7_cf );
+  _hwa_commit_o( gpio8_cf );
+  _hwa_commit_o( gpio9_cf );
+  _hwa_commit_o( gpio10_cf );
+  _hwa_commit_o( gpio11_cf );
+  _hwa_commit_o( gpio12_cf );
+  _hwa_commit_o( gpio13_cf );
+  _hwa_commit_o( gpio14_cf );
+  _hwa_commit_o( gpio15_cf );
 
-  _hwa_commit( port0 );
-  _hwa_commit( rtc );
-  _hwa_commit( timer1 );
-  _hwa_commit( uart0 );
+  _hwa_commit_o( port0 );
+  _hwa_commit_o( rtc );
+  _hwa_commit_o( timer1 );
+  _hwa_commit_o( uart0 );
 
-  //  _hwa_commit_or( shared, _edgeie ); /* Process IRQ at last */
-  _hwa_commit( shared );
+  //  _hwa_commit_r( shared, _edgeie ); /* Process IRQ at last */
+  _hwa_commit_o( shared );
 }
 
 #endif /* !defined __ASSEMBLER__ */

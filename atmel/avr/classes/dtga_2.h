@@ -17,7 +17,7 @@
  * the delay in prescaled clock units before the assertion of the output `X_y`:
  *
  * @code
- * hw( configure, HW_RELATIVE( counter0, dtg0 ),
+ * hw( configure, ( counter0, dtg0 ),
  *
  *   [ prescaler,  1 | 2 | 4 | 8, ]      // default is `1`
  *
@@ -47,26 +47,26 @@
  * hw( write, counter1dtgprescaler, 4 );
  */
 
-#define _hw_mtd_hwa_configure__dtga	, _hwa_cfdtga
+#define hwa_configure__dtga	, _hwa_cfdtga
 
 
 /*  Optionnal argument `prescaler`
  */
 #define _hwa_cfdtga(o,i,a,k,...)					\
-  do { HW_Y(_hwa_cfdtga_kpsc,_hw_dtga_kpsc_##k)(o,k,__VA_ARGS__) } while(0)
+  do { HW_Y(_hwa_cfdtga_kpsc_,_hw_dtga_kpsc_##k)(o,k,__VA_ARGS__) } while(0)
 
 #define _hwa_cfdtga_kpsc_1(o,k,v,...)				   \
-  HW_Y(_hwa_cfdtga_vpsc,HW_A0(_hw_dtga_vpsc_##v))(o,v,__VA_ARGS__) \
+  HW_Y(_hwa_cfdtga_vpsc_,HW_A0(_hw_dtga_vpsc_##v))(o,v,__VA_ARGS__) \
 
 #define _hwa_cfdtga_vpsc_0(o,v,...)		\
   HW_E_AVL(psc, v, 1 | 2 | 4 | 8)
 
 #define _hwa_cfdtga_vpsc_1(o,v,...)		\
-  _hwa_write_or(o,psc,HW_A1(_hw_dtga_vpsc_##v));\
+  _hwa_write(o,psc,HW_A1(_hw_dtga_vpsc_##v));\
   _hwa_cfdtga_kpsc_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kpsc_0(o,k,...)				\
-  HW_Y(_hwa_cfdtga_kcompare0h,_hw_dtga_kcompare0h_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfdtga_kcompare0h_,_hw_dtga_kcompare0h_##k)(o,k,__VA_ARGS__)
 
 #define _hw_dtga_kpsc_prescaler
 #define _hw_dtga_vpsc_1			, 0
@@ -79,13 +79,13 @@
  */
 #define _hwa_cfdtga_kcompare0h_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_or(o,compare0_h,v);					\
+    _hwa_write(o,compare0_h,v);					\
   else									\
     HWA_ERR("`compare0_h` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare0h_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare0h_0(o,k,...)				\
-  HW_Y(_hwa_cfdtga_kcompare0l,_hw_dtga_kcompare0l_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfdtga_kcompare0l_,_hw_dtga_kcompare0l_##k)(o,k,__VA_ARGS__)
 
 #define _hw_dtga_kcompare0h_compare0_h
 
@@ -94,13 +94,13 @@
  */
 #define _hwa_cfdtga_kcompare0l_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_or(o,compare0_l,v);					\
+    _hwa_write(o,compare0_l,v);					\
   else									\
     HWA_ERR("`compare0_l` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare0l_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare0l_0(o,k,...)				\
-  HW_Y(_hwa_cfdtga_kcompare1h,_hw_dtga_kcompare1h_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfdtga_kcompare1h_,_hw_dtga_kcompare1h_##k)(o,k,__VA_ARGS__)
 
 #define _hw_dtga_kcompare0l_compare0_l
 
@@ -109,13 +109,13 @@
  */
 #define _hwa_cfdtga_kcompare1h_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_or(o,compare1_h,v);					\
+    _hwa_write(o,compare1_h,v);					\
   else									\
     HWA_ERR("`compare1_h` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare1h_0(o,__VA_ARGS__)
 
 #define _hwa_cfdtga_kcompare1h_0(o,k,...)				\
-  HW_Y(_hwa_cfdtga_kcompare1l,_hw_dtga_kcompare1l_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfdtga_kcompare1l_,_hw_dtga_kcompare1l_##k)(o,k,__VA_ARGS__)
 
 #define _hw_dtga_kcompare1h_compare1_h
 
@@ -124,7 +124,7 @@
  */
 #define _hwa_cfdtga_kcompare1l_1(o,k,v,...)				\
   if ( v>=0 && v<=15 )							\
-    _hwa_write_or(o,compare1_l,v);					\
+    _hwa_write(o,compare1_l,v);					\
   else									\
     HWA_ERR("`compare1_l` must be in the 0..15 range, not `" #v "`.");	\
   _hwa_cfdtga_kcompare1l_0(o,__VA_ARGS__)
@@ -142,19 +142,19 @@
  *******************************************************************************/
 
 #define _hwa_setup__dtga(o,i,a)			\
-  _hwa_setup_or( o, dtps );			\
-  _hwa_setup_or( o, dta );			\
-  _hwa_setup_or( o, dtb );
+  _hwa_setup_r( o, dtps );			\
+  _hwa_setup_r( o, dta );			\
+  _hwa_setup_r( o, dtb );
 
 #define _hwa_init__dtga(o,i,a)			\
-  _hwa_init_or( o, dtps, 0x00 );		\
-  _hwa_init_or( o, dta, 0x00 );		\
-  _hwa_init_or( o, dtb, 0x00 );
+  _hwa_init_r( o, dtps, 0x00 );		\
+  _hwa_init_r( o, dta, 0x00 );		\
+  _hwa_init_r( o, dtb, 0x00 );
 
 #define _hwa_commit__dtga(o,i,a)		\
-  _hwa_commit_or(o,dtps);			\
-  _hwa_commit_or(o,dta);			\
-  _hwa_commit_or(o,dtb);
+  _hwa_commit_r(o,dtps);			\
+  _hwa_commit_r(o,dta);			\
+  _hwa_commit_r(o,dtb);
 
 
 /**

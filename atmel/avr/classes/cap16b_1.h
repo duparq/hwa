@@ -20,15 +20,15 @@
  * A class `_cap16b` object is a 16-bit capture unit. It has the following
  * relative objects:
  *
- *  * one counter, whose name is given by `HW_RELATIVE( capture0, counter )`
+ *  * one counter, whose name is given by `( capture0, counter )`
  *
- *  * one input pin, whose name is given by `HW_RELATIVE( capture0, pin )`
+ *  * one input pin, whose name is given by `( capture0, pin )`
  *
  * It is used in:
  *
  *  * @ref atmegaxu4 : `counter3capture0`
  */
-#define _hw_class__cap16b
+#define hw_class__cap16b
 
 /**
  * @page atmelavr_cap16b
@@ -43,7 +43,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__cap16b		, _hw_bn_cap16b
+#define HW_BITS__cap16b		, _hw_bn_cap16b
 #define _hw_bn_cap16b(o,i,a,...)			16
 
 

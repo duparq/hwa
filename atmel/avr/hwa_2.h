@@ -38,8 +38,6 @@
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
-
-
 #include "../../hwa/hwa_2.h"
 
 
@@ -48,17 +46,17 @@
  * classes. An object supports power management if it has a logical register
  * named `prr`.
  */
-#define _hw_mtd_hw_power		, _hw_power
-#define _hw_mtd_hwa_power		, _hwa_power
+#define hw_power		, _hw_power
+#define hwa_power		, _hwa_power
 
-#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hw,o,v,g)
-#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1,g)(_hwa,o,v,g)
+#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
+#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
 #define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
-#define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2,_hw_state_v)(x,o,v)
+#define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_v)(x,o,v)
 #define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3,HW_G2(_hw_isa_reg, _hw_reg_##o##_##prr))(x,o,v)
+#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_reg_##o##_##prr))(x,o,v)
 #define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
-#define _hwx_pwr3_1(x,o,v)		x##_write_or(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr3_1(x,o,v)		x##_write(o,prr,HW_A1(_hw_state_##v)==0)
 
 
 /**
@@ -68,10 +66,10 @@
  */
 #define HW_ATOMIC(...)				\
   do{						\
-    uint8_t s = _hw_read_or(core0,sreg);	\
+    uint8_t s = _hw_read(core0,sreg);	\
     hw_disable_interrupts();			\
     { __VA_ARGS__ }				\
-    _hw_write_or(core0,sreg,s) ;		\
+    _hw_write(core0,sreg,s) ;		\
   }while(0)
 
 
@@ -363,9 +361,10 @@ HW_INLINE void _hwa_commit__r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Boo
 #define _hw_read__r8(ra,rbn,rbp) (((*(volatile uint8_t*)(ra))>>(rbp))&((1U<<(rbn))-1))
 
 
-#define _hw_mtd_hw_read__r16		, _hw_read_r16
+#define hw_read__r16		, _hw_read_r16
 //#define _hw_read_r16(o,a,wm,fm,...)	_hw_read__r16(a,16,0)
 #define _hw_read_r16(o,a,wm,fm,...)	*(volatile uint16_t*)a
+
 
 HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 {
@@ -410,10 +409,10 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_or(core0,sreg);
+    uint8_t s = _hw_read(core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
-    _hw_write_or(core0,sreg,s);
+    _hw_write(core0,sreg,s);
     uint8_t hb = *ph ;
     v = (hb << 8) | lb ;
   }
@@ -476,32 +475,3 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 #define _hw_israttr_non_interruptible	,
 #define _hw_israttr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_naked		, __attribute__((naked))
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
-
-/*  Single event ISR
- */
-#define _HW_ISR_(v,...)							\
-  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
-  void __vector_##v(void)
-
-/*  Void ISR
- */
-#define _HW_VISR_(v)							\
-  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
-  void __vector_##v(void) { hw_asm("reti"); }
-
-
-/*  Clear an interrupt flag by writing 1 into it
- */
-#define _hw_mtd_hw_clear__m1		, _hw_clear_m1
-
-#define _hw_clear_m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,...)	_hw_write_##rc(ra,rwm,rfm,rbn,rbp,1)
-
-#define _hw_mtd_hwa_clear__m1		, _hwa_clear_m1
-
-#define _hwa_clear_m1(o,a,r,rc,ra,rwm,rfm,bn,bp,...)	_hwa_write_##rc(&hwa->o.r,rwm,rfm,bn,bp,1)

@@ -37,8 +37,3 @@
 #if defined DOXYGEN
 #  define HW_SYSHZ
 #endif
-
-/*  Address of a memory definition
- */
-#define _HW_A__m1(o,a,r,rc,ra,...)		(a+ra)
-#define _HW_A__r32(ra,rwm,rfm,o,c,a,r)		(a+ra)

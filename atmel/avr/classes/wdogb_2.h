@@ -38,7 +38,7 @@
  *	      );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__wdogb	, _hwa_cfwdogb
+#define hwa_configure__wdogb	, _hwa_cfwdogb
 
 /*    Optionnal argument `timeout`
  */
@@ -54,20 +54,20 @@
 #define _hw_wdogb_timeout_8s		, 9
 
 #define _hwa_cfwdogb(o,i,a,k,...)					\
-  do { HW_Y(_hwa_cfwdogb_ktimeout,_hw_is_timeout_##k)(o,k,__VA_ARGS__,,) }while(0)
+  do { HW_Y(_hwa_cfwdogb_ktimeout_,_hw_is_timeout_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 #define _hwa_cfwdogb_ktimeout_1(o,k,v,...)				\
-  HW_Y(_hwa_cfwdogb_vtimeout,_hw_wdogb_timeout_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfwdogb_vtimeout_,_hw_wdogb_timeout_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vtimeout_0(o,v,...)				\
   HW_E_AVL(timeout, v, 16ms | 32ms | 64ms | 125ms | 250ms | 500ms | 1s | 2s | 4s | 8s)
 
 #define _hwa_cfwdogb_vtimeout_1(o,v,k,...)			\
   hwa->o.config.timeout = HW_A1(_hw_wdogb_timeout_##v);		\
-  HW_Y(_hwa_cfwdogb_kaction,_hw_is_action_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfwdogb_kaction_,_hw_is_action_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfwdogb_ktimeout_0(...)				\
-  HW_Y(_hwa_cfwdogb_kaction,_hw_is_action_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfwdogb_kaction_,_hw_is_action_##k)(o,k,__VA_ARGS__)
 
 /*    Mandatory argument `action`
  */
@@ -80,7 +80,7 @@
   HW_E_VL(k,action)
 
 #define _hwa_cfwdogb_kaction_1(o,k,v,...)				\
-  HW_Y(_hwa_cfwdogb_vaction,_hw_wdogb_action_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfwdogb_vaction_,_hw_wdogb_action_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfwdogb_vaction_0(o,v,...)					\
   HW_E_AVL(action, v, none | irq | reset | irq_or_reset)
@@ -99,17 +99,12 @@
  *                     | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__wdogb		, _hw_turn_wdogb
+#define hw_turn__wdogb		, _hw_turn_wdogb
 
-#define _hw_turn_wdogb(o,i,a, v)			\
-  HW_Y(_hw_turn_wdogb,_hw_state_##v)(o,v)
-
-#define _hw_turn_wdogb_0(o, v)						\
-  HW_E_ST(v)
-
+#define _hw_turn_wdogb(o,i,a, v)	HW_Y0(_hw_turn_wdogb_,_hw_state_##v)(o,v)
+#define _hw_turn_wdogb_0(o, v)		HW_E_ST(v)
 #define _hw_turn_wdogb_1(o, v)		HW_G2(_hw_turn_wdogb, v)(o)
-
-#define _hw_turn_wdogb_on(o)		_hw_write_or(o,wde,1)
+#define _hw_turn_wdogb_on(o)		_hw_write(o,wde,1)
 
 /*  Disable the watchdog by clearing WDE. That special sequence must be
  *  respected.
@@ -123,16 +118,16 @@
 #define _hw_turn_wdogb_off(o)						\
   do {									\
     uint8_t reg ;							\
-    _hw_write_or( core0, mcusr, 0 );				\
+    _hw_write( core0, mcusr, 0 );				\
     __asm__ __volatile__("  in	 %[r], %[wdtcr]"	"\n\t"		\
 			 "  ori	 %[r], %[wdce]|%[wde]"	"\n\t"		\
 			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
 			 "  andi %[r], %[wdp]"		"\n\t"		\
 			 "  out	 %[wdtcr], %[r]"	"\n\t"		\
 			 : [r] "=&d" (reg)				\
-			 : [wdtcr] "I" (_HW_A(_HW_M(o, csr))-0x20), \
-			   [wdce] "I" (1<<_hw_bp(_HW_M(o, wdce))),	\
-			   [wde] "I" (1<<_hw_bp(_HW_M(o, wde))),	\
+			 : [wdtcr] "I" (HW_ADDRESS((o, csr))-0x20), \
+			   [wdce] "I" (1<<HW_POSITION((o, wdce))),	\
+			   [wde] "I" (1<<HW_POSITION((o, wde))),	\
 			   [wdp] "I" (0x27));				\
   } while(0)
 
@@ -145,19 +140,12 @@
  *                       | off );
  * @endcode
  */
-#define _hw_mtd_hwa_turn__wdogb	, _hwa_turn_wdogb
+#define hwa_turn__wdogb	, _hwa_turn_wdogb
 
-#define _hwa_turn_wdogb(o,i,a,k,...)	HW_Y(_hwa_turn_wdogb,_hw_state_##k)(o,k,__VA_ARGS__,)
-
+#define _hwa_turn_wdogb(o,i,a,k,...)	HW_Y(_hwa_turn_wdogb_,_hw_state_##k)(o,k,__VA_ARGS__,)
 #define _hwa_turn_wdogb_0(o, v, ...)	HW_E_ST(v)
-
-#define _hwa_turn_wdogb_1(o, v, ...)		\
-  HW_G2(_hwa_turn_wdogb, v)(o,i,a)		\
-  HW_EOL(__VA_ARGS__)
-
-#define _hwa_turn_wdogb_on(o,i,a)		\
-  _hwa_write_or(o,wde,1)
-
+#define _hwa_turn_wdogb_1(o, v, ...)	HW_G2(_hwa_turn_wdogb, v)(o,i,a) HW_EOL(__VA_ARGS__)
+#define _hwa_turn_wdogb_on(o,i,a)	_hwa_write(o,wde,1)
 #define _hwa_turn_wdogb_off(o,i,a)			\
   /* Action completed when committing */		\
   hwa->o.config.action = HW_A1(_hw_wdogb_action_none)
@@ -173,7 +161,7 @@
  * hw_reset( watchdog0 );
  * @endcode
  */
-#define _hw_mtd_hw_reset__wdogb	, _hw_rstwdogb
+#define hw_reset__wdogb	, _hw_rstwdogb
 
 #define _hw_rstwdogb(o,i,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 
@@ -185,9 +173,9 @@
  * The overflow flag can be accessed through the interrupt-related instructions:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( watchdog0 ) ) ) {
- *   hw( clear, HW_IRQFLAG( watchdog0 ) );
- *   hw( turn, HW_IRQ( watchdog0, on ) );
+ * if ( hw( read, irqflag( watchdog0 ) ) ) {
+ *   hw( clear, irqflag( watchdog0 ) );
+ *   hw( turn, irq( watchdog0, on ) );
  *   n_wdoverflows++ ;
  * }
  * @endcode
@@ -203,11 +191,11 @@
  *******************************************************************************/
 
 #define _hwa_setup__wdogb(o,i,a)		\
-  _hwa_setup_or( o, csr );			\
+  _hwa_setup_r( o, csr );			\
   hwa->o.config.action = 0xFF ;			\
   hwa->o.config.timeout = 0xFF
 
-#define _hwa_init__wdogb(o,i,a)			_hwa_init_or( o, csr, 0x00 )
+#define _hwa_init__wdogb(o,i,a)			_hwa_init_r( o, csr, 0x00 )
 
 /**
  * @brief Commit the configuration of a _wdogb class watchdog
@@ -227,31 +215,31 @@
 	if ( HW_DEVICE_FUSE_WDTON == 0 )				\
 	  HWA_ERR( "watchdog can not be turned off because "		\
 		   "HW_DEVICE_WATCHDOG_ALWAYS_ON is `enabled`." );	\
-	_hwa_write_or( o, wdrf, 0 );					\
-	_hwa_commit_or( o, wdrf );					\
-	_hwa_write_or( o, if, 1 );	/* was not in _wodga */		\
-	_hwa_write_or( o, wdce, 1 );					\
-	_hwa_write_or( o, wde,	 1 );					\
-	_hwa_commit_or( o, csr );					\
-	_hwa_write_or( o, ie, 0 );					\
-	_hwa_write_or( o, wdce, 0 );					\
-	_hwa_write_or( o, wde, 0 );					\
-	_hwa_write_or( o, wdp, 0 );					\
+	_hwa_write( o, wdrf, 0 );					\
+	_hwa_commit_r( o, wdrf );					\
+	_hwa_write( o, if, 1 );	/* was not in _wodga */		\
+	_hwa_write( o, wdce, 1 );					\
+	_hwa_write( o, wde,	 1 );					\
+	_hwa_commit_r( o, csr );					\
+	_hwa_write( o, ie, 0 );					\
+	_hwa_write( o, wdce, 0 );					\
+	_hwa_write( o, wde, 0 );					\
+	_hwa_write( o, wdp, 0 );					\
       }									\
       else {								\
 	/* Configure it */						\
-	_hwa_write_or( o, wdce, 1 );	/* was not in _wodga */		\
-	_hwa_write_or( o, wde,	 1 );	/* was not in _wodga */		\
-	_hwa_commit_or( o, csr );	/* was not in _wodga */		\
-	_hwa_write_or( o, wdce, 0 );	/* was not in _wodga */		\
-	_hwa_write_or( o, eie, hwa->o.config.action );			\
+	_hwa_write( o, wdce, 1 );	/* was not in _wodga */		\
+	_hwa_write( o, wde,	 1 );	/* was not in _wodga */		\
+	_hwa_commit_r( o, csr );	/* was not in _wodga */		\
+	_hwa_write( o, wdce, 0 );	/* was not in _wodga */		\
+	_hwa_write( o, eie, hwa->o.config.action );			\
 	if ( hwa->o.config.timeout != 0xFF )				\
-	  _hwa_write_or( o, wdp, hwa->o.config.timeout );		\
+	  _hwa_write( o, wdp, hwa->o.config.timeout );		\
       }									\
       /* hwa->o.config.action = 0xFF ; */				\
       /* hwa->o.config.timeout = 0xFF ; */				\
     }									\
-    _hwa_commit_or( o, csr );						\
+    _hwa_commit_r( o, csr );						\
   } while(0)
 
 

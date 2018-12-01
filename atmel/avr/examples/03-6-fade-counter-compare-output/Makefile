@@ -4,7 +4,7 @@
 SOURCES		=	main.c
 
 CONFIG		=	HW_DEVICE	\
-			hw_syshz	\
+			HW_SYSHZ	\
 			PWM		\
 			CLKDIV		\
 			COUNTMODE

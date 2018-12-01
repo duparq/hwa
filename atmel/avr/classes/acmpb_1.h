@@ -18,7 +18,7 @@
  *
  * * @ref attinyx5 : `acmp0`
  */
-#define _hw_class__acmpb
+#define hw_class__acmpb
 
 /**
  * @page atmelavr_acmpb

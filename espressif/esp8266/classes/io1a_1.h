@@ -15,7 +15,7 @@
  * A class `_io1a` object is a single or a group of consecutive pins inside the
  * same I/O port.
  */
-#define _hw_class__io1a
+#define hw_class__io1a
 
 
 /**
@@ -30,7 +30,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__io1a		, _hw_bn_io1a
+#define HW_BITS__io1a		, _hw_bn_io1a
 
 #define _hw_bn_io1a(o,i, cn,bn,bp,...)	       bn
 
@@ -47,7 +47,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_POSITION__io1a		, _hw_bp_io1a
+#define HW_POSITION__io1a		, _hw_bp_io1a
 #define _hw_bp_io1a(o,i, cn,bn,bp,...)	       bp
 
 
@@ -63,10 +63,10 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_hw_rel__io1a		, _hw_rel_io1a
+#define hw_rel__io1a		, _hw_rel_io1a
 
 #define _hw_rel_io1a(o,x,...)	\
-  HW_Y(_hw_rel_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)
+  HW_Y(_hw_rel_io1a_,_hw_is_port_##x)(o,x,__VA_ARGS__)
 
 #define _hw_rel_io1a_1(o,x,i,p,...)	p
 

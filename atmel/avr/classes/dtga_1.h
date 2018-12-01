@@ -18,7 +18,7 @@
  *
  * * @ref attinyx5 : `dtg1`
  */
-#define _hw_class__dtga
+#define hw_class__dtga
 
 
 #if !defined __ASSEMBLER__

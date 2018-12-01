@@ -53,8 +53,8 @@ void IROM user_init_2 ( )
 
   /*  Install user IRQ handlers
    */
-  os_set_isr( HW_IRQ(timer1, irq), ev_timer );
-  os_set_isr( HW_IRQ(timer1, nmi), ev_timer );
+  os_set_isr( irq(timer1,irq), ev_timer );
+  os_set_isr( irq(timer1,nmi), ev_timer );
 
   hwa_begin_from_reset();
 

@@ -19,7 +19,7 @@
  * uint8_t byte = hw( read, flash0, addr ); // Read byte at address addr
  * @endcode
  */
-#define _hw_mtd_hw_read__flasha	, _hw_read_flasha
+#define hw_read__flasha	, _hw_read_flasha
 #define _hw_read_flasha(o,i,a,addr,...)		 _hw_flashardbyte((intptr_t)(addr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
@@ -49,7 +49,7 @@ HW_INLINE uint8_t _hw_flashardbyte( uint16_t a )
  * @endcode
  */
 
-#define _hw_mtd_hw_read_bytes__flasha	, _hw_read_bytes_flasha
+#define hw_read_bytes__flasha	, _hw_read_bytes_flasha
 
 #define _hw_read_bytes_flasha(o,i,a,dst,addr,n,...)	\
    _hw_flashardbytes(dst,addr,n) HW_EOL(__VA_ARGS__)
@@ -98,13 +98,13 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  * @endcode
  */
 
-#define _hw_mtd_hw_load_buffer__flasha	, _hw_flasha_load_buffer
+#define hw_load_buffer__flasha	, _hw_flasha_load_buffer
 #define _hw_flasha_load_buffer(o,i,a,src,...)	_hw_flasha_ldpgbf(o,src) HW_EOL(__VA_ARGS__)
 
-#define _hw_mtd_hw_erase_page__flasha	, _hw_flasha_erase_page
+#define hw_erase_page__flasha	, _hw_flasha_erase_page
 #define _hw_flasha_erase_page(o,i,a,src,...)	_hw_flasha_pgers(o,src) HW_EOL(__VA_ARGS__)
 
-#define _hw_mtd_hw_write_page__flasha	, _hw_flasha_write_page
+#define hw_write_page__flasha	, _hw_flasha_write_page
 #define _hw_flasha_write_page(o,i,a,src,...)	_hw_flasha_pgwrt(o,src) HW_EOL(__VA_ARGS__)
 
 
@@ -115,13 +115,13 @@ HW_INLINE void _hw_flashardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  */
 #define _hw_flasha_pgers(o, ptr)					\
   do {									\
-    _hw_write_or( o, csr, 1<<_HW_BP_OR(o, pgers) | 1<<_HW_BP_OR(o, spmen) ); \
+    _hw_write( o, csr, 1<<HW_POSITION((o, pgers)) | 1<<HW_POSITION((o, spmen)) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
 
 #define _hw_flasha_pgwrt(o, ptr)					\
   do {									\
-    _hw_write_or( o, csr, 1<<_HW_BP_OR(o, pgwrt) | 1<<_HW_BP_OR(o, spmen) ); \
+    _hw_write( o, csr, 1<<HW_POSITION((o, pgwrt)) | 1<<HW_POSITION((o, spmen)) ); \
     _hw_flasha_spm( ptr );						\
   }while(0)
 
@@ -139,9 +139,9 @@ HW_INLINE void _hw_flasha_spm( intptr_t ptr )
 
 #define _hw_flasha_ldpgbf(o, src)				\
   do {								\
-    hw_asm("CSR = " HW_QUOTE(_HW_A(_HW_M(o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(_HW_BP_OR(o, rwwsre)) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(_HW_BP_OR(o, spmen)) "\n"	\
+    hw_asm("CSR = " HW_QUOTE(HW_ADDRESS((o, csr))-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_QUOTE(HW_POSITION((o, rwwsre))) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(HW_POSITION((o, spmen))) "\n"		\
 	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
     __hw_flasha_ldpgbf( src );					\
@@ -210,13 +210,15 @@ HW_INLINE void __hw_flasha_ldpgbf( void *src )
 #define _hw_flasha_pgers(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_BP_OR(o, pgers) | 1<<_HW_BP_OR(o, spmen) ); \
+    __hw_flasha_dospm( HW_ADDRESS((o,csr)), ptr,			\
+		       1<<HW_POSITION((o, pgers)) | 1<<HW_POSITION((o, spmen))); \
   }while(0)
 
 #define _hw_flasha_pgwrt(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_flasha_dospm( _HW_A(_HW_M(o,csr)), ptr, 1<<_HW_BP_OR(o, pgwrt) | 1<<_HW_BP_OR(o, spmen) ); \
+    __hw_flasha_dospm( HW_ADDRESS((o,csr)), ptr,			\
+		       1<<HW_POSITION((o, pgwrt)) | 1<<HW_POSITION((o, spmen))); \
   }while(0)
 
 /**
@@ -271,9 +273,9 @@ HW_INLINE void __hw_flasha_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 
 #define _hw_flasha_ldpgbf(o, src)				\
   do {								\
-    hw_asm("CSR = " HW_QUOTE(_HW_A(_HW_M(o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(_HW_BP_OR(o, rwwsre)) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(_HW_BP_OR(o, spmen)) "\n"	\
+    hw_asm("CSR = " HW_QUOTE(HW_ADDRESS((o, csr))-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_QUOTE(HW_POSITION((o, rwwsre))) "\n"	\
+	   "BP_SPMEN = " HW_QUOTE(HW_POSITION((o, spmen))) "\n"		\
 	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
     __hw_flasha_ldpgbf( src );					\

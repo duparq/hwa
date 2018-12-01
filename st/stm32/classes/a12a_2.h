@@ -23,18 +23,18 @@
  *                                  | 8 );
  * @endcode
  */
-#define _hw_mtd_hw_write_adcprescaler	, _hw_wradcpsc
-#define _hw_mtd_hwa_write_adcprescaler	, _hwa_wradcpsc
+#define hw_write_adcprescaler	, _hw_wradcpsc
+#define hwa_write_adcprescaler	, _hwa_wradcpsc
 
-#define _hw_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1,g)(_hw,v,g)
-#define _hwa_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1,g)(_hwa,v,g)
+#define _hw_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1_,g)(_hw,v,g)
+#define _hwa_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1_,g)(_hwa,v,g)
 
 #define _hwx_wradcpsc1_0(h,v,g)		HW_E_G(g)
-#define _hwx_wradcpsc1_1(h,v,g)		HW_Y(_hwx_wradcpsc2,v)(h,v)
+#define _hwx_wradcpsc1_1(h,v,g)		HW_Y(_hwx_wradcpsc2_,v)(h,v)
 #define _hwx_wradcpsc2_1(h,v)		HW_E_V()
 #define _hwx_wradcpsc2_0(h,v)				\
   do{							\
     if ( v-1!=1 && v-1!=3 && v-1!=5 && v-1!=7 )		\
       HWA_E_VL(v,2|4|6|8);				\
-    h##_write_or(rcc,adcpre,(v-2)/3);			\
+    h##_write(rcc,adcpre,(v-2)/3);			\
   }while(0)

@@ -4,7 +4,7 @@
 SOURCES		=	main.c
 
 CONFIG		=	HW_DEVICE			\
-			hw_syshz			\
+			HW_SYSHZ			\
 			NRF_CSN
 
 include ../make/Makefile

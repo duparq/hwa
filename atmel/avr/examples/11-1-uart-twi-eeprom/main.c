@@ -94,7 +94,7 @@ uint8_t twst;
  * debug/test output), and TWI clock.
  */
 void
-ioinit(void)
+ioinit_o(void)
 {
   hwa_begin_from_reset();
   hwa( configure,   uart0,
@@ -168,7 +168,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
  begin:
   hw( bus_start, TWI );			/* send start condition */
 
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_START:
@@ -186,7 +186,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
   /* Note [10]
    */
   hw( bus_slaw, TWI, sla>>1 );		/* send SLA+W */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
@@ -206,7 +206,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 #ifdef WORD_ADDRESS_16BIT
 
   hw( bus_data, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
@@ -225,7 +225,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 #endif
 
   hw( bus_data, TWI, eeaddr );		/* lowest 8 bits of addr */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
@@ -246,7 +246,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
    * Next cycle(s): master receiver mode
    */
   hw( bus_start, TWI );			/* send (rep.) start condition */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_START:		/* OK, but should not happen */
@@ -261,7 +261,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     }
 
   hw( bus_slar, TWI, sla>>1 );		/* send SLA+R */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MR_SLA_ACK:
@@ -286,7 +286,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
     else
       hw( bus_read, TWI, ack );		/* ask one more byte, send ACK*/
 
-    while( !hw(read, HW_IRQFLAG(TWI)) ) {} /* wait for transmission */
+    while( !hw(read, irqflag(TWI)) ) {} /* wait for transmission */
     switch( (twst=hw(stat,TWI)) )
       {
 	case HW_TWI_MR_DATA_NACK:
@@ -362,7 +362,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
   /* Note [15] */
 
   hw( bus_start, TWI );			/* send start condition */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_REP_START:		/* OK, but should not happen */
@@ -378,7 +378,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 
   hw( bus_slaw, TWI, sla>>1 );		/* send SLA+W */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_SLA_ACK:
@@ -396,7 +396,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
 #ifdef WORD_ADDRESS_16BIT
   hw( bus_data, TWI, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
@@ -414,7 +414,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 #endif
 
   hw( bus_data, TWI, eeaddr );		/* low 8 bits of addr */
-  while( !hw(read, HW_IRQFLAG(TWI)) ) {}   /* wait for transmission */
+  while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
       case HW_TWI_MT_DATA_ACK:
@@ -435,7 +435,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
     hw( bus_data, TWI, (*buf++) );
 
-    while( !hw(read, HW_IRQFLAG(TWI)) ) {} /* wait for transmission */
+    while( !hw(read, irqflag(TWI)) ) {} /* wait for transmission */
     switch( (twst=hw(stat,TWI)) )
       {
 	case HW_TWI_MT_DATA_NACK:
@@ -512,7 +512,7 @@ main(void)
   uint8_t b[16];
   uint8_t x;
 
-  ioinit();
+  ioinit_o();
 
   stdout = &mystdout;
 

@@ -18,7 +18,7 @@
  *
  * * @ref atmegaxu4 : `core0`
  */
-#define _hw_class__corec
+#define hw_class__corec
 
 #if !defined __ASSEMBLER__
 

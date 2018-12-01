@@ -24,7 +24,7 @@
  *
  *  * @ref atmegax8 : `spi0`
  */
-#define _hw_class__spia
+#define hw_class__spia
 
 
 /**

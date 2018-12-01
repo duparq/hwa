@@ -355,11 +355,10 @@ $(OUT).cfg.c: $(SOURCES)
 	  echo FAIL: no config				;\
 	  exit 1					;\
 	fi						;\
-	echo "#define HW_Q(...) HW_Q2(__VA_ARGS__)" >$@	;\
-	echo "#define HW_Q2(...) #__VA_ARGS__" >>$@	;\
 	for c in $(CONFIG)				;\
 	  do echo "_$$c=HW_Q($$c)" >>$@			;\
 	done
+
 
 #  Create a file that describes the configuration of the project. Assume the
 #  configuration is included in the first source file.

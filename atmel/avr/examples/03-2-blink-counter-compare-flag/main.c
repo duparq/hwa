@@ -23,8 +23,6 @@
 #define COMPARE			compare0
 #define PERIOD			0.5
 
-#define IRQF			HW_IRQFLAG(COUNTER,COMPARE)	// IRQ flag
-
 
 int main ( )
 {
@@ -59,9 +57,9 @@ int main ( )
      *	When a compare-match occurs, clear the counter, clear the flag and count
      *	the elapsed millisecond
      */
-    if ( hw( read, IRQF ) ) {
+    if ( hw( read, irqflag(COUNTER,COMPARE) ) ) {
       hw( write, COUNTER, 0 );
-      hw( clear, IRQF );
+      hw( clear, irqflag(COUNTER,COMPARE) );
       n++ ;
       if ( n >= (uint8_t)(0.5 + 1.0*PERIOD/0.001/2.0+0.5) ) {
 	/*

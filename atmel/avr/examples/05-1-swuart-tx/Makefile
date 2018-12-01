@@ -5,7 +5,7 @@ SOURCES		=	main.c	\
 			swuart.sx
 
 CONFIG		=	HW_DEVICE			\
-			hw_syshz			\
+			HW_SYSHZ			\
 			UART				\
 			BPS				\
 			hw_swuart0_pin_txd		\

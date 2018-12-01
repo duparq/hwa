@@ -7,27 +7,24 @@
 /**
  * @file
  * @brief General purpose macro definitions usable in C or assembler source code.
- *
- *  Upper case definitions process arbitrary lists of arguments.
- *
- *  Lower case definitions deal with lists of arguments starting with an object
- *  name or an object definition starting with a class name.
  */
 
 
-/**
+/*
  * @ingroup public_ins
  * @brief Trigger an error at preprocessing stage
  * @hideinitializer
  *
- *  Error handling is based on the C99 _Pragma operator. It produces a
- *  preprocessing error as soon as the _Pragma(...) sentence is produced, be it
- *  inside or outside of a C function definition, or in an assembler
- *  source. _Pragma(...) can not be processed by macros as the sentence is
- *  removed from the preprocessor output and replaced by a void token.
+ * Error handling is based on the C99 _Pragma operator. It produces a
+ * preprocessing error as soon as the _Pragma(...) sentence is emitted, be it
+ * inside or outside of a C function definition, or in an assembler
+ * source.
  *
- *  The error message 's' must be a single argument, i.e. it must not contain
- *  commas.
+ * The error message 's' must be a single argument, i.e. it must not contain
+ * commas.
+ *
+ * @note _Pragma(...) can not be processed by macros as the sentence is removed
+ * from the preprocessor output and replaced by a void token.
  */
 #define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s.))
 #define _HW_E2(s)		_HW_E3(s)
@@ -38,14 +35,19 @@
 #endif
 
 #define HW_E_O(x)		HW_E(`x` is not an object)
+#define HW_EM_O(x)		HW_QUOTE(`x` is not an object)
 #define HW_E_P(x)		HW_E(`x` is not a pin)
 #define HW_E_OM()		HW_E(missing object name)
 #define HW_E_T(x)		HW_E(unrecognized token `x`)
 #define HW_E_V()		HW_E(missing value)
-#define HW_E_G(x)		HW_E(garbage parameters starting with `x`)
+#define HW_E_G(x)		HW_E(garbage starting at `x`)
+#define HW_EM_G(x)		HW_QUOTE(garbage starting at `x`)
 #define HW_E_K(k,x)		HW_E(expected `k` instead of `x`)
 
-#define HW_E_OCM(o,c,m)		HW_E(object `o` of class `c` has no method named `m`)
+#define HW_E_OCM(o,c,m)		HW_Y(_HW_EOCM_,c)(o,c,m)
+#define _HW_EOCM_0(o,c,m)	HW_E(object `o` of class `c` has no method named `m`)
+#define _HW_EOCM_1(...)
+
 #define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
 #define HW_E_ST(x)		HW_E(`x` is not in (on, off))
 #define HW_E_VL(v,l)		HW_E(`v` is not `l`)
@@ -55,6 +57,7 @@
 #define HW_E_OKVL(k,v,l)	HW_E(value `v` for optionnal parameter `k` is not l)
 #define HW_E_OKMV(k,v,l)	HW_E(value of optionnal parameter `k` must be `l` not `v`)
 #define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
+#define HW_EM_OO(o,x)		HW_QUOTE(`o` has no relative named `x`)
 #define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
 #define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
 #define HW_E_TBI(f)		HW_E(instruction is not implemented yet)
@@ -63,10 +66,13 @@
 #define HW_E_ML(l)		HW_E(expected one argument in `l`)
 #define HW_E_NIL(v,l)		HW_E(`v` is not in `l`)
 
+#define HW_E_IRQ(n)		HW_E(`n` is not an IRQ)
+#define HW_EM_IRQ(n)		HW_QUOTE(`n` is not an IRQ)
+
 #define HW_ERROR		HW_E
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Element a0 of the list a0,...
  * @hideinitializer
@@ -75,7 +81,7 @@
 #define _HW_A0_2(a0,...)	a0
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Element a1 of the list a0,a1,...
  * @hideinitializer
@@ -84,7 +90,7 @@
 #define _HW_A1_2(a0,a1,...)	a1
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Element a2 of the list a0,a1,a2,...
  * @hideinitializer
@@ -92,8 +98,11 @@
 #define HW_A2(...)		_HW_A2_2(__VA_ARGS__,,,)
 #define _HW_A2_2(a0,a1,a2,...)	a2
 
+#define HW_A3(...)			_HW_A3_2(__VA_ARGS__,,,,)
+#define _HW_A3_2(a0,a1,a2,a3,...)	a3
 
-/**
+
+/*
  * @ingroup private_mac
  * @brief Elements a1,... of the list a0,a1,...
  * @hideinitializer
@@ -102,7 +111,7 @@
 #define _HW_TL2(a0,...)		__VA_ARGS__
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Glue the first two elements of the list with a '_' between them.
  * @hideinitializer
@@ -111,7 +120,7 @@
 #define _HW_G2_(a,b,...)	a##_##b
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Glue the first three elements of the list with a '_' between them.
  * @hideinitializer
@@ -120,7 +129,7 @@
 #define _HW_G3_(a,b,c,...)	a##_##b##_##c
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Expands to 1 if the first two elements of the list are defined equal, 0 otherwise.
  *
@@ -133,12 +142,12 @@
 #define _HW_IS_2(x,y,...)	HW_A1(_hw_is_##x##_##y,0)
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Concatenates '_1' or '_0' to the first argument according to the second.
  * @hideinitializer
  *
- * `HW_Y(f,c)` expands to:
+ * `HW_Y(f_,c)` expands to:
  *  * `f_1` if `c` is "",
  *  * `f_0` if `c` is not "".
  */
@@ -146,13 +155,18 @@
 #define _HW_Y00(f,x,...)		_HW_Y01(f,_hw_isa_leftbkt x,0,x)
 #define _HW_Y01(...)			_HW_Y2(__VA_ARGS__)
 #define _HW_Y2(f,x,y,...)		_HW_Y2_##y(f,__VA_ARGS__,)
-#define _HW_Y2_1(f,...)			f##_0
+#define _HW_Y2_1(f,...)			f##0
 #define _HW_Y2_0(f,x,...)		_HW_Y03(f,_hw_is__##x,0,)
 #define _HW_Y03(...)			_HW_Y04(__VA_ARGS__)
-#define _HW_Y04(f,x,y,...)		f##_##y
+#define _HW_Y04(f,x,y,...)		f##y
+
+#define HW_Y0(...)			_HW_Y000(__VA_ARGS__,,)
+#define _HW_Y000(f,x,...)		_HW_Y001(f,_hw_is__##x,0,)
+#define _HW_Y001(...)			_HW_Y002(__VA_ARGS__)
+#define _HW_Y002(f,x,y,...)		f##y
 
 
-/**
+/*
  * @ingroup private_mac
  * @brief Expand the argument to a function call
  * @hideinitializer
@@ -164,75 +178,7 @@
 #define _HW_VF2(x,f,a)			f(a)
 
 
-/**
- * @ingroup private_mac
- * @brief Connects a generic instruction to a method.
- * @hideinitializer
- *
- * @code
- * #define hw_myfunc(...)			HW_MTD(hw_myfunc, __VA_ARGS__,)
- * #define _hw_mtd_hw_myfunc__aclass(...)	, _hw_myfunc_aclass
- * @endcode
- *
- * makes the instruction `hw_myfunc()` accept an object of class `_aclass` as
- * first argument and expand as `_hw_myfunc_aclass(o,i,a,...)`.
- *
- * `HW_MTD()` verifies the existence of the object and its class method. An
- * explicit error message is produced if the object does not exist or if the
- * method is not supported by its class.
- *
- * __Note__ For instructions that accept a variable-length list of arguments,
- * it is advised to add a void argument to the list and check it after parsing
- * with `HW_EOL(__VA_ARGS__)`.
- */
-
-/* Note: an extra void argument must be added for single argument instructions
- * in order to avoid a compiler warning.
- */
-
-#define HW_MTD(...)		_HW_MTD1(__VA_ARGS__)
-
-/*  Get the definition of the object o. This will return the class in first
- *  position or void if an error occured.
- */
-#define _HW_MTD1(f,o,...)	_HW_MTD2(f,HW_OD(o),__VA_ARGS__)
-#define _HW_MTD2(...)		_HW_MTD3(__VA_ARGS__)
-#define _HW_MTD3(f,c,...)	HW_Y(_HW_MTD3,c)(f,c,__VA_ARGS__)
-#define _HW_MTD3_1(...)		//HW_E_OM() /* An error has been emitted by HW_OD */
-
-/*  Is there a method f for object o of class c?
- */
-#define _HW_MTD3_0(f,c,...)	HW_Y(_HW_MTD4,_hw_mtd_##f##_##c)(f,c,__VA_ARGS__)
-
-#define _HW_MTD4_1(f,c,...)	HW_A1(_hw_mtd_##f##_##c)(__VA_ARGS__)
-
-/*  Is there a method f for object o?
- */
-#define _HW_MTD4_0(f,c,o,...)	HW_Y(_HW_MTD5,_hw_mtd_##f##_##o)(f,c,o,__VA_ARGS__)
-#define _HW_MTD5_1(f,c,o,...)	HW_E_OCM(o,c,f)
-
-
-/**
- * @ingroup private_mac
- * @brief Specialize instruction `f` for class `c`: _HW_SPEC(f,c,...) -> f_c(...)
- * @hideinitializer
- *
- *  Arguments must start with a class name that is to be appended to the
- *  function name.
- */
-#define _HW_SPEC(...)		__HW_SPEC_2(__VA_ARGS__)
-#define __HW_SPEC_2(f,c,...)	f##_##c(__VA_ARGS__)
-
-
-/**
- * @ingroup private_mac
- * @brief Returns `1` if the first element is the name of a HWA object, `0` if not.
- * @hideinitializer
- */
-#define HW_ISON(o)		HW_IS(,HW_G2(_hw_class,HW_G2(_hw_def,o)))
-
-
-/**
+/*
  * @ingroup private_mac
  * @brief Trigger an error if the first argument is not void.
  * @hideinitializer
@@ -240,8 +186,8 @@
  * This is used to ensure that there is no remaining elements in a list at the
  * end of its parsing.
  */
-#define HW_EOL(...)		HW_Y(_HW_EOL,__VA_ARGS__)(__VA_ARGS__)
-#define _HW_EOL_0(...)		HW_E_T(__VA_ARGS__)
+#define HW_EOL(...)		HW_Y(_HW_EOL_,__VA_ARGS__)(__VA_ARGS__)
+#define _HW_EOL_0(...)		HW_E_G(__VA_ARGS__)
 #define _HW_EOL_1(...)
 
 
@@ -253,81 +199,8 @@
 #define HW_QUOTE(...)		_HW_QUOTE_2(__VA_ARGS__,)
 #define _HW_QUOTE_2(x,...)	#x
 
+#define HW_Q			HW_QUOTE
 
-
-/**
- * @ingroup public_mac
- * @brief Returns the definition of the @ref using_objects "object".
- * @hideinitializer
- *
- * The argument can be an object name, an object definition starting with a
- * class name, an object's relative using the '(...)' notation, or an
- * error.
- *
- * If successful, returns the definition starting with a class name followed by the object
- * name: c,o,... Otherwise, triggers an error and returns a void token.
- */
-#define HW_OD(object)		_HW_OD1(object)
-
-/*  Catch notation (...) for relatives
- */
-#define _HW_OD1(...)		HW_Y(_HW_OD1,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_OD1_0(...)		HW_Y(_HW_OD2,_hw_class_##__VA_ARGS__)(__VA_ARGS__)
-#define _HW_OD1_1(...)		_HW_OD1_2 __VA_ARGS__
-#define _HW_OD1_2(...)		_HW_OD7(HW_RLX(__VA_ARGS__))
-
-#define _HW_OD2_1(...)		__VA_ARGS__		/*  Class name found, job's done. */
-#define _HW_OD2_0(o)		_HW_OD3(o,_hw_def_##o)	/*  Is o an object's name? */
-#define _HW_OD3(...)		_HW_OD4(__VA_ARGS__)
-#define _HW_OD4(o,...)		HW_Y(_HW_OD4,_hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _HW_OD4_1(o,c,...)	c,o,__VA_ARGS__
-
-/*  Handle shorcuts:
- *   * irq()
- *   * relative()
- *   * register()
- */
-#define _HW_OD4_0(o,...)	_HW_OD4_2(o,_hw_o_##o)
-#define _HW_OD4_2(...)		_HW_OD4_3(__VA_ARGS__)
-#define _HW_OD4_3(o,...)	HW_Y(_HW_OD5,__VA_ARGS__)(o,__VA_ARGS__)
-#define _HW_OD5_1(o,x,...)	__VA_ARGS__
-#define _HW_OD5_0(o,...)	HW_Y(_HW_OD6,o)(o)
-#define _HW_OD6_0(o)		HW_E_O(o)		/* o is not recognized as an object */
-#define _HW_OD6_1(o)		HW_E_OM()		/* missing object name */
-
-#define _hw_o_irq(...)		, HW_IRQ(__VA_ARGS__)
-#define _hw_o_relative(o,r)	, _HW_OD7(HW_RELATIVE(o,r))
-#define _hw_o_rel(o,r)		, _HW_OD7(HW_RELATIVE(o,r))
-#define _hw_o_register(o,r)	, _HW_OD11(o,r,_hw_def_##o)
-#define _hw_o_reg(o,r)		, _HW_OD11(o,r,_hw_def_##o)
-#define _hw_o_HW_IO(...)	, _HW_OD21(__VA_ARGS__)
-
-#define _HW_OD7(o)		_HW_OD8(o)
-#define _HW_OD8(o)		HW_Y(_HW_OD8,o)(o)
-#define _HW_OD8_1(o)		/* HW_RELATIVE() has emitted an error */
-#define _HW_OD8_0(o)		_HW_OD8_2(o,_hw_def_##o)
-#define _HW_OD8_2(...)		_HW_OD4_1(__VA_ARGS__)
-
-#define _HW_OD11(...)		_HW_OD12(__VA_ARGS__)
-#define _HW_OD12(o,r,...)	HW_Y(_HW_OD12,_hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
-#define _HW_OD12_0(o,...)	HW_E_O(o)
-#define _HW_OD12_1(o,r,c,i,a)	_HW_OD13(_hw_reg_##c##_##r,o,c,a,r)
-#define _HW_OD13(...)		_HW_OD14(__VA_ARGS__)
-#define _HW_OD14(t,...)		HW_Y(_HW_OD14,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_OD14_1(t,...)	_hw_r2m_##t(__VA_ARGS__)
-#define _HW_OD14_0(t,o,c,a,r)	_HW_OD15(_hw_reg_##o##_##r,o,c,a,r)
-#define _HW_OD15(...)		_HW_OD16(__VA_ARGS__)
-#define _HW_OD16(t,...)		HW_Y(_HW_OD16,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_OD16_1(t,...)	_hw_r2m_##t(__VA_ARGS__)
-#define _HW_OD16_0(t,o,c,a,r)	HW_E(`o` has no register `r`)
-
-/* Process I/O definition HW_IO(...)
- */
-#define _HW_OD21(io,...)	_HW_OD22(io,_hw_def_##io,__VA_ARGS__)
-#define _HW_OD22(...)		_HW_OD23(__VA_ARGS__)
-#define _HW_OD23(io,c,...)	HW_Y(_HW_OD23,_hw_class_##c)(io,c,__VA_ARGS__)
-#define _HW_OD23_1(p,c,i,a,b,d)	_io1a,HW_IO(p,b,d),0,p,b,d
-#define _HW_OD23_0(io,...)	HW_E_O(io)	/* io is not recognized as an object */
 
 /**
  * @ingroup public_mac
@@ -352,18 +225,6 @@
 
 
 /**
- * @ingroup private_mac
- * @brief Returns the definition of the @ref using_objects "object".
- * @hideinitializer
- *
- * This is an equivalent for HW_OD() but without error checking.
- */
-#define _HW_OD(o)		__HW_OD1(o,_hw_def_##o)
-#define __HW_OD1(...)		__HW_OD2(__VA_ARGS__)
-#define __HW_OD2(o,c,...)	c,o,__VA_ARGS__
-
-
-/**
  * @ingroup public_ins_obj
  * @brief Executes an @ref using_actions "action" immediately on an @ref using_objects "object".
  * @hideinitializer
@@ -378,16 +239,7 @@
  * hw( write, counter0, 0 );
  * @endcode
  */
-
-/*  Make prefix 'hw_' or 'hwa_' an argument, have the arguments expanded, and
- *  add void arguments to meet argument number requirements and signal the end
- *  of the list.
- */
-#if defined DOXYGEN
-#  define hw(action,object,...)
-#else
-#  define hw(...)		_hwx1(hw,__VA_ARGS__,,,)
-#endif
+#define hw(...)			HW(hw_,__VA_ARGS__,,)
 
 
 /**
@@ -403,9 +255,9 @@
  * The context must have been created with the `hwa_begin()` or the
  * `hwa_begin_from_reset()` instruction.
  *
- * The `hw_commit()` instruction triggers the production of the machine code.
+ * The `hwa_commit()` instruction triggers the production of the machine code.
  *
- * The `hw_nocommit()` instruction does not produce code and is useful to put
+ * The `hwa_nocommit()` instruction does not produce code and is useful to put
  * the context in a known state.
  *
  * @code
@@ -413,264 +265,99 @@
  * hwa( write, counter0, 0 );
  * @endcode
  */
-#if defined DOXYGEN
-#  define hwa(action,object,...)
-#else
-#  define hwa(...)		_hwx1(hwa,__VA_ARGS__,,,)
-#endif
+#define hwa(...)		HW(hwa_,__VA_ARGS__,,)
 
 
-#define _hwx1(h,f,o,...)	_hwx2(h,f,HW_OD(o),__VA_ARGS__)
-#define _hwx2(...)		_hwx3(__VA_ARGS__)
-
-/*  Do not proceed further if the expansion of the object has triggered an error
+/*
+ * @ingroup public_ins_obj
+ * @brief Find a method for an object and call it
+ * @hideinitializer
+ *
+ * The method is searched in this order:
+ *  1. A class method, h_f_c
+ *  2. A global method, h_f
  */
-#define _hwx3(h,f,c,...)	HW_Y(_hwx4,c)(h,f,c,__VA_ARGS__)
-#define _hwx4_1(...)		// HW_E_OM() /* An error has already been emitted by HW_OD */
-
-/*  Look for a class method x_f for object o of class c.
- */
-#define _hwx4_0(h,f,c,...)	HW_Y(_hwx5,_hw_mtd_##h##_##f##_##c)(h,f,c,__VA_ARGS__)
-#define _hwx5_1(h,f,c,...)	HW_A1(_hw_mtd_##h##_##f##_##c)(__VA_ARGS__)
-
-/*  Look for a method x_f for object o.
- */
-#define _hwx5_0(h,f,c,o,...)	HW_Y(_hwx6,_hw_mtd_##h##_##f##_##o)(h,f,c,o,__VA_ARGS__)
-#define _hwx6_1(h,f,c,o,...)	HW_A1(_hw_mtd_##h##_##f##_##o)(__VA_ARGS__)
-
-/*  Look for a global method
- */
-#define _hwx6_0(h,f,...)	HW_Y(_hwx7,_hw_mtd_##h##_##f)(h,f,__VA_ARGS__)
-#define _hwx7_1(h,f,...)	HW_A1(_hw_mtd_##h##_##f)(__VA_ARGS__)
-
-/*  The _fake class accepts all methods (and does nothing)
- */
-#define _hwx7_0(h,f,c,o,...)	HW_Y(_hwx8,_hw_is__fake_##c)(h,f,c,o,__VA_ARGS__)
-#define _hwx8_1(...)
-
-/*  There is an error
- */
-#define _hwx8_0(h,f,c,o,...)	HW_E_OCM(o,c,h(f,...))
+#define HW(h,f,o,...)			_HW00(h,f, HW_X(o), __VA_ARGS__)
+#define _HW00(...)			_HW01(__VA_ARGS__)
+#define _HW01(h,f,c,o,...)		HW_Y0(_HW01_,c)(h,f,c,o,__VA_ARGS__)
+#define _HW01_1(h,f,c,o,e,...)		h##f##_	HW_E(e)// An error occured
+/* Class method? */
+#define _HW01_0(h,f,c,o,...)		_HW02(h,f,c,o,h##f##_##c,__VA_ARGS__)
+#define _HW02(...)			_HW03(__VA_ARGS__)
+#define _HW03(h,f,c,o,x,...)		HW_Y0(_HW03_,x)(h,f,c,o,x,__VA_ARGS__)
+#define _HW03_1(h,f,c,o,z,y,...)	y(o,__VA_ARGS__)
+/* Global method? */
+#define _HW03_0(h,f,c,o,x,...)		_HW06(h,f,c,o,h##f,__VA_ARGS__)
+#define _HW06(...)			_HW07(__VA_ARGS__)
+#define _HW07(h,f,c,o,x,...)		HW_Y0(_HW07_,x)(h,f,c,o,x,__VA_ARGS__)
+#define _HW07_1(h,f,c,o,z,y,...)	y(c,o,__VA_ARGS__)
+/* Fake object? */
+#define _HW07_0(h,f,c,o,x,...)		HW_Y0(_HW08_,_hw_is__fake_##c)(h,f,c,o)
+#define _HW08_1(...)
+#define _HW08_0(h,f,c,o,...)		HW_E_OCM(o,c,f)
 
 
 /*  Internal use only version
  */
 #define _hw(...)		__hw1(__VA_ARGS__,)
-#define __hw1(f,o,...)		__hw2(f,HW_OD(o),__VA_ARGS__)
+#define __hw1(f,o,...)		__hw2(f,HW_X(o),__VA_ARGS__)
 #define __hw2(...)		__hw3(__VA_ARGS__)
-#define __hw3(f,c,...)		HW_Y(__hw4,c)(f,c,__VA_ARGS__)
-#define __hw4_1(...)		// An error has been emitted. Stop here.
-
-/*  Look for a method x_f for object o of class c.
- */
-#define __hw4_0(f,c,...)	HW_Y(__hw41,_hw_mtd_hw_##f##_##c)(f,c,__VA_ARGS__)
-#define __hw41_1(f,c,...)	HW_A1(_hw_mtd_hw_##f##_##c)(__VA_ARGS__)
+#define __hw3(f,c,...)		HW_Y(__hw4_,c)(f,c,__VA_ARGS__)
+#define __hw4_1(c,o,e,...)	HW_E(e)	// Error, stop here.
+#define __hw4_0(f,c,...)	HW_Y(__hw41_,hw_##f##_##c)(f,c,__VA_ARGS__)
+#define __hw41_1(f,c,...)	HW_A1(hw_##f##_##c)(__VA_ARGS__)
 #define __hw41_0(f,c,o,...)	HW_E_OCM(o,c,hw_##f)
 
 
 /*  Internal use only version
  */
 #define _hwa(...)		__hwa1(__VA_ARGS__,)
-#define __hwa1(f,o,...)		__hwa2(f,HW_OD(o),__VA_ARGS__)
+#define __hwa1(f,o,...)		__hwa2(f,HW_X(o),__VA_ARGS__)
 #define __hwa2(...)		__hwa3(__VA_ARGS__)
-
-/*  Do not proceed further in case of error
- */
-#define __hwa3(f,c,...)		HW_Y(__hwa4,c)(f,c,__VA_ARGS__)
-#define __hwa4_1(...)		//HW_E(processing error: HW_QUOTE(__hwa4_0(f,c,__VA_ARGS__)))
-
-/*  Look for a method x_f for object o of class c.
- */
-#define __hwa4_0(f,c,...)	HW_Y(__hwa41,_hw_mtd_hwa_##f##_##c)(f,c,__VA_ARGS__)
-#define __hwa41_1(f,c,...)	HW_A1(_hw_mtd_hwa_##f##_##c)(__VA_ARGS__)
+#define __hwa3(f,c,...)		HW_Y(__hwa4_,c)(f,c,__VA_ARGS__)
+#define __hwa4_1(c,o,e,...)	HW_E(e)	// Error, stop here.
+#define __hwa4_0(f,c,...)	HW_Y(__hwa41_,hwa_##f##_##c)(f,c,__VA_ARGS__)
+#define __hwa41_1(f,c,...)	HW_A1(hwa_##f##_##c)(__VA_ARGS__)
 #define __hwa41_0(f,c,o,...)	HW_E_OCM(o,c,hwa_##f)
 
-#if 0
-/**
- * @ingroup public_ins_obj
- * @brief Implement methods of an object.
- * @hideinitializer
- *
- * The optionnal argument `static` can be specified to have the methods prefixed
- * with the `static` keyword.
- *
- * @code
- * HW_IMPLEMENT(sensor0);
- * @endcode
- * @code
- * HW_IMPLEMENT(sensor0,static);
- * @endcode
- */
-/*    Do not use hw() to keep it enabled for expansion.
- */
-#define HW_IMPLEMENT(...)	_HW_IMP1(__VA_ARGS__,,)
-#define _HW_IMP1(o,...)		_HW_IMP2(HW_OD(o),__VA_ARGS__)
-#define _HW_IMP2(...)		_HW_IMP3(__VA_ARGS__)
-#define _HW_IMP3(c,...)		HW_Y(_HW_IMP4,c)(c,__VA_ARGS__)
-#define _HW_IMP4_1(...)		// An error message has been emitted. Stop here.
-#define _HW_IMP4_0(c,...)	HW_Y(_HW_IMP5,_hw_implement_##c)(c,__VA_ARGS__)
-#define _HW_IMP5_0(c,o,...)	HW_E_OCM(o,c,HW_IMPLEMENT)
-#define _HW_IMP5_1(c,o,i,a,p,...)	HW_Y(_HW_IMP6,_hw_implement_prefix_##p)(c,o,i,a,p)
-#define _HW_IMP6_1(c,...)	HW_A1(_hw_implement_##c)(__VA_ARGS__)
-#define _HW_IMP6_0(c,o,i,a,p)	HW_E_VL(p, static or "" )
 
-#define _hw_implement_prefix_		, 1
-#define _hw_implement_prefix_static	, 1
-
-
-/**
- * @ingroup public_ins_obj
- * @brief Check the definition of an external object.
- * @hideinitializer
- *
- * @code
- * HW_CHECK(sensor0);
- * @endcode
- */
-#define HW_CHECK(o)		_HW_CHK2(HW_OD(o))
-#define _HW_CHK2(...)		_HW_CHK3(__VA_ARGS__)
-#define _HW_CHK3(c,...)		HW_Y(_HW_CHK4,c)(c,__VA_ARGS__)
-#define _HW_CHK4_1(...)		// An error message has been emitted.
-#define _HW_CHK4_0(c,...)	HW_Y(_HW_CHK5,_hw_check_##c)(c,__VA_ARGS__)
-#define _HW_CHK5_0(c,o,...)	HW_E_OCM(o,c,HW_CHECK)
-#define _HW_CHK5_1(c,...)	HW_A1(_hw_check_##c)(__VA_ARGS__)
-#endif
-
-
-/*  Define wich classes are hardware bits
- */
-#define _hw_isa_reg__r8			, 1
-#define _hw_isa_reg__r16		, 1
-#define _hw_isa_reg__r32		, 1
-#define _hw_isa_reg__cb1		, 1
-#define _hw_isa_reg__cb2		, 1
-#define _hw_isa_reg__ob1		, 1
-#define _hw_isa_reg__ob2		, 1
-#define _hw_isa_reg__xob1		, 1
-#define _hw_isa_reg__xob2		, 1
-
-
-/**
- * @ingroup public_ins_obj
- * @brief Returns the memory definition for register `reg` of @ref using_objects "object".
- * @hideinitializer
- *
- * The word _register_ here stands for "set of bits" that may be sprayed over 2
- * hardware registers. It can be a hardware register as well as a logical
- * register.
- *
- * Successful results can be:
- *
- *  * `_m1, o,a, r,rc,ra,rwm,rfm, rbn,rbp`
- *
- *  * `_m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
- *		 r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2`
- *
- * with:
- *
- *  * '`_m1`': class of one group of consecutive bits in one hardware register
- *
- *  * '`_m2`': class of a set of bits made of two groups of consecutive bits in
- *	     one or two hardware registers
- *
- *  * `o`: the object name
- *
- *  * `a`: the base address of the object
- *
- *  * `r`: the name of the hardware register
- *
- *  * `rc`: the class of the hardware register
- *
- *  * `ra`: the address of the hardware register relative to the address of the object
- *
- *  * `rwm`: the mask of bits that are writeable
- *
- *  * `rfm`: the mask of flag bits (bits that are reset by writing 1 in them)
- *
- *  * `rbn`: the number of consecutive bits concerned
- *
- *  * `rbp`: the position of the least significant bit of the group in the hardware register
- *
- *  * `vbp`: the position of the least significant bit of the group in the value
- *
- */
-#if defined DOXYGEN
-#  define HW_REGISTER(object, reg)
-#else
-#  define HW_REGISTER(o,x)		_HW_M1(HW_OD(o),x)
-#endif
-#define _HW_M1(...)			_HW_M2(__VA_ARGS__)
-#define _HW_M2(c,...)			HW_Y(_HW_M2,c)(c,__VA_ARGS__)
-#define _HW_M2_1(...)			// Error: return void 
-#define _HW_M2_0(c,o,i,a,r)		_HW_M4(_hw_reg_##c##_##r,o,c,a,r)
-#define _HW_M4(...)			_HW_M5(__VA_ARGS__)
-#define _HW_M5(t,...)			HW_Y(_HW_M5,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_M5_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
-#define _HW_M5_0(t,o,c,a,r)		_HW_M6(_hw_reg_##o##_##r,o,c,a,r)
-#define _HW_M6(...)			_HW_M7(__VA_ARGS__)
-#define _HW_M7(t,...)			HW_Y(_HW_M7,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _HW_M7_1(t,...)			_hw_r2m_##t(__VA_ARGS__)
-#define _HW_M7_0(t,o,c,a,r)		HW_E(`o` has no register `r`)
-
-
-/**
- * @ingroup private_ins
- * @brief Memory definition of a register (internal use, no error checking)
- * @hideinitializer
- */
-#define _HW_M(o,r)			__HW_M02(_HW_R(o,r))
-#define __HW_M02(...)			__HW_M03(__VA_ARGS__)
-#define __HW_M03(t,...)			_hw_r2m_##t(__VA_ARGS__)
-
-
-/**
- * @ingroup private_ins
- * @brief Definition of class or object `o` hardware register `r`
- * @hideinitializer
- */
-/*  We know that 'o' is defined but we do not know if 'r' is a class register or
- *  an object register.
- */
-#define _HW_R(o,r)			__HW_R2(o,_hw_def_##o,r)
-#define __HW_R2(...)			__HW_R3(__VA_ARGS__)
-#define __HW_R3(o,c,i,a,r)		__HW_R4(_hw_reg_##c##_##r,o,c,a,r)
-#define __HW_R4(...)			__HW_R5(__VA_ARGS__)
-#define __HW_R5(t,...)			HW_Y(__HW_R5,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define __HW_R5_1(...)			__VA_ARGS__
-#define __HW_R5_0(z,o,c,a,r)		_hw_reg_##o##_##r,o,c,a,r
-
-
-/*  Convert a register definition to a memory definition of class _m1 or _m2
- *	-> _m1, o,a, r,rc,ra,rwm,rfm, bn,bp
- *	-> _m2, o,a, r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,
- *		     r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2
- */
 /*
- *  Le nom du registre originel pourrait être conservé pour les messages
- *  d'erreur.
+ * @ingroup public_ins_obj
+ * @brief Find a method for an object and call it
+ * @hideinitializer
+ *
+ * The method is searched in this order:
+ *  1. f_c
+ *  2. f_o
+ *  3. f
+ *
+ * The definition of the object is pushed away so that it becomes the argument
+ * of the method.
  */
-#define _hw_r2m__r8(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r, _r8,ra,rwm,rfm, 8,0
-#define _hw_r2m__r16(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r16,ra,rwm,rfm,16,0
-#define _hw_r2m__r32(ra,rwm,rfm, o,c,a,r)	_m1,o,a,r,_r32,ra,rwm,rfm,32,0
-#define _hw_r2m__ob1(r,bn,bp, o,c,a,m)		_m1,o,0,r,_hw_reg_##o##_##r,bn,bp
-
-/*  External object register can be a register of the target object's class
- */
-#define _hw_r2m__xob1(to,tr,bn,bp,o,c,a,r)		_hw_r2m__xob12(_hw_reg_##to##_##tr,_hw_def_##to,to,tr,bn,bp)
-#define _hw_r2m__xob12(...)				_hw_r2m__xob13(__VA_ARGS__)
-#define _hw_r2m__xob13(t,...)				HW_Y(_hw_r2m__xob13,_hw_isa_reg_##t)(t,__VA_ARGS__)
-#define _hw_r2m__xob13_1(rc,ra,rwm,rfm,c,i,a,o,r,bn,bp)	_m1,o,a,r,rc,ra,rwm,rfm,bn,bp
-#define _hw_r2m__xob13_0(x,c,i,a,o,r,bn,bp)		_hw_r2m__xob16(_hw_reg_##c##_##r,c,i,a,o,r,bn,bp)
-#define _hw_r2m__xob16(...)				_hw_r2m__xob17(__VA_ARGS__)
-#define _hw_r2m__xob17(rc,ra,rwm,rfm,c,i,a,o,r,bn,bp)	_m1,o,a,r,rc,ra,rwm,rfm,bn,bp
-
-#define _hw_r2m__cb1(r,bn,bp, o,c,a,m)		_m1,o,a,r,_hw_reg_##c##_##r,bn,bp
-#define _hw_r2m__cb2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
-  _m2,o,a, r1,_hw_reg_##c##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##c##_##r2,rbn2,rbp2,vbp2
-#define _hw_r2m__ob2(r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,r)	\
-  _m2,o,a, r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2
-#define _hw_r2m__xob2(to, r1,rbn1,rbp1,vbp1, r2,rbn2,rbp2,vbp2, o,c,a,m) \
-  _m2,o,a, r1,_hw_reg_##to##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##to##_##r2,rbn2,rbp2,vbp2
+#define HW_F(...)			_HW_F0(__VA_ARGS__,)
+#define _HW_F0(f,o,...)			_HW_F00(f, HW_X(o),__VA_ARGS__)
+#define _HW_F00(...)			_HW_F01(__VA_ARGS__)
+#define _HW_F01(f,c,o,...)		HW_Y0(_HW_F01_,c)(f,c,o)   (o,__VA_ARGS__)
+#define _HW_F01_1(f,c,o)		f##_	// An error occured
+/* Class method? */
+#define _HW_F01_0(f,c,o)		_HW_F02(f,c,o,f##_##c,)
+#define _HW_F02(...)			_HW_F03(__VA_ARGS__)
+#define _HW_F03(f,c,o,x,...)		HW_Y0(_HW_F03_,x)(f,c,o,x,__VA_ARGS__)
+#define _HW_F03_1(f,c,o,z,y,...)	y
+/* Object method? */
+#define _HW_F03_0(f,c,o,...)		_HW_F04(f,c,o,f##_##o,)
+#define _HW_F04(...)			_HW_F05(__VA_ARGS__)
+#define _HW_F05(f,c,o,x,...)		HW_Y0(_HW_F05_,x)(f,c,o,x,__VA_ARGS__)
+#define _HW_F05_1(f,c,o,z,y,...)	y
+/* Global method? */
+#define _HW_F05_0(f,c,o,...)		_HW_F06(f,c,o,f,)
+#define _HW_F06(...)			_HW_F07(__VA_ARGS__)
+#define _HW_F07(f,c,o,x,...)		HW_Y0(_HW_F07_,x)(f,c,o,x,__VA_ARGS__)
+#define _HW_F07_1(f,c,o,z,y,...)	y
+/* Fake object? */
+#define _HW_F07_0(f,c,o,...)		HW_Y0(_HW_F08_,_hw_is__fake_##c)(f,c,o)
+#define _HW_F08_1(f,c,o)
+#define _HW_F08_0(f,c,o)		HW_E_OCM(o,c,f)
 
 
 /**
@@ -680,46 +367,35 @@
  *
  * The object should be a peripheral controller or a register.
  */
-/*  The argument can be an object definition
+#define HW_ADDRESS(...)			HW_F( HW_ADDRESS, __VA_ARGS__ )
+#define HW_ADDRESS_(...)		0
+
+#define _HW_A				HW_ADDRESS
+
+
+/*  Address correction
+ *    C and assembly addresses are offset by 0x20 bytes with avr-gcc (or avrlibc?)
  */
-#if defined DOXYGEN
-#  define HW_ADDRESS(object)
-#else
-#  define HW_ADDRESS(...)		HW_MTD(HW_ADDRESS, __VA_ARGS__,)
+#if !defined HW_AC
+#  define HW_AC
 #endif
 
+#define HW_ADDRESS__m111		, _hw_address_m111
+#define _hw_address_m111(n,o,r,c,a,...)	(a HW_AC)
 
-/* This is defined in the vendor-specific file since the address can be
- * different between C and assembler.
- */
-#define _hw_mtd_HW_ADDRESS__m1		, _HW_A__m1
-#define _hw_mtd_HW_ADDRESS__r32		, _HW_A__r32
-
-
-/**
- * @ingroup private_ins
- * @brief  Address of an object's register (internal use)
- * @hideinitializer
- */
-#define _HW_A(...)			_HW_SPEC(_HW_A, __VA_ARGS__)
+#define HW_ADDRESS__m1			, _hw_address_m1
+#define _hw_address_m1(n,o,r,c,a,...)	(a HW_AC)
 
 
 /**
  * @ingroup public_ins_obj
- * @brief Returns the number of bits of the @ref using_objects "object".
+ * @brief Returns the number of bits of an @ref using_objects "object".
  * @hideinitializer
+ *
+ * The object may be an I/O definition, a register, a counter...
  */
-/*  The argument can be an object definition
- */
-#if defined DOXYGEN
-#  define HW_BITS(object)
-#else
-#  define HW_BITS(...)			HW_MTD(HW_BITS, __VA_ARGS__,)
-#endif
-
-#define _hw_mtd_HW_BITS__m1		, _HW_BITS__m1
-
-#define _HW_BITS__m1(o,a, r,rw,ra,rwm,rfm, bn,bp)	bn
+#define HW_BITS(...)			HW_F( HW_BITS, __VA_ARGS__ )
+#define HW_BITS_(...)			0
 
 
 /**
@@ -727,35 +403,11 @@
  * @brief Returns the position of the least significant bit of the @ref using_objects "object".
  * @hideinitializer
  */
-/*  The argument can be an object definition
- */
-#if defined DOXYGEN
-#  define HW_POSITION(object)
-#else
-#  define HW_POSITION(...)				HW_MTD(HW_POSITION, __VA_ARGS__,)
-#endif
+#define HW_POSITION(...)		HW_F( HW_POSITION, __VA_ARGS__ )
+#define HW_POSITION_(...)		0 // An error occured
 
-#define _hw_mtd_HW_POSITION__m1	, _HW_POSITION__m1
-
-#define _HW_POSITION__m1(o,a, r,rw,ra,rwm,rfm, bn,bp,...)	bp
-
-
-/**
- * @ingroup private_mac
- * @brief Number of bits of the register `r` of @ref using_objects "object" `o`.
- * @hideinitializer
- */
-#define _HW_BN_OR(o,r)					_HW_SPEC(_HW_MBN,_HW_M(o,r))
-#define _HW_MBN__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bn
-
-
-/**
- * @ingroup private_mac
- * @brief Position of the least significant bit of the register `r` of @ref using_objects "object" `o`.
- * @hideinitializer
- */
-#define _HW_BP_OR(o,r)					_HW_SPEC(_HW_MBP,_HW_M(o,r))
-#define _HW_MBP__m1(o,a, r,rc,ra,rwm,rfm, bn,bp)	bp
+#define HW_POSITION__m111			, _hw_position_m111
+#define _hw_position_m111(n,o,r,c,a,wm,fm,bn,bp,...)	bp
 
 
 /**
@@ -781,12 +433,24 @@
 #define _hw_uintt2_0(n)			HW_E_VL(n,8|16) uint8_t
 
 
-/**
- * @ingroup private_ins
- * @brief Class of the register `r` of object `o`.
+/* FIXME: HW_X does not find the relative. Need an extra expansion?
+ *
+ * @ingroup public_ins
+ * @brief Returns a register type
  * @hideinitializer
+ *
+ * This is useful to define a new HWA register following the type of another.
+ *
+ * @code
+ * #define hw_reg_swuart1_dtn		hw_rt(hw_swuart1_compare,counter,count), (intptr_t)&__hw_swuart1_dtn, -1, 0x00
+ * @endcode
  */
-#define _HW_RC(o,r)			HW_A0(_HW_R(o,r))
+/* #define hw_r(...)		_hw_r01(HW_X(__VA_ARGS__)) */
+/* #define _hw_r01(...)		_hw_r02(__VA_ARGS__) */
+/* #define _hw_r02(c,...)		HW_Y0(_hw_r02_,c)(c,__VA_ARGS__) */
+/* #define _hw_r02_1(c,o,e,...)	HW_E(e) */
+/* #define _hw_r02_0(c,...)	_hw_r##c(__VA_ARGS__) */
+/* #define _hw_r_m111(n,o,r,c,...)	c */
 
 
 /**
@@ -794,159 +458,34 @@
  * @brief Returns the ID of the @ref using_objects "object" or 0 if the object does not exist.
  * @hideinitializer
  */
-/*  We do not use HW_OD() because HW_ID() should not trigger an error if 'object'
- *  is not an object.
- */
-#define HW_ID(object)			HW_G2(_HW_ID,HW_ISON(object))(object)
-#define _HW_ID_1(o)			HW_A1(_hw_def_##o)
-#define _HW_ID_0(o)			0
+#define HW_ID(o)			_HW_ID01( HW_X(o) )
+#define _HW_ID01(...)			_HW_ID02(__VA_ARGS__)
+#define _HW_ID02(c,...)			HW_Y0(_HW_ID02_,c)(c,__VA_ARGS__,)
+#define _HW_ID02_1(...)			0 // Do not produce an error
+#define _HW_ID02_0(c,o,i,...)		i
 
 
-/**
- * @ingroup public_ins_obj
- * @brief Returns the name of the relative object `x` of the @ref using_objects "object".
- *
- * Many peripheral controllers are implemented by a set of objects that have a
- * relationship. Typically, the Atmel AVR timer/counters are implemented through
- * one counting unit, optionnal compare units, and optionnal capture
- * units. Output pins of the compare units are relatives of the compare units.
- * 
- * For example, the Atmel AVR ATmega328P has a compare output pin named OC0A
- * that is the output of the compare unit A of the TIM0 timer/counter. With HWA,
- * TIM0 is called `counter0` and its first compare unit (A) is called
- * `counter0compare0`.
- * 
- *  * `HW_RELATIVE( counter0, compare0 )` returns `counter0compare0`.
- *  * `HW_RELATIVE( counter0compare0, counter )` returns `counter0`.
- *  * `HW_RELATIVE( counter0compare0, pin )` returns `pd6`.
- * 
- * The `HW_RELATIVE()` instruction is useful to make the source code less
- * dependant of the choice of the peripherals. For example, you define the
- * symbol PWM to hold the name of the compare unit whose output pin will produce
- * a PWM signal. You can configure its related objects, namely the counting unit
- * and the ouput pin, this way:
- * 
- * @code
- * #define PWM	counter0compare0
- * ...
- * hwa( configure, PWM, set_at_bottom_clear_on_match );
- * hwa( configure, HW_RELATIVE(PWM,counter), direction, up_loop );
- * hwa( write, PWM, (1U<<HW_BITS(PWM))/2 ); // 50% duty cycle
- * @endcode
- * 
- * If in the future you must use `counter2compare1` instead of
- * `counter0compare0`, you just need to change the definition of the PWM symbol
- * accordingly and the rest of the code will remain unchanged.
- *
- * @hideinitializer
- */
-/*  Check the object name,
- *  look for an object relative,
- *  look for a class-defined HW_RELATIVE() method.
- */
-#define HW_RELATIVE(object,x)		_HW_REL1(object,x)
-#define HW_REL(o,x)			_HW_REL1(o,x)
-#define _HW_REL1(...)			_HW_REL2(__VA_ARGS__)
-#define _HW_REL2(o,x)			HW_Y(_HW_REL2,o)(o,x)
-#define _HW_REL2_1(o,x)			HW_E_OM()
-#define _HW_REL2_0(o,x)			HW_G2(_HW_REL3,HW_ISON(o))(o,x)
-#define _HW_REL3_0(o,x)			HW_E_O(o)
-#define _HW_REL3_1(o,x)			HW_G2(_HW_REL4,HW_ISON(_hw_rel_##o##_##x))(o,x)
-#define _HW_REL4_1(o,x)			_hw_rel_##o##_##x
-#define _HW_REL4_0(o,x)			_HW_REL4(o,x,_hw_def_##o)
-#define _HW_REL4(...)			_HW_REL5(__VA_ARGS__)
-#define _HW_REL5(o,x,c,...)		HW_Y(_HW_REL5,_hw_class_##c)(o,x,c,__VA_ARGS__)
-#define _HW_REL5_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL5_1(o,x,c,...)		HW_Y(_HW_REL6,_hw_mtd_HW_RELATIVE_##c)(o,x,c,__VA_ARGS__)
-#define _HW_REL6_0(o,x,...)		HW_E_OO(o,x)
-#define _HW_REL6_1(o,x,c,...)		HW_A1(_hw_mtd_HW_RELATIVE_##c)(o,x,__VA_ARGS__)
 
-
-/**
+/*
  *@brief Remove brackets
  */
-#define HW_XB(...)		__VA_ARGS__
+#define HW_XB(...)			__VA_ARGS__
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Return a single argument or concat 2 arguments inside brackets
  * @hideinitializer
  */
-#define _HW_UBKT(...)			HW_Y(_HW_UBKT,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
+#define _HW_UBKT(...)			HW_Y(_HW_UBKT_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
 #define _HW_UBKT_0(...)			__VA_ARGS__
 #define _HW_UBKT_1(...)			_HW_UBKT1 __VA_ARGS__
 #define _HW_UBKT1(...)			_HW_UBKT2(__VA_ARGS__,,)
-#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3,x)(a,x,__VA_ARGS__)
+#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3_,x)(a,x,__VA_ARGS__)
 #define _HW_UBKT3_1(a,...)		a
-#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4,x)(a,b,x,__VA_ARGS__)
+#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4_,x)(a,b,x,__VA_ARGS__)
 #define _HW_UBKT4_1(a,b,...)		a##b
 #define _HW_UBKT4_0(...)		HW_E((__VA_ARGS__):too many arguments)
-
-
-/* Returns the name of a relative object using a path made of up to 4 objects.
- * 
- *   `HW_RLX(counter0,compare0,counter,compare1)` returns `counter0compare1`.
- *   `HW_RLX(counter0,compare0,counter)` returns `counter0`.
- *   `HW_RLX((counter0,compare0),counter)` returns `counter0`.
- *
- * This is used by the HW_OD() macro to expand the (object,...) object name.
- */
-#define HW_RLX(...)		_HW_RL1(__VA_ARGS__,,)
-#define _HW_RL1(...)		HW_Y(_HW_RL1,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_RL1_1(o,...)	_HW_RL2( HW_XB o, __VA_ARGS__ )
-#define _HW_RL1_0(...)		_HW_RL2( __VA_ARGS__ )
-
-#define _HW_RL2(o,x,...)	HW_Y(_HW_RL2,o)(o,x,__VA_ARGS__)
-#define _HW_RL2_1(o,x,...)	HW_E_OM()
-#define _HW_RL2_0(o,x,...)	HW_G2(_HW_RL3,HW_ISON(o))(o,x,__VA_ARGS__)
-#define _HW_RL3_0(o,x,...)	HW_E_O(o)
-#define _HW_RL3_1(o,x,...)	_HW_RL4(_HW_REL3_1(o,x),__VA_ARGS__)
-
-#define _HW_RL4(...)		_HW_RL40(__VA_ARGS__)
-#define _HW_RL40(x,...)		HW_Y(_HW_RL4,x)(x,__VA_ARGS__)
-#define _HW_RL4_1(...)		
-#define _HW_RL4_0(o,x,...)	HW_Y(_HW_RL40,x)(o,x,__VA_ARGS__)
-#define _HW_RL40_1(o,...)	o
-#define _HW_RL40_0(o,x,...)	_HW_RL5(_HW_REL3_1(o,x),__VA_ARGS__)
-
-#define _HW_RL5(...)		_HW_RL50(__VA_ARGS__)
-#define _HW_RL50(x,...)		HW_Y(_HW_RL5,x)(x,__VA_ARGS__)
-#define _HW_RL5_1(...)		
-#define _HW_RL5_0(o,x,...)	HW_Y(_HW_RL50,x)(o,x,__VA_ARGS__)
-#define _HW_RL50_1(o,...)	o
-#define _HW_RL50_0(o,x,...)	_HW_RL6(_HW_REL3_1(o,x),__VA_ARGS__)
-
-#define _HW_RL6(...)		_HW_RL60(__VA_ARGS__)
-#define _HW_RL60(x,...)		HW_Y(_HW_RL6,x)(x,__VA_ARGS__)
-#define _HW_RL6_1(...)		
-#define _HW_RL6_0(o,x,...)	HW_Y(_HW_RL60,x)(o,x,__VA_ARGS__)
-#define _HW_RL60_1(o,...)	o
-#define _HW_RL60_0(o,x,...)
-
-
-/**
- * @ingroup private_ins
- * @brief Returns the name of the relative `x` of object `o`.
- * @hideinitializer
- *
- * The public version of `HW_RELATIVE()` fails if one of the arguments is the
- * result of a `HW_RELATIVE()`. This private version should be used instead in
- * internal HWA code.
- */
-#define _HW_REL(o,x)			__HW_REL2(o,x)
-#define __HW_REL2(o,x)			_hw_rel_##o##_##x
-
-
-/**
- * @ingroup private_ins
- * @brief Returns the name of the relative `x` of object `o`.
- * @hideinitializer
- *
- * An alternative to `_HW_REL()` used by class _swuarta.
- */
-#define _HW_RV(o,x)			__HW_RV2(o,x)
-#define __HW_RV2(o,x)			_hw_rel_##o##_##x
 
 
 /**
@@ -956,12 +495,12 @@
  */
 #define HW_PIN(p)		_HW_PIN1(p,_hw_pin_##p,)
 #define _HW_PIN1(...)		_HW_PIN2(__VA_ARGS__)
-#define _HW_PIN2(o,x,...)	HW_Y(_HW_PIN,x)(o,__VA_ARGS__)
+#define _HW_PIN2(o,x,...)	HW_Y(_HW_PIN_,x)(o,__VA_ARGS__)
 #define _HW_PIN_0(o,...)	HW_E_P(o)
 #define _HW_PIN_1(o,p,...)	p
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Returns the canonical name of pin `p` of object `o`.
  * @hideinitializer

@@ -102,7 +102,7 @@ int main ( )
 
   /*  Enable overflow IRQ
    */
-  hwa( turn, HW_IRQ(COUNTER,overflow), on );
+  hwa( turn, irq(COUNTER,overflow), on );
 
   /*  Write this configuration into the hardware
    */

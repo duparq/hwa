@@ -4,7 +4,7 @@
 SOURCES		=	diabolo.sx
 
 CONFIG		=	HW_DEVICE	\
-			hw_syshz	\
+			HW_SYSHZ	\
 			DIABOLO_PIN_RX	\
 			DIABOLO_PIN_TX  \
 			DIABOLO_PIN_DBG	\

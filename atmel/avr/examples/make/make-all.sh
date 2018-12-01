@@ -50,7 +50,13 @@ done
 
 fails=$(cat ${FAILS} | wc -l)
 echo "$passed/$total succeeded." ; echo
+
 if [ -n "$LOCAL" ] ; then
+    if [ $passed -lt $total ] ; then
+	echo "Fails:"
+	cat ${FAILS}
+	echo
+    fi
     rm ${FAILS}
 fi
 

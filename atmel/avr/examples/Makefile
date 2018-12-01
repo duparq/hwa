@@ -3,7 +3,7 @@
 #
 .PHONY: all
 all:
-	@bash make/make-all.sh
+	@bash make/make-all.sh || true
 
 
 #  Check all the examples
@@ -11,6 +11,13 @@ all:
 .PHONY: check
 check:
 	@bash make/check-all.sh
+
+
+#  Check all the examples
+#
+.PHONY: validate
+validate:
+	@bash make/validate-all.sh
 
 
 #  Remove all built files

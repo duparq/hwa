@@ -23,7 +23,7 @@
  *
  * * @ref attinyx5 : `prescaler1`
  */
-#define _hw_class__pscb
+#define hw_class__pscb
 
 
 #if !defined __ASSEMBLER__

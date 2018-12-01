@@ -20,7 +20,7 @@
  * * @ref attinyx5 : `int0`
  * * @ref atmegax8 : `int0`, `int1`
  */
-#define _hw_class__inta
+#define hw_class__inta
 
 
 /**

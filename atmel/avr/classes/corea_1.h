@@ -19,7 +19,7 @@
  * * @ref attinyx4 : `core0`
  * * @ref attinyx5 : `core0`
  */
-#define _hw_class__corea
+#define hw_class__corea
 
 #if !defined __ASSEMBLER__
 

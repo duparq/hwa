@@ -24,7 +24,7 @@
  */
 HW_ISR( COUNTER )
 {
-  hw( write, register(COUNTER,if), 0) ;
+  hw( write, (COUNTER,if), 0) ;
   hw( toggle, LED );
 }
 
@@ -80,9 +80,9 @@ int main ( )
   /*      prescaler, (uint16_t)(0.001*AHBHZ)-1, */
   /*      reload,    (uint16_t)(PERIOD/2 / 0.001)-1 ); */
 
-  hwa( write, register(COUNTER,dir), 0 );
-  hwa( write, register(COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
-  hwa( write, register(COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 );
+  hwa( write, (COUNTER,dir), 0 );
+  hwa( write, (COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
+  hwa( write, (COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 );
   //  hwa( write, register(COUNTER,cen), 1 );
   hwa( turn, COUNTER, on );
 

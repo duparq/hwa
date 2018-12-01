@@ -9,46 +9,42 @@
 	;; Software half-duplex UART using a timer-counter
 	;; 
 	;; Note: gcc call-used registers: 18..27, 30, 31
-
+#define TXD	HW_G3(hw,UART,pin_txd)
+#define RXD	HW_G3(hw,UART,pin_rxd)
+#define PDBG	HW_G3(hw,UART,pin_dbg)
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if HW_ID(HW_G3(hw,UART,pin_txd))
+#if HW_ID(TXD)
 #  define CANTX 1
-#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_txd), port )
-	TXDPORT	  = HW_ADDRESS( HW_REGISTER(PORT,port) )
-	TXDPIN	  = HW_ADDRESS( HW_REGISTER(PORT,pin) )
-	TXDDR	  = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	TXDBIT	  = HW_POSITION( HW_G3(hw,UART,pin_txd) )
-#  undef PORT
+	TXDPORT	  = HW_ADDRESS((TXD,port,port))
+	TXDPIN	  = HW_ADDRESS((TXD,port,pin))
+	TXDDR	  = HW_ADDRESS((TXD,port,ddr))
+	TXDBIT	  = HW_POSITION(TXD)
 #else
 #  define CANTX 0
 #endif
 
-#if HW_ID(HW_G3(hw,UART,pin_rxd))
+#if HW_ID(RXD)
 #  define CANRX 1
-#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_rxd), port )
-	RXDPORT	  = HW_ADDRESS( HW_REGISTER(PORT,port) )
-	RXDPIN	  = HW_ADDRESS( HW_REGISTER(PORT,pin) )
-	RXDDR	  = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	RXDBIT	  = HW_POSITION( HW_G3(hw,UART,pin_rxd) )
+	RXDPORT	  = HW_ADDRESS((RXD,port,port))
+	RXDPIN	  = HW_ADDRESS((RXD,port,pin))
+	RXDDR	  = HW_ADDRESS((RXD,port,ddr))
+	RXDBIT	  = HW_POSITION(RXD)
 #  define RXD_AP  RXDPIN, RXDBIT
-#  undef PORT
 #else	
 #  define CANRX 0
 #endif
 
 	;; Debugging options
 	;; 
-#if HW_ID(HW_G3(hw,UART,pin_dbg))
-#  define PORT	HW_RELATIVE( HW_G3(hw,UART,pin_dbg), port )
+#if HW_ID(PDBG)
 	DBG	  = 1
-	DBGPORT	  = HW_ADDRESS( HW_REGISTER(PORT,port) )
-	DBGPIN	  = HW_ADDRESS( HW_REGISTER(PORT,pin) )
-	DBGDR	  = HW_ADDRESS( HW_REGISTER(PORT,ddr) )
-	DBGBIT	  = HW_POSITION( HW_G3(hw,UART,pin_dbg) )
+	DBGPORT	  = HW_ADDRESS((PDBG,port,port))
+	DBGPIN	  = HW_ADDRESS((PDBG,port,pin))
+	DBGDR	  = HW_ADDRESS((PDBG,port,ddr))
+	DBGBIT	  = HW_POSITION(PDBG)
 #  define DBG_AP  DBGPIN, DBGBIT
-#  undef PORT
 #else
 	DBG	  = 0
 #endif
@@ -84,14 +80,14 @@
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if HW_ID(HW_G3(hw,UART,pin_rxd)) == HW_ID(hw_pin_int0) \
- || HW_ID(HW_G3(hw,UART,pin_rxd)) == HW_ID(hw_pin_ain1)
+#if HW_ID(RXD) == HW_ID(hw_pin_int0) \
+ || HW_ID(RXD) == HW_ID(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
 #endif
 
-#define ONEWIRE		HW_ID(HW_G3(hw,UART,pin_txd)) == HW_ID(HW_G3(hw,UART,pin_rxd))
+#define ONEWIRE		HW_ID(TXD) == HW_ID(RXD)
 #define CHECKTX		HW_G3(hw,UART,check_tx)
 #define	CLK_DIV		HW_G3(hw,UART,clk_div)
 
@@ -99,7 +95,7 @@
 #define COMPARE		HW_G3(hw,UART,compare)
 
 #undef COUNTER
-#define COUNTER		_HW_REL(COMPARE,counter)
+#define COUNTER		(COMPARE,counter)
 
 #undef STARTISR
 #define STARTISR	HW_G3(hw,UART,starter)
@@ -108,12 +104,13 @@
 #define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
 
 #if CANRX
-#  define START_IE	AP(HW_IRQMASK(STARTISR))
-#  define START_IF	AP(HW_IRQFLAG(STARTISR))
+#  define START_IE	AP(irqmask(STARTISR))
+#  define START_IF	AP(irqflag(STARTISR))
 #endif
 
-#define MATCH_IF	AP(HW_IRQFLAG(COMPARE))
-#define MATCH_IE	AP(HW_IRQMASK(COMPARE))
+#define MATCH_IF	AP(irqflag(COMPARE))
+#define MATCH_IE	AP(irqmask(COMPARE))
+
 
 #undef COUNT_BN
 #define COUNT_BN	HW_BITS(COUNTER)
@@ -150,12 +147,12 @@ DATA(dtn):	.byte	0		; 1 bit duration
 
 	;; Counter registers
 	;;
-	count = HW_ADDRESS( HW_REGISTER(COUNTER,count) )
-	comp  = HW_ADDRESS( HW_REGISTER(COMPARE,reg) )
+	count = HW_ADDRESS((COUNTER,count))
+	comp  = HW_ADDRESS((COMPARE,reg))
 
 	;; Status byte
 	;;
-	stat  = HW_ADDRESS( HW_REGISTER(UART,sr) ) ; defined in the device-specific HWA header
+	stat  = HW_ADDRESS((UART,sr)) 	; defined in the device-specific HWA header
 
 #define F_RXC	 stat, 0		// RX complete (stop bit sampled)
 #define F_TXC	 stat, 1		// TX complete

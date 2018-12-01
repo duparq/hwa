@@ -21,4 +21,4 @@
  * * @ref attinyx5 : `prescaler0`
  * * @ref atmegax8 : `prescaler0`, `prescaler1`
  */
-#define _hw_class__psca
+#define hw_class__psca

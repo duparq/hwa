@@ -6,6 +6,6 @@ SOURCES		=	main.c
 BOARD		= 	nanodccduino
 
 CONFIG		=	HW_DEVICE			\
-			hw_syshz
+			HW_SYSHZ
 
 include ../make/Makefile

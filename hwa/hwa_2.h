@@ -10,7 +10,7 @@
  */
 
 
-/**
+/*
  * @ingroup public_ins
  * @brief Trigger an error after code generation.
  * @hideinitializer
@@ -30,7 +30,7 @@
 #define HWA_E_NIL(v,l)		HWA_E(`v` is not in `l`)
 
 
-/**
+/*
  * @ingroup public_ins
  * @brief Insert inline assembler code
  * @hideinitializer
@@ -43,7 +43,7 @@
 
 
 #if !defined hw_waste_cycles
-/**
+/*
  * @ingroup public_ins
  * @brief Insert a software loop for `n` system clock cycles.
  * @hideinitializer
@@ -124,174 +124,107 @@
   } while(0)
 
 
-/**
+/*
+ * @ingroup private_mac
+ * @brief Specialize instruction `f` for class `c`: HW_FC(f,c,...) -> fc(...)
+ * @hideinitializer
+ *
+ *  Arguments must start with a class name that is to be appended to the
+ *  function name.
+ */
+#define HW_FC(...)		_HW_FC(__VA_ARGS__)
+#define _HW_FC(f,c,...)		f##c(__VA_ARGS__,,)
+
+
+/*
  * @ingroup private_ins
  * @brief Read one register of an object
- *
- * Syntax: `_hw( read, object, register );`
  * @hideinitializer
+ *
+ * _hw_read( object, register );
+ *
  */
-#define _hw_read_or(o,r)		_HW_SPEC(_hw_read, _HW_M(o,r))
+#define _hw_read(o,r)		HW_FC(_hw_read_,HW_X(reg(o,r)),)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Read one register of an object with interrupts disabled
- *
- * Syntax: `_hw_atomic_read( object, register );`
  * @hideinitializer
+ *
+ * `_hw_atomic_read( object, register );`
  */
-#define _hw_atomic_read_or(o,r)	_HW_SPEC(_hw_atomic_read, _HW_M(o,r))
+#define _hw_atomic_read(o,r)	HW_FC(_hw_atomic_read_,HW_X(reg(o,r)),)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Write one register of an object
- *
- * Syntax: `_hw_write_or( object, register, value );`
  * @hideinitializer
+ *
+ * `_hw_write( object, register, value );`
  */
-#define _hw_write_or(o,r,v)		_HW_SPEC(_hw_write, _HW_M(o,r), v,)
+#define _hw_write(o,r,v)	HW_FC(_hw_write_,HW_X(reg(o,r)),v,)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Write one register of an object
+ * @hideinitializer
  *
- * Syntax: `_hwa_write_or( object, register, value );`
- * @hideinitializer
+ * `_hwa_write( object, register, value );`
  */
-#define _hwa_write_or(o,r,v)		_HW_SPEC(_hwa_write, _HW_M(o,r), v)
+#define _hwa_write(o,r,v)	HW_FC(_hwa_write_,HW_X(reg(o,r)),v,)
 
 
-#define _hw_mtd_hw_read__m1		, _hw_read__m1
-#define _hw_mtd_hw_read__m2		, _hw_read__m2
-#define _hw_mtd_hw_write__m1		, _hw_write__m1
-#define _hw_mtd_hw_write__m2		, _hw_write__m2
-#define _hw_mtd_hwa_write__m1		, _hwa_write__m1
-#define _hw_mtd_hwa_write__m2		, _hwa_write__m2
-#define _hw_mtd_hwa_write__r8		, _hwa_write__r8 /* FIXME */
-#define _hw_mtd_hwa_write__oreg		, _hwa_write_oreg
-#define _hw_mtd_hwa_write__xob1		, _hwa__write__xob1
-#define _hw_mtd_hwa_write__xob2		, _hwa__write__xob2
+#define hw_read__m111		, _hw_read__m111
 
+#define _hw_read__m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
+  _hw_read_##c(a,bn,bp)
 
-/**
- * @ingroup private_ins
- * @brief Read one group of consecutive bits from one hardware register
- * @hideinitializer
- */
-/* #define _hw_read__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp)	\ */
-/*   _hw_read_##rc(a+ra,rbn,rbp) */
+#define hw_clear__m111		, _hw_clear_m111
 
-#define _hw_read__m1(...)		_hw_read__m1_x(__VA_ARGS__,)
+#define _hw_clear_m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
+  _hw_write_##c(a,wm,fm,bn,bp,1)
 
-#define _hw_read__m1_x(o,a, r,rc,ra,rwm,rfm, rbn,rbp, ...)	\
-  _hw_read_##rc(a+ra,rbn,rbp)
+#define hwa_write__m111		, _hwa_write__m111
 
+#define _hwa_write__m111(n,o,r,c,a,wm,fm,bn,bp,v,...)	\
+  _hwa_write##c(&hwa->o.r,wm,fm,((1ULL<<bn)-1)<<bp,((unsigned long long)(v))<<bp)
 
-/**
- * @ingroup private_ins
- * @brief Read one group of consecutive bits from one hardware register with interrupts disabled
- * @hideinitializer
- */
-#define _hw_atomic_read__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp)	\
-  _hw_atomic_read_##rc(a+ra,rbn,rbp)
+#define hwa_clear__m111		, _hwa_clear_m111
 
+#define _hwa_clear_m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
+  _hwa_write##c(&hwa->o.r,wm,fm,((1ULL<<bn)-1)<<bp,((1ULL<<bn)-1)<<bp)
 
-/**
- * @ingroup private_ins
- * @brief Read two groups of consecutive bits from two hardware registers
- * @hideinitializer
- */
-#define _hw_read__m2(o,a,					\
-		     r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,	\
-		     r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2)	\
-  ((_hw_read_##rc1(a+ra1,rbn1,rbp1)<<vbp1) |			\
-   (_hw_read_##rc2(a+ra2,rbn2,rbp2)<<vbp2))
+#define hw_write__m111		, _hw_write__m111
 
+#define _hw_write__m111(n,o,r,c,a,wm,fm,bn,bp,v,...)	\
+  _hw_write_##c(a,wm,fm,bn,bp,v)
 
-/**
- * @ingroup private_ins
- * @brief Write something
- *
- * Syntax: `_hw_write( ..., value );`
- * @hideinitializer
- */
-#define _hw_write(...)			_hw_write_2(__VA_ARGS__) /* Internal use */
-#define _hw_write_2(x,...)		_hw_write_##x(__VA_ARGS__)
+#define _hw_write__m112(n,o,r,c,a,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2,v,...)	\
+  _hw_write##c( a, wm, fm,						\
+		(((1ULL<<bn1)-1)<<bp1) | (((1ULL<<bn2)-1)<<bp2),	\
+		(((v>>vp1)&((1<<bn1)-1))<<bp1) | (((v>>bp2)&((1<<bn2)-1))<<bp2))
 
-/**
- * @ingroup private_ins
- * @brief Write one group of consecutive bits into one hardware register
- * @hideinitializer
- */
-#define _hw_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v,...)	\
-  _hw_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
-
-
-/**
- * @ingroup private_ins
- * @brief Write one group of consecutive bits into one hardware register with interrupts disabled
- * @hideinitializer
- */
-#define _hw_atomic_write__m1(o,a, r,rc,ra,rwm,rfm, rbn,rbp, v)	\
-  _hw_atomic_write_##rc(a+ra,rwm,rfm,rbn,rbp,v)
-
-/**
- * @ingroup private_ins
- * @brief Write two groups of consecutive bits into two hardware registers
- * @hideinitializer
- */
-#define _hw_write__m2(o,a,						\
-		      rn1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		      rn2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v, ...)	\
+#define _hwa_write__m122( n, o,						\
+			  r1,c1,a1,wm1,fm1,bn1,bp1,vp1,			\
+			  r2,c2,a2,wm2,fm2,bn2,bp2,vp2, v, ... )		\
   do {									\
-    if ( ra1==ra2 ) {							\
-      /* HWA_ERR("That should not happen"); */				\
-      _hw_write##rc1( a+ra1, rwm1, rfm1,				\
-		      (((1U<<rbn1)-1)<<rbp1) | (((1U<<rbn2)-1)<<rbp2),	\
-		      (((v>>vbp1)&((1<<rbn1)-1))<<rbp1) | (((v>>vbp2)&((1<<rbn2)-1))<<rbp2)); \
-    }									\
-    else {								\
-      _hw_write_##rc1(a+ra1,rwm1,rfm1,rbn1,rbp1, (v>>vbp1)&((1<<rbn1)-1)); \
-	_hw_write_##rc2(a+ra2,rwm2,rfm2,rbn2,rbp2, (v>>vbp2)&((1<<rbn2)-1)); \
-    }									\
+    _hwa_write_##c1(&hwa->o.r1, wm1,fm1, bn1,bp1, ((v)>>(vp1))&((1ULL<<bn1)-1)); \
+    _hwa_write_##c2(&hwa->o.r2, wm2,fm2, bn2,bp2, ((v)>>(vp2))&((1ULL<<bn2)-1)); \
   } while(0)
 
 
-#define _hw_write__xob1(o,r,bn,bp,v)	_hw_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
-#define _hw_write__xob1_2(...)		_hw_write__xob1_3(__VA_ARGS__)
-#define _hw_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
-  _hw_write_##rc( ra, rwm,rfm, bn,bp, v )
-
-
-#define _hwa_write(...)			_hwa_write_2(__VA_ARGS__) /* Internal use */
-#define _hwa_write_2(x,...)		_hwa_write_##x(__VA_ARGS__)
-
-
-#define _hwa_write__m1(...)	_hwa_write__m1_x(__VA_ARGS__,)
-
-#define _hwa_write__m1_x(o,a, r,rc,ra,rwm,rfm, bn,bp, v, ...)	\
-  _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
-
-#define _hwa_write__m2(o,a,						\
-		       r1,rc1,ra1,rwm1,rfm1,rbn1,rbp1,vbp1,		\
-		       r2,rc2,ra2,rwm2,rfm2,rbn2,rbp2,vbp2, v)		\
-  do {									\
-    _hwa_write_##rc1(&hwa->o.r1, rwm1,rfm1, rbn1,rbp1, ((v)>>(vbp1))&((1U<<rbn1)-1)); \
-    _hwa_write_##rc2(&hwa->o.r2, rwm2,rfm2, rbn2,rbp2, ((v)>>(vbp2))&((1U<<rbn2)-1)); \
-  } while(0)
-
-
-/**
+/*
  * @brief  Write the register of an object
  */
-#define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write_or(o,r,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write(o,r,v) HW_EOL(__VA_ARGS__)
 
 
-//#define _hwa_write__xob1(t,o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
-#define _hwa_write__xob1(o,r,bn,bp,v)	_hwa_write__xob1_2(_hw_reg_##o##_##r,o,r,bn,bp,v)
+#define hwa_write__xob1		, _hwa__write__xob1
+
+#define _hwa_write__xob1(o,r,bn,bp,v)	_hwa_write__xob1_2(hw_reg_##o##_##r,o,r,bn,bp,v)
 #define _hwa_write__xob1_2(...)		_hwa_write__xob1_3(__VA_ARGS__)
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
@@ -305,114 +238,97 @@
 #define _hwa__write__xob1(o,r,bn,bp,v,...)	_hwa_write__xob1(o,r,bn,bp,v)
 
 
-/*  Added for espressif/esp8266/io1b_2.h:
- *	_hwa(write,_hw_reg_##o##_fn,HW_A1(_hw_##o##_fn_##v) );
- *	_hwa__write__xob1(hw_shared, did, 1, 0, 1,);
- */
-#define _hwa_write__xob2(o,r1,rbn1,rbp1,vbp1,r2,rbn2,rbp2,vbp2,v)	\
-  _hwa_write_xob2_2(_m2,o,r1,_hw_reg_##o##_##r1,rbn1,rbp1,vbp1, r2,_hw_reg_##o##_##r2,rbn2,rbp2,vbp2,v)
-#define _hwa_write_xob2_2(...)			_hwa_write_xob2_3(__VA_ARGS__)
-#define _hwa_write_xob2_3(mx,o,...)		_hwa_write_##mx(o,0,__VA_ARGS__)
-
-
-/**
+/*
  * @ingroup private_ins
  * @brief Write some bits of a hardware register
  * @hideinitializer
  *
- *	_hw_write_orm( o, r, m, v );
+ * _hw_write_m( o, r, m, v );
  */
-#define _hw_write_orm(o,r,m,v)			_HW_SPEC(_hw_wrrm,_HW_M(o,r),m,v)
-#define _hw_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hw_write##rc(a+ra,rwm,rfm,m,v)
+#define _hw_write_m(o,r,...)			HW_FC(_hw_wrorm,HW_X(reg(o,r)),__VA_ARGS__,)
 
-/**
+#define _hw_wrorm_m111(n,o,r,c,a,wm,fm,bn,bp,m,v,...)	_hw_write##c(a,wm,fm,m,v)
+
+/*
  * @ingroup private_ins
  * @brief Write some bits of a hardware register
  * @hideinitializer
  *
- *	_hwa_write_orm( o, r, m, v );
+ *	_hwa_write_m( o, r, m, v );
  */
-#define _hwa_write_orm(o,r,m,v)			_HW_SPEC(_hwa_wrrm,_HW_M(o,r),m,v)
-#define _hwa_wrrm__m1(o,a,r,rc,ra,rwm,rfm,rbn,rbp,m,v)	_hwa_write##rc(&hwa->o.r,rwm,rfm,m,v)
+
+#define _hwa_write_m(o,r,...)			HW_FC(_hwa_wrorm,HW_X(reg(o,r)),__VA_ARGS__,)
+
+#define _hwa_wrorm_m111(n,o,r,c,a,wm,fm,bn,bp,m,v,...)	_hwa_write##c(&hwa->o.r,wm,fm,m,v)
 
 
-/**
+/*
  * @brief Initialize the HWA context registers addresses of an object
  */
-#define _hwa_setup(o)			_hwa_setup00( o, _hw_def_##o )
+#define _hwa_setup_o(o)			_hwa_setup00( o, hw_##o )
 #define _hwa_setup00(...)		_hwa_setup01(__VA_ARGS__)
 #define _hwa_setup01(o,c,i,a)		_hwa_setup_##c(o,i,a)
 
 
-/**
+/*
  * @brief Initialize the HWA context registers of an object with their reset value
  */
-#define _hwa_init(o)			_hwa_init00( o, _hw_def_##o )
+#define _hwa_init_o(o)			_hwa_init00( o, hw_##o )
 #define _hwa_init00(...)		_hwa_init01(__VA_ARGS__)
 #define _hwa_init01(o,c,i,a)		_hwa_init_##c(o,i,a)
 
 
-/**
+/*
  * @brief Solve the configuration of an object
  */
-#define _hwa_solve(o)			_hwa_solve00( o, _hw_def_##o )
+#define _hwa_solve_o(o)			_hwa_solve00( o, hw_##o )
 #define _hwa_solve00(...)		_hwa_solve01(__VA_ARGS__)
-#define _hwa_solve01(o,c,i,a)		_hwa_solve_##c(o,i,a)
+#define _hwa_solve01(o,c,...)		_hwa_solve_##c(o,__VA_ARGS__)
 
 
-/**
+/*
  * @brief Commit the registers of an object
  */
-#define _hwa_commit(o)			_hwa_commit00( o, _hw_def_##o )
+#define _hwa_commit_o(o)		_hwa_commit00( o, hw_##o )
 #define _hwa_commit00(...)		_hwa_commit01(__VA_ARGS__)
 #define _hwa_commit01(o,c,i,a)		_hwa_commit_##c(o,i,a)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Create a HWA register
  * @hideinitializer
  */
-#define _hwa_setup_or(o,r)			_hwa_setup_reg_2(_HW_R(o,r))
-#define _hwa_setup_reg_2(...)			_hwa_setup_reg_3(__VA_ARGS__)
-#define _hwa_setup_reg_3(rt,ra,rwm,rfm,o,c,a,r)	_hwa_setup_##rt(&hwa->o.r, a+ra)
+#define _hwa_setup_r(o,r)				_hwa_setup_or02(HW_X(reg(o,r)))
+#define _hwa_setup_or02(...)			_hwa_setup_or03(__VA_ARGS__)
+#define _hwa_setup_or03(m,n,o,r,c,a,...)	_hwa_setup_##c(&hwa->o.r, a)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Initialize an HWA register of an object with its reset value
  * @hideinitializer
  */
-#define _hwa_init_or(o,r,v)			_hwa_init_reg_2(_HW_R(o,r),v)
+#define _hwa_init_r(o,r,v)			_hwa_init_reg_2(v,HW_X(reg(o,r)))
 #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__)
-#define _hwa_init_reg_3(rt,ra,rwm,rfm,o,c,a,r,v)	_hwa_set_##rt( &hwa->o.r, v )
+#define _hwa_init_reg_3(v,m,n,o,r,c,a,...)	_hwa_set_##c(&hwa->o.r, v)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Commit one object hardware register
  * @hideinitializer
  */
-/* #define _hwa_commit_or(o,r)			_hwa_commit_reg_2(_HW_M(o,r)) */
-/* #define _hwa_commit_reg_2(...)			_hwa_commit_reg_3(__VA_ARGS__) */
-/* #define _hwa_commit_reg_3(rt,...)		_hwa_commit_reg_##rt(__VA_ARGS__) */
+#define _hwa_commit_r(o,r)			HW_FC(_hwa_commit,HW_X(reg(o,r)))
 
-#define _hwa_commit_or(o,r)			_HW_SPEC(_hwa_commit_reg,_HW_M(o,r))
+#define _hwa_commit_m111(n,o,r,c,a,wm,fm,bn,bp,...)	_hwa_commit_##c(&hwa->o.r,wm,fm,hwa->commit)
 
-#define _hwa_commit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
-  _hwa_commit_##rt(&hwa->o.r,rwm,rfm,hwa->commit)
+#define _hwa_nocommit_r(o,r)			HW_FC(_hwa_nocommit,HW_X(reg(o,r)))
 
-/* #define _hwa_nocommit_or(o,r)			_hwa_nocommit_reg_2(_HW_M(o,r)) */
-/* #define _hwa_nocommit_reg_2(...)		_hwa_nocommit_reg_3(__VA_ARGS__) */
-/* #define _hwa_nocommit_reg_3(rt,...)		_hwa_nocommit_reg_##rt(__VA_ARGS__) */
-
-#define _hwa_nocommit_or(o,r)			_HW_SPEC(_hwa_nocommit_reg,_HW_M(o,r))
-
-#define _hwa_nocommit_reg__m1(o,a,r,rt,ra,rwm,rfm,bn,bp)	\
-  _hwa_commit_##rt(&hwa->o.r,rwm,rfm,0)
+#define _hwa_nocommit_m111(n,o,r,c,a,wm,fm,bn,bp,...)	_hwa_commit_##c(&hwa->o.r,wm,fm,0)
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Get the mmask of the logical register `r` of object `o`.
  *
@@ -421,36 +337,29 @@
  *
  * @hideinitializer
  */
-#define _hwa_mmask_or(o,r)					_HW_SPEC(_hwa_mmask,_HW_M(o,r))
-#define _hwa_mmask__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mmask)>>bp)&((1U<<bn)-1))
+#define _hwa_mmask(o,r)				HW_FC(_hwa_mmask_,HW_X(o,r))
+
+#define _hwa_mmask__m111(n,o,r,c,a,wm,fm,bn,bp,...)	(((hwa->o.r.mmask)>>bp)&((1ULL<<bn)-1))
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Get the value to be committed for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_mvalue_or(o,r)				_HW_SPEC(_hwa_mvalue,_HW_M(o,r))
-#define _hwa_mvalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.mvalue)>>bp)&((1U<<bn)-1))
+#define _hwa_mvalue(o,r)				HW_FC(_hwa_mvalue_,HW_X(o,r))
+
+#define _hwa_mvalue__m111(n,o,r,c,a,wm,fm,bn,bp,...)	(((hwa->o.r.mvalue)>>bp)&((1ULL<<bn)-1))
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Get the last committed value for the logical register `r` of object `o`.
  * @hideinitializer
  */
-#define _hwa_ovalue_or(o,r)				_HW_SPEC(_hwa_ovalue,_HW_M(o,r))
-#define _hwa_ovalue__m1(o,a,r,rc,ra,rwm,rfm,bn,bp)	(((hwa->o.r.ovalue)>>bp)&((1U<<bn)-1))
+#define _hwa_ovalue(o,r)				HW_FC(_hwa_ovalue_,HW_X(o,r))
 
-
-/**
- * @ingroup private_ins
- * @brief Set the value of the logical register `r` of the object `o` in the context to `v` without setting the modification mask (mmask).
- * @hideinitializer
- */
-#define _hwa_set_or(o,r,v)				_HW_SPEC(_hwa_set_reg,_HW_M(o,r),v)
-#define _hwa_set_reg__m1(o,a,r,rc,ra,rwm,rfm,bn,bp,v)			\
-    hwa->o.r.mvalue = (((hwa->o.r.mvalue)>>bp) & ~((1U<<bn)-1)) | (v<<bp)
+#define _hwa_ovalue__m111(n,o,r,c,a,wm,fm,bn,bp,...)	(((hwa->o.r.ovalue)>>bp)&((1ULL<<bn)-1))
 
 
 
@@ -482,7 +391,7 @@ HW_INLINE void _hwa_setup__r32 ( hwa_r32_t *r, intptr_t a )
 }
 
 
-/** 
+/*
  * @ingroup private_ins
  * @brief  Initialize a HWA register to a specific value (usually the reset value).
  * @hideinitializer
@@ -515,7 +424,7 @@ HW_INLINE void _hwa_set__r32 ( hwa_r32_t *r, uint32_t v )
 }
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief  Write into one 8-bit context register.
  *
@@ -590,7 +499,7 @@ HW_INLINE void _hwa_write_r32 ( hwa_r32_t *r, uint32_t rwm, uint32_t rfm, uint32
 }
 
 
-/**
+/*
  * @ingroup private_ins
  * @brief Trigger an error if optimizers failed to remove this code
  * @hideinitializer
@@ -608,3 +517,39 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwa_write__r8(ra,rwm,rfm,bn,bp,v)	_hwa_write_r8(ra,rwm,rfm,((1UL<<bn)-1)<<bp,((uint8_t)(v))<<bp)
 #define _hwa_write__r16(ra,rwm,rfm,bn,bp,v)	_hwa_write_r16(ra,rwm,rfm,((1UL<<bn)-1)<<bp,(v)<<bp)
 #define _hwa_write__r32(ra,rwm,rfm,bn,bp,v)	_hwa_write_r32(ra,rwm,rfm,((1ULL<<bn)-1)<<bp,(v)<<bp)
+
+
+/*
+ * @ingroup private_ins
+ * @brief  Turns an IRQ on/off.
+ * @hideinitializer
+ */
+#define hw_turn__irq				, _hw_tnirq
+#define hwa_turn__irq				, _hwa_tnirq
+
+#define _hw_tnirq(o,n,v,m,f,s,...)		_hwx_tnirq01(_hw,n,m,s,_hw_state_##s,__VA_ARGS__)
+#define _hwa_tnirq(o,n,v,m,f,s,...)		_hwx_tnirq01(_hwa,n,m,s,_hw_state_##s,__VA_ARGS__)
+#define _hwx_tnirq01(...)			_hwx_tnirq02(__VA_ARGS__)
+#define _hwx_tnirq02(h,n,m,s,z,...)		HW_Y0(_hwx_tnirq02_,z)(h,n,m,s,z,__VA_ARGS__)
+#define _hwx_tnirq02_0(h,n,m,s,z,x,...)		HW_E_ST(s)
+#define _hwx_tnirq02_1(h,n,m,s,z,x,y,...)	h##_write(n,m,x) HW_EOL(__VA_ARGS__)
+
+
+
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
+#endif
+
+/*  Single event ISR
+ */
+#define _HW_ISR_(v,...)							\
+  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void __vector_##v(void)
+
+/*  Void ISR
+ */
+#define _HW_VISR_(v)							\
+  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
+  void __vector_##v(void) { hw_asm("reti"); }

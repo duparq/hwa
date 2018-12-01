@@ -9,12 +9,12 @@
  * @brief I/O
  */
 
-#define _hw_mtd_hw_configure__io1a	, _hw_cfio1a
-#define _hw_mtd_hwa_configure__io1a	, _hwa_cfio1a
-#define _hw_mtd_hw_read__io1a		, _hw_read_io1a
-#define _hw_mtd_hw_write__io1a		, _hw_write_io1a
-#define _hw_mtd_hwa_write__io1a		, _hwa_write_io1a
-#define _hw_mtd_hw_toggle__io1a		, _hw_toggle_io1a
+#define hw_configure__io1a	, _hw_cfio1a
+#define hwa_configure__io1a	, _hwa_cfio1a
+#define hw_read__io1a		, _hw_read_io1a
+#define hw_write__io1a		, _hw_write_io1a
+#define hwa_write__io1a		, _hwa_write_io1a
+#define hw_toggle__io1a		, _hw_toggle_io1a
 
 
 /**
@@ -54,11 +54,11 @@
  */
 #define _hw_cfio1a_fn_gpio
 
-#define _hwx_cfio1a(x,o,i,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kfn,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
-#define _hwx_cfio1a_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kmd,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
-#define _hwx_cfio1a_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vfn,_hw_cfio1a_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfio1a(x,o,i,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vfn_,_hw_cfio1a_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfio1a_vfn_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (gpio) )
-#define _hwx_cfio1a_vfn_1(x,o,p,bn,bp,v,k,...)	HW_Y(_hwx_cfio1a_kmd,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a_vfn_1(x,o,p,bn,bp,v,k,...)	HW_Y(_hwx_cfio1a_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 
 /*  Key 'mode'
  */
@@ -72,32 +72,33 @@
 #define _hw_cfio1a_md_analog_input_pullup	, aipu
 
 #define _hwx_cfio1a_kmd_0(x,o,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
-#define _hwx_cfio1a_kmd_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vmd,_hw_cfio1a_md_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfio1a_kmd_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vmd_,_hw_cfio1a_md_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfio1a_vmd_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input|digital_output|analog_input) )
 #define _hwx_cfio1a_vmd_1(x,o,p,bn,bp,v,...)	HW_G2(_hwx_cfio1a,HW_A1(_hw_cfio1a_md_##v))(x,o,p,bn,bp,__VA_ARGS__)
 
-#define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dif(x,o,p,bn,bp,k,...)				\
-  x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_orm(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_m(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dipu(x,o,p,bn,bp,k,...)				\
-  x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_orm(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_orm(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, _hw_reg_##o##_##did, 1); HW_EOL(__VA_ARGS__)
-/* x##_write_or(o,did,1); DOES NOT WORK: 'o' is not a regular object */
+#define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, hw_reg_##o##_##did, 1); HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu,HW_G2(_hw_isa_reg,_hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+/* x##_write(o,did,1); DOES NOT WORK: 'o' is not a regular object */
+
+#define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
 #define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)			\
-  x( write, _hw_reg_##o##_##did, 1);				\
-  x##_write_orm(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
+  x( write, (o,did), 1);					\
+  x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
   HW_EOL(__VA_ARGS__)
 
 
@@ -111,7 +112,7 @@
  * @endcode
  */
 #define _hw_read_io1a(o,i, p,bn,bp,...)				\
-  ((_hw_read_or(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
+  ((_hw_read(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
   HW_EOL(__VA_ARGS__)
 
 
@@ -125,7 +126,7 @@
  * @endcode
  */
 #define _hw_write_io1a(o,i, p,bn,bp, v,...)		\
-  _hw_write_orm(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
+  _hw_write_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
@@ -139,22 +140,21 @@
  * `toggle`
  *
  * @code
- * hw | hwa( toggle, pa0 );	//  Toggle one or several consecutive pins at once
+ * hw( toggle, pa0 );		// Toggle pin PA0
  * @endcode
  */
-#define _hw_toggle_io1a(o,i,p,...)		_hw_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
-#define _hw_toggle_io1a_2(...)			_hw_toggle_io1a_3(__VA_ARGS__)
-#define _hw_toggle_io1a_3(_m1,o,a,r,rc,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  _hw_write(_m1,o,a,r,rc,ra,rwm,rfm,bn,bp,(1UL<<bn)-1,) HW_EOL(__VA_ARGS__)
+#define _hw_toggle_io1a(o,i,p,bn,bp,...)	_hw_tgio1a01(HW_X(p,pin),bn,bp)
+#define _hw_tgio1a01(...)			_hw_tgio1a02(__VA_ARGS__)
+#define _hw_tgio1a02(t,...)			_hw_tgio1a_##t(__VA_ARGS__)
+#define _hw_tgio1a__m111(n,o,r,c,a,rwm,rfm,rbn,rbp,bn,bp)	_hw_tgio1a(a,bn,bp)
 
 
-#define _hwa_toggle_io1a(o,i, p,...)		_hwa_toggle_io1a_2(_HW_M(p,pin),__VA_ARGS__)
-#define _hwa_toggle_io1a_2(...)			_hwa_toggle_io1a_3(__VA_ARGS__)
-#define _hwa_toggle_io1a_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\
-  _hwa(write,_m1,p,a,r,rw,ra,rwm,rfm,bn,bp,(1UL<<bn)-1) HW_EOL(__VA_ARGS__)
+HW_INLINE void _hw_tgio1a ( intptr_t a, uint8_t bn, uint8_t bp )
+{
+  volatile uint8_t *pin = (volatile uint8_t*)a ;
 
-
-/**
- * @page atmelavr_io1a
- * <br>
- */
+  if ( bn == 1 && a < 0x40 )
+    *pin |= 1<<bp ; // Use sbi
+  else
+    *pin = ((1UL<<bn)-1)<<bp ;
+}

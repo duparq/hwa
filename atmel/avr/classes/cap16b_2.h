@@ -30,7 +30,7 @@
  *	     );
  * @endcode
  */
-#define _hw_mtd_hw_configure__cap16b	, _hw_cfcap16b
+#define hw_configure__cap16b	, _hw_cfcap16b
 
 #define hw_cap16b_input_pin_icp			, 1
 #define hw_cap16b_input_acmp0			, 2
@@ -42,7 +42,7 @@
 //#define _hw_cfcap16b_kw_		, _hw_cfcap16b_
 
 #define _hw_cfcap16b(o,i,a,k,...)					\
-  HW_Y(_hw_cfcap16bkw1,_hw_cfcap16b_kw_##k)(o,k,__VA_ARGS__,)
+  HW_Y(_hw_cfcap16bkw1_,_hw_cfcap16b_kw_##k)(o,k,__VA_ARGS__,)
 
 #define _hw_cfcap16bkw1_0(o,kw,...)					\
   HW_E_VL(k,input | edge | filter)
@@ -51,11 +51,11 @@
   HW_A1(_hw_cfcap16b_kw_##kw)(o,__VA_ARGS__)
 
 #define _hw_cfcap16b_edge(o,v,...)					\
-  HW_Y(_hw_cfcap16b_vedge,hw_cap16b_edge_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hw_cfcap16b_vedge_,hw_cap16b_edge_##v)(o,v,__VA_ARGS__)
 #define _hw_cfcap16b_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 #define _hw_cfcap16b_vedge_1(o,v,...)			\
-  _hw_write_or(o, ices, HW_A1(hw_cap16b_edge_##v)-1) HW_EOL(__VA_ARGS__)
+  _hw_write(o, ices, HW_A1(hw_cap16b_edge_##v)-1) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -74,42 +74,42 @@
  *	     );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__cap16b	, _hwa_cfcap16b
+#define hwa_configure__cap16b	, _hwa_cfcap16b
 
 #define _hwa_cfcap16b(o,i,a,k,...)					\
-  do { HW_Y(_hwa_cfcap16b_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfcap16b_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfcap16b_kinput_0(o,k,...)					\
   HW_E_VL(k,input)
 
 #define _hwa_cfcap16b_kinput_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcap16b_vinput,hw_cap16b_input_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcap16b_vinput_,hw_cap16b_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcap16b_vinput_0(o,v,...)					\
   HW_E_AVL(`input`, v, `pin_icp`)
 
 #define _hwa_cfcap16b_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_cap16b_input_##v);			\
-  HW_Y(_hwa_cfcap16b_kedge,_hw_is_edge_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfcap16b_kedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcap16b_kedge_0(o,k,...)					\
   HW_E_VL(k,edge)
 
 #define _hwa_cfcap16b_kedge_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcap16b_vedge,hw_cap16b_edge_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcap16b_vedge_,hw_cap16b_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcap16b_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 
 #define _hwa_cfcap16b_vedge_1(o,v,k,...)				\
   hwa->o.config.edge = HW_A1(hw_cap16b_edge_##v);				\
-  HW_Y(_hwa_cfcap16b_kfilter,_hw_is_filter_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfcap16b_kfilter_,_hw_is_filter_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcap16b_kfilter_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcap16b_kfilter_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcap16b_vfilter,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcap16b_vfilter_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcap16b_vfilter_0(o,v,...)					\
   HW_E_OAVL(filter, v, on | off)
@@ -127,7 +127,7 @@
  * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define _hw_mtd_hw_read__cap16b	, _hw_read_cap16a
+#define hw_read__cap16b	, _hw_read_cap16a
 
 
 /**
@@ -137,7 +137,7 @@
  * hw_write( capture0, value );
  * @endcode
  */
-#define _hw_mtd_hw_write__cap16b	, _hw_write_cap16a
+#define hw_write__cap16b	, _hw_write_cap16a
 
 /**
  * @page atmelavr_cap16b
@@ -146,7 +146,7 @@
  * hwa_write( capture0, value );
  * @endcode
  */
-#define _hw_mtd_hwa_write__cap16b	, _hwa_write_cap16a
+#define hwa_write__cap16b	, _hwa_write_cap16a
 
 
 /**
@@ -157,9 +157,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( capture0 ) ) ) {	// Read capture IRQ flag
- *   hw( clear, HW_IRQFLAG( capture0 ) );		// Clear capture IRQ flag
- *   hw( turn, HW_IRQ( capture0, off ) );		// Disable capture IRQs
+ * if ( hw( read, irqflag( capture0 ) ) ) {	// Read capture IRQ flag
+ *   hw( clear, irqflag( capture0 ) );		// Clear capture IRQ flag
+ *   hw( turn, irq( capture0, off ) );		// Disable capture IRQs
  * }
  * @endcode
  */

@@ -18,7 +18,7 @@
  *
  *  * @ref esp8266 : `timer1` and `timer2`
  */
-#define _hw_class__tm23a
+#define hw_class__tm23a
 
 
 #if !defined __ASSEMBLER__

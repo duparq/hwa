@@ -19,11 +19,7 @@ extern void ets_isr_unmask(unsigned intr);
  * @endcode
  * @hideinitializer
  */
-#define _hw_mtd_os_set_isr__irq	, _os_set_isr
+#define os_set_isr(...)			HW_F(os_set_isr,__VA_ARGS__,)
 
-#define os_set_isr(...)			_os_setisr_2(__VA_ARGS__,)
-#define _os_setisr_2(...)		HW_G2(_os_setisr,HW_IS(_irq,__VA_ARGS__))(__VA_ARGS__)
-#define _os_setisr_0(...)		__VA_ARGS__
-#define _os_setisr_1(t,...)		_os_set_isr(__VA_ARGS__)
-
-#define _os_set_isr(o,v,ie,if,fn,...)	_os_setisr_##o##_##v(fn) HW_EOL(__VA_ARGS__)
+#define os_set_isr__irq			, _os_set_isr
+#define _os_set_isr(n,o,v,m,f,fn,...)	_os_setisr_##o##_##v(fn) HW_EOL(__VA_ARGS__)

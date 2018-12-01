@@ -76,7 +76,7 @@ int main ( )
   else
     hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
 
-  hwa( turn, HW_IRQ(COUNTER,overflow), on );
+  hwa( turn, irq(COUNTER,overflow), on );
 
   /*  Write this configuration into the hardware
    */

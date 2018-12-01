@@ -22,12 +22,12 @@
  *******************************************************************************/
 
 #define _hwa_setup__pcfa(o,i,a)		\
-  _hwa_setup_or( o, _reg )
+  _hwa_setup_r( o, _reg )
 
 #define _hwa_init__pcfa(o,i,a)			
 
 #define _hwa_commit__pcfa(o,i,a)		\
-  _hwa_commit_or( o, _reg )
+  _hwa_commit_r( o, _reg )
 
 
 /**

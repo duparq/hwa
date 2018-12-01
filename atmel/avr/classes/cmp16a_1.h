@@ -15,16 +15,16 @@
  * A class `_cmp16a` object is a 16-bit counter compare unit with waveform
  * generator. It has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_RELATIVE( compare0, counter )`
+ *  * one counter, whose name is given by `( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_RELATIVE( compare0, pin )`
+ *  * one output pin, whose name is given by `( compare0, pin )`
  *
  * It is used in:
  *
  * * @ref attinyx4 : `counter1compare0`, `counter1compare1`
  * * @ref atmegax8 : `counter1compare0`, `counter1compare1`
  */
-#define _hw_class__cmp16a
+#define hw_class__cmp16a
 
 
 /**
@@ -40,8 +40,8 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__cmp16a		, _hw_bn_cmp16a
-#define _hw_bn_cmp16a(o,i,a,...)			16
+#define HW_BITS__cmp16a			, _hw_bits_cmp16a
+#define _hw_bits_cmp16a(...)		16
 
 
 /**

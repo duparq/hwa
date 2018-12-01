@@ -21,7 +21,7 @@
  * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__pcica		, _hw_tnpcica
+#define hw_turn__pcica		, _hw_tnpcica
 #define _hw_tnpcica( o,i,a, ...)	_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
 
 
@@ -31,22 +31,22 @@
  * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
-#define _hw_mtd_hwa_turn__pcica		, _hwa_tnpcica
+#define hwa_turn__pcica		, _hwa_tnpcica
 #define _hwa_tnpcica( o,i,a, ...)	_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
 
 /*	Verify that a I/O name is given
  */
-#define _hwx_tnpcica1(x,o,io,...)	HW_G2(_hwx_tnpcica1,HW_IS(_io1a,_hw_def_##io))(x,o,io,__VA_ARGS__)
+#define _hwx_tnpcica1(x,o,io,...)	HW_G2(_hwx_tnpcica1,HW_IS(_io1a,hw_##io))(x,o,io,__VA_ARGS__)
 #define _hwx_tnpcica1_0(x,o,io,...)	HW_E(`io` is not an i/o pin)
 
 /*	Verify that a state is given
  */
-#define _hwx_tnpcica1_1(x,o,io,v,...)	HW_Y(_hwx_tnpcica2,_hw_state_##v)(x,o,io,v,__VA_ARGS__)
+#define _hwx_tnpcica1_1(x,o,io,v,...)	HW_Y(_hwx_tnpcica2_,_hw_state_##v)(x,o,io,v,__VA_ARGS__)
 
 #define _hwx_tnpcica2_0(x,o,io,v,...)	HW_E_ST(v)
-#define _hwx_tnpcica2_1(x,o,io,v,...)	_hwx_tnpcica2_2(x,o,_hw_def_##io,v) HW_EOL(__VA_ARGS__)
+#define _hwx_tnpcica2_1(x,o,io,v,...)	_hwx_tnpcica2_2(x,o,hw_##io,v) HW_EOL(__VA_ARGS__)
 #define _hwx_tnpcica2_2(...)			_hwx_tnpcica2_3(__VA_ARGS__)
-#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_orm(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
+#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
 
 
 /**
@@ -57,9 +57,9 @@
  * interrupt-related instructions:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( pcic0 ) ) ) {	     // Read pin change flag
- *   hw( clear, HW_IRQFLAG( pcic0 ) );	     // Clear pin change flag
- *   hw( turn, HW_IRQ( pcic0, off ) );	     // Disable pin change IRQ
+ * if ( hw( read, irqflag( pcic0 ) ) ) {	     // Read pin change flag
+ *   hw( clear, irqflag( pcic0 ) );	     // Clear pin change flag
+ *   hw( turn, irq( pcic0, off ) );	     // Disable pin change IRQ
  * }
  * @endcode
  */
@@ -89,11 +89,11 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__pcica(o,i,a)	_hwa_setup_or( o, msk )
+#define _hwa_setup__pcica(o,i,a)	_hwa_setup_r( o, msk )
 
-#define _hwa_init__pcica(o,i,a)		_hwa_init_or( o, msk, 0x00 )
+#define _hwa_init__pcica(o,i,a)		_hwa_init_r( o, msk, 0x00 )
 
-#define _hwa_commit__pcica(o,i,a)	_hwa_commit_or( o, msk )
+#define _hwa_commit__pcica(o,i,a)	_hwa_commit_r( o, msk )
 
 
 /**

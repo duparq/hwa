@@ -41,7 +41,7 @@ int main ( )
   hwa_commit();
 
   for(;;) {
-    if ( hw(read, HW_IRQFLAG(systick) ) )	/* Reading the flag clears it */
+    if ( hw(read, irqflag(systick) ) )	/* Reading the flag clears it */
       hw( toggle, LED );
   }
 }

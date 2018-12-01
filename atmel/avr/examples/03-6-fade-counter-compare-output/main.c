@@ -61,7 +61,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 
   /*  Enable overflow IRQ
    */
-  hwa( turn, HW_IRQ((PWM,counter),overflow), on );
+  hwa( turn, irq((PWM,counter),overflow), on );
 }
 
 

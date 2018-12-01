@@ -14,5 +14,4 @@
  * software UART.
  */
 
-#include "../../hwa/hwa_1.h"
 #include HW_QUOTE(../../atmel/avr/swuarta/swuarts.sx)

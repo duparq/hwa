@@ -21,7 +21,7 @@
  * hw( write, HW_PIN(1), 0 );
  * @endcode
  */
-#define _hw_class__io1a
+#define hw_class__io1a
 
 
 /**
@@ -34,9 +34,9 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__io1a			, _HW_BITS__io1a
+#define HW_BITS__io1a				, _hw_bits_io1a
 
-#define _HW_BITS__io1a(o,i, cn,bn,bp,...)	bn
+#define _hw_bits_io1a(o,i, cn,bn,bp,...)	bn
 
 
 /**
@@ -49,9 +49,9 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_POSITION__io1a		, _HW_POSITION__io1a
+#define HW_POSITION__io1a			, _hw_position_io1a
 
-#define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
+#define _hw_position_io1a(o,i, cn,bn,bp,...)	bp
 
 /**
  * @page stm32_io1a
@@ -60,11 +60,15 @@
  * definition pertains to.
  *
  * @code
- * hw( power, HW_RELATIVE(pa0,port), on );	// Power the GPIO port of pin PA0 on
+ * hw( power, (pa0,port), on );	// Power the GPIO port of pin PA0 on
  * @endcode
  */
-#define _hw_mtd_HW_RELATIVE__io1a	, _HW_REL_io1a
+#define __io1a	, _HW_REL_io1a
 
-#define _HW_REL_io1a(o,x,...)		HW_Y(_HW_REL_io1a,_hw_is_port_##x)(o,x,__VA_ARGS__)
+#define _HW_REL_io1a(o,x,...)		HW_Y(_HW_REL_io1a_,_hw_is_port_##x)(o,x,__VA_ARGS__)
 #define _HW_REL_io1a_1(o,x,i,p,...)	p
 #define _HW_REL_io1a_0(o,x,...)		HW_E_OO(o,x)
+
+/*  Port name of a pin
+ */
+#define _hw_rel__io1a_port(o,d)			HW_A1 d

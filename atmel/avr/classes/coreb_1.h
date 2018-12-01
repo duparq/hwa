@@ -18,7 +18,7 @@
  *
  * * @ref atmegax8 : `core0`
  */
-#define _hw_class__coreb
+#define hw_class__coreb
 
 #if !defined __ASSEMBLER__
 

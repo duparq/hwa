@@ -31,7 +31,7 @@
  *	       );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__corea	, _hwa_cfcorea
+#define hwa_configure__corea	, _hwa_cfcorea
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
@@ -40,20 +40,20 @@
  */
 #define _hwa_cfcorea(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfcorea_ksleep,_hw_is_sleep_##k)(o,k,__VA_ARGS__,,);	\
+    HW_Y(_hwa_cfcorea_ksleep_,_hw_is_sleep_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfcorea_ksleep_0(o,v,...)					\
   HW_G2(_hwa_cfcorea_ksleepmode,HW_IS(sleep_mode,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_ksleep_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcorea_vsleep,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcorea_vsleep_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleep_0(o,v,...)					\
   HW_E_AVL(sleep, v, enabled | disabled)
 
 #define _hwa_cfcorea_vsleep_1(o,v,k,...)				\
-  _hwa_write_or( o, se, HW_A1(_hw_state_##v) );			\
+  _hwa_write( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcorea_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `sleep_mode`
@@ -66,13 +66,13 @@
 #define _hwa_cfcorea_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfcorea_ksleepmode_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcorea_vsleepmode,hw_sleepmode_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfcorea_vsleepmode_,hw_sleepmode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleepmode_0(o,v,...)				\
   HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down)
 
 #define _hwa_cfcorea_vsleepmode_1(o,v,...)		\
-  _hwa_write_or( o, sm, HW_A1(hw_sleepmode_##v) );	\
+  _hwa_write( o, sm, HW_A1(hw_sleepmode_##v) );	\
   HW_EOL(__VA_ARGS__)
 
 
@@ -109,7 +109,7 @@
  * }
  * @endcode
  */
-#define _hw_mtd_hw_stat__corea		, _hw_stat_corea
+#define hw_stat__corea		, _hw_stat_corea
 
 /*  FIXME intf0 should be there
  */
@@ -132,7 +132,7 @@ typedef union {
 } _hw_corea_stat_t ;
 
 
-#define _hw_stat_corea(o,i,a,...)	_hw_corea_stat(_hw_read_or(o, mcusr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_corea(o,i,a,...)	_hw_corea_stat(_hw_read(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 {
@@ -151,9 +151,9 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define _hw_mtd_hwa_clear__corea	, _hwa_clear_corea
+#define hwa_clear__corea	, _hwa_clear_corea
 
-#define _hwa_clear_corea(o,i,a,...)	_hwa_write_or(o,allrf,0)
+#define _hwa_clear_corea(o,i,a,...)	_hwa_write(o,allrf,0)
 
 
 
@@ -164,20 +164,20 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  *******************************************************************************/
 
 #define _hwa_setup__corea(o,i,a)		\
-  _hwa_setup_or( o, mcucr  );			\
-  _hwa_setup_or( o, mcusr  );			\
-  _hwa_setup_or( o, osccal )
+  _hwa_setup_r( o, mcucr  );			\
+  _hwa_setup_r( o, mcusr  );			\
+  _hwa_setup_r( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
 #define _hwa_init__corea(o,i,a)			\
-  _hwa_init_or( o, mcucr,  0x00 );		\
-  _hwa_init_or( o, osccal, 0x00 )
+  _hwa_init_r( o, mcucr,  0x00 );		\
+  _hwa_init_r( o, osccal, 0x00 )
 
 #define _hwa_commit__corea(o,i,a)		\
-  _hwa_commit_or( o, mcucr  );			\
-  _hwa_commit_or( o, mcusr  );			\
-  _hwa_commit_or( o, osccal )
+  _hwa_commit_r( o, mcucr  );			\
+  _hwa_commit_r( o, mcusr  );			\
+  _hwa_commit_r( o, osccal )
 
 
 /**

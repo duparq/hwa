@@ -36,7 +36,7 @@
  *
  * * @ref attinyx5 : `adc0`
  */
-#define _hw_class__ad10c
+#define hw_class__ad10c
 
 
 /**
@@ -51,7 +51,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__ad10c		, _hw_bn_ad10c
+#define HW_BITS__ad10c		, _hw_bn_ad10c
 #define _hw_bn_ad10c(o,i,a,...)		10
 
 

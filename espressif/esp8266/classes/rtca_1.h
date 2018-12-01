@@ -13,7 +13,7 @@
  * @page espressif_rtca Class _rtca: RTC
  *
  */
-#define _hw_class__rtca
+#define hw_class__rtca
 
 
 #if !defined __ASSEMBLER__

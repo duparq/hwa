@@ -50,7 +50,7 @@ main ( )
    *  a crystal oscillator.
    */
 #if !defined HW_DEVICE_CLK_SRC_HZ
-  hwa( write, HW_REGISTER(core0, osccal), 0xFF );
+  hwa( write, (core0, osccal), 0xFF );
 #endif
 
   /*  Write this configuration into the hardware
@@ -107,11 +107,11 @@ main ( )
 	 */
 	uint16_t dt ;
 
-	dt = hw( read, HW_REGISTER(UART,dtn) ) ;
+	dt = hw( read, (UART,dtn) ) ;
 	hw( write, UART, (dt>>0) & 0xFF );
 	hw( write, UART, (dt>>8) & 0xFF );
 
-	dt = hw( read, HW_REGISTER(UART,dt0) ) ;
+	dt = hw( read, (UART,dt0) ) ;
 	hw( write, UART, (dt>>0) & 0xFF );
 	hw( write, UART, (dt>>8) & 0xFF );
 

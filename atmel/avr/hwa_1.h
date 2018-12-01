@@ -9,8 +9,6 @@
  * @brief Definitions common to all Atmel AVR devices that do not produce C code
  */
 
-#include "../../hwa/hwa_1.h"
-
 /**
  * @ingroup public_atmelavr_def
  * @brief Defined for all Atmel AVR devices
@@ -23,22 +21,10 @@
 #  define HW_DEVICE_ARCH	avr
 #endif
 
-
-/*  Address of a memory definition
- *
- *	C and assembler address differ!
+/*  Address correction of a memory definition (C and assembler address differ!)
  */
 #if defined __ASSEMBLER__
-#  define _HW_A__m1(o,a,r,rc,ra,...)		(a+ra-0x20)
-#else
-#  define _HW_A__m1(o,a,r,rc,ra,...)		(a+ra)
+#  define HW_AC					-0x20
 #endif
 
-
-/*  _hw_isr_(...): address (vector) of ISR
- *
- *	FIXME: should name it _vector(...)
- */
-#if defined __ASSEMBLER__
-#  define _HW_ISR_(vector, ...)			__vector_##vector
-#endif
+#include "../../hwa/hwa_1.h"

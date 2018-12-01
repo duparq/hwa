@@ -39,48 +39,48 @@
  * __Note__ You must connect the I/O pins to the proper UART signals using the
  * `configure` action on the I/O pin.
  */
-#define _hw_mtd_hw_configure__uarta	, _hw_cfuarta
-#define _hw_mtd_hwa_configure__uarta	, _hwa_cfuarta
+#define hw_configure__uarta	, _hw_cfuarta
+#define hwa_configure__uarta	, _hwa_cfuarta
 
 #define _hw_cfuarta(o,i,a,k,...)					\
   do{									\
     typedef struct { uint8_t commit ; hwa_uarta_t o ; } hwa_t ;		\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
-    _hwa_setup( o );							\
-    HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,,);		\
-    hwa->commit = 1 ; _hwa_commit( o );					\
+    _hwa_setup_o( o );							\
+    HW_Y(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,);		\
+    hwa->commit = 1 ; _hwa_commit_o( o );					\
   }while(0)
 
 #define _hwa_cfuarta(o,i,a,k,...)					\
-  do{ HW_Y(_hwx_cfuarta_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
+  do{ HW_Y(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 /*	Optionnal parameter `bps`
  */
 #define _hwx_cfuarta_kbps_1(o,k,v,...)			\
-  HW_Y(_hwx_cfuarta_vbps,v)(o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
 #define _hwx_cfuarta_vbps_0(o,v,k,...)					\
-  _hwa_write_or(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
-  HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
+  HW_Y(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kbps_0(o,k,...)					\
-  HW_Y(_hwx_cfuarta_kdatabits,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `databits`
  */
 #define _hwx_cfuarta_kdatabits_1(o,k,v,...)				\
-  HW_Y(_hwx_cfuarta_vdatabits,_hw_uarta_databits_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_vdatabits_,_hw_uarta_databits_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E_AVL(databits, v, 5 | 6 | 7 | 8)
 
 #define _hwx_cfuarta_vdatabits_1(o,v,k,...)			\
-  _hwa_write_or(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
-  HW_Y(_hwx_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
+  HW_Y(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kdatabits_0(o,k,...)			\
-  HW_Y(_hwx_cfuarta_kparity,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_databits_5		, 0
 #define _hw_uarta_databits_6		, 1
@@ -90,16 +90,16 @@
 /*	Optionnal parameter `parity`
  */
 #define _hwx_cfuarta_kparity_1(o,k,v,...)				\
-  HW_Y(_hwx_cfuarta_vparity,_hw_uarta_parity_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwx_cfuarta_vparity_,_hw_uarta_parity_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vparity_0(o,v,...)		HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
-  _hwa_write_or(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
-  HW_Y(_hwx_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
+  HW_Y(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kparity_0(o,k,...)					\
-    HW_Y(_hwx_cfuarta_kstopbits,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+    HW_Y(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_parity_none		, 0
 #define _hw_uarta_parity_even		, 2
@@ -108,12 +108,12 @@
 /*	Optionnal parameter `stopbits`
  */
 #define _hwx_cfuarta_kstopbits_1(o,k,v,...)				\
-    HW_Y(_hwx_cfuarta_vstopbits,_hw_uarta_stopbits_##v)(o,v,__VA_ARGS__)
+    HW_Y(_hwx_cfuarta_vstopbits_,_hw_uarta_stopbits_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E_AVL(stopbits, v, 1 | 1_5 | 2)
 
 #define _hwx_cfuarta_vstopbits_1(o,v,k,...)			\
-  _hwa_write_or(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
+  _hwa_write(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
   HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfuarta_kstopbits_0(o,k,...)	\
@@ -135,12 +135,12 @@
  * the data register:
  *
  * @code
- * while ( ! hw( read, HW_IRQFLAG( uart0, rxc ) ) ) {}
+ * while ( ! hw( read, irqflag( uart0, rxc ) ) ) {}
  * uint8_t byte = hw( read, uart0 );
  * @endcode
  */
-/* #define _hw_mtd_hw_read__uarta	, _hw_rduarta */
-/* #define _hw_rduarta(o,i,a,...)		_hw_read_or(o,dr) HW_EOL(__VA_ARGS__) */
+/* #define hw_read__uarta	, _hw_rduarta */
+/* #define _hw_rduarta(o,i,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__) */
 
 
 /*
@@ -151,18 +151,18 @@
  * writing into it. You may have to verify this first:
  *
  * @code
- * while ( ! hw( read, HW_IRQFLAG( uart0, txqnf ) ) ) {}
+ * while ( ! hw( read, irqflag( uart0, txqnf ) ) ) {}
  * hw_write( uart0, '#' );
  * @endcode
  */
-/* #define _hw_mtd_hw_write__uarta	, _hw_wruarta */
-/* #define _hw_wruarta(o,i,a,v,...)	_hw_write_or(o,dr,v) HW_EOL(__VA_ARGS__) */
+/* #define hw_write__uarta	, _hw_wruarta */
+/* #define _hw_wruarta(o,i,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__) */
 
 
 /*  Power management
  */
-/* #define _hw_mtd_hw_power__uarta	, _hw_power */
-/* #define _hw_mtd_hwa_power__uarta	, _hwa_power */
+/* #define hw_power__uarta	, _hw_power */
+/* #define hwa_power__uarta	, _hwa_power */
 
 
 /*
@@ -207,11 +207,11 @@
 /*   }; */
 /* } _hw_uarta_stat_t ; */
 
-/* #define _hw_mtd_hw_stat_t__uarta	, _hw_sttuarta */
+/* #define hw_stat_t__uarta	, _hw_sttuarta */
 /* #define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
 
-/* #define _hw_mtd_hw_stat__uarta	, _hw_stuarta */
-/* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read_or(o,csra)), \ */
+/* #define hw_stat__uarta	, _hw_stuarta */
+/* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read(o,csra)), \ */
 /*					      __VA_ARGS__) */
 
 /* HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte ) */
@@ -229,25 +229,25 @@
  *******************************************************************************/
 
 #define _hwa_setup__uarta(o,i,a)		\
-  _hwa_setup_or( o, _ie );			\
-  _hwa_setup_or( o, _ic );			\
-  _hwa_setup_or( o, _clkdiv );			\
-  _hwa_setup_or( o, _conf0 );			\
-  _hwa_setup_or( o, _conf1 )
+  _hwa_setup_r( o, _ie );			\
+  _hwa_setup_r( o, _ic );			\
+  _hwa_setup_r( o, _clkdiv );			\
+  _hwa_setup_r( o, _conf0 );			\
+  _hwa_setup_r( o, _conf1 )
 
 #define _hwa_init__uarta(o,i,a)					\
-  _hwa_init_or( o, _ie,	 0 );				\
-  _hwa_init_or( o, _ic,	 0 );				\
-  _hwa_init_or( o, _clkdiv,	 0 /* 0x2B6 seems wrong */ );	\
-  _hwa_init_or( o, _conf0,   0x1C );				\
-  _hwa_init_or( o, _conf1, 0x6060 )
+  _hwa_init_r( o, _ie,	 0 );				\
+  _hwa_init_r( o, _ic,	 0 );				\
+  _hwa_init_r( o, _clkdiv,	 0 /* 0x2B6 seems wrong */ );	\
+  _hwa_init_r( o, _conf0,   0x1C );				\
+  _hwa_init_r( o, _conf1, 0x6060 )
 
 #define _hwa_commit__uarta(o,i,a)		\
-  _hwa_commit_or( o, _clkdiv );		\
-  _hwa_commit_or( o, _conf0 );			\
-  _hwa_commit_or( o, _conf1 );			\
-  _hwa_commit_or( o, _ic );			\
-  _hwa_commit_or( o, _ie )
+  _hwa_commit_r( o, _clkdiv );		\
+  _hwa_commit_r( o, _conf0 );			\
+  _hwa_commit_r( o, _conf1 );			\
+  _hwa_commit_r( o, _ic );			\
+  _hwa_commit_r( o, _ie )
 
 /**
  * @page espressif_uarta

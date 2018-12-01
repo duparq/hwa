@@ -88,7 +88,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *     );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__c8b		, _hwa_cfc8b
+#define hwa_configure__c8b		, _hwa_cfc8b
 
 /*  Mandatory argument `clock`
  *
@@ -96,17 +96,17 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *    3 arguments following the last non-void argument.
  */
 #define _hwa_cfc8b(o,i,a,k,...)					\
-  do { HW_Y(_hwa_cfc8b_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfc8b_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8b_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_Y(_hwa_cfc8b_vclock,_hw_c8b_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfc8b_kclock_1(o,k,v,...)		HW_Y(_hwa_cfc8b_vclock_,_hw_c8b_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, `none` | `ioclk [/ 2**n]` with n in {0..14})
 
 #define _hwa_cfc8b_vclock_1(o,v,k,...)					\
-  _hwa_write_or(o, cs, HW_VF(_hw_c8b_clock_##v));				\
-  HW_Y(_hwa_cfc8b_kdirection,_hw_is_direction_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, cs, HW_VF(_hw_c8b_clock_##v));				\
+  HW_Y(_hwa_cfc8b_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 #define _hw_c8b_clock_none			, _hw_c8bck_none, 0
 #define _hw_c8b_clock_ioclk			, _hw_c8bck_ioclk, 16384.0
@@ -123,7 +123,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   _hwa_cfc8b_kdirection_0(o,__VA_ARGS__)
 
 #define _hwa_cfc8b_kdirection_0(o,k,...)				\
-  HW_Y(_hwa_cfc8b_kbottom,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
@@ -137,7 +137,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   _hwa_cfc8b_kbottom_0(o,__VA_ARGS__)
 
 #define _hwa_cfc8b_kbottom_0(o,k,...)				\
-  HW_Y(_hwa_cfc8b_ktop,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `top`
@@ -149,17 +149,17 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
 #define _hw_c8b_top_compare2		, 1
 
 #define _hwa_cfc8b_ktop_1(o,k,v,...)					\
-  HW_Y(_hwa_cfc8b_vtop,_hw_c8b_top_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_vtop_,_hw_c8b_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_vtop_0(o,v,...)\
   HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
 
 #define _hwa_cfc8b_vtop_1(o,v,...)\
-  _hwa_write_or(o, ctc, HW_A1(_hw_c8b_top_##v));	\
+  _hwa_write(o, ctc, HW_A1(_hw_c8b_top_##v));	\
   _hwa_cfc8b_ktop_0(v,__VA_ARGS__)
 
 #define _hwa_cfc8b_ktop_0(o,k,...)					\
-  HW_Y(_hwa_cfc8b_koverflow,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8b_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `overflow`
@@ -190,8 +190,8 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hw( read, counter0 );
  * @endcode
  */
-#define _hw_mtd_hw_read__c8b		, _hw_c8brd
-#define _hw_c8brd(o,i,a,...)		 _hw_read_or(o,count) HW_EOL(__VA_ARGS__)
+#define hw_read__c8b		, _hw_c8brd
+#define _hw_c8brd(o,i,a,...)		 _hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -199,8 +199,8 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hw( write, counter0, value );
  * @endcode
  */
-#define _hw_mtd_hw_write__c8b		, _hw_c8bwr
-#define _hw_c8bwr(o,i,a,v,...)		 _hw_write_or(o,count,v) HW_EOL(__VA_ARGS__)
+#define hw_write__c8b		, _hw_c8bwr
+#define _hw_c8bwr(o,i,a,v,...)		 _hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -208,8 +208,8 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hwa( write, counter0, value );
  * @endcode
  */
-#define _hw_mtd_hwa_write__c8b		, _hwa_c8bwr
-#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write_or(o,count,v) HW_EOL(__VA_ARGS__)
+#define hwa_write__c8b		, _hwa_c8bwr
+#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -219,9 +219,9 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, HW_IRQFLAG( counter0 ) ) ) {	// Read overflow IRQ flag
- *   hw( clear, HW_IRQFLAG( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, HW_IRQ( counter0, off ) );		// Disable overflow IRQs
+ * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
+ *   hw( turn, irq( counter0, off ) );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -250,47 +250,47 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * -> If 
  */
 #define _hwa_solve__c8b( o,i,a )					\
-  _hwa_solve__c8b_2( o, _HW_REL(o,compare0), _HW_REL(o,compare1) )
+  _hwa_solve__c8b_2( o, hw_##o##_compare0, hw_##o##_compare1 )
 
 #define _hwa_solve__c8b_2(...)	_hwa_solve_c8b(__VA_ARGS__)
 
 #define _hwa_solve_c8b(counter, compare0, compare1)			\
     _hwa_solve_cmp8b( compare0 );					\
     _hwa_solve_cmp8b( compare1 );					\
-    if ( _hwa_mmask_or(compare0, pwm) && _hwa_mmask_or(compare1, pwm)		\
-	 && _hwa_mvalue_or(compare0, pwm) != _hwa_mvalue_or(compare1, pwm) )	\
+    if ( _hwa_mmask(compare0, pwm) && _hwa_mmask(compare1, pwm)		\
+	 && _hwa_mvalue(compare0, pwm) != _hwa_mvalue(compare1, pwm) )	\
       HWA_ERR("used compare outputs must be in the same NORMAL or PWM mode."); \
-    else if ( _hwa_mmask_or(counter, ctc) && _hwa_mvalue_or(counter, ctc)==0	\
-	      && (   (_hwa_mmask_or(compare0, pwm) && _hwa_mvalue_or(compare1, pwm)) \
-		     || (_hwa_mmask_or(compare1, pwm) && _hwa_mvalue_or(compare1, pwm))) ) \
+    else if ( _hwa_mmask(counter, ctc) && _hwa_mvalue(counter, ctc)==0	\
+	      && (   (_hwa_mmask(compare0, pwm) && _hwa_mvalue(compare1, pwm)) \
+		     || (_hwa_mmask(compare1, pwm) && _hwa_mvalue(compare1, pwm))) ) \
       HWA_ERR("`top` must be `compare2` for `" #counter "` when using the PWM mode."); \
-    if ( _hwa_mvalue_or(counter, ie)==1					\
-	 && _hwa_mvalue_or(counter, ctc)==1				\
-	 && _hwa_mvalue_or(compare0, pwm) == 0				\
-	 && _hwa_mvalue_or(compare1, pwm) == 0 ) {				\
-      if ( _hwa_mmask_or(compare0, pwm)==1 || _hwa_mmask_or(compare1, pwm)== 1 ) \
+    if ( _hwa_mvalue(counter, ie)==1					\
+	 && _hwa_mvalue(counter, ctc)==1				\
+	 && _hwa_mvalue(compare0, pwm) == 0				\
+	 && _hwa_mvalue(compare1, pwm) == 0 ) {				\
+      if ( _hwa_mmask(compare0, pwm)==1 || _hwa_mmask(compare1, pwm)== 1 ) \
 	HWA_ERR("`" #counter "` does not trigger overflow IRQs when not using PWM mode for outputs."); \
       else								\
-	if ( _hwa_mmask_or(compare0, pwm)==0 )				\
-	  _hwa_write_or(compare0,pwm,1);				\
+	if ( _hwa_mmask(compare0, pwm)==0 )				\
+	  _hwa_write(compare0,pwm,1);				\
 	else								\
-	  _hwa_write_or(compare1,pwm,1);				\
+	  _hwa_write(compare1,pwm,1);				\
     }
 
 #define _hwa_setup__c8b(o,i,a)			\
-  _hwa_setup_or( o, ccr      );		\
-  _hwa_setup_or( o, count    );		\
-  _hwa_setup_or( o, compare2 );
+  _hwa_setup_r( o, ccr      );		\
+  _hwa_setup_r( o, count    );		\
+  _hwa_setup_r( o, compare2 );
 
 #define _hwa_init__c8b(o,i,a)			\
-  _hwa_init_or( o, ccr, 0	);		\
-  _hwa_init_or( o, count, 0	);		\
-  _hwa_init_or( o, compare2, 0 );
+  _hwa_init_r( o, ccr, 0	);		\
+  _hwa_init_r( o, count, 0	);		\
+  _hwa_init_r( o, compare2, 0 );
 
 #define _hwa_commit__c8b(o,i,a)			\
-  _hwa_commit_or( o, ccr      );		\
-  _hwa_commit_or( o, count    );		\
-  _hwa_commit_or( o, compare2 );
+  _hwa_commit_r( o, ccr      );		\
+  _hwa_commit_r( o, count    );		\
+  _hwa_commit_r( o, compare2 );
 
 
 /**

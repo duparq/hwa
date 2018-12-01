@@ -39,7 +39,7 @@
  *  seems acceptable to make the configuration instructions of the ADC or the
  *  ACMP drive the analog multiplexer transparently.
  */
-#define _hw_mtd_hwa_configure__acmpb	, _hwa_cfacmpb
+#define hwa_configure__acmpb	, _hwa_cfacmpb
 
 /*  Optionnal parameter `edge`
  */
@@ -49,17 +49,17 @@
 
 #define _hwa_cfacmpb(o,i,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfacmpb_xedge,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
+    HW_Y(_hwa_cfacmpb_xedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfacmpb_xedge_1(o,k,v,...)					\
-  HW_Y(_hwa_cfacmpb_vedge,_hw_acmpb_edge_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfacmpb_vedge_,_hw_acmpb_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising | both)
 
 #define _hwa_cfacmpb_vedge_1(o,v,k,...)			\
-  _hwa_write_or(o,acis, HW_A1(_hw_acmpb_edge_##v));	\
+  _hwa_write(o,acis, HW_A1(_hw_acmpb_edge_##v));	\
   HW_G2(_hwa_cfacmpb_xposin,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpb_xedge_0(o,k,...)					\
@@ -68,15 +68,15 @@
 /*  Optionnal parameter `positive_input`
  */
 #define _hwa_cfacmpb_xposin_1(o,k,v,...)				\
-  HW_Y(_hwa_cfacmpb_vposin_bandgap,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfacmpb_vposin_bandgap_,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_bandgap_1(o,v,k,...)			\
-  _hwa_write_or(o,acbg,1);						\
+  _hwa_write(o,acbg,1);						\
   HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacmpb_vposin_bandgap_0(o,v,k,...)			\
   if ( HW_ID(v)==HW_ID(HW_PIN(ain0)) )					\
-    _hwa_write_or(o,acbg,0);						\
+    _hwa_write(o,acbg,0);						\
   else									\
     HWA_ERR("`positive_input` can be `HW_PIN(ain0) | bandgap`, but not `"#v"`."); \
   HW_G2(_hwa_cfacmpb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
@@ -90,26 +90,26 @@
 
 #define _hwa_cfacmpb_xnegin_1(o,k,v,...)				\
   if ( HW_ID(v)==HW_ID(HW_PIN(ain1)) ) {					\
-    _hwa_write_or(o,acme,0);						\
+    _hwa_write(o,acme,0);						\
   } else {								\
-    _hwa_write_or(o,acme,1);						\
-    _hwa_write_or(o,aden,0);						\
+    _hwa_write(o,acme,1);						\
+    _hwa_write(o,aden,0);						\
     if ( HW_ID(v) == HW_ID( HW_PIN(adc0) ) )				\
-      _hwa_write_or(o,admux, 0);					\
+      _hwa_write(o,admux, 0);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc1) ) )			\
-      _hwa_write_or(o,admux, 1);					\
+      _hwa_write(o,admux, 1);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc2) ) )			\
-      _hwa_write_or(o,admux, 2);					\
+      _hwa_write(o,admux, 2);					\
     else if ( HW_ID(v) == HW_ID( HW_PIN(adc3) ) )			\
-      _hwa_write_or(o,admux, 3);					\
+      _hwa_write(o,admux, 3);					\
     else								\
       HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any analog input pin, but not `"#v"`."); \
   }									\
   HW_EOL(__VA_ARGS__)
 
 
-#define _hw_mtd_hw_power__acmpb	, _hw_power
-#define _hw_mtd_hwa_power__acmpb	, _hwa_power
+#define hw_power__acmpb	, _hw_power
+#define hwa_power__acmpb	, _hwa_power
 
 
 /*******************************************************************************
@@ -118,9 +118,9 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__acmpb(o,i,a)	_hwa_setup_or( o, csr )
-#define _hwa_init__acmpb(o,i,a)		_hwa_init_or( o, csr, 0x00 )
-#define _hwa_commit__acmpb(o,i,a)	_hwa_commit_or( o, csr )
+#define _hwa_setup__acmpb(o,i,a)	_hwa_setup_r( o, csr )
+#define _hwa_init__acmpb(o,i,a)		_hwa_init_r( o, csr, 0x00 )
+#define _hwa_commit__acmpb(o,i,a)	_hwa_commit_r( o, csr )
 
 /**
  * @page atmelavr_acmpb

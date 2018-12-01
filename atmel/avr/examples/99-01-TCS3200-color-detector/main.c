@@ -97,44 +97,44 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
   /*  Prepare to capture the date of the next rising edge
    */
   hw( configure, CAPTURE, edge, rising );
-  hw( clear, HW_IRQFLAG(CAPTURE) );
+  hw( clear, irqflag(CAPTURE) );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
   hw( write, COMPARE, hw(read, COUNTER) );
-  hw( clear, HW_IRQFLAG(COMPARE) );
+  hw( clear, irqflag(COMPARE) );
 
   for (;;) {
     /*
      *	Rising edge occured: continue below
      */
-    if ( hw( read, HW_IRQFLAG(CAPTURE) ) ) {
+    if ( hw( read, irqflag(CAPTURE) ) ) {
       t = hw( read, CAPTURE ) ;
       break ;
     }
     /*
      *	Compare-match occured: signal period is too long
      */
-    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
+    if ( hw( read, irqflag(COMPARE) ) )
       return 0xFFFF ;
   }
 
   /*  Now wait for the falling edge
    */
   hw( configure, CAPTURE, edge, falling );
-  hw( clear, HW_IRQFLAG(CAPTURE) );
+  hw( clear, irqflag(CAPTURE) );
 
   hw( write, COMPARE, t );
-  hw( clear, HW_IRQFLAG(COMPARE) );
+  hw( clear, irqflag(COMPARE) );
 
   for (;;) {
-    if ( hw( read, HW_IRQFLAG(CAPTURE) ) )
+    if ( hw( read, irqflag(CAPTURE) ) )
       /*
        *  Return the half-period
        */
       return hw( read, CAPTURE ) - t ;
-    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
+    if ( hw( read, irqflag(COMPARE) ) )
       /*
        *  Half-period is too long
        */

@@ -67,8 +67,8 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(o,i,a,v,...)		HW_Y(_hwx_pwr,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
-#define _hwa_power(o,i,a,v,...)		HW_Y(_hwx_pwr,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
+#define _hw_power(o,i,a,v,...)		HW_Y(_hwx_pwr_,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
+#define _hwa_power(o,i,a,v,...)		HW_Y(_hwx_pwr_,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 
@@ -77,7 +77,7 @@
 
 /*  Register prr exists, process the instruction
  */
-#define _hwx_pwr1_0(o,x,v)	x##_write_or(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr1_0(o,x,v)	x##_write(o,prr,HW_A1(_hw_state_##v)==0)
 
 /*  Register prr does not exist
  */
@@ -91,10 +91,10 @@
  */
 #define HW_ATOMIC(...)				\
   do{						\
-    uint8_t s = _hw_read_or(core0,sreg);	\
+    uint8_t s = _hw_read(core0,sreg);	\
     hw_disable_interrupts();			\
     { __VA_ARGS__ }				\
-    _hw_write_or(core0,sreg,s) ;		\
+    _hw_write(core0,sreg,s) ;		\
   }while(0)
 
 
@@ -545,10 +545,10 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   volatile uint8_t *ph = (volatile uint8_t *)ra+1 ;
 
   if ( (m & 0xFF) && (m >> 8) ) {
-    uint8_t s = _hw_read_or(core0,sreg);
+    uint8_t s = _hw_read(core0,sreg);
     hw_disable_interrupts();
     uint8_t lb = *pl ;
-    _hw_write_or(core0,sreg,s);
+    _hw_write(core0,sreg,s);
     uint8_t hb = *ph ;
     v = (hb << 8) | lb ;
   }
@@ -604,22 +604,3 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   );						      \
 }))
 #endif
-
-
-/*	ISR
- */
-#define hw_israttr_isr_interruptible		, __attribute__((interrupt))
-#define hw_israttr_isr_non_interruptible	, 
-#define hw_israttr_isr_naked			, __attribute__((naked))
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
-
-/*  Single event ISR
- */
-#define _hw_isr_(vector, ...)						\
-  HW_EXTERN_C void __vector_##vector(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ; \
-  void __vector_##vector (void)

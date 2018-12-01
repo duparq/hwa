@@ -30,7 +30,7 @@
  *
  *  * @ref atmegax8 : `counter2`
  */
-#define _hw_class__c8c
+#define hw_class__c8c
 
 /**
  * @page atmelavr_c8c
@@ -44,7 +44,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__c8c		, _hw_bn_c8c
+#define HW_BITS__c8c		, _hw_bn_c8c
 #define _hw_bn_c8c(o,i,a,...)		8
 
 /**

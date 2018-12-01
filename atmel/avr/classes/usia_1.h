@@ -14,7 +14,7 @@
  *
  * A class `_usia` object is an USI.
  */
-#define _hw_class__usia
+#define hw_class__usia
 
 
 /**
@@ -25,7 +25,7 @@
  *
  * Clocking is handle by HWA when `hw_write(...)` is executed.
  */
-#define _hw_class__usia_spimaster_swclk
+#define hw_class__usia_spimaster_swclk
 
 
 #if !defined __ASSEMBLER__

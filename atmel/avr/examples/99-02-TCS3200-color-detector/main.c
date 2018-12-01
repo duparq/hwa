@@ -35,9 +35,9 @@
 
 /*  Create a 'sensor0' device of class _tcs3200a.
  */
-#define _hw_def_sensor0			_tcs3200, 0, 0
-#define _hw_rel_sensor0_s2		PIN_TCS3200_S2
-#define _hw_rel_sensor0_s3		PIN_TCS3200_S3
+#define hw_sensor0		_tcs3200, 0, 0
+#define hw_sensor0_s2		PIN_TCS3200_S2
+#define hw_sensor0_s3		PIN_TCS3200_S3
 
 
 /*  Maximum period (minimum light level) required
@@ -78,43 +78,43 @@ static uint16_t measure ( )
    *  occur
    */
   hw( write, COMPARE, hw(read, COUNTER) );
-  hw( clear, HW_IRQFLAG(COMPARE) );
+  hw( clear, irqflag(COMPARE) );
 
   /*  Prepare to capture the date of the next rising edge
    */
   hw( configure, CAPTURE, edge, rising );
-  hw( clear, HW_IRQFLAG(CAPTURE) );
+  hw( clear, irqflag(CAPTURE) );
 
   for (;;) {
     /*
      *	Rising edge occured: continue below.
      */
-    if ( hw( read, HW_IRQFLAG(CAPTURE) ) )
+    if ( hw( read, irqflag(CAPTURE) ) )
       break ;
 
     /*
      *	Compare-match occured: signal period is too long, return.
      */
-    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
+    if ( hw( read, irqflag(COMPARE) ) )
       return 0xFFFF ;
   }
 
   t = hw( read, CAPTURE ) ;
   hw( write, COMPARE, t );
-  hw( clear, HW_IRQFLAG(COMPARE) );
+  hw( clear, irqflag(COMPARE) );
 
   /*  Now wait for the falling edge
    */
   hw( configure, CAPTURE, edge, falling );
-  hw( clear, HW_IRQFLAG(CAPTURE) );
+  hw( clear, irqflag(CAPTURE) );
 
   for (;;) {
-    if ( hw( read, HW_IRQFLAG(CAPTURE) ) )
+    if ( hw( read, irqflag(CAPTURE) ) )
       /*
        *  Return the half-period
        */
       return hw( read, CAPTURE ) - t ;
-    if ( hw( read, HW_IRQFLAG(COMPARE) ) )
+    if ( hw( read, irqflag(COMPARE) ) )
       /*
        *  Half-period is too long
        */
@@ -465,3 +465,9 @@ main ( )
     }
   }
 }
+
+hw( configure, sensor0, filter, clear ); tclear = measure();
+
+HW_SHOW( HW_X(sensor0) );
+
+HW_SHOW( HW_X(sensor0,s0) );

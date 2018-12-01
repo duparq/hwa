@@ -34,7 +34,7 @@
  *
  *  * @ref atmegax8 : `adc0`
  */
-#define _hw_class__ad10b
+#define hw_class__ad10b
 
 
 /**
@@ -49,7 +49,7 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__ad10b		, _hw_bn_ad10b
+#define HW_BITS__ad10b		, _hw_bn_ad10b
 #define _hw_bn_ad10b(o,i,a,...)		10 HW_EOL(__VA_ARGS__)
 
 

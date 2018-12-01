@@ -10,7 +10,7 @@
  */
 
 #include "hwa_macros.h"
-#include "hwa_interrupts.h"
+#include "hwa_x.h"
 
 
 #if DOXYGEN
@@ -145,101 +145,113 @@
 #define _hw_is_vref_vref			, 1
 #define _hw_is_yes_yes				, 1
 
-#define _hw_isa_leftbkt(...)			, 1
+
+/*  Define wich classes are hardware bits
+ */
+#define _hw_isa_reg__r8			, 1
+#define _hw_isa_reg__r16		, 1
+#define _hw_isa_reg__r32		, 1
+#define _hw_isa_reg__cb1		, 1
+#define _hw_isa_reg__cb2		, 1
+#define _hw_isa_reg__ob1		, 1
+#define _hw_isa_reg__or2b2		, 1
+#define _hw_isa_reg__xob1		, 1
+#define _hw_isa_reg__xb2		, 1
+
+#define _hw_isa_leftbkt(...)		, 1
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Generic object class.
  */
-#define _hw_class__obj
+#define hw_class__obj
 
 
-/**
+/*
  * @ingroup private_def
  * @brief 8-bit hardware register class.
  */
-#define _hw_class__r8
+#define hw_class__r8
 
 
-/**
+/*
  * @ingroup private_def
  * @brief 16-bit hardware register class.
  */
-#define _hw_class__r16
+#define hw_class__r16
 
 
-/**
+/*
  * @ingroup private_def
  * @brief 32-bit hardware register class.
  */
-#define _hw_class__r32
+#define hw_class__r32
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Class logical register made of one group of consecutive bits.
  */
-#define _hw_class__cb1
+#define hw_class__cb1
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Class logical register made of two groups of consecutive bits.
  */
-#define _hw_class__cb2
+#define hw_class__cb2
+
+#define hw_class__cr1
+#define hw_class__cr2
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Object logical register made of one group of consecutive bits.
  */
-#define _hw_class__ob1
+#define hw_class__ob1
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Object logical register made of two groups of consecutive bits.
  */
-#define _hw_class__ob2
+#define hw_class__ob2
+#define hw_class__or2b2
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Interrupt object class.
  */
-#define _hw_class__irq
+#define hw_class__irq
 
 
-/**
- * @ingroup private_def
- * @brief Memory definition of one group of consecutive bits.
- */
-#define _hw_class__m1
 
-
-/**
- * @ingroup private_def
- * @brief Memory definition of two groups of consecutive bits.
- */
-#define _hw_class__m2
-
-
-/**
+/*
  * @ingroup private_def
  * @brief Object logical register made of one group of consecutive bits.
  */
-#define _hw_class__xob1
+#define hw_class__xob1
+#define hw_class__xob2
+#define hw_class__xb2		// Two groups of bits inside the same register of another object
 
 
-/**
+/*
  * @ingroup private_def
  * @brief Object register class.
  *
  *  An `_oreg` class object is a register of an object that can be accessed with
  *  the generic instructions designed for objects.
  */
-#define _hw_class__oreg
+#define hw_class__oreg
+
+
+
+#define hw_class__m111
+#define hw_class__m112
+#define hw_class__m122
 
 
 /*
@@ -251,9 +263,49 @@
  * This is useful for compiling code for a target that does not implement non
  * vital hardware.
  */
-#define _hw_class__fake
-#define _hw_def_fake		_fake, 0, 0
+#define hw_class__fake
+#define hw_fake			_fake, 0, 0
 
+
+/**
+ * @ingroup public_def
+ * @brief Show how x expands
+ */
+#define HW_SHOW(x)		#x: x
+
+
+
+/**
+ * @brief Declare an ISR.
+ * @hideinitializer
+ *
+ * This can be used with C and assembly language.
+ *
+ * `HW_ISR(object [,reason] [,naked] [,interruptible])`
+ * `HW_ISR((object,...) [,reason] [,naked] [,interruptible])`
+ */
+#define HW_ISR(...)			_HW_ISR01(__VA_ARGS__,,,)
+#define _HW_ISR01(o,x,...)		HW_Y0(_HW_ISR01_,_hw_israttr_##x)(o,x,__VA_ARGS__)
+#define _HW_ISR01_0(o,x,...)		_HW_ISR02( HW_XIRQ(o,x), __VA_ARGS__ )
+#define _HW_ISR01_1(o,...)		_HW_ISR02( HW_XIRQ(o), __VA_ARGS__ )
+#define _HW_ISR02(...)			_HW_ISR03(__VA_ARGS__)
+#define _HW_ISR03(c,...)		HW_Y0(_HW_ISR03,c)(c,__VA_ARGS__)
+#define _HW_ISR031(c,o,e,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E(e)
+#define _HW_ISR030(c,o,n,v,m,f,x,...)	HW_Y0(_HW_ISR03_,x)(v,x,__VA_ARGS__)
+#define _HW_ISR03_1(v,...)		_HW_ISR90( v, ) HW_EOL(__VA_ARGS__)
+#define _HW_ISR03_0(v,x,...)		HW_Y0(_HW_ISR04_,_hw_israttr_##x)(v,x,__VA_ARGS__)
+#define _HW_ISR04_0(v,x,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x)
+#define _HW_ISR04_1(v,x1,x2,...)	HW_Y0(_HW_ISR05_,x2)(v,x1,x2,__VA_ARGS__)
+#define _HW_ISR05_1(v,x1,...)		_HW_ISR90( v, HW_A1(_hw_israttr_##x1)) HW_EOL(__VA_ARGS__)
+#define _HW_ISR05_0(v,x1,x2,...)	HW_Y0(_HW_ISR06_,_hw_israttr_##x2)(v,x1,x2,__VA_ARGS__)
+#define _HW_ISR06_0(v,x1,x2,...)	void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x2)
+#define _HW_ISR06_1(v,x1,x2,...)	_HW_ISR90(v, HW_A1(_hw_israttr_##x1) HW_A1(_hw_israttr_##x2)) HW_EOL(__VA_ARGS__)
+
+#define _HW_ISR90(...)			_HW_ISR_(__VA_ARGS__)
+
+#if defined __ASSEMBLER__ && !defined _HW_ISR_
+#  define _HW_ISR_(vector, ...)		__vector_##vector
+#endif
 
 #if !defined __ASSEMBLER__
 
@@ -270,7 +322,7 @@
  *  and optimisations must be on when using HWA.
  *
  *  However, it seems that the 'static' keyword prevents the function to be
- *  inlined unless the 'always_inline' attribute is specified.
+ *  inlined unless the 'always_inline' attribute is also specified.
  *
  *  `__attribute__((always_inline))` triggers a warning if gcc fails to inline the
  *  function.

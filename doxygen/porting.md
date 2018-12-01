@@ -81,19 +81,19 @@ letter that is used to distinguish various classes of the same kind of objects.
 For example, classes that implement an 8-bit counter are called `_c8a`, `_c8b`,
 or `_c8c`...
 
-A class is declared with a symbol starting with `_hw_class_` and ending with the
+A class is declared with a symbol starting with `hw_class_` and ending with the
 class name. The definition of this symbol must be void. For example, the class
 `_c8a` is declared with:
 
 @code
-#define _hw_class__c8a
+#define hw_class__c8a
 @endcode
 
 
 Objects {#porting_objects}
 =======
 
-An object is declared to HWA with a symbol that starts with `_hw_def_` followed
+An object is declared to HWA with a symbol that starts with `hw_` followed
 by the object name. The definition of this symbol must begin with a declared
 class name.
 
@@ -103,7 +103,7 @@ something like:
 @code
 /*	Object				class, id, address
  */
-#define _hw_def_counter0		_c8a, 100, 0x0000
+#define hw_counter0		_c8a, 100, 0x0000
 @endcode
 
 where:
@@ -156,10 +156,10 @@ register with a definition like:
 @code
 /*	Class hardware register		class, address, write mask, flags mask
  */
-#define _hw_reg__c8a_count		_r8, 0x40, 0xFF, 0x00
+#define hw_reg__c8a_count		_r8, 0x40, 0xFF, 0x00
 @endcode
 
-The symbol defined is the concatenation of `_hw_reg_`, the class name, and the
+The symbol defined is the concatenation of `hw_reg_`, the class name, and the
 register name. In this definition:
 
  * `%_r8` is the class of the register;
@@ -182,7 +182,7 @@ the `counter0` object with a definition like:
 @code
 /*	Object hardware register	class, address, write mask, flags mask
  */
-#define _hw_reg_counter0_ifr		_r8, 0x35, 0x07, 0x07
+#define hw_reg_counter0_ifr		_r8, 0x35, 0x07, 0x07
 @endcode
 
 The symbol defined is the concatenation of an underscore, the object name, an
@@ -233,7 +233,7 @@ class register with a definition like:
 @code
 /*	Class logical register
  */
-#define _hw_reg__c8a_cs			_cb1, ccrb, 3, 0
+#define hw_reg__c8a_cs			_cb1, ccrb, 3, 0
 @endcode
 
 where:
@@ -253,7 +253,7 @@ object register with a definition like:
 @code
 /*	Object logical register
  */
-#define _hw_reg_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define hw_reg_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 @endcode
 
 where:
@@ -280,7 +280,7 @@ stored in the bit 2 of the `csr` hardware register of the analog comparator
 `acmp0` object:
 
 @code
-#define _hw_reg__c16a_acic		_xob1, acmp0, csr, 1, 2
+#define hw_reg__c16a_acic		_xob1, acmp0, csr, 1, 2
 @endcode
 
 
@@ -294,8 +294,8 @@ defined like this (the second definition considers that there is no need for the
 event name to be specified):
 
 @code
-#define _hw_irq_counter0_overflow       _irq, counter0, 11, ie,  if
-#define _hw_irq_counter0_               _irq, counter0, 11, ie,  if
+#define hw_irq_counter0_overflow       _irq, counter0, 11, ie,  if
+#define hw_irq_counter0_               _irq, counter0, 11, ie,  if
 @endcode
 
 where:
@@ -314,7 +314,7 @@ where:
 For the STM32, the SysTick timer alarm is defined like this:
 
 @code
-#define _hw_irq_systick_alarm           _irq, systick, esr_systick, ie, if
+#define hw_irq_systick_alarm           _irq, systick, esr_systick, ie, if
 @endcode
 
 where `esr_systick` is the name of the ISR.
@@ -326,14 +326,14 @@ Class methods {#porting_cmtd}
 
 A class method is "called" when a generic instruction is applied to an object
 whose class has declared that it supports the instruction by the means of a
-symbol made of the prefix `_hw_mtd_`, the instruction name, an underscore `_`,
+symbol made of the prefix ``, the instruction name, an underscore `_`,
 the class name.
 
 For example, to declare that the class `_wdoga` supports the generic instruction
 `hw(reset,...)`, the following symbol must be defined:
 
 @code
-#define _hw_mtd_hw_reset__wdoga         , _hw_rstwdoga
+#define hw_reset__wdoga         , _hw_rstwdoga
 @endcode
 
 The definition contains two elements:
@@ -391,7 +391,7 @@ Let's see how the `_c8a` class implements the asychronous `configure` action
 First, the method has to be declared:
 
 @code
-#define _hw_mtd_hwa_configure__c8a	, _hwa_cfc8a
+#define hwa_configure__c8a	, _hwa_cfc8a
 @endcode
 
 The instruction `hwa( configure, counter0, ... )` will then be translated to
@@ -412,7 +412,7 @@ of `_hwa_cfc8a(...)`:
 
 @code
 #define _hwa_cfc8a(o,i,a,k,...)						\
-  do { HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_Y(_hwa_cfc8a_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 @endcode
 
 The `do { ... } while(0)` block ensure that the expansion of the instruction
@@ -430,7 +430,7 @@ For that to work, the following definition is required:
 
 Such definitions are gathered in the file `hwa/hwa_1.h`.
 
-Then, if the `k` argument is "clock", `HW_Y(_hwa_cfc8a_kclock,_hw_is_clock_##k)`
+Then, if the `k` argument is "clock", `HW_Y(_hwa_cfc8a_kclock_,_hw_is_clock_##k)`
 expands to `_hwa_cfc8a_kclock_1`, otherwise it expands to `_hwa_cfc8a_kclock_0`.
 
 After that, `_hwa_cfc8a_kclock_0` or `_hwa_cfc8a_kclock_1` is concatenated with
@@ -450,7 +450,7 @@ processing of the arguments to verify that the following argument `v` is an
 acceptable value for the "clock" key:
 
 @code
-#define _hwa_cfc8a_kclock_1(o,k,v,...)	HW_Y(_hwa_cfc8a_vclock,_hw_cclk1_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfc8a_kclock_1(o,k,v,...)	HW_Y(_hwa_cfc8a_vclock_,_hw_cclk1_##v)(o,v,__VA_ARGS__)
 @endcode
 
 and the following definitions, all expanding with a void element in first
@@ -474,7 +474,7 @@ be "direction", and `...` the remaining arguments in the list:
 @code
 #define _hwa_cfc8a_vclock_1(o,v,k,...)				\
   hwa->o.config.clock = HW_VF(_hw_cclk1_##v);			\
-  HW_Y(_hwa_cfc8a_kmode,_hw_is_direction_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfc8a_kmode_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 @endcode
 
 The `HW_VF()` call is responsible for processing the value that has to be stored
@@ -518,7 +518,7 @@ register `wgm` of the counting unit. Thus, contrary to other simpler objects,
 `_hwa_cfc8a()` does not immediately set logical register values according to the
 parsed arguments but only stores the configuration in the context as will the
 configuration instructions for the compare units. The `hwa_commit()` instruction
-will call `_hwa_solve()` to process the values stored in the context, compute
+will call `_hwa_solve_o()` to process the values stored in the context, compute
 the values of the registers, and verify that the whole configuration is valid
-before the `_hwa_commit()` instruction effectively writes the registers into the
+before the `hwa_commit()` instruction effectively writes the registers into the
 hardware.

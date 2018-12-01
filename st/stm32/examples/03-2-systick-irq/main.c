@@ -66,13 +66,13 @@ int main ( )
 
   /*  Configure the system tick timer
    */
-  uint32_t onems = hw(read, HW_REGISTER(systick,onems));
+  uint32_t onems = hw(read, (systick,onems));
 
   hwa( configure, systick,
        clock,     ahb,
        reload,    ((uint32_t)(PERIOD/2 / 0.001)*onems - 1) & 0xFFFFFF );
   hwa( turn, systick, on );
-  hwa( turn, HW_IRQ(systick), on );
+  hwa( turn, irq(systick), on );
   hwa_commit();
 
   /*  Toggle the LED between sleeps

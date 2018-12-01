@@ -105,7 +105,7 @@ main ( )
        top,       compare0 );
 
   hwa( write, (COUNTER, compare0), 0.02 * HW_SYSHZ / 1024 / 2 );
-  hwa( turn, HW_IRQ(COUNTER,overflow), on );
+  hwa( turn, irq(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)
    */
@@ -116,7 +116,7 @@ main ( )
        align,     right,
        input,     PIN_ANALOG_INPUT );
 
-  hwa( turn, HW_IRQ(adc0), on );
+  hwa( turn, irq(adc0), on );
 
   /*  Write this configuration into the hardware
    */

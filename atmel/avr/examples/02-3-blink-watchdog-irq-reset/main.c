@@ -74,9 +74,9 @@ int main ( )
    *  up), setting its flag the first time, resetting the device the second time
    *  if it has been reconfigured.
    */
-  hwa( configure,  watchdog0,
-       timeout,	TIMEOUT,
-       action,	irq_or_reset );
+  hwa( configure, watchdog0,
+       timeout,	  TIMEOUT,
+       action,	  irq_or_reset );
 
   /*  Write this configuration into the hardware
    */
@@ -95,7 +95,7 @@ int main ( )
      *	the IRQ so that next timeout will reset the device. Load the context
      *	with this information, but do not write it into hardware.
      */
-    hwa( turn, HW_IRQ(watchdog0), off );
+    hwa( turn, irq(watchdog0), off );
     hwa_nocommit();
 
     hw( toggle, PIN_LED );
@@ -104,7 +104,7 @@ int main ( )
       /*
        *  Re-enable the watchdog IRQ.
        */
-      hwa( turn, HW_IRQ(watchdog0), on );
+      hwa( turn, irq(watchdog0), on );
       hwa_commit();
     }
   }

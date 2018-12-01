@@ -9,13 +9,13 @@
  * @brief I/O
  */
 
-#define _hw_mtd_hw_configure__io1a	, _hw_cfio1a
-#define _hw_mtd_hwa_configure__io1a	, _hwa_cfio1a
-#define _hw_mtd_hw_read__io1a		, _hw_rdio1a
-#define _hw_mtd_hw_write__io1a		, _hw_wrio1a
-#define _hw_mtd_hwa_write__io1a		, _hwa_wrio1a
-#define _hw_mtd_hw_toggle__io1a		, _hw_tgio1a
-#define _hw_mtd_hwa_toggle__io1a	, _hwa_tgio1a
+#define hw_configure__io1a	, _hw_cfio1a
+#define hwa_configure__io1a	, _hwa_cfio1a
+#define hw_read__io1a		, _hw_rdio1a
+#define hw_write__io1a		, _hw_wrio1a
+#define hwa_write__io1a		, _hwa_wrio1a
+#define hw_toggle__io1a		, _hw_tgio1a
+#define hwa_toggle__io1a	, _hwa_tgio1a
 
 
 /**
@@ -74,26 +74,26 @@
     uint8_t cnf, mode, odr=0 ;				\
     struct { uint8_t commit ; hwa_p16a_t p ; } st ;	\
     hwa_t *hwa = (hwa_t*)&st ;				\
-    _hwa_setup(p);					\
+    _hwa_setup_o(p);					\
     _hwa_cfio1a_(o,i,p,__VA_ARGS__);			\
-    st.commit = 1 ; _hwa_commit(p);			\
+    st.commit = 1 ; _hwa_commit_o(p);			\
   }while(0)
 
 #define _hwa_cfio1a(...)			do{ uint8_t cnf, mode, odr=0 ; _hwa_cfio1a_(__VA_ARGS__); }while(0);
 
 /*  Key 'function'
  */
-#define _hwa_cfio1a_(o,i,p,bn,bp,k,...)		HW_Y(_hwa_cfio1a_kfn,_hw_is_function_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_(o,i,p,bn,bp,k,...)		HW_Y(_hwa_cfio1a_kfn_,_hw_is_function_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfio1a_kfn_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfn,_hw_is_gpio_##v)(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kfn_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfn_,_hw_is_gpio_##v)(o,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfio1a_vfn_0(o,p,bn,bp,v,...)	HW_E_KVNIY(function,v)
-#define _hwa_cfio1a_vfn_1(o,p,bn,bp,v,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfio1a_kfn_0(o,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_vfn_1(o,p,bn,bp,v,k,...)	HW_Y(_hwa_cfio1a_kmd_,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_kfn_0(o,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd_,_hw_is_mode_##k)(o,p,bn,bp,k,__VA_ARGS__)
 
 /*  Key 'mode'
  */
 #define _hwa_cfio1a_kmd_0(o,p,bn,bp,k,v,...)	HW_E_K(mode,k)
-#define _hwa_cfio1a_kmd_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vmd,_hw_cfio1a_md_##v)(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kmd_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vmd_,_hw_cfio1a_md_##v)(o,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfio1a_vmd_0(o,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating,digital_input_pullup,\
 							     digital_input_pulldown,digital_output,digital_output_pushpull,\
 							     digital_output_opendrain,analog_input))
@@ -102,8 +102,8 @@
 #define _hwa_cfio1a_dif(o,p,bn,bp,k,...)	cnf=1 ; mode=0 ; _hwa_cfio1a9(o,p,bn,bp,__VA_ARGS__)
 #define _hwa_cfio1a_dipu(o,p,bn,bp,k,...)	cnf=2 ; mode=0 ; odr=1 ; _hwa_cfio1a9(o,p,bn,bp,__VA_ARGS__)
 #define _hwa_cfio1a_dipd(o,p,bn,bp,k,...)	cnf=2 ; mode=0 ; odr=0 ; _hwa_cfio1a9(o,p,bn,bp,__VA_ARGS__)
-#define _hwa_cfio1a_dopp(o,p,bn,bp,k,...)	cnf=0 ; HW_Y(_hwa_cfio1a_kfq,_hw_is_frequency_##k)(o,p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfio1a_dood(o,p,bn,bp,k,...)	cnf=1 ; HW_Y(_hwa_cfio1a_kfq,_hw_is_frequency_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_dopp(o,p,bn,bp,k,...)	cnf=0 ; HW_Y(_hwa_cfio1a_kfq_,_hw_is_frequency_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_dood(o,p,bn,bp,k,...)	cnf=1 ; HW_Y(_hwa_cfio1a_kfq_,_hw_is_frequency_##k)(o,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfio1a_ai(o,p,bn,bp,k,...)		cnf=0 ; mode=0 ; _hwa_cfio1a9(o,p,bn,bp,__VA_ARGS__)
 
 /*  Key 'frequency'
@@ -114,15 +114,15 @@
 #define _hw_cfio1a_fq_50MHz			, 3
 #define _hw_cfio1a_fq_highest			, 3
 
-#define _hwa_cfio1a_kfq_0(o,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kfq0,k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_kfq_0(o,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kfq0_,k)(o,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfio1a_kfq0_1(o,p,bn,bp,k,...)	mode=2 ; _hwa_do_cfio1a( &hwa->p, bn, bp, cnf, mode, odr )
 #define _hwa_cfio1a_kfq0_0(o,p,bn,bp,k,...)	HW_E_K(frequency,k)
 
-#define _hwa_cfio1a_kfq_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfq,_hw_cfio1a_fq_##v)(o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfio1a_kfq_1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfq_,_hw_cfio1a_fq_##v)(o,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfio1a_vfq_1(o,p,bn,bp,v,...)	mode=HW_A1(_hw_cfio1a_fq_##v); _hwa_cfio1a9(o,p,bn,bp,__VA_ARGS__)
 #define _hwa_cfio1a_vfq_0(o,p,bn,bp,v,...)	HW_E_NIL(v,(2MHz,10MHz,50MHz))
 
-#define _hwa_cfio1a9(o,p,bn,bp,...)		HW_Y(_hwa_cfio1a9,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__)
+#define _hwa_cfio1a9(o,p,bn,bp,...)		HW_Y(_hwa_cfio1a9_,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__)
 #define _hwa_cfio1a9_0(o,p,bn,bp,g,...)		HW_E_G(g)
 #define _hwa_cfio1a9_1(o,p,bn,bp,g,...)		_hwa_do_cfio1a( &hwa->p, bn, bp, cnf, mode, odr )
 
@@ -193,9 +193,9 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * uint8_t value = hw( read, pa0 );
  * @endcode
  */
-#define _hw_rdio1a(o,i,p,bn,bp,...)	HW_Y(_hw_rdio1a,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
+#define _hw_rdio1a(o,i,p,bn,bp,...)	HW_Y(_hw_rdio1a_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
 #define _hw_rdio1a_0(p,bn,bp,g,...)	HW_E_G(g)
-#define _hw_rdio1a_1(p,bn,bp,...)	( (_hw_read_or(p,idr) & ((1UL<<bn)-1)) >> bp )
+#define _hw_rdio1a_1(p,bn,bp,...)	( (_hw_read(p,idr) & ((1UL<<bn)-1)) >> bp )
 
 
 /**
@@ -220,12 +220,12 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  *  BSRR: MSB16 bits reset the ODR bits
  *        LSB16 bits set the ODR bits, it has the priority over MSB16
  */
-#define _hw_wrio1a(o,i,p,bn,bp,v,g,...)		HW_Y(_hwx_wrio1a1,v)(_hw,p,bn,bp,v,g)
-#define _hwa_wrio1a(o,i,p,bn,bp,v,g,...)	HW_Y(_hwx_wrio1a1,v)(_hwa,p,bn,bp,v,g)
+#define _hw_wrio1a(o,i,p,bn,bp,v,g,...)		HW_Y(_hwx_wrio1a1_,v)(_hw,p,bn,bp,v,g)
+#define _hwa_wrio1a(o,i,p,bn,bp,v,g,...)	HW_Y(_hwx_wrio1a1_,v)(_hwa,p,bn,bp,v,g)
 #define _hwx_wrio1a1_1(x,p,bn,bp,v,g)		HW_E_V()
-#define _hwx_wrio1a1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrio1a2,g)(x,p,bn,bp,v,g)
+#define _hwx_wrio1a1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrio1a2_,g)(x,p,bn,bp,v,g)
 #define _hwx_wrio1a2_0(x,p,bn,bp,v,g)		HW_E_G(g)
-#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)		x##_write_orm( p, bsrr, 0xffffffff, \
+#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)		x##_write_m( p, bsrr, 0xffffffff, \
 								 ((((1UL<<bn)-1)<<bp) & (~(v##UL))<<bp)<<16 | \
 								 ((((1UL<<bn)-1)<<bp) & ( (v))<<bp) )
 
@@ -240,12 +240,12 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  */
 /*  Use the BSRR instead of a read-modify-write on the ODR.
  */
-#define _hw_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hw_tgio1a,g)(p,bn,bp,g)
+#define _hw_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hw_tgio1a_,g)(p,bn,bp,g)
 #define _hw_tgio1a_0(p,bn,bp,g)			HW_E_G(g)
 #define _hw_tgio1a_1(p,bn,bp,g)						\
   do {									\
-    uint32_t v = *(volatile uint32_t*)(_HW_A(_HW_R(p,odr)));		\
-    *(volatile uint32_t*)(_HW_A(_HW_R(p,bsrr))) =			\
+    uint32_t v = *(volatile uint32_t*)(HW_ADDRESS((p,odr)));		\
+    *(volatile uint32_t*)(HW_ADDRESS((p,bsrr))) =			\
       ((((1UL<<bn)-1)<<bp) & v)<<16 | ((((1UL<<bn)-1)<<bp) & ~v);	\
   }while(0)
 
@@ -261,7 +261,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * @note `toggle` is not atomic: it reads the ODR, then sets/resets the relevant
  * bits through the BSRR. The ODR is not written directly.
  */
-#define _hwa_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hwa_tgio1a,g)(p,bn,bp,g)
+#define _hwa_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hwa_tgio1a_,g)(p,bn,bp,g)
 #define _hwa_tgio1a_0(p,bn,bp,g)		HW_E_G(g)
 #define _hwa_tgio1a_1(p,bn,bp,g)		hwa->p.toggles |= (((1UL<<bn)-1) << bp)
 

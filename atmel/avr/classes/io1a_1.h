@@ -22,7 +22,7 @@
  * hw( write, HW_PIN(1), 0 );
  * @endcode
  */
-#define _hw_class__io1a
+#define hw_class__io1a
 
 
 /**
@@ -36,12 +36,11 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__io1a			, _HW_BITS__io1a
+#define HW_BITS__io1a				, _hw_bits_io1a
+#define _hw_bits_io1a(o,i,p,bn,bp,...)		bn
 
-#define _HW_BITS__io1a(o,i, cn,bn,bp,...)	bn
 
-
-/**
+/*
  * @page atmelavr_io1a
  *
  * For a group of consecutive pins, the `HW_POSITION()` instruction gives the position
@@ -53,31 +52,9 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_POSITION__io1a		, _HW_POSITION__io1a
+#define HW_POSITION__io1a			, _hw_position_io1a
+#define _hw_position_io1a(o,i,p,bn,bp,...)	bp
 
-#define _HW_POSITION__io1a(o,i, cn,bn,bp,...)	bp
-
-/**
- * @page atmelavr_io1a
- * @section atmelavr_io1a_rel Relatives
- *
- * `_io1a` objects have the following relatives:
- *
- *  * `port`: the I/O port the object pertains to:
- *     @code
- *     HW_RELATIVE( pa0, port )
- *     @endcode
- *  * `pcic`: the pin-change interrupt controller:
- *     @code
- *     HW_RELATIVE( pa0, pcic )
- *     @endcode
+/*  Port name of a pin
  */
-/*  Class-defined HW_RELATIVE()
- */
-#define _hw_mtd_HW_RELATIVE__io1a	, _hw_io1arl1
-
-#define _hw_io1arl1(o,x,...)		HW_Y(_hw_io1arl1,_hw_is_port_##x)(o,x,__VA_ARGS__)
-#define _hw_io1arl1_1(o,x,i,p,...)	p
-#define _hw_io1arl1_0(o,x,...)		HW_Y(_hw_io1arl2,_hw_is_pcic_##x)(o,x,__VA_ARGS__)
-#define _hw_io1arl2_1(o,x,i,p,...)	_hw_##p##_pcic
-#define _hw_io1arl2_0(o,x,...)		HW_E_OO(o,x)
+#define _hw_rel__io1a_port(o,d)			HW_A1 d

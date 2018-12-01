@@ -13,8 +13,8 @@
  */
 #include "ad10__2.h"
 
-#define _hw_mtd_hw_prescaler_max__ad10a		, hw_ad10_prescaler_max
-#define _hw_mtd_hw_prescaler_min__ad10a		, hw_ad10_prescaler_min
+#define hw_prescaler_max__ad10a		, hw_ad10_prescaler_max
+#define hw_prescaler_min__ad10a		, hw_ad10_prescaler_min
 
 /**
  * @page atmelavr_ad10a
@@ -103,7 +103,7 @@
  * Use HW_IRQ(...) or irq() for trigger?
  */
 
-#define _hw_mtd_hwa_configure__ad10a	, _hwa_cfad10a
+#define hwa_configure__ad10a	, _hwa_cfad10a
 
 /*  Mandatory parameter `clock`
  */
@@ -112,22 +112,22 @@
     uint8_t gain __attribute__((unused)) = 1 ;				\
     uint8_t input1 __attribute__((unused)) = 0xFF ;			\
     uint8_t input2 __attribute__((unused)) = 0xFF ;			\
-    _hwa_write_or( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfad10a_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
+    _hwa_write( o, en, 1 ); /* turn the ADC on */			\
+    HW_Y(_hwa_cfad10a_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfad10a_kclock_0(o,k,...)					\
   HW_E_VL(k,clock)
 
 #define _hwa_cfad10a_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10a_vclock,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vclock_,_hw_ad10_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 
 #define _hwa_cfad10a_vclock_1(o,v,k,...)				\
-  _hwa_write_or(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
-  HW_Y(_hwa_cfad10a_ktrigger,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o, ps, HW_A1(_hw_ad10_clock_##v)(HW_A2(_hw_ad10_clock_##v))); \
+  HW_Y(_hwa_cfad10a_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 
 /*  Mandatory parameter `trigger`
@@ -136,15 +136,15 @@
   HW_E_VL(k,trigger)
 
 #define _hwa_cfad10a_ktrigger_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10a_vtrigger,_hw_ad10a_trigger_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vtrigger_,_hw_ad10a_trigger_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | acmp0 | int0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
 
 #define _hwa_cfad10a_vtrigger_1(o,v,k,...)			\
-  _hwa_write_or(o,ate, HW_A1(_hw_ad10a_trigger_##v));		\
-  _hwa_write_or(o,ts, HW_A2(_hw_ad10a_trigger_##v));		\
-  HW_Y(_hwa_cfad10a_kvref,_hw_is_vref_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o,ate, HW_A1(_hw_ad10a_trigger_##v));		\
+  _hwa_write(o,ts, HW_A2(_hw_ad10a_trigger_##v));		\
+  HW_Y(_hwa_cfad10a_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10a_trigger_manual	, 0, 0	/* , ate, ts */
 #define _hw_ad10a_trigger_auto		, 1, 0
@@ -162,14 +162,14 @@
   HW_E_VL(k,vref)
 
 #define _hwa_cfad10a_kvref_1(o,k,v,...)					\
-  HW_Y(_hwa_cfad10a_vvref,_hw_ad10a_vref_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vvref_,_hw_ad10a_vref_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vvref_0(o,v,...)				\
   HW_E_AVL(vref, v, vcc | pin_aref | bandgap)
 
 #define _hwa_cfad10a_vvref_1(o,v,k,...)			\
-  _hwa_write_or(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
-  HW_Y(_hwa_cfad10a_kalign,_hw_is_align_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o,refs, HW_A1(_hw_ad10a_vref_##v));	\
+  HW_Y(_hwa_cfad10a_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10a_vref_vcc		, 0	/* , refs */
 #define _hw_ad10a_vref_pin_aref		, 1
@@ -178,16 +178,16 @@
 /*  Optionnal parameter `align`
  */
 #define _hwa_cfad10a_kalign_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10a_valign,_hw_ad10a_align_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_valign_,_hw_ad10a_align_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_valign_0(o,v,...)				\
   HW_E_OAVL(align, v, left | right)
 #define _hwa_cfad10a_valign_1(o,v,k,...)				\
-  _hwa_write_or(o,lar, HW_A1(_hw_ad10a_align_##v));			\
-  HW_Y(_hwa_cfad10a_kpolarity,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o,lar, HW_A1(_hw_ad10a_align_##v));			\
+  HW_Y(_hwa_cfad10a_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_kalign_0(o,k,...)					\
-  HW_Y(_hwa_cfad10a_kpolarity,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10a_align_left		, 1	/* , lar */
 #define _hw_ad10a_align_right		, 0
@@ -195,17 +195,17 @@
 /*  Optionnal parameter `polarity`
  */
 #define _hwa_cfad10a_kpolarity_1(o,k,v,...)				\
-  HW_Y(_hwa_cfad10a_vpolarity,_hw_ad10a_polarity_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vpolarity_,_hw_ad10a_polarity_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpolarity_0(o,v,...)				\
   HW_E_OAVL(polarity, v, unipolar | bipolar)
 
 #define _hwa_cfad10a_vpolarity_1(o,v,k,...)			\
-  _hwa_write_or(o,bin, HW_A1(_hw_ad10a_polarity_##vpolarity));	\
-  HW_Y(_hwa_cfad10a_kgain,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+  _hwa_write(o,bin, HW_A1(_hw_ad10a_polarity_##vpolarity));	\
+  HW_Y(_hwa_cfad10a_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfad10a_kpolarity_0(o,k,...)			\
-  HW_Y(_hwa_cfad10a_kgain,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ad10a_polarity_unipolar	, 0	/* , bin */
 #define _hw_ad10a_polarity_bipolar	, 1
@@ -219,29 +219,29 @@
   HW_G2(_hwa_cfad10a_kpositive_input,HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfad10a_kgain_0(o,k,...)				\
-  HW_Y(_hwa_cfad10a_kinput,_hw_is_input_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `input` -> single-end mode, end of list
  */
 #define _hwa_cfad10a_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10a_input_##v)) )				\
-    _hwa_write_or(o,mux, HW_A1(_hw_ad10a_input_##v,0));		\
+    _hwa_write(o,mux, HW_A1(_hw_ad10a_input_##v,0));		\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc0) ) )		\
-    _hwa_write_or(o,mux, 0);						\
+    _hwa_write(o,mux, 0);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc1) ) )		\
-    _hwa_write_or(o,mux, 1);						\
+    _hwa_write(o,mux, 1);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc2) ) )		\
-    _hwa_write_or(o,mux, 2);						\
+    _hwa_write(o,mux, 2);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc3) ) )		\
-    _hwa_write_or(o,mux, 3);						\
+    _hwa_write(o,mux, 3);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc4) ) )		\
-    _hwa_write_or(o,mux, 4);						\
+    _hwa_write(o,mux, 4);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc5) ) )		\
-    _hwa_write_or(o,mux, 5);						\
+    _hwa_write(o,mux, 5);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc6) ) )		\
-    _hwa_write_or(o,mux, 6);						\
+    _hwa_write(o,mux, 6);						\
   else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc7) ) )		\
-    _hwa_write_or(o,mux, 7);						\
+    _hwa_write(o,mux, 7);						\
   else									\
     HWA_ERR("`input` can be `HW_PIN(adc0..7)` (or synonyms), "		\
 	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
@@ -261,7 +261,7 @@
   HW_E_VL(k,input | positive_input)
 
 #define _hwa_cfad10a_kpositive_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfad10a_vpositive_input,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vpositive_input_,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vpositive_input_0(o,v,...)				\
   HW_E_AVL(`positive_input`, v, 'HW_PIN(adc0..7)' or synonyms)
@@ -273,14 +273,14 @@
   HW_E_VL(k,negative_input)
 
 #define _hwa_cfad10a_knegative_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfad10a_vnegative_input,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfad10a_vnegative_input_,_hw_ad10a_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfad10a_vnegative_input_0(o,v,...)		\
   HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..7)' or synonyms)
 
 #define _hwa_cfad10a_vnegative_input_1(o,v,...)				\
   uint8_t negative_input = HW_A1(_hw_ad10a_input_##v);			\
-  _hwa_write_or(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )); \
+  _hwa_write(o,mux,_hwa_ad10a_compute_mux( positive_input, negative_input, gain )); \
   HW_EOL(__VA_ARGS__)
 
 
@@ -364,8 +364,8 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /*  Power management
  */
-#define _hw_mtd_hw_power__ad10a		, _hw_power
-#define _hw_mtd_hwa_power__ad10a	, _hwa_power
+#define hw_power__ad10a		, _hw_power
+#define hwa_power__ad10a	, _hwa_power
 
 
 /**
@@ -382,7 +382,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mtd_hw_turn__ad10a		, _hw_turn_ad10_
+#define hw_turn__ad10a		, _hw_turn_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -390,7 +390,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define _hw_mtd_hwa_turn__ad10a	, _hwa_turn_ad10_
+#define hwa_turn__ad10a	, _hwa_turn_ad10_
 
 
 /**
@@ -401,7 +401,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( trigger, adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_trigger__ad10a	, _hw_trigger_ad10_
+#define hw_trigger__ad10a	, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -410,7 +410,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define _hw_mtd_hwa_trigger__ad10a	, _hwa_trigger_ad10_
+#define hwa_trigger__ad10a	, _hwa_trigger_ad10_
 
 
 /**
@@ -426,7 +426,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint8_t adc = hw( read, adc0, lo8 | hi8 );
  * @endcode
  */
-#define _hw_mtd_hw_read__ad10a		, _hw_rdad10_
+#define hw_read__ad10a		, _hw_rdad10_
 
 
 /**
@@ -439,7 +439,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_atomic_read__ad10a	, _hw_ardad10_
+#define hw_atomic_read__ad10a	, _hw_ardad10_
 
 
 /**
@@ -450,8 +450,8 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *
  * @code
  * hw( trigger, adc0 );
- * while ( !hw( read, HW_IRQFLAG(adc0) ) ) {}
- * hw( clear, HW_IRQFLAG(adc0) );
+ * while ( !hw( read, irqflag(adc0) ) ) {}
+ * hw( clear, irqflag(adc0) );
  * uint16_t result = hw( read, adc0 );
  * @endcode
  *
@@ -465,7 +465,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *   hw_trigger( adc0 );
  * @endcode
  */
-#define _hw_mtd_hw_stat__ad10a		, _hw_stat_ad10_
+#define hw_stat__ad10a		, _hw_stat_ad10_
 
 
 /*******************************************************************************

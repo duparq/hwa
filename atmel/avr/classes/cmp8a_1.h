@@ -15,9 +15,9 @@
  * A class `_cmp8a` object is an 8-bit compare unit with waveform generator. It
  * has the following relative objects:
  *
- *  * one counter, whose name is given by `HW_RELATIVE( compare0, counter )`
+ *  * one counter, whose name is given by `( compare0, counter )`
  *
- *  * one output pin, whose name is given by `HW_RELATIVE( compare0, pin )`
+ *  * one output pin, whose name is given by `( compare0, pin )`
  *
  * It is used in:
  *
@@ -25,7 +25,7 @@
  * * @ref attinyx5 : `counter0compare0`, `counter0compare1`
  * * @ref atmegax8 : `counter0compare0`, `counter0compare1`, `counter2compare0`, `counter2compare1`
  */
-#define _hw_class__cmp8a
+#define hw_class__cmp8a
 
 
 /**
@@ -41,8 +41,8 @@
  * #endif
  * @endcode
  */
-#define _hw_mtd_HW_BITS__cmp8a		, _hw_bn_cmp8a
-#define _hw_bn_cmp8a(o,i,a,...)			8
+#define HW_BITS__cmp8a			, _hw_bits_cmp8a
+#define _hw_bits_cmp8a(...)		8
 
 
 /**

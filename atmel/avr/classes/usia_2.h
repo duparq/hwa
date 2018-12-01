@@ -33,7 +33,7 @@
  *      );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__usia	, _hwa_cfusia
+#define hwa_configure__usia	, _hwa_cfusia
 
 #define _hw_usia_mode_disconnected	, 1
 #define _hw_usia_mode_spi_master	, 2
@@ -51,20 +51,20 @@
 #define _hwa_cfusia(o,i,a,k,...)					\
   do {									\
     uint8_t mode, clock ;						\
-    HW_Y(_hwa_cfusia_kmode,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
+    HW_Y(_hwa_cfusia_kmode_,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
       } while(0)
 #define _hwa_cfusia_kmode_0(o,k,...)	HW_E_VL(k, mode)
-#define _hwa_cfusia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfusia_vmode,_hw_usia_mode_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfusia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfusia_vmode_,_hw_usia_mode_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfusia_vmode_0(o,v,...)	HW_E_AVL(mode, v, spi_master | spi_slave)
 #define _hwa_cfusia_vmode_1(o,v,k,...)					\
   mode = HW_A1(_hw_usia_mode_##v);					\
-  HW_Y(_hwa_cfusia_kclock,_hw_is_clock_##k)(o,k,__VA_ARGS__)
+  HW_Y(_hwa_cfusia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfusia_kclock_0(o,k,...)	HW_E_VL(k, clock)
 
 /*	Mandatory argument `clock`
  */
-#define _hwa_cfusia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfusia_vclock,_hw_usia_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfusia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfusia_vclock_,_hw_usia_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | compare0 | external_rising | external_falling)
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\
@@ -76,16 +76,16 @@
     HWA_ERR("sorry, desired mode is not supported yet.");	\
   if ( clock != HW_A1(_hw_usia_clock_software) )		\
     HWA_ERR("sorry, desired clock mode is not supported yet.");	\
-  _hwa_write_or( o, wm, 1 );					\
-  _hwa_write_or( o, cs, 2 );					\
+  _hwa_write( o, wm, 1 );					\
+  _hwa_write( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
     _hwa( configure, HW_PIN(usck), mode, digital_output );		\
     _hwa( configure, HW_PIN(do),   mode, digital_output );		\
     _hwa( configure, HW_PIN(di),   mode, digital_input  );		\
-    _hwa_write_or( o, clk, 1 );				\
+    _hwa_write( o, clk, 1 );				\
   }								\
   else								\
-    _hwa_write_or( o, clk, 0 );
+    _hwa_write( o, clk, 0 );
 
 
 /**
@@ -96,12 +96,12 @@
  * uint8_t byte = hw( read, usi0 );
  * @endcode
  */
-#define _hw_mtd_hw_read__usia		, _hw_rdusia
+#define hw_read__usia		, _hw_rdusia
 
 /*  FIXME: the datasheet advices using br instead of dr but does not tell at
  *  what moment br is valid. Reading br returns weird values...
  */
-#define _hw_rdusia(o,i,a,...)		 _hw_read_or( o, dr ) HW_EOL(__VA_ARGS__)
+#define _hw_rdusia(o,i,a,...)		 _hw_read( o, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -111,9 +111,9 @@
  * hw_write( usi0, 'A' );
  * @endcode
  */
-#define _hw_mtd_hw_write__usia		, _hw_wrusia
+#define hw_write__usia		, _hw_wrusia
 
-#define _hw_wrusia(o,i,a,v,...)		 _hw_write_or( o, dr, v ) HW_EOL(__VA_ARGS__)
+#define _hw_wrusia(o,i,a,v,...)		 _hw_write( o, dr, v ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -127,9 +127,9 @@
 
  /* FIXME: 2 types of clocking should be handled. Look at the datasheet. */
 
-#define _hw_mtd_hw_trigger__usia	, _hw_tgusia
+#define hw_trigger__usia	, _hw_tgusia
 
-#define _hw_tgusia(o,i,a,...)		 _hw_write_or(o,tc,1) HW_EOL(__VA_ARGS__)
+#define _hw_tgusia(o,i,a,...)		 _hw_write(o,tc,1) HW_EOL(__VA_ARGS__)
 
 
 
@@ -143,7 +143,7 @@
  * hw( configure, SPI );
  * @endcode
  */
-#define _hw_mtd_hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
+#define hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
 #define _hwa_cfspimswclk(p,i,o,...)		\
    _hwa_docfspimswclk(o) HW_EOL(__VA_ARGS__)
@@ -152,9 +152,9 @@
   do {							\
     _hwa( configure, _HW_PIN(o,ck), mode, digital_output );		\
     _hwa( configure, _HW_PIN(o,do), mode, digital_output );		\
-    _hwa_write_or( o, wm,  1 );			\
-    _hwa_write_or( o, cs,  2 );			\
-    _hwa_write_or( o, clk, 1 );			\
+    _hwa_write( o, wm,  1 );			\
+    _hwa_write( o, cs,  2 );			\
+    _hwa_write( o, clk, 1 );			\
   } while(0)
 
 
@@ -168,9 +168,9 @@
  * uint8_t byte = hw( read, SPI );
  * @endcode
  */
-#define _hw_mtd_hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
+#define hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
 
-#define _hw_rdspimswclk(o,i,usio,...)		 _hw_read_or( usio, dr ) HW_EOL(__VA_ARGS__)
+#define _hw_rdspimswclk(o,i,usio,...)		 _hw_read( usio, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -181,15 +181,15 @@
  * hw_write( spimaster0_swclk, 'A' );
  * @endcode
  */
-#define _hw_mtd_hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
+#define hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
 
 #define _hw_wrspimswclk(p,i,usin,v,...)		\
   do {						\
-    _hw_write_or(usin, dr, v );		\
-    _hw_write_or(usin, ifov, 1 );		\
+    _hw_write(usin, dr, v );		\
+    _hw_write(usin, ifov, 1 );		\
     do						\
-      _hw_write_or(usin, tc, 1);		\
-    while( _hw_read_or(usin, ifov) == 0 );	\
+      _hw_write(usin, tc, 1);		\
+    while( _hw_read(usin, ifov) == 0 );	\
   }while(0)					\
     HW_EOL( __VA_ARGS__ )
 
@@ -197,26 +197,26 @@
 
 /*	Configuration of USI as SPI master with counter0_overflow clock
  */
-#define _hw_mtd_hwa_configure_usia_spimaster_c0clk	, _hwa_cfspimc0clk
+#define hwa_configure_usia_spimaster_c0clk	, _hwa_cfspimc0clk
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
     _hwa( configure, HW_PIN(usck), mode, digital_output );	\
     _hwa( configure, HW_PIN(do),   mode, digital_output );	\
     _hwa( configure, HW_PIN(di),   mode, digital_input  );	\
-    _hwa_write_or( o, wm,  1 );			\
-    _hwa_write_or( o, cs,  1 );			\
-    _hwa_write_or( o, clk, 0 );			\
+    _hwa_write( o, wm,  1 );			\
+    _hwa_write( o, cs,  1 );			\
+    _hwa_write( o, clk, 0 );			\
   } while(0)
 
 
-#define _hw_mtd_hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
+#define hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
 #define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
-  _hw_write_or(##usin, dr, v )
+  _hw_write(##usin, dr, v )
 
 
-#define _hw_mtd_hw_read_usia_spimaster_c0clk	, _hw_read_usia
+#define hw_read_usia_spimaster_c0clk	, _hw_read_usia
 
 
 /*******************************************************************************
@@ -225,9 +225,9 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__usia(o,i,a)		_hwa_setup_or( o, cr )
-#define _hwa_init__usia(o,i,a)		_hwa_init_or( o, cr, 0x00 )
-#define _hwa_commit__usia(o,i,a)	_hwa_commit_or( o, cr )
+#define _hwa_setup__usia(o,i,a)		_hwa_setup_r( o, cr )
+#define _hwa_init__usia(o,i,a)		_hwa_init_r( o, cr, 0x00 )
+#define _hwa_commit__usia(o,i,a)	_hwa_commit_r( o, cr )
 
 /**
  * @page atmelavr_usia

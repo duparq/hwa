@@ -17,7 +17,7 @@
  * It is used in:
  *  * @ref esp8266
  */
-#define _hw_class__p16a
+#define hw_class__p16a
 
 
 #if !defined __ASSEMBLER__

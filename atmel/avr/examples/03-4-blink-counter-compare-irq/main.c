@@ -76,7 +76,7 @@ int main ( )
 
   /*  Enable compare IRQ
    */
-  hwa( turn, HW_IRQ(COUNTER, COMPARE), on );
+  hwa( turn, irq(COUNTER, COMPARE), on );
 
   /*  Write this configuration into the hardware
    */

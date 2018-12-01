@@ -50,9 +50,9 @@ int main ( )
        top,	  compare0 );
   
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2 );
+    hwa( write, (COUNTER, compare0), (uint8_t)(0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2) );
   else
-    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
+    hwa( write, (COUNTER, compare0), (uint8_t)(0.5 + 0.001 * HW_SYSHZ / CLKDIV) );
 
   /*  Write this configuration into the hardware
    */
@@ -60,8 +60,8 @@ int main ( )
 
   static uint8_t n ;
   for(;;) {
-    if ( hw( read, HW_IRQFLAG(COUNTER, overflow) ) ) {
-      hw( clear, HW_IRQFLAG(COUNTER, overflow) );
+    if ( hw( read, irqflag(COUNTER, overflow) ) ) {
+      hw( clear, irqflag(COUNTER, overflow) );
       n++ ;
       if ( n >= (uint8_t)(PERIOD / 2.0 / 0.001) ) {
 	n = 0 ;

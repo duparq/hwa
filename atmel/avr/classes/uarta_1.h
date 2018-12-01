@@ -18,7 +18,7 @@
  *
  *  * @ref atmegax8 : `uart0`
  */
-#define _hw_class__uarta
+#define hw_class__uarta
 
 
 #if !defined __ASSEMBLER__

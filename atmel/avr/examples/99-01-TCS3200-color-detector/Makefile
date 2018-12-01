@@ -9,7 +9,7 @@ SOURCES		=	main.c		\
 #	Configuration memorized / checked
 #
 CONFIG		=	HW_DEVICE			\
-			hw_syshz			\
+			HW_SYSHZ			\
 			hw_swuart0_pin_rxd		\
 			hw_swuart0_pin_txd		\
 			hw_swuart0_autosync		\

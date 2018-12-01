@@ -117,14 +117,14 @@ HW_ISR( COUNTER, overflow, non_interruptible )
     hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
       hw( write, (COUNTER,compare1), duty );
-      hw( turn, HW_IRQ(COUNTER,compare1), on );
+      hw( turn, irq(COUNTER,compare1), on );
     }
     else
-      hw( turn, HW_IRQ(COUNTER,compare1), off );
+      hw( turn, irq(COUNTER,compare1), off );
   }
   else {
     hw( write, PIN_LED, 0 );
-    hw( turn, HW_IRQ(COUNTER,compare1), off );
+    hw( turn, irq(COUNTER,compare1), off );
   }
 }
 
@@ -134,7 +134,7 @@ HW_ISR( COUNTER, overflow, non_interruptible )
  *  Note: if the address of the port register is < 0x40 (assembler 0x20) we can
  *  spare a few bytes and have a faster code using a naked ISR.
  */
-#if HW_ADDRESS(HW_REGISTER((PIN_LED,port),port)) < 0x40
+#if HW_ADDRESS((PIN_LED,port,port)) < 0x40
 HW_ISR( COUNTER, compare1, naked )
 {
   hw( write, PIN_LED, 0 );
@@ -194,7 +194,7 @@ int main ( )
        //	    overflow,  at_top,
        );
   hwa( write, (COUNTER, TOP_OBJ), COUNT_TOP );
-  hwa( turn, HW_IRQ(COUNTER,overflow), on );
+  hwa( turn, irq(COUNTER,overflow), on );
 
   /*  Configure the ADC to make a single conversion and trigger an
    *  IRQ. The ISR will start a new conversion after its hard job is done.
@@ -206,7 +206,7 @@ int main ( )
        align,	  right,
        input,	  PIN_ANALOG_INPUT );
   
-  hwa( turn, HW_IRQ(adc0), on );
+  hwa( turn, irq(adc0), on );
   hwa( trigger, adc0 );
 
   /*  Write this configuration into the hardware

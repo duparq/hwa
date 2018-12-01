@@ -9,15 +9,15 @@
  * @brief I/O (not connected).
  */
 
-#define _hw_mtd_hw_configure__io0a	, _hw_io0ax
-#define _hw_mtd_hw_read__io0a		, _hw_io0ax
-#define _hw_mtd_hw_write__io0a		, _hw_io0ax
-#define _hw_mtd_hw_toggle__io0a	, _hw_io0ax
+#define hw_configure__io0a	, _hw_io0ax
+#define hw_read__io0a		, _hw_io0ax
+#define hw_write__io0a		, _hw_io0ax
+#define hw_toggle__io0a	, _hw_io0ax
 
 #define _hw_io0ax( o, ... )		HW_E(pin `o` is not connected)
 
-#define _hw_mtd_hwa_configure__io0a	, _hwa_io0ax
-#define _hw_mtd_hwa_write__io0a	, _hwa_io0ax
+#define hwa_configure__io0a	, _hwa_io0ax
+#define hwa_write__io0a	, _hwa_io0ax
 
 #define _hwa_io0ax( o, ... )		HWA_ERR("`" #o "` is not connected.")
 

@@ -18,7 +18,7 @@
  *
  *  * @ref esp8266 : `uart0` and `uart1`
  */
-#define _hw_class__uarta
+#define hw_class__uarta
 
 
 #if !defined __ASSEMBLER__

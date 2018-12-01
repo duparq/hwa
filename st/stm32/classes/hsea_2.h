@@ -39,10 +39,8 @@ typedef struct {
     unsigned int _18_31 : 14 ;
 } _hw_sthse_t ;
 
-#define _hw_mtd_hw_stat_t_hse		, _hw_stthse
+#define hw_stat_t__hsea			, _hw_stthse
 #define _hw_stthse(o,i,a,...)		 _hw_sthse_t HW_EOL(__VA_ARGS__)
 
-#define _hw_mtd_hw_stat_hse		, _hw_sthse
-#define _hw_sthse(i,a,g,...)		HW_Y(_hw_sthse1,g)(g)
-#define _hw_sthse1_0(g)			HW_E_G(g)
-#define _hw_sthse1_1(g)			(*(volatile _hw_sthse_t*)_HW_A(_HW_R(rcc,cr)))
+#define hw_stat__hsea			, _hw_sthse
+#define _hw_sthse(o,i,a,...)		(*(volatile _hw_sthse_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)

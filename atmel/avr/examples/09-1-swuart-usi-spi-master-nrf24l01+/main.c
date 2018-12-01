@@ -77,12 +77,12 @@ HW_ERROR(device `HW_DEVICE` does not have a USI)
 static void write_usi ( char c )
 {
   hw( write, USI, c );
-  hw( clear, HW_IRQFLAG(USI,txc) );
+  hw( clear, irqflag(USI,txc) );
   do {
     hw( trigger, USI );
     // hw_waste_cycles( 50e-6 * HW_SYSHZ );
   }
-  while ( !hw( read, HW_IRQFLAG(USI,txc) ) );
+  while ( !hw( read, irqflag(USI,txc) ) );
 }
 
 
