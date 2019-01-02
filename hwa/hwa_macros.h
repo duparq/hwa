@@ -34,40 +34,48 @@
 #  define _HW_E3(s)		_xPragma(#s)
 #endif
 
-#define HW_E_O(x)		HW_E(`x` is not an object)
-#define HW_EM_O(x)		HW_QUOTE(`x` is not an object)
-#define HW_E_P(x)		HW_E(`x` is not a pin)
+#define HW_E_O(x)		HW_E(HW_Q(x) is not an object)
+#define HW_EM_O(x)		HW_Q(x) is not an object
+#define HW_E_P(x)		HW_E(HW_Q(x) is not a pin)
 #define HW_E_OM()		HW_E(missing object name)
-#define HW_E_T(x)		HW_E(unrecognized token `x`)
+#define HW_E_T(x)		HW_E(unrecognized token HW_Q(x))
 #define HW_E_V()		HW_E(missing value)
-#define HW_E_G(x)		HW_E(garbage starting at `x`)
-#define HW_EM_G(x)		HW_QUOTE(garbage starting at `x`)
-#define HW_E_K(k,x)		HW_E(expected `k` instead of `x`)
+#define HW_E_G(x)		HW_E(garbage starting at HW_Q(x))
+#define HW_EM_G(x)		HW_QUOTE(garbage starting at HW_Q(x))
+#define HW_E_K(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
+
+#define HW_E_KX(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
+#define HW_EM_KX(k,x)		expected HW_Q(k) instead of HW_Q(x)
+#define HW_EM_NKX(n,k,x)	expected HW_Q(k) instead of HW_Q(x) in HW_Q(n)
+
+#define HW_EM_C(c)		HW_Q(c) is not a class
 
 #define HW_E_OCM(o,c,m)		HW_Y(_HW_EOCM_,c)(o,c,m)
-#define _HW_EOCM_0(o,c,m)	HW_E(object `o` of class `c` has no method named `m`)
+#define _HW_EOCM_0(o,c,m)	HW_E(object HW_Q(o) of class HW_Q(c) has no method named HW_Q(m))
 #define _HW_EOCM_1(...)
 
-#define HW_E_CM(c,m)		HW_E(class `c` has no method `m`)
-#define HW_E_ST(x)		HW_E(`x` is not in (on, off))
-#define HW_E_VL(v,l)		HW_E(`v` is not `l`)
-#define HW_E_AVM(a)		HW_E(missing value for `a`)
-#define HW_E_AVL(a,v,l)		HW_E(`a` can be `l` but not `v`)
-#define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter `a` can be `l` but not `v`)
-#define HW_E_OKVL(k,v,l)	HW_E(value `v` for optionnal parameter `k` is not l)
-#define HW_E_OKMV(k,v,l)	HW_E(value of optionnal parameter `k` must be `l` not `v`)
-#define HW_E_OO(o,x)		HW_E(object `o` has no relative named `x`)
-#define HW_EM_OO(o,x)		HW_QUOTE(`o` has no relative named `x`)
-#define HW_E_IOFN(o,a,v,l)	HW_E(`o`: `a` can be `l` but not `v`)
-#define HW_E_IMP(f)		HW_E(`f`: not implemented for this target)
+#define HW_E_CM(c,m)		HW_E(class HW_Q(c) has no method HW_Q(m))
+#define HW_EM_CM(c,m)		class HW_Q(c) has no method HW_Q(m)
+
+#define HW_E_ST(x)		HW_E(HW_Q(x) is not in (on, off))
+#define HW_E_VL(v,l)		HW_E(HW_Q(v) is not HW_Q(l))
+#define HW_E_AVM(a)		HW_E(missing value for HW_Q(a))
+#define HW_E_AVL(a,v,l)		HW_E(HW_Q(a) can be HW_Q(l) but not HW_Q(v))
+#define HW_E_OAVL(a,v,l)	HW_E(optionnal parameter HW_Q(a) can be HW_Q(l) but not HW_Q(v))
+#define HW_E_OKVL(k,v,l)	HW_E(value HW_Q(v) for optionnal parameter HW_Q(k) is not in l)
+#define HW_E_OKMV(k,v,l)	HW_E(value of optionnal parameter HW_Q(k) must be HW_Q(l) not HW_Q(v))
+#define HW_E_OO(o,x)		HW_E(object HW_Q(o) has no relative named HW_Q(x))
+#define HW_EM_OO(o,x)		HW_Q(o) has no relative named HW_Q(x)
+#define HW_E_IOFN(o,a,v,l)	HW_E(HW_Q(o): HW_Q(a) can be HW_Q(l) but not HW_Q(v))
+#define HW_E_IMP(f)		HW_E(HW_Q(f): not implemented for this target)
 #define HW_E_TBI(f)		HW_E(instruction is not implemented yet)
-#define HW_E_KVNIY(k,v)		HW_E(`k=v` is not implemented yet)
+#define HW_E_KVNIY(k,v)		HW_E(HW_Q(k=v) is not implemented yet)
 
-#define HW_E_ML(l)		HW_E(expected one argument in `l`)
-#define HW_E_NIL(v,l)		HW_E(`v` is not in `l`)
+#define HW_E_ML(l)		HW_E(expected one argument in HW_Q(l))
+#define HW_E_NIL(v,l)		HW_E(HW_Q(v) is not in l)
 
-#define HW_E_IRQ(n)		HW_E(`n` is not an IRQ)
-#define HW_EM_IRQ(n)		HW_QUOTE(`n` is not an IRQ)
+#define HW_E_IRQ(n)		HW_E(HW_Q(n) is not an IRQ)
+#define HW_EM_IRQ(n)		HW_Q(n) is not an IRQ
 
 #define HW_ERROR		HW_E
 
@@ -79,6 +87,9 @@
  */
 #define HW_A0(...)		_HW_A0_2(__VA_ARGS__,)
 #define _HW_A0_2(a0,...)	a0
+
+#define HW_A0_A1(...)		_HW_A0_A1_2(__VA_ARGS__,,)
+#define _HW_A0_A1_2(a0,a1,...)	a0,a1
 
 
 /*
@@ -101,13 +112,19 @@
 #define HW_A3(...)			_HW_A3_2(__VA_ARGS__,,,,)
 #define _HW_A3_2(a0,a1,a2,a3,...)	a3
 
+/* #define HW_A4(...)			_HW_A4_2(__VA_ARGS__,,,,,) */
+/* #define _HW_A4_2(a0,a1,a2,a3,a4,...)	a4 */
+
+/* #define HW_A5(...)			_HW_A5_2(__VA_ARGS__,,,,,,) */
+/* #define _HW_A5_2(a0,a1,a2,a3,a4,a5,...)	a5 */
+
 
 /*
  * @ingroup private_mac
  * @brief Elements a1,... of the list a0,a1,...
  * @hideinitializer
  */
-#define HW_TL(...)		_HW_TL2(__VA_ARGS__)
+#define HW_TL(...)		_HW_TL2(__VA_ARGS__,)
 #define _HW_TL2(a0,...)		__VA_ARGS__
 
 
@@ -128,6 +145,9 @@
 #define HW_G3(...)		_HW_G3_(__VA_ARGS__,,,)
 #define _HW_G3_(a,b,c,...)	a##_##b##_##c
 
+#define HW_G4(...)		_HW_G4_(__VA_ARGS__,,,,)
+#define _HW_G4_(a,b,c,d,...)	a##_##b##_##c##_##d
+
 
 /*
  * @ingroup private_mac
@@ -141,6 +161,12 @@
 #define HW_IS(...)		_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)	HW_A1(_hw_is_##x##_##y,0)
 
+/* #define HW_YIS(...)		_HW_YIS01(__VA_ARGS__,) */
+/* #define _HW_YIS01(f,x,y,...)	_HW_YIS02(f,x,y,_hw_isa_leftbkt y) */
+/* #define _HW_YIS02(...)		_HW_YIS03(__VA_ARGS__) */
+/* #define _HW_YIS03(f,x,y,z)	HW_Y0(_HW_YIS03_,z)(f,x,y) */
+/* #define _HW_YIS03_1(...)	0 */
+/* #define _HW_YIS03_0(f,x,y)	HW_Y0(f,_hw_is_##x##_##y) */
 
 /*
  * @ingroup private_mac
@@ -186,8 +212,8 @@
  * This is used to ensure that there is no remaining elements in a list at the
  * end of its parsing.
  */
-#define HW_EOL(...)		HW_Y(_HW_EOL_,__VA_ARGS__)(__VA_ARGS__)
-#define _HW_EOL_0(...)		HW_E_G(__VA_ARGS__)
+#define HW_EOL(...)		HW_Y(_HW_EOL_,__VA_ARGS__)(__VA_ARGS__,)
+#define _HW_EOL_0(g,...)	HW_E_G(g)
 #define _HW_EOL_1(...)
 
 
@@ -206,7 +232,7 @@
  * @ingroup public_mac
  * @brief Define an I/O
  * * `port` is the name of the port controller (`port0`, `port1`...). Notice that
-   it is not the port name (`porta`, `portb`...);
+ it is not the port name (`porta`, `portb`...);
  * * `number` is the number of consecutive bits;
  * * `position` is the position of the least significant bit.
  *
@@ -222,6 +248,11 @@
 #if defined DOXYGEN
 #  define HW_IO( port, number, position )
 #endif
+
+#define hw_class__io(...)
+
+#define HW_IO(...)		HW_F( HW_IO, __VA_ARGS__ )
+#define HW_IO_(c,o,e)		_io(_fake,o,e) HW_E(e)
 
 
 /**
@@ -299,7 +330,7 @@
 
 /*  Internal use only version
  */
-#define _hw(...)		__hw1(__VA_ARGS__,)
+#define _hw(...)		__hw1(__VA_ARGS__,,)
 #define __hw1(f,o,...)		__hw2(f,HW_X(o),__VA_ARGS__)
 #define __hw2(...)		__hw3(__VA_ARGS__)
 #define __hw3(f,c,...)		HW_Y(__hw4_,c)(f,c,__VA_ARGS__)
@@ -433,7 +464,7 @@
 #define _hw_uintt2_0(n)			HW_E_VL(n,8|16) uint8_t
 
 
-/* FIXME: HW_X does not find the relative. Need an extra expansion?
+/* FIXME: in the following, HW_X does not find the relative. Need an extra expansion?
  *
  * @ingroup public_ins
  * @brief Returns a register type
@@ -506,6 +537,44 @@
  * @hideinitializer
  */
 #define _HW_PIN(o,p)		HW_A1(_hw_pin_##o##_##p,)
+
+/* #define HW_NP(...)		_HW_NP01(HW_X(__VA_ARGS__)) */
+/* #define _HW_NP01(...)		_HW_NP02(__VA_ARGS__) */
+/* #define _HW_NP02(c,...)		HW_Y0(_HW_NP02_,c)(c,__VA_ARGS__) */
+/* #define _HW_NP02_1(c,o,e)	HW_E(e) */
+/* #define _HW_NP02_0(c,...)	HW_Y0(_HW_NP_,HW_NP_##c)(c,__VA_ARGS__) */
+/* #define _HW_NP_0(c,o,...)	HW_E_OCM(o,c,HW_NP) */
+/* #define _HW_NP_1(c,o,...)	HW_A1(HW_NP_##c)(o,__VA_ARGS__,) */
+
+
+/*  Declare interface functions for an object
+ */
+#define HW_INTERFACE(...)		HW_F(HW_INTERFACE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_INTERFACE_(o,e,...)		HW_E(e)
+
+/*  Implement interface functions for an object
+ */
+#define HW_IMPLEMENT(...)		HW_F(HW_IMPLEMENT,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_IMPLEMENT_(o,e,...)		HW_E(e)
+
+#define HW_IMPLEMENT_WEAK(...)		HW_F(HW_IMPLEMENT_WEAK,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_IMPLEMENT_WEAK_(o,e,...)	HW_E(e)
+
+
+/*  Return a function name of an object
+ */
+#define HW_FUNCTION(o,f)		HW_F(HW_FUNCTION,o,f)
+
+
+/*  Return the port name of a HW_IO
+ */
+#define HW_PORT(...)			_HW_PORT01(HW_X(__VA_ARGS__))
+#define _HW_PORT01(...)			_HW_PORT02(__VA_ARGS__)
+#define _HW_PORT02(c,...)		HW_Y0(_HW_PORT02_,c)(c,__VA_ARGS__)
+#define _HW_PORT02_1(c,o,e)		HW_E(e)
+#define _HW_PORT02_0(c,...)		HW_Y0(_HW_PORT_,HW_PORT_##c)(c,__VA_ARGS__)
+#define _HW_PORT_0(c,o,...)		HW_E_OCM(o,c,HW_PORT)
+#define _HW_PORT_1(c,o,...)		HW_A1(HW_PORT_##c)(o,__VA_ARGS__,)
 
 
 /**

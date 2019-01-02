@@ -72,5 +72,6 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 09-3-uart-spi-nrf24l01+"
 	EXAMPLES="${EXAMPLES} 10-1-acmp"
 	EXAMPLES="${EXAMPLES} 11-1-uart-twi-eeprom"
+	EXAMPLES="${EXAMPLES} 99-03-HD44780-PCF8574"
     fi
 }

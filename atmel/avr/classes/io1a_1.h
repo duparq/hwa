@@ -55,6 +55,15 @@
 #define HW_POSITION__io1a			, _hw_position_io1a
 #define _hw_position_io1a(o,i,p,bn,bp,...)	bp
 
+
 /*  Port name of a pin
  */
 #define _hw_rel__io1a_port(o,d)			HW_A1 d
+
+
+/*  Handle definitions such as HW_IO(pb1)
+ */
+#define hw_class__io1a_io
+
+#define HW_IO__io1a			, _hw_io_io1a
+#define _hw_io_io1a(o,i,p,bn,bp,...)	io(HW_A0(hw_##p),p##_##bn##_##bp,-1,p,bn,bp)

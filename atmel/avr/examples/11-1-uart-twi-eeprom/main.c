@@ -101,7 +101,7 @@ ioinit_o(void)
        bps,	    9600,
        receiver,    disabled,
        transmitter, enabled  );
-  hwa( configure, TWI, sclhz, 100000 );
+  hwa( configure, TWI, bps, 100000 );
   hwa_commit();
 }
 
@@ -205,7 +205,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #ifdef WORD_ADDRESS_16BIT
 
-  hw( bus_data, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
+  hw( bus_write, TWI, eeaddr >> 8 );	/* highest 8 bits of addr */
   while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -224,7 +224,7 @@ ee24xx_read_bytes(uint16_t eeaddr, int len, uint8_t *buf)
 
 #endif
 
-  hw( bus_data, TWI, eeaddr );		/* lowest 8 bits of addr */
+  hw( bus_write, TWI, eeaddr );		/* lowest 8 bits of addr */
   while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -395,7 +395,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 
 #ifdef WORD_ADDRESS_16BIT
-  hw( bus_data, TWI, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
+  hw( bus_write, TWI, eeaddr>>8 );	/* 16 bit word address device, send high 8 bits of addr */
   while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -413,7 +413,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
     }
 #endif
 
-  hw( bus_data, TWI, eeaddr );		/* low 8 bits of addr */
+  hw( bus_write, TWI, eeaddr );		/* low 8 bits of addr */
   while( !hw(read, irqflag(TWI)) ) {}   /* wait for transmission */
   switch( (twst=hw(stat,TWI)) )
     {
@@ -433,7 +433,7 @@ ee24xx_write_page(uint16_t eeaddr, int len, uint8_t *buf)
 
   for ( ; len>0 ; len-- ) {
 
-    hw( bus_data, TWI, (*buf++) );
+    hw( bus_write, TWI, (*buf++) );
 
     while( !hw(read, irqflag(TWI)) ) {} /* wait for transmission */
     switch( (twst=hw(stat,TWI)) )

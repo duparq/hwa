@@ -79,14 +79,15 @@
 #define _hwx_cfio1a_di(x,o,p,bn,bp,k,...)	x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dif(x,o,p,bn,bp,k,...)				\
-  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_m(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
+  do{ x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+    x##_write_m(p,port,((1U<<bn)-1)<<bp, 0 ); }while(0) HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_dipu(x,o,p,bn,bp,k,...)				\
-  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-  x##_write_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
+  do{ x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+    x##_write_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); }while(0) HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)	x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)				\
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp) HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
@@ -96,10 +97,9 @@
 
 #define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)			\
-  x( write, (o,did), 1);					\
-  x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp);	\
-  HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)				\
+  do { x( write, (o,did), 1);						\
+    x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); }while(0) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -111,9 +111,8 @@
  * uint8_t value = hw( read, pa0 );
  * @endcode
  */
-#define _hw_read_io1a(o,i, p,bn,bp,...)				\
-  ((_hw_read(p, pin) & (((1<<bn)-1)<<bp))>>bp)		\
-  HW_EOL(__VA_ARGS__)
+#define _hw_read_io1a(o,i, p,bn,bp,...)					\
+  ((_hw_read(p, pin) & (((1<<bn)-1)<<bp))>>bp) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -125,13 +124,11 @@
  * hw | hwa( write, pa0, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)		\
-  _hw_write_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp)	\
-  HW_EOL(__VA_ARGS__)
+#define _hw_write_io1a(o,i, p,bn,bp, v,...)				\
+  _hw_write_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
 
-#define _hwa_write_io1a(o,i, p,bn,bp, v, ...)		\
-  _hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v)	\
-  HW_EOL(__VA_ARGS__)
+#define _hwa_write_io1a(o,i, p,bn,bp, v, ...)				\
+  _hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v) HW_EOL(__VA_ARGS__)
 
 
 /**

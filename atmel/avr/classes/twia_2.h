@@ -24,7 +24,7 @@
  *
  *	      //  scl speed
  *	      //
- *	    [ sclhz,		    <value>, ]
+ *	    [ bps,		    <value>, ]
  *
  *	    [ slave_address,	    <value>, ]
  *
@@ -36,27 +36,27 @@
  *	    );
  * @endcode
  */
-#define hw_configure__twia	, _hw_cftwia
+#define hw_configure__twia		, _hw_cftwia
 #define _hw_cftwia( o,i,a, ... )	_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
-#define hwa_configure__twia	, _hwa_cftwia
+#define hwa_configure__twia		, _hwa_cftwia
 #define _hwa_cftwia( o,i,a, ... )	_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 
-/*	Optionnal argument `sclhz`
+/*	Optionnal argument `bps`
  */
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
     /*	The 'TWEN' bit that makes the TWI take control of the */	\
     /*  I/O pins is set by the 'bus_' actions */			\
-    HW_Y(_hwx_cftwia_ksclhz_,_hw_is_sclhz_##k)(x,o,k,__VA_ARGS__);	\
+    HW_Y(_hwx_cftwia_kbps_,_hw_is_bps_##k)(x,o,k,__VA_ARGS__);		\
   } while(0)
 
-#define _hwx_cftwia_ksclhz_1(x,o,k,v,...)			\
-  HW_Y(_hwx_cftwia_vsclhz_,v)(x,o,v,__VA_ARGS__)
+#define _hwx_cftwia_kbps_1(x,o,k,v,...)		\
+  HW_Y(_hwx_cftwia_vbps_,v)(x,o,v,__VA_ARGS__)
 
-#define _hwx_cftwia_vsclhz_1(x,o,v,...)		HW_E_VM(sclhz)
+#define _hwx_cftwia_vbps_1(x,o,v,...)		HW_E_VM(bps)
 
-#define _hwx_cftwia_vsclhz_0(x,o,v,k,...)				\
+#define _hwx_cftwia_vbps_0(x,o,v,k,...)					\
   uint32_t br=0, psc=0, pscreg=0 ;					\
   float brpsc = ((1.0*HW_SYSHZ / v)-16)/2 ;				\
   if ( brpsc < 256 ) {							\
@@ -64,7 +64,7 @@
     pscreg = 0 ;							\
     br = (uint32_t)(0.5 + brpsc) ;					\
     if ( brpsc < 1 && HW_SYSHZ != v*(16+2*psc*br) )			\
-      HWA_ERR("can not find a configuration for `sclhz = " #v "`.");	\
+      HWA_ERR("can not find a configuration for `bps = " #v "`.");	\
   } else if ( brpsc < 4*256 ) {						\
     psc = 4 ;								\
     pscreg = 1 ;							\
@@ -78,17 +78,17 @@
     pscreg = 3 ;							\
     br = (uint32_t)(0.5 + brpsc/64) ;					\
   } else								\
-    HWA_ERR("value of `sclhz` is too low.");				\
-  x##_write( o, psc, pscreg );					\
+    HWA_ERR("value of `bps` is too low.");				\
+  x##_write( o, psc, pscreg );						\
   x##_write( o, br, br );						\
   HW_G2(_hwx_cftwia_ksladdr,HW_IS(slave_address,k))(x,o,k,__VA_ARGS__)
 
-#define _hwx_cftwia_ksclhz_0(x,o,k,...)					\
+#define _hwx_cftwia_kbps_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_ksladdr,HW_IS(slave_address,k))(x,o,k,__VA_ARGS__)
 
 /*	Optionnal argument `slave_address`
  */
-#define _hwx_cftwia_ksladdr_1(x,o,k,v,...)			\
+#define _hwx_cftwia_ksladdr_1(x,o,k,v,...)		\
   HW_Y(_hwx_cftwia_vsladdr_,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vsladdr_1(x,o,v,...)	HW_E_VM(slave_address)
@@ -104,22 +104,22 @@
 
 /*	Optionnal argument `general_call`
  */
-#define _hwx_cftwia_kgcall_1(x,o,k,v,...)				\
+#define _hwx_cftwia_kgcall_1(x,o,k,v,...)			\
   HW_Y(_hwx_cftwia_vgcall_,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
-#define _hwx_cftwia_vgcall_0(x,o,v,...)					\
+#define _hwx_cftwia_vgcall_0(x,o,v,...)		\
   HW_E_AVL(general_call, v, enabled | disabled)
 
 #define _hwx_cftwia_vgcall_1(x,o,v,k,...)				\
   x##_write( o, gce, HW_A1(_hw_state_##v );				\
-		 HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
+  HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
 #define _hwx_cftwia_kgcall_0(x,o,k,...)					\
   HW_G2(_hwx_cftwia_kslam,HW_IS(slave_address_mask,k))(x,o,k,__VA_ARGS__)
 
 /*	Optionnal argument `slave_address_mask`
  */
-#define _hwx_cftwia_kslam_1(x,o,k,v,...)			\
+#define _hwx_cftwia_kslam_1(x,o,k,v,...)	\
   HW_Y(_hwx_cftwia_vslam_,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vslam_1(x,o,v,...)		HW_E_VM(slave_address_mask)
@@ -127,7 +127,7 @@
 #define _hwx_cftwia_vslam_0(x,o,v,...)					\
   if ( v < 0 || v > 127 )						\
     HWA_ERR("value of `slave_address_mask` must be in the range 0..127."); \
-   x##_write( o, slam, v ) HW_EOL(__VA_ARGS__)
+  x##_write( o, slam, v ) HW_EOL(__VA_ARGS__)
 
 #define _hwx_cftwia_kslam_0(x,o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -145,8 +145,8 @@
  * hwa( turn, twi0, on | off );
  * @endcode
  */
-#define hw_turn__twia		, _hw_tntwia_
-#define hwa_turn__twia		, _hwa_tntwia_
+#define hw_turn__twia			, _hw_tntwia_
+#define hwa_turn__twia			, _hwa_tntwia_
 
 #define _hw_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 #define _hwa_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
@@ -169,7 +169,7 @@
  * hw( bus_slar,  twi0, SLA [,irq] );         // Transmit SLA slave address + read bit
  * @endcode
  * @code
- * hw( bus_data,  twi0, DATA [,irq] );        // Transmit DATA
+ * hw( bus_write,  twi0, DATA [,irq] );        // Transmit DATA
  * @endcode
  * @code
  * hw( bus_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
@@ -189,58 +189,58 @@
  * rewrite it as `(*ptr)` or use a temporary, as the preprocessor can not
  * process the `*` character.
  */
-#define hw_bus_start__twia	, _hw_twia_txstart
+#define hw_bus_start__twia		, _hw_twia_txstart
 #define _hw_twia_txstart(o,i,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
-#define hw_bus_stop__twia	, _hw_twia_txstop
+#define hw_bus_stop__twia		, _hw_twia_txstop
 #define _hw_twia_txstop(o,i,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
-#define hw_bus_slaw__twia	, _hw_twia_txslaw
+#define hw_bus_slaw__twia		, _hw_twia_txslaw
 #define _hw_twia_txslaw(o,i,a,...)	HW_Y(_hw_twia_txslawv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
-#define _hw_twia_txslawv_0(o,v,k,...)					\
-  do {									\
-    if ( ((uint8_t)(v)) > 127 )						\
-      HWA_ERR("slave address must be in the range 0..127.");		\
+#define _hw_twia_txslawv_0(o,v,k,...)				\
+  do {								\
+    if ( ((uint8_t)(v)) > 127 )					\
+      HWA_ERR("slave address must be in the range 0..127.");	\
     _hw_write(o,dr,((v)<<1)+0);					\
-    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
+    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
-#define hw_bus_slar__twia	, _hw_twia_txslar
+#define hw_bus_slar__twia		, _hw_twia_txslar
 #define _hw_twia_txslar(o,i,a,...)	HW_Y(_hw_twia_vtxslar_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
-#define _hw_twia_vtxslar_0(o,v,k,...)					\
-  do {									\
-    if ( ((uint8_t)(v)) > 127 )						\
-      HWA_ERR("slave address must be in the range 0..127.");		\
+#define _hw_twia_vtxslar_0(o,v,k,...)				\
+  do {								\
+    if ( ((uint8_t)(v)) > 127 )					\
+      HWA_ERR("slave address must be in the range 0..127.");	\
     _hw_write(o,dr,((v)<<1)+1);					\
-    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);		\
+    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
-#define hw_bus_data__twia	, _hw_twia_txdata
-#define _hw_twia_txdata(o,i,a,...)	HW_Y(_hw_twia_txdatav_,__VA_ARGS__)(o,__VA_ARGS__)
-#define _hw_twia_txdatav_1(...)		HW_E(missing value)
-#define _hw_twia_txdatav_0(o,v,k,...)					\
+#define hw_bus_write__twia		, _hw_twiawr
+#define _hw_twiawr(o,i,a,...)		HW_Y(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twiawrv_1(...)		HW_E(missing value)
+#define _hw_twiawrv_0(o,v,k,...)					\
   do {									\
-    _hw_write(o,dr,v);						\
+    _hw_write(o,dr,v);							\
     HW_Y(_hw_twia_txend_,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
-#define hw_bus_read__twia	, _hw_twia_txread
-#define _hw_twia_txread(o,i,a,k,...)	HW_Y(_hw_twia_txread_ack_,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
-#define _hw_twia_txread_ack_1(o,ok,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
-#define _hw_twia_txread_ack_0(o,k,...)	HW_Y(_hw_twia_txread_nack_,_hw_is_nack_##k)(o,k,__VA_ARGS__)
-#define _hw_twia_txread_nack_1(o,ok,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
-#define _hw_twia_txread_nack_0(o,k,...)	HW_E_VL(k, ack | nack)
+#define hw_bus_read__twia		, _hw_twiard
+#define _hw_twiard(o,i,a,k,...)		HW_Y0(_hw_twiard_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
+#define _hw_twiard_ack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
+#define _hw_twiard_ack0(o,k,...)	HW_Y0(_hw_twiard_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
+#define _hw_twiard_nack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
+#define _hw_twiard_nack0(o,k,...)	HW_E_VL(k, ack | nack)
 
 
-#define _hw_twia_txend_0(o,v,...)	 _hw_write(o,cr,_hw_twia_cr_##v) HW_EOL(__VA_ARGS__)
-#define _hw_twia_txend_1(o,v,k,...)	 _hw_write(o,cr,_hw_twia_cr_##v##ie) HW_EOL(__VA_ARGS__)
+#define _hw_twia_txend_0(o,v,...)	_hw_write(o,cr,_hw_twia_cr_##v) HW_EOL(__VA_ARGS__)
+#define _hw_twia_txend_1(o,v,...)	_hw_write(o,cr,_hw_twia_cr_##v##ie) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -251,7 +251,7 @@
  * uint8_t byte = hw( read, twi0 );
  * @endcode
  */
-#define hw_read__twia		, _hw_rdtwia
+#define hw_read__twia			, _hw_rdtwia
 #define _hw_rdtwia(o,i,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
@@ -271,7 +271,7 @@
  *
  * Predefined TWI status symbols are:
  */
-#define hw_stat__twia		, _hw_stat_twia
+#define hw_stat__twia			, _hw_stat_twia
 #define _hw_stat_twia(o,i,a,...)	(_hw_read(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
 
 
@@ -490,7 +490,48 @@
  */
 
 
-/**
- * @page atmelavr_twia
- * <br>
- */
+/*******************************************************************************
+ *									       *
+ *	Implementation							       *
+ *									       *
+ *******************************************************************************/
+
+#define HW_INTERFACE__twia		, _hw_interface_twia
+
+#define _hw_interface_twia(o,i,a,...)				\
+								\
+  HW_EOL(__VA_ARGS__)						\
+								\
+  void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v );	\
+  uint8_t _hw_##o##_start_read_stop ( uint8_t sla );
+
+
+#define HW_IMPLEMENT__twia		, _hw_implement_twia
+
+#define _hw_implement_twia(o,i,a,...)				\
+								\
+  HW_EOL(__VA_ARGS__)						\
+								\
+  void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v )	\
+  {								\
+    hw( bus_start, o );						\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_slaw, o, sla & 0x7F );				\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_write, o, v );					\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_stop, o );						\
+  }								\
+								\
+  uint8_t _hw_##o##_start_read_stop ( uint8_t sla )		\
+  {								\
+    hw( bus_start, o );						\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_slaw, o, sla & 0x7F );				\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_read, o, nack );					\
+    while( !hw(read, irqflag(o)) ) {}				\
+    hw( bus_stop, o );						\
+								\
+    return hw( read, o );					\
+  }

@@ -8,15 +8,17 @@
  *  See HW_X() below.
  */
 
+
 /*
  * @brief Returns the standard definition of o: c,o,(...)
- * Returns ,o,"error message" if o is not an object.
+ * Insert the name of the object, o, into the definition.
+ * Return ,o,"error message" if o is not an object.
  */
 #define HW_XO(o)			_HW_XO01(o,hw_##o)
 #define _HW_XO01(...)			_HW_XO02(__VA_ARGS__)
 #define _HW_XO02(o,...)			HW_Y0(_HW_XO02_,hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _HW_XO02_1(o,c,...)		c,o,(__VA_ARGS__)
-#define _HW_XO02_0(o,x)			,o,HW_EM_O(o)
+#define _HW_XO02_0(o,...)		,o,HW_EM_O(o)
+#define _HW_XO02_1(o,c,...)		c,o,(__VA_ARGS__) // brackets
 
 
 /*
@@ -35,7 +37,9 @@
 #define _HW_OR00_1(o,...)		HW_XO(o)
 #define _HW_OR00_0(o,r)			_HW_OR01(o,r,hw_##o##_##r)
 #define _HW_OR01(...)			_HW_OR02(__VA_ARGS__)
-#define _HW_OR02(o,r,x)			_HW_OR03(o,r,HW_XO(x))
+#define _HW_OR02(o,r,...)		HW_Y0(_HW_OR02_,hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
+#define _HW_OR02_1(o,r,c,...)		c,o,(__VA_ARGS__)
+#define _HW_OR02_0(o,r,x)		_HW_OR03(o,r,HW_XO(x))
 #define _HW_OR03(...)			_HW_OR04(__VA_ARGS__)
 #define _HW_OR04(o,r,c,...)		HW_Y0(_HW_OR04_,c)(o,r,c,__VA_ARGS__)
 #define _HW_OR04_0(o,r,...)		__VA_ARGS__
@@ -191,12 +195,10 @@
  *   * an IRQ: `irq(o [,r])`, `irq((o,...) [,r])`
  *   * an IRQ flag: `irqflag(o [,r])`, `irqflag((o,...) [,r])`
  *   * an IRQ mask: `irqmask(o [,r])`, `irqmask((o,...) [,r])`
- *   * a user defined IO: `HW_IO(port,nbits,position)`
- *   * a pin: `pin(o,name)`, `pin((o,...),name)`
  *
- * A triplet `c,o,...` is always returned with the name of the object in o. If
- * an error occurs, no error is triggered but the class c is set void and the
- * error message is stored after the object name.
+ * A list `c,o,...` is always returned with the class in first position followed
+ * by the name of the object. If an error occurs, no error is triggered but the
+ * class c is set void and the error message is stored in third position..
  */
 #define HW_X(...)			HW_Y0(_HW_X00_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
 #define _HW_X00_1(...)			_HW_X90( HW_XP __VA_ARGS__ )
@@ -218,7 +220,7 @@
 #define _HW_X_irq			, HW_XIRQ
 #define _HW_X_irqflag			, HW_XIRQFLAG
 #define _HW_X_irqmask			, HW_XIRQMASK
-#define _HW_X_HW_IO			, HW_XIO
+
 
 /*  Expand the definition of a register.
  */
@@ -229,10 +231,11 @@
 #define _HW_XREG03_1(c,o,...)		,o,__VA_ARGS__	// Error: object not found
 #define _HW_XREG03_0(c,o,d,r,...)	_HW_OR21(c,o,d,r,hw_reg_##o##_##r)
 
-//  Expand the definition of an IRQ: _irq, irq(o,r), n, v, m, f
-//    The first arg must be an object name or an object path
-//    One optionnal interrupt name may follow
-//
+
+/* Expand the definition of an IRQ: _irq, irq(o,r), n, v, m, f
+ *   The first arg must be an object name or an object path
+ *   One optionnal interrupt name may follow
+ */
 #define HW_XIRQ(...)			_HW_XIRQ01(__VA_ARGS__,)
 #define _HW_XIRQ01(o,...)		_HW_XIRQ02(HW_XP(o),__VA_ARGS__)
 #define _HW_XIRQ02(...)			_HW_XIRQ03(__VA_ARGS__)
@@ -246,31 +249,18 @@
 #define _HW_XIRQ06_0(o,r,c,n,v,m,f,...)	,irq(o,r),HW_EM_G(HW_A0(__VA_ARGS__))	// Error: garbage
 #define _HW_XIRQ06_1(o,r,c,n,v,m,f,...)	_irq,irq(o,r),n,v,m,f	// Success
 
-//  Expand the definition of an IRQ flag.
-//
+/*  Expand the definition of an IRQ flag.
+ */
 #define HW_XIRQFLAG(...)		_HW_XIRQF01( HW_XIRQ(__VA_ARGS__) )
 #define _HW_XIRQF01(...)		_HW_XIRQF02(__VA_ARGS__)
 #define _HW_XIRQF02(c,...)		HW_Y0(_HW_XIRQF02_,c)(c,__VA_ARGS__)
 #define _HW_XIRQF02_1(c,o,...)		,irqflag(o),__VA_ARGS__	// Error
 #define _HW_XIRQF02_0(c,o,n,v,m,f)	_HW_X90( HW_XP(n,f) )
 
-//  Expand the definition of an IRQ mask.
-//
+/*  Expand the definition of an IRQ mask.
+ */
 #define HW_XIRQMASK(...)		_HW_XIRQM01( HW_XIRQ(__VA_ARGS__) )
 #define _HW_XIRQM01(...)		_HW_XIRQM02(__VA_ARGS__)
 #define _HW_XIRQM02(c,...)		HW_Y0(_HW_XIRQM02_,c)(c,__VA_ARGS__)
 #define _HW_XIRQM02_1(c,o,...)		,irqmask(o),__VA_ARGS__	// Error
 #define _HW_XIRQM02_0(c,o,n,v,m,f)	_HW_X90( HW_XP(n,m) )
-
-//  Expand HW_IO(port,bn,bp)
-//
-#define HW_XIO(...)			_HW_XIO01(HW_IO(__VA_ARGS__),__VA_ARGS__,,,)
-#define _HW_XIO01(o,p,bn,bp,...)	HW_Y0(_HW_XIO01_,bp)(o,p,bn,bp,__VA_ARGS__)
-#define _HW_XIO01_1(o,...)		,o,HW_EM_O(o) // Error
-#define _HW_XIO01_0(o,p,bn,...)		HW_Y0(_HW_XIO01_0,bn)(o,p,bn,__VA_ARGS__)
-#define _HW_XIO01_01(o,...)		,o,HW_EM_O(o) // Error
-#define _HW_XIO01_00(o,p,...)		_HW_XIO02(o,p,hw_##p,__VA_ARGS__)
-#define _HW_XIO02(...)			_HW_XIO03(__VA_ARGS__)
-#define _HW_XIO03(o,p,c,...)		HW_Y0(_HW_XIO03_,hw_class_##c)(o,p,c,__VA_ARGS__)
-#define _HW_XIO03_1(o,p,c,i,a,b,d,...)	_io1a,o,(0,p,b,d) HW_EOL(__VA_ARGS__)
-#define _HW_XIO03_0(o,p,...)		,o,HW_EM_O(p) // Error:	p is not an object
