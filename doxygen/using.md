@@ -5,12 +5,12 @@ Using HWA {#using}
 [TOC]
 
 This section gives general informations about how to use HWA, whatever the
-target device. Look at the @ref devices "Supported devices" page for
+target device. Look at the @ref devices "Devices" page for
 device-specific documentation.
 
 
-Device header {#using_header}
-=============
+Header file {#using_header}
+===========
 
 In order to use the HWA facilities, you must first include a header file
 to your source:
@@ -22,9 +22,9 @@ to your source:
 Your development tool should be configured to search the header file in the
 `/include/` directory of HWA.
 
-If your device uses configuration fuses (e.g. Atmel AVR), you __must__ set their
-values __before including the device header__ otherwise factory values will be
-assumed:
+If your device uses configuration fuses (e.g. Atmel AVR), you should set their
+values __before including the device header__. If you do not, factory values
+will be assumed:
 
 @code
 #define HW_DEVICE_CLK_SRC		rc_8MHz
@@ -63,7 +63,7 @@ after a _HWA context_ has been created with the `hwa_begin()` or the
 `hwa_begin_from_reset()` instruction.
 
 Once the context is created, the asynchronous actions are memorized until the
-the `hwa_commit_o()` instruction or the `hwa_nocommit()` instruction is met.
+the `hwa_commit()` instruction or the `hwa_nocommit()` instruction is met.
 
 The `hwa_commit()` instruction triggers the production of the machine code.
 
@@ -74,10 +74,10 @@ are in the registers.
 
 @code
 hwa_begin_from_reset()
-hwa( <ACTION1>, <OBJECT1> [,...] );
-hwa( <ACTION2>, <OBJECT2> [,...] );
+hwa( <ACTION_1>, <OBJECT_A> [,...] );
+hwa( <ACTION_2>, <OBJECT_B> [,...] );
 ...
-hwa( <ACTIONN>, <OBJECTN> [,...] );
+hwa( <ACTION_N>, <OBJECT_Z> [,...] );
 hwa_commit();
 @endcode
 
@@ -111,21 +111,24 @@ Action	    | Comments
 Objects {#using_objects}
 =======
 
-Object arguments can be peripheral controller names or canonical I/O pin names
-(i.e. the name used for the basic I/O function). They are lower cased:
+Object arguments can be:
 
- * `counter0`, `counter1`... ;
- * `uart0`, `uart1`... ;
- * `porta`, `portb`... ;
- * `pa0`...
+ * a peripheral controller names or canonical I/O pin names (i.e. the name used
+   for the basic I/O function). They are lower cased:
+   * `counter0`, `counter1`... ;
+   * `uart0`, `uart1`... ;
+   * `porta`, `portb`... ;
+   * `pa0`...
 
-Object arguments can also be a list of objects that provide a path to a target
-object (the only way to access logical or hard registers) :
+ * a list of object names that provide a path to a target object (the only way to
+   access logical or hard registers) :
+   * `(counter0,compare0)`: the compare unit #0 of the counter0;
+   * `(counter0,compare0,counter)`: equals `counter0`;
+   * `(counter0,count)`: the `count` register of counter0...
 
- * `(counter0,compare0)`: the compare unit #0 of the counter0;
- * `(counter0,compare0,counter)`: counter0;
- * `(counter0,count)`: the `count` register of counter0...
-
+ * an external object using a special declaration:
+   * `HW_PCF8574( interface, twi0, address, 0x27 )`
+   * `HW_HD44780( lines, 2, cols, 16, e, HW_IO(pc2), rs, HW_IO(pc0), rw, HW_IO(pc1), data, HW_IO(port2,4,4) )`
 
 
 Interrupts {#using_interrupts}
@@ -209,26 +212,48 @@ Defining an I/O object {#using_defio}
 `HW_IO()` allows using hw() or hwa() to act on a set of consecutive pins of
 one I/O port.
 
-`HW_IO()` requires 3 arguments: `HW_IO( port, number, position )` where
-
- * `port` is the name of the port controller (`port0`, `port1`...). Notice that
-   it is not the port name (`porta`, `portb`...);
- * `number` is the number of consecutive bits;
- * `position` is the position of the least significant bit.
+`HW_IO()` can be used two ways:
+ * `HW_IO( pin_name )`
+ * `HW_IO( port, number, position )` where
+   * `port` is the name of the port controller (`port0`, `port1`...). Notice that
+     it is not the port name (`porta`, `portb`...);
+   * `number` is the number of consecutive bits;
+   * `position` is the position of the least significant bit.
 
 @code
-#define pins                    HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
+#define PINS            HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
 
-hw( configure, pins, mode, digital_output );            // Sets pins 6..4 as outputs
-hw( write, pins, 5 );                                   // Sets pins 5 & 3, clears pins 6 & 4.
+hw( configure, PINS, mode, digital_output );    // Sets pins 6..3 of port0 as outputs
+hw( write, PINS, 5 );                           // Sets pins 5 & 3, clears pins 6 & 4 of port0
+@endcode
+
+`port` can refer to an external hardware, such as the I²C expander @ref pcf8574
+"PCF8574":
+
+@code
+#define PCF             HW_PCF8574( interface, twi0, address, 0x27 )
+#define PINS            HW_IO(PCF,4,3)
+
+hw( write, PINS, 5 );   // Sets pins 5 & 3, clears pins 6 & 4 of PCF8574
 @endcode
 
 
-Pin configuration {#using_cfpin}
-=================
+Pin configuration: function and mode {#using_cfpin}
+====================================
 
 HWA tries to provide a syntax that is as independent as possible from the target
 device and consistent accross various peripheral controllers.
+
+@code
+hw( configure, pin,
+    function,  gpio,
+    mode,      output_push_pull );
+@endcode
+
+@code
+hw( configure, pin,
+    function,  (uart0,rxd) );
+@endcode
 
 For the configuration of the device's pins, we'll try to apply the following.
 
@@ -242,7 +267,7 @@ pin). This can be a digital I/O, one signal of a peripheral controller, such as
 assumed.
 
 
-`mode` tells how the pin behaves, electrically:
+`mode` tells how, electrically, the pin behaves:
 
  * AVR
     *  digital_input | digital_input_floating
@@ -267,20 +292,6 @@ assumed.
     *  digital_output | digital_output_pushpull
     *  digital_output_when_awake | digital_output_pushpull_when_awake
     *  analog_input
- 
-
-@code
-hw( configure, pin,
-    function,  gpio,
-    mode,      output_push_pull );
-@endcode
-
-
-@code
-hw( configure, pin,
-    function,  (uart0,rxd) );
-@endcode
-
 
 
 Examples {#using_examples}
@@ -288,5 +299,3 @@ Examples {#using_examples}
 
 See the <a href="examples.html">Examples</a> page for a list of examples
 projects that demonstrate the usage of HWA.
-
-<br>

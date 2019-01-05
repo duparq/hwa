@@ -21,11 +21,14 @@ To achieve these goals, HWA provides:
  * an error-checking mechanism that tries to produce messages that help the
    developer solve the problems.
 
+
+Performances and compatibility
+==============================
+
 Because it is not a library, using HWA does not affect negatively the efficiency
 of the binary code produced either in terms of size, execution speed, or memory
-used. HWA helps the compiler's optimizers produce a binary that is at least as
-efficient as if the developer had written smart accesses to hardware registers
-himself.
+used. HWA helps the compiler's optimizers produce a binary that is as efficient
+as if the developer had written smart accesses to hardware registers himself.
 
 HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,
@@ -36,77 +39,50 @@ of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
 
 Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
-should be able to compile the source code.
+should be able to compile HWA code.
 
 
 Examples
 ========
 
-Several example projects are provided in the `vendor/architecture/examples/`
-directories (e.g. `atmel/avr/examples/`).
+A [set of commented examples](http://duparq.free.fr/hwa/examples.html) is
+provided. You'll find example projects in each `vendor/architecture/examples/`
+directory (e.g. `atmel/avr/examples/`) where a `README.md` file that explains
+how to compile the projects.
 
-Each `examples/` directory contains a `README.md` file that explains how to
-compile the examples.
+As an appetizer, the following code blinks a LED connected to an Atmel AVR ATtiny44 using
+watchdog interrupts and sleep mode (machine code size: 94 bytes):
 
-Here is an example of how to use a watchdog interrupt to make a LED blink with
-an Atmel AVR ATtiny44A-PU:
+    #include <hwa/attiny44a_pu.h>   // Load HWA definitions for the target MCU
 
-
-    //  Load HWA definitions for the target device
-    //
-    #include <hwa/attiny44a_pu.h>
-
-
-    //  We can use pin numbers as the device name tells HWA the package
-    //
     #define PIN_LED      HW_PIN(7)
 
-
-    //  Service watchdog IRQ
-    //
-    HW_ISR( watchdog0 )
+    HW_ISR( watchdog0 )             // Service watchdog IRQ
     {
-      //  Blink the LED
-      //
       hw( toggle, PIN_LED );
     }
 
 
     int main ( )
     {
-      //  Create a HWA context preloaded with RESET values to
-      //  collect the hardware configuration
-      //
-      hwa_begin_from_reset();
+      hwa_begin_from_reset();       // Create a HWA context to record the configuration
 
-      //  Configure the LED pin
-      //
       hwa( configure, PIN_LED, mode, digital_output );
 
-      //  Configure the watchdog to trigger an IRQ every 250ms
-      //
-      hwa( configure, watchdog0,
+      hwa( configure, watchdog0,    // Have the watchdog fire an IRQ every 250 ms
            timeout,   250ms,
            action,    irq );
 
-      //  Configure the core to enter idle mode when asked to sleep
-      //
-      hwa( configure,  core0,
+      hwa( configure,  core0,       // Put the MCU in idle mode when sleeping
            sleep,      enabled,
            sleep_mode, idle );
 
-      //  Write this configuration into the hardware
-      //
-      hwa_commit();
+      hwa_commit();                 // Execute the configuration
 
-      //  Enable interrupts
-      //
       hw_enable_interrupts();
 
-      //  Sleep between interrupts
-      //
       for(;;)
-        hw_sleep_until_irq();
+        hw_sleep_until_irq();       // Put the MCU in sleep mode between interrupts
 
       return 0 ;
     }
@@ -119,31 +95,32 @@ A ready-made documentation is available
 [here](http://duparq.free.fr/hwa/index.html). Start with the [Using
 HWA](http://duparq.free.fr/hwa/using.html) page.
 
-Building the documentation from sources requires
+Building your own copy of the documentation from the sources requires
 [Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make` in the
-HWA base directory and open the `doxygen/html/index.html` page.
-
-
-Status
-======
-
-__WARNING!__ The development of HWA is very chaotic and this project is subject
-to heavy changes of the code base.
+HWA directory, then open the `doxygen/html/index.html` page.
 
 
 Supported devices
 =================
 
- * HWA supports almost fully Atmel AVR ATtinyX4, ATtinyX5, and ATmegaX8:
-   * ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
-   * ATtiny25, ATtiny45, ATtiny85,
-   * ATmega328P
-   * ATmega32U4 needs probably some updates
+ * HWA supports almost fully:
+   * Atmel AVR:
+     * [ATtinyX4](http://duparq.free.fr/hwa/attinyx4.html): ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
+     * [ATtinyX5](http://duparq.free.fr/hwa/attinyx5.html): ATtiny25, ATtiny45, ATtiny85,
+     * [ATmegaX8](http://duparq.free.fr/hwa/atmegax8.html): ATmega328P
 
- * Very partial support of ST's STM32F103:
-   * STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+ * Very partially supported:
+   * Atmel AVR:
+     * [ATmega32U4](http://duparq.free.fr/hwa/atmegaxu4.html): ATmega32U4 needs probably a few updates
+   * ST STM32:
+     * [STM32F103](http://duparq.free.fr/hwa/stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+   * Espressif
+     * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
 
- * Very partial support of Espressif's ESP8266
+ * Support for a few "external" devices has been started:
+   * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
+   * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
+   * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector
 
 
 Organization of the code
@@ -156,14 +133,17 @@ Device-related sources are stored in `vendor/architecture/` directories
 `classes/`, `devices/`, and `examples/` directories.
 
 
-Hosting
-=======
+Status
+======
+
+__WARNING!__ The development of HWA is very chaotic and this project is subject
+to heavy changes of the code base.
+
+
+Hosting, feedback
+=================
 
 HWA is hosted on [Github](http://github.com/duparq/hwa).
-
-
-Feedback
-========
 
 Feedbacks will be greatly appreciated. For any bug report, question or
 suggestion, please open a new issue on [Github](http://github.com/duparq/hwa),
@@ -173,6 +153,4 @@ or use my gmail address (duparq) and put HWA in the object.
 License
 =======
 
-HWA is free software. See the @ref license "license" page for license information.
-
-<br>
+HWA is free software. See the [license](http://duparq.free.fr/hwa/license.html) page for license information.

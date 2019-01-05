@@ -71,6 +71,11 @@ body, table, div, p, dl {
     line-height: 22px;
 }
 
+div.line {
+    font-size: 12px;
+    min-height: 12px;
+}
+
 div.textblock {
     margin-bottom: 5em;
 }
