@@ -99,7 +99,7 @@
  * @page stm32f103
  * @section stm32f103_rcc Clocks
  *
- * Low-, medium-, high- and XL-density devices hold a RCC of class @ref
+ * Low-, medium-, high- and XL-density devices embed a RCC of class @ref
  * stm32_rcca "_rcca" that holds hardware registers shared by several objects to
  * access the device's RCC in order to configure various clocks in the device:
  *
@@ -127,7 +127,7 @@
  * The RCC is also used transparently by several other objects to enable/disable
  * their clocking for power management purpose.
  *
- * @note Connectivity line devices hold a RCC of class `_rccb`. Not implemented yet.
+ * @note Connectivity line devices embed a RCC of class `_rccb` that is not implemented yet.
  */
 
 #include "../classes/rcca_1.h"
@@ -472,8 +472,3 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 }
 
 #endif /* !defined __ASSEMBLER__ */
-
-/**
- * @page stm32f103
- * <br>
- */

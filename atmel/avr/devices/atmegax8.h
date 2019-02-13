@@ -414,29 +414,30 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * name. There are the existing relations between the device's objects and their
  * different names:
  *
- * Name		 | Path
- * :-------------|-----------------------
- * `prescaler0`	 | `counter0prescaler`	| `(counter0, prescaler)`
- * `prescaler0`	 | `counter0prescaler0` | `(counter0, prescaler0)`
- * `prescaler0`	 | `counter1prescaler`	| `(counter1, prescaler)`
- * `prescaler0`	 | `counter1prescaler0` | `(counter1, prescaler0)`
- * `counter0compare0`	 | `counter0compare0`	| `(counter0, compare0)`
- * `counter0compare1`	 | `counter0compare1`	| `(counter0, compare1)`
- * `counter0` | `counter0compare0counter`	   | `(counter0compare0, counter)`
- * `counter0` | `counter0compare1counter`	   | `(counter0compare1, counter)`
- * `pin_counter0compare0` | `counter0compare0pin`		   | `(counter0compare0, pin)`
- * `pin_counter0compare1` | `counter0compare1pin`		   | `(counter0compare1, pin)`
- * `counter1compare0`	 | `counter1compare0`	| `(counter1, compare0)`
- * `counter1compare1`	 | `counter1compare1`	| `(counter1, compare1)`
- * `counter1` | `counter1compare0counter`	   | `(counter1compare0, counter)`
- * `counter1` | `counter1compare1counter`	   | `(counter1compare1, counter)`
- * `pin_counter1compare0` | `counter1compare0pin`		   | `(counter1compare0, pin)`
- * `pin_counter1compare1` | `counter1compare1pin`		   | `(counter1compare1, pin)`
- * `pin_counter1capture0` | `counter1capture0pin`		   | `(counter1capture0, pin)`
- * `counter2` | `counter2compare0counter`	   | `(counter2compare0, counter)`
- * `counter2` | `counter2compare1counter`	   | `(counter2compare1, counter)`
- * `pin_counter2compare0` | `counter2compare0pin`		   | `(counter2compare0, pin)`
- * `pin_counter2compare1` | `counter2compare1pin`		   | `(counter2compare1, pin)`
+ * Name          | Alias                | Path
+ * :-------------|----------------------|:-----
+ * `prescaler0`          | `counter0prescaler`      |`(counter0, prescaler)`
+ * `prescaler0`          | `counter0prescaler0`     |`(counter0, prescaler0)`
+ * `prescaler0`          | `counter1prescaler`      |`(counter1, prescaler)`
+ * `prescaler0`          | `counter1prescaler0`     |`(counter1, prescaler0)`
+ * `counter0compare0`    | `counter0compare0`       |`(counter0, compare0)`
+ * `counter0compare1`    | `counter0compare1`       |`(counter0, compare1)`
+ * `counter0`            | `counter0compare0counter`|`(counter0compare0, counter)`
+ * `counter0`            | `counter0compare1counter`|`(counter0compare1, counter)`
+ * `pin_counter0compare0`| `counter0compare0pin`    |`(counter0compare0, pin)`
+ * `pin_counter0compare1`| `counter0compare1pin`    |`(counter0compare1, pin)`
+ * `counter1compare0`    | `counter1compare0`       |`(counter1, compare0)`
+ * `counter1compare1`    | `counter1compare1`       |`(counter1, compare1)`
+ * `counter1`            | `counter1compare0counter`|`(counter1compare0, counter)`
+ * `counter1`            | `counter1compare1counter`|`(counter1compare1, counter)`
+ * `pin_counter1compare0`| `counter1compare0pin`    |`(counter1compare0, pin)`
+ * `pin_counter1compare1`| `counter1compare1pin`    |`(counter1compare1, pin)`
+ * `pin_counter1capture0`| `counter1capture0pin`    |`(counter1capture0, pin)`
+ * `counter2`            | `counter2compare0counter`|`(counter2compare0, counter)`
+ * `counter2`            | `counter2compare1counter`|`(counter2compare1, counter)`
+ * `pin_counter2compare0`| `counter2compare0pin`    |`(counter2compare0, pin)`
+ * `pin_counter2compare1`| `counter2compare1pin`    |`(counter2compare1, pin)`
+ *
  */
 
 

@@ -12,13 +12,13 @@
 #include <hwa/pcf8574.h>
 #include <hwa/hd44780.h>
 
-/* #define TWI		HW_SWTWIMASTER( scl, pc5,	\ */
-/* 					sda, pc4,	\ */
-/* 					bps, TWI_BPS ) */
+#define TWI		HW_SWTWIMASTER( scl, pc5,	\
+					sda, pc4,	\
+					bps, TWI_BPS )
 
-#define TWI		twi0
+/* #define TWI		twi0 */
 
-#define TWI_BPS		500000
+#define TWI_BPS		400000
 
 #define LCD		HW_HD44780( lines, 2,			\
 				    cols,  16,			\
@@ -31,6 +31,6 @@
 
 #define LCD_LED		HW_IO( PCF, 1, 3 )
 
-HW_INTERFACE( TWI )
-HW_INTERFACE( PCF )
-HW_INTERFACE( LCD )
+HW_INTERFACE( TWI );
+HW_INTERFACE( PCF );
+HW_INTERFACE( LCD );

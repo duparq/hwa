@@ -4,12 +4,19 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/**
+/*	DO NOT USE!
+ *
+ *	This is a temporary file, for experimentation. <hwa/twimaster.h> should be used instead.
+ */
+
+#error Do not use this!
+
+/*
  * @file
  * @brief Software-emulated TWI
  */
 
-/**
+/*
  * @page atmelavr_swtwia Class _swtwia: software-emulated two-wire interface
  *
  */
@@ -127,7 +134,7 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
 }
 
 
-/**
+/*
  * @page atmelavr_swtwia
  * @section swtwiacf Configuration
  *
@@ -175,7 +182,7 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
 #define _hwx_cfswtwia_kbps3_1(o,v,...)	HW_EOL(__VA_ARGS__)
 
 
-/**
+/*
  * @page atmelavr_swtwia
  * @section swtwiacf Bus operations
  *

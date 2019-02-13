@@ -231,28 +231,25 @@
 /**
  * @ingroup public_mac
  * @brief Define an I/O
- * * `port` is the name of the port controller (`port0`, `port1`...). Notice that
- it is not the port name (`porta`, `portb`...);
+ *
+ * * `port` is the name of the port controller (`port0`, `port1`...). Notice
+ *    that it is not the name of the GPIO port (`porta`, `portb`...);
  * * `number` is the number of consecutive bits;
  * * `position` is the position of the least significant bit.
  *
  * @code
- * #define pins                    HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
+ * #define PINS                    HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
  *
- * hw( configure, pins, mode, digital_output );            // Sets pins 6..4 as output
- * hw( write, pins, 5 );                                   // Sets pins 5 & 3, clears pins 6 & 4.
+ * hw( configure, PINS, mode, digital_output );            // Sets pins 6..4 as output
+ * hw( write, PINS, 5 );                                   // Sets pins 5 & 3, clears pins 6 & 4.
  * @endcode
  *
  * @hideinitializer
  */
-#if defined DOXYGEN
-#  define HW_IO( port, number, position )
-#endif
+#define HW_IO(...)		HW_F(HW_IO,__VA_ARGS__)
+#define HW_IO_(c,o,e)		_io(_fake,o,e) HW_E(e)
 
 #define hw_class__io(...)
-
-#define HW_IO(...)		HW_F( HW_IO, __VA_ARGS__ )
-#define HW_IO_(c,o,e)		_io(_fake,o,e) HW_E(e)
 
 
 /**

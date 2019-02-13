@@ -38,7 +38,9 @@
  * * `hw_sensor0_oe` must be declared if you want the `configure` action to
  * be able to control the signal output.
  *
- * @section tcs3200_cf Configuration
+ * __Actions__
+ *
+ * `configure`
  *
  * The user is responsible of the configuration of the I/O pins. The `configure`
  * action, allows the selection of the maximum frequency of the output signal,

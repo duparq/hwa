@@ -11,10 +11,10 @@
  * 
  * @par nRF24L01+ module wiring
  *
- *		     Gnd  [1](2)  Vcc
- *	      Gnd <- CE	  (3)(4)  CSN  -> SS
- *	      SCL <- SCK  (5)(6)  MOSI -> MOSI
- *	     MISO <- MISO (7)(8)  IRQ
+ *                   Gnd  [1](2)  Vcc
+ *            Gnd <- CE   (3)(4)  CSN  -> SS
+ *            SCL <- SCK  (5)(6)  MOSI -> MOSI
+ *           MISO <- MISO (7)(8)  IRQ
  *
  * @par Test application
  *
@@ -22,18 +22,18 @@
  * 
  * should display:
  *
- *     Register CONFIG	  : 0x00 = 08
- *     Register EN_AA	  : 0x01 = 3F
+ *     Register CONFIG    : 0x00 = 08
+ *     Register EN_AA     : 0x01 = 3F
  *     Register EN_RX_ADDR: 0x02 = 03
  *     Register SETUP_AW  : 0x03 = 03
  *     Register SETUP_RETR: 0x04 = 03
- *     Register RF_CH	  : 0x05 = 02
+ *     Register RF_CH     : 0x05 = 02
  *     Register RF_SETUP  : 0x06 = 0F
- *     Register STATUS	  : 0x07 = 0E
+ *     Register STATUS    : 0x07 = 0E
  *     Register RX_ADDR_P0: 0x0A = E7 E7 E7 E7 E7
  *     Register RX_ADDR_P1: 0x0B = C2 C2 C2 C2 C2
- *     Register DYNPD	  : 0x1C = 00
- *     Register FEATURE	  : 0x1D = 00
+ *     Register DYNPD     : 0x1C = 00
+ *     Register FEATURE   : 0x1D = 00
  * 
  * * `BOARD_H` is the name of the target board header file. It can be defined at
  * compile time via the command line. For example, `make BOARD=nanodccduino`

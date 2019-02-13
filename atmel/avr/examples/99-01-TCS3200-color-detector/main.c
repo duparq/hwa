@@ -39,7 +39,9 @@
  * @include boards/attiny84-tcs3200.h
  *
  * @par config.h
- * @include config.h
+ * @include 99-01-TCS3200-color-detector/config.h
+ *
+ * @par main.c
  */
 
 #include "config.h"

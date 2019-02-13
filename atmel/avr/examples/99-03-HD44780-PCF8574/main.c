@@ -9,7 +9,13 @@
  *
  * @par Drive a LCD through a HD44780 controller connected to a PCF8574 TWI
  *
- * This examples shows how HWA can implement external hardware.
+ * This example shows how HWA deals with external hardware. Here, a
+ * HD44780-based LCD controller is driven through a PCF8574 I²C bus expander
+ * connected to a two-wire interface (TWI). The TWI can be embedded into the MCU
+ * or software-emulated.
+ *
+ * @par config.h
+ * @include 99-03-HD44780-PCF8574/config.h
  *
  * @par main.c
  */
@@ -18,9 +24,9 @@
 #include "xprintf.h"
 
 
-HW_IMPLEMENT(TWI)
-HW_IMPLEMENT(PCF)
-HW_IMPLEMENT(LCD)
+HW_IMPLEMENT(TWI);
+HW_IMPLEMENT(PCF);
+HW_IMPLEMENT(LCD);
 
 
 int main(void)
@@ -28,7 +34,9 @@ int main(void)
   hw( configure, TWI, bps, TWI_BPS );
   hw( configure, PCF );
 
+  hw( write, LCD_LED, 0 );
   hw( init, LCD );
+  hw( write, LCD_LED, 1 );
 
   while(1) {
     int i = 0;

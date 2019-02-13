@@ -228,8 +228,3 @@
 #define _hwa_setup__usia(o,i,a)		_hwa_setup_r( o, cr )
 #define _hwa_init__usia(o,i,a)		_hwa_init_r( o, cr, 0x00 )
 #define _hwa_commit__usia(o,i,a)	_hwa_commit_r( o, cr )
-
-/**
- * @page atmelavr_usia
- * <br>
- */

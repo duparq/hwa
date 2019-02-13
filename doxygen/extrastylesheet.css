@@ -90,6 +90,10 @@ div.fragment {
     box-shadow: .25em .25em 0.25em #888;
 }
 
+div.contents > dl.section.user > dd {
+    margin-left: 0;
+}
+
 code {
     color: #a8200b;
     font-weight: bold;

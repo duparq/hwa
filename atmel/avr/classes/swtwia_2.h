@@ -16,7 +16,7 @@
  * @brief Software-emulated TWI
  */
 
-/**
+/*
  * @page atmelavr_swtwia Class _swtwia: software-emulated two-wire interface
  *
  */
@@ -137,7 +137,7 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
 }
 
 
-/**
+/*
  * @page atmelavr_swtwia
  * @section swtwiacf Configuration
  *
@@ -183,7 +183,7 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
 #define _hwx_cfswtwia_kbps3_1(o,v,...)	HW_EOL(__VA_ARGS__)
 
 
-/**
+/*
  * @page atmelavr_swtwia
  * @section swtwiacf Bus operations
  *

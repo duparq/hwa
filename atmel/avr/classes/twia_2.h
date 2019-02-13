@@ -503,7 +503,7 @@
   HW_EOL(__VA_ARGS__)						\
 								\
   void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v );	\
-  uint8_t _hw_##o##_start_read_stop ( uint8_t sla );
+  uint8_t _hw_##o##_start_read_stop ( uint8_t sla )
 
 
 #define HW_IMPLEMENT__twia		, _hw_implement_twia
@@ -534,4 +534,6 @@
     hw( bus_stop, o );						\
 								\
     return hw( read, o );					\
-  }
+  }								\
+								\
+  extern void _hw_fake() /* require a ; */

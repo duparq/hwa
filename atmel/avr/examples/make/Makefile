@@ -13,6 +13,14 @@ MFD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
 .PHONY: all
 all:	deps bin lst size stat
 
+
+#  Produce HTML documentation
+#
+.PHONY: doc
+doc:
+	@cd $(MFD)../../../../doxygen && $(MAKE) --no-print-directory
+
+
 #  Directory of boards
 #
 BOARDS		:= $(MFD)../boards

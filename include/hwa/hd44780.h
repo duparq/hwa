@@ -6,13 +6,17 @@
 
 /**
  * @file
- * @brief HD44780
- */
-
-/**
- * @page hwa_hd44780 Class _hd44780
+ * @brief HD44780 LCD driver
+ * @page hd44780 HD44780 LCD driver
  *
- * Definition:
+ * As this device is not speed critical, its implementation focuses on code size
+ * rather than on speed, so it relies on extern C functions rather than on
+ * inlined code.
+ *
+ * Currently, HWA supports only the driving of the HD44780 through the I²C bus
+ * expander @ref pcf8574 "PCF8574".
+ *
+ * __Declaration__
  *
  * @code
  * #define PCF          HW_PCF8574( interface, twi0, address, 0x27 )
@@ -25,7 +29,6 @@
  *                                  data,  HW_IO(PCF, 4, 4) )
  * @endcode
  */
-
 #define hw_class__hd44780
 
 #define _hw_is_linescolsersrwdata_linescolsersrwdata	, 1
@@ -35,10 +38,13 @@
 
 #define HW_HD44780(...)			_HW_HD44780_01(__VA_ARGS__,,,,,,,,,,)
 #define _HW_HD44780_01(kl,vl,kc,vc,ke,ve,krs,vrs,krw,vrw,kd,vd,eol,...) \
-  HW_Y0(_HW_HD44780_01_,_hw_is_linescolsersrwdata_##kl##kc##ke##krs##krw##kd##eol)(kl,vl,kc,vc,ke,ve,krs,vrs,krw,vrw,kd,vd)
-#define _HW_HD44780_01_0(...)		,HW_HD44780(...),"HW_HD44780(...)" must be defined as "HW_HD44780(lines,...,e,...,rs,...,rw,...,d,..."
-
-#define _HW_HD44780_01_1(kl,vl,kc,vc,ke,ve,krs,vrs,krw,vrw,kd,vd)	_HW_HD44780_02((HW_X(ve)),(HW_X(vd)),(HW_X(vrs)),(HW_X(vrw)),vl,vc)
+  HW_Y0(_HW_HD44780_01_,_hw_is_linescolsersrwdata_##kl##kc##ke##krs##krw##kd##eol) \
+  (kl,vl,kc,vc,ke,ve,krs,vrs,krw,vrw,kd,vd)
+#define _HW_HD44780_01_0(...)		, \
+    HW_HD44780(...),"HW_HD44780(...)" must be defined as \
+    "HW_HD44780(lines,...,e,...,rs,...,rw,...,d,..."
+#define _HW_HD44780_01_1(kl,vl,kc,vc,ke,ve,krs,vrs,krw,vrw,kd,vd)	\
+  _HW_HD44780_02((HW_X(ve)),(HW_X(vd)),(HW_X(vrs)),(HW_X(vrw)),vl,vc)
 
 #define _HW_HD44780_02(...)		_HW_HD44780_03(__VA_ARGS__)
 #define _HW_HD44780_03(el,dl,rsl,rwl,l,c)	_HW_HD44780_04( HW_A0_A1 el, HW_BITS dl, l,c,el,rsl,rwl,dl)
@@ -46,13 +52,20 @@
 #define _HW_HD44780_05(c,...)		_HW_HD44780_06(_hw_hd44780_for_##c,c,__VA_ARGS__)
 #define _HW_HD44780_06(...)		_HW_HD44780_07(__VA_ARGS__)
 #define _HW_HD44780_07(x,...)		HW_Y0(_HW_HD44780_07_,x)(__VA_ARGS__)
-#define _HW_HD44780_07_1(c,c0,p,n,...)	hd44780(hd44780_##p,c##n,__VA_ARGS__)
+#define _HW_HD44780_07_1(c,c0,p,n,...)	xo(_hd44780,hd44780_##p,c##n,__VA_ARGS__)
 
 
-#define _HW_X_hd44780			, _hw_x_hd44780
-#define _hw_x_hd44780(...)		_hd44780,__VA_ARGS__
-
-
+/**
+ * @page hd44780
+ * __Interface__
+ *
+ * The following makes the implementation functions for TWI declared. Use it in
+ * your header files:
+ *
+ * @code
+ * HW_INTERFACE(LCD);
+ * @endcode
+ */
 #define HW_INTERFACE__hd44780		, _hw_hd44780_interface
 
 #define _hw_hd44780_interface(o,...)		\
@@ -68,9 +81,20 @@
   void _hw_##o##_gotoxy ( uint8_t, uint8_t );	\
   void _hw_##o##_newline( uint8_t );		\
   void _hw_##o##_home ( );			\
-  void _hw_##o##_putchar( unsigned char );
+  void _hw_##o##_putchar( unsigned char ) /* require a ; */
 
 
+/**
+ * @page hd44780
+ * __Implement__
+ *
+ * The following makes the implementation functions for TWI defined. It must
+ * appear in one of your source files:
+ *
+ * @code
+ * HW_IMPLEMENT(LCD);
+ * @endcode
+ */
 #define HW_IMPLEMENT__hd44780		, _hw_hd44780_implement
 
 #define _hw_hd44780_implement(o,v,...)			\
@@ -86,6 +110,7 @@
   _hw_implement_hd44780##v##_newline(o,v,__VA_ARGS__)	\
   _hw_implement_hd44780##v##_home(o,v,__VA_ARGS__)	\
   _hw_implement_hd44780##v##_putchar(o,v,__VA_ARGS__)	\
+  extern void _hwa_fake() /* require a ; */
 
 #define _hw_implement_hd44780twi4__pulse(o,v,lines,cols,e,...)	\
   void _hw_##o##__pulse ( )	{				\
@@ -122,27 +147,28 @@
 
 #define _hw_implement_hd44780twi4__wait(o,v,lines,cols,e,rs,rw,d,...)	\
   uint8_t _hw_##o##__wait ( ) {						\
-    while( _hw_##o##__read(0) & 0x80 )					\
+    uint8_t r0 ;							\
+    while( (r0 = _hw_##o##__read(0)) & 0x80 ) /* Bit 7 of register #0: busy  */ \
       hw_waste_cycles( 10e-6 * HW_SYSHZ );				\
-    return _hw_##o##__read(0);						\
+    return r0; /* Return counter */					\
   }
 
 #define _hw_implement_hd44780twi4__command(o,v,lines,cols,e,rs,rw,d,...) \
-  void _hw_##o##__command ( uint8_t c ) {					\
-    _hw_##o##__write(c,0);							\
+  void _hw_##o##__command ( uint8_t c ) {				\
+    _hw_##o##__write(c,0);						\
   }
 
-#define _hw_implement_hd44780twi4__data(o,v,lines,cols,e,rs,rw,d,...) \
-  void _hw_##o##__data ( uint8_t data ) {					\
+#define _hw_implement_hd44780twi4__data(o,v,lines,cols,e,rs,rw,d,...)	\
+  void _hw_##o##__data ( uint8_t data ) {				\
     _hw_##o##__write(data,1);						\
   }
 
 #define _hw_implement_hd44780twi4_cls(o,v,lines,cols,e,rs,rw,d,...)	\
-  void _hw_##o##_cls ( ) {							\
-    _hw_##o##__command(1);							\
+  void _hw_##o##_cls ( ) {						\
+    _hw_##o##__command(1);						\
   }
 
-#define _hw_implement_hd44780twi4_init(o,v,lines,cols,e,rs,rw,d,...) \
+#define _hw_implement_hd44780twi4_init(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##_init ( ) {						\
     hw( writea, HW_XB e, 0 );						\
     hw( writea, HW_XB rs, 0 );						\
@@ -169,16 +195,16 @@
     _hw_##o##__command( 0x0C ); /* Display on, no cursor, no blink */	\
   }
 
-#define _hw_implement_hd44780twi4_gotoxy(o,v,lines,cols,e,rs,rw,d,...) \
-  void _hw_##o##_gotoxy ( uint8_t x, uint8_t y ) {				\
+#define _hw_implement_hd44780twi4_gotoxy(o,v,lines,cols,e,rs,rw,d,...)	\
+  void _hw_##o##_gotoxy ( uint8_t x, uint8_t y ) {			\
     if ( lines==2 && y>0 )						\
       _hw_##o##__command(0x80+64+x);					\
     else								\
-      _hw_##o##__command(0x80+0+x);						\
+      _hw_##o##__command(0x80+0+x);					\
   }
 
 #define _hw_implement_hd44780twi4_newline(o,v,lines,cols,e,rs,rw,d,...) \
-  void _hw_##o##_newline ( uint8_t pos ) {					\
+  void _hw_##o##_newline ( uint8_t pos ) {				\
     if ( lines==1 )							\
       _hw_##o##_gotoxy(0,0);						\
     else if ( lines==2 ) {						\
@@ -189,9 +215,9 @@
     }									\
   }									\
 
-#define _hw_implement_hd44780twi4_home(o,v,lines,cols,e,rs,rw,d,...) \
-  void _hw_##o##_home ( ) {							\
-    _hw_##o##__command(2);							\
+#define _hw_implement_hd44780twi4_home(o,v,lines,cols,e,rs,rw,d,...)	\
+  void _hw_##o##_home ( ) {						\
+    _hw_##o##__command(2);						\
   }
 
 /* FIXME: should cache current line and column so that reading the LCD would not be necessary
@@ -200,21 +226,21 @@
   void _hw_##o##_putchar ( unsigned char c ) {				\
     uint8_t pos;							\
 									\
-    pos = _hw_##o##__wait();   /* wait busy-flag and get address counter */	\
+    pos = _hw_##o##__wait();   /* wait busy-flag and get address counter */ \
     if (c=='\n')							\
       _hw_##o##_newline(pos);						\
     else {								\
       if ( lines==1 ) {							\
 	if ( pos == cols )						\
-	  _hw_##o##_gotoxy(0,0);						\
+	  _hw_##o##_gotoxy(0,0);					\
       }									\
       else if ( lines==2 ) {						\
 	if ( pos == 0+cols )						\
-	  _hw_##o##_gotoxy(0,1);						\
+	  _hw_##o##_gotoxy(0,1);					\
 	else if ( pos == 64+cols )					\
-	  _hw_##o##_gotoxy(0,0);						\
+	  _hw_##o##_gotoxy(0,0);					\
       }									\
-      _hw_##o##__data(c);							\
+      _hw_##o##__data(c);						\
     }									\
   }
 

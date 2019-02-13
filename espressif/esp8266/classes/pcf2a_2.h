@@ -4,12 +4,19 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/**
+/*	DO NOT USE!
+ *
+ *	This is a temporary file, for experimentation. <hwa/twimaster.h> should be used instead.
+ */
+
+#error Do not use this!
+
+/*
  * @file
  * @brief I/O configurator
  */
 
-/**
+/*
  * @page espressif_pcf2a
  *
  */

@@ -94,7 +94,7 @@ uint8_t twst;
  * debug/test output), and TWI clock.
  */
 void
-ioinit_o(void)
+ioinit(void)
 {
   hwa_begin_from_reset();
   hwa( configure,   uart0,
@@ -512,7 +512,7 @@ main(void)
   uint8_t b[16];
   uint8_t x;
 
-  ioinit_o();
+  ioinit();
 
   stdout = &mystdout;
 

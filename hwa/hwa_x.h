@@ -264,3 +264,8 @@
 #define _HW_XIRQM02(c,...)		HW_Y0(_HW_XIRQM02_,c)(c,__VA_ARGS__)
 #define _HW_XIRQM02_1(c,o,...)		,irqmask(o),__VA_ARGS__	// Error
 #define _HW_XIRQM02_0(c,o,n,v,m,f)	_HW_X90( HW_XP(n,m) )
+
+/*  Expand the definition of an external object
+ */
+#define _HW_X_xo			, _hw_x_xo
+#define _hw_x_xo(...)			__VA_ARGS__
