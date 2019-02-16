@@ -31,7 +31,7 @@ HW_ISR( COUNTER )
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /* Configure the PLL source and multiplier (must be done before it is enabled).
    * Prepare the connection of the sysclk to the pll. The hardware will wait for
@@ -41,12 +41,12 @@ int main ( )
        source,     hsi/2,
        multiplier, SYSHZ/(HW_DEVICE_HSIHZ/2) );
   hwa( connect, sysclk, pll );
-  hwa_commit();
+  hwa( commit );
 
   /*  Turn the PLL on.
    */
   hwa( turn, pll, on );
-  hwa_commit();
+  hwa( commit );
 
   /* Wait for the PLL to be locked.
    */
@@ -57,20 +57,20 @@ int main ( )
   hwa( configure, ahb,
        clock,     sysclk,
        prescaler, SYSHZ/AHBHZ );
-  hwa_commit();
+  hwa( commit );
 
   /*  Power on the controllers we use
    */
   hwa( power, (LED1,port), on );
   hwa( power, COUNTER, on );
-  hwa_commit();
+  hwa( commit );
 
   /*  Configure the GPIO pin
    */
   hwa( configure, LED1,
        mode,      digital_output,
        frequency, lowest );
-  hwa_commit();
+  hwa( commit );
 
   /*  Configure the counter
    */
@@ -88,13 +88,13 @@ int main ( )
 
   hwa( turn, irq(COUNTER), on );
   hwa( turn, nvic, irq(COUNTER), on );
-  hwa_commit();
+  hwa( commit );
 
   /*  Toggle the LED between sleeps
    */
   uint8_t n=0;
   for(;;) {
-    hw_sleep_until_irq();	// hw_sleep_until_event() is OK too.
+    hw( sleep_until_irq );	// hw_sleep_until_event() is OK too.
     n++ ;
     if ( n>20 )
       //      hw( turn, nvic, irq(COUNTER), off );

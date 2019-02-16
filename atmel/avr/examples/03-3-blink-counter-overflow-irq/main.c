@@ -45,7 +45,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the LED pin
    */
@@ -80,10 +80,10 @@ int main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
   for(;;)
-    hw_sleep_until_irq();
+    hw( sleep_until_irq );
 }

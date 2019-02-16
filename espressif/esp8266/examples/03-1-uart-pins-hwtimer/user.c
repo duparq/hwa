@@ -56,7 +56,7 @@ void IROM user_init_2 ( )
   os_set_isr( irq(timer1,irq), ev_timer );
   os_set_isr( irq(timer1,nmi), ev_timer );
 
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   hwa( configure, PIN_LED, function, gpio, mode, digital_output );
 
@@ -79,7 +79,7 @@ void IROM user_init_2 ( )
        top,       0.5 + 0.1*HW_APBHZ/256,
        action,    irq );
 
-  hwa_commit();
+  hwa( commit );
 
   os_printf("START with user configuration: RXD=GPIO13 TXD=GPIO15\n");
 

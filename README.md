@@ -65,11 +65,11 @@ watchdog interrupts and sleep mode (machine code size: 94 bytes):
 
     int main ( )
     {
-      hwa_begin_from_reset();       // Create a HWA context to record the configuration
+      hwa( begin_from_reset );      // Create a HWA context to record the configuration
 
       hwa( configure, PIN_LED, mode, digital_output );
 
-      hwa( configure, watchdog0,    // Have the watchdog fire an IRQ every 250 ms
+      hwa( configure, watchdog0,    // Have the watchdog trigger an IRQ every 250 ms
            timeout,   250ms,
            action,    irq );
 
@@ -77,12 +77,12 @@ watchdog interrupts and sleep mode (machine code size: 94 bytes):
            sleep,      enabled,
            sleep_mode, idle );
 
-      hwa_commit();                 // Execute the configuration
+      hwa( commit );                // Execute the configuration
 
-      hw_enable_interrupts();
+      hw( enable_interrupts );
 
       for(;;)
-        hw_sleep_until_irq();       // Put the MCU in sleep mode between interrupts
+        hw( sleep_until_irq );      // Put the MCU in sleep mode between interrupts
 
       return 0 ;
     }

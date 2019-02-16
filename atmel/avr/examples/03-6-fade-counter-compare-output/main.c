@@ -94,7 +94,7 @@ HW_ISR( (PWM,counter), overflow )
 
       /*  Start from the hardawre configuration used at initialization
        */
-      hwa_begin_from_reset();
+      hwa( begin_from_reset );
       setup_hwa_context( hwa );
 
       if ( phase == 2 ) {
@@ -103,9 +103,9 @@ HW_ISR( (PWM,counter), overflow )
 	 *  to 'disconnected'
 	 */
 	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
-	hwa_nocommit();
+	hwa( nocommit );
 	hwa( configure, PWM, output, disconnected );
-	hwa_commit();
+	hwa( commit );
       }
       else if ( phase == 0 ) {
 	/*
@@ -113,9 +113,9 @@ HW_ISR( (PWM,counter), overflow )
 	 *  'set_at_bottom_clear_on_match'
 	 */
 	hwa( configure, PWM, output, disconnected );
-	hwa_nocommit();
+	hwa( nocommit );
 	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
-	hwa_commit();
+	hwa( commit );
       }
     }
   }
@@ -127,7 +127,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Store the hardware configuration into the HWA context
    */
@@ -135,10 +135,10 @@ int main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
   for(;;)
-    hw_sleep_until_irq();
+    hw( sleep_until_irq );
 }

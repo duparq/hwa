@@ -27,7 +27,7 @@
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Start the high-speed external oscillator.
    */
@@ -43,12 +43,12 @@ int main ( )
    * the PLL to be locked before actually switching.
    */
   hwa( connect, sysclk, pll );
-  hwa_commit();
+  hwa( commit );
 
   /*  Turn the PLL on.
    */
   hwa( turn, pll, on );
-  hwa_commit();
+  hwa( commit );
 
   /* Wait for the PLL to be locked.
    */
@@ -63,17 +63,17 @@ int main ( )
   hwa( configure, ahb,
        clock,     sysclk,
        prescaler, SYSHZ/COREHZ );
-  hwa_commit();
+  hwa( commit );
 
   /*  Configure the GPIO pin
    */
   hwa( power, (LED1,port), on );
-  hwa_commit();
+  hwa( commit );
 
   hwa( configure, LED1,
        mode,      digital_output,
        frequency, lowest );
-  hwa_commit();
+  hwa( commit );
 
   /*  Wait for the HSI to actually stop.
    */

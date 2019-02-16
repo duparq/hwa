@@ -54,24 +54,23 @@
 #endif
 
 
-/**
+/*
  * @ingroup public_ins
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
  * @hideinitializer
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
  */
-/*
- * Expands _hwa_begin_all() that must be defined in hwa_<device>_2.h.
- */
-#define hwa_begin()							\
+#define _hwa_begin__mcu(...)						\
   _hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
   _hwa_setup_context(hwa) ;						\
   uint8_t hwa_xcommit = 0 /* Will warn if hwa_commit() is not called */
 
+#define hwa_begin__mcu			, _hwa_begin__mcu
 
-/**
+
+/*
  * @ingroup public_ins
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
  * @hideinitializer
@@ -81,16 +80,18 @@
  *
  * Nothing is written into the hardware until `hwa_commit()` is called.
  */
-#define hwa_begin_from_reset()			\
+#define _hwa_begin_from_reset__mcu(...)		\
   _hwa_check_optimizations(0);			\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;		\
   _hwa_setup_context(hwa) ;			\
   _hwa_init_context(hwa) ;			\
-  hwa_nocommit() ;				\
+  _hwa_nocommit__mcu() ;			\
   uint8_t hwa_xcommit = 0
 
+#define hwa_begin_from_reset__mcu	, _hwa_begin_from_reset__mcu
 
-/**
+
+/*
  * @ingroup public_ins
  * @brief Generate machine code for the configuration stored in the context.
  *
@@ -101,15 +102,17 @@
  */
 /* _hwa_commit_all() must be defined somewhere in the device-specific files.
  */
-#define hwa_commit()					\
+#define _hwa_commit__mcu(...)				\
   do {							\
     uint8_t foo __attribute__((unused)) = hwa_xcommit ;	\
     hwa->commit = 1 ;					\
     _hwa_commit_context(hwa);				\
   } while(0)
 
+#define hwa_commit__mcu				, _hwa_commit__mcu
 
-/**
+
+/*
  * @ingroup public_ins
  * @brief  Same as hwa_commit() but do not write into hardware.
  *
@@ -117,11 +120,13 @@
  *
  * @hideinitializer
  */
-#define hwa_nocommit()				\
+#define _hwa_nocommit__mcu(...)			\
   do {						\
     hwa->commit = 0 ;				\
     _hwa_commit_context(hwa);			\
   } while(0)
+
+#define hwa_nocommit__mcu			, _hwa_nocommit__mcu
 
 
 /*

@@ -21,7 +21,7 @@
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  After RESET, the core is clocked at 8 MHz by the HSI RC oscillator.
    *
@@ -39,13 +39,13 @@ int main ( )
   hwa( connect, pll, hse );
   hwa( write, pll, (SYSHZ / HW_DEVICE_HSEHZ) );
   hwa( connect, sysclk, pll );
-  hwa_commit();
+  hwa( commit );
 
   /*  Now turn the PLL on and the hardware will use it as sysclk when the PLL is
    *  locked.
    */
   hwa( turn, pll, on );
-  hwa_commit();
+  hwa( commit );
 
   /*  Power the GPIO port
    */
@@ -57,7 +57,7 @@ int main ( )
        mode,      digital_output,
        frequency, lowest );
 
-  hwa_commit();
+  hwa( commit );
 
 
   for(;;) {

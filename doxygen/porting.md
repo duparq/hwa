@@ -418,9 +418,9 @@ of `_hwa_cfc8a(...)`:
 The `do { ... } while(0)` block ensure that the expansion of the instruction
 remains a block even if it develops as several statements.
 
-`HW_Y()` concatenates `_1` to its first argument if the result of the expansion
+`HW_Y()` concatenates `1` to its first argument if the result of the expansion
 of `_hw_is_clock_##k` begins with a void element. Otherwise, it concatenates
-`_0`.
+`0`.
 
 For that to work, the following definition is required:
 
@@ -517,8 +517,8 @@ the compare units have an incidence on the values to be written in the logical
 register `wgm` of the counting unit. Thus, contrary to other simpler objects,
 `_hwa_cfc8a()` does not immediately set logical register values according to the
 parsed arguments but only stores the configuration in the context as will the
-configuration instructions for the compare units. The `hwa_commit()` instruction
+configuration instructions for the compare units. The `hwa(commit)` instruction
 will call `_hwa_solve_o()` to process the values stored in the context, compute
 the values of the registers, and verify that the whole configuration is valid
-before the `hwa_commit()` instruction effectively writes the registers into the
+before the `hwa(commit)` instruction effectively writes the registers into the
 hardware.

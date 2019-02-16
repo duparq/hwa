@@ -255,7 +255,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * @code
  * hwa( toggle, pa0 );      //  Register pa0 for toggling
  * hwa( toggle, pa4 );      //  Register pa4 for toggling
- * hwa_commit();                //  Commit all registered pins at once
+ * hwa( commit );                //  Commit all registered pins at once
  * @endcode
  *
  * @note `toggle` is not atomic: it reads the ODR, then sets/resets the relevant

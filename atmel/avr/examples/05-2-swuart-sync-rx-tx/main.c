@@ -30,7 +30,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the software UART
    */
@@ -55,11 +55,11 @@ main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
   /*  Interrupt requests must be serviced for swuart
    */
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
 
   /*  Main loop:
@@ -79,7 +79,7 @@ main ( )
     /*	Wait for UART synchronization, then send the prompt
      */
     while ( !hw(stat,UART).sync )
-      hw_sleep_until_irq();
+      hw( sleep_until_irq );
 
     hw( write, UART, '$');
 
@@ -94,7 +94,7 @@ main ( )
       /*  Wait for a command
        */
       while ( !hw(stat,UART).rxc )
-	hw_sleep_until_irq();
+	hw( sleep_until_irq );
 
       uint8_t byte = hw( read, UART );
 

@@ -75,7 +75,7 @@ uint8_t __attribute__((weak)) hw_swtwi0_sr ;
 #else
 HW_INLINE void __attribute__((section (".irom.text"))) /* __attribute__((weak)) */ hw_swtwi0_delay (  )
 {
-  hw_waste_cycles( HW_SYSHZ / (2*hw_swtwi0_bps) );
+  hw( waste_cycles,);
 }
 #endif
 

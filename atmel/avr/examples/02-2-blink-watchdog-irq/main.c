@@ -33,7 +33,7 @@ int main ( )
   /*  Create a HWA context preloaded with RESET values to
    *  collect the hardware configuration
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the LED pin
    */
@@ -53,16 +53,16 @@ int main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
   /*  Enable interrupts
    */
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
   /*  Sleep between interrupts
    */
   for(;;)
-    hw_sleep_until_irq();
+    hw( sleep_until_irq );
     
   return 0 ;
 }

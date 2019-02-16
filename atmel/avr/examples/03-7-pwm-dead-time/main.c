@@ -36,7 +36,7 @@
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   hwa( configure, (COUNTER,prescaler),
        clock,	  CLOCK_SRC );
@@ -61,7 +61,7 @@ int main ( )
        HW_G2(COMPARE,h), 3,	// 0..15
        HW_G2(COMPARE,l), 9 );	// 0..15
 
-  hwa_commit();
+  hwa( commit );
 
   for(;;) {}
 }

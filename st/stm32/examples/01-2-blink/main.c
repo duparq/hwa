@@ -35,7 +35,7 @@
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   hwa( power, (LED1,port), on );
 
@@ -43,16 +43,16 @@ int main ( )
        mode,	  digital_output,
        frequency, lowest );
 
-  hwa_commit();
+  hwa( commit );
 
   for(;;) {
     hwa( write, LED1, 1 );
-    hwa_commit();
+    hwa( commit );
 
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
 
     hwa( write, LED1, 0 );
-    hwa_commit();
+    hwa( commit );
 
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
   }

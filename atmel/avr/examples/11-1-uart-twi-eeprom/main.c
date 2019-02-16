@@ -96,13 +96,13 @@ uint8_t twst;
 void
 ioinit(void)
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
   hwa( configure,   uart0,
        bps,	    9600,
        receiver,    disabled,
        transmitter, enabled  );
   hwa( configure, TWI, bps, 100000 );
-  hwa_commit();
+  hwa( commit );
 }
 
 /*

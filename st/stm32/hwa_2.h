@@ -13,36 +13,43 @@
  * @ingroup public_ins_stm32
  * @brief Puts the core in sleep mode.
  */
-#define hw_sleep_until_irq()		hw_asm("wfi")
-#define hw_sleep_until_event()		hw_asm("wfe")
+#define _hw_sleep_until_irq__mcu(...)		hw_asm("wfi")
+#define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
+
+#define _hw_sleep_until_event__mcu(...)		hw_asm("wfe")
+#define hw_sleep_until_event__mcu		, _hw_sleep_until_event__mcu
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Allows program interruption.
  */
-#define hw_enable_interrupts()		hw_asm("cpsie i")
+#define _hw_enable_interrupts__mcu(...)		hw_asm("cpsie i")
+#define hw_enable_interrupts__mcu		, _hw_enable_interrupts__mcu
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Prevents program interruption.
  */
-#define hw_disable_interrupts()		hw_asm("cpsid i")
+#define _hw_disable_interrupts__mcu(...)	hw_asm("cpsid i")
+#define hw_disable_interrupts__mcu		, _hw_disable_interrupts__mcu
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Allows program interruption.
  */
-#define hw_enable_fault_exceptions()	hw_asm("cpsie f")
+#define _hw_enable_fault_exceptions__mcu(...)	hw_asm("cpsie f")
+#define hw_enable_fault_exceptions__mcu		, _hw_enable_fault_exceptions__mcu
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Prevents program interruption.
  */
-#define hw_disable_fault_exceptions()	hw_asm("cpsid f")
+#define _hw_disable_fault_exceptions__mcu(...)	hw_asm("cpsid f")
+#define hw_disable_fault_exceptions__mcu	, _hw_disable_fault_exceptions__mcu
 
 
 /**

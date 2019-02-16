@@ -19,8 +19,8 @@ to your source:
 #include <hwa/attiny44a_pu.h>
 @endcode
 
-Your development tool should be configured to search the header file in the
-`/include/` directory of HWA.
+Your development tool should be configured so that it will look for header files
+in the `/include/` directory of HWA.
 
 If your device uses configuration fuses (e.g. Atmel AVR), you should set their
 values __before including the device header__. If you do not, factory values
@@ -38,6 +38,9 @@ will be assumed:
 
 #include <atmel/avr/attiny44a_pu.h>
 @endcode
+
+For Atmel AVR devices, HWA uses the configuration of the fuses to define the
+symbol `HW_SYSHZ` as the frequency of the CPU clock.
 
 
 Instructions {#using_instructions}
@@ -59,26 +62,26 @@ hw( <ACTION>, <OBJECT> [,...] );
 result.
 
 `hwa()` is used for asynchronous actions. Asynchronous actions can only be used
-after a _HWA context_ has been created with the `hwa_begin()` or the
-`hwa_begin_from_reset()` instruction.
+after a _HWA context_ has been created with the `hwa(begin)` or the
+`hwa(begin_from_reset)` instruction.
 
 Once the context is created, the asynchronous actions are memorized until the
-the `hwa_commit()` instruction or the `hwa_nocommit()` instruction is met.
+the `hwa(commit)` instruction or the `hwa(nocommit)` instruction is met.
 
-The `hwa_commit()` instruction triggers the production of the machine code.
+The `hwa(commit)` instruction triggers the production of the machine code.
 
-The `hwa_nocommit()` instruction does not produce machine code but is useful to
+The `hwa(nocommit)` instruction does not produce machine code but is useful to
 put the context in a known state usually before new actions modify it. This
 allows the production of machine code that avoids writing values that already
 are in the registers.
 
 @code
-hwa_begin_from_reset()
+hwa( begin_from_reset )
 hwa( <ACTION_1>, <OBJECT_A> [,...] );
 hwa( <ACTION_2>, <OBJECT_B> [,...] );
 ...
 hwa( <ACTION_N>, <OBJECT_Z> [,...] );
-hwa_commit();
+hwa( commit );
 @endcode
 
 Using a HWA context allows the best optimization of the machine code to access

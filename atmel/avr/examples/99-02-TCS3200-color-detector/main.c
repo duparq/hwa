@@ -194,7 +194,7 @@ static uint16_t HHHH2i ( uint8_t s[] )
 int
 main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   hwa( configure, UART );
 
@@ -209,9 +209,9 @@ main ( )
 
   hwa( write, PIN_OUTS, 0 );
 
-  hwa_commit();
+  hwa( commit );
 
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
   /*  Read tclear_max from EEPROM
    */

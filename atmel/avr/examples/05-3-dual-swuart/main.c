@@ -55,7 +55,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the software UARTs
    */
@@ -72,11 +72,11 @@ main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
   /*  Interrupt requests must be serviced for swuart
    */
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
 
   /*  Main loop
@@ -91,7 +91,7 @@ main ( )
     hw( reset, swuart0 );
     hw( reset, swuart1 );
     for(;;) {
-      hw_sleep_until_irq();
+      hw( sleep_until_irq );
       if ( hw(stat,swuart0).sync ) {
 	hw( write, swuart0, '$');     /* signal the synchronization */
 	hw( write, (swuart1, dt0), hw( read, (swuart0, dt0) ) );
@@ -115,7 +115,7 @@ main ( )
      *	Send on one UART what has been received from the other
      */
     for(;;) {
-      hw_sleep_until_irq();
+      hw( sleep_until_irq );
       if ( hw(stat,swuart0).rxc ) {
 	/*
 	 *  UART0 -> UART0 + UART1

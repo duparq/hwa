@@ -92,7 +92,7 @@
 #define HW_ATOMIC(...)				\
   do{						\
     uint8_t s = _hw_read(core0,sreg);	\
-    hw_disable_interrupts();			\
+    hw( disable_interrupts );			\
     { __VA_ARGS__ }				\
     _hw_write(core0,sreg,s) ;		\
   }while(0)
@@ -546,7 +546,7 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
   if ( (m & 0xFF) && (m >> 8) ) {
     uint8_t s = _hw_read(core0,sreg);
-    hw_disable_interrupts();
+    hw( disable_interrupts );
     uint8_t lb = *pl ;
     _hw_write(core0,sreg,s);
     uint8_t hb = *ph ;

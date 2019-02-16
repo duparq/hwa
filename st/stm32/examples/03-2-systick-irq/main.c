@@ -26,7 +26,7 @@ HW_ISR( systick ) {}
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /* Configure the PLL source and multiplier (must be done before it is enabled).
    * Prepare the connection of the sysclk to the pll. The hardware will wait for
@@ -36,12 +36,12 @@ int main ( )
        source,     hsi/2,
        multiplier, SYSHZ/(HW_DEVICE_HSIHZ/2) );
   hwa( connect, sysclk, pll );
-  hwa_commit();
+  hwa( commit );
 
   /*  Turn the PLL on.
    */
   hwa( turn, pll, on );
-  hwa_commit();
+  hwa( commit );
 
   /* Wait for the PLL to be locked.
    */
@@ -52,17 +52,17 @@ int main ( )
   hwa( configure, ahb,
        clock,     sysclk,
        prescaler, SYSHZ/AHBHZ );
-  hwa_commit();
+  hwa( commit );
 
   /*  Configure the GPIO pin
    */
   hwa( power, (LED1,port), on );
-  hwa_commit();
+  hwa( commit );
 
   hwa( configure, LED1,
        mode,      digital_output,
        frequency, lowest );
-  hwa_commit();
+  hwa( commit );
 
   /*  Configure the system tick timer
    */
@@ -73,12 +73,12 @@ int main ( )
        reload,    ((uint32_t)(PERIOD/2 / 0.001)*onems - 1) & 0xFFFFFF );
   hwa( turn, systick, on );
   hwa( turn, irq(systick), on );
-  hwa_commit();
+  hwa( commit );
 
   /*  Toggle the LED between sleeps
    */
   for(;;) {
-    hw_sleep_until_irq();	// hw_sleep_until_event() is OK too.
+    hw( sleep_until_irq );	// hw_sleep_until_event() is OK too.
     hw( toggle, LED );
   }
 }

@@ -42,7 +42,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the LED pin
    */
@@ -64,8 +64,8 @@ int main ( )
      *	so we must stop it.
      */
     hwa( turn, watchdog0, off );
-    hwa_commit();
-    hw_sleep_until_irq();
+    hwa( commit );
+    hw( sleep_until_irq );
     for (;;)			/* This should */
       hw( toggle, PIN_LED );	/* not happen  */
   }
@@ -80,23 +80,23 @@ int main ( )
 
   /*  Write this configuration into the hardware
    */
-  hwa_commit();
+  hwa( commit );
 
   /*  MCU can't awake from sleep without interrupts!
    */
-  hw_enable_interrupts();
+  hw( enable_interrupts );
 
   static uint8_t count ;
 
   for(;;) {
-    hw_sleep_until_irq();
+    hw( sleep_until_irq );
 
     /*	When watchdog action is 'irq_or_reset', a timeout automatically disables
      *	the IRQ so that next timeout will reset the device. Load the context
      *	with this information, but do not write it into hardware.
      */
     hwa( turn, irq(watchdog0), off );
-    hwa_nocommit();
+    hwa( nocommit );
 
     hw( toggle, PIN_LED );
     count++ ;
@@ -105,7 +105,7 @@ int main ( )
        *  Re-enable the watchdog IRQ.
        */
       hwa( turn, irq(watchdog0), on );
-      hwa_commit();
+      hwa( commit );
     }
   }
 }

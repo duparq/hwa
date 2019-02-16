@@ -13,21 +13,24 @@
  * @ingroup public_ins_atmelavr
  * @brief Puts the core in sleep mode.
  */
-#define hw_sleep_until_irq()			hw_asm("sleep")
+#define _hw_sleep_until_irq__mcu(...)		hw_asm("sleep")
+#define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
 
 
 /**
  * @ingroup public_ins_atmelavr
  * @brief Allows program interruption.
  */
-#define hw_enable_interrupts()		hw_asm("sei")
+#define _hw_enable_interrupts__mcu(...)		hw_asm("sei")
+#define hw_enable_interrupts__mcu		, _hw_enable_interrupts__mcu
 
 
 /**
  * @ingroup public_ins_atmelavr
  * @brief Prevents program interruption.
  */
-#define hw_disable_interrupts()		hw_asm("cli")
+#define _hw_disable_interrupts__mcu(...)	hw_asm("cli")
+#define hw_disable_interrupts__mcu		, _hw_disable_interrupts__mcu
 
 
 /**

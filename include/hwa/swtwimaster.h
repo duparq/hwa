@@ -233,12 +233,12 @@
  */
 #define _hw_cfswtwimaster(o,bps,scl,sda,...)			\
   do{								\
-    hwa_begin();						\
+    _hwa_begin__mcu(,);						\
     _hwa( configure, HW_XB scl, mode, digital_input_floating );	\
     _hwa( configure, HW_XB sda, mode, digital_input_floating );	\
     _hwa( write, HW_XB scl, 0 );				\
     _hwa( write, HW_XB sda, 0 );				\
-    hwa_commit();						\
+    _hwa_commit__mcu(,);					\
   }while(0)
 
 

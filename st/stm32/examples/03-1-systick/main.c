@@ -20,12 +20,12 @@
 
 int main ( )
 {
-  hwa_begin_from_reset();
+  hwa( begin_from_reset );
 
   /*  Configure the GPIO pin
    */
   hwa( power, (LED1,port), on );
-  hwa_commit();
+  hwa( commit );
 
   hwa( configure, LED1,
        mode,      digital_output,
@@ -38,7 +38,7 @@ int main ( )
        reload,    PERIOD/2 * AHBHZ/8 - 1,
        run,       yes );
 
-  hwa_commit();
+  hwa( commit );
 
   for(;;) {
     if ( hw(read, irqflag(systick) ) )	/* Reading the flag clears it */

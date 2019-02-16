@@ -57,6 +57,8 @@
 #define HW_E_CM(c,m)		HW_E(class HW_Q(c) has no method HW_Q(m))
 #define HW_EM_CM(c,m)		class HW_Q(c) has no method HW_Q(m)
 
+#define HW_E_M(m)		HW_E(unknown method HW_Q(m))
+
 #define HW_E_ST(x)		HW_E(HW_Q(x) is not in (on, off))
 #define HW_E_VL(v,l)		HW_E(HW_Q(v) is not HW_Q(l))
 #define HW_E_AVM(a)		HW_E(missing value for HW_Q(a))
@@ -267,7 +269,7 @@
  * hw( write, counter0, 0 );
  * @endcode
  */
-#define hw(...)			HW(hw_,__VA_ARGS__,,)
+#define hw(...)				hwx(hw_,__VA_ARGS__,,)
 
 
 /**
@@ -280,8 +282,8 @@
  * An explicit error message is produced if the object does not exist or if it
  * does not support the action.
  *
- * The context must have been created with the `hwa_begin()` or the
- * `hwa_begin_from_reset()` instruction.
+ * The context must have been created with the `hwa( begin )` or the
+ * `hwa( begin_from_reset )` instruction.
  *
  * The `hwa_commit()` instruction triggers the production of the machine code.
  *
@@ -293,7 +295,7 @@
  * hwa( write, counter0, 0 );
  * @endcode
  */
-#define hwa(...)		HW(hwa_,__VA_ARGS__,,)
+#define hwa(...)			hwx(hwa_,__VA_ARGS__,,)
 
 
 /*
@@ -304,25 +306,35 @@
  * The method is searched in this order:
  *  1. A class method, h_f_c
  *  2. A global method, h_f
+ *  3. A class method h_f__mcu if 'o' is void (begin,commit...)
  */
-#define HW(h,f,o,...)			_HW00(h,f, HW_X(o), __VA_ARGS__)
-#define _HW00(...)			_HW01(__VA_ARGS__)
-#define _HW01(h,f,c,o,...)		HW_Y0(_HW01_,c)(h,f,c,o,__VA_ARGS__)
-#define _HW01_1(h,f,c,o,e,...)		h##f##_	HW_E(e)// An error occured
+#define hwx(h,f,o,...)			_hwx_0(h,f,HW_X(o),__VA_ARGS__)
+#define _hwx_0(...)			_hwx_1(__VA_ARGS__)
+#define _hwx_1(h,f,c,o,...)		HW_Y0(_hwx_1,c)(h,f,c,o,__VA_ARGS__)
+#define _hwx_11(h,f,c,o,e,...)		HW_Y(_hwx_11,o)(h,f,c,o,e,__VA_ARGS__)
+#define _hwx_110(h,f,c,o,e,...)		h##f##_	HW_E(e) // An error occured with o
+#define _hwx_111(h,f,c,o,e,...)		_hwx_12(h,f,h##f##__mcu,__VA_ARGS__)
+#define _hwx_12(...)			_hwx_13(__VA_ARGS__)
+#define _hwx_13(h,f,x,...)		HW_Y0(_hwx_13,x)(h,f,x,__VA_ARGS__)
+#define _hwx_130(h,f,...)		HW_E_M(f)
+#define _hwx_131(h,f,z,y,...)		y(__VA_ARGS__)
 /* Class method? */
-#define _HW01_0(h,f,c,o,...)		_HW02(h,f,c,o,h##f##_##c,__VA_ARGS__)
-#define _HW02(...)			_HW03(__VA_ARGS__)
-#define _HW03(h,f,c,o,x,...)		HW_Y0(_HW03_,x)(h,f,c,o,x,__VA_ARGS__)
-#define _HW03_1(h,f,c,o,z,y,...)	y(o,__VA_ARGS__)
+#define _hwx_10(h,f,c,o,...)		_hwx_2(h,f,c,o,h##f##_##c,__VA_ARGS__)
+#define _hwx_2(...)			_hwx_3(__VA_ARGS__)
+#define _hwx_3(h,f,c,o,x,...)		HW_Y0(_hwx_3,x)(h,f,c,o,x,__VA_ARGS__)
+#define _hwx_31(h,f,c,o,z,y,...)	y(o,__VA_ARGS__)
 /* Global method? */
-#define _HW03_0(h,f,c,o,x,...)		_HW06(h,f,c,o,h##f,__VA_ARGS__)
-#define _HW06(...)			_HW07(__VA_ARGS__)
-#define _HW07(h,f,c,o,x,...)		HW_Y0(_HW07_,x)(h,f,c,o,x,__VA_ARGS__)
-#define _HW07_1(h,f,c,o,z,y,...)	y(c,o,__VA_ARGS__)
+#define _hwx_30(h,f,c,o,x,...)		_hwx_6(h,f,c,o,h##f,__VA_ARGS__)
+#define _hwx_6(...)			_hwx_7(__VA_ARGS__)
+#define _hwx_7(h,f,c,o,x,...)		HW_Y0(_hwx_7,x)(h,f,c,o,x,__VA_ARGS__)
+#define _hwx_71(h,f,c,o,z,y,...)	y(c,o,__VA_ARGS__)
 /* Fake object? */
-#define _HW07_0(h,f,c,o,x,...)		HW_Y0(_HW08_,_hw_is__fake_##c)(h,f,c,o)
-#define _HW08_1(...)
-#define _HW08_0(h,f,c,o,...)		HW_E_OCM(o,c,f)
+#define _hwx_70(h,f,c,o,x,...)		HW_Y0(_hwx_8,_hw_is__fake_##c)(h,f,c,o)
+#define _hwx_81(...)			// Nothing to do, fake is always OK.
+#define _hwx_80(h,f,c,o,...)		h##f##_ HW_E_OCM(o,c,f)
+
+#define hw_class__mcu
+#define hw_mcu				_mcu,,
 
 
 /*  Internal use only version
