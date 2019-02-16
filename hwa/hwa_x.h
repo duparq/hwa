@@ -244,7 +244,7 @@
 #define _HW_XIRQ03_0(c,o,d,r,...)	_HW_XIRQ04(o,r,hw_irq_##o##_##r,__VA_ARGS__)
 #define _HW_XIRQ04(...)			_HW_XIRQ05(__VA_ARGS__)
 #define _HW_XIRQ05(o,r,x,...)		HW_Y0(_HW_XIRQ05_,_hw_is_irq##x)(o,r,x,__VA_ARGS__)
-#define _HW_XIRQ05_0(o,r,...)		,irq(o,r),HW_EM_IRQ(o,r)	// Error: no such IRQ
+#define _HW_XIRQ05_0(o,r,...)		,irq(o,r),HW_EM_IRQ((o,r))	// Error: no such IRQ
 #define _HW_XIRQ05_1(o,r,c,n,v,m,f,...)	HW_Y0(_HW_XIRQ06_,__VA_ARGS__)(o,r,c,n,v,m,f,__VA_ARGS__)
 #define _HW_XIRQ06_0(o,r,c,n,v,m,f,...)	,irq(o,r),HW_EM_G(HW_A0(__VA_ARGS__))	// Error: garbage
 #define _HW_XIRQ06_1(o,r,c,n,v,m,f,...)	_irq,irq(o,r),n,v,m,f	// Success
