@@ -191,7 +191,7 @@ int main ( )
        direction, up_loop,
        bottom,	  0,
        top,	  TOP_OBJ,
-       //	    overflow,  at_top,
+       //	    overflow,  after_top,
        );
   hwa( write, (COUNTER, TOP_OBJ), COUNT_TOP );
   hwa( turn, irq(COUNTER,overflow), on );

@@ -12,17 +12,18 @@
 /**
  * @page atmelavr_cmp16a Class _cmp16a: counter compare unit with waveform generator
  *
- * A class `_cmp16a` object is a 16-bit counter compare unit with waveform
- * generator. It has the following relative objects:
+ * Class `_cmp16a` objects are 16-bit compare units with waveform generator. They
+ * are named using the notation (COUNTER,COMPARE),
+ * e.g. (counter0,compare0). They have the following relative objects:
  *
- *  * one counter, whose name is given by `( compare0, counter )`
+ *  * one counter: `((counter0,compare0), counter)`
+ *  * one output pin: `((counter0,compare0), pin)`
  *
- *  * one output pin, whose name is given by `( compare0, pin )`
+ * They are used in:
  *
- * It is used in:
+ * * @ref attinyx4 : `(counter1,compare0)`, `(counter1,compare1)`
+ * * @ref atmegax8 : `(counter1,compare0)`, `(counter1,compare1)`
  *
- * * @ref attinyx4 : `counter1compare0`, `counter1compare1`
- * * @ref atmegax8 : `counter1compare0`, `counter1compare1`
  */
 #define hw_class__cmp16a
 

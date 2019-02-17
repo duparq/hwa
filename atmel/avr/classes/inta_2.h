@@ -78,7 +78,7 @@
  * @code
  * if ( hw( read, irqflag( int0 ) ) ) {	   // Read IRQ flag
  *   hw( clear, irqflag( int0 ) );		   // Clear IRQ flag
- *   hw( turn, irq( int0, off ) );	   // Disable IRQ
+ *   hw( turn, irq(int0), off );	   // Disable IRQ
  * }
  * @endcode
  */

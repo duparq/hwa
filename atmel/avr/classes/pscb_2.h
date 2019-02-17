@@ -81,15 +81,13 @@
  * @page atmelavr_pscb
  * @section atmelavr_pscb_reset Reset
  *
- * The hw_reset() instruction resets the prescaler immediately without stopping
- * it:
+ * The `reset` action resets the prescaler immediately without stopping it:
  *
  * @code
- * hw_reset( prescaler0 );
+ * hw( reset, prescaler0 );
  * @endcode
  */
-#define hw_reset__pscb		, _hw_pscb_reset
-
+#define hw_reset__pscb			, _hw_pscb_reset
 #define _hw_pscb_reset(o,i,a, ...)	_hw_write(o,psr,1)
 
 

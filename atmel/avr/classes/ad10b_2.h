@@ -267,7 +267,7 @@
  * hw_stat_t(adc0)	st ;
  * st = hw(stat,adc0);
  * if ( !st.busy )
- *   hw_trigger( adc0 );
+ *   hw( trigger, adc0 );
  * @endcode
  */
 #define hw_stat__ad10b		, _hw_stat_ad10_

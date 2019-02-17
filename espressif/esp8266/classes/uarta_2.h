@@ -152,7 +152,7 @@
  *
  * @code
  * while ( ! hw( read, irqflag( uart0, txqnf ) ) ) {}
- * hw_write( uart0, '#' );
+ * hw( write, uart0, '#' );
  * @endcode
  */
 /* #define hw_write__uarta	, _hw_wruarta */

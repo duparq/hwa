@@ -14,21 +14,20 @@
  * @section atmelavr_cmp8b_acfg Configuration
  *
  * @code
- * hwa( configure, compare0,
+ * hwa( configure, (counter0,compare0),
  *
- *	   [   update,	   at_top, ]
+ *    [ update,     after_top, ]
  *
- *	   [   output
- *	     | output_h,   disconnected
- *			 | toggle_on_match
- *			 | clear_on_match
- *			 | set_on_match
- *			 | set_at_bottom_clear_on_match
- *			 | clear_at_bottom_set_on_match, ]
+ *  [   output
+ *    | output_h,   disconnected
+ *                | toggle_after_match
+ *                | clear_after_match
+ *                | set_after_match
+ *                | set_at_bottom_clear_after_match
+ *                | clear_at_bottom_set_after_match, ]
  *
- *	   [   output_l,   disconnected
- *			 | clear_at_bottom_set_on_match	 ]
- *	     );
+ *    [ output_l,   disconnected
+ *                | clear_at_bottom_set_after_match ] );
  * @endcode
  */
 
@@ -46,10 +45,10 @@
       } while(0)
 
 #define _hwa_cfcmp8b_kupdate_1(o,kw,v,...)				\
-  HW_G2(_hwa_cfcmp8b_vupdate,HW_IS(at_top,v))(o,v,__VA_ARGS__)
+  HW_G2(_hwa_cfcmp8b_vupdate,HW_IS(after_top,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_vupdate_0(o,v,...)				\
-  HW_E_AVL(`update`, v, `at_top`)
+  HW_E_AVL(`update`, v, `after_top`)
 
 #define _hwa_cfcmp8b_vupdate_1(o,v,...)		\
   _hwa_cfcmp8b_kupdate_0(o,__VA_ARGS__)
@@ -66,18 +65,18 @@
 /*								// COM	PWM
  */
 #define _hw_cmp8b_voutputh_disconnected	, 0	// 0	0
-#define _hw_cmp8b_voutputh_toggle_on_match	, 1	// 1	0
-#define _hw_cmp8b_voutputh_clear_on_match	, 2	// 2	0
-#define _hw_cmp8b_voutputh_set_on_match	, 3	// 3	0
-#define _hw_cmp8b_voutputh_set_at_bottom_clear_on_match	, 4	// 1,2	1
-#define _hw_cmp8b_voutputh_clear_at_bottom_set_on_match	, 5	// 3	1
+#define _hw_cmp8b_voutputh_toggle_after_match	, 1	// 1	0
+#define _hw_cmp8b_voutputh_clear_after_match	, 2	// 2	0
+#define _hw_cmp8b_voutputh_set_after_match	, 3	// 3	0
+#define _hw_cmp8b_voutputh_set_at_bottom_clear_after_match	, 4	// 1,2	1
+#define _hw_cmp8b_voutputh_clear_at_bottom_set_after_match	, 5	// 3	1
 
 
 #define _hwa_cfcmp8b_koutputh_1(o,kw,v,...)				\
   HW_Y(_hwa_cfcmp8b_voutputh_,_hw_cmp8b_voutputh_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_voutputh_0(o,v,...)					\
-  HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_on_match | clear_on_match | set_on_match | set_at_bottom_clear_on_match | clear_at_bottom_set_on_match`)
+  HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match`)
 
 #define _hwa_cfcmp8b_voutputh_1(o,v,...)		\
   hwa->o.config.outputh = HW_A1(_hw_cmp8b_voutputh_##v);	\
@@ -92,13 +91,13 @@
 /*								// COM	  PWM
  */
 #define _hw_cmp8b_voutputl_disconnected	, 0	// 0,2,3  0,1
-#define _hw_cmp8b_voutputl_clear_at_bottom_set_on_match	, 1	// 1	  1
+#define _hw_cmp8b_voutputl_clear_at_bottom_set_after_match	, 1	// 1	  1
 
 #define _hwa_cfcmp8b_koutputl_1(o,kw,v,...)				\
   HW_Y(_hwa_cfcmp8b_voutputl_,_hw_cmp8b_voutputl_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcmp8b_voutputl_0(o,v,...)				\
-  HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_on_match)
+  HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_after_match)
 
 #define _hwa_cfcmp8b_voutputl_1(o,v,...)			\
   hwa->o.config.outputl = HW_A1(_hw_cmp8b_voutputl_##v);	\
@@ -112,36 +111,25 @@
  * @page atmelavr_cmp8b
  * @section atmelavr_cmp8b_cr Compare value
  *
- * The compare value is set using the hw_write() or hwa_write() instruction:
+ * @code
+ * hw( write, (counter0,compare0), value );
+ * @endcode
  *
  * @code
- * hw_write( compare0, value );
+ * hwa( write, (counter0,compare0), value );
+ * @endcode
+ *
+ * @code
+ * uint8_t ocr = hw( read, (counter0,compare0) );
  * @endcode
  */
-#define hw_write__cmp8b	, _hw_wrcmp8b
-#define _hw_wrcmp8b(o,i,a,v,...)		_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define hw_write__cmp8b			, _hw_wrcmp8b
+#define _hw_wrcmp8b(o,i,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
-/**
- * @page atmelavr_cmp8b
- *
- * @code
- * hwa_write( compare0, value );
- * @endcode
- */
-#define hwa_write__cmp8b	, _hwa_wrcmp8b
+#define hwa_write__cmp8b		, _hwa_wrcmp8b
 #define _hwa_wrcmp8b(o,i,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
-
-/**
- * @page atmelavr_cmp8b
- *
- * The compare value is read using the`read`instruction:
- *
- * @code
- * uint16_t ocr = hw( read, compare0 );
- * @endcode
- */
-#define hw_read__cmp8b		, _hw_read_cmp8b
+#define hw_read__cmp8b			, _hw_read_cmp8b
 #define _hw_read_cmp8b(o,i,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
 
 
@@ -153,9 +141,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag( compare0 ) ) ) {	// Read compare IRQ flag
- *   hw( clear, irqflag( compare0 ) );		// Clear compare IRQ flag
- *   hw( turn, irq( compare0, off ) );		// Disable compare IRQs
+ * if ( hw( read, irqflag((counter0,compare0)) ) ) {    // Read compare IRQ flag
+ *   hw( clear, irqflag((counter0,compare0)) );         // Clear compare IRQ flag
+ *   hw( turn, irq((counter0,compare0)), off );         // Disable compare IRQs
  * }
  * @endcode
  */
@@ -177,10 +165,10 @@
 
 #define _hwa_solve_cmp8b(o)						\
   if ( hwa->o.config.outputh != 0xFF || hwa->o.config.outputl != 0xFF ) {	\
-  if ( hwa->o.config.outputl == HW_A1(_hw_cmp8b_voutputl_clear_at_bottom_set_on_match) ) { \
-    if ( hwa->o.config.outputh != HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_on_match) ) \
-      HWA_ERR("`output_h` must be `set_at_bottom_clear_on_match` "	\
-	      "when `output_l` is `clear_at_bottom_set_on_match`.");	\
+  if ( hwa->o.config.outputl == HW_A1(_hw_cmp8b_voutputl_clear_at_bottom_set_after_match) ) { \
+    if ( hwa->o.config.outputh != HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_after_match) ) \
+      HWA_ERR("`output_h` must be `set_at_bottom_clear_after_match` "	\
+	      "when `output_l` is `clear_at_bottom_set_after_match`.");	\
     _hwa_write(o,pwm,1);						\
     _hwa_write(o,mode,1);						\
   }									\
@@ -188,23 +176,23 @@
     _hwa_write(o,pwm,0);					\
     _hwa_write(o,mode,0);						\
   }									\
-  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_toggle_on_match) ) { \
+  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_toggle_after_match) ) { \
     _hwa_write(o,pwm,0);					\
     _hwa_write(o,mode,1);						\
   }									\
-  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_on_match) ) { \
+  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_after_match) ) { \
     _hwa_write(o,pwm,0);					\
     _hwa_write(o,mode,2);						\
   }									\
-  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_on_match) ) { \
+  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_after_match) ) { \
     _hwa_write(o,pwm,0);					\
     _hwa_write(o,mode,3);						\
   }									\
-  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_on_match) ) { \
+  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_set_at_bottom_clear_after_match) ) { \
     _hwa_write(o,pwm,1);						\
     _hwa_write(o,mode,2);						\
   }									\
-  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_at_bottom_set_on_match) ) { \
+  else if ( hwa->o.config.outputh == HW_A1(_hw_cmp8b_voutputh_clear_at_bottom_set_after_match) ) { \
     _hwa_write(o,pwm,1);						\
     _hwa_write(o,mode,3);						\
   }									\

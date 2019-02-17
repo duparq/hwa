@@ -158,7 +158,7 @@
  * The `hw_reset()` instruction resets the watchdog timer (issues a `wdr`):
  *
  * @code
- * hw_reset( watchdog0 );
+ * hw( reset, watchdog0 );
  * @endcode
  */
 #define hw_reset__wdogb	, _hw_rstwdogb
@@ -175,7 +175,7 @@
  * @code
  * if ( hw( read, irqflag( watchdog0 ) ) ) {
  *   hw( clear, irqflag( watchdog0 ) );
- *   hw( turn, irq( watchdog0, on ) );
+ *   hw( turn, irq(watchdog0), on );
  *   n_wdoverflows++ ;
  * }
  * @endcode

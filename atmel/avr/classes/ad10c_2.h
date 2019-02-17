@@ -378,7 +378,7 @@ HW_INLINE uint8_t _hwa_ad10c_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw_stat_t(adc0)	st ;
  * st = hw(stat,adc0);
  * if ( !st.busy )
- *   hw_trigger( adc0 );
+ *   hw( trigger, adc0 );
  * @endcode
  */
 #define hw_stat__ad10c		, _hw_stat_ad10_

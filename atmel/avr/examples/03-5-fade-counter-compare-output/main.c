@@ -66,7 +66,7 @@ HW_ISR( COUNTER, overflow )
       if ( phase == 2 )
 	hw( configure, (COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
-	hw( configure, (COUNTER,COMPARE), output, set_at_bottom_clear_on_match );
+	hw( configure, (COUNTER,COMPARE), output, set_at_bottom_clear_after_match );
     }
   }
 }
@@ -95,10 +95,10 @@ int main ( )
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
     hwa( configure, (COUNTER,COMPARE),
-	 output, clear_on_match_up_set_on_match_down );
+	 output, clear_after_match_up_set_after_match_down );
   else /* up_loop */
     hwa( configure, (COUNTER,COMPARE),
-	 output, set_at_bottom_clear_on_match );
+	 output, set_at_bottom_clear_after_match );
 
   /*  Enable overflow IRQ
    */

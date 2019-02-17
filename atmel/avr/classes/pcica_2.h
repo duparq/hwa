@@ -59,7 +59,7 @@
  * @code
  * if ( hw( read, irqflag( pcic0 ) ) ) {	     // Read pin change flag
  *   hw( clear, irqflag( pcic0 ) );	     // Clear pin change flag
- *   hw( turn, irq( pcic0, off ) );	     // Disable pin change IRQ
+ *   hw( turn, irq(pcic0), off );	     // Disable pin change IRQ
  * }
  * @endcode
  */

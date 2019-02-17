@@ -82,9 +82,9 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
  *
  *      //  When the overflow flag is set
  *      //
- *    [ overflow,    at_bottom                  // When the counter resets to bottom
- *                | at_top                      // When the counter reaches the top value
- *                | at_max ]                    // When the counter reaches its max value
+ *    [ overflow,    after_bottom                  // When the counter resets to bottom
+ *                | after_top                      // When the counter reaches the top value
+ *                | after_max ]                    // When the counter reaches its max value
  *      );
  * @endcode
  */
@@ -168,20 +168,20 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
 
 /*  Optionnal argument `overflow`
  */
-#define _hw_c8c_overflow_at_bottom	, 0
-#define _hw_c8c_overflow_at_top		, 1
-#define _hw_c8c_overflow_at_max		, 2
+#define _hw_c8c_overflow_after_bottom	, 0
+#define _hw_c8c_overflow_after_top		, 1
+#define _hw_c8c_overflow_after_max		, 2
 
 #define _hwa_cfc8c_koverflow_1(o,k,v,...)				\
   HW_Y(_hwa_cfc8c_voverflow_,_hw_c8c_overflow_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8c_voverflow_0(o,v,...)				\
-  HW_E_OAVL(overflow, v, at_bottom | at_top | at_max)
+  HW_E_OAVL(overflow, v, after_bottom | after_top | after_max)
 
 #define _hwa_cfc8c_voverflow_1(o,v,...)				\
   if ( hwa->o.config.direction == HW_A1(_hw_c8c_direction_up_loop)		\
-       && HW_A1(_hw_c8c_overflow_##v) == HW_A1(_hw_c8c_overflow_at_bottom) ) \
-    HWA_ERR("optionnal parameter `overflow` can not be `at_bottom` "	\
+       && HW_A1(_hw_c8c_overflow_##v) == HW_A1(_hw_c8c_overflow_after_bottom) ) \
+    HWA_ERR("optionnal parameter `overflow` can not be `after_bottom` "	\
 	    "when direction is `up_loop`.");				\
   hwa->o.config.overflow = HW_A1(_hw_c8c_overflow_##v);  HW_EOL(__VA_ARGS__)
 
@@ -217,50 +217,50 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
       HWA_ERR("configuration of `" #o "` is required.");		\
     else if ( r == 4 )							\
       HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "'disconnected', 'toggle_on_match', 'clear_on_match', or " \
-	      "'set_on_match'.");					\
+	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
+	      "'set_after_match'.");					\
     else if ( r == 5 )							\
       HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "'disconnected', 'set_at_bottom_clear_on_match', or "	\
-	      "'clear_at_bottom_set_on_match'.");			\
+	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
+	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 6 )							\
       HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "'disconnected', 'toggle_on_match', "			\
-	      "'set_at_bottom_clear_on_match', or "			\
-	      "'clear_at_bottom_set_on_match'.");			\
+	      "'disconnected', 'toggle_after_match', "			\
+	      "'set_at_bottom_clear_after_match', or "			\
+	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 7 )							\
       HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "'disconnected', 'clear_on_match_up_set_on_match_down', "	\
-	      "or 'set_on_match_up_clear_on_match_down'.");		\
+	      "'disconnected', 'clear_after_match_up_set_after_match_down', "	\
+	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 8 )							\
       HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "'disconnected', 'toggle_on_match', "			\
-	      "'clear_on_match_up_set_on_match_down', "			\
-	      "or 'set_on_match_up_clear_on_match_down'.");		\
+	      "'disconnected', 'toggle_after_match', "			\
+	      "'clear_after_match_up_set_after_match_down', "			\
+	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 9 )							\
       HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "'disconnected', 'toggle_on_match', 'clear_on_match', or " \
-	      "'set_on_match'.");					\
+	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
+	      "'set_after_match'.");					\
     else if ( r == 10 )							\
       HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "'disconnected', 'set_at_bottom_clear_on_match', or "	\
-	      "'clear_at_bottom_set_on_match'.");			\
+	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
+	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 11 )							\
       HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "'disconnected', 'clear_on_match_up_set_on_match_down', "	\
-	      "or 'set_on_match_up_clear_on_match_down'.");		\
+	      "'disconnected', 'clear_after_match_up_set_after_match_down', "	\
+	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 12 )							\
       HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'immediately'."); \
     else if ( r == 13 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'at_bottom'."); \
+      HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'after_bottom'."); \
     else if ( r == 14 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'at_top'."); \
+      HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'after_top'."); \
     else if ( r == 15 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'at_top'."); \
+      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'after_top'."); \
     else if ( r == 16 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'at_bottom'."); \
+      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'after_bottom'."); \
     else if ( r == 17 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'at_max'."); \
+      HWA_ERR("for `" #o "`, `optionnal parameter 'overflow' must be 'after_max'."); \
     else {								\
       /*								\
        *  Write solved registers					\
@@ -308,9 +308,9 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   uint8_t overflow = p->config.overflow ;
   if ( overflow == 0xFF && p->config.top == HW_A1(_hw_c8c_top_compare0) ) {
     if ( p->config.direction == HW_A1(_hw_c8c_direction_up_loop) )
-      overflow = HW_A1(_hw_c8c_overflow_at_top);
+      overflow = HW_A1(_hw_c8c_overflow_after_top);
     else /* if ( p->config.direction == HW_A1(_hw_c8c_direction_up_loop) ) */
-      overflow = HW_A1(_hw_c8c_overflow_at_bottom);
+      overflow = HW_A1(_hw_c8c_overflow_after_bottom);
   }
 
   /*  Compare update setting
@@ -343,11 +343,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   uint8_t wgm = 0xFF ;
   if ( p->config.direction == HW_A1(_hw_c8c_direction_up_loop) ) {
     if ( p->config.top == HW_A1(_hw_c8c_top_fixed_0xFF) ) {
-      if ( compare_update == HW_A1(_hw_cmp8a_update_at_bottom)
-	   || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match)
-	   || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	   || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match)
-	   || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match))
+      if ( compare_update == HW_A1(_hw_cmp8a_update_after_bottom)
+	   || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match)
+	   || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	   || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match)
+	   || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match))
 	wgm = 3 ;
       else 
 	wgm = 0 ;
@@ -359,12 +359,12 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
        *  wgm2 is not in the same register as wgm1:0, this generates useless
        *  code.
        */
-      if ( compare_update == HW_A1(_hw_cmp8a_update_at_bottom )
-	   || overflow == HW_A1(_hw_c8c_overflow_at_top)
-	   || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match)
-	   || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	   || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match)
-	   || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match))
+      if ( compare_update == HW_A1(_hw_cmp8a_update_after_bottom )
+	   || overflow == HW_A1(_hw_c8c_overflow_after_top)
+	   || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match)
+	   || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	   || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match)
+	   || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match))
 	wgm = 7 ;
       else
 	wgm = 2 ;
@@ -393,11 +393,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
     if ( compare0->config.output == HW_A1(_hw_cmp8a_output_disconnected) )
       mode = 0 ;
-    else if ( compare0->config.output == HW_A1(_hw_cmp8a_output_toggle_on_match) )
+    else if ( compare0->config.output == HW_A1(_hw_cmp8a_output_toggle_after_match) )
       mode = 1 ;
-    else if ( compare0->config.output == HW_A1(_hw_cmp8a_output_clear_on_match)
-	      || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	      || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_on_match_up_set_on_match_down) )
+    else if ( compare0->config.output == HW_A1(_hw_cmp8a_output_clear_after_match)
+	      || compare0->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	      || compare0->config.output == HW_A1(_hw_cmp8a_output_clear_after_match_up_set_after_match_down) )
       mode = 2 ;
     else
       mode = 3 ;
@@ -414,11 +414,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
     if ( compare1->config.output == HW_A1(_hw_cmp8a_output_disconnected) )
       mode = 0 ;
-    else if ( compare1->config.output == HW_A1(_hw_cmp8a_output_toggle_on_match) )
+    else if ( compare1->config.output == HW_A1(_hw_cmp8a_output_toggle_after_match) )
       mode = 1 ;
-    else if ( compare1->config.output == HW_A1(_hw_cmp8a_output_clear_on_match)
-	      || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	      || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_on_match_up_set_on_match_down) )
+    else if ( compare1->config.output == HW_A1(_hw_cmp8a_output_clear_after_match)
+	      || compare1->config.output == HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	      || compare1->config.output == HW_A1(_hw_cmp8a_output_clear_after_match_up_set_after_match_down) )
       mode = 2 ;
     else
       mode = 3 ;
@@ -442,53 +442,53 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
     if ( compare0->config.output != 0xFF ) {
       if ( wgm==0 || wgm==2 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_on_match))
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_after_match))
 	  return 4 ;
 	/* HWA_ERR("compare output A of class _c8c counter mode must be " */
-	/*	"'disconnected', 'toggle_on_match', 'clear_on_match', or " */
-	/*	"'set_on_match'."); */
+	/*	"'disconnected', 'toggle_after_match', 'clear_after_match', or " */
+	/*	"'set_after_match'."); */
 
       }
       else if ( wgm==3 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match) )
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match) )
 	  return 5 ;
 	/* HWA_ERR("compare output A of class _c8c counter mode must be " */
-	/*	"'disconnected', 'set_at_bottom_clear_on_match', or " */
-	/*	"'clear_at_bottom_set_on_match'."); */
+	/*	"'disconnected', 'set_at_bottom_clear_after_match', or " */
+	/*	"'clear_at_bottom_set_after_match'."); */
       }
       else if ( wgm==7 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match) )
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match) )
 	  return 6 ;
 	/* HWA_ERR("compare output A of class _c8c counter mode must be " */
-	/*	"'disconnected', 'toggle_on_match', " */
-	/*	"'set_at_bottom_clear_on_match', or " */
-	/*	"'clear_at_bottom_set_on_match'."); */
+	/*	"'disconnected', 'toggle_after_match', " */
+	/*	"'set_at_bottom_clear_after_match', or " */
+	/*	"'clear_at_bottom_set_after_match'."); */
       }
       else if ( wgm==1 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_on_match_up_set_on_match_down)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_on_match_up_clear_on_match_down) )
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_after_match_up_set_after_match_down)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_after_match_up_clear_after_match_down) )
 	  /* HWA_ERR("compare output A of class _c8c counter mode must be " */
-	  /*	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
-	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'clear_after_match_up_set_after_match_down', " */
+	  /*	  "or 'set_after_match_up_clear_after_match_down'."); */
 	  return 7 ;
       }
       else if ( wgm==5 ) {
 	if ( compare0->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_on_match)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_on_match_up_set_on_match_down)
-	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_on_match_up_clear_on_match_down) )
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_toggle_after_match)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_clear_after_match_up_set_after_match_down)
+	     && compare0->config.output != HW_A1(_hw_cmp8a_output_set_after_match_up_clear_after_match_down) )
 	  /* HWA_ERR("compare output A of class _c8c counter mode must be " */
-	  /*	  "'disconnected', 'toggle_on_match', " */
-	  /*	  "'clear_on_match_up_set_on_match_down', " */
-	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'toggle_after_match', " */
+	  /*	  "'clear_after_match_up_set_after_match_down', " */
+	  /*	  "or 'set_after_match_up_clear_after_match_down'."); */
 	  return 8 ;
       }
     }
@@ -498,30 +498,30 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
     if ( compare1->config.output != 0xFF ) {
       if ( wgm==0 || wgm==2 ) {
 	if ( compare1->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_toggle_on_match)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_on_match)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_on_match))
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_toggle_after_match)
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_after_match)
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_after_match))
 	  /* HWA_ERR("compare output B of class _c8c counter mode must be " */
-	  /*	  "'disconnected', 'toggle_on_match', 'clear_on_match', or " */
-	  /*	  "'set_on_match'."); */
+	  /*	  "'disconnected', 'toggle_after_match', 'clear_after_match', or " */
+	  /*	  "'set_after_match'."); */
 	  return 9 ;
       }
       else if ( wgm==3 || wgm==7 ) {
 	if ( compare1->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_on_match)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_on_match) )
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_at_bottom_clear_after_match)
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_at_bottom_set_after_match) )
 	  /* HWA_ERR("compare output B of class _c8c counter mode must be " */
-	  /*	  "'disconnected', 'set_at_bottom_clear_on_match', or " */
-	  /*	  "'clear_at_bottom_set_on_match'."); */
+	  /*	  "'disconnected', 'set_at_bottom_clear_after_match', or " */
+	  /*	  "'clear_at_bottom_set_after_match'."); */
 	  return 10 ;
       }
       else if ( wgm==1 || wgm==5 ) {
 	if ( compare1->config.output != HW_A1(_hw_cmp8a_output_disconnected)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_on_match_up_set_on_match_down)
-	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_on_match_up_clear_on_match_down) )
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_clear_after_match_up_set_after_match_down)
+	     && compare1->config.output != HW_A1(_hw_cmp8a_output_set_after_match_up_clear_after_match_down) )
 	  /* HWA_ERR("compare output B of class _c8c counter mode must be " */
-	  /*	  "'disconnected', 'clear_on_match_up_set_on_match_down', " */
-	  /*	  "or 'set_on_match_up_clear_on_match_down'."); */
+	  /*	  "'disconnected', 'clear_after_match_up_set_after_match_down', " */
+	  /*	  "or 'set_after_match_up_clear_after_match_down'."); */
 	  return 11 ;
       }
     }
@@ -536,15 +536,15 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 	  return 12 ;
       }
       else if ( wgm==3 || wgm==7 ) {
-	if ( compare_update != HW_A1(_hw_cmp8a_update_at_bottom) )
+	if ( compare_update != HW_A1(_hw_cmp8a_update_after_bottom) )
 	  /* HWA_ERR("optionnal parameter 'update' of class _c8c counter must be " */
-	  /*	  "'at_bottom'."); */
+	  /*	  "'after_bottom'."); */
 	  return 13 ;
       }
       else
-	if( compare_update != HW_A1(_hw_cmp8a_update_at_top) )
+	if( compare_update != HW_A1(_hw_cmp8a_update_after_top) )
 	  /* HWA_ERR("optionnal parameter 'update' of class _c8c counter must be " */
-	  /*	  "'at_top'."); */
+	  /*	  "'after_top'."); */
 	  return 14 ;
     }
 
@@ -552,20 +552,20 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
      */
     if ( overflow != 0xFF ) {
       if ( wgm==7 ) {
-	if ( overflow != HW_A1(_hw_c8c_overflow_at_top) )
+	if ( overflow != HW_A1(_hw_c8c_overflow_after_top) )
 	  /* HWA_ERR("optionnal parameter 'overflow' of class _c8c counter must be " */
-	  /*	  "'at_top'."); */
+	  /*	  "'after_top'."); */
 	  return 15 ;
       }
       else if ( (wgm==1 || wgm==5) ) {
-	if ( overflow != HW_A1(_hw_c8c_overflow_at_bottom) )
+	if ( overflow != HW_A1(_hw_c8c_overflow_after_bottom) )
 	  /* HWA_ERR("optionnal parameter 'overflow' of class _c8c counter must be " */
-	  /*	  "'at_bottom'."); */
+	  /*	  "'after_bottom'."); */
 	  return 16 ;
       }
-      else if ( overflow != HW_A1(_hw_c8c_overflow_at_max) )
+      else if ( overflow != HW_A1(_hw_c8c_overflow_after_max) )
 	/* HWA_ERR("optionnal parameter 'overflow' of class _c8c counter must be " */
-	/*	"'at_max'."); */
+	/*	"'after_max'."); */
 	return 17 ;
     }
   }
@@ -598,7 +598,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 /**
  * @page atmelavr_c8c
  * @code
- * hw_write( counter0, value );
+ * hw( write, counter0, value );
  * @endcode
  */
 #define hw_write__c8c		, _hw_write_c8c
@@ -607,7 +607,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 /**
  * @page atmelavr_c8c
  * @code
- * hwa_write( counter0, value );
+ * hwa( write, counter0, value );
  * @endcode
  */
 #define hwa_write__c8c		, _hwa_write_c8c
@@ -647,7 +647,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @code
  * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
  *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq( counter0, off ) );		// Disable overflow IRQs
+ *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -682,7 +682,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   /* hwa->o.config.clock     = HW_A1(_hw_c8c_clock_none);		\ */
   /* hwa->o.config.direction = HW_A1(_hw_c8c_direction_up_loop);	\ */
   /* hwa->o.config.top	     = HW_A1(_hw_c8c_top_max);		\ */
-  /* hwa->o.config.overflow  = HW_A1(_hw_c8c_overflow_at_max) */
+  /* hwa->o.config.overflow  = HW_A1(_hw_c8c_overflow_after_max) */
 
 
 #define _hwa_commit__c8c(o,i,a)			\

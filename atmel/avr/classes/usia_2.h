@@ -108,7 +108,7 @@
  * @page atmelavr_usia
  *
  * @code
- * hw_write( usi0, 'A' );
+ * hw( write, usi0, 'A' );
  * @endcode
  */
 #define hw_write__usia		, _hw_wrusia
@@ -121,7 +121,7 @@
  * @section atmelavr_usia_trigger Clocking
  *
  * @code
- * hw_trigger( usi0 );
+ * hw( trigger, usi0 );
  * @endcode
  */
 
@@ -178,7 +178,7 @@
  * @section atmelavr_usia_spimaster_swclk_write Sending one byte
  *
  * @code
- * hw_write( spimaster0_swclk, 'A' );
+ * hw( write, spimaster0_swclk, 'A' );
  * @endcode
  */
 #define hw_write__usia_spimaster_swclk	, _hw_wrspimswclk

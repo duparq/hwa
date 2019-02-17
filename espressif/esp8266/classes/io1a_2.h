@@ -229,7 +229,7 @@
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
  * //
- * hwa_toggle( pa0 );
+ * hwa( toggle, pa0 );
  * @endcode
  */
 

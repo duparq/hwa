@@ -59,13 +59,13 @@
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
  * @hideinitializer
  *
- * Nothing is written into the hardware until `hwa_commit()` is called.
+ * Nothing is written into the hardware until `hwa(commit)` is called.
  */
 #define _hwa_begin__mcu(...)						\
   _hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
   _hwa_setup_context(hwa) ;						\
-  uint8_t hwa_xcommit = 0 /* Will warn if hwa_commit() is not called */
+  uint8_t hwa_xcommit = 0 /* Will warn if hwa(commit) is not called */
 
 #define hwa_begin__mcu			, _hwa_begin__mcu
 
@@ -78,7 +78,7 @@
  * The context is initialized with the values the registers have after a
  * system reset.
  *
- * Nothing is written into the hardware until `hwa_commit()` is called.
+ * Nothing is written into the hardware until `hwa(commit)` is called.
  */
 #define _hwa_begin_from_reset__mcu(...)		\
   _hwa_check_optimizations(0);			\
@@ -100,7 +100,7 @@
  *
  * @hideinitializer
  */
-/* _hwa_commit_all() must be defined somewhere in the device-specific files.
+/* _hwa_commit_context() must be defined somewhere in the device-specific files.
  */
 #define _hwa_commit__mcu(...)				\
   do {							\
@@ -114,7 +114,7 @@
 
 /*
  * @ingroup public_ins
- * @brief  Same as hwa_commit() but do not write into hardware.
+ * @brief  Same as `hwa(commit)` but do not write into hardware.
  *
  * This is used to put the HWA context in a known state before modifying it.
  *
@@ -211,6 +211,8 @@
   _hw_write##c( a, wm, fm,						\
 		(((1ULL<<bn1)-1)<<bp1) | (((1ULL<<bn2)-1)<<bp2),	\
 		(((v>>vp1)&((1<<bn1)-1))<<bp1) | (((v>>bp2)&((1<<bn2)-1))<<bp2))
+
+#define hwa_write__m122		, _hwa_write__m122
 
 #define _hwa_write__m122( n, o,						\
 			  r1,c1,a1,wm1,fm1,bn1,bp1,vp1,			\
@@ -337,7 +339,7 @@
  * @ingroup private_ins
  * @brief Get the mmask of the logical register `r` of object `o`.
  *
- * The mmask is set each time a hwa_write() is performed. It is reset after the
+ * The mmask is set each time a `write` is performed. It is reset after the
  * value has been committed.
  *
  * @hideinitializer

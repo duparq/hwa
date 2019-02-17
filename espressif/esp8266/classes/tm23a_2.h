@@ -187,7 +187,7 @@
  * The `hw_write()` instruction sets the content of the counting register:
  *
  * @code
- * hw_write( timer0, VALUE );
+ * hw( write, timer0, VALUE );
  * @endcode
  */
 #define hw_write__tm23a	, _hw_wrtm23a

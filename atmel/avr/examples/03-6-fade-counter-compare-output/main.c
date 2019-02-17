@@ -55,9 +55,9 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
        top,	  TOP );
 
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( configure, PWM, output, clear_on_match_up_set_on_match_down );
+    hwa( configure, PWM, output, clear_after_match_up_set_after_match_down );
   else /* up_loop */
-    hwa( configure, PWM, output, set_at_bottom_clear_on_match );
+    hwa( configure, PWM, output, set_at_bottom_clear_after_match );
 
   /*  Enable overflow IRQ
    */
@@ -99,10 +99,10 @@ HW_ISR( (PWM,counter), overflow )
 
       if ( phase == 2 ) {
 	/*
-	 *  Change the compare output config from 'set_at_bottom_clear_on_match'
+	 *  Change the compare output config from 'set_at_bottom_clear_after_match'
 	 *  to 'disconnected'
 	 */
-	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
+	hwa( configure, PWM, output, set_at_bottom_clear_after_match );
 	hwa( nocommit );
 	hwa( configure, PWM, output, disconnected );
 	hwa( commit );
@@ -110,11 +110,11 @@ HW_ISR( (PWM,counter), overflow )
       else if ( phase == 0 ) {
 	/*
 	 *  Change the compare output config from 'disconnected' to
-	 *  'set_at_bottom_clear_on_match'
+	 *  'set_at_bottom_clear_after_match'
 	 */
 	hwa( configure, PWM, output, disconnected );
 	hwa( nocommit );
-	hwa( configure, PWM, output, set_at_bottom_clear_on_match );
+	hwa( configure, PWM, output, set_at_bottom_clear_after_match );
 	hwa( commit );
       }
     }

@@ -134,7 +134,7 @@
  * @page atmelavr_cap16b
  *
  * @code
- * hw_write( capture0, value );
+ * hw( write, capture0, value );
  * @endcode
  */
 #define hw_write__cap16b	, _hw_write_cap16a
@@ -143,7 +143,7 @@
  * @page atmelavr_cap16b
  *
  * @code
- * hwa_write( capture0, value );
+ * hwa( write, capture0, value );
  * @endcode
  */
 #define hwa_write__cap16b	, _hwa_write_cap16a
@@ -157,9 +157,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag( capture0 ) ) ) {	// Read capture IRQ flag
- *   hw( clear, irqflag( capture0 ) );		// Clear capture IRQ flag
- *   hw( turn, irq( capture0, off ) );		// Disable capture IRQs
+ * if ( hw( read, irqflag((counter0,capture0)) ) ) {       // Read capture IRQ flag
+ *   hw( clear, irqflag((counter0,capture0)) );            // Clear capture IRQ flag
+ *   hw( turn, irq((counter0,capture0)), off );            // Disable capture IRQs
  * }
  * @endcode
  */

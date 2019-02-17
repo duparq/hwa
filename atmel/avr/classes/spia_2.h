@@ -207,7 +207,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 /* /\** */
 /*  * @page atmelavr_spia */
 /*  * @code */
-/*  * hwa_write( spi0, value ); */
+/*  * hwa( write, spi0, value ); */
 /*  * @endcode */
 /*  *\/ */
 /* #define hwa_write__spia	, _hwa_write_spia */
@@ -257,7 +257,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  *
  * @code
  * if ( hw( read, irqflag( spi0 ) ) )  // Read "transfer complete" IRQ flag
- *   hw( turn, irq( spi0, off ) );     // Disable transfer complete IRQs
+ *   hw( turn, irq(spi0), off );     // Disable transfer complete IRQs
  * @endcode
  *
  * The "transfer complete" flag is cleared by hardware when the corresponding

@@ -46,13 +46,13 @@ int main ( )
        direction, up_loop,
        bottom,	  0,
        top,	  compare2,
-       overflow,  at_bottom );
+       overflow,  after_bottom );
 
   hwa( write, (COUNTER, compare2), COUNT-1 );
 
   hwa( configure, (COUNTER,COMPARE),
-       output_h,  set_at_bottom_clear_on_match,
-       output_l,  clear_at_bottom_set_on_match );
+       output_h,  set_at_bottom_clear_after_match,
+       output_l,  clear_at_bottom_set_after_match );
   
   hwa( write, (COUNTER,COMPARE), 0.5 * COUNT );
 

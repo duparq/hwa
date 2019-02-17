@@ -84,7 +84,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *
  *	//  When the overflow flag is set
  *	//
- *    [ overflow,    at_bottom ]		  // When the counter restarts from 0
+ *    [ overflow,    after_bottom ]		  // When the counter restarts from 0
  *     );
  * @endcode
  */
@@ -165,10 +165,10 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
 /*  Optionnal argument `overflow`
  */
 #define _hwa_cfc8b_koverflow_1(o,k,v,...)				\
-    HW_G2(_hwa_cfc8b_voverflow,HW_IS(at_bottom,v))(o,v,__VA_ARGS__)
+    HW_G2(_hwa_cfc8b_voverflow,HW_IS(after_bottom,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfc8b_voverflow_0(o,v,...)				\
-  HW_E_AVL(`overflow`, v, `at_bottom`)
+  HW_E_AVL(`overflow`, v, `after_bottom`)
 
 #define _hwa_cfc8b_voverflow_1(o,v,...)				\
   _hwa_cfc8b_koverflow_0(o,__VA_ARGS__)
@@ -221,7 +221,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @code
  * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
  *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq( counter0, off ) );		// Disable overflow IRQs
+ *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
  * }
  * @endcode
  */

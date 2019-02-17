@@ -12,18 +12,18 @@
 /**
  * @page atmelavr_cmp8a Class _cmp8a: 8-bit compare unit with waveform generator
  *
- * A class `_cmp8a` object is an 8-bit compare unit with waveform generator. It
- * has the following relative objects:
+ * Class `_cmp8a` objects are 8-bit compare units with waveform generator. They
+ * are named using the notation (COUNTER,COMPARE),
+ * e.g. (counter0,compare0). They have the following relative objects:
  *
- *  * one counter, whose name is given by `( compare0, counter )`
+ *  * one counter: `((counter0,compare0), counter)`
+ *  * one output pin: `((counter0,compare0), pin)`
  *
- *  * one output pin, whose name is given by `( compare0, pin )`
+ * They are used in:
  *
- * It is used in:
- *
- * * @ref attinyx4 : `counter0compare0`, `counter0compare1`
- * * @ref attinyx5 : `counter0compare0`, `counter0compare1`
- * * @ref atmegax8 : `counter0compare0`, `counter0compare1`, `counter2compare0`, `counter2compare1`
+ * * @ref attinyx4 : `(counter0,compare0)`, `(counter0,compare1)`
+ * * @ref attinyx5 : `(counter0,compare0)`, `(counter0,compare1)`
+ * * @ref atmegax8 : `(counter0,compare0)`, `(counter0,compare1)`, `(counter2,compare0)`, `(counter2,compare1)`
  */
 #define hw_class__cmp8a
 
@@ -53,7 +53,7 @@
  * a compare event occurs:
  *
  * @code
- * HW_ISR( compare0 )
+ * HW_ISR( (counter0,compare0) )
  * {
  *    // Process compare event
  * }

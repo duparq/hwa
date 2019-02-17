@@ -12,18 +12,18 @@
 /**
  * @page atmelavr_cmp8b Class _cmp8b: 8-bit compare unit with waveform generator
  *
- * A class `_cmp8b` object is an 8-bit compare unit with waveform generator that
- * drives two complementary outputs. It has the following relative objects:
+ * Class `_cmp8b` objects are 8-bit compare units with waveform generator. They
+ * are named using the notation (COUNTER,COMPARE),
+ * e.g. (counter0,compare0). They have the following relative objects:
  *
- *  * one counter, whose name is given by `( compare0, counter )`
+ *  * one counter: `((counter0,compare0), counter)`
+ *  * one output pin: `((counter0,compare0), pin_h)`
+ *  * one complementary output pin: `((counter0,compare0), pin_l)`
  *
- *  * one output pin, whose name is given by `( compare0, pin_h )`
+ * They are used in:
  *
- *  * one complementary output pin, whose name is given by `( compare0, pin_l )`
- *
- * It is used in:
- *
- * * @ref attinyx5 : `counter1compare0`, `counter1compare1`
+ * * @ref attinyx5 : `(counter1,compare0)`, `(counter1,compare1)`
+)`
  */
 #define hw_class__cmp8b
 
@@ -53,7 +53,7 @@
  * a compare event occurs:
  *
  * @code
- * HW_ISR( compare0 )
+ * HW_ISR( (counter0,compare0) )
  * {
  *    // Process compare event
  * }
