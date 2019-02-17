@@ -13,13 +13,9 @@
  * @page atmelavr_c8a Class _c8a: 8-bit counter/timer
  *
  * A class `_c8a` object is an 8-bit counting unit that has 3 relative objects:
- *
- *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `( counter0, prescaler )`
- *
- *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a "_cmp8a":
- *    * `( counter0, compare0 )` and <br>
- *	`( counter0, compare1 )`
+ *  * one prescaler of class @ref atmelavr_psca "_psca": `(counter0,prescaler)`
+ *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a
+ *    "_cmp8a": `(counter0,compare0)` and `(counter0,compare1)`
  *
  * It is used in:
  *

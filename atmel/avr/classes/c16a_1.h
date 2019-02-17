@@ -13,16 +13,10 @@
  * @page atmelavr_c16a Class _c16a: 16-bit counter/timer
  *
  * A class `_c16a` object is a 16-bit counting unit that has 4 relative objects:
- *
- *  * one prescaler of class @ref atmelavr_psca "_psca":
- *    * `( counter0, prescaler )`
- *
+ *  * one prescaler of class @ref atmelavr_psca "_psca": `(counter0,prescaler)`
  *  * two compare units with waveform generators, of class @ref atmelavr_cmp16a "_cmp16a":
- *    * `( counter0, compare0 )` and <br>
- *	`( counter0, compare1 )`
- *
- *  * one capture unit of class @ref atmelavr_cap16a "_cap16a":
- *    * `( counter0, capture0 )`
+ *    `(counter0,compare0)` and `(counter0,compare1)`
+ *  * one capture unit of class @ref atmelavr_cap16a "_cap16a": `(counter0,capture0)`
  *
  * It is used by:
  *

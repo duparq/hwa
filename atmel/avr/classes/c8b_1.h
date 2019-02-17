@@ -13,16 +13,10 @@
  * @page atmelavr_c8b Class _c8b: 8-bit counter/timer
  *
  * A class `_c8b` object is an 8-bit counting unit that has 4 relative objects:
- *
- *  * one prescaler of class @ref atmelavr_pscb "_pscb":
- *    * `( counter0, prescaler )`
- *
- *  * two compare units with waveform generators, of class @ref atmelavr_cmp8b "_cmp8b":
- *    * `( counter0, compare0 )` and <br>
- *	`( counter0, compare1 )`
- *
- *  * one dead time generator of class @ref atmelavr_dtga "_dtga":
- *    * `( counter0, dtg )`
+ *  * one prescaler of class @ref atmelavr_pscb "_pscb": `(counter0,prescaler)`
+ *  * two compare units with waveform generators, of class @ref atmelavr_cmp8b
+ *    "_cmp8b": `(counter0,compare0)` and`(counter0,compare1)`
+ *  * one dead time generator of class @ref atmelavr_dtga "_dtga": `(counter0,dtg)`
  *
  * It is used in:
  *

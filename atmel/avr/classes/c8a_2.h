@@ -638,8 +638,6 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  *      top,       max,
  *      overflow,  after_max );
  * @endcode
- *
- * @include "00-0/main.c"
  */
   
 /**
