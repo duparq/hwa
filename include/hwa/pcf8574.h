@@ -169,8 +169,8 @@
 #define HW_BITS__pcf8574_io			, _hw_bits_pcf8574_io
 #define _hw_bits_pcf8574_io(opcf,n,p,...)	n
 
-#define HW_PORT_pcf8574io			, _hw_port_pcf8574io
-#define _hw_port_pcf8574io(opcf,...)		_pcf8574,opcf,null,0
+/* #define HW_PORT_pcf8574io			, _hw_port_pcf8574io */
+/* #define _hw_port_pcf8574io(opcf,...)		_pcf8574,opcf,null,0 */
 
 #define HW_PORT__pcf8574_io			, _hw_port__pcf8574_io
 #define _hw_port__pcf8574_io(opcf,...)		_pcf8574,opcf,null,0

@@ -24,7 +24,7 @@
  *      //  How the counter is clocked
  *      //
  *      clock,       none                        // No clock, the counter is stopped
- *                 | ioclk [/ 8|64|256|1024]     // I/O clock
+ *                 | ioclk [/ 8|64|256|1024]     // I/O clock (frequency = HW_SYSHZ)
  *                 | external_rising             // External input, rising edge
  *                 | external_falling,           // External input, falling edge
  *
@@ -53,14 +53,38 @@
  * <br>
  * **Table of Atmel modes**
  *
- * Mode                  | `direction`   | `top`      | `overflow`     | Overflow flag | Update
- * :---------------------|:--------------|:-----------|:---------------|:--------------|:-------------	
- *  0 Normal             | `up_loop`     | `max`      | `after_max`    | max -> 0      | Immediate
- *  1 PWM, Phase correct | `updown_loop` | `max`      | `after_bottom` | 0 -> 1	       | At top
- *  2 CTC                | `up_loop`     | `compare0` | `after_max`    | max -> 0      | Immediate
- *  3 Fast PWM           | `up_loop`     | `max`      | `after_max`    | max -> 0      | At bottom
- *  5 PWM, Phase correct | `updown_loop` | `compare0` | `after_bottom` | 0 -> 1	       | At top
- *  7 Fast PWM           | `up_loop`     | `max`      | `after_top`    | top -> 0      | At bottom
+ * Mode                |`direction`  |`top`     |`overflow`    |Overflow flag|Compare update
+ * :-------------------|:------------|:---------|:-------------|:-------|:---------
+ * 0 Normal            |`up_loop`    |`max`     |`after_max`   |max -> 0|Immediate
+ * 1 PWM, Phase correct|`updown_loop`|`max`     |`after_bottom`|0 -> 1	|At top
+ * 2 CTC               |`up_loop`    |`compare0`|`after_max`   |max -> 0|Immediate
+ * 3 Fast PWM          |`up_loop`    |`max`     |`after_max`   |max -> 0|At bottom
+ * 5 PWM, Phase correct|`updown_loop`|`compare0`|`after_bottom`|0 -> 1	|At top
+ * 7 Fast PWM          |`up_loop`    |`max`     |`after_top`   |top -> 0|At bottom
+ *
+ * **Examples**
+ * @code
+ * //  An overflow IRQ is triggered when the count register is reset to 0.
+ * //  The frequency of the IRQs is HW_SYSHZ/8/256.
+ * //
+ * hw( configure, counter0,
+ *     clock,     ioclk/8,
+ *     direction, up_loop,
+ *     top,       max,
+ *     overflow,  after_max );
+ * @endcode
+ *
+ * @code
+ * //  An overflow IRQ is triggered when the count register is set to 1 after
+ * //  having reached 0. The frequency of the IRQs is HW_SYSHZ/64/6.
+ * //
+ * hwa( configure, counter0,
+ *      clock,     ioclk/64,
+ *      direction, updown_loop,
+ *      top,       compare0,
+ *      overflow,  after_bottom );
+ * hwa( write, (counter0,compare0), 3 );
+ * @endcode
  */
 #define hwa_configure__c8a	, _hwa_cfc8a
 
@@ -575,9 +599,9 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag(counter0) ) ) {	// Read overflow IRQ flag
- *   hw( clear, irqflag(counter0) );		// Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
+ * if ( hw( read, irqflag(counter0) ) ) {       // Read overflow IRQ flag
+ *   hw( clear, irqflag(counter0) );            // Clear overflow IRQ flag
+ *   hw( turn, irq(counter0), off );            // Disable overflow IRQs
  * }
  * @endcode
  */
@@ -624,21 +648,6 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
   _hwa_commit_r( o, count);			\
   _hwa_commit_r( o, imsk);			\
   _hwa_commit_r( o, ifr)
-
-/**
- * @page atmelavr_c8a
- * @section atmelavr_c8a_examples Examples
- *
- * The following code triggers a compare IRQ every 32 ioclk cycles:
- * @code
- * //  An IRQ is triggered when the count register is reset to 0
- * hwa( configure, counter0,
- *      clock,     ioclk/8,
- *      direction, up_loop,
- *      top,       max,
- *      overflow,  after_max );
- * @endcode
- */
   
 /**
  * @page atmelavr_c8a

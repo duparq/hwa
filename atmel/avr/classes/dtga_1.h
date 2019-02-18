@@ -12,9 +12,9 @@
 /**
  * @page atmelavr_dtga Class _dtga: dead time generator
  *
- * A class `_dtga` object is a dead time generator.
+ * `_dtga` objects are dead time generators.
  *
- * It is used in:
+ * They are used in:
  *
  * * @ref attinyx5 : `dtg1`
  */

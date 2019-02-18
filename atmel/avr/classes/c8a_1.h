@@ -12,12 +12,12 @@
 /**
  * @page atmelavr_c8a Class _c8a: 8-bit counter/timer
  *
- * A class `_c8a` object is an 8-bit counting unit that has 3 relative objects:
- *  * one prescaler of class @ref atmelavr_psca "_psca": `(counter0,prescaler)`
- *  * two compare units with waveform generators, of class @ref atmelavr_cmp8a
- *    "_cmp8a": `(counter0,compare0)` and `(counter0,compare1)`
+ * `_c8a` objects are 8-bit counting units that have 3 relative objects:
+ *  * one @ref atmelavr_psca "_psca" prescaler: `(counter0,prescaler)`
+ *  * two @ref atmelavr_cmp8a "_cmp8a" compare units with waveform generators:
+ *    `(COUNTER,compare0)` and `(COUNTER,compare1)`
  *
- * It is used in:
+ * They are used in:
  *
  *  * @ref attinyx4 : `counter0`
  *  * @ref attinyx5 : `counter0`
@@ -45,9 +45,25 @@
  * @page atmelavr_c8a
  * @par Interrupts
  *
- * Class `_c8a` objects can trigger the following IRQs:
+ * The counting unit can trigger an @ref using_interrupts "`overflow` IRQ" when
+ * it counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ * it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  *
- *  * `counter0` or `counter0,overflow`: counter overflow
+ * @code
+ * HW_ISR(counter0)
+ * {
+ *    // Process overflow event
+ * }
+ * @endcode
+ *
+ * @code
+ * HW_ISR(counter0,overflow)
+ * {
+ *    // Process overflow event
+ * }
+ * @endcode
+ *
+ * The compare units @ref atmelavr_cmp8a "_cmp8a" can also trigger IRQs.
  */
 
 #if !defined __ASSEMBLER__

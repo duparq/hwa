@@ -17,7 +17,9 @@
 #define HW_XO(o)			_HW_XO01(o,hw_##o)
 #define _HW_XO01(...)			_HW_XO02(__VA_ARGS__)
 #define _HW_XO02(o,...)			HW_Y0(_HW_XO02_,hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _HW_XO02_0(o,...)		,o,HW_EM_O(o)
+#define _HW_XO02_0(o,...)		HW_Y0(_HW_XO020,o)(o)
+#define _HW_XO0200(o)			,o,HW_EM_O(o)
+#define _HW_XO0201(o)			,o,HW_EM_OM(o)
 #define _HW_XO02_1(o,c,...)		c,o,(__VA_ARGS__) // brackets
 
 

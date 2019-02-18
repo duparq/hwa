@@ -12,15 +12,14 @@
 /**
  * @page atmelavr_c8b Class _c8b: 8-bit counter/timer
  *
- * A class `_c8b` object is an 8-bit counting unit that has 4 relative objects:
- *  * one prescaler of class @ref atmelavr_pscb "_pscb": `(counter0,prescaler)`
- *  * two compare units with waveform generators, of class @ref atmelavr_cmp8b
- *    "_cmp8b": `(counter0,compare0)` and`(counter0,compare1)`
- *  * one dead time generator of class @ref atmelavr_dtga "_dtga": `(counter0,dtg)`
+ * `_c8b` objects are 8-bit counting units that have 4 relative objects:
+ *  * one @ref atmelavr_pscb "_pscb" prescaler: `(COUNTER,prescaler)`
+ *  * two @ref atmelavr_cmp8b "_cmp8b" compare units with waveform generators:
+ *    `(COUNTER,compare0)` and `(COUNTER,compare1)`
+ *  * one @ref atmelavr_dtga "_dtga" dead time generator: `(COUNTER,dtg)`
  *
- * It is used in:
- *
- * * @ref attinyx5 : `counter1`
+ * They are used in:
+ *  * @ref attinyx5 : `counter1`
  */
 #define hw_class__c8b
 
@@ -43,9 +42,25 @@
  * @page atmelavr_c8b
  * @par Interrupts
  *
- * Class `_c8b` objects can trigger the following IRQs:
+ * The counting unit can trigger an @ref using_interrupts "`overflow` IRQ" when
+ * it counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ * it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  *
- *  * `counter0` or `counter0,overflow`: counter overflow
+ * @code
+ * HW_ISR(counter0)
+ * {
+ *    // Process overflow event
+ * }
+ * @endcode
+ *
+ * @code
+ * HW_ISR(counter0,overflow)
+ * {
+ *    // Process overflow event
+ * }
+ * @endcode
+ *
+ * The compare units @ref atmelavr_cmp8b "_cmp8b" can also trigger IRQs.
  */
 
 #if !defined __ASSEMBLER__

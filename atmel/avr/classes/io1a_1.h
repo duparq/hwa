@@ -48,7 +48,7 @@
  *
  * @code
  * #if HW_ID(pa3) && (HW_POSITION(pa3) != 3)
- * #  HWA is damaged!
+ * #  error HWA is damaged!
  * #endif
  * @endcode
  */
@@ -65,5 +65,5 @@
  */
 #define hw_class__io1a_io
 
-#define HW_IO__io1a			, _hw_io_io1a
-#define _hw_io_io1a(o,i,p,bn,bp,...)	io(HW_A0(hw_##p),p##_##bn##_##bp,-1,p,bn,bp)
+#define HW_IO__io1a				, _hw_io_io1a
+#define _hw_io_io1a(o,i,p,bn,bp,...)		xo(_io1a,p##_##bn##_##bp,-1,p,bn,bp)

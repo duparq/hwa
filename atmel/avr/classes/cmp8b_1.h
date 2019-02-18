@@ -49,11 +49,19 @@
  * @page atmelavr_cmp8b
  * @par Interrupts
  *
- * The compare unit can trigger an @ref using_interrupts "anonymous IRQ" when
- * a compare event occurs:
+ * The compare unit can trigger an @ref using_interrupts IRQ when the
+ * compare-match flag is set, one counter clock cycle after the compare register
+ * matches the counting register.
  *
  * @code
- * HW_ISR( (counter0,compare0) )
+ * HW_ISR(counter0,compare0)       // "compare0" IRQ of counter 0
+ * {
+ *    // Process compare event
+ * }
+ * @endcode
+ *
+ * @code
+ * HW_ISR( (counter0,compare0) )   // IRQ of (counter0,compare0)
  * {
  *    // Process compare event
  * }
