@@ -123,7 +123,8 @@
 #define HW_E_T(x)		HW_E(unrecognized token HW_Q(x))
 #define HW_E_V()		HW_E(missing value)
 #define HW_E_G(x)		HW_E(garbage starting at HW_Q(x))
-#define HW_EM_G(x)		HW_QUOTE(garbage starting at HW_Q(x))
+#define HW_EM_G(x)		garbage starting at HW_Q(x)
+#define HW_EM_GA(x)		garbage after HW_Q(x)
 #define HW_E_K(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
 
 #define HW_E_KX(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
@@ -267,6 +268,15 @@
 #define _HW_ID02(c,...)			HW_Y0(_HW_ID02_,c)(c,__VA_ARGS__,)
 #define _HW_ID02_1(...)			0 // Do not produce an error
 #define _HW_ID02_0(c,o,i,...)		i
+
+
+/**
+ * @ingroup public_mac
+ * @brief Returns a computed ID of the @ref using_objects "object" or -1 if the object does not exist.
+ * @hideinitializer
+ */
+#define HW_IDX(...)			HW_F(HW_IDX,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_IDX_(o,e,...)		-1
 
 
 /**

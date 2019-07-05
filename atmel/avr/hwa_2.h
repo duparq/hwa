@@ -475,6 +475,13 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
 /*	ISR
  */
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
+#endif
+
+#define _hw_israttr_atomic		,
 #define _hw_israttr_non_interruptible	,
 #define _hw_israttr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_naked		, __attribute__((naked))

@@ -11,7 +11,6 @@
 
 /**
  * @page stm32_boards
- *
  * @section mini-stm32-v3-0 Board from www.PowerMCU.com
  *
  * There is a STM32F103RBT6 with:

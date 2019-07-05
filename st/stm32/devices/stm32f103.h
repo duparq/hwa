@@ -4,6 +4,16 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/*  LITERATURE:
+ *
+ *  * PM0056: Programming Manual
+ *  * RM008:  Reference Manual
+ *  * Cortex M3 Devices Generic User Guide
+ *  * Cortex M3 Technical Reference Manual
+ *  * Discovering the STM32 Microcontroller, by Geoffrey Brown
+ *  * M3 Guide: The Definitive Guide to the ARM CORTEX-M3, by Joseph Yiu
+ */
+
 /**
  * @file
  * @brief STM32F103
@@ -61,32 +71,32 @@
  *
  */
 #define hw_irq_nmi_			_irq, core, x2, ,
-#define hw_irq_systick_		_irq, systick, x15, ie, if
+#define hw_irq_systick_			_irq, systick, x15, ie, if
 #define hw_irq_systick_alarm		_irq, systick, x15, ie, if
 #define hw_irq_counter2_		_irq, counter2, 28, ie, if
 #define hw_irq_counter3_		_irq, counter3, 29, ie, if
 #define hw_irq_counter4_		_irq, counter4, 30, ie, if
 /* #define hw_irq_counter5_		_irq, counter5, 50, ie, if */
 
-#define hw_isr_x2			hw_esr_nmi
-#define hw_isr_x3			hw_esr_hard
-#define hw_isr_x4			hw_esr_memory
-#define hw_isr_x5			hw_esr_bus
-#define hw_isr_x6			hw_esr_usage
-#define hw_isr_x11			hw_esr_swi
-#define hw_isr_x12			hw_esr_debug
-#define hw_isr_x14			hw_esr_pendswi
-#define hw_isr_x15			hw_esr_systick
+#define __vector_x2			hw_esr_nmi
+#define __vector_x3			hw_esr_hard
+#define __vector_x4			hw_esr_memory
+#define __vector_x5			hw_esr_bus
+#define __vector_x6			hw_esr_usage
+#define __vector_x11			hw_esr_swi
+#define __vector_x12			hw_esr_debug
+#define __vector_x14			hw_esr_pendswi
+#define __vector_x15			hw_esr_systick
 
-#define hw_isr_28			hw_isr_counter2
-#define hw_isr_29			hw_isr_counter3
-#define hw_isr_30			hw_isr_counter4
+#define __vector_28			hw_isr_counter2
+#define __vector_29			hw_isr_counter3
+#define __vector_30			hw_isr_counter4
 /* #define hw_isr_50			hw_isr_counter5 */
 
 
 #include "../classes/nvica_1.h"
 
-#define hw_nvic			_nvica, 101, 0xE000E100
+#define hw_nvic				_nvica, 101, 0xE000E100
 
 
 /*******************************************************************************
@@ -132,7 +142,9 @@
 
 #include "../classes/rcca_1.h"
 
-#define hw_rcc			_rcca, 101, 0x40021000
+#define hw_rcc				_rcca, 101, 0x40021000
+
+//#define hw_rcc_usart1			_rccp, 1, 0
 
 
 /*******************************************************************************
@@ -160,6 +172,8 @@
 /*	Objects				class, id, address
  */
 #define hw_port0			_p16a, 108, 0x40010800
+#define hw_port0_rcc			_rccen, port0en
+
 #define hw_port1			_p16a, 109, 0x40010C00
 #define hw_port2			_p16a, 110, 0x40011000
 #define hw_port3			_p16a, 111, 0x40011400
@@ -183,94 +197,94 @@
 
 /*  Pins				class, id, peripheral, bn, bp
  */
-#define hw_pa0			_io1a, 113, port0,  1,  0
-#define hw_pa1			_io1a, 114, port0,  1,  1
-#define hw_pa2			_io1a, 115, port0,  1,  2
-#define hw_pa3			_io1a, 116, port0,  1,  3
-#define hw_pa4			_io1a, 117, port0,  1,  4
-#define hw_pa5			_io1a, 118, port0,  1,  5
-#define hw_pa6			_io1a, 119, port0,  1,  6
-#define hw_pa7			_io1a, 120, port0,  1,  7
-#define hw_pa8			_io1a, 121, port0,  1,  8
-#define hw_pa9			_io1a, 122, port0,  1,  9
-#define hw_pa10			_io1a, 123, port0,  1, 10
-#define hw_pa11			_io1a, 124, port0,  1, 11
-#define hw_pa12			_io1a, 125, port0,  1, 12
-#define hw_pa13			_io1a, 126, port0,  1, 13
-#define hw_pa14			_io1a, 127, port0,  1, 14
-#define hw_pa15			_io1a, 128, port0,  1, 15
+#define hw_pa0				_io1a, 113, port0,  1,  0
+#define hw_pa1				_io1a, 114, port0,  1,  1
+#define hw_pa2				_io1a, 115, port0,  1,  2
+#define hw_pa3				_io1a, 116, port0,  1,  3
+#define hw_pa4				_io1a, 117, port0,  1,  4
+#define hw_pa5				_io1a, 118, port0,  1,  5
+#define hw_pa6				_io1a, 119, port0,  1,  6
+#define hw_pa7				_io1a, 120, port0,  1,  7
+#define hw_pa8				_io1a, 121, port0,  1,  8
+#define hw_pa9				_io1a, 122, port0,  1,  9
+#define hw_pa10				_io1a, 123, port0,  1, 10
+#define hw_pa11				_io1a, 124, port0,  1, 11
+#define hw_pa12				_io1a, 125, port0,  1, 12
+#define hw_pa13				_io1a, 126, port0,  1, 13
+#define hw_pa14				_io1a, 127, port0,  1, 14
+#define hw_pa15				_io1a, 128, port0,  1, 15
 #define hw_porta			_io1a, 129, port0, 16,  0
 
-#define hw_pb0			_io1a, 130, port1,  1,  0
-#define hw_pb1			_io1a, 131, port1,  1,  1
-#define hw_pb2			_io1a, 132, port1,  1,  2
-#define hw_pb3			_io1a, 133, port1,  1,  3
-#define hw_pb4			_io1a, 134, port1,  1,  4
-#define hw_pb5			_io1a, 135, port1,  1,  5
-#define hw_pb6			_io1a, 136, port1,  1,  6
-#define hw_pb7			_io1a, 137, port1,  1,  7
-#define hw_pb8			_io1a, 138, port1,  1,  8
-#define hw_pb9			_io1a, 139, port1,  1,  9
-#define hw_pb10			_io1a, 140, port1,  1, 10
-#define hw_pb11			_io1a, 141, port1,  1, 11
-#define hw_pb12			_io1a, 142, port1,  1, 12
-#define hw_pb13			_io1a, 143, port1,  1, 13
-#define hw_pb14			_io1a, 144, port1,  1, 14
-#define hw_pb15			_io1a, 145, port1,  1, 15
+#define hw_pb0				_io1a, 130, port1,  1,  0
+#define hw_pb1				_io1a, 131, port1,  1,  1
+#define hw_pb2				_io1a, 132, port1,  1,  2
+#define hw_pb3				_io1a, 133, port1,  1,  3
+#define hw_pb4				_io1a, 134, port1,  1,  4
+#define hw_pb5				_io1a, 135, port1,  1,  5
+#define hw_pb6				_io1a, 136, port1,  1,  6
+#define hw_pb7				_io1a, 137, port1,  1,  7
+#define hw_pb8				_io1a, 138, port1,  1,  8
+#define hw_pb9				_io1a, 139, port1,  1,  9
+#define hw_pb10				_io1a, 140, port1,  1, 10
+#define hw_pb11				_io1a, 141, port1,  1, 11
+#define hw_pb12				_io1a, 142, port1,  1, 12
+#define hw_pb13				_io1a, 143, port1,  1, 13
+#define hw_pb14				_io1a, 144, port1,  1, 14
+#define hw_pb15				_io1a, 145, port1,  1, 15
 #define hw_portb			_io1a, 146, port1, 16,  0
 
-#define hw_pc0			_io1a, 147, port2,  1,  0
-#define hw_pc1			_io1a, 148, port2,  1,  1
-#define hw_pc2			_io1a, 149, port2,  1,  2
-#define hw_pc3			_io1a, 150, port2,  1,  3
-#define hw_pc4			_io1a, 151, port2,  1,  4
-#define hw_pc5			_io1a, 152, port2,  1,  5
-#define hw_pc6			_io1a, 153, port2,  1,  6
-#define hw_pc7			_io1a, 154, port2,  1,  7
-#define hw_pc8			_io1a, 155, port2,  1,  8
-#define hw_pc9			_io1a, 156, port2,  1,  9
-#define hw_pc10			_io1a, 157, port2,  1, 10
-#define hw_pc11			_io1a, 158, port2,  1, 11
-#define hw_pc12			_io1a, 159, port2,  1, 12
-#define hw_pc13			_io1a, 160, port2,  1, 13
-#define hw_pc14			_io1a, 161, port2,  1, 14
-#define hw_pc15			_io1a, 162, port2,  1, 15
+#define hw_pc0				_io1a, 147, port2,  1,  0
+#define hw_pc1				_io1a, 148, port2,  1,  1
+#define hw_pc2				_io1a, 149, port2,  1,  2
+#define hw_pc3				_io1a, 150, port2,  1,  3
+#define hw_pc4				_io1a, 151, port2,  1,  4
+#define hw_pc5				_io1a, 152, port2,  1,  5
+#define hw_pc6				_io1a, 153, port2,  1,  6
+#define hw_pc7				_io1a, 154, port2,  1,  7
+#define hw_pc8				_io1a, 155, port2,  1,  8
+#define hw_pc9				_io1a, 156, port2,  1,  9
+#define hw_pc10				_io1a, 157, port2,  1, 10
+#define hw_pc11				_io1a, 158, port2,  1, 11
+#define hw_pc12				_io1a, 159, port2,  1, 12
+#define hw_pc13				_io1a, 160, port2,  1, 13
+#define hw_pc14				_io1a, 161, port2,  1, 14
+#define hw_pc15				_io1a, 162, port2,  1, 15
 #define hw_portc			_io1a, 163, port2, 16,  0
 
-#define hw_pd0			_io1a, 164, port3,  1,  0
-#define hw_pd1			_io1a, 165, port3,  1,  1
-#define hw_pd2			_io1a, 166, port3,  1,  2
-#define hw_pd3			_io1a, 167, port3,  1,  3
-#define hw_pd4			_io1a, 168, port3,  1,  4
-#define hw_pd5			_io1a, 169, port3,  1,  5
-#define hw_pd6			_io1a, 170, port3,  1,  6
-#define hw_pd7			_io1a, 171, port3,  1,  7
-#define hw_pd8			_io1a, 172, port3,  1,  8
-#define hw_pd9			_io1a, 173, port3,  1,  9
-#define hw_pd10			_io1a, 174, port3,  1, 10
-#define hw_pd11			_io1a, 175, port3,  1, 11
-#define hw_pd12			_io1a, 176, port3,  1, 12
-#define hw_pd13			_io1a, 177, port3,  1, 13
-#define hw_pd14			_io1a, 178, port3,  1, 14
-#define hw_pd15			_io1a, 179, port3,  1, 15
+#define hw_pd0				_io1a, 164, port3,  1,  0
+#define hw_pd1				_io1a, 165, port3,  1,  1
+#define hw_pd2				_io1a, 166, port3,  1,  2
+#define hw_pd3				_io1a, 167, port3,  1,  3
+#define hw_pd4				_io1a, 168, port3,  1,  4
+#define hw_pd5				_io1a, 169, port3,  1,  5
+#define hw_pd6				_io1a, 170, port3,  1,  6
+#define hw_pd7				_io1a, 171, port3,  1,  7
+#define hw_pd8				_io1a, 172, port3,  1,  8
+#define hw_pd9				_io1a, 173, port3,  1,  9
+#define hw_pd10				_io1a, 174, port3,  1, 10
+#define hw_pd11				_io1a, 175, port3,  1, 11
+#define hw_pd12				_io1a, 176, port3,  1, 12
+#define hw_pd13				_io1a, 177, port3,  1, 13
+#define hw_pd14				_io1a, 178, port3,  1, 14
+#define hw_pd15				_io1a, 179, port3,  1, 15
 #define hw_portd			_io1a, 180, port3, 16,  0
 
-#define hw_pe0			_io1a, 181, port4,  1,  0
-#define hw_pe1			_io1a, 182, port4,  1,  1
-#define hw_pe2			_io1a, 183, port4,  1,  2
-#define hw_pe3			_io1a, 184, port4,  1,  3
-#define hw_pe4			_io1a, 185, port4,  1,  4
-#define hw_pe5			_io1a, 186, port4,  1,  5
-#define hw_pe6			_io1a, 187, port4,  1,  6
-#define hw_pe7			_io1a, 188, port4,  1,  7
-#define hw_pe8			_io1a, 189, port4,  1,  8
-#define hw_pe9			_io1a, 190, port4,  1,  9
-#define hw_pe10			_io1a, 191, port4,  1, 10
-#define hw_pe11			_io1a, 192, port4,  1, 11
-#define hw_pe12			_io1a, 193, port4,  1, 12
-#define hw_pe13			_io1a, 194, port4,  1, 13
-#define hw_pe14			_io1a, 195, port4,  1, 14
-#define hw_pe15			_io1a, 196, port4,  1, 15
+#define hw_pe0				_io1a, 181, port4,  1,  0
+#define hw_pe1				_io1a, 182, port4,  1,  1
+#define hw_pe2				_io1a, 183, port4,  1,  2
+#define hw_pe3				_io1a, 184, port4,  1,  3
+#define hw_pe4				_io1a, 185, port4,  1,  4
+#define hw_pe5				_io1a, 186, port4,  1,  5
+#define hw_pe6				_io1a, 187, port4,  1,  6
+#define hw_pe7				_io1a, 188, port4,  1,  7
+#define hw_pe8				_io1a, 189, port4,  1,  8
+#define hw_pe9				_io1a, 190, port4,  1,  9
+#define hw_pe10				_io1a, 191, port4,  1, 10
+#define hw_pe11				_io1a, 192, port4,  1, 11
+#define hw_pe12				_io1a, 193, port4,  1, 12
+#define hw_pe13				_io1a, 194, port4,  1, 13
+#define hw_pe14				_io1a, 195, port4,  1, 14
+#define hw_pe15				_io1a, 196, port4,  1, 15
 #define hw_porte			_io1a, 197, port4, 16,  0
 
 /* #define hw_pf0			_io1a, 200, port5,  1,  0 */
@@ -330,15 +344,69 @@
 /* # */
 /* #endif */
 
+#include "../classes/afioa_1.h"
 
-/*  Mappings
+#define hw_afio				_afioa, 101, 0x40010000
+
+
+/*  Pin functions and mappings		STM32F103-x8-xB.pdf, p. 28
+ *
+ *  The mapping of controller signals to device pins is configured by a 'remap'
+ *  value associated to each controller and stored in the AFIO. Each 'remap'
+ *  value associates a set of pins to a set of signals for one controller, but
+ *  one pin can sometimes be associated to the same signal through different
+ *  'remap' values. One pin does not connected to one signal, but one controller
+ *  choses a mapping. Then, each pin can be configured to relay the "alternate"
+ *  signal or remain a GPIO.
+ *
+ *  Solution 1: we build a table in the HWA context to record for each signal
+ *  the pin it must be associated with. When the "commit" is invoked, a function
+ *  checks that the wanted associations can be satisfied. This is the same kind
+ *  of solution as for the Atmel AVR8 counters and their compare init outputs.
+ *
+ *  hw( configure, pa9,  function, (usart1,tx) );  // USART1_REMAP = 0
+ *  hw( configure, pa10, function, (usart1,rx) );  // USART1_REMAP = 0
+ *  hw( configure, pb6,  function, (usart1,tx) );  // USART1_REMAP = 1
+ *  hw( configure, pb7,  function, (usart1,rx) );  // USART1_REMAP = 1
+ *
+ *  Solution 2: we configure the mapping through the 'configure' action of the
+ *  controller.
+ *
+ *  hw( configure, counter2, 
+ *      ...
+ *      map_channel1, pa0,	// Remap '00'
+ *      map_channel2, pa1,
+ *      map_channel3, pa2,
+ *      map_channel4, pa3 );
+ *
+ *  hw( configure, counter2, 
+ *      ...
+ *      map_channel1, pa15,	// Remap '01'
+ *      map_channel2, pb3,
+ *      map_channel3, pa2,
+ *      map_channel4, pa3 );
+ *
  */
-#define _hw_map_pa0			(pa0,wkup,usart2_cts,adc12_in0,timer2_channel1,etr)
-#define _hw_map_pa0_pa0			, 
+//					, df/af, map
+//
+#define _hw_fn_pa0			(gpio,wkup,(usart2,cts),(adc12,in0),(counter2,channel1),etr)
+#define _hw_fn_pa0_gpio			, df
+#define _hw_fn_pa0_wkup			, af
+#define _hw_fn_pa0_usart2_cts		, af 
+#define _hw_fn_pa0_adc12_in0		, af 
+#define _hw_fn_pa0_counter2_channel1	, af 
+#define _hw_fn_pa0_etr			, af 
 
-#define _hw_gpio0_fn_spi_cs2		, 1
-#define _hw_gpio0_fn_clk_out		, 4 /* RESET */
-#define _hw_gpio0_fns			"`gpio`, `spi_cs2`, or `clk_out`"
+#define _hw_fn_pa9			(gpio,(usart1,tx),(counter1,channel2))
+#define _hw_fn_pa9_gpio			, df 
+#define _hw_fn_pa9_usart1_tx		, af
+#define _hw_fn_pa9_counter1_channel2	, af
+
+#define _hw_fn_pa10			(gpio,(usart1,rx),(counter1,channel3))
+#define _hw_fn_pa10_gpio		, df
+#define _hw_fn_pa10_usart1_rx		, af
+#define _hw_fn_pa10_counter1_channel3	, af
+
 
 /*******************************************************************************
  *									       *
@@ -356,6 +424,7 @@
 #include "../classes/stka_1.h"
 
 #define hw_systick			_stka, 101, 0xE000E010
+#define hw_systick_irq			_irq, systick, x15, ie, if
 
 
 /*******************************************************************************
@@ -374,11 +443,48 @@
 
 #include "../classes/c16a_1.h"
 
-#define hw_counter2		_c16a, 101, 0x40000000
-#define hw_counter3		_c16a, 101, 0x40000400
-#define hw_counter4		_c16a, 101, 0x40000800
-/* #define hw_counter5		_c16a, 101, 0x40000C00 */
+#define hw_counter2			_c16a, 102, 0x40000000
+#define hw_counter2_irq			_irq, counter2, 28, ie, if
+#define hw_counter2_nvic		_nvirq, 28
+#define hw_counter2_rcc			_rccen, tim2en
 
+#define hw_counter3			_c16a, 103, 0x40000400
+#define hw_counter3_irq			_irq, counter3, 29, ie, if
+#define hw_counter3_nvic		_nvirq, 29
+#define hw_counter3_rcc			_rccen, tim3en
+
+#define hw_counter4			_c16a, 104, 0x40000800
+#define hw_counter4_irq			_irq, counter4, 30, ie, if
+#define hw_counter4_nvic		_nvirq, 30
+#define hw_counter4_rcc			_rccen, tim4en
+
+
+/*******************************************************************************
+ *									       *
+ *	Universal synchronous asynchronous receiver transmitter (USART)	       *
+ *									       *
+ *******************************************************************************/
+
+/**
+ * @page stm32f103
+ * @section stm32f103_usarts USART
+ *
+ * The STM32F103 devices have 5 USARTs:
+ *  * @ref stm32_usarta "_usarta": usart1, usart2, usart3
+ *  * @ref stm32_usarta "_usartb": usart4, usart5
+ */
+
+#include "../classes/usarta_1.h"
+
+#define hw_usart1		_usarta, 104, 0x40013800
+#define hw_usart1_irq		_irq, usart1, 37, ie, if
+#define hw_usart1_nvic		_nvirq, 37
+#define hw_usart1_rcc		_rccen, usart1en
+
+#define hw_usart2		_usarta, 105, 0x40004400
+#define hw_usart3		_usarta, 106, 0x40004800
+#define hw_uart4		_uarta,  107, 0x40004C00
+#define hw_uart5		_uarta,  108, 0x40005000
 
 
 #if !defined __ASSEMBLER__
@@ -392,6 +498,7 @@ typedef struct {
   hwa_rcca_t	rcc ;
   hwa_nvica_t	nvic ;
 
+  hwa_afioa_t	afio ;
   hwa_p16a_t	port0 ;
   hwa_p16a_t	port1 ;
   hwa_p16a_t	port2 ;
@@ -405,20 +512,24 @@ typedef struct {
   hwa_c16a_t	counter3 ;
   hwa_c16a_t	counter4 ;
   /* hwa_c16a_t	counter5 ; */
+  hwa_usarta_t	usart1 ;
 } hwa_t ;
 
 #include "../hwa_2.h"
 #include "../classes/rcca_2.h"
+#include "../classes/afioa_2.h"
 #include "../classes/nvica_2.h"
 #include "../classes/io1a_2.h"
 #include "../classes/p16a_2.h"
 #include "../classes/stka_2.h"
 #include "../classes/c16a_2.h"
+#include "../classes/usarta_2.h"
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
   _hwa_setup_o( rcc );
   _hwa_setup_o( nvic );
+  _hwa_setup_o( afio );
   _hwa_setup_o( port0 );
   _hwa_setup_o( port1 );
   _hwa_setup_o( port2 );
@@ -431,6 +542,7 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
   _hwa_setup_o( counter3 );
   _hwa_setup_o( counter4 );
   /* _hwa_setup_o( counter5 ); */
+  _hwa_setup_o( usart1 );
 }
 
 
@@ -438,6 +550,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
   _hwa_init_o( rcc );
   _hwa_init_o( nvic );
+  _hwa_init_o( afio );
   _hwa_init_o( port0 );
   _hwa_init_o( port1 );
   _hwa_init_o( port2 );
@@ -450,6 +563,7 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
   _hwa_init_o( counter3 );
   _hwa_init_o( counter4 );
   /* _hwa_init_o( counter5 ); */
+  _hwa_init_o( usart1 );
 }
 
 
@@ -457,6 +571,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
   _hwa_commit_o( rcc );
   _hwa_commit_o( nvic );
+  _hwa_commit_o( afio );
   _hwa_commit_o( port0 );
   _hwa_commit_o( port1 );
   _hwa_commit_o( port2 );
@@ -469,6 +584,7 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
   _hwa_commit_o( counter3 );
   _hwa_commit_o( counter4 );
   /* _hwa_commit_o( counter5 ); */
+  _hwa_commit_o( usart1 );
 }
 
 #endif /* !defined __ASSEMBLER__ */

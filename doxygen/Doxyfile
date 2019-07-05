@@ -784,8 +784,10 @@ WARN_LOGFILE           =
 INPUT                  = defgroups.txt \
 		         ../README.md \
                          ../include/ \
+                         ../atmel/avr/examples/boards/README.md \
                          ../atmel/ \
                          ../espressif/ \
+                         ../st/stm32/examples/boards/README.md \
                          ../st/ \
                          ../hwa/ \
                          devices.md \

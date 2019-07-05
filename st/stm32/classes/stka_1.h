@@ -20,10 +20,10 @@
 #define hw_reg__stka_calib		_r32, 0x0C, 0x00000000, 0
 
 #define hw_reg__stka_countflag		_cb1, ctrl, 1, 16
-#define hw_reg__stka_if		_cb1, ctrl, 1, 16	// Convenient
+#define hw_reg__stka_if			_cb1, ctrl, 1, 16	// Convenient
 #define hw_reg__stka_clksource		_cb1, ctrl, 1, 2
 #define hw_reg__stka_tickint		_cb1, ctrl, 1, 1
-#define hw_reg__stka_ie		_cb1, ctrl, 1, 1	// Convenient
+#define hw_reg__stka_ie			_cb1, ctrl, 1, 1	// Convenient
 #define hw_reg__stka_enable		_cb1, ctrl, 1, 0
 #define hw_reg__stka_reload		_cb1, load, 24, 0
 #define hw_reg__stka_current		_cb1, val,  24, 0

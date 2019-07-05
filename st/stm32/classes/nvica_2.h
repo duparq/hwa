@@ -23,10 +23,10 @@
  * <br>
  */
 
-#define hw_turn__nvica		, _hw_nvictn
-#define hwa_turn__nvica		, _hwa_nvictn
-
+#define hw_turn__nvica			, _hw_nvictn
 #define _hw_nvictn(...)			do{ _hwx_nvictn(_hw,__VA_ARGS__,,); }while(0)
+
+#define hwa_turn__nvica			, _hwa_nvictn
 #define _hwa_nvictn(...)		do{ _hwx_nvictn(_hwa,__VA_ARGS__,,); }while(0)
 
 #define _hwx_nvictn(h,o,i,a,x,...)	_hwx_nvictn01(h,HW_X(x),__VA_ARGS__)
@@ -39,9 +39,27 @@
 #define _hwx_nvictn_1(h,o,v)		h##_nvic_enable(v)
 #define _hwx_nvictn_0(h,o,v)		h##_nvic_disable(v)
 
-#define _hw_nvic_enable(v)		__hw_nvic_enable(v)
 
-HW_INLINE void __hw_nvic_enable ( uint8_t v )
+/**
+ * @page stm32_nvica
+ * `turn`: enables/disables interrupts.
+ *
+ * @code
+ * hw | hwa ( turn, (counter2,nvic), on | off );
+ * @endcode
+ */
+#define hw_class__nvirq
+
+#define hw_turn__nvirq			, _hw_tnnvirq
+#define _hw_tnnvirq(...)		do{ _hwx_tnnvirq(_hw,__VA_ARGS__); }while(0)
+
+#define hwa_turn__nvirq			, _hwa_tnnvirq
+#define _hwa_tnnvirq(...)		do{ _hwx_tnnvirq(_hwa,__VA_ARGS__); }while(0)
+
+#define _hwx_tnnvirq(h,o,v,s,...)	HW_Y0(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
+
+
+HW_INLINE void _hw_nvic_enable ( uint8_t v )
 {
   if ( v < 32 )
     _hw_write_m(nvic, iser0, (1UL<<v), (1UL<<v));
@@ -53,7 +71,7 @@ HW_INLINE void __hw_nvic_enable ( uint8_t v )
     HWA_E(interrupt not supported);
 }
 
-#define _hwa_nvic_enable(v)			__hwa_nvic_enable(hwa,v)
+#define _hwa_nvic_enable(v)		__hwa_nvic_enable(hwa,v)
 
 HW_INLINE void __hwa_nvic_enable ( hwa_t *hwa, uint8_t v )
 {
@@ -67,9 +85,7 @@ HW_INLINE void __hwa_nvic_enable ( hwa_t *hwa, uint8_t v )
     HWA_E(interrupt not supported);
 }
 
-#define _hw_nvic_disable(v)			__hw_nvic_disable(v)
-
-HW_INLINE void __hw_nvic_disable ( uint8_t v )
+HW_INLINE void _hw_nvic_disable ( uint8_t v )
 {
   if ( v < 32 )
     _hw_write_m(nvic, icer0, (1UL<<v), (1UL<<v));
@@ -81,7 +97,7 @@ HW_INLINE void __hw_nvic_disable ( uint8_t v )
     HWA_E(interrupt not supported);
 }
 
-#define _hwa_nvic_disable(v)			__hwa_nvic_disable(hwa,v)
+#define _hwa_nvic_disable(v)		__hwa_nvic_disable(hwa,v)
 
 HW_INLINE void __hwa_nvic_disable ( hwa_t *hwa, uint8_t v )
 {
@@ -91,6 +107,31 @@ HW_INLINE void __hwa_nvic_disable ( hwa_t *hwa, uint8_t v )
     _hwa_write_m(nvic, icer1, (1UL<<(v-32)), (1UL<<(v-32)));
   else if ( v < 96 )
     _hwa_write_m(nvic, icer2, (1UL<<(v-64)), (1UL<<(v-64)));
+  else
+    HWA_E(interrupt not supported);
+}
+
+
+/**
+ * @page stm32_nvica
+ * `clear`: clears pending interrupts.
+ *
+ * @code
+ * hw( clear, (nvic,counter2) );
+ * @endcode
+ */
+#define hw_clear__nvirq			, _hw_clrnvirq
+#define _hw_clrnvirq(o,v,...)		_hw_nvic_clear(v) HW_EOL(__VA_ARGS__)
+
+
+HW_INLINE void _hw_nvic_clear ( uint8_t v )
+{
+  if ( v < 32 )
+    _hw_write_m(nvic, icpr0, (1UL<<v), (1UL<<v));
+  else if ( v < 64 )
+    _hw_write_m(nvic, icpr1, (1UL<<(v-32)), (1UL<<(v-32)));
+  else if ( v < 96 )
+    _hw_write_m(nvic, icpr2, (1UL<<(v-64)), (1UL<<(v-64)));
   else
     HWA_E(interrupt not supported);
 }

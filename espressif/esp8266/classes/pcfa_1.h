@@ -27,12 +27,12 @@
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define hw_reg__pcfa_fn		_cb2, _reg, 1, 8, 2, _reg, 2, 4, 0
-#define hw_reg__pcfa_pu		_cb1, _reg, 1, 7
+#define hw_reg__pcfa_fn			_cb2, _reg, 1, 8, 2, _reg, 2, 4, 0
+#define hw_reg__pcfa_pu			_cb1, _reg, 1, 7
 #define hw_reg__pcfa_spu		_cb1, _reg, 1, 3
 #define hw_reg__pcfa_pux		_cb2, _reg, 1, 7, 1, _reg, 1, 3, 0 /* convenient */
 #define hw_reg__pcfa_soe		_cb1, _reg, 1, 1
-#define hw_reg__pcfa_oe		_cb1, _reg, 1, 0
+#define hw_reg__pcfa_oe			_cb1, _reg, 1, 0
 #define hw_reg__pcfa_oex		_cb1, _reg, 2, 0 /* convenient */
 
 

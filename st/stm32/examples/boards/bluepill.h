@@ -12,7 +12,7 @@
 /**
  * @page stm32_boards
  *
- * @section stm32_board_vcc_gnd Board from www.vcc-gnd.com
+ * @section stm32_board_bluepill Board from www.vcc-gnd.com aka "Blue pill"
  *
  * There is a STM32F103C8T6 with:
  *  * one 8 MHz crystal
@@ -23,8 +23,8 @@
  *  * two jumpers for BOOT0 and BOOT1
  *  * one USB connector
  *
- * @par stm32f103c8t6-vcc-gnd.h
- * @include boards/stm32f103c8t6-vcc-gnd.h
+ * @par bluepill.h
+ * @include boards/bluepill.h
  * <br>
  */
 

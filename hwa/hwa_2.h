@@ -542,18 +542,13 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwx_tnirq02_1(h,n,m,s,z,x,y,...)	h##_write(n,m,x) HW_EOL(__VA_ARGS__)
 
 
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
-
 /*  Single event ISR
+ *    HW_ISR_ATTRIBUTES is defined in vendor/architecture/hwa_2.h
  */
 #define _HW_ISR_(v,...)							\
   HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
   void __vector_##v(void)
+
 
 /*  Void ISR
  */

@@ -16,31 +16,29 @@
  * @code
  * hwa( configure, uart0,
  *
- *	       //  Transfer rate in bits per second
- *	       //
- *	     [ bps,	    BPS, ]
+ *      //  Transfer rate in bits per second
+ *      //
+ *    [ bps,         BPS, ]
  *
- *	       //  Number of data bits in frame. Default is `8`.
- *	       //
- *	     [ databits,    5 | 6 | 7 | 8 | 9, ]
+ *      //  Number of data bits in frame. Default is `8`.
+ *      //
+ *    [ databits,    5 | 6 | 7 | 8 | 9, ]
  *
- *	       //  Parity. Default is `none`.
- *	       //
- *	     [ parity,	    none, even, odd, ]
+ *      //  Parity. Default is `none`.
+ *      //
+ *    [ parity,      none, even, odd, ]
  *
- *	       //  Number of stop bits in frame. Default is `1`.
- *	       //
- *	     [ stopbits,    1 | 2, ]
+ *      //  Number of stop bits in frame. Default is `1`.
+ *      //
+ *    [ stopbits,    1 | 2, ]
  *
- *	       //  Whether the UART can receive. Default is `enabled`.
- *	       //
- *	     [ receiver,    enabled | disabled, ]
+ *      //  Whether the UART can receive. Default is `enabled`.
+ *      //
+ *    [ receiver,    enabled | disabled, ]
  *
- *	       //  Whether the UART can transmit. Default is `enabled`.
- *	       //
- *	     [ transmitter, enabled | disabled, ]
- *
- *	     );
+ *      //  Whether the UART can transmit. Default is `enabled`.
+ *      //
+ *    [ transmitter, enabled | disabled, ] );
  * @endcode
  */
 #define _hwa_cfuarta(o,i,a,k,...)					\

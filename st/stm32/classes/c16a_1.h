@@ -30,7 +30,7 @@
 #define hw_reg__c16a_cr2		_r32, 0x04, 0x000000F8, 0
 #define hw_reg__c16a_smcr		_r32, 0x08, 0x0000FFF7, 0
 #define hw_reg__c16a_dier		_r32, 0x0C, 0x00005F5F, 0
-#define hw_reg__c16a_sr		_r32, 0x10, 0x00001E7F, 0
+#define hw_reg__c16a_sr			_r32, 0x10, 0x00001E7F, 0
 #define hw_reg__c16a_egr		_r32, 0x14, 0x0000005F, 0
 #define hw_reg__c16a_ccmr1		_r32, 0x18, 0x0000FFFF, 0
 #define hw_reg__c16a_ccmr2		_r32, 0x1C, 0x0000FFFF, 0
@@ -65,7 +65,7 @@
 #define hw_reg__c16a_etps		_cb1, smcr, 2, 12
 #define hw_reg__c16a_etf		_cb1, smcr, 4, 8
 #define hw_reg__c16a_msm		_cb1, smcr, 1, 7
-#define hw_reg__c16a_ts		_cb1, smcr, 3, 4
+#define hw_reg__c16a_ts			_cb1, smcr, 3, 4
 #define hw_reg__c16a_sms		_cb1, smcr, 3, 0
 
 #define hw_reg__c16a_tde		_cb1, dier, 1, 14
@@ -80,13 +80,13 @@
 #define hw_reg__c16a_cc2ie		_cb1, dier, 1, 2
 #define hw_reg__c16a_cc1ie		_cb1, dier, 1, 1
 #define hw_reg__c16a_uie		_cb1, dier, 1, 0
-#define hw_reg__c16a_ie		_cb1, dier, 1, 0	// Convenient
+#define hw_reg__c16a_ie			_cb1, dier, 1, 0	// Convenient
 
 //#define hw_reg__c16a_psc		_cb1, psc, 16, 0
 
 //#define hw_reg__c16a_arr		_cb1, arr, 16, 0
 
-#define hw_reg__c16a_if		_cb1, sr, 16, 0
+#define hw_reg__c16a_if			_cb1, sr, 16, 0
 
 #if !defined __ASSEMBLER__
 

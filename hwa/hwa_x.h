@@ -69,7 +69,17 @@
 #define _HW_OR31(...)			_HW_OR32(__VA_ARGS__)
 #define _HW_OR32(c,o,d,r,...)		HW_Y0(_HW_OR32_,hw_class_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 #define _HW_OR32_1(...)			_HW_OR40(__VA_ARGS__)
-#define _HW_OR32_0(c,o,d,r,x)		,o,HW_EM_OO(o,r)
+/* #define _HW_OR32_0(c,o,d,r,x)		,o,HW_EM_OO(o,r) */
+
+//  Search _hw_rel_c(o,d,r)
+#define _HW_OR32_0(c,o,d,r,x)		_HW_OR43(c,o,d,r,_hw_rel_##c(o,d,r))
+#define _HW_OR43(...)			_HW_OR44(__VA_ARGS__)
+#define _HW_OR44(c,o,d,r,x)		_HW_OR45(HW_XO(x),c,o,d,r,x)
+#define _HW_OR45(...)			_HW_OR46(__VA_ARGS__)
+#define _HW_OR46(c,...)			HW_Y0(_HW_OR46_,c)(c,__VA_ARGS__)
+#define _HW_OR46_0(c,o,d,...)		c,o,d
+#define _HW_OR46_1(_c,_o,_d,c,o,d,r,x)	,o,HW_EM_OO(o,r)
+
 
 /*  Registers are converted to standardized memory definitions:
  *   * _m111,reg(o,r),(o,r,rc,a,wm,fm,bn,bp)
@@ -136,7 +146,15 @@
 #define _HW_XP102(...)			_HW_XP10_0( __VA_ARGS__)
 #define _HW_XP100(...)			_HW_XP11(__VA_ARGS__,,)
 
-#define _HW_XP11(o,x,...)		_HW_XP12(HW_OR(o,x),__VA_ARGS__)
+/* #define _HW_XP11(o,x,...)		_HW_XP12(HW_OR(o,x),__VA_ARGS__) */
+#define _HW_XP11(o,x,...)		HW_Y0(_HW_XP11_,_hw_isa_leftbkt x)(o,x,__VA_ARGS__)
+#define _HW_XP11_0(o,x,...)		_HW_XP12(HW_OR(o,x),__VA_ARGS__)
+#define _HW_XP11_1(o,x,...)		_HW_XP112(o, HW_OR x, __VA_ARGS__)
+#define _HW_XP112(...)			_HW_XP113(__VA_ARGS__)
+#define _HW_XP113(o,x,...)		HW_Y0(_HW_XP113,x)(o,x,__VA_ARGS__)
+#define _HW_XP1131(o,z,r,e,...)		,r,e //_fake,fake,() HW_E(e)
+#define _HW_XP1130(o,c,r,d,...)		_HW_XP12(HW_OR(o,r),__VA_ARGS__)
+
 #define _HW_XP12(...)			_HW_XP13(__VA_ARGS__)
 #define _HW_XP13(c,...)			HW_Y0(_HW_XP13_,c)(c,__VA_ARGS__)
 #define _HW_XP13_1(...)			__VA_ARGS__ // Error
@@ -222,7 +240,7 @@
 #define _HW_X_irq			, HW_XIRQ
 #define _HW_X_irqflag			, HW_XIRQFLAG
 #define _HW_X_irqmask			, HW_XIRQMASK
-
+#define _HW_X_xo			, HW_X_XO
 
 /*  Expand the definition of a register.
  */
@@ -232,7 +250,6 @@
 #define _HW_XREG03(c,...)		HW_Y0(_HW_XREG03_,c)(c,__VA_ARGS__,)
 #define _HW_XREG03_1(c,o,...)		,o,__VA_ARGS__	// Error: object not found
 #define _HW_XREG03_0(c,o,d,r,...)	_HW_OR21(c,o,d,r,hw_reg_##o##_##r)
-
 
 /* Expand the definition of an IRQ: _irq, irq(o,r), n, v, m, f
  *   The first arg must be an object name or an object path
@@ -269,5 +286,4 @@
 
 /*  Expand the definition of an external object
  */
-#define _HW_X_xo			, _hw_x_xo
-#define _hw_x_xo(...)			__VA_ARGS__
+#define HW_X_XO(...)			__VA_ARGS__

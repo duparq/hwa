@@ -17,9 +17,34 @@
  * @code
  * hw | hwa ( configure,   counter2,
  *
- *            function,    timer
- *                       | encoder
- *                       | slave,
+ *          [ mode,        counter ]       // Default mode is "counter"
+ *
+ *            //  How the counter is clocked
+ *            //
+ *            input,       from_apb1       // Internal clock (CK_INT)
+ *                       | channel1
+ *                       | channel2
+ *                       | external
+ *                       | xor(channel1,channel2,channel3)
+ *
+ *            direction,   up_loop
+ *                       | up_noloop
+ *                       | down_loop
+ *                       | down_noloop
+ *                       | updown_loop, ]
+ *
+ *          [ reload,      x, ]            // Any value in 0..0xFFFFFF
+ *
+ *          [ run,         yes
+ *                       | no ] );
+ *
+ * hw | hwa ( configure,   counter2,
+ *
+ *            mode         encoder );
+ *
+ * hw | hwa ( configure,   counter2,
+ *
+ *            mode,         slave,  ]
  *
  *            //  How the counter is clocked
  *            //
@@ -112,13 +137,13 @@
  * <br>
  * `turn`:
  * @code
- * hw | hwa ( turn, systick, on | off );
+ * hw | hwa ( turn, counter2, on );
  * @endcode
  */
-#define hw_turn__c16a		, _hw_tnc16a
-#define hwa_turn__c16a		, _hwa_tnc16a
-
+#define hw_turn__c16a			, _hw_tnc16a
 #define _hw_tnc16a(o,i,a,...)		do{ _hwx_tnc16a(_hw,o,__VA_ARGS__) }while(0)
+
+#define hwa_turn__c16a			, _hwa_tnc16a
 #define _hwa_tnc16a(o,i,a,...)		do{ _hwx_tnc16a(_hwa,o,__VA_ARGS__) }while(0)
 
 #define _hwx_tnc16a(h,o,v,...)		HW_Y(_hwx_tnc16a_,_hw_state_##v)(h,o,v,__VA_ARGS__)
@@ -128,15 +153,14 @@
 
 /**
  * @page stm32_c16a
- * <br>
+ *
  * `read:`
  * @code
- * hw( read, systick );
+ * uint16_t v = hw( read, counter2 );
  * @endcode
  */
-#define hw_read__c16a		, _hw_rdc16a
-
-#define _hw_rdc16a(o,i,a,...)		_hw_read(o,current)
+#define hw_read__c16a			, _hw_rdc16a
+#define _hw_rdc16a(o,i,a,...)		_hw_read(o,cnt)
 
 
 /**

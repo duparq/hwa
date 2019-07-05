@@ -9,6 +9,11 @@
  * @brief SysTick timer
  */
 
+#define hw_class__stka
+
+/* #define hw__stka_irq			_irq, systick, x15, ie, if */
+/* #define hw__stka_flag			_cb1, ctrl, 1, 16 */
+
 /**
  * @page stm32_stka
  * __Actions__
@@ -25,10 +30,8 @@
  *          [ run,         yes | no ] );   
  * @endcode
  */
-#define hw_class__stka
-
-#define hw_configure__stka	, _hw_cfstka
-#define hwa_configure__stka	, _hwa_cfstka
+#define hw_configure__stka		, _hw_cfstka
+#define hwa_configure__stka		, _hwa_cfstka
 
 #define _hw_cfstka_clk_ahb		, 17
 
@@ -79,16 +82,15 @@
  * hw | hwa ( turn, systick, on | off );
  * @endcode
  */
-#define hw_turn__stka		, _hw_tnstka
-#define hwa_turn__stka		, _hwa_tnstka
-
+#define hw_turn__stka			, _hw_tnstka
 #define _hw_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hw,o,__VA_ARGS__) }while(0)
+
+#define hwa_turn__stka			, _hwa_tnstka
 #define _hwa_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hwa,o,__VA_ARGS__) }while(0)
 
 #define _hwx_tnstka(h,o,v,...)		HW_Y(_hwx_tnstka_,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnstka_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_tnstka_1(h,o,v,g,...)				\
-  h##_write(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_tnstka_1(h,o,v,g,...)	h##_write(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
@@ -96,32 +98,29 @@
  * <br>
  * `read:`
  * @code
- * hw( read, systick );
+ * uint32_t v = hw( read, systick );       // Returns the current value of the timer
  * @endcode
  */
-#define hw_read__stka		, _hw_rdstka
-
+#define hw_read__stka			, _hw_rdstka
 #define _hw_rdstka(o,i,a,...)		_hw_read(o,current)
 
 
 /**
  * @page stm32_stka
  * <br>
- * __Interrupt__
+ * __IRQ__
  * @code
  * hw | hwa ( turn, irq(systick), on | off );
  * @endcode
- */
-
-
-/**
- * @page stm32_stka
- * <br>
+ *
  * @code
- * if ( hw(read, irqflag(systick)) )    // Reading the flag clears it
+ * hw | hwa ( turn, (systick,irq), on | off );
+ * @endcode
+ *
+ * @code
+ * if ( hw(read, irqflag(systick)) )       // Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
- * <br>
  */
 
 
@@ -148,8 +147,6 @@
  *     reload,    (hw(read, (systick,onems)) - 1) & 0xFFFFFF,
  *     run,       yes );
  * @endcode
- *
- * <br>
  */
 
 

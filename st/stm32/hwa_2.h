@@ -13,55 +13,53 @@
  * @ingroup public_ins_stm32
  * @brief Puts the core in sleep mode.
  */
-#define _hw_sleep_until_irq__mcu(...)		hw_asm("wfi")
 #define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
+#define _hw_sleep_until_irq__mcu(...)		hw_asm("wfi")
 
-#define _hw_sleep_until_event__mcu(...)		hw_asm("wfe")
 #define hw_sleep_until_event__mcu		, _hw_sleep_until_event__mcu
+#define _hw_sleep_until_event__mcu(...)		hw_asm("wfe")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Allows program interruption.
  */
-#define _hw_enable_interrupts__mcu(...)		hw_asm("cpsie i")
 #define hw_enable_interrupts__mcu		, _hw_enable_interrupts__mcu
+#define _hw_enable_interrupts__mcu(...)		hw_asm("cpsie i")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Prevents program interruption.
  */
-#define _hw_disable_interrupts__mcu(...)	hw_asm("cpsid i")
 #define hw_disable_interrupts__mcu		, _hw_disable_interrupts__mcu
+#define _hw_disable_interrupts__mcu(...)	hw_asm("cpsid i")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Allows program interruption.
  */
-#define _hw_enable_fault_exceptions__mcu(...)	hw_asm("cpsie f")
 #define hw_enable_fault_exceptions__mcu		, _hw_enable_fault_exceptions__mcu
+#define _hw_enable_fault_exceptions__mcu(...)	hw_asm("cpsie f")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Prevents program interruption.
  */
-#define _hw_disable_fault_exceptions__mcu(...)	hw_asm("cpsid f")
 #define hw_disable_fault_exceptions__mcu	, _hw_disable_fault_exceptions__mcu
+#define _hw_disable_fault_exceptions__mcu(...)	hw_asm("cpsid f")
 
 
 /**
  * @ingroup public_ins_stm32
  * @brief Software loop of \c n system clock cycles.
  */
-#define hw_waste_cycles(n)		_hw_waste_cycles(n)
-
+#define hw_waste_cycles(n)			_hw_waste_cycles(n)
 
 
 #include "../../hwa/hwa_2.h"
-
 
 
 HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
@@ -79,8 +77,8 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
  * classes. An object supports power management if it has a logical register
  * named `cken`.
  */
-#define hw_power		, _hw_power
-#define hwa_power		, _hwa_power
+#define hw_power			, _hw_power
+#define hwa_power			, _hwa_power
 
 #define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
 #define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
@@ -172,3 +170,15 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
   volatile uint32_t *p = (volatile uint32_t *)ra ;
   return ((*p)>>rbp) & m ;
 }
+
+
+/*	ISR
+ */
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((used))
+#endif
+
+#define hw_clear__irq			, _hw_clrirq
+#define _hw_clrirq(o,r,v,m,f,...)	_hw_write(o,f,0)

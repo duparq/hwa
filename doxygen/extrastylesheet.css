@@ -73,7 +73,7 @@ body, table, div, p, dl {
 
 div.line {
     font-size: 12px;
-    min-height: 12px;
+    line-height: 1.5;
 }
 
 div.textblock {

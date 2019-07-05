@@ -1,0 +1,57 @@
+
+#	-*- Makefile -*-
+
+#  When booting from SRAM:
+#    * in the application initialization code, you have to relocate the vector
+#      table in SRAM using the NVIC exception table and offset register:
+#
+#        *(uint32_t*)0xE000ED08 = 0x20000000;
+#        mon mww 0xE000ED08 0x20000000
+#
+#    * the SP is not loaded:
+#
+#        set $$sp = *(int*)0x20000000
+#        set $$pc = *(int*)0x20000004
+
+
+#$(info Loaded Makefile.openocd)
+
+.PHONY: openocd
+openocd:
+	@openocd -c 'source [find interface/stlink-v2.cfg]'	\
+		 -c 'source [find target/stm32f1x.cfg]' >/dev/null 2>&1 &
+
+.PHONY: gdb
+gdb:	openocd $(OUT).elf
+	$(GDB)	-ex "set architecture arm"			\
+		-ex "target remote localhost:3333" 		\
+		-ex "mon reset halt"				\
+		-ex "load $(OUT).elf"				\
+		-ex "mon mww 0xE000ED08 0x20000000"		\
+		-ex 'set $$sp = *(int*)0x20000000'		\
+		-ex 'set $$pc = *(int*)0x20000004'
+	killall openocd
+
+.PHONY: gdb
+reset:	openocd $(OUT).elf
+	$(GDB)	-ex "set architecture arm"			\
+		-ex "target remote localhost:3333" 		\
+		-ex "mon reset"					\
+		-ex "mon shutdown"				\
+		-ex "detach"					\
+		-ex "quit"
+
+.PHONY: install-ram
+install-ram:	openocd $(OUT).elf
+	@$(GDB)	-ex "set architecture arm"			\
+		-ex "target remote localhost:3333" 		\
+		-ex "mon reset halt"				\
+		-ex "mon init"					\
+		-ex "load $(OUT).elf"				\
+		-ex "mon mww 0xE000ED08 0x20000000"		\
+		-ex 'set $$sp = *(int*)0x20000000'		\
+		-ex 'set $$pc = *(int*)0x20000004'		\
+		-ex "mon resume"				\
+		-ex "mon shutdown"				\
+		-ex "detach"					\
+		-ex "quit" >/dev/null 2>&1 && echo "Success"
