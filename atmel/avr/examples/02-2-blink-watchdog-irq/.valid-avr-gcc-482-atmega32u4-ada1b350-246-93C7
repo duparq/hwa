@@ -1,0 +1,93 @@
+HW_DEVICE="atmega32u4"
+HW_SYSHZ="16000000"
+PIN_LED="pb0"
+TIMEOUT="250ms"
+
+00000000 <__vectors>:
+   0:	0c 94 56 00 	jmp	0xac	; 0xac <__ctors_end>
+   4:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+   8:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+   c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  10:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  14:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  18:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  1c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  20:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  24:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  28:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  2c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  30:	0c 94 62 00 	jmp	0xc4	; 0xc4 <__vector_12>
+  34:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  38:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  3c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  40:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  44:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  48:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  4c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  50:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  54:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  58:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  5c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  60:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  64:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  68:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  6c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  70:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  74:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  78:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  7c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  80:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  84:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  88:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  8c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  90:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  94:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  98:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  9c:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a0:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a4:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+  a8:	0c 94 60 00 	jmp	0xc0	; 0xc0 <__bad_interrupt>
+
+000000ac <__ctors_end>:
+  ac:	11 24       	eor	r1, r1
+  ae:	1f be       	out	0x3f, r1	; 63
+  b0:	cf ef       	ldi	r28, 0xFF	; 255
+  b2:	da e0       	ldi	r29, 0x0A	; 10
+  b4:	de bf       	out	0x3e, r29	; 62
+  b6:	cd bf       	out	0x3d, r28	; 61
+  b8:	0e 94 6d 00 	call	0xda	; 0xda <main>
+  bc:	0c 94 79 00 	jmp	0xf2	; 0xf2 <_exit>
+
+000000c0 <__bad_interrupt>:
+  c0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000c4 <__vector_12>:
+  c4:	1f 92       	push	r1
+  c6:	0f 92       	push	r0
+  c8:	0f b6       	in	r0, 0x3f	; 63
+  ca:	0f 92       	push	r0
+  cc:	11 24       	eor	r1, r1
+  ce:	18 9a       	sbi	0x03, 0	; 3
+  d0:	0f 90       	pop	r0
+  d2:	0f be       	out	0x3f, r0	; 63
+  d4:	0f 90       	pop	r0
+  d6:	1f 90       	pop	r1
+  d8:	18 95       	reti
+
+000000da <main>:
+  da:	81 e0       	ldi	r24, 0x01	; 1
+  dc:	83 bf       	out	0x33, r24	; 51
+  de:	88 e1       	ldi	r24, 0x18	; 24
+  e0:	80 93 60 00 	sts	0x0060, r24
+  e4:	84 e4       	ldi	r24, 0x44	; 68
+  e6:	80 93 60 00 	sts	0x0060, r24
+  ea:	20 9a       	sbi	0x04, 0	; 4
+  ec:	78 94       	sei
+  ee:	88 95       	sleep
+  f0:	fe cf       	rjmp	.-4      	; 0xee <main+0x14>
+
+000000f2 <_exit>:
+  f2:	f8 94       	cli
+
+000000f4 <__stop_program>:
+  f4:	ff cf       	rjmp	.-2      	; 0xf4 <__stop_program>
