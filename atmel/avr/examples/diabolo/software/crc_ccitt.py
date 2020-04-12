@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2013-08-10 10:57:55 -*-
+# -*- coding: utf-8 -*- Last modified: 2020-04-12 13:04:54 -*-
 
 
 class CRC:
@@ -10,7 +10,7 @@ class CRC:
 
     @staticmethod
     def add(value, char):
-        tmp = (value >> 8) ^ ord(char)
+        tmp = (value >> 8) ^ char
         value = ((value << 8) ^ CRC.tab[tmp]) & 0xFFFF
         return value
 
@@ -18,7 +18,7 @@ class CRC:
     def check(data):
         value = 0xFFFF
         for c in data:
-            tmp = (value >> 8) ^ ord(c)
+            tmp = (value >> 8) ^ c
             value = ((value << 8) ^ CRC.tab[tmp]) & 0xFFFF
         return value
 
@@ -27,10 +27,10 @@ class CRC:
 #    Initialize the CRC table
 #
 CRC.tab=256*[[]]
-for i in xrange(256):
+for i in range(256):
     crc=0
     c = i << 8
-    for j in xrange(8):
+    for j in range(8):
         if (crc ^ c) & 0x8000:
             crc = ( crc << 1) ^ 0x1021
         else:

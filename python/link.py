@@ -32,7 +32,7 @@ def add_arguments(parser):
                         type=float, default='0.0')
     parser.add_argument('-w', '--wires', help="how many wires for rx/tx "
                         "(0 for autodetection)",
-                        type=int, choices=range(3), default=0)
+                        type=int, choices=(0,1,2), default=0)
     parser.add_argument('-r', '--reset-signal', help="signal used to reset the "
                         "device", choices=['','dtr','rts'], default='dtr')
     parser.add_argument('-d', '--reset-length', help="how long reset is "
@@ -314,14 +314,14 @@ class Link:
             try:
                 self.sync_5_1()
                 return
-            except Exception, e:
+            except Exception as e:
                 # trace(repr(e))
                 cout('\n')
         if self.args.sync=="" or self.args.sync=="9_1":
             try:
                 self.sync_9_1()
                 return
-            except Exception, e:
+            except Exception as e:
                 # trace(repr(e))
                 cout('\n')
         if self.args.sync=="" or self.args.sync=="10_1":
@@ -526,7 +526,7 @@ class ThreadedTimed(Link):
         #
         with self.lock:
             if len(self.txbuf):
-                raise(Exception("TX buffer not empty"))
+                raise Exception
 
         #  In one-wire mode, the string is appended to the output buffer
         #  so that the receiver can discard the echo
@@ -551,7 +551,7 @@ class ThreadedTimed(Link):
                     t=timer()
                 time.sleep(self.serial.timeout)
             if l0:
-                raise(Exception("One-wire echo timeout"))
+                raise Exception
 
 
     #  Receive n bytes or until there's a timeout

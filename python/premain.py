@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*- 
 
 import sys
-import __builtin__
+import builtins
 import os
 
 
 #  Globals
 #
-__builtin__.__dict__['cout'] = sys.stdout.write
-__builtin__.__dict__['flushout'] = sys.stdout.flush
-__builtin__.__dict__['cerr'] = sys.stderr.write
-__builtin__.__dict__['dbg'] = id
+builtins.__dict__['cout'] = sys.stdout.write
+builtins.__dict__['flushout'] = sys.stdout.flush
+builtins.__dict__['cerr'] = sys.stderr.write
+builtins.__dict__['dbg'] = id
 
 
 #  Platform adaptations
@@ -21,15 +21,15 @@ import platform
 system = platform.system()
 if system == "Linux":
 #    __builtin__.__dict__['_'] = lambda x: x.encode('utf8')
-    __builtin__.__dict__['_'] = lambda x: x
-    __builtin__.__dict__['timer'] = time.time
+    builtins.__dict__['_'] = lambda x: x
+    builtins.__dict__['timer'] = time.time
 elif system == "Windows":
-    __builtin__.__dict__['_'] = lambda x: x.encode('cp850')
-    __builtin__.__dict__['timer'] = time.clock
+    builtins.__dict__['_'] = lambda x: x.encode('cp850')
+    builtins.__dict__['timer'] = time.clock
 else:
 #    print "Unknown platform %s\n" % system
-    __builtin__.__dict__['_'] = lambda x: x
-    __builtin__.__dict__['timer'] = time.clock
+    builtins.__dict__['_'] = lambda x: x
+    builtins.__dict__['timer'] = time.clock
 
 
 #  Trace function
@@ -61,9 +61,9 @@ def trace(arg=""):
     cout("%08dms %s() %s:%d: %s\n" % \
          (dt, caller[3], os.path.basename(caller[1]),
           caller[2], arg))
-__builtin__.__dict__['trace'] = trace
-__builtin__.__dict__['enable_trace'] = enable_trace
-__builtin__.__dict__['disable_trace'] = disable_trace
+builtins.__dict__['trace'] = trace
+builtins.__dict__['enable_trace'] = enable_trace
+builtins.__dict__['disable_trace'] = disable_trace
 
 
 #  Print error message and exit with error code 1
@@ -72,4 +72,4 @@ def die(s):
     sys.stderr.write("\nFatal: "+s+'\n')
     sys.exit(1)
 
-__builtin__.__dict__['die'] = die
+builtins.__dict__['die'] = die

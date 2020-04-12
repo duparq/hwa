@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
     #  Atmel devices can need up to 50 cycles (~6.25 µs @ 8MHz) to process the
@@ -22,7 +22,7 @@ sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../../python"))
 sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
 
 import premain
-import __builtin__
+import builtins
 
 from utils import hexdump
 
@@ -269,7 +269,7 @@ class Application:
         #
         try:
             self.link = link.get(self.options)
-        except link.serial.SerialException, e:
+        except link.serial.SerialException as e:
             die(str(e))
 
         #  Reset the device connected to the serial interface
@@ -310,7 +310,7 @@ class Application:
         #
         try:
             self.link.sync()
-        except Exception, e:
+        except Exception as e:
             die(_("Synchronization failed.\n%s" % repr(e)))
 
         #  Identify device
@@ -567,10 +567,10 @@ parser.add_argument('filename', nargs='?')
 args = parser.parse_args()
 
 if args.quiet:
-    __builtin__.__dict__['cout'] = id
+    builtins.__dict__['cout'] = id
 
 if args.debug:
-    __builtin__.__dict__['dbg'] = cout
+    builtins.__dict__['dbg'] = cout
 
 enable_trace()
 

@@ -88,7 +88,7 @@ class Device():
 
         top = min( len(data), self.bladdr )-1
         for x in range(top, end, -1):
-            if data[x] != '\xFF':
+            if data[x] != 0xFF:
                 break
         for i in range(x, end, -1):
             crc = CRC.add(crc, data[i])
@@ -143,7 +143,7 @@ class Device():
             if rlen == 0:
                 return None
 
-            if kwargs.has_key('timeout'):
+            if 'timeout' in kwargs:
                 #
                 #  Wait for a reply until timeout
                 #

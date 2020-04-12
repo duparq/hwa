@@ -47,6 +47,6 @@ examples:
 #
 .PHONY: check
 check:
-	@cd atmel/avr/examples         && $(MAKE) --no-print-directory check-all-examples
-	@cd st/stm32/examples          && $(MAKE) --no-print-directory check-all-examples
-	@cd espressif/esp8266/examples && $(MAKE) --no-print-directory check-all-examples
+	@cd atmel/avr/examples         && $(MAKE) --no-print-directory check
+#	@cd st/stm32/examples          && $(MAKE) --no-print-directory check
+#	@cd espressif/esp8266/examples && $(MAKE) --no-print-directory check

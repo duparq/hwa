@@ -78,10 +78,6 @@ fi
 #  No validation file match. GCC version?
 #
 CCVERSION=avr-gcc-$(avr-gcc -dumpversion | sed -e 's/\.//g')
-#CCVERSION=$(make ccversion)
-# CCVERSION=$(avr-gcc --version	\
-# 		   | awk 'NR==1 {x=match($3,/([0-9]+)\.([0-9]+)\.([0-9]+)/,m);	\
-# 	        if(x!=0){print "avr-gcc-"m[1]m[2]m[3]}}')
 
 if ! ls .valid-${CCVERSION}-${HW_DEVICE}-${CFG_CRC}-* >/dev/null 2>&1 ; then
     echo "no validation file for $CCVERSION"

@@ -69,6 +69,7 @@ ODUMP		:= $(ARCH)objdump
 GDB		:= $(ARCH)gdb
 SIZE		:= $(ARCH)size
 
+
 #  Basic flags (evaluation of DEVICE must be delayed)
 #
 FLAGS		= -mmcu=$(DEVICE)
@@ -309,7 +310,7 @@ size:	$(OUT).elf
 #
 .PHONY: stat
 stat:	$(OUT).bin
-	@if python -V >/dev/null 2>&1 ; then					\
+	@if python3 -V >/dev/null 2>&1 ; then					\
 	  $(diabolo) --mcu=$(DEVICE) --stat $(OUT).bin -q			;\
 	else									\
 	  echo "Install Python if you want Diabolo to stat your application."	;\
@@ -382,18 +383,17 @@ $(OUT).cfg: $(OUT).cfg.c
 .PHONY: validate
 validate: $(OUT).cfg $(OUT).bin #$(OUT).ccversion
 #	@echo RULE: $@: $^
-	@if python -V >/dev/null 2>&1 ; then						\
+	@if python3 -V >/dev/null 2>&1 ; then						\
 	  set -e									;\
 	  S_CRC=$$($(diabolo) --crc32 $(OUT).cfg | awk '{print $1}' )			;\
 	  O_CRC=$$($(diabolo) -q -m $(DEVICE) --crc $(OUT).bin)				;\
 	  O_SIZE=$$($(diabolo) -q -m $(DEVICE) --size $(OUT).bin)			;\
-	  CCVERSION=$$($(CC) --version	\
-	   | awk 'NR==1 {x=match($$3,/([0-9]+)\.([0-9]+)\.([0-9]+)/,m);	\
-	          if(x!=0){print "$(CC)-"m[1]m[2]m[3]}}')				;\
-	  rm -f .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-*				;\
-	  cp $(OUT).cfg .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC			;\
-	  $(ODUMP) -d $(OUT).elf >>.valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC	;\
-	  echo Validation: .valid-$${CCVERSION}-$(DEVICE)-$$S_CRC-$$O_SIZE-$$O_CRC	;\
+	  CCVERSION=$(CC)-$$($(CC) -dumpversion | sed -e 's/\.//g')			;\
+	  rm -f .valid-$${CCVERSION}-$(DEVICE)-$${S_CRC}-*				;\
+	  VALID=.valid-$${CCVERSION}-$(DEVICE)-$${S_CRC}-$${O_SIZE}-$${O_CRC}		;\
+	  cp $(OUT).cfg $${VALID}							;\
+	  $(ODUMP) -d $(OUT).elf | tail +6 >> $${VALID}					;\
+	  echo Validation: $${VALID}							;\
 	else										\
 	  echo "Python is required to validate the application."			;\
 	fi
