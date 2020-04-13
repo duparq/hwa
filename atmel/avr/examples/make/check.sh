@@ -80,7 +80,7 @@ fi
 CCVERSION=avr-gcc-$(avr-gcc -dumpversion | sed -e 's/\.//g')
 
 if ! ls .valid-${CCVERSION}-${HW_DEVICE}-${CFG_CRC}-* >/dev/null 2>&1 ; then
-    echo "no validation file for $CCVERSION"
+    echo "no validation file for $CCVERSION with configuration ${CFG_CRC}"
     exit 6
 fi
 

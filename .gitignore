@@ -18,5 +18,8 @@ trash/
 windows/
 MEMO*
 TODO*
+
 atmel/avr/examples/00-0/
-atmel/avr/examples/11-2-uart-twi-24cxx/
+st/stm32/examples/boards/STM32F411E-DISCO Schematic -MB1115.pdf
+st/stm32/examples/boards/stm32f411e-disco.h
+include/hwa/AvrTFT.c
