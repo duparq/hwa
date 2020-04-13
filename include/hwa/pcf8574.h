@@ -6,8 +6,8 @@
 
 /**
  * @file
- * @brief PCF8574 8-bit I/O expander for I²C bus
- * @page pcf8574 PCF8574 8-bit I/O expander for I²C bus
+ * @brief PCF8574: 8-bit I/O expander for I²C bus
+ * @page pcf8574 PCF8574: 8-bit I/O expander for I²C bus
  *
  * As this device is not speed critical, its implementation focuses on code size
  * rather than on speed, so it relies on extern C functions rather than on

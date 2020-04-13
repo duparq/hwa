@@ -2,14 +2,56 @@
 HWA
 ===
 
-HWA is a set of C definitions designed to help developers write hardware-related
-code that:
+HWA is a set of C definitions designed for bare metal programming in a pleasant
+style.
 
- * is pleasant to read and write,
- * produces efficient binary code,
- * is easier to port to a different target.
+To give you an idea, the following code blinks a LED connected to an
+STM32F103RBT6 using Systick interrupts and sleeping mode:
 
-To achieve these goals, HWA provides:
+
+    #include <hwa/stm32f103rbt6.h>
+    
+    #define AHBHZ   HW_DEVICE_HSIHZ         // The HSI frequency (8 MHz)
+    #define LED     pa2
+    #define PERIOD  0.5                     // Blinking period in seconds
+    
+    HW_ISR( systick ) {}                    // The IRQ is used only to wake the core up.
+    
+    int main ( )
+    {
+      hwa( begin_from_reset );              // Record the configuration in a context
+    
+      hwa( power, (LED,port), on );         // Power the LED port
+      hwa( commit );                        // Write the context in the hardware
+    
+      hwa( configure, LED,                  // Configure the LED pin
+           function,  gpio,                 //   Optional argument
+           mode,      digital_output,       //   Mandatory argument
+           frequency, lowest );             //   Optional argument
+    
+      hwa( configure, systick,              // Configure the system tick timer
+           clock,     ahb/8,                //   Clock it at 1/8th the AHB frequency
+           reload,    PERIOD/2*AHBHZ/8-1,
+           run,       yes );
+    
+      hwa( turn, irq(systick), on );        // Enable Systick IRQs (to wake the core up)
+    
+      hwa( commit );                        // Write all that into the hardware
+    
+      for(;;) {
+        hw( sleep_until_irq );              // sleep_until_event is OK too.
+        hw( toggle, LED );                  // Toggle the LED at wake-up
+      }
+    }
+
+
+The resulting binary is 402 bytes long: 94 bytes of code + 308 bytes of vectors.
+
+
+HWA in short
+============
+
+To achieve its goals, HWA provides:
 
  * a set of objects that represent the hardware,
  * one single object-oriented generic instruction, `hw(...)`, that can act on
@@ -18,8 +60,8 @@ To achieve these goals, HWA provides:
    rather than on the values to be written in registers,
  * a transactional processing mechanism with the `hwa(...)` instruction that
    allows further optimization of the binary code produced,
- * an error-checking mechanism that tries to produce messages that help the
-   developer solve the problems.
+ * an error-checking mechanism that produces messages to help the developer
+   quickly solve the problems.
 
 
 Performances and compatibility
@@ -50,54 +92,17 @@ provided. You'll find example projects in each `vendor/architecture/examples/`
 directory (e.g. `atmel/avr/examples/`) where a `README.md` file that explains
 how to compile the projects.
 
-As an appetizer, the following code blinks a LED connected to an Atmel AVR ATtiny44 using
-watchdog interrupts and sleep mode (machine code size: 94 bytes):
-
-    #include <hwa/attiny44a_pu.h>   // Load HWA definitions for the target MCU
-
-    #define PIN_LED      HW_PIN(7)
-
-    HW_ISR( watchdog0 )             // Service watchdog IRQ
-    {
-      hw( toggle, PIN_LED );
-    }
-
-
-    int main ( )
-    {
-      hwa( begin_from_reset );      // Create a HWA context to record the configuration
-
-      hwa( configure, PIN_LED, mode, digital_output );
-
-      hwa( configure, watchdog0,    // Have the watchdog trigger an IRQ every 250 ms
-           timeout,   250ms,
-           action,    irq );
-
-      hwa( configure,  core0,       // Put the MCU in idle mode when sleeping
-           sleep,      enabled,
-           sleep_mode, idle );
-
-      hwa( commit );                // Execute the configuration
-
-      hw( enable_interrupts );
-
-      for(;;)
-        hw( sleep_until_irq );      // Put the MCU in sleep mode between interrupts
-
-      return 0 ;
-    }
-
 
 Documentation
 =============
 
 A ready-made documentation is available
-[here](http://duparq.free.fr/hwa/index.html). Start with the [Using
-HWA](http://duparq.free.fr/hwa/using.html) page.
+[here](http://duparq.free.fr/hwa/index.html). You can start with the [Using
+HWA](http://duparq.free.fr/hwa/using.html) page or browse the examples.
 
 Building your own copy of the documentation from the sources requires
-[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make` in the
-HWA directory, then open the `doxygen/html/index.html` page.
+[Doxygen](http://www.stack.nl/~dimitri/doxygen/) and Gnu Make. Run `make doc` in
+the HWA directory, then open the `doxygen/html/index.html` page.
 
 
 Supported devices
@@ -118,6 +123,7 @@ Supported devices
      * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
 
  * Support for a few "external" devices has been started:
+   * [24CXX](http://duparq.free.fr/hwa/_24cxx.html) I²C EEPROM
    * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
    * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
    * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector

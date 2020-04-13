@@ -397,6 +397,12 @@
 #define _hw_fn_pa0_counter2_channel1	, af 
 #define _hw_fn_pa0_etr			, af 
 
+#define _hw_fn_pa2			(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
+#define _hw_fn_pa2_gpio			, df
+#define _hw_fn_pa2_usart2_tx		, af
+#define _hw_fn_pa2_adc12_in2		, af
+#define _hw_fn_pa2_counter2_channel3	, af
+
 #define _hw_fn_pa9			(gpio,(usart1,tx),(counter1,channel2))
 #define _hw_fn_pa9_gpio			, df 
 #define _hw_fn_pa9_usart1_tx		, af

@@ -6,8 +6,8 @@
 
 /**
  * @file
- * @brief HD44780 LCD driver
- * @page hd44780 HD44780 LCD driver
+ * @brief HD44780: LCD driver
+ * @page hd44780 HD44780: LCD driver
  *
  * As this device is not speed critical, its implementation focuses on code size
  * rather than on speed, so it relies on extern C functions rather than on

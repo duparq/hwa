@@ -8,9 +8,10 @@
 
 /**
  * @file
- * @brief Colour detector TCS3200.
+ * @brief TCS3200: colour detector
+ * @page tcs3200 TCS3200: colour detector
  *
- * @page tcs3200 TCS3200 colour detector
+ * @note This implementation is old and needs to be updated
  *
  * A class `_tcs3200` object is colour light-to-frequency converter, also
  * called 'colour detector'.

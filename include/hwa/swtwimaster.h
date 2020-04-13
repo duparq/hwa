@@ -6,8 +6,8 @@
 
 /**
  * @file
- * @brief Software-emulated TWI master
- * @page swtwimaster Software-emulated TWI master
+ * @brief SWTWIMASTER: Software-emulated TWI master
+ * @page swtwimaster SWTWIMASTER: Software-emulated TWI master
  *
  * This is a software-emulated TWI master. As this kind of interface is not
  * speed critical, the implementation focuses on code size rather than on speed,
