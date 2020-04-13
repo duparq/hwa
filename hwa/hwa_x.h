@@ -240,7 +240,8 @@
 #define _HW_X_irq			, HW_XIRQ
 #define _HW_X_irqflag			, HW_XIRQFLAG
 #define _HW_X_irqmask			, HW_XIRQMASK
-#define _HW_X_xo			, HW_X_XO
+#define _HW_X_xb			, HW_XB /* just remove brackets */
+
 
 /*  Expand the definition of a register.
  */
@@ -283,7 +284,3 @@
 #define _HW_XIRQM02(c,...)		HW_Y0(_HW_XIRQM02_,c)(c,__VA_ARGS__)
 #define _HW_XIRQM02_1(c,o,...)		,irqmask(o),__VA_ARGS__	// Error
 #define _HW_XIRQM02_0(c,o,n,v,m,f)	_HW_X90( HW_XP(n,m) )
-
-/*  Expand the definition of an external object
- */
-#define HW_X_XO(...)			__VA_ARGS__

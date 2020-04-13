@@ -66,4 +66,4 @@
 #define hw_class__io1a_io
 
 #define HW_IO__io1a				, _hw_io_io1a
-#define _hw_io_io1a(o,i,p,bn,bp,...)		xo(_io1a,p##_##bn##_##bp,-1,p,bn,bp)
+#define _hw_io_io1a(o,i,p,bn,bp,...)		xb(_io1a,p##_##bn##_##bp,-1,p,bn,bp)

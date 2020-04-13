@@ -24,9 +24,9 @@
 #include "xprintf.h"
 
 
-HW_IMPLEMENT(TWI);
-HW_IMPLEMENT(PCF);
-HW_IMPLEMENT(LCD);
+HW_DEFINE(TWI);
+HW_DEFINE(PCF);
+HW_DEFINE(LCD);
 
 
 int main(void)

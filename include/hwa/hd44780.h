@@ -52,21 +52,21 @@
 #define _HW_HD44780_05(c,...)		_HW_HD44780_06(_hw_hd44780_for_##c,c,__VA_ARGS__)
 #define _HW_HD44780_06(...)		_HW_HD44780_07(__VA_ARGS__)
 #define _HW_HD44780_07(x,...)		HW_Y0(_HW_HD44780_07_,x)(__VA_ARGS__)
-#define _HW_HD44780_07_1(c,c0,p,n,...)	xo(_hd44780,hd44780_##p,c##n,__VA_ARGS__)
+#define _HW_HD44780_07_1(c,c0,p,n,...)	xb(_hd44780,hd44780_##p,c##n,__VA_ARGS__)
 
 
 /**
- * @page hd44780
+ * @page hd44780 HD44780 LCD driver
  * __Interface__
  *
  * The following makes the implementation functions for TWI declared. Use it in
  * your header files:
  *
  * @code
- * HW_INTERFACE(LCD);
+ * HW_DECLARE(LCD);
  * @endcode
  */
-#define HW_INTERFACE__hd44780		, _hw_hd44780_interface
+#define HW_DECLARE__hd44780		, _hw_hd44780_interface
 
 #define _hw_hd44780_interface(o,...)		\
   void _hw_##o##__pulse ( );			\
@@ -85,40 +85,40 @@
 
 
 /**
- * @page hd44780
+ * @page hd44780 HD44780 LCD driver
  * __Implement__
  *
  * The following makes the implementation functions for TWI defined. It must
  * appear in one of your source files:
  *
  * @code
- * HW_IMPLEMENT(LCD);
+ * HW_DEFINE(LCD);
  * @endcode
  */
-#define HW_IMPLEMENT__hd44780		, _hw_hd44780_implement
+#define HW_DEFINE__hd44780		, _hw_hd44780_implement
 
 #define _hw_hd44780_implement(o,v,...)			\
-  _hw_implement_hd44780##v##__pulse(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##__write(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##__read(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##__wait(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##__command(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##__data(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_cls(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_init(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_gotoxy(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_newline(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_home(o,v,__VA_ARGS__)	\
-  _hw_implement_hd44780##v##_putchar(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__pulse(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__write(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__read(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__wait(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__command(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##__data(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_cls(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_init(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_gotoxy(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_newline(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_home(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_putchar(o,v,__VA_ARGS__)	\
   extern void _hwa_fake() /* require a ; */
 
-#define _hw_implement_hd44780twi4__pulse(o,v,lines,cols,e,...)	\
+#define _hw_define_hd44780twi4__pulse(o,v,lines,cols,e,...)	\
   void _hw_##o##__pulse ( )	{				\
     hw(write, HW_XB e, 1);					\
     hw(write, HW_XB e, 0);					\
   }
 
-#define _hw_implement_hd44780twi4__write(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4__write(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##__write ( uint8_t data, uint8_t r )	{		\
     _hw_##o##__wait();							\
     hw( writea, HW_XB rs, r );						\
@@ -131,7 +131,7 @@
     hw( write, HW_XB d, 15 );						\
   }
 
-#define _hw_implement_hd44780twi4__read(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4__read(o,v,lines,cols,e,rs,rw,d,...)	\
   uint8_t _hw_##o##__read ( uint8_t r ) {				\
     _hw( write, HW_XB rs, r );						\
     _hw( write, HW_XB rw, 1 );						\
@@ -145,7 +145,7 @@
     return (hi<<4)|lo ;							\
   }
 
-#define _hw_implement_hd44780twi4__wait(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4__wait(o,v,lines,cols,e,rs,rw,d,...)	\
   uint8_t _hw_##o##__wait ( ) {						\
     uint8_t r0 ;							\
     while( (r0 = _hw_##o##__read(0)) & 0x80 ) /* Bit 7 of register #0: busy  */ \
@@ -153,22 +153,22 @@
     return r0; /* Return counter */					\
   }
 
-#define _hw_implement_hd44780twi4__command(o,v,lines,cols,e,rs,rw,d,...) \
+#define _hw_define_hd44780twi4__command(o,v,lines,cols,e,rs,rw,d,...) \
   void _hw_##o##__command ( uint8_t c ) {				\
     _hw_##o##__write(c,0);						\
   }
 
-#define _hw_implement_hd44780twi4__data(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4__data(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##__data ( uint8_t data ) {				\
     _hw_##o##__write(data,1);						\
   }
 
-#define _hw_implement_hd44780twi4_cls(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4_cls(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##_cls ( ) {						\
     _hw_##o##__command(1);						\
   }
 
-#define _hw_implement_hd44780twi4_init(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4_init(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##_init ( ) {						\
     hw( writea, HW_XB e, 0 );						\
     hw( writea, HW_XB rs, 0 );						\
@@ -195,7 +195,7 @@
     _hw_##o##__command( 0x0C ); /* Display on, no cursor, no blink */	\
   }
 
-#define _hw_implement_hd44780twi4_gotoxy(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4_gotoxy(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##_gotoxy ( uint8_t x, uint8_t y ) {			\
     if ( lines==2 && y>0 )						\
       _hw_##o##__command(0x80+64+x);					\
@@ -203,7 +203,7 @@
       _hw_##o##__command(0x80+0+x);					\
   }
 
-#define _hw_implement_hd44780twi4_newline(o,v,lines,cols,e,rs,rw,d,...) \
+#define _hw_define_hd44780twi4_newline(o,v,lines,cols,e,rs,rw,d,...) \
   void _hw_##o##_newline ( uint8_t pos ) {				\
     if ( lines==1 )							\
       _hw_##o##_gotoxy(0,0);						\
@@ -215,14 +215,14 @@
     }									\
   }									\
 
-#define _hw_implement_hd44780twi4_home(o,v,lines,cols,e,rs,rw,d,...)	\
+#define _hw_define_hd44780twi4_home(o,v,lines,cols,e,rs,rw,d,...)	\
   void _hw_##o##_home ( ) {						\
     _hw_##o##__command(2);						\
   }
 
 /* FIXME: should cache current line and column so that reading the LCD would not be necessary
  */
-#define _hw_implement_hd44780twi4_putchar(o,v,lines,cols,e,rs,rw,d,...) \
+#define _hw_define_hd44780twi4_putchar(o,v,lines,cols,e,rs,rw,d,...) \
   void _hw_##o##_putchar ( unsigned char c ) {				\
     uint8_t pos;							\
 									\

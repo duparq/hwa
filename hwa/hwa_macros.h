@@ -162,6 +162,8 @@
 #define HW_E_IRQ(n)		HW_E(HW_Q(n) is not an IRQ)
 #define HW_EM_IRQ(n)		HW_Q(n) is not an IRQ
 
+#define HW_E_WNOA		HW_E(wrong number of arguments)
+
 #define HW_ERROR		HW_E
 
 
@@ -281,42 +283,57 @@
 
 /**
  * @ingroup public_mac
- * @brief `HW_IMPLEMENT(object)` implements the interface functions for the object.
+ * @brief `HW_DEFINE(object)` defines the functions that implement an object.
  * @hideinitializer
  *
- * External objects may provide functions that are not inlined to implement HWA
- * actions. These functions are declared by `HW_INTERFACE()` and implemened by
- * `HW_IMPLEMENT()`.
+ * External objects usually rely on functions to implement their HWA
+ * actions. These functions are declared by `HW_DECLARE()` and implemened by
+ * `HW_DEFINE()`.
  *
  * @code
  * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
  *
- * HW_IMPLEMENT(PCF);
+ * HW_DEFINE(PCF);
  * @endcode
  */
-#define HW_IMPLEMENT(...)		HW_F(HW_IMPLEMENT,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
-#define HW_IMPLEMENT_(o,e,...)		HW_E(e)
-#define HW_IMPLEMENT_WEAK(...)		HW_F(HW_IMPLEMENT_WEAK,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__)
-#define HW_IMPLEMENT_WEAK_(o,e,...)	HW_E(e)
+#define HW_DEFINE(...)		HW_F(HW_DEFINE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_DEFINE_(o,e,...)		HW_E(e)
+
+/**
+ * @ingroup public_mac
+ * @brief `HW_DEFINE_WEAK(object)` defines the functions that implement an object.
+ * @hideinitializer
+ *
+ * Using HW_DEFINE_WEAK() instead of HW_DEFINE() allows multiple definitions of
+ * the same functions without errors.
+ *
+ * @code
+ * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
+ *
+ * HW_DEFINE_WEAK(PCF);
+ * @endcode
+ */
+#define HW_DEFINE_WEAK(...)		HW_F(HW_DEFINE_WEAK,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__)
+#define HW_DEFINE_WEAK_(o,e,...)	HW_E(e)
 
 
 /**
  * @ingroup public_mac
- * @brief `HW_INTERFACE(object)` declares the interface functions for the object.
+ * @brief `HW_DECLARE(object)` declares the functions that implement an object.
  * @hideinitializer
  *
- * External objects may provide functions that are not inlined to implement HWA
- * actions. These functions are declared by `HW_INTERFACE()` and implemened by
- * `HW_IMPLEMENT()`.
+ * External objects usually rely on functions to implement their HWA
+ * actions. These functions are declared by `HW_DECLARE()` and implemened by
+ * `HW_DEFINE()`.
  *
  * @code
  * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
  *
- * HW_INTERFACE(PCF);
+ * HW_DECLARE(PCF);
  * @endcode
  */
-#define HW_INTERFACE(...)		HW_F(HW_INTERFACE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
-#define HW_INTERFACE_(o,e,...)		HW_E(e)
+#define HW_DECLARE(...)			HW_F(HW_DECLARE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_DECLARE_(o,e,...)		HW_E(e)
 
 
 /**
@@ -346,7 +363,7 @@
  * @hideinitializer
  */
 #define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__)
-#define HW_IO_(o,e,...)			xo(_fake,o,e) HW_E(e)
+#define HW_IO_(o,e,...)			xb(_fake,o,e) HW_E(e)
 
 
 /*

@@ -33,7 +33,7 @@
   ,HW_PCF8574(...),"HW_PCF8574(...)" must be defined as "HW_PCF8574(interface,...,address,...)"
 #define _HW_PCF8574_01_1(k1,twi,k2,sla)		_HW_PCF8574_02(HW_A1(HW_X(twi)),sla)
 #define _HW_PCF8574_02(...)			_HW_PCF8574_03(__VA_ARGS__)
-#define _HW_PCF8574_03(otwi,sla)		xo(_pcf8574,pcf8574_##otwi##_##sla,otwi,sla)
+#define _HW_PCF8574_03(otwi,sla)		xb(_pcf8574,pcf8574_##otwi##_##sla,otwi,sla)
 
 
 /**
@@ -44,12 +44,12 @@
  * your header files:
  *
  * @code
- * HW_INTERFACE(PCF);
+ * HW_DECLARE(PCF);
  * @endcode
  */
-#define HW_INTERFACE__pcf8574		, _hw_interface_pcf8574
+#define HW_DECLARE__pcf8574		, _hw_declare_pcf8574
 
-#define _hw_interface_pcf8574(o,twi,sla,...)				\
+#define _hw_declare_pcf8574(o,twi,sla,...)				\
   									\
   extern uint8_t _hw_##o##_reg ;					\
 									\
@@ -107,15 +107,15 @@
  * appear in one of your source files:
  *
  * @code
- * HW_IMPLEMENT(PCF);
+ * HW_DEFINE(PCF);
  * @endcode
  */
-#define HW_IMPLEMENT__pcf8574		, _hw_implement_pcf8574_
-#define HW_IMPLEMENT_WEAK__pcf8574	, _hw_implement_pcf8574w
+#define HW_DEFINE__pcf8574		, _hw_define_pcf8574_
+#define HW_DEFINE_WEAK__pcf8574	, _hw_define_pcf8574w
 
-#define _hw_implement_pcf8574_(o,sla,twi,...)	_hw_implement_pcf8574(o,sla,twi,,__VA_ARGS__)
-#define _hw_implement_pcf8574w(o,sla,twi,...)	_hw_implement_pcf8574(o,sla,twi,__attribute__((weak)),__VA_ARGS__)
-#define _hw_implement_pcf8574(o,sla,twi,attr,...)	uint8_t attr _hw_##o##_reg
+#define _hw_define_pcf8574_(o,sla,twi,...)	_hw_define_pcf8574(o,sla,twi,,__VA_ARGS__)
+#define _hw_define_pcf8574w(o,sla,twi,...)	_hw_define_pcf8574(o,sla,twi,__attribute__((weak)),__VA_ARGS__)
+#define _hw_define_pcf8574(o,sla,twi,attr,...)	uint8_t attr _hw_##o##_reg
 
 
 /**
@@ -164,7 +164,7 @@
 #define hw_class__pcf8574_io
 
 #define HW_IO__pcf8574				, _hw_io_pcf8574
-#define _hw_io_pcf8574(opcf,sla,twil,bn,bp,...)	xo(_pcf8574_io,opcf,bn,bp)
+#define _hw_io_pcf8574(opcf,sla,twil,bn,bp,...)	xb(_pcf8574_io,opcf,bn,bp)
 
 #define HW_BITS__pcf8574_io			, _hw_bits_pcf8574_io
 #define _hw_bits_pcf8574_io(opcf,n,p,...)	n

@@ -44,7 +44,7 @@
  */
 #define _HW_SWTWIMASTER_03(scl,sda,bps)		_HW_SWTWIMASTER_04(HW_A1 scl, bps,scl,sda)
 #define _HW_SWTWIMASTER_04(...)			_HW_SWTWIMASTER_05(__VA_ARGS__)
-#define _HW_SWTWIMASTER_05(p,...)		xo(_swtwimaster,swtwimaster_##p,__VA_ARGS__)
+#define _HW_SWTWIMASTER_05(p,...)		xb(_swtwimaster,swtwimaster_##p,__VA_ARGS__)
 
 #define _hw_is_sclsdabps_sclsdabps		, 1
 #define _hw_isa_gpio__p8a_io			, 1
@@ -58,12 +58,12 @@
  * your header files:
  *
  * @code
- * HW_INTERFACE(TWI);
+ * HW_DECLARE(TWI);
  * @endcode
  */
-#define HW_INTERFACE__swtwimaster		, _hw_interface_swtwimaster
+#define HW_DECLARE__swtwimaster		, _hw_declare_swtwimaster
 
-#define _hw_interface_swtwimaster(o,bps,scl,sda,...)	\
+#define _hw_declare_swtwimaster(o,bps,scl,sda,...)	\
 							\
   extern uint8_t _hw_##o##__sr ;			\
 							\
@@ -86,12 +86,12 @@
  * appear in one of your source files:
  *
  * @code
- * HW_IMPLEMENT(TWI);
+ * HW_DEFINE(TWI);
  * @endcode
  */
-#define HW_IMPLEMENT__swtwimaster		, _hw_implement_swtwimaster
+#define HW_DEFINE__swtwimaster		, _hw_define_swtwimaster
 
-#define _hw_implement_swtwimaster(o,bps,scl,sda,...)			\
+#define _hw_define_swtwimaster(o,bps,scl,sda,...)			\
 									\
   extern void _hw_##o##__delay ( ) ;					\
 									\

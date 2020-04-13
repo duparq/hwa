@@ -496,9 +496,9 @@
  *									       *
  *******************************************************************************/
 
-#define HW_INTERFACE__twia		, _hw_interface_twia
+#define HW_DECLARE__twia		, _hw_declare_twia
 
-#define _hw_interface_twia(o,i,a,...)				\
+#define _hw_declare_twia(o,i,a,...)				\
 								\
   HW_EOL(__VA_ARGS__)						\
 								\
@@ -506,9 +506,9 @@
   uint8_t _hw_##o##_start_read_stop ( uint8_t sla )
 
 
-#define HW_IMPLEMENT__twia		, _hw_implement_twia
+#define HW_DEFINE__twia		, _hw_define_twia
 
-#define _hw_implement_twia(o,i,a,...)				\
+#define _hw_define_twia(o,i,a,...)				\
 								\
   HW_EOL(__VA_ARGS__)						\
 								\
