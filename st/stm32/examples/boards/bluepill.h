@@ -11,7 +11,6 @@
 
 /**
  * @page stm32_boards
- *
  * @section stm32_board_bluepill Board from www.vcc-gnd.com aka "Blue pill"
  *
  * There is a STM32F103C8T6 with:
@@ -33,7 +32,7 @@
 #define HW_DEVICE_HSEHZ			8e6
 #define HW_DEVICE_LSEHZ			32768
 
-/*  The pin at which the LED is connected. The target device name indicapes its
+/*  The pin the LED is connected to. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.
  */
 #define LED				pc13

@@ -4,6 +4,7 @@ STM32 classes {#stm32_classes}
 
 HWA provides the following classes for STM32 devices:
 
+* @subpage stm32_afioa
 * @subpage stm32_ahba
 * @subpage stm32_apba
 * @subpage stm32_hsea

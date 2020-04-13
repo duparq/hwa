@@ -84,9 +84,9 @@ main ( )
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure, core0,
-	      sleep,	  enabled,
-	      sleep_mode, idle );
+  hwa( configure,  core0,
+       sleep,	   enabled,
+       sleep_mode, idle );
 
   /*  Configure the counter to overflow every ~0.02 s.
    *
@@ -104,7 +104,7 @@ main ( )
        bottom,    0,
        top,       compare0 );
 
-  hwa( write, (COUNTER, compare0), 0.02 * HW_SYSHZ / 1024 / 2 );
+  hwa( write, (COUNTER,compare0), 0.02 * HW_SYSHZ / 1024 / 2 );
   hwa( turn, irq(COUNTER,overflow), on );
 
   /*  Configure the ADC (this turns it on)
