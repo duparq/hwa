@@ -253,10 +253,11 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
 #define _hwx_wrio1a1_1(x,p,bn,bp,v,g)		HW_E_V()
 #define _hwx_wrio1a1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrio1a2_,g)(x,p,bn,bp,v,g)
 #define _hwx_wrio1a2_0(x,p,bn,bp,v,g)		HW_E_G(g)
-#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)				\
-  x##_write_m( p, bsrr, 0xffffffff,				\
-	       ((((1UL<<bn)-1)<<bp) & (~(v##UL))<<bp)<<16 |	\
-	       ((((1UL<<bn)-1)<<bp) & ( (v))<<bp) )
+#define _hwx_wrio1a2_1(x,p,bn,bp,v,g)					\
+  { uint32_t v32 = (v); /* v could be volatile, boolean expr... */	\
+    x##_write_m( p, bsrr, 0xffffffff,					\
+		 ((((1UL<<bn)-1)<<bp) & (~v32)<<bp)<<16 |		\
+		 ((((1UL<<bn)-1)<<bp) & ( v32)<<bp) ); }
 
 
 /**
