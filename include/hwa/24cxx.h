@@ -7,6 +7,9 @@
 /**
  * @file
  * @brief 24CXX: I²C EEPROM
+ */
+
+/**
  * @page p24cxx 24CXX: I²C EEPROM
  *
  * As this device is not speed critical, its implementation focuses on code size

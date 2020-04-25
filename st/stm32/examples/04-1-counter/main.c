@@ -1,6 +1,6 @@
 
 /*  This file is part of the HWA project.
- *  Copyright (c) 2017 Christophe Duparquet.
+ *  Copyright (c) 2020 Christophe Duparquet.
  *  All rights reserved. Read LICENSE.TXT for details.
  */
 
@@ -13,9 +13,7 @@
  */
 #include BOARD_H
 
-#define SYSHZ		(36*1000*1000)		// Desired frequency for the SYSCLK signal
-#define AHBHZ		(9*1000*1000)		// Desired frequency for the core (and systick)
-
+#define AHBHZ		HW_DEVICE_HSIHZ		// AHB frequency
 #define COUNTER		counter2
 #define PERIOD		0.25			// Blinking period
 
@@ -24,8 +22,8 @@
  */
 HW_ISR( COUNTER )
 {
-  hw( write, (COUNTER,if), 0) ;
-  hw( toggle, LED );
+  /* hw( clear, (COUNTER,if) ) ; // DOES NOT WORK? */
+  hw( clear, (COUNTER,irq) );
 }
 
 
@@ -33,89 +31,39 @@ int main ( )
 {
   hwa( begin_from_reset );
 
-  /* Configure the PLL source and multiplier (must be done before it is enabled).
-   * Prepare the connection of the sysclk to the pll. The hardware will wait for
-   * the PLL to be locked before actually switching.
-   */
-  hwa( configure,  pll,
-       source,     hsi/2,
-       multiplier, SYSHZ/(HW_DEVICE_HSIHZ/2) );
-  hwa( connect, sysclk, pll );
-  hwa( commit );
-
-  /*  Turn the PLL on.
-   */
-  hwa( turn, pll, on );
-  hwa( commit );
-
-  /* Wait for the PLL to be locked.
-   */
-  while ( ! hw(stat,pll).ready ) {}
-
-  /*  Configure the AHB
-   */
-  hwa( configure, ahb,
-       clock,     sysclk,
-       prescaler, SYSHZ/AHBHZ );
-  hwa( commit );
-
-  /*  Power on the controllers we use
+  /*  Power the controllers we use
    */
   hwa( power, (LED1,port), on );
   hwa( power, (pa9,port), on );
   hwa( power, COUNTER, on );
   hwa( commit );
 
-  /*  Configure the GPIO pin
+  /*  Configure GPIOs
    */
   hwa( configure, LED1, mode, digital_output, frequency, lowest );
+  hwa( configure, pa8, mode, digital_output, frequency, lowest );
   hwa( configure, pa9, mode, digital_output, frequency, lowest );
   hwa( commit );
 
   /*  Configure the counter
    */
-  /* hwa( configure, COUNTER, */
-  /*      clock,     from_apb1, */
-  /*      direction, up_loop, */
-  /*      prescaler, (uint16_t)(0.001*AHBHZ)-1, */
-  /*      reload,    (uint16_t)(PERIOD/2 / 0.001)-1 ); */
+  hwa( configure, COUNTER,
+       mode,      counter,
+       clock,     from_apb1_psc,
+       direction, up_loop,
+       prescaler, AHBHZ*0.001 - 1,	// 1 ms clock period
+       reload,    PERIOD/2 / 0.001 - 1,
+       run,	  yes );
 
-  /* hwa( configure, COUNTER, */
-  /*      mode,      counter, */
-  /*      input,     from_apb1, */
-  /*      direction, up_loop, */
-  /*      prescaler, (uint16_t)(0.001*AHBHZ)-1, */
-  /*      reload,    (uint16_t)(PERIOD/2 / 0.001)-1 ); */
+  hw( turn, (COUNTER,nvic), on );
+  hw( turn, (COUNTER,irq), on );
 
-  hwa( write, (COUNTER,dir), 0 );
-  hwa( write, (COUNTER,psc), (uint32_t)(0.001*AHBHZ)-1 );
-  /* hwa( write, (COUNTER,arr), (uint32_t)(PERIOD/2 / 0.001)-1 ); */
-  hwa( write, (COUNTER,arr), 9 );
-  hwa( write, (COUNTER,cen), 1 );
-  //  hwa( turn, COUNTER, on );
-
-  //  hwa( turn, (COUNTER,irq), on );
-  /* hwa( turn, nvic, irq(COUNTER), on ); */
-  //  hwa( turn, (COUNTER,nvic), on );
-  /* hwa( turn, (nvic,COUNTER), on ); */
   hwa( commit );
 
   /*  Toggle the LED between sleeps
    */
-  /* uint8_t n=0; */
   for(;;) {
-    hw( write, pa9, hw(read,COUNTER)==1 );
-    //    hw( sleep_until_irq );	// hw_sleep_until_event() is OK too.
-    /* n++ ; */
-    /* if ( n>20 ) */
-    /*   hw( turn, nvic, irq(COUNTER), off ); */
-      /* hw( turn, (COUNTER,nvic), off ); */
-      /* hw( turn, (COUNTER,irq), off ); */
-    //hw( power, COUNTER, off );
+    hw( sleep_until_irq );	// sleep_until_event is OK too.
+    hw( toggle, LED1 );
   }
 }
-
-/* HW_X(pa9) */
-/* hw( write, pa9, hw(read,COUNTER)==1 ); */
-
-/* hw( read, COUNTER ); */

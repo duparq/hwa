@@ -153,7 +153,7 @@
 #define HW_EM_OO(o,x)		HW_Q(o) has no relative named HW_Q(x)
 #define HW_E_IOFN(o,a,v,l)	HW_E(HW_Q(o): HW_Q(a) can be HW_Q(l) but not HW_Q(v))
 #define HW_E_IMP(f)		HW_E(HW_Q(f): not implemented for this target)
-#define HW_E_TBI(f)		HW_E(instruction is not implemented yet)
+#define HW_E_TBI(...)		HW_E(instruction is not implemented yet)
 #define HW_E_KVNIY(k,v)		HW_E(HW_Q(k=v) is not implemented yet)
 
 #define HW_E_ML(l)		HW_E(expected one argument in HW_Q(l))

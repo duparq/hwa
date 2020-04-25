@@ -8,21 +8,23 @@
  * @example
  *
  * This program:
- *  * Starts the high-speed external oscillator.
+ *  * Starts the high-speed external oscillator (HSE).
  *  * Configures the PLL source and multiplier.
  *  * Connects the SYSCLK to the PLL.
+ *  * Configures the AHB prescaler.
  *  * Enables the LED port.
  *  * Configures the LED pin as a digital output.
+ *  * Stops the high-speed internal oscillator (HSI).
  *  * Toggles the LED in an infinite loop.
  *
  * @par main.c
  */
 #include BOARD_H
 
-#define SYSHZ		72e6	// Desired frequency for the SYSCLK signal
-#define COREHZ		9e6	// Desired frequency for the core
+#define SYSHZ		(36*1000*1000)	// Desired frequency for the SYSCLK signal
+#define AHBHZ		(9*1000*1000)	// Desired frequency for the core (and systick)
 
-#define PERIOD		0.5	// Blinking period
+#define PERIOD		0.5		// Blinking period
 
 
 int main ( )
@@ -62,7 +64,7 @@ int main ( )
    */
   hwa( configure, ahb,
        clock,     sysclk,
-       prescaler, SYSHZ/COREHZ );
+       prescaler, SYSHZ/AHBHZ );
   hwa( commit );
 
   /*  Configure the GPIO pin
@@ -81,6 +83,6 @@ int main ( )
 
   for(;;) {
     hw( toggle, LED1 );
-    hw_waste_cycles( PERIOD*COREHZ/2 );
+    hw_waste_cycles( PERIOD*AHBHZ/2 );
   }
 }

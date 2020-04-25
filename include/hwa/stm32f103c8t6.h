@@ -17,7 +17,7 @@
  * @endcode
  */
 /**
- * @page stm32f103c8t6 STM32F103C8T6
+ * @page stm32f103c8t6
  * @section stm32f103c8t6_sym Defined symbols
  *
  * Symbol		       | Value

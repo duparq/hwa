@@ -50,7 +50,7 @@
 #define hw_reg__c16a_arpe		_cb1, cr1, 1, 7
 #define hw_reg__c16a_cms		_cb1, cr1, 2, 5
 #define hw_reg__c16a_dir		_cb1, cr1, 1, 4
-#define hw_reg__c16a_cpm		_cb1, cr1, 1, 3
+#define hw_reg__c16a_opm		_cb1, cr1, 1, 3
 #define hw_reg__c16a_urs		_cb1, cr1, 1, 2
 #define hw_reg__c16a_udis		_cb1, cr1, 1, 1
 #define hw_reg__c16a_cen		_cb1, cr1, 1, 0
@@ -82,11 +82,8 @@
 #define hw_reg__c16a_uie		_cb1, dier, 1, 0
 #define hw_reg__c16a_ie			_cb1, dier, 1, 0	// Convenient
 
-//#define hw_reg__c16a_psc		_cb1, psc, 16, 0
-
-//#define hw_reg__c16a_arr		_cb1, arr, 16, 0
-
 #define hw_reg__c16a_if			_cb1, sr, 16, 0
+
 
 #if !defined __ASSEMBLER__
 

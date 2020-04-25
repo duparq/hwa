@@ -19,7 +19,7 @@ windows/
 MEMO*
 TODO*
 
-atmel/avr/examples/00-0/
+**/00-0
 st/stm32/examples/boards/STM32F411E-DISCO Schematic -MB1115.pdf
 st/stm32/examples/boards/stm32f411e-disco.h
 include/hwa/AvrTFT.c

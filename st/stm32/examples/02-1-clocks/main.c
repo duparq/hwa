@@ -14,9 +14,10 @@
  */
 #include BOARD_H
 
-#define SYSHZ		72e6	// Desired frequency for the system clock
+#define SYSHZ		(36*1000*1000)	// Desired frequency for the SYSCLK signal
+#define AHBHZ		(9*1000*1000)	// Desired frequency for the core (and systick)
 
-#define PERIOD		0.5	// Blinking period
+#define PERIOD		0.5		// Blinking period
 
 
 int main ( )
@@ -30,10 +31,6 @@ int main ( )
    *    enabled).
    *  * Prepare the connection of the sysclk to the pll. The hardware waits for
    *    the clocks to be stable before switching.
-   *
-   *  Alternately, we could check ourselves the clocks:
-   *    while ( !hw(stat,hse).ready ) {} : waits for the HSE to be stable.
-   *    while ( !hw(stat,pll).ready ) {} : waits for the PLL to be locked.
    */
   hwa( power, hse, on );
   hwa( connect, pll, hse );
