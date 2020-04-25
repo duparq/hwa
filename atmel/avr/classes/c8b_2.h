@@ -95,7 +95,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hwa_cfc8b(o,i,a,k,...)						\
+#define _hwa_cfc8b(o,a,k,...)						\
   do { HW_Y(_hwa_cfc8b_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc8b_kclock_0(o,k,...)		HW_E_VL(k,clock)
@@ -191,7 +191,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define hw_read__c8b		, _hw_c8brd
-#define _hw_c8brd(o,i,a,...)		 _hw_read(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_c8brd(o,a,...)		 _hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -200,7 +200,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define hw_write__c8b		, _hw_c8bwr
-#define _hw_c8bwr(o,i,a,v,...)		 _hw_write(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hw_c8bwr(o,a,v,...)		 _hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c8b
@@ -209,7 +209,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * @endcode
  */
 #define hwa_write__c8b		, _hwa_c8bwr
-#define _hwa_c8bwr(o,i,a,v,...)		 _hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hwa_c8bwr(o,a,v,...)		 _hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -249,7 +249,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *    too if it us used.
  * -> If 
  */
-#define _hwa_solve__c8b( o,i,a )				\
+#define _hwa_solve__c8b( o,a )				\
   _hwa_solve__c8b_2( o, hw_##o##_compare0, hw_##o##_compare1 )
 
 #define _hwa_solve__c8b_2(...)	_hwa_solve_c8b(__VA_ARGS__)
@@ -277,17 +277,17 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
 	_hwa_write(compare1,pwm,1);					\
   }
 
-#define _hwa_setup__c8b(o,i,a)			\
+#define _hwa_setup__c8b(o,a)			\
   _hwa_setup_r( o, ccr      );			\
   _hwa_setup_r( o, count    );			\
   _hwa_setup_r( o, compare2 );
 
-#define _hwa_init__c8b(o,i,a)			\
+#define _hwa_init__c8b(o,a)			\
   _hwa_init_r( o, ccr, 0	);		\
   _hwa_init_r( o, count, 0	);		\
   _hwa_init_r( o, compare2, 0 );
 
-#define _hwa_commit__c8b(o,i,a)			\
+#define _hwa_commit__c8b(o,a)			\
   _hwa_commit_r( o, ccr      );			\
   _hwa_commit_r( o, count    );			\
   _hwa_commit_r( o, compare2 );

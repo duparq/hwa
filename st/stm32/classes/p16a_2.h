@@ -30,7 +30,7 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__p16a(o,i,a)			\
+#define _hwa_setup__p16a(o,a)			\
   _hwa_setup_r( o, crl  );			\
   _hwa_setup_r( o, crh  );			\
   _hwa_setup_r( o, odr  );			\
@@ -39,7 +39,7 @@
   _hwa_setup_r( o, lckr );			\
   hwa->o.toggles = 0
 
-#define _hwa_init__p16a(o,i,a)			\
+#define _hwa_init__p16a(o,a)			\
   _hwa_init_r( o, crl,  0x44444444 );		\
   _hwa_init_r( o, crh,  0x44444444 );		\
   _hwa_init_r( o, odr,  0x00000000 );		\
@@ -47,7 +47,7 @@
   _hwa_init_r( o, brr,  0x00000000 );		\
   _hwa_init_r( o, lckr, 0x00000000 )
 
-#define _hwa_commit__p16a(o,i,a)					\
+#define _hwa_commit__p16a(o,a)					\
   _hwa_commit_r( o, crl  );						\
   _hwa_commit_r( o, crh  );						\
   _hwa_commit_r( o, odr  );						\

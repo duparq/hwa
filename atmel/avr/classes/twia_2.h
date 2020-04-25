@@ -37,10 +37,10 @@
  * @endcode
  */
 #define hw_configure__twia		, _hw_cftwia
-#define _hw_cftwia( o,i,a, ... )	_hwx_cftwia( _hw, o, __VA_ARGS__,, )
+#define _hw_cftwia( o,a, ... )	_hwx_cftwia( _hw, o, __VA_ARGS__,, )
 
 #define hwa_configure__twia		, _hwa_cftwia
-#define _hwa_cftwia( o,i,a, ... )	_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
+#define _hwa_cftwia( o,a, ... )	_hwx_cftwia( _hwa, o, __VA_ARGS__,, )
 
 /*	Optionnal argument `bps`
  */
@@ -148,8 +148,8 @@
 #define hw_turn__twia			, _hw_tntwia_
 #define hwa_turn__twia			, _hwa_tntwia_
 
-#define _hw_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
-#define _hwa_tntwia_(o,i,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+#define _hw_tntwia_(o,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+#define _hwa_tntwia_(o,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 #define _hwx_tntwia__0(x,o, v, ...)	HW_E_ST(v)
 #define _hwx_tntwia__1(x,o, v, ...)	x##_write(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
@@ -190,15 +190,15 @@
  * process the `*` character.
  */
 #define hw_bus_start__twia		, _hw_twia_txstart
-#define _hw_twia_txstart(o,i,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
+#define _hw_twia_txstart(o,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
 #define hw_bus_stop__twia		, _hw_twia_txstop
-#define _hw_twia_txstop(o,i,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
+#define _hw_twia_txstop(o,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
 #define hw_bus_slaw__twia		, _hw_twia_txslaw
-#define _hw_twia_txslaw(o,i,a,...)	HW_Y(_hw_twia_txslawv_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txslaw(o,a,...)	HW_Y(_hw_twia_txslawv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
 #define _hw_twia_txslawv_0(o,v,k,...)				\
   do {								\
@@ -210,7 +210,7 @@
 
 
 #define hw_bus_slar__twia		, _hw_twia_txslar
-#define _hw_twia_txslar(o,i,a,...)	HW_Y(_hw_twia_vtxslar_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txslar(o,a,...)	HW_Y(_hw_twia_vtxslar_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
 #define _hw_twia_vtxslar_0(o,v,k,...)				\
   do {								\
@@ -222,7 +222,7 @@
 
 
 #define hw_bus_write__twia		, _hw_twiawr
-#define _hw_twiawr(o,i,a,...)		HW_Y(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twiawr(o,a,...)		HW_Y(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twiawrv_1(...)		HW_E(missing value)
 #define _hw_twiawrv_0(o,v,k,...)					\
   do {									\
@@ -232,7 +232,7 @@
 
 
 #define hw_bus_read__twia		, _hw_twiard
-#define _hw_twiard(o,i,a,k,...)		HW_Y0(_hw_twiard_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
+#define _hw_twiard(o,a,k,...)		HW_Y0(_hw_twiard_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
 #define _hw_twiard_ack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
 #define _hw_twiard_ack0(o,k,...)	HW_Y0(_hw_twiard_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
 #define _hw_twiard_nack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
@@ -252,7 +252,7 @@
  * @endcode
  */
 #define hw_read__twia			, _hw_rdtwia
-#define _hw_rdtwia(o,i,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
+#define _hw_rdtwia(o,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
 
@@ -272,7 +272,7 @@
  * Predefined TWI status symbols are:
  */
 #define hw_stat__twia			, _hw_stat_twia
-#define _hw_stat_twia(o,i,a,...)	(_hw_read(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
+#define _hw_stat_twia(o,a,...)	(_hw_read(o,sr)&0xF8) HW_EOL(__VA_ARGS__)
 
 
 /** @page atmelavr_twia
@@ -431,7 +431,7 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__twia(o,i,a)			\
+#define _hwa_setup__twia(o,a)			\
   _hwa_setup_r( o, br	 );			\
   _hwa_setup_r( o, cr	 );			\
   _hwa_setup_r( o, sr	 );			\
@@ -439,7 +439,7 @@
   _hwa_setup_r( o, amr )
 
 
-#define _hwa_init__twia(o,i,a)			\
+#define _hwa_init__twia(o,a)			\
   _hwa_init_r( o, br,	 0x00 );		\
   _hwa_init_r( o, cr,	 0x00 );		\
   _hwa_init_r( o, sr,	 0xF8 );		\
@@ -447,7 +447,7 @@
   _hwa_init_r( o, amr, 0x00 )
 
 
-#define _hwa_commit__twia(o,i,a)		\
+#define _hwa_commit__twia(o,a)		\
   _hwa_commit_r( o, br  );			\
   _hwa_commit_r( o, cr  );			\
   _hwa_commit_r( o, sr  );			\
@@ -498,7 +498,7 @@
 
 #define HW_DECLARE__twia		, _hw_declare_twia
 
-#define _hw_declare_twia(o,i,a,...)				\
+#define _hw_declare_twia(o,a,...)				\
 								\
   HW_EOL(__VA_ARGS__)						\
 								\
@@ -508,7 +508,7 @@
 
 #define HW_DEFINE__twia		, _hw_define_twia
 
-#define _hw_define_twia(o,i,a,...)				\
+#define _hw_define_twia(o,a,...)				\
 								\
   HW_EOL(__VA_ARGS__)						\
 								\

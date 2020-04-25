@@ -32,7 +32,7 @@
  */
 #define HW_BITS__io1b		, _hw_bn_io1b
 
-#define _hw_bn_io1b(o,i, cn,bn,bp,...)	bn
+#define _hw_bn_io1b(o, cn,bn,bp,...)	bn
 
 
 /**
@@ -48,7 +48,7 @@
  * @endcode
  */
 #define HW_POSITION__io1b	, _hw_bp_io1b
-#define _hw_bp_io1b(o,i, cn,bn,bp,...)	bp
+#define _hw_bp_io1b(o, cn,bn,bp,...)	bp
 
 
 /**
@@ -66,5 +66,5 @@
 #define hw_rel__io1b		, _hw_rel_io1b
 
 #define _hw_rel_io1b(o,x,...)		HW_Y(_hw_rel_io1b_,_hw_is_port_##x)(o,x,__VA_ARGS__)
-#define _hw_rel_io1b_1(o,x,i,p,...)	p
+#define _hw_rel_io1b_1(o,x,p,...)	p
 #define _hw_rel_io1b_0(o,x,...)		HW_E(`o` has no relative named `x`)

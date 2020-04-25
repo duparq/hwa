@@ -39,7 +39,7 @@
  *    Add a second void argument to the end of the list so that there are always
  *    at least 2 arguments following the last non-void argument.
  */
-#define _hwa_cfcmp8b(o,i,a,k,...)					\
+#define _hwa_cfcmp8b(o,a,k,...)					\
   do {									\
     HW_Y(_hwa_cfcmp8b_kupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,)	\
       } while(0)
@@ -124,13 +124,13 @@
  * @endcode
  */
 #define hw_write__cmp8b			, _hw_wrcmp8b
-#define _hw_wrcmp8b(o,i,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrcmp8b(o,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hwa_write__cmp8b		, _hwa_wrcmp8b
-#define _hwa_wrcmp8b(o,i,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_wrcmp8b(o,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hw_read__cmp8b			, _hw_read_cmp8b
-#define _hw_read_cmp8b(o,i,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cmp8b(o,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -155,13 +155,13 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cmp8b(o,i,a)			\
+#define _hwa_setup__cmp8b(o,a)			\
   _hwa_setup_r( o, reg );			\
   hwa->o.config.outputh = 0xFF ;			\
   hwa->o.config.outputl = 0xFF ;
 
 
-#define _hwa_init__cmp8b(o,i,a)			_hwa_init_r( o, reg, 0x00 );
+#define _hwa_init__cmp8b(o,a)			_hwa_init_r( o, reg, 0x00 );
 
 #define _hwa_solve_cmp8b(o)						\
   if ( hwa->o.config.outputh != 0xFF || hwa->o.config.outputl != 0xFF ) {	\
@@ -203,7 +203,7 @@
   }
 
 
-#define _hwa_commit__cmp8b(o,i,a)		_hwa_commit_r(o,reg);
+#define _hwa_commit__cmp8b(o,a)		_hwa_commit_r(o,reg);
 
 
 /**

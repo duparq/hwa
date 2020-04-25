@@ -44,7 +44,7 @@
  * @endcode
  */
 #define HW_BITS__cap16b		, _hw_bn_cap16b
-#define _hw_bn_cap16b(o,i,a,...)			16
+#define _hw_bn_cap16b(o,a,...)			16
 
 
 /**

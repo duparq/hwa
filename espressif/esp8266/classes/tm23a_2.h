@@ -47,7 +47,7 @@
 #define hw_configure__tm23a	, _hw_cftm23a
 #define hwa_configure__tm23a	, _hwa_cftm23a
 
-#define _hw_cftm23a(o,i,a,k,...)					\
+#define _hw_cftm23a(o,a,k,...)					\
   do{									\
     typedef struct {							\
       uint8_t commit ;							\
@@ -61,7 +61,7 @@
     hwa->commit = 1; _hwa_commit_o( o ); _hwa_commit_o( shared );	\
   }while(0)
 
-#define _hwa_cftm23a(o,i,a,k,...)	HW_Y(_hwa_cftm23a_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,)
+#define _hwa_cftm23a(o,a,k,...)	HW_Y(_hwa_cftm23a_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,)
 
 
 /*  Key `clock`
@@ -178,7 +178,7 @@
  * @endcode
  */
 #define hw_read__tm23a		, _hw_rdtm23a
-#define _hw_rdtm23a(o,i,a,...)		_hw_read(o,_count) HW_EOL(__VA_ARGS__)
+#define _hw_rdtm23a(o,a,...)		_hw_read(o,_count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -191,7 +191,7 @@
  * @endcode
  */
 #define hw_write__tm23a	, _hw_wrtm23a
-#define _hw_wrtm23a(o,i,a,v,...)	_hw_write(o,_count,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrtm23a(o,a,v,...)	_hw_write(o,_count,v) HW_EOL(__VA_ARGS__)
 
 
 /*******************************************************************************
@@ -200,17 +200,17 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__tm23a(o,i,a)		\
+#define _hwa_setup__tm23a(o,a)		\
   _hwa_setup_r( o, _load );			\
   _hwa_setup_r( o, _ctrl );			\
 
 //  hwa->o.config.action = 0xFF
 
-#define _hwa_init__tm23a(o,i,a)			\
+#define _hwa_init__tm23a(o,a)			\
     _hwa_init_r( o, _load, 0 );		\
     _hwa_init_r( o, _ctrl, 0 )
 
-#define _hwa_commit__tm23a(o,i,a)					\
+#define _hwa_commit__tm23a(o,a)					\
     _hwa_commit_r( o, _load );					\
     _hwa_commit_r( o, _ctrl );					\
 

@@ -29,13 +29,13 @@
  * @note The PLL can not be configured while it is running.
  */
 #define hw_class__plla
-#define hw_pll			_plla, 0, 0
+#define hw_pll			_plla, 0
 
 #define hw_configure__plla	, _hw_cfplla
 #define hwa_configure__plla	, _hwa_cfplla
 
-#define _hw_cfplla(o,i,a,k,...)		do{ HW_Y(_hwx_cfplla_k_,k)(_hw,k,__VA_ARGS__) }while(0)
-#define _hwa_cfplla(o,i,a,k,...)	do{ HW_Y(_hwx_cfplla_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
+#define _hw_cfplla(o,a,k,...)		do{ HW_Y(_hwx_cfplla_k_,k)(_hw,k,__VA_ARGS__) }while(0)
+#define _hwa_cfplla(o,a,k,...)	do{ HW_Y(_hwx_cfplla_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
@@ -74,8 +74,8 @@
 #define _hw_cnplla_hsi			, 17
 #define _hw_cnplla_hse			, 19
 
-#define _hw_cnplla(o,i,a,v,g,...)	do{ HW_Y(_hwx_cnplla1_,g)(_hw,v,g) }while(0)
-#define _hwa_cnplla(o,i,a,v,g,...)	do{ HW_Y(_hwx_cnplla1_,g)(_hwa,v,g) }while(0)
+#define _hw_cnplla(o,a,v,g,...)	do{ HW_Y(_hwx_cnplla1_,g)(_hw,v,g) }while(0)
+#define _hwa_cnplla(o,a,v,g,...)	do{ HW_Y(_hwx_cnplla1_,g)(_hwa,v,g) }while(0)
 #define _hwx_cnplla1_0(h,v,g)		HW_E_G(g)
 #define _hwx_cnplla1_1(h,v,g)		HW_Y(_hwx_cnplla2_,_hw_cnplla_##v)(h,v,_hw_cnplla_##v)
 #define _hwx_cnplla2_0(h,v,xv)		HW_E_NIL(v,(hsi/2, hse, hse/2))
@@ -101,8 +101,8 @@
 #define hw_write__plla		, _hw_wrplla
 #define hwa_write__plla		, _hwa_wrplla
 
-#define _hw_wrplla(o,i,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hw,v,g) }while(0)
-#define _hwa_wrplla(o,i,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hwa,v,g) }while(0)
+#define _hw_wrplla(o,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hw,v,g) }while(0)
+#define _hwa_wrplla(o,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hwa,v,g) }while(0)
 #define _hwx_wrplla_0(h,v,g)		HW_E_G(g)
 #define _hwx_wrplla_1(h,v,g)				\
   if (v-1+1<2 || v-1+1>16)				\
@@ -122,8 +122,8 @@
 #define hw_turn__plla		, _hw_tnplla
 #define hwa_turn__plla		, _hwa_tnplla
 
-#define _hw_tnplla(o,i,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hw,v,g)
-#define _hwa_tnplla(o,i,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hwa,v,g)
+#define _hw_tnplla(o,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hw,v,g)
+#define _hwa_tnplla(o,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hwa,v,g)
 
 #define _hwx_tnplla_0(h,v,g)		HW_E_G(g)
 #define _hwx_tnplla_1(h,v,g)		HW_Y(_hwx_tnplla2_,_hw_state_##v)(h,v)
@@ -147,9 +147,9 @@ typedef struct {
 } _hw_stplla_t ;
 
 #define hw_stat_t__plla		, _hw_sttplla
-#define _hw_sttplla(o,i,a,...)		 _hw_stplla_t HW_EOL(__VA_ARGS__)
+#define _hw_sttplla(o,a,...)		 _hw_stplla_t HW_EOL(__VA_ARGS__)
 
 #define hw_stat__plla		, _hw_stplla
-#define _hw_stplla(o,i,a,g,...)		HW_Y(_hw_stplla1_,g)(g)
+#define _hw_stplla(o,a,g,...)		HW_Y(_hw_stplla1_,g)(g)
 #define _hw_stplla1_0(g)		HW_E_G(g)
 #define _hw_stplla1_1(g)		(*(volatile _hw_stplla_t*)HW_ADDRESS((rcc,cr)))

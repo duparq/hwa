@@ -47,7 +47,7 @@
 #define _hw_cmp8a_output_clear_after_match_up_set_after_match_down	, 6, 2	/* Phase correct PWM */
 #define _hw_cmp8a_output_set_after_match_up_clear_after_match_down	, 7, 3
 
-#define _hw_cfcmp8a(o,i,a,k,...)					\
+#define _hw_cfcmp8a(o,a,k,...)					\
   do {									\
     HW_Y(_hw_cfcmp8a_koutput_,_hw_is_output_##k)(o,k,__VA_ARGS__,,);	\
   }while(0)
@@ -100,7 +100,7 @@
 #define _hw_cmp8a_update_after_bottom	, 1
 #define _hw_cmp8a_update_after_top		, 2
 
-#define _hwa_cfcmp8a(o,i,a,k,...)					\
+#define _hwa_cfcmp8a(o,a,k,...)					\
   do {									\
     HW_Y(_hwa_cfcmp8a_kupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
@@ -148,13 +148,13 @@
  * @endcode
  */
 #define hw_write__cmp8a			, _hw_write_cmp8a
-#define _hw_write_cmp8a(o,i,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_cmp8a(o,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hwa_write__cmp8a		, _hwa_write_cmp8a
-#define _hwa_write_cmp8a(o,i,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_cmp8a(o,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hw_read__cmp8a			, _hw_read_cmp8a
-#define _hw_read_cmp8a(o,i,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cmp8a(o,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -170,10 +170,10 @@
  * @endcode
  */
 #define hw_trigger__cmp8a		, _hw_trigger_cmp8a
-#define _hw_trigger_cmp8a(o,i,a)	_hw_write(o,force,1)
+#define _hw_trigger_cmp8a(o,a)	_hw_write(o,force,1)
 
 #define hwa_trigger__cmp8a		, _hwa_trigger_cmp8a
-#define _hwa_trigger_cmp8a(o,i,a)	_hwa_write(o,force,1)
+#define _hwa_trigger_cmp8a(o,a)	_hwa_write(o,force,1)
 
 
 /**
@@ -198,14 +198,14 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cmp8a(o,i,a)			\
+#define _hwa_setup__cmp8a(o,a)			\
   _hwa_setup_r( o, reg );			\
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 
-#define _hwa_init__cmp8a(o,i,a)			_hwa_init_r( o, reg, 0x00 )
+#define _hwa_init__cmp8a(o,a)			_hwa_init_r( o, reg, 0x00 )
 
-#define _hwa_commit__cmp8a(o,i,a)		_hwa_commit_r( o, reg )
+#define _hwa_commit__cmp8a(o,a)		_hwa_commit_r( o, reg )
 
 
 /**

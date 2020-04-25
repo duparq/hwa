@@ -32,8 +32,8 @@
 #define hw_configure__io1b		, _hw_cfio1b
 #define hwa_configure__io1b		, _hwa_cfio1b
 
-#define _hw_cfio1b(o,i, p,bn,bp, ...)		_hw_cfio1b2(o,__VA_ARGS__)
-#define _hwa_cfio1b(o,i, p,bn,bp, ...)		_hwa_cfio1b2(o,__VA_ARGS__)
+#define _hw_cfio1b(o, p,bn,bp, ...)		_hw_cfio1b2(o,__VA_ARGS__)
+#define _hwa_cfio1b(o, p,bn,bp, ...)		_hwa_cfio1b2(o,__VA_ARGS__)
 
 /*  Create a local minimal context, apply the asynchronous action on it, and
  *  commit.
@@ -129,7 +129,7 @@
  */
 #define hw_read__io1b		, _hw_read_io1b
 
-#define _hw_read_io1b(o,i, p,bn,bp,...)				\
+#define _hw_read_io1b(o, p,bn,bp,...)				\
    ((_hw_read(p, _gpioin) & (((1UL<<bn)-1)<<bp))>>bp) HW_EOL(__VA_ARGS__)
 
 
@@ -144,7 +144,7 @@
  */
 #define hw_write__io1b		, _hw_wrio1b
 
-#define _hw_wrio1b(o,i, p,bn,bp, v,...)			\
+#define _hw_wrio1b(o, p,bn,bp, v,...)			\
    _hw_write_m(p, _gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
 
 
@@ -157,7 +157,7 @@
  */
 #define hwa_write__io1b		, _hwa_wrio1b
 
-#define _hwa_wrio1b(o,i, p,bn,bp, v, ...)				\
+#define _hwa_wrio1b(o, p,bn,bp, v, ...)				\
   _hwa_write_m(&hwa->p._gpioout, ((1UL<<bn)-1)<<bp, (v)<<bp)) HW_EOL(__VA_ARGS__)
 
 
@@ -169,7 +169,7 @@
  */
 #define hw_toggle__io1b		, _hw_tgio1b
 
-#define _hw_tgio1b(o,i,p,bn,bp,...)	 _hw_tgio1b_2(HW_ADDRESS((p,_gpioout)),(((1UL<<bn)-1)<<bp)) HW_EOL(__VA_ARGS__)
+#define _hw_tgio1b(o,p,bn,bp,...)	 _hw_tgio1b_2(HW_ADDRESS((p,_gpioout)),(((1UL<<bn)-1)<<bp)) HW_EOL(__VA_ARGS__)
 #define _hw_tgio1b_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /**

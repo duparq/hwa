@@ -29,7 +29,7 @@
 #define hwa_turn__nvica			, _hwa_nvictn
 #define _hwa_nvictn(...)		do{ _hwx_nvictn(_hwa,__VA_ARGS__,,); }while(0)
 
-#define _hwx_nvictn(h,o,i,a,x,...)	_hwx_nvictn01(h,HW_X(x),__VA_ARGS__)
+#define _hwx_nvictn(h,o,a,x,...)	_hwx_nvictn01(h,HW_X(x),__VA_ARGS__)
 #define _hwx_nvictn01(...)		_hwx_nvictn02(__VA_ARGS__)
 #define _hwx_nvictn02(h,c,...)		HW_Y0(_hwx_nvictn02_,c)(h,c,__VA_ARGS__)
 #define _hwx_nvictn02_0(h,c,n,o,v,m,f,s,...)	HW_Y0(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
@@ -144,7 +144,7 @@ HW_INLINE void _hw_nvic_clear ( uint8_t v )
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__nvica(o,i,a)		\
+#define _hwa_setup__nvica(o,a)		\
   _hwa_setup_r( o, iser0 );			\
   _hwa_setup_r( o, iser1 );			\
   _hwa_setup_r( o, iser2 );			\
@@ -152,7 +152,7 @@ HW_INLINE void _hw_nvic_clear ( uint8_t v )
   _hwa_setup_r( o, icer1 );			\
   _hwa_setup_r( o, icer2 );			\
 
-#define _hwa_init__nvica(o,i,a)			\
+#define _hwa_init__nvica(o,a)			\
   _hwa_init_r( o, iser0, 0x00000000 );	\
   _hwa_init_r( o, iser1, 0x00000000 );	\
   _hwa_init_r( o, iser2, 0x00000000 );	\
@@ -160,7 +160,7 @@ HW_INLINE void _hw_nvic_clear ( uint8_t v )
   _hwa_init_r( o, icer1, 0x00000000 );	\
   _hwa_init_r( o, icer2, 0x00000000 );	\
 
-#define _hwa_commit__nvica(o,i,a)		\
+#define _hwa_commit__nvica(o,a)		\
   _hwa_commit_r( o, iser0 );			\
   _hwa_commit_r( o, iser1 );			\
   _hwa_commit_r( o, iser2 );			\

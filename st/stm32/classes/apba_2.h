@@ -31,8 +31,8 @@
 #define hw_configure__apba	, _hw_cfapba
 #define hwa_configure__apba	, _hwa_cfapba
 
-#define _hw_cfapba(o,i,a,k,...)		do{ HW_Y(_hwx_cfapba_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfapba(o,i,a,k,...)	do{ HW_Y(_hwx_cfapba_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfapba(o,a,k,...)		do{ HW_Y(_hwx_cfapba_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfapba(o,a,k,...)	do{ HW_Y(_hwx_cfapba_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */

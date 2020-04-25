@@ -90,19 +90,19 @@
 #define _HW_OR41(...)			_HW_OR42(__VA_ARGS__)
 #define _HW_OR42(rc,...)		_HW_XR##rc(__VA_ARGS__)
 
-#define _HW_XR_r8(r,ra,rwm,rfm,c,o,i,a)		_m111,reg(o,r),(o,r,_r8,a+ra,rwm,rfm,8,0)
-#define _HW_XR_r16(r,ra,rwm,rfm,c,o,i,a)	_m111,reg(o,r),(o,r,_r16,a+ra,rwm,rfm,16,0)
-#define _HW_XR_r32(r,ra,rwm,rfm,c,o,i,a)	_m111,reg(o,r),(o,r,_r32,a+ra,rwm,rfm,32,0)
+#define _HW_XR_r8(r,ra,rwm,rfm,c,o,a)		_m111,reg(o,r),(o,r,_r8,a+ra,rwm,rfm,8,0)
+#define _HW_XR_r16(r,ra,rwm,rfm,c,o,a)	_m111,reg(o,r),(o,r,_r16,a+ra,rwm,rfm,16,0)
+#define _HW_XR_r32(r,ra,rwm,rfm,c,o,a)	_m111,reg(o,r),(o,r,_r32,a+ra,rwm,rfm,32,0)
 
-#define _HW_XR_ob1(s,r,bn,bp,c,o,i,a)	_HW_XR_ob1_01(o,a,r,hw_reg_##o##_##r,bn,bp)
+#define _HW_XR_ob1(s,r,bn,bp,c,o,a)	_HW_XR_ob1_01(o,a,r,hw_reg_##o##_##r,bn,bp)
 #define _HW_XR_ob1_01(...)		_HW_XR_ob1_02(__VA_ARGS__)
 #define _HW_XR_ob1_02(o,a,r,rc,ra,...)	_m111,reg(o,r),(o,r,rc,a+ra,__VA_ARGS__)
 
-#define _HW_XR_cb1(s,r,bn,bp,c,o,i,a)	_HW_XR_ob1_01(o,a,r,hw_reg_##c##_##r,bn,bp)
+#define _HW_XR_cb1(s,r,bn,bp,c,o,a)	_HW_XR_ob1_01(o,a,r,hw_reg_##c##_##r,bn,bp)
 
 #define _HW_XR_xob1(s,xo,xr,bn,bp,...)	_HW_XOB101(xo,hw_##xo,xr,bn,bp,hw_reg_##xo##_##xr)
 #define _HW_XOB101(...)			_HW_XOB102(__VA_ARGS__)
-#define _HW_XOB102(o,c,i,a,r,bn,bp,...)	HW_Y0(_HW_XOB102_,_hw_isa_reg_##__VA_ARGS__)(o,c,a,r,bn,bp,__VA_ARGS__)
+#define _HW_XOB102(o,c,a,r,bn,bp,...)	HW_Y0(_HW_XOB102_,_hw_isa_reg_##__VA_ARGS__)(o,c,a,r,bn,bp,__VA_ARGS__)
 #define _HW_XOB102_1(o,c,a,r,bn,bp,rc,ra,wm,fm)	_m111,reg(o,r),(o,r,rc,a+ra,wm,fm,bn,bp)
 #define _HW_XOB102_0(o,c,a,r,bn,bp,...)		_HW_XOB103(o,a,r,bn,bp,hw_reg_##c##_##r)
 #define _HW_XOB103(...)				_HW_XOB104(__VA_ARGS__)
@@ -111,25 +111,25 @@
 
 #define _HW_XR_ob2	_HW_XR_or2b2
 
-#define _HW_XR_or2b2(r,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,i,a)		\
+#define _HW_XR_or2b2(r,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,a)		\
   _HW_XR_or2b2_01(o,r,a,r1,hw_reg_##o##_##r1,bn1,bp1,vp1,r2,hw_reg_##o##_##r2,bn2,bp2,vp2)
 #define _HW_XR_or2b2_01(...)				_HW_XR_or2b2_02(__VA_ARGS__)
 #define _HW_XR_or2b2_02(o,r,a,r1,rc1,ra1,wm1,fm1,bn1,bp1,vp1,r2,rc2,ra2,wm2,fm2,bn2,bp2,vp2) \
   _m122,reg(o,r),(o,r1,rc1,a+ra1,wm1,fm1,bn1,bp1,vp1,r2,rc2,a+ra2,wm2,fm2,bn2,bp2,vp2)
 
-#define _HW_XR_or1b2(s,r,bn1,bp1,vp1,bn2,bp2,vp2,c,o,i,a)	_HW_XR_or1b2_01(o,a,r,hw_reg_##o##_##r,bn1,bp1,vp1,bn2,bp2,vp2)
+#define _HW_XR_or1b2(s,r,bn1,bp1,vp1,bn2,bp2,vp2,c,o,a)	_HW_XR_or1b2_01(o,a,r,hw_reg_##o##_##r,bn1,bp1,vp1,bn2,bp2,vp2)
 #define _HW_XR_or1b2_01(...)					_HW_XR_or1b2_02(__VA_ARGS__)
 #define _HW_XR_or1b2_02(o,a,r,rc,ra,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2)	\
   _m112,reg(o,r),(o,r,rc,a+ra,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2)
 
-#define _HW_XR_cb2(r,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,i,a)	\
+#define _HW_XR_cb2(r,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,a)	\
   _HW_XR_or2b2_01(o,r,a,r1,hw_reg_##c##_##r1,bn1,bp1,vp1,r2,hw_reg_##c##_##r2,bn2,bp2,vp2)
 
 //  Assume r1 == r2
-#define _HW_XR_xob2(s,xo,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,i,a)		\
+#define _HW_XR_xob2(s,xo,r1,bn1,bp1,vp1,r2,bn2,bp2,vp2,c,o,a)		\
   _HW_XR_or1b2_01(o,a,r1,hw_reg_##xo##_##r1,bn1,bp1,vp1,bn2,bp2,vp2)
 
-#define _HW_XR_xb2(s,xo,r,bn1,bp1,vp1,bn2,bp2,vp2,c,o,i,a)		\
+#define _HW_XR_xb2(s,xo,r,bn1,bp1,vp1,bn2,bp2,vp2,c,o,a)		\
   _HW_XR_or1b2_01(o,a,r,hw_reg_##xo##_##r,bn1,bp1,vp1,bn2,bp2,vp2)
 
 

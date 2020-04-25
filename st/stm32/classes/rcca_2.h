@@ -74,19 +74,19 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__rcca(o,i,a)			\
+#define _hwa_setup__rcca(o,a)			\
   _hwa_setup_r( o, cr      );			\
   _hwa_setup_r( o, cfgr    );			\
   _hwa_setup_r( o, apb2enr );			\
   _hwa_setup_r( o, apb1enr )
 
-#define _hwa_init__rcca(o,i,a)			\
+#define _hwa_init__rcca(o,a)			\
   _hwa_init_r( o, cr,      0x00000083 );	\
   _hwa_init_r( o, cfgr,    0x00000000 );	\
   _hwa_init_r( o, apb2enr, 0x00000000 );	\
   _hwa_init_r( o, apb1enr, 0x00000000 )
 
-#define _hwa_commit__rcca(o,i,a)		\
+#define _hwa_commit__rcca(o,a)		\
   _hwa_commit_r( o, cr      );		\
   _hwa_commit_r( o, cfgr    );		\
   _hwa_commit_r( o, apb2enr );		\

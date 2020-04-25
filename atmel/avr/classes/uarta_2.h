@@ -41,7 +41,7 @@
  *    [ transmitter, enabled | disabled, ] );
  * @endcode
  */
-#define _hwa_cfuarta(o,i,a,k,...)					\
+#define _hwa_cfuarta(o,a,k,...)					\
   do { HW_Y(_hwa_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define hwa_configure__uarta	, _hwa_cfuarta
@@ -190,7 +190,7 @@
  * @endcode
  */
 #define hw_read__uarta		, _hw_rduarta
-#define _hw_rduarta(o,i,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
+#define _hw_rduarta(o,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -206,7 +206,7 @@
  * @endcode
  */
 #define hw_write__uarta	, _hw_wruarta
-#define _hw_wruarta(o,i,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
+#define _hw_wruarta(o,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
 
 
 /*  Power management
@@ -258,10 +258,10 @@ typedef union {
 } _hw_uarta_stat_t ;
 
 #define hw_stat_t__uarta	, _hw_sttuarta
-#define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__)
+#define _hw_sttuarta(o,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__)
 
 #define hw_stat__uarta		, _hw_stuarta
-#define _hw_stuarta(o,i,a,...)		__hw_stuarta(_hw_read(o,csra)) HW_EOL(__VA_ARGS__)
+#define _hw_stuarta(o,a,...)		__hw_stuarta(_hw_read(o,csra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
 {
@@ -277,7 +277,7 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__uarta(o,i,a)			\
+#define _hwa_setup__uarta(o,a)			\
   _hwa_setup_r( o, ubrr );				\
   _hwa_setup_r( o, csra );				\
   _hwa_setup_r( o, csrb );				\
@@ -290,13 +290,13 @@ HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
   hwa->o.config.rxen = 1 ;				\
   hwa->o.config.txen = 1
 
-#define _hwa_init__uarta(o,i,a)			\
+#define _hwa_init__uarta(o,a)			\
   _hwa_init_r( o, ubrr, 0x00 );		\
   _hwa_init_r( o, csra, 0x20 );		\
   _hwa_init_r( o, csrb, 0x00 );		\
   _hwa_init_r( o, csrc, 0x06 )
 
-#define _hwa_commit__uarta(o,i,a)		\
+#define _hwa_commit__uarta(o,a)		\
   _hwa_commit_r( o, ubrr );			\
   _hwa_commit_r( o, csra );			\
   _hwa_commit_r( o, csrb );			\

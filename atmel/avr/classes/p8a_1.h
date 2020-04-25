@@ -28,7 +28,7 @@
 /*  Handle definitions such as HW_IO(port1,1,2)
  */
 #define HW_IO__p8a			, _hw_io_p8a
-#define _hw_io_p8a(o,i,a,bn,bp,...)	xb(_io1a,o##_##bn##_##bp,-1,o,bn,bp)
+#define _hw_io_p8a(o,a,bn,bp,...)	xb(_io1a,o##_##bn##_##bp,-1,o,bn,bp)
 
 
 #if !defined __ASSEMBLER__

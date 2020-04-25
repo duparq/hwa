@@ -25,7 +25,7 @@
  * @endcode
  */
 #define hw_configure__inta	, _hw_cfinta
-#define _hw_cfinta( o,i,a, ...)		_hwx_cfinta(_hw,o,__VA_ARGS__,)
+#define _hw_cfinta( o,a, ...)		_hwx_cfinta(_hw,o,__VA_ARGS__,)
 
 
 /**
@@ -43,7 +43,7 @@
  * @endcode
  */
 #define hwa_configure__inta	, _hwa_cfinta
-#define _hwa_cfinta( o,i,a, ...)	_hwx_cfinta(_hwa,o,__VA_ARGS__,)
+#define _hwa_cfinta( o,a, ...)	_hwx_cfinta(_hwa,o,__VA_ARGS__,)
 
 
 /*	Mandatory argument `sense`

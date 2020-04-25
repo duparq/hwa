@@ -18,4 +18,4 @@
 
 
 #define HW_BITS__io0a			, _hw_bn_io0a
-#define _hw_bn_io0a(o,i, cn,bn,bp,...)	0
+#define _hw_bn_io0a(o, cn,bn,bp,...)	0

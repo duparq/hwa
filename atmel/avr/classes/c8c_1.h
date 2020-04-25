@@ -45,7 +45,7 @@
  * @endcode
  */
 #define HW_BITS__c8c		, _hw_bn_c8c
-#define _hw_bn_c8c(o,i,a,...)		8
+#define _hw_bn_c8c(o,a,...)		8
 
 /**
  * @page atmelavr_c8c

@@ -70,7 +70,7 @@
 
 /*	Mandatory parameter 'clock'
  */
-#define _hwa_cfad10b(o,i,a,k,...)					\
+#define _hwa_cfad10b(o,a,k,...)					\
   do {									\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
     HW_Y(_hwa_cfad10b_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
@@ -279,9 +279,9 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__ad10b(o,i,a)	_hwa_setup__ad10_(o)
-#define _hwa_init__ad10b(o,i,a)		_hwa_init__ad10_(o)
-#define _hwa_commit__ad10b(o,i,a)	_hwa_commit__ad10_(o)
+#define _hwa_setup__ad10b(o,a)	_hwa_setup__ad10_(o)
+#define _hwa_init__ad10b(o,a)		_hwa_init__ad10_(o)
+#define _hwa_commit__ad10b(o,a)	_hwa_commit__ad10_(o)
 
 
 /**

@@ -395,7 +395,7 @@ First, the method has to be declared:
 @endcode
 
 The instruction `hwa( configure, counter0, ... )` will then be translated to
-`_hwa_cfc8a(o,i,a,...)` where:
+`_hwa_cfc8a(o,a,...)` where:
 
  * `o` is the name of the object: "counter0";
 
@@ -411,7 +411,7 @@ We want the first argument that follows the object name to be the keyword
 of `_hwa_cfc8a(...)`:
 
 @code
-#define _hwa_cfc8a(o,i,a,k,...)						\
+#define _hwa_cfc8a(o,a,k,...)						\
   do { HW_Y(_hwa_cfc8a_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 @endcode
 

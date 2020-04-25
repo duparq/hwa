@@ -52,8 +52,8 @@
 #define hw_power		, _hw_power
 #define hwa_power		, _hwa_power
 
-#define _hw_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
-#define _hwa_power(c,o,i,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
+#define _hw_power(c,o,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
+#define _hwa_power(c,o,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
 #define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
 #define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_v)(x,o,v)
 #define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)

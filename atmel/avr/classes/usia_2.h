@@ -48,7 +48,7 @@
 
 /*	Mandatory argument `mode`
  */
-#define _hwa_cfusia(o,i,a,k,...)					\
+#define _hwa_cfusia(o,a,k,...)					\
   do {									\
     uint8_t mode, clock ;						\
     HW_Y(_hwa_cfusia_kmode_,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
@@ -101,7 +101,7 @@
 /*  FIXME: the datasheet advices using br instead of dr but does not tell at
  *  what moment br is valid. Reading br returns weird values...
  */
-#define _hw_rdusia(o,i,a,...)		 _hw_read( o, dr ) HW_EOL(__VA_ARGS__)
+#define _hw_rdusia(o,a,...)		 _hw_read( o, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -113,7 +113,7 @@
  */
 #define hw_write__usia		, _hw_wrusia
 
-#define _hw_wrusia(o,i,a,v,...)		 _hw_write( o, dr, v ) HW_EOL(__VA_ARGS__)
+#define _hw_wrusia(o,a,v,...)		 _hw_write( o, dr, v ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -129,7 +129,7 @@
 
 #define hw_trigger__usia	, _hw_tgusia
 
-#define _hw_tgusia(o,i,a,...)		 _hw_write(o,tc,1) HW_EOL(__VA_ARGS__)
+#define _hw_tgusia(o,a,...)		 _hw_write(o,tc,1) HW_EOL(__VA_ARGS__)
 
 
 
@@ -145,7 +145,7 @@
  */
 #define hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
-#define _hwa_cfspimswclk(p,i,o,...)		\
+#define _hwa_cfspimswclk(p,o,...)		\
    _hwa_docfspimswclk(o) HW_EOL(__VA_ARGS__)
 
 #define _hwa_docfspimswclk( o )			\
@@ -170,7 +170,7 @@
  */
 #define hw_read__usia_spimaster_swclk	, _hw_rdspimswclk
 
-#define _hw_rdspimswclk(o,i,usio,...)		 _hw_read( usio, dr ) HW_EOL(__VA_ARGS__)
+#define _hw_rdspimswclk(o,usio,...)		 _hw_read( usio, dr ) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -183,7 +183,7 @@
  */
 #define hw_write__usia_spimaster_swclk	, _hw_wrspimswclk
 
-#define _hw_wrspimswclk(p,i,usin,v,...)		\
+#define _hw_wrspimswclk(p,usin,v,...)		\
   do {						\
     _hw_write(usin, dr, v );		\
     _hw_write(usin, ifov, 1 );		\
@@ -212,7 +212,7 @@
 
 #define hw_write_usia_spimaster_c0clk	, _hw_write_usia_spimaster_c0clk
 
-#define _hw_write_usia_spimaster_c0clk(c,n,i, usin, v)	\
+#define _hw_write_usia_spimaster_c0clk(c,n, usin, v)	\
   _hw_write(##usin, dr, v )
 
 
@@ -225,6 +225,6 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__usia(o,i,a)		_hwa_setup_r( o, cr )
-#define _hwa_init__usia(o,i,a)		_hwa_init_r( o, cr, 0x00 )
-#define _hwa_commit__usia(o,i,a)	_hwa_commit_r( o, cr )
+#define _hwa_setup__usia(o,a)		_hwa_setup_r( o, cr )
+#define _hwa_init__usia(o,a)		_hwa_init_r( o, cr, 0x00 )
+#define _hwa_commit__usia(o,a)	_hwa_commit_r( o, cr )

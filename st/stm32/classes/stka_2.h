@@ -35,8 +35,8 @@
 
 #define _hw_cfstka_clk_ahb		, 17
 
-#define _hw_cfstka(o,i,a,k,...)		do{ HW_Y(_hwx_cfstka_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfstka(o,i,a,k,...)	do{ HW_Y(_hwx_cfstka_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfstka(o,a,k,...)		do{ HW_Y(_hwx_cfstka_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfstka(o,a,k,...)	do{ HW_Y(_hwx_cfstka_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
@@ -83,10 +83,10 @@
  * @endcode
  */
 #define hw_turn__stka			, _hw_tnstka
-#define _hw_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hw,o,__VA_ARGS__) }while(0)
+#define _hw_tnstka(o,a,...)		do{ _hwx_tnstka(_hw,o,__VA_ARGS__) }while(0)
 
 #define hwa_turn__stka			, _hwa_tnstka
-#define _hwa_tnstka(o,i,a,...)		do{ _hwx_tnstka(_hwa,o,__VA_ARGS__) }while(0)
+#define _hwa_tnstka(o,a,...)		do{ _hwx_tnstka(_hwa,o,__VA_ARGS__) }while(0)
 
 #define _hwx_tnstka(h,o,v,...)		HW_Y(_hwx_tnstka_,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnstka_0(h,o,v,...)	HW_E_ST(v)
@@ -102,7 +102,7 @@
  * @endcode
  */
 #define hw_read__stka			, _hw_rdstka
-#define _hw_rdstka(o,i,a,...)		_hw_read(o,current)
+#define _hw_rdstka(o,a,...)		_hw_read(o,current)
 
 
 /**
@@ -157,17 +157,17 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__stka(o,i,a)			\
+#define _hwa_setup__stka(o,a)			\
   _hwa_setup_r( o, ctrl );			\
   _hwa_setup_r( o, load );			\
   _hwa_setup_r( o, val  )
 
-#define _hwa_init__stka(o,i,a)			\
+#define _hwa_init__stka(o,a)			\
   _hwa_init_r( o, ctrl, 0x00000000 );		\
   _hwa_init_r( o, load, 0x00000000 );		\
   _hwa_init_r( o, val,  0x00000000 )
 
-#define _hwa_commit__stka(o,i,a)		\
+#define _hwa_commit__stka(o,a)		\
   _hwa_commit_r( o, ctrl );			\
   _hwa_commit_r( o, load );			\
   _hwa_commit_r( o, val  )

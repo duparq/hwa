@@ -53,7 +53,7 @@
 #define _hw_wdoga_timeout_4s		, 8
 #define _hw_wdoga_timeout_8s		, 9
 
-#define _hwa_cfwdoga(o,i,a,k,...)					\
+#define _hwa_cfwdoga(o,a,k,...)					\
   do { HW_Y(_hwa_cfwdoga_ktimeout_,_hw_is_timeout_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 #define _hwa_cfwdoga_ktimeout_1(o,k,v,...)				\
@@ -101,7 +101,7 @@
  */
 #define hw_turn__wdoga			, _hw_turn_wdoga
 
-#define _hw_turn_wdoga(o,i,a, v)	HW_Y0(_hw_turn_wdoga_,_hw_state_##v)(o,v)
+#define _hw_turn_wdoga(o,a, v)	HW_Y0(_hw_turn_wdoga_,_hw_state_##v)(o,v)
 #define _hw_turn_wdoga_0(o, v)		HW_E_ST(v)
 #define _hw_turn_wdoga_1(o, v)		HW_G2(_hw_turn_wdoga, v)(o)
 #define _hw_turn_wdoga_on(o)		_hw_write(o,wde,1)
@@ -143,14 +143,14 @@
  */
 #define hwa_turn__wdoga	, _hwa_turn_wdoga
 
-#define _hwa_turn_wdoga(o,i,a,k,...)	HW_Y(_hwa_turn_wdoga_,_hw_state_##k)(o,k,__VA_ARGS__,)
+#define _hwa_turn_wdoga(o,a,k,...)	HW_Y(_hwa_turn_wdoga_,_hw_state_##k)(o,k,__VA_ARGS__,)
 
 #define _hwa_turn_wdoga_0(o, v, ...)	HW_E_ST(v)
 
-#define _hwa_turn_wdoga_1(o, v, ...)	HW_G2(_hwa_turn_wdoga, v)(o,i,a) HW_EOL(__VA_ARGS__)
+#define _hwa_turn_wdoga_1(o, v, ...)	HW_G2(_hwa_turn_wdoga, v)(o,a) HW_EOL(__VA_ARGS__)
 
-#define _hwa_turn_wdoga_on(o,i,a)	_hwa_write(o,wde,1)
-#define _hwa_turn_wdoga_off(o,i,a)			\
+#define _hwa_turn_wdoga_on(o,a)	_hwa_write(o,wde,1)
+#define _hwa_turn_wdoga_off(o,a)			\
   /* Action completed when committing */		\
   hwa->o.config.action = HW_A1(_hw_wdoga_action_none)
 
@@ -167,7 +167,7 @@
  */
 #define hw_reset__wdoga	, _hw_rstwdoga
 
-#define _hw_rstwdoga(o,i,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
+#define _hw_rstwdoga(o,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -192,13 +192,13 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__wdoga(o,i,a)		\
+#define _hwa_setup__wdoga(o,a)		\
   _hwa_setup_r( o, csr );			\
   hwa->o.config.action = 0xFF ;			\
   hwa->o.config.timeout = 0xFF
 
 
-#define _hwa_init__wdoga(o,i,a)			_hwa_init_r( o, csr, 0x00 )
+#define _hwa_init__wdoga(o,a)			_hwa_init_r( o, csr, 0x00 )
 
 
 /**
@@ -210,7 +210,7 @@
  *    2. Setting WDCE and WDE to 1 in the same operation
  *    3. Setting WDE to 0 within 4 cycles after 2.
  */
-#define _hwa_commit__wdoga(o,i,a)					\
+#define _hwa_commit__wdoga(o,a)					\
   do {									\
     if ( hwa->o.config.action != 0xFF ) {				\
       if ( hwa->o.config.action == HW_A1(_hw_wdoga_action_none) ) {	\

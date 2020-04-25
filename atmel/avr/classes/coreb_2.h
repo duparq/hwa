@@ -50,7 +50,7 @@
 
 /*	Optionnal parameter `sleep`
  */
-#define _hwa_cfcoreb(o,i,a,k,...)					\
+#define _hwa_cfcoreb(o,a,k,...)					\
   do {									\
     HW_Y(_hwa_cfcoreb_ksleep_,_hw_is_sleep_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
@@ -142,7 +142,7 @@ typedef union {
 
 
 #define hw_stat_t__coreb	, _hw_coreb_stat_t
-#define _hw_stat_coreb(o,i,a,...)	_hw_coreb_stat(_hw_read(o, mcusr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_coreb(o,a,...)	_hw_coreb_stat(_hw_read(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 
 HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
@@ -164,7 +164,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  */
 #define hwa_clear__coreb	, _hwa_clear__coreb
 
-#define _hwa_clear__coreb(o,i,a,...)	_hwa_write(o,allrf,0)
+#define _hwa_clear__coreb(o,a,...)	_hwa_write(o,allrf,0)
 
 
 /*******************************************************************************
@@ -173,7 +173,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__coreb(o,i,a)		\
+#define _hwa_setup__coreb(o,a)		\
   _hwa_setup_r( o, mcucr  );			\
   _hwa_setup_r( o, mcusr  );			\
   _hwa_setup_r( o, smcr   );			\
@@ -181,13 +181,13 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
-#define _hwa_init__coreb(o,i,a)			\
+#define _hwa_init__coreb(o,a)			\
   _hwa_init_r( o, mcucr,  0x00 );		\
   _hwa_init_r( o, smcr,   0x00 );		\
   _hwa_init_r( o, osccal, 0x00 )
 
 
-#define _hwa_commit__coreb(o,i,a)		\
+#define _hwa_commit__coreb(o,a)		\
   _hwa_commit_r( o, mcucr  );			\
   _hwa_commit_r( o, mcusr  );			\
   _hwa_commit_r( o, smcr   );			\

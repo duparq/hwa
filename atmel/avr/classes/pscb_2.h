@@ -45,7 +45,7 @@
  *    The `clock` value is stored in the `config` part of the context. The
  *    `commit` function handles the hardware configuration.
  */
-#define _hwa_cfpscb(o,i,a,k,...)					\
+#define _hwa_cfpscb(o,a,k,...)					\
   do { HW_Y(_hwa_cfpscb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,) } while(0)
 
 #define _hwa_cfpscb_kclock_0(o,k,...)		HW_E_VL(k,clock)
@@ -88,7 +88,7 @@
  * @endcode
  */
 #define hw_reset__pscb			, _hw_pscb_reset
-#define _hw_pscb_reset(o,i,a, ...)	_hw_write(o,psr,1)
+#define _hw_pscb_reset(o,a, ...)	_hw_write(o,psr,1)
 
 
 /*******************************************************************************
@@ -97,21 +97,21 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__pscb(o,i,a)			\
+#define _hwa_setup__pscb(o,a)			\
   _hwa_setup_r( o, pllcsr );			\
   hwa->o.config.clock = 0xFF ;
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
-#  define _hwa_init__pscb(o,i,a)		_hwa_init_r( o, pllcsr, 0x02 );
+#  define _hwa_init__pscb(o,a)		_hwa_init_r( o, pllcsr, 0x02 );
 #else
-#  define _hwa_init__pscb(o,i,a)		_hwa_init_r( o, pllcsr, 0x00 );
+#  define _hwa_init__pscb(o,a)		_hwa_init_r( o, pllcsr, 0x00 );
 #endif
 
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
-#  define _hwa_commit__pscb(o,i,a)		_hwa_commit_r(o,pllcsr);
+#  define _hwa_commit__pscb(o,a)		_hwa_commit_r(o,pllcsr);
 #else
-#  define _hwa_commit__pscb(o,i,a)					\
+#  define _hwa_commit__pscb(o,a)					\
   if ( hwa->o.config.clock != 0xFF ) {					\
     if ( hwa->o.config.clock == HW_A1(_hw_pscb_clock_ioclk) )		\
       _hwa_write( o, pcke, 0 );					\

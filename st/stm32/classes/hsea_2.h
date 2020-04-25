@@ -40,7 +40,7 @@ typedef struct {
 } _hw_sthse_t ;
 
 #define hw_stat_t__hsea			, _hw_stthse
-#define _hw_stthse(o,i,a,...)		 _hw_sthse_t HW_EOL(__VA_ARGS__)
+#define _hw_stthse(o,a,...)		 _hw_sthse_t HW_EOL(__VA_ARGS__)
 
 #define hw_stat__hsea			, _hw_sthse
-#define _hw_sthse(o,i,a,...)		(*(volatile _hw_sthse_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)
+#define _hw_sthse(o,a,...)		(*(volatile _hw_sthse_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)

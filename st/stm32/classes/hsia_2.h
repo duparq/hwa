@@ -37,7 +37,7 @@ typedef struct {
 } _hw_sthsi_t ;
 
 #define hw_stat_t__hsia			, _hw_stthsi
-#define _hw_stthsi(o,i,a,...)		 _hw_sthsi_t HW_EOL(__VA_ARGS__)
+#define _hw_stthsi(o,a,...)		 _hw_sthsi_t HW_EOL(__VA_ARGS__)
 
 #define hw_stat__hsia			, _hw_sthsi
-#define _hw_sthsi(o,i,a,...)		(*(volatile _hw_sthsi_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)
+#define _hw_sthsi(o,a,...)		(*(volatile _hw_sthsi_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)

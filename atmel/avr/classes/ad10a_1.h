@@ -53,7 +53,7 @@
  * @endcode
  */
 #define HW_BITS__ad10a		, _hw_bn_ad10a
-#define _hw_bn_ad10a(p,i,a,_)		10
+#define _hw_bn_ad10a(p,a,_)		10
 
 /**
  * @page atmelavr_ad10a

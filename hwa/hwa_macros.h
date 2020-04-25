@@ -73,7 +73,7 @@
 #define _hw_address_m1(n,o,r,c,a,...)	(a HW_AC)
 
 #define HW_ADDRESS_			, _hw_address_		// By default
-#define _hw_address_(o,i,a,...)		(a)
+#define _hw_address_(o,a,...)		(a)
 
 
 /**

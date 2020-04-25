@@ -62,7 +62,7 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hwa_cfc16b(o,i,a,k,...)					\
+#define _hwa_cfc16b(o,a,k,...)					\
   do { HW_Y(_hwa_cfc16b_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfc16b_kclock_0(o,k,...)				\
@@ -171,7 +171,7 @@
  * the objects and then can put computed registers values into the context, even
  * in the case of external register access, and display accurate error messages.
  */
-#define _hwa_solve__c16b( o,i,a )	\
+#define _hwa_solve__c16b( o,a )	\
   hwa_solve__c16b_2( o, hw_##o##_compare0, hw_##o##_compare1, hw_##o##_compare2, hw_##o##_capture0 )
 
 #define _hwa_solve__c16b_2(...)		_hwa_solve__c16b_3(__VA_ARGS__)
@@ -629,7 +629,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define hw_read__c16b		, _hw_read_c16b
-#define _hw_read_c16b(o,i,a,...)	_hw_read(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_read_c16b(o,a,...)	_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -639,7 +639,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define hw_write__c16b		, _hw_write_c16b
-#define _hw_write_c16b(o,i,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_c16b(o,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
  * @page atmelavr_c16b
@@ -648,7 +648,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * @endcode
  */
 #define hwa_write__c16b	, _hwa_write_c16b
-#define _hwa_write_c16b(o,i,a,v)	_hwa_write(o,count,v)
+#define _hwa_write_c16b(o,a,v)	_hwa_write(o,count,v)
 
 
 /**
@@ -672,7 +672,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__c16b(o,i,a)		\
+#define _hwa_setup__c16b(o,a)		\
   _hwa_setup_r( o, ccra     );		\
   _hwa_setup_r( o, ccrb     );		\
   _hwa_setup_r( o, ccrc     );		\
@@ -684,7 +684,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
   hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 
-#define _hwa_init__c16b(o,i,a)			\
+#define _hwa_init__c16b(o,a)			\
   _hwa_init_r( o, ccra, 0x00 );		\
   _hwa_init_r( o, ccrb, 0x00	   );		\
   _hwa_init_r( o, ccrc, 0x00	   );		\
@@ -692,7 +692,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
   _hwa_init_r( o, imsk, 0x00	   );		\
   _hwa_init_r( o, ifr, 0x00	   )
 
-#define _hwa_commit__c16b(o,i,a)		\
+#define _hwa_commit__c16b(o,a)		\
   _hwa_commit_r( o, ccra     );		\
   _hwa_commit_r( o, ccrb     );		\
   _hwa_commit_r( o, ccrc     );		\

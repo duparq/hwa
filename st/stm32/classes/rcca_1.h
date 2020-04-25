@@ -96,18 +96,18 @@
 /*	Convenient objects
  */
 #define hw_class__hsea
-#define hw_hse				_hsea, 102, 0
+#define hw_hse				_hsea, 0
 #define hw_reg_hse_cken			_xob1, rcc, cr, 1, 16	/* convenient */
 
 #define hw_class__hsia
-#define hw_hsi				_hsia, 103, 0
+#define hw_hsi				_hsia, 0
 #define hw_reg_hsi_cken			_xob1, rcc, cr, 1,  0	/* convenient */
 
-#define hw_usbprescaler			_obj, 104, 0
-#define hw_adcprescaler			_obj, 105, 0
+#define hw_usbprescaler			_obj, 0
+#define hw_adcprescaler			_obj, 0
 
-#define hw_apb1				_apba, 106, 0
-#define hw_apb2				_apba, 107, 0
+#define hw_apb1				_apba, 0
+#define hw_apb2				_apba, 0
 
 
 /*  Relatives. Make HW_X() translate "(rcc,oject)" to "object_rcc".

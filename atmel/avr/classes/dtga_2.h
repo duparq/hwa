@@ -52,7 +52,7 @@
 
 /*  Optionnal argument `prescaler`
  */
-#define _hwa_cfdtga(o,i,a,k,...)					\
+#define _hwa_cfdtga(o,a,k,...)					\
   do { HW_Y(_hwa_cfdtga_kpsc_,_hw_dtga_kpsc_##k)(o,k,__VA_ARGS__) } while(0)
 
 #define _hwa_cfdtga_kpsc_1(o,k,v,...)				   \
@@ -141,17 +141,17 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__dtga(o,i,a)			\
+#define _hwa_setup__dtga(o,a)			\
   _hwa_setup_r( o, dtps );			\
   _hwa_setup_r( o, dta );			\
   _hwa_setup_r( o, dtb );
 
-#define _hwa_init__dtga(o,i,a)			\
+#define _hwa_init__dtga(o,a)			\
   _hwa_init_r( o, dtps, 0x00 );		\
   _hwa_init_r( o, dta, 0x00 );		\
   _hwa_init_r( o, dtb, 0x00 );
 
-#define _hwa_commit__dtga(o,i,a)		\
+#define _hwa_commit__dtga(o,a)		\
   _hwa_commit_r(o,dtps);			\
   _hwa_commit_r(o,dta);			\
   _hwa_commit_r(o,dtb);

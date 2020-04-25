@@ -21,10 +21,10 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__pcfa(o,i,a)		\
+#define _hwa_setup__pcfa(o,a)		\
   _hwa_setup_r( o, _reg )
 
-#define _hwa_init__pcfa(o,i,a)			
+#define _hwa_init__pcfa(o,a)			
 
-#define _hwa_commit__pcfa(o,i,a)		\
+#define _hwa_commit__pcfa(o,a)		\
   _hwa_commit_r( o, _reg )

@@ -49,7 +49,7 @@
 #define _hw_acmpa_edge_rising		, 3
 #define _hw_acmpa_edge_both		, 0
 
-#define _hwa_cfacmpa(o,i,a,k,...)					\
+#define _hwa_cfacmpa(o,a,k,...)					\
   do {									\
     HW_Y(_hwa_cfacmpa_xedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
@@ -126,11 +126,11 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__acmpa(o,i,a)	_hwa_setup_r( o, csr	);
+#define _hwa_setup__acmpa(o,a)	_hwa_setup_r( o, csr	);
 
-#define _hwa_init__acmpa(o,i,a)		_hwa_init_r( o, csr, 0x00 );
+#define _hwa_init__acmpa(o,a)		_hwa_init_r( o, csr, 0x00 );
 
-#define _hwa_commit__acmpa(o,i,a)	_hwa_commit_r( o, csr );
+#define _hwa_commit__acmpa(o,a)	_hwa_commit_r( o, csr );
 
 
 /**

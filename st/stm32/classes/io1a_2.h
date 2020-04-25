@@ -84,13 +84,13 @@
  *  action on it, and commit.
  */
 #define hw_configure__io1a			, _hw_cfio1a
-#define _hw_cfio1a(o,i,p,...)						\
+#define _hw_cfio1a(o,p,...)						\
   do {									\
     uint8_t cnf, mode, odr=0 ;						\
     struct { uint8_t commit ; hwa_p16a_t p ; hwa_afioa_t afio ; } hwa_st ; \
     hwa_t *hwa = (hwa_t*)&hwa_st ;					\
     _hwa_setup_o(p);							\
-    _hwa_cfio1a_(o,i,p,__VA_ARGS__);					\
+    _hwa_cfio1a_(o,p,__VA_ARGS__);					\
     hwa_st.commit = 1 ; _hwa_commit_o(p);				\
   }while(0)
 
@@ -99,7 +99,7 @@
 
 /*  Key 'function'. Select default or alternate function (df/af). Register signal-pin association for 'af'.
  */
-#define _hwa_cfio1a_(o,i,p,bn,bp,k,...)		HW_Y(_hwa_cfio1a_kfn,_hw_is_function_##k)(o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfio1a_(o,p,bn,bp,k,...)		HW_Y(_hwa_cfio1a_kfn,_hw_is_function_##k)(o,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfio1a_kfn1(o,p,bn,bp,k,v,...)	HW_Y(_hwa_cfio1a_vfb,_hw_isa_leftbkt v)(o,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfio1a_vfb0(o,p,bn,bp,v,...)	_hwa_cfio1a_vfn4(_hw_fn_##o##_##v,v,v,o,p,bn,bp,__VA_ARGS__)
 #define _hwa_cfio1a_vfb1(o,p,bn,bp,v,...)	_hwa_cfio1a_vfb2( HW_AF v,v,o,p,bn,bp,__VA_ARGS__)
@@ -221,7 +221,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * uint8_t value = hw( read, pa0 );
  * @endcode
  */
-#define _hw_rdio1a(o,i,p,bn,bp,...)	HW_Y(_hw_rdio1a_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
+#define _hw_rdio1a(o,p,bn,bp,...)	HW_Y(_hw_rdio1a_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
 #define _hw_rdio1a_0(p,bn,bp,g,...)	HW_E_G(g)
 #define _hw_rdio1a_1(p,bn,bp,...)	( (_hw_read(p,idr) & ((1UL<<bn)-1)) >> bp )
 
@@ -248,8 +248,8 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  *  BSRR: MSB16 bits reset the ODR bits
  *        LSB16 bits set the ODR bits, it has the priority over MSB16
  */
-#define _hw_wrio1a(o,i,p,bn,bp,v,g,...)		HW_Y(_hwx_wrio1a1_,v)(_hw,p,bn,bp,v,g)
-#define _hwa_wrio1a(o,i,p,bn,bp,v,g,...)	HW_Y(_hwx_wrio1a1_,v)(_hwa,p,bn,bp,v,g)
+#define _hw_wrio1a(o,p,bn,bp,v,g,...)		HW_Y(_hwx_wrio1a1_,v)(_hw,p,bn,bp,v,g)
+#define _hwa_wrio1a(o,p,bn,bp,v,g,...)	HW_Y(_hwx_wrio1a1_,v)(_hwa,p,bn,bp,v,g)
 #define _hwx_wrio1a1_1(x,p,bn,bp,v,g)		HW_E_V()
 #define _hwx_wrio1a1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrio1a2_,g)(x,p,bn,bp,v,g)
 #define _hwx_wrio1a2_0(x,p,bn,bp,v,g)		HW_E_G(g)
@@ -274,7 +274,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  */
 /*  Use the BSRR instead of a read-modify-write on the ODR.
  */
-#define _hw_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hw_tgio1a_,g)(p,bn,bp,g)
+#define _hw_tgio1a(o,p,bn,bp,g,...)		HW_Y(_hw_tgio1a_,g)(p,bn,bp,g)
 #define _hw_tgio1a_0(p,bn,bp,g)			HW_E_G(g)
 #define _hw_tgio1a_1(p,bn,bp,g)						\
   do {									\
@@ -292,6 +292,6 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * hwa( commit );          //  Toggle all registered pins at once
  * @endcode
  */
-#define _hwa_tgio1a(o,i,p,bn,bp,g,...)		HW_Y(_hwa_tgio1a_,g)(p,bn,bp,g)
+#define _hwa_tgio1a(o,p,bn,bp,g,...)		HW_Y(_hwa_tgio1a_,g)(p,bn,bp,g)
 #define _hwa_tgio1a_0(p,bn,bp,g)		HW_E_G(g)
 #define _hwa_tgio1a_1(p,bn,bp,g)		hwa->p.toggles |= (((1UL<<bn)-1) << bp)

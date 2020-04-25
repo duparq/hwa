@@ -54,7 +54,7 @@
  */
 #define _hw_cfio1a_fn_gpio
 
-#define _hwx_cfio1a(x,o,i,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfio1a(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfio1a_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfio1a_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfio1a_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfio1a_vfn_,_hw_cfio1a_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfio1a_vfn_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (gpio) )
@@ -111,7 +111,7 @@
  * uint8_t value = hw( read, pa0 );
  * @endcode
  */
-#define _hw_read_io1a(o,i, p,bn,bp,...)					\
+#define _hw_read_io1a(o, p,bn,bp,...)					\
   ((_hw_read(p, pin) & (((1<<bn)-1)<<bp))>>bp) HW_EOL(__VA_ARGS__)
 
 
@@ -124,10 +124,10 @@
  * hw | hwa( write, pa0, value );
  * @endcode
  */
-#define _hw_write_io1a(o,i, p,bn,bp, v,...)				\
+#define _hw_write_io1a(o, p,bn,bp, v,...)				\
   _hw_write_m(p, port, ((1UL<<bn)-1)<<bp, (v)<<bp) HW_EOL(__VA_ARGS__)
 
-#define _hwa_write_io1a(o,i, p,bn,bp, v, ...)				\
+#define _hwa_write_io1a(o, p,bn,bp, v, ...)				\
   _hwa_write__r8(&hwa->p.port, 0xFF,0x00, bn,bp, v) HW_EOL(__VA_ARGS__)
 
 
@@ -140,7 +140,7 @@
  * hw( toggle, pa0 );		// Toggle pin PA0
  * @endcode
  */
-#define _hw_toggle_io1a(o,i,p,bn,bp,...)	_hw_tgio1a01(HW_X(p,pin),bn,bp)
+#define _hw_toggle_io1a(o,p,bn,bp,...)	_hw_tgio1a01(HW_X(p,pin),bn,bp)
 #define _hw_tgio1a01(...)			_hw_tgio1a02(__VA_ARGS__)
 #define _hw_tgio1a02(t,...)			_hw_tgio1a_##t(__VA_ARGS__)
 #define _hw_tgio1a__m111(n,o,r,c,a,rwm,rfm,rbn,rbp,bn,bp)	_hw_tgio1a(a,bn,bp)

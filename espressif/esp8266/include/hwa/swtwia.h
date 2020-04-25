@@ -150,8 +150,8 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
 #define _hw_mtd_hw_configure__swtwia	, _hw_cfswtwia
 #define _hw_mtd_hwa_configure__swtwia	, _hwa_cfswtwia
 
-#define _hw_cfswtwia(o,i,a,...)		_hwx_cfswtwia(_hw,o,__VA_ARGS__)
-#define _hwa_cfswtwia(o,i,a,...)	_hwx_cfswtwia(_hwa,o,__VA_ARGS__)
+#define _hw_cfswtwia(o,a,...)		_hwx_cfswtwia(_hw,o,__VA_ARGS__)
+#define _hwa_cfswtwia(o,a,...)	_hwx_cfswtwia(_hwa,o,__VA_ARGS__)
 
 #define _hwx_cfswtwia(x,o,k,...)					\
   do{									\
@@ -199,10 +199,10 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
 /* #define _hw_mtd_hw_bus_read__swtwia	, _hw_swtwia_txread */
 #define _hw_mtd_hw_stat__swtwia		, _hw_swtwia_stat
 
-#define _hw_swtwia_txstart(o,i,a,...)	hw_##o##_txstart() HW_EOL(__VA_ARGS__)
-#define _hw_swtwia_txstop(o,i,a,...)	hw_##o##_txstop() HW_EOL(__VA_ARGS__)
-#define _hw_swtwia_txslaw(o,i,a,v,...)	hw_##o##_txslaw(v) HW_EOL(__VA_ARGS__)
-#define _hw_swtwia_txdata(o,i,a,v,...)	hw_##o##_tx(v) HW_EOL(__VA_ARGS__)
-#define _hw_swtwia_stat(o,i,a,v,...)	hw_##o##_sr HW_EOL(__VA_ARGS__)
+#define _hw_swtwia_txstart(o,a,...)	hw_##o##_txstart() HW_EOL(__VA_ARGS__)
+#define _hw_swtwia_txstop(o,a,...)	hw_##o##_txstop() HW_EOL(__VA_ARGS__)
+#define _hw_swtwia_txslaw(o,a,v,...)	hw_##o##_txslaw(v) HW_EOL(__VA_ARGS__)
+#define _hw_swtwia_txdata(o,a,v,...)	hw_##o##_tx(v) HW_EOL(__VA_ARGS__)
+#define _hw_swtwia_stat(o,a,v,...)	hw_##o##_sr HW_EOL(__VA_ARGS__)
 
 #endif /* defined HWA_IMPLEMENT_SWTWI0 */

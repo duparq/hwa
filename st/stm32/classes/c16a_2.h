@@ -55,8 +55,8 @@
 #define hw_configure__c16a		, _hw_cfc16a
 #define hwa_configure__c16a		, _hwa_cfc16a
 
-#define _hw_cfc16a(o,i,a,k,...)		do{ HW_Y(_hwx_cfc16a,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfc16a(o,i,a,k,...)	do{ HW_Y(_hwx_cfc16a,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfc16a(o,a,k,...)		do{ HW_Y(_hwx_cfc16a,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfc16a(o,a,k,...)	do{ HW_Y(_hwx_cfc16a,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
@@ -206,10 +206,10 @@
  * @endcode
  */
 #define hw_turn__c16a			, _hw_tnc16a
-#define _hw_tnc16a(o,i,a,...)		do{ _hwx_tnc16a(_hw,o,__VA_ARGS__) }while(0)
+#define _hw_tnc16a(o,a,...)		do{ _hwx_tnc16a(_hw,o,__VA_ARGS__) }while(0)
 
 #define hwa_turn__c16a			, _hwa_tnc16a
-#define _hwa_tnc16a(o,i,a,...)		do{ _hwx_tnc16a(_hwa,o,__VA_ARGS__) }while(0)
+#define _hwa_tnc16a(o,a,...)		do{ _hwx_tnc16a(_hwa,o,__VA_ARGS__) }while(0)
 
 #define _hwx_tnc16a(h,o,v,...)		HW_Y(_hwx_tnc16a_,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_tnc16a_0(h,o,v,...)	HW_E_ST(v)
@@ -225,7 +225,7 @@
  * @endcode
  */
 #define hw_read__c16a			, _hw_rdc16a
-#define _hw_rdc16a(o,i,a,...)		_hw_read(o,cnt)
+#define _hw_rdc16a(o,a,...)		_hw_read(o,cnt)
 
 
 /**
@@ -265,7 +265,7 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__c16a(o,i,a)			\
+#define _hwa_setup__c16a(o,a)			\
   _hwa_setup_r( o, cr1 );			\
   _hwa_setup_r( o, cr2 );			\
   _hwa_setup_r( o, smcr );			\
@@ -273,7 +273,7 @@
   _hwa_setup_r( o, psc );			\
   _hwa_setup_r( o, arr )
 
-#define _hwa_init__c16a(o,i,a)			\
+#define _hwa_init__c16a(o,a)			\
   _hwa_init_r( o, cr1,  0x00000000 );		\
   _hwa_init_r( o, cr2,  0x00000000 );		\
   _hwa_init_r( o, smcr, 0x00000000 );		\
@@ -281,7 +281,7 @@
   _hwa_init_r( o, psc,  0x00000000 );		\
   _hwa_init_r( o, arr,  0x00000000 )
 
-#define _hwa_commit__c16a(o,i,a)		\
+#define _hwa_commit__c16a(o,a)		\
   _hwa_commit_r( o, cr1 );			\
   _hwa_commit_r( o, cr2 );			\
   _hwa_commit_r( o, smcr );			\

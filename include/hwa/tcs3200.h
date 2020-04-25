@@ -86,7 +86,7 @@
 
 /*  Optionnal keyword 'frequency'
  */
-#define _hwx_cft3k2(h,o,i,a,k,...)	HW_Y(_hwx_cft3k2_kfq_,_hw_is_frequency_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cft3k2(h,o,a,k,...)	HW_Y(_hwx_cft3k2_kfq_,_hw_is_frequency_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cft3k2_kfq_1(h,o,k,v,...)	HW_Y(_hwx_cft3k2_vfq_,_hw_t3k2_fq_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cft3k2_vfq_0(h,o,v,...)	HW_E_OKVL(frequency,v,`0|12kHz|120kHz|600kHz`)
 #define _hwx_cft3k2_vfq_1(h,o,v,k,...)				\

@@ -21,12 +21,12 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__pcfb(o,i,a)		\
+#define _hwa_setup__pcfb(o,a)		\
   _hwa_setup_r( o, _reg )
 
-#define _hwa_init__pcfb(o,i,a)			
+#define _hwa_init__pcfb(o,a)			
 
-#define _hwa_commit__pcfb(o,i,a)		\
+#define _hwa_commit__pcfb(o,a)		\
   _hwa_commit_r( o, _reg )
 
 

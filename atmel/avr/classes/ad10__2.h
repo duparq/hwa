@@ -20,8 +20,8 @@
 #define HW_PRESCALER_MAX(o)			hw(prescaler_max,o)
 #define HW_PRESCALER_MIN(o)			hw(prescaler_min,o)
 
-#define hw_ad10_prescaler_max(o,i,a,...)	_hw_ad10_prescaler_max()
-#define hw_ad10_prescaler_min(o,i,a,...)	_hw_ad10_prescaler_min()
+#define hw_ad10_prescaler_max(o,a,...)	_hw_ad10_prescaler_max()
+#define hw_ad10_prescaler_min(o,a,...)	_hw_ad10_prescaler_min()
 
 HW_INLINE uint8_t _hw_ad10_prescaler_max()
 {
@@ -129,10 +129,10 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
 
 /*	Turn ADC on / off
  */
-#define _hw_turn_ad10_(o,i,a, v, ...)			\
+#define _hw_turn_ad10_(o,a, v, ...)			\
   HW_Y(_hwx_turn_ad10__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 
-#define _hwa_turn_ad10_(o,i,a, v, ...)			\
+#define _hwa_turn_ad10_(o,a, v, ...)			\
   HW_Y(_hwx_turn_ad10__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_ad10__0(x,o, v, ...)			\
@@ -144,13 +144,13 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
 
 /*	Start a conversion
  */
-#define _hw_trigger_ad10_(o,i,a,...)	_hw_write( o, sc, 1 )
-#define _hwa_trigger_ad10_(o,i,a,...)	_hwa_write( o, sc, 1 )
+#define _hw_trigger_ad10_(o,a,...)	_hw_write( o, sc, 1 )
+#define _hwa_trigger_ad10_(o,a,...)	_hwa_write( o, sc, 1 )
 
 
 /*	Read the result of the conversion
  */
-#define _hw_rdad10_(o,i,a,...)		HW_Y0(_hw_rdad10__,__VA_ARGS__)(o,__VA_ARGS__,)
+#define _hw_rdad10_(o,a,...)		HW_Y0(_hw_rdad10__,__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_rdad10__1(o,...)		_hw_read(o, adc)
 
@@ -173,7 +173,7 @@ HW_INLINE uint8_t _hwa_ad10_clkmax( float v )
 /*	Read the ADC result with interrupts disabled and restore state as soon
  *	as possible.
  */
-#define _hw_ardad10_(o,i,a,...)		_hw_atomic_read(o, adc)
+#define _hw_ardad10_(o,a,...)		_hw_atomic_read(o, adc)
 
 /*	Status
  */
@@ -186,7 +186,7 @@ typedef union {
   };
 } _hw_ad10__status_t ;
 
-#define _hw_stat_ad10_(o,i,a,...)	_hw_ad10__status(_hw_read(o,sra)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_ad10_(o,a,...)	_hw_ad10__status(_hw_read(o,sra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
 {

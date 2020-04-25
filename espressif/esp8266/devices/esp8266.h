@@ -70,10 +70,10 @@
  *									       *
  *******************************************************************************/
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
 #define hw_class__shared
-#define hw_shared			_shared, 0x3FF00000, 0x3FF00000
+#define hw_shared			_shared, 0x3FF00000
 
 /*	Object hardware registers	class, address, write mask, w1tc mask
  */
@@ -93,15 +93,15 @@ typedef struct {
 } hwa_shared_t ;
 
 
-#define _hwa_setup__shared(o,i,a)	\
+#define _hwa_setup__shared(o,a)	\
   _hwa_setup_r( o, _edgeie );	\
   _hwa_setup_r( o, _swap )
 
-#define _hwa_init__shared(o,i,a)	\
+#define _hwa_init__shared(o,a)	\
   /* _edgeie is UNKNOWN and 0 causes errors */	\
   _hwa_init_r( o, _swap, 0 )
 
-#define _hwa_commit__shared(o,i,a)	\
+#define _hwa_commit__shared(o,a)	\
   _hwa_commit_r( o, _edgeie );	\
   _hwa_commit_r( o, _swap )
 
@@ -114,15 +114,13 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Objects				class, id, address
- */
 #include "../classes/p16a_1.h"
 #include "../classes/io1a_1.h"
 #include "../classes/io1b_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_port0			_p16a, 101, 0x60000300
+#define hw_port0			_p16a, 0x60000300
 
 
 /*	Class hardware registers	class, address, write mask, flags mask
@@ -157,9 +155,9 @@ typedef struct {
 #define hw_reg__p16a_enbw1tc		_cb1, _enbw1tc, 16,  0
 
 #define hw_reg__p16a_strapping		_cb1, _in,	16, 16
-#define hw_reg__p16a_in		_cb1, _in,	16,  0
+#define hw_reg__p16a_in			_cb1, _in,	16,  0
 
-#define hw_reg__p16a_ie		_cb1, _ie,	16, 16
+#define hw_reg__p16a_ie			_cb1, _ie,	16, 16
 #define hw_reg__p16a_iew1ts		_cb1, _iew1ts,	16, 16
 #define hw_reg__p16a_iew1tc		_cb1, _iew1tc,	16, 16
 
@@ -203,26 +201,26 @@ typedef struct {
  *	Pin GPIO16 (RTC_GPIO0 / xpd_dcdc) is of a different class.
  *	See esp_iot_sdk_v1.4.0/examples/driver_lib/driver/gpio16.c
  *
- *					class, id, port, bn, bp
+ *					class, port, bn, bp
  */
-#define hw_gpio0			_io1a, 102, port0, 1, 0
-#define hw_gpio1			_io1a, 103, port0, 1, 1
-#define hw_gpio2			_io1a, 104, port0, 1, 2
-#define hw_gpio3			_io1a, 105, port0, 1, 3
-#define hw_gpio4			_io1a, 106, port0, 1, 4
-#define hw_gpio5			_io1a, 107, port0, 1, 5
-#define hw_gpio6			_io1a, 108, port0, 1, 6
-#define hw_gpio7			_io1a, 109, port0, 1, 7
-#define hw_gpio8			_io1a, 110, port0, 1, 8
-#define hw_gpio9			_io1a, 111, port0, 1, 9
-#define hw_gpio10			_io1a, 112, port0, 1, 10
-#define hw_gpio11			_io1a, 113, port0, 1, 11
-#define hw_gpio12			_io1a, 114, port0, 1, 12
-#define hw_gpio13			_io1a, 115, port0, 1, 13
-#define hw_gpio14			_io1a, 116, port0, 1, 14
-#define hw_gpio15			_io1a, 117, port0, 1, 15
+#define hw_gpio0			_io1a, port0, 1, 0
+#define hw_gpio1			_io1a, port0, 1, 1
+#define hw_gpio2			_io1a, port0, 1, 2
+#define hw_gpio3			_io1a, port0, 1, 3
+#define hw_gpio4			_io1a, port0, 1, 4
+#define hw_gpio5			_io1a, port0, 1, 5
+#define hw_gpio6			_io1a, port0, 1, 6
+#define hw_gpio7			_io1a, port0, 1, 7
+#define hw_gpio8			_io1a, port0, 1, 8
+#define hw_gpio9			_io1a, port0, 1, 9
+#define hw_gpio10			_io1a, port0, 1, 10
+#define hw_gpio11			_io1a, port0, 1, 11
+#define hw_gpio12			_io1a, port0, 1, 12
+#define hw_gpio13			_io1a, port0, 1, 13
+#define hw_gpio14			_io1a, port0, 1, 14
+#define hw_gpio15			_io1a, port0, 1, 15
 
-#define hw_gpio16			_io1b, 118, rtc, 1, 0
+#define hw_gpio16			_io1b, rtc, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -262,22 +260,22 @@ typedef struct {
 #include "../classes/pcfa_1.h"
 #include "../classes/pcfb_1.h"
 
-#define hw_gpio12_cf		_pcfa, 119, 0x60000804
-#define hw_gpio13_cf		_pcfa, 120, 0x60000808
-#define hw_gpio14_cf		_pcfa, 121, 0x6000080C
-#define hw_gpio15_cf		_pcfa, 122, 0x60000810
-#define hw_gpio3_cf		_pcfa, 123, 0x60000814
-#define hw_gpio1_cf		_pcfa, 124, 0x60000818
-#define hw_gpio6_cf		_pcfa, 125, 0x6000081c
-#define hw_gpio7_cf		_pcfa, 126, 0x60000820
-#define hw_gpio8_cf		_pcfa, 127, 0x60000824
-#define hw_gpio9_cf		_pcfa, 128, 0x60000828
-#define hw_gpio10_cf		_pcfa, 129, 0x6000082c
-#define hw_gpio11_cf		_pcfa, 130, 0x60000830
-#define hw_gpio0_cf		_pcfa, 131, 0x60000834
-#define hw_gpio2_cf		_pcfa, 132, 0x60000838
-#define hw_gpio4_cf		_pcfa, 133, 0x6000083C
-#define hw_gpio5_cf		_pcfa, 134, 0x60000840
+#define hw_gpio12_cf			_pcfa, 0x60000804
+#define hw_gpio13_cf			_pcfa, 0x60000808
+#define hw_gpio14_cf			_pcfa, 0x6000080C
+#define hw_gpio15_cf			_pcfa, 0x60000810
+#define hw_gpio3_cf			_pcfa, 0x60000814
+#define hw_gpio1_cf			_pcfa, 0x60000818
+#define hw_gpio6_cf			_pcfa, 0x6000081c
+#define hw_gpio7_cf			_pcfa, 0x60000820
+#define hw_gpio8_cf			_pcfa, 0x60000824
+#define hw_gpio9_cf			_pcfa, 0x60000828
+#define hw_gpio10_cf			_pcfa, 0x6000082c
+#define hw_gpio11_cf			_pcfa, 0x60000830
+#define hw_gpio0_cf			_pcfa, 0x60000834
+#define hw_gpio2_cf			_pcfa, 0x60000838
+#define hw_gpio4_cf			_pcfa, 0x6000083C
+#define hw_gpio5_cf			_pcfa, 0x60000840
 
 
 /*  Pin functions
@@ -405,7 +403,7 @@ typedef struct {
 
 #include "../classes/rtca_1.h"
 
-#define hw_rtc			_rtca, 101, 0x60000700
+#define hw_rtc				_rtca, 0x60000700
 
 /* #define hw_reg__rtca__store0		_r32, 0x30, 0xFFFFFFFF, 0 */
 /* #define hw_reg__rtca__store1		_r32, 0x34, 0xFFFFFFFF, 0 */
@@ -438,9 +436,9 @@ typedef struct {
 
 #include "../classes/tm23a_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_timer1			_tm23a, 135, 0x60000600
+#define hw_timer1			_tm23a, 0x60000600
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
@@ -475,9 +473,9 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_timer2			_tm32a, 136, 0x60000620
+#define hw_timer2			_tm32a, 0x60000620
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -518,10 +516,10 @@ typedef struct {
 
 #include "../classes/uarta_1.h"
 
-/*	Objects				class, id, address
+/*	Objects				class, address
  */
-#define hw_uart0			_uarta, 137, 0x60000000
-#define hw_uart1			_uarta, 138, 0x60000F00
+#define hw_uart0			_uarta, 0x60000000
+#define hw_uart1			_uarta, 0x60000F00
 
 /*	Class hardware registers	class, address, write mask, w1tc mask
  */
@@ -531,7 +529,7 @@ typedef struct {
 #define hw_reg__uarta__ie		_r32, 0x0C, 0x1FF, 0		// IRQ enable
 #define hw_reg__uarta__ic		_r32, 0x10, 0x1FF, 0x1FF	// IRQ clear
 #define hw_reg__uarta__clkdiv		_r32, 0x14, 0xFFFFF, 0
-#define hw_reg__uarta__autobaud	_r32, 0x18, 0xFF01, 0
+#define hw_reg__uarta__autobaud		_r32, 0x18, 0xFF01, 0
 #define hw_reg__uarta__stat		_r32, 0x1C, 0x0, 0
 #define hw_reg__uarta__conf0		_r32, 0x20, 0x01FE61FF, 0
 #define hw_reg__uarta__conf1		_r32, 0x24, 0xFFFF7F7F, 0

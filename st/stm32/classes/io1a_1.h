@@ -30,7 +30,7 @@
 
 /*  Port name of a pin
  */
-#define _hw_rel__io1a_port(o,d)		HW_A1 d
+#define _hw_rel__io1a_port(o,d)		HW_A0 d
 
 
 /**
@@ -53,9 +53,9 @@
  */
 #define HW_ADDRESS__io1a		, _hw_adio1a
 
-#define _hw_adio1a(o,i,p,bn,bp,...)	_hw_adio1a01(hw_##p,bn,bp)
+#define _hw_adio1a(o,p,bn,bp,...)	_hw_adio1a01(hw_##p,bn,bp)
 #define _hw_adio1a01(...)		_hw_adio1a02(__VA_ARGS__)
-#define _hw_adio1a02(c,i,a,bn,bp)	(a+(bn-1)*16+bp)
+#define _hw_adio1a02(c,a,bn,bp)	(a+(bn-1)*16+bp)
 
 
 /**
@@ -78,7 +78,7 @@
  * @endcode
  */
 #define HW_BITS__io1a			, _hw_btio1a
-#define _hw_btio1a(o,i, cn,bn,bp,...)	bn
+#define _hw_btio1a(o, cn,bn,bp,...)	bn
 
 
 /**
@@ -92,4 +92,4 @@
  * @endcode
  */
 #define HW_POSITION__io1a		, _hw_pnio1a
-#define _hw_pnio1a(o,i, cn,bn,bp,...)	bp
+#define _hw_pnio1a(o, cn,bn,bp,...)	bp

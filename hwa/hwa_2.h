@@ -226,7 +226,7 @@
 /*
  * @brief  Write the register of an object
  */
-#define _hwa_write_oreg(c,i,o,r,v,...)	_hwa_write(o,r,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_oreg(c,o,r,v,...)	_hwa_write(o,r,v) HW_EOL(__VA_ARGS__)
 
 
 #define hwa_write__xob1		, _hwa__write__xob1
@@ -274,7 +274,7 @@
  */
 #define _hwa_setup_o(o)			_hwa_setup00( o, hw_##o )
 #define _hwa_setup00(...)		_hwa_setup01(__VA_ARGS__)
-#define _hwa_setup01(o,c,i,a)		_hwa_setup_##c(o,i,a)
+#define _hwa_setup01(o,c,a)		_hwa_setup_##c(o,a)
 
 
 /*
@@ -282,7 +282,7 @@
  */
 #define _hwa_init_o(o)			_hwa_init00( o, hw_##o )
 #define _hwa_init00(...)		_hwa_init01(__VA_ARGS__)
-#define _hwa_init01(o,c,i,a)		_hwa_init_##c(o,i,a)
+#define _hwa_init01(o,c,a)		_hwa_init_##c(o,a)
 
 
 /*
@@ -298,7 +298,7 @@
  */
 #define _hwa_commit_o(o)		_hwa_commit00( o, hw_##o )
 #define _hwa_commit00(...)		_hwa_commit01(__VA_ARGS__)
-#define _hwa_commit01(o,c,i,a)		_hwa_commit_##c(o,i,a)
+#define _hwa_commit01(o,c,a)		_hwa_commit_##c(o,a)
 
 
 /*

@@ -34,14 +34,14 @@
  * <br>
  */
 #define hw_class__ahba
-#define hw_ahb			_ahba, 0, 0
-#define hw_ahbprescaler		_ahba, 0, 0
+#define hw_ahb			_ahba, 0
+#define hw_ahbprescaler		_ahba, 0
 
 #define hw_configure__ahba	, _hw_cfahba
 #define hwa_configure__ahba	, _hwa_cfahba
 
-#define _hw_cfahba(o,i,a,k,...)		do{ HW_Y(_hwx_cfahba_k_,k)(_hw,k,__VA_ARGS__) }while(0)
-#define _hwa_cfahba(o,i,a,k,...)	do{ HW_Y(_hwx_cfahba_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
+#define _hw_cfahba(o,a,k,...)		do{ HW_Y(_hwx_cfahba_k_,k)(_hw,k,__VA_ARGS__) }while(0)
+#define _hwa_cfahba(o,a,k,...)	do{ HW_Y(_hwx_cfahba_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */

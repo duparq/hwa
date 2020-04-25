@@ -42,7 +42,7 @@
 #define hw_configure__uarta	, _hw_cfuarta
 #define hwa_configure__uarta	, _hwa_cfuarta
 
-#define _hw_cfuarta(o,i,a,k,...)					\
+#define _hw_cfuarta(o,a,k,...)					\
   do{									\
     typedef struct { uint8_t commit ; hwa_uarta_t o ; } hwa_t ;		\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
@@ -51,7 +51,7 @@
     hwa->commit = 1 ; _hwa_commit_o( o );					\
   }while(0)
 
-#define _hwa_cfuarta(o,i,a,k,...)					\
+#define _hwa_cfuarta(o,a,k,...)					\
   do{ HW_Y(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 /*	Optionnal parameter `bps`
@@ -140,7 +140,7 @@
  * @endcode
  */
 /* #define hw_read__uarta	, _hw_rduarta */
-/* #define _hw_rduarta(o,i,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__) */
+/* #define _hw_rduarta(o,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__) */
 
 
 /*
@@ -156,7 +156,7 @@
  * @endcode
  */
 /* #define hw_write__uarta	, _hw_wruarta */
-/* #define _hw_wruarta(o,i,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__) */
+/* #define _hw_wruarta(o,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__) */
 
 
 /*  Power management
@@ -208,10 +208,10 @@
 /* } _hw_uarta_stat_t ; */
 
 /* #define hw_stat_t__uarta	, _hw_sttuarta */
-/* #define _hw_sttuarta(o,i,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
+/* #define _hw_sttuarta(o,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
 
 /* #define hw_stat__uarta	, _hw_stuarta */
-/* #define _hw_stuarta(o,i,a,...)		HW_TX(__hw_stuarta(_hw_read(o,csra)), \ */
+/* #define _hw_stuarta(o,a,...)		HW_TX(__hw_stuarta(_hw_read(o,csra)), \ */
 /*					      __VA_ARGS__) */
 
 /* HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte ) */
@@ -228,21 +228,21 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__uarta(o,i,a)		\
+#define _hwa_setup__uarta(o,a)		\
   _hwa_setup_r( o, _ie );			\
   _hwa_setup_r( o, _ic );			\
   _hwa_setup_r( o, _clkdiv );			\
   _hwa_setup_r( o, _conf0 );			\
   _hwa_setup_r( o, _conf1 )
 
-#define _hwa_init__uarta(o,i,a)					\
+#define _hwa_init__uarta(o,a)					\
   _hwa_init_r( o, _ie,	 0 );				\
   _hwa_init_r( o, _ic,	 0 );				\
   _hwa_init_r( o, _clkdiv,	 0 /* 0x2B6 seems wrong */ );	\
   _hwa_init_r( o, _conf0,   0x1C );				\
   _hwa_init_r( o, _conf1, 0x6060 )
 
-#define _hwa_commit__uarta(o,i,a)		\
+#define _hwa_commit__uarta(o,a)		\
   _hwa_commit_r( o, _clkdiv );		\
   _hwa_commit_r( o, _conf0 );			\
   _hwa_commit_r( o, _conf1 );			\

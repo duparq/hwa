@@ -107,7 +107,7 @@
 
 /*  Mandatory parameter `clock`
  */
-#define _hwa_cfad10a(o,i,a,k,...)					\
+#define _hwa_cfad10a(o,a,k,...)					\
   do {									\
     uint8_t gain __attribute__((unused)) = 1 ;				\
     uint8_t input1 __attribute__((unused)) = 0xFF ;			\
@@ -474,9 +474,9 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__ad10a(o,i,a)	_hwa_setup__ad10_(o)
-#define _hwa_init__ad10a(o,i,a)		_hwa_init__ad10_(o)
-#define _hwa_commit__ad10a(o,i,a)	_hwa_commit__ad10_(o)
+#define _hwa_setup__ad10a(o,a)	_hwa_setup__ad10_(o)
+#define _hwa_init__ad10a(o,a)		_hwa_init__ad10_(o)
+#define _hwa_commit__ad10a(o,a)	_hwa_commit__ad10_(o)
 
 
 /**

@@ -21,17 +21,17 @@
  * <br>
  */
 #define hw_class__sclka
-#define hw_sysclk			_sclka, 0, 0
+#define hw_sysclk			_sclka, 0
 
-#define hw_connect__sclka	, _hw_cnsysclka
-#define hwa_connect__sclka	, _hwa_cnsysclka
+#define hw_connect__sclka		, _hw_cnsysclka
+#define hwa_connect__sclka		, _hwa_cnsysclka
 
 #define _hw_cnsysclka_hsi		, 0
 #define _hw_cnsysclka_hse		, 1
 #define _hw_cnsysclka_pll		, 2
 
-#define _hw_cnsysclka(o,i,a,v,g,...)	HW_Y(_hwx_cnsysclka1_,g)(_hw,v,g)
-#define _hwa_cnsysclka(o,i,a,v,g,...)	HW_Y(_hwx_cnsysclka1_,g)(_hwa,v,g)
+#define _hw_cnsysclka(o,a,v,g,...)	HW_Y(_hwx_cnsysclka1_,g)(_hw,v,g)
+#define _hwa_cnsysclka(o,a,v,g,...)	HW_Y(_hwx_cnsysclka1_,g)(_hwa,v,g)
 
 #define _hwx_cnsysclka1_0(h,v,g)	HW_E_G(g)
 #define _hwx_cnsysclka1_1(h,v,g)	HW_Y(_hwx_cnsysclka2_,_hw_cnsysclka_##v)(h,v)

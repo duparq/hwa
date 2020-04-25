@@ -13,7 +13,7 @@
 
 /*  Configure pin S0 if defined
  */
-#define x_hwa_cft3k2a(o,i,a,...)		HW_Y(_hwa_cft3k2a1_,hw_##o##_s0)(o)
+#define x_hwa_cft3k2a(o,a,...)		HW_Y(_hwa_cft3k2a1_,hw_##o##_s0)(o)
 #define _hwa_cft3k2a1_0(o)				\
   _hwa(configure,hw_##o##_s0,direction,output);	\
   _hwa(write,hw_##o##_s0,0);			\
@@ -46,7 +46,7 @@
 #define _hw_tcs3200_channel_blue	, 1, 0	/* S3, S2 */
 #define _hw_tcs3200_channel_green	, 1, 1	/* S3, S2 */
 
-#define _hw_rdt3k2a(o,i,a,c,...)	HW_Y(_hw_rdt3k2a1_,_hw_tcs3200_channel_##c)(o,c)
+#define _hw_rdt3k2a(o,a,c,...)	HW_Y(_hw_rdt3k2a1_,_hw_tcs3200_channel_##c)(o,c)
 #define _hw_rdt3k2a1_1(o,c)		_hw_##o##_read_channel(HW_TL(_hw_tcs3200_channel_##c))
 
 
@@ -54,7 +54,7 @@
 
 #define hw_define__tcs3200a		, _hw_imt3k2a
 
-#define _hw_imt3k2a(o,i,a,...)		HW_Y(_hw_imt3k2a_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_imt3k2a(o,a,...)		HW_Y(_hw_imt3k2a_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_imt3k2a_0(o,g,...)		HW_E_G(g)
 #define _hw_imt3k2a_1(o,...)					\
   _hw_imt3k2a_2(o,hw_##o##_s2, hw_##o##_s3,		\

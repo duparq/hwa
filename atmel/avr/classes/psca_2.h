@@ -22,7 +22,7 @@
  */
 #define hw_reset__psca		, _hw_psca_reset
 
-#define _hw_psca_reset(o,i,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
+#define _hw_psca_reset(o,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
 
 #define _hw_resetpsca(o)		_hw_write(o,psr,1)
 
@@ -44,7 +44,7 @@
  * @endcode
  */
 #define hw_turn__psca		, _hw_psca_turn
-#define _hw_psca_turn(o,i,a,v,...)			\
+#define _hw_psca_turn(o,a,v,...)			\
   HW_G2(_hw_turnpsca, HW_IS(,_hw_state_##v))(o,v)	\
   HW_EOL(__VA_ARGS__)
 
@@ -75,7 +75,7 @@
 
 /*  Mandatory argument `clock`
  */
-#define _hwa_cfpsca(o,i,a,k,...)					\
+#define _hwa_cfpsca(o,a,k,...)					\
   do { HW_Y(_hwa_cfpsca_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfpsca_kclock_0(o,k,...)		HW_E_VL(k,clock)

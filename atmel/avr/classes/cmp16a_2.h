@@ -54,7 +54,7 @@
 
 #define hw_configure__cmp16a	, _hw_cfcmp16a
 
-#define _hw_cfcmp16a(o,i,a,k,...)					\
+#define _hw_cfcmp16a(o,a,k,...)					\
   do {									\
     HW_Y(_hw_cfcmp16a_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
@@ -102,7 +102,7 @@
  */
 #define hwa_configure__cmp16a	, _hwa_cfcmp16a
 
-#define _hwa_cfcmp16a(o,i,a,k,...)					\
+#define _hwa_cfcmp16a(o,a,k,...)					\
   do {									\
     HW_Y(_hwa_cfcmp16a_xupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
@@ -148,13 +148,13 @@
  * @endcode
  */
 #define hw_write__cmp16a		, _hw_write_cmp16a
-#define _hw_write_cmp16a(o,i,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hw_write_cmp16a(o,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hwa_write__cmp16a		, _hwa_write_cmp16a
-#define _hwa_write_cmp16a(o,i,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_cmp16a(o,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 #define hw_read__cmp16a			, _hw_read_cmp16a
-#define _hw_read_cmp16a(o,i,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_cmp16a(o,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -170,10 +170,10 @@
  * @endcode
  */
 #define hw_trigger__cmp16a		, _hw_trigger_cmp16a
-#define _hw_trigger_cmp16a(o,i,a)	_hw_write(o,force,1)
+#define _hw_trigger_cmp16a(o,a)	_hw_write(o,force,1)
 
 #define hwa_trigger__cmp16a		, _hwa_trigger_cmp16a
-#define _hwa_trigger_cmp16a(o,i,a)	_hwa_write(o,force,1)
+#define _hwa_trigger_cmp16a(o,a)	_hwa_write(o,force,1)
 
 
 /**
@@ -198,14 +198,14 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cmp16a(o,i,a)			\
+#define _hwa_setup__cmp16a(o,a)			\
   _hwa_setup_r( o, reg );			\
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 
-#define _hwa_init__cmp16a(o,i,a)			_hwa_init_r( o, reg, 0x00 )
+#define _hwa_init__cmp16a(o,a)			_hwa_init_r( o, reg, 0x00 )
 
-#define _hwa_commit__cmp16a(o,i,a)			_hwa_commit_r( o, reg )
+#define _hwa_commit__cmp16a(o,a)			_hwa_commit_r( o, reg )
 
 
 /**

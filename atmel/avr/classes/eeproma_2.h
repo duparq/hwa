@@ -21,7 +21,7 @@
  */
 #define hw_read__eeproma	, _hw_read_eeproma
 
-#define _hw_read_eeproma(o,i,a,addr,...)	\
+#define _hw_read_eeproma(o,a,addr,...)	\
   _hw_rdeeproma( HW_ADDRESS((o,ar)),		\
 		 HW_ADDRESS((o,re)),		\
 		 HW_POSITION((o,re)),		\
@@ -54,7 +54,7 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
  */
 #define hw_read_bytes__eeproma	, _hw_eeproma_read_bytes
 
-#define _hw_eeproma_read_bytes(o,i,a,dst,src,n,...)	\
+#define _hw_eeproma_read_bytes(o,a,dst,src,n,...)	\
   _hw_eeproma_rdn( (uint8_t*)dst, (intptr_t)src, n,	\
 		   HW_ADDRESS((o,ar)),			\
 		   HW_ADDRESS((o,re)),			\
@@ -87,7 +87,7 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
  */
 #define hw_write__eeproma	, _hw_write_eeproma
 
-#define _hw_write_eeproma(o,i,a,addr,v,...)		\
+#define _hw_write_eeproma(o,a,addr,v,...)		\
   _hw_wreeproma( addr, v,				\
 		 HW_ADDRESS((o,ar)),			\
 		 HW_ADDRESS((o,dr)),			\
@@ -123,7 +123,7 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
  */
 #define hw_write_bytes__eeproma	, _hw_eeproma_write_bytes
 
-#define _hw_eeproma_write_bytes(o,i,a,dst,src,n,...)	\
+#define _hw_eeproma_write_bytes(o,a,dst,src,n,...)	\
   _hw_eeproma_wrn( (intptr_t)(dst), (uint8_t*)(src), n,	\
 		   HW_ADDRESS((o,ar)),			\
 		   HW_ADDRESS((o,dr)),			\

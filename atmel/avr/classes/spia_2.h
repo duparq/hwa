@@ -55,7 +55,7 @@
  */
 #define hwa_configure__spia	, _hwa_cfspia
 
-#define _hwa_cfspia(o,i,a,k,...)					\
+#define _hwa_cfspia(o,a,k,...)					\
   do {									\
     const float ioclk = 1.0 ;						\
     HW_Y(_hwa_cfspia_kfunction_,_hw_is_function_##k)(o,k,__VA_ARGS__,,);	\
@@ -149,7 +149,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hwa_cfspia_ksampling_0(o,v,k,...)	HW_E_VL(k,sampling_edge)
 #define _hwa_cfspia_ksampling_1(o,i,k,v,...)	HW_G2(_hwa_cfspia_vsampling,HW_IS(,_hw_spia_idle_##i##_sampling_##v))(o,i,v,__VA_ARGS__)
 #define _hwa_cfspia_vsampling_0(o,i,v,...)	HW_E_AVL(sampling_edge, v, rising|falling)
-#define _hwa_cfspia_vsampling_1(o,i,v,k,...)				\
+#define _hwa_cfspia_vsampling_1(o,i,v,k,...)			\
   _hwa_write(o,cpha, HW_A1(_hw_spia_idle_##i##_sampling_##v));	\
   HW_G2(_hwa_cfspia_korder,HW_IS(data_order,k))(o,k,__VA_ARGS__)  
 
@@ -178,7 +178,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * @endcode
  */
 #define hw_read__spia		, _hw_read_spia
-#define _hw_read_spia(o,i,a,...)	_hw_read(o,dr) HW_EOL(__VA_ARGS__)
+#define _hw_read_spia(o,a,...)	_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -188,9 +188,9 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * @endcode
  */
 #define hw_write__spia		, _hw_wrspia
-#define _hw_wrspia(o,i,a,v,...)		_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrspia(o,a,v,...)		_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
 
-/* #define _hw_wrspia(o,i,a,v,...)						\ */
+/* #define _hw_wrspia(o,a,v,...)						\ */
 /*    __hw_wrspia( _hw_rap(o,if), HW_ADDRESS((o,dr)), v ) HW_EOL(__VA_ARGS__) */
 
 /* HW_INLINE uint8_t __hw_wrspia( intptr_t flag_addr, uint8_t flag_bp, intptr_t dr, uint8_t v ) */
@@ -211,7 +211,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 /*  * @endcode */
 /*  *\/ */
 /* #define hwa_write__spia	, _hwa_write_spia */
-/* #define _hwa_write_spia(o,i,a,v)	_hwa_write(o,dr,v) */
+/* #define _hwa_write_spia(o,a,v)	_hwa_write(o,dr,v) */
 
 
 /**
@@ -226,7 +226,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  */
 #define hw_turn__spia		, _hw_turn_spia
 
-#define _hw_turn_spia(o,i,a,k,...)				\
+#define _hw_turn_spia(o,a,k,...)				\
   HW_Y(_hw_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hw_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
@@ -241,7 +241,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  */
 #define hwa_turn__spia		, _hwa_turn_spia
 
-#define _hwa_turn_spia(o,i,a,k,...)				\
+#define _hwa_turn_spia(o,a,k,...)				\
   HW_Y(_hwa_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
 #define _hwa_turn_spia_0(o,v, ...)			\
   HW_E_ST(v)
@@ -289,7 +289,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define hw_stat__spia		, _hw_stat_spia
 #define hw_stat_t__spia	, _hw_statt_spia
 
-#define _hw_statt_spia(o,i,a,...)	_hw_spia_stat_t HW_EOL(__VA_ARGS__)
+#define _hw_statt_spia(o,a,...)	_hw_spia_stat_t HW_EOL(__VA_ARGS__)
 
 typedef union {
   uint8_t	  byte ;
@@ -300,7 +300,7 @@ typedef union {
   };
 } _hw_spia_stat_t ;
 
-#define _hw_stat_spia(o,i,a,...)	_hw_spia_stat(_hw_read(o, sr)) HW_EOL(__VA_ARGS__)
+#define _hw_stat_spia(o,a,...)	_hw_spia_stat(_hw_read(o, sr)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
 {
@@ -316,15 +316,15 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__spia(o,i,a)		\
+#define _hwa_setup__spia(o,a)		\
   _hwa_setup_r( o, cr );			\
   _hwa_setup_r( o, sr )
 
-#define _hwa_init__spia(o,i,a)			\
+#define _hwa_init__spia(o,a)			\
   _hwa_init_r( o, cr, 0x00 );			\
   _hwa_init_r( o, sr, 0x00 )
 
-#define _hwa_commit__spia(o,i,a)		\
+#define _hwa_commit__spia(o,a)		\
   _hwa_commit_r( o, cr );			\
   _hwa_commit_r( o, sr )
 

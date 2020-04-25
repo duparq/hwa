@@ -22,7 +22,7 @@
  * @endcode
  */
 #define hw_turn__pcica		, _hw_tnpcica
-#define _hw_tnpcica( o,i,a, ...)	_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
+#define _hw_tnpcica( o,a, ...)	_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
 
 
 /**
@@ -32,7 +32,7 @@
  * @endcode
  */
 #define hwa_turn__pcica		, _hwa_tnpcica
-#define _hwa_tnpcica( o,i,a, ...)	_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
+#define _hwa_tnpcica( o,a, ...)	_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
 
 /*	Verify that a I/O name is given
  */
@@ -46,7 +46,7 @@
 #define _hwx_tnpcica2_0(x,o,io,v,...)	HW_E_ST(v)
 #define _hwx_tnpcica2_1(x,o,io,v,...)	_hwx_tnpcica2_2(x,o,hw_##io,v) HW_EOL(__VA_ARGS__)
 #define _hwx_tnpcica2_2(...)			_hwx_tnpcica2_3(__VA_ARGS__)
-#define _hwx_tnpcica2_3(x,o,c,i,p,bn,bp,v)	x##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
+#define _hwx_tnpcica2_3(x,o,c,p,bn,bp,v)	x##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*HW_A1(_hw_state_##v))<<bp)
 
 
 /**
@@ -89,11 +89,11 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__pcica(o,i,a)	_hwa_setup_r( o, msk )
+#define _hwa_setup__pcica(o,a)	_hwa_setup_r( o, msk )
 
-#define _hwa_init__pcica(o,i,a)		_hwa_init_r( o, msk, 0x00 )
+#define _hwa_init__pcica(o,a)		_hwa_init_r( o, msk, 0x00 )
 
-#define _hwa_commit__pcica(o,i,a)	_hwa_commit_r( o, msk )
+#define _hwa_commit__pcica(o,a)	_hwa_commit_r( o, msk )
 
 
 /**

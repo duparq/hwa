@@ -415,26 +415,26 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * @page attinyx4
  * @section attinyx4_interrupts Interrupts
  * 
- * Interrupt name	  | Atmel label | Comments
+ * Interrupt name         | Atmel label | Comments
  * :----------------------|-------------|------------------------
- * `int0`		  | INT0	| External interrupt INT0
- * `pcic0`		  | PCINT0	| Pin-change interrupt
- * `pcic1`		  | PCINT1	| Pin-change interrupt
- * `watchdog0`		  | WDT		| Watchdog timeout
- * `counter1,capture0` | TIM1_CAPT	| Capture event on counter 1
- * `counter1,compare0` | TIM1_COMPA	| Compare-match A on counter 1
- * `counter1,compare1` | TIM1_COMPB	| Compare-match B on counter 1
- * `counter1,overflow` | TIM1_OVF	| Counter 1 overflow
- * `counter0,compare0` | TIM0_COMPA	| Compare-match A on counter 0
- * `counter0,compare1` | TIM0_COMPB	| Compare-match B on counter 0
- * `counter0,overflow` | TIM0_OVF	| Counter 0 overflow
- * `acmp0`		  | ANA_COMP	| Analog comparator
- * `adc0`		  | ADC		| ADC conversion complete
- * `eeprom0`		  | EE_RDY	| EEPROM ready
- * `eeprom0,ready`	  | EE_RDY	| EEPROM ready
- * `usi0,start`	  | USI_STR	| USI start
- * `usi0,overflow`	  | USI_OVF	| USI overflow
- * `usi0,txc`	  | USI_OVF	| USI overflow (transmit completed)
+ * `int0`                 | INT0        | External interrupt INT0
+ * `pcic0`                | PCINT0      | Pin-change interrupt
+ * `pcic1`                | PCINT1      | Pin-change interrupt
+ * `watchdog0`            | WDT         | Watchdog timeout
+ * `counter1,capture0`    | TIM1_CAPT   | Capture event on counter 1
+ * `counter1,compare0`    | TIM1_COMPA  | Compare-match A on counter 1
+ * `counter1,compare1`    | TIM1_COMPB  | Compare-match B on counter 1
+ * `counter1,overflow`    | TIM1_OVF    | Counter 1 overflow
+ * `counter0,compare0`    | TIM0_COMPA  | Compare-match A on counter 0
+ * `counter0,compare1`    | TIM0_COMPB  | Compare-match B on counter 0
+ * `counter0,overflow`    | TIM0_OVF    | Counter 0 overflow
+ * `acmp0`                | ANA_COMP    | Analog comparator
+ * `adc0`                 | ADC         | ADC conversion complete
+ * `eeprom0`              | EE_RDY      | EEPROM ready
+ * `eeprom0,ready`        | EE_RDY      | EEPROM ready
+ * `usi0,start`           | USI_STR     | USI start
+ * `usi0,overflow`        | USI_OVF     | USI overflow
+ * `usi0,txc`             | USI_OVF     | USI overflow (transmit completed)
  */
 #define hw_irq_int0_			_irq, core0,	 1, ie,	 if
 #define hw_irq_pcic0_			_irq, pcic0,	 2, ie,	 if
@@ -456,11 +456,11 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define hw_irq_counter0_		_irq, counter0, 11, ie,	 if
 #define hw_irq_acmp0_			_irq, acmp0,	12, ie,	 if
 #define hw_irq_adc0_			_irq, adc0,	13, ie,	 if
-#define hw_irq_eeprom0_		_irq, eeprom0,	14, sie, /* no irq flag */
+#define hw_irq_eeprom0_			_irq, eeprom0,	14, sie, /* no irq flag */
 #define hw_irq_eeprom0_ready		_irq, eeprom0,	14, sie,
 #define hw_irq_usi0_start		_irq, usi0,	15, ies,  ifs
 #define hw_irq_usi0_overflow		_irq, usi0,	16, ieov, ifov
-#define hw_irq_usi0_txc		_irq, usi0,	16, ieov, ifov
+#define hw_irq_usi0_txc			_irq, usi0,	16, ieov, ifov
 
 
 /*******************************************************************************
@@ -473,7 +473,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  *******************************************************************************/
 
 #define hw_class__shared
-#define hw_shared			_shared, 101, 0
+#define hw_shared			_shared, 0
 
 #define hw_reg_shared_gimsk		_r8, 0x5B, 0x70, 0x00
 #define hw_reg_shared_gifr		_r8, 0x5A, 0x70, 0x70
@@ -539,34 +539,34 @@ typedef struct {
 #include "../classes/p8a_1.h"
 #include "../classes/io1a_1.h"
 
-/*	Objects				class, id, address
+/*	Objects				class, address
  */
-#define hw_port0			_p8a, 102, 0x39
-#define hw_port1			_p8a, 103, 0x36
+#define hw_port0			_p8a, 0x39
+#define hw_port1			_p8a, 0x36
 
-/*  Pins				class, id, peripheral, bn, bp
+/*  Pins				class, peripheral, bn, bp
  */
-#define hw_pa0			_io1a, 104, port0, 1, 0
-#define hw_pa1			_io1a, 105, port0, 1, 1
-#define hw_pa2			_io1a, 106, port0, 1, 2
-#define hw_pa3			_io1a, 107, port0, 1, 3
-#define hw_pa4			_io1a, 108, port0, 1, 4
-#define hw_pa5			_io1a, 109, port0, 1, 5
-#define hw_pa6			_io1a, 110, port0, 1, 6
-#define hw_pa7			_io1a, 111, port0, 1, 7
-#define hw_porta			_io1a, 112, port0, 8, 0
+#define hw_pa0				_io1a, port0, 1, 0
+#define hw_pa1				_io1a, port0, 1, 1
+#define hw_pa2				_io1a, port0, 1, 2
+#define hw_pa3				_io1a, port0, 1, 3
+#define hw_pa4				_io1a, port0, 1, 4
+#define hw_pa5				_io1a, port0, 1, 5
+#define hw_pa6				_io1a, port0, 1, 6
+#define hw_pa7				_io1a, port0, 1, 7
+#define hw_porta			_io1a, port0, 8, 0
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define hw_pb0			_io1a, 113, port1, 1, 0
+#  define hw_pb0			_io1a, port1, 1, 0
 #endif
-#define hw_pb1			_io1a, 113, port1, 1, 1
+#define hw_pb1				_io1a, port1, 1, 1
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define hw_pb2			_io1a, 115, port1, 1, 2
+#  define hw_pb2			_io1a, port1, 1, 2
 #endif
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET) && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
-#  define hw_pb3			_io1a, 116, port1, 1, 3
+#  define hw_pb3			_io1a, port1, 1, 3
 #endif
-#define hw_portb			_io1a, 114, port1, 4, 0
+#define hw_portb			_io1a, port1, 4, 0
 
 /*  Digital input disable bits for analog input pins
  */
@@ -581,19 +581,19 @@ typedef struct {
 
 /*  Relative pin change controllers
  */
-#define hw_pa0_pcic		pcic0
-#define hw_pa1_pcic		pcic0
-#define hw_pa2_pcic		pcic0
-#define hw_pa3_pcic		pcic0
-#define hw_pa4_pcic		pcic0
-#define hw_pa5_pcic		pcic0
-#define hw_pa6_pcic		pcic0
-#define hw_pa7_pcic		pcic0
+#define hw_pa0_pcic			pcic0
+#define hw_pa1_pcic			pcic0
+#define hw_pa2_pcic			pcic0
+#define hw_pa3_pcic			pcic0
+#define hw_pa4_pcic			pcic0
+#define hw_pa5_pcic			pcic0
+#define hw_pa6_pcic			pcic0
+#define hw_pa7_pcic			pcic0
 
-#define hw_pb0_pcic		pcic1
-#define hw_pb1_pcic		pcic1
-#define hw_pb2_pcic		pcic1
-#define hw_pb3_pcic		pcic1
+#define hw_pb0_pcic			pcic1
+#define hw_pb1_pcic			pcic1
+#define hw_pb2_pcic			pcic1
+#define hw_pb3_pcic			pcic1
 
 /*  Canonical pin names
  */
@@ -650,9 +650,9 @@ typedef struct {
 
 #include "../classes/corea_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_core0			_corea, 115, 0
+#define hw_core0			_corea, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
@@ -670,8 +670,8 @@ typedef struct {
  */
 #define hw_reg_core0_bods		_ob1, mcucr, 1, 7
 #define hw_reg_core0_pud		_ob1, mcucr, 1, 6
-#define hw_reg_core0_se		_ob1, mcucr, 1, 5
-#define hw_reg_core0_sm		_ob1, mcucr, 2, 3
+#define hw_reg_core0_se			_ob1, mcucr, 1, 5
+#define hw_reg_core0_sm			_ob1, mcucr, 2, 3
 #define hw_reg_core0_bodse		_ob1, mcucr, 1, 2
 
 #define hw_reg_core0_wdrf		_ob1, mcusr, 1, 3
@@ -687,10 +687,10 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
 #include "../classes/inta_1.h"
-#define hw_int0			_inta, 116, 0
+#define hw_int0				_inta, 0
 
 #define hw_reg_int0_sc			_xob1, core0,  mcucr, 2, 0
 #define hw_reg_int0_ie			_xob1, shared, gimsk, 1, 6
@@ -705,9 +705,9 @@ typedef struct {
 
 #include "../classes/pcica_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_pcic0			_pcica, 117, 0
+#define hw_pcic0			_pcica, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -715,12 +715,12 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_reg_pcic0_ie		_xob1, shared, gimsk, 1, 4
-#define hw_reg_pcic0_if		_xob1, shared, gifr,  1, 4
+#define hw_reg_pcic0_ie			_xob1, shared, gimsk, 1, 4
+#define hw_reg_pcic0_if			_xob1, shared, gifr,  1, 4
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_pcic1			_pcica, 118, 0
+#define hw_pcic1			_pcica, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -728,8 +728,8 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_reg_pcic1_ie		_xob1, shared, gimsk, 1, 5
-#define hw_reg_pcic1_if		_xob1, shared, gifr,  1, 5
+#define hw_reg_pcic1_ie			_xob1, shared, gimsk, 1, 5
+#define hw_reg_pcic1_if			_xob1, shared, gifr,  1, 5
 
 
 /*******************************************************************************
@@ -738,10 +738,10 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
 #include "../classes/wdoga_1.h"
-#define hw_watchdog0		_wdoga, 119, 0
+#define hw_watchdog0			_wdoga, 0
 
 /*	Class registers			class, address, write mask, flags mask
  */
@@ -767,9 +767,9 @@ typedef struct {
 
 #include "../classes/psca_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_prescaler0		_psca, 120, 0
+#define hw_prescaler0			_psca, 0
 
 /*	Object logical registers
  */
@@ -787,10 +787,10 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
 #include "../classes/c8a_1.h"
-#define hw_counter0		_c8a, 121, 0
+#define hw_counter0			_c8a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -809,10 +809,10 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter0_prescaler0	prescaler0
-#define hw_counter0_prescaler	prescaler0
-#define hw_counter0_compare0	counter0compare0
-#define hw_counter0_compare1	counter0compare1
+#define hw_counter0_prescaler0		prescaler0
+#define hw_counter0_prescaler		prescaler0
+#define hw_counter0_compare0		counter0compare0
+#define hw_counter0_compare1		counter0compare1
 
 
 /*******************************************************************************
@@ -823,9 +823,9 @@ typedef struct {
 
 #include "../classes/cmp8a_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter0compare0	_cmp8a, 122, 0
+#define hw_counter0compare0		_cmp8a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -843,9 +843,9 @@ typedef struct {
 #define hw_counter0compare0_pin		pb2
 #define hw_counter0compare0_counter	counter0
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter0compare1	_cmp8a, 123, 0
+#define hw_counter0compare1		_cmp8a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -872,9 +872,9 @@ typedef struct {
 
 #include "../classes/c16a_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter1		_c16a, 124, 0
+#define hw_counter1			_c16a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -894,11 +894,11 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1_prescaler0	prescaler0
-#define hw_counter1_prescaler	prescaler0
-#define hw_counter1_compare0	counter1compare0
-#define hw_counter1_compare1	counter1compare1
-#define hw_counter1_capture0	counter1capture0
+#define hw_counter1_prescaler0		prescaler0
+#define hw_counter1_prescaler		prescaler0
+#define hw_counter1_compare0		counter1compare0
+#define hw_counter1_compare1		counter1compare1
+#define hw_counter1_capture0		counter1capture0
 
 
 /*******************************************************************************
@@ -909,9 +909,9 @@ typedef struct {
 
 #include "../classes/cmp16a_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter1compare0	_cmp16a, 125, 0
+#define hw_counter1compare0		_cmp16a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -929,9 +929,9 @@ typedef struct {
 #define hw_counter1compare0_pin		pa6
 #define hw_counter1compare0_counter	counter1
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter1compare1	_cmp16a, 126, 0
+#define hw_counter1compare1		_cmp16a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -958,9 +958,9 @@ typedef struct {
 
 #include "../classes/cap16a_1.h"
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_counter1capture0	_cap16a, 127, 0
+#define hw_counter1capture0		_cap16a, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -986,39 +986,39 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Instance			class, id, address
+/*	Instance			class, address
  */					
 #include "../classes/usia_1.h"
-#define hw_usi0			_usia, 128, 0
+#define hw_usi0				_usia, 0
 
 /*	Class registers			class, address, write mask, flags mask
  */					
-#define hw_reg__usia_cr		_r8, 0x2D, 0xFF, 0x00
-#define hw_reg__usia_sr		_r8, 0x2E, 0xFF, 0xE0
-#define hw_reg__usia_dr		_r8, 0x2F, 0xFF, 0x00
-#define hw_reg__usia_br		_r8, 0x30, 0xFF, 0x00
+#define hw_reg__usia_cr			_r8, 0x2D, 0xFF, 0x00
+#define hw_reg__usia_sr			_r8, 0x2E, 0xFF, 0xE0
+#define hw_reg__usia_dr			_r8, 0x2F, 0xFF, 0x00
+#define hw_reg__usia_br			_r8, 0x30, 0xFF, 0x00
 
 #define hw_reg__usia_ies		_cb1, cr, 1, 7
 #define hw_reg__usia_ieov		_cb1, cr, 1, 6
-#define hw_reg__usia_wm		_cb1, cr, 2, 4
-#define hw_reg__usia_cs		_cb1, cr, 2, 2
+#define hw_reg__usia_wm			_cb1, cr, 2, 4
+#define hw_reg__usia_cs			_cb1, cr, 2, 2
 #define hw_reg__usia_clk		_cb1, cr, 1, 1
-#define hw_reg__usia_tc		_cb1, cr, 1, 0
+#define hw_reg__usia_tc			_cb1, cr, 1, 0
 
 #define hw_reg__usia_ifs		_cb1, sr, 1, 7
 #define hw_reg__usia_ifov		_cb1, sr, 1, 6
-#define hw_reg__usia_pf		_cb1, sr, 1, 5
-#define hw_reg__usia_dc		_cb1, sr, 1, 4
+#define hw_reg__usia_pf			_cb1, sr, 1, 5
+#define hw_reg__usia_dc			_cb1, sr, 1, 4
 #define hw_reg__usia_cnt		_cb1, sr, 4, 0
 
 
 /*	USI used as SPI master with software clock
  */
-#define hw_spimaster_swclk0	_usia_spimaster_swclk, 129, usi0
+#define hw_spimaster_swclk0		_usia_spimaster_swclk, usi0
 
 /*	USI used as SPI master with counter0 overflow clock
  */
-#define hw_spimaster_c0clk0	_usia_spimaster_c0clk, 130, usi0
+#define hw_spimaster_c0clk0		_usia_spimaster_c0clk, usi0
 
 
 /*******************************************************************************
@@ -1027,10 +1027,10 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-/*	Instance			class, id, address
+/*	Instance			class, address
  */					
 #include "../classes/acmpa_1.h"
-#define hw_acmp0			_acmpa, 131, 0
+#define hw_acmp0			_acmpa, 0
 
 /*	Class registers			class, address, write mask, flags mask
  */					
@@ -1054,7 +1054,7 @@ typedef struct {
  *******************************************************************************/
 
 #include "../classes/ad10a_1.h"
-#define hw_adc0			_ad10a, 132, 0
+#define hw_adc0				_ad10a, 0
 
 #define hw_reg__ad10a_admux		_r8,  0x27,   0xFF,   0x00
 #define hw_reg__ad10a_sra		_r8,  0x26,   0xFF,   0x10
@@ -1064,8 +1064,8 @@ typedef struct {
 #define hw_reg__ad10a_srb		_r8,  0x23,   0xD7,   0x00
 
 #define hw_reg_adc0_admux		_r8,  0x27,   0xFF,   0x00
-#define hw_reg_adc0_sra		_r8,  0x26,   0xFF,   0x10
-#define hw_reg_adc0_srb		_r8,  0x23,   0xD7,   0x00
+#define hw_reg_adc0_sra			_r8,  0x26,   0xFF,   0x10
+#define hw_reg_adc0_srb			_r8,  0x23,   0xD7,   0x00
 
 #define hw_reg__ad10a_refs		_cb1, admux, 2, 6
 #define hw_reg__ad10a_mux		_cb1, admux, 6, 0
@@ -1092,9 +1092,9 @@ typedef struct {
  */
 #define hw_class__eeproma
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_eeprom0			_eeproma, 133, 0
+#define hw_eeprom0			_eeproma, 0
 
 /*	Class regs			class, address, write mask, flags mask
  */
@@ -1121,9 +1121,9 @@ typedef struct {
  */
 #define hw_class__flasha
 
-/*	Object				class, id, address
+/*	Object				class, address
  */
-#define hw_flash0			_flasha, 134, 0
+#define hw_flash0			_flasha, 0
 
 /*	Class regs			class, address, write mask, flags mask
  */
@@ -1176,7 +1176,7 @@ typedef struct {
 #endif
 
 #if defined hw_swuart0_compare
-#  define hw_swuart0			_swuarta, 137, 0
+#  define hw_swuart0			_swuarta, 0
 #  if HW_BITS(hw_swuart0_compare) == 8
 #    define hw_reg_swuart0_dtn		_r8, (intptr_t)&__hw_swuart0_dtn, -1, 0x00
 #    define hw_reg_swuart0_dt0		_r8, (intptr_t)&__hw_swuart0_dt0, -1, 0x00
@@ -1220,7 +1220,7 @@ typedef struct {
 #endif
 
 #if defined hw_swuart1_compare
-#  define hw_swuart1			_swuarta, 138, 0
+#  define hw_swuart1			_swuarta, 0
 #  if HW_BITS(hw_swuart1_compare,counter,count) == 8
 #    define hw_reg_swuart1_dtn		_r8, (intptr_t)&__hw_swuart1_dtn, -1, 0x00
 #    define hw_reg_swuart1_dt0		_r8, (intptr_t)&__hw_swuart1_dt0, -1, 0x00

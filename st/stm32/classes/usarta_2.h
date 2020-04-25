@@ -48,11 +48,11 @@
 #define _hw_cfusarta_clk_from_apb1	, 17
 
 #if 0
-#define _hw_cfusarta(o,i,a,k,...)		do{ HW_Y(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfusarta(o,i,a,k,...)	do{ HW_Y(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfusarta(o,a,k,...)		do{ HW_Y(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfusarta(o,a,k,...)	do{ HW_Y(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 #else
-#define _hw_cfusarta(o,i,a,k,...)		HW_E_TBI()
-#define _hwa_cfusarta(o,i,a,k,...)	HW_E_TBI()
+#define _hw_cfusarta(o,a,k,...)		HW_E_TBI()
+#define _hwa_cfusarta(o,a,k,...)	HW_E_TBI()
 #endif
 
 /*  At least one keyword
@@ -99,7 +99,7 @@
  * @endcode
  */
 #define hw_read__usarta			, _hw_rdusarta
-#define _hw_rdusarta(o,i,a,...)		_hw_read(o,cnt)
+#define _hw_rdusarta(o,a,...)		_hw_read(o,cnt)
 
 
 /**
@@ -190,21 +190,21 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__usarta(o,i,a)		\
+#define _hwa_setup__usarta(o,a)		\
   _hwa_setup_r( o, brr );			\
   _hwa_setup_r( o, cr1 );			\
   _hwa_setup_r( o, cr2 );			\
   _hwa_setup_r( o, cr3 );			\
   _hwa_setup_r( o, gtpr )
 
-#define _hwa_init__usarta(o,i,a)		\
+#define _hwa_init__usarta(o,a)		\
   _hwa_init_r( o, brr,  0x00000000 );		\
   _hwa_init_r( o, cr1,  0x00000000 );		\
   _hwa_init_r( o, cr2,  0x00000000 );		\
   _hwa_init_r( o, cr3,  0x00000000 );		\
   _hwa_init_r( o, gtpr, 0x00000000 )
 
-#define _hwa_commit__usarta(o,i,a)		\
+#define _hwa_commit__usarta(o,a)		\
   _hwa_commit_r( o, brr );			\
   _hwa_commit_r( o, cr1 );			\
   _hwa_commit_r( o, cr2 );			\
