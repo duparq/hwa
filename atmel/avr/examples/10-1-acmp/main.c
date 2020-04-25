@@ -98,7 +98,7 @@ int main ( )
   /*  If REFERENCE is a pin, configure it in analog mode (disable its digital
    *  input buffer)
    */
-#if HW_ID(REFERENCE)
+#if HW_ADDRESS(REFERENCE) != -1
   hwa( configure, REFERENCE,
        mode,      analog_input );
 #endif

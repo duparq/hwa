@@ -225,22 +225,22 @@
  */
 #define _hwa_cfad10a_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_ad10a_input_##v)) )				\
-    _hwa_write(o,mux, HW_A1(_hw_ad10a_input_##v,0));		\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc0) ) )		\
+    _hwa_write(o,mux, HW_A1(_hw_ad10a_input_##v,0));			\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc0) ) ) \
     _hwa_write(o,mux, 0);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc1) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc1) ) ) \
     _hwa_write(o,mux, 1);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc2) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc2) ) ) \
     _hwa_write(o,mux, 2);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc3) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc3) ) ) \
     _hwa_write(o,mux, 3);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc4) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc4) ) ) \
     _hwa_write(o,mux, 4);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc5) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc5) ) ) \
     _hwa_write(o,mux, 5);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc6) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc6) ) ) \
     _hwa_write(o,mux, 6);						\
-  else if ( HW_ID(v)!=0 && HW_ID(v)==HW_ID( HW_PIN(adc7) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc7) ) ) \
     _hwa_write(o,mux, 7);						\
   else									\
     HWA_ERR("`input` can be `HW_PIN(adc0..7)` (or synonyms), "		\

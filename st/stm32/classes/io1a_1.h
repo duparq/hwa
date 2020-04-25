@@ -27,10 +27,6 @@
  * hw( turn, (rcc,(pa0,port)), on );       // Clock the GPIO port of pin PA0
  * @endcode
  */
-/* #define __io1a				, _HW_REL_io1a */
-/* #define _HW_REL_io1a(o,x,...)		HW_Y(_HW_REL_io1a_,_hw_is_port_##x)(o,x,__VA_ARGS__) */
-/* #define _HW_REL_io1a_1(o,x,i,p,...)	p */
-/* #define _HW_REL_io1a_0(o,x,...)		HW_E_OO(o,x) */
 
 /*  Port name of a pin
  */
@@ -39,19 +35,27 @@
 
 /**
  * @page stm32_io1a
- * `HW_IDX()` returns a computed ID of an I/O definition.
+ *
+ * `HW_ADDRESS()` returns an address for an I/O definition.
+ *
+ *  The address is computed as:
+ *  address_of_port + (number_of_bits-1)*16 + position_of_lsb.
+ *
+ *  Ports are maped 0x0400 bytes away in memory.
+ *
  * @code
- * #if HW_IDX(LED) == HW_IDX(pa9)
+ * #if HW_ADDRESS(LED) == HW_ADDRESS(pa9)
  * // LED is connected on pa9, or LED and pa9 do not exist.
  * #else
  * // LED is not connected on pa9, or pa9 or LED does not exist.
  * #endif
  * @endcode
  */
-#define HW_IDX__io1a			, _hw_idxio1a00
-#define _hw_idxio1a00(o,i,p,bn,bp,...)	_hw_idxio1a01(hw_##p,bn,bp)
-#define _hw_idxio1a01(...)		_hw_idxio1a02(__VA_ARGS__)
-#define _hw_idxio1a02(c,i,a,bn,bp)	(a+bn*16+bp)
+#define HW_ADDRESS__io1a		, _hw_adio1a
+
+#define _hw_adio1a(o,i,p,bn,bp,...)	_hw_adio1a01(hw_##p,bn,bp)
+#define _hw_adio1a01(...)		_hw_adio1a02(__VA_ARGS__)
+#define _hw_adio1a02(c,i,a,bn,bp)	(a+(bn-1)*16+bp)
 
 
 /**
@@ -68,7 +72,7 @@
  *
  * `HW_BITS()` returns the number of bits of an I/O definition:
  * @code
- * #if HW_ID(pa3) && (HW_BITS(pa3) != 1)
+ * #if (HW_ADDRESS(pa3) != -1) && (HW_BITS(pa3) != 1)
  * #  error HWA is damaged!
  * #endif
  * @endcode
@@ -82,7 +86,7 @@
  *
  * `HW_POSITION()` returns the position of the least significant bit:
  * @code
- * #if HW_ID(pa3) && (HW_POSITION(pa3) != 3)
+ * #if (HW_ADDRESS(pa3) != -1) && (HW_POSITION(pa3) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode

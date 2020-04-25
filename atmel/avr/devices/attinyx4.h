@@ -1153,7 +1153,7 @@ typedef struct {
 #if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
 #  if !defined hw_swuart0_compare
 #    error hw_swuart0_compare is not defined
-#  elif HW_ID(hw_swuart0_compare) == 0
+#  elif HW_ADDRESS(hw_swuart0_compare) == -1
 #    error HWA: hw_swuart0_compare: invalid definition
 #    undef hw_swuart0_compare
 #  endif
@@ -1161,11 +1161,11 @@ typedef struct {
 #    error hw_swuart0_clk_div is not defined
 #    undef hw_swuart0_compare
 #  endif
-#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
+#  if defined hw_swuart0_pin_txd && HW_ADDRESS(hw_swuart0_pin_txd) == -1
 #    error invalid definition of hw_swuart0_pin_txd
 #    undef hw_swuart0_compare
 #  endif
-#  if defined hw_swuart0_pin_rxd && HW_ID(hw_swuart0_pin_rxd)==0
+#  if defined hw_swuart0_pin_rxd && HW_ADDRESS(hw_swuart0_pin_rxd) == -1
 #    error invalid definition of hw_swuart0_pin_rxd
 #    undef hw_swuart0_compare
 #  endif
@@ -1197,7 +1197,7 @@ typedef struct {
 #if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
 #  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined
-#  elif HW_ID(hw_swuart1_compare) == 0
+#  elif HW_ADDRESS(hw_swuart1_compare) == -1
 #    error HWA: hw_swuart1_compare: invalid definition
 #    undef hw_swuart1_compare
 #  endif
@@ -1205,11 +1205,11 @@ typedef struct {
 #    error hw_swuart1_clk_div is not defined
 #    undef hw_swuart1_compare
 #  endif
-#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
+#  if defined hw_swuart1_pin_txd && HW_ADDRESS(hw_swuart1_pin_txd) == -1
 #    error invalid definition of hw_swuart1_pin_txd
 #    undef hw_swuart1_compare
 #  endif
-#  if defined hw_swuart1_pin_rxd && HW_ID(hw_swuart1_pin_rxd)==0
+#  if defined hw_swuart1_pin_rxd && HW_ADDRESS(hw_swuart1_pin_rxd) == -1
 #    error invalid definition of hw_swuart1_pin_rxd
 #    undef hw_swuart1_compare
 #  endif

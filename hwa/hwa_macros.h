@@ -57,10 +57,7 @@
  * The object should be a peripheral controller or a register.
  */
 #define HW_ADDRESS(...)			HW_F( HW_ADDRESS, __VA_ARGS__ )
-#define HW_ADDRESS_(...)		0
-
-#define _HW_A				HW_ADDRESS
-
+#define HW_ADDRESS_E(...)		-1	// Error
 
 /*  Address correction
  *    C and assembly addresses are offset by 0x20 bytes with avr-gcc (or avrlibc?)
@@ -74,6 +71,9 @@
 
 #define HW_ADDRESS__m1			, _hw_address_m1
 #define _hw_address_m1(n,o,r,c,a,...)	(a HW_AC)
+
+#define HW_ADDRESS_			, _hw_address_		// By default
+#define _hw_address_(o,i,a,...)		(a)
 
 
 /**
@@ -90,7 +90,7 @@
  * @endcode
  */
 #define HW_BITS(...)			HW_F( HW_BITS, __VA_ARGS__ )
-#define HW_BITS_(...)			0
+#define HW_BITS_E(...)			0
 
 
 /* @brief Trigger an error at preprocessing stage
@@ -197,7 +197,7 @@
 #define _HW_F0(f,o,...)			_HW_F00(f, HW_X(o),__VA_ARGS__)
 #define _HW_F00(...)			_HW_F01(__VA_ARGS__)
 #define _HW_F01(f,c,o,...)		HW_Y0(_HW_F01_,c)(f,c,o)   (o,__VA_ARGS__)
-#define _HW_F01_1(f,c,o)		f##_	// An error occured
+#define _HW_F01_1(f,c,o)		f##_E	// An error occured
 /* Class method? */
 #define _HW_F01_0(f,c,o)		_HW_F02(f,c,o,f##_##c,)
 #define _HW_F02(...)			_HW_F03(__VA_ARGS__)
@@ -209,7 +209,7 @@
 #define _HW_F05(f,c,o,x,...)		HW_Y0(_HW_F05_,x)(f,c,o,x,__VA_ARGS__)
 #define _HW_F05_1(f,c,o,z,y,...)	y
 /* Global method? */
-#define _HW_F05_0(f,c,o,...)		_HW_F06(f,c,o,f,)
+#define _HW_F05_0(f,c,o,...)		_HW_F06(f,c,o,f##_,)
 #define _HW_F06(...)			_HW_F07(__VA_ARGS__)
 #define _HW_F07(f,c,o,x,...)		HW_Y0(_HW_F07_,x)(f,c,o,x,__VA_ARGS__)
 #define _HW_F07_1(f,c,o,z,y,...)	y
@@ -236,7 +236,7 @@
  * xprintf( HW_FUNCTION(LCD,putchar), "Seconds=%d", seconds );
  * @endcode
  */
-#define HW_FUNCTION(oject,function)	HW_F(HW_FUNCTION,oject,function)
+#define HW_FUNCTION(object,function)	HW_F(HW_FUNCTION,object,function)
 
 
 /*
@@ -262,27 +262,6 @@
 
 /**
  * @ingroup public_mac
- * @brief Returns the ID of the @ref using_objects "object" or 0 if the object does not exist.
- * @hideinitializer
- */
-#define HW_ID(o)			_HW_ID01( HW_X(o) )
-#define _HW_ID01(...)			_HW_ID02(__VA_ARGS__)
-#define _HW_ID02(c,...)			HW_Y0(_HW_ID02_,c)(c,__VA_ARGS__,)
-#define _HW_ID02_1(...)			0 // Do not produce an error
-#define _HW_ID02_0(c,o,i,...)		i
-
-
-/**
- * @ingroup public_mac
- * @brief Returns a computed ID of the @ref using_objects "object" or -1 if the object does not exist.
- * @hideinitializer
- */
-#define HW_IDX(...)			HW_F(HW_IDX,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
-#define HW_IDX_(o,e,...)		-1
-
-
-/**
- * @ingroup public_mac
  * @brief `HW_DEFINE(object)` defines the functions that implement an object.
  * @hideinitializer
  *
@@ -296,8 +275,8 @@
  * HW_DEFINE(PCF);
  * @endcode
  */
-#define HW_DEFINE(...)		HW_F(HW_DEFINE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
-#define HW_DEFINE_(o,e,...)		HW_E(e)
+#define HW_DEFINE(...)			HW_F(HW_DEFINE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
+#define HW_DEFINE_E(o,e,...)		HW_E(e)
 
 /**
  * @ingroup public_mac
@@ -314,7 +293,7 @@
  * @endcode
  */
 #define HW_DEFINE_WEAK(...)		HW_F(HW_DEFINE_WEAK,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__)
-#define HW_DEFINE_WEAK_(o,e,...)	HW_E(e)
+#define HW_DEFINE_WEAK_E(o,e,...)	HW_E(e)
 
 
 /**
@@ -333,7 +312,7 @@
  * @endcode
  */
 #define HW_DECLARE(...)			HW_F(HW_DECLARE,__VA_ARGS__) HW_EOL(HW_TL(__VA_ARGS__))
-#define HW_DECLARE_(o,e,...)		HW_E(e)
+#define HW_DECLARE_E(o,e,...)		HW_E(e)
 
 
 /**
@@ -363,7 +342,7 @@
  * @hideinitializer
  */
 #define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__)
-#define HW_IO_(o,e,...)			xb(_fake,o,e) HW_E(e)
+#define HW_IO_E(o,e,...)			xb(_fake,o,e) HW_E(e)
 
 
 /*
@@ -426,7 +405,7 @@
  * @hideinitializer
  */
 #define HW_POSITION(...)		HW_F( HW_POSITION, __VA_ARGS__ )
-#define HW_POSITION_(...)		0 // An error occured
+#define HW_POSITION_E(...)		0 // An error occured
 
 #define HW_POSITION__m111			, _hw_position_m111
 #define _hw_position_m111(n,o,r,c,a,wm,fm,bn,bp,...)	bp

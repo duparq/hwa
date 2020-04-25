@@ -15,7 +15,7 @@
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
-#if HW_ID(TXD)
+#if HW_ADDRESS(TXD) != -1
 #  define CANTX 1
 	TXDPORT	  = HW_ADDRESS((TXD,port,port))
 	TXDPIN	  = HW_ADDRESS((TXD,port,pin))
@@ -25,7 +25,7 @@
 #  define CANTX 0
 #endif
 
-#if HW_ID(RXD)
+#if HW_ADDRESS(RXD) != -1
 #  define CANRX 1
 	RXDPORT	  = HW_ADDRESS((RXD,port,port))
 	RXDPIN	  = HW_ADDRESS((RXD,port,pin))
@@ -38,7 +38,7 @@
 
 	;; Debugging options
 	;; 
-#if HW_ID(PDBG)
+#if HW_ADDRESS(PDBG) != -1
 	DBG	  = 1
 	DBGPORT	  = HW_ADDRESS((PDBG,port,port))
 	DBGPIN	  = HW_ADDRESS((PDBG,port,pin))
@@ -80,14 +80,14 @@
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if HW_ID(RXD) == HW_ID(hw_pin_int0) \
- || HW_ID(RXD) == HW_ID(hw_pin_ain1)
+#if HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_int0) \
+ || HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_ain1)
 #  define CHECK_START_EDGE 0
 #else
 #  define CHECK_START_EDGE 1
 #endif
 
-#define ONEWIRE		HW_ID(TXD) == HW_ID(RXD)
+#define ONEWIRE		HW_ADDRESS(TXD) == HW_ADDRESS(RXD)
 #define CHECKTX		HW_G3(hw,UART,check_tx)
 #define	CLK_DIV		HW_G3(hw,UART,clk_div)
 

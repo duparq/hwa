@@ -29,14 +29,14 @@
 #  define HWA_HAS_SWTWI0
 #  if !defined hw_swtwi0_scl
 #    error hw_swtwi0_scl is not defined
-#  elif HW_ID(hw_swtwi0_scl) == 0
+#  elif HW_ADDRESS(hw_swtwi0_scl) == -1
 #    error HWA: hw_swtwi0_scl: invalid definition
 #    undef HWA_HAS_SWTWI0
 #  endif
 #  if !defined hw_swtwi0_sda
 #    error hw_swtwi0_sda is not defined
 #    undef HWA_HAS_SWTWI0
-#  elif HW_ID(hw_swtwi0_sda) == 0
+#  elif HW_ADDRESS(hw_swtwi0_sda) == -1
 #    error HWA: hw_swtwi0_sda: invalid definition
 #    undef HWA_HAS_SWTWI0
 #  endif

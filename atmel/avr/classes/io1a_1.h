@@ -28,10 +28,33 @@
 /**
  * @page atmelavr_io1a
  *
+ * `HW_ADDRESS()` returns an address for an I/O definition.
+ *
+ *  The address is computed as:
+ *  ((number_of_bits-1)*16+position_of_lsb)*0x10000 + address_of_port.
+ *
+ * @code
+ * #if HW_ADDRESS(LED) == HW_ADDRESS(pa2)
+ * // LED is connected on pa2, or LED and pa2 do not exist.
+ * #else
+ * // LED is not connected on pa2, or pa9 or LED does not exist.
+ * #endif
+ * @endcode
+ */
+#define HW_ADDRESS__io1a		, _hw_adio1a
+
+#define _hw_adio1a(o,i,p,bn,bp,...)	_hw_adio1a01(hw_##p,bn,bp)
+#define _hw_adio1a01(...)		_hw_adio1a02(__VA_ARGS__)
+#define _hw_adio1a02(c,i,a,bn,bp)	(((bn-1)*16+bp)*0x10000 + a)
+
+
+/**
+ * @page atmelavr_io1a
+ *
  * The `HW_BITS()` instruction returns the number of bits of an I/O definition:
  *
  * @code
- * #if HW_ID(pa3) && (HW_BITS(pa3) != 1)
+ * #if (HW_ADDRESS(pa3) != -1) && (HW_BITS(pa3) != 1)
  * #  error HWA is damaged!
  * #endif
  * @endcode
@@ -47,7 +70,7 @@
  * of the least significant bit:
  *
  * @code
- * #if HW_ID(pa3) && (HW_POSITION(pa3) != 3)
+ * #if (HW_ADDRESS(pa3) != -1) && (HW_POSITION(pa3) != 3)
  * #  error HWA is damaged!
  * #endif
  * @endcode

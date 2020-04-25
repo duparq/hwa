@@ -151,7 +151,7 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    *
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
-#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd) != HW_ID(hw_swuart0_pin_rxd)
+#  if defined hw_swuart0_pin_txd && HW_ADDRESS(hw_swuart0_pin_txd) != HW_ADDRESS(hw_swuart0_pin_rxd)
   _hwa( configure, hw_swuart0_pin_txd, mode, digital_output );
   _hwa( write, hw_swuart0_pin_txd, 1 );
 #  endif
@@ -198,7 +198,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    *
    *	Configure TXD pin as output high unless the pin is also used as RXD.
    */
-#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd) != HW_ID(hw_swuart1_pin_rxd)
+#  if defined hw_swuart1_pin_txd && HW_ADDRESS(hw_swuart1_pin_txd) != HW_ADDRESS(hw_swuart1_pin_rxd)
   _hwa( configure, hw_swuart1_pin_txd, mode, digital_output );
   _hwa( write, hw_swuart1_pin_txd, 1 );
 #  endif

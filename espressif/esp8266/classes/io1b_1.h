@@ -25,7 +25,7 @@
  * The `HW_BN()` instruction returns the number of bits of an I/O definition:
  *
  * @code
- * #if HW_ID(pa3) && (HW_BN(pa3) != 1)
+ * #if (HW_ADDRESS(pa3) != -1) && (HW_BN(pa3) != 1)
  * #  HWA is damaged!
  * #endif
  * @endcode

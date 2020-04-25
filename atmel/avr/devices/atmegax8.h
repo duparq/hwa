@@ -685,6 +685,11 @@ typedef struct {
 #endif
 #define hw_portc			_io1a, 117, port1, 7, 0
 
+/*  TODO: handle these special pins differently.
+ */
+#define hw_pc6a				_io1a, 336, port1, 1, 8
+#define hw_pc7a				_io1a, 337, port1, 1, 9
+
 #define hw_pd0				_io1a, 118, port2, 1, 0
 #define hw_pd1				_io1a, 119, port2, 1, 1
 #define hw_pd2				_io1a, 120, port2, 1, 2
@@ -694,9 +699,6 @@ typedef struct {
 #define hw_pd6				_io1a, 124, port2, 1, 6
 #define hw_pd7				_io1a, 125, port2, 1, 7
 #define hw_portd			_io1a, 126, port2, 8, 0
-
-#define hw_pin_adc6			_io1a, 336
-#define hw_pin_adc7			_io1a, 337
 
 /*  Digital input disable bits for analog input pins
  */
@@ -767,8 +769,8 @@ typedef struct {
 #define _hw_pin_adc3			, pc3
 #define _hw_pin_adc4			, pc4
 #define _hw_pin_adc5			, pc5
-#define _hw_pin_adc6			, pin_adc6	/* keep the pin_ prefix */
-#define _hw_pin_adc7			, pin_adc7	/* since adcX would name an ADC */
+#define _hw_pin_adc6			, pc6a
+#define _hw_pin_adc7			, pc7a
 
 #define _hw_pin_ain1			, pd7
 #define _hw_pin_ain0			, pd6
@@ -851,8 +853,8 @@ typedef struct {
 #  define _hw_pin_15			, pb3
 #  define _hw_pin_16			, pb4
 #  define _hw_pin_17			, pb5
-#  define _hw_pin_19			, pin_adc6
-#  define _hw_pin_22			, pin_adc7
+#  define _hw_pin_19			, pc6a
+#  define _hw_pin_22			, pc7a
 #  define _hw_pin_23			, pc0
 #  define _hw_pin_24			, pc1
 #  define _hw_pin_25			, pc2
@@ -1610,7 +1612,7 @@ typedef struct {
 #if defined hw_swuart0_compare || defined hw_swuart0_clk_div || defined hw_swuart0_pin_txd || defined hw_swuart0_pin_rxd || defined hw_swuart0_starter || defined hw_swuart0_check_tx
 #  if !defined hw_swuart0_compare
 #    error hw_swuart0_compare is not defined
-#  elif HW_ID(hw_swuart0_compare) == 0
+#  elif HW_ADDRESS(hw_swuart0_compare) == -1
 #    error HWA: hw_swuart0_compare: invalid definition
 #    undef hw_swuart0_compare
 #  endif
@@ -1618,11 +1620,11 @@ typedef struct {
 #    error hw_swuart0_clk_div is not defined
 #    undef hw_swuart0_compare
 #  endif
-#  if defined hw_swuart0_pin_txd && HW_ID(hw_swuart0_pin_txd)==0
+#  if defined hw_swuart0_pin_txd && HW_ADDRESS(hw_swuart0_pin_txd) == -1
 #    error invalid definition of hw_swuart0_pin_txd
 #    undef hw_swuart0_compare
 #  endif
-#  if defined hw_swuart0_pin_rxd && HW_ID(hw_swuart0_pin_rxd)==0
+#  if defined hw_swuart0_pin_rxd && HW_ADDRESS(hw_swuart0_pin_rxd) == -1
 #    error invalid definition of hw_swuart0_pin_rxd
 #    undef hw_swuart0_compare
 #  endif
@@ -1655,7 +1657,7 @@ typedef struct {
 #if defined hw_swuart1_compare || defined hw_swuart1_clk_div || defined hw_swuart1_pin_txd || defined hw_swuart1_pin_rxd || defined hw_swuart1_starter || defined hw_swuart1_check_tx
 #  if !defined hw_swuart1_compare
 #    error hw_swuart1_compare is not defined
-#  elif HW_ID(hw_swuart1_compare) == 0
+#  elif HW_ADDRESS(hw_swuart1_compare) == -1
 #    error HWA: hw_swuart1_compare: invalid definition
 #    undef hw_swuart1_compare
 #  endif
@@ -1663,11 +1665,11 @@ typedef struct {
 #    error hw_swuart1_clk_div is not defined
 #    undef hw_swuart1_compare
 #  endif
-#  if defined hw_swuart1_pin_txd && HW_ID(hw_swuart1_pin_txd)==0
+#  if defined hw_swuart1_pin_txd && HW_ADDRESS(hw_swuart1_pin_txd) == -1
 #    error invalid definition of hw_swuart1_pin_txd
 #    undef hw_swuart1_compare
 #  endif
-#  if defined hw_swuart1_pin_rxd && HW_ID(hw_swuart1_pin_rxd)==0
+#  if defined hw_swuart1_pin_rxd && HW_ADDRESS(hw_swuart1_pin_rxd) == -1
 #    error invalid definition of hw_swuart1_pin_rxd
 #    undef hw_swuart1_compare
 #  endif

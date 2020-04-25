@@ -21,7 +21,7 @@
 /*  (FIXME) Remove definitions for swuart0 if it is not the chosen UART to avoid
  *  including useless code
  */
-#if HW_ID(UART) != HW_ID(swuart0)
+#if HW_ADDRESS(UART) != HW_ADDRESS(swuart0)
 #  undef hw_swuart0_pin_txd
 #  undef hw_swuart0_compare
 #  undef hw_swuart0_clk_div

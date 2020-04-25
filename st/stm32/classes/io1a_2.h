@@ -112,7 +112,7 @@
 #define _hwa_cfio1a_vfn50(x,f,v,o,...)		HW_E_NIL(v,_hw_fn_##o)
 #define _hwa_cfio1a_vfn51(z,f,...)		_hwa_cfio1a_vfn52_##f(__VA_ARGS__)
 #define _hwa_cfio1a_vfn52_df(sig,v,o,...)	_hwa_cfio1a_vfn53(df,__VA_ARGS__)
-#define _hwa_cfio1a_vfn52_af(sig,v,o,...)	hwa->afio.map.sig = HW_IDX(o); _hwa_cfio1a_vfn53(af,__VA_ARGS__)
+#define _hwa_cfio1a_vfn52_af(sig,v,o,...)	hwa->afio.map.sig = HW_ADDRESS(o); _hwa_cfio1a_vfn53(af,__VA_ARGS__)
 #define _hwa_cfio1a_vfn53(f,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(f,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfio1a_kfn0(o,p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kmd,_hw_is_mode_##k)(df,p,bn,bp,k,__VA_ARGS__)
 
