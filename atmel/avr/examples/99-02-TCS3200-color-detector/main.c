@@ -211,7 +211,7 @@ main ( )
 
   hwa( commit );
 
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   /*  Read tclear_max from EEPROM
    */

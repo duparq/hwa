@@ -45,7 +45,7 @@
 
 #define _hw_adio1a(o,p,bn,bp,...)	_hw_adio1a01(hw_##p,bn,bp)
 #define _hw_adio1a01(...)		_hw_adio1a02(__VA_ARGS__)
-#define _hw_adio1a02(c,a,bn,bp)	(((bn-1)*16+bp)*0x10000 + a)
+#define _hw_adio1a02(c,a,bn,bp)		(((bn-1)*16+bp)*0x10000 + a)
 
 
 /**
@@ -59,8 +59,8 @@
  * #endif
  * @endcode
  */
-#define HW_BITS__io1a				, _hw_bits_io1a
-#define _hw_bits_io1a(o,p,bn,bp,...)		bn
+#define HW_BITS__io1a			, _hw_bits_io1a
+#define _hw_bits_io1a(o,p,bn,bp,...)	bn
 
 
 /*

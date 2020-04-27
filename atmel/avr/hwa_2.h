@@ -16,21 +16,8 @@
 #define _hw_sleep_until_irq__mcu(...)		hw_asm("sleep")
 #define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
 
-
-/**
- * @ingroup public_ins_atmelavr
- * @brief Allows program interruption.
- */
-#define _hw_enable_interrupts__mcu(...)		hw_asm("sei")
-#define hw_enable_interrupts__mcu		, _hw_enable_interrupts__mcu
-
-
-/**
- * @ingroup public_ins_atmelavr
- * @brief Prevents program interruption.
- */
-#define _hw_disable_interrupts__mcu(...)	hw_asm("cli")
-#define hw_disable_interrupts__mcu		, _hw_disable_interrupts__mcu
+#define _hw_enirqs(o,a,...)			hw_asm("sei") HW_EOL(__VA_ARGS__)
+#define _hw_dsirqs(o,a,...)			hw_asm("cli") HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -40,6 +27,21 @@
  * Only works with compile-time constants.
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+
+
+/*	ISR
+ */
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
+#endif
+
+#define _hw_israttr_atomic		,
+#define _hw_israttr_non_interruptible	,
+#define _hw_israttr_interruptible	, __attribute__((interrupt))
+#define _hw_israttr_naked		, __attribute__((naked))
+
 
 #include "../../hwa/hwa_2.h"
 
@@ -70,7 +72,7 @@
 #define HW_ATOMIC(...)				\
   do{						\
     uint8_t s = _hw_read(core0,sreg);	\
-    hw_disable_interrupts();			\
+    hw_disable, interrupts();			\
     { __VA_ARGS__ }				\
     _hw_write(core0,sreg,s) ;		\
   }while(0)
@@ -413,7 +415,7 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
   if ( (m & 0xFF) && (m >> 8) ) {
     uint8_t s = _hw_read(core0,sreg);
-    hw_disable_interrupts();
+    hw_disable, interrupts();
     uint8_t lb = *pl ;
     _hw_write(core0,sreg,s);
     uint8_t hb = *ph ;
@@ -471,17 +473,3 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   );						      \
 }))
 #endif
-
-
-/*	ISR
- */
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
-
-#define _hw_israttr_atomic		,
-#define _hw_israttr_non_interruptible	,
-#define _hw_israttr_interruptible	, __attribute__((interrupt))
-#define _hw_israttr_naked		, __attribute__((naked))

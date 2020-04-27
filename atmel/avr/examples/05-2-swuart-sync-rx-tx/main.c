@@ -59,7 +59,7 @@ main ( )
 
   /*  Interrupt requests must be serviced for swuart
    */
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
 
   /*  Main loop:

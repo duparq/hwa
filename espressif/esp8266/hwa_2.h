@@ -33,24 +33,20 @@
 
 /**
  * @ingroup public_ins_espressif
- * @brief Allow program interruption.
- */
-#define hw_enable_interrupts()		hw_asm("sei")
-
-/**
- * @ingroup public_ins_espressif
- * @brief Prevent program interruption.
- */
-#define hw_disable_interrupts()		hw_asm("cli")
-
-/**
- * @ingroup public_ins_espressif
  * @brief Software loop of \c n system clock cycles.
  *
  * Only works with compile time constants.
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
+#define _hw_enirqs(o,a,...)			hw_asm("sei") HW_EOL(__VA_ARGS__)
+#define _hw_dsirqs(o,a,...)			hw_asm("cli") HW_EOL(__VA_ARGS__)
+
+#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
+#else /* GCC < 4.1 */
+#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
+#endif
 
 #include "../hwa/hwa_2.h"
 
@@ -92,7 +88,7 @@
 #define HW_ATOMIC(...)				\
   do{						\
     uint8_t s = _hw_read(core0,sreg);	\
-    hw( disable_interrupts );			\
+    hw( disable, interrupts );			\
     { __VA_ARGS__ }				\
     _hw_write(core0,sreg,s) ;		\
   }while(0)
@@ -546,7 +542,7 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 
   if ( (m & 0xFF) && (m >> 8) ) {
     uint8_t s = _hw_read(core0,sreg);
-    hw( disable_interrupts );
+    hw( disable, interrupts );
     uint8_t lb = *pl ;
     _hw_write(core0,sreg,s);
     uint8_t hb = *ph ;

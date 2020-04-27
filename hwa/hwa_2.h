@@ -162,6 +162,11 @@
 #define _hw_atomic_read(o,r)	HW_FC(_hw_atomic_read_,HW_X(reg(o,r)),)
 
 
+#define hw_uint_t__r8		uint8_t
+#define hw_uint_t__r16		uint16_t
+#define hw_uint_t__r32		uint32_t
+
+
 /*
  * @ingroup private_ins
  * @brief Write one register of an object
@@ -208,18 +213,22 @@
   _hw_write_##c(a,wm,fm,bn,bp,v)
 
 #define _hw_write__m112(n,o,r,c,a,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2,v,...)	\
-  _hw_write##c( a, wm, fm,						\
-		(((1ULL<<bn1)-1)<<bp1) | (((1ULL<<bn2)-1)<<bp2),	\
-		(((v>>vp1)&((1<<bn1)-1))<<bp1) | (((v>>bp2)&((1<<bn2)-1))<<bp2))
+  do{									\
+    hw_uint_t_##c val = v ;						\
+    _hw_write##c( a, wm, fm,						\
+		  (((1ULL<<bn1)-1)<<bp1) | (((1ULL<<bn2)-1)<<bp2),	\
+		  (((val>>vp1)&((1<<bn1)-1))<<bp1) | (((val>>bp2)&((1<<bn2)-1))<<bp2));	\
+  }while(0)
 
 #define hwa_write__m122		, _hwa_write__m122
 
 #define _hwa_write__m122( n, o,						\
 			  r1,c1,a1,wm1,fm1,bn1,bp1,vp1,			\
-			  r2,c2,a2,wm2,fm2,bn2,bp2,vp2, v, ... )		\
+			  r2,c2,a2,wm2,fm2,bn2,bp2,vp2, v, ... )	\
   do {									\
-    _hwa_write_##c1(&hwa->o.r1, wm1,fm1, bn1,bp1, ((v)>>(vp1))&((1ULL<<bn1)-1)); \
-    _hwa_write_##c2(&hwa->o.r2, wm2,fm2, bn2,bp2, ((v)>>(vp2))&((1ULL<<bn2)-1)); \
+    hw_uint_t_##c1 val = (v);						\
+    _hwa_write_##c1(&hwa->o.r1, wm1,fm1, bn1,bp1, (val>>(vp1))&((1ULL<<bn1)-1)); \
+    _hwa_write_##c2(&hwa->o.r2, wm2,fm2, bn2,bp2, (val>>(vp2))&((1ULL<<bn2)-1)); \
   } while(0)
 
 
@@ -526,10 +535,7 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwa_write__r32(ra,rwm,rfm,bn,bp,v)	_hwa_write_r32(ra,rwm,rfm,((1ULL<<bn)-1)<<bp,(v)<<bp)
 
 
-/*
- * @ingroup private_ins
- * @brief  Turns an IRQ on/off.
- * @hideinitializer
+/*  Turn an IRQ on/off.
  */
 #define hw_turn__irq				, _hw_tnirq
 #define hwa_turn__irq				, _hwa_tnirq
@@ -541,9 +547,42 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwx_tnirq02_0(h,n,m,s,z,x,...)		HW_E_ST(s)
 #define _hwx_tnirq02_1(h,n,m,s,z,x,y,...)	h##_write(n,m,x) HW_EOL(__VA_ARGS__)
 
+#define hw_enable__irq				, _hw_enirq
+#define hwa_enable__irq				, _hwa_enirq
+
+#define _hw_enirq(o,n,v,m,f,...)		_hwx_enirq01(_hw,n,m,__VA_ARGS__,)
+#define _hwa_enirq(o,n,v,m,f,...)		_hwx_enirq01(_hwa,n,m,__VA_ARGS__,)
+#define _hwx_enirq01(...)			_hwx_enirq02(__VA_ARGS__)
+#define _hwx_enirq02(h,n,m,x,...)		HW_Y0(_hwx_enirq02_,x)(h,n,m,x,__VA_ARGS__)
+#define _hwx_enirq02_0(h,n,m,x,...)		HW_E_G(x)
+#define _hwx_enirq02_1(h,n,m,...)		h##_write(n,m,1)
+
+#define hw_disable__irq				, _hw_dsirq
+#define hwa_disable__irq			, _hwa_dsirq
+
+#define _hw_dsirq(o,n,v,m,f,...)		_hwx_dsirq01(_hw,n,m,__VA_ARGS__,)
+#define _hwa_dsirq(o,n,v,m,f,...)		_hwx_dsirq01(_hwa,n,m,__VA_ARGS__,)
+#define _hwx_dsirq01(...)			_hwx_dsirq02(__VA_ARGS__)
+#define _hwx_dsirq02(h,n,m,x,...)		HW_Y0(_hwx_dsirq02_,x)(h,n,m,x,__VA_ARGS__)
+#define _hwx_dsirq02_0(h,n,m,x,...)		HW_E_G(x)
+#define _hwx_dsirq02_1(h,n,m,...)		h##_write(n,m,0)
+
+/*  Manage interrupts
+ */
+#if !defined _hw_enirqs || !defined _hw_dsirqs
+#  error _hw_enirqs and _hw_dsirqs must be defined in vendor/architecture/hwa_2.h
+#endif
+#define hw_class__interrupts
+#define hw_interrupts				_interrupts, -1
+#define hw_enable__interrupts			, _hw_enirqs
+#define hw_disable__interrupts			, _hw_dsirqs
+
+
+#if !defined HW_ISR_ATTRIBUTES
+#  error HW_ISR_ATTRIBUTES must be defined in vendor/architecture/hwa_2.h
+#endif
 
 /*  Single event ISR
- *    HW_ISR_ATTRIBUTES is defined in vendor/architecture/hwa_2.h
  */
 #define _HW_ISR_(v,...)							\
   HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\

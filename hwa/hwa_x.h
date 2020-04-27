@@ -9,10 +9,9 @@
  */
 
 
-/*
- * @brief Returns the standard definition of o: c,o,(...)
- * Insert the name of the object, o, into the definition.
- * Return ,o,"error message" if o is not an object.
+/*  Return the standard definition of o: c,o,(...).
+ *    Insert the name of the object, o, into the definition.
+ *    Return ,o,"error message" if o is not an object.
  */
 #define HW_XO(o)			_HW_XO01(o,hw_##o)
 #define _HW_XO01(...)			_HW_XO02(__VA_ARGS__)
@@ -23,11 +22,9 @@
 #define _HW_XO02_1(o,c,...)		c,o,(__VA_ARGS__) // brackets
 
 
-/*
- * @brief Returns the standardized definition of the relative r of object o: `o,c,(...)`
- *  
- *  Returns the standardized definition of o if r is void.
- *  Returns ,o,"error message" if the relative can not be found.
+/*  Return the standard definition of the relative r of object o: `c,(o,r),(...)`
+ *    Return the standardized definition of o if r is void.
+ *    Return ,o,"error message" if the relative can not be found.
  *
  *  The relative r of o is searched in this order:
  *   * hw_o_r
@@ -41,6 +38,7 @@
 #define _HW_OR01(...)			_HW_OR02(__VA_ARGS__)
 #define _HW_OR02(o,r,...)		HW_Y0(_HW_OR02_,hw_class_##__VA_ARGS__)(o,r,__VA_ARGS__)
 #define _HW_OR02_1(o,r,c,...)		c,o,(__VA_ARGS__)
+//#define _HW_OR02_1(o,r,c,...)		c,(o,r),(__VA_ARGS__)
 #define _HW_OR02_0(o,r,x)		_HW_OR03(o,r,HW_XO(x))
 #define _HW_OR03(...)			_HW_OR04(__VA_ARGS__)
 #define _HW_OR04(o,r,c,...)		HW_Y0(_HW_OR04_,c)(o,r,c,__VA_ARGS__)
@@ -90,7 +88,7 @@
 #define _HW_OR41(...)			_HW_OR42(__VA_ARGS__)
 #define _HW_OR42(rc,...)		_HW_XR##rc(__VA_ARGS__)
 
-#define _HW_XR_r8(r,ra,rwm,rfm,c,o,a)		_m111,reg(o,r),(o,r,_r8,a+ra,rwm,rfm,8,0)
+#define _HW_XR_r8(r,ra,rwm,rfm,c,o,a)	_m111,reg(o,r),(o,r,_r8,a+ra,rwm,rfm,8,0)
 #define _HW_XR_r16(r,ra,rwm,rfm,c,o,a)	_m111,reg(o,r),(o,r,_r16,a+ra,rwm,rfm,16,0)
 #define _HW_XR_r32(r,ra,rwm,rfm,c,o,a)	_m111,reg(o,r),(o,r,_r32,a+ra,rwm,rfm,32,0)
 

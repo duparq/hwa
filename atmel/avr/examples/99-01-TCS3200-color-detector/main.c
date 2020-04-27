@@ -237,7 +237,7 @@ main ( )
 
   hwa( commit );
 
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   /*  tclear_max is stored in EEPROM
    */

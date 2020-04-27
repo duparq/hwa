@@ -84,7 +84,7 @@ int main ( )
 
   /*  MCU can't awake from sleep without interrupts!
    */
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   static uint8_t count ;
 

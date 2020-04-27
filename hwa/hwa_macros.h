@@ -54,9 +54,11 @@
  * @brief `HW_ADDRESS(object)` returns the address of the @ref using_objects "object".
  * @hideinitializer
  *
- * The object should be a peripheral controller or a register.
  */
-#define HW_ADDRESS(...)			HW_F( HW_ADDRESS, __VA_ARGS__ )
+#define HW_ADDRESS(...)			_HW_ADDRESS2(__VA_ARGS__,,)
+#define _HW_ADDRESS2(x,...)		HW_Y(_HW_ADDRESS,__VA_ARGS__)(x,__VA_ARGS__)
+#define _HW_ADDRESS0(x,y,...)		HW_E_G(y)
+#define _HW_ADDRESS1(x,...)		HW_F( HW_ADDRESS, x )
 #define HW_ADDRESS_E(...)		-1	// Error
 
 /*  Address correction
@@ -465,14 +467,11 @@
 #define HW_XB(...)			__VA_ARGS__
 
 
-/*
- * @ingroup private_mac
- * @brief Concatenates '_1' or '_0' to the first argument according to the second.
- * @hideinitializer
+/*  Concatenates '1' or '0' to the first argument if the second is void.
  *
- * `HW_Y(f_,c)` expands to:
- *  * `f_1` if `c` is "",
- *  * `f_0` if `c` is not "".
+ *    HW_Y(f,c) expands to:
+ *      f##1 if c is "",
+ *      f##0 if c is not "".
  */
 #define HW_Y(...)			_HW_Y00(__VA_ARGS__,,)
 #define _HW_Y00(f,x,...)		_HW_Y01(f,_hw_isa_leftbkt x,0,x)
@@ -483,6 +482,8 @@
 #define _HW_Y03(...)			_HW_Y04(__VA_ARGS__)
 #define _HW_Y04(f,x,y,...)		f##y
 
+/*  This version not handle brackets.
+ */
 #define HW_Y0(...)			_HW_Y000(__VA_ARGS__,,)
 #define _HW_Y000(f,x,...)		_HW_Y001(f,_hw_is__##x,0,)
 #define _HW_Y001(...)			_HW_Y002(__VA_ARGS__)

@@ -113,7 +113,7 @@ main ( )
    */
   hwa( commit );
 
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   /*  Wait for UART synchronization
    */

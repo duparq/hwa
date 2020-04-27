@@ -57,7 +57,7 @@ int main ( )
 
   /*  Enable interrupts
    */
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   /*  Sleep between interrupts
    */

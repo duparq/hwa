@@ -108,7 +108,7 @@ int main ( )
    */
   hwa( commit );
 
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   for(;;)
     hw( sleep_until_irq );

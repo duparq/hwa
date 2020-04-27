@@ -90,9 +90,9 @@ HW_ISR( adc0, interruptible )
 
   count_t tmp = tmp32 ;
   if ( sizeof(count_t) > 1 ) {
-    hw( disable_interrupts );
+    hw( disable, interrupts );
     duty = tmp ;
-    hw( enable_interrupts );
+    hw( enable, interrupts );
     /* HW_ATOMIC( */
     /*	      duty = tmp ; */
     /*	      ); */
@@ -205,7 +205,7 @@ int main ( )
        vref,	  vcc,
        align,	  right,
        input,	  PIN_ANALOG_INPUT );
-  
+
   hwa( turn, irq(adc0), on );
   hwa( trigger, adc0 );
 
@@ -213,7 +213,7 @@ int main ( )
    */
   hwa( commit );
 
-  hw( enable_interrupts );
+  hw( enable, interrupts );
 
   for(;;)
     hw( sleep_until_irq );
