@@ -13,6 +13,9 @@
 
 /**
  * @page atmegaxu4 ATmega16U4/32U4
+ *
+ * @note This needs to be rewritten.
+ *
  * @section attinyx8_device Defined symbols
  *
  * HWA defines the following symbols describing the target device and its

@@ -5,6 +5,16 @@ Internals {#internals}
 A few notes about how HWA works internally.
 
 
+Hierarchy of files
+------------------
+
+The base source code of HWA is in the `hwa/` directory.
+
+Device-related sources are stored in `vendor/architecture/` directories
+(`atmel/avr/`, `st/stm32/`, `espressif/esp8266/`, ...) where are stored
+`classes/`, `devices/`, and `examples/` directories.
+
+
 Macro dependencies
 ------------------
 

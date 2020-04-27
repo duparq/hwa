@@ -209,6 +209,17 @@ HW_ISR( counter0, overflow, naked )
 @endcode
 
 
+Interrupts can be globally enabled or disabled:
+
+@code
+hw( enable, interrupts );
+@endcode
+
+@code
+hw( disable, interrupts );
+@endcode
+
+
 Defining an I/O object {#using_defio}
 ======================
 

@@ -7,13 +7,238 @@
 /**
  * @file
  * @brief Atmel AVR ATmega48A/PA/88A/PA/168A/PA/328/P devices
+ * @page atmegax8 ATmega48A/PA/88A/PA/168A/PA/328/P
  */
 
 #include "../hwa_1.h"
 
 /**
- * @page atmegax8 ATmega48A/PA/88A/PA/168A/PA/328/P
- * @section atmegax8_device Defined symbols
+ * @section atmegax8_object Objects
+ *
+ * __Note__ These objects are not all completely implemented yet.
+ *
+ * Object name          | Class                           | Comments
+ * :--------------------|---------------------------------|:----------------------------------
+ * `core0`              |@ref atmelavr_coreb "_coreb"     |The core
+ * `int0`               |@ref atmelavr_inta "_inta"       |External interrupt INT0
+ * `int1`               |@ref atmelavr_inta "_inta"       |External interrupt INT1
+ * `port0`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port B (PORT0)
+ * `port1`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port C (PORT1)
+ * `port2`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port D (PORT2)
+ * `pcic0`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
+ * `pcic1`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
+ * `pcic2`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
+ * `watchdog0`          |@ref atmelavr_wdogb "_wdogb"     |Watchdog (WDG)
+ * `counter0`           |@ref atmelavr_c8a "_c8a"         |8-bit counter-timer (T0)
+ * `(counter0,compare0)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 0 of counter0 (OC0A)
+ * `(counter0,compare1)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 1 of counter0 (OC0B)
+ * `counter1`           |@ref atmelavr_c16a "_c16a"       |16-bit counter-timer (T1)
+ * `(counter1,compare0)`|@ref atmelavr_cmp16a "_cmp16a"   |Compare unit 0 of counter1 (OC1A)
+ * `(counter1,compare1)`|@ref atmelavr_cmp16a "_cmp16a"   |Compare unit 1 of counter1 (OC1B)
+ * `(counter1,capture0)`|@ref atmelavr_cap16a "_cap16a"   |Capture unit 0 of counter1 (ICP1)
+ * `counter2`           |@ref atmelavr_c8c "_c8c"         |8-bit counter-timer (T2)
+ * `(counter2,compare0)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 0 of counter2 (OC2A)
+ * `(counter2,compare1)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 1 of counter2 (OC2B)
+ * `prescaler0`         |@ref atmelavr_psca "_psca"       |counter0/counter1 prescaler (PSC0)
+ * `spi0`               |@ref atmelavr_spia "_spia"       |Serial Peripheral Interface
+ * `uart0`              |@ref atmelavr_uarta "_uarta"     |Universal Asynchronous Receiver Transmitter
+ * `twi0`               |@ref atmelavr_twia "_twia"       |2-wire Serial Interface
+ * `acmp0`              |@ref atmelavr_acmpa "_acmpa"     |Analog Comparator
+ * `adc0`               |@ref atmelavr_ad10b "_ad10b"     |10-bit Analog to Digital Converter
+ * `eeprom0`            |@ref atmelavr_eeproma "_eeproma" |Eeprom memory
+ * `flash0`             |@ref atmelavr_flasha "_flasha"   |Flash memory
+ *
+ * @subsection atmegax8_swobj Software-emulated peripherals
+ * 
+ * HWA provides the following software-emulated peripherals:
+ * 
+ * Name			  | Class		  | Comments
+ * :----------------------|-----------------------|:--------------------------------------
+ * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
+ * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
+ *
+ * @subsection atmegax8_objrel Aliases and relations
+ * @note This section needs to be rewritten.
+ *
+ * Some objects can be accessed from their relatives or can have more than one
+ * name. There are the existing relations between the device's objects and their
+ * different names:
+ *
+ * Name          | Alias                | Path
+ * :-------------|----------------------|:-----
+ * `prescaler0`          | `counter0prescaler`      |`(counter0, prescaler)`
+ * `prescaler0`          | `counter0prescaler0`     |`(counter0, prescaler0)`
+ * `prescaler0`          | `counter1prescaler`      |`(counter1, prescaler)`
+ * `prescaler0`          | `counter1prescaler0`     |`(counter1, prescaler0)`
+ * `counter0compare0`    | `counter0compare0`       |`(counter0, compare0)`
+ * `counter0compare1`    | `counter0compare1`       |`(counter0, compare1)`
+ * `counter0`            | `counter0compare0counter`|`(counter0compare0, counter)`
+ * `counter0`            | `counter0compare1counter`|`(counter0compare1, counter)`
+ * `pin_counter0compare0`| `counter0compare0pin`    |`(counter0compare0, pin)`
+ * `pin_counter0compare1`| `counter0compare1pin`    |`(counter0compare1, pin)`
+ * `counter1compare0`    | `counter1compare0`       |`(counter1, compare0)`
+ * `counter1compare1`    | `counter1compare1`       |`(counter1, compare1)`
+ * `counter1`            | `counter1compare0counter`|`(counter1compare0, counter)`
+ * `counter1`            | `counter1compare1counter`|`(counter1compare1, counter)`
+ * `pin_counter1compare0`| `counter1compare0pin`    |`(counter1compare0, pin)`
+ * `pin_counter1compare1`| `counter1compare1pin`    |`(counter1compare1, pin)`
+ * `pin_counter1capture0`| `counter1capture0pin`    |`(counter1capture0, pin)`
+ * `counter2`            | `counter2compare0counter`|`(counter2compare0, counter)`
+ * `counter2`            | `counter2compare1counter`|`(counter2compare1, counter)`
+ * `pin_counter2compare0`| `counter2compare0pin`    |`(counter2compare0, pin)`
+ * `pin_counter2compare1`| `counter2compare1pin`    |`(counter2compare1, pin)`
+ *
+ */
+
+
+/**
+ * @page atmegax8
+ * @subsection atmegax8_interrupts Interrupts
+ * 
+ * HWA interrupt name                      | Atmel name   | Comments
+ * :---------------------------------------|--------------|------------------------
+ * `int0`                                  | INT0         | External Interrupt Request 0
+ * `int1`                                  | INT1         | External Interrupt Request 1
+ * `pcic0`                                 | PCINT0       | Pin Change Interrupt Request 0
+ * `pcic1`                                 | PCINT1       | Pin Change Interrupt Request 1
+ * `pcic2`                                 | PCINT2       | Pin Change Interrupt Request 2
+ * `watchdog0`                             | WDT          | Watchdog Time-out Interrupt
+ * `counter2,compare0`                     | TIMER2 COMPA | Timer/Counter2 Compare Match A
+ * `counter2,compare1`                     | TIMER2 COMPB | Timer/Counter2 Compare Match B
+ * `counter2`<br>`counter2,overflow`       | TIMER2 OVF   | Timer/Counter2 Overflow
+ * `counter1,capture0`                     | TIMER1 CAPT  | Timer/Counter1 Capture Event
+ * `counter1,compare0`                     | TIMER1 COMPA | Timer/Counter1 Compare Match A
+ * `counter1,compare1`                     | TIMER1 COMPB | Timer/Coutner1 Compare Match B
+ * `counter1`<br>`counter1,overflow`       | TIMER1 OVF   | Timer/Counter1 Overflow
+ * `counter0,compare0`                     | TIMER0 COMPA | Timer/Counter0 Compare Match A
+ * `counter0,compare1`                     | TIMER0 COMPB | Timer/Counter0 Compare Match B
+ * `counter0`<br>`counter0,overflow`       | TIMER0 OVF   | Timer/Counter0 Overflow
+ * `spi0`                                  | SPI,STC      | SPI Serial Transfer Complete
+ * `uart0,rxc`                             | USART,RXC    | USART Rx Complete
+ * `uart0,txqne`                           | USART,UDRE   | USART, Data Register Empty
+ * `uart0,txc`                             | USART,TXC    | USART, Tx Complete
+ * `adc0`                                  | ADC          | ADC conversion complete
+ * `eeprom0`                               | EE READY     | EEPROM ready
+ * `eeprom0,ready`                         | EE READY     | EEPROM ready
+ * `acmp0`                                 | ANALOG COMP  | Analog comparator
+ * `twi0`                                  | TWI          | 2-wire Serial Interface
+ * `flash0`                                | SPM READY    | Store Program Memory Ready
+ */
+
+/**
+ * @ingroup atmegax8_interrupts
+ * @brief Definition of the interrupts
+ */
+#define hw_irq_int0_			_irq, int0,	 1, ie,	 if
+#define hw_irq_int1_			_irq, int1,	 2, ie,	 if
+#define hw_irq_pcic0_			_irq, pcic0,	 3, ie,	 if
+#define hw_irq_pcic1_			_irq, pcic1,	 4, ie,	 if
+#define hw_irq_pcic2_			_irq, pcic2,	 5, ie,	 if
+#define hw_irq_watchdog0_		_irq, watchdog0,	 6, ie,	 if
+							   
+#define hw_irq_counter2_compare0	_irq, counter2compare0,	 7, ie,	 if
+#define hw_irq_counter2compare0_	_irq, counter2compare0,	 7, ie,	 if
+#define hw_irq_counter2_compare1	_irq, counter2compare1,	 8, ie,	 if
+#define hw_irq_counter2compare1_	_irq, counter2compare1,	 8, ie,	 if
+#define hw_irq_counter2_overflow	_irq, counter2,	 9, ie,	 if
+#define hw_irq_counter2			_irq, counter2,	 9, ie,	 if
+							   
+#define hw_irq_counter1_capture0	_irq, counter1capture0,	10, ie,	 if
+#define hw_irq_counter1capture0_	_irq, counter1capture0,	10, ie,	 if
+#define hw_irq_counter1_compare0	_irq, counter1compare0,	11, ie,	 if
+#define hw_irq_counter1compare0_	_irq, counter1compare0,	11, ie,	 if
+#define hw_irq_counter1_compare1	_irq, counter1compare1,	12, ie,	 if
+#define hw_irq_counter1compare1_	_irq, counter1compare1,	12, ie,	 if
+#define hw_irq_counter1_overflow	_irq, counter1, 13, ie,	 if
+#define hw_irq_counter1_		_irq, counter1, 13, ie,	 if
+							   
+#define hw_irq_counter0_compare0	_irq, counter0compare0,	14, ie,	 if
+#define hw_irq_counter0compare0_	_irq, counter0compare0,	14, ie,	 if
+#define hw_irq_counter0_compare1	_irq, counter0compare1,	15, ie,	 if
+#define hw_irq_counter0compare1_	_irq, counter0compare1,	15, ie,	 if
+#define hw_irq_counter0_overflow	_irq, counter0, 16, ie,	 if
+#define hw_irq_counter0_		_irq, counter0, 16, ie,	 if
+							   
+#define hw_irq_spi0_			_irq, spi0,	17, ie,	 if
+#define hw_irq_spi0_txc			_irq, spi0,	17, ie,	 if
+							   
+#define hw_irq_uart0_rxc		_irq, uart0,	18, ierxc,  ifrxc
+#define hw_irq_uart0_txqnf		_irq, uart0,	19, ietxqe, iftxqnf
+#define hw_irq_uart0_txc		_irq, uart0,	20, ietxc,  iftxc
+							   
+#define hw_irq_adc0_			_irq, adc0,	21, ie,	   if
+							   
+#define hw_irq_eeprom0			_irq, eeprom0,	22, ie, /* no irq flag */
+#define hw_irq_eeprom0_ready		_irq, eeprom0,	22, ie,
+							   
+#define hw_irq_acmp0_			_irq, acmp0,	23, ie, if
+							   
+#define hw_irq_twi0_			_irq, twi0,	24, ie, if
+							   
+#define hw_irq_flash0_			_irq, flash0,	25, ie, if
+
+
+/**
+ * @page atmegax8
+ * @subsection atmegax8_pins Ports and pins
+ *
+ * Some of the pins may not be available depending on the fuses configuration.
+ *
+ * HWA name	| 32qfp/mlf   | Class			   | Atmel name
+ * -------------|-------------|----------------------------|-----------
+ * `portb`	|	      | @ref atmelavr_io1a "_io1a" | PORTB
+ * `pb0` | `HW_PIN(12)` | @ref atmelavr_io1a "_io1a" | PB0
+ * `pb1` | `HW_PIN(13)` | @ref atmelavr_io1a "_io1a" | PB1
+ * `pb2` | `HW_PIN(14)` | @ref atmelavr_io1a "_io1a" | PB2
+ * `pb3` | `HW_PIN(15)` | @ref atmelavr_io1a "_io1a" | PB3
+ * `pb4` | `HW_PIN(16)` | @ref atmelavr_io1a "_io1a" | PB4
+ * `pb5` | `HW_PIN(17)` | @ref atmelavr_io1a "_io1a" | PB5
+ * `pb6` | `HW_PIN(7)`	| @ref atmelavr_io1a "_io1a" | PB6
+ * `pb7` | `HW_PIN(8)`	| @ref atmelavr_io1a "_io1a" | PB7
+ * `portc`	|	      | @ref atmelavr_io1a "_io1a" | PORTC
+ * `pc0` | `HW_PIN(23)` | @ref atmelavr_io1a "_io1a" | PC0
+ * `pc1` | `HW_PIN(24)` | @ref atmelavr_io1a "_io1a" | PC1
+ * `pc2` | `HW_PIN(25)` | @ref atmelavr_io1a "_io1a" | PC2
+ * `pc3` | `HW_PIN(26)` | @ref atmelavr_io1a "_io1a" | PC3
+ * `pc4` | `HW_PIN(27)` | @ref atmelavr_io1a "_io1a" | PC4
+ * `pc5` | `HW_PIN(28)` | @ref atmelavr_io1a "_io1a" | PC5
+ * `pc6` | `HW_PIN(29)` | @ref atmelavr_io1a "_io1a" | PC6
+ * `portd`	|	      | @ref atmelavr_io1a "_io1a" | PORTD
+ * `pd0` | `HW_PIN(30)` | @ref atmelavr_io1a "_io1a" | PD0
+ * `pd1` | `HW_PIN(31)` | @ref atmelavr_io1a "_io1a" | PD1
+ * `pd2` | `HW_PIN(32)` | @ref atmelavr_io1a "_io1a" | PD2
+ * `pd3` | `HW_PIN(1)`	| @ref atmelavr_io1a "_io1a" | PD3
+ * `pd4` | `HW_PIN(2)`	| @ref atmelavr_io1a "_io1a" | PD4
+ * `pd5` | `HW_PIN(9)`	| @ref atmelavr_io1a "_io1a" | PD5
+ * `pd6` | `HW_PIN(10)` | @ref atmelavr_io1a "_io1a" | PD6
+ * `pd7` | `HW_PIN(11)` | @ref atmelavr_io1a "_io1a" | PD7
+ */
+
+
+/**
+ * @page atmegax8
+ * @subsection atmegax8_pm Power Management
+ *
+ * The following peripherals can be powered on/off using the `power`
+ * instruction:
+ *
+ *  * `twi0`
+ *  * `counter0`
+ *  * `counter1`
+ *  * `counter2`
+ *  * `spi0`
+ *  * `uart0`
+ *  * `adc0`
+ *
+ * @code
+ * hw( power, counter0, on );
+ * @endcode
+ */
+
+/**
+ * @page atmegax8
+ * @section atmegax8_device Symbols
  *
  * HWA defines the following symbols describing the target device and its
  * hardware configuration:
@@ -361,198 +586,6 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  *									       *
  *******************************************************************************/
 
-/**
- * @section atmegax8_object Peripherals
- *
- * __Note__ All the peripherals are not completely implemented yet.
- *
- * Object name          | Class                           | Comments
- * :--------------------|---------------------------------|:----------------------------------
- * `core0`              |@ref atmelavr_coreb "_coreb"     |The core
- * `int0`               |@ref atmelavr_inta "_inta"       |External interrupt INT0
- * `int1`               |@ref atmelavr_inta "_inta"       |External interrupt INT1
- * `port0`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port B (PORT0)
- * `port1`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port C (PORT1)
- * `port2`              |@ref atmelavr_p8a "_p8a"         |General purpose I/O port D (PORT2)
- * `pcic0`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
- * `pcic1`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
- * `pcic2`              |@ref atmelavr_pcica "_pcica"     |Pin change interrupt controller
- * `watchdog0`          |@ref atmelavr_wdogb "_wdogb"     |Watchdog (WDG)
- * `counter0`           |@ref atmelavr_c8a "_c8a"         |8-bit counter-timer (T0)
- * `(counter0,compare0)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 0 of counter0 (OC0A)
- * `(counter0,compare1)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 1 of counter0 (OC0B)
- * `counter1`           |@ref atmelavr_c16a "_c16a"       |16-bit counter-timer (T1)
- * `(counter1,compare0)`|@ref atmelavr_cmp16a "_cmp16a"   |Compare unit 0 of counter1 (OC1A)
- * `(counter1,compare1)`|@ref atmelavr_cmp16a "_cmp16a"   |Compare unit 1 of counter1 (OC1B)
- * `(counter1,capture0)`|@ref atmelavr_cap16a "_cap16a"   |Capture unit 0 of counter1 (ICP1)
- * `counter2`           |@ref atmelavr_c8c "_c8c"         |8-bit counter-timer (T2)
- * `(counter2,compare0)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 0 of counter2 (OC2A)
- * `(counter2,compare1)`|@ref atmelavr_cmp8a "_cmp8a"     |Compare unit 1 of counter2 (OC2B)
- * `prescaler0`         |@ref atmelavr_psca "_psca"       |counter0/counter1 prescaler (PSC0)
- * `spi0`               |@ref atmelavr_spia "_spia"       |Serial Peripheral Interface
- * `uart0`              |@ref atmelavr_uarta "_uarta"     |Universal Asynchronous Receiver Transmitter
- * `twi0`               |@ref atmelavr_twia "_twia"       |2-wire Serial Interface
- * `acmp0`              |@ref atmelavr_acmpa "_acmpa"     |Analog Comparator
- * `adc0`               |@ref atmelavr_ad10b "_ad10b"     |10-bit Analog to Digital Converter
- * `eeprom0`            |@ref atmelavr_eeproma "_eeproma" |Eeprom memory
- * `flash0`             |@ref atmelavr_flasha "_flasha"   |Flash memory
- *
- * @subsection atmegax8_swobj Software-emulated peripherals
- * 
- * HWA provides the following software-emulated peripherals:
- * 
- * Name			  | Class		  | Comments
- * :----------------------|-----------------------|:--------------------------------------
- * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
- *
- * @subsection atmegax8_objrel Aliases and relations
- * @note This section needs to be rewritten.
- *
- * Some objects can be accessed from their relatives or can have more than one
- * name. There are the existing relations between the device's objects and their
- * different names:
- *
- * Name          | Alias                | Path
- * :-------------|----------------------|:-----
- * `prescaler0`          | `counter0prescaler`      |`(counter0, prescaler)`
- * `prescaler0`          | `counter0prescaler0`     |`(counter0, prescaler0)`
- * `prescaler0`          | `counter1prescaler`      |`(counter1, prescaler)`
- * `prescaler0`          | `counter1prescaler0`     |`(counter1, prescaler0)`
- * `counter0compare0`    | `counter0compare0`       |`(counter0, compare0)`
- * `counter0compare1`    | `counter0compare1`       |`(counter0, compare1)`
- * `counter0`            | `counter0compare0counter`|`(counter0compare0, counter)`
- * `counter0`            | `counter0compare1counter`|`(counter0compare1, counter)`
- * `pin_counter0compare0`| `counter0compare0pin`    |`(counter0compare0, pin)`
- * `pin_counter0compare1`| `counter0compare1pin`    |`(counter0compare1, pin)`
- * `counter1compare0`    | `counter1compare0`       |`(counter1, compare0)`
- * `counter1compare1`    | `counter1compare1`       |`(counter1, compare1)`
- * `counter1`            | `counter1compare0counter`|`(counter1compare0, counter)`
- * `counter1`            | `counter1compare1counter`|`(counter1compare1, counter)`
- * `pin_counter1compare0`| `counter1compare0pin`    |`(counter1compare0, pin)`
- * `pin_counter1compare1`| `counter1compare1pin`    |`(counter1compare1, pin)`
- * `pin_counter1capture0`| `counter1capture0pin`    |`(counter1capture0, pin)`
- * `counter2`            | `counter2compare0counter`|`(counter2compare0, counter)`
- * `counter2`            | `counter2compare1counter`|`(counter2compare1, counter)`
- * `pin_counter2compare0`| `counter2compare0pin`    |`(counter2compare0, pin)`
- * `pin_counter2compare1`| `counter2compare1pin`    |`(counter2compare1, pin)`
- *
- */
-
-
-/*******************************************************************************
- *									       *
- *	Interrupts							       *
- *									       *
- *******************************************************************************/
-
-/**
- * @page atmegax8
- * @section atmegax8_interrupts Interrupts
- * 
- * HWA interrupt name                      | Atmel name   | Comments
- * :---------------------------------------|--------------|------------------------
- * `int0`                                  | INT0         | External Interrupt Request 0
- * `int1`                                  | INT1         | External Interrupt Request 1
- * `pcic0`                                 | PCINT0       | Pin Change Interrupt Request 0
- * `pcic1`                                 | PCINT1       | Pin Change Interrupt Request 1
- * `pcic2`                                 | PCINT2       | Pin Change Interrupt Request 2
- * `watchdog0`                             | WDT          | Watchdog Time-out Interrupt
- * `counter2,compare0`                     | TIMER2 COMPA | Timer/Counter2 Compare Match A
- * `counter2,compare1`                     | TIMER2 COMPB | Timer/Counter2 Compare Match B
- * `counter2`<br>`counter2,overflow`       | TIMER2 OVF   | Timer/Counter2 Overflow
- * `counter1,capture0`                     | TIMER1 CAPT  | Timer/Counter1 Capture Event
- * `counter1,compare0`                     | TIMER1 COMPA | Timer/Counter1 Compare Match A
- * `counter1,compare1`                     | TIMER1 COMPB | Timer/Coutner1 Compare Match B
- * `counter1`<br>`counter1,overflow`       | TIMER1 OVF   | Timer/Counter1 Overflow
- * `counter0,compare0`                     | TIMER0 COMPA | Timer/Counter0 Compare Match A
- * `counter0,compare1`                     | TIMER0 COMPB | Timer/Counter0 Compare Match B
- * `counter0`<br>`counter0,overflow`       | TIMER0 OVF   | Timer/Counter0 Overflow
- * `spi0`                                  | SPI,STC      | SPI Serial Transfer Complete
- * `uart0,rxc`                             | USART,RXC    | USART Rx Complete
- * `uart0,txqne`                           | USART,UDRE   | USART, Data Register Empty
- * `uart0,txc`                             | USART,TXC    | USART, Tx Complete
- * `adc0`                                  | ADC          | ADC conversion complete
- * `eeprom0`                               | EE READY     | EEPROM ready
- * `eeprom0,ready`                         | EE READY     | EEPROM ready
- * `acmp0`                                 | ANALOG COMP  | Analog comparator
- * `twi0`                                  | TWI          | 2-wire Serial Interface
- * `flash0`                                | SPM READY    | Store Program Memory Ready
- */
-/**
- * @ingroup atmegax8_interrupts
- * @brief Definition of the interrupts
- */
-#define hw_irq_int0_			_irq, int0,	 1, ie,	 if
-#define hw_irq_int1_			_irq, int1,	 2, ie,	 if
-#define hw_irq_pcic0_			_irq, pcic0,	 3, ie,	 if
-#define hw_irq_pcic1_			_irq, pcic1,	 4, ie,	 if
-#define hw_irq_pcic2_			_irq, pcic2,	 5, ie,	 if
-#define hw_irq_watchdog0_		_irq, watchdog0,	 6, ie,	 if
-							   
-#define hw_irq_counter2_compare0	_irq, counter2compare0,	 7, ie,	 if
-#define hw_irq_counter2compare0_	_irq, counter2compare0,	 7, ie,	 if
-#define hw_irq_counter2_compare1	_irq, counter2compare1,	 8, ie,	 if
-#define hw_irq_counter2compare1_	_irq, counter2compare1,	 8, ie,	 if
-#define hw_irq_counter2_overflow	_irq, counter2,	 9, ie,	 if
-#define hw_irq_counter2			_irq, counter2,	 9, ie,	 if
-							   
-#define hw_irq_counter1_capture0	_irq, counter1capture0,	10, ie,	 if
-#define hw_irq_counter1capture0_	_irq, counter1capture0,	10, ie,	 if
-#define hw_irq_counter1_compare0	_irq, counter1compare0,	11, ie,	 if
-#define hw_irq_counter1compare0_	_irq, counter1compare0,	11, ie,	 if
-#define hw_irq_counter1_compare1	_irq, counter1compare1,	12, ie,	 if
-#define hw_irq_counter1compare1_	_irq, counter1compare1,	12, ie,	 if
-#define hw_irq_counter1_overflow	_irq, counter1, 13, ie,	 if
-#define hw_irq_counter1_		_irq, counter1, 13, ie,	 if
-							   
-#define hw_irq_counter0_compare0	_irq, counter0compare0,	14, ie,	 if
-#define hw_irq_counter0compare0_	_irq, counter0compare0,	14, ie,	 if
-#define hw_irq_counter0_compare1	_irq, counter0compare1,	15, ie,	 if
-#define hw_irq_counter0compare1_	_irq, counter0compare1,	15, ie,	 if
-#define hw_irq_counter0_overflow	_irq, counter0, 16, ie,	 if
-#define hw_irq_counter0_		_irq, counter0, 16, ie,	 if
-							   
-#define hw_irq_spi0_			_irq, spi0,	17, ie,	 if
-#define hw_irq_spi0_txc			_irq, spi0,	17, ie,	 if
-							   
-#define hw_irq_uart0_rxc		_irq, uart0,	18, ierxc,  ifrxc
-#define hw_irq_uart0_txqnf		_irq, uart0,	19, ietxqe, iftxqnf
-#define hw_irq_uart0_txc		_irq, uart0,	20, ietxc,  iftxc
-							   
-#define hw_irq_adc0_			_irq, adc0,	21, ie,	   if
-							   
-#define hw_irq_eeprom0			_irq, eeprom0,	22, ie, /* no irq flag */
-#define hw_irq_eeprom0_ready		_irq, eeprom0,	22, ie,
-							   
-#define hw_irq_acmp0_			_irq, acmp0,	23, ie, if
-							   
-#define hw_irq_twi0_			_irq, twi0,	24, ie, if
-							   
-#define hw_irq_flash0_			_irq, flash0,	25, ie, if
-
-
-/**
- * @page atmegax8
- * @section atmegax8_pm Power Management
- *
- * The following peripherals can be powered on/off using the `power`
- * instruction:
- *
- *  * `twi0`
- *  * `counter0`
- *  * `counter1`
- *  * `counter2`
- *  * `spi0`
- *  * `uart0`
- *  * `adc0`
- *
- * @code
- * hw( power, counter0, on );
- * @endcode
- */
-
 
 /*******************************************************************************
  *									       *
@@ -609,42 +642,6 @@ typedef struct {
  *	Ports and pins							       *
  *									       *
  *******************************************************************************/
-
-/**
- * @page atmegax8
- * @section atmegax8_pins Ports and pins
- *
- * Some of the pins may not be available depending on the fuses configuration.
- *
- * HWA name	| 32qfp/mlf   | Class			   | Atmel name
- * -------------|-------------|----------------------------|-----------
- * `portb`	|	      | @ref atmelavr_io1a "_io1a" | PORTB
- * `pb0` | `HW_PIN(12)` | @ref atmelavr_io1a "_io1a" | PB0
- * `pb1` | `HW_PIN(13)` | @ref atmelavr_io1a "_io1a" | PB1
- * `pb2` | `HW_PIN(14)` | @ref atmelavr_io1a "_io1a" | PB2
- * `pb3` | `HW_PIN(15)` | @ref atmelavr_io1a "_io1a" | PB3
- * `pb4` | `HW_PIN(16)` | @ref atmelavr_io1a "_io1a" | PB4
- * `pb5` | `HW_PIN(17)` | @ref atmelavr_io1a "_io1a" | PB5
- * `pb6` | `HW_PIN(7)`	| @ref atmelavr_io1a "_io1a" | PB6
- * `pb7` | `HW_PIN(8)`	| @ref atmelavr_io1a "_io1a" | PB7
- * `portc`	|	      | @ref atmelavr_io1a "_io1a" | PORTC
- * `pc0` | `HW_PIN(23)` | @ref atmelavr_io1a "_io1a" | PC0
- * `pc1` | `HW_PIN(24)` | @ref atmelavr_io1a "_io1a" | PC1
- * `pc2` | `HW_PIN(25)` | @ref atmelavr_io1a "_io1a" | PC2
- * `pc3` | `HW_PIN(26)` | @ref atmelavr_io1a "_io1a" | PC3
- * `pc4` | `HW_PIN(27)` | @ref atmelavr_io1a "_io1a" | PC4
- * `pc5` | `HW_PIN(28)` | @ref atmelavr_io1a "_io1a" | PC5
- * `pc6` | `HW_PIN(29)` | @ref atmelavr_io1a "_io1a" | PC6
- * `portd`	|	      | @ref atmelavr_io1a "_io1a" | PORTD
- * `pd0` | `HW_PIN(30)` | @ref atmelavr_io1a "_io1a" | PD0
- * `pd1` | `HW_PIN(31)` | @ref atmelavr_io1a "_io1a" | PD1
- * `pd2` | `HW_PIN(32)` | @ref atmelavr_io1a "_io1a" | PD2
- * `pd3` | `HW_PIN(1)`	| @ref atmelavr_io1a "_io1a" | PD3
- * `pd4` | `HW_PIN(2)`	| @ref atmelavr_io1a "_io1a" | PD4
- * `pd5` | `HW_PIN(9)`	| @ref atmelavr_io1a "_io1a" | PD5
- * `pd6` | `HW_PIN(10)` | @ref atmelavr_io1a "_io1a" | PD6
- * `pd7` | `HW_PIN(11)` | @ref atmelavr_io1a "_io1a" | PD7
- */
 
 /*	Objects				class, address
  */
@@ -1900,8 +1897,3 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 }
 
 #endif /* !defined __ASSEMBLER__ */
-
-/**
- * @page atmegax8
- * <br>
- */

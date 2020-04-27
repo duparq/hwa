@@ -17,47 +17,20 @@
 /**
  * @file
  * @brief STM32F103
+ * @page stm32f103 STM32F103
  */
 
 #include "../hwa_1.h"
 
 /**
- * @page stm32f103 STM32F103
- *
- *  * @subpage stm32f103rbt6
- *  * @subpage stm32f103c8t6
- *  * @subpage stm32f103vct6
+ * @page stm32f103
+ * @section stm32f103_objects Objects
  */
+
 
 /**
  * @page stm32f103
- * @section stm32f103_sym Defined symbols
- *
- * HWA defines the following symbols describing the target device and its
- * hardware configuration:
- *
- * Symbol		    | Value
- * :------------------------|:-----------
- * `HW_DEVICE_STM32F103`    |Void.
- * `HW_DEVICE_HSIHZ`        |8*1000000
- * `HW_DEVICE_LSIHZ`        |40*1000
- */
-#define HW_DEVICE_STM32F103
-/* #define HW_DEVICE_ARCH		arm */
-#define HW_DEVICE_HSIHZ			8*1000000
-#define HW_DEVICE_LSIHZ			40*1000
-
-
-
-/*******************************************************************************
- *									       *
- *	Interrupts							       *
- *									       *
- *******************************************************************************/
-
-/**
- * @page stm32f103
- * @section stm32f103_interrupts Interrupts
+ * @subsection stm32f103_interrupts Interrupts
  *
  * The device has a Nested Vectored Interrupt Controller (@ref stm32_nvica "NVIC").
  * 
@@ -92,6 +65,36 @@
 #define __vector_29			hw_isr_counter3
 #define __vector_30			hw_isr_counter4
 /* #define hw_isr_50			hw_isr_counter5 */
+
+
+/**
+ * @page stm32f103
+ *
+ *  * @subpage stm32f103rbt6
+ *  * @subpage stm32f103c8t6
+ *  * @subpage stm32f103vct6
+ */
+
+/**
+ * @page stm32f103
+ * @section stm32f103_sym Defined symbols
+ *
+ * HWA defines the following symbols describing the target device and its
+ * hardware configuration:
+ *
+ * Symbol		    | Value
+ * :------------------------|:-----------
+ * `HW_DEVICE_STM32F103`    |Void.
+ * `HW_DEVICE_HSIHZ`        |8*1000000
+ * `HW_DEVICE_LSIHZ`        |40*1000
+ */
+#define HW_DEVICE_STM32F103
+/* #define HW_DEVICE_ARCH		arm */
+#define HW_DEVICE_HSIHZ			8*1000000
+#define HW_DEVICE_LSIHZ			40*1000
+
+
+
 
 
 #include "../classes/nvica_1.h"
@@ -473,6 +476,13 @@
 #define hw_counter4_irq			_irq, counter4, 30, ie, if
 #define hw_counter4_nvic		_nvirq, 30
 #define hw_counter4_rcc			_rccen, tim4en
+
+
+#include "../classes/cc16a_1.h"
+
+/*	Object				class, address
+ */
+#define hw_counter2_channel1		_cc16a, 0
 
 
 /*******************************************************************************

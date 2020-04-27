@@ -1,9 +1,9 @@
 
-HWA
-===
+HardWare Advanced
+=================
 
-HWA is a set of C definitions designed for bare metal programming in a pleasant
-style.
+HWA stands for HardWare Advanced. HWA is a set of C definitions designed for
+bare metal programming with a pleasant style.
 
 To give you an idea, the following code blinks a LED connected to an
 STM32F103RBT6 using Systick interrupts and sleeping mode:
@@ -51,21 +51,23 @@ The resulting binary is 402 bytes long: 94 bytes of code + 308 bytes of vectors.
 HWA in short
 ============
 
-To achieve its goals, HWA provides:
+HWA provides:
 
  * a set of objects that represent the hardware,
- * one single object-oriented generic instruction, `hw(...)`, that can act on
-   all hardware objects and accepts various types and various numbers of
-   mandatory and optionnal arguments, putting the focus on the expected result
-   rather than on the values to be written in registers,
- * a transactional processing mechanism with the `hwa(...)` instruction that
-   allows further optimization of the binary code produced,
- * an error-checking mechanism that produces messages to help the developer
-   quickly solve the problems.
+ * the generic instruction, `hw(...)`, that acts on these objects using
+   various types and numbers of mandatory and optionnal symbolic arguments,
+ * the generic instruction, `hwa(...)`, that provides a transactional processing
+   mechanism that allows further optimization of the binary code produced,
+ * an error-checking mechanism that produces meaningful messages to help the
+   developer quickly solve the problems.
 
 
 Performances and compatibility
 ==============================
+
+Any C compiler compatible with the
+[C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
+should be able to compile HWA code.
 
 Because it is not a library, using HWA does not affect negatively the efficiency
 of the binary code produced either in terms of size, execution speed, or memory
@@ -79,9 +81,6 @@ of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
 `atmel/avr/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
 `atmel/avr/examples/diabolo`) are examples of such a usage.
 
-Any C compiler compatible with the
-[C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
-should be able to compile HWA code.
 
 
 Examples
@@ -105,8 +104,8 @@ Building your own copy of the documentation from the sources requires
 the HWA directory, then open the `doxygen/html/index.html` page.
 
 
-Supported devices
-=================
+Supported hardware
+==================
 
  * HWA supports almost fully:
    * Atmel AVR:
@@ -127,16 +126,6 @@ Supported devices
    * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
    * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
    * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector
-
-
-Organization of the code
-========================
-
-The base source code of HWA is in the `hwa/` directory.
-
-Device-related sources are stored in `vendor/architecture/` directories
-(`atmel/avr/`, `st/stm32/`, `espressif/esp8266/`, ...) where are stored
-`classes/`, `devices/`, and `examples/` directories.
 
 
 Status

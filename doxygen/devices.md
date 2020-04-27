@@ -1,8 +1,6 @@
 
-Devices {#devices}
-=======
-
-[TOC]
+Hardware {#devices}
+========
 
   * @subpage atmel "Atmel"
   * @subpage espressif "Espressif"
