@@ -157,9 +157,11 @@
 #define _hw_isa_reg__cb1		, 1
 #define _hw_isa_reg__cb2		, 1
 #define _hw_isa_reg__ob1		, 1
-#define _hw_isa_reg__or2b2		, 1
+#define _hw_isa_reg__ob2		, 1
+//#define _hw_isa_reg__or2b2		, 1
 #define _hw_isa_reg__xob1		, 1
-#define _hw_isa_reg__xb2		, 1
+#define _hw_isa_reg__xob2		, 1
+//#define _hw_isa_reg__xb2		, 1
 
 #define _hw_isa_leftbkt(...)		, 1
 
@@ -221,7 +223,7 @@
  * @brief Object logical register made of two groups of consecutive bits.
  */
 #define hw_class__ob2
-#define hw_class__or2b2
+//#define hw_class__or2b2
 
 
 /*
@@ -238,7 +240,7 @@
  */
 #define hw_class__xob1
 #define hw_class__xob2
-#define hw_class__xb2		// Two groups of bits inside the same register of another object
+//#define hw_class__xb2		// Two groups of bits inside the same register of another object
 
 
 /*

@@ -265,8 +265,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  *	     );
  * @endcode
  */
-#define hw_configure__swuarta	, _hw_cfswuarta
-#define hwa_configure__swuarta	, _hwa_cfswuarta
+#define hw_configure__swuarta		, _hw_cfswuarta
+#define hwa_configure__swuarta		, _hwa_cfswuarta
 
 /*  Configuration of the relatives is easier inside a function to handle
  *  undeclared pins.
@@ -395,7 +395,7 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  * uint8_t byte = hw( read, UART ); // Clears the 'rxc' status flag
  * @endcode
  */
-#define hw_read__swuarta	, _hw_swuarta_read
+#define hw_read__swuarta		, _hw_swuarta_read
 #define _hw_swuarta_read(o,a,...)	_hw_##o##_getbyte() HW_EOL(__VA_ARGS__)
 
 #if defined hw_swuart0_pin_rxd
@@ -425,7 +425,7 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
  * hw_write( UART, '#' ); // Clears the 'txc' status flag
  * @endcode
  */
-#define hw_write__swuarta	, _hw_swuarta_write
+#define hw_write__swuarta		, _hw_swuarta_write
 #define _hw_swuarta_write(o,a,v,...)	_hw_##o##_putbyte(v) HW_EOL(__VA_ARGS__)
 
 #if defined hw_swuart0_pin_txd

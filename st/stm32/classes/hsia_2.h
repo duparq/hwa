@@ -15,7 +15,7 @@
  * `power`:
  * @code
  * hw | hwa ( power, hsi,   on
- *                        | off );
+ *			  | off );
  * @endcode
  */
 

@@ -30,14 +30,14 @@
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
-#define _hw_reg__pcf2a__reg		_r32, 0x00, 0x0785, 0
+#define _hw__pcf2a__reg			_r32, 0x00, 0x0785, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define _hw_reg__pcf2a_wue		_cb1, _reg, 1, 10	// Wake-up enable
-#define _hw_reg__pcf2a_intt		_cb1, _reg, 3, 7	// Interrupt type
-#define _hw_reg__pcf2a_drv		_cb1, _reg, 1, 2	// Drive (push-pull / open drain)
-#define _hw_reg__pcf2a_src		_cb1, _reg, 1, 0	// Source (sigma-delta / gpio)
+#define _hw__pcf2a_wue			_cb1, _reg, 1, 10	// Wake-up enable
+#define _hw__pcf2a_intt			_cb1, _reg, 3, 7	// Interrupt type
+#define _hw__pcf2a_drv			_cb1, _reg, 1, 2	// Drive (push-pull / open drain)
+#define _hw__pcf2a_src			_cb1, _reg, 1, 0	// Source (sigma-delta / gpio)
 
 
 #if !defined __ASSEMBLER__

@@ -54,7 +54,7 @@
  * matches the counting register.
  *
  * @code
- * HW_ISR(counter0,compare0)       // "compare0" IRQ of counter 0
+ * HW_ISR(counter0,compare0)	   // "compare0" IRQ of counter 0
  * {
  *    // Process compare event
  * }

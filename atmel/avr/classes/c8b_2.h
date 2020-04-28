@@ -69,7 +69,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  *	//  Clock source
  *	//
  *	clock,	     none			 // No clock, counter stopped
- *                 | ioclk [/ 2**{n}]            // I/O clock [divided], n in [ 0..14 ]
+ *		   | ioclk [/ 2**{n}]		 // I/O clock [divided], n in [ 0..14 ]
  *
  *	//  Class _c8b counters all loop from 0 to top
  *	//
@@ -108,8 +108,8 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   _hwa_write(o, cs, HW_VF(_hw_c8b_clock_##v));				\
   HW_Y(_hwa_cfc8b_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
-#define _hw_c8b_clock_none			, _hw_c8bck_none, 0
-#define _hw_c8b_clock_ioclk			, _hw_c8bck_ioclk, 16384.0
+#define _hw_c8b_clock_none		, _hw_c8bck_none, 0
+#define _hw_c8b_clock_ioclk		, _hw_c8bck_ioclk, 16384.0
 
 /*  Optionnal argument `direction`
  */
@@ -190,7 +190,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hw( read, counter0 );
  * @endcode
  */
-#define hw_read__c8b		, _hw_c8brd
+#define hw_read__c8b			, _hw_c8brd
 #define _hw_c8brd(o,a,...)		 _hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 /**
@@ -199,7 +199,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hw( write, counter0, value );
  * @endcode
  */
-#define hw_write__c8b		, _hw_c8bwr
+#define hw_write__c8b			, _hw_c8bwr
 #define _hw_c8bwr(o,a,v,...)		 _hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
@@ -208,7 +208,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
  * hwa( write, counter0, value );
  * @endcode
  */
-#define hwa_write__c8b		, _hwa_c8bwr
+#define hwa_write__c8b			, _hwa_c8bwr
 #define _hwa_c8bwr(o,a,v,...)		 _hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
@@ -278,7 +278,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   }
 
 #define _hwa_setup__c8b(o,a)			\
-  _hwa_setup_r( o, ccr      );			\
+  _hwa_setup_r( o, ccr	    );			\
   _hwa_setup_r( o, count    );			\
   _hwa_setup_r( o, compare2 );
 
@@ -288,7 +288,7 @@ HW_INLINE uint8_t _hw_c8bck_ioclk( float v )
   _hwa_init_r( o, compare2, 0 );
 
 #define _hwa_commit__c8b(o,a)			\
-  _hwa_commit_r( o, ccr      );			\
+  _hwa_commit_r( o, ccr	     );			\
   _hwa_commit_r( o, count    );			\
   _hwa_commit_r( o, compare2 );
 

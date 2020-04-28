@@ -21,46 +21,46 @@
  * @code
  * hwa( configure, counter0,
  *
- *      //  How the counter is clocked
- *      //
- *      clock,       none                        // No clock, the counter is stopped
- *                 | ioclk [/ 8|64|256|1024]     // I/O clock (frequency = HW_SYSHZ)
- *                 | external_rising             // External input, rising edge
- *                 | external_falling,           // External input, falling edge
+ *	//  How the counter is clocked
+ *	//
+ *	clock,	     none			 // No clock, the counter is stopped
+ *		   | ioclk [/ 8|64|256|1024]	 // I/O clock (frequency = HW_SYSHZ)
+ *		   | external_rising		 // External input, rising edge
+ *		   | external_falling,		 // External input, falling edge
  *
- *      //  How does this counter count
- *      //
- *      direction,   up_loop                     // Count up and loop
- *                 | updown_loop,                // Count up and down alternately
+ *	//  How does this counter count
+ *	//
+ *	direction,   up_loop			 // Count up and loop
+ *		   | updown_loop,		 // Count up and down alternately
  *
- *      //  Class _c8a counters all count from 0
- *      //
- *    [ bottom,      0, ]
+ *	//  Class _c8a counters all count from 0
+ *	//
+ *    [ bottom,	     0, ]
  *
- *      //  The maximum value the counter reaches (the default is `max`)
- *      //
- *    [ top,         0xFF | 0x00FF | 255 | max   // Hardware fixed value 0xFF
- *                 | compare0,]                  // Value stored in the compare0 unit
+ *	//  The maximum value the counter reaches (the default is `max`)
+ *	//
+ *    [ top,	     0xFF | 0x00FF | 255 | max	 // Hardware fixed value 0xFF
+ *		   | compare0,]			 // Value stored in the compare0 unit
  *
- *      //  When the overflow flag is set
- *      //
- *    [ overflow,    after_bottom                // When the counter counts from 0 to 1
- *                 | after_top                   // When the counter counts from top to 0
- *                 | after_max ]                 // When the counter counts from max to 0
+ *	//  When the overflow flag is set
+ *	//
+ *    [ overflow,    after_bottom		 // When the counter counts from 0 to 1
+ *		   | after_top			 // When the counter counts from top to 0
+ *		   | after_max ]		 // When the counter counts from max to 0
  *    );
  * @endcode
  *
  * <br>
  * **Table of Atmel modes**
  *
- * Mode                |`direction`  |`top`     |`overflow`    |Overflow flag|Compare update
+ * Mode		       |`direction`  |`top`	|`overflow`    |Overflow flag|Compare update
  * :-------------------|:------------|:---------|:-------------|:-------|:---------
- * 0 Normal            |`up_loop`    |`max`     |`after_max`   |max -> 0|Immediate
- * 1 PWM, Phase correct|`updown_loop`|`max`     |`after_bottom`|0 -> 1	|At top
- * 2 CTC               |`up_loop`    |`compare0`|`after_max`   |max -> 0|Immediate
- * 3 Fast PWM          |`up_loop`    |`max`     |`after_max`   |max -> 0|At bottom
+ * 0 Normal	       |`up_loop`    |`max`	|`after_max`   |max -> 0|Immediate
+ * 1 PWM, Phase correct|`updown_loop`|`max`	|`after_bottom`|0 -> 1	|At top
+ * 2 CTC	       |`up_loop`    |`compare0`|`after_max`   |max -> 0|Immediate
+ * 3 Fast PWM	       |`up_loop`    |`max`	|`after_max`   |max -> 0|At bottom
  * 5 PWM, Phase correct|`updown_loop`|`compare0`|`after_bottom`|0 -> 1	|At top
- * 7 Fast PWM          |`up_loop`    |`max`     |`after_top`   |top -> 0|At bottom
+ * 7 Fast PWM	       |`up_loop`    |`max`	|`after_top`   |top -> 0|At bottom
  *
  * **Examples**
  * @code
@@ -68,9 +68,9 @@
  * //  The frequency of the IRQs is HW_SYSHZ/8/256.
  * //
  * hw( configure, counter0,
- *     clock,     ioclk/8,
+ *     clock,	  ioclk/8,
  *     direction, up_loop,
- *     top,       max,
+ *     top,	  max,
  *     overflow,  after_max );
  * @endcode
  *
@@ -79,14 +79,14 @@
  * //  having reached 0. The frequency of the IRQs is HW_SYSHZ/64/6.
  * //
  * hwa( configure, counter0,
- *      clock,     ioclk/64,
- *      direction, updown_loop,
- *      top,       compare0,
- *      overflow,  after_bottom );
+ *	clock,	   ioclk/64,
+ *	direction, updown_loop,
+ *	top,	   compare0,
+ *	overflow,  after_bottom );
  * hwa( write, (counter0,compare0), 3 );
  * @endcode
  */
-#define hwa_configure__c8a	, _hwa_cfc8a
+#define hwa_configure__c8a		, _hwa_cfc8a
 
 /*  Mandatory argument `clock`
  *
@@ -165,8 +165,8 @@
 /*  Optionnal argument `overflow`
  */
 #define _hw_c8a_overflow_after_bottom	, 0
-#define _hw_c8a_overflow_after_top		, 1
-#define _hw_c8a_overflow_after_max		, 2
+#define _hw_c8a_overflow_after_top	, 1
+#define _hw_c8a_overflow_after_max	, 2
 
 #define _hwa_cfc8a_koverflow_1(o,k,v,...)				\
   HW_Y(_hwa_cfc8a_voverflow_,_hw_c8a_overflow_##v)(o,v,__VA_ARGS__)
@@ -179,7 +179,7 @@
        && HW_A1(_hw_c8a_overflow_##v) == HW_A1(_hw_c8a_overflow_after_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `after_bottom` "	\
 	    "when direction is `up_loop`.");				\
-  hwa->o.config.overflow = HW_A1(_hw_c8a_overflow_##v);  HW_EOL(__VA_ARGS__)
+  hwa->o.config.overflow = HW_A1(_hw_c8a_overflow_##v);	 HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfc8a_koverflow_0(o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -321,14 +321,14 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
   /* Mode WGM  Operation  COUNTMODE    TOP   UPD  OVF  OCA		      OCB
    *						
-   *  0	  000  Normal	  LOOP_UP      0xFF  IMM  MAX+1  DIS,ToM,CoM,SoM	      DIS,ToM,CoM,SoM
-   *  2	  010  CTC	  LOOP_UP      OCRA  IMM  MAX+1  DIS,ToM,CoM,SoM	      DIS,ToM,CoM,SoM
+   *  0	  000  Normal	  LOOP_UP      0xFF  IMM  MAX+1	 DIS,ToM,CoM,SoM	      DIS,ToM,CoM,SoM
+   *  2	  010  CTC	  LOOP_UP      OCRA  IMM  MAX+1	 DIS,ToM,CoM,SoM	      DIS,ToM,CoM,SoM
    *
    *  3	  011  Fast PWM	  LOOP_UP      0xFF  BOT  MAX  DIS,SaBCoM,CaBSoM      DIS,SaBCoM,CaBSoM
    *  7	  111  Fast PWM	  LOOP_UP      OCRA  BOT  TOP  DIS,ToM,CoMSaB,SoMCaB  DIS,SaBCoM,CaBSoM
    *
-   *  1	  001  PWM, PhC	  LOOP_UPDOWN  0xFF  TOP  BOT+1  DIS,CmuSmd,SmuCmd      DIS,CmuSmd,SmuCmd	  
-   *  5	  101  PWM, PhC	  LOOP_UPDOWN  OCRA  TOP  BOT+1  DIS,ToM,CmuSmd,SmuCmd  DIS,CmuSmd,SmuCmd
+   *  1	  001  PWM, PhC	  LOOP_UPDOWN  0xFF  TOP  BOT+1	 DIS,CmuSmd,SmuCmd	DIS,CmuSmd,SmuCmd	  
+   *  5	  101  PWM, PhC	  LOOP_UPDOWN  OCRA  TOP  BOT+1	 DIS,ToM,CmuSmd,SmuCmd	DIS,CmuSmd,SmuCmd
    *
    *  4	  100  *Reserved*
    *  6	  110  *Reserved*
@@ -563,10 +563,10 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * @section atmelavr_rdc8a Read
  *
  * @code
- * uint8_t n = hw( read, counter0 );      // Get the count
+ * uint8_t n = hw( read, counter0 );	  // Get the count
  * @endcode
  */
-#define hw_read__c8a		, _hw_read_c8a
+#define hw_read__c8a			, _hw_read_c8a
 #define _hw_read_c8a(o,a,...)		_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 
@@ -577,7 +577,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hw( write, counter0, value );
  * @endcode
  */
-#define hw_write__c8a		, _hw_write_c8a
+#define hw_write__c8a			, _hw_write_c8a
 #define _hw_write_c8a(o,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
@@ -587,7 +587,7 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hwa( write, counter0, value );
  * @endcode
  */
-#define hwa_write__c8a		, _hwa_write_c8a
+#define hwa_write__c8a			, _hwa_write_c8a
 #define _hwa_write_c8a(o,a,v,...)	_hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
@@ -599,9 +599,9 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag(counter0) ) ) {       // Read overflow IRQ flag
- *   hw( clear, irqflag(counter0) );            // Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );            // Disable overflow IRQs
+ * if ( hw( read, irqflag(counter0) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, irqflag(counter0) );		// Clear overflow IRQ flag
+ *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -628,11 +628,11 @@ HW_INLINE uint8_t _hwa_solve_c8a ( hwa_c8a_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 #define _hwa_init__c8a(o,a)			\
   /* _hwa_init_r( o, gtccr, 0x00 ); */		\
-  _hwa_init_r( o, ccra,  0x00 );		\
-  _hwa_init_r( o, ccrb,  0x00 );		\
+  _hwa_init_r( o, ccra,	 0x00 );		\
+  _hwa_init_r( o, ccrb,	 0x00 );		\
   _hwa_init_r( o, count, 0x00 );		\
-  _hwa_init_r( o, imsk,  0x00 );		\
-  _hwa_init_r( o, ifr,   0x00 )
+  _hwa_init_r( o, imsk,	 0x00 );		\
+  _hwa_init_r( o, ifr,	 0x00 )
 
 
 /* hwa->o.config.clock	   = HW_A1(_hw_c8a_clock_none);		\ */

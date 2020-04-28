@@ -10,9 +10,9 @@
  */
 
 
-#define _hw_ad10_clock_ioclk			, _hwa_ad10_clkdiv, 1.0
-#define _hw_ad10_clock_min			, _hwa_ad10_clkmin, 1.0
-#define _hw_ad10_clock_max			, _hwa_ad10_clkmax, 1.0
+#define _hw_ad10_clock_ioclk		, _hwa_ad10_clkdiv, 1.0
+#define _hw_ad10_clock_min		, _hwa_ad10_clkmin, 1.0
+#define _hw_ad10_clock_max		, _hwa_ad10_clkmax, 1.0
 
 
 /*	Compute min / max acceptable value of clock prescaler
@@ -204,15 +204,15 @@ HW_INLINE _hw_ad10__status_t _hw_ad10__status( uint8_t byte )
 
 #define _hwa_setup__ad10_(o)			\
   _hwa_setup_r( o, admux );			\
-  _hwa_setup_r( o, sra   );			\
-  _hwa_setup_r( o, srb   )
+  _hwa_setup_r( o, sra	 );			\
+  _hwa_setup_r( o, srb	 )
 
 #define _hwa_init__ad10_(o)			\
   _hwa_init_r( o, admux, 0x00 );		\
-  _hwa_init_r( o, sra,   0x00 );		\
-  _hwa_init_r( o, srb,   0x00 )
+  _hwa_init_r( o, sra,	 0x00 );		\
+  _hwa_init_r( o, srb,	 0x00 )
 
 #define _hwa_commit__ad10_(o)			\
   _hwa_commit_r( o, admux );			\
-  _hwa_commit_r( o, sra   );			\
-  _hwa_commit_r( o, srb   )
+  _hwa_commit_r( o, sra	  );			\
+  _hwa_commit_r( o, srb	  )

@@ -33,20 +33,20 @@
  *	       );
  * @endcode
  */
-#define hwa_configure__coreb	, _hwa_cfcoreb
+#define hwa_configure__coreb		, _hwa_cfcoreb
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
-/* #define _hw_is_awaker_awaker		, 1 */
-/* #define hw_awaker_io			, 0 */
-/* #define hw_awaker_int0_edge		, 0 */
+/* #define _hw_is_awaker_awaker			, 1 */
+/* #define hw_awaker_io				, 0 */
+/* #define hw_awaker_int0_edge			, 0 */
 /* #define hw_awaker_adc			, 1 */
 /* #define hw_awaker_flash			, 1 */
-/* #define hw_awaker_eeprom		, 1 */
-/* #define hw_awaker_int0_level		, 2 */
-/* #define hw_awaker_pinchange		, 2 */
+/* #define hw_awaker_eeprom			, 1 */
+/* #define hw_awaker_int0_level			, 2 */
+/* #define hw_awaker_pinchange			, 2 */
 /* #define hw_awaker_usi_start_condition	, 2 */
-/* #define hw_awaker_watchdog		, 2 */
+/* #define hw_awaker_watchdog			, 2 */
 
 /*	Optionnal parameter `sleep`
  */
@@ -120,7 +120,7 @@
  * }
  * @endcode
  */
-#define hw_stat__coreb		, _hw_stat_coreb
+#define hw_stat__coreb			, _hw_stat_coreb
 
 typedef union {
   uint8_t	  byte ;
@@ -141,7 +141,7 @@ typedef union {
 } _hw_coreb_stat_t ;
 
 
-#define hw_stat_t__coreb	, _hw_coreb_stat_t
+#define hw_stat_t__coreb		, _hw_coreb_stat_t
 #define _hw_stat_coreb(o,a,...)	_hw_coreb_stat(_hw_read(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 
@@ -162,7 +162,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define hwa_clear__coreb	, _hwa_clear__coreb
+#define hwa_clear__coreb		, _hwa_clear__coreb
 
 #define _hwa_clear__coreb(o,a,...)	_hwa_write(o,allrf,0)
 
@@ -176,14 +176,14 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
 #define _hwa_setup__coreb(o,a)		\
   _hwa_setup_r( o, mcucr  );			\
   _hwa_setup_r( o, mcusr  );			\
-  _hwa_setup_r( o, smcr   );			\
+  _hwa_setup_r( o, smcr	  );			\
   _hwa_setup_r( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
 #define _hwa_init__coreb(o,a)			\
   _hwa_init_r( o, mcucr,  0x00 );		\
-  _hwa_init_r( o, smcr,   0x00 );		\
+  _hwa_init_r( o, smcr,	  0x00 );		\
   _hwa_init_r( o, osccal, 0x00 )
 
 

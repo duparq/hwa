@@ -58,37 +58,37 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
  * @code
  * hwa( configure, counter0,
  * 
- *      //  How the counter is clocked
- *      //
- *      clock,       none                       // No clock, the counter is stopped
- *                 | ioclk [/ 8|32|64|128       // I/O clock [divided]
- *                             |256|512|1024]   //
- *                 | external_xosc,                  // Crystal between pins TOSC1-TOSC2
+ *	//  How the counter is clocked
+ *	//
+ *	clock,	     none			// No clock, the counter is stopped
+ *		   | ioclk [/ 8|32|64|128	// I/O clock [divided]
+ *			       |256|512|1024]	//
+ *		   | external_xosc,		     // Crystal between pins TOSC1-TOSC2
  *
- *      //  How does this counter count
- *      //
- *      direction,   up_loop                    // Count up and loop
- *                 | updown_loop,               // Count up and down alternately
+ *	//  How does this counter count
+ *	//
+ *	direction,   up_loop			// Count up and loop
+ *		   | updown_loop,		// Count up and down alternately
  *
- *      //  Class _c8c counters all count from 0
- *      //
- *    [ bottom,     0, ]
+ *	//  Class _c8c counters all count from 0
+ *	//
+ *    [ bottom,	    0, ]
  *
- *      //  The maximum value the counter reaches (the default is `max`)
- *      //
- *    [ top,        fixed_0xFF                  // Hardware fixed value 0xFF
- *                | max                         // Hardware fixed value 0xFF
- *                | compare0, ]                 // Value stored in the compare0 unit
+ *	//  The maximum value the counter reaches (the default is `max`)
+ *	//
+ *    [ top,	    fixed_0xFF			// Hardware fixed value 0xFF
+ *		  | max				// Hardware fixed value 0xFF
+ *		  | compare0, ]			// Value stored in the compare0 unit
  *
- *      //  When the overflow flag is set
- *      //
- *    [ overflow,    after_bottom                  // When the counter resets to bottom
- *                | after_top                      // When the counter reaches the top value
- *                | after_max ]                    // When the counter reaches its max value
- *      );
+ *	//  When the overflow flag is set
+ *	//
+ *    [ overflow,    after_bottom		   // When the counter resets to bottom
+ *		  | after_top			   // When the counter reaches the top value
+ *		  | after_max ]			   // When the counter reaches its max value
+ *	);
  * @endcode
  */
-#define hwa_configure__c8c	, _hwa_config_c8c
+#define hwa_configure__c8c		, _hwa_config_c8c
 
 /*  Mandatory argument `clock`
  *
@@ -113,7 +113,7 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
 
 #define _hw_c8c_clock_none		, _hw_c8cck_none, 0
 #define _hw_c8c_clock_ioclk		, _hw_c8cck_ioclk, 1.0
-#define _hw_c8c_clock_external_xosc		, _hw_c8cck_xosc, 0
+#define _hw_c8c_clock_external_xosc	, _hw_c8cck_xosc, 0
 
 /*  Optionnal argument `direction`
  */
@@ -169,8 +169,8 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
 /*  Optionnal argument `overflow`
  */
 #define _hw_c8c_overflow_after_bottom	, 0
-#define _hw_c8c_overflow_after_top		, 1
-#define _hw_c8c_overflow_after_max		, 2
+#define _hw_c8c_overflow_after_top	, 1
+#define _hw_c8c_overflow_after_max	, 2
 
 #define _hwa_cfc8c_koverflow_1(o,k,v,...)				\
   HW_Y(_hwa_cfc8c_voverflow_,_hw_c8c_overflow_##v)(o,v,__VA_ARGS__)
@@ -183,7 +183,7 @@ HW_INLINE uint8_t _hw_c8cck_xosc( float v )
        && HW_A1(_hw_c8c_overflow_##v) == HW_A1(_hw_c8c_overflow_after_bottom) ) \
     HWA_ERR("optionnal parameter `overflow` can not be `after_bottom` "	\
 	    "when direction is `up_loop`.");				\
-  hwa->o.config.overflow = HW_A1(_hw_c8c_overflow_##v);  HW_EOL(__VA_ARGS__)
+  hwa->o.config.overflow = HW_A1(_hw_c8c_overflow_##v);	 HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfc8c_koverflow_0(o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -591,7 +591,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hw( read, counter0 );
  * @endcode
  */
-#define hw_read__c8c		, _hw_read_c8c
+#define hw_read__c8c			, _hw_read_c8c
 #define _hw_read_c8c(o,a,...)		_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 
@@ -601,7 +601,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hw( write, counter0, value );
  * @endcode
  */
-#define hw_write__c8c		, _hw_write_c8c
+#define hw_write__c8c			, _hw_write_c8c
 #define _hw_write_c8c(o,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
@@ -610,7 +610,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hwa( write, counter0, value );
  * @endcode
  */
-#define hwa_write__c8c		, _hwa_write_c8c
+#define hwa_write__c8c			, _hwa_write_c8c
 #define _hwa_write_c8c(o,a,v)		_hwa_write(o,count,v)
 
 #if 0
@@ -623,7 +623,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  *`hw( clear, counter0 )`;
  * @endcode
  */
-#define hw_clear__c8c		, _hw_clear_c8c
+#define hw_clear__c8c			, _hw_clear_c8c
 #define _hw_clear_c8c(o,a,...)	_hw_write(o,count,0) HW_EOL(__VA_ARGS__)
 
 /**
@@ -633,7 +633,7 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
  * hwa( clear, counter0 );
  * @endcode
  */
-#define hwa_clear__c8c		, _hwa_clear_c8c
+#define hwa_clear__c8c			, _hwa_clear_c8c
 #define _hwa_clear_c8c(o,a,...)	_hwa_write(o,count,0) HW_EOL(__VA_ARGS__)
 #endif
 
@@ -672,11 +672,11 @@ HW_INLINE uint8_t _hwa_solve_c8c ( hwa_c8c_t *p, hwa_cmp8a_t *compare0, hwa_cmp8
 
 
 #define _hwa_init__c8c(o,a)					\
-  _hwa_init_r( o, ccra,  0x00 );				\
-  _hwa_init_r( o, ccrb,  0x00 );				\
+  _hwa_init_r( o, ccra,	 0x00 );				\
+  _hwa_init_r( o, ccrb,	 0x00 );				\
   _hwa_init_r( o, count, 0x00 );				\
-  _hwa_init_r( o, imsk,  0x00 );				\
-  _hwa_init_r( o, ifr,   0x00 )
+  _hwa_init_r( o, imsk,	 0x00 );				\
+  _hwa_init_r( o, ifr,	 0x00 )
 
 
   /* hwa->o.config.clock     = HW_A1(_hw_c8c_clock_none);		\ */

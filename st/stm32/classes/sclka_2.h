@@ -14,9 +14,9 @@
  *
  * `connect`:
  * @code
- * hw | hwa ( connect, sysclk,   hsi
- *                             | pll
- *                             | hse );
+ * hw | hwa ( connect, sysclk,	 hsi
+ *			       | pll
+ *			       | hse );
  * @endcode
  * <br>
  */

@@ -22,17 +22,17 @@
  *
  *     //  Behavior of the ouput pin
  *     //
- *     output,    disconnected
- *              | toggle_after_match
- *              | clear_after_match
- *              | set_after_match
- *              | set_at_bottom_clear_after_match
- *              | clear_at_bottom_set_after_match
- *              | clear_after_match_up_set_after_match_down
- *              | set_after_match_up_clear_after_match_down );
+ *     output,	  disconnected
+ *		| toggle_after_match
+ *		| clear_after_match
+ *		| set_after_match
+ *		| set_at_bottom_clear_after_match
+ *		| clear_at_bottom_set_after_match
+ *		| clear_after_match_up_set_after_match_down
+ *		| set_after_match_up_clear_after_match_down );
  * @endcode
  */
-#define hw_configure__cmp8a	, _hw_cfcmp8a
+#define hw_configure__cmp8a		, _hw_cfcmp8a
 
 /*  Mandatory parameter `output`
  */
@@ -74,31 +74,31 @@
  * @code
  * hwa( configure, (counter0,compare0),
  *
- *      //  When the content of the compare register is latched
- *      //
- *    [ update,    after_bottom
- *               | after_top
- *               | after_max,   ]
+ *	//  When the content of the compare register is latched
+ *	//
+ *    [ update,	   after_bottom
+ *		 | after_top
+ *		 | after_max,	]
  *
- *      //  Behavior of the ouput pin
- *      //
- *    [ output,    disconnected
- *               | toggle_after_match
- *               | clear_after_match
- *               | set_after_match
- *               | set_at_bottom_clear_after_match
- *               | clear_at_bottom_set_after_match
- *               | clear_after_match_up_set_after_match_down
- *               | set_after_match_up_clear_after_match_down ] );
+ *	//  Behavior of the ouput pin
+ *	//
+ *    [ output,	   disconnected
+ *		 | toggle_after_match
+ *		 | clear_after_match
+ *		 | set_after_match
+ *		 | set_at_bottom_clear_after_match
+ *		 | clear_at_bottom_set_after_match
+ *		 | clear_after_match_up_set_after_match_down
+ *		 | set_after_match_up_clear_after_match_down ] );
  * @endcode
  */
-#define hwa_configure__cmp8a	, _hwa_cfcmp8a
+#define hwa_configure__cmp8a		, _hwa_cfcmp8a
 
 /*  Optionnal parameter `update`
  */
 #define _hw_cmp8a_update_immediately	, 0
 #define _hw_cmp8a_update_after_bottom	, 1
-#define _hw_cmp8a_update_after_top		, 2
+#define _hw_cmp8a_update_after_top	, 2
 
 #define _hwa_cfcmp8a(o,a,k,...)					\
   do {									\
@@ -184,9 +184,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,compare0)) ) ) {    // Read compare IRQ flag
- *   hw( clear, irqflag((counter0,compare0)) );         // Clear compare IRQ flag
- *   hw( turn, irq((counter0,compare0)), off );         // Disable compare IRQs
+ * if ( hw( read, irqflag((counter0,compare0)) ) ) {	// Read compare IRQ flag
+ *   hw( clear, irqflag((counter0,compare0)) );		// Clear compare IRQ flag
+ *   hw( turn, irq((counter0,compare0)), off );		// Disable compare IRQs
  * }
  * @endcode
  */

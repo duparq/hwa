@@ -9,11 +9,11 @@
  * @brief I/O
  */
 
-#define hw_read__io1a		, _hw_rdio1a
-#define hw_write__io1a		, _hw_wrio1a
-#define hwa_write__io1a		, _hwa_wrio1a
-#define hw_toggle__io1a		, _hw_tgio1a
-#define hwa_toggle__io1a	, _hwa_tgio1a
+#define hw_read__io1a			, _hw_rdio1a
+#define hw_write__io1a			, _hw_wrio1a
+#define hwa_write__io1a			, _hwa_wrio1a
+#define hw_toggle__io1a			, _hw_tgio1a
+#define hwa_toggle__io1a		, _hwa_tgio1a
 
 
 /**
@@ -23,46 +23,46 @@
  * `configure`:
  *
  * @code
- * hw | hwa( configure,   pa0,
+ * hw | hwa( configure,	  pa0,
  *
- *         [ function,    gpio                                          // Default
- *                      | signal                                        // Alternate function
- *                      | (controller,signal), ]                        // Alternate function
+ *	   [ function,	  gpio						// Default
+ *			| signal					// Alternate function
+ *			| (controller,signal), ]			// Alternate function
  *
- *           mode,        digital_input | digital_input_floating        // Default
- *                      | digital_input_pullup
- *                      | digital_input_pulldown
- *                      | analog_input
- *                      | digital_output | digital_output_pushpull
- *                      | digital_output_opendrain,
+ *	     mode,	  digital_input | digital_input_floating	// Default
+ *			| digital_input_pullup
+ *			| digital_input_pulldown
+ *			| analog_input
+ *			| digital_output | digital_output_pushpull
+ *			| digital_output_opendrain,
  *
- *           // Only for output modes
- *           //
- *         [ frequency,   2MHz | lowest
- *                      | 10MHz                                         // Default
- *                      | 50MHz | highest ] );
+ *	     // Only for output modes
+ *	     //
+ *	   [ frequency,	  2MHz | lowest
+ *			| 10MHz						// Default
+ *			| 50MHz | highest ] );
  * @endcode
  */
 
 //  Default/alternate function			, macro selector
 //
-#define _hw_cfio1a_df_digital_input		, dif
+#define _hw_cfio1a_df_digital_input	, dif
 #define _hw_cfio1a_df_digital_input_floating	, dif
 #define _hw_cfio1a_df_digital_input_pullup	, dipu
 #define _hw_cfio1a_df_digital_input_pulldown	, dipd
-#define _hw_cfio1a_df_digital_output		, dopp
+#define _hw_cfio1a_df_digital_output	, dopp
 #define _hw_cfio1a_df_digital_output_pushpull	, dopp
 #define _hw_cfio1a_df_digital_output_opendrain	, dood
-#define _hw_cfio1a_df_analog_input		, ai
+#define _hw_cfio1a_df_analog_input	, ai
 
-#define _hw_cfio1a_af_digital_input		, dif
+#define _hw_cfio1a_af_digital_input	, dif
 #define _hw_cfio1a_af_digital_input_floating	, dif
 #define _hw_cfio1a_af_digital_input_pullup	, dipu
 #define _hw_cfio1a_af_digital_input_pulldown	, dipd
-#define _hw_cfio1a_af_digital_output		, afdopp
+#define _hw_cfio1a_af_digital_output	, afdopp
 #define _hw_cfio1a_af_digital_output_pushpull	, afdopp
 #define _hw_cfio1a_af_digital_output_opendrain	, afdood
-#define _hw_cfio1a_af_analog_input		, ai
+#define _hw_cfio1a_af_analog_input	, ai
 
 
 /*  Check and translate a "(controller,signal)": return "controller_signal" or
@@ -83,7 +83,7 @@
 /*  Synchronous action: create a local minimal context, apply the asynchronous
  *  action on it, and commit.
  */
-#define hw_configure__io1a			, _hw_cfio1a
+#define hw_configure__io1a		, _hw_cfio1a
 #define _hw_cfio1a(o,p,...)						\
   do {									\
     uint8_t cnf, mode, odr=0 ;						\
@@ -94,7 +94,7 @@
     hwa_st.commit = 1 ; _hwa_commit_o(p);				\
   }while(0)
 
-#define hwa_configure__io1a			, _hwa_cfio1a
+#define hwa_configure__io1a		, _hwa_cfio1a
 #define _hwa_cfio1a(...)			do{ uint8_t cnf, mode, odr=0 ; _hwa_cfio1a_(__VA_ARGS__); }while(0)
 
 /*  Key 'function'. Select default or alternate function (df/af). Register signal-pin association for 'af'.
@@ -138,9 +138,9 @@
  */
 #define _hw_cfio1a_fq_10MHz			, 1
 #define _hw_cfio1a_fq_2MHz			, 2
-#define _hw_cfio1a_fq_lowest			, 2
+#define _hw_cfio1a_fq_lowest		, 2
 #define _hw_cfio1a_fq_50MHz			, 3
-#define _hw_cfio1a_fq_highest			, 3
+#define _hw_cfio1a_fq_highest		, 3
 
 #define _hwa_cfio1a_kfq_0(p,bn,bp,k,...)	HW_Y(_hwa_cfio1a_kfq0_,k)(p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfio1a_kfq0_1(p,bn,bp,k,...)	mode=2 ; _hwa_do_cfio1a( &hwa->p, bn, bp, cnf, mode, odr )
@@ -246,7 +246,7 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  *  a heavier binary code. So, let's use that!
  *
  *  BSRR: MSB16 bits reset the ODR bits
- *        LSB16 bits set the ODR bits, it has the priority over MSB16
+ *	  LSB16 bits set the ODR bits, it has the priority over MSB16
  */
 #define _hw_wrio1a(o,p,bn,bp,v,g,...)		HW_Y(_hwx_wrio1a1_,v)(_hw,p,bn,bp,v,g)
 #define _hwa_wrio1a(o,p,bn,bp,v,g,...)	HW_Y(_hwx_wrio1a1_,v)(_hwa,p,bn,bp,v,g)
@@ -287,9 +287,9 @@ HW_INLINE void _hwa_do_cfio1a( hwa_p16a_t *p, uint8_t bn, uint8_t bp, uint8_t cn
  * @page stm32_io1a
  *
  * @code
- * hwa( toggle, pa0 );     //  Register pa0 for toggling
- * hwa( toggle, pa4 );     //  Register pa4 for toggling
- * hwa( commit );          //  Toggle all registered pins at once
+ * hwa( toggle, pa0 );	   //  Register pa0 for toggling
+ * hwa( toggle, pa4 );	   //  Register pa4 for toggling
+ * hwa( commit );	   //  Toggle all registered pins at once
  * @endcode
  */
 #define _hwa_tgio1a(o,p,bn,bp,g,...)		HW_Y(_hwa_tgio1a_,g)(p,bn,bp,g)

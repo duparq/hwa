@@ -33,7 +33,7 @@
  *	       );
  * @endcode
  */
-#define hwa_configure__corec	, _hwa_cfcorec
+#define hwa_configure__corec		, _hwa_cfcorec
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
@@ -112,7 +112,7 @@
  * }
  * @endcode
  */
-#define hw_stat__corec		, _hw_stat_corec
+#define hw_stat__corec			, _hw_stat_corec
 
 typedef union {
   uint8_t	  byte ;
@@ -137,7 +137,7 @@ typedef union {
 } _hw_corec_stat_t ;
 
 
-#define hw_stat_t__corec	, _hw_corec_stat_t
+#define hw_stat_t__corec		, _hw_corec_stat_t
 #define _hw_stat_corec(o,a,...)	_hw_corec_stat(_hw_read(o, mcusr)) HW_EOL(__VA_ARGS__)
 
 
@@ -158,7 +158,7 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define hwa_clear__corec	, _hwa_clear__corec
+#define hwa_clear__corec		, _hwa_clear__corec
 
 #define _hwa_clear__corec(o,a,...)	_hwa_write( o, allrf, 0 )
 
@@ -172,14 +172,14 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
 #define _hwa_setup__corec(o,a)		\
   _hwa_setup_r( o, mcucr  );			\
   _hwa_setup_r( o, mcusr  );			\
-  _hwa_setup_r( o, smcr   );			\
+  _hwa_setup_r( o, smcr	  );			\
   _hwa_setup_r( o, osccal )
 
 /*  mcusr is not initialized as its status is not known after RESET
  */
 #define _hwa_init__corec(o,a)			\
   _hwa_init_r( o, mcucr,  0x00 );		\
-  _hwa_init_r( o, smcr,   0x00 );		\
+  _hwa_init_r( o, smcr,	  0x00 );		\
   _hwa_init_r( o, osccal, 0x00 )
 
 

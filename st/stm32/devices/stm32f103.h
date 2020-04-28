@@ -38,9 +38,9 @@
  * :--------------------|------------------------
  * `systick`		| SysTick timer reached 0
  * `systick,alarm`	| SysTick timer reached 0
- * `counter2`	  	| Counter 2 update
- * `counter3`	  	| Counter 3 update
- * `counter4`	  	| Counter 4 update
+ * `counter2`		| Counter 2 update
+ * `counter3`		| Counter 3 update
+ * `counter4`		| Counter 4 update
  *
  */
 #define hw_irq_nmi_			_irq, core, x2, ,
@@ -49,7 +49,7 @@
 #define hw_irq_counter2_		_irq, counter2, 28, ie, if
 #define hw_irq_counter3_		_irq, counter3, 29, ie, if
 #define hw_irq_counter4_		_irq, counter4, 30, ie, if
-/* #define hw_irq_counter5_		_irq, counter5, 50, ie, if */
+/* #define hw_irq_counter5_			_irq, counter5, 50, ie, if */
 
 #define __vector_x2			hw_esr_nmi
 #define __vector_x3			hw_esr_hard
@@ -64,7 +64,7 @@
 #define __vector_28			hw_isr_counter2
 #define __vector_29			hw_isr_counter3
 #define __vector_30			hw_isr_counter4
-/* #define hw_isr_50			hw_isr_counter5 */
+/* #define hw_isr_50				hw_isr_counter5 */
 
 
 /**
@@ -85,8 +85,8 @@
  * Symbol		    | Value
  * :------------------------|:-----------
  * `HW_DEVICE_STM32F103`    |Void.
- * `HW_DEVICE_HSIHZ`        |8*1000000
- * `HW_DEVICE_LSIHZ`        |40*1000
+ * `HW_DEVICE_HSIHZ`	    |8*1000000
+ * `HW_DEVICE_LSIHZ`	    |40*1000
  */
 #define HW_DEVICE_STM32F103
 /* #define HW_DEVICE_ARCH		arm */
@@ -123,19 +123,19 @@
  *  * @ref stm32_plla "pll": PLL multiplying HSI or HSE clock.
  *  * @ref stm32_sclka "sysclk": connected to HSI, PLL, or HSE, clocks
  *    * @ref stm32_ahba "ahb": clocks
- *      * sdio
- *      * fsmc
- *      * core
- *      * memory
- *      * dma
- *      * Cortex system timer
- *      * FCLK Cortex free running clock
- *      * @ref stm32_apba "apb1" (low-speed): clocks (36 MHz max.)
- *        * counter2..7, counter12..14
- *        * APB1 peripherals
- *      * @ref stm32_apba "apb2" (high-speed): clocks
- *        * counter1, counter8..11
- *        * adc and other APB2 peripherals
+ *	* sdio
+ *	* fsmc
+ *	* core
+ *	* memory
+ *	* dma
+ *	* Cortex system timer
+ *	* FCLK Cortex free running clock
+ *	* @ref stm32_apba "apb1" (low-speed): clocks (36 MHz max.)
+ *	  * counter2..7, counter12..14
+ *	  * APB1 peripherals
+ *	* @ref stm32_apba "apb2" (high-speed): clocks
+ *	  * counter1, counter8..11
+ *	  * adc and other APB2 peripherals
  *    * i2s2
  *    * i2s3
  *
@@ -151,7 +151,7 @@
  */
 #define hw_rcc				_rcca, 0x40021000
 
-//#define hw_rcc_usart1			_rccp, 0
+//#define hw_rcc_usart1				_rccp, 0
 
 
 /*******************************************************************************
@@ -185,22 +185,22 @@
 #define hw_port2			_p16a, 0x40011000
 #define hw_port3			_p16a, 0x40011400
 #define hw_port4			_p16a, 0x40011800
-/* #define hw_port5			_p16a, 0x40011C00 */
-/* #define hw_port6			_p16a, 0x40012000 */
+/* #define hw_port5				_p16a, 0x40011C00 */
+/* #define hw_port6				_p16a, 0x40012000 */
 
 /*	Object registers
  */
-#define hw_reg_port0_cken		_xob1, rcc, apb2enr, 1, 2	/* convenient */
-#define hw_reg_port1_cken		_xob1, rcc, apb2enr, 1, 3	/* convenient */
-#define hw_reg_port2_cken		_xob1, rcc, apb2enr, 1, 4	/* convenient */
-#define hw_reg_port3_cken		_xob1, rcc, apb2enr, 1, 5	/* convenient */
-#define hw_reg_port4_cken		_xob1, rcc, apb2enr, 1, 6	/* convenient */
-/* #define hw_reg_port5_cken		_xob1, rcc, apb2enr, 1, 7	/\* convenient *\/ */
-/* #define hw_reg_port6_cken		_xob1, rcc, apb2enr, 1, 8	/\* convenient *\/ */
-#define hw_reg_counter2_cken		_xob1, rcc, apb1enr, 1, 0	/* convenient */
-#define hw_reg_counter3_cken		_xob1, rcc, apb1enr, 1, 1	/* convenient */
-#define hw_reg_counter4_cken		_xob1, rcc, apb1enr, 1, 2	/* convenient */
-#define hw_reg_counter5_cken		_xob1, rcc, apb1enr, 1, 3	/* convenient */
+#define hw_port0_cken			_xob1, rcc, apb2enr, 1, 2	/* convenient */
+#define hw_port1_cken			_xob1, rcc, apb2enr, 1, 3	/* convenient */
+#define hw_port2_cken			_xob1, rcc, apb2enr, 1, 4	/* convenient */
+#define hw_port3_cken			_xob1, rcc, apb2enr, 1, 5	/* convenient */
+#define hw_port4_cken			_xob1, rcc, apb2enr, 1, 6	/* convenient */
+/* #define hw_port5_cken			_xob1, rcc, apb2enr, 1, 7	/\* convenient *\/ */
+/* #define hw_port6_cken			_xob1, rcc, apb2enr, 1, 8	/\* convenient *\/ */
+#define hw_counter2_cken		_xob1, rcc, apb1enr, 1, 0	/* convenient */
+#define hw_counter3_cken		_xob1, rcc, apb1enr, 1, 1	/* convenient */
+#define hw_counter4_cken		_xob1, rcc, apb1enr, 1, 2	/* convenient */
+#define hw_counter5_cken		_xob1, rcc, apb1enr, 1, 3	/* convenient */
 
 /*  Pins				class, peripheral, bn, bp
  */
@@ -220,6 +220,24 @@
 #define hw_pa13				_io1a, port0,  1, 13
 #define hw_pa14				_io1a, port0,  1, 14
 #define hw_pa15				_io1a, port0,  1, 15
+
+#define hw_porta_0			_io1a, port0,  1,  0
+#define hw_porta_1			_io1a, port0,  1,  1
+#define hw_porta_2			_io1a, port0,  1,  2
+#define hw_porta_3			_io1a, port0,  1,  3
+#define hw_porta_4			_io1a, port0,  1,  4
+#define hw_porta_5			_io1a, port0,  1,  5
+#define hw_porta_6			_io1a, port0,  1,  6
+#define hw_porta_7			_io1a, port0,  1,  7
+#define hw_porta_8			_io1a, port0,  1,  8
+#define hw_porta_9			_io1a, port0,  1,  9
+#define hw_porta_10			_io1a, port0,  1, 10
+#define hw_porta_11			_io1a, port0,  1, 11
+#define hw_porta_12			_io1a, port0,  1, 12
+#define hw_porta_13			_io1a, port0,  1, 13
+#define hw_porta_14			_io1a, port0,  1, 14
+#define hw_porta_15			_io1a, port0,  1, 15
+
 #define hw_porta			_io1a, port0, 16,  0
 
 #define hw_pb0				_io1a, port1,  1,  0
@@ -294,41 +312,41 @@
 #define hw_pe15				_io1a, port4,  1, 15
 #define hw_porte			_io1a, port4, 16,  0
 
-/* #define hw_pf0			_io1a, port5,  1,  0 */
-/* #define hw_pf1			_io1a, port5,  1,  1 */
-/* #define hw_pf2			_io1a, port5,  1,  2 */
-/* #define hw_pf3			_io1a, port5,  1,  3 */
-/* #define hw_pf4			_io1a, port5,  1,  4 */
-/* #define hw_pf5			_io1a, port5,  1,  5 */
-/* #define hw_pf6			_io1a, port5,  1,  6 */
-/* #define hw_pf7			_io1a, port5,  1,  7 */
-/* #define hw_pf8			_io1a, port5,  1,  8 */
-/* #define hw_pf9			_io1a, port5,  1,  9 */
-/* #define hw_pf10			_io1a, port5,  1, 10 */
-/* #define hw_pf11			_io1a, port5,  1, 11 */
-/* #define hw_pf12			_io1a, port5,  1, 12 */
-/* #define hw_pf13			_io1a, port5,  1, 13 */
-/* #define hw_pf14			_io1a, port5,  1, 14 */
-/* #define hw_pf15			_io1a, port5,  1, 15 */
-/* #define hw_portf			_io1a, port5, 16,  0 */
+/* #define hw_pf0				_io1a, port5,  1,  0 */
+/* #define hw_pf1				_io1a, port5,  1,  1 */
+/* #define hw_pf2				_io1a, port5,  1,  2 */
+/* #define hw_pf3				_io1a, port5,  1,  3 */
+/* #define hw_pf4				_io1a, port5,  1,  4 */
+/* #define hw_pf5				_io1a, port5,  1,  5 */
+/* #define hw_pf6				_io1a, port5,  1,  6 */
+/* #define hw_pf7				_io1a, port5,  1,  7 */
+/* #define hw_pf8				_io1a, port5,  1,  8 */
+/* #define hw_pf9				_io1a, port5,  1,  9 */
+/* #define hw_pf10				_io1a, port5,  1, 10 */
+/* #define hw_pf11				_io1a, port5,  1, 11 */
+/* #define hw_pf12				_io1a, port5,  1, 12 */
+/* #define hw_pf13				_io1a, port5,  1, 13 */
+/* #define hw_pf14				_io1a, port5,  1, 14 */
+/* #define hw_pf15				_io1a, port5,  1, 15 */
+/* #define hw_portf				_io1a, port5, 16,  0 */
 
-/* #define hw_pg0			_io1a, port6,  1,  0 */
-/* #define hw_pg1			_io1a, port6,  1,  1 */
-/* #define hw_pg2			_io1a, port6,  1,  2 */
-/* #define hw_pg3			_io1a, port6,  1,  3 */
-/* #define hw_pg4			_io1a, port6,  1,  4 */
-/* #define hw_pg5			_io1a, port6,  1,  5 */
-/* #define hw_pg6			_io1a, port6,  1,  6 */
-/* #define hw_pg7			_io1a, port6,  1,  7 */
-/* #define hw_pg8			_io1a, port6,  1,  8 */
-/* #define hw_pg9			_io1a, port6,  1,  9 */
-/* #define hw_pg10			_io1a, port6,  1, 10 */
-/* #define hw_pg11			_io1a, port6,  1, 11 */
-/* #define hw_pg12			_io1a, port6,  1, 12 */
-/* #define hw_pg13			_io1a, port6,  1, 13 */
-/* #define hw_pg14			_io1a, port6,  1, 14 */
-/* #define hw_pg15			_io1a, port6,  1, 15 */
-/* #define hw_portg			_io1a, port6, 16,  0 */
+/* #define hw_pg0				_io1a, port6,  1,  0 */
+/* #define hw_pg1				_io1a, port6,  1,  1 */
+/* #define hw_pg2				_io1a, port6,  1,  2 */
+/* #define hw_pg3				_io1a, port6,  1,  3 */
+/* #define hw_pg4				_io1a, port6,  1,  4 */
+/* #define hw_pg5				_io1a, port6,  1,  5 */
+/* #define hw_pg6				_io1a, port6,  1,  6 */
+/* #define hw_pg7				_io1a, port6,  1,  7 */
+/* #define hw_pg8				_io1a, port6,  1,  8 */
+/* #define hw_pg9				_io1a, port6,  1,  9 */
+/* #define hw_pg10				_io1a, port6,  1, 10 */
+/* #define hw_pg11				_io1a, port6,  1, 11 */
+/* #define hw_pg12				_io1a, port6,  1, 12 */
+/* #define hw_pg13				_io1a, port6,  1, 13 */
+/* #define hw_pg14				_io1a, port6,  1, 14 */
+/* #define hw_pg15				_io1a, port6,  1, 15 */
+/* #define hw_portg				_io1a, port6, 16,  0 */
 
 /* #if defined HW_DEVICE_PACKAGE_LQFP64 */
 /* # */
@@ -373,27 +391,27 @@
  *  checks that the wanted associations can be satisfied. This is the same kind
  *  of solution as for the Atmel AVR8 counters and their compare init outputs.
  *
- *  hw( configure, pa9,  function, (usart1,tx) );  // USART1_REMAP = 0
+ *  hw( configure, pa9,	 function, (usart1,tx) );  // USART1_REMAP = 0
  *  hw( configure, pa10, function, (usart1,rx) );  // USART1_REMAP = 0
- *  hw( configure, pb6,  function, (usart1,tx) );  // USART1_REMAP = 1
- *  hw( configure, pb7,  function, (usart1,rx) );  // USART1_REMAP = 1
+ *  hw( configure, pb6,	 function, (usart1,tx) );  // USART1_REMAP = 1
+ *  hw( configure, pb7,	 function, (usart1,rx) );  // USART1_REMAP = 1
  *
  *  Solution 2: we configure the mapping through the 'configure' action of the
  *  controller.
  *
  *  hw( configure, counter2, 
- *      ...
- *      map_channel1, pa0,	// Remap '00'
- *      map_channel2, pa1,
- *      map_channel3, pa2,
- *      map_channel4, pa3 );
+ *	...
+ *	map_channel1, pa0,	// Remap '00'
+ *	map_channel2, pa1,
+ *	map_channel3, pa2,
+ *	map_channel4, pa3 );
  *
  *  hw( configure, counter2, 
- *      ...
- *      map_channel1, pa15,	// Remap '01'
- *      map_channel2, pb3,
- *      map_channel3, pa2,
- *      map_channel4, pa3 );
+ *	...
+ *	map_channel1, pa15,	// Remap '01'
+ *	map_channel2, pb3,
+ *	map_channel3, pa2,
+ *	map_channel4, pa3 );
  *
  */
 //					, df/af, map
@@ -504,15 +522,15 @@
 
 /*	Object				class, address
  */
-#define hw_usart1		_usarta, 0x40013800
-#define hw_usart1_irq		_irq, usart1, 37, ie, if
-#define hw_usart1_nvic		_nvirq, 37
-#define hw_usart1_rcc		_rccen, usart1en
+#define hw_usart1			_usarta, 0x40013800
+#define hw_usart1_irq			_irq, usart1, 37, ie, if
+#define hw_usart1_nvic			_nvirq, 37
+#define hw_usart1_rcc			_rccen, usart1en
 
-#define hw_usart2		_usarta, 0x40004400
-#define hw_usart3		_usarta, 0x40004800
-#define hw_uart4		_uarta,  0x40004C00
-#define hw_uart5		_uarta,  0x40005000
+#define hw_usart2			_usarta, 0x40004400
+#define hw_usart3			_usarta, 0x40004800
+#define hw_uart4			_uarta,	 0x40004C00
+#define hw_uart5			_uarta,	 0x40005000
 
 
 #if !defined __ASSEMBLER__

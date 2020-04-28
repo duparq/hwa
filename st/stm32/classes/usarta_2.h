@@ -18,26 +18,26 @@
  * @code
  * hw | hwa ( configure,   usart1,
  *
- *          [ mode,        asynchronous ]          // Default mode is `asynchronous`.
+ *	    [ mode,	   asynchronous ]	   // Default mode is `asynchronous`.
  *
- *          [ bps,         BPS, ]                  // Transfer rate in bits per second.
+ *	    [ bps,	   BPS, ]		   // Transfer rate in bits per second.
  *
- *          [ databits,    8 | 9, ]                // Number of data bits in frame. Default is `8`.
+ *	    [ databits,	   8 | 9, ]		   // Number of data bits in frame. Default is `8`.
  *
- *          [ parity,      none, even, odd, ]      // Parity. Default is `none`
+ *	    [ parity,	   none, even, odd, ]	   // Parity. Default is `none`
  *
- *          [ stopbits,    1 | 2, ]                // Number of stop bits in frame. Default is `1`.
+ *	    [ stopbits,	   1 | 2, ]		   // Number of stop bits in frame. Default is `1`.
  *
- *          [ receiver,    enabled | disabled, ]   // Whether the UART can receive. Default is `enabled`.
+ *	    [ receiver,	   enabled | disabled, ]   // Whether the UART can receive. Default is `enabled`.
  *
- *          [ transmitter, enabled | disabled, ]   // Whether the UART can transmit. Default is `enabled`.
- *          );
+ *	    [ transmitter, enabled | disabled, ]   // Whether the UART can transmit. Default is `enabled`.
+ *	    );
  * @endcode
  *
  * Counter used as encoder:
  * @code
  * hw | hwa ( configure,   encoder(counter2),
- *          );
+ *	    );
  * @endcode
  */
 #define hw_class__usarta
@@ -67,7 +67,7 @@
 #define _hwx_cfusarta_vclk_1(h,o,v,...)	_hwx_cfusarta_vclk_2(h,o,v,_hw_cfusarta_clk_##v,__VA_ARGS__)
 #define _hwx_cfusarta_vclk_2(...)		_hwx_cfusarta_vclk_3(__VA_ARGS__)
 #define _hwx_cfusarta_vclk_3(h,o,v,z,xv,k,...)				\
-  if      ( 8*xv == 17 ) h##_write(o,clksource,0);			\
+  if	  ( 8*xv == 17 ) h##_write(o,clksource,0);			\
   else if (   xv == 17 ) h##_write(o,clksource,1);			\
   else HWA_E_NIL(v,(ahb/8, ahb));					\
   HW_Y(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
@@ -115,7 +115,7 @@
  * @page stm32_usarta
  * <br>
  * @code
- * if ( hw(read, irqflag(systick)) )    // Reading the flag clears it
+ * if ( hw(read, irqflag(systick)) )	// Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
  * <br>
@@ -198,10 +198,10 @@
   _hwa_setup_r( o, gtpr )
 
 #define _hwa_init__usarta(o,a)		\
-  _hwa_init_r( o, brr,  0x00000000 );		\
-  _hwa_init_r( o, cr1,  0x00000000 );		\
-  _hwa_init_r( o, cr2,  0x00000000 );		\
-  _hwa_init_r( o, cr3,  0x00000000 );		\
+  _hwa_init_r( o, brr,	0x00000000 );		\
+  _hwa_init_r( o, cr1,	0x00000000 );		\
+  _hwa_init_r( o, cr2,	0x00000000 );		\
+  _hwa_init_r( o, cr3,	0x00000000 );		\
   _hwa_init_r( o, gtpr, 0x00000000 )
 
 #define _hwa_commit__usarta(o,a)		\

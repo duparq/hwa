@@ -57,9 +57,9 @@
 #  define _hw_rel_swtwi0_scl		hw_swtwi0_scl
 #  define _hw_def_swtwi0		_swtwia, 0, 0
 #  define _hw_irq_swtwi0_		_irq, swtwi0, 0, null, if
-#  define _hw_reg_swtwi0_sr		_r8, (intptr_t)&hw_swtwi0_sr, -1, 0x00
-#  define _hw_reg__swtwia_cr		_const, 0xFF, 0, 0
-#  define _hw_reg__swtwia_if		_cb1, cr, 1, 7		// IRQ flag
+#  define _hw_swtwi0_sr		_r8, (intptr_t)&hw_swtwi0_sr, -1, 0x00
+#  define _hw__swtwia_cr		_const, 0xFF, 0, 0
+#  define _hw__swtwia_if		_cb1, cr, 1, 7		// IRQ flag
 
 #  define hw_swtwi0_scl_0		_hw( write, hw_swtwi0_scl, 0 )
 #  define hw_swtwi0_scl_X		_hw( write, hw_swtwi0_scl, 1 )

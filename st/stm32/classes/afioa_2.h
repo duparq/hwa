@@ -25,7 +25,7 @@
   _hwa_setup_r( o, mapr )
 
 #define _hwa_init__afioa(o,a)			\
-  _hwa_init_r( o, mapr,  0x00000000 )
+  _hwa_init_r( o, mapr,	 0x00000000 )
 
 #define _hwa_commit__afioa(o,a)		\
   _hwa_commit_r( o, mapr )

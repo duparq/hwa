@@ -19,26 +19,26 @@
  * @code
  * hw | hwa ( configure,   ahb,
  *
- *          [ clock,       sysclk, ]
+ *	    [ clock,	   sysclk, ]
  *
- *            prescaler,   1
- *                       | 2
- *                       | 4
- *                       | 8
- *                       | 16
- *                       | 64
- *                       | 128
- *                       | 256
- *                       | 512 );
+ *	      prescaler,   1
+ *			 | 2
+ *			 | 4
+ *			 | 8
+ *			 | 16
+ *			 | 64
+ *			 | 128
+ *			 | 256
+ *			 | 512 );
  * @endcode
  * <br>
  */
 #define hw_class__ahba
-#define hw_ahb			_ahba, 0
-#define hw_ahbprescaler		_ahba, 0
+#define hw_ahb				_ahba, 0
+#define hw_ahbprescaler			_ahba, 0
 
-#define hw_configure__ahba	, _hw_cfahba
-#define hwa_configure__ahba	, _hwa_cfahba
+#define hw_configure__ahba		, _hw_cfahba
+#define hwa_configure__ahba		, _hwa_cfahba
 
 #define _hw_cfahba(o,a,k,...)		do{ HW_Y(_hwx_cfahba_k_,k)(_hw,k,__VA_ARGS__) }while(0)
 #define _hwa_cfahba(o,a,k,...)	do{ HW_Y(_hwx_cfahba_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
@@ -60,7 +60,7 @@
 #define _hwx_cfahba_kpsc_0(h,k,...)	HW_E_K(prescaler,k)
 #define _hwx_cfahba_kpsc_1(h,k,v,g,...)	_hwx_cfahba_vpsc(h,v) HW_EOL(g)
 #define _hwx_cfahba_vpsc(h,v)					\
-  if      ( (v+0) ==   1 ) h##_write(rcc,hpre, 0);		\
+  if	  ( (v+0) ==   1 ) h##_write(rcc,hpre, 0);		\
   else if ( (v+0) ==   2 ) h##_write(rcc,hpre, 8);		\
   else if ( (v+0) ==   4 ) h##_write(rcc,hpre, 9);		\
   else if ( (v+0) ==   8 ) h##_write(rcc,hpre,10);		\

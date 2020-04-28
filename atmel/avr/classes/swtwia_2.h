@@ -57,9 +57,9 @@
 #  define _hw_rel_swtwi0_scl		hw_swtwi0_scl
 #  define _hw_def_swtwi0		_swtwia, 0, 0
 #  define _hw_irq_swtwi0_		_irq, swtwi0, 0, null, if
-#  define _hw_reg_swtwi0_sr		_r8, (intptr_t)&hw_swtwi0_sr, -1, 0x00
-#  define _hw_reg__swtwia_cr		_const, 0xFF, 0, 0
-#  define _hw_reg__swtwia_if		_cb1, cr, 1, 7		// IRQ flag
+#  define _hw_swtwi0_sr		_r8, (intptr_t)&hw_swtwi0_sr, -1, 0x00
+#  define _hw__swtwia_cr		_const, 0xFF, 0, 0
+#  define _hw__swtwia_if		_cb1, cr, 1, 7		// IRQ flag
 
 #  define hw_swtwi0_scl_0		_hw( configure, hw_swtwi0_scl, mode, digital_output )
 #  define hw_swtwi0_scl_X		_hw( configure, hw_swtwi0_scl, mode, digital_input )
@@ -146,8 +146,8 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
  * @code
  * hwa( configure,   swtwi0,
  *
- *      bps,         BPS           //  bits per second
- *                 | max );
+ *	bps,	     BPS	   //  bits per second
+ *		   | max );
  * @endcode
  */
 #define _hw_mtd_hw_configure__swtwia	, _hw_cfswtwia
@@ -194,10 +194,10 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
  */
 #define _hw_mtd_hw_bus_start__swtwia	, _hw_swtwia_txstart
 #define _hw_mtd_hw_bus_slaw__swtwia	, _hw_swtwia_txslaw
-/* #define _hw_mtd_hw_bus_slar__swtwia	, _hw_swtwia_txslar */
+/* #define _hw_mtd_hw_bus_slar__swtwia		, _hw_swtwia_txslar */
 #define _hw_mtd_hw_bus_stop__swtwia	, _hw_swtwia_txstop
 #define _hw_mtd_hw_bus_data__swtwia	, _hw_swtwia_txdata
-/* #define _hw_mtd_hw_bus_read__swtwia	, _hw_swtwia_txread */
+/* #define _hw_mtd_hw_bus_read__swtwia		, _hw_swtwia_txread */
 #define _hw_mtd_hw_stat__swtwia		, _hw_swtwia_stat
 
 #define _hw_swtwia_txstart(o,a,...)	hw_##o##_txstart() HW_EOL(__VA_ARGS__)

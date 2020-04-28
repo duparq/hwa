@@ -100,8 +100,8 @@
  * `HW_DEVICE_CLK_PSC`	 | <b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
  */
 #define _hw_is_rc_8MHz_rc_8MHz				, 1
-#define _hw_is_low_freq_xosc_low_freq_xosc		, 1
-#define _hw_is_low_power_xosc_low_power_xosc		, 1
+#define _hw_is_low_freq_xosc_low_freq_xosc	, 1
+#define _hw_is_low_power_xosc_low_power_xosc	, 1
 
 
 #ifndef HW_DEVICE_CLK_SRC
@@ -529,39 +529,39 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define hw_irq_usb0			_irq, 10, usb0,	    ie,	  if
 #define hw_irq_usb0_endpoint		_irq, 11, usb0,	    ieep, ifep
 #define hw_irq_watchdog0		_irq, 12, watchdog0,	ie,	  if
-#define hw_irq_counter1capture0	_irq, 16, counter1capture0,	    ie,	  if
-#define hw_irq_counter1_capture	_irq, 16, counter1capture0,	    ie,	  if
-#define hw_irq_counter1compare0	_irq, 17, counter1compare0,	    ie,	  if
+#define hw_irq_counter1capture0		_irq, 16, counter1capture0,	    ie,	  if
+#define hw_irq_counter1_capture		_irq, 16, counter1capture0,	    ie,	  if
+#define hw_irq_counter1compare0		_irq, 17, counter1compare0,	    ie,	  if
 #define hw_irq_counter1_compare0	_irq, 17, counter1compare0,	    ie,	  if
-#define hw_irq_counter1compare1	_irq, 18, counter1compare1,	    ie,	  if
+#define hw_irq_counter1compare1		_irq, 18, counter1compare1,	    ie,	  if
 #define hw_irq_counter1_compare1	_irq, 18, counter1compare1,	    ie,	  if
-#define hw_irq_counter1compare2	_irq, 19, counter1compare2,	    ie,	  if
+#define hw_irq_counter1compare2		_irq, 19, counter1compare2,	    ie,	  if
 #define hw_irq_counter1_compare2	_irq, 19, counter1compare2,	    ie,	  if
-#define hw_irq_counter1		_irq, 20, counter1, ie,	  if
+#define hw_irq_counter1			_irq, 20, counter1, ie,	  if
 #define hw_irq_counter1_overflow	_irq, 20, counter1, ie,	  if
-#define hw_irq_counter0compare0	_irq, 21, counter0compare0,	    ie,	  if
+#define hw_irq_counter0compare0		_irq, 21, counter0compare0,	    ie,	  if
 #define hw_irq_counter0_compare0	_irq, 21, counter0compare0,	    ie,	  if
-#define hw_irq_counter0compare1	_irq, 22, counter0compare1,	    ie,	  if
+#define hw_irq_counter0compare1		_irq, 22, counter0compare1,	    ie,	  if
 #define hw_irq_counter0_compare1	_irq, 22, counter0compare1,	    ie,	  if
-#define hw_irq_counter0		_irq, 23, counter0, ie,	  if
+#define hw_irq_counter0			_irq, 23, counter0, ie,	  if
 #define hw_irq_counter0_overflow	_irq, 23, counter0, ie,	  if
 #define hw_irq_spi0			_irq, 24, spi0,	    ie,	  if
-#define hw_irq_spi0_txc		_irq, 24, spi0,	    ie,	  if
+#define hw_irq_spi0_txc			_irq, 24, spi0,	    ie,	  if
 #define hw_irq_acmp0			_irq, 28, acmp0,    ie,	  if
 #define hw_irq_adc0			_irq, 29, adc0,	    ie,	  if
 #define hw_irq_eeprom0			_irq, 30, eeprom0,  ie,	  /* no irq flag */
 #define hw_irq_eeprom0_ready		_irq, 30, eeprom0,  ie,
-#define hw_irq_counter3capture0	_irq, 31, counter3capture0,	    ie,	  if
-#define hw_irq_counter3compare0	_irq, 32, counter3compare0,	    ie,	  if
-#define hw_irq_counter3compare1	_irq, 33, counter3compare1,	    ie,	  if
-#define hw_irq_counter3compare2	_irq, 34, counter3compare2,	    ie,	  if
-#define hw_irq_counter3		_irq, 35, counter3, ie,	  if
+#define hw_irq_counter3capture0		_irq, 31, counter3capture0,	    ie,	  if
+#define hw_irq_counter3compare0		_irq, 32, counter3compare0,	    ie,	  if
+#define hw_irq_counter3compare1		_irq, 33, counter3compare1,	    ie,	  if
+#define hw_irq_counter3compare2		_irq, 34, counter3compare2,	    ie,	  if
+#define hw_irq_counter3			_irq, 35, counter3, ie,	  if
 #define hw_irq_counter3_overflow	_irq, 35, counter3, ie,	  if
 #define hw_irq_twi0			_irq, 36, twi0,	    ie,	  if
 #define hw_irq_flash0			_irq, 37, flash0,   ie,	  if
-#define hw_irq_counter4compare0	_irq, 38, counter4compare0,	    ie,	  if
-#define hw_irq_counter4compare1	_irq, 39, counter4compare1,	    ie,	  if
-#define hw_irq_counter4compare2	_irq, 40, counter4compare2,	    ie,	  if
+#define hw_irq_counter4compare0		_irq, 38, counter4compare0,	    ie,	  if
+#define hw_irq_counter4compare1		_irq, 39, counter4compare1,	    ie,	  if
+#define hw_irq_counter4compare2		_irq, 40, counter4compare2,	    ie,	  if
 #define hw_irq_counter4_overflow	_irq, 41, counter4, ieov, ifov
 #define hw_irq_counter4_fault		_irq, 42, counter4, iefp, iffp
 
@@ -582,21 +582,21 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_shared_did1		_r8, 0x7F, 0x01, 0x00	/* DID for AIN0 */
-#define hw_reg_shared_did0		_r8, 0x7E, 0xF3, 0x00
-#define hw_reg_shared_did2		_r8, 0x7D, 0x3F, 0x00
-#define hw_reg_shared_eicrb		_r8, 0x6A, 0x30, 0x00
-#define hw_reg_shared_eicra		_r8, 0x69, 0xFF, 0x00
-#define hw_reg_shared_pcicr		_r8, 0x68, 0x01, 0x00
-#define hw_reg_shared_prr1		_r8, 0x65, 0x99, 0x00
-#define hw_reg_shared_prr0		_r8, 0x64, 0xAD, 0x00
-#define hw_reg_shared_gpior2		_r8, 0x4B, 0xFF, 0x00
-#define hw_reg_shared_gpior1		_r8, 0x4A, 0xFF, 0x00
-#define hw_reg_shared_gtccr		_r8, 0x43, 0x81, 0x00
-#define hw_reg_shared_gpior0		_r8, 0x3E, 0xFF, 0x00
-#define hw_reg_shared_eimsk		_r8, 0x3D, 0x4F, 0x00
-#define hw_reg_shared_eifr		_r8, 0x3C, 0x4F, 0x4F
-#define hw_reg_shared_pcifr		_r8, 0x3B, 0x01, 0x01
+#define hw_shared_did1			_r8, 0x7F, 0x01, 0x00	/* DID for AIN0 */
+#define hw_shared_did0			_r8, 0x7E, 0xF3, 0x00
+#define hw_shared_did2			_r8, 0x7D, 0x3F, 0x00
+#define hw_shared_eicrb			_r8, 0x6A, 0x30, 0x00
+#define hw_shared_eicra			_r8, 0x69, 0xFF, 0x00
+#define hw_shared_pcicr			_r8, 0x68, 0x01, 0x00
+#define hw_shared_prr1			_r8, 0x65, 0x99, 0x00
+#define hw_shared_prr0			_r8, 0x64, 0xAD, 0x00
+#define hw_shared_gpior2		_r8, 0x4B, 0xFF, 0x00
+#define hw_shared_gpior1		_r8, 0x4A, 0xFF, 0x00
+#define hw_shared_gtccr			_r8, 0x43, 0x81, 0x00
+#define hw_shared_gpior0		_r8, 0x3E, 0xFF, 0x00
+#define hw_shared_eimsk			_r8, 0x3D, 0x4F, 0x00
+#define hw_shared_eifr			_r8, 0x3C, 0x4F, 0x4F
+#define hw_shared_pcifr			_r8, 0x3B, 0x01, 0x01
 
 #if !defined __ASSEMBLER__
 /*
@@ -632,30 +632,30 @@ typedef struct {
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_core0_osccal		_r8, 0x66, 0xFF, 0x00
-#define hw_reg_core0_sreg		_r8, 0x5F, 0xFF, 0x00
-#define hw_reg_core0_sph		_r8, 0x5E, 0xFF, 0x00
-#define hw_reg_core0_spl		_r8, 0x5D, 0xFF, 0x00
-#define hw_reg_core0_mcucr		_r8, 0x55, 0x53, 0x00
-#define hw_reg_core0_mcusr		_r8, 0x54, 0x3F, 0x00
-#define hw_reg_core0_smcr		_r8, 0x53, 0x0F, 0x00
+#define hw_core0_osccal			_r8, 0x66, 0xFF, 0x00
+#define hw_core0_sreg			_r8, 0x5F, 0xFF, 0x00
+#define hw_core0_sph			_r8, 0x5E, 0xFF, 0x00
+#define hw_core0_spl			_r8, 0x5D, 0xFF, 0x00
+#define hw_core0_mcucr			_r8, 0x55, 0x53, 0x00
+#define hw_core0_mcusr			_r8, 0x54, 0x3F, 0x00
+#define hw_core0_smcr			_r8, 0x53, 0x0F, 0x00
 
 /*	Object logical registers
  */
-#define hw_reg_core0_pud		_ob1, mcucr, 1, 4
-#define hw_reg_core0_ivsel		_ob1, mcucr, 1, 1
-#define hw_reg_core0_ivce		_ob1, mcucr, 1, 0
+#define hw_core0_pud			_ob1, mcucr, 1, 4
+#define hw_core0_ivsel			_ob1, mcucr, 1, 1
+#define hw_core0_ivce			_ob1, mcucr, 1, 0
 
-#define hw_reg_core0_usbrf		_ob1, mcusr, 1, 5
-#define hw_reg_core0_jtrf		_ob1, mcusr, 1, 4
-#define hw_reg_core0_wdrf		_ob1, mcusr, 1, 3
-#define hw_reg_core0_borf		_ob1, mcusr, 1, 2
-#define hw_reg_core0_extrf		_ob1, mcusr, 1, 1
-#define hw_reg_core0_porf		_ob1, mcusr, 1, 0
-#define hw_reg_core0_allrf		_ob1, mcusr, 6, 0	/* convenient */
+#define hw_core0_usbrf			_ob1, mcusr, 1, 5
+#define hw_core0_jtrf			_ob1, mcusr, 1, 4
+#define hw_core0_wdrf			_ob1, mcusr, 1, 3
+#define hw_core0_borf			_ob1, mcusr, 1, 2
+#define hw_core0_extrf			_ob1, mcusr, 1, 1
+#define hw_core0_porf			_ob1, mcusr, 1, 0
+#define hw_core0_allrf			_ob1, mcusr, 6, 0	/* convenient */
 
-#define hw_reg_core0_sm		_ob1, smcr, 3, 1
-#define hw_reg_core0_se		_ob1, smcr, 1, 0
+#define hw_core0_sm			_ob1, smcr, 3, 1
+#define hw_core0_se			_ob1, smcr, 1, 0
 
 
 /*******************************************************************************
@@ -668,15 +668,15 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_watchdog0		_wdogb, 103, 0
+#define hw_watchdog0			_wdogb, 103, 0
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg__wdogb_csr		_r8, 0x60, 0xFF, 0x80
+#define hw__wdogb_csr			_r8, 0x60, 0xFF, 0x80
 
 /*	Class logical registers
  */
-#define hw_reg__wdogb_wdrf		_xob1, core0, mcusr, 1, 3
+#define hw__wdogb_wdrf			_xob1, core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -737,83 +737,83 @@ typedef struct {
 
 /*  Pins				class, id, port, bn, bp
  */
-#define hw_pb0			_io1a, 109, portb, 1, 0
-#define hw_pb1			_io1a, 110, portb, 1, 1
-#define hw_pb2			_io1a, 111, portb, 1, 2
-#define hw_pb3			_io1a, 112, portb, 1, 3
-#define hw_pb4			_io1a, 113, portb, 1, 4
-#define hw_pb5			_io1a, 114, portb, 1, 5
-#define hw_pb6			_io1a, 115, portb, 1, 6
-#define hw_pb7			_io1a, 116, portb, 1, 7
+#define hw_pb0				_io1a, 109, portb, 1, 0
+#define hw_pb1				_io1a, 110, portb, 1, 1
+#define hw_pb2				_io1a, 111, portb, 1, 2
+#define hw_pb3				_io1a, 112, portb, 1, 3
+#define hw_pb4				_io1a, 113, portb, 1, 4
+#define hw_pb5				_io1a, 114, portb, 1, 5
+#define hw_pb6				_io1a, 115, portb, 1, 6
+#define hw_pb7				_io1a, 116, portb, 1, 7
 
-#define hw_pc6			_io1a, 117, portc, 1, 6
-#define hw_pc7			_io1a, 118, portc, 1, 7
+#define hw_pc6				_io1a, 117, portc, 1, 6
+#define hw_pc7				_io1a, 118, portc, 1, 7
 
-#define hw_pd0			_io1a, 119, portd, 1, 0
-#define hw_pd1			_io1a, 120, portd, 1, 1
-#define hw_pd2			_io1a, 121, portd, 1, 2
-#define hw_pd3			_io1a, 122, portd, 1, 3
-#define hw_pd4			_io1a, 123, portd, 1, 4
-#define hw_pd5			_io1a, 124, portd, 1, 5
-#define hw_pd6			_io1a, 125, portd, 1, 6
-#define hw_pd7			_io1a, 126, portd, 1, 7
+#define hw_pd0				_io1a, 119, portd, 1, 0
+#define hw_pd1				_io1a, 120, portd, 1, 1
+#define hw_pd2				_io1a, 121, portd, 1, 2
+#define hw_pd3				_io1a, 122, portd, 1, 3
+#define hw_pd4				_io1a, 123, portd, 1, 4
+#define hw_pd5				_io1a, 124, portd, 1, 5
+#define hw_pd6				_io1a, 125, portd, 1, 6
+#define hw_pd7				_io1a, 126, portd, 1, 7
 
-#define hw_pe2			_io1a, 127, porte, 1, 2
-#define hw_pe6			_io1a, 128, porte, 1, 6
+#define hw_pe2				_io1a, 127, porte, 1, 2
+#define hw_pe6				_io1a, 128, porte, 1, 6
 
-#define hw_pf0			_io1a, 129, portf, 1, 0
-#define hw_pf1			_io1a, 130, portf, 1, 1
-#define hw_pf4			_io1a, 131, portf, 1, 4
-#define hw_pf5			_io1a, 132, portf, 1, 5
-#define hw_pf6			_io1a, 133, portf, 1, 6
-#define hw_pf7			_io1a, 134, portf, 1, 7
+#define hw_pf0				_io1a, 129, portf, 1, 0
+#define hw_pf1				_io1a, 130, portf, 1, 1
+#define hw_pf4				_io1a, 131, portf, 1, 4
+#define hw_pf5				_io1a, 132, portf, 1, 5
+#define hw_pf6				_io1a, 133, portf, 1, 6
+#define hw_pf7				_io1a, 134, portf, 1, 7
 
 /*  Not connected pins
  */
 #include "../classes/io0a_1.h"
 
-#define hw_counter3compare1	_io0a
-#define hw_counter3compare2	_io0a
+#define hw_counter3compare1		_io0a
+#define hw_counter3compare2		_io0a
 
 /*  Digital input disable bits for analog input pins
  */
-#define hw_reg_pf0_did		_xob1, shared, did0, 1, 0	/* ADC0 */
-#define hw_reg_pf1_did		_xob1, shared, did0, 1, 1	/* ADC1 */
-#define hw_reg_pf4_did		_xob1, shared, did0, 1, 4	/* ADC4 */
-#define hw_reg_pf5_did		_xob1, shared, did0, 1, 5	/* ADC5 */
-#define hw_reg_pf6_did		_xob1, shared, did0, 1, 6	/* ADC6 */
-#define hw_reg_pf7_did		_xob1, shared, did0, 1, 7	/* ADC7 */
+#define hw_pf0_did			_xob1, shared, did0, 1, 0	/* ADC0 */
+#define hw_pf1_did			_xob1, shared, did0, 1, 1	/* ADC1 */
+#define hw_pf4_did			_xob1, shared, did0, 1, 4	/* ADC4 */
+#define hw_pf5_did			_xob1, shared, did0, 1, 5	/* ADC5 */
+#define hw_pf6_did			_xob1, shared, did0, 1, 6	/* ADC6 */
+#define hw_pf7_did			_xob1, shared, did0, 1, 7	/* ADC7 */
 
-#define hw_reg_pd4_did		_xob1, shared, did2, 1, 0	/* ADC8 */
-#define hw_reg_pd6_did		_xob1, shared, did2, 1, 1	/* ADC9 */
-#define hw_reg_pd7_did		_xob1, shared, did2, 1, 2	/* ADC10 */
-#define hw_reg_pb4_did		_xob1, shared, did2, 1, 3	/* ADC11 */
-#define hw_reg_pb5_did		_xob1, shared, did2, 1, 4	/* ADC12 */
-#define hw_reg_pb6_did		_xob1, shared, did2, 1, 5	/* ADC13 */
+#define hw_pd4_did			_xob1, shared, did2, 1, 0	/* ADC8 */
+#define hw_pd6_did			_xob1, shared, did2, 1, 1	/* ADC9 */
+#define hw_pd7_did			_xob1, shared, did2, 1, 2	/* ADC10 */
+#define hw_pb4_did			_xob1, shared, did2, 1, 3	/* ADC11 */
+#define hw_pb5_did			_xob1, shared, did2, 1, 4	/* ADC12 */
+#define hw_pb6_did			_xob1, shared, did2, 1, 5	/* ADC13 */
 
-#define hw_reg_pe6_did		_xob1, shared, did1, 1, 0	/* AIN0 */
+#define hw_pe6_did			_xob1, shared, did1, 1, 0	/* AIN0 */
 
 /*  Pin change controller mask
  */
-#define hw_pb0_pcic		_xob1, 135, msk, 1, 0
-#define hw_pb1_pcic		_xob1, 136, msk, 1, 1
-#define hw_pb2_pcic		_xob1, 137, msk, 1, 2
-#define hw_pb3_pcic		_xob1, 138, msk, 1, 3
-#define hw_pb4_pcic		_xob1, 139, msk, 1, 4
-#define hw_pb5_pcic		_xob1, 140, msk, 1, 5
-#define hw_pb6_pcic		_xob1, 141, msk, 1, 6
-#define hw_pb7_pcic		_xob1, 142, msk, 1, 7
+#define hw_pb0_pcic			_xob1, 135, msk, 1, 0
+#define hw_pb1_pcic			_xob1, 136, msk, 1, 1
+#define hw_pb2_pcic			_xob1, 137, msk, 1, 2
+#define hw_pb3_pcic			_xob1, 138, msk, 1, 3
+#define hw_pb4_pcic			_xob1, 139, msk, 1, 4
+#define hw_pb5_pcic			_xob1, 140, msk, 1, 5
+#define hw_pb6_pcic			_xob1, 141, msk, 1, 6
+#define hw_pb7_pcic			_xob1, 142, msk, 1, 7
 
 /*  Relative pin change controllers
  */
-#define hw_pb0_pcic		pcic0
-#define hw_pb1_pcic		pcic0
-#define hw_pb2_pcic		pcic0
-#define hw_pb3_pcic		pcic0
-#define hw_pb4_pcic		pcic0
-#define hw_pb5_pcic		pcic0
-#define hw_pb6_pcic		pcic0
-#define hw_pb7_pcic		pcic0
+#define hw_pb0_pcic			pcic0
+#define hw_pb1_pcic			pcic0
+#define hw_pb2_pcic			pcic0
+#define hw_pb3_pcic			pcic0
+#define hw_pb4_pcic			pcic0
+#define hw_pb5_pcic			pcic0
+#define hw_pb6_pcic			pcic0
+#define hw_pb7_pcic			pcic0
 
 /*  Canonical pin names
  */
@@ -912,53 +912,53 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_int0			_inta, 143, 0
+#define hw_int0				_inta, 143, 0
 
 /*	Object logical registers
  */
-#define hw_reg_int0_sc			_xob1, shared, eicra, 2, 0
-#define hw_reg_int0_ie			_xob1, shared, eimsk, 1, 0
-#define hw_reg_int0_if			_xob1, shared, eifr,  1, 0
+#define hw_int0_sc			_xob1, shared, eicra, 2, 0
+#define hw_int0_ie			_xob1, shared, eimsk, 1, 0
+#define hw_int0_if			_xob1, shared, eifr,  1, 0
 
 /*	Object				class, id, address
  */
-#define hw_int1			_inta, 144, 0
+#define hw_int1				_inta, 144, 0
 
 /*	Object logical registers
  */
-#define hw_reg_int1_sc			_xob1, shared, eicra, 2, 2
-#define hw_reg_int1_ie			_xob1, shared, eimsk, 1, 1
-#define hw_reg_int1_if			_xob1, shared, eifr,  1, 1
+#define hw_int1_sc			_xob1, shared, eicra, 2, 2
+#define hw_int1_ie			_xob1, shared, eimsk, 1, 1
+#define hw_int1_if			_xob1, shared, eifr,  1, 1
 
 /*	Object				class, id, address
  */
-#define hw_int2			_inta, 145, 0
+#define hw_int2				_inta, 145, 0
 
 /*	Object logical registers
  */
-#define hw_reg_int2_sc			_xob1, shared, eicra, 2, 4
-#define hw_reg_int2_ie			_xob1, shared, eimsk, 1, 2
-#define hw_reg_int2_if			_xob1, shared, eifr,  1, 2
+#define hw_int2_sc			_xob1, shared, eicra, 2, 4
+#define hw_int2_ie			_xob1, shared, eimsk, 1, 2
+#define hw_int2_if			_xob1, shared, eifr,  1, 2
 
 /*	Object				class, id, address
  */
-#define hw_int3			_inta, 146, 0
+#define hw_int3				_inta, 146, 0
 
 /*	Object logical registers
  */
-#define hw_reg_int3_sc			_xob1, shared, eicra, 2, 6
-#define hw_reg_int3_ie			_xob1, shared, eimsk, 1, 3
-#define hw_reg_int3_if			_xob1, shared, eifr,  1, 3
+#define hw_int3_sc			_xob1, shared, eicra, 2, 6
+#define hw_int3_ie			_xob1, shared, eimsk, 1, 3
+#define hw_int3_if			_xob1, shared, eifr,  1, 3
 
 /*	Object				class, id, address
  */
-#define hw_int6			_inta, 147, 0
+#define hw_int6				_inta, 147, 0
 
 /*	Object logical registers
  */
-#define hw_reg_int6_sc			_xob1, shared, eicrb, 2, 4
-#define hw_reg_int6_ie			_xob1, shared, eimsk, 1, 6
-#define hw_reg_int6_if			_xob1, shared, eifr,  1, 6
+#define hw_int6_sc			_xob1, shared, eicrb, 2, 4
+#define hw_int6_ie			_xob1, shared, eimsk, 1, 6
+#define hw_int6_if			_xob1, shared, eifr,  1, 6
 
 
 /*******************************************************************************
@@ -975,12 +975,12 @@ typedef struct {
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_pcic0_msk		_r8, 0x6B, 0xFF, 0x00
+#define hw_pcic0_msk			_r8, 0x6B, 0xFF, 0x00
 
 /*	Object logical registers
  */
-#define hw_reg_pcic0_ie		_xob1, shared, pcicr, 1, 0
-#define hw_reg_pcic0_if		_xob1, shared, pcifr, 1, 0
+#define hw_pcic0_ie			_xob1, shared, pcicr, 1, 0
+#define hw_pcic0_if			_xob1, shared, pcifr, 1, 0
 
 
 /*******************************************************************************
@@ -993,16 +993,16 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_prescaler0		_psca, 149, 0
+#define hw_prescaler0			_psca, 149, 0
 
 /*	Object logical registers
  */
-#define hw_reg_prescaler0_tsm		_xob1, shared, gtccr, 1, 7
-#define hw_reg_prescaler0_psr		_xob1, shared, gtccr, 1, 0
+#define hw_prescaler0_tsm		_xob1, shared, gtccr, 1, 7
+#define hw_prescaler0_psr		_xob1, shared, gtccr, 1, 0
 
 /*  This is a convenient logical register definition for stopping the prescaler
  */
-#define hw_reg_prescaler0_tsmpsr	_xob2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
+#define hw_prescaler0_tsmpsr		_xob2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -1015,31 +1015,31 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter0		_c8a, 150, 0
+#define hw_counter0			_c8a, 150, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter0_ccra		_r8, 0x44, 0xF3, 0x00
-#define hw_reg_counter0_ccrb		_r8, 0x45, 0xCF, 0x00
-#define hw_reg_counter0_count		_r8, 0x46, 0xFF, 0x00
-#define hw_reg_counter0_imsk		_r8, 0x6E, 0x07, 0x00
-#define hw_reg_counter0_ifr		_r8, 0x35, 0x07, 0x07
+#define hw_counter0_ccra		_r8, 0x44, 0xF3, 0x00
+#define hw_counter0_ccrb		_r8, 0x45, 0xCF, 0x00
+#define hw_counter0_count		_r8, 0x46, 0xFF, 0x00
+#define hw_counter0_imsk		_r8, 0x6E, 0x07, 0x00
+#define hw_counter0_ifr			_r8, 0x35, 0x07, 0x07
 
 /*	Object logical registers
  */
-#define hw_reg_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
-#define hw_reg_counter0_cs		_ob1, ccrb, 3, 0
-#define hw_reg_counter0_ie		_ob1, imsk, 1, 0
-#define hw_reg_counter0_if		_ob1, ifr, 1, 0
-#define hw_reg_counter0_prr		_xob1, shared, prr, 1, 5
+#define hw_counter0_wgm			_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define hw_counter0_cs			_ob1, ccrb, 3, 0
+#define hw_counter0_ie			_ob1, imsk, 1, 0
+#define hw_counter0_if			_ob1, ifr, 1, 0
+#define hw_counter0_prr			_xob1, shared, prr, 1, 5
 
 
 /*	Relatives
  */
-#define hw_counter0_prescaler0	prescaler0
-#define hw_counter0_prescaler	prescaler0
-#define hw_counter0_compare0	counter0compare0
-#define hw_counter0_compare1	counter0compare1
+#define hw_counter0_prescaler0		prescaler0
+#define hw_counter0_prescaler		prescaler0
+#define hw_counter0_compare0		counter0compare0
+#define hw_counter0_compare1		counter0compare1
 
 
 /*******************************************************************************
@@ -1052,43 +1052,43 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter0compare0	_cmp8a, 151, 0
+#define hw_counter0compare0		_cmp8a, 151, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter0compare0_reg	_r8, 0x47, 0xFF, 0x00	/* OCR0A */
+#define hw_counter0compare0_reg		_r8, 0x47, 0xFF, 0x00	/* OCR0A */
 
 /*	Object logical registers
  */
-#define hw_reg_counter0compare0_com	_xob1, counter0, ccra, 2, 6
-#define hw_reg_counter0compare0_force	_xob1, counter0, ccrb, 1, 7
-#define hw_reg_counter0compare0_ie	_xob1, counter0, imsk, 1, 1
-#define hw_reg_counter0compare0_if	_xob1, counter0, ifr,  1, 1
+#define hw_counter0compare0_com		_xob1, counter0, ccra, 2, 6
+#define hw_counter0compare0_force	_xob1, counter0, ccrb, 1, 7
+#define hw_counter0compare0_ie		_xob1, counter0, imsk, 1, 1
+#define hw_counter0compare0_if		_xob1, counter0, ifr,  1, 1
 
 /*	Relatives
  */
-#define hw_counter0compare0_pin	pb7
+#define hw_counter0compare0_pin		pb7
 #define hw_counter0compare0_counter	counter0
 
 
 /*	Object				class, id, address
  */
-#define hw_counter0compare1	_cmp8a, 152, 0
+#define hw_counter0compare1		_cmp8a, 152, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter0compare1_reg	_r8, 0x48, 0xFF, 0x00	/* OCR0B */
+#define hw_counter0compare1_reg		_r8, 0x48, 0xFF, 0x00	/* OCR0B */
 
 /*	Object logical registers
  */
-#define hw_reg_counter0compare1_com	_xob1, counter0, ccra, 2, 4
-#define hw_reg_counter0compare1_force	_xob1, counter0, ccrb, 1, 6
-#define hw_reg_counter0compare1_ie	_xob1, counter0, imsk, 1, 2
-#define hw_reg_counter0compare1_if	_xob1, counter0, ifr,  1, 2
+#define hw_counter0compare1_com		_xob1, counter0, ccra, 2, 4
+#define hw_counter0compare1_force	_xob1, counter0, ccrb, 1, 6
+#define hw_counter0compare1_ie		_xob1, counter0, imsk, 1, 2
+#define hw_counter0compare1_if		_xob1, counter0, ifr,  1, 2
 
 /*	Relatives
  */
-#define hw_counter0compare1_pin	pd0
+#define hw_counter0compare1_pin		pd0
 #define hw_counter0compare1_counter	counter0
 
 
@@ -1102,33 +1102,33 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter1		_c16b, 153, 0
+#define hw_counter1			_c16b, 153, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter1_ccra		_r8,  0x80, 0xF3,   0x00
-#define hw_reg_counter1_ccrb		_r8,  0x81, 0xDF,   0x00
-#define hw_reg_counter1_ccrc		_r8,  0x82, 0xC0,   0x00
-#define hw_reg_counter1_count		_r16, 0x84, 0xFFFF, 0x0000
-#define hw_reg_counter1_imsk		_r8,  0x6F, 0x2F,   0x00
-#define hw_reg_counter1_ifr		_r8,  0x36, 0x2F,   0x2F
+#define hw_counter1_ccra		_r8,  0x80, 0xF3,   0x00
+#define hw_counter1_ccrb		_r8,  0x81, 0xDF,   0x00
+#define hw_counter1_ccrc		_r8,  0x82, 0xC0,   0x00
+#define hw_counter1_count		_r16, 0x84, 0xFFFF, 0x0000
+#define hw_counter1_imsk		_r8,  0x6F, 0x2F,   0x00
+#define hw_counter1_ifr			_r8,  0x36, 0x2F,   0x2F
 
 /*	Object logical registers
  */
-#define hw_reg_counter1_cs		_ob1, ccrb, 3, 0
-#define hw_reg_counter1_wgm		_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
-#define hw_reg_counter1_ie		_ob1, imsk, 1, 0
-#define hw_reg_counter1_if		_ob1, ifr,  1, 0
-#define hw_reg_counter1_prr		_xob1, shared, prr0, 1, 3
+#define hw_counter1_cs			_ob1, ccrb, 3, 0
+#define hw_counter1_wgm			_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+#define hw_counter1_ie			_ob1, imsk, 1, 0
+#define hw_counter1_if			_ob1, ifr,  1, 0
+#define hw_counter1_prr			_xob1, shared, prr0, 1, 3
 
 /*	Relatives
  */
-#define hw_counter1_prescaler0	prescaler0
-#define hw_counter1_prescaler	prescaler0
-#define hw_counter1_compare0	counter1compare0
-#define hw_counter1_compare1	counter1compare1
-#define hw_counter1_compare2	counter1compare2
-#define hw_counter1_capture0	counter1capture0
+#define hw_counter1_prescaler0		prescaler0
+#define hw_counter1_prescaler		prescaler0
+#define hw_counter1_compare0		counter1compare0
+#define hw_counter1_compare1		counter1compare1
+#define hw_counter1_compare2		counter1compare2
+#define hw_counter1_capture0		counter1capture0
 
 
 /*******************************************************************************
@@ -1141,22 +1141,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter1compare0	_cmp16a, 154, 0
+#define hw_counter1compare0		_cmp16a, 154, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter1compare0_reg	_r16, 0x88, 0xFFFF, 0x0000	/* OCR1A */
+#define hw_counter1compare0_reg		_r16, 0x88, 0xFFFF, 0x0000	/* OCR1A */
 
 /*	Object logical registers
  */
-#define hw_reg_counter1compare0_com	_xob1, counter1, ccra, 2, 6
-#define hw_reg_counter1compare0_force	_xob1, counter1, ccrc, 1, 7
-#define hw_reg_counter1compare0_ie	_xob1, counter1, imsk, 1, 1
-#define hw_reg_counter1compare0_if	_xob1, counter1, ifr,  1, 1
+#define hw_counter1compare0_com		_xob1, counter1, ccra, 2, 6
+#define hw_counter1compare0_force	_xob1, counter1, ccrc, 1, 7
+#define hw_counter1compare0_ie		_xob1, counter1, imsk, 1, 1
+#define hw_counter1compare0_if		_xob1, counter1, ifr,  1, 1
 
 /*	Relatives
  */
-#define hw_counter1compare0_pin	pb5
+#define hw_counter1compare0_pin		pb5
 #define hw_counter1compare0_counter	counter1
 
 
@@ -1168,22 +1168,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter1compare1	_cmp16a, 155, 0
+#define hw_counter1compare1		_cmp16a, 155, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter1compare1_reg	_r16, 0x8A, 0xFFFF, 0x0000	/* OCR1B */
+#define hw_counter1compare1_reg		_r16, 0x8A, 0xFFFF, 0x0000	/* OCR1B */
 
 /*	Object logical registers
  */
-#define hw_reg_counter1compare1_com	_xob1, counter1, ccra, 2, 4
-#define hw_reg_counter1compare1_force	_xob1, counter1, ccrc, 1, 6
-#define hw_reg_counter1compare1_ie	_xob1, counter1, imsk, 1, 2
-#define hw_reg_counter1compare1_if	_xob1, counter1, ifr,  1, 2
+#define hw_counter1compare1_com		_xob1, counter1, ccra, 2, 4
+#define hw_counter1compare1_force	_xob1, counter1, ccrc, 1, 6
+#define hw_counter1compare1_ie		_xob1, counter1, imsk, 1, 2
+#define hw_counter1compare1_if		_xob1, counter1, ifr,  1, 2
 
 /*	Relatives
  */
-#define hw_counter1compare1_pin	pb6
+#define hw_counter1compare1_pin		pb6
 #define hw_counter1compare1_counter	counter1
 
 
@@ -1195,22 +1195,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_reg_counter1compare2	_cmp16a, 413, 0
+#define hw_counter1compare2		_cmp16a, 413, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter1compare2_reg	_r16, 0x8C, 0xFFFF, 0x0000
+#define hw_counter1compare2_reg		_r16, 0x8C, 0xFFFF, 0x0000
 
 /*	Object logical registers
  */
-#define hw_reg_counter1compare2_com	_xob1, counter1, ccra, 2, 2
-#define hw_reg_counter1compare2_force	_xob1, counter1, ccrc, 1, 5
-#define hw_reg_counter1compare2_ie	_xob1, counter1, imsk, 1, 3
-#define hw_reg_counter1compare2_if	_xob1, counter1, ifr,  1, 3
+#define hw_counter1compare2_com		_xob1, counter1, ccra, 2, 2
+#define hw_counter1compare2_force	_xob1, counter1, ccrc, 1, 5
+#define hw_counter1compare2_ie		_xob1, counter1, imsk, 1, 3
+#define hw_counter1compare2_if		_xob1, counter1, ifr,  1, 3
 
 /*	Relatives
  */
-#define hw_counter1compare2_pin	pb7
+#define hw_counter1compare2_pin		pb7
 #define hw_counter1compare2_counter	counter1
 
 
@@ -1224,23 +1224,23 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter1capture0	_cap16a, 156, 0
+#define hw_counter1capture0		_cap16a, 156, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter1capture0_reg	_r16, 0x86, 0xFFFF, 0x0000	/* ICR1 */
+#define hw_counter1capture0_reg		_r16, 0x86, 0xFFFF, 0x0000	/* ICR1 */
 
 /*	Object logical registers
  */
-#define hw_reg_counter1capture0_acic	_xob1, acmp0, csr, 1, 2
-#define hw_reg_counter1capture0_icnc	_xob1, counter1, ccrb, 1, 7
-#define hw_reg_counter1capture0_ices	_xob1, counter1, ccrb, 1, 6
-#define hw_reg_counter1capture0_ie	_xob1, counter1, imsk, 1, 5
-#define hw_reg_counter1capture0_if	_xob1, counter1, ifr,  1, 5
+#define hw_counter1capture0_acic	_xob1, acmp0, csr, 1, 2
+#define hw_counter1capture0_icnc	_xob1, counter1, ccrb, 1, 7
+#define hw_counter1capture0_ices	_xob1, counter1, ccrb, 1, 6
+#define hw_counter1capture0_ie		_xob1, counter1, imsk, 1, 5
+#define hw_counter1capture0_if		_xob1, counter1, ifr,  1, 5
 
 /*	Relatives
  */
-#define hw_counter1capture0_pin	pd4
+#define hw_counter1capture0_pin		pd4
 #define hw_counter1capture0_counter	counter1
 
 
@@ -1252,33 +1252,33 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter3		_c16b, 157, 0
+#define hw_counter3			_c16b, 157, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter3_ccra		_r8,  0x90, 0xF3,   0x00
-#define hw_reg_counter3_ccrb		_r8,  0x91, 0xDF,   0x00
-#define hw_reg_counter3_ccrc		_r8,  0x92, 0xC0,   0x00
-#define hw_reg_counter3_count		_r16, 0x94, 0xFFFF, 0x0000
-#define hw_reg_counter3_imsk		_r8,  0x71, 0x2F,   0x00
-#define hw_reg_counter3_ifr		_r8,  0x38, 0x2F,   0x2F
+#define hw_counter3_ccra		_r8,  0x90, 0xF3,   0x00
+#define hw_counter3_ccrb		_r8,  0x91, 0xDF,   0x00
+#define hw_counter3_ccrc		_r8,  0x92, 0xC0,   0x00
+#define hw_counter3_count		_r16, 0x94, 0xFFFF, 0x0000
+#define hw_counter3_imsk		_r8,  0x71, 0x2F,   0x00
+#define hw_counter3_ifr			_r8,  0x38, 0x2F,   0x2F
 
 /*	Object logical registers
  */
-#define hw_reg_counter3_cs		_ob1, ccrb, 3, 0
-#define hw_reg_counter3_wgm		_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
-#define hw_reg_counter3_ie		_ob1, imsk, 1, 0
-#define hw_reg_counter3_if		_ob1, ifr,  1, 0
-#define hw_reg_counter3_prr		_xob1, shared, prr1, 1, 3
+#define hw_counter3_cs			_ob1, ccrb, 3, 0
+#define hw_counter3_wgm			_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
+#define hw_counter3_ie			_ob1, imsk, 1, 0
+#define hw_counter3_if			_ob1, ifr,  1, 0
+#define hw_counter3_prr			_xob1, shared, prr1, 1, 3
 
 /*	Relatives
  */
-#define hw_counter3_prescaler0	prescaler0
-#define hw_counter3_prescaler	prescaler0
-#define hw_counter3_compare0	counter3compare0
-#define hw_counter3_compare1	counter3compare1
-#define hw_counter3_compare2	counter3compare2
-#define hw_counter3_capture0	counter3capture0
+#define hw_counter3_prescaler0		prescaler0
+#define hw_counter3_prescaler		prescaler0
+#define hw_counter3_compare0		counter3compare0
+#define hw_counter3_compare1		counter3compare1
+#define hw_counter3_compare2		counter3compare2
+#define hw_counter3_capture0		counter3capture0
 
 
 /*******************************************************************************
@@ -1289,22 +1289,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter3compare0	_cmp16a, 158, 0
+#define hw_counter3compare0		_cmp16a, 158, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter3compare0_reg	_r16, 0x98, 0xFFFF, 0x0000	/* OCR1A */
+#define hw_counter3compare0_reg		_r16, 0x98, 0xFFFF, 0x0000	/* OCR1A */
 
 /*	Object logical registers
  */
-#define hw_reg_counter3compare0_com	_xob1, counter3, ccra, 2, 6
-#define hw_reg_counter3compare0_force	_xob1, counter3, ccrc, 1, 7
-#define hw_reg_counter3compare0_ie	_xob1, counter3, imsk, 1, 1
-#define hw_reg_counter3compare0_if	_xob1, counter3, ifr,  1, 1
+#define hw_counter3compare0_com		_xob1, counter3, ccra, 2, 6
+#define hw_counter3compare0_force	_xob1, counter3, ccrc, 1, 7
+#define hw_counter3compare0_ie		_xob1, counter3, imsk, 1, 1
+#define hw_counter3compare0_if		_xob1, counter3, ifr,  1, 1
 
 /*	Relatives
  */
-#define hw_counter3compare0_pin	pc6
+#define hw_counter3compare0_pin		pc6
 #define hw_counter3compare0_counter	counter3
 
 
@@ -1316,22 +1316,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter3compare1	_cmp16a, 159, 0
+#define hw_counter3compare1		_cmp16a, 159, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter3compare1_reg	_r16, 0x9A, 0xFFFF, 0x0000	/* OCR1B */
+#define hw_counter3compare1_reg		_r16, 0x9A, 0xFFFF, 0x0000	/* OCR1B */
 
 /*	Object logical registers
  */
-#define hw_reg_counter3compare1_com	_xob1, counter3, ccra, 2, 4
-#define hw_reg_counter3compare1_force	_xob1, counter3, ccrc, 1, 6
-#define hw_reg_counter3compare1_ie	_xob1, counter3, imsk, 1, 2
-#define hw_reg_counter3compare1_if	_xob1, counter3, ifr,  1, 2
+#define hw_counter3compare1_com		_xob1, counter3, ccra, 2, 4
+#define hw_counter3compare1_force	_xob1, counter3, ccrc, 1, 6
+#define hw_counter3compare1_ie		_xob1, counter3, imsk, 1, 2
+#define hw_counter3compare1_if		_xob1, counter3, ifr,  1, 2
 
 /*	Relatives
  */
-#define hw_counter3compare1_pin	pin_counter3compare1
+#define hw_counter3compare1_pin		pin_counter3compare1
 #define hw_counter3compare1_counter	counter3
 
 
@@ -1343,22 +1343,22 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_reg_counter3compare2	_cmp16a, 433, 0
+#define hw_counter3compare2		_cmp16a, 433, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter3compare2_reg	_r16, 0x9C, 0xFFFF, 0x0000
+#define hw_counter3compare2_reg		_r16, 0x9C, 0xFFFF, 0x0000
 
 /*	Object logical registers
  */
-#define hw_reg_counter3compare2_com	_xob1, counter3, ccra, 2, 2
-#define hw_reg_counter3compare2_force	_xob1, counter3, ccrc, 1, 5
-#define hw_reg_counter3compare2_ie	_xob1, counter3, imsk, 1, 3
-#define hw_reg_counter3compare2_if	_xob1, counter3, ifr,  1, 3
+#define hw_counter3compare2_com		_xob1, counter3, ccra, 2, 2
+#define hw_counter3compare2_force	_xob1, counter3, ccrc, 1, 5
+#define hw_counter3compare2_ie		_xob1, counter3, imsk, 1, 3
+#define hw_counter3compare2_if		_xob1, counter3, ifr,  1, 3
 
 /*	Relatives
  */
-#define hw_counter3compare2_pin	pin_counter3compare2
+#define hw_counter3compare2_pin		pin_counter3compare2
 #define hw_counter3compare2_counter	counter3
 
 
@@ -1372,23 +1372,23 @@ typedef struct {
 
 /*	Object				class, id, address
  */
-#define hw_counter3capture0	_cap16b, 160, 0
+#define hw_counter3capture0		_cap16b, 160, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg_counter3capture0_reg	_r16, 0x96, 0xFFFF, 0x0000	/* ICR3 */
+#define hw_counter3capture0_reg		_r16, 0x96, 0xFFFF, 0x0000	/* ICR3 */
 
 /*	Object logical registers
  */
-#define hw_reg_counter3capture0_acic	_xob1, acmp0, csr, 1, 2
-#define hw_reg_counter3capture0_icnc	_xob1, counter3, ccrb, 1, 7
-#define hw_reg_counter3capture0_ices	_xob1, counter3, ccrb, 1, 6
-#define hw_reg_counter3capture0_ie	_xob1, counter3, imsk, 1, 5
-#define hw_reg_counter3capture0_if	_xob1, counter3, ifr,  1, 5
+#define hw_counter3capture0_acic	_xob1, acmp0, csr, 1, 2
+#define hw_counter3capture0_icnc	_xob1, counter3, ccrb, 1, 7
+#define hw_counter3capture0_ices	_xob1, counter3, ccrb, 1, 6
+#define hw_counter3capture0_ie		_xob1, counter3, imsk, 1, 5
+#define hw_counter3capture0_if		_xob1, counter3, ifr,  1, 5
 
 /*	Relatives
  */
-#define hw_counter3capture0_pin	pc7
+#define hw_counter3capture0_pin		pc7
 #define hw_counter3capture0_counter	counter3
 
 
@@ -1406,18 +1406,18 @@ typedef struct {
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
-#define hw_reg__acmpa_csr		_r8, 0x50, 0xDF, 0x10
+#define hw__acmpa_csr			_r8, 0x50, 0xDF, 0x10
 
 /*	Object hardware registers	class, address, write mask, flags mask
  *	  Required for _hw_counter1capture0_acic
  */
-#define hw_reg_acmp0_csr		_r8, 0x50, 0xDF, 0x10
+#define hw_acmp0_csr			_r8, 0x50, 0xDF, 0x10
 
 /*	Object logical registers
  */
-#define hw_reg_acmp0_acme		_xob1, adc0, srb,   1, 6
-#define hw_reg_acmp0_aden		_xob1, adc0, sra,   1, 7
-#define hw_reg_acmp0_admux		_xob1, adc0, admux, 4, 0
+#define hw_acmp0_acme			_xob1, adc0, srb,   1, 6
+#define hw_acmp0_aden			_xob1, adc0, sra,   1, 7
+#define hw_acmp0_admux			_xob1, adc0, admux, 4, 0
 
 
 /*******************************************************************************
@@ -1434,9 +1434,9 @@ typedef struct {
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
-#define hw_reg__eeproma_ar		_r16, 0x41, 0x03FF, 0x00
-#define hw_reg__eeproma_dr		_r8,  0x40,   0xFF, 0x00
-#define hw_reg__eeproma_cr		_r8,  0x3F,   0x3F, 0x00
+#define hw__eeproma_ar			_r16, 0x41, 0x03FF, 0x00
+#define hw__eeproma_dr			_r8,  0x40,   0xFF, 0x00
+#define hw__eeproma_cr			_r8,  0x3F,   0x3F, 0x00
 
 
 /*******************************************************************************
@@ -1453,7 +1453,7 @@ typedef struct {
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */					
-#define hw_reg__flasha_csr		_r8, 0x57, 0xBF, 0x00
+#define hw__flasha_csr			_r8, 0x57, 0xBF, 0x00
 
 
 /*******************************************************************************

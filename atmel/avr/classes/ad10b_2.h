@@ -26,47 +26,47 @@
  * @code
  * hwa( configure, adc0,
  * 
- *      //  Clock source: the resulting clock frequency should be in
- *      //  the 50..200 kHz range for maximum resolution, and in all
- *      //  case lower than 1 MHz.
- *      //
- *      clock,     min                          // choose the nearest 50 kHz
- *               | max                          // choose the nearest 200 kHz
- *               | ioclk / 2**n,                // with n in 1..7
- *                                              
- *      //  How a conversation is started       
- *      //                                      
- *      trigger,   manual                       // with the `trigger` instruction
- *               | auto                         // as soon as a consersion is completed
- *               | acmp0                        // ANA_COMP interrupt request
- *               | int0                         // INT0 interrupt request
- *               | counter0_compare0            // TIMER0_COMPA interrupt request
- *               | counter0_overflow            // TIMER0_OVF interrupt request
- *               | counter1_compare1            // TIMER1_COMPB interrupt request
- *               | counter1_overflow            // TIMER1_OVF interrupt request
- *               | counter1_capture,            // TIMER1_CAPT interrupt request
- *                                              
- *      //  Voltage reference                   
- *      //                                      
- *      vref,      vcc                          // Vcc
- *               | pin_avcc                     // Voltage on AVCC pin
- *               | pin_aref                     // Voltage on AREF pin
- *               | bandgap_1100mV,              // Internal 1.1V bandgap
+ *	//  Clock source: the resulting clock frequency should be in
+ *	//  the 50..200 kHz range for maximum resolution, and in all
+ *	//  case lower than 1 MHz.
+ *	//
+ *	clock,	   min				// choose the nearest 50 kHz
+ *		 | max				// choose the nearest 200 kHz
+ *		 | ioclk / 2**n,		// with n in 1..7
+ *						
+ *	//  How a conversation is started	
+ *	//					
+ *	trigger,   manual			// with the `trigger` instruction
+ *		 | auto				// as soon as a consersion is completed
+ *		 | acmp0			// ANA_COMP interrupt request
+ *		 | int0				// INT0 interrupt request
+ *		 | counter0_compare0		// TIMER0_COMPA interrupt request
+ *		 | counter0_overflow		// TIMER0_OVF interrupt request
+ *		 | counter1_compare1		// TIMER1_COMPB interrupt request
+ *		 | counter1_overflow		// TIMER1_OVF interrupt request
+ *		 | counter1_capture,		// TIMER1_CAPT interrupt request
+ *						
+ *	//  Voltage reference			
+ *	//					
+ *	vref,	   vcc				// Vcc
+ *		 | pin_avcc			// Voltage on AVCC pin
+ *		 | pin_aref			// Voltage on AREF pin
+ *		 | bandgap_1100mV,		// Internal 1.1V bandgap
  * 
- *      //  Result alignment (default is `right`)
- *      //
- *    [ align,     left
- *               | right, ]
+ *	//  Result alignment (default is `right`)
+ *	//
+ *    [ align,	   left
+ *		 | right, ]
  *
- *      //  Input
- *      //
- *      input,     HW_PIN(adc0..7)
- *               | agnd
- *               | bandgap_1100mV
- *               | temperature );
+ *	//  Input
+ *	//
+ *	input,	   HW_PIN(adc0..7)
+ *		 | agnd
+ *		 | bandgap_1100mV
+ *		 | temperature );
  * @endcode
  */
-#define hwa_configure__ad10b	, _hwa_cfad10b
+#define hwa_configure__ad10b		, _hwa_cfad10b
 
 /*	Mandatory parameter 'clock'
  */
@@ -99,10 +99,10 @@
   _hwa_write(o,ts, HW_A2(_hw_ad10b_trigger_##v));			\
   HW_Y(_hwa_cfad10b_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
-#define _hw_ad10b_trigger_manual		, 0, 0	/* , ate, ts */
-#define _hw_ad10b_trigger_auto			, 1, 0
-#define _hw_ad10b_trigger_acmp0			, 1, 1
-#define _hw_ad10b_trigger_int0			, 1, 2
+#define _hw_ad10b_trigger_manual	, 0, 0	/* , ate, ts */
+#define _hw_ad10b_trigger_auto		, 1, 0
+#define _hw_ad10b_trigger_acmp0		, 1, 1
+#define _hw_ad10b_trigger_int0		, 1, 2
 #define _hw_ad10b_trigger_counter0_compare0	, 1, 3
 #define _hw_ad10b_trigger_counter0_overflow	, 1, 4
 #define _hw_ad10b_trigger_counter1_compare1	, 1, 5
@@ -176,8 +176,8 @@
 
 /*  Power management
  */
-#define hw_power__ad10b		, _hw_power
-#define hwa_power__ad10b	, _hwa_power
+#define hw_power__ad10b			, _hw_power
+#define hwa_power__ad10b		, _hwa_power
 
 
 /**
@@ -194,7 +194,7 @@
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define hw_turn__ad10b		, _hw_turn_ad10_
+#define hw_turn__ad10b			, _hw_turn_ad10_
 
 
 /**
@@ -204,7 +204,7 @@
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define hwa_turn__ad10b	, _hwa_turn_ad10_
+#define hwa_turn__ad10b			, _hwa_turn_ad10_
 
 
 /**
@@ -215,7 +215,7 @@
  * hw( trigger, adc0 );
  * @endcode
  */
-#define hw_trigger__ad10b	, _hw_trigger_ad10_
+#define hw_trigger__ad10b		, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10b
@@ -224,7 +224,7 @@
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define hwa_trigger__ad10b	, _hwa_trigger_ad10_
+#define hwa_trigger__ad10b		, _hwa_trigger_ad10_
 
 
 /**
@@ -235,7 +235,7 @@
  * uint16_t adc = hw( read, adc0 );
  * @endcode
  */
-#define hw_read__ad10b		, _hw_rdad10_
+#define hw_read__ad10b			, _hw_rdad10_
 
 /**
  * @page atmelavr_ad10b
@@ -244,7 +244,7 @@
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define hw_atomic_read__ad10b	, _hw_ardad10_
+#define hw_atomic_read__ad10b		, _hw_ardad10_
 
 
 /**
@@ -270,7 +270,7 @@
  *   hw( trigger, adc0 );
  * @endcode
  */
-#define hw_stat__ad10b		, _hw_stat_ad10_
+#define hw_stat__ad10b			, _hw_stat_ad10_
 
 
 /*******************************************************************************

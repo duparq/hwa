@@ -17,7 +17,7 @@
  * `turn`: turn an IRQ on/off at the NVIC level
  * @code
  * hw | hwa ( turn, nvic, irq(counter2),   on
- *                                       | off );
+ *					 | off );
  * @endcode
  *
  * <br>

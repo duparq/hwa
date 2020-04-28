@@ -38,7 +38,7 @@
  *	      );
  * @endcode
  */
-#define hwa_configure__wdogb	, _hwa_cfwdogb
+#define hwa_configure__wdogb		, _hwa_cfwdogb
 
 /*    Optionnal argument `timeout`
  */
@@ -95,11 +95,11 @@
  * @section atmelavr_wdogb_turn Turning on/off
  *
  * @code
- * hw( turn, watchdog0,  on
- *                     | off );
+ * hw( turn, watchdog0,	 on
+ *		       | off );
  * @endcode
  */
-#define hw_turn__wdogb		, _hw_turn_wdogb
+#define hw_turn__wdogb			, _hw_turn_wdogb
 
 #define _hw_turn_wdogb(o,a, v)	HW_Y0(_hw_turn_wdogb_,_hw_state_##v)(o,v)
 #define _hw_turn_wdogb_0(o, v)		HW_E_ST(v)
@@ -137,10 +137,10 @@
  *
  * @code
  * hwa( turn, watchdog0,   on
- *                       | off );
+ *			 | off );
  * @endcode
  */
-#define hwa_turn__wdogb	, _hwa_turn_wdogb
+#define hwa_turn__wdogb			, _hwa_turn_wdogb
 
 #define _hwa_turn_wdogb(o,a,k,...)	HW_Y(_hwa_turn_wdogb_,_hw_state_##k)(o,k,__VA_ARGS__,)
 #define _hwa_turn_wdogb_0(o, v, ...)	HW_E_ST(v)
@@ -161,7 +161,7 @@
  * hw( reset, watchdog0 );
  * @endcode
  */
-#define hw_reset__wdogb	, _hw_rstwdogb
+#define hw_reset__wdogb			, _hw_rstwdogb
 
 #define _hw_rstwdogb(o,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 

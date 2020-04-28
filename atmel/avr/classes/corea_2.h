@@ -31,7 +31,7 @@
  *	       );
  * @endcode
  */
-#define hwa_configure__corea	, _hwa_cfcorea
+#define hwa_configure__corea		, _hwa_cfcorea
 
 /*  TODO use a list of wake-up sources instead (or in addition)?
  */
@@ -58,10 +58,10 @@
 
 /*	Optionnal parameter `sleep_mode`
  */
-#define hw_sleepmode_idle			, 0
+#define hw_sleepmode_idle		, 0
 #define hw_sleepmode_adc_noise_reduction	, 1
-#define hw_sleepmode_power_down			, 2
-#define hw_sleepmode_standby			, 3
+#define hw_sleepmode_power_down		, 2
+#define hw_sleepmode_standby		, 3
 
 #define _hwa_cfcorea_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
@@ -109,7 +109,7 @@
  * }
  * @endcode
  */
-#define hw_stat__corea		, _hw_stat_corea
+#define hw_stat__corea			, _hw_stat_corea
 
 /*  FIXME intf0 should be there
  */
@@ -151,7 +151,7 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
  * hwa( clear, core0 );
  * @endcode
  */
-#define hwa_clear__corea	, _hwa_clear_corea
+#define hwa_clear__corea		, _hwa_clear_corea
 
 #define _hwa_clear_corea(o,a,...)	_hwa_write(o,allrf,0)
 

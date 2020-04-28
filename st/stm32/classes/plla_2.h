@@ -16,23 +16,23 @@
  * @code
  * hw | hwa ( configure,    pll,
  *
- *          [ source,       hsi/2
- *                        | hse
- *                        | hse/2, ]
+ *	    [ source,	    hsi/2
+ *			  | hse
+ *			  | hse/2, ]
  *
- *          [ multiplier,   2		// Any value in the range [ 2..16 ]
- *                        | 3
- *                        | ...
- *                        | 16 ] );
+ *	    [ multiplier,   2		// Any value in the range [ 2..16 ]
+ *			  | 3
+ *			  | ...
+ *			  | 16 ] );
  * @endcode
  *
  * @note The PLL can not be configured while it is running.
  */
 #define hw_class__plla
-#define hw_pll			_plla, 0
+#define hw_pll				_plla, 0
 
-#define hw_configure__plla	, _hw_cfplla
-#define hwa_configure__plla	, _hwa_cfplla
+#define hw_configure__plla		, _hw_cfplla
+#define hwa_configure__plla		, _hwa_cfplla
 
 #define _hw_cfplla(o,a,k,...)		do{ HW_Y(_hwx_cfplla_k_,k)(_hw,k,__VA_ARGS__) }while(0)
 #define _hwa_cfplla(o,a,k,...)	do{ HW_Y(_hwx_cfplla_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
@@ -64,12 +64,12 @@
  * `connect`:
  * @code
  * hw | hwa ( connect, pll,   hsi / 2
- *                          | hse
- *                          | hse / 2 );
+ *			    | hse
+ *			    | hse / 2 );
  * @endcode
  */
-#define hw_connect__plla	, _hw_cnplla
-#define hwa_connect__plla	, _hwa_cnplla
+#define hw_connect__plla		, _hw_cnplla
+#define hwa_connect__plla		, _hwa_cnplla
 
 #define _hw_cnplla_hsi			, 17
 #define _hw_cnplla_hse			, 19
@@ -81,7 +81,7 @@
 #define _hwx_cnplla2_0(h,v,xv)		HW_E_NIL(v,(hsi/2, hse, hse/2))
 #define _hwx_cnplla2_1(...)		_hwx_cnplla3(__VA_ARGS__)
 #define _hwx_cnplla3(h,v,z,xv)						\
-  if      ( 2*xv == 17 ) h##_write(rcc,pllsrc,0);			\
+  if	  ( 2*xv == 17 ) h##_write(rcc,pllsrc,0);			\
   else if (   xv == 19 ) h##_write(rcc,pllxtpresrc,1); /* pllxtpre=0, pllsrc=1 */ \
   else if ( 2*xv == 19 ) h##_write(rcc,pllxtpresrc,3); /* pllxtpre=1, pllsrc=1 */ \
   else HWA_E_NIL(v,(hsi/2, hse, hse/2));
@@ -93,13 +93,13 @@
  * `write`:
  * @code
  * hw | hwa ( write, pll,   2		// Any value in the range [ 2..16 ]
- *                        | 3
- *                        | ...
- *                        | 16 );
+ *			  | 3
+ *			  | ...
+ *			  | 16 );
  * @endcode
  */
-#define hw_write__plla		, _hw_wrplla
-#define hwa_write__plla		, _hwa_wrplla
+#define hw_write__plla			, _hw_wrplla
+#define hwa_write__plla			, _hwa_wrplla
 
 #define _hw_wrplla(o,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hw,v,g) }while(0)
 #define _hwa_wrplla(o,a,v,g,...)	do{ HW_Y(_hwx_wrplla_,g)(_hwa,v,g) }while(0)
@@ -116,11 +116,11 @@
  * `turn`:
  * @code
  * hw | hwa ( turn, pll,   on
- *                       | off );
+ *			 | off );
  * @endcode
  */
-#define hw_turn__plla		, _hw_tnplla
-#define hwa_turn__plla		, _hwa_tnplla
+#define hw_turn__plla			, _hw_tnplla
+#define hwa_turn__plla			, _hwa_tnplla
 
 #define _hw_tnplla(o,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hw,v,g)
 #define _hwa_tnplla(o,a,v,g,...)	HW_Y(_hwx_tnplla_,g)(_hwa,v,g)
@@ -142,14 +142,14 @@
  */
 typedef struct {
   unsigned int _0_24  : 25 ;
-  unsigned int ready  :  1 ;
-  unsigned int _26_31 :  6 ;
+  unsigned int ready  :	 1 ;
+  unsigned int _26_31 :	 6 ;
 } _hw_stplla_t ;
 
-#define hw_stat_t__plla		, _hw_sttplla
+#define hw_stat_t__plla			, _hw_sttplla
 #define _hw_sttplla(o,a,...)		 _hw_stplla_t HW_EOL(__VA_ARGS__)
 
-#define hw_stat__plla		, _hw_stplla
+#define hw_stat__plla			, _hw_stplla
 #define _hw_stplla(o,a,g,...)		HW_Y(_hw_stplla1_,g)(g)
 #define _hw_stplla1_0(g)		HW_E_G(g)
 #define _hw_stplla1_1(g)		(*(volatile _hw_stplla_t*)HW_ADDRESS((rcc,cr)))

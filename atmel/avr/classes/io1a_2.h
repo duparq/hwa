@@ -9,12 +9,12 @@
  * @brief I/O
  */
 
-#define hw_configure__io1a	, _hw_cfio1a
-#define hwa_configure__io1a	, _hwa_cfio1a
-#define hw_read__io1a		, _hw_read_io1a
-#define hw_write__io1a		, _hw_write_io1a
-#define hwa_write__io1a		, _hwa_write_io1a
-#define hw_toggle__io1a		, _hw_toggle_io1a
+#define hw_configure__io1a		, _hw_cfio1a
+#define hwa_configure__io1a		, _hwa_cfio1a
+#define hw_read__io1a			, _hw_read_io1a
+#define hw_write__io1a			, _hw_write_io1a
+#define hwa_write__io1a			, _hwa_write_io1a
+#define hw_toggle__io1a			, _hw_toggle_io1a
 
 
 /**
@@ -25,21 +25,21 @@
  * `configure`:
  *
  * @code
- * hw | hwa( configure,   pa0,
+ * hw | hwa( configure,	  pa0,
  *
- *         [ function,    gpio, ]                       // Default
+ *	   [ function,	  gpio, ]			// Default
  *
- *           mode,        digital_input
- *                      | digital_input_floating        // Default
- *                      | digital_input_pullup
- *                      | digital_output | digital_output_pushpull
- *                      | analog_input
- *                      | analog_input_floating
- *                      | analog_input_pullup );
+ *	     mode,	  digital_input
+ *			| digital_input_floating	// Default
+ *			| digital_input_pullup
+ *			| digital_output | digital_output_pushpull
+ *			| analog_input
+ *			| analog_input_floating
+ *			| analog_input_pullup );
  * @endcode
  *
  * @note a digital output in high state enables the pull-up when switched to an
- *       input mode.
+ *	 input mode.
  */
 
 #define _hw_cfio1a(...)		_hwx_cfio1a(_hw,__VA_ARGS__,,)
@@ -62,12 +62,12 @@
 
 /*  Key 'mode'
  */
-#define _hw_cfio1a_md_digital_input		, di
+#define _hw_cfio1a_md_digital_input	, di
 #define _hw_cfio1a_md_digital_input_floating	, dif
 #define _hw_cfio1a_md_digital_input_pullup	, dipu
-#define _hw_cfio1a_md_digital_output		, do
+#define _hw_cfio1a_md_digital_output	, do
 #define _hw_cfio1a_md_digital_output_pushpull	, do
-#define _hw_cfio1a_md_analog_input		, ai
+#define _hw_cfio1a_md_analog_input	, ai
 #define _hw_cfio1a_md_analog_input_floating	, aif
 #define _hw_cfio1a_md_analog_input_pullup	, aipu
 
@@ -89,13 +89,13 @@
 #define _hwx_cfio1a_do(x,o,p,bn,bp,k,...)				\
   x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp) HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfio1a_ai_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, hw_reg_##o##_##did, 1); HW_EOL(__VA_ARGS__)
+#define _hwx_cfio1a_ai_1(x,o,p,bn,bp,k,...)	x( write, hw_##o##_##did, 1); HW_EOL(__VA_ARGS__)
 
 /* x##_write(o,did,1); DOES NOT WORK: 'o' is not a regular object */
 
-#define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu_,HW_G2(_hw_isa_reg,hw_reg_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
+#define _hwx_cfio1a_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfio1a_aipu_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
 #define _hwx_cfio1a_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
 #define _hwx_cfio1a_aipu_1(x,o,p,bn,bp,k,...)				\
   do { x( write, (o,did), 1);						\

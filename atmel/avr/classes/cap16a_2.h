@@ -16,28 +16,28 @@
  * @code
  * hw( configure, counter0capture0,
  *
- *   [ input,     pin_icp      // NOT IMPLEMENTED YET
- *              | acmp0, ]
+ *   [ input,	  pin_icp      // NOT IMPLEMENTED YET
+ *		| acmp0, ]
  *
- *   [ edge,      falling
- *              | rising, ]
+ *   [ edge,	  falling
+ *		| rising, ]
  *
- *   [ filter,    on           // NOT IMPLEMENTED YET
- *              | off ] );
+ *   [ filter,	  on	       // NOT IMPLEMENTED YET
+ *		| off ] );
  * @endcode
  */
 /*  TODO: complete this.
  */
-#define hw_configure__cap16a	, _hw_cfcap16a
+#define hw_configure__cap16a		, _hw_cfcap16a
 
-#define hw_cap16a_input_pin_icp			, 1
-#define hw_cap16a_input_acmp0			, 2
+#define hw_cap16a_input_pin_icp		, 1
+#define hw_cap16a_input_acmp0		, 2
 
-#define hw_cap16a_edge_falling			, 1
-#define hw_cap16a_edge_rising			, 2
+#define hw_cap16a_edge_falling		, 1
+#define hw_cap16a_edge_rising		, 2
 
 #define _hw_cfcap16a_kw_edge		, _hw_cfcap16a_edge
-//#define _hw_cfcap16a_kw_		, _hw_cfcap16a_
+//#define _hw_cfcap16a_kw_			, _hw_cfcap16a_
 
 #define _hw_cfcap16a(o,a,k,...)					\
   HW_Y(_hw_cfcap16akw1_,_hw_cfcap16a_kw_##k)(o,k,__VA_ARGS__,)
@@ -61,14 +61,14 @@
  * @code
  * hwa( configure, counter0capture0,
  *
- *    [ input,     pin_icp
- *               | acmp0, ]
+ *    [ input,	   pin_icp
+ *		 | acmp0, ]
  *
- *    [ edge,      falling
- *               | rising, ]
+ *    [ edge,	   falling
+ *		 | rising, ]
  *
- *    [ filter,    on
- *               | off ] );
+ *    [ filter,	   on
+ *		 | off ] );
  * @endcode
  */
 #define hwa_configure__cap16a		, _hwa_cfcap16a
@@ -119,7 +119,7 @@
  * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define hw_read__cap16a	, _hw_read_cap16a
+#define hw_read__cap16a			, _hw_read_cap16a
 #define _hw_read_cap16a(o,a,...)	 _hw_read(o,reg) HW_EOL(__VA_ARGS__)
 
 
@@ -130,7 +130,7 @@
  * hw( write, capture0, value );
  * @endcode
  */
-#define hw_write__cap16a	, _hw_write_cap16a
+#define hw_write__cap16a		, _hw_write_cap16a
 #define _hw_write_cap16a(o,a,v,...)		 _hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 /**
@@ -140,7 +140,7 @@
  * hwa( write, capture0, value );
  * @endcode
  */
-#define hwa_write__cap16a	, _hwa_write_cap16a
+#define hwa_write__cap16a		, _hwa_write_cap16a
 #define _hwa_write_cap16a(o,a,v,...)		 _hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
 
 
@@ -152,9 +152,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,capture0)) ) ) {       // Read capture IRQ flag
- *   hw( clear, irqflag((counter0,capture0)) );            // Clear capture IRQ flag
- *   hw( turn, irq((counter0,capture0)), off );            // Disable capture IRQs
+ * if ( hw( read, irqflag((counter0,capture0)) ) ) {	   // Read capture IRQ flag
+ *   hw( clear, irqflag((counter0,capture0)) );		   // Clear capture IRQ flag
+ *   hw( turn, irq((counter0,capture0)), off );		   // Disable capture IRQs
  * }
  * @endcode
  */
@@ -168,7 +168,7 @@
  *******************************************************************************/
 
 #define _hwa_setup__cap16a(o,a)		\
-  _hwa_setup_r( o, reg      );		\
+  _hwa_setup_r( o, reg	    );		\
   hwa->o.config.input  = 0xFF ;			\
   hwa->o.config.edge   = 0xFF ;			\
   hwa->o.config.filter = 0xFF

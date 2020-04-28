@@ -30,16 +30,16 @@
  *	     );
  * @endcode
  */
-#define hw_configure__cap16b	, _hw_cfcap16b
+#define hw_configure__cap16b		, _hw_cfcap16b
 
-#define hw_cap16b_input_pin_icp			, 1
-#define hw_cap16b_input_acmp0			, 2
+#define hw_cap16b_input_pin_icp		, 1
+#define hw_cap16b_input_acmp0		, 2
 
-#define hw_cap16b_edge_falling			, 1
-#define hw_cap16b_edge_rising			, 2
+#define hw_cap16b_edge_falling		, 1
+#define hw_cap16b_edge_rising		, 2
 
 #define _hw_cfcap16b_kw_edge		, _hw_cfcap16b_edge
-//#define _hw_cfcap16b_kw_		, _hw_cfcap16b_
+//#define _hw_cfcap16b_kw_			, _hw_cfcap16b_
 
 #define _hw_cfcap16b(o,a,k,...)					\
   HW_Y(_hw_cfcap16bkw1_,_hw_cfcap16b_kw_##k)(o,k,__VA_ARGS__,)
@@ -74,7 +74,7 @@
  *	     );
  * @endcode
  */
-#define hwa_configure__cap16b	, _hwa_cfcap16b
+#define hwa_configure__cap16b		, _hwa_cfcap16b
 
 #define _hwa_cfcap16b(o,a,k,...)					\
   do { HW_Y(_hwa_cfcap16b_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__,,) } while(0)
@@ -127,7 +127,7 @@
  * uint16_t capture = hw( read, capture0 );
  * @endcode
  */
-#define hw_read__cap16b	, _hw_read_cap16a
+#define hw_read__cap16b			, _hw_read_cap16a
 
 
 /**
@@ -137,7 +137,7 @@
  * hw( write, capture0, value );
  * @endcode
  */
-#define hw_write__cap16b	, _hw_write_cap16a
+#define hw_write__cap16b		, _hw_write_cap16a
 
 /**
  * @page atmelavr_cap16b
@@ -146,7 +146,7 @@
  * hwa( write, capture0, value );
  * @endcode
  */
-#define hwa_write__cap16b	, _hwa_write_cap16a
+#define hwa_write__cap16b		, _hwa_write_cap16a
 
 
 /**
@@ -157,9 +157,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,capture0)) ) ) {       // Read capture IRQ flag
- *   hw( clear, irqflag((counter0,capture0)) );            // Clear capture IRQ flag
- *   hw( turn, irq((counter0,capture0)), off );            // Disable capture IRQs
+ * if ( hw( read, irqflag((counter0,capture0)) ) ) {	   // Read capture IRQ flag
+ *   hw( clear, irqflag((counter0,capture0)) );		   // Clear capture IRQ flag
+ *   hw( turn, irq((counter0,capture0)), off );		   // Disable capture IRQs
  * }
  * @endcode
  */

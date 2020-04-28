@@ -28,43 +28,43 @@
  * @code
  * hwa( configure, adc0,
  * 
- *      //  Clock source: the resulting clock frequency should be in
- *      //  the 50..200 kHz range for maximum resolution, and in all
- *      //  case lower than 1 MHz.
- *      //
- *      clock,     min                       // choose the nearest 50 kHz
- *               | max                       // choose the nearest 200 kHz
- *               | ioclk / 2**n,             // with n in 1..7
+ *	//  Clock source: the resulting clock frequency should be in
+ *	//  the 50..200 kHz range for maximum resolution, and in all
+ *	//  case lower than 1 MHz.
+ *	//
+ *	clock,	   min			     // choose the nearest 50 kHz
+ *		 | max			     // choose the nearest 200 kHz
+ *		 | ioclk / 2**n,	     // with n in 1..7
  *
- *      //  How a conversation is started
- *      //
- *      trigger,   manual                    // with the `trigger` action
- *               | auto                      // as soon as a conversion is completed
- *               | acmp0                     // ANA_COMP interrupt request
- *               | int0                      // INT0 interrupt request
- *               | counter0_compare0         // TIMER0_COMPA interrupt request
- *               | counter0_overflow         // TIMER0_OVF interrupt request
- *               | counter1_compare1         // TIMER1_COMPB interrupt request
- *               | counter1_overflow         // TIMER1_OVF interrupt request
- *               | counter1_capture,         // TIMER1_CAPT interrupt request
+ *	//  How a conversation is started
+ *	//
+ *	trigger,   manual		     // with the `trigger` action
+ *		 | auto			     // as soon as a conversion is completed
+ *		 | acmp0		     // ANA_COMP interrupt request
+ *		 | int0			     // INT0 interrupt request
+ *		 | counter0_compare0	     // TIMER0_COMPA interrupt request
+ *		 | counter0_overflow	     // TIMER0_OVF interrupt request
+ *		 | counter1_compare1	     // TIMER1_COMPB interrupt request
+ *		 | counter1_overflow	     // TIMER1_OVF interrupt request
+ *		 | counter1_capture,	     // TIMER1_CAPT interrupt request
  *
- *      //  Voltage reference
- *      //
- *      vref,      vcc                       // Vcc
- *               | pin_aref                  // Voltage on AREF pin
- *               | bandgap,                  // Internal 1.1V bandgap
+ *	//  Voltage reference
+ *	//
+ *	vref,	   vcc			     // Vcc
+ *		 | pin_aref		     // Voltage on AREF pin
+ *		 | bandgap,		     // Internal 1.1V bandgap
  * 
- *      //  Result alignment (default is `right`)
- *      //
- *    [ align,     left
- *               | right, ]
+ *	//  Result alignment (default is `right`)
+ *	//
+ *    [ align,	   left
+ *		 | right, ]
  *
- *      //  Input
- *      //
- *      input,     HW_PIN(adc0..7)
- *               | agnd
- *               | bandgap
- *               | temperature );
+ *	//  Input
+ *	//
+ *	input,	   HW_PIN(adc0..7)
+ *		 | agnd
+ *		 | bandgap
+ *		 | temperature );
  * @endcode
  *
  * @subsection atmelavr_ad10a_cf2 Differential mode
@@ -103,7 +103,7 @@
  * Use HW_IRQ(...) or irq() for trigger?
  */
 
-#define hwa_configure__ad10a	, _hwa_cfad10a
+#define hwa_configure__ad10a		, _hwa_cfad10a
 
 /*  Mandatory parameter `clock`
  */
@@ -364,8 +364,8 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
 
 /*  Power management
  */
-#define hw_power__ad10a		, _hw_power
-#define hwa_power__ad10a	, _hwa_power
+#define hw_power__ad10a			, _hw_power
+#define hwa_power__ad10a		, _hwa_power
 
 
 /**
@@ -382,7 +382,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( turn, adc0, on | off );
  * @endcode
  */
-#define hw_turn__ad10a		, _hw_turn_ad10_
+#define hw_turn__ad10a			, _hw_turn_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -390,7 +390,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( turn, adc0, on | off );
  * @endcode
  */
-#define hwa_turn__ad10a	, _hwa_turn_ad10_
+#define hwa_turn__ad10a			, _hwa_turn_ad10_
 
 
 /**
@@ -401,7 +401,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hw( trigger, adc0 );
  * @endcode
  */
-#define hw_trigger__ad10a	, _hw_trigger_ad10_
+#define hw_trigger__ad10a		, _hw_trigger_ad10_
 
 /**
  * @page atmelavr_ad10a
@@ -410,7 +410,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * hwa( trigger, adc0 );
  * @endcode
  */
-#define hwa_trigger__ad10a	, _hwa_trigger_ad10_
+#define hwa_trigger__ad10a		, _hwa_trigger_ad10_
 
 
 /**
@@ -426,7 +426,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint8_t adc = hw( read, adc0, lo8 | hi8 );
  * @endcode
  */
-#define hw_read__ad10a		, _hw_rdad10_
+#define hw_read__ad10a			, _hw_rdad10_
 
 
 /**
@@ -439,7 +439,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  * uint16_t adc = hw_atomic_read( adc0 );
  * @endcode
  */
-#define hw_atomic_read__ad10a	, _hw_ardad10_
+#define hw_atomic_read__ad10a		, _hw_ardad10_
 
 
 /**
@@ -465,7 +465,7 @@ HW_INLINE uint8_t _hwa_ad10a_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gai
  *   hw( trigger, adc0 );
  * @endcode
  */
-#define hw_stat__ad10a		, _hw_stat_ad10_
+#define hw_stat__ad10a			, _hw_stat_ad10_
 
 
 /*******************************************************************************

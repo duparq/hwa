@@ -29,9 +29,9 @@
  *******************************************************************************/
 
 #define _hwa_setup__pcf2a(o,a)		\
-  _hwa_setup_reg( o, _reg )
+  _hwa_setup_( o, _reg )
 
 #define _hwa_init__pcf2a(o,a)			
 
 #define _hwa_commit__pcf2a(o,a)		\
-  _hwa_commit_reg( o, _reg )
+  _hwa_commit_( o, _reg )

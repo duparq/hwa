@@ -1,10 +1,10 @@
 
 /*  Counter clocking. Used by: c16a, c16b, c8a
  */
-#define _hw_c1clk_none				, _hw_c1ck_none, 0
-#define _hw_c1clk_ioclk				, _hw_c1ck_ioclk, 1.0
-#define _hw_c1clk_external_rising		, _hw_c1ck_external_rising, 0
-#define _hw_c1clk_external_falling		, _hw_c1ck_external_falling, 0
+#define _hw_c1clk_none			, _hw_c1ck_none, 0
+#define _hw_c1clk_ioclk			, _hw_c1ck_ioclk, 1.0
+#define _hw_c1clk_external_rising	, _hw_c1ck_external_rising, 0
+#define _hw_c1clk_external_falling	, _hw_c1ck_external_falling, 0
 
 HW_INLINE uint8_t _hw_c1ck_none( float v )
 {

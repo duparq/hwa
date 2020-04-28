@@ -17,32 +17,31 @@
  * @code
  * hw | hwa ( configure,   counter2,
  *
- *          [ mode,        counter ]       // Default mode
+ *	    [ mode,	   counter ]	   // Default mode
  *
- *            //  How the counter is clocked
- *            //
- *            clock,       from_apb1_psc   // See note
- *                       | channel1
- *                       | channel2
- *                       | external
- *                       | xor123
+ *	      //  How the counter is clocked
+ *	      //
+ *	      clock,	   from_apb1_psc   // See note
+ *			 | channel1
+ *			 | channel2
+ *			 | external
+ *			 | xor123
  *
- *            direction,   up_loop
- *                       | up_noloop
- *                       | down_loop
- *                       | down_noloop
- *                       | updown_loop,
+ *	      direction,   up_loop
+ *			 | up_noloop
+ *			 | down_loop
+ *			 | down_noloop
+ *			 | updown_loop,
  *
- *          [ prescaler,   x, ]            // Any value in 0..0xFFFFFF
+ *	    [ prescaler,   x, ]		   // Any value in 0..0xFFFF
  *
- *          [ reload,      x, ]            // Any value in 0..0xFFFFFF
+ *	    [ reload,	   x, ]		   // Any value in 0..0xFFFF
  *
- *          [ run,         yes
- *                       | no ] );
+ *	    [ run,	   yes
+ *			 | no ] );
  * @endcode
  *
- * @note The clock frequency is that of the AHB when the APB prescaler is 1 or 2.\n
- *   RM0008, p. 126: The timer clock frequencies are automatically fixed by
+ * @note RM0008, p. 126: The timer clock frequencies are automatically fixed by
  *   hardware. There are two cases:
  *     1. if the APB prescaler is 1, the timer clock frequencies are set to the
  *     same frequency as that of the APB domain to which the timers are connected.
@@ -56,7 +55,7 @@
 #define hwa_configure__c16a		, _hwa_cfc16a
 
 #define _hw_cfc16a(o,a,k,...)		do{ HW_Y(_hwx_cfc16a,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfc16a(o,a,k,...)	do{ HW_Y(_hwx_cfc16a,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfc16a(o,a,k,...)		do{ HW_Y(_hwx_cfc16a,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
@@ -109,20 +108,19 @@
 #define _hwx_cfc16a_kdir1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vdir,_hw_cfc16a_dir_##v)(h,o,v,__VA_ARGS__)
 
 #define _hw_cfc16a_dir_list		(up_loop,up_noloop,down_loop,down_noloop,updown_loop)
-//					 dir opm cms
-#define _hw_cfc16a_dir_up_loop		,  0,  0,  0
-#define _hw_cfc16a_dir_up_noloop	,  0,  1,  0
-#define _hw_cfc16a_dir_down_loop	,  1,  0,  0
-#define _hw_cfc16a_dir_down_noloop	,  1,  1,  0
-#define _hw_cfc16a_dir_updown_loop	,  0,  0,  1
+//					 opm cmsdir
+#define _hw_cfc16a_dir_up_loop		,  0,  0
+#define _hw_cfc16a_dir_up_noloop	,  1,  0
+#define _hw_cfc16a_dir_down_loop	,  0,  1
+#define _hw_cfc16a_dir_down_noloop	,  1,  1
+#define _hw_cfc16a_dir_updown_loop	,  0,  6
 
 #define _hwx_cfc16a_vdir0(h,o,v,...)	HW_E_NIL(v,_hw_cfc16a_dir_list)
 #define _hwx_cfc16a_vdir1(h,o,v,...)	_hwx_cfc16a_vdir2(h,o,_hw_cfc16a_dir_##v,__VA_ARGS__)
 #define _hwx_cfc16a_vdir2(...)		_hwx_cfc16a_vdir3(__VA_ARGS__)
-#define _hwx_cfc16a_vdir3(h,o,v0,vdir,vopm,vcms,k,...)	\
-  h##_write(o,dir,vdir);							\
+#define _hwx_cfc16a_vdir3(h,o,v0,vopm,vcmsdir,k,...)	\
+  h##_write(o,dir,vcmsdir);							\
   h##_write(o,opm,vopm);							\
-  h##_write(o,cms,vcms);							\
   HW_Y(_hwx_cfc16a_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
   
 /*  Optionnal parameter `prescaler`
@@ -154,7 +152,7 @@
  * @code
  * hw | hwa ( configure,   counter2,
  *
- *            mode         encoder );
+ *	      mode	   encoder );
  * @endcode
  */
 
@@ -163,36 +161,36 @@
  * @code
  * hw | hwa ( configure,   counter2,
  *
- *            mode,        slave,
+ *	      mode,	   slave,
  *
- *            //  How the counter is clocked
- *            //
- *            clock,       from_apb1       // Internal clock (CK_INT)
- *                       | channel1
- *                       | channel2
- *                       | external
- *                       | encode(channel1,channel2)
- *                       | xor(channel1,channel2,channel3)
+ *	      //  How the counter is clocked
+ *	      //
+ *	      clock,	   from_apb1	   // Internal clock (CK_INT)
+ *			 | channel1
+ *			 | channel2
+ *			 | external
+ *			 | encode(channel1,channel2)
+ *			 | xor(channel1,channel2,channel3)
  *
- *            //  How the counter is reset (slave mode)
- *            //
- *          [ reset,       counter1
- *                       | counter2
- *                       | counter3
- *                       | counter4
- *                       | counter5
- *                       | counter8
+ *	      //  How the counter is reset (slave mode)
+ *	      //
+ *	    [ reset,	   counter1
+ *			 | counter2
+ *			 | counter3
+ *			 | counter4
+ *			 | counter5
+ *			 | counter8
  *
- *            //  Not used for 'encoder' mode
- *            //
- *          [ direction,   up_loop
- *                       | down_loop
- *                       | updown, ]
+ *	      //  Not used for 'encoder' mode
+ *	      //
+ *	    [ direction,   up_loop
+ *			 | down_loop
+ *			 | updown, ]
  *
- *          [ reload,      x, ]            // Any value in 0..0xFFFFFF
+ *	    [ reload,	   x, ]		   // Any value in 0..0xFFFFFF
  *
- *          [ run,         yes
- *                       | no ] );
+ *	    [ run,	   yes
+ *			 | no ] );
  * @endcode
  */
 
@@ -230,23 +228,26 @@
 
 /**
  * @page stm32_c16a
- * <br>
- * __Interrupt__
+ *
+ * `write:`
  * @code
- * hw | hwa ( turn, irq(systick), on | off );
+ * uint16_t v = hw( write, counter2, 500 );
  * @endcode
  */
+#define hw_write__c16a			, _hw_wrc16a
+#define _hw_wrc16a(o,a,v,...)		_hw_write(o,cnt,(v) & 0xFFFF) HW_EOL(__VA_ARGS__)
 
 
 /**
  * @page stm32_c16a
- * <br>
+ *
+ * `stat:` get the status flags and clear them.
  * @code
- * if ( hw(read, irqflag(systick)) )    // Reading the flag clears it
- *   hw(toggle,LED);
+ * uint16_t v = hw( stat, counter2 );
  * @endcode
- * <br>
  */
+#define hw_stat__c16a			, _hw_stc16a
+#define _hw_stc16a(o,a,...)		_hw_read(o,sr)
 
 
 /**
@@ -274,12 +275,12 @@
   _hwa_setup_r( o, arr )
 
 #define _hwa_init__c16a(o,a)			\
-  _hwa_init_r( o, cr1,  0x00000000 );		\
-  _hwa_init_r( o, cr2,  0x00000000 );		\
+  _hwa_init_r( o, cr1,	0x00000000 );		\
+  _hwa_init_r( o, cr2,	0x00000000 );		\
   _hwa_init_r( o, smcr, 0x00000000 );		\
   _hwa_init_r( o, dier, 0x00000000 );		\
-  _hwa_init_r( o, psc,  0x00000000 );		\
-  _hwa_init_r( o, arr,  0x00000000 )
+  _hwa_init_r( o, psc,	0x00000000 );		\
+  _hwa_init_r( o, arr,	0x00000000 )
 
 #define _hwa_commit__c16a(o,a)		\
   _hwa_commit_r( o, cr1 );			\
@@ -287,4 +288,4 @@
   _hwa_commit_r( o, smcr );			\
   _hwa_commit_r( o, dier );			\
   _hwa_commit_r( o, psc );			\
-  _hwa_commit_r( o, arr  )
+  _hwa_commit_r( o, arr	 )

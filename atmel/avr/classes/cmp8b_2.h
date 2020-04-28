@@ -16,22 +16,22 @@
  * @code
  * hwa( configure, (counter0,compare0),
  *
- *    [ update,     after_top, ]
+ *    [ update,	    after_top, ]
  *
- *  [   output
+ *  [	output
  *    | output_h,   disconnected
- *                | toggle_after_match
- *                | clear_after_match
- *                | set_after_match
- *                | set_at_bottom_clear_after_match
- *                | clear_at_bottom_set_after_match, ]
+ *		  | toggle_after_match
+ *		  | clear_after_match
+ *		  | set_after_match
+ *		  | set_at_bottom_clear_after_match
+ *		  | clear_at_bottom_set_after_match, ]
  *
  *    [ output_l,   disconnected
- *                | clear_at_bottom_set_after_match ] );
+ *		  | clear_at_bottom_set_after_match ] );
  * @endcode
  */
 
-#define hwa_configure__cmp8b	, _hwa_cfcmp8b
+#define hwa_configure__cmp8b		, _hwa_cfcmp8b
 
 
 /*  Optionnal argument `update`
@@ -141,9 +141,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,compare0)) ) ) {    // Read compare IRQ flag
- *   hw( clear, irqflag((counter0,compare0)) );         // Clear compare IRQ flag
- *   hw( turn, irq((counter0,compare0)), off );         // Disable compare IRQs
+ * if ( hw( read, irqflag((counter0,compare0)) ) ) {	// Read compare IRQ flag
+ *   hw( clear, irqflag((counter0,compare0)) );		// Clear compare IRQ flag
+ *   hw( turn, irq((counter0,compare0)), off );		// Disable compare IRQs
  * }
  * @endcode
  */

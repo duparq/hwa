@@ -16,9 +16,9 @@
  * @code
  * hwa( configure, prescaler0,
  *
- *      clock,   ioclk
- *             | pll_32MHz
- *             | pll_64MHz );
+ *	clock,	 ioclk
+ *	       | pll_32MHz
+ *	       | pll_64MHz );
  * @endcode
  *
  * __Note 1__ `pll_32MHz` is not available when the PLL is used as system clock
@@ -35,7 +35,7 @@
  *
  * __Note 5__ The PLL is never stopped once it has been turned on.
  */
-#define hwa_configure__pscb	, _hwa_cfpscb
+#define hwa_configure__pscb		, _hwa_cfpscb
 
 /*  Mandatory argument `clock`
  *
@@ -51,7 +51,7 @@
 #define _hwa_cfpscb_kclock_0(o,k,...)		HW_E_VL(k,clock)
 #define _hwa_cfpscb_kclock_1(o,k,v,...)		HW_Y(_hwa_cfpscb_vclock_,_hw_pscb_clock_##v)(o,v,__VA_ARGS__)
 
-#define _hw_pscb_clock_ioclk			, 0
+#define _hw_pscb_clock_ioclk		, 0
 #define _hw_pscb_clock_pll_32MHz		, 1
 #define _hw_pscb_clock_pll_64MHz		, 2
 

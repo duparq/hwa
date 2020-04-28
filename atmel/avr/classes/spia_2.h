@@ -21,39 +21,39 @@
  *  mode by hardware as soon as the SS pin goes low.
 
  * @code
- * hwa( configure,       spi0,
+ * hwa( configure,	 spi0,
  *
- *      function,        master
- *                     | slave
- *                     | off,
+ *	function,	 master
+ *		       | slave
+ *		       | off,
  *
- *      //  Clock frequency
- *      //
- *      clock,           ioclk / (    2
- *                                |   4
- *                                |   8
- *                                |  16
- *                                |  32
- *                                |  64
- *                                | 128 ),
+ *	//  Clock frequency
+ *	//
+ *	clock,		 ioclk / (    2
+ *				  |   4
+ *				  |   8
+ *				  |  16
+ *				  |  32
+ *				  |  64
+ *				  | 128 ),
  *
- *    [ mode,            0 | 1 | 2 | 3, ]
+ *    [ mode,		 0 | 1 | 2 | 3, ]
  *
- *      //  State of SCK when idle
- *      //
- * |  [ idle_state,      low
- *                     | high,
+ *	//  State of SCK when idle
+ *	//
+ * |  [ idle_state,	 low
+ *		       | high,
  *
- *      //  Sampling clock edge
- *      //
- *      sampling_edge,   falling
- *                     | rising, ]
+ *	//  Sampling clock edge
+ *	//
+ *	sampling_edge,	 falling
+ *		       | rising, ]
  *
- *    [ data_order,      lsb_first
- *                     | msb_first ] );
+ *    [ data_order,	 lsb_first
+ *		       | msb_first ] );
  * @endcode
  */
-#define hwa_configure__spia	, _hwa_cfspia
+#define hwa_configure__spia		, _hwa_cfspia
 
 #define _hwa_cfspia(o,a,k,...)					\
   do {									\
@@ -162,8 +162,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
   _hwa_write(o,dord,HW_A1(_hw_spia_order_##v));	\
   HW_EOL(__VA_ARGS__)
 
-#define _hw_spia_order_msb_first		, 0	/* , order */
-#define _hw_spia_order_lsb_first		, 1
+#define _hw_spia_order_msb_first	, 0	/* , order */
+#define _hw_spia_order_lsb_first	, 1
 
 
 /**
@@ -177,7 +177,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw( read, spi0 );
  * @endcode
  */
-#define hw_read__spia		, _hw_read_spia
+#define hw_read__spia			, _hw_read_spia
 #define _hw_read_spia(o,a,...)	_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
@@ -187,7 +187,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw(_write, spi0, value );
  * @endcode
  */
-#define hw_write__spia		, _hw_wrspia
+#define hw_write__spia			, _hw_wrspia
 #define _hw_wrspia(o,a,v,...)		_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
 
 /* #define _hw_wrspia(o,a,v,...)						\ */
@@ -210,7 +210,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 /*  * hwa( write, spi0, value ); */
 /*  * @endcode */
 /*  *\/ */
-/* #define hwa_write__spia	, _hwa_write_spia */
+/* #define hwa_write__spia			, _hwa_write_spia */
 /* #define _hwa_write_spia(o,a,v)	_hwa_write(o,dr,v) */
 
 
@@ -224,7 +224,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hw( turn, spi0, on | off );
  * @endcode
  */
-#define hw_turn__spia		, _hw_turn_spia
+#define hw_turn__spia			, _hw_turn_spia
 
 #define _hw_turn_spia(o,a,k,...)				\
   HW_Y(_hw_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
@@ -239,7 +239,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * hwa( turn, spi0, on | off );
  * @endcode
  */
-#define hwa_turn__spia		, _hwa_turn_spia
+#define hwa_turn__spia			, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,a,k,...)				\
   HW_Y(_hwa_turn_spia_,_hw_state_##k)(o,k,__VA_ARGS__)
@@ -266,7 +266,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  *
  * @code
  * if ( hw( read, irqflag( spi0 ) ) )  // Read transfer complete IRQ flag
- *   data = hw( read, spi0 );             // Read data and clear transfer complete IRQ flag
+ *   data = hw( read, spi0 );		  // Read data and clear transfer complete IRQ flag
  * @endcode
  *
  * The `hw(stat,)` instruction lets you read the `collision` flag:
@@ -286,8 +286,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  *   n_collisions++ ;
  * @endcode
  */
-#define hw_stat__spia		, _hw_stat_spia
-#define hw_stat_t__spia	, _hw_statt_spia
+#define hw_stat__spia			, _hw_stat_spia
+#define hw_stat_t__spia			, _hw_statt_spia
 
 #define _hw_statt_spia(o,a,...)	_hw_spia_stat_t HW_EOL(__VA_ARGS__)
 

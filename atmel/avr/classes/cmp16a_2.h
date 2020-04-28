@@ -52,7 +52,7 @@
 #define _hw_cmp16a_output_set_after_match_up_clear_after_match_down	, 7, 3
 
 
-#define hw_configure__cmp16a	, _hw_cfcmp16a
+#define hw_configure__cmp16a		, _hw_cfcmp16a
 
 #define _hw_cfcmp16a(o,a,k,...)					\
   do {									\
@@ -100,7 +100,7 @@
  *	      );
  * @endcode
  */
-#define hwa_configure__cmp16a	, _hwa_cfcmp16a
+#define hwa_configure__cmp16a		, _hwa_cfcmp16a
 
 #define _hwa_cfcmp16a(o,a,k,...)					\
   do {									\
@@ -184,9 +184,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,compare0)) ) ) {       // Read compare IRQ flag
- *   hw( clear, irqflag((counter0,compare0)) );            // Clear compare IRQ flag
- *   hw( turn, irq((counter0,compare0)), off );            // Disable compare IRQs
+ * if ( hw( read, irqflag((counter0,compare0)) ) ) {	   // Read compare IRQ flag
+ *   hw( clear, irqflag((counter0,compare0)) );		   // Clear compare IRQ flag
+ *   hw( turn, irq((counter0,compare0)), off );		   // Disable compare IRQs
  * }
  * @endcode
  */

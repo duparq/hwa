@@ -21,41 +21,41 @@
  * @code
  * hwa( configure, counter0,
  *
- *      //  How the counter is clocked
- *      //
- *      clock,       none                       // No clock, the counter is stopped
- *                 | ioclk [/ 8|64|256|1024]    // I/O clock
- *                 | external_rising            // External input, rising edge
- *                 | external_falling,          // External input, falling edge
+ *	//  How the counter is clocked
+ *	//
+ *	clock,	     none			// No clock, the counter is stopped
+ *		   | ioclk [/ 8|64|256|1024]	// I/O clock
+ *		   | external_rising		// External input, rising edge
+ *		   | external_falling,		// External input, falling edge
  *
- *      //  How does this counter count
- *      //
- *      direction,   up_loop                    // Count up and loop
- *                 | updown_loop,               // Count up and down alternately
+ *	//  How does this counter count
+ *	//
+ *	direction,   up_loop			// Count up and loop
+ *		   | updown_loop,		// Count up and down alternately
  *
- *      //  Class _c16b counters all count from 0
- *      //
- *    [ bottom,      0, ]
+ *	//  Class _c16b counters all count from 0
+ *	//
+ *    [ bottom,	     0, ]
  *
- *      //  The maximum value the counter reaches (the default is `max`)
- *      //
- *    [ top,         0xFF | 0x00FF | 255        // Hardware fixed value 0x00FF
- *                 | 0x1FF | 0x01FF | 511       // Hardware fixed value 0x01FF
- *                 | 0x3FF | 0x03FF | 1023      // Hardware fixed value 0x03FF
- *                 | 0xFFFF | 65535             // Hardware fixed value 0xFFFF
- *                 | max                        // Hardware fixed value 0xFFFF
- *                 | compare0                   // Value stored in the compare0 unit
- *                 | capture0, ]                // Value stored in the capture0 unit
+ *	//  The maximum value the counter reaches (the default is `max`)
+ *	//
+ *    [ top,	     0xFF | 0x00FF | 255	// Hardware fixed value 0x00FF
+ *		   | 0x1FF | 0x01FF | 511	// Hardware fixed value 0x01FF
+ *		   | 0x3FF | 0x03FF | 1023	// Hardware fixed value 0x03FF
+ *		   | 0xFFFF | 65535		// Hardware fixed value 0xFFFF
+ *		   | max			// Hardware fixed value 0xFFFF
+ *		   | compare0			// Value stored in the compare0 unit
+ *		   | capture0, ]		// Value stored in the capture0 unit
  *
- *      //  When the overflow flag is set
- *      //
- *    [ overflow,    after_bottom                  // When the counter resets to bottom
- *                 | after_top                     // When the counter reaches the top value
- *                 | after_max ]                   // When the counter reaches its max value
+ *	//  When the overflow flag is set
+ *	//
+ *    [ overflow,    after_bottom		   // When the counter resets to bottom
+ *		   | after_top			   // When the counter reaches the top value
+ *		   | after_max ]		   // When the counter reaches its max value
  *    );
  * @endcode
  */
-#define hwa_configure__c16b	, _hwa_cfc16b
+#define hwa_configure__c16b		, _hwa_cfc16b
 
 /*  Mandatory argument `clock`
  *
@@ -628,7 +628,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * hw( read, counter0 );
  * @endcode
  */
-#define hw_read__c16b		, _hw_read_c16b
+#define hw_read__c16b			, _hw_read_c16b
 #define _hw_read_c16b(o,a,...)	_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 
@@ -638,7 +638,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * hw( write, counter0, value );
  * @endcode
  */
-#define hw_write__c16b		, _hw_write_c16b
+#define hw_write__c16b			, _hw_write_c16b
 #define _hw_write_c16b(o,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 /**
@@ -647,7 +647,7 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  * hwa( write, counter0, value );
  * @endcode
  */
-#define hwa_write__c16b	, _hwa_write_c16b
+#define hwa_write__c16b			, _hwa_write_c16b
 #define _hwa_write_c16b(o,a,v)	_hwa_write(o,count,v)
 
 
@@ -673,12 +673,12 @@ HW_INLINE uint8_t _hwa_solve_c16b ( hwa_c16b_t *c, hwa_cmp16a_t *compare0,
  *******************************************************************************/
 
 #define _hwa_setup__c16b(o,a)		\
-  _hwa_setup_r( o, ccra     );		\
-  _hwa_setup_r( o, ccrb     );		\
-  _hwa_setup_r( o, ccrc     );		\
+  _hwa_setup_r( o, ccra	    );		\
+  _hwa_setup_r( o, ccrb	    );		\
+  _hwa_setup_r( o, ccrc	    );		\
   _hwa_setup_r( o, count    );		\
-  _hwa_setup_r( o, imsk     );		\
-  _hwa_setup_r( o, ifr      );		\
+  _hwa_setup_r( o, imsk	    );		\
+  _hwa_setup_r( o, ifr	    );		\
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\

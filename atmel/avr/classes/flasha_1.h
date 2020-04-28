@@ -24,11 +24,11 @@
 
 /*	Class logical registers
  */					
-#define hw_reg__flasha_spmie		_cb1, csr, 1, 7
-#define hw_reg__flasha_rwwsb		_cb1, csr, 1, 6
-#define hw_reg__flasha_sigrd		_cb1, csr, 1, 5
-#define hw_reg__flasha_rwwsre		_cb1, csr, 1, 4
-#define hw_reg__flasha_blbset		_cb1, csr, 1, 3
-#define hw_reg__flasha_pgwrt		_cb1, csr, 1, 2
-#define hw_reg__flasha_pgers		_cb1, csr, 1, 1
-#define hw_reg__flasha_spmen		_cb1, csr, 1, 0
+#define hw__flasha_spmie		_cb1, csr, 1, 7
+#define hw__flasha_rwwsb		_cb1, csr, 1, 6
+#define hw__flasha_sigrd		_cb1, csr, 1, 5
+#define hw__flasha_rwwsre		_cb1, csr, 1, 4
+#define hw__flasha_blbset		_cb1, csr, 1, 3
+#define hw__flasha_pgwrt		_cb1, csr, 1, 2
+#define hw__flasha_pgers		_cb1, csr, 1, 1
+#define hw__flasha_spmen		_cb1, csr, 1, 0

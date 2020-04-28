@@ -11,7 +11,7 @@
 
 #define hw_class__stka
 
-/* #define hw__stka_irq			_irq, systick, x15, ie, if */
+/* #define hw__stka_irq				_irq, systick, x15, ie, if */
 /* #define hw__stka_flag			_cb1, ctrl, 1, 16 */
 
 /**
@@ -22,12 +22,12 @@
  * @code
  * hw | hwa ( configure,   systick,
  *
- *          [ clock,       ahb             // Clock source
- *                       | ahb/8 ],
+ *	    [ clock,	   ahb		   // Clock source
+ *			 | ahb/8 ],
  *
- *          [ reload,      x, ]            // Any value in 0..0xFFFFFF
+ *	    [ reload,	   x, ]		   // Any value in 0..0xFFFFFF
  *
- *          [ run,         yes | no ] );   
+ *	    [ run,	   yes | no ] );   
  * @endcode
  */
 #define hw_configure__stka		, _hw_cfstka
@@ -50,7 +50,7 @@
 #define _hwx_cfstka_vclk_1(h,o,v,...)	_hwx_cfstka_vclk_2(h,o,v,_hw_cfstka_clk_##v,__VA_ARGS__)
 #define _hwx_cfstka_vclk_2(...)		_hwx_cfstka_vclk_3(__VA_ARGS__)
 #define _hwx_cfstka_vclk_3(h,o,v,z,xv,k,...)				\
-  if      ( 8*xv == 17 ) h##_write(o,clksource,0);			\
+  if	  ( 8*xv == 17 ) h##_write(o,clksource,0);			\
   else if (   xv == 17 ) h##_write(o,clksource,1);			\
   else HWA_E_NIL(v,(ahb/8, ahb));					\
   HW_Y(_hwx_cfstka_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
@@ -98,7 +98,7 @@
  * <br>
  * `read:`
  * @code
- * uint32_t v = hw( read, systick );       // Returns the current value of the timer
+ * uint32_t v = hw( read, systick );	   // Returns the current value of the timer
  * @endcode
  */
 #define hw_read__stka			, _hw_rdstka
@@ -118,7 +118,7 @@
  * @endcode
  *
  * @code
- * if ( hw(read, irqflag(systick)) )       // Reading the flag clears it
+ * if ( hw(read, irqflag(systick)) )	   // Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
  */
@@ -143,9 +143,9 @@
  * //  1 ms period when AHB is clocked at 9 MHz
  * //
  * hw( configure, systick,
- *     clock,     ahb,
- *     reload,    (hw(read, (systick,onems)) - 1) & 0xFFFFFF,
- *     run,       yes );
+ *     clock,	  ahb,
+ *     reload,	  (hw(read, (systick,onems)) - 1) & 0xFFFFFF,
+ *     run,	  yes );
  * @endcode
  */
 
@@ -160,14 +160,14 @@
 #define _hwa_setup__stka(o,a)			\
   _hwa_setup_r( o, ctrl );			\
   _hwa_setup_r( o, load );			\
-  _hwa_setup_r( o, val  )
+  _hwa_setup_r( o, val	)
 
 #define _hwa_init__stka(o,a)			\
   _hwa_init_r( o, ctrl, 0x00000000 );		\
   _hwa_init_r( o, load, 0x00000000 );		\
-  _hwa_init_r( o, val,  0x00000000 )
+  _hwa_init_r( o, val,	0x00000000 )
 
 #define _hwa_commit__stka(o,a)		\
   _hwa_commit_r( o, ctrl );			\
   _hwa_commit_r( o, load );			\
-  _hwa_commit_r( o, val  )
+  _hwa_commit_r( o, val	 )

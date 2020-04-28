@@ -14,26 +14,21 @@
  */
 #define hw_class__nvica
 
-#define hw_reg__nvica_iser0		_r32, 0x0000, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_iser1		_r32, 0x0004, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_iser2		_r32, 0x0008, 0x0000FFFF, 0x0000FFFF
+#define hw__nvica_iser0			_r32, 0x0000, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_iser1			_r32, 0x0004, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_iser2			_r32, 0x0008, 0x0000FFFF, 0x0000FFFF
 
-#define hw_reg__nvica_icer0		_r32, 0x0080, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_icer1		_r32, 0x0084, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_icer2		_r32, 0x0088, 0x0000FFFF, 0x0000FFFF
+#define hw__nvica_icer0			_r32, 0x0080, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_icer1			_r32, 0x0084, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_icer2			_r32, 0x0088, 0x0000FFFF, 0x0000FFFF
 
-#define hw_reg__nvica_ispr0		_r32, 0x0100, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_ispr1		_r32, 0x0104, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_ispr2		_r32, 0x0108, 0x0000FFFF, 0x0000FFFF
+#define hw__nvica_ispr0			_r32, 0x0100, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_ispr1			_r32, 0x0104, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_ispr2			_r32, 0x0108, 0x0000FFFF, 0x0000FFFF
 
-#define hw_reg__nvica_icpr0		_r32, 0x0180, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_icpr1		_r32, 0x0184, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw_reg__nvica_icpr2		_r32, 0x0188, 0x0000FFFF, 0x0000FFFF
-
-/*  Relatives. Make HW_X() translate "(nvic,oject)" to "object_nvic".
- *    E.g. (nvic,counter2) -> counter2_nvic
- */
-#define _hw_rel__nvica(o,d,r)		r##_##o
+#define hw__nvica_icpr0			_r32, 0x0180, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_icpr1			_r32, 0x0184, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw__nvica_icpr2			_r32, 0x0188, 0x0000FFFF, 0x0000FFFF
 
 
 #if !defined __ASSEMBLER__

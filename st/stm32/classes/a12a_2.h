@@ -18,13 +18,13 @@
  *
  * @code
  * hw | hwa ( write, adcprescaler,    2
- *                                  | 4
- *                                  | 6
- *                                  | 8 );
+ *				    | 4
+ *				    | 6
+ *				    | 8 );
  * @endcode
  */
-#define hw_write_adcprescaler	, _hw_wradcpsc
-#define hwa_write_adcprescaler	, _hwa_wradcpsc
+#define hw_write_adcprescaler		, _hw_wradcpsc
+#define hwa_write_adcprescaler		, _hwa_wradcpsc
 
 #define _hw_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1_,g)(_hw,v,g)
 #define _hwa_wradcpsc(i,a,v,g,...)	HW_Y(_hwx_wradcpsc1_,g)(_hwa,v,g)

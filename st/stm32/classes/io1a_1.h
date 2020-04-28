@@ -24,13 +24,14 @@
  * The relative `port` names the GPIO port the I/O pertains to:
  *
  * @code
- * hw( turn, (rcc,(pa0,port)), on );       // Clock the GPIO port of pin PA0
+ * hw( turn, (rcc,(pa0,port)), on );	   // Clock the GPIO port of pin PA0
  * @endcode
  */
 
 /*  Port name of a pin
  */
-#define _hw_rel__io1a_port(o,d)		HW_A0 d
+//#define _hw_rel__io1a_port(o,d)		HW_A0 d
+#define hw__io1a_port(o,d)		HW_A0 d
 
 
 /**

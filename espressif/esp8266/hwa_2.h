@@ -69,7 +69,7 @@
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 
 #define _hwx_pwr_1(o,x,v, ...)		\
-  HW_G2(_hwx_pwr1,HW_IS(hw_error,hw_reg(o,prr)))(o,x,v) HW_EOL(__VA_ARGS__)
+  HW_G2(_hwx_pwr1,HW_IS(hw_error,hw_(o,prr)))(o,x,v) HW_EOL(__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
  */

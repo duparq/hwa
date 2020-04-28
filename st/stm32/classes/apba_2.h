@@ -16,20 +16,20 @@
  * @code
  * hw | hwa ( configure,   apb1,
  *
- *          [ clock,       ahb, ]
+ *	    [ clock,	   ahb, ]
  *
- *            prescaler,   1
- *                       | 2
- *                       | 4
- *                       | 8
- *                       | 16 );
+ *	      prescaler,   1
+ *			 | 2
+ *			 | 4
+ *			 | 8
+ *			 | 16 );
  * @endcode
  * <br>
  */
 #define hw_class__apba
 
-#define hw_configure__apba	, _hw_cfapba
-#define hwa_configure__apba	, _hwa_cfapba
+#define hw_configure__apba		, _hw_cfapba
+#define hwa_configure__apba		, _hwa_cfapba
 
 #define _hw_cfapba(o,a,k,...)		do{ HW_Y(_hwx_cfapba_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfapba(o,a,k,...)	do{ HW_Y(_hwx_cfapba_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
@@ -53,7 +53,7 @@
 #define _hwx_cfapba_vpsc1_1(h,o,v,g)		HW_Y(_hwx_cfapba_vpsc2_,v)(h,o,v)
 #define _hwx_cfapba_vpsc2_1(h,o,v)		HW_E_V()
 #define _hwx_cfapba_vpsc2_0(h,o,v)				\
-    if      ( v ==  1 ) h##_write(rcc,o,0);	\
+    if	    ( v ==  1 ) h##_write(rcc,o,0);	\
     else if ( v ==  2 ) h##_write(rcc,o,4);	\
     else if ( v ==  4 ) h##_write(rcc,o,5);	\
     else if ( v ==  8 ) h##_write(rcc,o,6);	\

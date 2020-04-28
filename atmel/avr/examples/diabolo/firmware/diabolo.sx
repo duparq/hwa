@@ -256,7 +256,7 @@ sync:
 
 	;; Initialize TXD pin if separate from RXD
 	;;
-#if HW_ID(DIABOLO_PIN_RX) != HW_ID(DIABOLO_PIN_TX)
+#if HW_ADDRESS(DIABOLO_PIN_RX) != HW_ADDRESS(DIABOLO_PIN_TX)
 	sbi	TXDPORT, BP_TXD
 	sbi	TXDDR, BP_TXD
 #endif
@@ -486,7 +486,7 @@ xX:	cpi	R24, 'X'
 	;;
 	;; Deinitialize TXD pin if not the same as RXD
 	;; 
-#if HW_ID(DIABOLO_PIN_RX) != HW_ID(DIABOLO_PIN_TX)
+#if HW_ADDRESS(DIABOLO_PIN_RX) != HW_ADDRESS(DIABOLO_PIN_TX)
 	ldi	R24, 0
 	XST	TXDDR, R24
 	XST	TXDPORT, R24
@@ -519,7 +519,7 @@ delay:				; [3] rcall
 ibyte:
 	DBG1
 ;; ibyte:	ldi	R22, 9		; 8 data bits + 1 stop bit
-#if HW_ID(DIABOLO_PIN_RX) == HW_ID(DIABOLO_PIN_TX)
+#if HW_ADDRESS(DIABOLO_PIN_RX) == HW_ADDRESS(DIABOLO_PIN_TX)
 	cbi	TXDDR, BP_TXD	;
 	cbi	TXDPORT, BP_TXD	; Release TXD
 #endif
@@ -591,7 +591,7 @@ obytecrc:
 	;;
 obyte:
 	;; mov	R27, R24
-#if HW_ID(DIABOLO_PIN_RX) == HW_ID(DIABOLO_PIN_TX)
+#if HW_ADDRESS(DIABOLO_PIN_RX) == HW_ADDRESS(DIABOLO_PIN_TX)
 	;;
 	;; Delay 1.5 bit time between RX and TX on the same wire
 	;; 

@@ -16,24 +16,24 @@
  * @code
  * hwa( configure, USI,
  *
- *      //  How the USI behaves
- *      //
- *      mode,    disconnected          // The USI is disabled
- *             | spi_master            // The USI acts as a SPI master
- *             | spi_slave             // The USI acts as a SPI slave
- *             | twi_master            // The USI acts as a I²C master
- *             | twi_slave,            // The USI acts as a I²C slave
+ *	//  How the USI behaves
+ *	//
+ *	mode,	 disconnected	       // The USI is disabled
+ *	       | spi_master	       // The USI acts as a SPI master
+ *	       | spi_slave	       // The USI acts as a SPI slave
+ *	       | twi_master	       // The USI acts as a I²C master
+ *	       | twi_slave,	       // The USI acts as a I²C slave
  *
- *      //  How is it clocked
- *      //
- *      clock,   software              // Clocked by software
- *             | compare0              // Clocked by compare unit ? of counter 0
- *             | external_rising       // Clocked by external source rising edge
- *             | external_falling      // Clocked by external source falling edge
- *      );
+ *	//  How is it clocked
+ *	//
+ *	clock,	 software	       // Clocked by software
+ *	       | compare0	       // Clocked by compare unit ? of counter 0
+ *	       | external_rising       // Clocked by external source rising edge
+ *	       | external_falling      // Clocked by external source falling edge
+ *	);
  * @endcode
  */
-#define hwa_configure__usia	, _hwa_cfusia
+#define hwa_configure__usia		, _hwa_cfusia
 
 #define _hw_usia_mode_disconnected	, 1
 #define _hw_usia_mode_spi_master	, 2
@@ -81,7 +81,7 @@
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
     _hwa( configure, HW_PIN(usck), mode, digital_output );		\
     _hwa( configure, HW_PIN(do),   mode, digital_output );		\
-    _hwa( configure, HW_PIN(di),   mode, digital_input  );		\
+    _hwa( configure, HW_PIN(di),   mode, digital_input	);		\
     _hwa_write( o, clk, 1 );				\
   }								\
   else								\
@@ -96,7 +96,7 @@
  * uint8_t byte = hw( read, usi0 );
  * @endcode
  */
-#define hw_read__usia		, _hw_rdusia
+#define hw_read__usia			, _hw_rdusia
 
 /*  FIXME: the datasheet advices using br instead of dr but does not tell at
  *  what moment br is valid. Reading br returns weird values...
@@ -111,7 +111,7 @@
  * hw( write, usi0, 'A' );
  * @endcode
  */
-#define hw_write__usia		, _hw_wrusia
+#define hw_write__usia			, _hw_wrusia
 
 #define _hw_wrusia(o,a,v,...)		 _hw_write( o, dr, v ) HW_EOL(__VA_ARGS__)
 
@@ -127,7 +127,7 @@
 
  /* FIXME: 2 types of clocking should be handled. Look at the datasheet. */
 
-#define hw_trigger__usia	, _hw_tgusia
+#define hw_trigger__usia		, _hw_tgusia
 
 #define _hw_tgusia(o,a,...)		 _hw_write(o,tc,1) HW_EOL(__VA_ARGS__)
 
@@ -152,8 +152,8 @@
   do {							\
     _hwa( configure, _HW_PIN(o,ck), mode, digital_output );		\
     _hwa( configure, _HW_PIN(o,do), mode, digital_output );		\
-    _hwa_write( o, wm,  1 );			\
-    _hwa_write( o, cs,  2 );			\
+    _hwa_write( o, wm,	1 );			\
+    _hwa_write( o, cs,	2 );			\
     _hwa_write( o, clk, 1 );			\
   } while(0)
 
@@ -203,9 +203,9 @@
   do {							\
     _hwa( configure, HW_PIN(usck), mode, digital_output );	\
     _hwa( configure, HW_PIN(do),   mode, digital_output );	\
-    _hwa( configure, HW_PIN(di),   mode, digital_input  );	\
-    _hwa_write( o, wm,  1 );			\
-    _hwa_write( o, cs,  1 );			\
+    _hwa( configure, HW_PIN(di),   mode, digital_input	);	\
+    _hwa_write( o, wm,	1 );			\
+    _hwa_write( o, cs,	1 );			\
     _hwa_write( o, clk, 0 );			\
   } while(0)
 

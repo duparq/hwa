@@ -18,7 +18,7 @@
  * `power`:
  * @code
  * hw | hwa ( power, hse,   on
- *                        | off );
+ *			  | off );
  * @endcode
  */
 
@@ -34,8 +34,8 @@
  * <br>
  */
 typedef struct {
-    unsigned int _0_16  : 17 ;
-    unsigned int ready  :  1 ;
+    unsigned int _0_16	: 17 ;
+    unsigned int ready	:  1 ;
     unsigned int _18_31 : 14 ;
 } _hw_sthse_t ;
 

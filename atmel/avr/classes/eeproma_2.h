@@ -19,7 +19,7 @@
  * uint8_t byte = hw( read, eeprom0, 0x42 );  // read byte at address 0x42
  * @endcode
  */
-#define hw_read__eeproma	, _hw_read_eeproma
+#define hw_read__eeproma		, _hw_read_eeproma
 
 #define _hw_read_eeproma(o,a,addr,...)	\
   _hw_rdeeproma( HW_ADDRESS((o,ar)),		\
@@ -52,7 +52,7 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
  * hw( read_bytes, eeprom0, &bytes, address, sizeof(bytes) );
  * @endcode
  */
-#define hw_read_bytes__eeproma	, _hw_eeproma_read_bytes
+#define hw_read_bytes__eeproma		, _hw_eeproma_read_bytes
 
 #define _hw_eeproma_read_bytes(o,a,dst,src,n,...)	\
   _hw_eeproma_rdn( (uint8_t*)dst, (intptr_t)src, n,	\
@@ -85,7 +85,7 @@ HW_INLINE void _hw_eeproma_rdn( uint8_t *dst, intptr_t src, uint8_t n,
  * hw( write, eeprom0, 0x42, 42 );  // Write 42 at address 0x42
  * @endcode
  */
-#define hw_write__eeproma	, _hw_write_eeproma
+#define hw_write__eeproma		, _hw_write_eeproma
 
 #define _hw_write_eeproma(o,a,addr,v,...)		\
   _hw_wreeproma( addr, v,				\
@@ -121,7 +121,7 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
  * hw( write_bytes, eeprom0, 0x0100, bytes, sizeof(bytes) );  // Store 42 bytes at address 0x0100
  * @endcode
  */
-#define hw_write_bytes__eeproma	, _hw_eeproma_write_bytes
+#define hw_write_bytes__eeproma		, _hw_eeproma_write_bytes
 
 #define _hw_eeproma_write_bytes(o,a,dst,src,n,...)	\
   _hw_eeproma_wrn( (intptr_t)(dst), (uint8_t*)(src), n,	\

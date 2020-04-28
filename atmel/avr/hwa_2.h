@@ -59,7 +59,7 @@
 #define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
 #define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_v)(x,o,v)
 #define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_reg_##o##_##prr))(x,o,v)
+#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##prr))(x,o,v)
 #define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
 #define _hwx_pwr3_1(x,o,v)		x##_write(o,prr,HW_A1(_hw_state_##v)==0)
 

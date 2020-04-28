@@ -81,7 +81,8 @@
 
 /*  Port name of a pin
  */
-#define _hw_rel__io1a_port(o,d)			HW_A1 d
+//#define hw__io1a_port(o,d)			HW_A1 d
+#define hw__io1a_port(o,d)			HW_A0 d
 
 
 /*  Handle definitions such as HW_IO(pb1)

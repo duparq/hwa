@@ -88,7 +88,7 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
 #define _hwx_pwr1_0(h,o,v,g)		HW_E_G(g)
 #define _hwx_pwr1_1(h,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_##v)(h,o,v)
 #define _hwx_pwr2_0(h,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(h,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_reg_##o##_##cken))(h,o,v)
+#define _hwx_pwr2_1(h,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##cken))(h,o,v)
 #define _hwx_pwr3_0(h,o,v)		HW_E(`o` does not support power management)
 #define _hwx_pwr3_1(h,o,v)		h##_write(o,cken,HW_A1(_hw_state_##v))
 

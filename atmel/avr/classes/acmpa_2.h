@@ -21,15 +21,15 @@
  * @code
  * hwa( configure, acmp0,
  * 
- *    [ edge,             falling
- *                      | rising
- *                      | both, ]
+ *    [ edge,		  falling
+ *			| rising
+ *			| both, ]
  *
- *    [ positive_input,   HW_PIN(ain0)
- *                      | bandgap, ]
+ *    [ positive_input,	  HW_PIN(ain0)
+ *			| bandgap, ]
  *
- *    [ negative_input,   HW_PIN(ain1)
- *                      | HW_PIN(adc0..7) ] );
+ *    [ negative_input,	  HW_PIN(ain1)
+ *			| HW_PIN(adc0..7) ] );
  * @endcode
  */
 /*
@@ -41,7 +41,7 @@
  *  acceptable to make the configuration instructions of the ADC or of the ACMP
  *  drive the analog multiplexer.
  */
-#define hwa_configure__acmpa	, _hwa_cfacmpa
+#define hwa_configure__acmpa		, _hwa_cfacmpa
 
 /*  Optionnal parameter `edge`
  */

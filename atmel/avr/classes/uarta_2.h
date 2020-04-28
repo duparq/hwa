@@ -16,35 +16,35 @@
  * @code
  * hwa( configure, uart0,
  *
- *      //  Transfer rate in bits per second
- *      //
- *    [ bps,         BPS, ]
+ *	//  Transfer rate in bits per second
+ *	//
+ *    [ bps,	     BPS, ]
  *
- *      //  Number of data bits in frame. Default is `8`.
- *      //
+ *	//  Number of data bits in frame. Default is `8`.
+ *	//
  *    [ databits,    5 | 6 | 7 | 8 | 9, ]
  *
- *      //  Parity. Default is `none`.
- *      //
- *    [ parity,      none, even, odd, ]
+ *	//  Parity. Default is `none`.
+ *	//
+ *    [ parity,	     none, even, odd, ]
  *
- *      //  Number of stop bits in frame. Default is `1`.
- *      //
+ *	//  Number of stop bits in frame. Default is `1`.
+ *	//
  *    [ stopbits,    1 | 2, ]
  *
- *      //  Whether the UART can receive. Default is `enabled`.
- *      //
+ *	//  Whether the UART can receive. Default is `enabled`.
+ *	//
  *    [ receiver,    enabled | disabled, ]
  *
- *      //  Whether the UART can transmit. Default is `enabled`.
- *      //
+ *	//  Whether the UART can transmit. Default is `enabled`.
+ *	//
  *    [ transmitter, enabled | disabled, ] );
  * @endcode
  */
 #define _hwa_cfuarta(o,a,k,...)					\
   do { HW_Y(_hwa_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) } while(0)
 
-#define hwa_configure__uarta	, _hwa_cfuarta
+#define hwa_configure__uarta		, _hwa_cfuarta
 
 /*	Optionnal parameter `bps`
  *	  Choose the U2X value that gives the lowest error
@@ -189,7 +189,7 @@
  * uint8_t byte = hw( read, uart0 );
  * @endcode
  */
-#define hw_read__uarta		, _hw_rduarta
+#define hw_read__uarta			, _hw_rduarta
 #define _hw_rduarta(o,a,...)		_hw_read(o,dr) HW_EOL(__VA_ARGS__)
 
 
@@ -205,14 +205,14 @@
  * hw( write, uart0, '#' );
  * @endcode
  */
-#define hw_write__uarta	, _hw_wruarta
+#define hw_write__uarta			, _hw_wruarta
 #define _hw_wruarta(o,a,v,...)	_hw_write(o,dr,v) HW_EOL(__VA_ARGS__)
 
 
 /*  Power management
  */
-#define hw_power__uarta	, _hw_power
-#define hwa_power__uarta	, _hwa_power
+#define hw_power__uarta			, _hw_power
+#define hwa_power__uarta		, _hwa_power
 
 
 /**
@@ -257,10 +257,10 @@ typedef union {
   };
 } _hw_uarta_stat_t ;
 
-#define hw_stat_t__uarta	, _hw_sttuarta
+#define hw_stat_t__uarta		, _hw_sttuarta
 #define _hw_sttuarta(o,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__)
 
-#define hw_stat__uarta		, _hw_stuarta
+#define hw_stat__uarta			, _hw_stuarta
 #define _hw_stuarta(o,a,...)		__hw_stuarta(_hw_read(o,csra)) HW_EOL(__VA_ARGS__)
 
 HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )

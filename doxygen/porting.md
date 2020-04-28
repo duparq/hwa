@@ -156,10 +156,10 @@ register with a definition like:
 @code
 /*	Class hardware register		class, address, write mask, flags mask
  */
-#define hw_reg__c8a_count		_r8, 0x40, 0xFF, 0x00
+#define hw__c8a_count		_r8, 0x40, 0xFF, 0x00
 @endcode
 
-The symbol defined is the concatenation of `hw_reg_`, the class name, and the
+The symbol defined is the concatenation of `hw_`, the class name, and the
 register name. In this definition:
 
  * `%_r8` is the class of the register;
@@ -182,7 +182,7 @@ the `counter0` object with a definition like:
 @code
 /*	Object hardware register	class, address, write mask, flags mask
  */
-#define hw_reg_counter0_ifr		_r8, 0x35, 0x07, 0x07
+#define hw_counter0_ifr		_r8, 0x35, 0x07, 0x07
 @endcode
 
 The symbol defined is the concatenation of an underscore, the object name, an
@@ -233,7 +233,7 @@ class register with a definition like:
 @code
 /*	Class logical register
  */
-#define hw_reg__c8a_cs			_cb1, ccrb, 3, 0
+#define hw__c8a_cs			_cb1, ccrb, 3, 0
 @endcode
 
 where:
@@ -253,7 +253,7 @@ object register with a definition like:
 @code
 /*	Object logical register
  */
-#define hw_reg_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
+#define hw_counter0_wgm		_ob2, ccra, 2, 0, 0, ccrb, 1, 3, 2
 @endcode
 
 where:
@@ -280,7 +280,7 @@ stored in the bit 2 of the `csr` hardware register of the analog comparator
 `acmp0` object:
 
 @code
-#define hw_reg__c16a_acic		_xob1, acmp0, csr, 1, 2
+#define hw__c16a_acic		_xob1, acmp0, csr, 1, 2
 @endcode
 
 

@@ -63,7 +63,7 @@
  * #endif
  * @endcode
  */
-#define hw_rel__io1a		, _hw_rel_io1a
+#define hw_rel__io1a			, _hw_rel_io1a
 
 #define _hw_rel_io1a(o,x,...)	\
   HW_Y(_hw_rel_io1a_,_hw_is_port_##x)(o,x,__VA_ARGS__)

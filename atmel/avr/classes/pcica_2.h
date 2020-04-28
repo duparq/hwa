@@ -21,7 +21,7 @@
  * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
-#define hw_turn__pcica		, _hw_tnpcica
+#define hw_turn__pcica			, _hw_tnpcica
 #define _hw_tnpcica( o,a, ...)	_hwx_tnpcica1(_hw,o,__VA_ARGS__,,)
 
 
@@ -31,7 +31,7 @@
  * hw( turn, pcic0, pa0, on | off );
  * @endcode
  */
-#define hwa_turn__pcica		, _hwa_tnpcica
+#define hwa_turn__pcica			, _hwa_tnpcica
 #define _hwa_tnpcica( o,a, ...)	_hwx_tnpcica1(_hwa,o,__VA_ARGS__,,)
 
 /*	Verify that a I/O name is given

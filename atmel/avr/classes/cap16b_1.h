@@ -62,4 +62,4 @@
  * @endcode
  */
 
-#define hwa_cap16b_t	hwa_cap16a_t
+#define hwa_cap16b_t			hwa_cap16a_t

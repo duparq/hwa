@@ -15,15 +15,36 @@
 
 #define AHBHZ		HW_DEVICE_HSIHZ		// AHB frequency
 #define COUNTER		counter2
-#define PERIOD		0.25			// Blinking period
+#define FREQUENCY	100
+#define DUTYMAX		256
 
 
-/*  The IRQ is used only to wake the core up.
+/*  Service the counter overflow IRQ:
+ *    compute the next value of the compare unit
+ *
+ *    Phase 0: increase duty cycle from 0 to DUTYMAX
+ *    Phase 1: decrease duty cycle from DUTYMAX to 0 (use ~duty)
+ *    Phase 2: off
+ *    Phase 3: off
  */
 HW_ISR( COUNTER )
 {
-  /* hw( clear, (COUNTER,if) ) ; // DOES NOT WORK BECAUSE SETS TO 1 */
+  static uint16_t		duty ;
+  static uint8_t		phase ;
+
   hw( clear, (COUNTER,irq) );
+
+  if ( phase == 0 )
+    hw( write, COUNTER, duty );
+  else if ( phase == 1 )
+    hw( write, COUNTER, ~duty );
+
+  duty++ ;
+
+  if ( duty == DUTYMAX ) {
+    duty = 0 ;
+    phase = (phase + 1) & 3 ;
+  }
 }
 
 
@@ -33,8 +54,7 @@ int main ( )
 
   /*  Power the controllers we use
    */
-  hwa( power, (LED1,port), on );
-  hwa( power, (pa9,port), on );
+  hwa( power, (LED,port), on );
   hwa( power, COUNTER, on );
   hwa( commit );
 
@@ -51,12 +71,14 @@ int main ( )
        mode,      counter,
        clock,     from_apb1_psc,
        direction, up_loop,
-       prescaler, AHBHZ*0.001 - 1,	// 1 ms clock period
-       reload,    PERIOD/2 / 0.001 - 1,
+       prescaler, AHBHZ / (FREQUENCY*DUTYMAX) - 1,
+       reload,    DUTYMAX-1,
        run,	  yes );
 
+  //  hwa( configure, (COUNTER,channel1) );
+
   hw( turn, (COUNTER,nvic), on );
-  hw( enable, (COUNTER,irq) );
+  hw( turn, (COUNTER,irq), on );
 
   hwa( commit );
 
@@ -64,6 +86,5 @@ int main ( )
    */
   for(;;) {
     hw( sleep_until_irq );	// sleep_until_event is OK too.
-    hw( toggle, LED1 );
   }
 }

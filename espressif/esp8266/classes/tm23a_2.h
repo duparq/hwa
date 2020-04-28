@@ -16,36 +16,36 @@
  * @code
  * hwa( configure, timer0,
  *
- *      //  Clock source
- *      //
- *    [ clock,       apb                    // APB clock
- *                 | apb /   1              // APB clock
- *                         | 16             // APB clock divided by 16
- *                         | 256, ]         // APB clock divided by 256
+ *	//  Clock source
+ *	//
+ *    [ clock,	     apb		    // APB clock
+ *		   | apb /   1		    // APB clock
+ *			   | 16		    // APB clock divided by 16
+ *			   | 256, ]	    // APB clock divided by 256
  *
- *      //  Counting mode
- *      //
- *    [ direction,   stop                   // Stop
- *                 | down                   // Count down to 0 and stop
- *                 | down_loop, ]           // Count down to 0 and reload
+ *	//  Counting mode
+ *	//
+ *    [ direction,   stop		    // Stop
+ *		   | down		    // Count down to 0 and stop
+ *		   | down_loop, ]	    // Count down to 0 and reload
  *
- *      //  Class _tm23a timers all count from top down to 0
- *      //
- *    [ bottom,      0, ]
+ *	//  Class _tm23a timers all count from top down to 0
+ *	//
+ *    [ bottom,	     0, ]
  *
- *      //  The value the counter loads after 0 is reached
- *      //
- *    [ top,         VALUE, ]               // VALUE: 0 .. 0x7FFFFF
+ *	//  The value the counter loads after 0 is reached
+ *	//
+ *    [ top,	     VALUE, ]		    // VALUE: 0 .. 0x7FFFFF
  *
- *      //  Action triggered after 0 is reached
- *      //
- *    [ action,      none
- *                 | irq
- *                 | nmi  ] );
+ *	//  Action triggered after 0 is reached
+ *	//
+ *    [ action,	     none
+ *		   | irq
+ *		   | nmi  ] );
  * @endcode
  */
-#define hw_configure__tm23a	, _hw_cftm23a
-#define hwa_configure__tm23a	, _hwa_cftm23a
+#define hw_configure__tm23a		, _hw_cftm23a
+#define hwa_configure__tm23a		, _hwa_cftm23a
 
 #define _hw_cftm23a(o,a,k,...)					\
   do{									\
@@ -71,7 +71,7 @@
 #define _hwa_cftm23a_vclock_1(o,v,...)		_hwa_cftm23a_vclock_2(o,v,_hw_tm23a_clock_##v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_2(...)		_hwa_cftm23a_vclock_3(__VA_ARGS__)
 #define _hwa_cftm23a_vclock_3(o,v,z,x,k,...)				\
-  if      (     x == 1 ) _hwa_write(o,psc,0);			\
+  if	  (	x == 1 ) _hwa_write(o,psc,0);			\
   else if (  16*x == 1 ) _hwa_write(o,psc,1);			\
   else if ( 256*x == 1 ) _hwa_write(o,psc,2);			\
   else HWA_E_NIL(v,(apb, apb/16, apb/256));				\
@@ -177,7 +177,7 @@
  * uint32_t count = hw( read, timer0 );
  * @endcode
  */
-#define hw_read__tm23a		, _hw_rdtm23a
+#define hw_read__tm23a			, _hw_rdtm23a
 #define _hw_rdtm23a(o,a,...)		_hw_read(o,_count) HW_EOL(__VA_ARGS__)
 
 
@@ -190,7 +190,7 @@
  * hw( write, timer0, VALUE );
  * @endcode
  */
-#define hw_write__tm23a	, _hw_wrtm23a
+#define hw_write__tm23a			, _hw_wrtm23a
 #define _hw_wrtm23a(o,a,v,...)	_hw_write(o,_count,v) HW_EOL(__VA_ARGS__)
 
 

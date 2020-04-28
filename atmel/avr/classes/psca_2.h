@@ -20,7 +20,7 @@
  * hw( reset, prescaler0 );
  * @endcode
  */
-#define hw_reset__psca		, _hw_psca_reset
+#define hw_reset__psca			, _hw_psca_reset
 
 #define _hw_psca_reset(o,a,...)	_hw_resetpsca(o) HW_EOL(__VA_ARGS__)
 
@@ -43,7 +43,7 @@
  * hw( turn, prescaler0, on );	//  Release the prescaler
  * @endcode
  */
-#define hw_turn__psca		, _hw_psca_turn
+#define hw_turn__psca			, _hw_psca_turn
 #define _hw_psca_turn(o,a,v,...)			\
   HW_G2(_hw_turnpsca, HW_IS(,_hw_state_##v))(o,v)	\
   HW_EOL(__VA_ARGS__)
@@ -68,10 +68,10 @@
  *
  * @code
  * hwa( configure, prescaler0,
- *      clock,     ioclk       );
+ *	clock,	   ioclk       );
  * @endcode
  */
-#define hwa_configure__psca	, _hwa_cfpsca
+#define hwa_configure__psca		, _hwa_cfpsca
 
 /*  Mandatory argument `clock`
  */

@@ -149,7 +149,7 @@
  * _hw_read( object, register );
  *
  */
-#define _hw_read(o,r)		HW_FC(_hw_read_,HW_X(reg(o,r)),)
+#define _hw_read(o,r)		HW_FC(_hw_read_,HW_X((o,r)),)
 
 
 /*
@@ -159,7 +159,7 @@
  *
  * `_hw_atomic_read( object, register );`
  */
-#define _hw_atomic_read(o,r)	HW_FC(_hw_atomic_read_,HW_X(reg(o,r)),)
+#define _hw_atomic_read(o,r)	HW_FC(_hw_atomic_read_,HW_X((o,r)),)
 
 
 #define hw_uint_t__r8		uint8_t
@@ -174,7 +174,7 @@
  *
  * `_hw_write( object, register, value );`
  */
-#define _hw_write(o,r,v)	HW_FC(_hw_write_,HW_X(reg(o,r)),v,)
+#define _hw_write(o,r,v)	HW_FC(_hw_write_,HW_X((o,r)),v,)
 
 
 /*
@@ -184,7 +184,7 @@
  *
  * `_hwa_write( object, register, value );`
  */
-#define _hwa_write(o,r,v)	HW_FC(_hwa_write_,HW_X(reg(o,r)),v,)
+#define _hwa_write(o,r,v)	HW_FC(_hwa_write_,HW_X((o,r)),v,)
 
 
 #define hw_read__m111		, _hw_read__m111
@@ -235,12 +235,12 @@
 /*
  * @brief  Write the register of an object
  */
-#define _hwa_write_oreg(c,o,r,v,...)	_hwa_write(o,r,v) HW_EOL(__VA_ARGS__)
+#define _hwa_write_o(c,o,r,v,...)	_hwa_write(o,r,v) HW_EOL(__VA_ARGS__)
 
 
 #define hwa_write__xob1		, _hwa__write__xob1
 
-#define _hwa_write__xob1(o,r,bn,bp,v)	_hwa_write__xob1_2(hw_reg_##o##_##r,o,r,bn,bp,v)
+#define _hwa_write__xob1(o,r,bn,bp,v)	_hwa_write__xob1_2(hw_##o##_##r,o,r,bn,bp,v)
 #define _hwa_write__xob1_2(...)		_hwa_write__xob1_3(__VA_ARGS__)
 #define _hwa_write__xob1_3(rc,ra,rwm,rfm,o,r,bn,bp,v)	\
   _hwa_write_##rc( &hwa->o.r, rwm,rfm, bn,bp, v )
@@ -261,7 +261,7 @@
  *
  * _hw_write_m( o, r, m, v );
  */
-#define _hw_write_m(o,r,...)			HW_FC(_hw_wrorm,HW_X(reg(o,r)),__VA_ARGS__,)
+#define _hw_write_m(o,r,...)			HW_FC(_hw_wrorm,HW_X((o,r)),__VA_ARGS__,)
 
 #define _hw_wrorm_m111(n,o,r,c,a,wm,fm,bn,bp,m,v,...)	_hw_write##c(a,wm,fm,m,v)
 
@@ -273,7 +273,7 @@
  *	_hwa_write_m( o, r, m, v );
  */
 
-#define _hwa_write_m(o,r,...)			HW_FC(_hwa_wrorm,HW_X(reg(o,r)),__VA_ARGS__,)
+#define _hwa_write_m(o,r,...)			HW_FC(_hwa_wrorm,HW_X((o,r)),__VA_ARGS__,)
 
 #define _hwa_wrorm_m111(n,o,r,c,a,wm,fm,bn,bp,m,v,...)	_hwa_write##c(&hwa->o.r,wm,fm,m,v)
 
@@ -315,7 +315,7 @@
  * @brief Create a HWA register
  * @hideinitializer
  */
-#define _hwa_setup_r(o,r)				_hwa_setup_or02(HW_X(reg(o,r)))
+#define _hwa_setup_r(o,r)				_hwa_setup_or02(HW_X((o,r)))
 #define _hwa_setup_or02(...)			_hwa_setup_or03(__VA_ARGS__)
 #define _hwa_setup_or03(m,n,o,r,c,a,...)	_hwa_setup_##c(&hwa->o.r, a)
 
@@ -325,7 +325,7 @@
  * @brief Initialize an HWA register of an object with its reset value
  * @hideinitializer
  */
-#define _hwa_init_r(o,r,v)			_hwa_init_reg_2(v,HW_X(reg(o,r)))
+#define _hwa_init_r(o,r,v)			_hwa_init_reg_2(v,HW_X((o,r)))
 #define _hwa_init_reg_2(...)			_hwa_init_reg_3(__VA_ARGS__)
 #define _hwa_init_reg_3(v,m,n,o,r,c,a,...)	_hwa_set_##c(&hwa->o.r, v)
 
@@ -335,11 +335,11 @@
  * @brief Commit one object hardware register
  * @hideinitializer
  */
-#define _hwa_commit_r(o,r)			HW_FC(_hwa_commit,HW_X(reg(o,r)))
+#define _hwa_commit_r(o,r)			HW_FC(_hwa_commit,HW_X((o,r)))
 
 #define _hwa_commit_m111(n,o,r,c,a,wm,fm,bn,bp,...)	_hwa_commit_##c(&hwa->o.r,wm,fm,hwa->commit)
 
-#define _hwa_nocommit_r(o,r)			HW_FC(_hwa_nocommit,HW_X(reg(o,r)))
+#define _hwa_nocommit_r(o,r)			HW_FC(_hwa_nocommit,HW_X((o,r)))
 
 #define _hwa_nocommit_m111(n,o,r,c,a,wm,fm,bn,bp,...)	_hwa_commit_##c(&hwa->o.r,wm,fm,0)
 

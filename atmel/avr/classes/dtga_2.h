@@ -19,15 +19,15 @@
  * @code
  * hw( configure, (counter0,dtg0),
  *
- *   [ prescaler,  1 | 2 | 4 | 8, ]      // default is `1`
+ *   [ prescaler,  1 | 2 | 4 | 8, ]	 // default is `1`
  *
- *   [ compare0_h, 0..15, ]              // default is `0`
+ *   [ compare0_h, 0..15, ]		 // default is `0`
  *
- *   [ compare0_l, 0..15, ]              // default is `0`
+ *   [ compare0_l, 0..15, ]		 // default is `0`
  *
- *   [ compare1_h, 0..15, ]              // default is `0`
+ *   [ compare1_h, 0..15, ]		 // default is `0`
  *
- *   [ compare1_l, 0..15  ]              // default is `0` );
+ *   [ compare1_l, 0..15  ]		 // default is `0` );
  * @endcode
  */
 
@@ -41,13 +41,13 @@
  *  * counter1dtgprescaler
  *
  * hw( configure, counter1compare0dtg,
- *     low,       2,
- *     high,      2 );
+ *     low,	  2,
+ *     high,	  2 );
  *
  * hw( write, counter1dtgprescaler, 4 );
  */
 
-#define hwa_configure__dtga	, _hwa_cfdtga
+#define hwa_configure__dtga		, _hwa_cfdtga
 
 
 /*  Optionnal argument `prescaler`

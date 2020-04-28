@@ -20,9 +20,9 @@
 
 /*	Class registers			class, address, rwm, rfm
  */
-#define hw_reg__p8a_port		_r8, 0x02, 0xFF, 0x00
-#define hw_reg__p8a_ddr			_r8, 0x01, 0xFF, 0x00
-#define hw_reg__p8a_pin			_r8, 0x00, 0xFF, 0x00
+#define hw__p8a_port			_r8, 0x02, 0xFF, 0x00
+#define hw__p8a_ddr			_r8, 0x01, 0xFF, 0x00
+#define hw__p8a_pin			_r8, 0x00, 0xFF, 0x00
 
 
 /*  Handle definitions such as HW_IO(port1,1,2)

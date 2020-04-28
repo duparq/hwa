@@ -38,7 +38,7 @@
  *	      );
  * @endcode
  */
-#define hwa_configure__wdoga	, _hwa_cfwdoga
+#define hwa_configure__wdoga		, _hwa_cfwdoga
 
 /*    Optionnal argument `timeout`
  */
@@ -95,8 +95,8 @@
  * @section atmelavr_wdoga_turn Turning on/off
  *
  * @code
- * hw( turn watchdog0,   on
- *                     | off );
+ * hw( turn watchdog0,	 on
+ *		       | off );
  * @endcode
  */
 #define hw_turn__wdoga			, _hw_turn_wdoga
@@ -138,10 +138,10 @@
  *
  * @code
  * hwa( turn, watchdog0,   on
- *                       | off );
+ *			 | off );
  * @endcode
  */
-#define hwa_turn__wdoga	, _hwa_turn_wdoga
+#define hwa_turn__wdoga			, _hwa_turn_wdoga
 
 #define _hwa_turn_wdoga(o,a,k,...)	HW_Y(_hwa_turn_wdoga_,_hw_state_##k)(o,k,__VA_ARGS__,)
 
@@ -165,7 +165,7 @@
  * hw( reset, watchdog0 );
  * @endcode
  */
-#define hw_reset__wdoga	, _hw_rstwdoga
+#define hw_reset__wdoga			, _hw_rstwdoga
 
 #define _hw_rstwdoga(o,a,...)			hw_asm("wdr"::) HW_EOL(__VA_ARGS__)
 

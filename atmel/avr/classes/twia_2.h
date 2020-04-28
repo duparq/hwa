@@ -47,7 +47,7 @@
 #define _hwx_cftwia(x,o,k,...)						\
   do {									\
     /*	The 'TWEN' bit that makes the TWI take control of the */	\
-    /*  I/O pins is set by the 'bus_' actions */			\
+    /*	I/O pins is set by the 'bus_' actions */			\
     HW_Y(_hwx_cftwia_kbps_,_hw_is_bps_##k)(x,o,k,__VA_ARGS__);		\
   } while(0)
 
@@ -160,22 +160,22 @@
  * `bus_...`:
  *
  * @code
- * hw( bus_start, twi0 [,irq] );              // Transmit START condition
+ * hw( bus_start, twi0 [,irq] );	      // Transmit START condition
  * @endcode
  * @code
- * hw( bus_slaw,  twi0, SLA [,irq] );         // Transmit SLA slave address + write bit
+ * hw( bus_slaw,  twi0, SLA [,irq] );	      // Transmit SLA slave address + write bit
  * @endcode
  * @code
- * hw( bus_slar,  twi0, SLA [,irq] );         // Transmit SLA slave address + read bit
+ * hw( bus_slar,  twi0, SLA [,irq] );	      // Transmit SLA slave address + read bit
  * @endcode
  * @code
- * hw( bus_write,  twi0, DATA [,irq] );        // Transmit DATA
+ * hw( bus_write,  twi0, DATA [,irq] );	       // Transmit DATA
  * @endcode
  * @code
  * hw( bus_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
  * @endcode
  * @code
- * hw( bus_stop,  twi0 [,irq] );              // Transmit STOP condition
+ * hw( bus_stop,  twi0 [,irq] );	      // Transmit STOP condition
  * @endcode
  *
  * The optionnal `irq` parameter can be used to have the command enable the IRQ.
@@ -448,10 +448,10 @@
 
 
 #define _hwa_commit__twia(o,a)		\
-  _hwa_commit_r( o, br  );			\
-  _hwa_commit_r( o, cr  );			\
-  _hwa_commit_r( o, sr  );			\
-  _hwa_commit_r( o, ar  );			\
+  _hwa_commit_r( o, br	);			\
+  _hwa_commit_r( o, cr	);			\
+  _hwa_commit_r( o, sr	);			\
+  _hwa_commit_r( o, ar	);			\
   _hwa_commit_r( o, amr )
   
 

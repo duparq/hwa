@@ -19,14 +19,14 @@
 
 /*	Class hardware registers	class, address, write mask, flags mask
  */
-#define hw_reg__pcfb__reg		_r32, 0x00, 0xFFFFFFFF, 0
+#define hw__pcfb__reg			_r32, 0x00, 0xFFFFFFFF, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define hw_reg__pcfb_fn		_cb2, _reg, 1, 6, 2, _reg, 2, 0, 0
-#define hw_reg__pcfb_spd		_cb1, _reg, 1, 5
-#define hw_reg__pcfb_pd		_cb1, _reg, 1, 3
-#define hw_reg__pcfb_pdx		_cb2, _reg, 1, 5, 1, _reg, 1, 3, 0 /* convenient */
+#define hw__pcfb_fn			_cb2, _reg, 1, 6, 2, _reg, 2, 0, 0
+#define hw__pcfb_spd			_cb1, _reg, 1, 5
+#define hw__pcfb_pd			_cb1, _reg, 1, 3
+#define hw__pcfb_pdx			_cb2, _reg, 1, 5, 1, _reg, 1, 3, 0 /* convenient */
 
 
 #if !defined __ASSEMBLER__
