@@ -18,6 +18,9 @@
  *
  * __Declaration__
  *
+ * The following declares a PCF8574 that is attached to the TWI
+ * interface twi0 at slave address 0x27:
+ *
  * @code
  * #define PCF          HW_PCF8574( interface, twi0, address, 0x27 )
  * @endcode
@@ -38,10 +41,9 @@
 
 /**
  * @page pcf8574
- * __Interface__
+ * __Interface and implementation__
  *
- * The following makes the implementation functions for TWI declared. Use it in
- * your header files:
+ * The following declares the functions that implement the object:
  *
  * @code
  * HW_DECLARE(PCF);
@@ -101,17 +103,15 @@
 
 /**
  * @page pcf8574
- * __Implement__
  *
- * The following makes the implementation functions for TWI defined. It must
- * appear in one of your source files:
+ * The following defines the functions that implement the object:
  *
  * @code
  * HW_DEFINE(PCF);
  * @endcode
  */
 #define HW_DEFINE__pcf8574		, _hw_define_pcf8574_
-#define HW_DEFINE_WEAK__pcf8574	, _hw_define_pcf8574w
+#define HW_DEFINE_WEAK__pcf8574		, _hw_define_pcf8574w
 
 #define _hw_define_pcf8574_(o,sla,twi,...)	_hw_define_pcf8574(o,sla,twi,,__VA_ARGS__)
 #define _hw_define_pcf8574w(o,sla,twi,...)	_hw_define_pcf8574(o,sla,twi,__attribute__((weak)),__VA_ARGS__)

@@ -56,11 +56,10 @@
 
 
 /**
- * @page hd44780 HD44780 LCD driver
- * __Interface__
+ * @page hd44780
+ * __Interface and implementation__
  *
- * The following makes the implementation functions for TWI declared. Use it in
- * your header files:
+ * The following declares the functions that implement the object:
  *
  * @code
  * HW_DECLARE(LCD);
@@ -85,11 +84,9 @@
 
 
 /**
- * @page hd44780 HD44780 LCD driver
- * __Implement__
+ * @page hd44780
  *
- * The following makes the implementation functions for TWI defined. It must
- * appear in one of your source files:
+ * The following defines the functions that implement the object:
  *
  * @code
  * HW_DEFINE(LCD);
@@ -104,11 +101,11 @@
   _hw_define_hd44780##v##__wait(o,v,__VA_ARGS__)	\
   _hw_define_hd44780##v##__command(o,v,__VA_ARGS__)	\
   _hw_define_hd44780##v##__data(o,v,__VA_ARGS__)	\
-  _hw_define_hd44780##v##_cls(o,v,__VA_ARGS__)	\
-  _hw_define_hd44780##v##_init(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_cls(o,v,__VA_ARGS__)		\
+  _hw_define_hd44780##v##_init(o,v,__VA_ARGS__)		\
   _hw_define_hd44780##v##_gotoxy(o,v,__VA_ARGS__)	\
-  _hw_define_hd44780##v##_newline(o,v,__VA_ARGS__)	\
-  _hw_define_hd44780##v##_home(o,v,__VA_ARGS__)	\
+    _hw_define_hd44780##v##_newline(o,v,__VA_ARGS__)	\
+  _hw_define_hd44780##v##_home(o,v,__VA_ARGS__)		\
   _hw_define_hd44780##v##_putchar(o,v,__VA_ARGS__)	\
   extern void _hwa_fake() /* require a ; */
 
@@ -249,20 +246,75 @@
 #define _hw_function_hd44780(o,v,lines,cols,e,rs,rw,d,f,...)	_hw_##o##_##f
 
 
+/**
+ * @page hd44780
+ *
+ * __Actions__
+ *
+ * `init`: the LCD requires an initialization before it can be used.
+ * @code
+ * hw( init, LCD );
+ * @endcode
+ */
 #define hw_init__hd44780		, _hw_hd44780_init
 #define _hw_hd44780_init(o,...)		_hw_##o##_init()
 
+
+/**
+ * @page hd44780
+ *
+ * `cls`: clear screen.
+ * @code
+ * hw( cls, LCD );
+ * @endcode
+ */
 #define hw_cls__hd44780			, _hw_hd44780_cls
 #define _hw_hd44780_cls(o,...)		_hw_##o##_cls()
 
+
+/**
+ * @page hd44780
+ *
+ * `gotoxy`: move the cursor to column x, line y.
+ * @code
+ * hw( gotoxy, LCD, x, y );
+ * @endcode
+ */
 #define hw_gotoxy__hd44780		, _hw_hd44780_gotoxy
 #define _hw_hd44780_gotoxy(o,v,lines,cols,e,rs,rw,d,x,y,...)	_hw_##o##_gotoxy(x,y)
 
+
+/**
+ * @page hd44780
+ *
+ * `newline`: move the cursor to the start of the line below.
+ * @code
+ * hw( newline, LCD, pos );
+ * @endcode
+ */
 #define hw_newline__hd44780		, _hw_hd44780_newline
 #define _hw_hd44780_newline(o,v,lines,cols,e,rs,rw,d,pos,...)	_hw_##o##_newline(pos)
 
+
+/**
+ * @page hd44780
+ *
+ * `home`: move the cursor to the home position.
+ * @code
+ * hw( home, LCD );
+ * @endcode
+ */
 #define hw_home__hd44780		, _hw_hd44780_home
 #define _hw_hd44780_home(o,...)		_hw_##o##_home()
 
+
+/**
+ * @page hd44780
+ *
+ * `putchar`: write a character at the current position.
+ * @code
+ * hw( cls, LCD, c );
+ * @endcode
+ */
 #define hw_putchar__hd44780		, _hw_hd44780_putchar
 #define _hw_hd44780_putchar(o,v,lines,cols,e,rs,rw,d,ch,...)	o##_putchar(ch)
