@@ -18,7 +18,7 @@
 #include "hsia_2.h"
 #include "hsea_2.h"
 
-/**
+/*
  * @page stm32_rcca
  *
  * The `_rcca` class is not used directly. It holds hardware registers shared by
@@ -37,18 +37,18 @@
  * @endcode
  */
 
-#define hw_turn__rccen			, _hw_tnrcc
-#define _hw_tnrcc(o,r,v,...)		HW_Y(_hw_tnrcc,_hw_state_##v)(v,r,__VA_ARGS__)
-#define _hw_tnrcc1(v,r,...)		_hw_write(rcc,r,HW_A1(_hw_state_##v))
-#define _hw_tnrcc0(v,...)		HW_E_ST(v)
+/* #define hw_turn__rccen			, _hw_tnrcc */
+/* #define _hw_tnrcc(o,r,v,...)		HW_Y(_hw_tnrcc,_hw_state_##v)(v,r,__VA_ARGS__) */
+/* #define _hw_tnrcc1(v,r,...)		_hw_write(rcc,r,HW_A1(_hw_state_##v)) */
+/* #define _hw_tnrcc0(v,...)		HW_E_ST(v) */
 
-#define hwa_turn__rccen			, _hwa_tnrcc
-#define _hwa_tnrcc(o,r,v,...)		HW_Y(_hwa_tnrcc,_hw_state_##v)(v,r,__VA_ARGS__)
-#define _hwa_tnrcc1(v,r,...)		_hwa_write(rcc,r,HW_A1(_hw_state_##v))
-#define _hwa_tnrcc0(v,...)		HW_E_ST(v)
+/* #define hwa_turn__rccen			, _hwa_tnrcc */
+/* #define _hwa_tnrcc(o,r,v,...)		HW_Y(_hwa_tnrcc,_hw_state_##v)(v,r,__VA_ARGS__) */
+/* #define _hwa_tnrcc1(v,r,...)		_hwa_write(rcc,r,HW_A1(_hw_state_##v)) */
+/* #define _hwa_tnrcc0(v,...)		HW_E_ST(v) */
 
 
-/**
+/*
  * @page stm32_rcca
  *
  * @section Examples

@@ -18,6 +18,7 @@
  */
 #define hw__rcca_cr			_r32, 0x00, 0x010D00F9, 0
 #define hw__rcca_cfgr			_r32, 0x04, 0x077FFFF3, 0
+#define hw__rcca_cir			_r32, 0x08, 0x00FFFFFF, 0
 #define hw__rcca_apb2enr		_r32, 0x18, 0x0038FFFD, 0
 #define hw__rcca_apb1enr		_r32, 0x1C, 0x3AFED3FF, 0
 
@@ -92,6 +93,32 @@
 #define hw__rcca_tim3en			_cb1, apb1enr, 1,  1
 #define hw__rcca_tim2en			_cb1, apb1enr, 1,  0
 
+/*  HWA names
+ */
+#define hw__rcca_dac			_cb1, apb1enr, 1, 29
+#define hw__rcca_power			_cb1, apb1enr, 1, 28
+#define hw__rcca_backup			_cb1, apb1enr, 1, 27
+#define hw__rcca_can			_cb1, apb1enr, 1, 25
+#define hw__rcca_usb			_cb1, apb1enr, 1, 23
+#define hw__rcca_i2c2			_cb1, apb1enr, 1, 22
+#define hw__rcca_i2c1			_cb1, apb1enr, 1, 21
+#define hw__rcca_uart5			_cb1, apb1enr, 1, 20
+#define hw__rcca_uart4			_cb1, apb1enr, 1, 19
+#define hw__rcca_usart3			_cb1, apb1enr, 1, 18
+#define hw__rcca_usart2			_cb1, apb1enr, 1, 17
+#define hw__rcca_spi3			_cb1, apb1enr, 1, 15
+#define hw__rcca_spi2			_cb1, apb1enr, 1, 14
+#define hw__rcca_windiwwdg		_cb1, apb1enr, 1, 11
+#define hw__rcca_counter14		_cb1, apb1enr, 1,  8
+#define hw__rcca_counter13		_cb1, apb1enr, 1,  7
+#define hw__rcca_counter12		_cb1, apb1enr, 1,  6
+#define hw__rcca_counter7		_cb1, apb1enr, 1,  5
+#define hw__rcca_counter6		_cb1, apb1enr, 1,  4
+#define hw__rcca_counter5		_cb1, apb1enr, 1,  3
+#define hw__rcca_counter4		_cb1, apb1enr, 1,  2
+#define hw__rcca_counter3		_cb1, apb1enr, 1,  1
+#define hw__rcca_counter2		_cb1, apb1enr, 1,  0
+
 
 /*	Convenient objects
  */
@@ -110,7 +137,7 @@
 #define hw_apb2				_apba, 0
 
 
-#define hw_class__rccen
+//#define hw_class__rccen
 
 
 #if !defined __ASSEMBLER__

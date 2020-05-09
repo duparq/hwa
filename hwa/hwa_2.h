@@ -54,6 +54,11 @@
 #endif
 
 
+/*  Catch a trailing semicolon 
+ */
+extern void hw_donothing();
+
+
 /*
  * @ingroup public_ins
  * @brief Create a context to memorize what the `hwa(...)` instructions do.
@@ -315,7 +320,7 @@
  * @brief Create a HWA register
  * @hideinitializer
  */
-#define _hwa_setup_r(o,r)				_hwa_setup_or02(HW_X((o,r)))
+#define _hwa_setup_r(o,r)			_hwa_setup_or02(HW_X((o,r)))
 #define _hwa_setup_or02(...)			_hwa_setup_or03(__VA_ARGS__)
 #define _hwa_setup_or03(m,n,o,r,c,a,...)	_hwa_setup_##c(&hwa->o.r, a)
 

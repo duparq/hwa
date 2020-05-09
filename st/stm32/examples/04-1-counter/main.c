@@ -23,7 +23,8 @@
 HW_ISR( COUNTER )
 {
   /* hw( clear, (COUNTER,if) ) ; // DOES NOT WORK BECAUSE SETS TO 1 */
-  hw( clear, (COUNTER,irq) );
+  //  hw( write, irqflag(COUNTER), 0 );
+  hw( clear, irq(COUNTER) );
 }
 
 
@@ -34,15 +35,12 @@ int main ( )
   /*  Power the controllers we use
    */
   hwa( power, (LED1,port), on );
-  hwa( power, (pa9,port), on );
   hwa( power, COUNTER, on );
   hwa( commit );
 
   /*  Configure GPIOs
    */
   hwa( configure, LED1, mode, digital_output, frequency, lowest );
-  hwa( configure, pa8, mode, digital_output, frequency, lowest );
-  hwa( configure, pa9, mode, digital_output, frequency, lowest );
   hwa( commit );
 
   /*  Configure the counter
@@ -50,15 +48,15 @@ int main ( )
   hwa( configure, COUNTER,
        mode,      counter,
        clock,     from_apb1_psc,
-       direction, up_loop,
+       direction, up,
        prescaler, AHBHZ*0.001 - 1,	// 1 ms clock period
        reload,    PERIOD/2 / 0.001 - 1,
-       run,	  yes );
-
-  hw( turn, (COUNTER,nvic), on );
-  hw( enable, (COUNTER,irq) );
+       run,       yes );
 
   hwa( commit );
+
+  hw( enable, nvic, irq(COUNTER) );
+  hw( enable, irq(COUNTER) );
 
   /*  Toggle the LED between sleeps
    */

@@ -59,7 +59,7 @@
 /*  IRQ flag is cleared writing 0 into it.
  */
 #define hw_clear__irq			, _hw_clrirq
-#define _hw_clrirq(o,r,v,m,f,...)	_hw_write(o,f,0)
+#define _hw_clrirq(p,o,v,m,f,...)	_hw_write(o,f,0)
 
 
 #include "../../hwa/hwa_2.h"

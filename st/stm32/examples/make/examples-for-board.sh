@@ -12,6 +12,7 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 03-1-systick"
 	EXAMPLES="${EXAMPLES} 03-2-systick-irq"
 	EXAMPLES="${EXAMPLES} 04-1-counter"
+	EXAMPLES="${EXAMPLES} 04-2-counter-output-fade"
     fi
     if [ ${BOARD} = "stm32f103c8t6-vcc-gnd" ] ; then
 	EXAMPLES="${EXAMPLES} 01-1-blink"
@@ -21,5 +22,6 @@ examples_for_board() {
 	EXAMPLES="${EXAMPLES} 03-1-systick"
 	EXAMPLES="${EXAMPLES} 03-2-systick-irq"
 	EXAMPLES="${EXAMPLES} 04-1-counter"
+	EXAMPLES="${EXAMPLES} 04-2-counter-output-fade"
     fi
 }

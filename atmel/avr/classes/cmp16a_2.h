@@ -24,13 +24,13 @@
  *	       //  Behavior of the ouput pin
  *	       //
  *	      output,	disconnected
- *		   | toggle_after_match
- *		   | clear_after_match
- *		   | set_after_match
- *		   | set_at_bottom_clear_after_match
- *		   | clear_at_bottom_set_after_match
- *		   | clear_after_match_up_set_after_match_down
- *		   | set_after_match_up_clear_after_match_down
+ *		      | toggle_after_match
+ *		      | clear_after_match
+ *		      | set_after_match
+ *		      | set_at_bottom_clear_after_match
+ *		      | clear_at_bottom_set_after_match
+ *		      | clear_after_match_up_set_after_match_down
+ *		      | set_after_match_up_clear_after_match_down
  *	     );
  * @endcode
  */
@@ -40,7 +40,7 @@
 
 /*							     , code, COM value
  */
-#define _hw_cmp16a_output_disconnected	, 0, 0	/* Non-PWM */
+#define _hw_cmp16a_output_disconnected		, 0, 0	/* Non-PWM */
 #define _hw_cmp16a_output_toggle_after_match	, 1, 1	/* Non-PWM */
 #define _hw_cmp16a_output_clear_after_match	, 2, 2	/* Non-PWM */
 #define _hw_cmp16a_output_set_after_match	, 3, 3	/* Non-PWM */
@@ -89,7 +89,7 @@
  *
  *	       //  Behavior of the ouput pin
  *	       //
- *	     [ output,	    disconnected
+ *	     [ output,	 disconnected
  *		       | toggle_after_match
  *		       | clear_after_match
  *		       | set_after_match
@@ -170,7 +170,7 @@
  * @endcode
  */
 #define hw_trigger__cmp16a		, _hw_trigger_cmp16a
-#define _hw_trigger_cmp16a(o,a)	_hw_write(o,force,1)
+#define _hw_trigger_cmp16a(o,a)		_hw_write(o,force,1)
 
 #define hwa_trigger__cmp16a		, _hwa_trigger_cmp16a
 #define _hwa_trigger_cmp16a(o,a)	_hwa_write(o,force,1)
@@ -203,12 +203,6 @@
   hwa->o.config.update	= 0xFF ;		\
   hwa->o.config.output	= 0xFF ;
 
-#define _hwa_init__cmp16a(o,a)			_hwa_init_r( o, reg, 0x00 )
+#define _hwa_init__cmp16a(o,a)		_hwa_init_r( o, reg, 0x00 )
 
-#define _hwa_commit__cmp16a(o,a)			_hwa_commit_r( o, reg )
-
-
-/**
- * @page atmelavr_cmp16a
- * <br>
- */
+#define _hwa_commit__cmp16a(o,a)	_hwa_commit_r( o, reg )

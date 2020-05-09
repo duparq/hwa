@@ -14,6 +14,57 @@
  *
  * __Actions__
  *
+ * `enable`: enable an IRQ at the NVIC level
+ *
+ * @code
+ * hw( enable, nvic, irq(counter2) );
+ * @endcode
+ *
+ * @code
+ * hwa( enable, nvic, irq(counter2) );
+ * @endcode
+ */
+#define hw_enable__nvica		, _hw_nvicaen
+#define hwa_enable__nvica		, _hwa_nvicaen
+
+#define _hw_nvicaen(o,a,x,...)		_hwx_nvicaed01(_hw_nvic_en,HW_X(x))
+#define _hwa_nvicaen(o,a,x,...)		_hwx_nvicaed01(_hwa_nvic_en,HW_X(x))
+
+#define _hwx_nvicaed01(...)		_hwx_nvicaed02(__VA_ARGS__)
+#define _hwx_nvicaed02(h,c,...)		HW_KW(_hwx_nvicaed02,_irq,c)(h,c,__VA_ARGS__)
+#define _hwx_nvicaed021(h,c,x,p,n,...)	h##able(n)
+#define _hwx_nvicaen020(h,f,c,...)	HW_Y0(_hwx_nvicerr,c)(c,__VA_ARGS__)
+#define _hwx_nvicerr1(z,x,e,...)	HW_E(e) hw_donothing()
+#define _hwx_nvicerr00(c,o,...)		HW_E(argument of type _irq required)
+
+
+/**
+ * @page stm32_nvica
+ *
+ * __Actions__
+ *
+ * `disable`: enable an IRQ at the NVIC level
+ *
+ * @code
+ * hw( disable, nvic, irq(counter2) );
+ * @endcode
+ *
+ * @code
+ * hwa( disable, nvic, irq(counter2) );
+ * @endcode
+ */
+#define hw_disable__nvica		, _hw_nvicads
+#define hwa_disable__nvica		, _hwa_nvicads
+
+#define _hw_nvicads(o,a,x,...)		_hwx_nvicaed01(_hw_nvic_dis,HW_X(x))
+#define _hwa_nvicads(o,a,x,...)		_hwx_nvicaed01(_hwa_nvic_dis,HW_X(x))
+
+
+/**
+ * @page stm32_nvica
+ *
+ * __Actions__
+ *
  * `turn`: turn an IRQ on/off at the NVIC level
  * @code
  * hw | hwa ( turn, nvic, irq(counter2),   on

@@ -128,6 +128,8 @@
 #define HW_EM_G(x)		garbage starting at HW_Q(x)
 #define HW_EM_GA(x)		garbage after HW_Q(x)
 #define HW_E_K(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
+#define HW_E_MA(w)		HW_E(missing argument HW_Q(w))
+#define HW_E_KW(w)		HW_E(HW_Q(w) is not an argument name)
 
 #define HW_E_KX(k,x)		HW_E(expected HW_Q(k) instead of HW_Q(x))
 #define HW_EM_KX(k,x)		expected HW_Q(k) instead of HW_Q(x)
@@ -144,7 +146,7 @@
 
 #define HW_E_M(m)		HW_E(unknown method HW_Q(m))
 
-#define HW_E_ST(x)		HW_E(HW_Q(x) is not in (on, off))
+#define HW_E_ST(x)		HW_E(HW_Q(x) is not in (0,1,on,off,yes,no))
 #define HW_E_VL(v,l)		HW_E(HW_Q(v) is not HW_Q(l))
 #define HW_E_AVM(a)		HW_E(missing value for HW_Q(a))
 #define HW_E_AVL(a,v,l)		HW_E(HW_Q(a) can be HW_Q(l) but not HW_Q(v))
@@ -157,6 +159,7 @@
 #define HW_E_IMP(f)		HW_E(HW_Q(f): not implemented for this target)
 #define HW_E_TBI(...)		HW_E(instruction is not implemented yet)
 #define HW_E_KVNIY(k,v)		HW_E(HW_Q(k=v) is not implemented yet)
+#define HW_E_TBIKV(k,v)		HW_E(k HW_Q(v) is not implemented yet)
 
 #define HW_E_ML(l)		HW_E(expected one argument in HW_Q(l))
 #define HW_E_NIL(v,l)		HW_E(HW_Q(v) is not in l)
@@ -344,7 +347,7 @@
  * @hideinitializer
  */
 #define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__)
-#define HW_IO_E(o,e,...)			xb(_fake,o,e) HW_E(e)
+#define HW_IO_E(o,e,...)		xb(_fake,o,e) HW_E(e)
 
 
 /*
@@ -359,14 +362,26 @@
 #define HW_IS(...)			_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)		HW_A1(_hw_is_##x##_##y,0)
 
-/* #define HW_YIS(...)		_HW_YIS01(__VA_ARGS__,) */
-/* #define _HW_YIS01(f,x,y,...)	_HW_YIS02(f,x,y,_hw_isa_leftbkt y) */
-/* #define _HW_YIS02(...)		_HW_YIS03(__VA_ARGS__) */
-/* #define _HW_YIS03(f,x,y,z)	HW_Y0(_HW_YIS03_,z)(f,x,y) */
-/* #define _HW_YIS03_1(...)	0 */
-/* #define _HW_YIS03_0(f,x,y)	HW_Y0(f,_hw_is_##x##_##y) */
 
+/*  Test for a bracketted argument
+ *    Expand as f##1 if x is ()
+ *              f##0 otherwise
+ */
+/* #define HW_ISB(f,x)			_HW_ISB01(f,_hw_isa_leftbkt x,0,1,) */
+/* #define _HW_ISB01(...)			_HW_ISB2(__VA_ARGS__) */
+/* #define _HW_ISB2(f,x,y,...)		f##y */
 
+#define HW_EAT(...)
+
+/*  Test for a bracketted argument
+ *    Expand as f if x is ()
+ *              void otherwise
+ */
+#define HW_IFB(x,f)			_HW_IFB01(_hw_isa_leftbkt x,f,HW_EAT,)
+#define _HW_IFB01(...)			_HW_IFB2(__VA_ARGS__)
+#define _HW_IFB2(z,x,y,...)		y
+
+  
 /**
  * @ingroup public_mac
  * @brief `HW_PIN(p)` returns the canonical name of pin `p`.
@@ -482,12 +497,57 @@
 #define _HW_Y03(...)			_HW_Y04(__VA_ARGS__)
 #define _HW_Y04(f,x,y,...)		f##y
 
-/*  This version not handle brackets.
+/*  This version does not handle brackets.
  */
 #define HW_Y0(...)			_HW_Y000(__VA_ARGS__,,)
 #define _HW_Y000(f,x,...)		_HW_Y001(f,_hw_is__##x,0,)
 #define _HW_Y001(...)			_HW_Y002(__VA_ARGS__)
 #define _HW_Y002(f,x,y,...)		f##y
+
+  
+/*  Branch depending on a word
+ *
+ *    HW_KW(f,k,w) expands to:
+ *      f0 if k is not w
+ *      f1 if k is w	(there must a: #define _hw_is_k_k , 1)
+ */
+#define HW_KW(...)			_HW_KW01(__VA_ARGS__,,,)
+#define _HW_KW01(f,k,w,...)		_HW_KW02(f,k,w,_hw_isa_leftbkt w, 0,)
+#define _HW_KW02(...)			_HW_KW03(__VA_ARGS__)
+#define _HW_KW03(f,k,w,z,x,...)		_HW_KW03##x(f,k,w)
+#define _HW_KW031(f,k,w)		f##0
+#define _HW_KW030(f,k,w)		_HW_KW04(f,k,w,_hw_is__##w, 0,)
+#define _HW_KW04(...)			_HW_KW05(__VA_ARGS__)
+#define _HW_KW05(f,k,w,z,x,...)		_HW_KW05##x(f,k,w)
+#define _HW_KW051(f,k,w)		f##0
+#define _HW_KW050(f,k,w)		_HW_KW06(f,k,w,_hw_is_##k##_##w, 0,)
+#define _HW_KW06(...)			_HW_KW07(__VA_ARGS__)
+#define _HW_KW07(f,k,w,z,x,...)		f##x
+
+
+/*  Branch depending on a state: (0,1,on,off,yes,no,(...))
+ *    (...) is considered a state as it can be a boolean expression.
+ *
+ *    HW_KS(f,w,va) expands to:
+ *      f0(va) if w is not a state, and produce an error
+ *      f1(0|1|(...), va) if w is a state
+ */
+#define HW_KS(f,w,...)			_HW_KS02(f,w,(__VA_ARGS__),_hw_isa_leftbkt w, 0,)
+#define _HW_KS02(...)			_HW_KS03(__VA_ARGS__)
+#define _HW_KS03(f,w,va,z,x,...)	_HW_KS03##x(f,w,va)
+#define _HW_KS031(f,w,va)		_HW_KS0A( f, HW_A1(_hw_state_##w), HW_XB va) //f##1(w, HW_XB va)
+#define _HW_KS030(f,w,va)		_HW_KS04(f,w,va,_hw_is__##w, 0,)
+#define _HW_KS04(...)			_HW_KS05(__VA_ARGS__)
+#define _HW_KS05(f,w,va,z,x,...)	_HW_KS05##x(f,w,va)
+#define _HW_KS051(f,w,va)		HW_E_ST(w) f##0 va
+#define _HW_KS050(f,w,va)		_HW_KS06(f,w,va,_hw_state_##w, 0,)
+#define _HW_KS06(...)			_HW_KS07(__VA_ARGS__)
+#define _HW_KS07(f,w,va,z,...)		_HW_KS08(f,w,va,_hw_is__##z,0,)
+#define _HW_KS08(...)			_HW_KS09(__VA_ARGS__)
+#define _HW_KS09(f,w,va,n,x,...)	_HW_KS09##x(f,w,va)
+#define _HW_KS090(f,w,va)		HW_E_ST(w) f##0 va
+#define _HW_KS091(f,w,va)		_HW_KS0A( f, HW_A1(_hw_state_##w), HW_XB va)
+#define _HW_KS0A(f,...)			f##1( __VA_ARGS__ )
 
 
 /**
@@ -549,7 +609,7 @@
 #define _hwx_0(...)			_hwx_1(__VA_ARGS__)
 #define _hwx_1(h,f,c,o,...)		HW_Y0(_hwx_1,c)(h,f,c,o,__VA_ARGS__)
 #define _hwx_11(h,f,c,o,e,...)		HW_Y(_hwx_11,o)(h,f,c,o,e,__VA_ARGS__)
-#define _hwx_110(h,f,c,o,e,...)		h##f##_	HW_E(e) // An error occured with o
+#define _hwx_110(h,f,c,o,e,...)		/* h##f##_ */	HW_E(e) // An error occured with o
 #define _hwx_111(h,f,c,o,e,...)		_hwx_12(h,f,h##f##__mcu,__VA_ARGS__)
 #define _hwx_12(...)			_hwx_13(__VA_ARGS__)
 #define _hwx_13(h,f,x,...)		HW_Y0(_hwx_13,x)(h,f,x,__VA_ARGS__)
@@ -568,7 +628,7 @@
 /* Fake object? */
 #define _hwx_70(h,f,c,o,x,...)		HW_Y0(_hwx_8,_hw_is__fake_##c)(h,f,c,o)
 #define _hwx_81(...)			// Nothing to do, fake is always OK.
-#define _hwx_80(h,f,c,o,...)		h##f##_ HW_E_OCM(o,c,f)
+#define _hwx_80(h,f,c,o)		/* h##f##_ */ HW_E_OCM(o,c,f)
 
 #define hw_class__mcu
 #define hw_mcu				_mcu,,

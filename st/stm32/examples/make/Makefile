@@ -192,10 +192,9 @@ CFLAGS		+= $(FLAGS)
 CFLAGS		+= -std=c1x
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
-#CFLAGS		+= -pedantic
 CFLAGS		+= -Wpedantic	# GCC 4.8
 CFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
-#CFLAGS		+= -ftrack-macro-expansion=0
+CFLAGS		+= -ftrack-macro-expansion=0 -Wno-misleading-indentation
 #CFLAGS		+= -fomit-frame-pointer
 CFLAGS		+= -ffunction-sections
 #CFLAGS		+= -fno-builtins
@@ -234,19 +233,17 @@ $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
 
 #  Object files list (from source files list)
 #
-#OBJECTS		 = $(SOURCES:.c=.$(DEVICE).o)
-#OBJECTS		:= $(OBJECTS:.sx=.$(DEVICE).o)
-OBJECTS		:= $(SOURCES:.c=.o)
-OBJECTS		:= $(OBJECTS:.sx=.o)
-OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
+OBJECTS			:= $(SOURCES:.c=.o)
+OBJECTS			:= $(OBJECTS:.sx=.o)
+OBJECTS			:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
-LDFLAGS		+= $(FLAGS)
+LDFLAGS			+= $(FLAGS)
 #LDFLAGS		+= -s
-LDFLAGS		+= -Wl,-Map,$(OUT).map,--cref
+LDFLAGS			+= -Wl,-Map,$(OUT).map,--cref
 #LDFLAGS		+= -Wl,-u,vfprintf -lprintf_min
 #LDFLAGS		+= -nostartfiles
-LDFLAGS		+= -T../make/ram.ld
-LDFLAGS		+= -Wl,--gc-sections
+LDFLAGS			+= -T../make/ram.ld
+LDFLAGS			+= -Wl,--gc-sections
 #LDFLAGS		+= -nostdlib # Provide clear_bss aso
 #LDFLAGS		+= -Wl,--section-start=.protext=0x1E00
 #LDFLAGS		+= -Wl,--section-start=.bss.pro=0x800100
@@ -284,9 +281,9 @@ endif
 # @$(OBJCOPY) --only-section .text --only-section .data	\
 # 	-O binary --gap-fill=0xFF $(PADTO) $^ $@
 
-%.hex: %.elf
-	@$(OBJCOPY) --only-section .text --only-section .data	\
-		-O ihex --gap-fill=0xFF $^ $@
+# %.hex: %.elf
+# 	@$(OBJCOPY) --only-section .text --only-section .data --only-section .rodata	\
+# 		-O ihex --gap-fill=0xFF $^ $@
 
 #  Object dump flags:
 #

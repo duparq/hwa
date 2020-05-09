@@ -36,7 +36,7 @@
 
 /*  Logical registers
  */
-#define hw__usarta_cts			_cb1, sr, 1, 9
+#define hw__usarta_reg_cts		_cb1, sr, 1, 9
 #define hw__usarta_lbd			_cb1, sr, 1, 8
 #define hw__usarta_txe			_cb1, sr, 1, 7
 #define hw__usarta_tc			_cb1, sr, 1, 6

@@ -37,9 +37,9 @@
 #define hw__c16a_ccer			_r16, 0x20, 0x3333, 0
 #define hw__c16a_cnt			_r16, 0x24, 0xFFFF, 0
 #define hw__c16a_psc			_r16, 0x28, 0xFFFF, 0
-#define hw__c16a_prescaler		_r16, 0x28, 0xFFFF, 0	// Synonym
+#define hw__c16a_prescaler		psc			// Synonym
 #define hw__c16a_arr			_r16, 0x2C, 0xFFFF, 0
-#define hw__c16a_reload			_r16, 0x2C, 0xFFFF, 0	// Synonym
+#define hw__c16a_reload			arr			// Synonym
 #define hw__c16a_ccr1			_r16, 0x34, 0xFFFF, 0
 #define hw__c16a_ccr2			_r16, 0x38, 0xFFFF, 0
 #define hw__c16a_ccr3			_r16, 0x3C, 0xFFFF, 0
@@ -56,7 +56,6 @@
 #define hw__c16a_urs			_cb1, cr1, 1, 2
 #define hw__c16a_udis			_cb1, cr1, 1, 1
 #define hw__c16a_cen			_cb1, cr1, 1, 0
-#define hw__c16a_enable			_cb1, cr1, 1, 0		// Synonym
 
 #define hw__c16a_ti1s			_cb1, cr2, 1, 7
 #define hw__c16a_mms			_cb1, cr2, 3, 4
@@ -86,7 +85,48 @@
 
 #define hw__c16a_if			_cb1, sr, 1, 0
 
+#define hw__c16a_cc4p			_cb1, ccer, 1, 13
+#define hw__c16a_cc4e			_cb1, ccer, 1, 12
+#define hw__c16a_cc3p			_cb1, ccer, 1,  9
+#define hw__c16a_cc3e			_cb1, ccer, 1,  8
+#define hw__c16a_cc2p			_cb1, ccer, 1,  5
+#define hw__c16a_cc2e			_cb1, ccer, 1,  4
+#define hw__c16a_cc1p			_cb1, ccer, 1,  1
+#define hw__c16a_cc1e			_cb1, ccer, 1,  0
 
+#define hw__c16a_oc2ce			_cb1, ccmr1, 1, 15
+#define hw__c16a_oc2m			_cb1, ccmr1, 3, 12
+#define hw__c16a_ic2f			_cb1, ccmr1, 4, 12
+#define hw__c16a_oc2pe			_cb1, ccmr1, 1, 11
+#define hw__c16a_oc2fe			_cb1, ccmr1, 1, 10
+#define hw__c16a_ic2psc			_cb1, ccmr1, 2, 10
+#define hw__c16a_cc2s			_cb1, ccmr1, 2,  8
+
+#define hw__c16a_oc1ce			_cb1, ccmr1, 1,  7
+#define hw__c16a_oc1m			_cb1, ccmr1, 3,  4
+#define hw__c16a_ic1f			_cb1, ccmr1, 4,  4
+#define hw__c16a_oc1pe			_cb1, ccmr1, 1,  3
+#define hw__c16a_oc1fe			_cb1, ccmr1, 1,  2
+#define hw__c16a_ic1psc			_cb1, ccmr1, 2,  2
+#define hw__c16a_cc1s			_cb1, ccmr1, 2,  0
+
+#define hw__c16a_oc4ce			_cb1, ccmr2, 1, 15
+#define hw__c16a_oc4m			_cb1, ccmr2, 3, 12
+#define hw__c16a_ic4f			_cb1, ccmr2, 4, 12
+#define hw__c16a_oc4pe			_cb1, ccmr2, 1, 11
+#define hw__c16a_oc4fe			_cb1, ccmr2, 1, 10
+#define hw__c16a_ic4psc			_cb1, ccmr2, 2, 10
+#define hw__c16a_cc4s			_cb1, ccmr2, 2,  8
+
+#define hw__c16a_oc3ce			_cb1, ccmr2, 1,  7
+#define hw__c16a_oc3m			_cb1, ccmr2, 3,  4
+#define hw__c16a_ic3f			_cb1, ccmr2, 4,  4
+#define hw__c16a_oc3pe			_cb1, ccmr2, 1,  3
+#define hw__c16a_oc3fe			_cb1, ccmr2, 1,  2
+#define hw__c16a_ic3psc			_cb1, ccmr2, 2,  2
+#define hw__c16a_cc3s			_cb1, ccmr2, 2,  0
+
+  
 #if !defined __ASSEMBLER__
 
 typedef struct {
@@ -96,9 +136,13 @@ typedef struct {
   hwa_r16_t dier ;
   //  hwa_r16_t sr ;
   hwa_r16_t egr ;
+  hwa_r16_t ccmr1 ;
+  hwa_r16_t ccmr2 ;
+  hwa_r16_t ccer ;
   hwa_r16_t cnt ;
   hwa_r16_t psc ;
   hwa_r16_t arr ;
+  hwa_r16_t ccr3 ;
 } hwa_c16a_t ;
 
 #endif

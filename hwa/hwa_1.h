@@ -54,6 +54,8 @@
 
 /*	State definitions		, positive, negative
  */
+#define _hw_state_1			, 1, 0
+#define _hw_state_0			, 0, 1
 #define _hw_state_on			, 1, 0
 #define _hw_state_off			, 0, 1
 #define _hw_state_yes			, 1, 0
@@ -65,6 +67,7 @@
 /*  Keywords
  */
 #define _hw_is_0_0				, 1
+#define _hw_is_1_1				, 1
 #define _hw_is_16_16_				, 1
 #define _hw_is_8_8_				, 1
 #define _hw_is__				, 1
@@ -84,6 +87,8 @@
 #define _hw_is_bps_bps				, 1
 #define _hw_is_class_class			, 1
 #define _hw_is_clock_clock			, 1
+#define _hw_is_compare_compare			, 1
+#define _hw_is_connected_connected		, 1
 #define _hw_is_direction_direction		, 1
 #define _hw_is_cpb_cpb				, 1
 #define _hw_is_data_order_data_order		, 1
@@ -107,6 +112,7 @@
 #define _hw_is_ioclk_ioclk			, 1
 #define _hw_is_irq_irq				, 1
 #define _hw_is_irq_type_irq_type		, 1
+#define _hw_is_latch_latch			, 1
 #define _hw_is_lo8_lo8				, 1
 #define _hw_is_mode_mode			, 1
 #define _hw_is_multiplier_multiplier		, 1
@@ -127,6 +133,7 @@
 #define _hw_is_pullup_pullup			, 1
 #define _hw_is_receiver_receiver		, 1
 #define _hw_is_reload_reload			, 1
+#define _hw_is_rule_rule			, 1
 #define _hw_is_run_run				, 1
 #define _hw_is_sampling_edge_sampling_edge	, 1
 #define _hw_is_sclhz_sclhz			, 1

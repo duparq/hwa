@@ -7,7 +7,14 @@
 /**
  * @example
  *
- * This program blinks a LED using a counter reload event.
+ * This program fades LED1 (pa2) using one channel output of a counter.
+ *
+ * The counting direction of the counter (up/down) is output on LED2. It can
+ * synchronize an oscilloscope to view the PWM signal.
+ *
+ * You can direct the output signal to pb10 instead of LED2 (pa3) after having
+ * powered its port and the afio. The remapping of the signal is automatically
+ * handled by HWA.
  *
  * @par main.c
  */
@@ -15,12 +22,14 @@
 
 #define AHBHZ		HW_DEVICE_HSIHZ		// AHB frequency
 #define COUNTER		counter2
-#define FREQUENCY	100
-#define DUTYMAX		256
+#define CHANNEL		channel3
+#define DUTYMAX		100
 
 
-/*  Service the counter overflow IRQ:
- *    compute the next value of the compare unit
+/*  Service the counter IRQ (every overflow or underflow, then the frequency of
+ *  the IRQ does not depend on the counting mode of the counter, but the
+ *  frequency of the PWM output does): compute the next value of the compare
+ *  unit.
  *
  *    Phase 0: increase duty cycle from 0 to DUTYMAX
  *    Phase 1: decrease duty cycle from DUTYMAX to 0 (use ~duty)
@@ -29,21 +38,23 @@
  */
 HW_ISR( COUNTER )
 {
-  static uint16_t		duty ;
-  static uint8_t		phase ;
+  static uint16_t	duty ;
+  static uint8_t	phase ;
 
-  hw( clear, (COUNTER,irq) );
+  hw( clear, irq(COUNTER) );
+
+  hw( write, LED2, hw(read,(COUNTER,dir))==0 );
 
   if ( phase == 0 )
-    hw( write, COUNTER, duty );
+    hw( write, (COUNTER,CHANNEL), duty );
   else if ( phase == 1 )
-    hw( write, COUNTER, ~duty );
+    hw( write, (COUNTER,CHANNEL), DUTYMAX-duty );
 
   duty++ ;
 
-  if ( duty == DUTYMAX ) {
+  if ( duty > DUTYMAX ) {
     duty = 0 ;
-    phase = (phase + 1) & 3 ;
+    phase = (phase+1) & 3 ;
   }
 }
 
@@ -54,37 +65,41 @@ int main ( )
 
   /*  Power the controllers we use
    */
-  hwa( power, (LED,port), on );
+  hwa( power, (LED1,port), on );
+  hwa( power, (LED2,port), on );
   hwa( power, COUNTER, on );
+  /* hwa( power, afio, on ); */
   hwa( commit );
 
   /*  Configure GPIOs
    */
-  hwa( configure, LED1, mode, digital_output, frequency, lowest );
-  hwa( configure, pa8, mode, digital_output, frequency, lowest );
-  hwa( configure, pa9, mode, digital_output, frequency, lowest );
-  hwa( commit );
+  hwa( configure, LED1, function, (COUNTER,CHANNEL), mode, digital_output );
+  hwa( configure, LED2, function, gpio, mode, digital_output );
 
-  /*  Configure the counter
+  /* hwa( configure, pb10, function, (counter2,channel3), mode, digital_output ); */
+
+  /*  Configure and start the counter (sms=0, cms=3, opm=0, cen=1)
    */
   hwa( configure, COUNTER,
-       mode,      counter,
        clock,     from_apb1_psc,
-       direction, up_loop,
-       prescaler, AHBHZ / (FREQUENCY*DUTYMAX) - 1,
-       reload,    DUTYMAX-1,
-       run,	  yes );
+       direction, updown,
+       prescaler, AHBHZ/DUTYMAX/100 - 1,
+       reload,    DUTYMAX,
+       run,       yes );
 
-  //  hwa( configure, (COUNTER,channel1) );
-
-  hw( turn, (COUNTER,nvic), on );
-  hw( turn, (COUNTER,irq), on );
+  /*  Configure the channel used as PWM output
+   */
+  hwa( configure, (COUNTER,CHANNEL),
+       function,  compare,
+       rule,      clear_on_match_up_set_on_match_down,
+       output,    connected );
 
   hwa( commit );
 
-  /*  Toggle the LED between sleeps
+  hw( enable, nvic, irq(COUNTER) );
+  hw( enable, irq(COUNTER) );
+
+  /*  Sleep between IRQs. 'sleep_until_event' is OK too.
    */
-  for(;;) {
-    hw( sleep_until_irq );	// sleep_until_event is OK too.
-  }
+  for(;;) hw( sleep_until_irq );
 }

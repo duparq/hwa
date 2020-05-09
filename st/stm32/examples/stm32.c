@@ -7,27 +7,31 @@
 
 
 extern int main ( ) __attribute__((noreturn));
+extern unsigned long _sidata ;
+extern unsigned long _edata ;
+extern unsigned long _sdata ;
+extern unsigned long _ebss ;
+extern unsigned long _sbss ;
+
 
 void
 hw_esr_reset ( )
 {
-#if 0
-  unsigned long *pulSrc, *pulDest;
-
-  /* Copy the data segment initializers from flash to SRAM.
+  /*  Copy the data segment initializers
    */
-  pulSrc = &_sidata;
-  for(pulDest = &_sdata; pulDest < &_edata; )
-    {
-      *(pulDest++) = *(pulSrc++);
-    }
+#if 1
+  unsigned long *src = &_sidata;
+  for( unsigned long *dst = &_sdata ; dst < &_edata; ) {
+    *(dst++) = *(src++);
+  }
+#endif
 
-  // Zero fill the bss segment.
-  //
-  for(pulDest = &_sbss; pulDest < &_ebss; )
-    {
-      *(pulDest++) = 0;
-    }
+  /*  Zero fill the bss segment. 
+   */  
+#if 1
+  for( unsigned long *dst = &_sbss ; dst < &_ebss; ) {
+    *(dst++) = 0;
+  }
 #endif
 
   main();

@@ -175,9 +175,13 @@
 
 #include "../classes/p16a_1.h"
 #include "../classes/io1a_1.h"
+#include "../classes/afioa_1.h"
 
 /*	Objects				class, address
  */
+#define hw_afio				_afioa, 0x40010000
+#define hw_afio_cken			_xob1, rcc, apb2enr, 1,  0	/* convenient */
+
 #define hw_port0			_p16a, 0x40010800
 #define hw_port0_rcc			_rccen, port0en
 
@@ -369,76 +373,60 @@
 /* # */
 /* #endif */
 
-#include "../classes/afioa_1.h"
-
-/*	Object				class, address
- */
-#define hw_afio				_afioa, 0x40010000
-
 
 /*  Pin functions and mappings		STM32F103-x8-xB.pdf, p. 28
  *
- *  The mapping of controller signals to device pins is configured by a 'remap'
- *  value associated to each controller and stored in the AFIO. Each 'remap'
- *  value associates a set of pins to a set of signals for one controller, but
- *  one pin can sometimes be associated to the same signal through different
- *  'remap' values. One pin does not connected to one signal, but one controller
- *  choses a mapping. Then, each pin can be configured to relay the "alternate"
- *  signal or remain a GPIO.
+ *  Each pin can be configured as a GPIO or as an "alternate" signal attached to
+ *  a controller.
  *
- *  Solution 1: we build a table in the HWA context to record for each signal
- *  the pin it must be associated with. When the "commit" is invoked, a function
- *  checks that the wanted associations can be satisfied. This is the same kind
- *  of solution as for the Atmel AVR8 counters and their compare init outputs.
+ *  Routing of one controller's signal to a pin is controlled by the controller
+ *  through various configurations numbered in the 'remap' register. As the same
+ *  signal can be routed to the same pin by different configurations, it seems
+ *  necessary to gather the configurations of all the pins and decide later of
+ *  the 'remap' values.
  *
- *  hw( configure, pa9,	 function, (usart1,tx) );  // USART1_REMAP = 0
- *  hw( configure, pa10, function, (usart1,rx) );  // USART1_REMAP = 0
- *  hw( configure, pb6,	 function, (usart1,tx) );  // USART1_REMAP = 1
- *  hw( configure, pb7,	 function, (usart1,rx) );  // USART1_REMAP = 1
+ *  The gpio/alternate function is set by the CNF bits in the pins' port
+ *  registers. When an alternate function is selected, the pin is driven by the
+ *  controller it is mapped to.
  *
- *  Solution 2: we configure the mapping through the 'configure' action of the
- *  controller.
- *
- *  hw( configure, counter2, 
- *	...
- *	map_channel1, pa0,	// Remap '00'
- *	map_channel2, pa1,
- *	map_channel3, pa2,
- *	map_channel4, pa3 );
- *
- *  hw( configure, counter2, 
- *	...
- *	map_channel1, pa15,	// Remap '01'
- *	map_channel2, pb3,
- *	map_channel3, pa2,
- *	map_channel4, pa3 );
- *
+ *  Solution: for each signal that can be mapped, we record the address of the
+ *  pin to attach. The commit procedure browses the attachements and tries to
+ *  find valid remap values for the controllers.
  */
-//					, df/af, map
-//
-#define _hw_fn_pa0			(gpio,wkup,(usart2,cts),(adc12,in0),(counter2,channel1),etr)
-#define _hw_fn_pa0_gpio			, df
-#define _hw_fn_pa0_wkup			, af
-#define _hw_fn_pa0_usart2_cts		, af 
-#define _hw_fn_pa0_adc12_in0		, af 
-#define _hw_fn_pa0_counter2_channel1	, af 
-#define _hw_fn_pa0_etr			, af 
+#define _hw_af_pa0			(gpio,wkup,(usart2,cts),(adc12,in0),(counter2,channel1),(counter2,etr))
+#define _hw_af_pa1			(gpio,(usart2,rts),(adc12,in1),(counter2,channel2))
+#define _hw_af_pa2			(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
+#define _hw_af_pa2			(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
+#define _hw_af_pa3			(gpio,(usart2,rx),(adc12,in3),(counter2,channel4))
+#define _hw_af_pa4			(gpio,(spi1,nss),(usart2,ck),(adc12,in4))
+#define _hw_af_pa5			(gpio,(spi1,sck),(adc12,in5))
+#define _hw_af_pa6			(gpio,(spi1,miso),(adc12,in6),(counter3,channel1),(counter1,bkin))
+#define _hw_af_pa7			(gpio,(spi1,mosi),(adc12,in7),(counter3,channel2),(counter1,ch1n))
+#define _hw_af_pa9			(gpio,(usart1,tx),(counter1,channel2))
+#define _hw_af_pa10			(gpio,(usart1,rx),(counter1,channel3))
 
-#define _hw_fn_pa2			(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
-#define _hw_fn_pa2_gpio			, df
-#define _hw_fn_pa2_usart2_tx		, af
-#define _hw_fn_pa2_adc12_in2		, af
-#define _hw_fn_pa2_counter2_channel3	, af
+#define _hw_af_pb0			(gpio,(adc12,in8),(counter3,channel3),(counter1,ch2n))
+#define _hw_af_pb1			(gpio,(adc12,in9),(counter3,channel4),(counter1,ch3n))
+#define _hw_af_pb10			(gpio,(i2c2,scl),(usart3,tx),(counter2,channel3))
 
-#define _hw_fn_pa9			(gpio,(usart1,tx),(counter1,channel2))
-#define _hw_fn_pa9_gpio			, df 
-#define _hw_fn_pa9_usart1_tx		, af
-#define _hw_fn_pa9_counter1_channel2	, af
+#define _hw_af_pc4			(gpio,(adc12,in14))
+#define _hw_af_pc5			(gpio,(adc12,in15))
+#define _hw_af_pc13			(gpio,(tamper_rtc))
+#define _hw_af_pc14			(gpio,(osc32_in))
+#define _hw_af_pc15			(gpio,(osc32_out))
 
-#define _hw_fn_pa10			(gpio,(usart1,rx),(counter1,channel3))
-#define _hw_fn_pa10_gpio		, df
-#define _hw_fn_pa10_usart1_rx		, af
-#define _hw_fn_pa10_counter1_channel3	, af
+#define _hw_af_pd0			(gpio,osc_in)
+#define _hw_af_pd1			(gpio,osc_out)
+
+#define _hw_af_pe2			(traceck)
+#define _hw_af_pe3			(traced0)
+#define _hw_af_pe4			(traced1)
+#define _hw_af_pe5			(traced2)
+#define _hw_af_pe6			(traced3)
+#define _hw_af_pe7			((counter1,etr))
+#define _hw_af_pe8			((counter1,ch1n))
+#define _hw_af_pe9			((counter1,ch1))
+#define _hw_af_pe10			((counter1,ch2n))
 
 
 /*******************************************************************************
@@ -459,8 +447,17 @@
 /*	Object				class, address
  */
 #define hw_systick			_stka, 0xE000E010
-#define hw_systick_irq			_irq, systick, x15, ie, if
+//#define hw_systick_irq			_irq, systick, x15, ie, if
 
+
+/**
+ * @page stm32f103
+ * @section stm32f103_acc Advanced-control counter-timers
+ *
+ * STM32F103 devices have 1 advanced-control counter-timers: @ref stm32_c16a "counter1".
+ *
+ * @note This counter is not implemented yet.
+ */
 
 /*******************************************************************************
  *									       *
@@ -477,30 +474,28 @@
  */
 
 #include "../classes/c16a_1.h"
+#include "../classes/cca_1.h"
 
-/*	Object				class, address
+/*	Object				class, definition
  */
 #define hw_counter2			_c16a, 0x40000000
-#define hw_counter2_irq			_irq, counter2, 28, ie, if
-#define hw_counter2_nvic		_nvirq, 28
-#define hw_counter2_rcc			_rccen, tim2en
-
 #define hw_counter3			_c16a, 0x40000400
-#define hw_counter3_irq			_irq, counter3, 29, ie, if
-#define hw_counter3_nvic		_nvirq, 29
-#define hw_counter3_rcc			_rccen, tim3en
-
 #define hw_counter4			_c16a, 0x40000800
-#define hw_counter4_irq			_irq, counter4, 30, ie, if
-#define hw_counter4_nvic		_nvirq, 30
-#define hw_counter4_rcc			_rccen, tim4en
 
+#define hw_counter2_channel1		_cca, counter2, 1
+#define hw_counter2_channel2		_cca, counter2, 2
+#define hw_counter2_channel3		_cca, counter2, 3
+#define hw_counter2_channel4		_cca, counter2, 4
 
-#include "../classes/cc16a_1.h"
+#define hw_counter3_channel1		_cca, counter3, 1
+#define hw_counter3_channel2		_cca, counter3, 2
+#define hw_counter3_channel3		_cca, counter3, 3
+#define hw_counter3_channel4		_cca, counter3, 4
 
-/*	Object				class, address
- */
-#define hw_counter2_channel1		_cc16a, 0
+#define hw_counter4_channel1		_cca, counter4, 1
+#define hw_counter4_channel2		_cca, counter4, 2
+#define hw_counter4_channel3		_cca, counter4, 3
+#define hw_counter4_channel4		_cca, counter4, 4
 
 
 /*******************************************************************************
@@ -523,7 +518,7 @@
 /*	Object				class, address
  */
 #define hw_usart1			_usarta, 0x40013800
-#define hw_usart1_irq			_irq, usart1, 37, ie, if
+//#define hw_usart1_irq			_irq, usart1, 37, ie, if
 #define hw_usart1_nvic			_nvirq, 37
 #define hw_usart1_rcc			_rccen, usart1en
 
@@ -535,11 +530,13 @@
 
 #if !defined __ASSEMBLER__
 
+
 /* This structure is instanciated by hwa( begin ) or hwa( begin_from_reset ) and
  * used by all HWA asynchronous instructions to bufferize hardware accesses.
  */
 typedef struct {
   uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
+  hwa_map_t	map ;
 
   hwa_rcca_t	rcc ;
   hwa_nvica_t	nvic ;
@@ -569,10 +566,22 @@ typedef struct {
 #include "../classes/p16a_2.h"
 #include "../classes/stka_2.h"
 #include "../classes/c16a_2.h"
+#include "../classes/cca_2.h"
 #include "../classes/usarta_2.h"
+
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {
+  /*  Initialize the remaper
+   */
+  /* hwa->map.error = 0 ; */
+  /* hwa->map.counter2_0 = 0 ; */
+  /* hwa->map.counter2_1 = 0 ; */
+  /* hwa->map.counter2_2 = 0 ; */
+  /* hwa->map.counter2_3 = 0 ; */
+
+  /* _hwa_setup_map(hwa); */
+
   _hwa_setup_o( rcc );
   _hwa_setup_o( nvic );
   _hwa_setup_o( afio );
@@ -594,6 +603,8 @@ HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_init_context( hwa_t *hwa )
 {
+  /* _hwa_init_map(hwa); */
+
   _hwa_init_o( rcc );
   _hwa_init_o( nvic );
   _hwa_init_o( afio );
@@ -615,6 +626,17 @@ HW_INLINE void _hwa_init_context( hwa_t *hwa )
 
 HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 {
+  /* if ( hwa->map.counter2_0 == 1 ) */
+  /*   _hwa_write(counter2,remap,0); */
+  /* if ( hwa->map.counter2_1 == 1 ) */
+  /*   _hwa_write(counter2,remap,1); */
+  /* if ( hwa->map.counter2_2 == 1 ) */
+  /*   _hwa_write(counter2,remap,2); */
+  /* if ( hwa->map.counter2_3 == 1 ) */
+  /*   _hwa_write(counter2,remap,3); */
+
+  /* _hwa_commit_map(hwa); */
+
   _hwa_commit_o( rcc );
   _hwa_commit_o( nvic );
   _hwa_commit_o( afio );

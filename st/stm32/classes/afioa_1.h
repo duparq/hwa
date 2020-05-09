@@ -37,6 +37,10 @@
 #define hw__afioa_adc1_etrgreg_remap	_cb1, mapr, 1, 18
 #define hw__afioa_adc1_etrging_remap	_cb1, mapr, 1, 17
 /* To be continued */
+//#define hw__afioa_tim2_remap		_cb1, mapr, 2, 8
+#define hw__afioa_counter2_remap	_cb1, mapr, 2, 8
+//#define hw__afioa_counter2_remap	(tim2_remap)
+/* To be continued */
 #define hw__afioa_usart1_remap		_cb1, mapr, 1, 2
 /* To be continued */
 
@@ -51,11 +55,26 @@ typedef struct {
   /* hwa_r32_t exticr3 ; */
   /* hwa_r32_t exticr4 ; */
   /* hwa_r32_t mapr2 ; */
-  struct {
-    uint32_t usart1_tx, usart1_rx ;
-    uint32_t counter2_channel1 ;
-    uint32_t wkup ;
-  } map ;
+  /* struct { */
+  /*   uint32_t usart1_tx, usart1_rx ; */
+  /*   uint32_t counter2_channel1 ; */
+  /*   uint32_t wkup ; */
+  /* } map ; */
 } hwa_afioa_t ;
+
+
+/*  Table of signals mapping for alternate pin functions
+ */
+typedef struct {
+  uint8_t	error ;
+
+  int8_t	counter2_remap ;
+  uint32_t	counter2_etr ;
+  uint32_t	counter2_channel1 ;
+  uint32_t	counter2_channel2 ;
+  uint32_t	counter2_channel3 ;
+  uint32_t	counter2_channel4 ;
+} hwa_map_t ;
+
 
 #endif

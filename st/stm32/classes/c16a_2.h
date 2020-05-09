@@ -15,30 +15,37 @@
  *
  * `configure` as counter
  * @code
- * hw | hwa ( configure,   counter2,
+ * hw | hwa ( configure,      counter2,
  *
- *	    [ mode,	   counter ]	   // Default mode
+ *          [ mode,           counter, ]                   // Default mode
  *
- *	      //  How the counter is clocked
- *	      //
- *	      clock,	   from_apb1_psc   // See note
- *			 | channel1
- *			 | channel2
- *			 | external
- *			 | xor123
+ *            //  How the counter is clocked
+ *            //
+ *            clock,          from_apb1_psc                // See note
+ *                          | channel1
+ *                          | channel2
+ *                          | external
+ *                          | xor123,
  *
- *	      direction,   up_loop
- *			 | up_noloop
- *			 | down_loop
- *			 | down_noloop
- *			 | updown_loop,
+ *            direction,      up
+ *                          | down
+ *                          | updown,
  *
- *	    [ prescaler,   x, ]		   // Any value in 0..0xFFFF
+ *            //  The following is accepted only when direction is 'up_down'
+ *            //
+ *          [ compare_flag,   counting_up
+ *                          | counting_down
+ *                          | counting_up_or_down, ]       // Default
  *
- *	    [ reload,	   x, ]		   // Any value in 0..0xFFFF
+ *          [ loop,           yes                          // Default
+ *                          | no, ]
  *
- *	    [ run,	   yes
- *			 | no ] );
+ *          [ prescaler,      x, ]                         // Any value in 0..0xFFFF
+ *
+ *          [ reload,         x, ]                         // Any value in 0..0xFFFF
+ *
+ *          [ run,            yes
+ *                          | no ] );
  * @endcode
  *
  * @note RM0008, p. 126: The timer clock frequencies are automatically fixed by
@@ -78,16 +85,16 @@
 #define _hwx_cfc16a(h,o,k,...)		HW_Y(_hwx_cfc16a_kclock,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfc16a_kclock0(h,o,k,...)	HW_E_NIL(k,(clock))
 #define _hwx_cfc16a_kclock1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vclock,_hw_cfc16a_clock_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfc16a_vclock0(h,o,v,...)	HW_E_NIL(v,_hw_cfc16a_clock_list)
+#define _hwx_cfc16a_vclock0(h,o,v,...)	HW_E_NIL(v,_hw_cfc16a_clocks)
 #define _hwx_cfc16a_vclock1(h,o,v,...)	HW_A1(_hw_cfc16a_clock_##v)(h,o,__VA_ARGS__)
 
 
-#define _hw_cfc16a_clock_list		(from_apb1_psc,ti1,ti2,xor123)
+#define _hw_cfc16a_clocks		(from_apb1_psc,ti1,ti2,xor123)
 #define _hw_cfc16a_clock_from_apb1_psc	, _hwx_cfc16a_clock_from_apb1_psc
 #define _hw_cfc16a_clock_ti1fed		, HW_E_TBI
 #define _hw_cfc16a_clock_channel1	, _hwx_cfc16a_clock_ti1fp1
 #define _hw_cfc16a_clock_channel2	, _hwx_cfc16a_clock_ti2fp2
-#define _hw_cfc16a_clock_xor123		, HW_E_TBI				// ti1s=		(p. 393)
+#define _hw_cfc16a_clock_xor123		, HW_E_TBI			// ti1s=  (p. 393)
 
 #define _hwx_cfc16a_clock_from_apb1_psc(h,o,k,...)			\
   h##_write(o,sms,0);							\
@@ -107,22 +114,47 @@
 #define _hwx_cfc16a_kdir0(h,o,k,...)	HW_E_NIL(k,(direction))
 #define _hwx_cfc16a_kdir1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vdir,_hw_cfc16a_dir_##v)(h,o,v,__VA_ARGS__)
 
-#define _hw_cfc16a_dir_list		(up_loop,up_noloop,down_loop,down_noloop,updown_loop)
-//					 opm cmsdir
-#define _hw_cfc16a_dir_up_loop		,  0,  0
-#define _hw_cfc16a_dir_up_noloop	,  1,  0
-#define _hw_cfc16a_dir_down_loop	,  0,  1
-#define _hw_cfc16a_dir_down_noloop	,  1,  1
-#define _hw_cfc16a_dir_updown_loop	,  0,  6
+#define _hw_cfc16a_dirs			(up,down,updown)
+//					, jump,              v =  cms  dir
+#define _hw_cfc16a_dir_up		, _hwx_cfc16a_kocf0, 0 //  00   0
+#define _hw_cfc16a_dir_down		, _hwx_cfc16a_kocf0, 1 //  00   1
+#define _hw_cfc16a_dir_updown		, _hwx_cfc16a_vdir2, 6 //  11   x
 
-#define _hwx_cfc16a_vdir0(h,o,v,...)	HW_E_NIL(v,_hw_cfc16a_dir_list)
-#define _hwx_cfc16a_vdir1(h,o,v,...)	_hwx_cfc16a_vdir2(h,o,_hw_cfc16a_dir_##v,__VA_ARGS__)
-#define _hwx_cfc16a_vdir2(...)		_hwx_cfc16a_vdir3(__VA_ARGS__)
-#define _hwx_cfc16a_vdir3(h,o,v0,vopm,vcmsdir,k,...)	\
-  h##_write(o,dir,vcmsdir);							\
-  h##_write(o,opm,vopm);							\
+#define _hwx_cfc16a_vdir0(h,o,v,...)	HW_E_NIL(v,_hw_cfc16a_dirs)
+#define _hwx_cfc16a_vdir1(h,o,v,k,...)					\
+  uint8_t cmsdir = HW_A2(_hw_cfc16a_dir_##v) ;				\
+  HW_A1(_hw_cfc16a_dir_##v)(h,o,k,__VA_ARGS__)
+
+#define _hwx_cfc16a_vdir2(h,o,k,...)	HW_Y(_hwx_cfc16a_kocf,_hw_is_compare_flag_##k)(h,o,k,__VA_ARGS__)
+
+/*  Optionnal parameter `compare_flag`, only when counting up-down
+ */
+#define _hwx_cfc16a_kocf1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vocf,_hw_cfc16a_compare_flag_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfc16a_vocf0(h,o,v,...)	HW_E_NIL(v,(counting_up,counting_down,counting_up_or_down))
+#define _hwx_cfc16a_vocf1(h,o,v,k,...)					\
+  cmsdir += HW_A1(_hw_cfc16a_compare_flag_##v);				\
+  h##_write(o,cmsdir,cmsdir);						\
+  HW_Y(_hwx_cfc16a_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__)
+
+#define _hwx_cfc16a_kocf0(h,o,k,...)				\
+  h##_write(o,cmsdir,cmsdir);					\
+  HW_Y(_hwx_cfc16a_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__)
+
+#define _hw_cfc16a_compare_flag_counting_down		, -4
+#define _hw_cfc16a_compare_flag_counting_up		, -2
+#define _hw_cfc16a_compare_flag_counting_up_or_down	, +0
+
+/*  Optionnal parameter `loop`
+ */
+#define _hwx_cfc16a_kloop1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfc16a_vloop0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_cfc16a_vloop1(h,o,v,k,...)					\
+  h##_write(o,opm,HW_A2(_hw_state_##v));				\
   HW_Y(_hwx_cfc16a_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
-  
+
+#define _hwx_cfc16a_kloop0(h,o,k,...)					\
+  HW_Y(_hwx_cfc16a_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+
 /*  Optionnal parameter `prescaler`
  */
 #define _hwx_cfc16a_kpsc1(h,o,k0,v,k,...)			\
@@ -139,16 +171,19 @@
 #define _hwx_cfc16a_krld0(h,o,k,...)				\
   HW_Y(_hwx_cfc16a_krun,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
-/*  Mandatory parameter `run`
+/*  Optionnal parameter `run`
  */
-#define _hwx_cfc16a_krun0(h,o,k,...)	HW_E_KX(run,k)
-#define _hwx_cfc16a_krun1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vrn_,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfc16a_vrn_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_cfc16a_vrn_1(h,o,v,g,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
+#define _hwx_cfc16a_krun1(h,o,k,v,...)	HW_Y(_hwx_cfc16a_vrun,_hw_state_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfc16a_vrun0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_cfc16a_vrun1(h,o,v,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(__VA_ARGS__);
+#define _hwx_cfc16a_krun0(h,o,k,...)	HW_EOL(__VA_ARGS__)
 
 
 /**
  * `configure` as encoder
+ *
+ * @note To be implemented.
+ *
  * @code
  * hw | hwa ( configure,   counter2,
  *
@@ -158,6 +193,9 @@
 
 /**
  * `configure` as slave
+ *
+ * @note To be implemented.
+ *
  * @code
  * hw | hwa ( configure,   counter2,
  *
@@ -179,18 +217,7 @@
  *			 | counter3
  *			 | counter4
  *			 | counter5
- *			 | counter8
- *
- *	      //  Not used for 'encoder' mode
- *	      //
- *	    [ direction,   up_loop
- *			 | down_loop
- *			 | updown, ]
- *
- *	    [ reload,	   x, ]		   // Any value in 0..0xFFFFFF
- *
- *	    [ run,	   yes
- *			 | no ] );
+ *			 | counter8, ] );
  * @endcode
  */
 
@@ -198,20 +225,31 @@
 /**
  * @page stm32_c16a
  * <br>
- * `turn`:
+ * `run`:
  * @code
- * hw | hwa ( turn, counter2, on );
+ * hw | hwa ( run, counter2 );
  * @endcode
  */
-#define hw_turn__c16a			, _hw_tnc16a
-#define _hw_tnc16a(o,a,...)		do{ _hwx_tnc16a(_hw,o,__VA_ARGS__) }while(0)
+#define hw_run__c16a			, _hw_rnc16a
+#define _hw_rnc16a(o,a,...)		_hw_write(o,cen,1) HW_EOL(__VA_ARGS__)
 
-#define hwa_turn__c16a			, _hwa_tnc16a
-#define _hwa_tnc16a(o,a,...)		do{ _hwx_tnc16a(_hwa,o,__VA_ARGS__) }while(0)
+#define hwa_run__c16a			, _hwa_rnc16a
+#define _hwa_rnc16a(o,a,...)		_hwa_write(o,cen,1) HW_EOL(__VA_ARGS__)
 
-#define _hwx_tnc16a(h,o,v,...)		HW_Y(_hwx_tnc16a_,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_tnc16a_0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_tnc16a_1(h,o,v,g,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
+
+/**
+ * @page stm32_c16a
+ * <br>
+ * `stop`:
+ * @code
+ * hw | hwa ( stop, counter2 );
+ * @endcode
+ */
+#define hw_stop__c16a			, _hw_spc16a
+#define _hw_spc16a(o,a,...)		_hw_write(o,cen,0) HW_EOL(__VA_ARGS__)
+
+#define hwa_stop__c16a			, _hwa_spc16a
+#define _hwa_spc16a(o,a,...)		_hwa_write(o,cen,0) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -271,21 +309,30 @@
   _hwa_setup_r( o, cr2 );			\
   _hwa_setup_r( o, smcr );			\
   _hwa_setup_r( o, dier );			\
+  _hwa_setup_r( o, ccmr2 );			\
+  _hwa_setup_r( o, ccer );			\
   _hwa_setup_r( o, psc );			\
-  _hwa_setup_r( o, arr )
+  _hwa_setup_r( o, arr );			\
+  _hwa_setup_r( o, ccr3 )
 
 #define _hwa_init__c16a(o,a)			\
-  _hwa_init_r( o, cr1,	0x00000000 );		\
-  _hwa_init_r( o, cr2,	0x00000000 );		\
-  _hwa_init_r( o, smcr, 0x00000000 );		\
-  _hwa_init_r( o, dier, 0x00000000 );		\
-  _hwa_init_r( o, psc,	0x00000000 );		\
-  _hwa_init_r( o, arr,	0x00000000 )
+  _hwa_init_r( o, cr1,	 0x00000000 );		\
+  _hwa_init_r( o, cr2,	 0x00000000 );		\
+  _hwa_init_r( o, smcr,  0x00000000 );		\
+  _hwa_init_r( o, dier,  0x00000000 );		\
+  _hwa_init_r( o, ccmr2, 0x00000000 );		\
+  _hwa_init_r( o, ccer,  0x00000000 );		\
+  _hwa_init_r( o, psc,	 0x00000000 );		\
+  _hwa_init_r( o, arr,	 0x00000000 );		\
+  _hwa_init_r( o, ccr3,	 0x00000000 )
 
-#define _hwa_commit__c16a(o,a)		\
+#define _hwa_commit__c16a(o,a)			\
   _hwa_commit_r( o, cr1 );			\
   _hwa_commit_r( o, cr2 );			\
   _hwa_commit_r( o, smcr );			\
   _hwa_commit_r( o, dier );			\
+  _hwa_commit_r( o, ccmr2 );			\
+  _hwa_commit_r( o, ccer );			\
   _hwa_commit_r( o, psc );			\
-  _hwa_commit_r( o, arr	 )
+  _hwa_commit_r( o, arr	 );			\
+  _hwa_commit_r( o, ccr3 )

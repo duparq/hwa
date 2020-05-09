@@ -22,4 +22,10 @@
 #endif
 
 
+/*  Keywords for stm32
+ */
+#define _hw_is_compare_flag_compare_flag	, 1
+#define _hw_is_loop_loop			, 1
+
+
 #include "../../hwa/hwa_1.h"
