@@ -17,7 +17,7 @@ HWA provides the following classes for STM32 devices:
 * @subpage stm32_sclka
 * @subpage stm32_stka
 * @subpage stm32_c16a
-* @subpage stm32_cc16a
+* @subpage stm32_cca
 * @subpage stm32_usarta
 
 * @subpage stm32_a12a
