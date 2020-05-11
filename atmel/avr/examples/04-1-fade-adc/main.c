@@ -69,7 +69,7 @@ static volatile count_t		duty ;
 /*  Service ADC "conversion completed" IRQ: compute duty
  *  Make the ISR interruptible so that counter IRQs are serviced promptly.
  */
-HW_ISR( adc0, interruptible )
+HW_ISR( (adc0,irq), interruptible )
 {
   /*  Get the new value
    */
@@ -109,7 +109,7 @@ HW_ISR( adc0, interruptible )
 /*  Service counter-overflow IRQ: turn the LED on and enable the compare IRQ
  *  that turns it off
  */
-HW_ISR( COUNTER, overflow, non_interruptible )
+HW_ISR( (COUNTER,irq,overflow), non_interruptible )
 {
   /*  No need to protect access to duty since interrupts are not allowed */
 
@@ -117,14 +117,14 @@ HW_ISR( COUNTER, overflow, non_interruptible )
     hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
       hw( write, (COUNTER,compare1), duty );
-      hw( turn, irq(COUNTER,compare1), on );
+      hw( enable, (COUNTER,irq,compare1) );
     }
     else
-      hw( turn, irq(COUNTER,compare1), off );
+      hw( disable, (COUNTER,irq,compare1) );
   }
   else {
     hw( write, PIN_LED, 0 );
-    hw( turn, irq(COUNTER,compare1), off );
+    hw( disable, (COUNTER,irq,compare1) );
   }
 }
 
@@ -135,7 +135,7 @@ HW_ISR( COUNTER, overflow, non_interruptible )
  *  spare a few bytes and have a faster code using a naked ISR.
  */
 #if HW_ADDRESS((PIN_LED,port,port)) < 0x40
-HW_ISR( COUNTER, compare1, naked )
+HW_ISR( (COUNTER,irq,compare1), naked )
 {
   hw( write, PIN_LED, 0 );
   hw_asm("reti");
@@ -153,7 +153,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
@@ -193,8 +193,8 @@ int main ( )
        top,	  TOP_OBJ,
        //	    overflow,  after_top,
        );
-  hwa( write, (COUNTER, TOP_OBJ), COUNT_TOP );
-  hwa( turn, irq(COUNTER,overflow), on );
+  hwa( write, (COUNTER,TOP_OBJ), COUNT_TOP );
+  hwa( enable, (COUNTER,irq,overflow) );
 
   /*  Configure the ADC to make a single conversion and trigger an
    *  IRQ. The ISR will start a new conversion after its hard job is done.
@@ -206,7 +206,7 @@ int main ( )
        align,	  right,
        input,	  PIN_ANALOG_INPUT );
 
-  hwa( turn, irq(adc0), on );
+  hwa( enable, (adc0,irq) );
   hwa( trigger, adc0 );
 
   /*  Write this configuration into the hardware
@@ -216,7 +216,7 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 
   return 0 ;
 }

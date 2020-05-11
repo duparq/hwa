@@ -42,21 +42,14 @@
 #define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
 
 
-#if !defined hw_waste_cycles
-/*
- * @ingroup public_ins
- * @brief Insert a software loop for `n` system clock cycles.
- * @hideinitializer
- *
- * Only works with compile-time constants.
- */
-#  define hw_waste_cycles(n)		HW_E_IMP(hw_waste_cycles)
-#endif
-
-
 /*  Catch a trailing semicolon 
  */
 extern void hw_donothing();
+
+
+
+#define hwa_begin_			, _hwa_begin_
+#define hwa_begin_reset			, _hwa_begin_reset
 
 
 /*
@@ -66,13 +59,13 @@ extern void hw_donothing();
  *
  * Nothing is written into the hardware until `hwa(commit)` is called.
  */
-#define _hwa_begin__mcu(...)						\
+#define _hwa_begin_(g,...)		HW_Y(_hwa_begin_,g)(g,__VA_ARGS__)
+#define _hwa_begin_0(g,...)		HW_E(HW_EM_IA(g))
+#define _hwa_begin_1(...)						\
   _hwa_check_optimizations(0);						\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;					\
   _hwa_setup_context(hwa) ;						\
   uint8_t hwa_xcommit = 0 /* Will warn if hwa(commit) is not called */
-
-#define hwa_begin__mcu			, _hwa_begin__mcu
 
 
 /*
@@ -85,15 +78,15 @@ extern void hw_donothing();
  *
  * Nothing is written into the hardware until `hwa(commit)` is called.
  */
-#define _hwa_begin_from_reset__mcu(...)		\
+#define _hwa_begin_reset(r,g,...)	HW_Y(_hwa_begin_reset_,g)(g,__VA_ARGS__)
+#define _hwa_begin_reset_0(r,g,...)	HW_E(HW_EM_IA(g))
+#define _hwa_begin_reset_1(...)			\
   _hwa_check_optimizations(0);			\
   hwa_t hwa_st ; hwa_t *hwa = &hwa_st ;		\
   _hwa_setup_context(hwa) ;			\
   _hwa_init_context(hwa) ;			\
-  _hwa_nocommit__mcu() ;			\
+  _hwa_nocommit_() ;				\
   uint8_t hwa_xcommit = 0
-
-#define hwa_begin_from_reset__mcu	, _hwa_begin_from_reset__mcu
 
 
 /*
@@ -107,14 +100,14 @@ extern void hw_donothing();
  */
 /* _hwa_commit_context() must be defined somewhere in the device-specific files.
  */
-#define _hwa_commit__mcu(...)				\
+#define _hwa_commit_(...)				\
   do {							\
     uint8_t foo __attribute__((unused)) = hwa_xcommit ;	\
     hwa->commit = 1 ;					\
     _hwa_commit_context(hwa);				\
   } while(0)
 
-#define hwa_commit__mcu				, _hwa_commit__mcu
+#define hwa_commit_				, _hwa_commit_
 
 
 /*
@@ -125,13 +118,13 @@ extern void hw_donothing();
  *
  * @hideinitializer
  */
-#define _hwa_nocommit__mcu(...)			\
+#define _hwa_nocommit_(...)			\
   do {						\
     hwa->commit = 0 ;				\
     _hwa_commit_context(hwa);			\
   } while(0)
 
-#define hwa_nocommit__mcu			, _hwa_nocommit__mcu
+#define hwa_nocommit_			, _hwa_nocommit_
 
 
 /*
@@ -156,6 +149,7 @@ extern void hw_donothing();
  */
 #define _hw_read(o,r)		HW_FC(_hw_read_,HW_X((o,r)),)
 
+#define _hw_read_(o,...)	HW_E(HW_A0(__VA_ARGS__))	// Error message
 
 /*
  * @ingroup private_ins
@@ -181,6 +175,7 @@ extern void hw_donothing();
  */
 #define _hw_write(o,r,v)	HW_FC(_hw_write_,HW_X((o,r)),v,)
 
+#define _hw_write_(o,...)	HW_E(HW_A0(__VA_ARGS__))	// Error message
 
 /*
  * @ingroup private_ins
@@ -191,26 +186,36 @@ extern void hw_donothing();
  */
 #define _hwa_write(o,r,v)	HW_FC(_hwa_write_,HW_X((o,r)),v,)
 
+#define _hwa_write_(o,...)	HW_E(HW_A0(__VA_ARGS__))	// Error message
 
+
+/*  Read/write _mem8/_mem16 (memory positions)
+ *    Used by _swuart to access dt0/dtn registers.
+ */
+#define hw_read__mem8			, _hw_read_mem8
+#define _hw_read_mem8(o,a,...)		*a
+
+#define hw_read__mem16			, _hw_read_mem16
+#define _hw_read_mem16(o,a,...)		*a
+
+#define hw_write__mem8			, _hw_write_mem8
+#define _hw_write_mem8(o,a,v,...)	*a = (v)
+
+#define hw_write__mem16			, _hw_write_mem16
+#define _hw_write_mem16(o,a,v,...)	*a = (v)
+
+
+/*  Read/write memory of registers
+ */
 #define hw_read__m111		, _hw_read__m111
 
 #define _hw_read__m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
   _hw_read_##c(a,bn,bp)
 
-#define hw_clear__m111		, _hw_clear_m111
-
-#define _hw_clear_m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
-  _hw_write_##c(a,wm,fm,bn,bp,1)
-
 #define hwa_write__m111		, _hwa_write__m111
 
 #define _hwa_write__m111(n,o,r,c,a,wm,fm,bn,bp,v,...)	\
   _hwa_write##c(&hwa->o.r,wm,fm,((1ULL<<bn)-1)<<bp,((unsigned long long)(v))<<bp)
-
-#define hwa_clear__m111		, _hwa_clear_m111
-
-#define _hwa_clear_m111(n,o,r,c,a,wm,fm,bn,bp,...)	\
-  _hwa_write##c(&hwa->o.r,wm,fm,((1ULL<<bn)-1)<<bp,((1ULL<<bn)-1)<<bp)
 
 #define hw_write__m111		, _hw_write__m111
 
@@ -540,62 +545,3 @@ HW_INLINE void _hwa_check_optimizations ( uint8_t x )
 #define _hwa_write__r32(ra,rwm,rfm,bn,bp,v)	_hwa_write_r32(ra,rwm,rfm,((1ULL<<bn)-1)<<bp,(v)<<bp)
 
 
-/*  Turn an IRQ on/off.
- */
-#define hw_turn__irq				, _hw_tnirq
-#define hwa_turn__irq				, _hwa_tnirq
-
-#define _hw_tnirq(o,n,v,m,f,s,...)		_hwx_tnirq01(_hw,n,m,s,_hw_state_##s,__VA_ARGS__)
-#define _hwa_tnirq(o,n,v,m,f,s,...)		_hwx_tnirq01(_hwa,n,m,s,_hw_state_##s,__VA_ARGS__)
-#define _hwx_tnirq01(...)			_hwx_tnirq02(__VA_ARGS__)
-#define _hwx_tnirq02(h,n,m,s,z,...)		HW_Y0(_hwx_tnirq02_,z)(h,n,m,s,z,__VA_ARGS__)
-#define _hwx_tnirq02_0(h,n,m,s,z,x,...)		HW_E_ST(s)
-#define _hwx_tnirq02_1(h,n,m,s,z,x,y,...)	h##_write(n,m,x) HW_EOL(__VA_ARGS__)
-
-#define hw_enable__irq				, _hw_enirq
-#define hwa_enable__irq				, _hwa_enirq
-
-#define _hw_enirq(o,n,v,m,f,...)		_hwx_enirq01(_hw,n,m,__VA_ARGS__,)
-#define _hwa_enirq(o,n,v,m,f,...)		_hwx_enirq01(_hwa,n,m,__VA_ARGS__,)
-#define _hwx_enirq01(...)			_hwx_enirq02(__VA_ARGS__)
-#define _hwx_enirq02(h,n,m,x,...)		HW_Y0(_hwx_enirq02_,x)(h,n,m,x,__VA_ARGS__)
-#define _hwx_enirq02_0(h,n,m,x,...)		HW_E_G(x)
-#define _hwx_enirq02_1(h,n,m,...)		h##_write(n,m,1)
-
-#define hw_disable__irq				, _hw_dsirq
-#define hwa_disable__irq			, _hwa_dsirq
-
-#define _hw_dsirq(o,n,v,m,f,...)		_hwx_dsirq01(_hw,n,m,__VA_ARGS__,)
-#define _hwa_dsirq(o,n,v,m,f,...)		_hwx_dsirq01(_hwa,n,m,__VA_ARGS__,)
-#define _hwx_dsirq01(...)			_hwx_dsirq02(__VA_ARGS__)
-#define _hwx_dsirq02(h,n,m,x,...)		HW_Y0(_hwx_dsirq02_,x)(h,n,m,x,__VA_ARGS__)
-#define _hwx_dsirq02_0(h,n,m,x,...)		HW_E_G(x)
-#define _hwx_dsirq02_1(h,n,m,...)		h##_write(n,m,0)
-
-/*  Manage interrupts
- */
-#if !defined _hw_enirqs || !defined _hw_dsirqs
-#  error _hw_enirqs and _hw_dsirqs must be defined in vendor/architecture/hwa_2.h
-#endif
-#define hw_class__interrupts
-#define hw_interrupts				_interrupts, -1
-#define hw_enable__interrupts			, _hw_enirqs
-#define hw_disable__interrupts			, _hw_dsirqs
-
-
-#if !defined HW_ISR_ATTRIBUTES
-#  error HW_ISR_ATTRIBUTES must be defined in vendor/architecture/hwa_2.h
-#endif
-
-/*  Single event ISR
- */
-#define _HW_ISR_(v,...)							\
-  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
-  void __vector_##v(void)
-
-
-/*  Void ISR
- */
-#define _HW_VISR_(v)							\
-  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
-  void __vector_##v(void) { hw_asm("reti"); }

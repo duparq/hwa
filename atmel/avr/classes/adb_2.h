@@ -267,8 +267,8 @@
  *
  * @code
  * hw( trigger, adc0 );
- * while ( !hw( read, irqflag(adc0) ) ) {}
- * hw( clear, irqflag(adc0) );
+ * while ( !hw( read, (adc0,irq) ) ) {}
+ * hw( clear, (adc0,irq) );
  * uint16_t result = hw( read, adc0 );
  * @endcode
  *

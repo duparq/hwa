@@ -261,8 +261,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * Reading the "transfer complete" flag:
  *
  * @code
- * if ( hw( read, irqflag( spi0 ) ) )	// Read "transfer complete" IRQ flag
- *   hw( turn, irq(spi0), off );     	// Disable transfer complete IRQs
+ * if ( hw( read, (spi0,irq) ) )	// Read "transfer complete" IRQ flag
+ *   hw( disable, (spi0,irq) );     	// Disable transfer complete IRQs
  * @endcode
  *
  * The "transfer complete" flag is cleared by hardware when the corresponding
@@ -270,7 +270,7 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * flag has been read:
  *
  * @code
- * if ( hw( read, irqflag( spi0 ) ) )	// Read transfer complete IRQ flag
+ * if ( hw( read, (spi0,irq) ) )	// Read transfer complete IRQ flag
  *   data = hw( read, spi0 );		// Read data and clear transfer complete IRQ flag
  * @endcode
  */

@@ -13,13 +13,13 @@
  * speed critical, the implementation focuses on code size rather than on speed,
  * so it relies on extern C functions rather than on inlined code.
  *
- * __Declaration__
+ * __Constructor__
  *
  * Two GPIO lines named `scl` and `sda` and the `bps` rate must be defined:
  *
  * @code
- * #define TWI     HW_SWTWIMASTER( scl, HW_IO(pc5),
- *                                 sda, HW_IO(pc4),
+ * #define TWI     HW_SWTWIMASTER( scl, pc5,
+ *                                 sda, pc4,
  *                                 bps, 400000 )
  * @endcode
  *
@@ -31,23 +31,22 @@
  */
 #define hw_class__swtwimaster
 
-#define HW_SWTWIMASTER(...)			_HW_SWTWIMASTER_01(__VA_ARGS__,,,,,,,)
-#define _HW_SWTWIMASTER_01(kscl,vscl,ksda,vsda,kbps,vbps,eol,...)	\
-  HW_Y(_HW_SWTWIMASTER_01_,_hw_is_sclsdabps_##kscl##ksda##kbps##eol)(kscl,vscl,ksda,vsda,kbps,vbps)
-#define _HW_SWTWIMASTER_01_0(...)					\
-  ,HW_SWTWIMASTER(...),"HW_SWTWIMASTER(...)" must be defined as "HW_SWTWIMASTER(scl,HW_IO(...),sda,HW_IO(...),bps,..."
-#define _HW_SWTWIMASTER_01_1(kscl,vscl,ksda,vsda,kbps,vbps)	\
-  _HW_SWTWIMASTER_02((HW_X(vscl)),(HW_X(vsda)),vbps)
-#define _HW_SWTWIMASTER_02(...)			_HW_SWTWIMASTER_03(__VA_ARGS__)
+#define HW_SWTWIMASTER(...)			_HW_SWTWIM_(__VA_ARGS__,,,,,,,)
+#define _HW_SWTWIM_(k,...)			HW_KW(_HW_SWTWIM_1,scl,k)(k,__VA_ARGS__)
+#define _HW_SWTWIM_10(k,...)			_HW_SWTWIM_E(k,__VA_ARGS__)
+#define _HW_SWTWIM_11(k,...)			_HW_SWTWIM_12(HW_AD(__VA_ARGS__))	/* Get SCL def */
+#define _HW_SWTWIM_12(...)			_HW_SWTWIM_13(__VA_ARGS__)
+#define _HW_SWTWIM_13(scl,k,...)		HW_KW(_HW_SWTWIM_2,sda,k)(scl,k,__VA_ARGS__)
+#define _HW_SWTWIM_20(scl,k,...)		_HW_SWTWIM_E(k,__VA_ARGS__)
+#define _HW_SWTWIM_21(scl,k,...)		_HW_SWTWIM_22(scl,HW_AD(__VA_ARGS__))	/* Get SDA def */
+#define _HW_SWTWIM_22(...)			_HW_SWTWIM_23(__VA_ARGS__)
+#define _HW_SWTWIM_23(scl,sda,k,...)		HW_KW(_HW_SWTWIM_3,bps,k)(HW_A1 scl,scl,sda,k,__VA_ARGS__)
+#define _HW_SWTWIM_30(sclo,scl,sda,k,...)		_HW_SWTWIM_E(k,__VA_ARGS__)
+#define _HW_SWTWIM_31(sclo,scl,sda,k,bps,g,...)	HW_Y0(_HW_SWTWIM_4,g)(sclo,scl,sda,bps,g,__VA_ARGS__)
+#define _HW_SWTWIM_40(sclo,scl,sda,bps,g,...)	HW_E(HW_EM_G(g))
+#define _HW_SWTWIM_41(sclo,scl,sda,bps,...)	_swtwimaster,swtwimaster_##sclo,(scl,sda,bps)
 
-/* Put bps in 3rd position in the definition so that scl is not unbracketed by HW_X()
- */
-#define _HW_SWTWIMASTER_03(scl,sda,bps)		_HW_SWTWIMASTER_04(HW_A1 scl, bps,scl,sda)
-#define _HW_SWTWIMASTER_04(...)			_HW_SWTWIMASTER_05(__VA_ARGS__)
-#define _HW_SWTWIMASTER_05(p,...)		xb(_swtwimaster,swtwimaster_##p,__VA_ARGS__)
-
-#define _hw_is_sclsdabps_sclsdabps		, 1
-#define _hw_isa_gpio__p8a_io			, 1
+#define _HW_SWTWIM_E(k,...)	HW_E(HW_EM_S("HW_SWTWIM(scl,..., sda,..., bps,...)" (k,__VA_ARGS__)))
 
 
 /**
@@ -61,9 +60,9 @@
  * HW_DECLARE(TWI);
  * @endcode
  */
-#define HW_DECLARE__swtwimaster		, _hw_declare_swtwimaster
+#define HW_DECLARE__swtwimaster		, _hw_dcswtwimaster
 
-#define _hw_declare_swtwimaster(o,bps,scl,sda,...)	\
+#define _hw_dcswtwimaster(o,...)			\
 							\
   extern uint8_t _hw_##o##__sr ;			\
 							\
@@ -89,9 +88,9 @@
  * HW_DEFINE(TWI);
  * @endcode
  */
-#define HW_DEFINE__swtwimaster		, _hw_define_swtwimaster
+#define HW_DEFINE__swtwimaster		, _hw_dfswtwimaster
 
-#define _hw_define_swtwimaster(o,bps,scl,sda,...)			\
+#define _hw_dfswtwimaster(o,scl,sda,bps,...)				\
 									\
   extern void _hw_##o##__delay ( ) ;					\
 									\
@@ -103,9 +102,9 @@
 									\
   void _hw_##o##_start ( ) {						\
     /* SDA goes low while SCL is high */				\
-    _hw( configure, HW_XB sda, mode, digital_output );			\
+    _hw( configure, sda, mode, digital_output );			\
     _hw_##o##__delay();							\
-    _hw( configure, HW_XB scl, mode, digital_output );			\
+    _hw( configure, scl, mode, digital_output );			\
   }									\
 									\
   void _hw_##o##_slar ( uint8_t sla ) {					\
@@ -128,22 +127,22 @@
     /* SDA can change while SCL is low */				\
     for ( uint8_t bit=0x80 ; bit ; bit>>=1 ) {				\
       if ( (byte & bit) == 0 )						\
-	_hw( configure, HW_XB sda, mode, digital_output );		\
+	_hw( configure, sda, mode, digital_output );		\
       else {								\
-	_hw( configure, HW_XB sda, mode, digital_input );		\
-	while ( !hw(read, HW_XB sda) ) {}				\
+	_hw( configure, sda, mode, digital_input );		\
+	while ( !hw(read, sda) ) {}				\
       }									\
-      _hw( configure, HW_XB scl, mode, digital_input );			\
-      while ( !hw(read, HW_XB scl) ) {} /* The slave can extend the SCL low period */ \
+      _hw( configure, scl, mode, digital_input );			\
+      while ( !hw(read, scl) ) {} /* The slave can extend the SCL low period */ \
       _hw_##o##__delay();						\
-      _hw( configure, HW_XB scl, mode, digital_output ) ;		\
+      _hw( configure, scl, mode, digital_output ) ;		\
     }									\
-    _hw( configure, HW_XB sda, mode, digital_input );			\
-    _hw( configure, HW_XB scl, mode, digital_input );			\
-    while ( !hw(read, HW_XB scl) ) {} /* The slave can extend the SCL low period */ \
+    _hw( configure, sda, mode, digital_input );			\
+    _hw( configure, scl, mode, digital_input );			\
+    while ( !hw(read, scl) ) {} /* The slave can extend the SCL low period */ \
     _hw_##o##__delay();							\
-    byte = hw(read, HW_XB sda);						\
-    _hw( configure, HW_XB scl, mode, digital_output ) ;			\
+    byte = hw(read, sda);						\
+    _hw( configure, scl, mode, digital_output ) ;			\
     return byte ;							\
   }									\
   									\
@@ -151,12 +150,12 @@
     /* SDA can change while SCL is low */				\
     uint8_t data = 0 ;							\
     for ( uint8_t bit=0x80 ; bit ; bit>>=1 ) {				\
-      _hw( configure, HW_XB scl, mode, digital_input );			\
-      while ( !hw(read, HW_XB scl) ) {} /* The slave can extend the SCL low period */ \
+      _hw( configure, scl, mode, digital_input );			\
+      while ( !hw(read, scl) ) {} /* The slave can extend the SCL low period */ \
       _hw_##o##__delay();						\
-      if ( hw(read, HW_XB sda) != 0 )					\
+      if ( hw(read, sda) != 0 )					\
 	data |= bit ;							\
-      _hw( configure, HW_XB scl, mode, digital_output ) ;		\
+      _hw( configure, scl, mode, digital_output ) ;		\
       _hw_##o##__delay();						\
     }									\
     return data ;							\
@@ -164,33 +163,33 @@
 									\
   uint8_t _hw_##o##_read_nack ( ) {					\
     uint8_t data = _hw_##o##__read();					\
-    _hw( configure, HW_XB scl, mode, digital_input );			\
+    _hw( configure, scl, mode, digital_input );			\
     _hw_##o##__delay();							\
-    while ( !hw(read, HW_XB scl) ) {} /* The slave can extend the SCL low period */ \
-    _hw( configure, HW_XB scl, mode, digital_output ) ;			\
-    _hw( configure, HW_XB sda, mode, digital_output ) ;			\
+    while ( !hw(read, scl) ) {} /* The slave can extend the SCL low period */ \
+    _hw( configure, scl, mode, digital_output ) ;			\
+    _hw( configure, sda, mode, digital_output ) ;			\
     _hw_##o##__delay();							\
     return data ;							\
   }									\
 									\
   uint8_t _hw_##o##_read_ack ( ) {					\
     uint8_t data = _hw_##o##__read();					\
-    _hw( configure, HW_XB sda, mode, digital_output ) ;			\
-    _hw( configure, HW_XB scl, mode, digital_input );			\
+    _hw( configure, sda, mode, digital_output ) ;			\
+    _hw( configure, scl, mode, digital_input );			\
     _hw_##o##__delay();							\
-    while ( !hw(read, HW_XB scl) ) {} /* The slave can extend the SCL low period */ \
-    _hw( configure, HW_XB scl, mode, digital_output ) ;			\
+    while ( !hw(read, scl) ) {} /* The slave can extend the SCL low period */ \
+    _hw( configure, scl, mode, digital_output ) ;			\
     _hw_##o##__delay();							\
     return data ;							\
   }									\
 									\
   void _hw_##o##_stop ( ) {						\
     /* SDA goes high while SCL is high */				\
-    if ( hw(read, HW_XB sda) )						\
-      _hw( configure, HW_XB sda, mode, digital_output ) ;		\
-    _hw( configure, HW_XB scl, mode, digital_input );			\
+    if ( hw(read, sda) )						\
+      _hw( configure, sda, mode, digital_output ) ;		\
+    _hw( configure, scl, mode, digital_input );			\
     _hw_##o##__delay();							\
-    _hw( configure, HW_XB sda, mode, digital_input );			\
+    _hw( configure, sda, mode, digital_input );			\
   }									\
 									\
   void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v )		\
@@ -210,7 +209,7 @@
     return v;								\
   }									\
 									\
-  extern void _hw_fake() /* require a ; */
+  extern void _hw_() /* for semicolon */
 
 
 /**
@@ -231,25 +230,25 @@
 /*  SCL and SDA are set to 0 and then configured as digital_input /
  *  digital_output. External pullup resistors are required.
  */
-#define _hw_cfswtwimaster(o,bps,scl,sda,...)			\
+#define _hw_cfswtwimaster(o,scl,sda,bps,...)			\
   do{								\
-    _hwa_begin__mcu(,);						\
-    _hwa( configure, HW_XB scl, mode, digital_input_floating );	\
-    _hwa( configure, HW_XB sda, mode, digital_input_floating );	\
-    _hwa( write, HW_XB scl, 0 );				\
-    _hwa( write, HW_XB sda, 0 );				\
-    _hwa_commit__mcu(,);					\
+    _hwa_begin_(,);						\
+    _hwa( configure, scl, mode, digital_input_floating );	\
+    _hwa( configure, sda, mode, digital_input_floating );	\
+    _hwa( write, scl, 0 );				\
+    _hwa( write, sda, 0 );				\
+    _hwa_commit_(,);					\
   }while(0)
 
 
 #define hwa_configure__swtwimaster	, _hwa_cfswtwimaster
 
-#define _hwa_cfswtwimaster(o,bps,scl,sda,...)			\
+#define _hwa_cfswtwimaster(o,scl,sda,bps,...)			\
   do{								\
-    _hwa( configure, HW_XB scl, mode, digital_input_floating );	\
-    _hwa( configure, HW_XB sda, mode, digital_input_floating );	\
-    _hwa( write, HW_XB scl, 0 );				\
-    _hwa( write, HW_XB sda, 0 );				\
+    _hwa( configure, scl, mode, digital_input_floating );	\
+    _hwa( configure, sda, mode, digital_input_floating );	\
+    _hwa( write, scl, 0 );				\
+    _hwa( write, sda, 0 );				\
   }while(0)
 
 
@@ -284,8 +283,8 @@
 #define hw_bus_stop__swtwimaster	, _hw_swtwimaster_stop
 #define hw_stat__swtwimaster		, _hw_swtwimaster_stat
 
-#define _hw_swtwimaster_start(o,bps,scl,sda,...)	_hw_##o##_start() HW_EOL(__VA_ARGS__)
-#define _hw_swtwimaster_slaw(o,bps,scl,sda,sla,...)	_hw_##o##_slaw(sla) HW_EOL(__VA_ARGS__)
-#define _hw_swtwimaster_write(o,bps,scl,sda,data,...)	_hw_##o##_write(data) HW_EOL(__VA_ARGS__)
-#define _hw_swtwimaster_stop(o,bps,scl,sda,...)		_hw_##o##_stop() HW_EOL(__VA_ARGS__)
-#define _hw_swtwimaster_stat(o,bps,scl,sda,...)		_hw_##o##__sr HW_EOL(__VA_ARGS__)
+#define _hw_swtwimaster_start(o,scl,sda,bps,...)	_hw_##o##_start() HW_EOL(__VA_ARGS__)
+#define _hw_swtwimaster_slaw(o,scl,sda,bps,sla,...)	_hw_##o##_slaw(sla) HW_EOL(__VA_ARGS__)
+#define _hw_swtwimaster_write(o,scl,sda,bps,data,...)	_hw_##o##_write(data) HW_EOL(__VA_ARGS__)
+#define _hw_swtwimaster_stop(o,scl,sda,bps,...)		_hw_##o##_stop() HW_EOL(__VA_ARGS__)
+#define _hw_swtwimaster_stat(o,scl,sda,bps,...)		_hw_##o##__sr HW_EOL(__VA_ARGS__)

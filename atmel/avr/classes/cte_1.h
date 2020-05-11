@@ -45,8 +45,18 @@
  * #endif
  * @endcode
  */
-#define HW_BITS__cte		, _hw_bn_cte
-#define _hw_bn_cte(o,a,...)		16
+#define HW_BITS__cte			, _hw_bits_cte
+#define _hw_bits_cte(o,a,...)		16
+
+#define hw__cte_bits			, _hw_bits_cte
+
+
+/*  Return the counting register of a _cte
+ *    HW_CODR is blued.
+ */
+#define hw__cte_reg			, _hw_cte_reg
+#define _hw_cte_reg(o,a)		HW_XOR(o,count)
+
 
 /**
  * @page atmelavr_cte

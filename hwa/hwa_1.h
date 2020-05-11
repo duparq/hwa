@@ -67,35 +67,42 @@
 /*  Keywords
  */
 #define _hw_is_0_0				, 1
+#define _hw_is_16_16				, 1
 #define _hw_is_1_1				, 1
-#define _hw_is_16_16_				, 1
-#define _hw_is_8_8_				, 1
+#define _hw_is_8_8				, 1
 #define _hw_is__				, 1
 #define _hw_is__fake__fake			, 1
-#define _hw_is__irq__irq			, 1
 #define _hw_is__io1a__io1a			, 1
+#define _hw_is__irq__irq			, 1
+#define _hw_is__m111__m111			, 1
 #define _hw_is_ack_ack				, 1
 #define _hw_is_action_action			, 1
 #define _hw_is_address_address			, 1
-#define _hw_is_ahb_ahb				, 1
-#define _hw_is_align_align			, 1
 #define _hw_is_after_bottom_after_bottom	, 1
 #define _hw_is_after_top_after_top		, 1
+#define _hw_is_ahb_ahb				, 1
+#define _hw_is_align_align			, 1
 #define _hw_is_bandgap_bandgap			, 1
 #define _hw_is_bottom_bottom			, 1
 #define _hw_is_bps_baudrate			, 1
 #define _hw_is_bps_bps				, 1
 #define _hw_is_class_class			, 1
 #define _hw_is_clock_clock			, 1
+#define _hw_is_cols_cols			, 1
 #define _hw_is_compare_compare			, 1
 #define _hw_is_connected_connected		, 1
-#define _hw_is_direction_direction		, 1
+#define _hw_is_counter_counter			, 1
 #define _hw_is_cpb_cpb				, 1
+#define _hw_is_data_data			, 1
 #define _hw_is_data_order_data_order		, 1
 #define _hw_is_databits_databits		, 1
+#define _hw_is_delay_h_delay_h			, 1
+#define _hw_is_delay_l_delay_l			, 1
+#define _hw_is_direction_direction		, 1
 #define _hw_is_direction_direction		, 1
 #define _hw_is_disabled_disabled		, 1
 #define _hw_is_disconnected_disconnected	, 1
+#define _hw_is_e_e				, 1
 #define _hw_is_edge_edge			, 1
 #define _hw_is_enabled_enabled			, 1
 #define _hw_is_external_external		, 1
@@ -113,6 +120,7 @@
 #define _hw_is_irq_irq				, 1
 #define _hw_is_irq_type_irq_type		, 1
 #define _hw_is_latch_latch			, 1
+#define _hw_is_lines_lines			, 1
 #define _hw_is_lo8_lo8				, 1
 #define _hw_is_mode_mode			, 1
 #define _hw_is_multiplier_multiplier		, 1
@@ -133,10 +141,16 @@
 #define _hw_is_pullup_pullup			, 1
 #define _hw_is_receiver_receiver		, 1
 #define _hw_is_reload_reload			, 1
+#define _hw_is_reset_reset			, 1
+#define _hw_is_rs_rs				, 1
 #define _hw_is_rule_rule			, 1
 #define _hw_is_run_run				, 1
+#define _hw_is_rw_rw				, 1
+#define _hw_is_rxd_rxd				, 1
 #define _hw_is_sampling_edge_sampling_edge	, 1
+#define _hw_is_scl_scl				, 1
 #define _hw_is_sclhz_sclhz			, 1
+#define _hw_is_sda_sda				, 1
 #define _hw_is_sense_sense			, 1
 #define _hw_is_slave_address_mask_slave_address_mask	, 1
 #define _hw_is_slave_address_slave_address	, 1
@@ -149,6 +163,7 @@
 #define _hw_is_top_top				, 1
 #define _hw_is_transmitter_transmitter		, 1
 #define _hw_is_trigger_trigger			, 1
+#define _hw_is_txd_txd				, 1
 #define _hw_is_up_loop_up_loop			, 1
 #define _hw_is_update_update			, 1
 #define _hw_is_var_var				, 1
@@ -170,6 +185,7 @@
 #define _hw_isa_reg__xob2		, 1
 //#define _hw_isa_reg__xb2		, 1
 
+#define _hw_islb(...)			, 1
 #define _hw_isa_leftbkt(...)		, 1
 
 
@@ -276,14 +292,14 @@
  * vital hardware.
  */
 #define hw_class__fake
-#define hw_fake			_fake, 0, 0
+#define hw_fake				_fake, 0, 0
 
 
 /**
  * @ingroup public_def
  * @brief Show how x expands
  */
-#define HW_SHOW(x)		#x: x
+#define HW_SHOW(x)			#x: x
 
 
 
@@ -296,30 +312,44 @@
  * `HW_ISR(object [,reason] [,naked] [,interruptible])`
  * `HW_ISR((object,...) [,reason] [,naked] [,interruptible])`
  */
-#define HW_ISR(...)			_HW_ISR01(__VA_ARGS__,,,)
-#define _HW_ISR01(o,x,...)		HW_Y0(_HW_ISR01_,_hw_israttr_##x)(o,x,__VA_ARGS__)
-#define _HW_ISR01_0(o,x,...)		_HW_ISR02( HW_XIRQ(o,x), __VA_ARGS__ )
-#define _HW_ISR01_1(o,...)		_HW_ISR02( HW_XIRQ(o), __VA_ARGS__ )
-#define _HW_ISR02(...)			_HW_ISR03(__VA_ARGS__)
-#define _HW_ISR03(c,...)		HW_Y0(_HW_ISR03,c)(c,__VA_ARGS__)
-#define _HW_ISR031(c,o,e,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E(e)
-#define _HW_ISR030(c,o,n,v,m,f,x,...)	HW_Y0(_HW_ISR03_,x)(v,x,__VA_ARGS__)
-#define _HW_ISR03_1(v,...)		_HW_ISR90( v, ) HW_EOL(__VA_ARGS__)
-#define _HW_ISR03_0(v,x,...)		HW_Y0(_HW_ISR04_,_hw_israttr_##x)(v,x,__VA_ARGS__)
-#define _HW_ISR04_0(v,x,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x)
-#define _HW_ISR04_1(v,x1,x2,...)	HW_Y0(_HW_ISR05_,x2)(v,x1,x2,__VA_ARGS__)
-#define _HW_ISR05_1(v,x1,...)		_HW_ISR90( v, HW_A1(_hw_israttr_##x1)) HW_EOL(__VA_ARGS__)
-#define _HW_ISR05_0(v,x1,x2,...)	HW_Y0(_HW_ISR06_,_hw_israttr_##x2)(v,x1,x2,__VA_ARGS__)
-#define _HW_ISR06_0(v,x1,x2,...)	void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x2)
-#define _HW_ISR06_1(v,x1,x2,...)	_HW_ISR90(v, HW_A1(_hw_israttr_##x1) HW_A1(_hw_israttr_##x2)) HW_EOL(__VA_ARGS__)
+/* #define HW_ISR(...)			_HW_ISR01(__VA_ARGS__,,,) */
+/* #define _HW_ISR01(o,x,...)		HW_Y0(_HW_ISR01_,_hw_israttr_##x)(o,x,__VA_ARGS__) */
+/* #define _HW_ISR01_0(o,x,...)		_HW_ISR02( HW_XIRQ(o,x), __VA_ARGS__ ) */
+/* #define _HW_ISR01_1(o,...)		_HW_ISR02( HW_XIRQ(o), __VA_ARGS__ ) */
+/* #define _HW_ISR02(...)			_HW_ISR03(__VA_ARGS__) */
+/* #define _HW_ISR03(c,...)		HW_Y0(_HW_ISR03,c)(c,__VA_ARGS__) */
+/* #define _HW_ISR031(c,o,e,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E(e) */
+/* #define _HW_ISR030(c,o,n,v,m,f,x,...)	HW_Y0(_HW_ISR03_,x)(v,x,__VA_ARGS__) */
+/* #define _HW_ISR03_1(v,...)		_HW_ISR90( v, ) HW_EOL(__VA_ARGS__) */
+/* #define _HW_ISR03_0(v,x,...)		HW_Y0(_HW_ISR04_,_hw_israttr_##x)(v,x,__VA_ARGS__) */
+/* #define _HW_ISR04_0(v,x,...)		void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x) */
+/* #define _HW_ISR04_1(v,x1,x2,...)	HW_Y0(_HW_ISR05_,x2)(v,x1,x2,__VA_ARGS__) */
+/* #define _HW_ISR05_1(v,x1,...)		_HW_ISR90( v, HW_A1(_hw_israttr_##x1)) HW_EOL(__VA_ARGS__) */
+/* #define _HW_ISR05_0(v,x1,x2,...)	HW_Y0(_HW_ISR06_,_hw_israttr_##x2)(v,x1,x2,__VA_ARGS__) */
+/* #define _HW_ISR06_0(v,x1,x2,...)	void _hw_isr_error(void) __attribute__((weak)) HW_E_T(x2) */
+/* #define _HW_ISR06_1(v,x1,x2,...)	_HW_ISR90(v, HW_A1(_hw_israttr_##x1) HW_A1(_hw_israttr_##x2)) HW_EOL(__VA_ARGS__) */
 
-#define _HW_ISR90(...)			_HW_ISR_(__VA_ARGS__)
+#define HW_ISR(...)			_HW_ISR0(__VA_ARGS__,,,)
+#define _HW_ISR0(o,...)			_HW_ISR1( HW_X(o), __VA_ARGS__ )
+#define _HW_ISR1(...)			_HW_ISR2(__VA_ARGS__)
+#define _HW_ISR2(x,...)			HW_KW(_HW_ISR2_,_irq,x)(x, __VA_ARGS__ )
+#define _HW_ISR2_0(x,o,...)		_HW_ISR_E(o,__VA_ARGS__)
+#define _HW_ISR2_1(c,o,v,p,m,f,x,...)	HW_Y0(_HW_ISR3_,_hw_israttr_##x)(v,x,__VA_ARGS__)
+#define _HW_ISR3_0(v,...)		_HW_ISR9(v,) HW_EOL(__VA_ARGS__)
+#define _HW_ISR3_1(v,x,y,...)		HW_Y0(_HW_ISR4_,_hw_israttr_##y)(v,x,y,__VA_ARGS__)
+#define _HW_ISR4_0(v,x,...)		_HW_ISR9(v, HW_A1(_hw_israttr_##x)) HW_EOL(__VA_ARGS__)
+#define _HW_ISR4_1(v,x,y,...)		_HW_ISR9(v, HW_A1(_hw_israttr_##x) HW_A1(_hw_israttr_##y)) HW_EOL(__VA_ARGS__)
+
+#define _HW_ISR9(...)			_HW_ISR_(__VA_ARGS__)
 
 #if defined __ASSEMBLER__ && !defined _HW_ISR_
 #  define _HW_ISR_(vector, ...)		__vector_##vector
+#  define _HW_ISR_E(o, ...)		__vector_0 HW_E(HW_EM_NOTIRQ(o)[_HW_ISR_E(o,__VA_ARGS__)]) 
 #endif
 
 #if !defined __ASSEMBLER__
+
+#  define _HW_ISR_E(o, ...)	void _hw_isr_error(void) __attribute__((weak)) HW_E(HW_EM_NOTIRQ(o)[_HW_ISR_E(o,__VA_ARGS__)])
 
 #include <stdint.h>
 

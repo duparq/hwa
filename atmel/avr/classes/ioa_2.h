@@ -53,7 +53,7 @@
  */
 #define _hw_cfioa_fn_gpio
 
-#define _hwx_cfioa(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfioa(x,o,p,bn,bp,k,...)		HW_Y(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfioa_vfn_,_hw_cfioa_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfioa_vfn_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (gpio) )
@@ -61,12 +61,12 @@
 
 /*  Key 'mode'
  */
-#define _hw_cfioa_md_digital_input	, di
+#define _hw_cfioa_md_digital_input		, di
 #define _hw_cfioa_md_digital_input_floating	, dif
 #define _hw_cfioa_md_digital_input_pullup	, dipu
-#define _hw_cfioa_md_digital_output	, do
+#define _hw_cfioa_md_digital_output		, do
 #define _hw_cfioa_md_digital_output_pushpull	, do
-#define _hw_cfioa_md_analog_input	, ai
+#define _hw_cfioa_md_analog_input		, ai
 #define _hw_cfioa_md_analog_input_floating	, aif
 #define _hw_cfioa_md_analog_input_pullup	, aipu
 
@@ -88,17 +88,29 @@
 #define _hwx_cfioa_do(x,o,p,bn,bp,k,...)				\
   x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp) HW_EOL(__VA_ARGS__)
 
-#define _hwx_cfioa_ai(x,o,p,bn,bp,...)		HW_Y(_hwx_cfioa_ai_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
-#define _hwx_cfioa_ai_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfioa_ai_1(x,o,p,bn,bp,k,...)	x( write, hw_##o##_##did, 1); HW_EOL(__VA_ARGS__)
+#define _hwx_cfioa_ai(h,o,p,bn,bp,...)		_hwx_cfioa_ai1(h,o,HW_X(o,did))
+#define _hwx_cfioa_ai1(...)			_hwx_cfioa_ai2(__VA_ARGS__)
+#define _hwx_cfioa_ai2(h,o,x,...)		HW_KW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
+#define _hwx_cfioa_ai2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
+#define _hwx_cfioa_ai2_1(h,o,c,...)		h##_write__m111( __VA_ARGS__, 1, )
 
-/* x##_write(o,did,1); DOES NOT WORK: 'o' is not a regular object */
+#define _hwx_cfioa_aipu(h,o,p,bn,bp,...)	_hwx_cfioa_aipu1(h,o,p,bn,bp,HW_X(o,did))
+#define _hwx_cfioa_aipu1(...)			_hwx_cfioa_aipu2(__VA_ARGS__)
+#define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_KW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
+#define _hwx_cfioa_aipu2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
+#define _hwx_cfioa_aipu2_1(h,o,p,bn,bp,c,...)				\
+  do {									\
+    h##_write__m111( __VA_ARGS__, 1, );					\
+    h##_write_m( p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); }	\
+  while(0)
 
-#define _hwx_cfioa_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfioa_aipu_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__)
-#define _hwx_cfioa_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input)
-#define _hwx_cfioa_aipu_1(x,o,p,bn,bp,k,...)				\
-  do { x( write, (o,did), 1);						\
-    x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); }while(0) HW_EOL(__VA_ARGS__)
+//_hwx_cfioa_aipu2_1(_hwa,pa0,port0,1,0,_m111,(shared,did),shared,did,_r8,0 +0x21,0xFF,0x00,1,0);
+
+/* #define _hwx_cfioa_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfioa_aipu_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__) */
+/* #define _hwx_cfioa_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input) */
+/* #define _hwx_cfioa_aipu_1(x,o,p,bn,bp,k,...)				\ */
+/*   do { x( write, (o,did), 1);						\ */
+/*     x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); }while(0) HW_EOL(__VA_ARGS__) */
 
 
 /**

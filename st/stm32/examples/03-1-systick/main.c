@@ -20,7 +20,7 @@
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the GPIO pin
    */
@@ -41,7 +41,7 @@ int main ( )
   hwa( commit );
 
   for(;;) {
-    if ( hw(read, irqflag(systick) ) )	/* Reading the flag clears it */
+    if ( hw( read, (systick,irq) ) )	/* Reading the flag clears it */
       hw( toggle, LED );
   }
 }

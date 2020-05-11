@@ -85,9 +85,9 @@ HW_INLINE uint8_t _hw_ctcck_xosc( float v )
  *
  *	//  When the overflow flag is set
  *	//
- *    [ overflow,    after_bottom		   // When the counter resets to bottom
- *		  | after_top			   // When the counter reaches the top value
- *		  | after_max ]			   // When the counter reaches its max value
+ *    [ overflow,   after_bottom		// When the counter resets to bottom
+ *		  | after_top			// When the counter reaches the top value
+ *		  | after_max ]			// When the counter reaches its max value
  *	);
  * @endcode
  */
@@ -204,14 +204,9 @@ HW_INLINE uint8_t _hw_ctcck_xosc( float v )
  * the objects and then can put computed registers values into the context, even
  * in the case of external register access, and display accurate error messages.
  */
-#define _hwa_solve__ctc( o,a )	_hwa_solve__ctc_2( o,		\
-							   hw_##o##_compare0,	\
-							   hw_##o##_compare1 )
-#define _hwa_solve__ctc_2(...)		_hwa_solve__ctc_3(__VA_ARGS__)
-
-#define _hwa_solve__ctc_3( o, compare0, compare1 )				\
+#define _hwa_solve__ctc( o, a )						\
   do {									\
-    uint8_t r = _hwa_solve_ctc( &hwa->o, &hwa->compare0, &hwa->compare1 );	\
+    uint8_t r = _hwa_solve_ctc( &hwa->o, &hwa->o.compare0, &hwa->o.compare1 );	\
     if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \
     else if ( r == 2 )							\
@@ -219,37 +214,37 @@ HW_INLINE uint8_t _hw_ctcck_xosc( float v )
     else if ( r == 3 )							\
       HWA_ERR("configuration of `" #o "` is required.");		\
     else if ( r == 4 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
 	      "'set_after_match'.");					\
     else if ( r == 5 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 6 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', "			\
 	      "'set_at_bottom_clear_after_match', or "			\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 7 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'clear_after_match_up_set_after_match_down', "	\
 	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 8 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', "			\
 	      "'clear_after_match_up_set_after_match_down', "			\
 	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 9 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
+      HWA_ERR("`mode` of compare1 can be "				\
 	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
 	      "'set_after_match'.");					\
     else if ( r == 10 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
+      HWA_ERR("`mode` of compare1 can be "				\
 	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 11 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
+      HWA_ERR("`mode` of compare1 can be "				\
 	      "'disconnected', 'clear_after_match_up_set_after_match_down', "	\
 	      "or 'set_after_match_up_clear_after_match_down'.");		\
     else if ( r == 12 )							\
@@ -270,17 +265,17 @@ HW_INLINE uint8_t _hw_ctcck_xosc( float v )
        */								\
       if ( hwa->o.solved.cs != 0xFF ) _hwa_write( o, cs, hwa->o.solved.cs ); \
       if ( hwa->o.solved.wgm != 0xFF ) _hwa_write( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write( compare0, com, hwa->compare0.solved.com ); \
-      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write( compare1, com, hwa->compare1.solved.com ); \
+      if ( hwa->o.compare0.solved.com != 0xFF ) _hwa_write( o, com0, hwa->o.compare0.solved.com ); \
+      if ( hwa->o.compare1.solved.com != 0xFF ) _hwa_write( o, com1, hwa->o.compare1.solved.com ); \
       /*								\
        *  Configure used compare outputs as i/o outputs			\
        */								\
-      if ( hwa->compare0.config.output != 0xFF				\
-	   && hwa->compare0.config.output != HW_A1(_hw_oca_output_disconnected) ) \
-	_hwa( configure, (compare0,pin), mode, digital_output );		\
-      if ( hwa->compare1.config.output != 0xFF				\
-	   && hwa->compare1.config.output != HW_A1(_hw_oca_output_disconnected) ) \
-	_hwa( configure, (compare1,pin), mode, digital_output );		\
+      if ( hwa->o.compare0.config.output != 0xFF				\
+	   && hwa->o.compare0.config.output != HW_A1(_hw_oca_output_disconnected) ) \
+	_hwa( configure, hw_##o##_compare0_pin, mode, digital_output );	\
+      if ( hwa->o.compare1.config.output != 0xFF				\
+	   && hwa->o.compare1.config.output != HW_A1(_hw_oca_output_disconnected) ) \
+	_hwa( configure, hw_##o##_compare1_pin, mode, digital_output );	\
     }									\
   } while(0)
 
@@ -654,9 +649,9 @@ HW_INLINE uint8_t _hwa_solve_ctc ( hwa_ctc_t *p, hwa_oca_t *compare0, hwa_oca_t 
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
- *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
+ * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
+ *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -677,7 +672,11 @@ HW_INLINE uint8_t _hwa_solve_ctc ( hwa_ctc_t *p, hwa_oca_t *compare0, hwa_oca_t 
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
-  hwa->o.config.overflow  = 0xFF
+  hwa->o.config.overflow  = 0xFF;		\
+  hwa->o.compare0.config.update	= 0xFF ;	\
+  hwa->o.compare0.config.output	= 0xFF ;	\
+  hwa->o.compare1.config.update	= 0xFF ;	\
+  hwa->o.compare1.config.output	= 0xFF
 
 
 #define _hwa_init__ctc(o,a)					\
@@ -688,14 +687,7 @@ HW_INLINE uint8_t _hwa_solve_ctc ( hwa_ctc_t *p, hwa_oca_t *compare0, hwa_oca_t 
   _hwa_init_r( o, ifr,	 0x00 )
 
 
-  /* hwa->o.config.clock     = HW_A1(_hw_ctc_clock_none);		\ */
-  /* hwa->o.config.direction = HW_A1(_hw_ctc_direction_up_loop);	\ */
-  /* hwa->o.config.top	     = HW_A1(_hw_ctc_top_max);		\ */
-  /* hwa->o.config.overflow  = HW_A1(_hw_ctc_overflow_after_max) */
-
-
 #define _hwa_commit__ctc(o,a)			\
-  /* _hwa_commit_r( o, gtccr); */			\
   _hwa_commit_r( o, ccra);			\
   _hwa_commit_r( o, ccrb);			\
   _hwa_commit_r( o, count);			\

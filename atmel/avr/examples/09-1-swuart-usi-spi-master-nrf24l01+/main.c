@@ -58,7 +58,7 @@
 /*  We need a device with an USI
  */
 #if HW_ADDRESS(usi0) == -1
-HW_ERROR(device `HW_DEVICE` does not have a USI)
+HW_E(device `HW_DEVICE` does not have a USI)
 #endif
 
 
@@ -77,12 +77,12 @@ HW_ERROR(device `HW_DEVICE` does not have a USI)
 static void write_usi ( char c )
 {
   hw( write, USI, c );
-  hw( clear, irqflag(USI,txc) );
+  hw( clear, (USI,irq,txc) );
   do {
     hw( trigger, USI );
     // hw_waste_cycles( 50e-6 * HW_SYSHZ );
   }
-  while ( !hw( read, irqflag(USI,txc) ) );
+  while ( !hw( read, (USI,irq,txc) ) );
 }
 
 
@@ -92,7 +92,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */

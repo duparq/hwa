@@ -188,7 +188,7 @@
  * the data register:
  *
  * @code
- * while ( ! hw( read, irqflag( uart0, rxc ) ) ) {}
+ * while ( ! hw( read, (uart0,irq, rxc ) ) ) {}
  * uint8_t byte = hw( read, uart0 );
  * @endcode
  */
@@ -204,7 +204,7 @@
  * writing into it. You may have to verify this first:
  *
  * @code
- * while ( ! hw( read, irqflag( uart0, txqnf ) ) ) {}
+ * while ( ! hw( read, (uart0,irq, txqnf ) ) ) {}
  * hw( write, uart0, '#' );
  * @endcode
  */

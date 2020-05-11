@@ -19,17 +19,13 @@
 
 #include BOARD_H
 
-/*  Watchdog timeout
- */
-#define TIMEOUT			250ms
-
 
 int main ( )
 {
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -38,7 +34,7 @@ int main ( )
   /*  Configure the watchdog to trigger an IRQ periodically
    */
   hwa( configure, watchdog0,
-       timeout,	  TIMEOUT,
+       timeout,	  250ms,
        action,	  irq	    );
 
   /*  Write this configuration into the hardware
@@ -50,8 +46,8 @@ int main ( )
      *	As soon as the watchdog IRQ flag is set, clear
      *	it and toggle the LED.
      */
-    if ( hw( read, irqflag(watchdog0) ) ) {
-      hw( clear, irqflag(watchdog0) );
+    if ( hw( read, (watchdog0,irq) ) ) {
+      hw( clear, (watchdog0,irq) );
       hw( toggle, PIN_LED );
     }
   }

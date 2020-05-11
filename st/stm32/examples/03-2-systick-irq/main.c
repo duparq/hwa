@@ -21,12 +21,12 @@
 
 /*  The IRQ is used only to wake the core up.
  */
-HW_ISR( systick ) {}
+HW_ISR( (systick,irq) ) {}
 
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /* Configure the PLL source and multiplier (must be done before it is enabled).
    * Prepare the connection of the sysclk to the pll. The hardware will wait for
@@ -72,13 +72,13 @@ int main ( )
        clock,     ahb,
        reload,    ((uint32_t)(PERIOD/2 / 0.001)*onems - 1) & 0xFFFFFF );
   hwa( turn, systick, on );
-  hwa( turn, irq(systick), on );
+  hwa( enable, (systick,irq) );
   hwa( commit );
 
   /*  Toggle the LED between sleeps
    */
   for(;;) {
-    hw( sleep_until_irq );	// hw_sleep_until_event() is OK too.
+    hw( wait, irq );
     hw( toggle, LED );
   }
 }

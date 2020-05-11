@@ -21,8 +21,6 @@
 
 #include "config.h"
 
-#define UART			swuart0
-
 
 int
 main ( )
@@ -30,7 +28,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */
@@ -79,7 +77,7 @@ main ( )
     /*	Wait for UART synchronization, then send the prompt
      */
     while ( !hw(stat,UART).sync )
-      hw( sleep_until_irq );
+      hw( wait, irq );
 
     hw( write, UART, '$');
 
@@ -94,7 +92,7 @@ main ( )
       /*  Wait for a command
        */
       while ( !hw(stat,UART).rxc )
-	hw( sleep_until_irq );
+	hw( wait, irq );
 
       uint8_t byte = hw( read, UART );
 

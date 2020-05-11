@@ -19,7 +19,7 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
     
     int main ( )
     {
-      hwa( begin_from_reset );              // Record the configuration in a context
+      hwa( begin, reset );                  // Record the configuration in a context
     
       hwa( power, (LED,port), on );         // Power the LED port
       hwa( commit );                        // Write the context in the hardware
@@ -34,12 +34,12 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
            reload,    PERIOD/2*AHBHZ/8-1,
            run,       yes );
     
-      hwa( turn, irq(systick), on );        // Enable Systick IRQs (to wake the core up)
+      hwa( turn, (systick,irq), on );       // Enable Systick IRQs (to wake the core up)
     
       hwa( commit );                        // Write all that into the hardware
     
       for(;;) {
-        hw( sleep_until_irq );              // sleep_until_event is OK too.
+        hw( wait, irq );                    // wait event is OK too.
         hw( toggle, LED );                  // Toggle the LED at wake-up
       }
     }

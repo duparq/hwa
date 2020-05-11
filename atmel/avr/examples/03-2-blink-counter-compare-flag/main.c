@@ -29,7 +29,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -57,9 +57,9 @@ int main ( )
      *	When a compare-match occurs, clear the counter, clear the flag and count
      *	the elapsed millisecond
      */
-    if ( hw( read, irqflag(COUNTER,COMPARE) ) ) {
+    if ( hw( read, (COUNTER,irq,COMPARE) ) ) {
       hw( write, COUNTER, 0 );
-      hw( clear, irqflag(COUNTER,COMPARE) );
+      hw( clear, (COUNTER,COMPARE,irq) );
       n++ ;
       if ( n >= (uint8_t)(0.5 + 1.0*PERIOD/0.001/2.0+0.5) ) {
 	/*

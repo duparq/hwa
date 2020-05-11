@@ -45,6 +45,13 @@
 #define _hw_bits_occ(...)		16
 
 
+/*  Return the compare register of a _occ
+ *    HW_CODR is blued.
+ */
+#define hw__occ_reg			, _hw_occ_reg
+#define _hw_occ_reg(oo,ct,cp)		HW_XOR(ct,ocr##cp)
+
+
 /**
  * @page atmelavr_occ
  * @par Interrupts
@@ -74,10 +81,6 @@
 /*  HWA context
  */
 typedef struct {
-
-  /*  Hardware registers
-   */
-  hwa_r16_t	reg ;
 
   /*  Registers used for high-level configuration
    */

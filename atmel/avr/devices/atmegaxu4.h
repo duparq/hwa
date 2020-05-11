@@ -1464,7 +1464,7 @@ typedef struct {
 
 #if !defined __ASSEMBLER__
 
-/* This structure is instanciated by hwa( begin ) or hwa( begin_from_reset ) and
+/* This structure is instanciated by hwa( begin ) or hwa( begin, reset ) and
  * used by all HWA asynchronous instructions to bufferize hardware accesses.
  */
 typedef struct {

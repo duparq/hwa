@@ -34,8 +34,8 @@
 
 	;; R24, [R25], R26, and SREG are already stacked
 	;;
-	.section		.text.LABEL(autosync_5_1),"ax",@progbits
-LABEL(autosync_5_1):
+	.section		.text.LABEL(autosync),"ax",@progbits
+LABEL(autosync):
 	CYCLES=CY_SYNC0
 
 	XSBIC	R26, RXD_AP	; Return if RXD is high

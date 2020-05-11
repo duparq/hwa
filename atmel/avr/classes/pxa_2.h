@@ -51,9 +51,9 @@
  * interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( pcic0 ) ) ) {	     // Read pin change flag
- *   hw( clear, irqflag( pcic0 ) );	     // Clear pin change flag
- *   hw( turn, irq(pcic0), off );	     // Disable pin change IRQ
+ * if ( hw( read, (pcic0,irq) ) ) {	     // Read pin change flag
+ *   hw( clear, (pcic0,irq) );	     // Clear pin change flag
+ *   hw( disable, (pcic0,irq) );	     // Disable pin change IRQ
  * }
  * @endcode
  */

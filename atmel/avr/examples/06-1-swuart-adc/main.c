@@ -48,7 +48,7 @@ volatile uint8_t		x_adc ; // Set to 1 after adc is written
 /*  Service counter overflow interrupt:
  *    turn the ADC on, it will start a conversion as the MCU enters sleep
  */
-HW_ISR( COUNTER, overflow )
+HW_ISR( (COUNTER,irq,overflow) )
 {
   hw( turn, adc0, on );
   hw( toggle, PIN_LED );
@@ -58,7 +58,7 @@ HW_ISR( COUNTER, overflow )
 /*  Service ADC conversion interrupt:
  *    get ADC result, stop the ADC, signal new data ready
  */
-HW_ISR( adc0 )
+HW_ISR( (adc0,irq) )
 {
   adc = hw( read, adc0 );
   hw( turn, adc0, off );
@@ -72,7 +72,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */
@@ -105,7 +105,7 @@ main ( )
        top,       compare0 );
 
   hwa( write, (COUNTER,compare0), 0.02 * HW_SYSHZ / 1024 / 2 );
-  hwa( turn, irq(COUNTER,overflow), on );
+  hwa( enable, (COUNTER,irq,overflow) );
 
   /*  Configure the ADC (this turns it on)
    */
@@ -116,7 +116,7 @@ main ( )
        align,     right,
        input,     PIN_ANALOG_INPUT );
 
-  hwa( turn, irq(adc0), on );
+  hwa( enable, (adc0,irq) );
 
   /*  Write this configuration into the hardware
    */
@@ -127,7 +127,7 @@ main ( )
   /*  Wait for UART synchronization, then send the prompt
    */
   while ( !hw(stat,UART).sync )
-    hw( sleep_until_irq );
+    hw( wait, irq );
   hw( write, UART, '$' );
 
   /*  Main loop:
@@ -135,7 +135,7 @@ main ( )
    *	Send new data to host
    */
   for(;;) {
-    hw( sleep_until_irq );
+    hw( wait, irq );
     if ( x_adc ) {
       uint16_t x ;
       do {

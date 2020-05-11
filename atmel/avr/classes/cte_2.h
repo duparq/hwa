@@ -667,9 +667,9 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
- *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
+ * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
+ *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
  * }
  * @endcode
  */

@@ -67,25 +67,25 @@
     _hw( write, pin_s3, s3!=0 );					\
     _hw( write, pin_s2, s2!=0 );					\
     _hw( configure, capture, edge, rising );				\
-    _hw( clear, irqflag(capture) );					\
+    _hw( clear, (capture,irq) );					\
     _hw( write, compare, _hw(read, counter) );				\
-    _hw( clear, irqflag(compare) );					\
+    _hw( clear, (compare,irq) );					\
     for (;;) {								\
-      if ( _hw( read, irqflag(capture) ) ) {				\
+      if ( _hw( read, (capture,irq) ) ) {				\
 	t = _hw( read, capture );					\
 	break ;								\
       }									\
-      if ( _hw( read, irqflag(compare) ) )				\
+      if ( _hw( read, (compare,irq) ) )				\
 	return 0xFFFF ;							\
     }									\
     _hw( configure, capture, edge, falling );				\
-    _hw( clear, irqflag(capture) );					\
+    _hw( clear, (capture,irq) );					\
     _hw( write, compare, t );						\
-    _hw( clear, irqflag(compare) );					\
+    _hw( clear, (compare,irq) );					\
     for (;;) {								\
-      if ( _hw( read, irqflag(capture) ) )				\
+      if ( _hw( read, (capture,irq) ) )				\
 	return _hw( read, capture ) - t ;				\
-      if ( _hw( read, irqflag(compare) ) )				\
+      if ( _hw( read, (compare,irq) ) )				\
 	return 0xFFFF ;							\
     }									\
   }

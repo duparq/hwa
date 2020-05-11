@@ -31,7 +31,7 @@
 
 /*  Service the compare-match IRQ
  */
-HW_ISR( COUNTER, COMPARE )
+HW_ISR( (COUNTER,irq,COMPARE) )
 {
   hw( write, COUNTER, 0 );
 
@@ -49,7 +49,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -73,13 +73,13 @@ int main ( )
    *  flag is set one counting cycle after the match.
    */
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( write, (COUNTER, COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV/2 );
+    hwa( write, (COUNTER,COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV/2 );
   else /* up_loop */
-    hwa( write, (COUNTER, COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV );
+    hwa( write, (COUNTER,COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV );
 
   /*  Enable compare IRQ
    */
-  hwa( turn, irq(COUNTER, COMPARE), on );
+  hwa( enable, (COUNTER,irq,COMPARE) );
 
   /*  Write this configuration into the hardware
    */
@@ -88,5 +88,5 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 }

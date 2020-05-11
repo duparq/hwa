@@ -36,7 +36,7 @@
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   hwa( configure, (COUNTER,prescaler),
        clock,	  CLOCK_SRC );
@@ -56,10 +56,10 @@ int main ( )
   
   hwa( write, (COUNTER,COMPARE), 0.5 * COUNT );
 
-  hwa( configure,        (COUNTER, dtg0),
-       prescaler,        4,	// 1 | 2 | 4 | 8
-       HW_G2(COMPARE,h), 3,	// 0..15
-       HW_G2(COMPARE,l), 9 );	// 0..15
+  hwa( configure, (COUNTER,COMPARE,dtg),
+       prescaler, 4,	// 1 | 2 | 4 | 8
+       delay_h,   3,	// 0..15
+       delay_l,   9 );	// 0..15
 
   hwa( commit );
 

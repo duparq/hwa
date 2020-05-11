@@ -26,7 +26,7 @@
 
 /*  The counter
  */
-#define PWM			counter0compare0
+#define PWM			(counter0,compare0)
 #define CLKDIV			64
 #define COUNTMODE		up_loop
 #define TOP			0xFF
@@ -61,7 +61,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
 
   /*  Enable overflow IRQ
    */
-  hwa( turn, irq((PWM,counter),overflow), on );
+  hwa( enable, (PWM,counter,irq,overflow) );
 }
 
 
@@ -72,7 +72,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( (PWM,counter), overflow )
+HW_ISR( (PWM,counter,irq,overflow) )
 {
   static uint8_t	duty ;
   static uint8_t	phase ;
@@ -94,7 +94,7 @@ HW_ISR( (PWM,counter), overflow )
 
       /*  Start from the hardawre configuration used at initialization
        */
-      hwa( begin_from_reset );
+      hwa( begin, reset );
       setup_hwa_context( hwa );
 
       if ( phase == 2 ) {
@@ -127,7 +127,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Store the hardware configuration into the HWA context
    */
@@ -140,5 +140,5 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 }

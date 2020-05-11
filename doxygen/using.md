@@ -63,7 +63,7 @@ result.
 
 `hwa()` is used for asynchronous actions. Asynchronous actions can only be used
 after a _HWA context_ has been created with the `hwa(begin)` or the
-`hwa(begin_from_reset)` instruction.
+`hwa(begin,reset)` instruction.
 
 Once the context is created, the asynchronous actions are memorized until the
 the `hwa(commit)` instruction or the `hwa(nocommit)` instruction is met.
@@ -76,7 +76,7 @@ allows the production of machine code that avoids writing values that already
 are in the registers.
 
 @code
-hwa( begin_from_reset )
+hwa( begin , reset )
 hwa( <ACTION_1>, <OBJECT_A> [,...] );
 hwa( <ACTION_2>, <OBJECT_B> [,...] );
 ...
@@ -102,7 +102,7 @@ Action	    | Comments
 `power`	    | Power the object ON/OFF.
 `configure` | Configure the object.
 `write`	    | Write a value in the object.
-`clear`	    | Clear the object (usually an IRQ flag).
+`clear`	    | Clear the object.
 `reset`	    | Reset the object.
 `read`	    | Read the object.
 `stat`	    | Read the status of the object.
@@ -114,51 +114,49 @@ Action	    | Comments
 Objects {#using_objects}
 =======
 
-Object arguments can be:
-
- * a peripheral controller names or canonical I/O pin names (i.e. the name used
-   for the basic I/O function). They are lower cased:
+ * objects are named using lower case and are often numbered:
    * `counter0`, `counter1`... ;
    * `uart0`, `uart1`... ;
    * `porta`, `portb`... ;
    * `pa0`...
 
- * a list of object names that provide a path to a target object (the only way to
-   access logical or hard registers) :
+ * objects can be designated using a path, bracketted:
    * `(counter0,compare0)`: the compare unit #0 of the counter0;
    * `(counter0,compare0,counter)`: equals `counter0`;
    * `(counter0,count)`: the `count` register of counter0...
 
- * an external object using a special declaration:
+ * external objects use a constructor:
    * `HW_PCF8574( interface, twi0, address, 0x27 )`
-   * `HW_HD44780( lines, 2, cols, 16, e, HW_IO(pc2), rs, HW_IO(pc0), rw, HW_IO(pc1), data, HW_IO(port2,4,4) )`
+   * `HW_HD44780( lines, 2, cols, 16, e, pc2, rs, pc0, rw, pc1, data, HW_IO(port2,4,4) )`
 
 
 Interrupts {#using_interrupts}
 ==========
 
-IRQs, their flags and masks are objects that can be accessed using a particular
-notation:
+IRQs, their flags and masks are objects that can be accessed using the `irq`
+element in the path:
 
- * `irq(counter0)` or `irq(counter0,overflow)`: the overflow IRQ of counter0;
- * `irq(counter0,compare0)`: the compare0 IRQ of counter0;
- * `irq((counter0,compare0))`: the IRQ of the compare unit #0 of counter0;
- * `irqflag(counter0)`: the flag of the counter0 overflow IRQ;
- * `irqmask(counter0)`: the mask of the counter0 overflow IRQ;
+ * `(counter0,irq)` IRQ triggered by counter0;
+ * `(counter0,irq,overflow)`: IRQ triggered by counter0 when it overflows;
+ * `(counter0,compare0,irq)`: the IRQ of the compare unit #0 of counter0;
 
-IRQs can be turned on and off.
-IRQ flags can be read and cleared.
+Available actions for IRQs are:
+
+ * `enable`: allows the IRQ to be serviced;
+ * `disable`: prevents the IRQ to be serviced;
+ * `read`: returns the status of the IRQ flag;
+ * `clear`: clears the IRQ flag.
 
 Examples:
 
 @code
-hw( clear, irqflag(counter0, overflow) );
-hw( turn, irq(counter0, overflow), on );
+hw( clear, (counter0,overflow,irq) );
+hw( enable, (counter0,overflow,irq) );
 @endcode
 
 @code
-if( hw(read, irqflag(counter0,overflow)) ) {
-    hw(clear, irqflag(counter0,overflow));
+if( hw(read, (counter0,irq,overflow) ) ) {
+    hw(clear, (counter0,irq,overflow) );
     hw(toggle, LED);
 }
 @endcode
@@ -166,7 +164,7 @@ if( hw(read, irqflag(counter0,overflow)) ) {
 Interrupt service routines are declared with the `HW_ISR()` instruction:
 
 @code
-HW_ISR( watchdog0 )
+HW_ISR( (watchdog0,irq) )
 {
   // code to handle the overflow of the watchdog timer
 }
@@ -176,7 +174,7 @@ As the USI `usi0` can trigger several different interrupt requests, the event
 name is required:
 
 @code
-HW_ISR( usi0, txc )
+HW_ISR( (usi0,irq,txc) )
 {
   // code to handle the transmit-complete IRQ of the USI
 }
@@ -201,7 +199,7 @@ cycles. You then must ensure that your ISR does not alter any CPU register and
 you have to provide the instruction for exiting the ISR yourself:
 
 @code
-HW_ISR( counter0, overflow, naked )
+HW_ISR( (counter0,irq,overflow), naked )
 {
   hw( toggle, pa0 );    // will use the `sbi` instruction, no register is altered
   hw_asm("reti");       // produce the `reti` instruction

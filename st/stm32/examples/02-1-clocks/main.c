@@ -22,7 +22,7 @@
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  After RESET, the core is clocked at 8 MHz by the HSI RC oscillator.
    *

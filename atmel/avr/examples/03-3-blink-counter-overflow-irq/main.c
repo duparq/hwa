@@ -29,7 +29,7 @@
 
 /*  Service the counter overflow IRQ
  */
-HW_ISR( COUNTER, overflow )
+HW_ISR( (COUNTER,irq,overflow) )
 {
   static uint8_t n ;
   n++ ;
@@ -45,7 +45,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -75,11 +75,11 @@ int main ( )
    *  flag is set one counting cycle after the match.
    */
   if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
-    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2 );
+    hwa( write, (COUNTER,compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV / 2 );
   else
-    hwa( write, (COUNTER, compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
+    hwa( write, (COUNTER,compare0), 0.5 + 0.001 * HW_SYSHZ / CLKDIV );
 
-  hwa( turn, irq(COUNTER,overflow), on );
+  hwa( enable, (COUNTER,irq,overflow) );
 
   /*  Write this configuration into the hardware
    */
@@ -88,5 +88,5 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 }

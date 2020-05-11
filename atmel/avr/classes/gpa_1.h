@@ -29,6 +29,7 @@
  */
 #define HW_IO__gpa			, _hw_io_gpa
 #define _hw_io_gpa(o,a,bn,bp,...)	xb(_ioa,o##_##bn##_##bp,-1,o,bn,bp)
+//#define _hw_io_gpa(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(-1,o,bn,bp)
 
 
 #if !defined __ASSEMBLER__

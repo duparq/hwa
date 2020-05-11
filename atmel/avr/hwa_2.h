@@ -13,24 +13,46 @@
  * @ingroup public_ins_atmelavr
  * @brief Puts the core in sleep mode.
  */
-#define _hw_sleep_until_irq__mcu(...)		hw_asm("sleep")
-#define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
-
-#define _hw_enirqs(o,a,...)			hw_asm("sei") HW_EOL(__VA_ARGS__)
-#define _hw_dsirqs(o,a,...)			hw_asm("cli") HW_EOL(__VA_ARGS__)
 
 
-/**
- * @ingroup public_ins_atmelavr
- * @brief Software loop of \c n system clock cycles.
- *
- * Only works with compile-time constants.
+/*	Interrupts
  */
-#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+#define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,1)	/* Write 1 to clear */
+#define _hwa_clirq(o,v,n,m,f,...)	_hwa_write(n,f,1)
+
+#define hw_enable__irq			, _hw_enirq
+#define hwa_enable__irq			, _hwa_enirq
+
+#define _hw_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,1,__VA_ARGS__,)
+#define _hwa_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,1,__VA_ARGS__,)
+
+#define hw_disable__irq			, _hw_dsirq
+#define hwa_disable__irq		, _hwa_dsirq
+
+#define _hw_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,0,__VA_ARGS__,)
+#define _hwa_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,0,__VA_ARGS__,)
+
+#define _hwx_tirq01(...)		_hwx_tirq02(__VA_ARGS__)
+#define _hwx_tirq02(h,n,m,v,x,...)	HW_Y0(_hwx_tirq02_,x)(h,n,m,v,x,__VA_ARGS__)
+#define _hwx_tirq02_0(h,n,m,v,x,...)	HW_E_G(x)
+#define _hwx_tirq02_1(h,n,m,v,...)	h##_write(n,m,v)
+
+#define hw_read__irq			, _hw_rdirq
+#define _hw_rdirq(o,v,n,m,f,...)	_hw_read(n,f)
+
+#define hw_clear__irq			, _hw_clirq
+#define hwa_clear__irq			, _hwa_clirq
+
+#define hw_enable_interrupts		, _hw_enirqs
+#define hw_disable_interrupts		, _hw_dsirqs
+
+#define _hw_enirqs(o,a,...)		hw_asm("sei") HW_EOL(__VA_ARGS__)
+#define _hw_dsirqs(o,a,...)		hw_asm("cli") HW_EOL(__VA_ARGS__)
+
+#define hw_wait_irq			, _hw_wait_irq
+#define _hw_wait_irq(...)		hw_asm("sleep")
 
 
-/*	ISR
- */
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
 #else /* GCC < 4.1 */
@@ -41,6 +63,30 @@
 #define _hw_israttr_non_interruptible	,
 #define _hw_israttr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_naked		, __attribute__((naked))
+
+
+/*  Single event ISR
+ */
+#define _HW_ISR_(v,...)							\
+  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void __vector_##v(void)
+
+
+/*  Void ISR
+ */
+#define _HW_VISR_(v)							\
+  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
+  void __vector_##v(void) { hw_asm("reti"); }
+
+
+/**
+ * @ingroup public_ins_atmelavr
+ * @brief Software loop of \c n system clock cycles.
+ *
+ * Only works with compile-time constants.
+ */
+#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
+
 
 
 #include "../../hwa/hwa_2.h"

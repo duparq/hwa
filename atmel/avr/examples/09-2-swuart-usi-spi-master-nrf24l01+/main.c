@@ -61,7 +61,7 @@
 /*  We need a device with an USI
  */
 #if HW_ADDRESS(usi0) == -1
-HW_ERROR(device `HW_DEVICE` does not have a USI)
+HW_E(device `HW_DEVICE` does not have a USI)
 #endif
 
 
@@ -77,7 +77,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */

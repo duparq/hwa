@@ -34,14 +34,17 @@
 
 #define _hw_is_interfaceaddressaddresssizepagesize_interfaceaddressaddresssizepagesize	, 1
 
-#define HW_24CXX(...)				_HW_24CXX_01(__VA_ARGS__,,,,,,,,,)
-#define _HW_24CXX_01(k1,v1,k2,v2,k3,v3,k4,v4,eol,...)			\
-  HW_Y(_HW_24CXX_01_,_hw_is_interfaceaddressaddresssizepagesize_##k1##k2##k3##k4##eol)(k1,v1,k2,v2,k3,v3,k4,v4)
-#define _HW_24CXX_01_0(...)						\
+#define HW_24CXX(...)					_HW_24CXX0(__VA_ARGS__,,,,,,,,,)
+#define _HW_24CXX0(k1,v1,k2,v2,k3,v3,k4,v4,eol,...)			\
+  HW_Y(_HW_24CXX0_,_hw_is_interfaceaddressaddresssizepagesize_##k1##k2##k3##k4##eol)(k1,v1,k2,v2,k3,v3,k4,v4)
+#define _HW_24CXX0_0(...)						\
   ,HW_24CXX(...),"HW_24CXX(...)" must be defined as "HW_24CXX(interface,...,address,...,addresssize,...,pagesize,...)"
-#define _HW_24CXX_01_1(k1,twi,k2,sla,k3,as,k4,ps)	_HW_24CXX_02(HW_A1(HW_X(twi)),sla,as,ps)
-#define _HW_24CXX_02(...)		_HW_24CXX_03(__VA_ARGS__)
-#define _HW_24CXX_03(otwi,sla,as,ps)	xb(_24cxx,24cxx_##otwi,otwi,sla,as,ps)
+#define _HW_24CXX0_1(k1,twi,k2,sla,k3,as,k4,ps)		_HW_24CXX1(HW_XO(twi),sla,as,ps)
+#define _HW_24CXX1(...)					_HW_24CXX2(__VA_ARGS__)
+//#define _HW_24CXX_03(otwi,sla,as,ps)			_24cxx,24cxx_##otwi,(otwi,sla,as,ps)
+#define _HW_24CXX2(x,...)				HW_Y0(_HW_24CXX3_,x)(x,__VA_ARGS__)
+#define _HW_24CXX3_1(z,o,e,...)				,o,e
+#define _HW_24CXX3_0(c,o,d,sla,as,ps)			_24cxx,24cxx_##o,(o,sla,as,ps)
 
 
 /**
@@ -54,13 +57,13 @@
  * HW_DECLARE( EEPROM );
  * @endcode
  */
-#define HW_DECLARE__24cxx		, _hw_declare_pcf8574
+#define HW_DECLARE__24cxx		, _hw_declare_24cxx
 
-#define _hw_declare_pcf8574(o,...)					\
+#define _hw_declare_24cxx(o,...)					\
   uint8_t _hw_##o##_read_bytes ( uint8_t, uint8_t, uint16_t, int, uint8_t* ); \
   uint8_t _hw_##o##_write_page ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ); \
   uint8_t _hw_##o##_write_bytes ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ); \
-  extern void _hwa_fake()
+  extern void hwa_fake()
 
 
 /**
@@ -82,12 +85,22 @@
 
 #define _hw_im24cxx_(o,twi,...)		_hw_im24cxx(twi,)
 #define _hw_im24cxxw(o,twi,...)		_hw_im24cxx(twi,__attribute__((weak)))
-
 #define _hw_im24cxx(twi,weak)				\
   _hw_im24cxx_read_bytes(twi,weak)			\
     _hw_im24cxx_write_page(twi,weak)			\
     _hw_im24cxx_write_bytes(twi,weak)			\
-    extern void _hwa_fake() /* require a semicolon */
+    extern void hwa_fake() /* require a semicolon */
+
+/* #define _hw_im24cxx(twi,weak)				\ */
+/*   foo(twi,weak)					\ */
+/*     extern void hwa_fake() /\* require a semicolon *\/ */
+
+/* #define foo(twi,weak)				\ */
+/*   void weak foo_##twi (  )			\ */
+/*   {						\ */
+/*     hw( xread, (twi,irq);			\ */
+/*   } */
+
 
 
 /**
@@ -134,6 +147,7 @@
 #define hw_read__24cxx			, _hw_rd24cxx
 
 #define _hw_rd24cxx(...)		_hw_rd24cxx0(__VA_ARGS__,,,,,,)
+
 #define _hw_rd24cxx0(o,twi,sla,as,ps,ka,va,ks,vs,kb,vb,eol,...)	HW_Y(_hw_rd24cxx0,_hw_is_addresssizebuffer_##ka##ks##kb##eol)(o,twi,sla,as,ka,va,ks,vs,kb,vb,eol)
 #define _hw_rd24cxx00(o,twi,sla,as,ka,va,ks,vs,kb,vb,eol) HW_E(syntax is hw(read,object,address,..., size,..., buffer,... ))
 #define _hw_rd24cxx01(o,twi,sla,as,ka,va,ks,vs,kb,vb,eol) _hw_24cxx_##twi##_read_bytes(sla,as,va,vs,(uint8_t*)vb)
@@ -155,7 +169,7 @@
   begin:								\
     hw( bus_start, twi );						\
 									\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_START:						\
@@ -170,7 +184,7 @@
       }									\
 									\
     hw( bus_slaw, twi, _sla>>1 );					\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_MT_SLA_ACK:						\
@@ -185,7 +199,7 @@
 									\
     if ( as == 2 ) {							\
       hw( bus_write, twi, addr >> 8 );					\
-      while( !hw(read, irqflag(twi)) ) {}				\
+      while( !hw(read,(twi,irq)) ) {}					\
       switch( (_twst=hw(stat,twi)) )					\
 	{								\
 	  case HW_TWI_MT_DATA_ACK:					\
@@ -203,7 +217,7 @@
     }									\
 									\
     hw( bus_write, twi, addr & 255 );					\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_MT_DATA_ACK:					\
@@ -220,7 +234,7 @@
       }									\
 									\
     hw( bus_start, twi );						\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_START:						\
@@ -235,7 +249,7 @@
       }									\
 									\
     hw( bus_slar, twi, sla & 127 );					\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_MR_SLA_ACK:						\
@@ -257,7 +271,7 @@
       else								\
 	hw( bus_read, twi, ack );					\
 									\
-      while( !hw(read, irqflag(twi)) ) {}				\
+      while( !hw(read,(twi,irq)) ) {}					\
       switch( (_twst=hw(stat,twi)) )					\
 	{								\
 	  case HW_TWI_MR_DATA_NACK:					\
@@ -302,7 +316,7 @@
 									\
   begin:								\
     hw( bus_start, twi );						\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_REP_START:						\
@@ -317,7 +331,7 @@
       }									\
 									\
     hw( bus_slaw, twi, _sla>>1 );					\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_MT_SLA_ACK:						\
@@ -332,7 +346,7 @@
 									\
     if ( as == 2 ) {							\
       hw( bus_write, twi, addr>>8 );					\
-      while( !hw(read, irqflag(twi)) ) {}				\
+      while( !hw(read,(twi,irq)) ) {}					\
       switch( (_twst=hw(stat,twi)) )					\
 	{								\
 	  case HW_TWI_MT_DATA_ACK:					\
@@ -350,7 +364,7 @@
     }									\
 									\
     hw( bus_write, twi, addr );						\
-    while( !hw(read, irqflag(twi)) ) {}					\
+    while( !hw(read,(twi,irq)) ) {}					\
     switch( (_twst=hw(stat,twi)) )					\
       {									\
 	case HW_TWI_MT_DATA_ACK:					\
@@ -371,7 +385,7 @@
 									\
       hw( bus_write, twi, (*buf++) );					\
 									\
-      while( !hw(read, irqflag(twi)) ) {}				\
+      while( !hw(read,(twi,irq)) ) {}					\
       switch( (_twst=hw(stat,twi)) )					\
 	{								\
 	  case HW_TWI_MT_DATA_NACK:					\

@@ -31,7 +31,7 @@
  *    instruction ourselves (otherwise avr-gcc does some register
  *    initializations even though none is used).
  */
-HW_ISR( watchdog0, naked )
+HW_ISR( (watchdog0,irq), naked )
 {
   hw_asm("reti");
 }
@@ -42,7 +42,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -65,7 +65,7 @@ int main ( )
      */
     hwa( turn, watchdog0, off );
     hwa( commit );
-    hw( sleep_until_irq );
+    hw( wait, irq );
     for (;;)			/* This should */
       hw( toggle, PIN_LED );	/* not happen  */
   }
@@ -89,13 +89,13 @@ int main ( )
   static uint8_t count ;
 
   for(;;) {
-    hw( sleep_until_irq );
+    hw( wait, irq );
 
     /*	When watchdog action is 'irq_or_reset', a timeout automatically disables
      *	the IRQ so that next timeout will reset the device. Load the context
      *	with this information, but do not write it into hardware.
      */
-    hwa( turn, irq(watchdog0), off );
+    hwa( disable, (watchdog0,irq) );
     hwa( nocommit );
 
     hw( toggle, PIN_LED );
@@ -104,7 +104,7 @@ int main ( )
       /*
        *  Re-enable the watchdog IRQ.
        */
-      hwa( turn, irq(watchdog0), on );
+      hwa( enable, (watchdog0,irq) );
       hwa( commit );
     }
   }

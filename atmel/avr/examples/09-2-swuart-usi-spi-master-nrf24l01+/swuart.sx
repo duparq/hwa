@@ -2,4 +2,4 @@
 	;; -*- asm -*-
 
 #include "config.h"
-#include <hwa/swuart.sx>
+#include <hwa/swuarta.sx>

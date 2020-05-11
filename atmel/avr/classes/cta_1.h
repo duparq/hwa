@@ -13,7 +13,7 @@
  * @page atmelavr_cta Class _cta: 8-bit counter/timer
  *
  * `_cta` objects are 8-bit counting units that have 3 relative objects:
- *  * one @ref atmelavr_psa "_psa" prescaler: `(counter0,prescaler)`
+ *  * one @ref atmelavr_psa "_psa" prescaler: `(COUNTER,prescaler)`
  *  * two @ref atmelavr_oca "_oca" compare units with waveform generators:
  *    `(COUNTER,compare0)` and `(COUNTER,compare1)`
  *
@@ -40,6 +40,16 @@
  */
 #define HW_BITS__cta			, _hw_bits_cta
 #define _hw_bits_cta(...)		8
+
+#define hw__cta_bits			, _hw_bits_cta
+
+
+/*  Return the counting register of a _cta
+ *    HW_CODR is blued.
+ */
+#define hw__cta_reg			, _hw_cta_reg
+#define _hw_cta_reg(o,a)		HW_XOR(o,count)
+
 
 /**
  * @page atmelavr_cta
@@ -79,6 +89,8 @@ typedef struct {
   hwa_r8_t	count ;
   hwa_r8_t	imsk ;
   hwa_r8_t	ifr ;
+  hwa_r8_t	ocr0 ;
+  hwa_r8_t	ocr1 ;
 
   /*  Registers used for high-level configuration
    */
@@ -91,6 +103,9 @@ typedef struct {
   struct {
     uint8_t	cs, wgm ;
   } solved ;
+
+  hwa_oca_t	compare0 ;
+  hwa_oca_t	compare1 ;
 
 } hwa_cta_t ;
 

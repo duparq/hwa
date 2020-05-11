@@ -39,7 +39,7 @@
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( COUNTER, overflow )
+HW_ISR( (COUNTER,irq,overflow) )
 {
   static hw_uint_t(HW_BITS(COUNTER))	duty ;
   static uint8_t			phase ;
@@ -77,7 +77,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
@@ -102,7 +102,7 @@ int main ( )
 
   /*  Enable overflow IRQ
    */
-  hwa( turn, irq(COUNTER,overflow), on );
+  hwa( enable, (COUNTER,irq,overflow) );
 
   /*  Write this configuration into the hardware
    */
@@ -111,5 +111,5 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 }

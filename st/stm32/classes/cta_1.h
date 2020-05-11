@@ -37,9 +37,7 @@
 #define hw__cta_ccer			_r16, 0x20, 0x3333, 0
 #define hw__cta_cnt			_r16, 0x24, 0xFFFF, 0
 #define hw__cta_psc			_r16, 0x28, 0xFFFF, 0
-#define hw__cta_prescaler		psc			// Synonym
 #define hw__cta_arr			_r16, 0x2C, 0xFFFF, 0
-#define hw__cta_reload			arr			// Synonym
 #define hw__cta_ccr1			_r16, 0x34, 0xFFFF, 0
 #define hw__cta_ccr2			_r16, 0x38, 0xFFFF, 0
 #define hw__cta_ccr3			_r16, 0x3C, 0xFFFF, 0
@@ -126,7 +124,12 @@
 #define hw__cta_ic3psc			_cb1, ccmr2, 2,  2
 #define hw__cta_cc3s			_cb1, ccmr2, 2,  0
 
-  
+/*  Relatives
+ */
+#define hw__cta_prescaler		_cb1, psc, 16, 0
+#define hw__cta_reload			_cb1, arr, 16, 0
+
+
 #if !defined __ASSEMBLER__
 
 typedef struct {

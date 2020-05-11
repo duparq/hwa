@@ -13,10 +13,7 @@
  * rather than on speed, so it relies on extern C functions rather than on
  * inlined code.
  *
- * Currently, HWA supports only the driving of the HD44780 through the I2C
- * expander PCF8574.
- *
- * __Declaration__
+ * __Constructor__
  *
  * The following declares a PCF8574 that is attached to the TWI
  * interface twi0 at slave address 0x27:
@@ -27,16 +24,16 @@
  */
 #define hw_class__pcf8574
 
-#define _hw_is_interfaceaddress_interfaceaddress	, 1
+#define HW_PCF8574(...)			_HW_PCF8574_(__VA_ARGS__,,,,,)
+#define _HW_PCF8574_(k,...)		HW_KW(_HW_PCF8574_1_,interface,k)(k,__VA_ARGS__)
+#define _HW_PCF8574_1_0(...)		_HW_PCF8574_E
+#define _HW_PCF8574_1_1(k,...)		_HW_PCF8574_1_2(HW_ANAME(__VA_ARGS__))
+#define _HW_PCF8574_1_2(...)		_HW_PCF8574_1_3(__VA_ARGS__)
+#define _HW_PCF8574_1_3(twi,k,...)	HW_KW(_HW_PCF8574_2_,address,k)(twi,k,__VA_ARGS__)
+#define _HW_PCF8574_2_0(...)		_HW_PCF8574_E
+#define _HW_PCF8574_2_1(twi,k,sla,...)	_pcf8574,pcf8574_##twi##_##sla,(twi,sla)	HW_EOL(__VA_ARGS__)
 
-#define HW_PCF8574(...)				_HW_PCF8574_01(__VA_ARGS__,,,,,)
-#define _HW_PCF8574_01(k1,v1,k2,v2,eol,...)				\
-  HW_Y(_HW_PCF8574_01_,_hw_is_interfaceaddress_##k1##k2##eol)(k1,v1,k2,v2)
-#define _HW_PCF8574_01_0(...)						\
-  ,HW_PCF8574(...),"HW_PCF8574(...)" must be defined as "HW_PCF8574(interface,...,address,...)"
-#define _HW_PCF8574_01_1(k1,twi,k2,sla)		_HW_PCF8574_02(HW_A1(HW_X(twi)),sla)
-#define _HW_PCF8574_02(...)			_HW_PCF8574_03(__VA_ARGS__)
-#define _HW_PCF8574_03(otwi,sla)		xb(_pcf8574,pcf8574_##otwi##_##sla,otwi,sla)
+#define _HW_PCF8574_E			HW_E(HW_EM_S("HW_PCF8574(interface,..., address,...)"))
 
 
 /**
@@ -164,35 +161,34 @@
 #define hw_class__pcf8574_io
 
 #define HW_IO__pcf8574				, _hw_io_pcf8574
-#define _hw_io_pcf8574(opcf,sla,twil,bn,bp,...)	xb(_pcf8574_io,opcf,bn,bp)
+#define _hw_io_pcf8574(o,sla,twil,bn,bp,...)	_pcf8574_io,o,(bn,bp)
 
 #define HW_BITS__pcf8574_io			, _hw_bits_pcf8574_io
-#define _hw_bits_pcf8574_io(opcf,n,p,...)	n
+#define _hw_bits_pcf8574_io(o,n,p,...)		n
 
 /* #define HW_PORT_pcf8574io			, _hw_port_pcf8574io */
-/* #define _hw_port_pcf8574io(opcf,...)		_pcf8574,opcf,null,0 */
+/* #define _hw_port_pcf8574io(o,...)		_pcf8574,o,null,0 */
 
 #define HW_PORT__pcf8574_io			, _hw_port__pcf8574_io
-#define _hw_port__pcf8574_io(opcf,...)		_pcf8574,opcf,null,0
+#define _hw_port__pcf8574_io(o,...)		_pcf8574,o,(null,0)
 
 /*  FIXME: this implementation of 'configure' is a fake used for testing the
  *  compilability when a PCF8574 drives another PCF8574
  */
 /* #define hw_configure__pcf8574_io		, _hw_cfpcf8574io */
-/* #define _hw_cfpcf8574io(opcf,bn,bp,...)		_hw_##opcf##_write_np(bn,bp,1) */
+/* #define _hw_cfpcf8574io(o,bn,bp,...)		_hw_##o##_write_np(bn,bp,1) */
 
 #define hw_write__pcf8574_io			, _hw_pcf8574iowr
-#define _hw_pcf8574iowr(opcf,bn,bp,v,...)	_hw_##opcf##_write_np(bn,bp,v)
+#define _hw_pcf8574iowr(o,bn,bp,v,...)		_hw_##o##_write_np(bn,bp,v)
 
 #define hw_toggle__pcf8574_io			, _hw_pcf8574iotg
-#define _hw_pcf8574iotg(opcf,bn,bp,...)		_hw_##opcf##_toggle_np(bn,bp)
+#define _hw_pcf8574iotg(o,bn,bp,...)		_hw_##o##_toggle_np(bn,bp)
 
 #define hw_writea__pcf8574_io			, _hw_pcf8574iowra
-
-#define _hw_pcf8574iowra(opcf,bn,bp,v,...)	_hw_##opcf##_writea_np(bn,bp,v)
+#define _hw_pcf8574iowra(o,bn,bp,v,...)		_hw_##o##_writea_np(bn,bp,v)
 
 #define hw_read__pcf8574_io			, _hw_pcf8574iord
-#define _hw_pcf8574iord(opcf,bn,bp,v,...)	_hw_##opcf##_read_np(bn,bp)
+#define _hw_pcf8574iord(o,bn,bp,v,...)		_hw_##o##_read_np(bn,bp)
 
 #define hwa_write__pcf8574_io			, _hwa_pcf8574iowr
-#define _hwa_pcf8574iowr(opcf,bn,bp,v,...)	_hw_##opcf##_writea_np(bn,bp,v)
+#define _hwa_pcf8574iowr(o,bn,bp,v,...)		_hw_##o##_writea_np(bn,bp,v)

@@ -55,10 +55,10 @@
  *
  *  'vector' is used to store the type of interrupt
  *
- *						class, object, vector, ie, if
+ *					class, vector, object, ie, if
  */
-#define hw_irq_timer1_nmi		_irq, timer1, nmi, ie,
-#define hw_irq_timer1_irq		_irq, timer1,	9, ie,
+#define hw_timer1_nmi			_irq, nmi, timer1, ie,
+#define hw_timer1_irq			_irq,	9, timer1, ie,
 
 
 /*******************************************************************************
@@ -139,20 +139,20 @@ typedef struct {
 #define hw__gpa__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
 #define hw__gpa__in			_r32, 0x18, 0x00000000, 0
 #define hw__gpa__ie			_r32, 0x1C, 0x0000FFFF, 0
-#define hw__gpa__iew1ts		_r32, 0x20, 0x0000FFFF, 0
-#define hw__gpa__iew1tc		_r32, 0x24, 0x0000FFFF, 0
+#define hw__gpa__iew1ts			_r32, 0x20, 0x0000FFFF, 0
+#define hw__gpa__iew1tc			_r32, 0x24, 0x0000FFFF, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
 #define hw__gpa_btsel			_cb1, _out,	16, 16
 #define hw__gpa_out			_cb1, _out,	16,  0
-#define hw__gpa_outw1ts		_cb1, _outw1ts, 16,  0
-#define hw__gpa_outw1tc		_cb1, _outw1tc, 16,  0
+#define hw__gpa_outw1ts			_cb1, _outw1ts, 16,  0
+#define hw__gpa_outw1tc			_cb1, _outw1tc, 16,  0
 
-#define hw__gpa_sdiosel		_cb1, _enb,	 6, 16
+#define hw__gpa_sdiosel			_cb1, _enb,	 6, 16
 #define hw__gpa_enb			_cb1, _enb,	16,  0
-#define hw__gpa_enbw1ts		_cb1, _enbw1ts, 16,  0
-#define hw__gpa_enbw1tc		_cb1, _enbw1tc, 16,  0
+#define hw__gpa_enbw1ts			_cb1, _enbw1ts, 16,  0
+#define hw__gpa_enbw1tc			_cb1, _enbw1tc, 16,  0
 
 #define hw__gpa_strapping		_cb1, _in,	16, 16
 #define hw__gpa_in			_cb1, _in,	16,  0
@@ -639,7 +639,7 @@ typedef struct {
 
 #if !defined __ASSEMBLER__
 
-/* This structure is instanciated by hwa( begin ) or hwa( begin_from_reset ) and
+/* This structure is instanciated by hwa( begin ) or hwa( begin, reset ) and
  * used by all HWA asynchronous instructions to bufferize hardware accesses.
  */
 typedef struct {
@@ -763,8 +763,3 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 }
 
 #endif /* !defined __ASSEMBLER__ */
-
-/**
- * @page esp8266
- * <br>
- */

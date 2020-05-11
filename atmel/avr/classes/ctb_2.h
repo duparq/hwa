@@ -19,36 +19,21 @@ HW_INLINE uint8_t _hw_ctbck_none( float v )
 
 HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
 {
-  if ( v == 16384 )
-    return 1 ;
-  if ( v == 8192 )
-    return 2 ;
-  if ( v == 4096 )
-    return 3 ;
-  if ( v == 2048 )
-    return 4 ;
-  if ( v == 1024 )
-    return 5 ;
-  if ( v == 512 )
-    return 6 ;
-  if ( v == 256 )
-    return 7 ;
-  if ( v == 128 )
-    return 8 ;
-  if ( v == 64 )
-    return 9 ;
-  if ( v == 32 )
-    return 10 ;
-  if ( v == 16 )
-    return 11 ;
-  if ( v == 8 )
-    return 12 ;
-  if ( v == 4 )
-    return 13 ;
-  if ( v == 2 )
-    return 14 ;
-  if ( v == 1 )
-    return 15 ;
+  if ( v == 16384 ) return 1 ;
+  if ( v ==  8192 ) return 2 ;
+  if ( v ==  4096 ) return 3 ;
+  if ( v ==  2048 ) return 4 ;
+  if ( v ==  1024 ) return 5 ;
+  if ( v ==   512 ) return 6 ;
+  if ( v ==   256 ) return 7 ;
+  if ( v ==   128 ) return 8 ;
+  if ( v ==    64 ) return 9 ;
+  if ( v ==    32 ) return 10 ;
+  if ( v ==    16 ) return 11 ;
+  if ( v ==     8 ) return 12 ;
+  if ( v ==     4 ) return 13 ;
+  if ( v ==     2 ) return 14 ;
+  if ( v ==     1 ) return 15 ;
 
   HWA_E(value of `clock` must be in (`none`, `ioclk/2**n` with n in [1..14], `external_falling`, `external_rising`));
 
@@ -221,9 +206,9 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
- *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );		// Disable overflow IRQs
+ * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
+ *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -251,48 +236,63 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
  *    too if it us used.
  * -> If 
  */
-#define _hwa_solve__ctb( o,a )				\
-  _hwa_solve__ctb_2( o, hw_##o##_compare0, hw_##o##_compare1 )
-
-#define _hwa_solve__ctb_2(...)	_hwa_solve_ctb(__VA_ARGS__)
-
-#define _hwa_solve_ctb(counter, compare0, compare1)			\
-  _hwa_solve_ocb( compare0 );						\
-  _hwa_solve_ocb( compare1 );						\
-  if ( _hwa_mmask(compare0, pwm) && _hwa_mmask(compare1, pwm)		\
-       && _hwa_mvalue(compare0, pwm) != _hwa_mvalue(compare1, pwm) )	\
+#define _hwa_solve__ctb( counter, a )					\
+  _hwa_solve_ocb( counter, 0 );						\
+  _hwa_solve_ocb( counter, 1 );						\
+  if ( _hwa_mmask(counter,pwm0) && _hwa_mmask(counter,pwm1)		\
+       && _hwa_mvalue(counter,pwm0) != _hwa_mvalue(counter,pwm1) )	\
     HWA_ERR("used compare outputs must be in the same NORMAL or PWM mode."); \
-  else if ( _hwa_mmask(counter, ctc) && _hwa_mvalue(counter, ctc)==0	\
-	    && (   (_hwa_mmask(compare0, pwm) && _hwa_mvalue(compare1, pwm)) \
-		   || (_hwa_mmask(compare1, pwm) && _hwa_mvalue(compare1, pwm))) ) \
+  else if ( _hwa_mmask(counter,ctc) && _hwa_mvalue(counter,ctc)==0	\
+	    && (   (_hwa_mmask(counter,pwm0) && _hwa_mvalue(counter,pwm1)) \
+		   || (_hwa_mmask(counter,pwm1) && _hwa_mvalue(counter,pwm1))) ) \
     HWA_ERR("`top` must be `compare2` for `" #counter "` when using the PWM mode."); \
-  if ( _hwa_mvalue(counter, ie)==1					\
-       && _hwa_mvalue(counter, ctc)==1					\
-       && _hwa_mvalue(compare0, pwm) == 0				\
-       && _hwa_mvalue(compare1, pwm) == 0 ) {				\
-    if ( _hwa_mmask(compare0, pwm)==1 || _hwa_mmask(compare1, pwm)== 1 ) \
+  if ( _hwa_mvalue(counter,ie)==1					\
+       && _hwa_mvalue(counter,ctc)==1					\
+       && _hwa_mvalue(counter,pwm0) == 0				\
+       && _hwa_mvalue(counter,pwm1) == 0 ) {				\
+    if ( _hwa_mmask(counter,pwm0)==1 || _hwa_mmask(counter,pwm1)== 1 )	\
       HWA_ERR("`" #counter "` does not trigger overflow IRQs when not using PWM mode for outputs."); \
     else								\
-      if ( _hwa_mmask(compare0, pwm)==0 )				\
-	_hwa_write(compare0,pwm,1);					\
+      if ( _hwa_mmask(counter,pwm0)==0 )				\
+	_hwa_write(counter,pwm0,1);					\
       else								\
-	_hwa_write(compare1,pwm,1);					\
+	_hwa_write(counter,pwm0,1);					\
   }
+
 
 #define _hwa_setup__ctb(o,a)			\
   _hwa_setup_r( o, ccr	    );			\
   _hwa_setup_r( o, count    );			\
-  _hwa_setup_r( o, compare2 );
+  _hwa_setup_r( o, ocr0 );			\
+  _hwa_setup_r( o, ocr1 );			\
+  _hwa_setup_r( o, ocr2 );			\
+  _hwa_setup_r( o, dtps );			\
+  _hwa_setup_r( o, dta );			\
+  _hwa_setup_r( o, dtb );			\
+  hwa->o.compare0.config.outputh = 0xFF ;	\
+  hwa->o.compare0.config.outputl = 0xFF ;	\
+  hwa->o.compare1.config.outputh = 0xFF ;	\
+  hwa->o.compare1.config.outputl = 0xFF ;	\
 
 #define _hwa_init__ctb(o,a)			\
   _hwa_init_r( o, ccr, 0	);		\
   _hwa_init_r( o, count, 0	);		\
-  _hwa_init_r( o, compare2, 0 );
+  _hwa_init_r( o, ocr0, 0 );			\
+  _hwa_init_r( o, ocr1, 0 );			\
+  _hwa_init_r( o, ocr2, 0 );			\
+  _hwa_init_r( o, dtps, 0 );			\
+  _hwa_init_r( o, dta, 0 );			\
+  _hwa_init_r( o, dtb, 0 )
 
 #define _hwa_commit__ctb(o,a)			\
-  _hwa_commit_r( o, ccr	     );			\
-  _hwa_commit_r( o, count    );			\
-  _hwa_commit_r( o, compare2 );
+  _hwa_commit_r( o, ccr	  );			\
+  _hwa_commit_r( o, count );			\
+  _hwa_commit_r( o, ocr0  );			\
+  _hwa_commit_r( o, ocr1  );			\
+  _hwa_commit_r( o, ocr2  );			\
+  _hwa_commit_r( o, dtps  );			\
+  _hwa_commit_r( o, dta   );			\
+  _hwa_commit_r( o, dtb   )
 
 
 /**

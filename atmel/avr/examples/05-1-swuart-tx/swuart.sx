@@ -1,11 +1,12 @@
 
 	;; -*- asm -*-
 
-/**
- * @file
- * @brief  Include the implementation of the software uarts
+/*  Implement _swuarta
  */
-//#define SWUART_COMPUTE_CYCLES
 
 #include "config.h"
-#include <hwa/swuart.sx>
+
+
+//#define SWUART_COMPUTE_CYCLES
+
+#include <hwa/swuarta.sx>

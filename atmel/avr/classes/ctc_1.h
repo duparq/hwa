@@ -44,8 +44,18 @@
  * #endif
  * @endcode
  */
-#define HW_BITS__ctc		, _hw_bn_ctc
-#define _hw_bn_ctc(o,a,...)		8
+#define HW_BITS__ctc			, _hw_bits_ctc
+#define _hw_bits_ctc(o,a,...)		8
+
+#define hw__ctc_bits			, _hw_bits_ctc
+
+
+/*  Return the counting register of a _ctc
+ *    HW_CODR is blued.
+ */
+#define hw__ctc_reg			, _hw_ctc_reg
+#define _hw_ctc_reg(o,a)		HW_XOR(o,count)
+
 
 /**
  * @page atmelavr_ctc
@@ -81,6 +91,9 @@ typedef struct {
   struct {
     uint8_t	cs, wgm ;
   } solved ;
+
+  hwa_oca_t	compare0 ;
+  hwa_oca_t	compare1 ;
 
 } hwa_ctc_t ;
 

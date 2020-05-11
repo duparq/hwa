@@ -1,113 +1,12 @@
 
-/* This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
- * All rights reserved. Read LICENSE.TXT for details.
- */
 
-/*  These macros expand the `object argument`.
- *  See HW_X() below.
+/*  Expand the definition of object register r of object o.
+ *    No error checking. r must be a register of object o, not a class register.
  */
+#define HW_XOR(o,r)			_HW_XOR1(r,hw_##o##_##r,o,hw_##o)
+#define _HW_XOR1(...)			_HW_XOR2(__VA_ARGS__)
+#define _HW_XOR2(r,rc,ra,rwm,rfm,o,c,a)	HW_OXR(rc,r,ra,rwm,rfm,c,o,a)
 
-
-/*  Return the definition of o as a triplet: c,o,(d).
- *  or ,o,"error message" if o is not an object.
- */
-#define HW_XO(o)			_HW_XO01(o,hw_##o)
-#define _HW_XO01(...)			_HW_XO02(__VA_ARGS__)
-#define _HW_XO02(o,...)			HW_Y0(_HW_XO02,hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
-#define _HW_XO021(o,c,...)		c,o,(__VA_ARGS__)
-#define _HW_XO020(o,...)		HW_Y0(_HW_XO020,o)(o)
-#define _HW_XO0200(o)			,o,HW_EM_O(o)
-#define _HW_XO0201(o)			,o,HW_EM_OM(o)
-
-
-/*  Return the definition of the relative x of object o as a triplet: `c,(o,x),(d)`
- *    Return `,o,error message` if the relative can not be found.
- *    Return `(),,` if the definition is a path to another object
- *    Convert register definitions to memory definitions (a register has no relatives).
- */
-/*
- *  1. If x is void, return the definition of o.
- */
-#define HW_OX(o,x)			HW_Y(_HW_OX0_,x)(o,x)
-#define _HW_OX0_1(o,...)		HW_XO(o)
-/*
- *  2. Object relative. Assume that o is an object name.
- */
-#define _HW_OX0_0(o,x)			_HW_OX02(o,x,hw_##o##_##x)
-#define _HW_OX02(...)			_HW_OX03(__VA_ARGS__)
-/*
- *     If the expansion of hw_o_x starts with left bracket, return it as is (...),,
- */
-#define _HW_OX03(o,x,...)		HW_Y0(_HW_OX1_,_hw_isa_leftbkt __VA_ARGS__)(o,x,__VA_ARGS__)
-#define _HW_OX1_1(o,x,...)		__VA_ARGS__,,
-/*
- *     If the expansion of hw_o_x starts with a class name, return the definition: c,(o,x),(...)
- */  
-#define _HW_OX1_0(o,x,...)		HW_Y0(_HW_OX2_,hw_class_##__VA_ARGS__)(o,x,__VA_ARGS__)
-/*
- *     hw_o_x starts with a class name.
- */
-#define _HW_OX2_1(o,x,c,...)		HW_Y0(_HW_OX3_,_hw_isa_reg_##c)(o,x,c,__VA_ARGS__)
-/*
- *     hw_o_x is a definition of an object.
- */
-//#define _HW_OX3_0(o,x,c,...)		c,o,(__VA_ARGS__)
-#define _HW_OX3_0(o,x,c,...)		c,o##_##x,(__VA_ARGS__)
-
-/*
- *     hw_o_x is a register. We need the definition of its holder. Return the definition of the reg.
- */
-#define _HW_OX3_1(o,...)		_HW_OX32((o,__VA_ARGS__),hw_##o)
-#define _HW_OX32(...)			_HW_OX33(__VA_ARGS__)
-#define _HW_OX33(va,c,...)		_HW_OX34(c,(__VA_ARGS__),HW_XB va)
-#define _HW_OX34(...)			_HW_OX35(__VA_ARGS__)
-#define _HW_OX35(c,d,o,x,xc,...)	_HW_OXR(xc,x,__VA_ARGS__,c,o,HW_XB d)
-/*
- *  3. If the expansion of hw_o_x is the name of an object o2, return the definition: c2,o2,(...)
- */
-#define _HW_OX2_0(o,x,o2)		_HW_OX22(o,x,HW_XO(o2))
-#define _HW_OX22(...)			_HW_OX23(__VA_ARGS__)
-#define _HW_OX23(o,x,c2,...)		HW_Y0(_HW_OX4_,c2)(o,x,c2,__VA_ARGS__)
-#define _HW_OX4_0(o,x,...)		__VA_ARGS__ // The definition of o2
-/*
- *  4. Look for a class relative.
- *     Get the class name from the definition of o: c,o,d
- */
-#define _HW_OX4_1(o,x,...)		_HW_OX42(HW_XO(o),x)
-#define _HW_OX42(...)			_HW_OX43(__VA_ARGS__)
-#define _HW_OX43(c,...)			HW_Y0(_HW_OX5_,c)(c,__VA_ARGS__)
-#define _HW_OX5_1(c,o,d,...)		,o,d //__VA_ARGS__ // Error: o is not an object
-/*
- *  5. Expand hw_c_x
- */
-#define _HW_OX5_0(c,o,d,x)		_HW_OX52(c,o,d,x,hw_##c##_##x)
-#define _HW_OX52(...)			_HW_OX53(__VA_ARGS__)
-/*
- *     If the expansion of hw_c_x starts with a void, return the expansion of a function
- */
-#define _HW_OX53(c,o,d,x,...)		HW_Y0(_HW_OX6_,__VA_ARGS__)(c,o,d,x,__VA_ARGS__)
-#define _HW_OX6_1(c,o,d,x,z,f)		_HW_OX62(f,o,HW_XB d)
-#define _HW_OX62(f,...)			_HW_OX63(f(__VA_ARGS__)) // Expand f( o, ...d... )
-#define _HW_OX63(...)			_HW_OX6_0(__VA_ARGS__)
-/*
- *     If the expansion of hw_c_x starts with a class name, return this.
- *       The expansion of hw_c_x can be a single name (check for a register first)
- */
-#define _HW_OX6_0(c,o,d,x,...)		HW_Y0(_HW_OX7_,hw_class_##__VA_ARGS__)(c,o,d,x,__VA_ARGS__)
-#define _HW_OX7_0(c,o,d,x,y)		_HW_OX72(c,o,d,x,y,hw_##c##_##y)
-#define _HW_OX72(...)			_HW_OX73(__VA_ARGS__)
-#define _HW_OX73(c,o,d,x,y,...)		HW_Y0(_HW_OX9_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,x,y,__VA_ARGS__)
-#define _HW_OX9_1(c,o,d,x,y,cx,...)	_HW_OXR(cx,y,__VA_ARGS__,c,o,HW_XB d)
-#define _HW_OX9_0(c,o,d,x,y,...)	HW_Y0(_HW_OXA_,hw_class_##y)(c,o,d,x,y,__VA_ARGS__)
-#define _HW_OXA_0(c,o,d,x,y,...)	,(o,x),o has no relative x
-#define _HW_OXA_1(c,o,d,x,y,...)	y,(o,x),__VA_ARGS__
-/*
- *       If it is a register, return its memory definition.
- */
-#define _HW_OX7_1(c,o,d,x,cx,...)	HW_Y0(_HW_OX8_,_hw_isa_reg_##cx)(c,o,d,x,cx,__VA_ARGS__)
-#define _HW_OX8_0(c,o,d,x,...)		__VA_ARGS__
-#define _HW_OX8_1(c,o,d,x,cx,...)	_HW_OXR(cx,x,__VA_ARGS__,c,o,HW_XB d)
 
 /*
  *  Convert a register definition to a memory definitions:
@@ -115,7 +14,7 @@
  *   * _m112,(o,r),(o,r,rc,a,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2)
  *   * _m122,(o,r),(o,r1,rc1,a1,wm1,fm1,bn1,bp1,vp1,r2,rc2,a2,wm2,fm2,bn2,bp2,vp2)
  */
-#define _HW_OXR(...)			_HW_OXR2(__VA_ARGS__)
+#define HW_OXR(...)			_HW_OXR2(__VA_ARGS__)
 #define _HW_OXR2(rc,...)		_HW_OXR##rc(__VA_ARGS__)
 
 #define _HW_OXR_r8(r,ra,rwm,rfm,c,o,a)	_m111,(o,r),(o,r,_r8,a+ra,rwm,rfm,8,0)
@@ -153,168 +52,197 @@
   _m112,(o,r),(o,r,rc,a+ra,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2)
 
 
-/*  Follow an object path.
- *    Return the definition of the target object as a triplet: c,o,d
- *
- *  1. If the path is in brackets, remove them.
+
+/*  Return the definition of o as a triplet: c,o,(d).
+ *  or ,o,"error message" if o is not an object.
  */
-#define HW_XP(...)			HW_Y0(_HW_XP01_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_XP01_0(...)			_HW_XP11(__VA_ARGS__,,)
-#define _HW_XP01_1(...)			_HW_XP02( HW_XB __VA_ARGS__ )
-#define _HW_XP02(...)			_HW_XP03( __VA_ARGS__)
+#define HW_XO(o)			_HW_XO01(o,hw_##o)
+#define _HW_XO01(...)			_HW_XO02(__VA_ARGS__)
+#define _HW_XO02(o,...)			HW_Y0(_HW_XO02,hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
+#define _HW_XO021(o,c,...)		c,o,(__VA_ARGS__)
+#define _HW_XO020(o,...)		HW_Y0(_HW_XO020,o)(o)
+#define _HW_XO0200(o)			,o,HW_EM_O(o)
+#define _HW_XO0201(o)			,o,HW_EM_OM(o)
+
+
+/*  Return the definition of the relative r of object o as a triplet: 'c,o_r,(d)' or 'c,(o,r),(d)'
+ *    Return ',o,error message' if the relative can not be found.
+ *    Register definitions are converted to memory definitions.
+ */
+#define HW_CODR(c,o,...)		HW_Y0(_HW_CODR_,_hw_islb o)(c,o,__VA_ARGS__)
+#define _HW_CODR_1(c,o,d,r)		_HW_CODR2(c,o,d,r,hw_##c##_##r)	// Can not compute o_r since o is ()
+#define _HW_CODR_0(c,o,d,r)		_HW_CODR0(c,o,d,r,hw_##o##_##r)
+#define _HW_CODR0(...)			_HW_CODR1(__VA_ARGS__)
+#define _HW_CODR1(c,o,d,r,...)		HW_Y0(_HW_CODR1_,hw_class_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*
- *  2. If the first arg is in brackets, remove them.
+ *  hw_o_r is a definition.
  */
-#define _HW_XP03(...)			HW_Y0(_HW_XP03_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_XP03_0(...)			_HW_XP11(__VA_ARGS__,,)
-#define _HW_XP03_1(...)			_HW_XP04( HW_XB __VA_ARGS__ )
-#define _HW_XP04(...)			_HW_XP11( __VA_ARGS__,,)
+#define _HW_CODR1_1(c,o,d,r,...)	HW_Y0(_HW_CODR10_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*
- *  3. If the second arg is a path (in brackets), expand it.
+ *  hw_o_r is not a register. Return the definition.
  */
-#define _HW_XP11(o,x,...)		HW_Y0(_HW_XP11_,_hw_isa_leftbkt x)(o,x,__VA_ARGS__)
-#define _HW_XP11_0(o,x,...)		_HW_XP22(HW_OX(o,x),__VA_ARGS__)
-#define _HW_XP11_1(o,x,...)		_HW_XP12(o, HW_OX x, __VA_ARGS__)
-#define _HW_XP12(...)			_HW_XP13(__VA_ARGS__)
-#define _HW_XP13(o,c,...)		HW_Y0(_HW_XP19_,c)(o,c,__VA_ARGS__)
-#define _HW_XP19_1(o,z,r,e,...)		,r,e // Error
+#define _HW_CODR10_0(c,o,d,r,x,...)	x,o##_##r,(__VA_ARGS__)
 /*
- *  2nd arg.
+ *  hw_o_r is a register. Return the memory definition.
  */
-#define _HW_XP19_0(o,c,x,d,...)		_HW_XP22(HW_OX(o,x),__VA_ARGS__)
-
-#define _HW_XP22(...)			_HW_XP23(__VA_ARGS__)
-#define _HW_XP23(c,...)			HW_Y0(_HW_XP23_,c)(c,__VA_ARGS__)
-#define _HW_XP23_1(...)			__VA_ARGS__ // Error
-#define _HW_XP23_0(c,o,d,...)		HW_Y0(_HW_XP29_,__VA_ARGS__)(c,o,d,__VA_ARGS__)
-#define _HW_XP29_1(c,o,d,...)		c,o,d
+#define _HW_CODR10_1(c,o,d,r,cr,...)	HW_OXR(cr,r,__VA_ARGS__,c,o,HW_XB d)
 /*
- *  3rd arg.
+ *  x is a not a class, is it the name of an object?
  */
-#define _HW_XP29_0(c,o,d,x,...)		_HW_XP31(HW_OX(o,x),__VA_ARGS__)
-#define _HW_XP31(...)			_HW_XP32(__VA_ARGS__)
+#define _HW_CODR1_0(c,o,d,r,x)		_HW_CODR10(c,o,d,r,HW_XO(x),)
+#define _HW_CODR10(...)			_HW_CODR11(__VA_ARGS__)
+#define _HW_CODR11(c,o,d,r,x,...)	HW_Y0(_HW_CODR11_,hw_class_##x)(c,o,d,r,x,__VA_ARGS__)
 /*
- *     If the result of the expansion is a path, expand it again.
+ *  hw_o_r is the name of an object. Return its definition.
  */
-#define _HW_XP32(c,...)			HW_Y0(_HW_XP32_,_hw_isa_leftbkt c)(c,__VA_ARGS__)
-#define _HW_XP32_1(c,...)		_HW_XP33(HW_OX c,__VA_ARGS__)
-#define _HW_XP33(...)			_HW_XP32_0(__VA_ARGS__)
-#define _HW_XP32_0(c,...)		HW_Y0(_HW_XP33_,c)(c,__VA_ARGS__)
-#define _HW_XP33_1(...)			__VA_ARGS__ // Error
-#define _HW_XP33_0(c,o,d,...)		HW_Y0(_HW_XP39_,__VA_ARGS__)(c,o,d,__VA_ARGS__)
-#define _HW_XP39_1(c,o,d,...)		c,o,d
+#define _HW_CODR11_1(c,o,d,r,oc,oo,od,...)	oc,oo,od
 /*
- *  4th arg
+ *  hw_o_r is not the name of an object. Try hw_c_r.
  */
-#define _HW_XP39_0(c,o,d,x,...)		_HW_XP41(HW_OX(o,x),__VA_ARGS__)
-#define _HW_XP41(...)			_HW_XP42(__VA_ARGS__)
-#define _HW_XP42(c,...)			HW_Y0(_HW_XP42_,c)(c,__VA_ARGS__)
-#define _HW_XP42_1(...)			__VA_ARGS__ // Error
-#define _HW_XP42_0(c,o,d,...)		HW_Y0(_HW_XP43_,__VA_ARGS__)(c,o,d,__VA_ARGS__)
-#define _HW_XP43_1(c,o,d,...)		c,o,d
-#define _HW_XP43_0(c,o,d,...)		,o,() HW_E(too many arguments)
-
-
+#define _HW_CODR11_0(c,o,d,r,...)	_HW_CODR2(c,o,d,r,hw_##c##_##r)
+#define _HW_CODR2(...)			_HW_CODR3(__VA_ARGS__)
+#define _HW_CODR3(c,o,d,r,...)		HW_Y0(_HW_CODR3_,__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*
- * @ingroup public_mac
- * @brief Returns the definition of an object from its path.
- * @hideinitializer
- *
- * Parses the path and returns the definition of the target object if it exist
- * (its class has been declared), otherwise emits an error and returns the
- * definition of the fake object so that caller won't emit other errors.
- *
- * The definition of an object has the form `class, name, ...`
- *
- * @code
- * HW_X(counter0)
- * @endcode
- *
- * @code
- * HW_X((counter0,compare0))
- * @endcode
- *
- * @code
- * HW_X((counter0,compare0,output))
- * @endcode
- *
- * @code
- * HW_X(irq(counter0,compare0))
- * @endcode
+ *  hw_c_r is void -> delegate to the provided function
  */
-
-/* Returns the definition of an object: `c,o,...`
- *
- * The argument can be:
- *   * a single object name: `o`
- *   * an object definition starting with a class name
- *   * an object path: `(o,...)`
- *   * an IRQ: `irq(o [,r])`, `irq((o,...) [,r])`
- *   * an IRQ flag: `irqflag(o [,r])`, `irqflag((o,...) [,r])`
- *   * an IRQ mask: `irqmask(o [,r])`, `irqmask((o,...) [,r])`
- *
- * A list `c,o,...` is always returned with the class in first position followed
- * by the name of the object. If an error occurs, no error is triggered but the
- * class c is set void and the error message is stored in third position..
- */
-/*  1. If the args start with a left bracket, expand the path. End.
- *  2. If the args start with with a class name, return them as is. End.
- *  3. If the args start with a keyword (reg, irq...), use the corresponding macro HW_X_... . End.
- *  4. Expand the path. End.
- */
-#define HW_X(...)			HW_Y0(_HW_X00_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_X00_1(...)			_HW_X09( HW_XP __VA_ARGS__ )
-#define _HW_X00_0(...)			HW_Y0(_HW_X01_,hw_class_##__VA_ARGS__)(__VA_ARGS__)
-#define _HW_X01_1(...)			__VA_ARGS__
-#define _HW_X01_0(...)			_HW_X01((__VA_ARGS__),_HW_X_##__VA_ARGS__)
-#define _HW_X01(...)			_HW_X02(__VA_ARGS__ )
-#define _HW_X02(va,...)			HW_Y0(_HW_X02_,__VA_ARGS__)(va,__VA_ARGS__)
-#define _HW_X02_1(va,z,...)		_HW_X09( __VA_ARGS__ )
-#define _HW_X02_0(va,...)		_HW_X09( HW_XP va )
+#define _HW_CODR3_1(c,o,d,r,z,f)	_HW_CODR4(f,o,HW_XB d)
+#define _HW_CODR4(f,...)		_HW_CODR5(f(__VA_ARGS__))
+#define _HW_CODR5(...)			__VA_ARGS__
 /*
- *  End of the expansion. 3 arguments: c, o, d.
- *  If brackets around the definition (d), remove them.
+ *  hw_c_r is not void.
  */
-#define _HW_X09(...)			_HW_X0A(__VA_ARGS__)
-#define _HW_X0A(c,o,...)		HW_Y0(_HW_X09_,_hw_isa_leftbkt __VA_ARGS__)(c,o,__VA_ARGS__)
-#define _HW_X09_1(c,o,...)		_HW_X09_0(c,o,HW_XB __VA_ARGS__)
-#define _HW_X09_0(...)			__VA_ARGS__
-
-
-#define _HW_X_irq			, HW_XIRQ
-#define _HW_X_irqflag			, HW_XIRQFLAG
-#define _HW_X_irqmask			, HW_XIRQMASK
-#define _HW_X_xb			, HW_XB /* just remove brackets */
-
-/* Expand the definition of an IRQ: _irq, irq(o,r), n, v, m, f
- *   The first arg must be an object name or an object path
- *   One optionnal interrupt name may follow
+#define _HW_CODR3_0(c,o,d,r,...)	HW_Y0(_HW_CODR4_,_hw_islb __VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+#define _HW_CODR4_1(c,o,d,r,...)	,(o,r),internal error: expanding () is not implemented [_HW_CODR4_1]
+/*
+ *  hw_c_r is a word.
  */
-#define HW_XIRQ(...)			_HW_XIRQ01(__VA_ARGS__,)
-#define _HW_XIRQ01(o,...)		_HW_XIRQ02(HW_XP(o),__VA_ARGS__)
-#define _HW_XIRQ02(...)			_HW_XIRQ03(__VA_ARGS__)
-#define _HW_XIRQ03(c,...)		HW_Y0(_HW_XIRQ03_,c)(c,__VA_ARGS__,)
-#define _HW_XIRQ03_1(c,o,...)		,irq(o),__VA_ARGS__	// Error: object not found
-#define _HW_XIRQ03_0(c,o,d,r,...)	_HW_XIRQ04(o,r,hw_irq_##o##_##r,__VA_ARGS__)
-#define _HW_XIRQ04(...)			_HW_XIRQ05(__VA_ARGS__)
-#define _HW_XIRQ05(o,r,x,...)		HW_Y0(_HW_XIRQ05_,_hw_is_irq##x)(o,r,x,__VA_ARGS__)
-#define _HW_XIRQ05_0(o,r,...)		,irq(o,r),HW_EM_IRQ((o,r))	// Error: no such IRQ
-#define _HW_XIRQ05_1(o,r,c,n,v,m,f,...)	HW_Y0(_HW_XIRQ06_,__VA_ARGS__)(o,r,c,n,v,m,f,__VA_ARGS__)
-#define _HW_XIRQ06_0(o,r,c,n,v,m,f,...)	,irq(o,r),HW_EM_G(HW_A0(__VA_ARGS__))	// Error: garbage
-#define _HW_XIRQ06_1(o,r,c,n,v,m,f,...)	_irq,irq(o,r),n,v,m,f	// Success
-
-/*  Expand the definition of an IRQ flag.
+#define _HW_CODR4_0(c,o,d,r,...)	HW_Y0(_HW_CODR5_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+/*
+ *  hw_c_r is a register
+ *    Convert the register definition to a memory definition.
  */
-#define HW_XIRQFLAG(...)		_HW_XIRQF01( HW_XIRQ(__VA_ARGS__) )
-#define _HW_XIRQF01(...)		_HW_XIRQF02(__VA_ARGS__)
-#define _HW_XIRQF02(c,...)		HW_Y0(_HW_XIRQF02_,c)(c,__VA_ARGS__)
-#define _HW_XIRQF02_1(c,o,...)		,irqflag(o),__VA_ARGS__	// Error
-#define _HW_XIRQF02_0(c,o,n,v,m,f)	HW_OX(n,f)
-
-/*  Expand the definition of an IRQ mask.
+#define _HW_CODR5_1(c,o,d,r,cr,...)	HW_OXR(cr,r,__VA_ARGS__,c,o,HW_XB d)
+/*
+ *  hw_c_r is not a register, try a function hw_c_
  */
-#define HW_XIRQMASK(...)		_HW_XIRQM01( HW_XIRQ(__VA_ARGS__) )
-#define _HW_XIRQM01(...)		_HW_XIRQM02(__VA_ARGS__)
-#define _HW_XIRQM02(c,...)		HW_Y0(_HW_XIRQM02_,c)(c,__VA_ARGS__)
-#define _HW_XIRQM02_1(c,o,...)		,irqmask(o),__VA_ARGS__	// Error
-#define _HW_XIRQM02_0(c,o,n,v,m,f)	HW_OX(n,m)
+#define _HW_CODR5_0(c,o,d,r,...)	_HW_CODR6(c,o,d,r,hw_##c##_)
+#define _HW_CODR6(...)			_HW_CODR7(__VA_ARGS__)
+#define _HW_CODR7(c,o,d,r,...)		HW_Y0(_HW_CODR7_,__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+/*
+ *  hw_c_ is a function that would provide class relatives
+ */
+#define _HW_CODR7_1(c,o,d,r,z,f)	_HW_CODR8(f,o,r,HW_XB d)
+#define _HW_CODR8(f,...)		_HW_CODR9(f(__VA_ARGS__))
+#define _HW_CODR9(...)			__VA_ARGS__
+
+#define _HW_CODR7_0(c,o,d,r,...)	,o,o has no relative r
+
+
+//HW_CODR(_oca,counter0_compare0,(counter0, 0),pin);
+//HW_CODR(_swuarta,swuart_pb0pa1,(pb0,pa1,(counter0,compare0),1),txd)
+//HW_CODR(_swuarta,swuart_pb0pa1,(pb0,pa1,(counter0,compare0),1),txd)
+
+
+/*  Compute the beginning of a path: o
+ */
+#define HW_XS(x,...)			HW_Y0(_HW_XS1_,_hw_islb x)(x,__VA_ARGS__)
+#define _HW_XS1_1(...)			_HW_XS1_2( HW_XB __VA_ARGS__ )		// Remove brackets
+#define _HW_XS1_2(...)			_HW_XS1_3(__VA_ARGS__ )
+#define _HW_XS1_3(x,...)		HW_Y0(_HW_XS2_,_hw_islb x)(x,__VA_ARGS__)
+#define _HW_XS2_1(x,...)		,o,two many brackets in path before (__VA_ARGS__) [HW_XS2_1],__VA_ARGS__
+#define _HW_XS2_0(x,...)		HW_Y(_HW_XS3_,hw_class_##x)(x,__VA_ARGS__)
+
+#define _HW_XS1_0(x,...)		HW_Y(_HW_XS3_,hw_class_##x)(x,__VA_ARGS__)
+#define _HW_XS3_0(x,...)		_HW_XS3_1( HW_XO(x), __VA_ARGS__ )	// Element 1 is a word, process it
+#define _HW_XS3_1(...)			__VA_ARGS__
+
+
+/*  Compute the concatenation of c,o,(d) with x.
+ *  Put the resulting definition or ',o,error message' in c,o,(d).
+ *  FIXME: is it useful to process brackets around x?
+ *  FIXME: is it useful to process concatenation of x being a c,o,(d)?
+ */
+/* #define HW_XC(c,o,d,x,...)		HW_Y(_HW_XC_,_hw_islb x)(c,o,d,x,__VA_ARGS__) */
+/* #define _HW_XC_1(c,o,d,x,...)		_HW_XC2(c,o,d,HW_XS x,__VA_ARGS__ ) */
+/* #define _HW_XC2(...)			_HW_XC3_0(__VA_ARGS__) */
+/* #define _HW_XC_0(c,o,d,x,...)		HW_Y(_HW_XC3_,x)(c,o,d,x,__VA_ARGS__) */
+/* #define _HW_XC3_1(c,o,d,z,o2,e,...)	,o2,e */
+/* #define _HW_XC3_0(c,o,d,x,...)		HW_Y(_HW_XC4_,hw_class_##x)(c,o,d,x,__VA_ARGS__) */
+/* #define _HW_XC4_0(c,o,d,r,...)		_HW_XC5( HW_CODR(c,o,d,r), __VA_ARGS__ ) */
+/* #define _HW_XC4_1(c,o,d,c2,r,d2,...)	_HW_XC5( HW_CODR(c,o,d,r), __VA_ARGS__ ) */
+/* #define _HW_XC5(...)			__VA_ARGS__ */
+
+
+/*  Parse an object path to return the definition with the format: c,o,...
+ *  Up to 4 elements can be put in the path.
+ *
+ *  Each element can be:
+ *    * a single word: `o`
+ *    * a definition: c,o,(d)
+ *    * a path: (...)
+ *
+ *  Provided definitions can com from vitual objects and to not have a hw_o
+ *  declarations. An object is supposed to exist if a class name is provided.
+ *
+ *  If an error occurs, ',o,error message' is returned.
+ */
+#define HW_X(...)			_HW_P0(__VA_ARGS__,,,,)			// Ensure at least 5 arguments
+
+#define _HW_P0(x,...)			HW_Y0(_HW_P0_,_hw_islb x)(x,__VA_ARGS__)
+#define _HW_P0_1(...)			_HW_P0_2( HW_XB __VA_ARGS__ )		// Remove brackets
+#define _HW_P0_2(...)			_HW_P0_0(__VA_ARGS__ )
+
+#define _HW_P0_0(...)			_HW_P0_3( HW_XS(__VA_ARGS__) )		// Element 1
+#define _HW_P0_3(...)			_HW_P0_4( __VA_ARGS__)
+#define _HW_P0_4(x,...)			HW_Y0(_HW_P1_,x)(x,__VA_ARGS__)
+#define _HW_P1_1(c,o,d,...)		_HW_P9(c,o,d)
+
+#define _HW_P1_0(c,o,d,x,...)		HW_Y(_HW_P2_,x)(c,o,d,x,__VA_ARGS__)	// Element 2
+#define _HW_P2_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_P2_0(c,o,d,r,...)		_HW_P2_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_P2_2(...)			_HW_P3(__VA_ARGS__)
+
+#define _HW_P3(c,o,d,x,...)		HW_Y(_HW_P3_,x)(c,o,d,x,__VA_ARGS__)	// Element 3
+#define _HW_P3_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_P3_0(c,o,d,r,...)		_HW_P3_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_P3_2(...)			_HW_P4(__VA_ARGS__)
+
+#define _HW_P4(c,o,d,x,...)		HW_Y(_HW_P4_,x)(c,o,d,x,__VA_ARGS__)	// Element 4
+#define _HW_P4_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_P4_0(c,o,d,r,...)		_HW_P4_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_P4_2(...)			_HW_P5(__VA_ARGS__)
+
+#define _HW_P5(c,o,d,x,...)		HW_Y(_HW_P5_,x)(c,o,d,x,__VA_ARGS__)	// Element 4
+#define _HW_P5_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_P5_0(c,o,d,r,...)		_HW_P5_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_P5_2(...)			_HW_P6(__VA_ARGS__)
+
+#define _HW_P6(c,o,d,x,...)		HW_Y(_HW_P6_,x)(c,o,d,x,__VA_ARGS__)	// Element 5
+#define _HW_P6_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_P6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_P6_0]
+
+#define _HW_P9(c,o,d)			HW_Y0(_HW_P9_,_hw_islb d)(c,o,d)
+#define _HW_P9_1(c,o,d)			_HW_P9_0(c,o,HW_XB d)
+#define _HW_P9_0(...)			__VA_ARGS__
+
+
+
+/*  Return the mask register of an _irq.
+ *  Can not use HW_CODR since it's blued.
+ */
+#define hw__irq_mask			, _hw_irqm
+#define _hw_irqm(oo,v,o,m,f)		_hw_irqm1(o,hw_##o,hw_##o##_##m)
+#define _hw_irqm1(...)			_hw_irqm2(__VA_ARGS__)
+#define _hw_irqm2(o,c,a,rc,...)		HW_OXR(rc,,__VA_ARGS__,c,o,a)
+
+#define hw__irq_flag			, _hw_irqf
+#define _hw_irqf(oo,v,o,m,f)		_hw_irqf1(o,hw_##o,hw_##o##_##f)
+#define _hw_irqf1(...)			_hw_irqf2(__VA_ARGS__)
+#define _hw_irqf2(o,c,a,rc,...)		HW_OXR(rc,,__VA_ARGS__,c,o,a)
+
+#define hw__irq_			, _hw_irq_
+#define _hw_irq_(oo,r,v,o,m,f)		_hw_irq1(o,r,hw_##o##_irq_##r)
+#define _hw_irq1(...)			_hw_irq2(__VA_ARGS__)
+#define _hw_irq2(o,r,...)		HW_KW(_hw_irq2_,_irq,__VA_ARGS__)(o,r,__VA_ARGS__)
+#define _hw_irq2_0(o,r,...)		,(o,irq,r),HW_EM_O((o,irq,r))
+#define _hw_irq2_1(o,r,ic,iv,...)	ic,(o,irq,r),(iv,__VA_ARGS__)

@@ -1,18 +1,21 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include BOARD_H
+
+#include <hwa/swuarta.h>
+
 /*
  *  NOTE: do not leave the RX pin floating. Fix-it to high level through 10 kohms.
  */
-#define hw_swuart0_pin_txd		DIABOLO_PIN_TX
-#define hw_swuart0_pin_rxd		DIABOLO_PIN_RX
-#define hw_swuart0_starter		(DIABOLO_PIN_RX,pcic)
-#define hw_swuart0_autosync		5_1
-#define hw_swuart0_compare		(counter1,compare0)
-#define hw_swuart0_clk_div		1
+#define UART			HW_SWUART( txd,       DIABOLO_PIN_TX,	\
+					   rxd,       DIABOLO_PIN_RX,	\
+					   counter,   counter1,		\
+					   compare,   compare0,		\
+					   clkdiv,    1,		\
+					   autosync,  51,		\
+					   fastreg,   (shared,gpior0) )
 
-#define UART				swuart0
-
-#include BOARD_H
+HW_DECLARE(UART);
 
 #endif

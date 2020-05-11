@@ -106,7 +106,7 @@
  * @page stm32_usarta
  * @section Interrupts
  * @code
- * hw | hwa ( turn, irq(systick), on | off );
+ * hw | hwa ( turn, (systick,irq), on | off );
  * @endcode
  */
 
@@ -115,7 +115,7 @@
  * @page stm32_usarta
  * <br>
  * @code
- * if ( hw(read, irqflag(systick)) )	// Reading the flag clears it
+ * if ( hw( read, (systick,irq) )	// Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
  * <br>

@@ -35,7 +35,7 @@
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   hwa( power, (LED1,port), on );
 

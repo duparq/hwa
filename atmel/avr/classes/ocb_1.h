@@ -41,8 +41,15 @@
  * #endif
  * @endcode
  */
-#define HW_BITS__ocb		, _hw_bn_ocb
-#define _hw_bn_ocb(o,a,...)			8
+#define HW_BITS__ocb			, _hw_bn_ocb
+#define _hw_bn_ocb(o,a,...)		8
+
+
+/*  Return the compare register of a _ocb
+ *    HW_CODR is blued.
+ */
+#define hw__ocb_reg			, _hw_ocb_reg
+#define _hw_ocb_reg(oo,ct,cp)		HW_XOR(ct,ocr##cp)
 
 
 /**
@@ -72,10 +79,6 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-
-  /*  Hardware registers
-   */
-  hwa_r8_t	reg ;
 
   /*  Registers used for high-level configuration
    */

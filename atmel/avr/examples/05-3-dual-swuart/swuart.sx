@@ -2,4 +2,10 @@
 	;; -*- asm -*-
 
 #include "config.h"
-#include <hwa/swuart.sx>
+
+#define UART	UART0
+#include <hwa/swuarta.sx>
+
+#undef UART
+#define UART	UART1
+#include <hwa/swuarta.sx>

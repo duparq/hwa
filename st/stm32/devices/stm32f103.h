@@ -43,13 +43,12 @@
  * `counter4`		| Counter 4 update
  *
  */
-#define hw_irq_nmi_			_irq, core, x2, ,
-#define hw_irq_systick_			_irq, systick, x15, ie, if
-#define hw_irq_systick_alarm		_irq, systick, x15, ie, if
-#define hw_irq_counter2_		_irq, counter2, 28, ie, if
-#define hw_irq_counter3_		_irq, counter3, 29, ie, if
-#define hw_irq_counter4_		_irq, counter4, 30, ie, if
-/* #define hw_irq_counter5_			_irq, counter5, 50, ie, if */
+#define hw_nmi_irq			_irq,  x2, core,     ,
+#define hw_systick_irq			_irq, x15, systick,  ie, if
+#define hw_systick_irq_alarm		_irq, x15, systick,  ie, if
+#define hw_counter2_irq			_irq,  28, counter2, ie, if
+#define hw_counter3_irq			_irq,  29, counter3, ie, if
+#define hw_counter4_irq			_irq,  30, counter4, ie, if
 
 #define __vector_x2			hw_esr_nmi
 #define __vector_x3			hw_esr_hard
@@ -476,7 +475,7 @@
 #include "../classes/cta_1.h"
 #include "../classes/cca_1.h"
 
-/*	Object				class, definition
+/*	Object				class, address
  */
 #define hw_counter2			_cta, 0x40000000
 #define hw_counter3			_cta, 0x40000400
@@ -496,6 +495,10 @@
 #define hw_counter4_channel2		_cca, counter4, 2
 #define hw_counter4_channel3		_cca, counter4, 3
 #define hw_counter4_channel4		_cca, counter4, 4
+
+#define hw_counter2_remap		_xob1, afio, mapr, 2,  8
+#define hw_counter3_remap		_xob1, afio, mapr, 2, 10
+#define hw_counter4_remap		_xob1, afio, mapr, 1, 12
 
 
 /*******************************************************************************
@@ -531,7 +534,7 @@
 #if !defined __ASSEMBLER__
 
 
-/* This structure is instanciated by hwa( begin ) or hwa( begin_from_reset ) and
+/* This structure is instanciated by hwa( begin ) or hwa( begin, reset ) and
  * used by all HWA asynchronous instructions to bufferize hardware accesses.
  */
 typedef struct {

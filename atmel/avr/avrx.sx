@@ -1,6 +1,9 @@
 
 	;; -*- asm -*-
 
+#ifndef _AVRX_SX_
+#define _AVRX_SX_
+
 	;; Extended instructions
 
 #define	SREG		HW_ADDRESS((core0, sreg))
@@ -170,3 +173,5 @@
 	.endif
 	CYCLES=CYCLES+1
 	.endm
+
+#endif /* ifndef _AVRX_SX_ */

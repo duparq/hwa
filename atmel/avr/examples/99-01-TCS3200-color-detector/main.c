@@ -99,44 +99,44 @@ static uint16_t measure ( uint8_t s3, uint8_t s2 )
   /*  Prepare to capture the date of the next rising edge
    */
   hw( configure, CAPTURE, edge, rising );
-  hw( clear, irqflag(CAPTURE) );
+  hw( clear, (CAPTURE,irq) );
 
   /*  Use the compare unit to detect a too long elapsed time for rising edge to
    *  occur
    */
   hw( write, COMPARE, hw(read, COUNTER) );
-  hw( clear, irqflag(COMPARE) );
+  hw( clear, (COMPARE,irq) );
 
   for (;;) {
     /*
      *	Rising edge occured: continue below
      */
-    if ( hw( read, irqflag(CAPTURE) ) ) {
+    if ( hw( read, (CAPTURE,irq) ) ) {
       t = hw( read, CAPTURE ) ;
       break ;
     }
     /*
      *	Compare-match occured: signal period is too long
      */
-    if ( hw( read, irqflag(COMPARE) ) )
+    if ( hw( read, (COMPARE,irq) ) )
       return 0xFFFF ;
   }
 
   /*  Now wait for the falling edge
    */
   hw( configure, CAPTURE, edge, falling );
-  hw( clear, irqflag(CAPTURE) );
+  hw( clear, (CAPTURE,irq) );
 
   hw( write, COMPARE, t );
-  hw( clear, irqflag(COMPARE) );
+  hw( clear, (COMPARE,irq) );
 
   for (;;) {
-    if ( hw( read, irqflag(CAPTURE) ) )
+    if ( hw( read, (CAPTURE,irq) ) )
       /*
        *  Return the half-period
        */
       return hw( read, CAPTURE ) - t ;
-    if ( hw( read, irqflag(COMPARE) ) )
+    if ( hw( read, (COMPARE,irq) ) )
       /*
        *  Half-period is too long
        */
@@ -216,7 +216,7 @@ static uint16_t HHHH2i ( uint8_t s[] )
 int
 main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   hwa( configure, UART );
 

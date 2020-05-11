@@ -101,7 +101,7 @@
 
 /* FIXME
  *
- * Use HW_IRQ(...) or irq() for trigger?
+ * Use irq for trigger?
  */
 
 #define hwa_configure__ada		, _hwa_cfada
@@ -458,8 +458,8 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
  *
  * @code
  * hw( trigger, adc0 );
- * while ( !hw( read, irqflag(adc0) ) ) {}
- * hw( clear, irqflag(adc0) );
+ * while ( !hw( read, (adc0,irq) ) ) {}
+ * hw( clear, (adc0,irq) );
  * uint16_t result = hw( read, adc0 );
  * @endcode
  *

@@ -110,7 +110,7 @@
  * <br>
  * __IRQ__
  * @code
- * hw | hwa ( turn, irq(systick), on | off );
+ * hw | hwa ( turn, (systick,irq), on | off );
  * @endcode
  *
  * @code
@@ -118,7 +118,7 @@
  * @endcode
  *
  * @code
- * if ( hw(read, irqflag(systick)) )	   // Reading the flag clears it
+ * if ( hw( read, (systick,irq) )	   // Reading the flag clears it
  *   hw(toggle,LED);
  * @endcode
  */

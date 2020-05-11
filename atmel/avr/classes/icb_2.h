@@ -163,9 +163,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,capture0)) ) ) {	   // Read capture IRQ flag
- *   hw( clear, irqflag((counter0,capture0)) );		   // Clear capture IRQ flag
- *   hw( turn, irq((counter0,capture0)), off );		   // Disable capture IRQs
+ * if ( hw( read,(counter0,capture0,irq) ) ) {	   // Read capture IRQ flag
+ *   hw( clear,(counter0,capture0,irq) );		   // Clear capture IRQ flag
+ *   hw( disable,(counter0,capture0,irq) );		   // Disable capture IRQs
  * }
  * @endcode
  */

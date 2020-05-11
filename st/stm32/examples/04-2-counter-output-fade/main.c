@@ -13,8 +13,8 @@
  * synchronize an oscilloscope to view the PWM signal.
  *
  * You can direct the output signal to pb10 instead of LED2 (pa3) after having
- * powered its port and the afio. The remapping of the signal is automatically
- * handled by HWA.
+ * powered its port and the afio. This requires a remapping of the counter that
+ * is handled by HWA.
  *
  * @par main.c
  */
@@ -36,12 +36,12 @@
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( COUNTER )
+HW_ISR( (COUNTER,irq) )
 {
   static uint16_t	duty ;
   static uint8_t	phase ;
 
-  hw( clear, irq(COUNTER) );
+  hw( clear, (COUNTER,irq) );
 
   hw( write, LED2, hw(read,(COUNTER,dir))==0 );
 
@@ -61,13 +61,14 @@ HW_ISR( COUNTER )
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Power the controllers we use
    */
   hwa( power, (LED1,port), on );
   hwa( power, (LED2,port), on );
   hwa( power, COUNTER, on );
+  /* hwa( power, (pb10,port), on ); */
   /* hwa( power, afio, on ); */
   hwa( commit );
 
@@ -96,10 +97,10 @@ int main ( )
 
   hwa( commit );
 
-  hw( enable, nvic, irq(COUNTER) );
-  hw( enable, irq(COUNTER) );
+  hw( enable, nvic, COUNTER );
+  hw( enable, (COUNTER,irq) );
 
-  /*  Sleep between IRQs. 'sleep_until_event' is OK too.
+  /*  Sleep between IRQs.
    */
-  for(;;) hw( sleep_until_irq );
+  for(;;) hw( wait, irq );
 }

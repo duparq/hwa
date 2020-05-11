@@ -28,6 +28,7 @@
 					   addresssize, 2,	\
 					   pagesize,    8 )
 
+
 HW_DECLARE(EEPROM);
 HW_DEFINE(EEPROM);
 
@@ -62,7 +63,7 @@ main(void)
   uint8_t b[16];
   uint8_t x;
 
-  hwa( begin_from_reset );
+  hwa( begin, reset );
   hwa( configure,   uart0,
        bps,	    9600,
        receiver,    disabled,

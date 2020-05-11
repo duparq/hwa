@@ -20,17 +20,15 @@
 
 /*  The IRQ is used only to wake the core up.
  */
-HW_ISR( COUNTER )
+HW_ISR( (COUNTER,irq) )
 {
-  /* hw( clear, (COUNTER,if) ) ; // DOES NOT WORK BECAUSE SETS TO 1 */
-  //  hw( write, irqflag(COUNTER), 0 );
-  hw( clear, irq(COUNTER) );
+  hw( clear, (COUNTER,irq) );
 }
 
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Power the controllers we use
    */
@@ -55,13 +53,13 @@ int main ( )
 
   hwa( commit );
 
-  hw( enable, nvic, irq(COUNTER) );
-  hw( enable, irq(COUNTER) );
+  hw( enable, nvic, COUNTER );
+  hw( enable, (COUNTER,irq) );
 
   /*  Toggle the LED between sleeps
    */
   for(;;) {
-    hw( sleep_until_irq );	// sleep_until_event is OK too.
+    hw( wait, irq );
     hw( toggle, LED1 );
   }
 }

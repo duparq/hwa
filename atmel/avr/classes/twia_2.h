@@ -505,22 +505,22 @@
   void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v )	\
   {								\
     hw( bus_start, o );						\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_slaw, o, sla & 0x7F );				\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_write, o, v );					\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_stop, o );						\
   }								\
 								\
   uint8_t _hw_##o##_start_read_stop ( uint8_t sla )		\
   {								\
     hw( bus_start, o );						\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_slaw, o, sla & 0x7F );				\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_read, o, nack );					\
-    while( !hw(read, irqflag(o)) ) {}				\
+    while( !hw( read, (o,irq) ) {}				\
     hw( bus_stop, o );						\
 								\
     return hw( read, o );					\

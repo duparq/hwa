@@ -9,7 +9,7 @@
 #  define DEFAULT_ISR(n)		{ hw_isr_default(n); }
 void WEAK hw_isr_default ( unsigned int n __attribute__((unused)) )
 {
-  while(1) hw(sleep_until_event);
+  while(1) hw(wait,irq);
 }
 #elif 0
 #  define DEFAULT_ESR(n)		__attribute__((alias("hw_isr_default")));
@@ -18,8 +18,8 @@ void WEAK hw_isr_default ( )
 {
 }
 #elif 0
-#  define DEFAULT_ESR(n)		{ while(1) hw(sleep_until_event); }
-#  define DEFAULT_ISR(n)		{ while(1) hw(sleep_until_event); }
+#  define DEFAULT_ESR(n)		{ while(1) hw(wait,irq); }
+#  define DEFAULT_ISR(n)		{ while(1) hw(wait,irq); }
 #endif
 
 #include "../stm32.c"

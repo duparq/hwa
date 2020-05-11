@@ -20,7 +20,7 @@
 
 /*  Service watchdog IRQ
  */
-HW_ISR( watchdog0 )
+HW_ISR( (watchdog0,irq) )
 {
   /*  Blink the LED
    */
@@ -33,7 +33,7 @@ int main ( )
   /*  Create a HWA context preloaded with RESET values to
    *  collect the hardware configuration
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the LED pin
    */
@@ -62,7 +62,7 @@ int main ( )
   /*  Sleep between interrupts
    */
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
     
   return 0 ;
 }

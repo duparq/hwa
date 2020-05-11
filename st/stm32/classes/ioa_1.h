@@ -53,7 +53,10 @@
  */
 #define hw__ioa_port			, _hw_ioa_port
 
-#define _hw_ioa_port(o,p,...)		_ioa,o,(p,__VA_ARGS__),port, HW_XO(p)
+/* #define _hw_ioa_port(o,p,...)		_ioa,o,(p,__VA_ARGS__),port, HW_XO(p) */
+#define _hw_ioa_port(o,p,...)		HW_XO(p)
+
+//#define hw__ioa_port(o,d)			HW_A0 d
 
 /*  Access 'mode' bits in crl/crh from a pin. [_HW_OX26]
  */
@@ -61,10 +64,15 @@
 
 #define _hw_ioa_mode(...)		_hw_ioa_mode10(__VA_ARGS__)
 #define _hw_ioa_mode10(o,p,bn,bp)	HW_Y(_hw_ioa_mode10_,_hw_is_1_##bn)(o,p,bn,bp)
-#define _hw_ioa_mode10_0(o,p,bn,bp)	,o,"is not a single pin"
-#define _hw_ioa_mode10_1(o,p,bn,bp)	_hw_ioa_mode20(o,p,bp,hw__gpa_mode_##bp,hw_##p)
+#define _hw_ioa_mode10_0(o,p,bn,bp)	,o,HW_EM(is not a single pin)
+#define _hw_ioa_mode10_1(o,p,bn,bp)	_hw_ioa_mode20(bp,hw__gpa_mode##bp,p,hw_##p)
 #define _hw_ioa_mode20(...)		_hw_ioa_mode21(__VA_ARGS__)
-#define _hw_ioa_mode21(pin,o,bp,cr,r,rbn,rbp,c,d)	c,o,(d),x, cr,r,rbn,rbp
+#define _hw_ioa_mode21(bp,rc,r,rbn,rbp,p,pc,pa)	HW_OXR(rc,,r,rbn,rbp,pc,p,pa)
+
+
+//_hw_ioa_mode21(pa2,2,_cb1, crl, 2, 8,port0,_gpa, 0x40010800),,;
+//_HW_OXR(_cb1,mode2,crl, 2, 8,_gpa,port0,0x40010800),,;
+
 
 /*  Access 'cnf' bits in crl/crh from a pin. [_HW_OX26]
  */
@@ -73,9 +81,10 @@
 #define _hw_ioa_cnf(...)		_hw_ioa_cnf10(__VA_ARGS__)
 #define _hw_ioa_cnf10(o,p,bn,bp)	HW_Y(_hw_ioa_cnf10_,_hw_is_1_##bn)(o,p,bn,bp)
 #define _hw_ioa_cnf10_0(o,p,bn,bp)	,o,"is not a single pin"
-#define _hw_ioa_cnf10_1(o,p,bn,bp)	_hw_ioa_cnf20(o,p,bp,hw__gpa_cnf_##bp,hw_##p)
+#define _hw_ioa_cnf10_1(o,p,bn,bp)	_hw_ioa_cnf20(bp,hw__gpa_cnf##bp,p,hw_##p)
 #define _hw_ioa_cnf20(...)		_hw_ioa_cnf21(__VA_ARGS__)
-#define _hw_ioa_cnf21(pin,port,bp,cr,r,rbn,rbp,cp,ca)	cp,port,(ca),x,cr,r,rbn,rbp
+//#define _hw_ioa_cnf21(pin,port,bp,cr,r,rbn,rbp,cp,ca)	cp,port,(ca),x,cr,r,rbn,rbp
+#define _hw_ioa_cnf21(bp,rc,r,rbn,rbp,p,pc,pa)	HW_OXR(rc,,r,rbn,rbp,pc,p,pa)
 
 
 /**

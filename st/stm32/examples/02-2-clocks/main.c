@@ -29,7 +29,7 @@
 
 int main ( )
 {
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Start the high-speed external oscillator.
    */

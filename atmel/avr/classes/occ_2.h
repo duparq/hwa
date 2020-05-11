@@ -56,7 +56,7 @@
 
 #define hw_configure__occ		, _hw_cfocc
 
-#define _hw_cfocc(o,a,k,...)					\
+#define _hw_cfocc(o,ct,oc,k,...)					\
   do {									\
     HW_Y(_hw_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
@@ -103,7 +103,7 @@
  */
 #define hwa_configure__occ		, _hwa_cfocc
 
-#define _hwa_cfocc(o,a,k,...)					\
+#define _hwa_cfocc(o,ct,oc,k,...)					\
   do {									\
     HW_Y(_hwa_cfocc_xupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
@@ -154,14 +154,14 @@
  * uint16_t ocr = hw( read, (counter0,compare0) );
  * @endcode
  */
-#define hw_write__occ		, _hw_write_occ
-#define _hw_write_occ(o,a,v,...)	_hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define hw_write__occ			, _hw_write_occ
+#define _hw_write_occ(o,ct,oc,v,...)	_hw_write(ct,ocr##oc,v) HW_EOL(__VA_ARGS__)
 
-#define hwa_write__occ		, _hwa_write_occ
-#define _hwa_write_occ(o,a,v,...)	_hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
+#define hwa_write__occ			, _hwa_write_occ
+#define _hwa_write_occ(o,ct,oc,v,...)	_hwa_write(ct,ocr##oc,v) HW_EOL(__VA_ARGS__)
 
 #define hw_read__occ			, _hw_read_occ
-#define _hw_read_occ(o,a,...)	_hw_read(o,reg) HW_EOL(__VA_ARGS__)
+#define _hw_read_occ(o,ct,oc,...)	_hw_read(ct,ocr##oc) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -178,11 +178,11 @@
  * hwa( trigger, (counter0,compare0) );
  * @endcode
  */
-#define hw_trigger__occ		, _hw_trigger_occ
-#define _hw_trigger_occ(o,a)		_hw_write(o,force,1)
+#define hw_trigger__occ			, _hw_trigger_occ
+#define _hw_trigger_occ(o,ct,oc)	_hw_write(ct,foc##oc,1)
 
 #define hwa_trigger__occ		, _hwa_trigger_occ
-#define _hwa_trigger_occ(o,a)	_hwa_write(o,force,1)
+#define _hwa_trigger_occ(o,ct,oc)	_hwa_write(ct,foc##oc,1)
 
 
 /**
@@ -193,25 +193,9 @@
  * instructions:
  *
  * @code
- * if ( hw( read, irqflag((counter0,compare0)) ) ) {	   // Read compare IRQ flag
- *   hw( clear, irqflag((counter0,compare0)) );		   // Clear compare IRQ flag
- *   hw( turn, irq((counter0,compare0)), off );		   // Disable compare IRQs
+ * if ( hw( read,(counter0,compare0,irq) ) ) {	   // Read compare IRQ flag
+ *   hw( clear,(counter0,compare0,irq) );		   // Clear compare IRQ flag
+ *   hw( disable,(counter0,compare0,irq) );		   // Disable compare IRQs
  * }
  * @endcode
  */
-
-
-/*******************************************************************************
- *									       *
- *	Context management						       *
- *									       *
- *******************************************************************************/
-
-#define _hwa_setup__occ(o,a)			\
-  _hwa_setup_r( o, reg );			\
-  hwa->o.config.update	= 0xFF ;		\
-  hwa->o.config.output	= 0xFF ;
-
-#define _hwa_init__occ(o,a)		_hwa_init_r( o, reg, 0x00 )
-
-#define _hwa_commit__occ(o,a)	_hwa_commit_r( o, reg )

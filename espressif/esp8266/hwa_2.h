@@ -4,49 +4,14 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/**
- * @file
- * @brief Definitions that produce C code specific to Atmel AVR devices
+/*	Interrupts
  */
+#define hw_enable__irq			, _hw_enirq
+#define _hw_enirq(o,v,n,m,f,...)	ets_isr_unmask(1<<v)
 
-/**
- * @ingroup public_ins_espressif
- * @brief Insert inline assembler code
- * @hideinitializer
- *
- * Syntax: `hw_asm("reti");  // Insert the RETI instruction`
- */
-#define hw_asm(...)			__asm__ __volatile__(__VA_ARGS__)
+#define hw_disable__irq			, _hw_dsirq
+#define _hw_dsirq(o,v,n,m,f,...)	ets_isr_mask(1<<v)
 
-/**
- * @ingroup public_ins_espressif
- * @brief Return from a naked interrupt service routine.
- * @hideinitializer
- */
-#define hw_reti()			hw_asm("reti")
-
-/**
- * @ingroup public_ins_espressif
- * @brief Put the core in sleep mode.
- */
-#define hw_sleep_until_irq()			hw_asm("sleep")
-
-/**
- * @ingroup public_ins_espressif
- * @brief Software loop of \c n system clock cycles.
- *
- * Only works with compile time constants.
- */
-#define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
-
-#define _hw_enirqs(o,a,...)			hw_asm("sei") HW_EOL(__VA_ARGS__)
-#define _hw_dsirqs(o,a,...)			hw_asm("cli") HW_EOL(__VA_ARGS__)
-
-#if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used, externally_visible))
-#else /* GCC < 4.1 */
-#  define HW_ISR_ATTRIBUTES __attribute__((signal, used))
-#endif
 
 #include "../hwa/hwa_2.h"
 
@@ -68,7 +33,7 @@
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 
-#define _hwx_pwr_1(o,x,v, ...)		\
+#define _hwx_pwr_1(o,x,v, ...)						\
   HW_G2(_hwx_pwr1,HW_IS(hw_error,hw_(o,prr)))(o,x,v) HW_EOL(__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
@@ -87,10 +52,10 @@
  */
 #define HW_ATOMIC(...)				\
   do{						\
-    uint8_t s = _hw_read(core0,sreg);	\
+    uint8_t s = _hw_read(core0,sreg);		\
     hw( disable, interrupts );			\
     { __VA_ARGS__ }				\
-    _hw_write(core0,sreg,s) ;		\
+    _hw_write(core0,sreg,s) ;			\
   }while(0)
 
 
@@ -119,65 +84,65 @@
  * @param mask	mask of bits concerned.
  * @param value	value to write.
  */
-HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mask, uint8_t value )
-{
+  HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mask, uint8_t value )
+  {
 #if defined HWA_CHECK_ACCESS
-  if ( ra == ~0 )
-    HWA_ERR("invalid access");
+    if ( ra == ~0 )
+      HWA_ERR("invalid access");
 #endif
 
 #if !defined HWA_NO_CHECK_USEFUL
-  if ( mask == 0 )
-    HWA_ERR("no bit to be changed?");
+    if ( mask == 0 )
+      HWA_ERR("no bit to be changed?");
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
-  if ( value & (~mask) ) {
-    HWA_ERR("value overflows mask");
-  }
+    if ( value & (~mask) ) {
+      HWA_ERR("value overflows mask");
+    }
 #endif
 
-  /*  Verify that we do not try to set non-writeable bits
-   */
-  if ( (value & mask & rwm) != (value & mask) )
-    HWA_ERR("bits not writeable.");
-
-  volatile uint8_t *p = (volatile uint8_t *)ra ;
-
-  if ( ra < 0x40 && 
-       (mask==0x01 || mask==0x02 || mask==0x04 || mask==0x08 ||
-	mask==0x10 || mask==0x20 || mask==0x40 || mask==0x80) ) {
-    /*
-     *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
-     *	sbi/cbi
+    /*  Verify that we do not try to set non-writeable bits
      */
-    if ( value )
-      *p |= mask ; /* sbi */
-    else
-      *p &= ~mask ; /* cbi */
-  }
-  else {
-    /*
-     *	Mask of bits to be read
-     *	  = bits that are writeable and not to be modified and not flags
-     */
-    uint8_t rm = rwm & ~mask & ~rfm ;
+    if ( (value & mask & rwm) != (value & mask) )
+      HWA_ERR("bits not writeable.");
 
-    if ( rm == 0 )
+    volatile uint8_t *p = (volatile uint8_t *)ra ;
+
+    if ( ra < 0x40 && 
+	 (mask==0x01 || mask==0x02 || mask==0x04 || mask==0x08 ||
+	  mask==0x10 || mask==0x20 || mask==0x40 || mask==0x80) ) {
       /*
-       *  Nothing to be read, just write the new value
+       *	Just 1 bit to be written at C address < 0x40 (ASM address < 0x20): use
+       *	sbi/cbi
        */
-      *p = value ;
+      if ( value )
+	*p |= mask ; /* sbi */
+      else
+	*p &= ~mask ; /* cbi */
+    }
     else {
       /*
-       *  Read-modify-write
+       *	Mask of bits to be read
+       *	  = bits that are writeable and not to be modified and not flags
        */
-      uint8_t sm = mask & rwm & value ;	    /* what has to be set     */
-      uint8_t cm = mask & rwm & (~value) ;  /* what has to be cleared */
-      *p = (*p & ~cm) | sm ;
+      uint8_t rm = rwm & ~mask & ~rfm ;
+
+      if ( rm == 0 )
+	/*
+	 *  Nothing to be read, just write the new value
+	 */
+	*p = value ;
+      else {
+	/*
+	 *  Read-modify-write
+	 */
+	uint8_t sm = mask & rwm & value ;	    /* what has to be set     */
+	uint8_t cm = mask & rwm & (~value) ;  /* what has to be cleared */
+	*p = (*p & ~cm) | sm ;
+      }
     }
   }
-}
 
 
 /**
@@ -569,34 +534,34 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
 /*
  *	From http://www.avrfreaks.net/forum/atomic-readwrite-uint16t-variable?skey=atomic%20write
  */
-#define atomic_read_word(__addr)		      \
-(__extension__({				      \
-  uint16_t __result;				      \
-  __asm__ __volatile__ (			      \
-    "cli		      \n\t"		      \
-    "lds %A[res], %[addr]     \n\t"		      \
-    "sei		      \n\t"		      \
-    "lds %B[res], %[addr] + 1 \n\t"		      \
-    : [res]  "=&r" (__result)			      \
-    : [addr] "p"   (&(__addr))			      \
-    : "memory"					      \
-  );						      \
-  __result;					      \
-}))
+#define atomic_read_word(__addr)				\
+  (__extension__({						\
+      uint16_t __result;					\
+      __asm__ __volatile__ (					\
+			    "cli		      \n\t"	\
+			    "lds %A[res], %[addr]     \n\t"	\
+			    "sei		      \n\t"	\
+			    "lds %B[res], %[addr] + 1 \n\t"	\
+			    : [res]  "=&r" (__result)		\
+			    : [addr] "p"   (&(__addr))		\
+			    : "memory"				\
+						      );	\
+      __result;							\
+    }))
 
-#define atomic_write_word_restore(__addr, __data)     \
-(__extension__({				      \
-  uint8_t  __tmp;				      \
-  __asm__ __volatile__ (			      \
-    "in	 %[tmp], __SREG__      \n\t"		      \
-    "cli		       \n\t"		      \
-    "sts %[addr], %A[data]     \n\t"		      \
-    "out __SREG__, %[tmp]      \n\t"		      \
-    "sts %[addr] + 1, %B[data] \n\t"		      \
-    : [tmp]  "=&r" (__tmp)			      \
-    : [data] "r"   (__data)			      \
-    , [addr] "p"   (&(__addr))			      \
-    : "memory"					      \
-  );						      \
-}))
+#define atomic_write_word_restore(__addr, __data)		\
+  (__extension__({						\
+      uint8_t  __tmp;						\
+      __asm__ __volatile__ (					\
+			    "in	 %[tmp], __SREG__      \n\t"	\
+			    "cli		       \n\t"	\
+			    "sts %[addr], %A[data]     \n\t"	\
+			    "out __SREG__, %[tmp]      \n\t"	\
+			    "sts %[addr] + 1, %B[data] \n\t"	\
+			    : [tmp]  "=&r" (__tmp)		\
+			    : [data] "r"   (__data)		\
+			      , [addr] "p"   (&(__addr))	\
+			    : "memory"				\
+						      );	\
+    }))
 #endif

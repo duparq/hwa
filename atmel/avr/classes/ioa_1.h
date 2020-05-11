@@ -76,19 +76,23 @@
  * #endif
  * @endcode
  */
-#define HW_POSITION__ioa			, _hw_position_ioa
+#define HW_POSITION__ioa		, _hw_position_ioa
 #define _hw_position_ioa(o,p,bn,bp,...)	bp
 
 
 /*  Port name of a pin
+ *    Could use HW_XO but we know that the port exists, so let's expand its defition here.
  */
-//#define hw__ioa_port(o,d)			HW_A1 d
-#define hw__ioa_port(o,d)			HW_A0 d
+#define hw__ioa_port			, _hw_ioa_port
+//#define _hw_ioa_port(o,p,...)		HW_XO(p)
+#define _hw_ioa_port(o,p,...)		_hw_ioa_port1(p,hw_##p)
+#define _hw_ioa_port1(...)		_hw_ioa_port2(__VA_ARGS__)
+#define _hw_ioa_port2(p,c,...)		c,p,(__VA_ARGS__)
 
 
 /*  Handle definitions such as HW_IO(pb1)
  */
 #define hw_class__ioa_io
 
-#define HW_IO__ioa				, _hw_io_ioa
-#define _hw_io_ioa(o,p,bn,bp,...)		xb(_ioa,p##_##bn##_##bp,-1,p,bn,bp)
+#define HW_IO__ioa			, _hw_io_ioa
+#define _hw_io_ioa(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(-1,p,bn,bp)

@@ -120,7 +120,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */
@@ -141,7 +141,7 @@ main ( )
   /*  Wait for UART synchronization, then send the prompt
    */
   while ( !hw(stat,UART).sync )
-    hw( sleep_until_irq );
+    hw( wait, irq );
   hw( write, UART, '$');
 
   for(;;) {
@@ -149,7 +149,7 @@ main ( )
      *	Main loop:
      *	  put the MCU into sleep mode, an interrupt will awake it
      */
-    hw( sleep_until_irq );
+    hw( wait, irq );
     if ( hw(stat,UART).rxc ) {
       /*
        *  MCU awakened by SWUART that has received a stop bit

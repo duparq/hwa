@@ -142,8 +142,8 @@ HW_INLINE void _hw_swuart0_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart0_pin_rxd
   _hwa( configure, hw_swuart0_pin_rxd, mode, digital_input );
-  hwa( clear, irqflag((hw_swuart0_pin_rxd,pcic)) );
-  hwa( turn, irq((hw_swuart0_pin_rxd,pcic)), on );
+  hwa( clear,(hw,irq_swuart0_pin_rxd,pcic)) );
+  hwa( enable,(hw,irq_swuart0_pin_rxd,pcic)) );
   _hwa( turn, (hw_swuart0_pin_rxd,pcic), hw_swuart0_pin_rxd, on );
 #  endif
 
@@ -189,8 +189,8 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
    */
 #  if defined hw_swuart1_pin_rxd
   _hwa( configure, hw_swuart1_pin_rxd, mode, digital_input );
-  hwa( clear, irqflag((hw_swuart1_pin_rxd,pcic)) );
-  hwa( turn, irq((hw_swuart1_pin_rxd,pcic)), on );
+  hwa( clear,(hw,irq_swuart1_pin_rxd,pcic)) );
+  hwa( enable,(hw,irq_swuart1_pin_rxd,pcic)) );
   _hwa( turn, (hw_swuart1_pin_rxd,pcic), hw_swuart1_pin_rxd, on );
 #  endif
 

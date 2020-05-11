@@ -41,6 +41,16 @@
 #define HW_BITS__ctd			, _hw_bits_ctd
 #define _hw_bits_ctd(...)		16
 
+#define hw__ctd_bits			, _hw_bits_ctd
+
+
+/*  Return the counting register of a _ctd
+ *    HW_CODR is blued.
+ */
+#define hw__ctd_reg			, _hw_ctd_reg
+#define _hw_ctd_reg(o,a)		HW_XOR(o,count)
+
+
 /**
  * @page atmelavr_ctd
  * @par Interrupts
@@ -85,6 +95,9 @@ typedef struct {
    */
   hwa_r8_t	ccra ;
   hwa_r8_t	ccrb ;
+  hwa_r16_t	ocr0 ;
+  hwa_r16_t	ocr1 ;
+  hwa_r16_t	icr0 ;		/* can store top count value */
   hwa_r8_t	ccrc ;
   hwa_r16_t	count ;
   hwa_r8_t	imsk ;
@@ -93,7 +106,7 @@ typedef struct {
   /*  Registers used for high-level configuration
    */
   struct {
-    uint8_t	clock,direction, top, overflow ;
+    uint8_t	clock, direction, top, overflow ;
   } config ;
 
   /*  Registers used for configuration resolution
@@ -101,6 +114,10 @@ typedef struct {
   struct {
     uint8_t	cs, wgm ;
   } solved ;
+
+  hwa_occ_t	compare0 ;
+  hwa_occ_t	compare1 ;
+  hwa_ica_t	capture0 ;
 
 } hwa_ctd_t ;
 

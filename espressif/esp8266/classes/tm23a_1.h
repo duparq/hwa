@@ -24,15 +24,9 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r32_t	_load, _ctrl ;
+  hwa_r32_t	_load ;
+  hwa_r32_t	_ctrl ;
 
-  /* struct { */
-  /*   uint32_t	baudrate ; */
-  /*   uint8_t	databits, parity, stopbits, rxen, txen ; */
-  /* } config ; */
-  /* struct { */
-  /*   uint8_t action ;	// Used at commit time */
-  /* } config ; */
 } hwa_tm23a_t ;
 
 #endif

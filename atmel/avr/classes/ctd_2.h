@@ -169,35 +169,29 @@
  * the objects and then can put computed registers values into the context, even
  * in the case of external register access, and display accurate error messages.
  */
-#define _hwa_solve__ctd( o,a )	_hwa_solve__ctd_2( o,		\
-							    hw_##o##_compare0, \
-							    hw_##o##_compare1, \
-							    hw_##o##_capture0 )
-#define _hwa_solve__ctd_2(...)		_hwa_solve__ctd_3(__VA_ARGS__)
-
-#define _hwa_solve__ctd_3( o, compare0, compare1, ic0 )				\
+#define _hwa_solve__ctd( o, a )						\
   do {									\
-    uint8_t r = _hwa_solve_ctd( &hwa->o, &hwa->compare0, &hwa->compare1, &hwa->ic0 ); \
+    uint8_t r = _hwa_solve_ctd( &hwa->o, &hwa->o.compare0, &hwa->o.compare1, &hwa->o.capture0 ); \
     if ( r == 0 ) {							\
       /*								\
        *  Write solved registers					\
        */								\
       if ( hwa->o.solved.cs != 0xFF ) _hwa_write( o, cs, hwa->o.solved.cs ); \
       if ( hwa->o.solved.wgm != 0xFF ) _hwa_write( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write( compare0, com, hwa->compare0.solved.com ); \
-      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write( compare1, com, hwa->compare1.solved.com ); \
-      if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write( ic0, acic, hwa->ic0.solved.acic ); \
-      if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write( ic0, ices, hwa->ic0.solved.ices ); \
-      if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write( ic0, icnc, hwa->ic0.solved.icnc ); \
+      if ( hwa->o.compare0.solved.com != 0xFF ) _hwa_write( o, com0, hwa->o.compare0.solved.com ); \
+      if ( hwa->o.compare1.solved.com != 0xFF ) _hwa_write( o, com1, hwa->o.compare1.solved.com ); \
+      if ( hwa->o.capture0.solved.acic != 0xFF ) _hwa_write( o, acic, hwa->o.capture0.solved.acic ); \
+      if ( hwa->o.capture0.solved.ices != 0xFF ) _hwa_write( o, ices, hwa->o.capture0.solved.ices ); \
+      if ( hwa->o.capture0.solved.icnc != 0xFF ) _hwa_write( o, icnc, hwa->o.capture0.solved.icnc ); \
       /*								\
        *  Configure used compare outputs as i/o outputs			\
        */								\
-      if ( hwa->compare0.config.output != 0xFF				\
-	   && hwa->compare0.config.output != HW_A1(_hw_occ_output_disconnected) ) \
-	_hwa( configure, (compare0,pin), mode, digital_output ); \
-      if ( hwa->compare1.config.output != 0xFF				\
-	   && hwa->compare1.config.output != HW_A1(_hw_occ_output_disconnected) ) \
-	_hwa( configure, (compare1,pin), mode, digital_output ); \
+      if ( hwa->o.compare0.config.output != 0xFF			\
+	   && hwa->o.compare0.config.output != HW_A1(_hw_occ_output_disconnected) ) \
+	_hwa( configure, hw_##o##_compare0_pin, mode, digital_output );	\
+      if ( hwa->o.compare1.config.output != 0xFF			\
+	   && hwa->o.compare1.config.output != HW_A1(_hw_occ_output_disconnected) ) \
+	_hwa( configure, hw_##o##_compare1_pin, mode, digital_output );	\
     }									\
     else if ( r == 1 )							\
       HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \
@@ -206,39 +200,39 @@
     else if ( r == 3 )							\
       HWA_ERR("configuration of `" #o "` is required.");		\
     else if ( r == 4 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
 	      "'set_after_match'.");					\
     else if ( r == 5 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 6 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', "			\
 	      "'set_at_bottom_clear_after_match', or "			\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 7 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'clear_after_match_up_set_after_match_down', " \
-	      "or 'set_after_match_up_clear_after_match_down'.");		\
+	      "or 'set_after_match_up_clear_after_match_down'.");	\
     else if ( r == 8 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
+      HWA_ERR("`mode` of compare0 can be "				\
 	      "'disconnected', 'toggle_after_match', "			\
-	      "'clear_after_match_up_set_after_match_down', "			\
-	      "or 'set_after_match_up_clear_after_match_down'.");		\
+	      "'clear_after_match_up_set_after_match_down', "		\
+	      "or 'set_after_match_up_clear_after_match_down'.");	\
     else if ( r == 9 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
+      HWA_ERR("`mode` of compare1 can be "				\
 	      "'disconnected', 'toggle_after_match', 'clear_after_match', or " \
 	      "'set_after_match'.");					\
     else if ( r == 10 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
+      HWA_ERR("`mode` of compare1 can be "				\
 	      "'disconnected', 'set_at_bottom_clear_after_match', or "	\
 	      "'clear_at_bottom_set_after_match'.");			\
     else if ( r == 11 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "'disconnected', 'clear_after_match_up_set_after_match_down', "	\
-	      "or 'set_after_match_up_clear_after_match_down'.");		\
+      HWA_ERR("`mode` of compare1 can be "				\
+	      "'disconnected', 'clear_after_match_up_set_after_match_down', " \
+	      "or 'set_after_match_up_clear_after_match_down'.");	\
     else if ( r == 12 )							\
       HWA_ERR("for `" #o "`, `optionnal parameter 'update' must be 'immediately'."); \
     else if ( r == 13 )							\
@@ -259,15 +253,15 @@
  */
 //HW_INLINE void _hwa_solve__ctd ( hwa_t *hwa __attribute__((unused)), hwa_ctd_t *p )
 HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
-				    hwa_occ_t *compare1, hwa_ica_t *ic0 )
+				   hwa_occ_t *compare1, hwa_ica_t *capture0 )
 {
   c->solved.cs	 = 0xFF ;
   c->solved.wgm	 = 0xFF ;
   compare0->solved.com = 0xFF ;
   compare1->solved.com = 0xFF ;
-  ic0->solved.acic = 0xFF ;
-  ic0->solved.ices = 0xFF ;
-  ic0->solved.icnc = 0xFF ;
+  capture0->solved.acic = 0xFF ;
+  capture0->solved.ices = 0xFF ;
+  capture0->solved.icnc = 0xFF ;
 
   if ( c->config.clock == 0xFF )
     return 0 ;
@@ -438,13 +432,13 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
 
   /*	Solve the configuration of the capture input
    */
-  //  if ( ic0->config.input != 0xFF ) {
-  if ( ic0->config.input != 0xFF )
-    ic0->solved.acic = ic0->config.input-1 ;
-  if ( ic0->config.edge != 0xFF )
-    ic0->solved.ices = ic0->config.edge-1 ;
-  if ( ic0->config.filter != 0xFF )
-    ic0->solved.icnc = ic0->config.filter ;
+  //  if ( capture0->config.input != 0xFF ) {
+  if ( capture0->config.input != 0xFF )
+    capture0->solved.acic = capture0->config.input-1 ;
+  if ( capture0->config.edge != 0xFF )
+    capture0->solved.ices = capture0->config.edge-1 ;
+  if ( capture0->config.filter != 0xFF )
+    capture0->solved.icnc = capture0->config.filter ;
   //}
 
 
@@ -612,7 +606,7 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
  * @endcode
  */
 #define hw_read__ctd			, _hw_read_ctd
-#define _hw_read_ctd(o,a,...)	_hw_read(o,count) HW_EOL(__VA_ARGS__)
+#define _hw_read_ctd(o,a,...)		_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
 
 /**
@@ -635,7 +629,7 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
  * @endcode
  */
 #define hwa_write__ctd			, _hwa_write_ctd
-#define _hwa_write_ctd(o,a,v)	_hwa_write(o,count,v)
+#define _hwa_write_ctd(o,a,v)		_hwa_write(o,count,v)
 
 
 
@@ -646,9 +640,9 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
  * The overflow flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( counter0 ) ) ) {	// Read overflow IRQ flag
- *   hw( clear, irqflag( counter0 ) );		// Clear overflow IRQ flag
- *   hw( turn, irq(counter0), off );	// Disable overflow IRQs
+ * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
+ *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
+ *   hw( disable, (counter0,irq) );	// Disable overflow IRQs
  * }
  * @endcode
  */
@@ -661,32 +655,48 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
  *******************************************************************************/
 
 #define _hwa_setup__ctd(o,a)			\
-  _hwa_setup_r( o, ccra	    );		\
-  _hwa_setup_r( o, ccrb	    );		\
-  _hwa_setup_r( o, ccrc	    );		\
-  _hwa_setup_r( o, count    );		\
-  _hwa_setup_r( o, imsk	    );		\
-  _hwa_setup_r( o, ifr	    );		\
-  hwa->o.config.clock	  = 0xFF;		\
-  hwa->o.config.direction = 0xFF;		\
-  hwa->o.config.top	  = 0xFF;		\
-  hwa->o.config.overflow  = 0xFF
+  _hwa_setup_r( o, ccra	        );		\
+  _hwa_setup_r( o, ccrb	        );		\
+  _hwa_setup_r( o, ocr0 );			\
+  _hwa_setup_r( o, ocr1 );			\
+  _hwa_setup_r( o, icr0 );			\
+  _hwa_setup_r( o, ccrc	        );		\
+  _hwa_setup_r( o, count        );		\
+  _hwa_setup_r( o, imsk	        );		\
+  _hwa_setup_r( o, ifr	        );		\
+  hwa->o.config.clock	  = 0xFF ;		\
+  hwa->o.config.direction = 0xFF ;		\
+  hwa->o.config.top	  = 0xFF ;		\
+  hwa->o.config.overflow  = 0xFF ;		\
+  hwa->o.compare0.config.update	= 0xFF ;	\
+  hwa->o.compare0.config.output	= 0xFF ;	\
+  hwa->o.compare1.config.update	= 0xFF ;	\
+  hwa->o.compare1.config.output	= 0xFF ;	\
+  hwa->o.capture0.config.input  = 0xFF ;	\
+  hwa->o.capture0.config.edge   = 0xFF ;	\
+  hwa->o.capture0.config.filter = 0xFF
 
-#define _hwa_init__ctd(o,a)					\
-  _hwa_init_r( o, ccra, 0x00 );			\
-  _hwa_init_r( o, ccrb, 0x00	   );		\
-  _hwa_init_r( o, ccrc, 0x00	   );		\
-  _hwa_init_r( o, count, 0x00	   );		\
-  _hwa_init_r( o, imsk, 0x00	   );		\
-  _hwa_init_r( o, ifr, 0x00	   )
+#define _hwa_init__ctd(o,a)			\
+  _hwa_init_r( o, ccra,         0 );		\
+  _hwa_init_r( o, ccrb,         0 );		\
+  _hwa_init_r( o, ocr0, 0 );			\
+  _hwa_init_r( o, ocr1, 0 );			\
+  _hwa_init_r( o, icr0, 0 );			\
+  _hwa_init_r( o, ccrc,         0 );		\
+  _hwa_init_r( o, count,        0 );		\
+  _hwa_init_r( o, imsk, 	0 );		\
+  _hwa_init_r( o, ifr, 		0 )
 
 #define _hwa_commit__ctd(o,a)			\
-  _hwa_commit_r( o, ccra     );		\
-  _hwa_commit_r( o, ccrb     );		\
-  _hwa_commit_r( o, ccrc     );		\
-  _hwa_commit_r( o, count    );		\
-  _hwa_commit_r( o, imsk     )
-
+  _hwa_commit_r( o, ccra         );		\
+  _hwa_commit_r( o, ccrb         );		\
+  _hwa_commit_r( o, ccrc         );		\
+  _hwa_commit_r( o, count        );		\
+  _hwa_commit_r( o, ocr0 );			\
+  _hwa_commit_r( o, ocr1 );			\
+  _hwa_commit_r( o, icr0 );			\
+  _hwa_commit_r( o, imsk         );		\
+  _hwa_commit_r( o, ifr          )
 
 
 /**

@@ -181,9 +181,9 @@
  * The overflow flag can be accessed through the interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( watchdog0 ) ) ) {
- *   hw( clear, irqflag( watchdog0 ) );
- *   hw( turn, irq(watchdog0), on );
+ * if ( hw( read, (watchdog0,irq) ) ) {
+ *   hw( clear, (watchdog0,irq) );
+ *   hw( enable, (watchdog0,irq) );
  *   n_wdoverflows++ ;
  * }
  * @endcode

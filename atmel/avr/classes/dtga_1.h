@@ -25,10 +25,6 @@
 
 typedef struct {
 
-  /*  Hardware registers
-   */
-  hwa_r8_t	dtps, dta, dtb ;
-
   /*  Registers used for high-level configuration
    */
   struct {

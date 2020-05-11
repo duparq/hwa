@@ -45,12 +45,12 @@
  *    turn the LED off
  *    turn analog comparator IRQ on
  */
-HW_ISR( COUNTER, COMPARE )
+HW_ISR( (COUNTER,irq,COMPARE) )
 {
-  hw( turn, irq(COUNTER,COMPARE), off );
+  hw( disable, (COUNTER,irq,COMPARE) );
   hw( write, PIN_LED, 0 );
-  hw( clear, irqflag(acmp0) );
-  hw( turn, irq(acmp0), on );
+  hw( clear, (acmp0,irq) );
+  hw( enable, (acmp0,irq) );
 }
 
 
@@ -60,9 +60,9 @@ HW_ISR( COUNTER, COMPARE )
  *    program a compare-match IRQ to occur in 1ms.
  *	(maybe reset the prescaler)
  */
-HW_ISR( acmp0 )
+HW_ISR( (acmp0,irq) )
 {
-  hw( turn, irq(acmp0), off );
+  hw( disable, (acmp0,irq) );
   hw( write, PIN_LED, 1 );
 
   if ( COUNTER_CLK_DIV > 1 )
@@ -73,8 +73,8 @@ HW_ISR( acmp0 )
   if ( COUNTER_CLK_DIV > 1 )
     hw( turn, (COUNTER,prescaler0), on);
 
-  hw( clear, irqflag(COUNTER,COMPARE) );
-  hw( turn, irq(COUNTER,COMPARE), on );
+  hw( clear, (COUNTER,irq,COMPARE) );
+  hw( enable, (COUNTER,irq,COMPARE) );
 }
 
 
@@ -83,7 +83,7 @@ int main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
@@ -131,7 +131,7 @@ int main ( )
        positive_input, REFERENCE,
        negative_input, PIN_ANALOG_INPUT );
 
-  hwa( turn, irq(acmp0), on );
+  hwa( enable, (acmp0,irq) );
 
   /*  Write this configuration into the hardware
    */
@@ -140,7 +140,7 @@ int main ( )
   hw( enable, interrupts );
 
   for(;;)
-    hw( sleep_until_irq );
+    hw( wait, irq );
 
   return 0 ;
 }

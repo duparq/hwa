@@ -62,9 +62,9 @@
  * The IRQ mask and flag can be accessed through interrupt-related instructions:
  *
  * @code
- * if ( hw( read, irqflag( int0 ) ) ) {	   // Read IRQ flag
- *   hw( clear, irqflag( int0 ) );		   // Clear IRQ flag
- *   hw( turn, irq(int0), off );	   // Disable IRQ
+ * if ( hw( read, (int0,irq) ) ) {	   // Read IRQ flag
+ *   hw( clear, (int0,irq) );		   // Clear IRQ flag
+ *   hw( disable, (int0,irq) );	   // Disable IRQ
  * }
  * @endcode
  */

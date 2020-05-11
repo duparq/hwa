@@ -4,66 +4,114 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
+/*	Interrupts
+ */
+#define hw_enable__irq			, _hw_enirq
+#define _hw_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,1,__VA_ARGS__,)
+
+#define hwa_enable__irq			, _hwa_enirq
+#define _hwa_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,1,__VA_ARGS__,)
+
+#define hw_disable__irq			, _hw_dsirq
+#define _hw_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,0,__VA_ARGS__,)
+
+#define hwa_disable__irq		, _hwa_dsirq
+#define _hwa_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,0,__VA_ARGS__,)
+
+#define _hwx_tirq01(...)		_hwx_tirq02(__VA_ARGS__)
+#define _hwx_tirq02(h,n,m,v,x,...)	HW_Y0(_hwx_tirq02_,x)(h,n,m,v,x,__VA_ARGS__)
+#define _hwx_tirq02_0(h,n,m,v,x,...)	HW_E_G(x)
+#define _hwx_tirq02_1(h,n,m,v,...)	h##_write(n,m,v)
+
+#define hw_read__irq			, _hw_rdirq
+#define _hw_rdirq(o,v,n,m,f,...)	_hw_read(n,f)
+
+#define hw_clear__irq			, _hw_clirq
+#define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,0)	/* Write 0 to clear */
+
+#define hwa_clear__irq			, _hwa_clirq
+#define _hwa_clirq(o,v,n,m,f,...)	_hwa_write(n,f,0)	/* Write 0 to clear */
+
+#define hw_enable_interrupts		, _hw_enirqs
+#define _hw_enirqs(o,a,...)		hw_asm("cpsie i") HW_EOL(__VA_ARGS__)
+
+#define hw_disable_interrupts		, _hw_dsirqs
+#define _hw_dsirqs(o,a,...)		hw_asm("cpsid i") HW_EOL(__VA_ARGS__)
+
+
 /**
- * @file
- * @brief Definitions that produce C code specific to STM32 devices
- * @page stm32_general STM32 general instructions
+ * @page stm32_general
+ *
+ * @code
+ * hw( enable, faults );
+ * @endcode
+ *
+ * @code
+ * hw( disable, faults );
+ * @endcode
  */
+#define hw_enable_			, _hw_enable
+#define _hw_enable(...)			HW_E(HW_EM_TL(( hw(enable,faults), hw(enable,interrupts) )))
 
-/**
- * @ingroup public_ins_stm32
- * @brief Puts the core in sleep mode.
- */
-#define hw_sleep_until_irq__mcu			, _hw_sleep_until_irq__mcu
-#define _hw_sleep_until_irq__mcu(...)		hw_asm("wfi")
+#define hw_disable_			, _hw_disable
+#define _hw_disable(...)		HW_E(HW_EM_TL(( hw(disable,faults), hw(disable,interrupts) )))
 
-#define hw_sleep_until_event__mcu		, _hw_sleep_until_event__mcu
-#define _hw_sleep_until_event__mcu(...)		hw_asm("wfe")
+#define hw_enable_faults		, _hw_enable_faults
+#define _hw_enable_faults(r,...)	, hw_asm("cpsie f") HW_EOL(__VA_ARGS__)
 
-#define _hw_enirqs(o,a,...)			hw_asm("cpsie i") HW_EOL(__VA_ARGS__)
-#define _hw_dsirqs(o,a,...)			hw_asm("cpsid i") HW_EOL(__VA_ARGS__)
-
-
-/**
- * @ingroup public_ins_stm32
- * @brief Allows program interruption.
- */
-#define hw_enable_fault_exceptions__mcu		, _hw_enable_fault_exceptions__mcu
-#define _hw_enable_fault_exceptions__mcu(...)	hw_asm("cpsie f")
+#define hw_disable_faults		, _hw_disable_faults
+#define _hw_disable_faults(r,...)	, hw_asm("cpsid f") HW_EOL(__VA_ARGS__)
 
 
 /**
- * @ingroup public_ins_stm32
- * @brief Prevents program interruption.
+ * @page stm32_general
+ *
+ * @code
+ * hw( wait, event );
+ * @endcode
  */
-#define hw_disable_fault_exceptions__mcu	, _hw_disable_fault_exceptions__mcu
-#define _hw_disable_fault_exceptions__mcu(...)	hw_asm("cpsid f")
+#define hw_wait_event			, _hw_wait_event
+#define _hw_wait_event(r,...)		hw_asm("wfe") HW_EOL(__VA_ARGS__)
+
+#define hw_wait_			, _hw_wait
+#define _hw_wait(...)			HW_E(HW_EM_TL(( hw(wait,irq), hw(wait,event) )))
+
+#define hw_wait_irq			, _hw_wait_irq
+#define _hw_wait_irq(r,...)		hw_asm("wfi") HW_EOL(__VA_ARGS__)
 
 
-/**
- * @ingroup public_ins_stm32
- * @brief Software loop of \c n system clock cycles.
- */
-#define hw_waste_cycles(n)			_hw_waste_cycles(n)
-
-
-/*	ISR
- */
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
 #  define HW_ISR_ATTRIBUTES __attribute__((used, externally_visible))
 #else /* GCC < 4.1 */
 #  define HW_ISR_ATTRIBUTES __attribute__((used))
 #endif
 
+#define _hw_israttr_atomic		,
+#define _hw_israttr_non_interruptible	,
+#define _hw_israttr_interruptible	, __attribute__((interrupt))
+#define _hw_israttr_naked		, __attribute__((naked))
 
-/*  IRQ flag is cleared writing 0 into it.
+
+/*  Single event ISR
  */
-#define hw_clear__irq			, _hw_clrirq
-#define _hw_clrirq(p,o,v,m,f,...)	_hw_write(o,f,0)
+#define _HW_ISR_(v,...)							\
+  HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
+  void __vector_##v(void)
+
+
+/*  Void ISR
+ */
+#define _HW_VISR_(v)							\
+  HW_EXTERN_C void __vector_##v(void) __attribute__((naked)) ;		\
+  void __vector_##v(void) { hw_asm("reti"); }
+
 
 
 #include "../../hwa/hwa_2.h"
 
+
+
+#define hw_waste_cycles(n)		_hw_waste_cycles(n)
 
 HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
 {

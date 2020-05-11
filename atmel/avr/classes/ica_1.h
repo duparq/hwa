@@ -66,7 +66,7 @@
  */
 typedef struct {
 
-  hwa_r16_t	reg ;
+  /* hwa_r16_t	reg ; */
 
   /*  Registers used for high-level configuration
    */

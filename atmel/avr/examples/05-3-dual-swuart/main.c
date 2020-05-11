@@ -55,18 +55,18 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UARTs
    */
-  hwa( configure, swuart0 );
-  hwa( configure, swuart1 );
+  hwa( configure, UART0 );
+  hwa( configure, UART1 );
 
   hwa( configure, PIN_LED, mode, digital_output );
 
   /*  Have the CPU enter idle mode when the 'sleep' instruction is executed.
    */
-  hwa( configure,     core0,
+  hwa( configure,  core0,
        sleep,	   enabled,
        sleep_mode, idle );
 
@@ -88,24 +88,24 @@ main ( )
      */
     hw( write, PIN_LED, 1 );
 
-    hw( reset, swuart0 );
-    hw( reset, swuart1 );
+    hw( reset, UART0 );
+    hw( reset, UART1 );
     for(;;) {
-      hw( sleep_until_irq );
-      if ( hw(stat,swuart0).sync ) {
-	hw( write, swuart0, '$');     /* signal the synchronization */
-	hw( write, (swuart1, dt0), hw( read, (swuart0, dt0) ) );
-	hw( write, (swuart1, dtn), hw( read, (swuart0, dtn) ) );
-	hw( write, (swuart1, synced), 1 );
-	hw( write, swuart1, '$');     /* signal the synchronization */
+      hw( wait, irq );
+      if ( hw(stat,UART0).sync ) {
+	hw( write, UART0, '$');     /* signal the synchronization */
+	hw( write, (UART1, dt0), hw( read, (UART0, dt0) ) );
+	hw( write, (UART1, dtn), hw( read, (UART0, dtn) ) );
+	hw( write, (UART1,sync), 1 );
+	hw( write, UART1, '$');     /* signal the synchronization */
 	break ;
       }
-      if ( hw(stat,swuart1).sync ) {
-	hw( write, swuart1, '$');     /* signal the synchronization */
-	hw( write, (swuart0, dt0), hw( read, (swuart1, dt0) ) );
-	hw( write, (swuart0, dtn), hw( read, (swuart1, dtn) ) );
-	hw( write, (swuart0, synced), 1 );
-	hw( write, swuart0, '$');     /* signal the synchronization */
+      if ( hw(stat,UART1).sync ) {
+	hw( write, UART1, '$');     /* signal the synchronization */
+	hw( write, (UART0, dt0), hw( read, (UART1, dt0) ) );
+	hw( write, (UART0, dtn), hw( read, (UART1, dtn) ) );
+	hw( write, (UART0,sync), 1 );
+	hw( write, UART0, '$');     /* signal the synchronization */
 	break ;
       }
     }
@@ -115,28 +115,28 @@ main ( )
      *	Send on one UART what has been received from the other
      */
     for(;;) {
-      hw( sleep_until_irq );
-      if ( hw(stat,swuart0).rxc ) {
+      hw( wait, irq );
+      if ( hw(stat,UART0).rxc ) {
 	/*
 	 *  UART0 -> UART0 + UART1
 	 */
-	if ( hw(stat,swuart0).stop == 0 )
+	if ( hw(stat,UART0).stop == 0 )
 	  break ;	/* null stop bit -> resynchronize */
 
-	uint8_t byte = hw( read, swuart0 );
-	hw( write, swuart0, byte );
-	hw( write, swuart1, byte );
+	uint8_t byte = hw( read, UART0 );
+	hw( write, UART0, byte );
+	hw( write, UART1, byte );
       }
-      if ( hw(stat,swuart1).rxc ) {
+      if ( hw(stat,UART1).rxc ) {
 	/*
 	 *  UART1 -> UART1 + UART0
 	 */
-	if ( hw(stat,swuart1).stop == 0 )
+	if ( hw(stat,UART1).stop == 0 )
 	  break ;	/* null stop bit -> resynchronize */
 
-	uint8_t byte = hw( read, swuart1 );
-	hw( write, swuart1, byte );
-	hw( write, swuart0, byte );
+	uint8_t byte = hw( read, UART1 );
+	hw( write, UART1, byte );
+	hw( write, UART0, byte );
       }
     }
   }

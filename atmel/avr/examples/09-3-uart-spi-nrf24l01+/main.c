@@ -66,7 +66,7 @@
 uint8_t spi ( uint8_t v )
 {
   hw( write, spi0, v );
-  while( !hw( read, irqflag(spi0) ) ) {}
+  while( !hw( read, (spi0,irq) ) ) {}
   return hw( read, spi0 );
 }
 
@@ -75,7 +75,7 @@ uint8_t spi ( uint8_t v )
  */
 uint8_t uart_rx()
 {
-  while ( !hw( read, irqflag(UART,rxc) ) ) {}
+  while ( !hw( read, (UART,irq,rxc) ) ) {}
   return hw( read, UART );
 }
 
@@ -85,7 +85,7 @@ uint8_t uart_rx()
  */
 void uart_tx( uint8_t c )
 {
-  while ( !hw( read, irqflag(UART,txqnf) ) ) {}
+  while ( !hw( read, (UART,irq,txqnf) ) ) {}
   hw( write, UART, c );
 }
 
@@ -96,7 +96,7 @@ main ( )
   /*  Create a HWA context to collect the hardware configuration
    *  Preload this context with RESET values
    */
-  hwa( begin_from_reset );
+  hwa( begin, reset );
 
   /*  Configure the software UART
    */
