@@ -166,15 +166,15 @@
  *
  * STM32 devices have up to 7 GPIO ports each holding 16 GPIO pins:
  *
- *  * @ref stm32_p16a "port0" (PORTA): @ref stm32_io1a "pa0..15"
- *  * @ref stm32_p16a "port1" (PORTB): @ref stm32_io1a "pb0..15"
- *  * @ref stm32_p16a "port2" (PORTC): @ref stm32_io1a "pc0..15"
- *  * @ref stm32_p16a "port3" (PORTD): @ref stm32_io1a "pd0..15"
- *  * @ref stm32_p16a "port4" (PORTE): @ref stm32_io1a "pe0..15"
+ *  * @ref stm32_gpa "port0" (PORTA): @ref stm32_ioa "pa0..15"
+ *  * @ref stm32_gpa "port1" (PORTB): @ref stm32_ioa "pb0..15"
+ *  * @ref stm32_gpa "port2" (PORTC): @ref stm32_ioa "pc0..15"
+ *  * @ref stm32_gpa "port3" (PORTD): @ref stm32_ioa "pd0..15"
+ *  * @ref stm32_gpa "port4" (PORTE): @ref stm32_ioa "pe0..15"
  */
 
-#include "../classes/p16a_1.h"
-#include "../classes/io1a_1.h"
+#include "../classes/gpa_1.h"
+#include "../classes/ioa_1.h"
 #include "../classes/afioa_1.h"
 
 /*	Objects				class, address
@@ -182,15 +182,15 @@
 #define hw_afio				_afioa, 0x40010000
 #define hw_afio_cken			_xob1, rcc, apb2enr, 1,  0	/* convenient */
 
-#define hw_port0			_p16a, 0x40010800
+#define hw_port0			_gpa, 0x40010800
 #define hw_port0_rcc			_rccen, port0en
 
-#define hw_port1			_p16a, 0x40010C00
-#define hw_port2			_p16a, 0x40011000
-#define hw_port3			_p16a, 0x40011400
-#define hw_port4			_p16a, 0x40011800
-/* #define hw_port5				_p16a, 0x40011C00 */
-/* #define hw_port6				_p16a, 0x40012000 */
+#define hw_port1			_gpa, 0x40010C00
+#define hw_port2			_gpa, 0x40011000
+#define hw_port3			_gpa, 0x40011400
+#define hw_port4			_gpa, 0x40011800
+/* #define hw_port5				_gpa, 0x40011C00 */
+/* #define hw_port6				_gpa, 0x40012000 */
 
 /*	Object registers
  */
@@ -208,149 +208,149 @@
 
 /*  Pins				class, peripheral, bn, bp
  */
-#define hw_pa0				_io1a, port0,  1,  0
-#define hw_pa1				_io1a, port0,  1,  1
-#define hw_pa2				_io1a, port0,  1,  2
-#define hw_pa3				_io1a, port0,  1,  3
-#define hw_pa4				_io1a, port0,  1,  4
-#define hw_pa5				_io1a, port0,  1,  5
-#define hw_pa6				_io1a, port0,  1,  6
-#define hw_pa7				_io1a, port0,  1,  7
-#define hw_pa8				_io1a, port0,  1,  8
-#define hw_pa9				_io1a, port0,  1,  9
-#define hw_pa10				_io1a, port0,  1, 10
-#define hw_pa11				_io1a, port0,  1, 11
-#define hw_pa12				_io1a, port0,  1, 12
-#define hw_pa13				_io1a, port0,  1, 13
-#define hw_pa14				_io1a, port0,  1, 14
-#define hw_pa15				_io1a, port0,  1, 15
+#define hw_pa0				_ioa, port0,  1,  0
+#define hw_pa1				_ioa, port0,  1,  1
+#define hw_pa2				_ioa, port0,  1,  2
+#define hw_pa3				_ioa, port0,  1,  3
+#define hw_pa4				_ioa, port0,  1,  4
+#define hw_pa5				_ioa, port0,  1,  5
+#define hw_pa6				_ioa, port0,  1,  6
+#define hw_pa7				_ioa, port0,  1,  7
+#define hw_pa8				_ioa, port0,  1,  8
+#define hw_pa9				_ioa, port0,  1,  9
+#define hw_pa10				_ioa, port0,  1, 10
+#define hw_pa11				_ioa, port0,  1, 11
+#define hw_pa12				_ioa, port0,  1, 12
+#define hw_pa13				_ioa, port0,  1, 13
+#define hw_pa14				_ioa, port0,  1, 14
+#define hw_pa15				_ioa, port0,  1, 15
 
-#define hw_porta_0			_io1a, port0,  1,  0
-#define hw_porta_1			_io1a, port0,  1,  1
-#define hw_porta_2			_io1a, port0,  1,  2
-#define hw_porta_3			_io1a, port0,  1,  3
-#define hw_porta_4			_io1a, port0,  1,  4
-#define hw_porta_5			_io1a, port0,  1,  5
-#define hw_porta_6			_io1a, port0,  1,  6
-#define hw_porta_7			_io1a, port0,  1,  7
-#define hw_porta_8			_io1a, port0,  1,  8
-#define hw_porta_9			_io1a, port0,  1,  9
-#define hw_porta_10			_io1a, port0,  1, 10
-#define hw_porta_11			_io1a, port0,  1, 11
-#define hw_porta_12			_io1a, port0,  1, 12
-#define hw_porta_13			_io1a, port0,  1, 13
-#define hw_porta_14			_io1a, port0,  1, 14
-#define hw_porta_15			_io1a, port0,  1, 15
+#define hw_porta_0			_ioa, port0,  1,  0
+#define hw_porta_1			_ioa, port0,  1,  1
+#define hw_porta_2			_ioa, port0,  1,  2
+#define hw_porta_3			_ioa, port0,  1,  3
+#define hw_porta_4			_ioa, port0,  1,  4
+#define hw_porta_5			_ioa, port0,  1,  5
+#define hw_porta_6			_ioa, port0,  1,  6
+#define hw_porta_7			_ioa, port0,  1,  7
+#define hw_porta_8			_ioa, port0,  1,  8
+#define hw_porta_9			_ioa, port0,  1,  9
+#define hw_porta_10			_ioa, port0,  1, 10
+#define hw_porta_11			_ioa, port0,  1, 11
+#define hw_porta_12			_ioa, port0,  1, 12
+#define hw_porta_13			_ioa, port0,  1, 13
+#define hw_porta_14			_ioa, port0,  1, 14
+#define hw_porta_15			_ioa, port0,  1, 15
 
-#define hw_porta			_io1a, port0, 16,  0
+#define hw_porta			_ioa, port0, 16,  0
 
-#define hw_pb0				_io1a, port1,  1,  0
-#define hw_pb1				_io1a, port1,  1,  1
-#define hw_pb2				_io1a, port1,  1,  2
-#define hw_pb3				_io1a, port1,  1,  3
-#define hw_pb4				_io1a, port1,  1,  4
-#define hw_pb5				_io1a, port1,  1,  5
-#define hw_pb6				_io1a, port1,  1,  6
-#define hw_pb7				_io1a, port1,  1,  7
-#define hw_pb8				_io1a, port1,  1,  8
-#define hw_pb9				_io1a, port1,  1,  9
-#define hw_pb10				_io1a, port1,  1, 10
-#define hw_pb11				_io1a, port1,  1, 11
-#define hw_pb12				_io1a, port1,  1, 12
-#define hw_pb13				_io1a, port1,  1, 13
-#define hw_pb14				_io1a, port1,  1, 14
-#define hw_pb15				_io1a, port1,  1, 15
-#define hw_portb			_io1a, port1, 16,  0
+#define hw_pb0				_ioa, port1,  1,  0
+#define hw_pb1				_ioa, port1,  1,  1
+#define hw_pb2				_ioa, port1,  1,  2
+#define hw_pb3				_ioa, port1,  1,  3
+#define hw_pb4				_ioa, port1,  1,  4
+#define hw_pb5				_ioa, port1,  1,  5
+#define hw_pb6				_ioa, port1,  1,  6
+#define hw_pb7				_ioa, port1,  1,  7
+#define hw_pb8				_ioa, port1,  1,  8
+#define hw_pb9				_ioa, port1,  1,  9
+#define hw_pb10				_ioa, port1,  1, 10
+#define hw_pb11				_ioa, port1,  1, 11
+#define hw_pb12				_ioa, port1,  1, 12
+#define hw_pb13				_ioa, port1,  1, 13
+#define hw_pb14				_ioa, port1,  1, 14
+#define hw_pb15				_ioa, port1,  1, 15
+#define hw_portb			_ioa, port1, 16,  0
 
-#define hw_pc0				_io1a, port2,  1,  0
-#define hw_pc1				_io1a, port2,  1,  1
-#define hw_pc2				_io1a, port2,  1,  2
-#define hw_pc3				_io1a, port2,  1,  3
-#define hw_pc4				_io1a, port2,  1,  4
-#define hw_pc5				_io1a, port2,  1,  5
-#define hw_pc6				_io1a, port2,  1,  6
-#define hw_pc7				_io1a, port2,  1,  7
-#define hw_pc8				_io1a, port2,  1,  8
-#define hw_pc9				_io1a, port2,  1,  9
-#define hw_pc10				_io1a, port2,  1, 10
-#define hw_pc11				_io1a, port2,  1, 11
-#define hw_pc12				_io1a, port2,  1, 12
-#define hw_pc13				_io1a, port2,  1, 13
-#define hw_pc14				_io1a, port2,  1, 14
-#define hw_pc15				_io1a, port2,  1, 15
-#define hw_portc			_io1a, port2, 16,  0
+#define hw_pc0				_ioa, port2,  1,  0
+#define hw_pc1				_ioa, port2,  1,  1
+#define hw_pc2				_ioa, port2,  1,  2
+#define hw_pc3				_ioa, port2,  1,  3
+#define hw_pc4				_ioa, port2,  1,  4
+#define hw_pc5				_ioa, port2,  1,  5
+#define hw_pc6				_ioa, port2,  1,  6
+#define hw_pc7				_ioa, port2,  1,  7
+#define hw_pc8				_ioa, port2,  1,  8
+#define hw_pc9				_ioa, port2,  1,  9
+#define hw_pc10				_ioa, port2,  1, 10
+#define hw_pc11				_ioa, port2,  1, 11
+#define hw_pc12				_ioa, port2,  1, 12
+#define hw_pc13				_ioa, port2,  1, 13
+#define hw_pc14				_ioa, port2,  1, 14
+#define hw_pc15				_ioa, port2,  1, 15
+#define hw_portc			_ioa, port2, 16,  0
 
-#define hw_pd0				_io1a, port3,  1,  0
-#define hw_pd1				_io1a, port3,  1,  1
-#define hw_pd2				_io1a, port3,  1,  2
-#define hw_pd3				_io1a, port3,  1,  3
-#define hw_pd4				_io1a, port3,  1,  4
-#define hw_pd5				_io1a, port3,  1,  5
-#define hw_pd6				_io1a, port3,  1,  6
-#define hw_pd7				_io1a, port3,  1,  7
-#define hw_pd8				_io1a, port3,  1,  8
-#define hw_pd9				_io1a, port3,  1,  9
-#define hw_pd10				_io1a, port3,  1, 10
-#define hw_pd11				_io1a, port3,  1, 11
-#define hw_pd12				_io1a, port3,  1, 12
-#define hw_pd13				_io1a, port3,  1, 13
-#define hw_pd14				_io1a, port3,  1, 14
-#define hw_pd15				_io1a, port3,  1, 15
-#define hw_portd			_io1a, port3, 16,  0
+#define hw_pd0				_ioa, port3,  1,  0
+#define hw_pd1				_ioa, port3,  1,  1
+#define hw_pd2				_ioa, port3,  1,  2
+#define hw_pd3				_ioa, port3,  1,  3
+#define hw_pd4				_ioa, port3,  1,  4
+#define hw_pd5				_ioa, port3,  1,  5
+#define hw_pd6				_ioa, port3,  1,  6
+#define hw_pd7				_ioa, port3,  1,  7
+#define hw_pd8				_ioa, port3,  1,  8
+#define hw_pd9				_ioa, port3,  1,  9
+#define hw_pd10				_ioa, port3,  1, 10
+#define hw_pd11				_ioa, port3,  1, 11
+#define hw_pd12				_ioa, port3,  1, 12
+#define hw_pd13				_ioa, port3,  1, 13
+#define hw_pd14				_ioa, port3,  1, 14
+#define hw_pd15				_ioa, port3,  1, 15
+#define hw_portd			_ioa, port3, 16,  0
 
-#define hw_pe0				_io1a, port4,  1,  0
-#define hw_pe1				_io1a, port4,  1,  1
-#define hw_pe2				_io1a, port4,  1,  2
-#define hw_pe3				_io1a, port4,  1,  3
-#define hw_pe4				_io1a, port4,  1,  4
-#define hw_pe5				_io1a, port4,  1,  5
-#define hw_pe6				_io1a, port4,  1,  6
-#define hw_pe7				_io1a, port4,  1,  7
-#define hw_pe8				_io1a, port4,  1,  8
-#define hw_pe9				_io1a, port4,  1,  9
-#define hw_pe10				_io1a, port4,  1, 10
-#define hw_pe11				_io1a, port4,  1, 11
-#define hw_pe12				_io1a, port4,  1, 12
-#define hw_pe13				_io1a, port4,  1, 13
-#define hw_pe14				_io1a, port4,  1, 14
-#define hw_pe15				_io1a, port4,  1, 15
-#define hw_porte			_io1a, port4, 16,  0
+#define hw_pe0				_ioa, port4,  1,  0
+#define hw_pe1				_ioa, port4,  1,  1
+#define hw_pe2				_ioa, port4,  1,  2
+#define hw_pe3				_ioa, port4,  1,  3
+#define hw_pe4				_ioa, port4,  1,  4
+#define hw_pe5				_ioa, port4,  1,  5
+#define hw_pe6				_ioa, port4,  1,  6
+#define hw_pe7				_ioa, port4,  1,  7
+#define hw_pe8				_ioa, port4,  1,  8
+#define hw_pe9				_ioa, port4,  1,  9
+#define hw_pe10				_ioa, port4,  1, 10
+#define hw_pe11				_ioa, port4,  1, 11
+#define hw_pe12				_ioa, port4,  1, 12
+#define hw_pe13				_ioa, port4,  1, 13
+#define hw_pe14				_ioa, port4,  1, 14
+#define hw_pe15				_ioa, port4,  1, 15
+#define hw_porte			_ioa, port4, 16,  0
 
-/* #define hw_pf0				_io1a, port5,  1,  0 */
-/* #define hw_pf1				_io1a, port5,  1,  1 */
-/* #define hw_pf2				_io1a, port5,  1,  2 */
-/* #define hw_pf3				_io1a, port5,  1,  3 */
-/* #define hw_pf4				_io1a, port5,  1,  4 */
-/* #define hw_pf5				_io1a, port5,  1,  5 */
-/* #define hw_pf6				_io1a, port5,  1,  6 */
-/* #define hw_pf7				_io1a, port5,  1,  7 */
-/* #define hw_pf8				_io1a, port5,  1,  8 */
-/* #define hw_pf9				_io1a, port5,  1,  9 */
-/* #define hw_pf10				_io1a, port5,  1, 10 */
-/* #define hw_pf11				_io1a, port5,  1, 11 */
-/* #define hw_pf12				_io1a, port5,  1, 12 */
-/* #define hw_pf13				_io1a, port5,  1, 13 */
-/* #define hw_pf14				_io1a, port5,  1, 14 */
-/* #define hw_pf15				_io1a, port5,  1, 15 */
-/* #define hw_portf				_io1a, port5, 16,  0 */
+/* #define hw_pf0				_ioa, port5,  1,  0 */
+/* #define hw_pf1				_ioa, port5,  1,  1 */
+/* #define hw_pf2				_ioa, port5,  1,  2 */
+/* #define hw_pf3				_ioa, port5,  1,  3 */
+/* #define hw_pf4				_ioa, port5,  1,  4 */
+/* #define hw_pf5				_ioa, port5,  1,  5 */
+/* #define hw_pf6				_ioa, port5,  1,  6 */
+/* #define hw_pf7				_ioa, port5,  1,  7 */
+/* #define hw_pf8				_ioa, port5,  1,  8 */
+/* #define hw_pf9				_ioa, port5,  1,  9 */
+/* #define hw_pf10				_ioa, port5,  1, 10 */
+/* #define hw_pf11				_ioa, port5,  1, 11 */
+/* #define hw_pf12				_ioa, port5,  1, 12 */
+/* #define hw_pf13				_ioa, port5,  1, 13 */
+/* #define hw_pf14				_ioa, port5,  1, 14 */
+/* #define hw_pf15				_ioa, port5,  1, 15 */
+/* #define hw_portf				_ioa, port5, 16,  0 */
 
-/* #define hw_pg0				_io1a, port6,  1,  0 */
-/* #define hw_pg1				_io1a, port6,  1,  1 */
-/* #define hw_pg2				_io1a, port6,  1,  2 */
-/* #define hw_pg3				_io1a, port6,  1,  3 */
-/* #define hw_pg4				_io1a, port6,  1,  4 */
-/* #define hw_pg5				_io1a, port6,  1,  5 */
-/* #define hw_pg6				_io1a, port6,  1,  6 */
-/* #define hw_pg7				_io1a, port6,  1,  7 */
-/* #define hw_pg8				_io1a, port6,  1,  8 */
-/* #define hw_pg9				_io1a, port6,  1,  9 */
-/* #define hw_pg10				_io1a, port6,  1, 10 */
-/* #define hw_pg11				_io1a, port6,  1, 11 */
-/* #define hw_pg12				_io1a, port6,  1, 12 */
-/* #define hw_pg13				_io1a, port6,  1, 13 */
-/* #define hw_pg14				_io1a, port6,  1, 14 */
-/* #define hw_pg15				_io1a, port6,  1, 15 */
-/* #define hw_portg				_io1a, port6, 16,  0 */
+/* #define hw_pg0				_ioa, port6,  1,  0 */
+/* #define hw_pg1				_ioa, port6,  1,  1 */
+/* #define hw_pg2				_ioa, port6,  1,  2 */
+/* #define hw_pg3				_ioa, port6,  1,  3 */
+/* #define hw_pg4				_ioa, port6,  1,  4 */
+/* #define hw_pg5				_ioa, port6,  1,  5 */
+/* #define hw_pg6				_ioa, port6,  1,  6 */
+/* #define hw_pg7				_ioa, port6,  1,  7 */
+/* #define hw_pg8				_ioa, port6,  1,  8 */
+/* #define hw_pg9				_ioa, port6,  1,  9 */
+/* #define hw_pg10				_ioa, port6,  1, 10 */
+/* #define hw_pg11				_ioa, port6,  1, 11 */
+/* #define hw_pg12				_ioa, port6,  1, 12 */
+/* #define hw_pg13				_ioa, port6,  1, 13 */
+/* #define hw_pg14				_ioa, port6,  1, 14 */
+/* #define hw_pg15				_ioa, port6,  1, 15 */
+/* #define hw_portg				_ioa, port6, 16,  0 */
 
 /* #if defined HW_DEVICE_PACKAGE_LQFP64 */
 /* # */
@@ -454,7 +454,7 @@
  * @page stm32f103
  * @section stm32f103_acc Advanced-control counter-timers
  *
- * STM32F103 devices have 1 advanced-control counter-timers: @ref stm32_c16a "counter1".
+ * STM32F103 devices have 1 advanced-control counter-timers: @ref stm32_cta "counter1".
  *
  * @note This counter is not implemented yet.
  */
@@ -469,18 +469,18 @@
  * @page stm32f103
  * @section stm32f103_gpc General-purpose counter-timers
  *
- * The STM32F103 devices have 3 general-purpose counter-timers: @ref stm32_c16a
+ * The STM32F103 devices have 3 general-purpose counter-timers: @ref stm32_cta
  * "counter2..4".
  */
 
-#include "../classes/c16a_1.h"
+#include "../classes/cta_1.h"
 #include "../classes/cca_1.h"
 
 /*	Object				class, definition
  */
-#define hw_counter2			_c16a, 0x40000000
-#define hw_counter3			_c16a, 0x40000400
-#define hw_counter4			_c16a, 0x40000800
+#define hw_counter2			_cta, 0x40000000
+#define hw_counter3			_cta, 0x40000400
+#define hw_counter4			_cta, 0x40000800
 
 #define hw_counter2_channel1		_cca, counter2, 1
 #define hw_counter2_channel2		_cca, counter2, 2
@@ -542,19 +542,19 @@ typedef struct {
   hwa_nvica_t	nvic ;
 
   hwa_afioa_t	afio ;
-  hwa_p16a_t	port0 ;
-  hwa_p16a_t	port1 ;
-  hwa_p16a_t	port2 ;
-  hwa_p16a_t	port3 ;
-  hwa_p16a_t	port4 ;
-  /* hwa_p16a_t	port5 ; */
-  /* hwa_p16a_t	port6 ; */
+  hwa_gpa_t	port0 ;
+  hwa_gpa_t	port1 ;
+  hwa_gpa_t	port2 ;
+  hwa_gpa_t	port3 ;
+  hwa_gpa_t	port4 ;
+  /* hwa_gpa_t	port5 ; */
+  /* hwa_gpa_t	port6 ; */
   hwa_stka_t	systick ;
 
-  hwa_c16a_t	counter2 ;
-  hwa_c16a_t	counter3 ;
-  hwa_c16a_t	counter4 ;
-  /* hwa_c16a_t	counter5 ; */
+  hwa_cta_t	counter2 ;
+  hwa_cta_t	counter3 ;
+  hwa_cta_t	counter4 ;
+  /* hwa_cta_t	counter5 ; */
   hwa_usarta_t	usart1 ;
 } hwa_t ;
 
@@ -562,10 +562,10 @@ typedef struct {
 #include "../classes/rcca_2.h"
 #include "../classes/afioa_2.h"
 #include "../classes/nvica_2.h"
-#include "../classes/io1a_2.h"
-#include "../classes/p16a_2.h"
+#include "../classes/ioa_2.h"
+#include "../classes/gpa_2.h"
 #include "../classes/stka_2.h"
-#include "../classes/c16a_2.h"
+#include "../classes/cta_2.h"
 #include "../classes/cca_2.h"
 #include "../classes/usarta_2.h"
 

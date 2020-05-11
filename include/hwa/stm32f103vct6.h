@@ -16,8 +16,9 @@
  * #include <hwa/stm32f103vct6.h>
  * @endcode
  */
+
 /**
- * @page stm32f103vct6 STM32F103VCT6
+ * @page stm32f103vct6
  * @section stm32f103vct6_sym Defined symbols
  *
  * Symbol		       | Value
@@ -60,9 +61,3 @@
 
 
 #include "../../st/stm32/devices/stm32f103.h"
-
-
-/**
- * @page stm32f103vct6
- * <br>
- */

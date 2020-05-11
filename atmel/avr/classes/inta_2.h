@@ -11,39 +11,25 @@
 
 /**
  * @page atmelavr_inta
- * @section atmelavr_inta_cf Configuration
+ * @section atmelavr_inta_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
- * hw( configure, int0,
+ * hw | hwa( configure,   int0,
  *
- *	      //  What does trigger the IRQ
- *	      //
- *	      sense,   low_level
- *		     | edge
- *		     | falling_edge
- *		     | rising_edge  );
+ *           sense,       low_level		//  What does trigger the IRQ
+ *                      | edge
+ *                      | falling_edge
+ *                      | rising_edge  );
  * @endcode
  */
 #define hw_configure__inta		, _hw_cfinta
 #define _hw_cfinta( o,a, ...)		_hwx_cfinta(_hw,o,__VA_ARGS__,)
 
-
-/**
- * @page atmelavr_inta
- *
- * @code
- * hwa( configure, int0,
- *
- *	       //  What does trigger the IRQ
- *	       //
- *	       sense,	low_level
- *		      | edge
- *		      | falling_edge
- *		      | rising_edge  );
- * @endcode
- */
 #define hwa_configure__inta		, _hwa_cfinta
-#define _hwa_cfinta( o,a, ...)	_hwx_cfinta(_hwa,o,__VA_ARGS__,)
+#define _hwa_cfinta( o,a, ...)		_hwx_cfinta(_hwa,o,__VA_ARGS__,)
 
 
 /*	Mandatory argument `sense`
@@ -93,13 +79,4 @@
  *  * `sc`: sense control
  *  * `ie`: IRQ mask
  *  * `if`: IRQ flag
- *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
- */
-
-
-/**
- * @page atmelavr_inta
- * <br>
  */

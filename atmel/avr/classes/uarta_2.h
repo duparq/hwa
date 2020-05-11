@@ -11,7 +11,10 @@
 
 /**
  * @page atmelavr_uarta
- * @section atmelavr_uarta_config Configuration
+ * @section atmelavr_uarta_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
  * hwa( configure, uart0,

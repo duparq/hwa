@@ -11,7 +11,10 @@
 
 /**
  * @page atmelavr_dtga
- * @section atmelavr_dtga_acfg Configuration
+ * @section atmelavr_dtga_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * The same clock prescaler is used for the 4 units. The value `compareX_y` is
  * the delay in prescaled clock units before the assertion of the output `X_y`:
@@ -174,13 +177,4 @@
  *  * `compare0_l` : delay for complementary output pin of compare unit 0
  *  * `compare1_h` : delay for output pin of compare unit 1
  *  * `compare1_l` : delay for complementary output pin of compare unit 1
- *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
- */
-
-
-/**
- * @page atmelavr_dtga
- * <br>
  */

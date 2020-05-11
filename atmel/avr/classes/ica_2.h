@@ -1,0 +1,186 @@
+
+/* This file is part of the HWA project.
+ * Copyright (c) 2012,2015 Christophe Duparquet.
+ * All rights reserved. Read LICENSE.TXT for details.
+ */
+
+/**
+ * @file
+ * @brief 16-bit capture unit
+ */
+
+/**
+ * @page atmelavr_ica
+ * @section atmelavr_ica_act Actions
+ *
+ * <br>
+ * `configure`:
+ *
+ * @code
+ * hw( configure, counter0capture0,
+ *
+ *   [ input,	  pin_icp      // NOT IMPLEMENTED YET
+ *		| acmp0, ]
+ *
+ *   [ edge,	  falling
+ *		| rising, ]
+ *
+ *   [ filter,	  on	       // NOT IMPLEMENTED YET
+ *		| off ] );
+ * @endcode
+ */
+/*  TODO: complete this.
+ */
+#define hw_configure__ica		, _hw_cfica
+
+#define hw_ica_input_pin_icp		, 1
+#define hw_ica_input_acmp0		, 2
+
+#define hw_ica_edge_falling		, 1
+#define hw_ica_edge_rising		, 2
+
+#define _hw_cfica_kw_edge		, _hw_cfica_edge
+//#define _hw_cfica_kw_			, _hw_cfica_
+
+#define _hw_cfica(o,a,k,...)					\
+  HW_Y(_hw_cficakw1_,_hw_cfica_kw_##k)(o,k,__VA_ARGS__,)
+
+#define _hw_cficakw1_0(o,kw,...)					\
+  HW_E_VL(k,input | edge | filter)
+
+#define _hw_cficakw1_1(o,kw,...)		\
+  HW_A1(_hw_cfica_kw_##kw)(o,__VA_ARGS__)
+
+#define _hw_cfica_edge(o,v,...)					\
+  HW_Y(_hw_cfica_vedge_,hw_ica_edge_##v)(o,v,__VA_ARGS__)
+#define _hw_cfica_vedge_0(o,v,...)					\
+  HW_E_AVL(edge, v, falling | rising)
+#define _hw_cfica_vedge_1(o,v,...)			\
+  _hw_write(o, ices, HW_A1(hw_ica_edge_##v)-1) HW_EOL(__VA_ARGS__)
+
+
+/**
+ * @page atmelavr_ica
+ * @code
+ * hwa( configure, counter0capture0,
+ *
+ *    [ input,	   pin_icp
+ *		 | acmp0, ]
+ *
+ *    [ edge,	   falling
+ *		 | rising, ]
+ *
+ *    [ filter,	   on
+ *		 | off ] );
+ * @endcode
+ */
+#define hwa_configure__ica		, _hwa_cfica
+
+#define _hwa_cfica(o,a,k,...) \
+  do { HW_Y(_hwa_cfica_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__) } while(0)
+
+#define _hwa_cfica_kinput_0(o,k,...)		\
+  HW_Y(_hwa_cfica_kedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__) //HW_E_VL(k,input)
+#define _hwa_cfica_kinput_1(o,k,v,...)	HW_Y(_hwa_cfica_vinput_,hw_ica_input_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfica_vinput_0(o,v,...)		HW_E_AVL(input, v, pin_icp | acmp0)
+#define _hwa_cfica_vinput_1(o,v,k,...)				\
+  hwa->o.config.input = HW_A1(hw_ica_input_##v);			\
+  HW_Y(_hwa_cfica_kedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__)
+
+#define _hwa_cfica_kedge_0(o,k,...)					\
+  HW_Y(_hwa_cfica_kfilter_,_hw_is_filter_##k)(o,k,__VA_ARGS__) //  HW_E_VL(k,edge)
+
+#define _hwa_cfica_kedge_1(o,k,v,...)				\
+  HW_Y(_hwa_cfica_vedge_,hw_ica_edge_##v)(o,v,__VA_ARGS__)
+
+#define _hwa_cfica_vedge_0(o,v,...)					\
+  HW_E_AVL(edge, v, falling | rising)
+
+#define _hwa_cfica_vedge_1(o,v,k,...)				\
+  hwa->o.config.edge = HW_A1(hw_ica_edge_##v);				\
+  HW_Y(_hwa_cfica_kfilter_,_hw_is_filter_##k)(o,k,__VA_ARGS__)
+
+#define _hwa_cfica_kfilter_0(o,...)		\
+  HW_EOL(__VA_ARGS__)
+
+#define _hwa_cfica_kfilter_1(o,k,v,...)				\
+  HW_Y(_hwa_cfica_vfilter_,_hw_state_##v)(o,v,__VA_ARGS__)
+
+#define _hwa_cfica_vfilter_0(o,v,...)					\
+  HW_E_OAVL(filter, v, on | off)
+
+#define _hwa_cfica_vfilter_1(o,v,...)		\
+  hwa->o.config.filter = HW_A1(_hw_state_##v);		\
+  HW_EOL(__VA_ARGS__)
+
+
+/**
+ * @page atmelavr_ica
+ *
+ * <br>
+ * `read`:
+ *
+ * @code
+ * uint16_t capture = hw( read, capture0 );
+ * @endcode
+ */
+#define hw_read__ica			, _hw_read_ica
+#define _hw_read_ica(o,a,...)	 _hw_read(o,reg) HW_EOL(__VA_ARGS__)
+
+
+/**
+ * @page atmelavr_ica
+ *
+ * <br>
+ * `write`:
+ *
+ * @code
+ * hw( write, capture0, value );
+ * @endcode
+ */
+#define hw_write__ica		, _hw_write_ica
+#define _hw_write_ica(o,a,v,...)		 _hw_write(o,reg,v) HW_EOL(__VA_ARGS__)
+
+/**
+ * @page atmelavr_ica
+ *
+ * @code
+ * hwa( write, capture0, value );
+ * @endcode
+ */
+#define hwa_write__ica		, _hwa_write_ica
+#define _hwa_write_ica(o,a,v,...)		 _hwa_write(o,reg,v) HW_EOL(__VA_ARGS__)
+
+
+/**
+ * @page atmelavr_ica
+ * @section atmelavr_ica_st Status
+ *
+ * The capture event flag can be accessed through interrupt-related
+ * instructions:
+ *
+ * @code
+ * if ( hw( read, irqflag((counter0,capture0)) ) ) {	   // Read capture IRQ flag
+ *   hw( clear, irqflag((counter0,capture0)) );		   // Clear capture IRQ flag
+ *   hw( turn, irq((counter0,capture0)), off );		   // Disable capture IRQs
+ * }
+ * @endcode
+ */
+
+
+
+/*******************************************************************************
+ *									       *
+ *	Context management						       *
+ *									       *
+ *******************************************************************************/
+
+#define _hwa_setup__ica(o,a)		\
+  _hwa_setup_r( o, reg	    );		\
+  hwa->o.config.input  = 0xFF ;			\
+  hwa->o.config.edge   = 0xFF ;			\
+  hwa->o.config.filter = 0xFF
+
+#define _hwa_init__ica(o,a)		_hwa_init_r(o,reg,0)
+
+#define _hwa_commit__ica(o,a)		_hwa_commit_r(o,reg)

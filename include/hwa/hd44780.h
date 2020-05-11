@@ -57,7 +57,6 @@
 
 /**
  * @page hd44780
- * __Interface and implementation__
  *
  * The following declares the functions that implement the object:
  *

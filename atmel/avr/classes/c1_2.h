@@ -1,5 +1,5 @@
 
-/*  Counter clocking. Used by: c16a, c16b, c8a
+/*  Counter clocking. Used by: ctd, cte, cta
  */
 #define _hw_c1clk_none			, _hw_c1ck_none, 0
 #define _hw_c1clk_ioclk			, _hw_c1ck_ioclk, 1.0

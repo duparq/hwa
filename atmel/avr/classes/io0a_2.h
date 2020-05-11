@@ -20,8 +20,3 @@
 #define hwa_write__io0a			, _hwa_io0ax
 
 #define _hwa_io0ax( o, ... )		HWA_ERR("`" #o "` is not connected.")
-
-/**
- * @page atmelavr_io0a
- * <br>
- */

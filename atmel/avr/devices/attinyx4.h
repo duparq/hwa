@@ -20,24 +20,24 @@
  * :--------------------|--------------------------------|:--------------------------------------
  * `core0`		|@ref atmelavr_corea "_corea"	 | The core
  * `int0`		|@ref atmelavr_inta "_inta"	 | External interrupt INT0
- * `port0`		|@ref atmelavr_p8a "_p8a"	 | General purpose I/O port A (PORT0)
- * `port1`		|@ref atmelavr_p8a "_p8a"	 | General purpose I/O port B (PORT1)
- * `pcic0`		|@ref atmelavr_pcica "_pcica"	 | Pin change interrupt controller
- * `pcic1`		|@ref atmelavr_pcica "_pcica"	 | Pin change interrupt controller
- * `watchdog0`		|@ref atmelavr_wdoga "_wdoga"	 | Watchdog (WDG)
- * `prescaler0`		|@ref atmelavr_psca "_psca"	 | counter0/counter1 prescaler (PSC0)
- * `counter0`		|@ref atmelavr_c8a "_c8a"	 | 8-bit counter-timer (T0)
- * `(counter0,compare0)`|@ref atmelavr_cmp8a "_cmp8a"	 | Compare unit 0 of counter0 (OC0A)
- * `(counter0,compare1)`|@ref atmelavr_cmp8a "_cmp8a"	 | Compare unit 1 of counter0 (OC0B)
- * `counter1`		|@ref atmelavr_c16a "_c16a"	 | 16-bit counter-timer (T1)
- * `(counter1,compare0)`|@ref atmelavr_cmp16a "_cmp16a"	 | Compare unit 0 of counter1 (OC1A)
- * `(counter1,compare1)`|@ref atmelavr_cmp16a "_cmp16a"	 | Compare unit 1 of counter1 (OC1B)
- * `(counter1,capture0)`|@ref atmelavr_cap16a "_cap16a"	 | Capture unit 0 of counter1 (ICP)
+ * `port0`		|@ref atmelavr_gpa "_gpa"	 | General purpose I/O port A (PORT0)
+ * `port1`		|@ref atmelavr_gpa "_gpa"	 | General purpose I/O port B (PORT1)
+ * `pcic0`		|@ref atmelavr_pxa "_pxa"	 | Pin change interrupt controller
+ * `pcic1`		|@ref atmelavr_pxa "_pxa"	 | Pin change interrupt controller
+ * `watchdog0`		|@ref atmelavr_wda "_wda"	 | Watchdog (WDG)
+ * `prescaler0`		|@ref atmelavr_psa "_psa"	 | counter0/counter1 prescaler (PSC0)
+ * `counter0`		|@ref atmelavr_cta "_cta"	 | 8-bit counter-timer (T0)
+ * `(counter0,compare0)`|@ref atmelavr_oca "_oca"	 | Compare unit 0 of counter0 (OC0A)
+ * `(counter0,compare1)`|@ref atmelavr_oca "_oca"	 | Compare unit 1 of counter0 (OC0B)
+ * `counter1`		|@ref atmelavr_ctd "_ctd"	 | 16-bit counter-timer (T1)
+ * `(counter1,compare0)`|@ref atmelavr_occ "_occ"	 | Compare unit 0 of counter1 (OC1A)
+ * `(counter1,compare1)`|@ref atmelavr_occ "_occ"	 | Compare unit 1 of counter1 (OC1B)
+ * `(counter1,capture0)`|@ref atmelavr_ica "_ica"	 | Capture unit 0 of counter1 (ICP)
  * `usi0`		|@ref atmelavr_usia "_usia"	 | Universal Serial Interface
- * `acmp0`		|@ref atmelavr_acmpa "_acmpa"	 | Analog Comparator
- * `adc0`		|@ref atmelavr_ad10a "_ad10a"	 | 10-bit Analog to Digital Converter
- * `eeprom0`		|@ref atmelavr_eeproma "_eeproma"| Eeprom memory
- * `flash0`		|@ref atmelavr_flasha "_flasha"	 | Flash memory
+ * `acmp0`		|@ref atmelavr_aca "_aca"	 | Analog Comparator
+ * `adc0`		|@ref atmelavr_ada "_ada"	 | 10-bit Analog to Digital Converter
+ * `eeprom0`		|@ref atmelavr_eea "_eea"	 | Eeprom memory
+ * `flash0`		|@ref atmelavr_fla "_fla"	 | Flash memory
  *
  * @subsection attinyx4_swobj Software-emulated peripherals
  * 
@@ -137,20 +137,20 @@
  *
  * HWA name | 14pdip	   | Class			| Atmel name
  * ---------|--------------|----------------------------|-----------
- * `porta`  |		   | @ref atmelavr_p8a "_p8a"	| PORTA
- * `pa0`    | `HW_PIN(13)` | @ref atmelavr_io1a "_io1a" | PA0
- * `pa1`    | `HW_PIN(12)` | @ref atmelavr_io1a "_io1a" | PA1
- * `pa2`    | `HW_PIN(11)` | @ref atmelavr_io1a "_io1a" | PA2
- * `pa3`    | `HW_PIN(10)` | @ref atmelavr_io1a "_io1a" | PA3
- * `pa4`    | `HW_PIN(9)`  | @ref atmelavr_io1a "_io1a" | PA4
- * `pa5`    | `HW_PIN(8)`  | @ref atmelavr_io1a "_io1a" | PA5
- * `pa6`    | `HW_PIN(7)`  | @ref atmelavr_io1a "_io1a" | PA6
- * `pa7`    | `HW_PIN(6)`  | @ref atmelavr_io1a "_io1a" | PA7
- * `portb`  |		   | @ref atmelavr_p8a "_p8a"	| PORTB
- * `pb0`    | `HW_PIN(2)`  | @ref atmelavr_io1a "_io1a" | PB0
- * `pb1`    | `HW_PIN(3)`  | @ref atmelavr_io1a "_io1a" | PB1
- * `pb2`    | `HW_PIN(5)`  | @ref atmelavr_io1a "_io1a" | PB2
- * `pb3`    | `HW_PIN(4)`  | @ref atmelavr_io1a "_io1a" | PB3
+ * `porta`  |		   | @ref atmelavr_gpa "_gpa"	| PORTA
+ * `pa0`    | `HW_PIN(13)` | @ref atmelavr_ioa "_ioa" | PA0
+ * `pa1`    | `HW_PIN(12)` | @ref atmelavr_ioa "_ioa" | PA1
+ * `pa2`    | `HW_PIN(11)` | @ref atmelavr_ioa "_ioa" | PA2
+ * `pa3`    | `HW_PIN(10)` | @ref atmelavr_ioa "_ioa" | PA3
+ * `pa4`    | `HW_PIN(9)`  | @ref atmelavr_ioa "_ioa" | PA4
+ * `pa5`    | `HW_PIN(8)`  | @ref atmelavr_ioa "_ioa" | PA5
+ * `pa6`    | `HW_PIN(7)`  | @ref atmelavr_ioa "_ioa" | PA6
+ * `pa7`    | `HW_PIN(6)`  | @ref atmelavr_ioa "_ioa" | PA7
+ * `portb`  |		   | @ref atmelavr_gpa "_gpa"	| PORTB
+ * `pb0`    | `HW_PIN(2)`  | @ref atmelavr_ioa "_ioa" | PB0
+ * `pb1`    | `HW_PIN(3)`  | @ref atmelavr_ioa "_ioa" | PB1
+ * `pb2`    | `HW_PIN(5)`  | @ref atmelavr_ioa "_ioa" | PB2
+ * `pb3`    | `HW_PIN(4)`  | @ref atmelavr_ioa "_ioa" | PB3
  */
 
 
@@ -545,37 +545,37 @@ typedef struct {
  *******************************************************************************/
 
 
-#include "../classes/p8a_1.h"
-#include "../classes/io1a_1.h"
+#include "../classes/gpa_1.h"
+#include "../classes/ioa_1.h"
 
 /*	Objects				class, address
  */
-#define hw_port0			_p8a, 0x39
-#define hw_port1			_p8a, 0x36
+#define hw_port0			_gpa, 0x39
+#define hw_port1			_gpa, 0x36
 
 /*  Pins				class, peripheral, bn, bp
  */
-#define hw_pa0				_io1a, port0, 1, 0
-#define hw_pa1				_io1a, port0, 1, 1
-#define hw_pa2				_io1a, port0, 1, 2
-#define hw_pa3				_io1a, port0, 1, 3
-#define hw_pa4				_io1a, port0, 1, 4
-#define hw_pa5				_io1a, port0, 1, 5
-#define hw_pa6				_io1a, port0, 1, 6
-#define hw_pa7				_io1a, port0, 1, 7
-#define hw_porta			_io1a, port0, 8, 0
+#define hw_pa0				_ioa, port0, 1, 0
+#define hw_pa1				_ioa, port0, 1, 1
+#define hw_pa2				_ioa, port0, 1, 2
+#define hw_pa3				_ioa, port0, 1, 3
+#define hw_pa4				_ioa, port0, 1, 4
+#define hw_pa5				_ioa, port0, 1, 5
+#define hw_pa6				_ioa, port0, 1, 6
+#define hw_pa7				_ioa, port0, 1, 7
+#define hw_porta			_ioa, port0, 8, 0
 
 #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define hw_pb0			_io1a, port1, 1, 0
+#  define hw_pb0			_ioa, port1, 1, 0
 #endif
-#define hw_pb1				_io1a, port1, 1, 1
+#define hw_pb1				_ioa, port1, 1, 1
 #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT) && !HW_IS(xosc,HW_DEVICE_CLK_SRC)
-#  define hw_pb2			_io1a, port1, 1, 2
+#  define hw_pb2			_ioa, port1, 1, 2
 #endif
 #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET) && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE)
-#  define hw_pb3			_io1a, port1, 1, 3
+#  define hw_pb3			_ioa, port1, 1, 3
 #endif
-#define hw_portb			_io1a, port1, 4, 0
+#define hw_portb			_ioa, port1, 4, 0
 
 /*  Digital input disable bits for analog input pins
  */
@@ -712,11 +712,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/pcica_1.h"
+#include "../classes/pxa_1.h"
 
 /*	Object				class, address
  */
-#define hw_pcic0			_pcica, 0
+#define hw_pcic0			_pxa, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -729,7 +729,7 @@ typedef struct {
 
 /*	Object				class, address
  */
-#define hw_pcic1			_pcica, 0
+#define hw_pcic1			_pxa, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -749,23 +749,23 @@ typedef struct {
 
 /*	Object				class, address
  */
-#include "../classes/wdoga_1.h"
-#define hw_watchdog0			_wdoga, 0
+#include "../classes/wda_1.h"
+#define hw_watchdog0			_wda, 0
 
 /*	Class registers			class, address, write mask, flags mask
  */
-#define hw__wdoga_csr			_r8, 0x41, 0xFF, 0x80
+#define hw__wda_csr			_r8, 0x41, 0xFF, 0x80
 
-#define hw__wdoga_if			_cb1, csr, 1, 7
-#define hw__wdoga_ie			_cb1, csr, 1, 6
-#define hw__wdoga_wdp			_cb2, csr, 1, 5, 3, csr, 3, 0, 0
-#define hw__wdoga_wdce			_cb1, csr, 1, 4
-#define hw__wdoga_wde			_cb1, csr, 1, 3
+#define hw__wda_if			_cb1, csr, 1, 7
+#define hw__wda_ie			_cb1, csr, 1, 6
+#define hw__wda_wdp			_cb2, csr, 1, 5, 3, csr, 3, 0, 0
+#define hw__wda_wdce			_cb1, csr, 1, 4
+#define hw__wda_wde			_cb1, csr, 1, 3
 
-#define hw__wdoga_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
-#define hw__wdoga_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
+#define hw__wda_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
+#define hw__wda_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
 
-#define hw__wdoga_wdrf			_xob1, core0, mcusr, 1, 3
+#define hw__wda_wdrf			_xob1, core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -774,11 +774,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/psca_1.h"
+#include "../classes/psa_1.h"
 
 /*	Object				class, address
  */
-#define hw_prescaler0			_psca, 0
+#define hw_prescaler0			_psa, 0
 
 /*	Object logical registers
  */
@@ -798,8 +798,8 @@ typedef struct {
 
 /*	Object				class, address
  */
-#include "../classes/c8a_1.h"
-#define hw_counter0			_c8a, 0
+#include "../classes/cta_1.h"
+#define hw_counter0			_cta, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -830,11 +830,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/cmp8a_1.h"
+#include "../classes/oca_1.h"
 
 /*	Object				class, address
  */
-#define hw_counter0compare0		_cmp8a, 0
+#define hw_counter0compare0		_oca, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -854,7 +854,7 @@ typedef struct {
 
 /*	Object				class, address
  */
-#define hw_counter0compare1		_cmp8a, 0
+#define hw_counter0compare1		_oca, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -879,11 +879,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/c16a_1.h"
+#include "../classes/ctd_1.h"
 
 /*	Object				class, address
  */
-#define hw_counter1			_c16a, 0
+#define hw_counter1			_ctd, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -916,11 +916,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/cmp16a_1.h"
+#include "../classes/occ_1.h"
 
 /*	Object				class, address
  */
-#define hw_counter1compare0		_cmp16a, 0
+#define hw_counter1compare0		_occ, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -940,7 +940,7 @@ typedef struct {
 
 /*	Object				class, address
  */
-#define hw_counter1compare1		_cmp16a, 0
+#define hw_counter1compare1		_occ, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -965,11 +965,11 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/cap16a_1.h"
+#include "../classes/ica_1.h"
 
 /*	Object				class, address
  */
-#define hw_counter1capture0		_cap16a, 0
+#define hw_counter1capture0		_ica, 0
 
 /*	Object hardware registers	class, address, write mask, flags mask
  */
@@ -1038,12 +1038,12 @@ typedef struct {
 
 /*	Instance			class, address
  */					
-#include "../classes/acmpa_1.h"
-#define hw_acmp0			_acmpa, 0
+#include "../classes/aca_1.h"
+#define hw_acmp0			_aca, 0
 
 /*	Class registers			class, address, write mask, flags mask
  */					
-#define hw__acmpa_csr			_r8, 0x28, 0xDF, 0x10
+#define hw__aca_csr			_r8, 0x28, 0xDF, 0x10
 
 /*	Object registers		class, address, write mask, flags mask
  *
@@ -1062,33 +1062,33 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/ad10a_1.h"
-#define hw_adc0				_ad10a, 0
+#include "../classes/ada_1.h"
+#define hw_adc0				_ada, 0
 
-#define hw__ad10a_admux			_r8,  0x27,   0xFF,   0x00
-#define hw__ad10a_sra			_r8,  0x26,   0xFF,   0x10
-#define hw__ad10a_adc			_r16, 0x24, 0x0000, 0x0000
-#define hw__ad10a_adch			_r8,  0x25,   0x00,   0x00
-#define hw__ad10a_adcl			_r8,  0x24,   0x00,   0x00
-#define hw__ad10a_srb			_r8,  0x23,   0xD7,   0x00
+#define hw__ada_admux			_r8,  0x27,   0xFF,   0x00
+#define hw__ada_sra			_r8,  0x26,   0xFF,   0x10
+#define hw__ada_adc			_r16, 0x24, 0x0000, 0x0000
+#define hw__ada_adch			_r8,  0x25,   0x00,   0x00
+#define hw__ada_adcl			_r8,  0x24,   0x00,   0x00
+#define hw__ada_srb			_r8,  0x23,   0xD7,   0x00
 
 #define hw_adc0_admux			_r8,  0x27,   0xFF,   0x00
 #define hw_adc0_sra			_r8,  0x26,   0xFF,   0x10
 #define hw_adc0_srb			_r8,  0x23,   0xD7,   0x00
 
-#define hw__ad10a_refs			_cb1, admux, 2, 6
-#define hw__ad10a_mux			_cb1, admux, 6, 0
+#define hw__ada_refs			_cb1, admux, 2, 6
+#define hw__ada_mux			_cb1, admux, 6, 0
 
-#define hw__ad10a_en			_cb1, sra, 1, 7
-#define hw__ad10a_sc			_cb1, sra, 1, 6
-#define hw__ad10a_ate			_cb1, sra, 1, 5
-#define hw__ad10a_if			_cb1, sra, 1, 4
-#define hw__ad10a_ie			_cb1, sra, 1, 3
-#define hw__ad10a_ps			_cb1, sra, 3, 0
+#define hw__ada_en			_cb1, sra, 1, 7
+#define hw__ada_sc			_cb1, sra, 1, 6
+#define hw__ada_ate			_cb1, sra, 1, 5
+#define hw__ada_if			_cb1, sra, 1, 4
+#define hw__ada_ie			_cb1, sra, 1, 3
+#define hw__ada_ps			_cb1, sra, 3, 0
 
-#define hw__ad10a_bin			_cb1, srb, 1, 7
-#define hw__ad10a_lar			_cb1, srb, 1, 4
-#define hw__ad10a_ts			_cb1, srb, 3, 0
+#define hw__ada_bin			_cb1, srb, 1, 7
+#define hw__ada_lar			_cb1, srb, 1, 4
+#define hw__ada_ts			_cb1, srb, 3, 0
 
 
 /*******************************************************************************
@@ -1099,25 +1099,25 @@ typedef struct {
 
 /*	Class
  */
-#define hw_class__eeproma
+#define hw_class__eea
 
 /*	Object				class, address
  */
-#define hw_eeprom0			_eeproma, 0
+#define hw_eeprom0			_eea, 0
 
 /*	Class regs			class, address, write mask, flags mask
  */
-#define hw__eeproma_arh			_r8,  0x3F,   0x01, 0x00
-#define hw__eeproma_arl			_r8,  0x3E,   0xFF, 0x00
-#define hw__eeproma_ar			_r16, 0x3E, 0x01FF, 0x00
-#define hw__eeproma_dr			_r8,  0x3D,   0xFF, 0x00
-#define hw__eeproma_cr			_r8,  0x3C,   0x3F, 0x00
+#define hw__eea_arh			_r8,  0x3F,   0x01, 0x00
+#define hw__eea_arl			_r8,  0x3E,   0xFF, 0x00
+#define hw__eea_ar			_r16, 0x3E, 0x01FF, 0x00
+#define hw__eea_dr			_r8,  0x3D,   0xFF, 0x00
+#define hw__eea_cr			_r8,  0x3C,   0x3F, 0x00
 
-#define hw__eeproma_pm			_cb1, cr, 2, 4
-#define hw__eeproma_rie			_cb1, cr, 1, 3
-#define hw__eeproma_mpe			_cb1, cr, 1, 2
-#define hw__eeproma_pe			_cb1, cr, 1, 1
-#define hw__eeproma_re			_cb1, cr, 1, 0
+#define hw__eea_pm			_cb1, cr, 2, 4
+#define hw__eea_rie			_cb1, cr, 1, 3
+#define hw__eea_mpe			_cb1, cr, 1, 2
+#define hw__eea_pe			_cb1, cr, 1, 1
+#define hw__eea_re			_cb1, cr, 1, 0
 
 
 /*******************************************************************************
@@ -1128,25 +1128,25 @@ typedef struct {
 
 /*	Class
  */
-#define hw_class__flasha
+#define hw_class__fla
 
 /*	Object				class, address
  */
-#define hw_flash0			_flasha, 0
+#define hw_flash0			_fla, 0
 
 /*	Class regs			class, address, write mask, flags mask
  */
-#define hw__flasha_csr			_r8,  0x57, 0x3F, 0x00
+#define hw__fla_csr			_r8,  0x57, 0x3F, 0x00
 
-#define hw__flasha_sigrd		_cb1, csr, 1, 5
-#define hw__flasha_rsig			_cb1, csr, 1, 5	/* old definition */
-#define hw__flasha_rwwsre		_cb1, csr, 1, 4
-#define hw__flasha_ctpb			_cb1, csr, 1, 4	/* old definition */
-#define hw__flasha_blbset		_cb1, csr, 1, 3
-#define hw__flasha_rflb			_cb1, csr, 1, 3	/* old definition */
-#define hw__flasha_pgwrt		_cb1, csr, 1, 2
-#define hw__flasha_pgers		_cb1, csr, 1, 1
-#define hw__flasha_spmen		_cb1, csr, 1, 0
+#define hw__fla_sigrd		_cb1, csr, 1, 5
+#define hw__fla_rsig			_cb1, csr, 1, 5	/* old definition */
+#define hw__fla_rwwsre		_cb1, csr, 1, 4
+#define hw__fla_ctpb			_cb1, csr, 1, 4	/* old definition */
+#define hw__fla_blbset		_cb1, csr, 1, 3
+#define hw__fla_rflb			_cb1, csr, 1, 3	/* old definition */
+#define hw__fla_pgwrt		_cb1, csr, 1, 2
+#define hw__fla_pgers		_cb1, csr, 1, 1
+#define hw__fla_spmen		_cb1, csr, 1, 0
 
 
 /*******************************************************************************
@@ -1256,44 +1256,44 @@ typedef struct {
   hwa_shared_t	shared ;
 
   hwa_corea_t	core0 ;
-  hwa_p8a_t	port0 ;
-  hwa_p8a_t	port1 ;
-  hwa_pcica_t	pcic0 ;
-  hwa_pcica_t	pcic1 ;
-  hwa_wdoga_t	watchdog0 ;
+  hwa_gpa_t	port0 ;
+  hwa_gpa_t	port1 ;
+  hwa_pxa_t	pcic0 ;
+  hwa_pxa_t	pcic1 ;
+  hwa_wda_t	watchdog0 ;
 
-  hwa_cmp8a_t	counter0compare0 ;
-  hwa_cmp8a_t	counter0compare1 ;
-  hwa_c8a_t	counter0 ;
+  hwa_oca_t	counter0compare0 ;
+  hwa_oca_t	counter0compare1 ;
+  hwa_cta_t	counter0 ;
 
-  hwa_cmp16a_t	counter1compare0 ;
-  hwa_cmp16a_t	counter1compare1 ;
-  hwa_cap16a_t	counter1capture0 ;
-  hwa_c16a_t	counter1 ;
+  hwa_occ_t	counter1compare0 ;
+  hwa_occ_t	counter1compare1 ;
+  hwa_ica_t	counter1capture0 ;
+  hwa_ctd_t	counter1 ;
 
   hwa_usia_t	usi0 ;
-  hwa_acmpa_t	acmp0 ;
-  hwa_ad10a_t	adc0 ;
+  hwa_aca_t	acmp0 ;
+  hwa_ada_t	adc0 ;
 } hwa_t ;
 
 #include "../hwa_2.h"
 #include "../classes/c1_2.h"
 #include "../classes/corea_2.h"
-#include "../classes/io1a_2.h"
-#include "../classes/p8a_2.h"
-#include "../classes/pcica_2.h"
-#include "../classes/wdoga_2.h"
-#include "../classes/psca_2.h"
-#include "../classes/cmp8a_2.h"
-#include "../classes/c8a_2.h"
-#include "../classes/cmp16a_2.h"
-#include "../classes/cap16a_2.h"
-#include "../classes/c16a_2.h"
+#include "../classes/ioa_2.h"
+#include "../classes/gpa_2.h"
+#include "../classes/pxa_2.h"
+#include "../classes/wda_2.h"
+#include "../classes/psa_2.h"
+#include "../classes/oca_2.h"
+#include "../classes/cta_2.h"
+#include "../classes/occ_2.h"
+#include "../classes/ica_2.h"
+#include "../classes/ctd_2.h"
 #include "../classes/usia_2.h"
-#include "../classes/acmpa_2.h"
-#include "../classes/ad10a_2.h"
-#include "../classes/eeproma_2.h"
-#include "../classes/flasha_2.h"
+#include "../classes/aca_2.h"
+#include "../classes/ada_2.h"
+#include "../classes/eea_2.h"
+#include "../classes/fla_2.h"
 #include "../classes/swuarta_2.h"
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )

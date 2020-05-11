@@ -57,9 +57,3 @@
 
 
 #include "../../st/stm32/devices/stm32f103.h"
-
-
-/**
- * @page stm32f103c8t6
- * <br>
- */

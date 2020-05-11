@@ -11,7 +11,7 @@
 
 /**
  * @page atmelavr_twia
- * __Actions__
+ * @section atmelavr_twia_act Actions
  *
  * `configure`:
  *
@@ -22,18 +22,14 @@
  * @code
  * hw | hwa( configure, twi0,
  *
- *	      //  scl speed
- *	      //
- *	    [ bps,		    <value>, ]
+ *	   [ bps,		   <value>, ]	//  SCL speed
  *
- *	    [ slave_address,	    <value>, ]
+ *	   [ slave_address,	   <value>, ]
  *
- *	    [ general_call,	    enabled
- *				  | disabled, ]
+ *	   [ general_call,	   enabled
+ *	   			 | disabled, ]
  *
- *	    [ slave_address_mask,   <value> ]
- *
- *	    );
+ *	   [ slave_address_mask,   <value> ] );
  * @endcode
  */
 #define hw_configure__twia		, _hw_cftwia
@@ -169,7 +165,7 @@
  * hw( bus_slar,  twi0, SLA [,irq] );	      // Transmit SLA slave address + read bit
  * @endcode
  * @code
- * hw( bus_write,  twi0, DATA [,irq] );	       // Transmit DATA
+ * hw( bus_write,  twi0, DATA [,irq] );	      // Transmit DATA
  * @endcode
  * @code
  * hw( bus_read,  twi0, ack | nack [,irq] );  // Receive one byte, send ACK or NACK
@@ -245,6 +241,7 @@
 
 /**
  * @page atmelavr_twia
+ *
  * `read`:
  *
  * @code
@@ -258,9 +255,8 @@
 
 /**
  * @page atmelavr_twia
- * `stat`:
- *
- * The `stat` action returns the status flags of the TWI as a byte whose value
+ * <br>
+ * `stat`: returns the status flags of the TWI as a byte whose value
  * can be compared to HWA predefined symbols:
  *
  * @code
@@ -457,10 +453,7 @@
 
 /**
  * @page atmelavr_twia
- * <br>
- * __Registers__
- *
- * <br>
+ * @section atmelavr_twia_regs Registers
  *
  * Class `_twia` objects hold the following hardware registers:
  *
@@ -484,9 +477,6 @@
  *  * `sla`: slave address
  *  * `slam`: enable ack mask
  *  * `gce`: general call enable
- *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
  */
 
 

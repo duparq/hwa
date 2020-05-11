@@ -16,8 +16,9 @@
  * #include <hwa/stm32f103rbt6.h>
  * @endcode
  */
+
 /**
- * @page stm32f103rbt6 STM32F103RBT6
+ * @page stm32f103rbt6
  * @section stm32f103rbt6_sym Defined symbols
  *
  * Symbol		       | Value
@@ -57,9 +58,3 @@
 
 
 #include "../../st/stm32/devices/stm32f103.h"
-
-
-/**
- * @page stm32f103rbt6
- * <br>
- */

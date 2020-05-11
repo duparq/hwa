@@ -46,7 +46,6 @@
 
 /**
  * @page p24cxx
- * __Interface__
  *
  * The following declares the functions that implement the memory. You can use it in
  * your header files:
@@ -66,7 +65,6 @@
 
 /**
  * @page p24cxx
- * __Implement__
  *
  * The following defines the functions that implement the memory. It must
  * appear in one of your source files:
@@ -80,7 +78,7 @@
  * @endcode
  */
 #define HW_DEFINE__24cxx		, _hw_im24cxx_
-#define HW_DEFINE_WEAK__24cxx	, _hw_im24cxxw
+#define HW_DEFINE_WEAK__24cxx		, _hw_im24cxxw
 
 #define _hw_im24cxx_(o,twi,...)		_hw_im24cxx(twi,)
 #define _hw_im24cxxw(o,twi,...)		_hw_im24cxx(twi,__attribute__((weak)))

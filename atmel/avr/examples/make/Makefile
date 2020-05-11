@@ -207,8 +207,7 @@ CFLAGS		+= -Wextra
 #CFLAGS		+= -pedantic
 CFLAGS		+= -Wpedantic	# GCC 4.8
 CFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
-#CFLAGS		+= -ftrack-macro-expansion=0
-#CFLAGS		+= -fomit-frame-pointer
+CFLAGS		+= -ftrack-macro-expansion=0 # -Wno-misleading-indentation unrecognized
 CFLAGS		+= -ffunction-sections
 #CFLAGS		+= -fno-builtins
 CFLAGS		+= -fpack-struct

@@ -11,24 +11,27 @@
 
 /**
  * @page atmelavr_corea
- * @section atmelavr_corea_config Configuration
+ * @section atmelavr_corea_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
  * hwa( configure, core0,
  *
- *	       //  Whether the `hw_sleep_until_irq()` instruction will put the core in
- *	       //  sleep mode or not
- *	       //
- *	     [ sleep,	     enabled,
- *			   | disabled, ]
+ *      //  Whether the `hw_sleep_until_irq()` instruction will put the core in
+ *      //  sleep mode or not
+ *      //
+ *    [ sleep,        enabled,
+ *                  | disabled, ]
  *
- *	       //  Wanted sleep mode
- *	       //
- *	     [ sleep_mode,   idle
- *			   | adc_noise_reduction
- *			   | power_down
- *			   | standby		 ]
- *	       );
+ *      //  Wanted sleep mode
+ *      //
+ *    [ sleep_mode,   idle
+ *                  | adc_noise_reduction
+ *                  | power_down
+ *                  | standby             ]
+ *      );
  * @endcode
  */
 #define hwa_configure__corea		, _hwa_cfcorea
@@ -78,21 +81,21 @@
 
 /**
  * @page atmelavr_corea
- * @section atmelavr_corea_sleep Sleep
  *
- * If enabled, the `hw_sleep_until_irq()` instruction puts the core into sleeping mode
+ * <br>
+ * `sleep_until_irq`: puts the core into sleeping mode
  *
  * @code
- * hw_sleep_until_irq();
+ * hw( sleep_until_irq );
  * @endcode
  */
 
 
 /**
  * @page atmelavr_corea
- * @section atmelavr_corea_stat Status
  *
- * The `hw(stat,)` instruction returns the status flags of the core in a
+ * <br>
+ * `stat`: returns the status flags of the core in a
  * structure whose typename is given by the `hw_stat_t()` instruction. Available
  * flags are
  *
@@ -145,7 +148,8 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 /**
  * @page atmelavr_corea
  *
- * The ``clear`` instruction clears the status flags all at once
+ * <br>
+ * `clear`:
  *
  * @code
  * hwa( clear, core0 );
@@ -178,9 +182,3 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
   _hwa_commit_r( o, mcucr  );			\
   _hwa_commit_r( o, mcusr  );			\
   _hwa_commit_r( o, osccal )
-
-
-/**
- * @page atmelavr_corea
- * <br>
- */

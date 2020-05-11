@@ -36,7 +36,7 @@
  *
  * Object name	| Class				 | Comments
  * :------------|--------------------------------|:-----------------------------
- * `port0`	| @ref espressif_p16a "_p16a"	 | General purpose I/O port
+ * `port0`	| @ref espressif_gpa "_gpa"	 | General purpose I/O port
  * `timer1`	| @ref espressif_tm23a "_tm23a"	 | 23-bit timer
  * `uart0`	| @ref espressif_uarta "_uarta"	 | UART
  */
@@ -114,13 +114,13 @@ typedef struct {
  *									       *
  *******************************************************************************/
 
-#include "../classes/p16a_1.h"
-#include "../classes/io1a_1.h"
-#include "../classes/io1b_1.h"
+#include "../classes/gpa_1.h"
+#include "../classes/ioa_1.h"
+#include "../classes/iob_1.h"
 
 /*	Object				class, address
  */
-#define hw_port0			_p16a, 0x60000300
+#define hw_port0			_gpa, 0x60000300
 
 
 /*	Class hardware registers	class, address, write mask, flags mask
@@ -131,35 +131,35 @@ typedef struct {
  *	  * 0D-ESP8266__Pin_List__Release_15-11-2014.ods
  *	  * ESP8266_RTOS_SDK/blob/master/examples/driver_lib/driver/gpio.c
  */
-#define hw__p16a__out			_r32, 0x00, 0xFFFFFFFF, 0
-#define hw__p16a__outw1ts		_r32, 0x04, 0x0000FFFF, 0
-#define hw__p16a__outw1tc		_r32, 0x08, 0x0000FFFF, 0
-#define hw__p16a__enb			_r32, 0x0C, 0x003FFFFF, 0
-#define hw__p16a__enbw1ts		_r32, 0x10, 0x0000FFFF, 0
-#define hw__p16a__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
-#define hw__p16a__in			_r32, 0x18, 0x00000000, 0
-#define hw__p16a__ie			_r32, 0x1C, 0x0000FFFF, 0
-#define hw__p16a__iew1ts		_r32, 0x20, 0x0000FFFF, 0
-#define hw__p16a__iew1tc		_r32, 0x24, 0x0000FFFF, 0
+#define hw__gpa__out			_r32, 0x00, 0xFFFFFFFF, 0
+#define hw__gpa__outw1ts		_r32, 0x04, 0x0000FFFF, 0
+#define hw__gpa__outw1tc		_r32, 0x08, 0x0000FFFF, 0
+#define hw__gpa__enb			_r32, 0x0C, 0x003FFFFF, 0
+#define hw__gpa__enbw1ts		_r32, 0x10, 0x0000FFFF, 0
+#define hw__gpa__enbw1tc		_r32, 0x14, 0x0000FFFF, 0
+#define hw__gpa__in			_r32, 0x18, 0x00000000, 0
+#define hw__gpa__ie			_r32, 0x1C, 0x0000FFFF, 0
+#define hw__gpa__iew1ts		_r32, 0x20, 0x0000FFFF, 0
+#define hw__gpa__iew1tc		_r32, 0x24, 0x0000FFFF, 0
 
 /*	Class logical registers		class, reg, bn, bp
  */
-#define hw__p16a_btsel			_cb1, _out,	16, 16
-#define hw__p16a_out			_cb1, _out,	16,  0
-#define hw__p16a_outw1ts		_cb1, _outw1ts, 16,  0
-#define hw__p16a_outw1tc		_cb1, _outw1tc, 16,  0
+#define hw__gpa_btsel			_cb1, _out,	16, 16
+#define hw__gpa_out			_cb1, _out,	16,  0
+#define hw__gpa_outw1ts		_cb1, _outw1ts, 16,  0
+#define hw__gpa_outw1tc		_cb1, _outw1tc, 16,  0
 
-#define hw__p16a_sdiosel		_cb1, _enb,	 6, 16
-#define hw__p16a_enb			_cb1, _enb,	16,  0
-#define hw__p16a_enbw1ts		_cb1, _enbw1ts, 16,  0
-#define hw__p16a_enbw1tc		_cb1, _enbw1tc, 16,  0
+#define hw__gpa_sdiosel		_cb1, _enb,	 6, 16
+#define hw__gpa_enb			_cb1, _enb,	16,  0
+#define hw__gpa_enbw1ts		_cb1, _enbw1ts, 16,  0
+#define hw__gpa_enbw1tc		_cb1, _enbw1tc, 16,  0
 
-#define hw__p16a_strapping		_cb1, _in,	16, 16
-#define hw__p16a_in			_cb1, _in,	16,  0
+#define hw__gpa_strapping		_cb1, _in,	16, 16
+#define hw__gpa_in			_cb1, _in,	16,  0
 
-#define hw__p16a_ie			_cb1, _ie,	16, 16
-#define hw__p16a_iew1ts			_cb1, _iew1ts,	16, 16
-#define hw__p16a_iew1tc			_cb1, _iew1tc,	16, 16
+#define hw__gpa_ie			_cb1, _ie,	16, 16
+#define hw__gpa_iew1ts			_cb1, _iew1ts,	16, 16
+#define hw__gpa_iew1tc			_cb1, _iew1tc,	16, 16
 
 
 /*******************************************************************************
@@ -176,23 +176,23 @@ typedef struct {
  *
  * Pin	  | HWA name | Class			 | Functions
  * -------|----------|---------------------------|-------------
- * GPIO0  | `gpio0`  | @ref espressif_io1a "_io1a" | `gpio`, `(spi0,cs2)`, `clk_out`
- * GPIO1  | `gpio1`  | @ref espressif_io1a "_io1a" | `gpio`, `(uart0,txd)`, `(spi0,cs1)`, `clk_rtc`
- * GPIO2  | `gpio2`  | @ref espressif_io1a "_io1a" | `gpio`, `(i2so0,ws)`, `(uart1,txd)`, `(uart0,txd)`
- * GPIO3  | `gpio3`  | @ref espressif_io1a "_io1a" | `gpio`, `(uart0,rxd)`, `(i2so,data)`, `fn_clk_xtal`
- * GPIO4  | `gpio4`  | @ref espressif_io1a "_io1a" | `gpio`, `clk_xtal`
- * GPIO5  | `gpio5`  | @ref espressif_io1a "_io1a" | `gpio`, `clk_rtc`
- * GPIO6  | `gpio6`  | @ref espressif_io1a "_io1a" | `gpio`, `sd_clk`, `(spi0,clk)`, `(uart1,cts)`
- * GPIO7  | `gpio7`  | @ref espressif_io1a "_io1a" | `gpio`, `sd_data0`, `(spi0,q)`, `(uart1,txd)`
- * GPIO8  | `gpio8`  | @ref espressif_io1a "_io1a" | `gpio`, `sd_data1`, `(spi0,d)`, `(uart1,rxd)`
- * GPIO9  | `gpio9`  | @ref espressif_io1a "_io1a" | `gpio`, `sd_data2`, `(spi0,hd)`, `(hspi0,hd)`
- * GPIO10 | `gpio10` | @ref espressif_io1a "_io1a" | `gpio`, `sd_data3`, `(spi0,wp)`, `(hspi0,wp)`
- * GPIO11 | `gpio11` | @ref espressif_io1a "_io1a" | `gpio`, `sd_cmd`, `(spi0,cs0)`, `(uart1,rts)`
- * GPIO12 | `gpio12` | @ref espressif_io1a "_io1a" | `gpio`, `mtdi`, `(i2si,data)`, `(hspi0,miso)`, `(uart0,dtr)`
- * GPIO13 | `gpio13` | @ref espressif_io1a "_io1a" | `gpio`, `mtck`, `(i2s0,bck)`, `(hspi0,mosi)`, `(uart0,cts)`
- * GPIO14 | `gpio14` | @ref espressif_io1a "_io1a" | `gpio`, `mtms`, `(i2si,ws)`, `(hspi0,clk)`, `(uart0,dsr)`
- * GPIO15 | `gpio15` | @ref espressif_io1a "_io1a" | `gpio`, `mtdo`, `(i2so0,bck)`, `(hspi0,cs)`, `(uart0,rts)`, `(uart0,txd)`
- * GPIO16 | `gpio16` | @ref espressif_io1b "_io1b" | `gpio`, `xpd_dcdc`, `external_wakeup`, `deep_sleep`, `bt_xtal_en`
+ * GPIO0  | `gpio0`  | @ref espressif_ioa "_ioa" | `gpio`, `(spi0,cs2)`, `clk_out`
+ * GPIO1  | `gpio1`  | @ref espressif_ioa "_ioa" | `gpio`, `(uart0,txd)`, `(spi0,cs1)`, `clk_rtc`
+ * GPIO2  | `gpio2`  | @ref espressif_ioa "_ioa" | `gpio`, `(i2so0,ws)`, `(uart1,txd)`, `(uart0,txd)`
+ * GPIO3  | `gpio3`  | @ref espressif_ioa "_ioa" | `gpio`, `(uart0,rxd)`, `(i2so,data)`, `fn_clk_xtal`
+ * GPIO4  | `gpio4`  | @ref espressif_ioa "_ioa" | `gpio`, `clk_xtal`
+ * GPIO5  | `gpio5`  | @ref espressif_ioa "_ioa" | `gpio`, `clk_rtc`
+ * GPIO6  | `gpio6`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_clk`, `(spi0,clk)`, `(uart1,cts)`
+ * GPIO7  | `gpio7`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data0`, `(spi0,q)`, `(uart1,txd)`
+ * GPIO8  | `gpio8`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data1`, `(spi0,d)`, `(uart1,rxd)`
+ * GPIO9  | `gpio9`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data2`, `(spi0,hd)`, `(hspi0,hd)`
+ * GPIO10 | `gpio10` | @ref espressif_ioa "_ioa" | `gpio`, `sd_data3`, `(spi0,wp)`, `(hspi0,wp)`
+ * GPIO11 | `gpio11` | @ref espressif_ioa "_ioa" | `gpio`, `sd_cmd`, `(spi0,cs0)`, `(uart1,rts)`
+ * GPIO12 | `gpio12` | @ref espressif_ioa "_ioa" | `gpio`, `mtdi`, `(i2si,data)`, `(hspi0,miso)`, `(uart0,dtr)`
+ * GPIO13 | `gpio13` | @ref espressif_ioa "_ioa" | `gpio`, `mtck`, `(i2s0,bck)`, `(hspi0,mosi)`, `(uart0,cts)`
+ * GPIO14 | `gpio14` | @ref espressif_ioa "_ioa" | `gpio`, `mtms`, `(i2si,ws)`, `(hspi0,clk)`, `(uart0,dsr)`
+ * GPIO15 | `gpio15` | @ref espressif_ioa "_ioa" | `gpio`, `mtdo`, `(i2so0,bck)`, `(hspi0,cs)`, `(uart0,rts)`, `(uart0,txd)`
+ * GPIO16 | `gpio16` | @ref espressif_iob "_iob" | `gpio`, `xpd_dcdc`, `external_wakeup`, `deep_sleep`, `bt_xtal_en`
  */
 
 
@@ -203,24 +203,24 @@ typedef struct {
  *
  *					class, port, bn, bp
  */
-#define hw_gpio0			_io1a, port0, 1, 0
-#define hw_gpio1			_io1a, port0, 1, 1
-#define hw_gpio2			_io1a, port0, 1, 2
-#define hw_gpio3			_io1a, port0, 1, 3
-#define hw_gpio4			_io1a, port0, 1, 4
-#define hw_gpio5			_io1a, port0, 1, 5
-#define hw_gpio6			_io1a, port0, 1, 6
-#define hw_gpio7			_io1a, port0, 1, 7
-#define hw_gpio8			_io1a, port0, 1, 8
-#define hw_gpio9			_io1a, port0, 1, 9
-#define hw_gpio10			_io1a, port0, 1, 10
-#define hw_gpio11			_io1a, port0, 1, 11
-#define hw_gpio12			_io1a, port0, 1, 12
-#define hw_gpio13			_io1a, port0, 1, 13
-#define hw_gpio14			_io1a, port0, 1, 14
-#define hw_gpio15			_io1a, port0, 1, 15
+#define hw_gpio0			_ioa, port0, 1, 0
+#define hw_gpio1			_ioa, port0, 1, 1
+#define hw_gpio2			_ioa, port0, 1, 2
+#define hw_gpio3			_ioa, port0, 1, 3
+#define hw_gpio4			_ioa, port0, 1, 4
+#define hw_gpio5			_ioa, port0, 1, 5
+#define hw_gpio6			_ioa, port0, 1, 6
+#define hw_gpio7			_ioa, port0, 1, 7
+#define hw_gpio8			_ioa, port0, 1, 8
+#define hw_gpio9			_ioa, port0, 1, 9
+#define hw_gpio10			_ioa, port0, 1, 10
+#define hw_gpio11			_ioa, port0, 1, 11
+#define hw_gpio12			_ioa, port0, 1, 12
+#define hw_gpio13			_ioa, port0, 1, 13
+#define hw_gpio14			_ioa, port0, 1, 14
+#define hw_gpio15			_ioa, port0, 1, 15
 
-#define hw_gpio16			_io1b, rtc, 1, 0
+#define hw_gpio16			_iob, rtc, 1, 0
 
 
 /*  Association of pin numbers and pin names
@@ -646,7 +646,7 @@ typedef struct {
   uint8_t	commit ;	/*!< 1 if commit does write into hardware registers	*/
 
   hwa_shared_t	shared ;
-  hwa_p16a_t	port0 ;
+  hwa_gpa_t	port0 ;
   hwa_rtca_t	rtc ;
   hwa_pcfa_t	gpio0_cf ;
   hwa_pcfa_t	gpio1_cf ;
@@ -674,9 +674,9 @@ typedef struct {
 #include "../classes/rtca_2.h"
 #include "../classes/pcfa_2.h"
 #include "../classes/pcfb_2.h"
-#include "../classes/p16a_2.h"
-#include "../classes/io1a_2.h"
-#include "../classes/io1b_2.h"
+#include "../classes/gpa_2.h"
+#include "../classes/ioa_2.h"
+#include "../classes/iob_2.h"
 #include "../classes/tm23a_2.h"
 #include "../classes/uarta_2.h"
 

@@ -11,7 +11,9 @@
 
 /**
  * @page atmelavr_spia
- * @section atmelavr_spia_cf Configuration
+ * @section atmelavr_spia_act Actions
+ *
+ * `configure`:
  *
  * __Note 1__ When configured in master or slave mode, the SPI automatically
  * configures its related I/O pins as inputs or outputs according to the mode.
@@ -19,7 +21,7 @@
  * __Note 2__ In master mode, if the SS pin is configured as an input, it must
  *  be held high.  Otherwise the SPI will be automatically turned into slave
  *  mode by hardware as soon as the SS pin goes low.
-
+ *
  * @code
  * hwa( configure,	 spi0,
  *
@@ -27,9 +29,7 @@
  *		       | slave
  *		       | off,
  *
- *	//  Clock frequency
- *	//
- *	clock,		 ioclk / (    2
+ *	clock,		 ioclk / (    2		//  Clock frequency
  *				  |   4
  *				  |   8
  *				  |  16
@@ -39,14 +39,10 @@
  *
  *    [ mode,		 0 | 1 | 2 | 3, ]
  *
- *	//  State of SCK when idle
- *	//
- * |  [ idle_state,	 low
+ *    [ idle_state,	 low			//  State of SCK when idle
  *		       | high,
  *
- *	//  Sampling clock edge
- *	//
- *	sampling_edge,	 falling
+ *	sampling_edge,	 falling		//  Sampling clock edge
  *		       | rising, ]
  *
  *    [ data_order,	 lsb_first
@@ -168,11 +164,9 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 
 /**
  * @page atmelavr_spia
- * @section atmelavr_spia_data Data
- */
-
-/**
- * @page atmelavr_spia
+ *
+ * `read`:
+ *
  * @code
  * hw( read, spi0 );
  * @endcode
@@ -183,6 +177,9 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 
 /**
  * @page atmelavr_spia
+ *
+ * `write`:
+ *
  * @code
  * hw(_write, spi0, value );
  * @endcode
@@ -216,12 +213,15 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 
 /**
  * @page atmelavr_spia
- * @section atmelavr_spia_turn Turning on/off
  *
- * When the SPI is turned on, it takes control of the MOSI and MISO pins.
+ * `turn`: when the SPI is turned on, it takes control of the MOSI and MISO pins.
  *
  * @code
  * hw( turn, spi0, on | off );
+ * @endcode
+ *
+ * @code
+ * hwa( turn, spi0, on | off );
  * @endcode
  */
 #define hw_turn__spia			, _hw_turn_spia
@@ -233,12 +233,6 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 #define _hw_turn_spia_1(o,v, ...)				\
   _hw_write(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
-/**
- * @page atmelavr_spia
- * @code
- * hwa( turn, spi0, on | off );
- * @endcode
- */
 #define hwa_turn__spia			, _hwa_turn_spia
 
 #define _hwa_turn_spia(o,a,k,...)				\
@@ -251,13 +245,24 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
 
 /**
  * @page atmelavr_spia
- * @section atmelavr_spia_st Status
+ *
+ * `stat`: returns the `collision` flag:
+ *
+ * @code
+ * 
+ * hw_stat_t( spi0 ) st ;	//  Create a structure to receive the counter status
+ *
+ * st = hw( stat, spi0 );	//  Copy the SPI status into the structure
+ *
+ * if ( st.collision )		//  Process the collision flag
+ *   n_collisions++ ;
+ * @endcode
  *
  * Reading the "transfer complete" flag:
  *
  * @code
- * if ( hw( read, irqflag( spi0 ) ) )  // Read "transfer complete" IRQ flag
- *   hw( turn, irq(spi0), off );     // Disable transfer complete IRQs
+ * if ( hw( read, irqflag( spi0 ) ) )	// Read "transfer complete" IRQ flag
+ *   hw( turn, irq(spi0), off );     	// Disable transfer complete IRQs
  * @endcode
  *
  * The "transfer complete" flag is cleared by hardware when the corresponding
@@ -265,25 +270,8 @@ HW_INLINE uint8_t _hwa_cpspia_clk ( float v )
  * flag has been read:
  *
  * @code
- * if ( hw( read, irqflag( spi0 ) ) )  // Read transfer complete IRQ flag
- *   data = hw( read, spi0 );		  // Read data and clear transfer complete IRQ flag
- * @endcode
- *
- * The `hw(stat,)` instruction lets you read the `collision` flag:
- *
- * @code
- * //  Create a structure to receive the counter status
- * //
- * hw_stat_t( spi0 ) st ;
- *
- * //  Copy the SPI status into the structure
- * //
- * st = hw( stat, spi0 );
- *
- * //  Process the collision flag
- * //
- * if ( st.collision )
- *   n_collisions++ ;
+ * if ( hw( read, irqflag( spi0 ) ) )	// Read transfer complete IRQ flag
+ *   data = hw( read, spi0 );		// Read data and clear transfer complete IRQ flag
  * @endcode
  */
 #define hw_stat__spia			, _hw_stat_spia
@@ -332,7 +320,7 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
 
 /**
  * @page atmelavr_spia
- * @section atmelavr_spia_internals Internals
+ * @section atmelavr_spia_regs Registers
  *
  * Class `_spia` objects hold the following hardware registers:
  *
@@ -352,13 +340,4 @@ HW_INLINE _hw_spia_stat_t _hw_spia_stat( uint8_t byte )
  *  * `sp2x`: double clock speed
  *  * `ie`: overflow interrupt mask
  *  * `if`: overflow interrupt flag
- *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
- */
-
-
-/**
- * @page atmelavr_spia
- * <br>
  */

@@ -525,12 +525,12 @@
 #define _HW_KW07(f,k,w,z,x,...)		f##x
 
 
-/*  Branch depending on a state: (0,1,on,off,yes,no,(...))
- *    (...) is considered a state as it can be a boolean expression.
+/*  Branch depending on a state: (0,1,on,off,yes,no,(x))
+ *    (x) is considered a state as it can be a boolean expression.
  *
- *    HW_KS(f,w,va) expands to:
- *      f0(va) if w is not a state, and produce an error
- *      f1(0|1|(...), va) if w is a state
+ *    HW_KS(f,w,...) expands to:
+ *      f0(__VA_ARGS__) if w is not a state, and produce an error
+ *      f1(0|1|(), __VA_ARGS__) if w is a state
  */
 #define HW_KS(f,w,...)			_HW_KS02(f,w,(__VA_ARGS__),_hw_isa_leftbkt w, 0,)
 #define _HW_KS02(...)			_HW_KS03(__VA_ARGS__)

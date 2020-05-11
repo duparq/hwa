@@ -11,25 +11,24 @@
 
 /**
  * @page atmelavr_usia
- * @section atmelavr_usia_config Configuration
+ * @section atmelavr_usia_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
- * hwa( configure, USI,
+ * hwa( configure,   USI,
  *
- *	//  How the USI behaves
- *	//
- *	mode,	 disconnected	       // The USI is disabled
- *	       | spi_master	       // The USI acts as a SPI master
- *	       | spi_slave	       // The USI acts as a SPI slave
- *	       | twi_master	       // The USI acts as a I²C master
- *	       | twi_slave,	       // The USI acts as a I²C slave
+ *	mode,	     disconnected	// The USI is disabled
+ *		   | spi_master		// The USI acts as a SPI master
+ *		   | spi_slave		// The USI acts as a SPI slave
+ *		   | twi_master		// The USI acts as a I²C master
+ *		   | twi_slave,		// The USI acts as a I²C slave
  *
- *	//  How is it clocked
- *	//
- *	clock,	 software	       // Clocked by software
- *	       | compare0	       // Clocked by compare unit ? of counter 0
- *	       | external_rising       // Clocked by external source rising edge
- *	       | external_falling      // Clocked by external source falling edge
+ *	clock,	     software		// Clocked by software
+ *		   | compare0		// Clocked by compare unit ? of counter 0
+ *		   | external_rising	// Clocked by external source rising edge
+ *		   | external_falling	// Clocked by external source falling edge
  *	);
  * @endcode
  */
@@ -90,7 +89,9 @@
 
 /**
  * @page atmelavr_usia
- * @section atmelavr_usia_data Data
+ *
+ * <br>
+ * `read`:
  *
  * @code
  * uint8_t byte = hw( read, usi0 );
@@ -107,6 +108,9 @@
 /**
  * @page atmelavr_usia
  *
+ * <br>
+ * `write`:
+ *
  * @code
  * hw( write, usi0, 'A' );
  * @endcode
@@ -118,7 +122,9 @@
 
 /**
  * @page atmelavr_usia
- * @section atmelavr_usia_trigger Clocking
+ *
+ * <br>
+ * `trigger`:
  *
  * @code
  * hw( trigger, usi0 );
@@ -135,7 +141,10 @@
 
 /**
  * @page atmelavr_usia_spimaster_swclk
- * @section atmelavr_usia_spimaster_swclk_config Configuring the SPI
+ * @section atmelavr_usia_spimaster_swclk_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
  * #define SPI		spimaster0_swclk
@@ -160,7 +169,9 @@
 
 /**
  * @page atmelavr_usia_spimaster_swclk
- * @section atmelavr_usia_spimaster_swclk_read Getting the last received byte
+ *
+ * <br>
+ * `read`:
  *
  * @code
  * #define SPI		spimaster0_swclk
@@ -175,7 +186,9 @@
 
 /**
  * @page atmelavr_usia_spimaster_swclk
- * @section atmelavr_usia_spimaster_swclk_write Sending one byte
+ *
+ * <br>
+ * `write`: send one byte.
  *
  * @code
  * hw( write, spimaster0_swclk, 'A' );

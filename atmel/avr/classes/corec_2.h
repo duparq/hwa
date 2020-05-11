@@ -11,26 +11,29 @@
 
 /**
  * @page atmelavr_corec
- * @section atmelavr_corec_config Configuration
+ * @section atmelavr_corec_act Actions
+ *
+ * <br>
+ * `configure`:
  *
  * @code
  * hwa( configure, core0,
  *
- *	       //  Whether the `hw_sleep_until_irq()` instruction will put the core in
- *	       //  sleep mode or not
- *	       //
- *	     [ sleep,	     enabled,
- *			   | disabled, ]
+ *      //  Whether the `hw_sleep_until_irq()` instruction will put the core in
+ *      //  sleep mode or not
+ *      //
+ *    [ sleep,        enabled,
+ *                  | disabled, ]
  *
- *	       //  Wanted sleep mode
- *	       //
- *	     [ sleep_mode,   idle
- *			   | adc_noise_reduction
- *			   | power_down
- *			   | power_save
- *			   | standby
- *			   | extended_standby	  ]
- *	       );
+ *      //  Wanted sleep mode
+ *      //
+ *    [ sleep_mode,   idle
+ *                  | adc_noise_reduction
+ *                  | power_down
+ *                  | power_save
+ *                  | standby
+ *                  | extended_standby     ]
+ *      );
  * @endcode
  */
 #define hwa_configure__corec		, _hwa_cfcorec
@@ -79,12 +82,12 @@
 
 /**
  * @page atmelavr_corec
- * @section atmelavr_corec_sleep Sleep
  *
- * If enabled, the `hw_sleep_until_irq()` instruction puts the core into sleeping mode
+ * <br>
+ * `sleep_until_irq`: puts the core into sleeping mode
  *
  * @code
- * hw_sleep_until_irq();
+ * hw( sleep_until_irq );
  * @endcode
  */
 
@@ -152,7 +155,8 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
 /**
  * @page atmelavr_corec
  *
- * The ``clear`` instruction clears the status flags all at once
+ * <br>
+ * `clear`: clears the status flags all at once
  *
  * @code
  * hwa( clear, core0 );
@@ -188,9 +192,3 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
   _hwa_commit_r( o, mcusr  );			\
   _hwa_commit_r( o, smcr   );			\
   _hwa_commit_r( o, osccal )
-
-
-/**
- * @page atmelavr_corec
- * <br>
- */

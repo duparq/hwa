@@ -211,11 +211,13 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 }
 #endif
 
-#if defined hw_swuart0_compare || defined hw_swuart1_compare
+#if defined hw_swuart0_compare || defined hw_swuart1_compare || defined DOXYGEN
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_config Configuration
+ * @section atmelavr_swuarta_act Actions
+ *
+ * `configure`
  *
  * The instructions `hwa(configure,UART,...)` and `hw(configure,UART,...)` differ
  * slightly in what they do:
@@ -232,37 +234,23 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
  * Optionnal arguments are used for consistency with the class `_uarta`.
  *
  * @code
- * hwa( configure, UART,
+ * hwa( configure,     UART,
  *
- *	       //  Baudrate in bits per second
- *	       //
- *	     [ bps,	    BPS, ]
+ *    [ bps,	       BPS, ]		//  Baudrate in bits per second
+ *    
+ *    [ cpb,	       N, ]		//  Baudrate in CPU clock pulses per bit
  *
- *	       //  Baudrate in CPU clock pulses per bit
- *	       //
- *	     [ cpb,	    N, ]
+ *    [ databits,      8, ]		//  Number of data bits in frame. Must be `8`.
  *
- *	       //  Number of data bits in frame. Must be `8`.
- *	       //
- *	     [ databits,    8, ]
+ *    [ parity,	       none, ]		//  Parity. Must be `none`.
  *
- *	       //  Parity. Must be `none`.
- *	       //
- *	     [ parity,	    none, ]
+ *    [ stopbits,      1, ]		//  Number of stop bits in frame. Must be `1`.
  *
- *	       //  Number of stop bits in frame. Must be `1`.
- *	       //
- *	     [ stopbits,    1, ]
+ *    [ receiver,      enabled		//  Whether the UART can receive. Default is `enabled`.
+ *		     | disabled, ]
  *
- *	       //  Whether the UART can receive. Default is `enabled`.
- *	       //
- *	     [ receiver,    enabled | disabled, ]
+ *    [ transmitter,   enabled ] );	//  Whether the UART can transmit. Must be `enabled`.
  *
- *	       //  Whether the UART can transmit. Must be `enabled`.
- *	       //
- *	     [ transmitter, enabled ]
- *
- *	     );
  * @endcode
  */
 #define hw_configure__swuarta		, _hw_cfswuarta
@@ -386,10 +374,9 @@ HW_INLINE void _hw_swuart1_config_relatives ( hwa_t *hwa __attribute__((unused))
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_read Receiving
  *
- * The `read` instruction waits for the reception of a byte, clears the
- * `rxc` flag, and returns the byte.
+ * `read`: waits for the reception of a byte, clears the `rxc` flag, and returns
+ * the byte.
  *
  * @code
  * uint8_t byte = hw( read, UART ); // Clears the 'rxc' status flag
@@ -413,16 +400,14 @@ extern uint8_t				_hw_swuart1_getbyte ( ) ;
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_write Transmitting
  *
- * The `hw_write()` instruction waits for the completion of the transmission
- * (and the reception in 1-wire mode) and places the byte to send into the shift
- * register. This instruction returns before the byte is actually
- * transmitted. You need to check the `txc` flag to know when the transmission
- * is complete.
+ * `write`: waits for the completion of the transmission (and the reception in
+ * 1-wire mode) and places the byte to send into the shift register. This
+ * instruction returns before the byte is actually transmitted. You need to
+ * check the `txc` flag to know when the transmission is complete.
  *
  * @code
- * hw_write( UART, '#' ); // Clears the 'txc' status flag
+ * hw( write, UART, '#' ); // Clears the 'txc' status flag
  * @endcode
  */
 #define hw_write__swuarta		, _hw_swuarta_write
@@ -443,10 +428,8 @@ extern void				_hw_swuart1_putbyte ( uint8_t byte ) ;
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_stat Status
  *
- * The UART status is accessible through the `hw(stat,)` instruction. It
- * contains the following flags:
+ * `stat`: returns the status, containing the following flags:
  *
  * * `stop`: the state of the received stop bit, 0 if the byte failed to
  *	     transmit (collision)
@@ -485,10 +468,10 @@ typedef struct {
 /**
  * @page atmelavr_swuarta
  *
- * The ``clear`` instruction clears the `rxc` and `txc` status flags.
+ * `clear`: clears the `rxc` and `txc` status flags.
  *
  * @code
- *`hw( clear, UART )`;
+ * hw( clear, UART );
  * @endcode
  */
 #define hw_clear__swuarta		, _hw_clear__swuarta
@@ -501,9 +484,8 @@ typedef struct {
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_reset Resetting
  *
- * Resetting the UART will abort any transmission or reception. If the UART has automatic
+ * `reset`: aborts any transmission or reception. If the UART has automatic
  * baudrate detection, the UART will first resynchronize.
  *
  * @code
@@ -516,22 +498,14 @@ typedef struct {
 
 /**
  * @page atmelavr_swuarta
- * @section atmelavr_swuarta_internals Internals
+ * @section atmelavr_swuarta_regs Registers
  *
  * Class `_swuarta` objects hold the following registers:
  *
- *  * `dt0`: counter clocks between the start condition and the sampling of data bit 0
- *  * `dtn`: counter clocks between samplings
+ *  * `dt0`: number of counter clocks between the start condition and the sampling of data bit 0
+ *  * `dtn`: number of counter clocks between samplings
  *  * `sr`: status byte
- *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
  */
 
 
-#endif /* defined hw_swuart0_compare || defined hw_swuart1_compare */
-
-/**
- * @page atmelavr_swuarta
- * <br>
- */
+#endif /* defined hw_swuart0_compare || defined hw_swuart1_compare || defined DOXYGEN */

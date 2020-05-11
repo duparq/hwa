@@ -4,9 +4,9 @@ Object classes {#espressif_classes}
 
 HWA provides the following classes for Espressif devices:
 
-* @subpage espressif_io1a
-* @subpage espressif_io1b
-* @subpage espressif_p16a
+* @subpage espressif_ioa
+* @subpage espressif_iob
+* @subpage espressif_gpa
 * @subpage espressif_pcfa
 * @subpage espressif_pcfb
 * @subpage espressif_tm23a

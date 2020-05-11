@@ -139,9 +139,10 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
 
 /*
  * @page atmelavr_swtwia
- * @section swtwiacf Configuration
+ * @section swtwiacf act Actions
  *
- * `configure`
+ * <br>
+ * `configure`:
  *
  * @code
  * hwa( configure,   swtwi0,
