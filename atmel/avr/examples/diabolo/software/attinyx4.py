@@ -6,7 +6,7 @@ import devices
 class attinyx4(devices.Device):
 
     def s_fuse_eb(self, fuses):
-        fuse = ord(fuses[2])
+        fuse = fuses[2]
         s_selfprgen = { 0: "enabled", 1: "disabled" }
         selfprgen = fuse & 0x01
         s =  _("  Fuses ext byte: 0x%02X\n" % fuse)
@@ -14,7 +14,7 @@ class attinyx4(devices.Device):
         return s
 
     def s_fuse_hb(self, fuses):
-        fuse = ord(fuses[3])
+        fuse = fuses[3]
         rstdsbl = (fuse & 0x80)>>7
         dwen    = (fuse & 0x40)>>6
         spien   = (fuse & 0x20)>>5
@@ -39,7 +39,7 @@ class attinyx4(devices.Device):
         return s
 
     def s_fuse_lb(self, fuses):
-        fuse = ord(fuses[0])
+        fuse = fuses[0]
         ckdiv8  = (fuse & 0x80)>>7 ; s_ckdiv8 = { 0: "8", 1: "1" }
         ckout   = (fuse & 0x40)>>6 ; s_ckout = { 0: "enabled", 1: "disabled" }
         sut     = (fuse & 0x30)>>4 ; 
@@ -98,7 +98,7 @@ class attinyx4(devices.Device):
         return s
 
     def s_fuse_lk(self, fuses):
-        fuse = ord(fuses[1])
+        fuse = fuses[1]
         lbx   = (fuse & 0x03)
         s_lbx = { 0: "no_program_no_verify "\
                   "(Programming and verification of Flash and EEPROM are "\
@@ -117,16 +117,16 @@ class attinyx4(devices.Device):
 
 class attiny44(attinyx4):
     def __init__(self):
-        attinyx4.__init__(self,'ATtiny44','1E9207',64,4096,512,False)
+        attinyx4.__init__(self,'ATtiny44',b'\x1E\x92\x07',64,4096,512,False)
 
 devices.devices["attiny44"] = attiny44
 devices.devices["attiny44a"] = attiny44
-devices.devices['1E9207'] = attiny44
+devices.devices[b'\x1E\x92\x07'] = attiny44
 
 class attiny84(attinyx4):
     def __init__(self):
-        attinyx4.__init__(self,'ATtiny84','1E930C',64,8192,512,False)
+        attinyx4.__init__(self,'ATtiny84',b'\x1E\x93\x0C',64,8192,512,False)
 
 devices.devices["attiny84"] = attiny84
 devices.devices["attiny84a"] = attiny84
-devices.devices['1E930C'] = attiny84
+devices.devices[b'\x1E\x93\x0C'] = attiny84

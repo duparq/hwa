@@ -283,11 +283,15 @@ $(OUT).elf: $(OBJECTS) $(LDSCRIPT)
 #									       #
 ################################################################################
 
-bin:	$(OUT).bin
+bin:	$(OUT).lst $(OUT).bin
 lst:	$(OUT).lst
 
+#  Note: must specify the section otherwise gap-fill includes the .data section (-> 8 MB!)
+#
 %.bin: %.elf
-	@$(OBJCOPY) --gap-fill=0xFF -O binary $^ $@
+	@$(OBJCOPY) --gap-fill=0xFF --pad-to $(DEVICE_FLASH_SIZE) \
+		--only-section .text \
+		-O binary $^ $@
 
 #  Object dump flags:
 #
@@ -424,7 +428,7 @@ print-fuses: $(INC_HWA)
 		$$(($$(echo $(DEVICE_FUSE_LB))))
 
 
-ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset))
+ifneq (,$(filter $(MAKECMDGOALS), install diabolo erase decode-fuses reset read-fuses read-flash))
   ifeq (,$(PROG_SW))
     PROG_SW = diabolo
   endif

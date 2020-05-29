@@ -6,114 +6,174 @@
  * @brief Implementation of _swuarta software UART
  */
 
+/*  The following is not processed if the UART is not properly declared
+ */
+#if HW_ADDRESS(UART) != -1
+
 	;; Software half-duplex UART using a timer-counter
 	;; 
 	;; Note: gcc call-used registers: 18..27, 30, 31
-#define TXD	HW_G3(hw,UART,pin_txd)
-#define RXD	HW_G3(hw,UART,pin_rxd)
-#define PDBG	HW_G3(hw,UART,pin_dbg)
+	;;
+	;; HW_SHOW( UART )
+	;; HW_SHOW( HW_ADDRESS(UART) )
+
+#undef NAME
+#define NAME				HW_A1( HW_X(UART) )
+#undef TXD
+#define TXD				HW_A2( HW_X(UART) )
+#undef RXD
+#define RXD				HW_A3( HW_X(UART) )
+#undef STARTIRQ
+#define STARTIRQ			HW_A4( HW_X(UART) )
+#undef COUNTER
+#define COUNTER				HW_A5( HW_X(UART) )
+#undef COUNT_BN
+#define COUNT_BN			HW_A6( HW_X(UART) )
+#undef COMPARE
+#define COMPARE				HW_A7( HW_X(UART) )
+#undef CLKDIV
+#define CLKDIV				HW_A8( HW_X(UART) )
+#undef AUTOSYNC
+#define AUTOSYNC			HW_A9( HW_X(UART) )
+#undef FASTREG
+#define FASTREG				HW_A10( HW_X(UART) )
+#undef CHECKTX
+//#define CHECKTX				HW_A9( HW_X(UART) )
+#define CHECKTX				0
+
+
+/*	Create a label
+ */
+#undef LABEL
+#define LABEL(x)			HW_G3(hw,NAME,x)
+
+
+/*	Create a data
+ */
+#undef DATA
+#define DATA(x)				HW_G3(hw,NAME,x)
+
 
 	;; Registers of the I/O ports handling the I/O pins used for RX/TX
 	;;
+
+#undef CANTX
 #if HW_ADDRESS(TXD) != -1
 #  define CANTX 1
 	TXDPORT	  = HW_ADDRESS((TXD,port,port))
 	TXDPIN	  = HW_ADDRESS((TXD,port,pin))
 	TXDDR	  = HW_ADDRESS((TXD,port,ddr))
 	TXDBIT	  = HW_POSITION(TXD)
+#  define AP_TXD    TXDPORT, TXDBIT
 #else
 #  define CANTX 0
 #endif
 
-#if HW_ADDRESS(RXD) != -1
-#  define CANRX 1
+#undef CANRX
+#if !HW_Y0(RXD)
+#  if HW_ADDRESS(RXD) != -1
+#    define CANRX 1
 	RXDPORT	  = HW_ADDRESS((RXD,port,port))
 	RXDPIN	  = HW_ADDRESS((RXD,port,pin))
 	RXDDR	  = HW_ADDRESS((RXD,port,ddr))
 	RXDBIT	  = HW_POSITION(RXD)
-#  define RXD_AP  RXDPIN, RXDBIT
+#    define AP_RXD    RXDPIN, RXDBIT
+#  else	
+#    define CANRX 0
+#  endif
 #else	
 #  define CANRX 0
 #endif
 
 	;; Debugging options
 	;; 
-#if HW_ADDRESS(PDBG) != -1
-	DBG	  = 1
-	DBGPORT	  = HW_ADDRESS((PDBG,port,port))
-	DBGPIN	  = HW_ADDRESS((PDBG,port,pin))
-	DBGDR	  = HW_ADDRESS((PDBG,port,ddr))
-	DBGBIT	  = HW_POSITION(PDBG)
-#  define DBG_AP  DBGPIN, DBGBIT
+//#define DBG				pb1
+
+#if HW_ADDRESS(DBG) != -1
+	DBGPORT	  = HW_ADDRESS((DBG,port,port))
+	DBGPIN	  = HW_ADDRESS((DBG,port,pin))
+	DBGDR	  = HW_ADDRESS((DBG,port,ddr))
+	DBGBIT	  = HW_POSITION(DBG)
+	XDBG	  = 1
+#  define AP_DBG  DBGPIN, DBGBIT
 #else
-	DBG	  = 0
+	XDBG	  = 0
 #endif
 
-	DBG_START1    = DBG && 0
-	DBG_START2    = DBG && 0
+	DBG_START1    = XDBG & 0
+	DBG_START2    = XDBG & 0
 
-	DBG_SYNC1     = DBG && 0
-	DBG_SYNC2     = DBG && 0
-	DBG_SYNC3     = DBG && 0
-	DBG_SYNC4     = DBG && 0
+	DBG_SYNC1     = XDBG & 0
+	DBG_SYNC2     = XDBG & 0
+	DBG_SYNC3     = XDBG & 0
+	DBG_SYNC4     = XDBG & 0
 
-	DBG_START99   = DBG && 0
+	DBG_START99   = XDBG & 0
 
-	DBG_COMP1     = DBG && 0
+	DBG_SPL       = XDBG & 0 ; Compare-match ISR toggles DBG
 
-	DBG_RXBIT     = DBG && 0
-	DBG_RXLDB     = DBG && 0
-	DBG_RXST      = DBG && 0
+	DBG_RXBIT     = XDBG & 0
+	DBG_RXLDB     = XDBG & 0
+	DBG_RXST      = XDBG & 0
 
-	DBG_TXSTART   = DBG && 0
-	DBG_TXBIT     = DBG && 0
-	DBG_TXSB      = DBG && 0
-	DBG_TXFAIL    = DBG && 0
+	DBG_TXSTART   = XDBG & 0
+	DBG_TXBIT     = XDBG & 0
+	DBG_TXSB      = XDBG & 0
+	DBG_TXFAIL    = XDBG & 0
 
-	DBG_GETBYTE   = DBG && 0
-	DBG_PUTBYTE   = DBG && 0
-	DBG_WAIT      = DBG && 0
-	DBG_WAITIDLE  = DBG && 0
-	DBG_WAITSTART = DBG && 0
-	DBG_WAITREADY = DBG && 0
+	DBG_GETBYTE   = XDBG & 0
+	DBG_PUTBYTE   = XDBG & 0
+	DBG_WAIT      = XDBG & 0
+	DBG_WAITIDLE  = XDBG & 0
+	DBG_WAITSTART = XDBG & 0
+	DBG_WAITREADY = XDBG & 0
 
 
 	;; Whether we need/can check the edge that triggers the start condition
 	;;
-#if HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_int0) \
+#undef CHECK_START
+#if CANRX
+#  if HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_int0) \
  || HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_ain1)
-#  define CHECK_START_EDGE 0
-#else
-#  define CHECK_START_EDGE 1
+#    define CHECK_START 0
+#  else
+#    define CHECK_START 1
+#  endif
 #endif
 
-#define ONEWIRE		HW_ADDRESS(TXD) == HW_ADDRESS(RXD)
-#define CHECKTX		HW_G3(hw,UART,check_tx)
-#define	CLK_DIV		HW_G3(hw,UART,clk_div)
-
-#undef COMPARE
-#define COMPARE		HW_G3(hw,UART,compare)
-
-#undef COUNTER
-#define COUNTER		(COMPARE,counter)
-
+#undef ONEWIRE
+#if HW_ADDRESS((UART,txd)) == HW_ADDRESS((UART,rxd))
+#  define ONEWIRE	1
+#else
+#  define ONEWIRE	0
+#endif
+	
 #undef STARTISR
-#define STARTISR	HW_G3(hw,UART,starter)
+#define STARTISR	(RXD,pcic,irq)
 
-
+#undef AP
 #define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
 
 #if CANRX
-#  define START_IE	AP(irqmask(STARTISR))
-#  define START_IF	AP(irqflag(STARTISR))
+#  undef START_IE
+#  define START_IE	AP((STARTISR,mask))
+#  undef START_IF
+#  define START_IF	AP((STARTISR,flag))
 #endif
 
-#define MATCH_IF	AP(irqflag(COMPARE))
-#define MATCH_IE	AP(irqmask(COMPARE))
+#undef MATCH_IE
+#define MATCH_IE	AP((COUNTER,irq,COMPARE,mask))
+
+#undef MATCH_IF
+#define MATCH_IF	AP((COUNTER,irq,COMPARE,flag))
 
 
-#undef COUNT_BN
-#define COUNT_BN	HW_BITS(COUNTER)
+#if COUNT_BN != 8 && COUNT_BN != 16
+#  error HWA: size of counter for HW_SWUART must be 8 or 16 bits
+#endif
+
+
+#include "../avrx.sx"
 
 
 	.section .bss
@@ -147,16 +207,30 @@ DATA(dtn):	.byte	0		; 1 bit duration
 
 	;; Counter registers
 	;;
-	count = HW_ADDRESS((COUNTER,count))
-	comp  = HW_ADDRESS((COMPARE,reg))
+	count = HW_ADDRESS((COUNTER,reg))
+	comp  = HW_ADDRESS((COUNTER,COMPARE,reg))
 
-	;; Status byte
+	;; Status byte: use the fastreg
+	;; 
+	;; Currently, the address of the status byte must be known before
+	;; compiling. This is required by the macro-instructions for bit accesses
+	;; of memory.
 	;;
-	stat  = HW_ADDRESS((UART,sr)) 	; defined in the device-specific HWA header
+	;; TODO: use special macros for dealing with the status byte. One set
+	;; for constant address, another set when address is not known.
+	;;
+#if FASTREG < 0
+#  error HWA: address of FASTREG register is not constant.
+#endif
+
+	.global DATA(stat)
+	DATA(stat) = FASTREG
+	
+	stat = FASTREG
 
 #define F_RXC	 stat, 0		// RX complete (stop bit sampled)
 #define F_TXC	 stat, 1		// TX complete
-#define F_STOP	 stat, 2		// RX: Stop bit value, TX: 0 = TX fail
+#define F_STOP	 stat, 2		// RX: Stop bit value / TX: 0 means TX fail
 #define F_SYNC	 stat, 3		// 0: swuart needs to be synced
 
 #define F_RXTX	 stat, 4		// 0==RX, 1==TX
@@ -164,629 +238,75 @@ DATA(dtn):	.byte	0		; 1 bit duration
 #define F_SENT	 stat, 5		// Last bit sent
 
 
-	.section .text
-
-	CY_ST_SEI=0
-	CY_RX_SEI=0
-
-#if CANRX
-
-	;; Start condition (falling edge on RXD)
+	;; Display configuration data (these comments are processed by cpp but not used by as)
 	;;
-	;; Priority is to get the date of the start condition and re-enable
-	;; interrupts as soon as possible.
+	;; HW_SHOW(NAME)
+	;; HW_SHOW(TXD)
+	;; HW_SHOW(CANTX)
+	;; HW_SHOW(RXD)
+	;; HW_SHOW(CANRX)
+	;; HW_SHOW(COUNTER)
+	;; HW_SHOW(COMPARE)
+	;; HW_SHOW(CLKDIV)
+	;; HW_SHOW(AUTOSYNC)
+	;; HW_SHOW(FASTREG)
+	;; HW_SHOW( HW_ADDRESS((TXD,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((TXD,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((TXD,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(TXD) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(RXD) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(DBG) )
+	;; HW_SHOW(ONEWIRE)
+	;; HW_SHOW(CHECKTX)
+	;; HW_SHOW(STARTISR)
+	;; HW_SHOW(HW_X(STARTISR))
+	;; HW_SHOW(START_IE)
+	;; HW_SHOW(START_IF)
+	;; HW_SHOW(MATCH_IE)
+	;; HW_SHOW(MATCH_IF)
+	;; HW_SHOW(COUNT_BN)
+	;; HW_SHOW( HW_ADDRESS((COUNTER,reg)) )
+	;; HW_SHOW( HW_ADDRESS((COUNTER,COMPARE,reg)) )
+
+
+	;; End of configuration data
 	;;
-	;; Edge checking is not a high priority since catching a rising edge
-	;; would happen only when UART is out of sync.
-	;;
-	;; Interrupts are disabled for CY_ST_SEI cycles (until sampling
-	;; of counter COUNT).
-	;; 
-	;; Total isr_start cycles: CY_ST
-	;;
-	;; To get CY_ values: avr-nm out.elf | grep " a CY_"
-	;;
-	.global HW_ISR(STARTISR)
-HW_ISR(STARTISR):
-	CYCLES=4		; [4] <- call
+	;; Beginning of implementation code
 
-	push	R24		; [2]
-	CYCLES=CYCLES+2
 
-	.if DBG_START1
-	XSB	R24, DBG_AP
-	.endif
+	;; .section .text
 
-	;; Get start bit date (R25:R24) and re-enable interrupts
-	;;
-#  if COUNT_BN==8
-	sei			; [1]
-	XLD	R24, count
-	CYCLES=CYCLES+3
-	CY_ST_SEI=CYCLES
-#  endif
-#  if COUNT_BN==16
-	push	R25		; [2]
-	XLD	R24, count+0
-	sei			; [1]
-	XLD	R25, count+1
-	CYCLES=CYCLES+5
-	CY_ST_SEI=CYCLES
-#  endif
-
-	push	R26		; [2]
-	CYCLES=CYCLES+2
-
-	in	R26, SREG	; [1]
-	push	R26		; [2]
-	CYCLES=CYCLES+3
-
-	;; Start date is stored in r25:r24
-	;; r26 and SREG are stacked
-
-#  if defined AUTOSYNC
-	;;
-	;; Need to synchronize ?
-	;;   This must be done before checking the edge since autosyncing
-	;;   may require to detect both falling and rising edges
-	;;
-	XSBIS	R26, F_SYNC
-	rjmp	LABEL(HW_G2(autosync,HW_G3(hw,UART,autosync)))	; [2]
-
-	CYCLES=CYCLES+2
-	CY_SYNC0=CYCLES
-#  endif
-
-	;; Test edge
-	;;
-#  if CHECK_START_EDGE
-	XSBIC	r26, RXDPIN, RXDBIT
-	rjmp	LABEL(st99)	; [2]
-	CYCLES=CYCLES+2
-#  endif
-
-	.if DBG_START2
-	sbi	DBGPORT, DBGBIT	; [2]
-	CYCLES=CYCLES+2
-	.endif
-
-LABEL(syn):
-	XCB	R26, START_IE	;	Disable START interrupts
-
-	;; Compute first data bit date
-	;;
-#  if COUNT_BN==8
-	lds	R26, dt0	; [2]
-	add	R24, R26	; [1]
-	XST	comp, r24
-	CYCLES=CYCLES+3
-#  endif
-#  if COUNT_BN==16
-	lds	R26, dt0+0	; [2]
-	add	R24, R26	; [1]
-	lds	R26, dt0+1	; [2]
-	adc	R25, R26	; [1]
-	XST	comp+1, r25
-	XST	comp+0, r24
-	CYCLES=CYCLES+6
-#  endif
-
-	;; Set 'bit' reception routine up
-	;;
-LABEL(st8):
-	ldi	R24, 8		; [1]		8 data bits to receive
-	sts	nbit, R24	; [2]
-	CYCLES=CYCLES+3
-
-	;; Clear flag, enable compare-match interrupts
-	;;
-	XCIF	R24, MATCH_IF
-	XSBAI	R24, MATCH_IE
-	
-	;; End of start routine
-	;; 
-LABEL(st99):
-	CY_ST99=CYCLES
-	.if DBG_START99
-	XSB	R26, DBG_AP
-	.endif
-
-	pop	R26		; [2]
-	out	SREG, R26	; [1]
-	pop	R26		; [2]
-	CYCLES=CYCLES+5
-
-#  if COUNT_BN==16
-	pop	R25		; [2]
-	CYCLES=CYCLES+2
-#  endif
-
-	pop	R24		; [2]
-
-	reti			; [4]
-	CYCLES=CYCLES+6
-	CY_ST=CYCLES
-	CY_ST99=CYCLES-CY_ST99
-
-#endif /* defined PINRX */
-
-
-	;; ISR Bit: send/receive one bit
-	;;
-	;; The priority is to re-enable interrupts as quickly as possible.
-	;;
-	;; The next bit date is computed early as the processing of the end of
-	;; frame can take a little longer than for a normal data bit and the
-	;; next date can expire before the end of the processing.
-	;;
-	.global HW_ISR((COMPARE,irq)
-HW_ISR((COMPARE,irq):
-
-	CYCLES=4		; [4]	<- call
-
-	push	R31		; [2]
-	in	R31, SREG	; [1]
-	push	R31		; [2]
-	push	R30		; [2]	Used for next compare date
-	CYCLES=CYCLES+7
-
-	.if DBG_COMP1
-	XSB	R30, DBG_AP
-	.endif
-
-	;;  Compute next bit date
-	;;
-#  if COUNT_BN==8
-	XLD	R30, comp	; [2]
-	lds	R31, dtn	; [2]
-	add	R30, R31	; [1]
-	XST	comp, R30
-	CYCLES=CYCLES+5
-#  endif
-#  if COUNT_BN==16
-	lds	R30, dtn+0	; [2]
-	lds	R31, dtn+1	; [2]
-	push	R29		; [2]
-	XLD	R29, comp+0
-	add	R30, R29	; [1]
-	XLD	R29, comp+1
-	adc	R31, R29	; [1]
-	pop	R29		; [2]
-	XST	comp+1, R31
-	XST	comp+0, R30
-	CYCLES=CYCLES+10
-#  endif
-
-#  if CANTX
-#    if CANRX
-	XSBIC	R31, F_RXTX	;	TX or RX?
-#    endif
-	rjmp	LABEL(tx)	; [2]
-	CYCLES=CYCLES+2
-	CY_TX=CYCLES
-;; #  else
-;; #	error "swuarta without TX pin is not handled"
-#  endif
-
-#  if CANRX
-	;; Receiving
-	;;
-	.if DBG_RXBIT
-	XSB	R31, DBG_AP
-	.endif
-
-	sei			; [1]		Sample port of RXD pin
-	in	R31, RXDPIN	; [1]		and enable interrupts
-	CYCLES=CYCLES+2
-	CY_RX_SEI=CYCLES
-
-	bst	R31, RXDBIT	; [1]		Store RXD bit to T
-	lds	R31, shift	; [2]		Store T to shift register
-	lsr	R31		; [1]
-	bld	R31, 7		; [1]
-	sts	shift, R31	; [2]
-	CYCLES=CYCLES+7
-
-	lds	R31, nbit	; [2]		One more bit received
-	subi	R31, 1		; [1]		'dec' would not set the carry!
-	sts	nbit, R31	; [2]
-	CYCLES=CYCLES+5
-
-	brmi	LABEL(rxsb)	; [1/2]		nbit < 0
-	CY_RX_SB=CYCLES+2
-	brne	LABEL(cmp99)	; [1/2]		nbit > 0
-	CY_RX_DB=CYCLES+3
-	CYCLES=CYCLES+2
-
-	;; nbit==0: all data bits received
-	;; 
-	.if DBG_RXLDB
-	cbi	DBGPORT, DBGBIT	; [2]
-	CYCLES=CYCLES+2
-	.endif
-	;;
-	;;	Store data byte
-	;;
-	lds	R31, shift	; [2]
-	sts	data, R31	; [2]
-	CYCLES=CYCLES+4
-#   else
-	CY_RX_DB=0
-#   endif /* CANRX */
-
-	;; Return from compare ISR
-	;;
-LABEL(cmp99):
-	CY_CMP99=CYCLES
-
-	pop	R30		; [2]
-	pop	R31		; [2]		Leave ISR
-	out	SREG, R31	; [1]
-	pop	R31		; [2]
-
-	;; .if DBG_BIT+DBG_RXBIT+DBG_RX_SB+DBG_RXDATA+DBG_TXBIT+DBG_TXSB
-	;; cbi	DBGPORT, DBGBIT	; [2]
-	;; CYCLES=CYCLES+2
-	;; .endif
-
-	reti			; [4]
-	CYCLES=CYCLES+11
-
-	CY_RX_LDB=CYCLES
-	CY_RX_DB=CY_RX_DB+CYCLES-CY_CMP99
-	CY_CMP99=CYCLES-CY_CMP99
-
-
-#if CANRX
-	;;
-	;; Stop bit has been sampled
-	;;
-LABEL(rxsb):
-	CYCLES0=CYCLES
-	CY_RXSB=CYCLES
-	.if DBG_RXST
-	cbi	DBGPORT, DBGBIT	; [2]
-	CYCLES=CYCLES+2
-	.endif
-
-#  if defined AUTOSYNC
-	;; Status = RXC + WBTX + SYNC + STOP bit value
-	;;  If SYNC was 0 do not set RXC since received byte is not data
-	;;
-	XLD	r31, stat
-	bld	r31, HW_A1(F_STOP)				; [1]	Stop bit value
-	sbrc	r31, HW_A1(F_SYNC)				; [1]
-	ori	r31, 1<<HW_A1(F_RXC)				; [1]
-	ori	r31, (1<<HW_A1(F_SYNC)) | (1<<HW_A1(F_WBTX))	; [1]
-	XST	stat, R31
-	CYCLES=CYCLES+4
-#  else
-	;; Status = RXC + WBTX + STOP bit value
-	;;
-	XLD	r31, stat
-	bld	r31, HW_A1(F_STOP)				; [1]	Stop bit value
-	ori	r31, (1<<HW_A1(F_WBTX)) | (1<<HW_A1(F_RXC))	; [1]
-	XST	stat, R31
-	CYCLES=CYCLES+2
-#  endif
-
-	;; Disable compare-match interrupts
-	;;
-	XCB	R31, MATCH_IE
-
-	;; Clear flag, enable START interrupts
-	;;
-	XCIF	R31, START_IF
-	XSBAI	R31, START_IE
-
-;; #  if HW_G2(UART,callback)
-;;	rcall	LABEL(callback)
-;; #  endif
-
-	rjmp	LABEL(cmp99)	; [2]
-	CYCLES=CYCLES+2
-
-	CY_RXSB=CYCLES-CY_RXSB
-	CY_RX_SB=CY_RX_SB+CY_RXSB+CY_CMP99
-
-#endif /* CANRX */
-
-	
-#if CANTX
-	;;
-	;;  Send next bit (data or stop)
-	;;    Re-enable interrupts as soon as possible
-	;;
-LABEL(tx):
-	CYCLES=CY_TX
-
-#   if CHECKTX
-	;;
-	;;	Check that the last bit was correctly sent (if it was '1')
-	;;
-	XSBIS	R30, F_SENT		; [2]	No check if '0' was sent
-	rjmp	1f
-	XSBIC	R30, TXDPIN, TXDBIT	; [2]	OK if '1' is still on the bus
-	rjmp	1f
-	CYCLES0=CYCLES+4
-
-	;;	Lost the bus: sent '1', read '0'
-	;;
-	.if DBG_TXFAIL
-	XSB	R31, DBG_AP
-	.endif
-	XCB	R31, F_STOP	;	Clear STOP flag in status
-	cbi	TXDDR, TXDBIT	; [2]	Release TXD pin, set all remaining data
-	ldi	R31, 0		; [1]	bits to 0 to avoid pulling-up, and
-	rjmp	LABEL(tx0)	; [2]	continue as a fake transmitting (keep sync)
-
-	CYCLES=CYCLES0
-#   endif
-
-1:	lds	R31, shift	; [2]	Load bit to send in carry flag
-	lsr	R31		; [1]
-	CYCLES=CYCLES+3
-
-#   if CHECKTX
-	XLD	R30, stat	; [2]	Load status
-	CYCLES=CYCLES+2
-#   endif
-
-	.if DBG_TXBIT
-	sbi	DBG_AP	; [2]
-	CYCLES=CYCLES+2
-	.endif
-
-	brcs	LABEL(tx1)	; [1/2]
-
-LABEL(tx0):
-#   if CHECKTX
-	andi	R30, ~(1<<HW_A1(F_SENT)) ; [1]	Save sent data bit in status
-	CYCLES=CYCLES+1
-#   endif
-	sei			; [1]
-	cbi	TXDPORT, TXDBIT	; [2]
-	rjmp	LABEL(tx2)	; [2]
-
-LABEL(tx1):
-#   if CHECKTX
-	ori	R30, 1<<HW_A1(F_SENT)	; [1]	Save sent data bit in status
-	CYCLES=CYCLES+1
-#   endif
-	sei			; [1]
-	sbi	TXDPORT, TXDBIT	; [2]
-
-LABEL(tx2):
-	sts	shift, R31	; [2]	Store next bits
-
-#   if CHECKTX
-	XST	stat, R30	; [2]	Store status
-	CYCLES=CYCLES+2
-#   endif
-
-	CYCLES=CYCLES+8	; 7 or 8
-	CY_TX_SEI=CYCLES
-
-	lds	R31, nbit	; [2]		One more bit sent
-	subi	R31, 1		; [1]		'dec' does not set the carry flag!
-	sts	nbit, R31	; [2]
-	CYCLES=CYCLES+5
-
-	brmi	LABEL(txsb)	; [1/2]		nbit<0: stop bit just sent
-	CY_TX_SB=CYCLES+2
-	CYCLES=CYCLES+1
-
-	brne	1f		; [1/2]		nbit>0: data bits remaining
-	CY_TX_DB=CYCLES+2
-	CYCLES=CYCLES+1
-
-	;; ldi	R31, 0x03	; [1]		nbit==0: load stop and idle state bits
-	ldi	R31, 0x01	; [1]		last data bit just sent, prepare stop bit
-	sts	shift, R31	; [2]
-	CYCLES=CYCLES+3
-
-1:	rjmp	LABEL(cmp99)	; [2]
-
-	CY_TX_DB=CY_TX_DB+2+CY_CMP99
-	CY_TX_LDB=CYCLES+2+CY_CMP99
-
-
-LABEL(txsb):
-	;;
-	;;	Stop bit just sent
-	;;
-	CY_TXSB=CYCLES
-
-	.if DBG_TXSB
-	sbi	DBGPORT, DBGBIT	; [2]
-	CYCLES=CYCLES+2
-	.endif
-
-	XSB	R31, F_TXC	;	Status = tx completed
-	XSB	R31, F_WBTX	;	Need to wait one more match before TX can start again
-
-	;; Disable compare-match interrupts
-	;;
-	XCB	R31, MATCH_IE
-
-#  if ONEWIRE
-	cbi	TXDDR, TXDBIT	; [2]	Release TXD
-	cbi	TXDPORT, TXDBIT	; [2]
-	CYCLES=CYCLES+4
-#  endif
-
-#  if CANRX
-	XCB	R31, F_RXTX	;	Mode = RX
-
-	;; Clear flag, enable START interrupts
-	;;
-	XCIF	R31, START_IF
-	XSBAI	R31, START_IE
-#  endif
-
-	.if DBG_PUTBYTE
-	sbi	DBGPORT, DBGBIT
-	CYCLES=CYCLES+2
-	.endif
-
-#  if HW_G3(hw,UART,callback)
-	rjmp	LABEL(callback)
-#  endif
-
-	rjmp	LABEL(cmp99)	; [2]
-	CYCLES=CYCLES+2
-	
-	CY_TXSB=CYCLES-CY_TXSB
-	CY_TX_SB=CY_TX_SB+CY_TXSB+CY_CMP99
-
-#endif /* CANTX */
-
-
-#if CANRX
-
-	;; Return last received byte or wait until a byte is received and return
-	;; it.
-	;;
-	.global		LABEL(getbyte)
-	.section	.text.LABEL(getbyte),"ax",@progbits
-LABEL(getbyte):
-	.if DBG_GETBYTE
-	sbi	DBGPORT, DBGBIT
-	.endif
-
-1:	XSBIS	R24, F_RXC
-	rjmp	1b
-
-	XCBAS	R24, R25, F_RXC
-
-	lds	R24, data
-
-	.if DBG_GETBYTE
-	cbi	DBGPORT, DBGBIT
-	.endif
-	ret
-#endif /* defined PINRX */
-
-
-#if CANTX
-
-	;; Send one byte (R24)
-	;;
-	.global		LABEL(putbyte)
-	.section	.text.LABEL(putbyte),"ax",@progbits
-LABEL(putbyte):
-	.if DBG_PUTBYTE
-	cbi	DBGPORT, DBGBIT
-	.endif
-	ldi	R25, 8		;	Number of data bits to send
-
-	;; Wait until rx/tx completed, i.e. match interrupt disabled
-	;;
-1:	XSBIC	R26, MATCH_IE
-	rjmp	1b
-
-	XCB	R26, F_TXC	;	Status = tx not completed
-
-	;; FIXME: WBTX is needed between end of reception and beginning
-	;; of transmission since the stop bit is sampled before the end
-	;; of its slot. Should find a way of handling this better than
-	;; with a busy loop.
-	;;
-	XSBIS	R26, F_WBTX	;	Need to wait before TX?
-	rjmp	1f
-
-2:	XSBIS	R26, MATCH_IF	;	Wait one bit time
-	rjmp	2b
-1:
-
-#  if CANRX
-	;;
-	;; Disable START interrupts
-	;;
-	XCB	R26, START_IE
-#  endif
-
-	sts	shift, R24	;	Set shift register
-	sts	nbit, R25	;	Set number of data bits to send
-
-	;;  Init status
-	;;
-	XLD	R24, stat
-#  if CHECKTX
-	;;
-	;;	Store start bit into status sent bit
-	;;
-	andi	R24, ~(1<<HW_A1(F_SENT))
-#  endif
-	ori	R24, (1<<HW_A1(F_RXTX)) | (1<<HW_A1(F_STOP))
-	XST	stat, R24	;
-
-#  if ONEWIRE
-	sbi	TXDPORT, TXDBIT	;	Configure RX/TX pin as output
-	sbi	TXDDR, TXDBIT	;
-#  endif
-
-	.if DBG_TXSTART
-	cbi	DBGPORT, DBGBIT
-	.endif
-
-	;; Send start bit
-	;; Compute next bit date
-	;; 
-#  if COUNT_BN==8
-	cli
-	CYCLES=0
-	XLD	R24, count	;		Get date
-	sei			; [1]|
-	cbi	TXDPORT, TXDBIT	; [2]|=3	Send start bit
-	lds	R25, dtn	;		Compute first data bit date
-	CYCLES=CYCLES+3
-	subi	R25, (CY_TX_SEI-CYCLES+CLK_DIV/2)/CLK_DIV ;	Compensate bit isr / send delay
-	add	R24, R25
-	XST	comp, R24
-#  endif
-#  if COUNT_BN==16
-	cli
-	CYCLES=0
-	XLD	R24, count+0	;		Get date
-	XLD	R25, count+1	;
-	sei			; [1]|
-	cbi	TXDPORT, TXDBIT	; [2]|=3	Send start bit
-	CYCLES=CYCLES+3
-	lds	R26, dtn+0	;		Compute first data bit date
-	lds	R27, dtn+1	;
-	sbiw	R26, (CY_TX_SEI-CYCLES+CLK_DIV/2)/CLK_DIV ;	Compensate bit isr / send delay
-	add	R24, R26
-	adc	R25, R27
-	XST	comp+1, R25
-	XST	comp+0, R24
-#  endif
-
-	;; Clear flag, enable compare-match interrupts
-	;;
-	XCIF	R24, MATCH_IF
-	XSBAS	R24, R25, MATCH_IE
-
-	ret
-
-#  include "swuarta_brk.sx"
-#endif /* defined PINTX */
-
-#include "swuarta_reset.sx"
+#include "swuarta_matchisr.sx"
 #include "swuarta_set_dt.sx"
-
-#define _hw_swuarta_autosync_5_1	, swuarta_autosync_5_1.sx
-#define _hw_swuarta_autosync_9_1	, swuarta_autosync_9_1.sx
-#define _hw_swuarta_autosync_10_1	, swuarta_autosync_10_1.sx
+#include "swuarta_reset.sx"
 
 #if CANRX
-#  if AUTOSYNC
-#    if HW_IS(,HW_G2(_hw_swuarta_autosync,HW_G3(hw,UART,autosync)))
-#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,HW_G3(hw,UART,autosync))))
-#    else
-#      error `autosync` must be `5_1`, `9_1`, or `10_1`.
-#    endif
-#  endif
+#  include "swuarta_startisr.sx"
+#  include "swuarta_getbyte.sx"
 #  include "swuarta_sample.sx"
 #  include "swuarta_wait_idle_bits.sx"
+#
+#  define _hw_swuarta_autosync_51	, swuarta_autosync_51.sx
+#  define _hw_swuarta_autosync_91_91	, swuarta_autosync_91.sx
+#  define _hw_swuarta_autosync_101_101	, swuarta_autosync_101.sx
+#  if AUTOSYNC > 0
+#    if HW_IS(,HW_G2(_hw_swuarta_autosync,AUTOSYNC))
+#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,AUTOSYNC)))
+#    else
+#      error `autosync` must be `51`, `91`, or `101`.
+#    endif
+#  endif
 #endif
+
+#if CANTX
+#  include "swuarta_putbyte.sx"
+#  include "swuarta_brk.sx"
+#endif
+
+#endif /* HW_ADDRESS(UART) != -1 */

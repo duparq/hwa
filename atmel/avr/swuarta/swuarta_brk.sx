@@ -1,4 +1,6 @@
 
+	;; -*- asm -*-
+
 	;; Send BREAK (R24: nbits)
 	;; 
 	.section	.text.brk,"ax",@progbits

@@ -3,7 +3,7 @@
 
 from crc_ccitt import CRC
 import struct
-from utils import s2hex, hexdump
+from utils import hexdump
 
 
 class Device():
@@ -34,7 +34,7 @@ class Device():
         """
         Build device informations string.
         """
-        s =  _("  Signature: %s \"%s\"\n" % (self.signature, self.name))
+        s =  _("  Signature: %s \"%s\"\n" % (self.signature.hex(), self.name))
         s += _("  Bootloader: 0x%04X (%d bytes for application)\n" % (self.bladdr, self.bladdr))
         s += _("  Application CRC:\n")
         s += _("    computed: 0x%04X\n" % self.appcrc)
@@ -101,15 +101,14 @@ class Device():
     #
     def resume(self):
         for i in range(256):
-            #trace()
-            if self.link.lastchar == '#':
+            if self.link.lastchar == ord('#'):
                 return True
-            if self.link.lastchar == '!':
+            if self.link.lastchar == ord('!'):
                 self.nresumes += 1
-                self.link.lastchar="" # lastchar is not set by self.link.rx(1) if there is no reply
-            self.link.tx('\n')
+                self.link.lastchar=None # lastchar is not set by self.link.rx(1) if there is no reply
+            self.link.tx(b'\n')
             r = self.link.rx(1)
-            if r!='':
+            if len(r):
                 dbg("RESUME: tx('\\n') -> %s (0x%02X)\n" % (r,ord(r)))
             else:
                 dbg("RESUME: tx('\\n') -> no reply\n")
@@ -129,15 +128,15 @@ class Device():
         Repeated CRC errors can mean that the device estimated the baudrate not
         accurately enough.
         """
-        dbg("EXECUTE(%s,%d,%d,%s)\n" % (s2hex(cmdstr), rlen, repeats, repr(kwargs)))
+        dbg("EXECUTE(%s,%d,%d,%s)\n" % (cmdstr.hex(), rlen, repeats, repr(kwargs)))
         built = None
         crcerrors = 0
         for repeat in range(repeats):
             # if repeat>0:
             #     trace()
             self.resume()
-            self.link.lastchar = ""
-            dbg("EXECUTE: tx(%s) -> " % (s2hex(cmdstr)))
+            self.link.lastchar=None
+            dbg("EXECUTE: tx(0x%s) -> " % (cmdstr.hex()))
             self.link.tx(cmdstr)
             self.ncmds += 1
             if rlen == 0:
@@ -147,13 +146,13 @@ class Device():
                 #
                 #  Wait for a reply until timeout
                 #
-                r=""
+                r=bytearray()
                 t=timer()+kwargs['timeout']
                 while len(r) < rlen and timer() < t:
                     c=self.link.rx(1)
                     if c:
                         t=timer()+kwargs['timeout']
-                        r += c
+                        r.extend(c)
                 #     if r!= "":
                 #         break
                 # if r=="":
@@ -178,11 +177,11 @@ class Device():
                 r = self.link.rx(rlen)
 
             if r:
-                dbg("%s\n" % s2hex(r))
+                dbg("%s\n" % r.hex())
             else:
                 dbg("no reply\n")
 
-            if self.link.lastchar != '#':
+            if self.link.lastchar != ord('#'):
                 dbg("  COMMAND FAILED\n")
                 self.ncmdfails += 1
                 continue
@@ -194,11 +193,11 @@ class Device():
                 crc = CRC.check(cmdstr+r)
                 if crc == 0:
                     if built:
-                        dbg("\nBUILT REPLY:  %s:" % s2hex(built))
+                        dbg("\nBUILT REPLY:  %s:" % built.hex())
                         for i in range(rlen-1):
                             if built[i] != r[i]:
                                 dbg(" #%d" % i)
-                        dbg("\nGOOD REPLY:   %s\n\n" % s2hex(r))
+                        dbg("\nGOOD REPLY:   %s\n\n" % r.hex())
                     return r[:-2]
                 dbg("  CRC ERROR: 0x%04X\n" % crc)
                 #
@@ -237,7 +236,7 @@ class Device():
                     dbg("\n             ")
                     for i in range(rlen-1):
                         dbg(" %02d" % i)
-                dbg("  BAD REPLY #%d: %s\n" % (repeat,s2hex(r)))
+                dbg("  BAD REPLY #%d: %s\n" % (repeat,r.hex()))
 
                 updated = False
                 if not built:
@@ -250,10 +249,9 @@ class Device():
                     #
                     positions=[]
                     for p in range(rlen-1):
-                        if ( (ord(built[p]) & 0xC0) == 0xC0
-                             or (ord(built[p]) & 0xC0) == 0x00 )\
-                            and ord(r[p]) != ord(built[p]):
-
+                        if ( (built[p] & 0xC0) == 0xC0
+                             or (built[p] & 0xC0) == 0x00 )\
+                             and r[p] != built[p]:
                             positions.append(p)
                             built = built[:p] + r[p] + built[p+1:]
                             dbg(" #%d" % p)
@@ -272,10 +270,10 @@ class Device():
                 #
                 if updated:
                     for p in range(rlen-1):
-                        old = ord(built[p])
+                        old = built[p]
                         if (old & 0xC0) == 0x00 or (old & 0xC0) == 0xC0:
                             new = old ^ 0x80
-                            x = built[:p] + chr(new) + built[p+1:]
+                            x = built[:p] + new + built[p+1:]
                             crc = CRC.check(cmdstr+x)
                             if crc == 0:
                                 dbg("\nbyte #%d has been corrected "
@@ -285,9 +283,9 @@ class Device():
         # s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
         if len(cmdstr) > 8:
             s = "\nCOMMAND [%s ... %s] (%d bytes) FAILED." \
-                % (s2hex(cmdstr[:4]), s2hex(cmdstr[-2:]), len(cmdstr))
+                % (cmdstr[:4].hex(), cmdstr[-2:].hex(), len(cmdstr))
         else:
-            s = "\nCOMMAND [%s] FAILED." % s2hex(cmdstr)
+            s = "\nCOMMAND [%s] FAILED." % cmdstr.hex()
         if crcerrors > 3:
             s += _("\nMany CRC unrecoverable errors detected. Your baudrate setting (%d) "\
                    "may be too high for the device.\n" % self.link.serial.baudrate)
@@ -298,14 +296,14 @@ class Device():
         """
         Identify the device.
         """
-        r = self.execute("i", 1000)
+        r = self.execute(b'i', 1000)
         #trace("i: %s\n" % s2hex(r))
-        self.protocol = ord(r[0])
+        self.protocol = r[0]
 
         if self.protocol != 4 and self.protocol != 5:
             die(_('protocol #%d not supported' % self.protocol))
 
-        signature=s2hex(r[1:4]).replace(' ','') ; r = r[4:]
+        signature=r[1:4]
 
         try:
             device = devices[signature]()
@@ -314,10 +312,10 @@ class Device():
 
         device.link = self.link
         device.protocol = self.protocol
-        device.blpages = struct.unpack('B', r[0])[0] ; r = r[1:]
+        device.blpages = r[4]
         device.bladdr = device.flashsize-device.blpages*device.pagesize
-        device.appcrc = struct.unpack('>H', r[0:2])[0] ; r = r[2:]
-        device.fuses = r[0:4] ; r = r[4:]
+        device.appcrc = int.from_bytes(r[5:7], byteorder='big')
+        device.fuses = r[7:11]
 
         device.eeappcrc = device.read_eeprom_appcrc()
         if device.eeappcrc is None:
@@ -336,7 +334,7 @@ class Device():
     def read_flash_page(self, address):
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
-        s = 'f'+chr(al)+chr(ah)
+        s = bytes([ord('f'),al,ah])
         if self.protocol == 4:
             return self.execute(s, self.pagesize+2+1, timeout=0.5)
         else: # protocol 5
@@ -345,18 +343,18 @@ class Device():
     def read_eeprom_bytes(self, address, n):
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
-        s = 'e'+chr(al)+chr(ah)+chr(n)
+        s = bytes([ord('e'),al,ah,n])
         return self.execute( s, n+3 )
 
     def read_eeprom_appcrc(self):
         crc = self.read_eeprom_bytes( self.eepromsize-8, 2 )
-        crc = struct.unpack('>H', crc)[0]
+        crc = int.from_bytes(crc[0:2], byteorder='big')
         return crc
 
 
     def read_eeprom_pgmcount(self):
         pcount = self.read_eeprom_bytes( self.eepromsize-4, 4 )
-        pcount = struct.unpack('>L', pcount)[0]
+        pcount = int.from_bytes(pcount[0:4], byteorder='big')
         return pcount
 
     def write_flash_page(self, address, data):
@@ -378,10 +376,10 @@ class Device():
 
         ah = (address >>  8) & 0xFF
         al = address & 0xFF
-        s = 'F'+chr(al)+chr(ah)+data
+        s = bytearray([ord('F'),al,ah])+data
         crc = CRC.check(s)
-        s += struct.pack('>H', crc)
-        x = ord(self.execute(s, 1+1, 1, timeout=0.1)[0])
+        s += crc.to_bytes(2, byteorder='big')
+        x = self.execute(s, 1+1, 1, timeout=0.1)[0]
         if x & 0xF0 == 0:
             #
             #  No error, update the known content of the flash
@@ -411,30 +409,32 @@ class Device():
     def write_eeprom(self, address, data):
         if len(data)==0 or len(data)>255:
             die()
-        ah = (address >>  8) & 0xFF
-        al = address & 0xFF
-        s = 'E'+chr(al)+chr(ah)+chr(len(data))+data
-        crc = CRC.check(s)
-        s += struct.pack('>H', crc)
+        s = bytearray(b'E')
+        s.extend( address.to_bytes(2,byteorder='little') )
+        s.append(len(data))
+        s.extend(data)
+        s.extend( CRC.check(s).to_bytes(2, byteorder='big') )
         self.execute(s, 1, timeout=0.1)
 
     def write_eeprom_pgmcount(self, n):
-        self.write_eeprom( self.eepromsize-4, struct.pack('>L', n) )
+        self.write_eeprom( self.eepromsize-4, n.to_bytes(4,byteorder='big'))
         self.pgmcount = n
 
 
     def write_eeprom_appcrc(self, crc):
         enable_trace()
-        self.write_eeprom( self.eepromsize-8, struct.pack('>H', crc) )
+        self.write_eeprom( self.eepromsize-8, crc.to_bytes(2,byteorder='big'))
         self.eeappcrc = crc
 
 
     def start_application(self):
         self.resume()
         self.ncmds += 1
-        self.link.tx('X'+struct.pack('>H', CRC.check('X')))
-        self.link.rx(1)
-        return self.link.lastchar == '\0'
+        s = bytearray(b'X')
+        s.extend( CRC.check(b'X').to_bytes(2,byteorder='big') )
+        self.link.tx(s) # execute would read more than 1 byte
+        r = self.link.rx(1)
+        return r[0]==0
 
 
 def get_device(link):

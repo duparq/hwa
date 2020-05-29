@@ -71,7 +71,7 @@
  */
 #define DIABOLO_PIN_RX			HW_PIN(2)	// PB0
 #define DIABOLO_PIN_TX			HW_PIN(2)
-#define DIABOLO_SYNC			5+1
+#define DIABOLO_SYNC			51
 
 /*  The pin at which the LED is connected. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.

@@ -520,6 +520,14 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 #define hw_shared_gpior0		_r8, 0x33, 0xFF, 0x00
 #define hw_shared_did			_r8, 0x21, 0xFF, 0x00
 
+/*  FIXME: find a way for HW_X() to expand that correctly (without inserting the
+ *  name in second position)
+ */
+#define hw_gpior2			_xob1, gpior2, shared, 8, 0
+#define hw_gpior1			_xob1, gpior1, shared, 8, 0
+#define hw_gpior0			_m111,(shared,gpior0),shared,gpior0,_r8,0 +0x33,0xFF,0x00,8,0;
+
+
 #if !defined __ASSEMBLER__
 /*
  *  HWA context
@@ -1109,7 +1117,7 @@ typedef struct {
 #include "../classes/ada_2.h"
 #include "../classes/eea_2.h"
 #include "../classes/fla_2.h"
-#include "../classes/swuarta_2.h"
+
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )
 {

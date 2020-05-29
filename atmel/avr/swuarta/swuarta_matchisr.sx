@@ -1,0 +1,330 @@
+
+	;; -*- asm -*-
+
+	;; Compare-match ISR: send or receive one bit
+	;;
+	;; The priority is to re-enable interrupts as quickly as possible.
+	;;
+	;; The next date is computed early as the processing of the end of
+	;; frame can take a little longer than for a normal data bit and the
+	;; next date could expire before the end of the processing.
+	;;
+	CY_RX_SEI=0
+
+	.section .text
+	.global HW_ISR((COUNTER,irq,COMPARE))
+HW_ISR((COUNTER,irq,COMPARE)):
+
+	CYCLES=4		; [4]	<- call
+
+	push	R31		; [2]
+	in	R31, SREG	; [1]
+	push	R31		; [2]
+	push	R30		; [2]	Used for next date
+	CYCLES=CYCLES+7
+
+	.if DBG_SPL
+	XSB	R30, AP_DBG
+	.endif
+
+	;;  Compute next date
+	;;
+#if COUNT_BN==8
+	XLD	R30, comp	; [2]
+	lds	R31, dtn	; [2]
+	add	R30, R31	; [1]
+	XST	comp, R30
+	CYCLES=CYCLES+5
+#endif
+#if COUNT_BN==16
+	lds	R30, dtn+0	; [2]
+	lds	R31, dtn+1	; [2]
+	push	R29		; [2]
+	XLD	R29, comp+0
+	add	R30, R29	; [1]
+	XLD	R29, comp+1
+	adc	R31, R29	; [1]
+	pop	R29		; [2]
+	XST	comp+1, R31
+	XST	comp+0, R30
+	CYCLES=CYCLES+10
+#endif
+
+#if CANTX
+#  if CANRX
+	XSBIC	R31, F_RXTX	;	TX or RX?
+#  endif
+	rjmp	LABEL(tx)	; [2]
+	CYCLES=CYCLES+2
+	CY_TX=CYCLES
+;; #  else
+;; #	error "swuarta without TX pin is not handled"
+#endif
+
+#if CANRX
+	;; Receiving
+	;;
+	.if DBG_RXBIT
+	XSB	R31, AP_DBG
+	.endif
+
+	sei			; [1]		Enable interrupts...
+	in	R31, RXDPIN	; [1]		  ...after sampling RXD
+	CYCLES=CYCLES+2
+	CY_RX_SEI=CYCLES
+
+	bst	R31, RXDBIT	; [1]		T flag = RXD
+	lds	R31, shift	; [2]		
+	lsr	R31		; [1]
+	bld	R31, 7		; [1]		Shift register bit 7 = T
+	sts	shift, R31	; [2]
+	CYCLES=CYCLES+7
+
+	lds	R31, nbit	; [2]		Update number of bits to receive
+	subi	R31, 1		; [1]		'dec' would not set the carry!
+	sts	nbit, R31	; [2]
+	CYCLES=CYCLES+5
+
+	brmi	LABEL(rxsb)	; [1/2]		nbit < 0
+	CY_RX_SB=CYCLES+2
+	brne	LABEL(cmp99)	; [1/2]		nbit > 0
+	CY_RX_DB=CYCLES+3
+	CYCLES=CYCLES+2
+
+	;; nbit==0: all data bits received
+	;; 
+	.if DBG_RXLDB
+	cbi	DBGPORT, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+	;;
+	;;	Store data byte
+	;;
+	lds	R31, shift	; [2]
+	sts	data, R31	; [2]
+	CYCLES=CYCLES+4
+#else
+	CY_RX_DB=0
+#endif /* CANRX */
+
+	;; Return from compare ISR
+	;;
+LABEL(cmp99):
+	CY_CMP99=CYCLES
+
+	pop	R30		; [2]
+	pop	R31		; [2]		Leave ISR
+	out	SREG, R31	; [1]
+	pop	R31		; [2]
+
+	;; .if DBG_BIT+DBG_RXBIT+DBG_RX_SB+DBG_RXDATA+DBG_TXBIT+DBG_TXSB
+	;; cbi	DBGPORT, DBGBIT	; [2]
+	;; CYCLES=CYCLES+2
+	;; .endif
+
+	reti			; [4]
+	CYCLES=CYCLES+11
+
+	CY_RX_LDB=CYCLES
+	CY_RX_DB=CY_RX_DB+CYCLES-CY_CMP99
+	CY_CMP99=CYCLES-CY_CMP99
+
+
+#if CANRX
+	;;
+	;; Stop bit has just been sampled
+	;;
+LABEL(rxsb):
+	CYCLES0=CYCLES
+	CY_RXSB=CYCLES
+	.if DBG_RXST
+	cbi	DBGPORT, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+#  if AUTOSYNC > 0
+	;; Status = RXC + WBTX + SYNC + STOP bit value
+	;;  If SYNC was 0 do not set RXC since received byte is not data
+	;;
+	XLD	r31, stat
+	bld	r31, HW_A1(F_STOP)				; [1]	Stop bit value
+	sbrc	r31, HW_A1(F_SYNC)				; [1/2]
+	ori	r31, 1<<HW_A1(F_RXC)				; [1]
+	ori	r31, (1<<HW_A1(F_SYNC)) | (1<<HW_A1(F_WBTX))	; [1]
+	XST	stat, R31
+	CYCLES=CYCLES+4
+#  else
+	;; Status = RXC + WBTX + STOP bit value
+	;;
+	XLD	r31, stat
+	bld	r31, HW_A1(F_STOP)				; [1]	Stop bit value
+	ori	r31, (1<<HW_A1(F_WBTX)) | (1<<HW_A1(F_RXC))	; [1]
+	XST	stat, R31
+	CYCLES=CYCLES+2
+#  endif
+	;; Disable compare-match interrupts
+	;;
+	XCB	R31, MATCH_IE
+
+	;; Clear flag, enable START interrupts
+	;;
+	XCIF	R31, START_IF
+	XSBAI	R31, START_IE
+
+;; #  if HW_G2(UART,callback)
+;;	rcall	LABEL(callback)
+;; #  endif
+
+	rjmp	LABEL(cmp99)	; [2]
+	CYCLES=CYCLES+2
+
+	CY_RXSB=CYCLES-CY_RXSB
+	CY_RX_SB=CY_RX_SB+CY_RXSB+CY_CMP99
+
+#endif /* CANRX */
+
+	
+#if CANTX
+	;;
+	;;  Send next bit (data or stop)
+	;;    Re-enable interrupts as soon as possible
+	;;
+LABEL(tx):
+	CYCLES=CY_TX
+
+#  if CHECKTX
+	;;
+	;;	Check that the last bit was correctly sent (if it was '1')
+	;;
+	XSBIS	R30, F_SENT		; [2]	No check if '0' was sent
+	rjmp	1f
+	XSBIC	R30, TXDPIN, TXDBIT	; [2]	OK if '1' is still on the bus
+	rjmp	1f
+	CYCLES0=CYCLES+4
+
+	;;	Lost the bus: sent '1', read '0'
+	;;
+	.if DBG_TXFAIL
+	XSB	R31, AP_DBG
+	.endif
+	XCB	R31, F_STOP	;	Clear STOP flag in status
+	cbi	TXDDR, TXDBIT	; [2]	Release TXD pin, set all remaining data
+	ldi	R31, 0		; [1]	bits to 0 to avoid pulling-up, and
+	rjmp	2f		; [2]	continue as a fake transmitting (keep sync)
+
+	CYCLES=CYCLES0
+#  endif
+
+1:	lds	R31, shift	; [2]	Load shift register
+	lsr	R31		; [1]	Put bit to send in carry flag
+	CYCLES=CYCLES+3
+
+#  if CHECKTX
+	XLD	R30, stat	; [2]	Use R30 to update status flag F_SENT
+	CYCLES=CYCLES+2
+#  endif
+
+	.if DBG_TXBIT
+	sbi	AP_DBG		; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	brcs	3f		; [1/2]
+
+2:	;; Write '0' bit
+	;; 
+#  if CHECKTX
+	andi	R30, ~(1<<HW_A1(F_SENT)) ; [1]	Save sent data bit in status
+	CYCLES=CYCLES+1
+#  endif
+	sei			; [1]	Re-enable interrupts...
+	cbi	AP_TXD		; [2]	  ...after this instruction
+	rjmp	4f		; [2]
+
+3:	;; Write '1' bit
+	;; 
+#  if CHECKTX
+	ori	R30, 1<<HW_A1(F_SENT)	; [1]	Save sent data bit in status
+	CYCLES=CYCLES+1
+#  endif
+	sei			; [1]	Re-enable interrupts...
+	sbi	AP_TXD		; [2]	  ...after this instruction
+
+4:	sts	shift, R31	; [2]	Update shift register
+
+#  if CHECKTX
+	XST	stat, R30	; [2]	Store status flag F_SENT
+	CYCLES=CYCLES+2
+#  endif
+
+	CYCLES=CYCLES+8	; 7 for '1', or 8 for '0'
+	CY_TX_SEI=CYCLES
+
+	lds	R31, nbit	; [2]	Update number of bits sent
+	subi	R31, 1		; [1]	('dec' does not set the carry flag!)
+	sts	nbit, R31	; [2]
+	CYCLES=CYCLES+5
+
+	brmi	2f		; [1/2]	nbit<0: bit written was stop bit
+	CY_TX_SB=CYCLES+2
+	CYCLES=CYCLES+1
+
+	brne	1f		; [1/2]	nbit>0: data bits remaining
+	CY_TX_DB=CYCLES+2
+	CYCLES=CYCLES+1
+
+	ldi	R31, 0x03	; [1]	nbit==0: bit written was last data bit
+	sts	shift, R31	; [2]	put stop and idle state bits in shifter
+	CYCLES=CYCLES+3
+
+1:	rjmp	LABEL(cmp99)	; [2]
+
+	CY_TX_DB=CY_TX_DB+2+CY_CMP99
+	CY_TX_LDB=CYCLES+2+CY_CMP99
+
+2:	CY_TXSB=CYCLES
+
+	cpi	R31, 0xFF	;	Stop bit just written, wait one more
+	breq	1b		;	  IRQ for complete frame transmission
+
+	;; Stop bit completely sent
+	;;   TX can start again
+	;;
+	.if DBG_TXSB
+	cbi	DBGPORT, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+	XSB	R31, F_TXC	;	Status = tx completed
+
+	XCB	R31, MATCH_IE	;	Disable compare-match interrupts
+
+#  if ONEWIRE
+	cbi	TXDDR, TXDBIT	; [2]	Release TXD
+	cbi	AP_TXD		; [2]
+	CYCLES=CYCLES+4
+#  endif
+
+#  if CANRX
+	XCB	R31, F_RXTX	;	Mode = RX
+
+	XCIF	R31, START_IF	;	Clear START IRQ flag
+	XSBAI	R31, START_IE	;	Enable START interrupts
+#  endif
+
+	.if DBG_PUTBYTE
+	sbi	DBGPORT, DBGBIT
+	CYCLES=CYCLES+2
+	.endif
+
+#  if HW_G3(hw,UART,callback)
+	rjmp	LABEL(callback)
+#  endif
+
+	rjmp	LABEL(cmp99)	; [2]
+	CYCLES=CYCLES+2
+	
+	CY_TXSB=CYCLES-CY_TXSB
+	CY_TX_SB=CY_TX_SB+CY_TXSB+CY_CMP99
+
+#endif /* CANTX */

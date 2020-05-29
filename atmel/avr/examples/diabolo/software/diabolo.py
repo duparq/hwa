@@ -19,7 +19,7 @@ import sys
 import os.path
 
 sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../../python"))
-sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
+#sys.path.insert(2,os.path.normpath(sys.path[1]+"/pyserial-3.0"))
 
 import premain
 import builtins
@@ -50,7 +50,7 @@ class Application:
         if not filename.endswith('.bin'):
             die(_("File format not handled."))
         f = open(filename, 'rb')
-        data = f.read()
+        data = bytearray( f.read() )
         f.close()
         if not self.options.quiet and len(data)==0:
             cout(_("%s is void.\n" % filename))
@@ -79,8 +79,8 @@ class Application:
     def read_flash(self):
         t = timer()
         cout("\nReading flash:")
-        s=''
-        vp = '\xFF'*self.device.pagesize
+        s=bytearray()
+        vp = bytearray.fromhex('FF'*self.device.pagesize)
         sps = self.device.protocol<5 and self.device.pagesize or 256
         col=0
         for a in range(0, self.device.flashsize, sps):
@@ -157,7 +157,7 @@ class Application:
         #
         #  Reprogram pages that failed
         #
-        pv = '\xFF'*self.device.pagesize
+        pv = bytearray.fromhex('FF'*self.device.pagesize)
         for a in redo:
             cout("\n")
             cout("Need to reprogram page at 0x%04X.\n" % a)
@@ -193,7 +193,7 @@ class Application:
     def read_eeprom(self):
         t = timer()
         cout("\nReading EEPROM:")
-        s=''
+        s=bytes()
         col=0
         for a in range(0, self.device.eepromsize, 64):
             if col==0 :
@@ -303,15 +303,13 @@ class Application:
         #  signal is used to drive the power supply (sending data while the
         #  device is not powered could cause troubles).
         #
-        self.link.detect_wires('?')
+        self.link.detect_wires(b'?')
         cout(_("Tty wires: %d\n") % self.link.wires)
 
         #  We can now send synchronization sequences
         #
-        try:
-            self.link.sync()
-        except Exception as e:
-            die(_("Synchronization failed.\n%s" % repr(e)))
+        if not self.link.sync():
+            die(_("Synchronization failed.\n"))
 
         #  Identify device
         #
@@ -329,27 +327,25 @@ class Application:
         #
         if self.options.fwcrc:
             cout("\nReading firmware flash: ")
-            data=''
+            data = bytearray()
             if self.device.protocol == 4:
-                l = self.device.pagesize
+                step = self.device.pagesize
             else: # protocol 5
-                l = 256
-            data = '\xFF'*self.device.bladdr
-            # data = '\xFF'*l
-            for a in range(self.device.bladdr, self.device.flashsize, l):
-                p = self.device.read_flash_page(a)
-                if p == None:
+                step = 256
+            for a in range(self.device.bladdr, self.device.flashsize, step):
+                page = self.device.read_flash_page(a)
+                if page == None:
                     cerr(_("\nRead page failed at 0x%04X.\n" % a))
                     return False
                 cout('.')
                 flushout()
-                data += p
+                data.extend(page)
 
             #  Compute the CRC
             #
             crc = CRC.init()
             i = len(data)-1
-            while i>=0 and data[i]=='\xFF':
+            while i>=0 and data[i]==0xFF:
                 i -= 1
             while i>=0:
                 crc = CRC.add(crc, data[i])
@@ -366,7 +362,7 @@ class Application:
         if self.options.read_flash:
             data = self.read_flash()
             if self.options.hexdump:
-                sys.stdout.write(hexdump(0,data)+"\n")
+                cout(hexdump(0,data)+"\n")
             if self.options.cache:
                 self.write_file(self.options.cache, data)
             #return
@@ -376,7 +372,7 @@ class Application:
         if self.options.read_eeprom:
             data = self.read_eeprom()
             if self.options.hexdump:
-                sys.stdout.write(hexdump(0,data)+"\n")
+                cout(hexdump(0,data)+"\n")
             if self.options.cache:
                 self.write_file(self.options.cache, data)
             #return
@@ -384,7 +380,7 @@ class Application:
         #  Erase flash memory?
         #
         if self.options.clear_flash:
-            flash = '\xFF'*self.device.flashsize
+            flash = bytearray.fromhex('FF'*self.device.flashsize)
 
         #  Write flash memory?
         #
@@ -416,7 +412,7 @@ class Application:
             flash = self.read_file(self.options.filename)
             if len(flash) < self.device.bladdr:
                 cout(_("Padding data with 0xFF bytes\n"))
-                flash = flash + "\xFF"*(self.device.bladdr - len(flash))
+                flash.extend( bytes.fromhex('FF'*(self.device.bladdr - len(flash))) )
 
         #  Program flash memory
         #
@@ -426,7 +422,7 @@ class Application:
             #    RJMP opcode: 1111 aaaa aaaa aaaa = 0xC000 + Addr
             #
             if not self.device.bootsection:
-                addr = self.device.bladdr/2 - 1
+                addr = int(self.device.bladdr/2) - 1
                 if addr > 0x0FFF:
                     die(_("Can not set RESET vector opcode.\n"))
                 opcode = 0xC000 + addr
@@ -435,23 +431,35 @@ class Application:
                 cout(_("Device without bootsection, "
                        "setting RESET vector to computed opcode: %02x %02x\n")
                      % (byte0, byte1))
-                flash = chr(byte0)+chr(byte1)+flash[2:]
+                #flash = opcode.to_bytes(2,byteorder="little")+flash[2:]
+                flash[0] = byte0 ;
+                flash[1] = byte1 ;
 
             x, flash_crc = self.device.appstat(flash)
             if flash_crc == cache_crc:
                 cout(_("Cache and data CRC match, nothing to program in Flash memory.\n"))
                 if self.device.eeappcrc != flash_crc:
                     self.device.write_eeprom_appcrc(flash_crc)
-                    cout(_("Updated application CRC in EEPROM: 0x%04X\n" % flash_crc))
-                x_restart = True
+                    check = self.device.read_eeprom_appcrc()
+                    if check == flash_crc:
+                        cout(_("Updated application CRC in EEPROM: 0x%04X\n" % flash_crc))
+                    else:
+                        raise Exception(_("update of application CRC in EEPROM failed: %04X!=%04X" %\
+                                (check, flash_crc)) )
+                    x_restart = True
             else:
                 self.write_flash(flash,cache)
 
             x_restart = False
             if self.device.flash_changed:
                 # trace()
-                self.device.write_eeprom_pgmcount(self.device.pgmcount+1)
-                cout(_("Set program count to %d\n" % self.device.pgmcount))
+                self.device.pgmcount += 1
+                self.device.write_eeprom_pgmcount(self.device.pgmcount)
+                check = self.device.read_eeprom_pgmcount()
+                if check == self.device.pgmcount:
+                    cout(_("Set program count to %d\n" % self.device.pgmcount))
+                else:
+                    cout(_("Failed to set program count to %d (read %d)." % (self.device.pgmcount, check)))
                 x_restart = True
 
             if self.device.eeappcrc != flash_crc:
@@ -464,7 +472,7 @@ class Application:
                 # trace()
                 #cout(_("Reset device's Diabolo\n"))
                 self.device.resume()
-                self.link.tx('*') # Send a bad command to force CRC re-computation
+                self.link.tx(b'*') # Send a bad command to force CRC re-computation
                 #
                 #  Wait up to 1 s for CRC computation (~50 cycles/byte)
                 #
@@ -472,9 +480,9 @@ class Application:
                 while timer() < t and not self.link.rx(1): pass
                 if timer() >= t:
                     raise Exception("timeout waiting CRC recomputation")
-                if self.link.lastchar != '!':
+                if self.link.lastchar != ord('!'):
                     raise Exception("unexpected reply (0x%02X) to '*' command" % ord(c))
-                self.link.tx('\n') # Resume
+                self.link.tx(b'\n') # Resume
                 self.link.rx(1)
                 self.device = self.device.identify()
                 cout("  Application CRC:\n")

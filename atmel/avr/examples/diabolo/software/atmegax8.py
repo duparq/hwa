@@ -147,20 +147,20 @@ class atmegax8(devices.Device):
 
 class atmega48(atmegax8):
     def __init__(self):
-        atmegax8.__init__(self,'ATmega48','1E9205',64,4096,256,False)
+        atmegax8.__init__(self,'ATmega48',b'\x1E\x92\x05',64,4096,256,False)
 
-devices.devices['1E9205'] = atmega48
+devices.devices[b'\x1E\x92\x05'] = atmega48
 
 class atmega48p(atmegax8):
     def __init__(self):
-        atmegax8.__init__(self,'ATmega48P','1E920A',64,4096,256,False)
+        atmegax8.__init__(self,'ATmega48P',b'\x1E\x92\x0A',64,4096,256,False)
 
-devices.devices['1E920A'] = atmega48p
+devices.devices[b'\x1E\x92\x0A'] = atmega48p
 
 class atmega328p(atmegax8):
     def __init__(self):
-        atmegax8.__init__(self,'ATmega328P','1E950F',128,32768,1024,True)
+        atmegax8.__init__(self,'ATmega328P',b'\x1E\x95\x0F',128,32768,1024,True)
 
-devices.devices['1E950F'] = atmega328p
+devices.devices[b'\x1E\x95\x0F'] = atmega328p
 devices.devices['atmega328p'] = atmega328p
 devices.devices['atmega328pa'] = atmega328p

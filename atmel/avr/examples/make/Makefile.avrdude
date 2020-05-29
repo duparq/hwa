@@ -17,14 +17,17 @@ install: write-fuses write-flash
 #	Extract the matching device name
 #
 ifneq (,$(DEVICE))
-$(OUT).avrdude: $(OUT).hwa
+$(OUT).avrdude: $(OUT).cfg
 	@echo "RULE: $@ $<"
 	@avrdude -c usbasp -p \? 2>&1 \
 	| sed -r -e 's/( )+//g'\
 	| awk -F'=' '{if (tolower($$2)=="$(DEVICE)") print "PARTNO="$$1}' >$@
 
--include $(OUT).avrdude
+else
+  $(error DEVICE is not defined)
 endif
+
+include $(OUT).avrdude
 
 
 #  Reset the microcontroller (link checking)

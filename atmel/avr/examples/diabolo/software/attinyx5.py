@@ -129,15 +129,15 @@ class attinyx5(devices.Device):
 
 class attiny45(attinyx5):
     def __init__(self):
-        attinyx5.__init__(self,'ATtiny45','1E9206',64,4096,256,False)
+        attinyx5.__init__(self,'ATtiny45',b'\x1E\x92\x06',64,4096,256,False)
 
 devices.devices["attiny45"] = attiny45
-devices.devices['1E9206'] = attiny45
+devices.devices[b'\x1E\x92\x06'] = attiny45
 
 
 class attiny85(attinyx5):
     def __init__(self):
-        attinyx5.__init__(self,'ATtiny85','1E930B',64,8192,512,False)
+        attinyx5.__init__(self,'ATtiny85',b'\x1E\x93\x0B',64,8192,512,False)
 
 devices.devices["attiny85"] = attiny85
-devices.devices['1E930B'] = attiny85
+devices.devices[b'\x1E\x93\x0B'] = attiny85

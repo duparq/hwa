@@ -11,12 +11,12 @@
 
 #include <hwa/swuarta.h>
 
-#define UART			HW_SWUART( txd,       DIABOLO_PIN_TX,	\
-					   counter,   counter0,		\
-					   compare,   compare0,		\
-					   clkdiv,    1,		\
-					   autosync,  51,		\
-					   fastreg,   (shared,gpior0) )
+#define UART			HW_SWUART( txd,      DIABOLO_PIN_TX,	\
+					   counter,  counter0,		\
+					   compare,  compare0,		\
+					   clkdiv,   1,		\
+					   autosync, 51,		\
+					   fastreg,  (shared,gpior0) )
 
 HW_DECLARE(UART);
 

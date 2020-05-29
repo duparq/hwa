@@ -25,9 +25,9 @@
  */
 #define hw_reset__psa			, _hw_psa_reset
 
-#define _hw_psa_reset(o,a,...)	_hw_resetpsa(o) HW_EOL(__VA_ARGS__)
+#define _hw_psa_reset(o,a,...)		_hw_resetpsa(o) HW_EOL(__VA_ARGS__)
 
-#define _hw_resetpsa(o)		_hw_write(o,psr,1)
+#define _hw_resetpsa(o)			_hw_write(o,psr,1)
 
 
 /**
@@ -81,7 +81,7 @@
 #define _hwa_cfpsa(o,a,k,...)					\
   do { HW_Y(_hwa_cfpsa_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
-#define _hwa_cfpsa_kclock_0(o,k,...)		HW_E_VL(k,clock)
+#define _hwa_cfpsa_kclock_0(o,k,...)	HW_E_VL(k,clock)
 
 #define _hwa_cfpsa_kclock_1(o,k,v,...)					\
   HW_Y(_hwa_cfpsa_vclock_,_hw_psa_clock_##v)(o,v,__VA_ARGS__)

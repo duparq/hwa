@@ -1,0 +1,93 @@
+
+	;; -*- asm -*-
+
+	;; Send one byte (R24)
+	;;
+	.global		LABEL(putbyte)
+	.section	.text.LABEL(putbyte),"ax",@progbits
+LABEL(putbyte):
+	.if DBG_PUTBYTE
+	cbi	DBGPORT, DBGBIT
+	.endif
+
+#  if CANRX
+	XCB	R25, START_IE	;	Disable START interrupts
+#  endif
+
+1:	XSBIC	R25, MATCH_IE	;	Wait end of current rx/tx,
+	rjmp	1b		;	  i.e. match interrupt disabled
+
+	XCB	R25, F_TXC	;	Status = tx not completed
+
+	;; FIXME: WBTX is needed between end of reception and beginning
+	;; of transmission since the stop bit is sampled before the end
+	;; of its slot. Should find a way of handling this better than
+	;; with a busy loop.
+	;;
+	XSBIS	R25, F_WBTX	;	Need to wait before TX?
+	rjmp	1f
+
+2:	XSBIS	R25, MATCH_IF	;	Wait one bit time
+	rjmp	2b
+1:
+	sts	shift, R24	;	Set shift register
+
+	ldi	R25, 8		;	Number of data bits to send
+	sts	nbit, R25	;	Set number of data bits to send
+
+	;;  Init status
+	;;
+	XLD	R24, stat
+#  if CHECKTX
+	andi	R24, ~(1<<HW_A1(F_SENT))	; Record start bit into status
+#  endif
+	ori	R24, (1<<HW_A1(F_RXTX)) | (1<<HW_A1(F_STOP))
+	XST	stat, R24	;
+
+#  if ONEWIRE
+	sbi	AP_TXD		;	Set RXD/TXD to 1 (pull-up if input mode)
+	sbi	TXDDR, TXDBIT	;	Configure RX/TX pin as output
+#  endif
+
+	.if DBG_TXSTART
+	cbi	DBGPORT, DBGBIT
+	.endif
+
+	;; Send start bit
+	;; Compute next bit date
+	;; 
+#  if COUNT_BN==8
+	cli
+	CYCLES=0
+	XLD	R24, count	;		Get date
+	sei			; [1]|
+	cbi	AP_TXD		; [2]|=3	Send start bit
+	lds	R25, dtn	;		Compute first data bit date
+	CYCLES=CYCLES+3
+	subi	R25, (CY_TX_SEI-CYCLES+CLKDIV/2)/CLKDIV  ; 	  Compensate bit isr / send delay
+	add	R24, R25
+	XST	comp, R24
+#  endif
+#  if COUNT_BN==16
+	cli
+	CYCLES=0
+	XLD	R24, count+0	;		Get date
+	XLD	R25, count+1	;
+	sei			; [1]|
+	cbi	AP_TXD		; [2]|=3	Send start bit
+	CYCLES=CYCLES+3
+	lds	R26, dtn+0	;		Compute first data bit date
+	lds	R27, dtn+1	;
+	sbiw	R26, (CY_TX_SEI-CYCLES+CLKDIV/2)/CLKDIV ;	Compensate bit isr / send delay
+	add	R24, R26
+	adc	R25, R27
+	XST	comp+1, R25
+	XST	comp+0, R24
+#  endif
+
+	;; Clear flag, enable compare-match interrupts
+	;;
+	XCIF	R24, MATCH_IF
+	XSBAS	R24, R25, MATCH_IE
+
+	ret

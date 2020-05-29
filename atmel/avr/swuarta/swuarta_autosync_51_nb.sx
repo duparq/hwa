@@ -27,17 +27,17 @@
 	;; must be prescaled. With a prescaler of 2, 1 bit lasts 40 counting
 	;; units.
 
-#if !CHECK_START_EDGE
-#  error Autosync needs to detect both falling and rising edges
+#if !CHECK_START
+#  error swuarta_autosync_51_nb.sx needs to detect both falling and rising edges
 #endif
 
-#if CLK_DIV > 8 || CLK_DIV & (CLK_DIV-1) != 0
-#  error Autosync does not support this clk_div
+#if CLKDIV > 8 || CLKDIV & (CLKDIV-1) != 0
+#  error swuarta_autosync_51_nb.sx does not support this value of clkdiv
 #endif
 
-#if COUNT_BN != 8
-#  warning This routine is not tested with 16-bit counters.
-#endif
+;; #if COUNT_BN != 8
+;; #  warning swuarta_autosync_51_nb.sx is not tested with 16-bit counters.
+;; #endif
 
 	;; Use existant registers to store the date of the falling
 	;; edge and the duration of the low level.
@@ -50,11 +50,11 @@
 	;; [R25]:R24 contains the date of the edge.
 	;; R24, [R25], R26, and SREG are already stacked.
 	;;
-	.section	.text.LABEL(autosync_5_1_nb),"ax",@progbits
-LABEL(autosync_5_1_nb):
+	.section	.text.LABEL(autosync),"ax",@progbits
+LABEL(autosync):
 	CYCLES=CY_SYNC0
 
-	XSBIC	R26, RXD_AP	; Jump if RXD is high
+	XSBIC	R26, AP_RXD	; Jump if RXD is high
 	rjmp	1f
 
 	;; RXD is low.
@@ -124,12 +124,12 @@ LABEL(autosync_5_1_nb):
 	;; Check the lower limit
 	;;
 	cp	R28, R26	; if ( t1 < 5×t2 - dt )
-	cpc	R29, R27
-	brcc	2f
+	cpc	R29, R27	;
+	brcc	2f		;
 
 	;; Need another sample.
 	;; 
-8:	sts	t1l, R24	; Shift t1 <- t2
+8:	sts	t1l, R24	; t1 = t2
 	sts	t1h, R25	;
 
 9:	pop	R31
@@ -140,7 +140,6 @@ LABEL(autosync_5_1_nb):
 #  if COUNT_BN==8
 	pop	R25
 #  endif
-
 	rjmp	LABEL(st99)
 
 	;; Compute R27:R26 = 5×t2 + dt
@@ -169,7 +168,7 @@ LABEL(autosync_5_1_nb):
 	rol	R25
 #endif
 #if CLK_DIV < 4
-	add	R24, CLK_DIV/2
+	add	R24, CLKDIV/2
 	adc	R25, 0
 	lsr	R25
 	ror	R24

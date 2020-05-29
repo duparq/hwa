@@ -6,7 +6,7 @@
 	;; This code is designed to be executed from the START ISR.
 	;;
 	;; Baudrate is determined by measuring the low-level durations of a
-	;; 5 bits low / 1 bit low sequence.
+	;; 5 bits low / 1 bit low sequence, e.g. 'p'==0x70.
 	;; Interrupts are disabled while measuring, i.e. for the duration
 	;; of a low level.
 	;;
@@ -14,16 +14,12 @@
 	;; When 4.75×t2 <= t1 <= 5.25×t2, synchronization is done.
 
 
-#if !CHECK_START_EDGE
-#  error Autosync needs to detect both falling and rising edges
+#if !CHECK_START
+#  error swuarta_autosync_51.sx needs to detect both falling and rising edges
 #endif
 
-#if CLK_DIV > 8 || CLK_DIV & (CLK_DIV-1) != 0
-#  error Autosync does not support this clk_div
-#endif
-
-#if COUNT_BN != 8
-#  warning This routine is not optimized and not tested with 16-bit counters. Try an older version.
+#if CLKDIV > 8 || CLKDIV & (CLKDIV-1) != 0
+#  error swuarta_autosync_51.sx does not support this value of clkdiv
 #endif
 
 	;; Use existant registers to store the duration of low level
@@ -32,16 +28,18 @@
 	meash = dtn
 
 
-	;; R24, [R25], R26, and SREG are already stacked
+	;; R24, [R25], R26, and SREG have been stacked by STARTISR
 	;;
 	.section		.text.LABEL(autosync),"ax",@progbits
 LABEL(autosync):
 	CYCLES=CY_SYNC0
 
-	XSBIC	R26, RXD_AP	; Return if RXD is high
+#  if CHECK_START
+	XSBIC	R26, AP_RXD	; Return if RXD is high
 	rjmp	LABEL(st99)	;
 
 	CYCLES=CYCLES+1		; XSBIC did skip the 1 word rjmp
+#  endif
 
 	;;
 	;; RXD is low
@@ -68,7 +66,7 @@ LABEL(autosync):
 	;;
 	cli					; [1]
 2:	adiw	R24, 1		; [2]	|
-	XSBIS	R26, RXD_AP	; [1/2] |
+	XSBIS	R26, AP_RXD	; [1/2] |
 	rjmp	2b		; [2]	|=5
 	sei
 	CY_SYNC1=CYCLES

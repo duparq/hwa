@@ -20,7 +20,8 @@
 	;;   Resume to application: 'X' + CRC -> Code
 	;;   Unknown operation: -> '!' after CRC recomputation
 	;;
-	;;     Note: CRC is sent/received MSB first
+	;;   Note: addr is sent/received LSB first
+	;;   Note: CRC is sent/received MSB first
 	;;
 	;; Returned codes
 	;;
@@ -50,14 +51,14 @@
 	;; Device without boot section: allocate enough pages
 	;; for Diabolo at end of flash memory
 	;;
-	NBLPAGES  = 10
+	BLPAGES  = 10
 #else
 	;; Diabolo in boot section
 	;;
-	NBLPAGES  = HW_DEVICE_BOOTSECTION_SIZE / HW_DEVICE_FLASH_PAGE_SIZE
+	BLPAGES  = HW_DEVICE_BOOTSECTION_SIZE / HW_DEVICE_FLASH_PAGE_SIZE
 #endif
 	APPSTART  = HW_DEVICE_APP_START
-	BOOTSTART = FLASHSIZE - NBLPAGES*PAGESIZE
+	BOOTSTART = FLASHSIZE - BLPAGES*PAGESIZE
 
 
 	;; Position of data in EEPROM
@@ -110,9 +111,9 @@
 	EEDR	   = HW_ADDRESS((eeprom0, dr))
 	EECR	   = HW_ADDRESS((eeprom0, cr))
 
-#define AP_EEMPE   HW_ADDRESS((eeprom0,mpe)), HW_POSITION((eeprom0,mpe))
-#define AP_EEPE	   HW_ADDRESS((eeprom0,pe)), HW_POSITION((eeprom0,mpe))
-#define AP_EERE	   HW_ADDRESS((eeprom0,re)), HW_POSITION((eeprom0,mpe))
+#define AP_EEMPE   HW_AP((eeprom0,mpe))
+#define AP_EEPE	   HW_AP((eeprom0,pe))
+#define AP_EERE	   HW_AP((eeprom0,re))
 
 	;; Communication pins: DIABOLO_PIN_RX and DIABOLO_PIN_TX can be the same
 	;;
@@ -179,7 +180,7 @@
 	;; SP points to RAMEND after RESET then no initialization is required
 
 	;; Start the application if the reset was not caused by power-on or by
-	;; the reset pin
+	;; the reset pin (maybe application watchdog).
 	;; 
 reset:	XLD	R16, MCUSR
 	andi	R16, (1<<BP_EXTRF) | (1<<BP_PORF)
@@ -226,10 +227,12 @@ init:	DBG1
 	;;   Store it in R15:R14
 	;;
 sync:
-#if DIABOLO_SYNC == 11
-#  include "diabolo-sync-10+1.sx"
-#elif DIABOLO_SYNC == 6
-#  include "diabolo-sync-5+1.sx"
+#if DIABOLO_SYNC == 101
+#  include "diabolo-sync-101.sx"
+#elif DIABOLO_SYNC == 91
+#  include "diabolo-sync-91.sx"
+#elif DIABOLO_SYNC == 51
+#  include "diabolo-sync-51.sx"
 #else
 #  error DIABOLO_SYNC not recognized
 #endif
@@ -261,7 +264,7 @@ sync:
 	sbi	TXDDR, BP_TXD
 #endif
 
-	;; Error state: send '!' and wait for '\n' before giving prompt
+	;; Error state: send '!' (0x21) and wait for '\n' before giving prompt
 	;;
 error:	ldi	R24, '!'
 	rcall	obyte
@@ -293,7 +296,7 @@ xi:	cpi	R24, 'i'
 	rcall	obytecrc
 	ldi	R24, SIGNATURE2
 	rcall	obytecrc
-	ldi	R24, NBLPAGES	; 4: number of pages for the bootloader
+	ldi	R24, BLPAGES	; 4: number of pages for the bootloader
 	rcall	obytecrc
 	mov	R24, R3		; 5: CRC of application (MSB)
 	rcall	obytecrc
@@ -657,8 +660,8 @@ crci:	ldi	R16, 0xFF
 	;;	  = 48 ms/kB of flash code @1MHz
 	;;
 stat:	rcall	crci
-	ldi	R30, lo8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; Begin with last byte
-	ldi	R31, hi8(FLASHSIZE-NBLPAGES*PAGESIZE-1) ; of application code
+	ldi	R30, lo8(FLASHSIZE-BLPAGES*PAGESIZE-1) ; Begin with last byte
+	ldi	R31, hi8(FLASHSIZE-BLPAGES*PAGESIZE-1) ; of application code
 2:	lpm	R24, Z		; [3]
 	and	R17, R24	; [1]
 	cpi	R17, 0xFF	; [1]	Do not compute 0xFF bytes at end of app section

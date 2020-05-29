@@ -13,28 +13,27 @@ import sys
 import os.path
 sys.path.insert(1,os.path.normpath(sys.path[0]+"../../../../../python"))
 
-import __builtin__
+import builtins
 import premain
-from utils import s2hex, hexdump
+from utils import hexdump
 import time
 
 enable_trace()
 
-import xserial
+import link
 
-parser = xserial.ArgumentParser()
+
+import argparse
+parser = argparse.ArgumentParser()
+
+#  Arguments about serial port
+#
+link.add_arguments(parser)
 
 parser.add_argument('--lpf', help="low-pass filter on received data", action='store_true')
 parser.add_argument('--gfx', help="graphical gauge", action='store_true')
 
 args = parser.parse_args()
-
-serial = xserial.get_serial(args)
-
-serial.reset_device()
-serial.detect_wires()
-time.sleep(0.2)	# Leave Diabolo enough time to check the CRC and start the application
-serial.sync()
 
 
 if args.gfx:
@@ -45,12 +44,12 @@ if args.gfx:
     import dial
 
     class Application(wx.App):
-        def __init__(self, serial, args):
+        def __init__(self, args):
             self.args = args
             self.serial = serial
             self.lpf = 0
             wx.App.__init__(self, 0)
-
+    
         def run(self):
             # trace()
             self.MainLoop()
@@ -118,9 +117,25 @@ else:
     #  Console application
     #
     class Application():
-        def __init__(self, serial, args):
+        def __init__(self, args):
             self.args = args
-            self.serial = serial
+
+            try:
+                self.link = link.get(args)
+            except link.serial.SerialException as e:
+                die(str(e))
+
+
+            self.link.set_RESET(0)
+            time.sleep(0.01)
+            self.link.set_RESET(1)
+            self.link.detect_wires(b'?')
+            cout(_("Tty wires: %d\n") % self.link.wires)
+
+            time.sleep(0.2)	# Leave Diabolo enough time to check the CRC and start the application
+
+            if not self.link.sync():
+                die(_("Synchronization failed.\n"))
 
         def run(self):
             #
@@ -143,7 +158,7 @@ else:
                 #
                 #  Get device data until nothing has been received for 1 byte time
                 #
-                r = self.serial.rx_until_idle(1)
+                r = self.link.rx_until_idle(1)
                 if len(r)>=2:
                     #
                     #  Decode last two byte
@@ -161,7 +176,7 @@ else:
 #serial = com.Threaded(args)
 
 try:
-    Application(serial,args).run()
+    Application(args).run()
 except KeyboardInterrupt:
     cout("\n")
 #    except Exception, e:

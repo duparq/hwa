@@ -1549,7 +1549,6 @@ typedef struct {
 #include "../classes/adb_2.h"
 #include "../classes/eea_2.h"
 #include "../classes/fla_2.h"
-#include "../classes/swuarta_2.h"
 
 
 HW_INLINE void _hwa_setup_context( hwa_t *hwa )

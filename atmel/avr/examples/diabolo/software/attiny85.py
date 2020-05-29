@@ -5,7 +5,7 @@ import devices
 
 class device(devices.Device):
     def __init__(self):
-        devices.Device.__init__(self,'ATtiny85','1E930B',64,8192,512,False)
+        devices.Device.__init__(self,'ATtiny85',b'1E930B',64,8192,512,False)
 
     def s_fuse_eb(self):
         fuse = ord(self.fuses[2])

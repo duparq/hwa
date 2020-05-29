@@ -33,6 +33,8 @@ main ( )
   /*  Configure the software UART
    */
   hwa( configure, UART );
+  hwa( enable, (DIABOLO_PIN_RX,pcic,irq) );
+  hwa( turn, (DIABOLO_PIN_RX,pcic), DIABOLO_PIN_RX, on );
 
   /*  Configure the LED pin
    */

@@ -1,10 +1,8 @@
 
 	;; -*- asm -*-
 
-#if HW_G2(hw_swuart,sampling_shift)
-#  define SHIFT		HW_G2(hw_swuart,sampling_shift)
-#else
-#  define SHIFT		0
+#if !defined SPL_SHIFT
+#  define SPL_SHIFT		0
 #endif
 
 	;; Set UART registers dtn & dt0
@@ -15,17 +13,17 @@
 	.section	.text.LABEL(set_dt),"ax",@progbits
 LABEL(set_dt):
 
-#if defined CANRX && CLK_DIV > 1
+#if CANRX && CLKDIV > 1
 	movw	R30, R24	; Save dtn
-	rcall	HW_G2(_hw_swuarta_div,CLK_DIV)	;   dtn/CLK_DIV
+	rcall	HW_G2(_hw_swuarta_div,CLKDIV)	;   dtn/CLK_DIV
 #endif
 	sts	dtn+0,r24	; Store dtn/CLK_DIV
-#  if COUNT_BN == 16
+#if COUNT_BN == 16
 	sts	dtn+1,r25	;
-#  endif
+#endif
 
-#if defined CANRX
-#  if CLK_DIV > 1
+#if CANRX
+#  if CLKDIV > 1
 	movw	R24, R30	; Restore dtn
 #  endif
 	movw	r26, r24	; r25:r24 = dtn in counter units
@@ -36,13 +34,13 @@ LABEL(set_dt):
 	add	r24, r26	; r25:r24 = dtn + (dtn+1)/2
 	adc	r25, r27	;
 
-	DELAY = CY_ST_SEI + CY_RX_SEI - SHIFT
+	DELAY = CY_ST_SEI + CY_RX_SEI - SPL_SHIFT
 
 	subi	r24, lo8(DELAY)	; r25:r24 = dtn + (dtn+1)/2 - DELAY
 	sbci	r25, hi8(DELAY)	;
 
-#  if CLK_DIV > 1
-	rcall	HW_G2(_hw_swuarta_div,CLK_DIV)
+#  if CLKDIV > 1
+	rcall	HW_G2(_hw_swuarta_div,CLKDIV)
 #  endif
 
 	;;	Store dt0

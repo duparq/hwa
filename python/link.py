@@ -5,7 +5,7 @@
 #
 import sys
 import os.path
-sys.path.insert(1,os.path.normpath(sys.path[0]+"/pyserial-3.0"))
+#sys.path.insert(1,os.path.normpath(sys.path[0]+"/pyserial-3.0"))
 
 import serial
 import time
@@ -41,7 +41,7 @@ def add_arguments(parser):
     parser.add_argument('--keep-txd-low', help="how long TXD is "
                         "maintained low after RESET (0.5)", metavar='SECONDS',
                         type=float, default='0')
-    parser.add_argument('--sync', choices=['5_1','9_1','10_1'],
+    parser.add_argument('--sync', choices=['51','91','101'],
                         help="synchronization method", default='')
     parser.add_argument('--threaded-timed',
                         help="use a separate thread and a timer for serial interface",
@@ -236,49 +236,52 @@ class Link:
     #
     def tx10low(self):
         self.serial.parity =  serial.PARITY_EVEN
-        self.tx('\0')
+        self.tx(b'\x00')
         self.serial.parity =  serial.PARITY_NONE
 
     #  Synchronize the UART of the other side:
     #    send 10 bits low, followed by 1 bit low.
     #
-    def sync_10_1(self):
-        cout("Synchronizing (10_1): ")
+    def sync_101(self):
+        cout("Synchronizing (101): ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
-            Link.flush(self)
-            Link.tx10low(self)
-            r = Link.rx(self,1,1,1)
+            self.flush()
+            self.tx10low()
+            r = self.rx(1,1,1)
             if len(r)==0:
-                Link.tx(self,'\xFF')
-                r = Link.rx(self,1,1,1)
+                self.tx(b'\xFF')
+                r = self.rx(1,1,1)
             if len(r):
-                cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
+                cout(" OK after %d tries: 0x%02X.\n" % (i+1, r[0]))
                 self.lastchar = r[0]
-                return
-        raise Exception("synchronization failed")
+                return True
+            time.sleep(0.1)
+        cout('\n')
+        return False
 
 
     #  Synchronize UART with 9/1 low-level sequences
     #
-    def sync_9_1(self):
-        cout("Synchronizing (9_1): ")
+    def sync_91(self):
+        cout("Synchronizing (91): ")
         while self.serial.read(1): pass # flush
         for i in range(4):
             cout('.')
             flushout()
-            Link.tx(self,'\x00')
-            r = Link.rx(self,1,1,1)
+            self.tx(b'\0')
+            r = self.rx(1,1,1)
             if len(r)==0:
-                Link.tx(self,'\xFF')
-                r = Link.rx(self,1,1,1)
+                self.tx(b'\xFF')
+                r = self.rx(1,1,1)
             if len(r):
                 cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
                 self.lastchar = r[0]
-                return
-        raise Exception("synchronization failed")
+                return True
+        cout('\n')
+        return False
 
 
     #  Synchronize UART with 5/1 low-level sequences
@@ -292,74 +295,74 @@ class Link:
     #
     #      0xF0 / 0xFF: 5 low + many high + 1 low, good for slowest devices
     #
-    def sync_5_1(self):
-        cout("Synchronizing (5_1): ")
+    def sync_51(self):
+        #trace()
+        cout("Synchronizing (51): ")
         while self.serial.read(1): pass # flush
-        for i in range(400):
+        for i in range(4):
             cout('.')
             flushout()
-            Link.tx(self,'p')
-            r = Link.rx(self,1,1,1)
+            self.tx(b'\x70')
+            r = self.rx(1,1,1)
             if len(r):
-                cout(" OK after %d bytes sent: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
+                cout(" OK after %d bytes sent: 0x%02X.\n" % (i+1, r[0]) )
                 self.lastchar = r[0]
-                return
-        raise Exception("synchronization failed")
+                return True
+        cout('\n')
+        return False
 
 
-    #  Default synchronization method: try 5_1, then 9_1, then 10_1
+    #  Default synchronization method: try 51, then 91, then 101
     #
     def sync(self):
-        if self.args.sync=="" or self.args.sync=="5_1":
-            try:
-                self.sync_5_1()
-                return
-            except Exception as e:
-                # trace(repr(e))
-                cout('\n')
-        if self.args.sync=="" or self.args.sync=="9_1":
-            try:
-                self.sync_9_1()
-                return
-            except Exception as e:
-                # trace(repr(e))
-                cout('\n')
-        if self.args.sync=="" or self.args.sync=="10_1":
-            try:
-                self.sync_10_1()
-                return
-            except:
-                cout('\n')
-        raise Exception("synchronization failed")
+        #trace()
+        if self.args.sync=="" or self.args.sync=="51":
+            if self.sync_51():
+                return True
+        if self.args.sync=="" or self.args.sync=="91":
+            if self.sync_91():
+                return True
+        if self.args.sync=="" or self.args.sync=="101":
+            if self.sync_101():
+                return True
+        return False
 
 
-    #  Send a string
+    #  Send bytes
     #    In one-wire mode, wait for the echo and remove it
     #
-    def tx(self, s):
+    def tx(self, bs):
+        if repr(type(bs))=="<class 'str'>":
+            import inspect
+            caller = inspect.stack()[1]
+            print("Warning: using str instead of bytes (from %s in %s:%s)\n" % \
+                  (caller[3], os.path.basename(caller[1]), caller[2]))
         if not self.inter_char_delay:
-            self.serial.write(s)
+            self.serial.write(bs)
         else:
-            self.serial.write(s[0])
-            for c in s[1:]:
+            self.serial.write(bs[0])
+            for b in bs[1:]:
                 time.sleep(self.inter_char_delay)
-                self.serial.write(c)
+                cout(c)
+                self.serial.write(b)
+                return True
         if self.wires==1:
-            r = ""
-            n = 0
-            l = len(s)
+            br = bytes()
             self.lastrxtime = timer()
-            while n<l:
-                c = self.serial.read(1)
-                if c != "":
-                    r += c
-                    n += 1
+            while len(br)<len(bs):
+                b = self.serial.read(1)
+                if len(b)==0:
+                    if timer()-self.lastrxtime > 0.1:
+                        raise Exception("One-wire echo timeout")
+                elif len(b)==1:
+                    #trace("echo len(bs)=%d len(br)=%d, %d: %s" % (len(bs),len(br),len(b),repr(b)))
+                    br += b
                     self.lastrxtime = timer()
                 else:
-                    if timer()-self.lastrxtime > 1.0:
-                        raise Exception("One-wire echo timeout")
-            if r != s:
-                raise Exception("One-wire wrong echo\n  S: %s\n  R: %s" % (s2hex(s),s2hex(r)))
+                    raise Exception("several bytes received instead of one.")
+            if br == bs:
+                return True
+            raise Exception("One-wire wrong echo\n  S: %s\n  R: %s" % (bs.hex(),br.hex()))
 
 
     #  Receive l bytes or until there's a timeout
@@ -368,16 +371,17 @@ class Link:
         #
         #  Wait up to n1 timeouts for the beginning of reception
         #
-        r = ""
+        r = bytearray()
         for i in range(t1):
             c = self.serial.read(1)
-            if c !="" :
-                r += c
-                self.lastchar = c
+            if len(c):
+                #trace("received %d bytes: %s\n" % (len(c),c.hex()) )
+                r.extend(c)
+                self.lastchar = ord(c)
                 self.lastrxtime = timer()
                 break
 
-        if r != "":
+        if len(r):
             #
             #  Wait for the completion of reception.
             #  Accept up to t2 consecutive timeouts.
@@ -385,28 +389,28 @@ class Link:
             timeouts = 0
             while len(r)<l:
                 c = self.serial.read(1)
-                if c != "":
-                    r += c
-                    self.lastchar = c
+                if len(c):
+                    r.extend(c)
+                    self.lastchar = ord(c)
                     self.lastrxtime = timer()
                     timeouts = 0
                 elif timeouts > t2:
                     break
                 else:
                     timeouts += 1
-        return r
+        return bytes(r)
 
 
     #  Return all received data until t2 bytes duration has elapsed without
     #  reception
     #
     def rx_until_idle(self, t2=1):
-        r = ""
+        r = bytearray()
         timeouts = 0
         while True:
             c = self.serial.read(1)
             if c != '':
-                r += c
+                r.extend(c)
                 self.lastrxtime = timer()
                 timeouts = 0
             else:
@@ -504,7 +508,7 @@ class ThreadedTimed(Link):
 
     #  Synchronize UART with 5/1 low-level sequences
     #
-    def sync_5_1(self):
+    def sync_51(self):
         cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
         for i in range(4):
             self.tx('A')
@@ -677,7 +681,7 @@ class rem_ThreadedEvent(Link): # THIS HAS TO BE REWRITTEN
 
     #  Synchronize UART with 5/1 low-level sequences
     #
-    def sync_5_1(self):
+    def sync_51(self):
 
         cout("Synchronizing with 5+1 low bits (ASCII 'A'): ")
 

@@ -111,6 +111,22 @@
 
 /**
  * @ingroup public_mac
+ * @brief `HW_AP(logical_register)` returns the pair address,position of a logical register.
+ *
+ * This is useful for assembly programming, for example with the SBI / CBI instructions.
+ *
+ * @hideinitializer
+ *
+ */
+#define HW_AP(...)			HW_F( HW_AP, __VA_ARGS__ )
+#define HW_AP_E(...)			0 // An error occured
+
+#define HW_AP__m111				, _hw_ap_m111
+#define _hw_ap_m111(n,o,r,c,a,wm,fm,bn,bp,...)	(a HW_AC), bp
+
+
+/**
+ * @ingroup public_mac
  * @brief `HW_BITS(object)` returns the number of bits of the @ref using_objects "object".
  * @hideinitializer
  *
@@ -232,14 +248,38 @@
  * @hideinitializer
  */
 #define HW_F(...)			_HW_F(__VA_ARGS__,)
-#define _HW_F(f,o,...)		        HW_Y0(_HW_F_,_hw_islb o)(f,o,__VA_ARGS__)
-#define _HW_F_0(f,o,...)	        HW_Y0(_HW_F_0_,hw_class_##o)(f,o,__VA_ARGS__)
-#define _HW_F_0_1(f,c,o,d,...)	        _HW_F01(f,c,o,HW_XB d,__VA_ARGS__)
-
-#define _HW_F_0_0(f,o,...)	        _HW_F00(f, HW_X(o),__VA_ARGS__)
-#define _HW_F_1(f,o,...)		_HW_F00(f, HW_X o,__VA_ARGS__)
+#define _HW_F(f,x,...)		        HW_Y0(_HW_F_,_hw_islb x)(f,x,__VA_ARGS__)
+/*
+ *  x is not (...)
+ */
+#define _HW_F_0(f,x,...)	        HW_Y0(_HW_F_0_,hw_class_##x)(f,x,__VA_ARGS__)
+/*
+ *  x is a class name
+ */
+#define _HW_F_0_1(f,x,o,d,...)	        _HW_F01(f,x,o,HW_XB d,__VA_ARGS__)
+/*
+ *  x is not a class name
+ */
+#define _HW_F_0_0(f,x,...)	        HW_Y0(_HW_F00_,x)(f,x,__VA_ARGS__)
+/*
+ *  x is void (error message or void)
+ */
+#define _HW_F00_1(...)		  	_HW_F00_2(__VA_ARGS__,,,,)
+#define _HW_F00_2(f,z,o,e,...)	  	HW_Y0(_HW_F00_2,o)(f,z,o,__VA_ARGS__)
+#define _HW_F00_21(f,z,o,e,...)	  	f##_E(HW_EM_OM())
+#define _HW_F00_20(f,z,o,e,...)	  	f##_E(e)
+/*
+ *  x is not void
+ */
+#define _HW_F00_0(f,x,...)	  	_HW_F00(f, HW_X(x),__VA_ARGS__)
+/*
+ *  x is (...)
+ */
+#define _HW_F_1(f,x,...)		_HW_F00(f, HW_X x,__VA_ARGS__)
 #define _HW_F00(...)			_HW_F01(__VA_ARGS__)
-
+/*
+ *  Got object definition in c,o,...
+ */
 #define _HW_F01(f,c,o,...)		HW_Y0(_HW_F01_,c)(f,c,o) /* Arguments pushed --> */ (o,__VA_ARGS__)
 #define _HW_F01_1(f,c,o)		f##_E(HW_EM_O(o)) HW_POP  /* <-- Arguments popped */
 /* Class method? */
@@ -319,7 +359,7 @@
  * @endcode
  */
 #define HW_DEFINE(...)			HW_F(HW_DEFINE,__VA_ARGS__)
-#define HW_DEFINE_E(e)			HW_E(e)
+#define HW_DEFINE_E(e)			HW_E(e) extern void _hwa_()
 
 /**
  * @ingroup public_mac
@@ -336,7 +376,7 @@
  * @endcode
  */
 #define HW_DEFINE_WEAK(...)		HW_F(HW_DEFINE_WEAK,__VA_ARGS__)
-#define HW_DEFINE_WEAK_E(e)		HW_E(e)
+#define HW_DEFINE_WEAK_E(e)		HW_E(e) extern void _hwa_()
 
 
 /**
@@ -355,7 +395,7 @@
  * @endcode
  */
 #define HW_DECLARE(...)			HW_F(HW_DECLARE,__VA_ARGS__)
-#define HW_DECLARE_E(e)			HW_E(e)
+#define HW_DECLARE_E(e)			HW_E(e) extern void _hwa_()
 
 
 /**
@@ -642,26 +682,37 @@
  *  1. A class method, h_f_c
  *  2. A global method, h_f
  *  3. A class method h_f_ if 'o' is void (begin,commit...)
+ *
+ * FIXME: using the object name to distinguish a no-object call and an
+ * error-object call. A class _err would be faster?
  */
-//#define hwx(h,f,o,...)			HW_Y0(_hwx0_,hw_class_##o)(h,f,o,__VA_ARGS__)
-//hwx(hw_,read, (twi,irq),,);
-#define hwx(h,f,o,...)			HW_Y0(_hwx0_,_hw_islb o)(h,f,o,__VA_ARGS__)
+#define hwx(h,f,x,...)			HW_Y0(_hwx0_,_hw_islb x)(h,f,x,__VA_ARGS__)
 /*
- *  o is ()
+ *  x is ()
  */
-#define _hwx0_1(h,f,o,...)		_hwx_0(h,f,HW_X o,__VA_ARGS__)
+#define _hwx0_1(h,f,x,...)		_hwx_0(h,f,HW_X x,__VA_ARGS__)
 /*
- *  o is not ()
+ *  x is not ()
  */
-#define _hwx0_0(h,f,o,...)		HW_Y0(_hwx1_,hw_class_##o)(h,f,o,__VA_ARGS__)
+#define _hwx0_0(h,f,x,...)		HW_Y0(_hwx1_,hw_class_##x)(h,f,x,__VA_ARGS__)
 /*
- *  o is a class, expand the definition.
+ *  x is a class name, expand the definition.
  */
-#define _hwx1_1(h,f,c,o,d,...)		_hwx_10(h,f,c,o,HW_XB d,__VA_ARGS__)
+#define _hwx1_1(h,f,x,o,d,...)		_hwx_10(h,f,x,o,HW_XB d,__VA_ARGS__)
 /*
- *  o is not a class
+ *  x is not a class name
  */
-#define _hwx1_0(h,f,o,...)		_hwx_0(h,f,HW_X(o),__VA_ARGS__)
+#define _hwx1_0(h,f,x,...)		HW_Y0(_hwx10_,x)(h,f,x,__VA_ARGS__)
+/*
+ *  x is void
+ */
+#define _hwx10_1(h,f,z,...)		HW_Y0(_hwx101_,__VA_ARGS__)(h,f,z,__VA_ARGS__)
+#define _hwx101_0(h,f,z,o,e,...)	HW_E(e)
+#define _hwx101_1(h,f,x,...)		_hwx_0(h,f,HW_X(x),__VA_ARGS__)
+/*
+ *  x is not void
+ */
+#define _hwx10_0(h,f,x,...)		_hwx_0(h,f,HW_X(x),__VA_ARGS__)
 #define _hwx_0(...)			_hwx_1(__VA_ARGS__)
 #define _hwx_1(h,f,c,...)		HW_Y0(_hwx_1,c)(h,f,c,__VA_ARGS__)
 /*

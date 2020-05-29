@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*- Last modified: 2020-04-12 13:04:54 -*-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*- Last modified: 2020-05-26 19:53:58 -*-
 
 
 class CRC:
@@ -9,13 +9,15 @@ class CRC:
         return 0xFFFF
 
     @staticmethod
-    def add(value, char):
-        tmp = (value >> 8) ^ char
+    def add(value, v):
+        tmp = (value >> 8) ^ v
         value = ((value << 8) ^ CRC.tab[tmp]) & 0xFFFF
         return value
 
     @staticmethod
     def check(data):
+        if not isinstance(data, (bytes,bytearray)):
+            raise Exception("type is %s, not bytes" % repr(type(data)))
         value = 0xFFFF
         for c in data:
             tmp = (value >> 8) ^ c
@@ -32,7 +34,7 @@ for i in range(256):
     c = i << 8
     for j in range(8):
         if (crc ^ c) & 0x8000:
-            crc = ( crc << 1) ^ 0x1021
+            crc = (crc << 1) ^ 0x1021
         else:
             crc = crc << 1
         c = c << 1
