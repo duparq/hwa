@@ -37,9 +37,6 @@
  *                          | counting_down
  *                          | counting_up_or_down, ]       // Default
  *
- *          [ loop,           yes                          // Default
- *                          | no, ]
- *
  *          [ prescaler,      x, ]                         // Any value in 0..0xFFFF
  *
  *          [ reload,         x, ]                         // Any value in 0..0xFFFF
@@ -114,15 +111,18 @@
 #define _hwx_cfctd_kdir0(h,o,k,...)	HW_E_NIL(k,(direction))
 #define _hwx_cfctd_kdir1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vdir,_hw_cfctd_dir_##v)(h,o,v,__VA_ARGS__)
 
-#define _hw_cfctd_dirs			(up,down,updown)
-//					, jump,              v =  cms  dir
-#define _hw_cfctd_dir_up		, _hwx_cfctd_kocf0, 0 //  00   0
-#define _hw_cfctd_dir_down		, _hwx_cfctd_kocf0, 1 //  00   1
-#define _hw_cfctd_dir_updown		, _hwx_cfctd_vdir2, 6 //  11   x
+#define _hw_cfctd_dirs			(up_loop,up_noloop,down_loop,down_noloop,updown_loop,updown_noloop)
+//					, jump,              v =  cms  dir  opm
+#define _hw_cfctd_dir_up_loop		, _hwx_cfctd_kocf0,  0 //  00   0    0
+#define _hw_cfctd_dir_up_noloop		, _hwx_cfctd_kocf0,  1 //  00   0    1
+#define _hw_cfctd_dir_down_loop		, _hwx_cfctd_kocf0,  2 //  00   1    0
+#define _hw_cfctd_dir_down_noloop	, _hwx_cfctd_kocf0,  3 //  00   1    1
+#define _hw_cfctd_dir_updown_loop	, _hwx_cfctd_vdir2, 12 //  11   x    0
+#define _hw_cfctd_dir_updown_noloop	, _hwx_cfctd_vdir2, 13 //  11   x    1
 
 #define _hwx_cfctd_vdir0(h,o,v,...)	HW_E_NIL(v,_hw_cfctd_dirs)
 #define _hwx_cfctd_vdir1(h,o,v,k,...)					\
-  uint8_t cmsdir = HW_A2(_hw_cfctd_dir_##v) ;				\
+  uint8_t cmsdiropm = HW_A2(_hw_cfctd_dir_##v) ;			\
   HW_A1(_hw_cfctd_dir_##v)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfctd_vdir2(h,o,k,...)	HW_Y(_hwx_cfctd_kocf,_hw_is_compare_flag_##k)(h,o,k,__VA_ARGS__)
@@ -132,28 +132,30 @@
 #define _hwx_cfctd_kocf1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vocf,_hw_cfctd_compare_flag_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vocf0(h,o,v,...)	HW_E_NIL(v,(counting_up,counting_down,counting_up_or_down))
 #define _hwx_cfctd_vocf1(h,o,v,k,...)					\
-  cmsdir += HW_A1(_hw_cfctd_compare_flag_##v);				\
-  h##_write(o,cmsdir,cmsdir);						\
-  HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__)
+  cmsdiropm += HW_A1(_hw_cfctd_compare_flag_##v);			\
+  h##_write(o,cmsdiropm,cmsdiropm);					\
+  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+  /* HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
 #define _hwx_cfctd_kocf0(h,o,k,...)				\
-  h##_write(o,cmsdir,cmsdir);					\
-  HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__)
+  h##_write(o,cmsdiropm,cmsdiropm);				\
+  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+  /* HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
-#define _hw_cfctd_compare_flag_counting_down		, -4
-#define _hw_cfctd_compare_flag_counting_up		, -2
+#define _hw_cfctd_compare_flag_counting_down		, -8
+#define _hw_cfctd_compare_flag_counting_up		, -4
 #define _hw_cfctd_compare_flag_counting_up_or_down	, +0
 
 /*  Optionnal parameter `loop`
  */
-#define _hwx_cfctd_kloop1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfctd_vloop0(h,o,v,...)	HW_E_ST(v)
-#define _hwx_cfctd_vloop1(h,o,v,k,...)					\
-  h##_write(o,opm,HW_A2(_hw_state_##v));				\
-  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+/* #define _hwx_cfctd_kloop1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__) */
+/* #define _hwx_cfctd_vloop0(h,o,v,...)	HW_E_ST(v) */
+/* #define _hwx_cfctd_vloop1(h,o,v,k,...)					\ */
+/*   h##_write(o,opm,HW_A2(_hw_state_##v));				\ */
+/*   HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
 
-#define _hwx_cfctd_kloop0(h,o,k,...)					\
-  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+/* #define _hwx_cfctd_kloop0(h,o,k,...)					\ */
+/*   HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
 
 /*  Optionnal parameter `prescaler`
  */

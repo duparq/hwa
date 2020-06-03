@@ -183,19 +183,3 @@
 
 #define hwa_trigger__oca		, _hwa_trigger_oca
 #define _hwa_trigger_oca(o,ct,oc)	_hwa_write(ct,foc##oc,1)
-
-
-/**
- * @page atmelavr_oca
- * @section atmelavr_oca_st Status
- *
- * The compare event flag can be accessed through interrupt-related
- * instructions:
- *
- * @code
- * if ( hw( read,(counter0,compare0,irq) ) ) {	// Read compare IRQ flag
- *   hw( clear,(counter0,compare0,irq) );		// Clear compare IRQ flag
- *   hw( disable,(counter0,compare0,irq) );		// Disable compare IRQs
- * }
- * @endcode
- */

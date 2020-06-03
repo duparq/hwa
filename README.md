@@ -8,14 +8,13 @@ bare metal programming with a pleasant style.
 To give you an idea, the following code blinks a LED connected to an
 STM32F103RBT6 using Systick interrupts and sleeping mode:
 
-
     #include <hwa/stm32f103rbt6.h>
     
     #define AHBHZ   HW_DEVICE_HSIHZ         // The HSI frequency (8 MHz)
     #define LED     pa2
     #define PERIOD  0.5                     // Blinking period in seconds
     
-    HW_ISR( systick ) {}                    // The IRQ is used only to wake the core up.
+    HW_ISR( (systick,irq) ) {}              // The IRQ is used only to wake the core up.
     
     int main ( )
     {
@@ -34,7 +33,7 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
            reload,    PERIOD/2*AHBHZ/8-1,
            run,       yes );
     
-      hwa( turn, (systick,irq), on );       // Enable Systick IRQs (to wake the core up)
+      hwa( enable, (systick,irq) );         // Enable Systick IRQs (to wake the core up)
     
       hwa( commit );                        // Write all that into the hardware
     
@@ -43,7 +42,6 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
         hw( toggle, LED );                  // Toggle the LED at wake-up
       }
     }
-
 
 The resulting binary is 402 bytes long: 94 bytes of code + 308 bytes of vectors.
 

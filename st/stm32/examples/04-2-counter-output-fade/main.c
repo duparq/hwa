@@ -83,7 +83,7 @@ int main ( )
    */
   hwa( configure, COUNTER,
        clock,     from_apb1_psc,
-       direction, updown,
+       direction, updown_loop,
        prescaler, AHBHZ/DUTYMAX/100 - 1,
        reload,    DUTYMAX,
        run,       yes );

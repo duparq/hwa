@@ -86,9 +86,6 @@
 #  define HW_ISR_ATTRIBUTES __attribute__((used))
 #endif
 
-#define _hw_israttr_atomic		,
-#define _hw_israttr_non_interruptible	,
-#define _hw_israttr_interruptible	, __attribute__((interrupt))
 #define _hw_israttr_naked		, __attribute__((naked))
 
 

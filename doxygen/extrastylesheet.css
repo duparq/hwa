@@ -94,6 +94,10 @@ div.contents > dl.section.user > dd {
     margin-left: 0;
 }
 
+dl.section.user {
+    margin-top: 3em;
+}
+
 code {
     color: #a8200b;
     font-weight: bold;

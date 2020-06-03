@@ -594,22 +594,6 @@ HW_INLINE uint8_t _hwa_solve_cta ( hwa_cta_t *p, hwa_oca_t *compare0, hwa_oca_t 
 #define _hwa_write_cta(o,a,v,...)	_hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
-
-/**
- * @page atmelavr_cta
- * @section atmelavr_stcta Status
- *
- * The overflow flag can be accessed through interrupt-related instructions:
- *
- * @code
- * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
- *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
- *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
- * }
- * @endcode
- */
-
-
 /*******************************************************************************
  *									       *
  *	Context management						       *
@@ -656,22 +640,33 @@ HW_INLINE uint8_t _hwa_solve_cta ( hwa_cta_t *p, hwa_oca_t *compare0, hwa_oca_t 
   _hwa_commit_r( o, imsk);			\
   _hwa_commit_r( o, ifr)
   
+
 /**
  * @page atmelavr_cta
- * @section atmelavr_cta_internals Internals
+ * @section atmelavr_cta_regs Registers
  *
- * Class `_cta` objects hold the following hardware registers:
+ * Hardware registers:
  *
  *  * `ccra`: control register a
  *  * `ccrb`: control register b
- *  * `count`: count register
+ *  * `count`, `reg`: count register
+ *  * `ocr0`: output-compare A register
+ *  * `ocr1`: output-compare B register
  *  * `imsk`: interrupt mask register
  *  * `ifr`: interrupt flag register
  *
- * that hold the following logical registers:
+ * Logical registers:
  *
  *  * `wgm`: counting and waveform generation mode
  *  * `cs`: clock selection
  *  * `ie`: overflow interrupt mask
+ *  * `ocie0`: compare A interrupt mask
+ *  * `ocie1`: compare B interrupt mask
  *  * `if`: overflow interrupt flag
+ *  * `ocif0`: compare A interrupt flag
+ *  * `ocif1`: compare B interrupt flag
+ *  * `com0`: output-compare mode A
+ *  * `com1`: output-compare mode B
+ *  * `foc0`: force output-compare A
+ *  * `foc1`: force output-compare B
  */

@@ -46,7 +46,7 @@ int main ( )
   hwa( configure, COUNTER,
        mode,      counter,
        clock,     from_apb1_psc,
-       direction, up,
+       direction, up_loop,
        prescaler, AHBHZ*0.001 - 1,	// 1 ms clock period
        reload,    PERIOD/2 / 0.001 - 1,
        run,       yes );

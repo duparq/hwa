@@ -51,6 +51,7 @@
 #define hw__cta_dir			_cb1, cr1, 1, 4
 #define hw__cta_cmsdir			_cb1, cr1, 3, 4		// Convenient
 #define hw__cta_opm			_cb1, cr1, 1, 3
+#define hw__cta_cmsdiropm		_cb1, cr1, 4, 3		// Convenient
 #define hw__cta_urs			_cb1, cr1, 1, 2
 #define hw__cta_udis			_cb1, cr1, 1, 1
 #define hw__cta_cen			_cb1, cr1, 1, 0
