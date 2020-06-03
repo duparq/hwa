@@ -351,8 +351,6 @@
 
 #  define _HW_ISR_E(o, ...)	void _hw_isr_error(void) __attribute__((weak)) HW_E(HW_EM_NOTIRQ(o)[_HW_ISR_E(o,__VA_ARGS__)])
 
-#include <stdint.h>
-
 
 /*  Storage class of HWA functions.
  *
