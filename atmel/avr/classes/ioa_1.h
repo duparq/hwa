@@ -42,7 +42,7 @@
  * #endif
  * @endcode
  */
-#define HW_ADDRESS__ioa		, _hw_adioa
+#define HW_ADDRESS__ioa			, _hw_adioa
 
 #define _hw_adioa(o,p,bn,bp,...)	_hw_adioa01(hw_##p,bn,bp)
 #define _hw_adioa01(...)		_hw_adioa02(__VA_ARGS__)
@@ -80,19 +80,36 @@
 #define _hw_position_ioa(o,p,bn,bp,...)	bp
 
 
-/*  Port name of a pin
- *    Could use HW_XO but we know that the port exists, so let's expand its defition here.
+/*  Name of the io port of a pin
+ *    Could use HW_XO but we know that the port exists, so let's expand its definition here.
  */
 #define hw__ioa_port			, _hw_ioa_port
-//#define _hw_ioa_port(o,p,...)		HW_XO(p)
 #define _hw_ioa_port(o,p,...)		_hw_ioa_port1(p,hw_##p)
 #define _hw_ioa_port1(...)		_hw_ioa_port2(__VA_ARGS__)
 #define _hw_ioa_port2(p,c,...)		c,p,(__VA_ARGS__)
 
 
-/*  Handle definitions such as HW_IO(pb1)
+/*  Accept to append a number to a _ioa definition so that:
+ *   * (portx,n) becomes a single pin at position n of portx.
+ *   * (portx,n,p) becomes a set of n consecutive pins at position p of portx.
+ */
+#define hw__ioa_			, _hw_ioa_
+#define _hw_ioa_(o,r,p,bn,bp)		HW_Y0(_hw_ioa_,_hw_is_1_##bn)(o,r,p,bn,bp)
+#define _hw_ioa_0(o,r,...)		,(o,r),HW_EM(o has no relative r)
+#define _hw_ioa_1(o,r,p,bn,bp)		HW_Y0(_hw_ioa1_,_hw_isa_4bn_##r)(o,r,p,bn,bp)
+#define _hw_ioa1_1(o,r,p,bn,bp)		_ioa,p##_##bp##_##r,(p,bp,r)
+#define _hw_ioa1_0(o,r,p,bn,bp)		,(o),HW_EM(o has no relative r)
+
+
+/*  Process HW_IO()
+ *   * HW_IO(pin,...)
  */
 #define hw_class__ioa_io
 
 #define HW_IO__ioa			, _hw_io_ioa
-#define _hw_io_ioa(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(-1,p,bn,bp)
+//#define _hw_io_ioa(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(p,bn,bp)
+/* #define _hw_io_ioa(o,p,bn,bp,...)	HW_Y(_hw_io_ioa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) */
+/* #define _hw_io_ioa1(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(p,bn,bp) */
+  //_hw_io_ioa0((port1,4,2),port1,4,2,(port1,2,6),);
+/* #define _hw_io_ioa0(o1,p1,bn1,bp1,...)	_ioa,p##_##bn##_##bp,(p,bn,bp) */
+#define _hw_io_ioa(o,p,bn,bp,...)	_iox,HW_IO,(p,bn,bp),__VA_ARGS__

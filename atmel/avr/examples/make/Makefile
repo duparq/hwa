@@ -289,8 +289,8 @@ lst:	$(OUT).lst
 #  Note: must specify the section otherwise gap-fill includes the .data section (-> 8 MB!)
 #
 %.bin: %.elf
-	@$(OBJCOPY) --gap-fill=0xFF --pad-to $(DEVICE_FLASH_SIZE) \
-		--only-section .text \
+	@$(OBJCOPY) --gap-fill=0xFF --pad-to $(DEVICE_FLASH_SIZE) 		\
+		--only-section .text --only-section .bss --only-section .data	\
 		-O binary $^ $@
 
 #  Object dump flags:

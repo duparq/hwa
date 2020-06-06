@@ -11,7 +11,7 @@
 
 /**
  * @page atmelavr_ocb
- * @section atmelavr_oca_act Actions
+ * @section atmelavr_ocb_act Actions
  *
  * <br>
  * `configure`:

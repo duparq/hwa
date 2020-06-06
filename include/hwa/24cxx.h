@@ -10,7 +10,7 @@
  */
 
 /**
- * @page p24cxx 24CXX: I²C EEPROM
+ * @page ext_24cxx 24CXX: I²C EEPROM
  *
  * As this device is not speed critical, its implementation focuses on code size
  * rather than on speed, so it relies on extern C functions rather than on
@@ -48,7 +48,7 @@
 
 
 /**
- * @page p24cxx
+ * @page ext_24cxx
  *
  * The following declares the functions that implement the memory. You can use it in
  * your header files:
@@ -63,25 +63,25 @@
   uint8_t _hw_##o##_read_bytes ( uint8_t, uint8_t, uint16_t, int, uint8_t* ); \
   uint8_t _hw_##o##_write_page ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ); \
   uint8_t _hw_##o##_write_bytes ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ); \
-  extern void hwa_fake()
+  HW_FOO() /* for semicolon */
 
 
 /**
- * @page p24cxx
+ * @page ext_24cxx
  *
  * The following defines the functions that implement the memory. It must
  * appear in one of your source files:
  *
  * @code
- * HW_DEFINE( EEPROM );
+ * HW_IMPLEMENT( EEPROM );
  * @endcode
  *
  * @code
- * HW_DEFINE_WEAK( EEPROM ); // Allows multiple definitions
+ * HW_IMPLEMENT_WEAK( EEPROM ); // Allows multiple definitions
  * @endcode
  */
-#define HW_DEFINE__24cxx		, _hw_im24cxx_
-#define HW_DEFINE_WEAK__24cxx		, _hw_im24cxxw
+#define HW_IMPLEMENT__24cxx		, _hw_im24cxx_
+#define HW_IMPLEMENT_WEAK__24cxx		, _hw_im24cxxw
 
 #define _hw_im24cxx_(o,twi,...)		_hw_im24cxx(twi,)
 #define _hw_im24cxxw(o,twi,...)		_hw_im24cxx(twi,__attribute__((weak)))
@@ -89,22 +89,11 @@
   _hw_im24cxx_read_bytes(twi,weak)			\
     _hw_im24cxx_write_page(twi,weak)			\
     _hw_im24cxx_write_bytes(twi,weak)			\
-    extern void hwa_fake() /* require a semicolon */
-
-/* #define _hw_im24cxx(twi,weak)				\ */
-/*   foo(twi,weak)					\ */
-/*     extern void hwa_fake() /\* require a semicolon *\/ */
-
-/* #define foo(twi,weak)				\ */
-/*   void weak foo_##twi (  )			\ */
-/*   {						\ */
-/*     hw( xread, (twi,irq);			\ */
-/*   } */
-
+    HW_FOO() /* for semicolon */
 
 
 /**
- * @page p24cxx
+ * @page ext_24cxx
  * __Actions__
  *
  * `write`
@@ -130,7 +119,7 @@
 
 
 /**
- * @page p24cxx
+ * @page ext_24cxx
  *
  * `read`
  *

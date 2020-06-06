@@ -50,7 +50,7 @@
 #define _hw_rdt3k2a1_1(o,c)		_hw_##o##_read_channel(HW_TL(_hw_tcs3200_channel_##c))
 
 
-#define HW_DEFINE(...)		hw(implement,__VA_ARGS__)
+#define HW_IMPLEMENT(...)		hw(implement,__VA_ARGS__)
 
 #define hw_define__tcs3200a		, _hw_imt3k2a
 

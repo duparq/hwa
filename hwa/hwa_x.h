@@ -69,9 +69,11 @@
  *    Return ',o,error message' if the relative can not be found.
  *    Register definitions are converted to memory definitions.
  */
-#define HW_CODR(c,o,...)		HW_Y0(_HW_CODR_,_hw_islb o)(c,o,__VA_ARGS__)
+#define HW_CODR(c,o,...)		HW_Y0(_HW_CODR_,_hw_prn o)(c,o,__VA_ARGS__)
 #define _HW_CODR_1(c,o,d,r)		_HW_CODR2(c,o,d,r,hw_##c##_##r)	// Can not compute o_r since o is ()
-#define _HW_CODR_0(c,o,d,r)		_HW_CODR0(c,o,d,r,hw_##o##_##r)
+#define _HW_CODR_0(c,o,d,r)		HW_Y0(_HW_CODR0_,_hw_prn r)(c,o,d,r)
+#define _HW_CODR0_1(c,o,d,r)		_HW_CODR6(c,o,d,r,hw_##c##_)	// Can not compute o_r since r is ()
+#define _HW_CODR0_0(c,o,d,r)		_HW_CODR0(c,o,d,r,hw_##o##_##r)
 #define _HW_CODR0(...)			_HW_CODR1(__VA_ARGS__)
 #define _HW_CODR1(c,o,d,r,...)		HW_Y0(_HW_CODR1_,hw_class_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*
@@ -111,7 +113,7 @@
 /*
  *  hw_c_r is not void.
  */
-#define _HW_CODR3_0(c,o,d,r,...)	HW_Y0(_HW_CODR4_,_hw_islb __VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+#define _HW_CODR3_0(c,o,d,r,...)	HW_Y0(_HW_CODR4_,_hw_prn __VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 #define _HW_CODR4_1(c,o,d,r,...)	,(o,r),internal error: expanding () is not implemented [_HW_CODR4_1]
 /*
  *  hw_c_r is a word.
@@ -145,11 +147,11 @@
 
 /*  Compute the beginning of a path: o
  */
-#define HW_XS(x,...)			HW_Y0(_HW_XS1_,_hw_islb x)(x,__VA_ARGS__)
-#define _HW_XS1_1(...)			_HW_XS1_2( HW_XB __VA_ARGS__ )		// Remove brackets
+#define HW_XS(x,...)			HW_Y0(_HW_XS1_,_hw_prn x)(x,__VA_ARGS__)
+#define _HW_XS1_1(...)			_HW_XS1_2( HW_XB __VA_ARGS__ )		// Remove parentheses
 #define _HW_XS1_2(...)			_HW_XS1_3(__VA_ARGS__ )
-#define _HW_XS1_3(x,...)		HW_Y0(_HW_XS2_,_hw_islb x)(x,__VA_ARGS__)
-#define _HW_XS2_1(x,...)		,o,two many brackets in path before (__VA_ARGS__) [HW_XS2_1],__VA_ARGS__
+#define _HW_XS1_3(x,...)		HW_Y0(_HW_XS2_,_hw_prn x)(x,__VA_ARGS__)
+#define _HW_XS2_1(x,...)		,o,two many parentheses in path before (__VA_ARGS__) [HW_XS2_1],__VA_ARGS__
 #define _HW_XS2_0(x,...)		HW_Y(_HW_XS3_,hw_class_##x)(x,__VA_ARGS__)
 
 #define _HW_XS1_0(x,...)		HW_Y(_HW_XS3_,hw_class_##x)(x,__VA_ARGS__)
@@ -159,10 +161,10 @@
 
 /*  Compute the concatenation of c,o,(d) with x.
  *  Put the resulting definition or ',o,error message' in c,o,(d).
- *  FIXME: is it useful to process brackets around x?
+ *  FIXME: is it useful to process parentheses around x?
  *  FIXME: is it useful to process concatenation of x being a c,o,(d)?
  */
-/* #define HW_XC(c,o,d,x,...)		HW_Y(_HW_XC_,_hw_islb x)(c,o,d,x,__VA_ARGS__) */
+/* #define HW_XC(c,o,d,x,...)		HW_Y(_HW_XC_,_hw_prn x)(c,o,d,x,__VA_ARGS__) */
 /* #define _HW_XC_1(c,o,d,x,...)		_HW_XC2(c,o,d,HW_XS x,__VA_ARGS__ ) */
 /* #define _HW_XC2(...)			_HW_XC3_0(__VA_ARGS__) */
 /* #define _HW_XC_0(c,o,d,x,...)		HW_Y(_HW_XC3_,x)(c,o,d,x,__VA_ARGS__) */
@@ -188,8 +190,8 @@
  */
 #define HW_X(...)			_HW_P0(__VA_ARGS__,,,,)			// Ensure at least 5 arguments
 
-#define _HW_P0(x,...)			HW_Y0(_HW_P0_,_hw_islb x)(x,__VA_ARGS__)
-#define _HW_P0_1(...)			_HW_P0_2( HW_XB __VA_ARGS__ )		// Remove brackets
+#define _HW_P0(x,...)			HW_Y0(_HW_P0_,_hw_prn x)(x,__VA_ARGS__)
+#define _HW_P0_1(...)			_HW_P0_2( HW_XB __VA_ARGS__ )		// Remove parentheses
 #define _HW_P0_2(...)			_HW_P0_0(__VA_ARGS__ )
 
 #define _HW_P0_0(...)			_HW_P0_3( HW_XS(__VA_ARGS__) )		// Element 1
@@ -221,10 +223,20 @@
 #define _HW_P6_1(c,o,d,...)		_HW_P9(c,o,d)
 #define _HW_P6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_P6_0]
 
-#define _HW_P9(c,o,d)			HW_Y0(_HW_P9_,_hw_islb d)(c,o,d)
+#define _HW_P9(c,o,d)			HW_Y0(_HW_P9_,_hw_prn d)(c,o,d)
 #define _HW_P9_1(c,o,d)			_HW_P9_0(c,o,HW_XB d)
 #define _HW_P9_0(...)			__VA_ARGS__
 
+
+/*  Expand an object path, remove void arguments from definition.
+ *    This is used for example to get the "putchar" function name of a LCD:
+ *      HW(LCD,putchar)
+ */
+#define HW(...)				_HW_1( HW_X(__VA_ARGS__) )
+#define _HW_1(...)			_HW_2(__VA_ARGS__)
+#define _HW_2(c,o,...)			HW_Y0(_HW_2,o)(c,o,__VA_ARGS__)
+#define _HW_20(...)			__VA_ARGS__
+#define _HW_21(c,o,...)			c
 
 
 /*  Return the mask register of an _irq.
@@ -243,6 +255,6 @@
 #define hw__irq_			, _hw_irq_
 #define _hw_irq_(oo,r,v,o,m,f)		_hw_irq1(o,r,hw_##o##_irq_##r)
 #define _hw_irq1(...)			_hw_irq2(__VA_ARGS__)
-#define _hw_irq2(o,r,...)		HW_KW(_hw_irq2_,_irq,__VA_ARGS__)(o,r,__VA_ARGS__)
+#define _hw_irq2(o,r,...)		HW_YW(_hw_irq2_,_irq,__VA_ARGS__)(o,r,__VA_ARGS__)
 #define _hw_irq2_0(o,r,...)		,(o,irq,r),HW_EM_O((o,irq,r))
 #define _hw_irq2_1(o,r,ic,iv,...)	ic,(o,irq,r),(iv,__VA_ARGS__)

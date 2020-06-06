@@ -11,7 +11,7 @@
 
 /**
  * @page atmelavr_wdb
- * @section atmelavr_wda_act Actions
+ * @section atmelavr_wdb_act Actions
  *
  * <br>
  * `configure`:

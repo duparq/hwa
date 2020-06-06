@@ -51,9 +51,9 @@
 #define _hwx_tnpxa1(...)		_hwx_tnpxa2(__VA_ARGS__)
 #define _hwx_tnpxa2(h,o,c,...)		HW_Y0(_hwx_tnpxa2,c)(h,o,c,__VA_ARGS__)
 #define _hwx_tnpxa21(h,o,z,...)		do{}while(0) // p is not an object, error sent by HW_X()
-#define _hwx_tnpxa20(h,o,c,...)		HW_KW(_hwx_tnpxa3,_ioa,c)(h,o,c,__VA_ARGS__)
+#define _hwx_tnpxa20(h,o,c,...)		HW_YW(_hwx_tnpxa3,_ioa,c)(h,o,c,__VA_ARGS__)
 #define _hwx_tnpxa30(h,o,c,p,...)		HW_E(`p` is not an I/O pin)
-#define _hwx_tnpxa31(h,o,c,p,po,bn,bp,v,...)	HW_KS(_hwx_tnpxa4,v,h,o,bn,bp,__VA_ARGS__)
+#define _hwx_tnpxa31(h,o,c,p,po,bn,bp,v,...)	HW_YS(_hwx_tnpxa4,v,h,o,bn,bp,__VA_ARGS__)
 #define _hwx_tnpxa40(...)
 #define _hwx_tnpxa41(s,h,o,bn,bp,...)					\
   h##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*s<<bp))		\

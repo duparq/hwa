@@ -75,18 +75,18 @@
 #define hwa_configure__ica		, _hwa_cfica
 
 #define _hwa_cfica(o,ct,ic,k,...)					\
-  do { HW_KW(_hwa_cfica_kinput_,input,k)(ct,k,__VA_ARGS__) } while(0)
+  do { HW_YW(_hwa_cfica_kinput_,input,k)(ct,k,__VA_ARGS__) } while(0)
 
 #define _hwa_cfica_kinput_0(ct,k,...)					\
-  HW_KW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__) //HW_E_VL(k,input)
+  HW_YW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__) //HW_E_VL(k,input)
 #define _hwa_cfica_kinput_1(ct,k,v,...)		HW_Y(_hwa_cfica_vinput_,hw_ica_input_##v)(ct,v,__VA_ARGS__)
 #define _hwa_cfica_vinput_0(ct,v,...)		HW_E_AVL(input, v, pin_icp | acmp0)
 #define _hwa_cfica_vinput_1(ct,v,k,...)				\
   hwa->ct.capture0.config.input = HW_A1(hw_ica_input_##v);		\
-  HW_KW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__)
+  HW_YW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__)
 
 #define _hwa_cfica_kedge_0(ct,k,...)					\
-  HW_KW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__) //  HW_E_VL(k,edge)
+  HW_YW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__) //  HW_E_VL(k,edge)
 
 #define _hwa_cfica_kedge_1(ct,k,v,...)				\
   HW_Y(_hwa_cfica_vedge_,hw_ica_edge_##v)(ct,v,__VA_ARGS__)
@@ -95,7 +95,7 @@
 
 #define _hwa_cfica_vedge_1(ct,v,k,...)				\
   hwa->ct.capture0.config.edge = HW_A1(hw_ica_edge_##v);			\
-  HW_KW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__)
+  HW_YW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__)
 
 #define _hwa_cfica_kfilter_0(ct,...)		\
   HW_EOL(__VA_ARGS__)

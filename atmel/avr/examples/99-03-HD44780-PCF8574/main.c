@@ -24,9 +24,9 @@
 #include "xprintf.h"
 
 
-HW_DEFINE(TWI);
-HW_DEFINE(PCF);
-HW_DEFINE(LCD);
+HW_IMPLEMENT(TWI);
+HW_IMPLEMENT(PCF);
+HW_IMPLEMENT(LCD);
 
 
 int main(void)
@@ -35,7 +35,15 @@ int main(void)
   hw( configure, PCF );
 
   hw( write, LCD_LED, 0 );
-  hw( init, LCD );
+
+  hw( configure, LCD,
+      init,	 yes,
+      display,   on ,
+      cursor,    off,
+      blink,     off,
+      shift,     cursor,
+      direction, right );
+
   hw( write, LCD_LED, 1 );
 
   while(1) {
@@ -44,12 +52,12 @@ int main(void)
     for(i=0; i<1000 ; i++) {
 
       if ( line == 0 ) {
-	hw( gotoxy, LCD, 0, line );
-	xprintf( HW_FUNCTION(LCD,putchar), " g=%3d", i);
+  	hw( gotoxy, LCD, 0, line );
+  	xprintf( HW(LCD,putchar), " g=%3d", i);
       }
       else {
-	hw( gotoxy, LCD, 8, line );
-	xprintf( HW_FUNCTION(LCD,putchar), " g=%03d", i);
+  	hw( gotoxy, LCD, 8, line );
+  	xprintf( HW(LCD,putchar), " g=%03d", i);
       }
 
       line++;

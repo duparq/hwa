@@ -9,5 +9,10 @@ SOURCES		=	main.c xprintf.c
 #
 CONFIG		=	HW_DEVICE			\
 			HW_SYSHZ			\
+			TWI				\
+			TWI_BPS				\
+			LCD				\
+			PCF
+
 
 include ../make/Makefile

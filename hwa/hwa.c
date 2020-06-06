@@ -21,6 +21,6 @@
 
 /*	ISO forbids an empty translation unit
  */
-void hwa_foo() {}
+void hw_foo() {}
 
 #endif /* !defined __ASSEMBLER__ */

@@ -180,13 +180,33 @@
 #define _hw_isa_reg__cb2		, 1
 #define _hw_isa_reg__ob1		, 1
 #define _hw_isa_reg__ob2		, 1
-//#define _hw_isa_reg__or2b2		, 1
 #define _hw_isa_reg__xob1		, 1
 #define _hw_isa_reg__xob2		, 1
-//#define _hw_isa_reg__xb2		, 1
 
-#define _hw_islb(...)			, 1
-#define _hw_isa_leftbkt(...)		, 1
+
+/*  4-bit numbers
+ */
+#define _hw_isa_4bn_0			, 1
+#define _hw_isa_4bn_1			, 1
+#define _hw_isa_4bn_2			, 1
+#define _hw_isa_4bn_3			, 1
+#define _hw_isa_4bn_4			, 1
+#define _hw_isa_4bn_5			, 1
+#define _hw_isa_4bn_6			, 1
+#define _hw_isa_4bn_7			, 1
+#define _hw_isa_4bn_8			, 1
+#define _hw_isa_4bn_9			, 1
+#define _hw_isa_4bn_10			, 1
+#define _hw_isa_4bn_11			, 1
+#define _hw_isa_4bn_12			, 1
+#define _hw_isa_4bn_13			, 1
+#define _hw_isa_4bn_14			, 1
+#define _hw_isa_4bn_15			, 1
+
+
+/*  To check parenthesis in arguments
+ */
+#define _hw_prn(...)			, 1
 
 
 /*
@@ -332,7 +352,7 @@
 #define HW_ISR(...)			_HW_ISR0(__VA_ARGS__,,,)
 #define _HW_ISR0(o,...)			_HW_ISR1( HW_X(o), __VA_ARGS__ )
 #define _HW_ISR1(...)			_HW_ISR2(__VA_ARGS__)
-#define _HW_ISR2(x,...)			HW_KW(_HW_ISR2_,_irq,x)(x, __VA_ARGS__ )
+#define _HW_ISR2(x,...)			HW_YW(_HW_ISR2_,_irq,x)(x, __VA_ARGS__ )
 #define _HW_ISR2_0(x,o,...)		_HW_ISR_E(o,__VA_ARGS__)
 #define _HW_ISR2_1(c,o,v,p,m,f,x,...)	HW_Y0(_HW_ISR3_,_hw_israttr_##x)(v,x,__VA_ARGS__)
 #define _HW_ISR3_0(v,...)		_HW_ISR9(v,) HW_EOL(__VA_ARGS__)

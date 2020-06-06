@@ -56,26 +56,28 @@
  *    as HW_SWTWIMASTER. The functions get the definition instead of the object
  *    name.
  */
-#define HW_ANAME(x,...)			HW_Y0(_HW_ANAME1_,_hw_islb x)(x,__VA_ARGS__)
+#define HW_ANAME(x,...)			HW_Y0(_HW_ANAME1_,_hw_prn x)(x,__VA_ARGS__)
 #define _HW_ANAME1_1(...)		HW_E(HW_EM_TBI)
 #define _HW_ANAME1_0(x,...)		HW_Y0(_HW_ANAME2_,hw_class_##x)(x,__VA_ARGS__)
 #define _HW_ANAME2_1(c,o,d,...)		o,__VA_ARGS__
 #define _HW_ANAME2_0(...)		__VA_ARGS__
 
 
+/*  Put parentheses around arguments of a definition from 3rd position on.
+ */
 #define HW_D3(...)			_HW_D3(__VA_ARGS__)
 #define _HW_D3(c,o,...)			c,o,(__VA_ARGS__)
 
 
 /*  Reduce the definition of the object in first position to one single
- *  bracketted element.
+ *  element in parentheses: '(c,o,d)'
  */
-#define HW_AD(x,...)			HW_Y0(_HW_AD1,_hw_islb x)(x,__VA_ARGS__)
-#define _HW_AD11(...)			HW_E_TBI()
+#define HW_AD(x,...)			HW_Y0(_HW_AD1,_hw_prn x)(x,__VA_ARGS__)
+#define _HW_AD11(x,...)			(HW_D3(HW_X x)),__VA_ARGS__
 #define _HW_AD10(x,...)			HW_Y0(_HW_AD2,hw_class_##x)(x,__VA_ARGS__)
 #define _HW_AD21(c,o,d,...)		(c,o,d),__VA_ARGS__
-//#define _HW_AD20(x,...)			(HW_X(x)),__VA_ARGS__
 #define _HW_AD20(x,...)			(HW_D3(HW_X(x))),__VA_ARGS__
+
 
 /**
  * @ingroup public_mac
@@ -83,14 +85,9 @@
  * @hideinitializer
  *
  */
-/* #define HW_ADDRESS(...)			_HW_ADDRESS2(__VA_ARGS__,,) */
-/* #define _HW_ADDRESS2(x,...)		HW_Y(_HW_ADDRESS,__VA_ARGS__)(x,__VA_ARGS__) */
-/* #define _HW_ADDRESS0(x,y,...)		HW_E_G(y) */
-/* #define _HW_ADDRESS1(x,...)		HW_F( HW_ADDRESS, x ) */
-
 #define HW_ADDRESS(...)			HW_F( HW_ADDRESS, __VA_ARGS__ )
-
 #define HW_ADDRESS_E(...)		-1	// Error
+
 
 /*  Address correction
  *    C and assembly addresses are offset by 0x20 bytes with avr-gcc (or avrlibc?)
@@ -172,6 +169,7 @@
 #define HW_EM_IA(a)		HW_Q(a): invalid argument
 #define HW_EM_IRQ(n)		HW_Q(n) is not an IRQ
 #define HW_EM_KX(k,x)		expected HW_Q(k) instead of HW_Q(x)
+#define HW_EM_XNIL(x,l)		HW_Q(x) is not in l
 #define HW_EM_NKX(n,k,x)	expected HW_Q(k) instead of HW_Q(x) in HW_Q(n)
 #define HW_EM_O(x)		HW_Q(x) is not an object
 #define HW_EM_OM()		HW_Q(missing object name)
@@ -248,30 +246,30 @@
  * @hideinitializer
  */
 #define HW_F(...)			_HW_F(__VA_ARGS__,)
-#define _HW_F(f,x,...)		        HW_Y0(_HW_F_,_hw_islb x)(f,x,__VA_ARGS__)
+#define _HW_F(f,x,...)			HW_Y0(_HW_F_,_hw_prn x)(f,x,__VA_ARGS__)
 /*
  *  x is not (...)
  */
-#define _HW_F_0(f,x,...)	        HW_Y0(_HW_F_0_,hw_class_##x)(f,x,__VA_ARGS__)
+#define _HW_F_0(f,x,...)		HW_Y0(_HW_F_0_,hw_class_##x)(f,x,__VA_ARGS__)
 /*
  *  x is a class name
  */
-#define _HW_F_0_1(f,x,o,d,...)	        _HW_F01(f,x,o,HW_XB d,__VA_ARGS__)
+#define _HW_F_0_1(f,x,o,d,...)		_HW_F01(f,x,o,HW_XB d,__VA_ARGS__)
 /*
  *  x is not a class name
  */
-#define _HW_F_0_0(f,x,...)	        HW_Y0(_HW_F00_,x)(f,x,__VA_ARGS__)
+#define _HW_F_0_0(f,x,...)		HW_Y0(_HW_F00_,x)(f,x,__VA_ARGS__)
 /*
  *  x is void (error message or void)
  */
-#define _HW_F00_1(...)		  	_HW_F00_2(__VA_ARGS__,,,,)
-#define _HW_F00_2(f,z,o,e,...)	  	HW_Y0(_HW_F00_2,o)(f,z,o,__VA_ARGS__)
-#define _HW_F00_21(f,z,o,e,...)	  	f##_E(HW_EM_OM())
-#define _HW_F00_20(f,z,o,e,...)	  	f##_E(e)
+#define _HW_F00_1(...)			_HW_F00_2(__VA_ARGS__,,,,)
+#define _HW_F00_2(f,z,o,e,...)		HW_Y0(_HW_F00_2,o)(f,z,o,e,__VA_ARGS__)
+#define _HW_F00_21(f,z,o,e,...)		f##_E(HW_EM_OM())
+#define _HW_F00_20(f,z,o,e,...)		f##_E(e)
 /*
  *  x is not void
  */
-#define _HW_F00_0(f,x,...)	  	_HW_F00(f, HW_X(x),__VA_ARGS__)
+#define _HW_F00_0(f,x,...)		_HW_F00(f, HW_X(x),__VA_ARGS__)
 /*
  *  x is (...)
  */
@@ -302,24 +300,26 @@
 #define _HW_F08_1(f,c,o)
 #define _HW_F08_0(f,c,o)		f##_E(HW_EM(no function f for o)) HW_POP  /* <-- Arguments popped */
 
+
 /**
  * @ingroup public_mac
  * @brief `HW_FUNCTION(object,function)` returns the name of a function an object provides
  * @hideinitializer
  *
  * @code
- * #define PCF          HW_PCF8574( interface, twi0, address, 0x27 )
- * #define LCD          HW_HD44780( lines, 2,                   \
- *                                  cols,  16,                  \
- *                                  e,     HW_IO(PCF, 1, 2),    \
- *                                  rs,    HW_IO(PCF, 1, 0),    \
- *                                  rw,    HW_IO(PCF, 1, 1),    \
- *                                  data,  HW_IO(PCF, 4, 4) )
+ * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
+ * #define LCD		HW_HD44780( lines, 2,		\
+ *				    cols,  16,		\
+ *				    e,	   (PCF, 1, 2),	\
+ *				    rs,	   (PCF, 1, 0),	\
+ *				    rw,	   (PCF, 1, 1),	\
+ *				    data,  (PCF, 4, 4) )
  *
  * xprintf( HW_FUNCTION(LCD,putchar), "Seconds=%d", seconds );
  * @endcode
  */
 #define HW_FUNCTION(object,function)	HW_F(HW_FUNCTION,object,function)
+#define HW_FUNCTION_E(e)		HW_E(e) hw_foo
 
 
 /*
@@ -345,38 +345,38 @@
 
 /**
  * @ingroup public_mac
- * @brief `HW_DEFINE(object)` defines the functions that implement an object.
+ * @brief `HW_IMPLEMENT(object)` defines the functions that implement an object.
  * @hideinitializer
  *
  * External objects usually rely on functions to implement their HWA
  * actions. These functions are declared by `HW_DECLARE()` and implemened by
- * `HW_DEFINE()`.
+ * `HW_IMPLEMENT()`.
  *
  * @code
  * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
  *
- * HW_DEFINE(PCF);
+ * HW_IMPLEMENT(PCF);
  * @endcode
  */
-#define HW_DEFINE(...)			HW_F(HW_DEFINE,__VA_ARGS__)
-#define HW_DEFINE_E(e)			HW_E(e) extern void _hwa_()
+#define HW_IMPLEMENT(...)			HW_F(HW_IMPLEMENT,__VA_ARGS__)
+#define HW_IMPLEMENT_E(e)			HW_E(e) HW_FOO() /* for semicolon */
 
 /**
  * @ingroup public_mac
- * @brief `HW_DEFINE_WEAK(object)` defines the functions that implement an object.
+ * @brief `HW_IMPLEMENT_WEAK(object)` defines the functions that implement an object.
  * @hideinitializer
  *
- * Using HW_DEFINE_WEAK() instead of HW_DEFINE() allows multiple definitions of
+ * Using HW_IMPLEMENT_WEAK() instead of HW_IMPLEMENT() allows multiple definitions of
  * the same functions without errors.
  *
  * @code
  * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
  *
- * HW_DEFINE_WEAK(PCF);
+ * HW_IMPLEMENT_WEAK(PCF);
  * @endcode
  */
-#define HW_DEFINE_WEAK(...)		HW_F(HW_DEFINE_WEAK,__VA_ARGS__)
-#define HW_DEFINE_WEAK_E(e)		HW_E(e) extern void _hwa_()
+#define HW_IMPLEMENT_WEAK(...)		HW_F(HW_IMPLEMENT_WEAK,__VA_ARGS__)
+#define HW_IMPLEMENT_WEAK_E(e)		HW_E(e) HW_FOO() /* for semicolon */
 
 
 /**
@@ -386,7 +386,7 @@
  *
  * External objects usually rely on functions to implement their HWA
  * actions. These functions are declared by `HW_DECLARE()` and implemened by
- * `HW_DEFINE()`.
+ * `HW_IMPLEMENT()`.
  *
  * @code
  * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
@@ -395,7 +395,14 @@
  * @endcode
  */
 #define HW_DECLARE(...)			HW_F(HW_DECLARE,__VA_ARGS__)
-#define HW_DECLARE_E(e)			HW_E(e) extern void _hwa_()
+#define HW_DECLARE_E(e)			HW_E(e) HW_FOO() /* for semicolon */
+
+
+/**
+ *  Eliminates arguments. Used when a parsing fails and remaining arguments have
+ *  been pushed.
+ */
+#define HW_EAT(...)
 
 
 /**
@@ -408,16 +415,16 @@
  * * `position` is the position of the least significant bit.
  *
  * @code
- * #define PINS                    HW_IO(port0,4,3)        // Pins 6,5,4,3 of port0
+ * #define PINS			   HW_IO(port0,4,3)	   // Pins 6,5,4,3 of port0
  *
- * hw( configure, PINS, mode, digital_output );            // Sets pins 6..4 as output
- * hw( write, PINS, 5 );                                   // Sets pins 5 & 3, clears pins 6 & 4.
+ * hw( configure, PINS, mode, digital_output );		   // Sets pins 6..4 as output
+ * hw( write, PINS, 5 );				   // Sets pins 5 & 3, clears pins 6 & 4.
  * @endcode
  *
  * `HW_IO(...)` can also be used with external controllers:
  * @code
- * #define PCF                     HW_PCF8574( interface, twi0, address, 0x27 )
- * #define LED                     HW_IO( PCF, 1, 3 )
+ * #define PCF			   HW_PCF8574( interface, twi0, address, 0x27 )
+ * #define LED			   HW_IO( PCF, 1, 3 )
  *
  * hw( write, LED, 1 );
  * @endcode
@@ -425,7 +432,12 @@
  * @hideinitializer
  */
 #define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__)
-#define HW_IO_E(o,e,...)		_fake,o,e HW_E(e)
+/* #define HW_IO(...)			HW_Y0(_HW_IO,_hw_prn __VA_ARGS__)(__VA_ARGS__) */
+/* #define _HW_IO0(...)			HW_F(HW_IO,__VA_ARGS__) */
+/* #define _HW_IO1(...)			_HW_IO2(HW_XB __VA_ARGS__) */
+/* #define _HW_IO2(...)			HW_F(HW_IO,__VA_ARGS__) */
+
+#define HW_IO_E(e)			_fake,fake,e HW_E(e)
 
 
 /*
@@ -439,25 +451,6 @@
  */
 #define HW_IS(...)			_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)		HW_A1(_hw_is_##x##_##y,0)
-
-
-/*  Test for a bracketted argument
- *    Expand as f##1 if x is ()
- *              f##0 otherwise
- */
-/* #define HW_ISB(f,x)			_HW_ISB01(f,_hw_isa_leftbkt x,0,1,) */
-/* #define _HW_ISB01(...)			_HW_ISB2(__VA_ARGS__) */
-/* #define _HW_ISB2(f,x,y,...)		f##y */
-
-#define HW_EAT(...)
-
-/*  Test for a bracketted argument
- *    Expand as f if x is ()
- *              void otherwise
- */
-#define HW_IFB(x,f)			_HW_IFB01(_hw_isa_leftbkt x,f,HW_EAT,)
-#define _HW_IFB01(...)			_HW_IFB2(__VA_ARGS__)
-#define _HW_IFB2(z,x,y,...)		y
 
   
 /**
@@ -482,20 +475,6 @@
 
 /**
  * @ingroup public_mac
- * @brief `HW_PORT(pin)` returns the port name of a HW_IO pin.
- * @hideinitializer
- */
-#define HW_PORT(...)			_HW_PORT01(HW_X(__VA_ARGS__))
-#define _HW_PORT01(...)			_HW_PORT02(__VA_ARGS__)
-#define _HW_PORT02(c,...)		HW_Y0(_HW_PORT02_,c)(c,__VA_ARGS__)
-#define _HW_PORT02_1(c,o,e)		HW_E(e)
-#define _HW_PORT02_0(c,...)		HW_Y0(_HW_PORT_,HW_PORT_##c)(c,__VA_ARGS__)
-#define _HW_PORT_0(c,o,...)		HW_E_OCM(o,c,HW_PORT)
-#define _HW_PORT_1(c,o,...)		HW_A1(HW_PORT_##c)(o,__VA_ARGS__,)
-
-
-/**
- * @ingroup public_mac
  * @brief `HW_POSITION(object)` returns the position of the least significant bit of the @ref using_objects "object".
  * @hideinitializer
  */
@@ -511,8 +490,10 @@
  * @brief Build a C string from the first element in the list
  * @hideinitializer
  */
-#define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__,)
-#define _HW_QUOTE_2(x,...)		#x
+/* #define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__,) */
+/* #define _HW_QUOTE_2(x,...)		#x */
+#define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__)
+#define _HW_QUOTE_2(...)		#__VA_ARGS__
 
 #define HW_Q				HW_QUOTE
 
@@ -524,22 +505,6 @@
  */
 #define HW_TL(...)			_HW_TL2(__VA_ARGS__,)
 #define _HW_TL2(a0,...)			__VA_ARGS__
-
-
-/*
- * @ingroup private_ins
- * @brief Return a single argument or concat 2 arguments inside brackets
- * @hideinitializer
- */
-#define _HW_UBKT(...)			HW_Y(_HW_UBKT_,_hw_isa_leftbkt __VA_ARGS__)(__VA_ARGS__)
-#define _HW_UBKT_0(...)			__VA_ARGS__
-#define _HW_UBKT_1(...)			_HW_UBKT1 __VA_ARGS__
-#define _HW_UBKT1(...)			_HW_UBKT2(__VA_ARGS__,,)
-#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3_,x)(a,x,__VA_ARGS__)
-#define _HW_UBKT3_1(a,...)		a
-#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4_,x)(a,b,x,__VA_ARGS__)
-#define _HW_UBKT4_1(a,b,...)		a##b
-#define _HW_UBKT4_0(...)		HW_E((__VA_ARGS__):too many arguments)
 
 
 /*
@@ -555,7 +520,7 @@
 
 
 /*
- *@brief Remove brackets
+ *@brief Remove parentheses
  */
 #define HW_XB(...)			__VA_ARGS__
 
@@ -563,11 +528,11 @@
 /*  Concatenates '1' or '0' to the first argument if the second is void.
  *
  *    HW_Y(f,c) expands to:
- *      f##1 if c is "",
- *      f##0 if c is not "".
+ *	f##1 if c is "",
+ *	f##0 if c is not "".
  */
 #define HW_Y(...)			_HW_Y00(__VA_ARGS__,,)
-#define _HW_Y00(f,x,...)		_HW_Y01(f,_hw_isa_leftbkt x,0,x)
+#define _HW_Y00(f,x,...)		_HW_Y01(f,_hw_prn x,0,x)
 #define _HW_Y01(...)			_HW_Y2(__VA_ARGS__)
 #define _HW_Y2(f,x,y,...)		_HW_Y2_##y(f,__VA_ARGS__,)
 #define _HW_Y2_1(f,...)			f##0
@@ -575,57 +540,94 @@
 #define _HW_Y03(...)			_HW_Y04(__VA_ARGS__)
 #define _HW_Y04(f,x,y,...)		f##y
 
-/*  This version does not handle brackets.
+/*  This version does not handle parentheses.
  */
 #define HW_Y0(...)			_HW_Y000(__VA_ARGS__,,)
 #define _HW_Y000(f,x,...)		_HW_Y001(f,_hw_is__##x,0,)
 #define _HW_Y001(...)			_HW_Y002(__VA_ARGS__)
 #define _HW_Y002(f,x,y,...)		f##y
 
+#define HW_Y0X(...)			_HW_Y0X1(__VA_ARGS__)
+#define _HW_Y0X1(f,x,...)		_HW_Y0X2(f,_hw_is__##x,0,__VA_ARGS__)
+#define _HW_Y0X2(...)			_HW_Y0X3(__VA_ARGS__)
+#define _HW_Y0X3(f,x,y,...)		_HW_Y0X3##y(f,x,y,__VA_ARGS__)
+#define _HW_Y0X30(f,x,y,...)		f##0(y,__VA_ARGS__)
+
+
+/*  Branch depending on a word:
+ *    HW_YA(f,k,v,...) expands to:
+ *	f1 if k##v is void
+ *	f0 otherwise
+ */
+#define HW_YA(...)			_HW_YA01(__VA_ARGS__,,,)
+#define _HW_YA01(f,k,v,...)		_HW_YA02(f,k,v,_hw_prn v, 0,)
+#define _HW_YA02(...)			_HW_YA03(__VA_ARGS__)
+#define _HW_YA03(f,k,v,z,x,...)		_HW_YA03##x(f,k,v)
+#define _HW_YA031(f,k,v)		f##0
+#define _HW_YA030(f,k,v)		_HW_YA04(f,k,v,k##v, 0,)
+#define _HW_YA04(...)			_HW_YA05(__VA_ARGS__)
+#define _HW_YA05(f,k,v,z,x,...)		f##x
+
   
 /*  Branch depending on a word
  *
- *    HW_KW(f,k,w) expands to:
- *      f0 if k is not w
- *      f1 if k is w	(there must a: #define _hw_is_k_k , 1)
+ *    HW_YW(f,k,w) expands to:
+ *	f0 if k is not w
+ *	f1 if k is w	(there must a: #define _hw_is_k_k , 1)
  */
-#define HW_KW(...)			_HW_KW01(__VA_ARGS__,,,)
-#define _HW_KW01(f,k,w,...)		_HW_KW02(f,k,w,_hw_isa_leftbkt w, 0,)
-#define _HW_KW02(...)			_HW_KW03(__VA_ARGS__)
-#define _HW_KW03(f,k,w,z,x,...)		_HW_KW03##x(f,k,w)
-#define _HW_KW031(f,k,w)		f##0
-#define _HW_KW030(f,k,w)		_HW_KW04(f,k,w,_hw_is__##w, 0,)
-#define _HW_KW04(...)			_HW_KW05(__VA_ARGS__)
-#define _HW_KW05(f,k,w,z,x,...)		_HW_KW05##x(f,k,w)
-#define _HW_KW051(f,k,w)		f##0
-#define _HW_KW050(f,k,w)		_HW_KW06(f,k,w,_hw_is_##k##_##w, 0,)
-#define _HW_KW06(...)			_HW_KW07(__VA_ARGS__)
-#define _HW_KW07(f,k,w,z,x,...)		f##x
+#define HW_YW(...)			_HW_YW01(__VA_ARGS__,,,)
+#define _HW_YW01(f,k,w,...)		_HW_YW02(f,k,w,_hw_prn w, 0,)
+#define _HW_YW02(...)			_HW_YW03(__VA_ARGS__)
+#define _HW_YW03(f,k,w,z,x,...)		_HW_YW03##x(f,k,w)
+#define _HW_YW031(f,k,w)		f##0
+#define _HW_YW030(f,k,w)		_HW_YW04(f,k,w,_hw_is__##w, 0,)
+#define _HW_YW04(...)			_HW_YW05(__VA_ARGS__)
+#define _HW_YW05(f,k,w,z,x,...)		_HW_YW05##x(f,k,w)
+#define _HW_YW051(f,k,w)		f##0
+#define _HW_YW050(f,k,w)		_HW_YW06(f,k,w,_hw_is_##k##_##w, 0,)
+#define _HW_YW06(...)			_HW_YW07(__VA_ARGS__)
+#define _HW_YW07(f,k,w,z,x,...)		f##x
 
 
 /*  Branch depending on a state: (0,1,on,off,yes,no,(x))
  *    (x) is considered a state as it can be a boolean expression.
  *
- *    HW_KS(f,w,...) expands to:
- *      f0(__VA_ARGS__) if w is not a state, and produce an error
- *      f1(0|1|(), __VA_ARGS__) if w is a state
+ *    HW_YS(f,w,...) expands to:
+ *	f0(__VA_ARGS__) if w is not a state, and produce an error
+ *	f1(0|1|(x), __VA_ARGS__) if w is a state
  */
-#define HW_KS(f,w,...)			_HW_KS02(f,w,(__VA_ARGS__),_hw_isa_leftbkt w, 0,)
-#define _HW_KS02(...)			_HW_KS03(__VA_ARGS__)
-#define _HW_KS03(f,w,va,z,x,...)	_HW_KS03##x(f,w,va)
-#define _HW_KS031(f,w,va)		_HW_KS0A( f, HW_A1(_hw_state_##w), HW_XB va) //f##1(w, HW_XB va)
-#define _HW_KS030(f,w,va)		_HW_KS04(f,w,va,_hw_is__##w, 0,)
-#define _HW_KS04(...)			_HW_KS05(__VA_ARGS__)
-#define _HW_KS05(f,w,va,z,x,...)	_HW_KS05##x(f,w,va)
-#define _HW_KS051(f,w,va)		HW_E_ST(w) f##0 va
-#define _HW_KS050(f,w,va)		_HW_KS06(f,w,va,_hw_state_##w, 0,)
-#define _HW_KS06(...)			_HW_KS07(__VA_ARGS__)
-#define _HW_KS07(f,w,va,z,...)		_HW_KS08(f,w,va,_hw_is__##z,0,)
-#define _HW_KS08(...)			_HW_KS09(__VA_ARGS__)
-#define _HW_KS09(f,w,va,n,x,...)	_HW_KS09##x(f,w,va)
-#define _HW_KS090(f,w,va)		HW_E_ST(w) f##0 va
-#define _HW_KS091(f,w,va)		_HW_KS0A( f, HW_A1(_hw_state_##w), HW_XB va)
-#define _HW_KS0A(f,...)			f##1( __VA_ARGS__ )
+/*  FIXME: this can not be used repeatedly since it blues itself at first expansion.
+ */
+#define HW_YS(f,w,...)			_HW_YS02(f,w,(__VA_ARGS__),_hw_prn w, 0,)
+#define _HW_YS02(...)			_HW_YS03(__VA_ARGS__)
+#define _HW_YS03(f,w,va,z,x,...)	_HW_YS03##x(f,w,va)
+#define _HW_YS031(f,w,va)		_HW_YS0A( f, HW_A1(_hw_state_##w), HW_XB va) //f##1(w, HW_XB va)
+#define _HW_YS030(f,w,va)		_HW_YS04(f,w,va,_hw_is__##w, 0,)
+#define _HW_YS04(...)			_HW_YS05(__VA_ARGS__)
+#define _HW_YS05(f,w,va,z,x,...)	_HW_YS05##x(f,w,va)
+#define _HW_YS051(f,w,va)		HW_E_ST(w) f##0 va
+#define _HW_YS050(f,w,va)		_HW_YS06(f,w,va,_hw_state_##w, 0,)
+#define _HW_YS06(...)			_HW_YS07(__VA_ARGS__)
+#define _HW_YS07(f,w,va,z,...)		_HW_YS08(f,w,va,_hw_is__##z,0,)
+#define _HW_YS08(...)			_HW_YS09(__VA_ARGS__)
+#define _HW_YS09(f,w,va,n,x,...)	_HW_YS09##x(f,w,va)
+#define _HW_YS090(f,w,va)		HW_E_ST(w) f##0 va
+#define _HW_YS091(f,w,va)		_HW_YS0A( f, HW_A1(_hw_state_##w), HW_XB va)
+#define _HW_YS0A(f,...)			f##1( __VA_ARGS__ )
+
+
+/*  Parse a value argument.
+ *  HW_AV(f,p,s) expands as:
+ *   * f##0(s) if p##s is not defined, i.e. its expansion does not start with a void
+ *   * f##1(v) where v is the 2nd element of expansion of p##x
+ */
+#define HW_KV(f,p,s)				HW_Y0(_HW_KV1,_hw_prn s)(f,p,s)
+#define _HW_KV11(f,p,s)				f##b
+#define _HW_KV10(f,p,s)				_HW_KV12(f,p,s,p##s,)
+#define _HW_KV12(...)				_HW_KV13(__VA_ARGS__)
+#define _HW_KV13(f,p,s,...)			HW_Y0(_HW_KV2,__VA_ARGS__)(f,p,s,__VA_ARGS__)
+#define _HW_KV20(f,p,s,...)			f##0(s)
+#define _HW_KV21(f,p,s,z,v,...)			f##1(v)
 
 
 /**
@@ -686,7 +688,7 @@
  * FIXME: using the object name to distinguish a no-object call and an
  * error-object call. A class _err would be faster?
  */
-#define hwx(h,f,x,...)			HW_Y0(_hwx0_,_hw_islb x)(h,f,x,__VA_ARGS__)
+#define hwx(h,f,x,...)			HW_Y0(_hwx0_,_hw_prn x)(h,f,x,__VA_ARGS__)
 /*
  *  x is ()
  */
@@ -723,14 +725,14 @@
 #define _hwx_13(h,e,f,x,...)		HW_Y0(_hwx_13,x)(h,e,f,x,__VA_ARGS__)
 #define _hwx_131(h,e,f,z,y,...)		y(__VA_ARGS__)
 /*
- *                            Look for h_##f##_
+ *			      Look for h_##f##_
  */
 #define _hwx_130(h,e,f,m,...)		_hwx_14(h,e,f,h##f##_,__VA_ARGS__)
 #define _hwx_14(...)			_hwx_15(__VA_ARGS__)
 #define _hwx_15(h,e,f,x,...)		HW_Y0(_hwx_15,x)(h,e,f,x,__VA_ARGS__)
 #define _hwx_151(h,f,z,y,...)		y(__VA_ARGS__)
 //#define _hwx_150(...)			HW_E(internal error [_hwx_150(__VA_ARGS__)] )
-#define _hwx_150(h,e,...)		HW_E(e) extern void hwa_require_semicolon()
+#define _hwx_150(h,e,...)		HW_E(e) hw_foo()
 /*
  *  2nd arg is an object of class c
  */
@@ -804,9 +806,9 @@
  * @endcode
  */
 #define hw_uint_t(n)			_hw_uintt0(n)
-#define _hw_uintt0(n)			HW_KW(_hw_uintt0,8,n)(n)
+#define _hw_uintt0(n)			HW_YW(_hw_uintt0,8,n)(n)
 #define _hw_uintt01(n)			uint8_t
-#define _hw_uintt00(n)			HW_KW(_hw_uintt1,16,n)(n)
+#define _hw_uintt00(n)			HW_YW(_hw_uintt1,16,n)(n)
 #define _hw_uintt11(n)			uint16_t
 #define _hw_uintt10(n)			HW_E_VL(n,8|16) uint8_t
 

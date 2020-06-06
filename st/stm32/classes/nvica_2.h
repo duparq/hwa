@@ -31,7 +31,7 @@
 #define _hwa_nvicaen(o,a,x,...)		_hwx_nvicaed01(_hwa_nvic_en,HW_X((x,irq)))
 
 #define _hwx_nvicaed01(...)		_hwx_nvicaed02(__VA_ARGS__)
-#define _hwx_nvicaed02(h,x,...)		HW_KW(_hwx_nvicaed02,_irq,x)(h,x,__VA_ARGS__)
+#define _hwx_nvicaed02(h,x,...)		HW_YW(_hwx_nvicaed02,_irq,x)(h,x,__VA_ARGS__)
 #define _hwx_nvicaed021(h,c,o,v,...)	h##able(v)
 #define _hwx_nvicaen020(h,f,c,...)	HW_Y0(_hwx_nvicerr,c)(c,__VA_ARGS__)
 #define _hwx_nvicerr1(z,x,e,...)	HW_E(e) hw_donothing()

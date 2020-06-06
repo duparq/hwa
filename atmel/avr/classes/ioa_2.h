@@ -41,18 +41,19 @@
  *	 input mode.
  */
 
-#define _hw_cfioa(...)		_hwx_cfioa(_hw,__VA_ARGS__,,)
-#define _hwa_cfioa(...)	_hwx_cfioa(_hwa,__VA_ARGS__,,)
+#define _hw_cfioa(...)			_hwx_cfioa(_hw,__VA_ARGS__,,)
+#define _hwa_cfioa(...)			_hwx_cfioa(_hwa,__VA_ARGS__,,)
 
 /*  Atmel AVR peripheral controllers are responsible of their I/O pins
  *  configuration, so there is no need for a 'function' argument as it is always
  *  'gpio'. 
  */
 
-/*  Key 'function'
+/*  Optionnal key 'function'
  */
 #define _hw_cfioa_fn_gpio
 
+//_hwx_cfioa(_hw,port1_4_0,-1,port1,4,0,mode, digital_output,,,,);
 #define _hwx_cfioa(x,o,p,bn,bp,k,...)		HW_Y(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfioa_vfn_,_hw_cfioa_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
@@ -90,13 +91,13 @@
 
 #define _hwx_cfioa_ai(h,o,p,bn,bp,...)		_hwx_cfioa_ai1(h,o,HW_X(o,did))
 #define _hwx_cfioa_ai1(...)			_hwx_cfioa_ai2(__VA_ARGS__)
-#define _hwx_cfioa_ai2(h,o,x,...)		HW_KW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
+#define _hwx_cfioa_ai2(h,o,x,...)		HW_YW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
 #define _hwx_cfioa_ai2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
 #define _hwx_cfioa_ai2_1(h,o,c,...)		h##_write__m111( __VA_ARGS__, 1, )
 
 #define _hwx_cfioa_aipu(h,o,p,bn,bp,...)	_hwx_cfioa_aipu1(h,o,p,bn,bp,HW_X(o,did))
 #define _hwx_cfioa_aipu1(...)			_hwx_cfioa_aipu2(__VA_ARGS__)
-#define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_KW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
+#define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_YW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
 #define _hwx_cfioa_aipu2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
 #define _hwx_cfioa_aipu2_1(h,o,p,bn,bp,c,...)				\
   do {									\

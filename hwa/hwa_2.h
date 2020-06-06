@@ -44,8 +44,8 @@
 
 /*  Catch a trailing semicolon 
  */
-extern void hw_donothing();
-
+extern void hw_foo();
+#define HW_FOO()			extern void hw_foo()
 
 
 #define hwa_begin_			, _hwa_begin_

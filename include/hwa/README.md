@@ -1,8 +1,8 @@
 
-External devices {#externs}
+External devices {#ext}
 ================
 
- * @subpage p24cxx
+ * @subpage ext_24cxx
  * @subpage hd44780
  * @subpage pcf8574
  * @subpage tcs3200

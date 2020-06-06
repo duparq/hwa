@@ -277,7 +277,7 @@ class Link:
                 self.tx(b'\xFF')
                 r = self.rx(1,1,1)
             if len(r):
-                cout(" OK after %d tries: '%c' (0x%02X).\n" % (i+1, r[0], ord(r[0])))
+                cout(" OK after %d tries: 0x%02X.\n" % (i+1, r[0]))
                 self.lastchar = r[0]
                 return True
         cout('\n')

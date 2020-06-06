@@ -24,23 +24,23 @@
  * @endcode
  *
  * @code
- * #define TWI     HW_SWTWIMASTER( scl, HW_IO(port0, 1, 2),
- *                                 sda, HW_IO(port0, 1, 3),
+ * #define TWI     HW_SWTWIMASTER( scl, (port0, 1, 2),
+ *                                 sda, (port0, 1, 3),
  *                                 bps, 100000 )
  * @endcode
  */
 #define hw_class__swtwimaster
 
 #define HW_SWTWIMASTER(...)			_HW_SWTWIM_(__VA_ARGS__,,,,,,,)
-#define _HW_SWTWIM_(k,...)			HW_KW(_HW_SWTWIM_1,scl,k)(k,__VA_ARGS__)
+#define _HW_SWTWIM_(k,...)			HW_YW(_HW_SWTWIM_1,scl,k)(k,__VA_ARGS__)
 #define _HW_SWTWIM_10(k,...)			_HW_SWTWIM_E(k,__VA_ARGS__)
 #define _HW_SWTWIM_11(k,...)			_HW_SWTWIM_12(HW_AD(__VA_ARGS__))	/* Get SCL def */
 #define _HW_SWTWIM_12(...)			_HW_SWTWIM_13(__VA_ARGS__)
-#define _HW_SWTWIM_13(scl,k,...)		HW_KW(_HW_SWTWIM_2,sda,k)(scl,k,__VA_ARGS__)
+#define _HW_SWTWIM_13(scl,k,...)		HW_YW(_HW_SWTWIM_2,sda,k)(scl,k,__VA_ARGS__)
 #define _HW_SWTWIM_20(scl,k,...)		_HW_SWTWIM_E(k,__VA_ARGS__)
 #define _HW_SWTWIM_21(scl,k,...)		_HW_SWTWIM_22(scl,HW_AD(__VA_ARGS__))	/* Get SDA def */
 #define _HW_SWTWIM_22(...)			_HW_SWTWIM_23(__VA_ARGS__)
-#define _HW_SWTWIM_23(scl,sda,k,...)		HW_KW(_HW_SWTWIM_3,bps,k)(HW_A1 scl,scl,sda,k,__VA_ARGS__)
+#define _HW_SWTWIM_23(scl,sda,k,...)		HW_YW(_HW_SWTWIM_3,bps,k)(HW_A1 scl,scl,sda,k,__VA_ARGS__)
 #define _HW_SWTWIM_30(sclo,scl,sda,k,...)		_HW_SWTWIM_E(k,__VA_ARGS__)
 #define _HW_SWTWIM_31(sclo,scl,sda,k,bps,g,...)	HW_Y0(_HW_SWTWIM_4,g)(sclo,scl,sda,bps,g,__VA_ARGS__)
 #define _HW_SWTWIM_40(sclo,scl,sda,bps,g,...)	HW_E(HW_EM_G(g))
@@ -85,10 +85,10 @@
  * appear in one of your source files:
  *
  * @code
- * HW_DEFINE(TWI);
+ * HW_IMPLEMENT(TWI);
  * @endcode
  */
-#define HW_DEFINE__swtwimaster		, _hw_dfswtwimaster
+#define HW_IMPLEMENT__swtwimaster		, _hw_dfswtwimaster
 
 #define _hw_dfswtwimaster(o,scl,sda,bps,...)				\
 									\
@@ -209,7 +209,7 @@
     return v;								\
   }									\
 									\
-  extern void _hw_() /* for semicolon */
+  HW_FOO() /* for semicolon */
 
 
 /**

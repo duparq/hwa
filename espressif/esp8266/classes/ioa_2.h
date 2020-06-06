@@ -75,7 +75,25 @@
 
 /*  Key 'function'
  */
-#define _hwa_cfioa1(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfioa_kfn_,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa1(o,cf,p,bn,bp,k,...)		HW_Y(_hwa_cfioa_kfn_,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+
+
+/* FIXME: look at STM32 code that does not use UBKT
+ *
+ * @ingroup private_ins
+ * @brief Return a single argument or concat 2 arguments inside parentheses
+ * @hideinitializer
+ */
+#define _HW_UBKT(...)			HW_Y(_HW_UBKT_,_hw_prn __VA_ARGS__)(__VA_ARGS__)
+#define _HW_UBKT_0(...)			__VA_ARGS__
+#define _HW_UBKT_1(...)			_HW_UBKT1 __VA_ARGS__
+#define _HW_UBKT1(...)			_HW_UBKT2(__VA_ARGS__,,)
+#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3_,x)(a,x,__VA_ARGS__)
+#define _HW_UBKT3_1(a,...)		a
+#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4_,x)(a,b,x,__VA_ARGS__)
+#define _HW_UBKT4_1(a,b,...)		a##b
+#define _HW_UBKT4_0(...)		HW_E((__VA_ARGS__):too many arguments)
+
 
 #define _hwa_cfioa_kfn_0(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfioa_kmd_,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioa_kfn_1(o,cf,p,bn,bp,k,v,...)	_hwa_cfioa_kfn_2(o,cf,p,bn,bp,v,_HW_UBKT(v),__VA_ARGS__)

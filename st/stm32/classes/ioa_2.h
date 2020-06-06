@@ -78,29 +78,29 @@
 /*  The first argument 'x' is an indicator that can be 0 or 1, telling that
  *  hwa() is used to configure one single pin and can process signal remaping.
  */
-#define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_KW(_hwa_cfioa_kfn,function,k)(x,(o,p,bn,bp),k,__VA_ARGS__)
+#define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_YW(_hwa_cfioa_kfn,function,k)(x,(o,p,bn,bp),k,__VA_ARGS__)
 
 /*  Optionnal argument 'function'. Select default or alternate function (df/af). Register signal-pin association for 'af'.
  */
-#define _hwa_cfioa_kfn1(x,va,k,v,...)		HW_Y(_hwa_cfioa_vfn,_hw_isa_leftbkt v)(x,va,v,__VA_ARGS__)
+#define _hwa_cfioa_kfn1(x,va,k,v,...)		HW_Y(_hwa_cfioa_vfn,_hw_prn v)(x,va,v,__VA_ARGS__)
 /*
  *    Value is not a (). Must be 'gpio'. Can drop the indicator 'x'. Indicate default function with 'df'
  */
-#define _hwa_cfioa_vfn0(x,va,v,...)		HW_KW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
+#define _hwa_cfioa_vfn0(x,va,v,...)		HW_YW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
 #define _hwa_cfioa_vfn00(va,v,...)		HW_E_NIL(v,(gpio))
-#define _hwa_cfioa_vfn01(va,v,k,...)		HW_KW(_hwa_cfioa_kmd,mode,k)(df,HW_XB va,k,__VA_ARGS__)
+#define _hwa_cfioa_vfn01(va,v,k,...)		HW_YW(_hwa_cfioa_kmd,mode,k)(df,HW_XB va,k,__VA_ARGS__)
 /*
  *    Value is a (). Verify that indicator 'x' is 1 before trying to process signal mapping.
  */
 #define _hwa_cfioa_vfn1(x,va,...)		_hwa_cfioa_vfn1##x(va,__VA_ARGS__)
-#define _hwa_cfioa_vfn10(...)			HW_E(can not remap multiple pins nor out of a HWA context)
+#define _hwa_cfioa_vfn10(...)			HW_E(can not remap multiple pins or one pin out of a HWA context)
 /*
  *      OK, get the signal name.
  */
 #define _hwa_cfioa_vfn11(va,v,...)		_hwa_cfioa_vfn2(va,(__VA_ARGS__),v,HW_X(v))
 #define _hwa_cfioa_vfn2(...)			_hwa_cfioa_vfn3(__VA_ARGS__)
 #define _hwa_cfioa_vfn3(va1,va2,v,c,...)	HW_Y0(_hwa_cfioa_vfn3,c)(va1,va2,v,c,__VA_ARGS__)
-#define _hwa_cfioa_vfn31(va1,va2,v,...)	HW_E(HW_Q(v) is not a signal)
+#define _hwa_cfioa_vfn31(va1,va2,v,...)		HW_E(HW_Q(v) is not a signal)
 /*
  *      Record association of signal to pin. Verification and processing is made by commit.
  */
@@ -111,11 +111,11 @@
     hwa->map.n = HW_ADDRESS(o);					\
   else if ( hwa->map.n != HW_ADDRESS(o) )			\
     HWA_E(signal is already mapped to another pin);		\
-  HW_KW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
+  HW_YW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_kfn0(x,va,...)		_hwa_cfioa_kfn2(HW_XB va,__VA_ARGS__)
 #define _hwa_cfioa_kfn2(...)			_hwa_cfioa_kfn3(__VA_ARGS__)
-#define _hwa_cfioa_kfn3(o,p,bn,bp,k,...)	HW_KW(_hwa_cfioa_kmd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_kfn3(o,p,bn,bp,k,...)	HW_YW(_hwa_cfioa_kmd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
 /*
  *  Mandatory argument 'mode'. Can drop 'o'.
  */
@@ -152,10 +152,10 @@
 #define _hwa_cfioa_dipu(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=1 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa_dipd(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=0 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa_ai(p,bn,bp,...)		cnf=0 ; mode=0 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_dopp(p,bn,bp,k,...)		cnf=0 ; HW_KW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_dood(p,bn,bp,k,...)		cnf=1 ; HW_KW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdopp(p,bn,bp,k,...)	cnf=2 ; HW_KW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdood(p,bn,bp,k,...)	cnf=3 ; HW_KW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_dopp(p,bn,bp,k,...)		cnf=0 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_dood(p,bn,bp,k,...)		cnf=1 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_afdopp(p,bn,bp,k,...)	cnf=2 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_afdood(p,bn,bp,k,...)	cnf=3 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
 /*
  *  Optionnal argument 'frequency' (only for output modes)
  */

@@ -183,7 +183,12 @@
  * regarding how the parameters are written in order to avoid a strange behavior
  * of the compiler. For example, if the DATA parameter is `*ptr`, you must
  * rewrite it as `(*ptr)` or use a temporary, as the preprocessor can not
- * process the `*` character.
+ * process the `*` character. (FIXME: could use a function 'hw_id(uint8_t v){
+ * return v; }' to check the presence of a value so that '*ptr' would be OK?)
+ */
+/*  TODO:
+ *   * create a relative '(TWI,bus)' to handle TWI bus operations?
+ *   * use get/put for bus transfers?
  */
 #define hw_bus_start__twia		, _hw_twia_txstart
 #define _hw_twia_txstart(o,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
@@ -216,7 +221,9 @@
     HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
-
+/*  FIXME: could use a function 'hw_id(uint8_t v){ return v; }' to check the
+ *  presence of a value so that '*ptr' would be OK?
+ */
 #define hw_bus_write__twia		, _hw_twiawr
 #define _hw_twiawr(o,a,...)		HW_Y(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twiawrv_1(...)		HW_E(missing value)
@@ -496,7 +503,7 @@
   uint8_t _hw_##o##_start_read_stop ( uint8_t sla )
 
 
-#define HW_DEFINE__twia		, _hw_define_twia
+#define HW_IMPLEMENT__twia		, _hw_define_twia
 
 #define _hw_define_twia(o,a,...)				\
 								\
@@ -505,25 +512,25 @@
   void _hw_##o##_start_write_stop ( uint8_t sla, uint8_t v )	\
   {								\
     hw( bus_start, o );						\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_slaw, o, sla & 0x7F );				\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_write, o, v );					\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_stop, o );						\
   }								\
 								\
   uint8_t _hw_##o##_start_read_stop ( uint8_t sla )		\
   {								\
     hw( bus_start, o );						\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_slaw, o, sla & 0x7F );				\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_read, o, nack );					\
-    while( !hw( read, (o,irq) ) {}				\
+    while( !hw( read, (o,irq) ) ) {}				\
     hw( bus_stop, o );						\
 								\
     return hw( read, o );					\
   }								\
 								\
-  extern void _hw_fake() /* require a ; */
+  HW_FOO() /* for semicolon */
