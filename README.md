@@ -75,10 +75,9 @@ as if the developer had written smart accesses to hardware registers himself.
 HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,
 a few features of HWA can be used for assembly programming. The implementation
-of a [software UART for Atmel AVR microcontrollers](atmel/avr/swuarta) (see
-`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmel/avr/examples/diabolo) (see
-`atmel/avr/examples/diabolo`) are examples of such a usage.
-
+of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
+`include/hwa/swuarta.h`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
+`atmel/avr/examples/diabolo/`) are examples of such a usage.
 
 
 Examples
