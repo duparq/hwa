@@ -75,8 +75,8 @@ as if the developer had written smart accesses to hardware registers himself.
 HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,
 a few features of HWA can be used for assembly programming. The implementation
-of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
-`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
+of a [software UART for Atmel AVR microcontrollers](atmel/avr/swuarta) (see
+`atmel/avr/swuarta/`) and the [Diabolo bootloader](atmel/avr/examples/diabolo) (see
 `atmel/avr/examples/diabolo`) are examples of such a usage.
 
 
@@ -120,10 +120,11 @@ Supported hardware
      * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
 
  * Support for a few "external" devices has been started:
-   * [24CXX](http://duparq.free.fr/hwa/_24cxx.html) I²C EEPROM
+   * [24CXX](http://duparq.free.fr/hwa/ext_24cxx.html) I²C EEPROM
    * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
    * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
    * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector
+   * [Software TWI](http://duparq.free.fr/hwa/swtwimaster.html) master
 
 
 Status
