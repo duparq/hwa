@@ -1,0 +1,39 @@
+
+	;; -*- asm -*-
+
+	;; Sample (R24) bits
+	;;
+	.global		LABEL(sample)
+	.section	.text.LABEL(sample),"ax",@progbits
+LABEL(sample):
+	;; rcall	LABEL(wait_ready)
+
+	sts	nbit, R24	;	# of data bits to receive
+
+	;; XCB	R24, stat, HW_A1(F_RXTX)	; RX
+
+	;; Compute first data bit date
+	;;
+#	if COUNT_BN==8
+	XLD	R24, count
+	lds	R26, dtn
+	add	R24, R26
+	XST	comp, r24
+#	endif
+#	if COUNT_BN==16
+	XLD	R24, count+0
+	XLD	R25, count+1
+	lds	R26, dtn+0
+	lds	R27, dtn+1
+	add	R24, R26
+	adc	R25, R27
+	XST	comp+1, r25
+	XST	comp+0, r24
+#	endif
+
+	;; Clear flag & enable compare-match interrupts
+	;;
+	XCIF	R24, MATCH_IF
+	XSBAS	R24, R26, MATCH_IE
+
+	ret

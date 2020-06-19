@@ -23,7 +23,11 @@
  * A class `_usia_spimaster_swclk` object is an SPI master clocked by software
  * implemented on top of the USI interface.
  *
- * Clocking is handle by HWA when `hw_write(...)` is executed.
+ * Clocking is handle by HWA when `hw(write,...)` is executed.
+ *
+ * @note This needs to be rewritten.
+ */
+/*  FIXME: need a constructor HW_SPI( interface, USI, ... ) and seperate files for implementation.
  */
 #define hw_class__usia_spimaster_swclk
 

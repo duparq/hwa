@@ -9,31 +9,11 @@
  * @brief Definitions common to all Espressif devices that do not produce C code
  */
 
-
-/**
- * @ingroup espressif_public_gen_macros
- * @brief Defined for all Atmel AVR devices
- */
-#define HW_DEVICE_ESPRESSIF
-
-/**
- * @ingroup espressif_public_gen_macros
- * @brief Defined as `atmel` for all Atmel devices
- */
-#define HW_DEVICE_VENDOR	espressif
-
-/**
- * @ingroup espressif_public_gen_macros
- * @brief Defined as `avr` for all Atmel AVR devices
- */
-#define HW_DEVICE_ARCH		xtensa
-
-/**
- * @ingroup espressif_public_gen_macros
- * @brief Expands to the CPU clock frequency (cpu cycles per second).
- */
-#if defined DOXYGEN
-#  define HW_SYSHZ
+#if !defined DOXYGEN
+#  define HW_DEVICE_VENDOR_ESPRESSIF
+#  define HW_DEVICE_ARCH_XTENSA
+#  define HW_DEVICE_VENDOR		espressif
+#  define HW_DEVICE_ARCH		xtensa
 #endif
 
 #if !defined __ASSEMBLER__

@@ -1,2 +1,12 @@
 
-#include "../../atmel/avr/swuarta/swuarta.sx"
+#if defined HW_DEVICE_ARCH_AVR
+#  if defined __ASSEMBLER__
+#    include "../../atmel/avr/classes/swuarta.h"
+#  else
+#    error this file must be included from an assembly file.
+#  endif
+#else
+#  error Class _swuarta is supported by Atmel AVR devices only.
+#endif
+
+#include "../../atmel/avr/classes/swuarta/swuarta.sx"

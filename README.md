@@ -11,7 +11,7 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
     #include <hwa/stm32f103rbt6.h>
     
     #define AHBHZ   HW_DEVICE_HSIHZ         // The HSI frequency (8 MHz)
-    #define LED     pa2
+    #define LED     (porta,2)               // PA2
     #define PERIOD  0.5                     // Blinking period in seconds
     
     HW_ISR( (systick,irq) ) {}              // The IRQ is used only to wake the core up.
@@ -76,17 +76,18 @@ HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,
 a few features of HWA can be used for assembly programming. The implementation
 of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
-`include/hwa/swuarta.h`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
+`atmel/avr/classes/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
 `atmel/avr/examples/diabolo/`) are examples of such a usage.
+
 
 
 Examples
 ========
 
 A [set of commented examples](http://duparq.free.fr/hwa/examples.html) is
-provided. You'll find example projects in each `vendor/architecture/examples/`
-directory (e.g. `atmel/avr/examples/`) where a `README.md` file that explains
-how to compile the projects.
+provided. Example projects are store in the `vendor/architecture/examples/`
+directories (e.g. `atmel/avr/examples/`) where a `README.md` file explains how
+to compile them.
 
 
 Documentation
@@ -104,26 +105,26 @@ the HWA directory, then open the `doxygen/html/index.html` page.
 Supported hardware
 ==================
 
- * HWA supports almost fully:
-   * Atmel AVR:
-     * [ATtinyX4](http://duparq.free.fr/hwa/attinyx4.html): ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
-     * [ATtinyX5](http://duparq.free.fr/hwa/attinyx5.html): ATtiny25, ATtiny45, ATtiny85,
-     * [ATmegaX8](http://duparq.free.fr/hwa/atmegax8.html): ATmega328P
+ * Atmel AVR:
+   * [ATtinyX4](http://duparq.free.fr/hwa/attinyx4.html): ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
+   * [ATtinyX5](http://duparq.free.fr/hwa/attinyx5.html): ATtiny25, ATtiny45, ATtiny85,
+   * [ATmegaX8](http://duparq.free.fr/hwa/atmegax8.html): ATmega328P
+   * Software-emulated devices:
+     * [HW_SWUART](http://duparq.free.fr/hwa/atmelavr_swuarta.html) Software UART
+     * [HW_SWTWIMASTER](http://duparq.free.fr/hwa/atmelavr_swtwimaster.html) Software TWI master
+   * Very partial support (old, must be rewritten):
+     * [ATmega32U4](http://duparq.free.fr/hwa/atmegaxu4.html): ATmega32U4
 
- * Very partially supported:
-   * Atmel AVR:
-     * [ATmega32U4](http://duparq.free.fr/hwa/atmegaxu4.html): ATmega32U4 needs probably a few updates
-   * ST STM32:
-     * [STM32F103](http://duparq.free.fr/hwa/stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
-   * Espressif
-     * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
+ * ST STM32:
+   * [STM32F103](http://duparq.free.fr/hwa/stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+ * Espressif
+   * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
 
- * Support for a few "external" devices has been started:
+ * External devices:
    * [24CXX](http://duparq.free.fr/hwa/ext_24cxx.html) I²C EEPROM
    * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
    * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
    * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector
-   * [Software TWI](http://duparq.free.fr/hwa/swtwimaster.html) master
 
 
 Status

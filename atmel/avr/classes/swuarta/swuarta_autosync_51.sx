@@ -1,0 +1,195 @@
+
+	;; -*- asm -*-
+
+	;; Auto-synchronization for software UART
+	;;
+	;; This code is designed to be executed from the START ISR.
+	;;
+	;; Baudrate is determined by measuring the low-level durations of a
+	;; 5 bits low / 1 bit low sequence, e.g. 'p'==0x70.
+	;; Interrupts are disabled while measuring, i.e. for the duration
+	;; of a low level.
+	;;
+	;; Consecutive low-level durations t1 and t2 are measured.
+	;; When 4.75×t2 <= t1 <= 5.25×t2, synchronization is done.
+
+
+#if !CHECK_START
+#  error swuarta_autosync_51.sx needs to detect both falling and rising edges
+#endif
+
+#if CLKDIV > 8 || CLKDIV & (CLKDIV-1) != 0
+#  error swuarta_autosync_51.sx does not support this value of clkdiv
+#endif
+
+	;; Use existant registers to store the duration of low level
+	;;
+	measl = dt0
+	meash = dtn
+
+
+	;; R24, [R25], R26, and SREG have been stacked by STARTISR
+	;;
+	.section		.text.LABEL(autosync),"ax",@progbits
+LABEL(autosync):
+	CYCLES=CY_SYNC0
+
+#  if CHECK_START
+	XSBIC	R26, AP_RXD	; Return if RXD is high
+	rjmp	LABEL(st99)	;
+
+	CYCLES=CYCLES+1		; XSBIC did skip the 1 word rjmp
+#  endif
+
+	;;
+	;; RXD is low
+	;;
+
+	XCBAI	R26, START_IE	;	Disable START interrupts
+
+#  if COUNT_BN==8
+	push	R25		; [2]
+	CYCLES=CYCLES+2
+#  endif
+
+	;; Initialize duration
+	;;   Round to nearest 5-cycles unit
+	;;   Subtract the 5-cycles unit that is going to be added
+	;;
+	CYCLES=CYCLES+3	; +3 cycles for ldi/ldi/cli below
+	ldi	R24, lo8((CYCLES+2)/5-1)	; [1]
+	ldi	R25, hi8((CYCLES+2)/5-1)	; [1]
+
+	CY_SYNC0=CYCLES
+
+	;; Measure low level duration in R25:R24 in units of 5 CPU cycles
+	;;
+	cli					; [1]
+2:	adiw	R24, 1		; [2]	|
+	XSBIS	R26, AP_RXD	; [1/2] |
+	rjmp	2b		; [2]	|=5
+	sei
+	CY_SYNC1=CYCLES
+
+	push	R27		; [2]
+	push	R28		; [2]
+	push	R29		; [2]
+	push	R30		; [2]
+	push	R31		; [2]
+	CYCLES=CYCLES+10
+
+	;; Compute R27:R26 = 5×t2
+	;;
+	movw	R26, R24	; [2]	R27:R26 = t2
+	lsl	R26		; [1]
+	rol	R27		; [1]	R27:R26 = 2×t2
+	lsl	R26		; [1]
+	rol	R27		; [1]	R27:R26 = 4×t2
+	add	R26, R24	; [1]
+	adc	R27, R25	; [1]	R27:R26 = 5×t2
+	CYCLES=CYCLES+8
+
+	;; Compute R31:R30 = dt = 0.25×t2
+	;;
+	movw	R30, R24	; [2]	R31:R30 = t2
+	adiw	R30, 1		; [2]	round
+	lsr	R31		; [1]
+	ror	R30		; [1]	R31:R30 = 0.5×t2
+	lsr	R31		; [1]
+	ror	R30		; [1]	R31:R30 = 0.25×t2
+	CYCLES=CYCLES+8
+
+	;; Compute R27:R26 = 5×t2 - dt
+	;;
+	sub	R26, R30	; [1]
+	sbc	R27, R31	; [1]
+	CYCLES=CYCLES+2
+
+	;; Load last measure
+	;;
+	lds	R28, measl	; [2]
+	lds	R29, meash	; [2]
+	CYCLES=CYCLES+4
+
+	;; Check lower limit
+	;;
+	cp	R28, R26	; [1]	if ( t1 < 5×t2 - dt )
+	cpc	R29, R27	; [1]
+	brcc	2f		; [1/2]
+	CYCLES=CYCLES+3
+	CY_SYNC2=CYCLES-CY_SYNC1+1
+	CY_SYNC8=CY_SYNC2
+
+	;; Need another sample.
+
+8:	sts	measl, R24	; [2]	Store measure
+	sts	meash, R25	; [2]
+	CYCLES=CYCLES+4
+
+	XCIF	R26, START_IF	; Clear START IRQ flag
+	XSBAI	R26, START_IE	; Enable START interrupts
+
+9:
+
+#  if COUNT_BN==8
+	pop	R25		; [2]
+	CYCLES=CYCLES+2
+#  endif
+	pop	R31		; [2]
+	pop	R30		; [2]
+	pop	R29		; [2]
+	pop	R28		; [2]
+	pop	R27		; [2]
+	rjmp	LABEL(st99)	; [2]
+	CYCLES=CYCLES+12
+	CY_SYNC1=CYCLES-CY_SYNC1+CY_ST99
+
+	;; Compute R27:R26 = 5×t2 + dt
+	;;
+2:	CYCLES=CY_SYNC2
+	add	R26, R30	; [1]
+	adc	R27, R31	; [1]	R27:R26 = 5×t2
+	add	R26, R30	; [1]
+	adc	R27, R31	; [1]	R27:R26 = 5×t2 + dt
+	CYCLES=CYCLES+4
+
+	;; Check upper limit
+	;;
+	cp	R28, R26	; [1]	if ( t1 > 5×t2 + dt )
+	cpc	R29, R27	; [1]	  then t1 is too high
+	brcc	8b		; [1/2]	  need to get another sample
+	CYCLES=CYCLES+3
+	CY_SYNC2=CYCLES-CY_SYNC2+CY_SYNC1
+
+	;; Synchronization is done. Compute dtn.
+	;;
+	;; t1 = 5×t2 in units of 5 CPU cycles = t2 in units of 1 CPU cycle
+	;;
+	sub	R26, R30
+	sbc	R27, R31	; R27:R26 = t2 in units of 1 CPU cycle
+	movw	R24, R26	; R25:R24 = t2 in units of 1 CPU cycle
+
+	;; Set baudrate registers
+	;;
+	rcall	LABEL(set_dt)
+
+	;; Start a fake receiving to ensure that the UART will not transmit
+	;; before the end of the synchronization byte.
+	;;
+	XLD	R24, count+0
+	lds	R25, dtn+0
+	add	R24, R25
+	XST	comp+0, R24
+#if COUNT_BN==16
+	XLD	R24, count+1
+	lds	R25, dtn+1
+	adc	R24, R25
+	XST	comp+1, R24
+#endif
+	XCBAI	R26, START_IE	; Disable START
+	ldi	R26, 8		; 8 data bits to receive
+	sts	nbit, R26	;
+	XCIF	R26, MATCH_IF	; Clear compare-match IRQ flag
+	XSBAI	R26, MATCH_IE	; Enable compare-match interrupts
+
+	rjmp	9b

@@ -14,11 +14,11 @@
  * @brief Defined for all Atmel AVR devices
  * @hideinitializer
  */
-#define HW_DEVICE_ATMELAVR
-
 #if !defined DOXYGEN
-#  define HW_DEVICE_VENDOR	atmel
-#  define HW_DEVICE_ARCH	avr
+#  define HW_DEVICE_VENDOR_ATMEL
+#  define HW_DEVICE_ARCH_AVR
+#  define HW_DEVICE_VENDOR		atmel
+#  define HW_DEVICE_ARCH		avr
 #endif
 
 /*  Address correction of a memory definition (C and assembler address differ!)

@@ -1,0 +1,143 @@
+
+	;; -*- asm -*-
+
+	;; Start condition (falling edge on RXD)
+	;;
+	;; Priority is to get the date of the start condition and re-enable
+	;; interrupts as soon as possible.
+	;;
+	;; Edge checking is not a high priority since catching a rising edge
+	;; would happen only when UART is out of sync.
+	;;
+	;; Interrupts are disabled for CY_ST_SEI cycles (until sampling
+	;; of counter COUNT).
+	;; 
+	;; Total isr_start cycles: CY_ST
+	;;
+	;; To get CY_ values: avr-nm out.elf | grep " a CY_"
+	;;
+
+	CY_ST_SEI=0
+
+	.section .text
+	.global HW_ISR(STARTISR)
+HW_ISR(STARTISR):
+	CYCLES=4		; [4] <- call
+
+	push	R24		; [2]
+	CYCLES=CYCLES+2
+
+	.if DBG_START1
+	XSB	R24, AP_DBG
+	.endif
+
+	;; Get start bit date (R25:R24) and re-enable interrupts
+	;;
+#if COUNT_BN==8
+	sei			; [1]
+	XLD	R24, count
+	CYCLES=CYCLES+3
+	CY_ST_SEI=CYCLES
+#endif
+#if COUNT_BN==16
+	push	R25		; [2]
+	XLD	R24, count+0
+	sei			; [1]
+	XLD	R25, count+1
+	CYCLES=CYCLES+5
+	CY_ST_SEI=CYCLES
+#endif
+
+	push	R26		; [2]
+	CYCLES=CYCLES+2
+
+	in	R26, SREG	; [1]
+	push	R26		; [2]
+	CYCLES=CYCLES+3
+
+	;; Start date is stored in r25:r24
+	;; r26 and SREG are stacked
+
+#if AUTOSYNC > 0
+	;;
+	;; Need to synchronize ?
+	;;   This must be done before checking the edge since autosyncing
+	;;   may require to detect both falling and rising edges
+	;;
+	XSBIS	R26, F_SYNC
+	rjmp	LABEL(autosync)	; [2]
+
+	CYCLES=CYCLES+2
+	CY_SYNC0=CYCLES
+#endif
+
+	;; Test edge
+	;;
+#if CHECK_START
+	XSBIC	r26, AP_RXD
+	rjmp	LABEL(st99)	; [2]
+	CYCLES=CYCLES+2
+#endif
+
+	.if DBG_START2
+	sbi	DBGPORT, DBGBIT	; [2]
+	CYCLES=CYCLES+2
+	.endif
+
+LABEL(syn):
+	XCB	R26, START_IE	;	Disable START interrupts
+
+	;; Compute first data bit date
+	;;
+#if COUNT_BN==8
+	lds	R26, dt0	; [2]
+	add	R24, R26	; [1]
+	XST	comp, r24
+	CYCLES=CYCLES+3
+#endif
+#if COUNT_BN==16
+	lds	R26, dt0+0	; [2]
+	add	R24, R26	; [1]
+	lds	R26, dt0+1	; [2]
+	adc	R25, R26	; [1]
+	XST	comp+1, r25
+	XST	comp+0, r24
+	CYCLES=CYCLES+6
+#endif
+
+	;; Set 'bit' reception routine up
+	;;
+	ldi	R24, 8		; [1]	8 data bits to receive
+	sts	nbit, R24	; [2]
+	CYCLES=CYCLES+3
+
+	;; Clear flag, enable compare-match interrupts
+	;;
+	XCIF	R24, MATCH_IF
+	XSBAI	R24, MATCH_IE
+	
+	;; End of start routine
+	;; 
+LABEL(st99):
+	CY_ST99=CYCLES
+	.if DBG_START99
+	XSB	R26, AP_DBG
+	.endif
+
+	pop	R26		; [2]
+	out	SREG, R26	; [1]
+	pop	R26		; [2]
+	CYCLES=CYCLES+5
+
+#if COUNT_BN==16
+	pop	R25		; [2]
+	CYCLES=CYCLES+2
+#endif
+
+	pop	R24		; [2]
+
+	reti			; [4]
+
+	CYCLES=CYCLES+6
+	CY_ST=CYCLES
+	CY_ST99=CYCLES-CY_ST99

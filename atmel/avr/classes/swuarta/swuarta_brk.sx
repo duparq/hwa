@@ -1,0 +1,11 @@
+
+	;; -*- asm -*-
+
+	;; Send BREAK (R24: nbits)
+	;; 
+	.section	.text.brk,"ax",@progbits
+LABEL(brk):
+	mov	R25, R24
+	ldi	R24, 0
+	subi	R25, 1
+	rjmp	putbits

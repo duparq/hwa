@@ -1,0 +1,33 @@
+
+	;; -*- asm -*-
+
+	;; Reset the UART
+	;;
+	.global		LABEL(reset)
+	.section	.text.LABEL(reset),"ax",@progbits
+LABEL(reset):
+
+	;; Disable compare-match interrupts
+	;;
+	XCB	r24, MATCH_IE
+
+	ldi	r24, 0
+	XST	stat, r24
+	sts	nbit, r24
+#if COUNT_BN==8
+	sts	dtn, r24
+	sts	dt0, r24
+#endif	
+#if COUNT_BN==16
+	sts	dtn+0, r24
+	sts	dtn+1, r24
+	sts	dt0+0, r24
+	sts	dt0+1, r24
+#endif	
+#if CANRX
+	;; Clear flag & enable START interrupts
+	;;
+	XCIF	R24, START_IF
+	XSBAS	R24, R25, START_IE
+#endif
+	ret

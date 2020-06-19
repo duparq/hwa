@@ -2,8 +2,6 @@
 Atmel AVR8 classes {#atmelavr8_classes}
 ==================
 
-HWA provides the following classes for Atmel AVR devices:
-
 * @subpage atmelavr_aca
 * @subpage atmelavr_acb
 * @subpage atmelavr_ada
@@ -32,11 +30,15 @@ HWA provides the following classes for Atmel AVR devices:
 * @subpage atmelavr_pxa
 * @subpage atmelavr_psa
 * @subpage atmelavr_psb
-* @subpage atmelavr_swuarta
 * @subpage atmelavr_spia
 * @subpage atmelavr_twia
 * @subpage atmelavr_uarta
 * @subpage atmelavr_usia
-* @subpage atmelavr_usia_spimaster_swclk
 * @subpage atmelavr_wda
 * @subpage atmelavr_wdb
+
+Software-emulated:
+
+* @subpage atmelavr_swtwimaster
+* @subpage atmelavr_swuarta
+* @subpage atmelavr_usia_spimaster_swclk

@@ -6,26 +6,19 @@
 
 /**
  * @file
- * @brief Definitions common to all Atmel AVR devices that do not produce C code
+ * @brief Definitions common to all STM32 devices that do not produce C code
  */
-
-/**
- * @ingroup public_atmelavr_def
- * @brief Defined for all Atmel AVR devices
- * @hideinitializer
- */
-#define HW_DEVICE_ATMELAVR
-
 #if !defined DOXYGEN
-#  define HW_DEVICE_VENDOR	atmel
-#  define HW_DEVICE_ARCH	avr
+#  define HW_DEVICE_VENDOR_ST
+#  define HW_DEVICE_ARCH_STM32
+#  define HW_DEVICE_VENDOR		st
+#  define HW_DEVICE_ARCH		stm32
 #endif
 
 
 /*  Keywords for stm32
  */
 #define _hw_is_compare_flag_compare_flag	, 1
-#define _hw_is_loop_loop			, 1
 
 
 #if !defined __ASSEMBLER__

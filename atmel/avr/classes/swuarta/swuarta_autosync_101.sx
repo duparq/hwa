@@ -1,0 +1,184 @@
+
+	;; -*- asm -*-
+
+	;; HW_SWUART0 auto-synchronization
+	;;
+	;; This code is designed to be executed from the START ISR but must be
+	;; included after the cycles computations are done.
+	;;
+	;; Baudrate is determined by measuring the low-level durations of a
+	;; 10 bits low / 1 bit low sequence.
+	;;
+	;; Consecutive low-level durations t1 and t2 are measured.
+	;; When 9.5×t2 <= t1 <= 10.5×t2, synchronization is done
+	;; and r25:r24 contains the bit duration (baudrate) in CPU cycles.
+	;;
+	;; Measures are done with the counter chosen for the UART.
+
+#if !CHECK_START_EDGE
+#  error Autosync needs to detect both falling and rising edges
+#endif
+
+#if COUNT_BN != 16
+#  error Currently, only 16 bit counter is implemented for autosync
+#endif
+
+sync:	push	r24
+	in	r24, SREG
+	push	r24
+	push	r25
+	push	r26
+	push	r27
+	push	r28
+	push	r29
+
+	;; Load the current date and re-enable interrupts
+	;;
+	XLD	r24, COUNT+0
+	sei
+	XLD	r25, COUNT+1
+	
+	sbic	RXDPIN, RXDBIT
+	rjmp	2f
+
+
+	;; Falling edge
+	;;
+	;;	Memorise the date in match
+	;;
+	sts	match+0, r24
+	sts	match+1, r25
+	;;
+	;;	Shift: dt0 <- dtn
+	;;
+	lds	r26, dtn+0
+	sts	dt0+0, r26
+	lds	r26, dtn+1
+	sts	dt0+1, r26
+	rjmp	3f /* done */
+
+
+	;; Rising edge
+	;;
+	;;	Memorise in dtn (r25:r24) the duration of the low-level
+	;;
+2:	lds	r26, match+0
+	lds	r27, match+1
+	sub	r24, r26
+	sbc	r25, r27
+	sts	dtn+0, r24
+	sts	dtn+1, r25
+	;;
+	;;	Compute r27:r26 = 10×t2
+	;;
+	movw	r26, r24	; r27:r26 = t2
+	lsl	r26		;
+	rol	r27		; r27:r26 = 2×t2
+	lsl	r26		;
+	rol	r27		; r27:r26 = 4×t2
+	add	r26, r24	;
+	adc	r27, r25	; r27:r26 = 5×t2
+	lsl	r26		;
+	rol	r27		; r27:r26 = 10×t2
+	;;
+	;;	Compute r29:r28 = dt = t2/2
+	;; 
+	movw	r28, r24	; r29:r28 = t2
+	adiw	r28, 1		; round
+	lsr	r29		;
+	ror	r28		; r29:r28 = t2/2
+	;; 
+	;;	Compute r27:r26 = 10×t2 - dt
+	;; 
+	sub	r26, r28	;
+	sbc	r27, r29	; r27:r26 = 10×t2 - dt
+	;;
+	;;	 Check the lower bound
+	;;
+	lds	r24, dt0+0
+	lds	r25, dt0+1
+	cp	r24, r26	; if ( t1 < 10×t2 - dt )
+	cpc	r25, r27	;   then t1 is too low
+	brcs	3f		;	 get another sample
+	;;
+	;;	Compute r27:r26 = 10×t2 + dt
+	;; 
+	add	r26, r28	;
+	adc	r27, r29	; r27:r26 = 10×t2
+	add	r26, r28	;
+	adc	r27, r29	; r27:r26 = 10×t2 + dt
+	;;
+	;;	Check the upper bound
+	;; 
+	cp	r24, r26	; if ( t1 > 10×t2 + dt )
+	cpc	r25, r27	;   then t1 is too high
+	brcc	3f		;	 get another sample
+	;;
+	;;	10 / 1 sequence is validated
+	;;	Compute dt0 = dtn + dtn/2 - dtn/8 - delay (counter units)
+	;;
+	DELAY=CY_STSEI+CY_RXSEI+8 /* add 8 cycles for safety, better sooner than later! */
+
+	lds	r24, dtn+0
+	lds	r25, dtn+1
+	movw	r26, r24	; r25:r24 = dtn in cpu cycles
+
+	adiw	r26, 1		; r27:r26 = dtn/2
+	lsr	r27		;
+	ror	r26		;
+
+	add	r24, r26	; r25:r24 = dtn + dtn/2
+	adc	r25, r27	;
+
+	;; adiw	r26, 1		; r27:r26 = dtn/8
+	;; lsr	r27		;
+	;; ror	r26		;
+	;; adiw	r26, 1		;
+	;; lsr	r27		;
+	;; ror	r26		;
+
+	;; sub	r24, r26	; r25:r24 = dtn + dtn/2 - dtn/8 - DELAY
+	;; sbc	r25, r27	;
+
+	subi	r24, lo8(DELAY / HW_SWUART0_COUNTER_CLK_DIV)
+	sbci	r25, hi8(DELAY / HW_SWUART0_COUNTER_CLK_DIV)
+	;; 
+	;;	Store dt0
+	;; 
+	sts	dt0+0, r24
+	sts	dt0+1, r25
+	;;
+	;;	Date of the next bit
+	;;
+	lds	r24, match+0
+	lds	r25, dtn+0
+	add	r24, r25
+	sts	match+0, r24
+
+	lds	r24, match+1
+	lds	r25, dtn+1
+	adc	r24, r25
+	sts	match+1, r24
+
+	;; Set 'bit' reception routine up
+	;;
+	ldi	r24, 8		; 8 data bits to receive
+	sts	nbit, r24	;
+
+	enable_match R24
+
+	;;
+	;;	Assert 'synced'
+	;; 
+	XSB	r24, F_SYNCED
+
+3:	pop	r29
+	pop	r28
+	pop	r27
+	pop	r26
+	pop	r25
+	pop	r24
+	out	SREG, r24
+	pop	r24
+
+	reti

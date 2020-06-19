@@ -6,4 +6,3 @@ External devices {#ext}
  * @subpage hd44780
  * @subpage pcf8574
  * @subpage tcs3200
- * @subpage swtwimaster

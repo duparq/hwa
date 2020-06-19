@@ -1,0 +1,312 @@
+
+	;; -*- asm -*-
+
+/**
+ * @file
+ * @brief Implementation of _swuarta software UART
+ */
+
+/*  The following is not processed if the UART is not properly declared
+ */
+#if HW_ADDRESS(UART) != -1
+
+	;; Software half-duplex UART using a timer-counter
+	;; 
+	;; Note: gcc call-used registers: 18..27, 30, 31
+	;;
+	;; HW_SHOW( UART )
+	;; HW_SHOW( HW_ADDRESS(UART) )
+
+#undef NAME
+#define NAME				HW_A1( HW_X(UART) )
+#undef TXD
+#define TXD				HW_A2( HW_X(UART) )
+#undef RXD
+#define RXD				HW_A3( HW_X(UART) )
+#undef STARTIRQ
+#define STARTIRQ			HW_A4( HW_X(UART) )
+#undef COUNTER
+#define COUNTER				HW_A5( HW_X(UART) )
+#undef COUNT_BN
+#define COUNT_BN			HW_A6( HW_X(UART) )
+#undef COMPARE
+#define COMPARE				HW_A7( HW_X(UART) )
+#undef CLKDIV
+#define CLKDIV				HW_A8( HW_X(UART) )
+#undef AUTOSYNC
+#define AUTOSYNC			HW_A9( HW_X(UART) )
+#undef FASTREG
+#define FASTREG				HW_A10( HW_X(UART) )
+#undef CHECKTX
+//#define CHECKTX				HW_A9( HW_X(UART) )
+#define CHECKTX				0
+
+
+/*	Create a label
+ */
+#undef LABEL
+#define LABEL(x)			HW_G3(hw,NAME,x)
+
+
+/*	Create a data
+ */
+#undef DATA
+#define DATA(x)				HW_G3(hw,NAME,x)
+
+
+	;; Registers of the I/O ports handling the I/O pins used for RX/TX
+	;;
+
+#undef CANTX
+#if HW_ADDRESS(TXD) != -1
+#  define CANTX 1
+	TXDPORT	  = HW_ADDRESS((TXD,port,port))
+	TXDPIN	  = HW_ADDRESS((TXD,port,pin))
+	TXDDR	  = HW_ADDRESS((TXD,port,ddr))
+	TXDBIT	  = HW_POSITION(TXD)
+#  define AP_TXD    TXDPORT, TXDBIT
+#else
+#  define CANTX 0
+#endif
+
+#undef CANRX
+#if !HW_Y0(RXD)
+#  if HW_ADDRESS(RXD) != -1
+#    define CANRX 1
+	RXDPORT	  = HW_ADDRESS((RXD,port,port))
+	RXDPIN	  = HW_ADDRESS((RXD,port,pin))
+	RXDDR	  = HW_ADDRESS((RXD,port,ddr))
+	RXDBIT	  = HW_POSITION(RXD)
+#    define AP_RXD    RXDPIN, RXDBIT
+#  else	
+#    define CANRX 0
+#  endif
+#else	
+#  define CANRX 0
+#endif
+
+	;; Debugging options
+	;; 
+//#define DBG				pb1
+
+#if HW_ADDRESS(DBG) != -1
+	DBGPORT	  = HW_ADDRESS((DBG,port,port))
+	DBGPIN	  = HW_ADDRESS((DBG,port,pin))
+	DBGDR	  = HW_ADDRESS((DBG,port,ddr))
+	DBGBIT	  = HW_POSITION(DBG)
+	XDBG	  = 1
+#  define AP_DBG  DBGPIN, DBGBIT
+#else
+	XDBG	  = 0
+#endif
+
+	DBG_START1    = XDBG & 0
+	DBG_START2    = XDBG & 0
+
+	DBG_SYNC1     = XDBG & 0
+	DBG_SYNC2     = XDBG & 0
+	DBG_SYNC3     = XDBG & 0
+	DBG_SYNC4     = XDBG & 0
+
+	DBG_START99   = XDBG & 0
+
+	DBG_SPL       = XDBG & 0 ; Compare-match ISR toggles DBG
+
+	DBG_RXBIT     = XDBG & 0
+	DBG_RXLDB     = XDBG & 0
+	DBG_RXST      = XDBG & 0
+
+	DBG_TXSTART   = XDBG & 0
+	DBG_TXBIT     = XDBG & 0
+	DBG_TXSB      = XDBG & 0
+	DBG_TXFAIL    = XDBG & 0
+
+	DBG_GETBYTE   = XDBG & 0
+	DBG_PUTBYTE   = XDBG & 0
+	DBG_WAIT      = XDBG & 0
+	DBG_WAITIDLE  = XDBG & 0
+	DBG_WAITSTART = XDBG & 0
+	DBG_WAITREADY = XDBG & 0
+
+
+	;; Whether we need/can check the edge that triggers the start condition
+	;;
+#undef CHECK_START
+#if CANRX
+#  if HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_int0) \
+ || HW_ADDRESS(RXD) == HW_ADDRESS(hw_pin_ain1)
+#    define CHECK_START 0
+#  else
+#    define CHECK_START 1
+#  endif
+#endif
+
+#undef ONEWIRE
+#if HW_ADDRESS((UART,txd)) == HW_ADDRESS((UART,rxd))
+#  define ONEWIRE	1
+#else
+#  define ONEWIRE	0
+#endif
+	
+#undef STARTISR
+#define STARTISR	(RXD,pcic,irq)
+
+#undef AP
+#define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
+
+#if CANRX
+#  undef START_IE
+#  define START_IE	AP((STARTISR,mask))
+#  undef START_IF
+#  define START_IF	AP((STARTISR,flag))
+#endif
+
+#undef MATCH_IE
+#define MATCH_IE	AP((COUNTER,irq,COMPARE,mask))
+
+#undef MATCH_IF
+#define MATCH_IF	AP((COUNTER,irq,COMPARE,flag))
+
+
+#if COUNT_BN != 8 && COUNT_BN != 16
+#  error HWA: size of counter for HW_SWUART must be 8 or 16 bits
+#endif
+
+
+#include "../../avrx.sx"
+
+
+	.section .bss
+	.global __do_clear_bss		; Initialize data to 0
+
+	.global	DATA(data)
+	.global	DATA(dt0)
+	.global	DATA(dtn)
+
+	;; Registers stored in RAM
+	;;
+DATA(data):	.byte	0		; Data register
+DATA(shift):	.byte	0		; Shift register
+DATA(nbit):	.byte	0		; # of bits to rx/tx
+
+#	if COUNT_BN==8
+DATA(dt0):	.byte	0		; 1.5 bit duration
+DATA(dtn):	.byte	0		; 1 bit duration
+#	elif COUNT_BN==16
+DATA(dt0):	.byte	0		; 1.5 bit duration
+		.byte	0
+DATA(dtn):	.byte	0		; 1 bit duration
+		.byte	0
+#	endif
+
+	data  = DATA(data)
+	shift = DATA(shift)
+	nbit  = DATA(nbit)
+	dt0   = DATA(dt0)
+	dtn   = DATA(dtn)
+
+	;; Counter registers
+	;;
+	count = HW_ADDRESS((COUNTER,reg))
+	comp  = HW_ADDRESS((COUNTER,COMPARE,reg))
+
+	;; Status byte: use the fastreg
+	;; 
+	;; Currently, the address of the status byte must be known before
+	;; compiling. This is required by the macro-instructions for bit accesses
+	;; of memory.
+	;;
+	;; TODO: use special macros for dealing with the status byte. One set
+	;; for constant address, another set when address is not known.
+	;;
+#if FASTREG < 0
+#  error HWA: address of FASTREG register is not constant.
+#endif
+
+	.global DATA(stat)
+	DATA(stat) = FASTREG
+	
+	stat = FASTREG
+
+#define F_RXC	 stat, 0		// RX complete (stop bit sampled)
+#define F_TXC	 stat, 1		// TX complete
+#define F_STOP	 stat, 2		// RX: Stop bit value / TX: 0 means TX fail
+#define F_SYNC	 stat, 3		// 0: swuart needs to be synced
+
+#define F_RXTX	 stat, 4		// 0==RX, 1==TX
+#define F_WBTX	 stat, 5		// 1: wait one match before tx
+#define F_SENT	 stat, 5		// Last bit sent
+
+
+	;; Display configuration data (these comments are processed by cpp but not used by as)
+	;;
+	;; HW_SHOW(NAME)
+	;; HW_SHOW(TXD)
+	;; HW_SHOW(CANTX)
+	;; HW_SHOW(RXD)
+	;; HW_SHOW(CANRX)
+	;; HW_SHOW(COUNTER)
+	;; HW_SHOW(COMPARE)
+	;; HW_SHOW(CLKDIV)
+	;; HW_SHOW(AUTOSYNC)
+	;; HW_SHOW(FASTREG)
+	;; HW_SHOW( HW_ADDRESS((TXD,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((TXD,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((TXD,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(TXD) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((RXD,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(RXD) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,port)) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,pin)) )
+	;; HW_SHOW( HW_ADDRESS((DBG,port,ddr)) )
+	;; HW_SHOW( HW_POSITION(DBG) )
+	;; HW_SHOW(ONEWIRE)
+	;; HW_SHOW(CHECKTX)
+	;; HW_SHOW(STARTISR)
+	;; HW_SHOW(HW_X(STARTISR))
+	;; HW_SHOW(START_IE)
+	;; HW_SHOW(START_IF)
+	;; HW_SHOW(MATCH_IE)
+	;; HW_SHOW(MATCH_IF)
+	;; HW_SHOW(COUNT_BN)
+	;; HW_SHOW( HW_ADDRESS((COUNTER,reg)) )
+	;; HW_SHOW( HW_ADDRESS((COUNTER,COMPARE,reg)) )
+
+
+	;; End of configuration data
+	;;
+	;; Beginning of implementation code
+
+
+	;; .section .text
+
+#include "swuarta_matchisr.sx"
+#include "swuarta_set_dt.sx"
+#include "swuarta_reset.sx"
+
+#if CANRX
+#  include "swuarta_startisr.sx"
+#  include "swuarta_getbyte.sx"
+#  include "swuarta_sample.sx"
+#  include "swuarta_wait_idle_bits.sx"
+#
+#  define _hw_swuarta_autosync_51	, swuarta_autosync_51.sx
+#  define _hw_swuarta_autosync_91_91	, swuarta_autosync_91.sx
+#  define _hw_swuarta_autosync_101_101	, swuarta_autosync_101.sx
+#  if AUTOSYNC > 0
+#    if HW_IS(,HW_G2(_hw_swuarta_autosync,AUTOSYNC))
+#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,AUTOSYNC)))
+#    else
+#      error `autosync` must be `51`, `91`, or `101`.
+#    endif
+#  endif
+#endif
+
+#if CANTX
+#  include "swuarta_putbyte.sx"
+#  include "swuarta_brk.sx"
+#endif
+
+#endif /* HW_ADDRESS(UART) != -1 */
