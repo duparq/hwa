@@ -78,10 +78,10 @@
   _hwa_write( o, wm, 1 );					\
   _hwa_write( o, cs, 2 );					\
   if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
-    _hwa( configure, HW_PIN(usck), mode, digital_output );		\
-    _hwa( configure, HW_PIN(do),   mode, digital_output );		\
-    _hwa( configure, HW_PIN(di),   mode, digital_input	);		\
-    _hwa_write( o, clk, 1 );				\
+    _hwa( configure, (o,ck), mode, digital_output );		\
+    _hwa( configure, (o,do), mode, digital_output );		\
+    _hwa( configure, (o,di), mode, digital_input  );		\
+    _hwa_write( o, clk, 1 );					\
   }								\
   else								\
     _hwa_write( o, clk, 0 );
@@ -154,16 +154,15 @@
  */
 #define hwa_configure__usia_spimaster_swclk	, _hwa_cfspimswclk
 
-#define _hwa_cfspimswclk(p,o,...)		\
-   _hwa_docfspimswclk(o) HW_EOL(__VA_ARGS__)
+#define _hwa_cfspimswclk(p,o,...)		_hwa_docfspimswclk(o) HW_EOL(__VA_ARGS__)
 
-#define _hwa_docfspimswclk( o )			\
+#define _hwa_docfspimswclk( o )				\
   do {							\
-    _hwa( configure, _HW_PIN(o,ck), mode, digital_output );		\
-    _hwa( configure, _HW_PIN(o,do), mode, digital_output );		\
-    _hwa_write( o, wm,	1 );			\
-    _hwa_write( o, cs,	2 );			\
-    _hwa_write( o, clk, 1 );			\
+    _hwa( configure, (o,ck), mode, digital_output );	\
+    _hwa( configure, (o,do), mode, digital_output );	\
+    _hwa_write( o, wm,	1 );				\
+    _hwa_write( o, cs,	2 );				\
+    _hwa_write( o, clk, 1 );				\
   } while(0)
 
 
@@ -214,12 +213,12 @@
 
 #define _hwa_docfspimc0clk( hwa, o )			\
   do {							\
-    _hwa( configure, HW_PIN(usck), mode, digital_output );	\
-    _hwa( configure, HW_PIN(do),   mode, digital_output );	\
-    _hwa( configure, HW_PIN(di),   mode, digital_input	);	\
-    _hwa_write( o, wm,	1 );			\
-    _hwa_write( o, cs,	1 );			\
-    _hwa_write( o, clk, 0 );			\
+    _hwa( configure, (o,ck), mode, digital_output );	\
+    _hwa( configure, (o,do), mode, digital_output );	\
+    _hwa( configure, (o,di), mode, digital_input  );	\
+    _hwa_write( o, wm,	1 );				\
+    _hwa_write( o, cs,	1 );				\
+    _hwa_write( o, clk, 0 );				\
   } while(0)
 
 

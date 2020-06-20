@@ -229,7 +229,7 @@ main ( )
   hwa( configure, PIN_TCS3200_S2, mode, digital_output );
   hwa( write, PIN_TCS3200_S2, 0 );
 
-  hwa( configure, PIN_TCS3200_S3, mode, digital_output );
+  /* hwa( configure, PIN_TCS3200_S3, mode, digital_output ); */
   hwa( write, PIN_TCS3200_S3, 0 );
 
   hwa( configure, PIN_OUTS, mode, digital_output );

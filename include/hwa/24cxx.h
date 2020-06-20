@@ -10,7 +10,7 @@
  */
 
 /**
- * @page ext_24cxx 24CXX: I²C EEPROM
+ * @page ee24cxx 24CXX: I²C EEPROM
  *
  * As this device is not speed critical, its implementation focuses on code size
  * rather than on speed, so it relies on extern C functions rather than on
@@ -48,7 +48,7 @@
 
 
 /**
- * @page ext_24cxx
+ * @page ee24cxx
  *
  * The following declares the functions that implement the memory. You can use it in
  * your header files:
@@ -67,7 +67,7 @@
 
 
 /**
- * @page ext_24cxx
+ * @page ee24cxx
  *
  * The following defines the functions that implement the memory. It must
  * appear in one of your source files:
@@ -93,7 +93,7 @@
 
 
 /**
- * @page ext_24cxx
+ * @page ee24cxx
  * __Actions__
  *
  * `write`
@@ -119,7 +119,7 @@
 
 
 /**
- * @page ext_24cxx
+ * @page ee24cxx
  *
  * `read`
  *

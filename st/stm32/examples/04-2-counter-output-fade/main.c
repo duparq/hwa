@@ -7,12 +7,12 @@
 /**
  * @example
  *
- * This program fades LED1 (pa2) using one channel output of a counter.
+ * This program fades LED1 ((porta,2)) using one channel output of a counter.
  *
  * The counting direction of the counter (up/down) is output on LED2. It can
  * synchronize an oscilloscope to view the PWM signal.
  *
- * You can direct the output signal to pb10 instead of LED2 (pa3) after having
+ * You can direct the output signal to _ioa, portb, 1, 10 instead of LED2 ((porta,3)) after having
  * powered its port and the afio. This requires a remapping of the counter that
  * is handled by HWA.
  *
@@ -68,7 +68,7 @@ int main ( )
   hwa( power, (LED1,port), on );
   hwa( power, (LED2,port), on );
   hwa( power, COUNTER, on );
-  /* hwa( power, (pb10,port), on ); */
+  /* hwa( power, ((portb,10),port), on ); */
   /* hwa( power, afio, on ); */
   hwa( commit );
 
@@ -77,7 +77,7 @@ int main ( )
   hwa( configure, LED1, function, (COUNTER,CHANNEL), mode, digital_output );
   hwa( configure, LED2, function, gpio, mode, digital_output );
 
-  /* hwa( configure, pb10, function, (counter2,channel3), mode, digital_output ); */
+  /* hwa( configure, (portb,10), function, (counter2,channel3), mode, digital_output ); */
 
   /*  Configure and start the counter (sms=0, cms=3, opm=0, cen=1)
    */

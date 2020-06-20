@@ -258,7 +258,6 @@ typedef struct {
  *	Each pin has a _pcf object that handles its configuration.
  */
 #include "../classes/pcfa_1.h"
-#include "../classes/pcfb_1.h"
 
 #define hw_gpio12_cf			_pcfa, 0x60000804
 #define hw_gpio13_cf			_pcfa, 0x60000808
@@ -673,7 +672,6 @@ typedef struct {
 #include "../hwa_2.h"
 #include "../classes/rtca_2.h"
 #include "../classes/pcfa_2.h"
-#include "../classes/pcfb_2.h"
 #include "../classes/gpa_2.h"
 #include "../classes/ioa_2.h"
 #include "../classes/iob_2.h"

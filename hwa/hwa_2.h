@@ -15,16 +15,16 @@
  * @brief Trigger an error after code generation.
  * @hideinitializer
  */
-#define HWA_ERR(msg)		_HWA_ERR_2(msg, __COUNTER__)
+#define HWA_ERR(...)		_HWA_ERR_2(__COUNTER__,__VA_ARGS__)
 #define _HWA_ERR_2(...)		_HWA_ERR_3(__VA_ARGS__)
-#define _HWA_ERR_3(msg, num)						\
+#define _HWA_ERR_3(num,...)						\
   do {									\
-    extern void __attribute__((error(msg))) hwa_error_##num(void); \
+    extern void __attribute__((error(#__VA_ARGS__))) hwa_error_##num(void); \
       hwa_error_##num();						\
   } while(0)
 
 
-#define HWA_E(s)		_HWA_ERR_2(HW_QUOTE(HWA: s.), __COUNTER__)
+#define HWA_E(s)		_HWA_ERR_2(__COUNTER__,HW_QUOTE(HWA: s.))
 #define HWA_E_INTERNAL()	HWA_E(internal error)
 #define HWA_E_VL(v,l)		HWA_E(`v` is not `l`)
 #define HWA_E_NIL(v,l)		HWA_E(`v` is not in `l`)

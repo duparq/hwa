@@ -35,12 +35,12 @@
 
 //#define _hw_cfgio1a_kf1(o,d,k,v,...)	v
 
-/* hw( config, pa2, (c) ); */
-/* hw( config, pa2, ); */
-/* hw( config, pa2, key ); */
-/* hw( config, pa2, function ); */
-/* hw( config, pa2, function, gpio ); */
-/* hw( config, pa2, function, (counter2,channel3) ); */
+/* hw( config, (porta,2), (c) ); */
+/* hw( config, (porta,2), ); */
+/* hw( config, (porta,2), key ); */
+/* hw( config, (porta,2), function ); */
+/* hw( config, (porta,2), function, gpio ); */
+/* hw( config, (porta,2), function, (counter2,channel3) ); */
 
 
 #define HW_V(...)			_HW_V01(__VA_ARGS__,,,)
@@ -109,7 +109,7 @@
 #include "../../hwa/hwa_1.h"
 
 
-HW_OX(pa2,port); // _p16a,port0,(0x40010800);
+HW_OX((porta,2),port); // _p16a,port0,(0x40010800);
 
 HW_OX(counter2,oreg); // _m111,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
 
@@ -122,7 +122,7 @@ HW_OX(counter2,channel2); // _cca,counter2,(counter2, 2);
 HW_OX(counter2_channel2,ocm);
 
 
-HW_X((pa2,port)); // _p16a,port0,(0x40010800);
+HW_X(((porta,2),port)); // _p16a,port0,(0x40010800);
 
 HW_X((counter2,oreg)); // _m111,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
 
@@ -139,3 +139,16 @@ HW_X(counter2,channel2,ocm); // _m111,(counter2,creg),counter2,creg,_r16,0x40000
 #define hw_write__m111			, _hw_wrm111
 
 hw( write, (counter2,channel2,ocm), 1); // _m111,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
+
+
+/*  attinyx4
+ */
+HW_X((pin,2));					// _ioa,pin_2,portb, 1, 0;
+HW_X((pin,2),pcic);				// _pxa,pcic1,0x40;
+HW_X((pin,2),pcic,irq);				// _irq,pcic1_irq,3, pcic1, ie, if;
+
+HW_X((pin,13));					// _ioa,pin_13,porta, 1, 0;
+HW_X((pin,13,did));				// _m111,(shared,did),shared,did,_r8,0 +0x21,0xFF,0x00,1,0;
+
+HW_CODR(_ioa,(pin,2),(portb, 1, 0),pcic);	// _pxa,pcic1,(0x40);
+HW_CODR(_ioa,(pin,2),(portb, 1, 0),pcid);	// ,((pin,2)),HW_EM((pin,2) has no relative pcid);

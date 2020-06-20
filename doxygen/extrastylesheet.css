@@ -26,7 +26,7 @@ h3 {
 }
 
 div.contents {
-    max-width: 900px;
+    max-width: 7in;
     margin-bottom: 1in;
 }
 
@@ -68,12 +68,12 @@ h1.glow, h2.glow, h3.glow, h4.glow, h5.glow, h6.glow {
 body, table, div, p, dl {
     font-size: 12px;
     font-family: sans-serif;
-    line-height: 22px;
+    line-height: 125%;
 }
 
 div.line {
     font-size: 12px;
-    line-height: 1.5;
+    /* line-height: 1.5; */
 }
 
 div.textblock {

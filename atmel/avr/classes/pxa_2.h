@@ -19,15 +19,15 @@
  * at once):
  *
  * @code
- * hw|hwa( enable, pcic0, pa0 );
+ * hw|hwa( enable, pcic0, (porta,0) );
  * @endcode
  *
  * @code
- * hw|hwa( disable, pcic0, pa0 );
+ * hw|hwa( disable, pcic0, (porta,0) );
  * @endcode
  *
  * @code
- * hw|hwa( turn, pcic0, pa0, on | off );
+ * hw|hwa( turn, pcic0, (porta,0), on | off );
  * @endcode
  */
 #define hw_turn__pxa			, _hw_tnpxa

@@ -64,10 +64,10 @@ HW_E(device `HW_DEVICE` does not have a USI)
 
 #if defined ARDUINO
 #  define USI		spi0
-#  define NRF_CSN	HW_PIN(PIN_D2)
+#  define NRF_CSN	PIN_D2
 #else
 #  define USI		usi0
-#  define NRF_CSN	HW_PIN(3)
+#  define NRF_CSN	(pin,3)
 #endif
 
 

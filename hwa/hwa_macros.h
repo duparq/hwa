@@ -153,8 +153,9 @@
  * @note _Pragma(...) can not be processed by macros as the sentence is removed
  * from the preprocessor output and replaced by a void token.
  */
-#define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s.))
-#define _HW_E2(s)		_HW_E3(s)
+/* #define HW_E(s)			_HW_E2(GCC error HW_QUOTE(HWA: s.)) */
+#define HW_E(s)			_HW_E2(HWA: s.)
+#define _HW_E2(...)		_HW_E3(GCC error #__VA_ARGS__)
 #if !defined HW_XE
 #  define _HW_E3(s)		_Pragma(#s)
 #else
@@ -225,11 +226,6 @@
 #define _HW_EOL_1(...)
 
 
-/*  This is used to catch pushed data
- */
-#define HW_POP(...)
-
-
 /*
  * @ingroup public_ins_obj
  * @brief Find a function f for object o and call it.
@@ -278,8 +274,8 @@
 /*
  *  Got object definition in c,o,...
  */
-#define _HW_F01(f,c,o,...)		HW_Y0(_HW_F01_,c)(f,c,o) /* Arguments pushed --> */ (o,__VA_ARGS__)
-#define _HW_F01_1(f,c,o)		f##_E(HW_EM_O(o)) HW_POP  /* <-- Arguments popped */
+#define _HW_F01(f,c,o,...)		HW_Y0(_HW_F01_,c)(f,c,o)(o,__VA_ARGS__) /* <- push */
+#define _HW_F01_1(f,c,o)		f##_E(HW_EM_O(o)) HW_EAT /* <-- Arguments pushed */
 /* Class method? */
 #define _HW_F01_0(f,c,o)		_HW_F02(f,c,o,f##_##c,)
 #define _HW_F02(...)			_HW_F03(__VA_ARGS__)
@@ -298,28 +294,7 @@
 /* Fake object? */
 #define _HW_F07_0(f,c,o,...)		HW_Y0(_HW_F08_,_hw_is__fake_##c)(f,c,o)
 #define _HW_F08_1(f,c,o)
-#define _HW_F08_0(f,c,o)		f##_E(HW_EM(no function f for o)) HW_POP  /* <-- Arguments popped */
-
-
-/**
- * @ingroup public_mac
- * @brief `HW_FUNCTION(object,function)` returns the name of a function an object provides
- * @hideinitializer
- *
- * @code
- * #define PCF		HW_PCF8574( interface, twi0, address, 0x27 )
- * #define LCD		HW_HD44780( lines, 2,		\
- *				    cols,  16,		\
- *				    e,	   (PCF, 1, 2),	\
- *				    rs,	   (PCF, 1, 0),	\
- *				    rw,	   (PCF, 1, 1),	\
- *				    data,  (PCF, 4, 4) )
- *
- * xprintf( HW_FUNCTION(LCD,putchar), "Seconds=%d", seconds );
- * @endcode
- */
-#define HW_FUNCTION(object,function)	HW_F(HW_FUNCTION,object,function)
-#define HW_FUNCTION_E(e)		HW_E(e) hw_foo
+#define _HW_F08_0(f,c,o)		f##_E(HW_EM(no function f for o)) HW_EAT  /* <-- Arguments pushed */
 
 
 /*
@@ -405,7 +380,7 @@
 #define HW_EAT(...)
 
 
-/**
+/*
  * @ingroup public_mac
  * @brief `HW_IO( port, number, position )` defines a set of I/O lines.
  *
@@ -431,13 +406,13 @@
  *
  * @hideinitializer
  */
-#define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__)
+/* #define HW_IO(...)			HW_F(HW_IO,__VA_ARGS__) */
 /* #define HW_IO(...)			HW_Y0(_HW_IO,_hw_prn __VA_ARGS__)(__VA_ARGS__) */
 /* #define _HW_IO0(...)			HW_F(HW_IO,__VA_ARGS__) */
 /* #define _HW_IO1(...)			_HW_IO2(HW_XB __VA_ARGS__) */
 /* #define _HW_IO2(...)			HW_F(HW_IO,__VA_ARGS__) */
 
-#define HW_IO_E(e)			_fake,fake,e HW_E(e)
+/* #define HW_IO_E(e)			_fake,fake,e HW_E(e) */
 
 
 /*
@@ -452,50 +427,30 @@
 #define HW_IS(...)			_HW_IS_2(__VA_ARGS__,,)
 #define _HW_IS_2(x,y,...)		HW_A1(_hw_is_##x##_##y,0)
 
-  
-/**
- * @ingroup public_mac
- * @brief `HW_PIN(p)` returns the canonical name of pin `p`.
- * @hideinitializer
- */
-#define HW_PIN(p)			_HW_PIN1(p,_hw_pin_##p,)
-#define _HW_PIN1(...)			_HW_PIN2(__VA_ARGS__)
-#define _HW_PIN2(o,x,...)		HW_Y(_HW_PIN_,x)(o,__VA_ARGS__)
-#define _HW_PIN_0(o,...)		HW_E_P(o)
-#define _HW_PIN_1(o,p,...)		p
-
-
-/*
- * @ingroup private_ins
- * @brief Returns the canonical name of pin `p` of object `o`.
- * @hideinitializer
- */
-#define _HW_PIN(o,p)			HW_A1(_hw_pin_##o##_##p,)
-
 
 /**
  * @ingroup public_mac
- * @brief `HW_POSITION(object)` returns the position of the least significant bit of the @ref using_objects "object".
+ * @brief `HW_POSITION(object)` returns the position of the least significant
+ *        bit of the @ref using_objects "object".
  * @hideinitializer
  */
 #define HW_POSITION(...)		HW_F( HW_POSITION, __VA_ARGS__ )
 #define HW_POSITION_E(...)		0 // An error occured
 
-#define HW_POSITION__m111			, _hw_position_m111
+#define HW_POSITION__m111				, _hw_position_m111
 #define _hw_position_m111(n,o,r,c,a,wm,fm,bn,bp,...)	bp
 
 
 /**
  * @ingroup public_mac
- * @brief Build a C string from the first element in the list
+ * @brief Build a C string from a list of elements
  * @hideinitializer
  */
-/* #define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__,) */
-/* #define _HW_QUOTE_2(x,...)		#x */
 #define HW_QUOTE(...)			_HW_QUOTE_2(__VA_ARGS__)
 #define _HW_QUOTE_2(...)		#__VA_ARGS__
 
-#define HW_Q				HW_QUOTE
+#define HW_Q(...)			_HW_Q_2(__VA_ARGS__)
+#define _HW_Q_2(...)			#__VA_ARGS__
 
 
 /*
@@ -617,7 +572,7 @@
 
 
 /*  Parse a value argument.
- *  HW_AV(f,p,s) expands as:
+ *  HW_KV(f,p,s) expands as:
  *   * f##0(s) if p##s is not defined, i.e. its expansion does not start with a void
  *   * f##1(v) where v is the 2nd element of expansion of p##x
  */
@@ -630,6 +585,20 @@
 #define _HW_KV21(f,p,s,z,v,...)			f##1(v)
 
 
+/*  Parse a value argument.
+ *  HW_VE(p,s,d,e) expands as:
+ *   * v if p##s expands as ', v'
+ *   * d otherwise, and produce an error message e
+ */
+#define HW_VE(p,s,d,e)				HW_Y0(_HW_VE1,_hw_prn s)(p,s,d,e)
+#define _HW_VE11(p,s,d,e)			d HW_E(e)
+#define _HW_VE10(p,s,d,e)			_HW_VE12(p,s,d,e,p##s,)
+#define _HW_VE12(...)				_HW_VE13(__VA_ARGS__)
+#define _HW_VE13(p,s,d,e,...)			HW_Y0(_HW_VE2,__VA_ARGS__)(p,s,d,e,__VA_ARGS__)
+#define _HW_VE20(p,s,d,e,...)			d HW_E(e)
+#define _HW_VE21(p,s,d,e,z,v,...)		v
+
+
 /**
  * @ingroup public_ins_obj
  * @brief `hw( action, object [,...] )` executes an @ref using_actions "action" immediately on an @ref using_objects "object".
@@ -640,7 +609,7 @@
  * * Additional arguments may follow the name of the object.
  *
  * @code
- * hw( configure, pa0, direction, output );
+ * hw( configure, (porta,0), direction, output );
  * hw( write, counter0, 0 );
  * @endcode
  */
@@ -666,9 +635,9 @@
  * //  accessing the DDRA register only once.
  * //
  * hwa( begin, reset );
- * hwa( configure, pa0, direction, output );
- * hwa( configure, HW_IO(pa2), direction, output );
- * hwa( configure, HW_IO(port0,4,4), direction, output );
+ * hwa( configure, (porta,0), direction, output );
+ * hwa( configure, ((porta,2)), direction, output );	// Dual parentheses is OK
+ * hwa( configure, (port0,4,4), direction, output );
  * hwa( commit );
  * @endcode
  */

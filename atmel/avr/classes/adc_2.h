@@ -65,7 +65,7 @@
  *
  *	//  Input
  *	//
- *	input,	   HW_PIN(adc0..3)
+ *	input,	   (pin,adc0..3)
  *		 | gnd
  *		 | bandgap
  *		 | temperature );
@@ -96,9 +96,9 @@
  *	       //  HWA will trigger an error if you try to use a combination
  *	       //  of inputs that is not available
  *	       //
- *	       positive_input,	 HW_PIN(adc0..3)
+ *	       positive_input,	 (pin,adc0..3)
  * 
- *	       negative_input,	 HW_PIN(adc0..3)
+ *	       negative_input,	 (pin,adc0..3)
  *	     );
  * @endcode
  */
@@ -106,11 +106,14 @@
 
 /*  Mandatory parameter `clock`
  */
-#define _hwa_cfadc(o,a,k,...)					\
+#define _hwa_cfadc(o,a,k,...)						\
   do {									\
+    uint8_t mux __attribute__((unused)) = 0xFF ;			\
     uint8_t gain __attribute__((unused)) = 1 ;				\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
     HW_Y(_hwa_cfadc_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,);	\
+    if ( gain != 1 && gain != 20 ) HWA_ERR("optionnal parameter `gain` must be 1 or 20."); \
+    if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
   } while(0)
 
 #define _hwa_cfadc_kclock_0(o,k,...)					\
@@ -137,14 +140,14 @@
   _hwa_write(o,ts, HW_A2(_hw_adc_trigger_##v));		\
   HW_Y(_hwa_cfadc_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
-#define _hw_adc_trigger_manual	, 0, 0	/* , ate, ts */
-#define _hw_adc_trigger_auto		, 1, 0
-#define _hw_adc_trigger_acmp0		, 1, 1
-#define _hw_adc_trigger_int0		, 1, 2
+#define _hw_adc_trigger_manual			, 0, 0	/* , ate, ts */
+#define _hw_adc_trigger_auto			, 1, 0
+#define _hw_adc_trigger_acmp0			, 1, 1
+#define _hw_adc_trigger_int0			, 1, 2
 #define _hw_adc_trigger_counter0_compare0	, 1, 3
 #define _hw_adc_trigger_counter0_overflow	, 1, 4
 #define _hw_adc_trigger_counter0_compare1	, 1, 5
-#define _hw_adc_trigger_pcic0		, 1, 6
+#define _hw_adc_trigger_pcic0			, 1, 6
 
 /*  Mandatory parameter `vref`
  */
@@ -158,8 +161,8 @@
   _hwa_write(o,refs, HW_A1(_hw_adc_vref_##v));	\
   HW_Y(_hwa_cfadc_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
-#define _hw_adc_vref_vcc		, 0	/* , refs */
-#define _hw_adc_vref_pin_aref		, 1
+#define _hw_adc_vref_vcc			, 0	/* , refs */
+#define _hw_adc_vref_pin_aref			, 1
 #define _hw_adc_vref_bandgap_1100mV		, 2
 #define _hw_adc_vref_bandgap_2560mV		, 6
 #define _hw_adc_vref_bandgap_2560mV_aref	, 7
@@ -176,8 +179,8 @@
 #define _hwa_cfadc_kalign_0(o,k,...)					\
   HW_Y(_hwa_cfadc_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
-#define _hw_adc_align_left		, 1	/* , lar */
-#define _hw_adc_align_right		, 0
+#define _hw_adc_align_left			, 1	/* , lar */
+#define _hw_adc_align_right			, 0
 
 /*  Optionnal parameter `polarity`
  */
@@ -191,65 +194,53 @@
 #define _hwa_cfadc_kpolarity_0(o,k,...)			\
   HW_Y(_hwa_cfadc_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
-#define _hw_adc_polarity_unipolar	, 0	/* , bin */
-#define _hw_adc_polarity_bipolar	, 1
+#define _hw_adc_polarity_unipolar		, 0	/* , bin */
+#define _hw_adc_polarity_bipolar		, 1
 
 /*  Optionnal parameter `gain`
  */
-#define _hwa_cfadc_kgain_1(o,k,v,...)					\
-  gain = (uint8_t)(v) ;							\
-  if ( gain != 1 && gain != 20 )					\
-    HWA_ERR("optionnal parameter `gain` must be 1 or 20.");		\
-  HW_G2(_hwa_cfadc_kpositive_input,HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
-#define _hwa_cfadc_kgain_0(o,k,...)				\
-  HW_Y(_hwa_cfadc_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfadc_kgain_1(o,k0,v,k,...)	gain = (uint8_t)(v); HW_YW(_hwa_cfadc_pi,input,k))(o,k,__VA_ARGS__)
+#define _hwa_cfadc_kgain_0(o,k,...)		HW_YW(_hwa_cfadc_in,input,k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal parameter `input`
  */
-#define _hwa_cfadc_kinput_1(o,k,v,...)				\
-  if ( HW_IS(,HW_A0(_hw_adc_input_##v)) )				\
-    _hwa_write(o,mux, HW_A1(_hw_adc_input_##v,0));			\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc0) ) ) \
-    _hwa_write(o,mux, 0);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc1) ) ) \
-    _hwa_write(o,mux, 1);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc2) ) ) \
-    _hwa_write(o,mux, 2);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc3) ) ) \
-    _hwa_write(o,mux, 3);						\
-  else									\
-    HWA_ERR("`input` can be 'HW_PIN(adc0..3)' (or synonyms), "		\
-	    "`temperature`, `bandgap`, or `ground`  but not `"#v"`.");	\
-  HW_EOL(__VA_ARGS__)
+#define _hwa_cfadc_in1(o,k,v,...)	HW_KV(_hwa_cfadc_in1,_hw__adcinput_,v)(o,v,__VA_ARGS__)
+#define _hwa_cfadc_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfadc_in12
+#define _hwa_cfadc_in11(v)		mux=v;	_hwa_cfadc_in12
+#define _hwa_cfadc_in12(o,k,...)	HW_EOL(__VA_ARGS__)
+#define _hwa_cfadc_in1b(o,v,...)					\
+  uint32_t a = HW_ADDRESS(v);						\
+  if (      a==HW_ADDRESS((pin,adc0)) )	mux=0;				\
+  else if ( a==HW_ADDRESS((pin,adc1)) )	mux=1;				\
+  else if ( a==HW_ADDRESS((pin,adc2)) )	mux=2;				\
+  else if ( a==HW_ADDRESS((pin,adc3)) )	mux=3;				\
+  else HWA_ERR(HW_EM_XNIL(v,((pin,adc0..4),temperature,bandgap,ground))); HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfadc_kinput(o,k,...)					\
-  HW_Y(_hwa_cfadc_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfadc_in0(o,...)		HW_EOL(__VA_ARGS__)
 
-#define _hw_adc_input_bandgap		, 12	/* , mux */
-#define _hw_adc_input_ground		, 13
-#define _hw_adc_input_temperature	, 15
+#define _hw__adcinput_bandgap		, 12	/* , mux */
+#define _hw__adcinput_ground		, 13
+#define _hw__adcinput_temperature	, 15
 
 
 /*	Process 'positive_input' & 'negative_input' in differential mode
  */
-#define _hwa_cfadc_kpositive_input_0(o,k,...)	\
-  HW_E_VL(k,input | positive_input)
-#define _hwa_cfadc_kpositive_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfadc_vpositive_input_,_hw_adc_input_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfadc_vpositive_input_0(o,v,...)			\
-  HW_E_AVL(`positive_input`, v, 'HW_PIN(adc0..3)' or synonyms)
+#define _hwa_cfadc_pi0(o,k,...)		HW_E(HW_EM_XNIL(k,(input,positive_input)))
+#define _hwa_cfadc_pi1(o,k,v,...)	HW_Y(_hwa_cfadc_vpositive_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
+#define x_hwa_cfadc_vpositive_input_0(o,v,...)			\
+  HW_E_AVL(`positive_input`, v, '(pin,adc0..3)' or synonyms)
 #define _hwa_cfadc_vpositive_input_1(o,v,k,...)			\
-  uint8_t positive_input = HW_A1(_hw_adc_input_##v);			\
+  uint8_t positive_input = HW_A1(_hw__adcinput_##v);			\
   HW_G2(_hwa_cfadc_knegative_input,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 #define _hwa_cfadc_knegative_input_0(o,k,...)	\
   HW_E_VL(k,negative_input)
 #define _hwa_cfadc_knegative_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfadc_vnegative_input_,_hw_adc_input_##v)(o,v,__VA_ARGS__)
+  HW_Y(_hwa_cfadc_vnegative_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vnegative_input_0(o,v,...)			\
-  HW_E_AVL(`negative_input`, v, 'HW_PIN(adc0..3)' or synonyms)
+  HW_E_AVL(`negative_input`, v, '(pin,adc0..3)' or synonyms)
 #define _hwa_cfadc_vnegative_input_1(o,v,...)				\
-  uint8_t negative_input = HW_A1(_hw_adc_input_##v);			\
+  uint8_t negative_input = HW_A1(_hw__adcinput_##v);			\
   _hwa_write(o,mux,_hwa_adc_compute_mux(positive_input,negative_input,gain)); \
   HW_EOL(__VA_ARGS__)
 

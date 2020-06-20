@@ -53,7 +53,7 @@
 
 
 
-/*  Return the definition of o as a triplet: c,o,(d).
+/*  Get the definition of an object named 'o' as a triplet: c,o,(d).
  *  or ,o,"error message" if o is not an object.
  */
 #define HW_XO(o)			_HW_XO01(o,hw_##o)
@@ -61,11 +61,11 @@
 #define _HW_XO02(o,...)			HW_Y0(_HW_XO02,hw_class_##__VA_ARGS__)(o,__VA_ARGS__)
 #define _HW_XO021(o,c,...)		c,o,(__VA_ARGS__)
 #define _HW_XO020(o,...)		HW_Y0(_HW_XO020,o)(o)
-#define _HW_XO0200(o)			,o,HW_EM_O(o)
-#define _HW_XO0201(o)			,o,HW_EM_OM(o)
+#define _HW_XO0200(o)			,o,HW_EM_O(o)	/* o is not the name of an object */
+#define _HW_XO0201(o)			,o,HW_EM_OM(o)	/* object name missing */
 
 
-/*  Return the definition of the relative r of object o as a triplet: 'c,o_r,(d)' or 'c,(o,r),(d)'
+/*  Get the definition of the relative r of object o as a triplet: 'c,o_r,(d)' or 'c,(o,r),(d)'
  *    Return ',o,error message' if the relative can not be found.
  *    Register definitions are converted to memory definitions.
  */
@@ -84,6 +84,7 @@
  *  hw_o_r is not a register. Return the definition.
  */
 #define _HW_CODR10_0(c,o,d,r,x,...)	x,o##_##r,(__VA_ARGS__)
+/* #define _HW_CODR10_0(c,o,d,r,x,...)	x,(o,r),(__VA_ARGS__) */
 /*
  *  hw_o_r is a register. Return the memory definition.
  */
@@ -111,7 +112,7 @@
 #define _HW_CODR4(f,...)		_HW_CODR5(f(__VA_ARGS__))
 #define _HW_CODR5(...)			__VA_ARGS__
 /*
- *  hw_c_r is not void.
+ *  hw_c_r is not void. FIXME: remove this when its known that it will never be used.
  */
 #define _HW_CODR3_0(c,o,d,r,...)	HW_Y0(_HW_CODR4_,_hw_prn __VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 #define _HW_CODR4_1(c,o,d,r,...)	,(o,r),internal error: expanding () is not implemented [_HW_CODR4_1]
@@ -141,8 +142,8 @@
 
 
 //HW_CODR(_oca,counter0_compare0,(counter0, 0),pin);
-//HW_CODR(_swuarta,swuart_pb0pa1,(pb0,pa1,(counter0,compare0),1),txd)
-//HW_CODR(_swuarta,swuart_pb0pa1,(pb0,pa1,(counter0,compare0),1),txd)
+//HW_CODR(_swuarta,swuart_pb0pa1,((portb,0),(porta,1),(counter0,compare0),1),txd)
+//HW_CODR(_swuarta,swuart_pb0pa1,((portb,0),(porta,1),(counter0,compare0),1),txd)
 
 
 /*  Compute the beginning of a path: o
@@ -176,56 +177,54 @@
 
 
 /*  Parse an object path to return the definition with the format: c,o,...
- *  Up to 4 elements can be put in the path.
+ *  Up to 5 elements can be put in the path.
  *
- *  Each element can be:
+ *  First element can be:
  *    * a single word: `o`
  *    * a definition: c,o,(d)
  *    * a path: (...)
- *
- *  Provided definitions can com from vitual objects and to not have a hw_o
- *  declarations. An object is supposed to exist if a class name is provided.
+ *  following elements must be object names.
  *
  *  If an error occurs, ',o,error message' is returned.
  */
-#define HW_X(...)			_HW_P0(__VA_ARGS__,,,,)			// Ensure at least 5 arguments
+#define HW_X(...)			_HW_X0(__VA_ARGS__,,,,)			// Ensure at least 5 arguments
 
-#define _HW_P0(x,...)			HW_Y0(_HW_P0_,_hw_prn x)(x,__VA_ARGS__)
-#define _HW_P0_1(...)			_HW_P0_2( HW_XB __VA_ARGS__ )		// Remove parentheses
-#define _HW_P0_2(...)			_HW_P0_0(__VA_ARGS__ )
+#define _HW_X0(x,...)			HW_Y0(_HW_X0_,_hw_prn x)(x,__VA_ARGS__)
+#define _HW_X0_1(...)			_HW_X0_2( HW_XB __VA_ARGS__ )		// Remove parentheses
+#define _HW_X0_2(...)			_HW_X0_0(__VA_ARGS__ )
 
-#define _HW_P0_0(...)			_HW_P0_3( HW_XS(__VA_ARGS__) )		// Element 1
-#define _HW_P0_3(...)			_HW_P0_4( __VA_ARGS__)
-#define _HW_P0_4(x,...)			HW_Y0(_HW_P1_,x)(x,__VA_ARGS__)
-#define _HW_P1_1(c,o,d,...)		_HW_P9(c,o,d)
+#define _HW_X0_0(...)			_HW_X0_3( HW_XS(__VA_ARGS__) )		// Element 1: starter
+#define _HW_X0_3(...)			_HW_X0_4( __VA_ARGS__)
+#define _HW_X0_4(x,...)			HW_Y0(_HW_X1_,x)(x,__VA_ARGS__)
+#define _HW_X1_1(c,o,d,...)		_HW_X9(c,o,d)
 
-#define _HW_P1_0(c,o,d,x,...)		HW_Y(_HW_P2_,x)(c,o,d,x,__VA_ARGS__)	// Element 2
-#define _HW_P2_1(c,o,d,...)		_HW_P9(c,o,d)
-#define _HW_P2_0(c,o,d,r,...)		_HW_P2_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
-#define _HW_P2_2(...)			_HW_P3(__VA_ARGS__)
+#define _HW_X1_0(c,o,d,x,...)		HW_Y(_HW_X2_,x)(c,o,d,x,__VA_ARGS__)	// Element 2
+#define _HW_X2_1(c,o,d,...)		_HW_X9(c,o,d)
+#define _HW_X2_0(c,o,d,r,...)		_HW_X2_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_X2_2(...)			_HW_X3(__VA_ARGS__)
 
-#define _HW_P3(c,o,d,x,...)		HW_Y(_HW_P3_,x)(c,o,d,x,__VA_ARGS__)	// Element 3
-#define _HW_P3_1(c,o,d,...)		_HW_P9(c,o,d)
-#define _HW_P3_0(c,o,d,r,...)		_HW_P3_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
-#define _HW_P3_2(...)			_HW_P4(__VA_ARGS__)
+#define _HW_X3(c,o,d,x,...)		HW_Y(_HW_X3_,x)(c,o,d,x,__VA_ARGS__)	// Element 3
+#define _HW_X3_1(c,o,d,...)		_HW_X9(c,o,d)
+#define _HW_X3_0(c,o,d,r,...)		_HW_X3_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_X3_2(...)			_HW_X4(__VA_ARGS__)
 
-#define _HW_P4(c,o,d,x,...)		HW_Y(_HW_P4_,x)(c,o,d,x,__VA_ARGS__)	// Element 4
-#define _HW_P4_1(c,o,d,...)		_HW_P9(c,o,d)
-#define _HW_P4_0(c,o,d,r,...)		_HW_P4_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
-#define _HW_P4_2(...)			_HW_P5(__VA_ARGS__)
+#define _HW_X4(c,o,d,x,...)		HW_Y(_HW_X4_,x)(c,o,d,x,__VA_ARGS__)	// Element 4
+#define _HW_X4_1(c,o,d,...)		_HW_X9(c,o,d)
+#define _HW_X4_0(c,o,d,r,...)		_HW_X4_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_X4_2(...)			_HW_X5(__VA_ARGS__)
 
-#define _HW_P5(c,o,d,x,...)		HW_Y(_HW_P5_,x)(c,o,d,x,__VA_ARGS__)	// Element 4
-#define _HW_P5_1(c,o,d,...)		_HW_P9(c,o,d)
-#define _HW_P5_0(c,o,d,r,...)		_HW_P5_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
-#define _HW_P5_2(...)			_HW_P6(__VA_ARGS__)
+#define _HW_X5(c,o,d,x,...)		HW_Y(_HW_X5_,x)(c,o,d,x,__VA_ARGS__)	// Element 5
+#define _HW_X5_1(c,o,d,...)		_HW_X9(c,o,d)
+#define _HW_X5_0(c,o,d,r,...)		_HW_X5_2( HW_CODR(c,o,d,r), __VA_ARGS__ )
+#define _HW_X5_2(...)			_HW_X6(__VA_ARGS__)
 
-#define _HW_P6(c,o,d,x,...)		HW_Y(_HW_P6_,x)(c,o,d,x,__VA_ARGS__)	// Element 5
-#define _HW_P6_1(c,o,d,...)		_HW_P9(c,o,d)
-#define _HW_P6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_P6_0]
+#define _HW_X6(c,o,d,x,...)		HW_Y(_HW_X6_,x)(c,o,d,x,__VA_ARGS__)	// End
+#define _HW_X6_1(c,o,d,...)		_HW_X9(c,o,d)
+#define _HW_X6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_X6_0]
 
-#define _HW_P9(c,o,d)			HW_Y0(_HW_P9_,_hw_prn d)(c,o,d)
-#define _HW_P9_1(c,o,d)			_HW_P9_0(c,o,HW_XB d)
-#define _HW_P9_0(...)			__VA_ARGS__
+#define _HW_X9(c,o,d)			HW_Y0(_HW_X9_,_hw_prn d)(c,o,d)
+#define _HW_X9_1(c,o,d)			_HW_X9_0(c,o,HW_XB d)
+#define _HW_X9_0(...)			__VA_ARGS__
 
 
 /*  Expand an object path, remove void arguments from definition.

@@ -60,7 +60,7 @@
  * // Power-on PORTA, USART1, and TIM2
  * //
  * hwa( begin, reset );
- * hwa( turn, (rcc,(pa0,port)), on );
+ * hwa( turn, (rcc,((porta,0),port)), on );
  * hwa( turn, (rcc,usart1), on );
  * hwa( turn, (counter2,rcc), on );
  * hwa( commit );

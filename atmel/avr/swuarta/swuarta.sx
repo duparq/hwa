@@ -87,7 +87,7 @@
 
 	;; Debugging options
 	;; 
-//#define DBG				pb1
+//#define DBG				_ioa, portb, 1, 1
 
 #if HW_ADDRESS(DBG) != -1
 	DBGPORT	  = HW_ADDRESS((DBG,port,port))

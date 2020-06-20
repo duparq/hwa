@@ -26,7 +26,7 @@
  * @note You can not map one signal to one pin with hw(). Use hwa() instead.
  *
  * @code
- * hw | hwa( configure,	  pa0,
+ * hw | hwa( configure,	  (porta,0),
  *
  *	   [ function,	  gpio						// Default
  *			| (controller,...), ]				// Alternate function
@@ -108,8 +108,8 @@
 #define _hwa_cfioa_vfn32(...)			_hwa_cfioa_vfn33(__VA_ARGS__)
 #define _hwa_cfioa_vfn33(o,p,bn,bp,v,n,k,...)			\
   if ( hwa->map.n == 0 )					\
-    hwa->map.n = HW_ADDRESS(o);					\
-  else if ( hwa->map.n != HW_ADDRESS(o) )			\
+    hwa->map.n = HW_ADDRESS((p,bn,bp));				\
+  else if ( hwa->map.n != HW_ADDRESS((p,bn,bp)) )		\
     HWA_E(signal is already mapped to another pin);		\
   HW_YW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
 
@@ -241,7 +241,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * <br>
  * `read`:
  * @code
- * uint8_t value = hw( read, pa0 );
+ * uint8_t value = hw( read, (porta,0) );
  * @endcode
  */
 #define _hw_rdioa(o,p,bn,bp,...)	HW_Y(_hw_rdioa_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
@@ -254,7 +254,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * <br>
  * `write`:
  * @code
- * hw | hwa( write, pa0, 0 );
+ * hw | hwa( write, (porta,0), 0 );
  * @endcode
  *
  * @note HWA does not write the ODR of the port. It writes the BSRR so that
@@ -292,7 +292,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * bits through the BSRR. The ODR is not written directly.
  *
  * @code
- * hw( toggle, pa0 );
+ * hw( toggle, (porta,0) );
  * @endcode
  */
 /*  Use the BSRR instead of a read-modify-write on the ODR.
@@ -316,8 +316,8 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * @page stm32_ioa
  *
  * @code
- * hwa( toggle, pa0 );	   //  Register pa0 for toggling
- * hwa( toggle, pa4 );	   //  Register pa4 for toggling
+ * hwa( toggle, (porta,0) );	   //  Register _ioa, porta, 1, 0 for toggling
+ * hwa( toggle, (porta,4) );	   //  Register _ioa, porta, 1, 4 for toggling
  * hwa( commit );	   //  Toggle all registered pins at once
  * @endcode
  */

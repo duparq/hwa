@@ -18,8 +18,8 @@
  * Two GPIO lines named `scl` and `sda` and the `bps` rate must be defined:
  *
  * @code
- * #define TWI     HW_SWTWIMASTER( scl, pc5,
- *                                 sda, pc4,
+ * #define TWI     HW_SWTWIMASTER( scl, (portc,5),
+ *                                 sda, (portc,4),
  *                                 bps, 400000 )
  * @endcode
  *

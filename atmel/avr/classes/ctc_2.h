@@ -272,10 +272,10 @@ HW_INLINE uint8_t _hw_ctcck_xosc( float v )
        */								\
       if ( hwa->o.compare0.config.output != 0xFF				\
 	   && hwa->o.compare0.config.output != HW_A1(_hw_oca_output_disconnected) ) \
-	_hwa( configure, hw_##o##_compare0_pin, mode, digital_output );	\
+	_hwa( configure, (o,compare0,pin), mode, digital_output );	\
       if ( hwa->o.compare1.config.output != 0xFF				\
 	   && hwa->o.compare1.config.output != HW_A1(_hw_oca_output_disconnected) ) \
-	_hwa( configure, hw_##o##_compare1_pin, mode, digital_output );	\
+	_hwa( configure, (o,compare1,pin), mode, digital_output );	\
     }									\
   } while(0)
 

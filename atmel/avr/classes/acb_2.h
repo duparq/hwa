@@ -28,11 +28,11 @@
  *		       | rising
  *		       | both, ]
  *
- *    [ positive_input,	 HW_PIN(ain0)
+ *    [ positive_input,	 (pin,ain0)
  *		       | bandgap,    ]
  *
- *    [ negative_input,	 HW_PIN(ain1)
- *		       | HW_PIN(adc0..3) ] );
+ *    [ negative_input,	 (pin,ain1)
+ *		       | (pin,adc0..3) ] );
  * @endcode
  */
 /*
@@ -78,10 +78,10 @@
   HW_G2(_hwa_cfacb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacb_vposin_bandgap_0(o,v,k,...)			\
-  if ( HW_ADDRESS(v)==HW_ADDRESS(HW_PIN(ain0)) )					\
+  if ( HW_ADDRESS(v)==HW_ADDRESS((pin,ain0)) )					\
     _hwa_write(o,acbg,0);						\
   else									\
-    HWA_ERR("`positive_input` can be `HW_PIN(ain0) | bandgap`, but not `"#v"`."); \
+    HWA_ERR("`positive_input` can be `(pin,ain0) | bandgap`, but not `"#v"`."); \
   HW_G2(_hwa_cfacb_xnegin,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
 
 #define _hwa_cfacb_xposin_0(o,k,...)					\
@@ -92,21 +92,21 @@
 #define _hwa_cfacb_xnegin_0(o,...)		HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfacb_xnegin_1(o,k,v,...)				\
-  if ( HW_ADDRESS(v)==HW_ADDRESS(HW_PIN(ain1)) ) {			\
+  if ( HW_ADDRESS(v)==HW_ADDRESS((pin,ain1)) ) {			\
     _hwa_write(o,acme,0);						\
   } else {								\
     _hwa_write(o,acme,1);						\
     _hwa_write(o,aden,0);						\
-    if ( HW_ADDRESS(v) == HW_ADDRESS( HW_PIN(adc0) ) )			\
+    if ( HW_ADDRESS(v) == HW_ADDRESS( (pin,adc0) ) )			\
       _hwa_write(o,admux, 0);						\
-    else if ( HW_ADDRESS(v) == HW_ADDRESS( HW_PIN(adc1) ) )		\
+    else if ( HW_ADDRESS(v) == HW_ADDRESS( (pin,adc1) ) )		\
       _hwa_write(o,admux, 1);						\
-    else if ( HW_ADDRESS(v) == HW_ADDRESS( HW_PIN(adc2) ) )		\
+    else if ( HW_ADDRESS(v) == HW_ADDRESS( (pin,adc2) ) )		\
       _hwa_write(o,admux, 2);						\
-    else if ( HW_ADDRESS(v) == HW_ADDRESS( HW_PIN(adc3) ) )		\
+    else if ( HW_ADDRESS(v) == HW_ADDRESS( (pin,adc3) ) )		\
       _hwa_write(o,admux, 3);						\
     else								\
-      HWA_ERR("`negative_input` can be `HW_PIN(ain1)`, or any analog input pin, but not `"#v"`."); \
+      HWA_ERR("`negative_input` can be `(pin,ain1)`, or any analog input pin, but not `"#v"`."); \
   }									\
   HW_EOL(__VA_ARGS__)
 

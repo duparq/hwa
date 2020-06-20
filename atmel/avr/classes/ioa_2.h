@@ -24,7 +24,7 @@
  * `configure`:
  *
  * @code
- * hw | hwa( configure,	  pa0,
+ * hw | hwa( configure,	  (porta,0),
  *
  *	   [ function,	  gpio, ]			// Default
  *
@@ -41,19 +41,17 @@
  *	 input mode.
  */
 
-#define _hw_cfioa(...)			_hwx_cfioa(_hw,__VA_ARGS__,,)
-#define _hwa_cfioa(...)			_hwx_cfioa(_hwa,__VA_ARGS__,,)
+#define _hw_cfioa(...)			do{ _hwx_cfioa(_hw,__VA_ARGS__,,) }while(0)
+#define _hwa_cfioa(...)			do{ _hwx_cfioa(_hwa,__VA_ARGS__,,) }while(0)
 
-/*  Atmel AVR peripheral controllers are responsible of their I/O pins
- *  configuration, so there is no need for a 'function' argument as it is always
- *  'gpio'. 
+/*  Atmel AVR peripheral controllers take care of their I/O configuration, so
+ *  there is no need for a 'function' argument as it is always 'gpio'.
  */
 
 /*  Optionnal key 'function'
  */
 #define _hw_cfioa_fn_gpio
 
-//_hwx_cfioa(_hw,port1_4_0,-1,port1,4,0,mode, digital_output,,,,);
 #define _hwx_cfioa(x,o,p,bn,bp,k,...)		HW_Y(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwx_cfioa_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfioa_vfn_,_hw_cfioa_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
@@ -79,39 +77,30 @@
 #define _hwx_cfioa_di(x,o,p,bn,bp,k,...)	x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfioa_dif(x,o,p,bn,bp,k,...)				\
-  do{ x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-    x##_write_m(p,port,((1U<<bn)-1)<<bp, 0 ); }while(0) HW_EOL(__VA_ARGS__)
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_m(p,port,((1U<<bn)-1)<<bp, 0 ); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfioa_dipu(x,o,p,bn,bp,k,...)				\
-  do{ x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
-    x##_write_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); }while(0) HW_EOL(__VA_ARGS__)
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, 0);				\
+  x##_write_m(p,port,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfioa_do(x,o,p,bn,bp,k,...)				\
-  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp) HW_EOL(__VA_ARGS__)
+  x##_write_m(p,ddr,((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); HW_EOL(__VA_ARGS__)
 
+//do{_hwx_cfioa_ai(_hwa,pin_13,porta,1,0,,,,)while(0)
 #define _hwx_cfioa_ai(h,o,p,bn,bp,...)		_hwx_cfioa_ai1(h,o,HW_X(o,did))
 #define _hwx_cfioa_ai1(...)			_hwx_cfioa_ai2(__VA_ARGS__)
 #define _hwx_cfioa_ai2(h,o,x,...)		HW_YW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
 #define _hwx_cfioa_ai2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
-#define _hwx_cfioa_ai2_1(h,o,c,...)		h##_write__m111( __VA_ARGS__, 1, )
+#define _hwx_cfioa_ai2_1(h,o,c,...)		h##_write__m111( __VA_ARGS__, 1, );
 
 #define _hwx_cfioa_aipu(h,o,p,bn,bp,...)	_hwx_cfioa_aipu1(h,o,p,bn,bp,HW_X(o,did))
 #define _hwx_cfioa_aipu1(...)			_hwx_cfioa_aipu2(__VA_ARGS__)
 #define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_YW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
 #define _hwx_cfioa_aipu2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
 #define _hwx_cfioa_aipu2_1(h,o,p,bn,bp,c,...)				\
-  do {									\
-    h##_write__m111( __VA_ARGS__, 1, );					\
-    h##_write_m( p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp ); }	\
-  while(0)
-
-//_hwx_cfioa_aipu2_1(_hwa,pa0,port0,1,0,_m111,(shared,did),shared,did,_r8,0 +0x21,0xFF,0x00,1,0);
-
-/* #define _hwx_cfioa_aipu(x,o,p,bn,bp,...)	HW_Y(_hwx_cfioa_aipu_,HW_G2(_hw_isa_reg,hw_##o##_##did),0)(x,o,p,bn,bp,__VA_ARGS__) */
-/* #define _hwx_cfioa_aipu_0(x,o,p,bn,bp,...)	HW_E(pin `o` does not support analog_input) */
-/* #define _hwx_cfioa_aipu_1(x,o,p,bn,bp,k,...)				\ */
-/*   do { x( write, (o,did), 1);						\ */
-/*     x##_write_m(p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp); }while(0) HW_EOL(__VA_ARGS__) */
+  h##_write__m111( __VA_ARGS__, 1, );					\
+  h##_write_m( p, port, ((1U<<bn)-1)<<bp, ((1U<<bn)-1)<<bp );
 
 
 /**
@@ -120,7 +109,7 @@
  * `read`:
  *
  * @code
- * uint8_t value = hw( read, pa0 );
+ * uint8_t value = hw( read, (porta,0) );
  * @endcode
  */
 #define _hw_read_ioa(o, p,bn,bp,...)					\
@@ -133,7 +122,7 @@
  * `write`:
  *
  * @code
- * hw | hwa( write, pa0, value );
+ * hw | hwa( write, (porta,0), value );
  * @endcode
  */
 #define _hw_write_ioa(o, p,bn,bp, v,...)				\
@@ -149,7 +138,7 @@
  * `toggle`
  *
  * @code
- * hw( toggle, pa0 );		// Toggle pin PA0
+ * hw( toggle, (porta,0) );		// Toggle pin PA0
  * @endcode
  */
 #define _hw_toggle_ioa(o,p,bn,bp,...)	_hw_tgioa01(HW_X(p,pin),bn,bp)

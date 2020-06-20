@@ -68,7 +68,7 @@ HW_E(device `HW_DEVICE` does not have a USI)
 /*  SPI master (over USI) with software-managed clocking handled by HWA
  */
 #define SPI		spimaster_swclk0
-#define NRF_CSN		HW_PIN(3)
+#define NRF_CSN		(pin,3)
 
 
 int

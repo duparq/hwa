@@ -40,7 +40,7 @@
  * @code
  * // ALTERNATE_FUNCTION is a signal name, such as 'int0' or '(uart0,tx)'.
  * //
- * hw | hwa( configure,	  pa0,
+ * hw | hwa( configure,	  (porta,0),
  *
  *	     function,	  ALTERNATE_FUNCTION );
  * @endcode
@@ -247,7 +247,7 @@
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
  * //
- * hwa( toggle, pa0 );
+ * hwa( toggle, (porta,0) );
  * @endcode
  */
 

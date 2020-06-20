@@ -19,7 +19,7 @@
  * @endcode
  * <br>
  * @code
- * hw | hwa( power, (pa0,port),	  on
+ * hw | hwa( power, ((porta,0),port),	  on
  *					   | off );
  * @endcode
  */

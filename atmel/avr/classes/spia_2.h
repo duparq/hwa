@@ -67,10 +67,10 @@
   _hwa_write(o,mstr, HW_A2(_hw_spia_function_##v));			\
   if ( HW_A1(_hw_spia_function_##v) == 1 ) {				\
     if ( HW_A2(_hw_spia_function_##v) == 0 ) {				\
-      _hwa( configure, (o,pin_miso), mode, digital_output );	\
+      _hwa( configure, (o,miso), mode, digital_output );	\
     } else {								\
-      _hwa( configure, (o,pin_mosi), mode, digital_output );	\
-      _hwa( configure, (o,pin_sck), mode, digital_output );	\
+      _hwa( configure, (o,mosi), mode, digital_output );	\
+      _hwa( configure, (o,sck), mode, digital_output );	\
     }									\
   }									\
   HW_Y(_hwa_cfspia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)

@@ -25,7 +25,7 @@
  * The `hw_bn()` instruction returns the number of bits of an I/O definition:
  *
  * @code
- * #if hw_id(pa3) && (hw_bn(pa3) != 1)
+ * #if (HW_ADDRESS((porta,3)) != -1) && (HW_BITS((porta,3)) != 1)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -42,7 +42,7 @@
  * of the least significant bit:
  *
  * @code
- * #if hw_id(pa3) && (hw_bp(pa3) != 3)
+ * #if (HW_ADDRESS((porta,3)) != -1) && (HW_POSITION((porta,3)) != 3)
  * #  HWA is damaged!
  * #endif
  * @endcode
@@ -54,12 +54,9 @@
 /**
  * @page espressif_ioa
  *
- * The `hw_rel()` instruction is usefull to retrieve the name of the I/O port
- * associated to the I/O:
- *
  * @code
- * #if hw_id(pa3) && hw_id(rel(hw_pa3,port)) != hw_id(port_a)
- * #  Pin PA3 should be a PORTA pin!
+ * #if (HW_ADDRESS((porta,3)) != -1) && (HW_ADDRESS((porta,3),port) != HW_ADDRESS(porta))
+ * #  Pin (porta,3) is not a pin of PORTA?
  * #endif
  * @endcode
  */

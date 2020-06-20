@@ -122,9 +122,9 @@
  *
  * #include <hwa/swuarta.h>
  *
- * #define UART		HW_SWUART( txd,       pb0,
- *                                 rxd,       pb1,
- *                                 startirq,  (pb1,pcic,irq),
+ * #define UART		HW_SWUART( txd,       (portb,0),
+ *                                 rxd,       (portb,1),
+ *                                 startirq,  ((portb,1),pcic,irq),
  *                                 counter,   counter0,
  *                                 compare,   compare0,
  *                                 clkdiv,    2,
@@ -134,24 +134,32 @@
  */
 #define hw_class__swuarta
 
-#define HW_SWUART(...)					_HW_SWUART0(__VA_ARGS__,,,,,)
-#define _HW_SWUART0(k,...)				HW_YW(_HW_SWUART0_,txd,k)(k,__VA_ARGS__)
-#define _HW_SWUART0_0(k,...)				,HW_SWUART(...),HW_EM_KX(txd,k)
-#define _HW_SWUART0_1(k,v,...)				HW_YW(_HW_SWUART1_,_ioa,hw_##v)(v,__VA_ARGS__)
-#define _HW_SWUART1_0(v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART1_1(t,k,...)				HW_YW(_HW_SWUART2_,rxd,k)(t,k,__VA_ARGS__)
-#define _HW_SWUART2_0(t,k,...)				HW_YW(_HW_SWUART4_,counter,k)(t,,,k,__VA_ARGS__)
-#define _HW_SWUART2_1(t,k,v,...)			HW_YW(_HW_SWUART3_,_ioa,hw_##v)(t,v,__VA_ARGS__)
-#define _HW_SWUART3_0(t,v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART3_1(t,r,k,...)			HW_YW(_HW_SWUART3B_,startirq,k)(t,r,k,__VA_ARGS__)
-#define _HW_SWUART3B_0(t,r,k,...)			,HW_SWUART(...),HW_EM_IKW(HW_SWUART(...),startirq,k)
-#define _HW_SWUART3B_1(t,r,k,v,...)			_HW_SWUART3B2(t,r,(HW_X(v)),__VA_ARGS__)
-#define _HW_SWUART3B2(...)				_HW_SWUART3B3(__VA_ARGS__)
-#define _HW_SWUART3B3(t,r,v,...)			HW_YW(_HW_SWUART3C_,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
-#define _HW_SWUART3C_0(t,r,v,...)			,HW_SWUART(...),HW_EM_ONAI(v)
-#define _HW_SWUART3C_1(t,r,i,k,...)			HW_YW(_HW_SWUART4_,counter,k)(t,r,i,k,__VA_ARGS__)
-#define _HW_SWUART4_0(t,r,i,k,...)			,HW_SWUART(...),HW_EM_KX(counter,k)
-#define _HW_SWUART4_1(t,r,i,k1,ct,k,...)		HW_YW(_HW_SWUART5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
+#define HW_SWUART(...)					_HW_SWUART10(__VA_ARGS__,,,,,)
+#define _HW_SWUART10(k,...)				HW_YW(_HW_SWUART10,txd,k)(k,__VA_ARGS__)
+
+#define _HW_SWUART100(k,...)				HW_YW(_HW_SWUART20,rxd,k)((),k,__VA_ARGS__)
+#define _HW_SWUART101(k,...)				_HW_SWUART11(HW_AD(__VA_ARGS__))
+#define _HW_SWUART11(...)				_HW_SWUART12(__VA_ARGS__)
+#define _HW_SWUART12(v,...)				HW_YW(_HW_SWUART12,_ioa,HW_A0 v)(v,__VA_ARGS__)
+#define _HW_SWUART120(v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
+#define _HW_SWUART121(t,k,...)				HW_YW(_HW_SWUART20,rxd,k)(t,k,__VA_ARGS__)
+
+#define _HW_SWUART200(t,k,...)				HW_YW(_HW_SWUART40,counter,k)(t,(),,k,__VA_ARGS__)
+#define _HW_SWUART201(t,k,...)				_HW_SWUART21(t,HW_AD(__VA_ARGS__))
+#define _HW_SWUART21(...)				_HW_SWUART22(__VA_ARGS__)
+#define _HW_SWUART22(t,v,...)				HW_YW(_HW_SWUART22,_ioa,HW_A0 v)(t,v,__VA_ARGS__)
+#define _HW_SWUART220(t,v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
+#define _HW_SWUART221(t,r,k,...)			HW_YW(_HW_SWUART30,startirq,k)(t,r,k,__VA_ARGS__)
+
+#define _HW_SWUART300(t,r,k,...)			,HW_SWUART(...),HW_EM_IKW(HW_SWUART(...),startirq,k)
+#define _HW_SWUART301(t,r,k,...)			_HW_SWUART31(t,r,HW_AD(__VA_ARGS__))
+#define _HW_SWUART31(...)				_HW_SWUART32(__VA_ARGS__)
+#define _HW_SWUART32(t,r,v,...)				HW_YW(_HW_SWUART32,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
+#define _HW_SWUART320(t,r,v,...)			,HW_SWUART(...),HW_EM_ONAI(v)
+#define _HW_SWUART321(t,r,i,k,...)			HW_YW(_HW_SWUART40,counter,k)(t,r,i,k,__VA_ARGS__)
+
+#define _HW_SWUART400(t,r,i,k,...)			,HW_SWUART(...),HW_EM_KX(counter,k)
+#define _HW_SWUART401(t,r,i,k1,ct,k,...)		HW_YW(_HW_SWUART5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
 #define _HW_SWUART5_0(t,r,i,ct,k,...)			,HW_SWUART(...),HW_EM_KX(compare,k)
 #define _HW_SWUART5_1(t,r,i,ct,k1,cp,k,...)		HW_YW(_HW_SWUART6_,clkdiv,k)(t,r,i,ct,HW_BITS(ct),cp,k,__VA_ARGS__)
 #define _HW_SWUART6_0(t,r,i,ct,cp,k,...)		,HW_SWUART(...),HW_EM_KX(clkdiv,k)
@@ -161,7 +169,7 @@
 #define _HW_SWUART8_0(t,r,i,ct,cw,cp,ps,as,k,...)	HW_Y0(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,-1,k,__VA_ARGS__)
 #define _HW_SWUART8_1(t,r,i,ct,cw,cp,ps,as,k1,fr,k,...)	HW_Y0(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,HW_ADDRESS(fr),k,__VA_ARGS__)
 #define _HW_SWUART9_0(t,r,i,ct,cw,cp,ps,as,fr,g,...)	,HW_SWUART(...),HW_EM_G(g)
-#define _HW_SWUART9_1(t,r,i,ct,cw,cp,ps,as,fr,...)	_swuarta, swuart##t##r, (t,r,i,ct,cw,cp,ps,as,fr)
+#define _HW_SWUART9_1(t,r,i,ct,cw,cp,ps,as,fr,...)	_swuarta, HW_G3(swuart,HW_A1 t,HW_A1 r), (t,r,i,ct,cw,cp,ps,as,fr)
 
 #define _HW_SWUART_E	,HW_SWUART(...), HW_E(HW_EM_S(HW_SWUARTX( txd,..., [rxd,..., startirq,...,] counter,..., compare,..., clkdiv,..., autosync,..., fastreg,... )))
 
@@ -303,7 +311,7 @@
 /*  Configure TXD pin as output high unless the pin is also
  *  used as RXD.
  */
-#define _hwa_cfswuarta_t(r,t)		HW_Y(_hwa_cfswuarta_t,t)(r,t)
+#define _hwa_cfswuarta_t(r,t)		HW_Y(_hwa_cfswuarta_t,HW_A1 t)(r,t)
 #define _hwa_cfswuarta_t1(r,t)
 #define _hwa_cfswuarta_t0(r,t)						\
   if ( HW_ADDRESS(t) != -1 && HW_ADDRESS(r) != HW_ADDRESS(t) ) {	\
@@ -313,7 +321,7 @@
 
 /*  RXD pin & interrupts (for reception / sync)
  */
-#define _hwa_cfswuarta_ri(r,i)		HW_Y(_hwa_cfswuarta_ri,r)(r,i)
+#define _hwa_cfswuarta_ri(r,i)		HW_Y(_hwa_cfswuarta_ri,HW_A1 r)(r,i)
 #define _hwa_cfswuarta_ri1(r,i)
 #define _hwa_cfswuarta_ri0(r,i)						\
     if ( HW_ADDRESS(r) != -1 ) {					\

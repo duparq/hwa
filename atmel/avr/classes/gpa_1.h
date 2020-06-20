@@ -36,10 +36,10 @@
 
 /*  Handle definitions such as HW_IO(port1,1,2)
  */
-#define HW_IO__gpa			, _hw_io_gpa
-//#define _hw_io_gpa(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp)
-#define _hw_io_gpa(o,a,bn,bp,...)	HW_Y(_hw_io_gpa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__)
-#define _hw_io_gpa1(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp) HW_EOL(__VA_ARGS__)
+/* #define HW_IO__gpa			, _hw_io_gpa */
+/* //#define _hw_io_gpa(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp) */
+/* #define _hw_io_gpa(o,a,bn,bp,...)	HW_Y(_hw_io_gpa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) */
+/* #define _hw_io_gpa1(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp) HW_EOL(__VA_ARGS__) */
 
 
 #if !defined __ASSEMBLER__

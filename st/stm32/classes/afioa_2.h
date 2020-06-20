@@ -57,36 +57,36 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
   int8_t remap1 = -1 ;
 
   if ( hwa->map.counter2_etr != 0 ) {
-    if ( hwa->map.counter2_etr == HW_ADDRESS(pa0) )
+    if ( hwa->map.counter2_etr == HW_ADDRESS((porta,0)) )
       remap0 = 0 ;
-    else if ( hwa->map.counter2_etr == HW_ADDRESS(pa15) )
+    else if ( hwa->map.counter2_etr == HW_ADDRESS((porta,15)) )
       remap0 = 1 ;
     else
       hwa->map.error = 1 ;
   }
 
   if ( hwa->map.counter2_channel1 != 0 ) {
-    if ( hwa->map.counter2_channel1 == HW_ADDRESS(pa0) )
+    if ( hwa->map.counter2_channel1 == HW_ADDRESS((porta,0)) )
       remap0 = 0 ;
-    else if ( hwa->map.counter2_channel1 == HW_ADDRESS(pa15) )
+    else if ( hwa->map.counter2_channel1 == HW_ADDRESS((porta,15)) )
       remap0 = 1 ;
     else
       hwa->map.error = 1 ;
   }
 
   if ( hwa->map.counter2_channel2 != 0 ) {
-    if ( hwa->map.counter2_channel2 == HW_ADDRESS(pa1) && remap0 == -1 )
+    if ( hwa->map.counter2_channel2 == HW_ADDRESS((porta,1)) && remap0 == -1 )
       remap0 = 0 ;
-    else if ( hwa->map.counter2_channel2 == HW_ADDRESS(pb3) && remap0 == -1 )
+    else if ( hwa->map.counter2_channel2 == HW_ADDRESS((portb,3)) && remap0 == -1 )
       remap0 = 1 ;
     else
       hwa->map.error = 1 ;
   }
 
   if ( hwa->map.counter2_channel3 != 0 ) {
-    if ( hwa->map.counter2_channel3 == HW_ADDRESS(pa2) )
+    if ( hwa->map.counter2_channel3 == HW_ADDRESS((porta,2)) )
       remap1 = 0 ;
-    else if ( hwa->map.counter2_channel3 == HW_ADDRESS(pb10) )
+    else if ( hwa->map.counter2_channel3 == HW_ADDRESS((portb,10)) )
       remap1 = 1 ;
     else {
       hwa->map.error = 1 ;
@@ -95,9 +95,9 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
   }
 
   if ( hwa->map.counter2_channel4 != 0 ) {
-    if ( hwa->map.counter2_channel4 == HW_ADDRESS(pa3) && remap1 == -1 )
+    if ( hwa->map.counter2_channel4 == HW_ADDRESS((porta,3)) && remap1 == -1 )
       remap1 = 0 ;
-    else if ( hwa->map.counter2_channel4 == HW_ADDRESS(pb11) && remap1 == -1 )
+    else if ( hwa->map.counter2_channel4 == HW_ADDRESS((portb,11)) && remap1 == -1 )
       remap1 = 1 ;
     else
       hwa->map.error = 1 ;

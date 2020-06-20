@@ -63,7 +63,7 @@
  *
  *	//  Input
  *	//
- *	input,	   HW_PIN(adc0..7)
+ *	input,	   (pin,adc0..7)
  *		 | agnd
  *		 | bandgap_1100mV
  *		 | temperature );
@@ -75,8 +75,10 @@
  */
 #define _hwa_cfadb(o,a,k,...)					\
   do {									\
+    uint8_t mux __attribute__((unused)) = 0xFF ;			\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
     HW_Y(_hwa_cfadb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
+    if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
   } while(0)
 
 #define _hwa_cfadb_kclock_0(o,k,...)			\
@@ -130,14 +132,14 @@
 #define _hwa_cfadb_align(o,k,...)				\
   HW_Y(_hwa_cfadb_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfadb_kalign_0(o,...)		\
-  _hwa_cfadb_kinput(o,__VA_ARGS__)
+  _hwa_cfadb_in(o,__VA_ARGS__)
 #define _hwa_cfadb_kalign_1(o,k,v,...)				\
   HW_Y(_hwa_cfadb_valign_,_hw_adb_align_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_valign_0(o,v,...)				\
   HW_E_AVL(align, v, left | right)
 #define _hwa_cfadb_valign_1(o,v,...)			\
   _hwa_write(o,lar, HW_A1(_hw_adb_align_##v));	\
-  _hwa_cfadb_kinput(o,__VA_ARGS__)
+  _hwa_cfadb_in(o,__VA_ARGS__)
 
 #define _hw_adb_align_left		, 1	/* , lar */
 #define _hw_adb_align_right		, 0
@@ -151,36 +153,57 @@
 #define _hwa_cfadb_kinput_1(o,k,v,...)				\
   if ( HW_IS(,HW_A0(_hw_adb_input_##v)) )				\
     _hwa_write(o,mux, HW_A1(_hw_adb_input_##v,0));			\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc0) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc0) ) )		\
     _hwa_write(o,mux, 0);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc1) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc1) ) )		\
     _hwa_write(o,mux, 1);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc2) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc2) ) )		\
     _hwa_write(o,mux, 2);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc3) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc3) ) )		\
     _hwa_write(o,mux, 3);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc4) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc4) ) )		\
     _hwa_write(o,mux, 4);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc5) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc5) ) )		\
     _hwa_write(o,mux, 5);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc6) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc6) ) )		\
     _hwa_write(o,mux, 6);						\
-  else if ( HW_ADDRESS(v)==HW_ADDRESS( HW_PIN(adc7) ) )		\
+  else if ( HW_ADDRESS(v)==HW_ADDRESS( (pin,adc7) ) )		\
     _hwa_write(o,mux, 7);						\
   else									\
-    HWA_ERR("`input` can be 'HW_PIN(adc0..7)' (or synonyms), "		\
+    HWA_ERR("`input` can be '(pin,adc0..7)' (or synonyms), "		\
 	    "`temperature`, `bandgap_1100mV`, or `ground`  but not `"#v"`."); \
   HW_EOL(__VA_ARGS__)
 
-#define _hw_adb_input_temperature	, 8	/* , mux */
-#define _hw_adb_input_bandgap_1100mV	, 14
-#define _hw_adb_input_ground		, 15
+
+
+/*	Mandatory parameter `input`
+ */
+#define _hwa_cfadb_in(o,k,...)		HW_YW(_hwa_cfadb_in,input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadb_in1(o,k,v,...)	HW_KV(_hwa_cfadb_in1,_hw__adbinput_,v)(o,v,__VA_ARGS__)
+#define _hwa_cfadb_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfadb_in12
+#define _hwa_cfadb_in11(v)		mux=v;	_hwa_cfadb_in12
+#define _hwa_cfadb_in12(o,k,...)	HW_EOL(__VA_ARGS__)
+#define _hwa_cfadb_in1b(o,v,...)					\
+  uint32_t a = HW_ADDRESS(v);						\
+  if ( a==HW_ADDRESS((pin,adc0)) )	mux=0;				\
+  else if ( a==HW_ADDRESS((pin,adc1)) )	mux=1;				\
+  else if ( a==HW_ADDRESS((pin,adc2)) )	mux=2;				\
+  else if ( a==HW_ADDRESS((pin,adc3)) )	mux=3;				\
+  else if ( a==HW_ADDRESS((pin,adc4)) )	mux=4;				\
+  else if ( a==HW_ADDRESS((pin,adc5)) )	mux=5;				\
+  else if ( a==HW_ADDRESS((pin,adc6)) )	mux=6;				\
+  else if ( a==HW_ADDRESS((pin,adc7)) )	mux=7;				\
+  else HWA_ERR(HW_Q(HW_Q(v) is not in ((pin,adc0..7),temperature,bandgap_1100mV,ground))); HW_EOL(__VA_ARGS__)
+
+#define _hw__adbinput_temperature	, 8	/* , mux */
+#define _hw__adbinput_bandgap_1100mV	, 14
+#define _hw__adbinput_ground		, 15
 
 
 /*  Power management
  */
 #define hw_power__adb			, _hw_power
-#define hwa_power__adb		, _hwa_power
+#define hwa_power__adb			, _hwa_power
 
 
 /**

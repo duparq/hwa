@@ -692,26 +692,26 @@ typedef struct {
  * HWA name	| 44Q	      | Class			   | Atmel name
  * -------------|-------------|----------------------------|-----------
  * `port_b`	|	      | @ref atmelavr_ioa "_ioa" | PORTB
- * `pb0` | `pin_8`	| @ref atmelavr_ioa "_ioa" | PB0
- * `pb1` | `pin_9`	| @ref atmelavr_ioa "_ioa" | PB1
- * `pb2` | `pin_10` | @ref atmelavr_ioa "_ioa" | PB2
- * `pb3` | `pin_11` | @ref atmelavr_ioa "_ioa" | PB3
- * `pb4` | `pin_28` | @ref atmelavr_ioa "_ioa" | PB4
- * `pb5` | `pin_29` | @ref atmelavr_ioa "_ioa" | PB5
- * `pb6` | `pin_30` | @ref atmelavr_ioa "_ioa" | PB6
- * `pb7` | `pin_12` | @ref atmelavr_ioa "_ioa" | PB7
+ * `(portb,0)` | `pin_8`	| @ref atmelavr_ioa "_ioa" | PB0
+ * `(portb,1)` | `pin_9`	| @ref atmelavr_ioa "_ioa" | PB1
+ * `(portb,2)` | `pin_10` | @ref atmelavr_ioa "_ioa" | PB2
+ * `(portb,3)` | `pin_11` | @ref atmelavr_ioa "_ioa" | PB3
+ * `(portb,4)` | `pin_28` | @ref atmelavr_ioa "_ioa" | PB4
+ * `(portb,5)` | `pin_29` | @ref atmelavr_ioa "_ioa" | PB5
+ * `(portb,6)` | `pin_30` | @ref atmelavr_ioa "_ioa" | PB6
+ * `(portb,7)` | `pin_12` | @ref atmelavr_ioa "_ioa" | PB7
  * `port_c`	|	      | @ref atmelavr_ioa "_ioa" | PORTC
- * `pc6` | `pin_31` | @ref atmelavr_ioa "_ioa" | PC6
- * `pc7` | `pin_32` | @ref atmelavr_ioa "_ioa" | PC7
+ * `(portc,6)` | `pin_31` | @ref atmelavr_ioa "_ioa" | PC6
+ * `(portc,7)` | `pin_32` | @ref atmelavr_ioa "_ioa" | PC7
  * `port_d`	|	      | @ref atmelavr_ioa "_ioa" | PORTD
- * `pd0` | `pin_18` | @ref atmelavr_ioa "_ioa" | PD0
- * `pd1` | `pin_19` | @ref atmelavr_ioa "_ioa" | PD1
- * `pd2` | `pin_20` | @ref atmelavr_ioa "_ioa" | PD2
- * `pd3` | `pin_21` | @ref atmelavr_ioa "_ioa" | PD3
- * `pd4` | `pin_25` | @ref atmelavr_ioa "_ioa" | PD4
- * `pd5` | `pin_22` | @ref atmelavr_ioa "_ioa" | PD5
- * `pd6` | `pin_26` | @ref atmelavr_ioa "_ioa" | PD6
- * `pd7` | `pin_27` | @ref atmelavr_ioa "_ioa" | PD7
+ * `(portd,0)` | `pin_18` | @ref atmelavr_ioa "_ioa" | PD0
+ * `(portd,1)` | `pin_19` | @ref atmelavr_ioa "_ioa" | PD1
+ * `(portd,2)` | `pin_20` | @ref atmelavr_ioa "_ioa" | PD2
+ * `(portd,3)` | `pin_21` | @ref atmelavr_ioa "_ioa" | PD3
+ * `(portd,4)` | `pin_25` | @ref atmelavr_ioa "_ioa" | PD4
+ * `(portd,5)` | `pin_22` | @ref atmelavr_ioa "_ioa" | PD5
+ * `(portd,6)` | `pin_26` | @ref atmelavr_ioa "_ioa" | PD6
+ * `(portd,7)` | `pin_27` | @ref atmelavr_ioa "_ioa" | PD7
  * `port_e`	|	      | @ref atmelavr_ioa "_ioa" | PORTE
  * `pe2` | `pin_33` | @ref atmelavr_ioa "_ioa" | PE2
  * `pe6` | `pin_1`	| @ref atmelavr_ioa "_ioa" | PE6
@@ -819,79 +819,79 @@ typedef struct {
  */
 #define _hw_pin_adc0			, pf0
 #define _hw_pin_adc1			, pf1
-#define _hw_pin_adc10			, pd7
-#define _hw_pin_adc11			, pb4
-#define _hw_pin_adc12			, pb5
-#define _hw_pin_adc13			, pb6
+#define _hw_pin_adc10			, (portd,7)
+#define _hw_pin_adc11			, (portb,4)
+#define _hw_pin_adc12			, (portb,5)
+#define _hw_pin_adc13			, (portb,6)
 #define _hw_pin_adc4			, pf4
 #define _hw_pin_adc5			, pf5
 #define _hw_pin_adc6			, pf6
 #define _hw_pin_adc7			, pf7
-#define _hw_pin_adc8			, pd4
-#define _hw_pin_adc9			, pd6
+#define _hw_pin_adc8			, (portd,4)
+#define _hw_pin_adc9			, (portd,6)
 #define _hw_pin_ain0			, pe6
-#define _hw_pin_clk0			, pc7
-#define _hw_pin_icp1			, pd4
-#define _hw_pin_icp3			, pc7
-#define _hw_pin_miso			, pb3
-#define _hw_pin_mosi			, pb2
-#define _hw_pin_ncts			, pd5
+#define _hw_pin_clk0			, (portc,7)
+#define _hw_pin_icp1			, (portd,4)
+#define _hw_pin_icp3			, (portc,7)
+#define _hw_pin_miso			, (portb,3)
+#define _hw_pin_mosi			, (portb,2)
+#define _hw_pin_ncts			, (portd,5)
 #define _hw_pin_nhwb			, pe2
-#define _hw_pin_nint0			, pd0
-#define _hw_pin_nint1			, pd1
-#define _hw_pin_nint2			, pd2
-#define _hw_pin_nint3			, pd3
+#define _hw_pin_nint0			, (portd,0)
+#define _hw_pin_nint1			, (portd,1)
+#define _hw_pin_nint2			, (portd,2)
+#define _hw_pin_nint3			, (portd,3)
 #define _hw_pin_nint6			, pe6
-#define _hw_pin_ncounter4compare0	, pc6
-#define _hw_pin_ncounter4compare1	, pb5
-#define _hw_pin_ncounter4compare3	, pd6
-#define _hw_pin_nrts			, pb7
-#define _hw_pin_counter0compare0	, pb7
-#define _hw_pin_counter0compare1	, pd0
-#define _hw_pin_counter1compare0	, pb5
-#define _hw_pin_counter1compare1	, pb6
-#define _hw_pin_counter1compare2	, pb7
-#define _hw_pin_counter3compare0	, pc6
-#define _hw_pin_counter4compare0	, pc7
-#define _hw_pin_counter4compare1	, pb6
-#define _hw_pin_counter4compare3	, pd7
-#define _hw_pin_pdi			, pb2
-#define _hw_pin_pdo			, pb3
-#define _hw_pin_rxd1			, pd2
-#define _hw_pin_scl			, pd0
-#define _hw_pin_sclk			, pb1
-#define _hw_pin_sda			, pd1
-#define _hw_pin_ss			, pb0
-#define _hw_pin_t0			, pd7
-#define _hw_pin_t1			, pd6
+#define _hw_pin_ncounter4compare0	, (portc,6)
+#define _hw_pin_ncounter4compare1	, (portb,5)
+#define _hw_pin_ncounter4compare3	, (portd,6)
+#define _hw_pin_nrts			, (portb,7)
+#define _hw_pin_counter0compare0	, (portb,7)
+#define _hw_pin_counter0compare1	, (portd,0)
+#define _hw_pin_counter1compare0	, (portb,5)
+#define _hw_pin_counter1compare1	, (portb,6)
+#define _hw_pin_counter1compare2	, (portb,7)
+#define _hw_pin_counter3compare0	, (portc,6)
+#define _hw_pin_counter4compare0	, (portc,7)
+#define _hw_pin_counter4compare1	, (portb,6)
+#define _hw_pin_counter4compare3	, (portd,7)
+#define _hw_pin_pdi			, (portb,2)
+#define _hw_pin_pdo			, (portb,3)
+#define _hw_pin_rxd1			, (portd,2)
+#define _hw_pin_scl			, (portd,0)
+#define _hw_pin_sclk			, (portb,1)
+#define _hw_pin_sda			, (portd,1)
+#define _hw_pin_ss			, (portb,0)
+#define _hw_pin_t0			, (portd,7)
+#define _hw_pin_t1			, (portd,6)
 #define _hw_pin_tck			, pf4
 #define _hw_pin_tdi			, pf7
 #define _hw_pin_tdo			, pf6
 #define _hw_pin_tms			, pf5
-#define _hw_pin_txd1			, pd3
-#define _hw_pin_xck1			, pd5
+#define _hw_pin_txd1			, (portd,3)
+#define _hw_pin_xck1			, (portd,5)
 
 #if defined HW_DEVICE_PACKAGE_44Q
 #
 #  define _hw_pin_1			, pe6
-#  define _hw_pin_8			, pb0
-#  define _hw_pin_9			, pb1
-#  define _hw_pin_10			, pb2
-#  define _hw_pin_11			, pb3
-#  define _hw_pin_12			, pb7
-#  define _hw_pin_18			, pd0
-#  define _hw_pin_19			, pd1
-#  define _hw_pin_20			, pd2
-#  define _hw_pin_21			, pd3
-#  define _hw_pin_22			, pd5
-#  define _hw_pin_25			, pd4
-#  define _hw_pin_26			, pd6
-#  define _hw_pin_27			, pd7
-#  define _hw_pin_28			, pb4
-#  define _hw_pin_29			, pb5
-#  define _hw_pin_30			, pb6
-#  define _hw_pin_31			, pc6
-#  define _hw_pin_32			, pc7
+#  define _hw_pin_8			, (portb,0)
+#  define _hw_pin_9			, (portb,1)
+#  define _hw_pin_10			, (portb,2)
+#  define _hw_pin_11			, (portb,3)
+#  define _hw_pin_12			, (portb,7)
+#  define _hw_pin_18			, (portd,0)
+#  define _hw_pin_19			, (portd,1)
+#  define _hw_pin_20			, (portd,2)
+#  define _hw_pin_21			, (portd,3)
+#  define _hw_pin_22			, (portd,5)
+#  define _hw_pin_25			, (portd,4)
+#  define _hw_pin_26			, (portd,6)
+#  define _hw_pin_27			, (portd,7)
+#  define _hw_pin_28			, (portb,4)
+#  define _hw_pin_29			, (portb,5)
+#  define _hw_pin_30			, (portb,6)
+#  define _hw_pin_31			, (portc,6)
+#  define _hw_pin_32			, (portc,7)
 #  define _hw_pin_33			, pe2
 #  define _hw_pin_36			, pf7
 #  define _hw_pin_37			, pf6
@@ -1067,7 +1067,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter0compare0_pin		pb7
+#define hw_counter0compare0_pin		_ioa, portb, 1, 7
 #define hw_counter0compare0_counter	counter0
 
 
@@ -1088,7 +1088,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter0compare1_pin		pd0
+#define hw_counter0compare1_pin		_ioa, portd, 1, 0
 #define hw_counter0compare1_counter	counter0
 
 
@@ -1156,7 +1156,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1compare0_pin		pb5
+#define hw_counter1compare0_pin		_ioa, portb, 1, 5
 #define hw_counter1compare0_counter	counter1
 
 
@@ -1183,7 +1183,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1compare1_pin		pb6
+#define hw_counter1compare1_pin		_ioa, portb, 1, 6
 #define hw_counter1compare1_counter	counter1
 
 
@@ -1210,7 +1210,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1compare2_pin		pb7
+#define hw_counter1compare2_pin		_ioa, portb, 1, 7
 #define hw_counter1compare2_counter	counter1
 
 
@@ -1240,7 +1240,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter1capture0_pin		pd4
+#define hw_counter1capture0_pin		_ioa, portd, 1, 4
 #define hw_counter1capture0_counter	counter1
 
 
@@ -1304,7 +1304,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter3compare0_pin		pc6
+#define hw_counter3compare0_pin		_ioa, portc, 1, 6
 #define hw_counter3compare0_counter	counter3
 
 
@@ -1388,7 +1388,7 @@ typedef struct {
 
 /*	Relatives
  */
-#define hw_counter3capture0_pin		pc7
+#define hw_counter3capture0_pin		_ioa, portc, 1, 7
 #define hw_counter3capture0_counter	counter3
 
 

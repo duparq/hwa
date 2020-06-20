@@ -22,11 +22,11 @@
  *
  * @code
  * #define hw_sensor0              _tcs3200, 0, 0
- * #define hw_sensor0_s0           pa0
- * #define hw_sensor0_s1           pa1
- * #define hw_sensor0_s2           pa2
- * #define hw_sensor0_s3           pa3
- * #define hw_sensor0_oe           pa4
+ * #define hw_sensor0_s0           _ioa, porta, 1, 0
+ * #define hw_sensor0_s1           _ioa, porta, 1, 1
+ * #define hw_sensor0_s2           _ioa, porta, 1, 2
+ * #define hw_sensor0_s3           _ioa, porta, 1, 3
+ * #define hw_sensor0_oe           _ioa, porta, 1, 4
  * @endcode
  *
  * * `hw_sensor0_s1` and `hw_sensor0_s0` must be declared if you want

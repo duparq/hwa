@@ -69,24 +69,24 @@
 /*  Settings for building the Diabolo bootloader
  *  Settings for the Diabolo application are in the board's Makefile
  */
-#define DIABOLO_PIN_RX			HW_PIN(2)	// PB0
-#define DIABOLO_PIN_TX			HW_PIN(2)
+#define DIABOLO_PIN_RX			(pin,2)		// PB0
+#define DIABOLO_PIN_TX			(pin,2)
 #define DIABOLO_SYNC			51
 
 /*  The pin at which the LED is connected. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.
  */
-#define PIN_LED				HW_PIN(7)	// OC1A
-//#define PIN_LED			  HW_PIN(5)	// OC0A
+#define PIN_LED				(pin,7)		// OC1A
+//#define PIN_LED			  (pin,5)	// OC0A
 
 /*  Analog input pin
  */
-#define PIN_ANALOG_INPUT		HW_PIN(13)	// ADC0
+#define PIN_ANALOG_INPUT		(pin,13)	// ADC0
 
 /*  Pins for hw_swuart1
  */
-#define PIN_TX2				HW_PIN(8)
-#define PIN_RX2				HW_PIN(9)
+#define PIN_TX2				(pin,8)
+#define PIN_RX2				(pin,9)
 
 /*  Include HWA definitions
  */
