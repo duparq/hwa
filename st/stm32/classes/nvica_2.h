@@ -31,9 +31,9 @@
 #define _hwa_nvicaen(o,a,x,...)		_hwx_nvicaed01(_hwa_nvic_en,HW_X((x,irq)))
 
 #define _hwx_nvicaed01(...)		_hwx_nvicaed02(__VA_ARGS__)
-#define _hwx_nvicaed02(h,x,...)		HW_YW(_hwx_nvicaed02,_irq,x)(h,x,__VA_ARGS__)
+#define _hwx_nvicaed02(h,x,...)		HW_BW(_hwx_nvicaed02,_irq,x)(h,x,__VA_ARGS__)
 #define _hwx_nvicaed021(h,c,o,v,...)	h##able(v)
-#define _hwx_nvicaen020(h,f,c,...)	HW_Y0(_hwx_nvicerr,c)(c,__VA_ARGS__)
+#define _hwx_nvicaen020(h,f,c,...)	_HW_B(_hwx_nvicerr,c)(c,__VA_ARGS__)
 #define _hwx_nvicerr1(z,x,e,...)	HW_E(e) hw_donothing()
 #define _hwx_nvicerr00(c,o,...)		HW_E(argument of type _irq required)
 
@@ -82,8 +82,8 @@
 
 #define _hwx_nvictn(h,o,a,x,...)	_hwx_nvictn01(h,HW_X(x,irq),__VA_ARGS__)
 #define _hwx_nvictn01(...)		_hwx_nvictn02(__VA_ARGS__)
-#define _hwx_nvictn02(h,c,...)		HW_Y0(_hwx_nvictn02_,c)(h,c,__VA_ARGS__)
-#define _hwx_nvictn02_0(h,c,n,v,o,m,f,s,...)	HW_Y0(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
+#define _hwx_nvictn02(h,c,...)		_HW_B(_hwx_nvictn02_,c)(h,c,__VA_ARGS__)
+#define _hwx_nvictn02_0(h,c,n,v,o,m,f,s,...)	_HW_B(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
 #define _hwx_nvictn03_0(h,o,v,s, ...)	HW_E_ST(s)
 #define _hwx_nvictn03_1(h,o,v,s, ...)	HW_G2(_hwx_nvictn,HW_A1(_hw_state_##s))(h,o,v) HW_EOL(__VA_ARGS__)
 
@@ -106,7 +106,7 @@
 #define hwa_turn__nvirq			, _hwa_tnnvirq
 #define _hwa_tnnvirq(...)		do{ _hwx_tnnvirq(_hwa,__VA_ARGS__); }while(0)
 
-#define _hwx_tnnvirq(h,o,v,s,...)	HW_Y0(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
+#define _hwx_tnnvirq(h,o,v,s,...)	_HW_B(_hwx_nvictn03_,_hw_state_##s)(h,o,v,s,__VA_ARGS__)
 
 
 HW_INLINE void _hw_nvic_enable ( uint8_t v )
@@ -121,9 +121,9 @@ HW_INLINE void _hw_nvic_enable ( uint8_t v )
     HWA_E(interrupt not supported);
 }
 
-#define _hwa_nvic_enable(v)		__hwa_nvic_enable(hwa,v)
+#define _hwa_nvic_enable(v)		_hwa___nvic_enable(hwa,v)
 
-HW_INLINE void __hwa_nvic_enable ( hwa_t *hwa, uint8_t v )
+HW_INLINE void _hwa___nvic_enable ( hwa_t *hwa, uint8_t v )
 {
   if ( v < 32 )
     _hwa_write_m(nvic, iser0, (1UL<<v), (1UL<<v));
@@ -147,9 +147,9 @@ HW_INLINE void _hw_nvic_disable ( uint8_t v )
     HWA_E(interrupt not supported);
 }
 
-#define _hwa_nvic_disable(v)		__hwa_nvic_disable(hwa,v)
+#define _hwa_nvic_disable(v)		_hwa___nvic_disable(hwa,v)
 
-HW_INLINE void __hwa_nvic_disable ( hwa_t *hwa, uint8_t v )
+HW_INLINE void _hwa___nvic_disable ( hwa_t *hwa, uint8_t v )
 {
   if ( v < 32 )
     _hwa_write_m(nvic, icer0, (1UL<<v), (1UL<<v));

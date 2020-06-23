@@ -40,20 +40,20 @@
 #define hw_configure__ahba		, _hw_cfahba
 #define hwa_configure__ahba		, _hwa_cfahba
 
-#define _hw_cfahba(o,a,k,...)		do{ HW_Y(_hwx_cfahba_k_,k)(_hw,k,__VA_ARGS__) }while(0)
-#define _hwa_cfahba(o,a,k,...)	do{ HW_Y(_hwx_cfahba_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
+#define _hw_cfahba(o,a,k,...)		do{ HW_B(_hwx_cfahba_k_,k)(_hw,k,__VA_ARGS__) }while(0)
+#define _hwa_cfahba(o,a,k,...)	do{ HW_B(_hwx_cfahba_k_,k)(_hwa,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
 #define _hwx_cfahba_k_1(h,k,...)	HW_E_ML((clock, prescaler))
-#define _hwx_cfahba_k_0(h,k,...)	HW_Y(_hwx_cfahba_ksrc_,_hw_is_clock_##k)(h,k,__VA_ARGS__)
+#define _hwx_cfahba_k_0(h,k,...)	HW_B(_hwx_cfahba_ksrc_,_hw_is_clock_##k)(h,k,__VA_ARGS__)
 
 /*  Optionnal parameter `clock`
  */
-#define _hwx_cfahba_ksrc_1(h,k,v,...)	HW_Y(_hwx_cfahba_vsrc_,_hw_is_sysclk_##v)(h,v,__VA_ARGS__)
+#define _hwx_cfahba_ksrc_1(h,k,v,...)	HW_B(_hwx_cfahba_vsrc_,_hw_is_sysclk_##v)(h,v,__VA_ARGS__)
 #define _hwx_cfahba_vsrc_0(h,v,...)	HW_E_OKVL(clock,v,sysclk)
-#define _hwx_cfahba_vsrc_1(h,v,k,...)	HW_Y(_hwx_cfahba_kpsc_,_hw_is_prescaler_##k)(h,k,__VA_ARGS__)
-#define _hwx_cfahba_ksrc_0(h,k,...)	HW_Y(_hwx_cfahba_kpsc_,_hw_is_prescaler_##k)(h,k,__VA_ARGS__)
+#define _hwx_cfahba_vsrc_1(h,v,k,...)	HW_B(_hwx_cfahba_kpsc_,_hw_is_prescaler_##k)(h,k,__VA_ARGS__)
+#define _hwx_cfahba_ksrc_0(h,k,...)	HW_B(_hwx_cfahba_kpsc_,_hw_is_prescaler_##k)(h,k,__VA_ARGS__)
 
 /*  Mandatory parameter `prescaler`
  */

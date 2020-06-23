@@ -58,13 +58,13 @@
 
 #define _hw_cfocc(o,ct,oc,k,...)					\
   do {									\
-    HW_Y(_hw_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__,);	\
+    HW_B(_hw_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
 
 #define _hw_cfocc_xoutput_0(o,k,...)					\
   HW_E_VL(k,output)
 #define _hw_cfocc_xoutput_1(o,k,v,...)				\
-  HW_Y(_hw_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
+  HW_B(_hw_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
 #define _hw_cfocc_voutput_0(o,v,...)					\
   HW_E_AVL(mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)
 #define _hw_cfocc_voutput_1(o,v,...)				\
@@ -105,26 +105,26 @@
 
 #define _hwa_cfocc(o,ct,oc,k,...)					\
   do {									\
-    HW_Y(_hwa_cfocc_xupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
+    HW_B(_hwa_cfocc_xupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
   }while(0)
 
 #define _hwa_cfocc_xupdate_0(o,k,...)					\
-  HW_Y(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfocc_xupdate_1(o,k,v,...)					\
-  HW_Y(_hwa_cfocc_vupdate_,_hw_occ_update_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfocc_vupdate_,_hw_occ_update_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfocc_vupdate_0(o,v,...)			\
   HW_E_AVL(update mode of `o`, v, `immediately | after_bottom | after_top`)
 
 #define _hwa_cfocc_vupdate_1(o,v,k,...)			\
   hwa->o.config.update = HW_A1(_hw_occ_update_##v);\
-  HW_Y(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfocc_xoutput_0(o,...)	\
    HW_EOL(__VA_ARGS__)
 
 #define _hwa_cfocc_xoutput_1(o,k,v,...)				\
-  HW_Y(_hwa_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfocc_voutput_0(o,v,...)			\
   HW_E_AVL(output mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)

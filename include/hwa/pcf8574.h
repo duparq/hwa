@@ -25,11 +25,11 @@
 #define hw_class__pcf8574
 
 #define HW_PCF8574(...)			_HW_PCF8574_(__VA_ARGS__,,,,,)
-#define _HW_PCF8574_(k,...)		HW_YW(_HW_PCF8574_1_,interface,k)(k,__VA_ARGS__)
+#define _HW_PCF8574_(k,...)		HW_BW(_HW_PCF8574_1_,interface,k)(k,__VA_ARGS__)
 #define _HW_PCF8574_1_0(...)		_HW_PCF8574_E
 #define _HW_PCF8574_1_1(k,...)		_HW_PCF8574_1_2(HW_ANAME(__VA_ARGS__))
 #define _HW_PCF8574_1_2(...)		_HW_PCF8574_1_3(__VA_ARGS__)
-#define _HW_PCF8574_1_3(twi,k,...)	HW_YW(_HW_PCF8574_2_,address,k)(twi,k,__VA_ARGS__)
+#define _HW_PCF8574_1_3(twi,k,...)	HW_BW(_HW_PCF8574_2_,address,k)(twi,k,__VA_ARGS__)
 #define _HW_PCF8574_2_0(...)		_HW_PCF8574_E
 #define _HW_PCF8574_2_1(twi,k,sla,...)	_pcf8574,pcf8574_##twi##_##sla,(twi,sla) HW_EOL(__VA_ARGS__)
 
@@ -200,7 +200,7 @@
  *  Validity of n is verified by functions.
  */
 #define hw__pcf8574_			, _hw_pcf8574_
-#define _hw_pcf8574_(o,n,twi,sla)	HW_Y0(_hw_pcf8574_,_hw_isa_4bn_##n)(o,n)
+#define _hw_pcf8574_(o,n,twi,sla)	_HW_B(_hw_pcf8574_,_hw_isa_4bn_##n)(o,n)
 #define _hw_pcf8574_1(o,n)		_io8574,o,(1,n)
 #define _hw_pcf8574_0(o,n)		,o,HW_EM(o has no relative n)
 
@@ -211,9 +211,9 @@
  *  Validity of n and p is verified by functions.
  */
 #define hw__io8574_			, _hw_io8574_
-#define _hw_io8574_(o,r,bn,bp)		HW_Y0(_hw_io8574_,_hw_is_1_##bn)(o,r,bn,bp)
+#define _hw_io8574_(o,r,bn,bp)		_HW_B(_hw_io8574_,_hw_is_1_##bn)(o,r,bn,bp)
 #define _hw_io8574_0(o,r,...)		,o,HW_EM(o has no relative r)
-#define _hw_io8574_1(o,r,bn,bp)		HW_Y0(_hw_io85741_,_hw_isa_4bn_##r)(o,r,bn,bp)
+#define _hw_io8574_1(o,r,bn,bp)		_HW_B(_hw_io85741_,_hw_isa_4bn_##r)(o,r,bn,bp)
 #define _hw_io85741_1(o,r,bn,bp)	_io8574,o,(bp,r)
 #define _hw_io85741_0(o,r,bn,bp)	,o,HW_EM(o has no relative r)
 

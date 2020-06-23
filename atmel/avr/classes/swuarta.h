@@ -135,39 +135,39 @@
 #define hw_class__swuarta
 
 #define HW_SWUART(...)					_HW_SWUART10(__VA_ARGS__,,,,,)
-#define _HW_SWUART10(k,...)				HW_YW(_HW_SWUART10,txd,k)(k,__VA_ARGS__)
+#define _HW_SWUART10(k,...)				HW_BW(_HW_SWUART10,txd,k)(k,__VA_ARGS__)
 
-#define _HW_SWUART100(k,...)				HW_YW(_HW_SWUART20,rxd,k)((),k,__VA_ARGS__)
+#define _HW_SWUART100(k,...)				HW_BW(_HW_SWUART20,rxd,k)((),k,__VA_ARGS__)
 #define _HW_SWUART101(k,...)				_HW_SWUART11(HW_AD(__VA_ARGS__))
 #define _HW_SWUART11(...)				_HW_SWUART12(__VA_ARGS__)
-#define _HW_SWUART12(v,...)				HW_YW(_HW_SWUART12,_ioa,HW_A0 v)(v,__VA_ARGS__)
+#define _HW_SWUART12(v,...)				HW_BW(_HW_SWUART12,_ioa,HW_A0 v)(v,__VA_ARGS__)
 #define _HW_SWUART120(v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART121(t,k,...)				HW_YW(_HW_SWUART20,rxd,k)(t,k,__VA_ARGS__)
+#define _HW_SWUART121(t,k,...)				HW_BW(_HW_SWUART20,rxd,k)(t,k,__VA_ARGS__)
 
-#define _HW_SWUART200(t,k,...)				HW_YW(_HW_SWUART40,counter,k)(t,(),,k,__VA_ARGS__)
+#define _HW_SWUART200(t,k,...)				HW_BW(_HW_SWUART40,counter,k)(t,(),,k,__VA_ARGS__)
 #define _HW_SWUART201(t,k,...)				_HW_SWUART21(t,HW_AD(__VA_ARGS__))
 #define _HW_SWUART21(...)				_HW_SWUART22(__VA_ARGS__)
-#define _HW_SWUART22(t,v,...)				HW_YW(_HW_SWUART22,_ioa,HW_A0 v)(t,v,__VA_ARGS__)
+#define _HW_SWUART22(t,v,...)				HW_BW(_HW_SWUART22,_ioa,HW_A0 v)(t,v,__VA_ARGS__)
 #define _HW_SWUART220(t,v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART221(t,r,k,...)			HW_YW(_HW_SWUART30,startirq,k)(t,r,k,__VA_ARGS__)
+#define _HW_SWUART221(t,r,k,...)			HW_BW(_HW_SWUART30,startirq,k)(t,r,k,__VA_ARGS__)
 
 #define _HW_SWUART300(t,r,k,...)			,HW_SWUART(...),HW_EM_IKW(HW_SWUART(...),startirq,k)
 #define _HW_SWUART301(t,r,k,...)			_HW_SWUART31(t,r,HW_AD(__VA_ARGS__))
 #define _HW_SWUART31(...)				_HW_SWUART32(__VA_ARGS__)
-#define _HW_SWUART32(t,r,v,...)				HW_YW(_HW_SWUART32,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
+#define _HW_SWUART32(t,r,v,...)				HW_BW(_HW_SWUART32,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
 #define _HW_SWUART320(t,r,v,...)			,HW_SWUART(...),HW_EM_ONAI(v)
-#define _HW_SWUART321(t,r,i,k,...)			HW_YW(_HW_SWUART40,counter,k)(t,r,i,k,__VA_ARGS__)
+#define _HW_SWUART321(t,r,i,k,...)			HW_BW(_HW_SWUART40,counter,k)(t,r,i,k,__VA_ARGS__)
 
 #define _HW_SWUART400(t,r,i,k,...)			,HW_SWUART(...),HW_EM_KX(counter,k)
-#define _HW_SWUART401(t,r,i,k1,ct,k,...)		HW_YW(_HW_SWUART5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
+#define _HW_SWUART401(t,r,i,k1,ct,k,...)		HW_BW(_HW_SWUART5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
 #define _HW_SWUART5_0(t,r,i,ct,k,...)			,HW_SWUART(...),HW_EM_KX(compare,k)
-#define _HW_SWUART5_1(t,r,i,ct,k1,cp,k,...)		HW_YW(_HW_SWUART6_,clkdiv,k)(t,r,i,ct,HW_BITS(ct),cp,k,__VA_ARGS__)
+#define _HW_SWUART5_1(t,r,i,ct,k1,cp,k,...)		HW_BW(_HW_SWUART6_,clkdiv,k)(t,r,i,ct,HW_BITS(ct),cp,k,__VA_ARGS__)
 #define _HW_SWUART6_0(t,r,i,ct,cp,k,...)		,HW_SWUART(...),HW_EM_KX(clkdiv,k)
-#define _HW_SWUART6_1(t,r,i,ct,cw,cp,k1,ps,k,...)	HW_YW(_HW_SWUART7_,autosync,k)(t,r,i,ct,cw,cp,ps,k,__VA_ARGS__)
-#define _HW_SWUART7_0(t,r,i,ct,cw,cp,ps,k,...)		HW_YW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,0,k,__VA_ARGS__)
-#define _HW_SWUART7_1(t,r,i,ct,cw,cp,ps,k1,as,k,...)	HW_YW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,as,k,__VA_ARGS__)
-#define _HW_SWUART8_0(t,r,i,ct,cw,cp,ps,as,k,...)	HW_Y0(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,-1,k,__VA_ARGS__)
-#define _HW_SWUART8_1(t,r,i,ct,cw,cp,ps,as,k1,fr,k,...)	HW_Y0(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,HW_ADDRESS(fr),k,__VA_ARGS__)
+#define _HW_SWUART6_1(t,r,i,ct,cw,cp,k1,ps,k,...)	HW_BW(_HW_SWUART7_,autosync,k)(t,r,i,ct,cw,cp,ps,k,__VA_ARGS__)
+#define _HW_SWUART7_0(t,r,i,ct,cw,cp,ps,k,...)		HW_BW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,0,k,__VA_ARGS__)
+#define _HW_SWUART7_1(t,r,i,ct,cw,cp,ps,k1,as,k,...)	HW_BW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,as,k,__VA_ARGS__)
+#define _HW_SWUART8_0(t,r,i,ct,cw,cp,ps,as,k,...)	_HW_B(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,-1,k,__VA_ARGS__)
+#define _HW_SWUART8_1(t,r,i,ct,cw,cp,ps,as,k1,fr,k,...)	_HW_B(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,HW_ADDRESS(fr),k,__VA_ARGS__)
 #define _HW_SWUART9_0(t,r,i,ct,cw,cp,ps,as,fr,g,...)	,HW_SWUART(...),HW_EM_G(g)
 #define _HW_SWUART9_1(t,r,i,ct,cw,cp,ps,as,fr,...)	_swuarta, HW_G3(swuart,HW_A1 t,HW_A1 r), (t,r,i,ct,cw,cp,ps,as,fr)
 
@@ -305,13 +305,13 @@
     _hwa_cfswuarta_t(r,t);						\
     _hwa_cfswuarta_ri(r,i);						\
     _hwa_cfswuarta_c(ct,ps);						\
-    HW_YW(_hwx_cfswuarta_kbps_,bps,k)(_hwa,o,r,fr,k,__VA_ARGS__,);	\
+    HW_BW(_hwx_cfswuarta_kbps_,bps,k)(_hwa,o,r,fr,k,__VA_ARGS__,);	\
   } while(0)
 
 /*  Configure TXD pin as output high unless the pin is also
  *  used as RXD.
  */
-#define _hwa_cfswuarta_t(r,t)		HW_Y(_hwa_cfswuarta_t,HW_A1 t)(r,t)
+#define _hwa_cfswuarta_t(r,t)		HW_B(_hwa_cfswuarta_t,HW_A1 t)(r,t)
 #define _hwa_cfswuarta_t1(r,t)
 #define _hwa_cfswuarta_t0(r,t)						\
   if ( HW_ADDRESS(t) != -1 && HW_ADDRESS(r) != HW_ADDRESS(t) ) {	\
@@ -321,7 +321,7 @@
 
 /*  RXD pin & interrupts (for reception / sync)
  */
-#define _hwa_cfswuarta_ri(r,i)		HW_Y(_hwa_cfswuarta_ri,HW_A1 r)(r,i)
+#define _hwa_cfswuarta_ri(r,i)		HW_B(_hwa_cfswuarta_ri,HW_A1 r)(r,i)
 #define _hwa_cfswuarta_ri1(r,i)
 #define _hwa_cfswuarta_ri0(r,i)						\
     if ( HW_ADDRESS(r) != -1 ) {					\
@@ -340,7 +340,7 @@
 
 #define _hw_cfswuarta(o,t,r,i,ct,cw,cp,ps,as,fr,k,...)			\
   do {									\
-    HW_YW(_hwx_cfswuarta_kbps_,bps,k)(_hw,o,r,fr,k,__VA_ARGS__,);	\
+    HW_BW(_hwx_cfswuarta_kbps_,bps,k)(_hw,o,r,fr,k,__VA_ARGS__,);	\
   } while(0)
 
 /*  Process arg `bps`
@@ -348,25 +348,25 @@
 #define _hwx_cfswuarta_kbps_1(h,o,r,fr,k0,v,k,...)			\
   hw_##o##_##set_dt((HW_SYSHZ + (v)/2) / (v)) ;				\
   *(volatile uint8_t*)fr |= 0x0A ; /* Set SYNC, TXC */			\
-  HW_YW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kbps_0(h,o,r,fr,k,...)			\
-  HW_YW(_hwx_cfswuarta_kcpb_,cpb,k)(h,o,r,fr,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kcpb_,cpb,k)(h,o,r,fr,k,__VA_ARGS__)
 
 /*  Process arg `cpb`
  */
 #define _hwx_cfswuarta_kcpb_1(h,o,r,fr,k0,v,k,...)			\
   hw_##o##_##set_dt(v) ;						\
   *(volatile uint8_t*)fr |= 0x0A ; /* Set SYNC, TXC */			\
-  HW_YW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kcpb_0(h,o,r,fr,k,...)				\
-  HW_YW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kdatabits_,databits,k)(h,o,r,k,__VA_ARGS__)
 
 /*  Process arg `databits`
  */
 #define _hwx_cfswuarta_kdatabits_1(h,o,r,k,v,...)			\
-  HW_Y(_hwx_cfswuarta_vdatabits_,_hw_swuarta_csz_##v)(h,o,r,v,__VA_ARGS__)
+  HW_B(_hwx_cfswuarta_vdatabits_,_hw_swuarta_csz_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vdatabits_0(h,o,r,v,...)	\
   HW_E_AVL(`databits`, v, `8`)
@@ -375,14 +375,14 @@
   _hwx_cfswuarta_kdatabits_0(h,o,r,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kdatabits_0(h,o,r,k,...)			\
-  HW_YW(_hwx_cfswuarta_kparity_,parity,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kparity_,parity,k)(h,o,r,k,__VA_ARGS__)
 
 #define _hw_swuarta_csz_8		, 0
 
 /*  Process arg `parity`
  */
 #define _hwx_cfswuarta_kparity_1(h,o,r,k,v,...)				\
-  HW_Y(_hwx_cfswuarta_vparity_,_hw_swuarta_pm_##v)(h,o,r,v,__VA_ARGS__)
+  HW_B(_hwx_cfswuarta_vparity_,_hw_swuarta_pm_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vparity_0(h,o,r,v,...)	\
   HW_E_AVL(`parity`, v, `none`)
@@ -391,14 +391,14 @@
   _hwx_cfswuarta_kparity_0(h,o,r,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kparity_0(h,o,r,k,...)				\
-  HW_YW(_hwx_cfswuarta_kstopbits_,stopbits,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kstopbits_,stopbits,k)(h,o,r,k,__VA_ARGS__)
 
 #define _hw_swuarta_pm_none		, 0
 
 /*  Process arg `stopbits`
  */
 #define _hwx_cfswuarta_kstopbits_1(h,o,r,k,v,...)			\
-  HW_Y(_hwx_cfswuarta_vstopbits_,_hw_swuarta_sbs_##v)(h,o,r,v,__VA_ARGS__)
+  HW_B(_hwx_cfswuarta_vstopbits_,_hw_swuarta_sbs_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vstopbits_0(h,o,r,v,...)	\
   HW_E_AVL(`stopbits`, v, `1`)
@@ -407,14 +407,14 @@
   _hwx_cfswuarta_kstopbits_0(h,o,r,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kstopbits_0(h,o,r,k,...)				\
-  HW_YW(_hwx_cfswuarta_kreceiver_,receiver,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_kreceiver_,receiver,k)(h,o,r,k,__VA_ARGS__)
 
 #define _hw_swuarta_sbs_1		, 0
 
 /*  Process arg `receiver`
  */
 #define _hwx_cfswuarta_kreceiver_1(h,o,r,k,v,...)			\
-  HW_Y(_hwx_cfswuarta_vreceiver_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
+  HW_B(_hwx_cfswuarta_vreceiver_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vreceiver_0(h,o,r,v,...)	\
   HW_E_AVL(receiver, v, enabled | disabled)
@@ -424,12 +424,12 @@
   _hwx_cfswuarta_kreceiver_0(h,o,r,__VA_ARGS__)
 
 #define _hwx_cfswuarta_kreceiver_0(h,o,r,k,...)				\
-  HW_YW(_hwx_cfswuarta_ktransmitter_,transmitter,k)(h,o,r,k,__VA_ARGS__)
+  HW_BW(_hwx_cfswuarta_ktransmitter_,transmitter,k)(h,o,r,k,__VA_ARGS__)
 
 /*  Process arg `transmitter`
  */
 #define _hwx_cfswuarta_ktransmitter_1(h,o,r,k,v,...)			\
-  HW_Y(_hwx_cfswuarta_vtransmitter_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
+  HW_B(_hwx_cfswuarta_vtransmitter_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vtransmitter_0(h,o,r,v,...)	\
   HW_E_AVL(`transmitter`, v, `enabled`)

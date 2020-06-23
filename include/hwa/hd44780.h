@@ -32,42 +32,42 @@
 #define hw_class__hd44780
 
 #define HW_HD44780(...)				_HW_HD44780_(__VA_ARGS__,,,,,,,,,,)
-#define _HW_HD44780_(k,...)			HW_YW(_HW_HD44780_1,lines,k)(k,__VA_ARGS__)
+#define _HW_HD44780_(k,...)			HW_BW(_HW_HD44780_1,lines,k)(k,__VA_ARGS__)
 #define _HW_HD44780_10(k,...)			_HW_HD44780_E(k,__VA_ARGS__)
-#define _HW_HD44780_11(k0,l,k,...)		HW_YW(_HW_HD44780_2,cols,k)(l,k,__VA_ARGS__)
+#define _HW_HD44780_11(k0,l,k,...)		HW_BW(_HW_HD44780_2,cols,k)(l,k,__VA_ARGS__)
 #define _HW_HD44780_20(l,k,...)			_HW_HD44780_E(k,__VA_ARGS__)
-#define _HW_HD44780_21(l,k0,c,k,...)		HW_YW(_HW_HD44780_3,e,k)(l,c,k,__VA_ARGS__)
+#define _HW_HD44780_21(l,k0,c,k,...)		HW_BW(_HW_HD44780_3,e,k)(l,c,k,__VA_ARGS__)
 #define _HW_HD44780_30(l,c,k,...)		_HW_HD44780_E(k,__VA_ARGS__)
 #define _HW_HD44780_31(l,c,k,...)		_HW_HD44780_32(l,c,HW_AD(__VA_ARGS__))
 #define _HW_HD44780_32(...)			_HW_HD44780_33(__VA_ARGS__)
-#define _HW_HD44780_33(l,c,e,...)		HW_Y0(_HW_HD44780_33,HW_A0 e)(l,c,e,__VA_ARGS__)
+#define _HW_HD44780_33(l,c,e,...)		_HW_B(_HW_HD44780_33,HW_A0 e)(l,c,e,__VA_ARGS__)
 #define _HW_HD44780_331(l,c,e,...)		,HW_HD44780(...),(HW_HD44780(...): HW_A2 e)
-#define _HW_HD44780_330(l,c,e,k,...)		HW_YW(_HW_HD44780_4,rs,k)(l,c,e,k,__VA_ARGS__)
+#define _HW_HD44780_330(l,c,e,k,...)		HW_BW(_HW_HD44780_4,rs,k)(l,c,e,k,__VA_ARGS__)
 #define _HW_HD44780_40(l,c,e,k,...)		_HW_HD44780_E(k,__VA_ARGS__)
 #define _HW_HD44780_41(l,c,e,k,...)		_HW_HD44780_42(l,c,e,HW_AD(__VA_ARGS__))
 #define _HW_HD44780_42(...)			_HW_HD44780_43(__VA_ARGS__)
-#define _HW_HD44780_43(l,c,e,s,...)		HW_Y0(_HW_HD44780_43,HW_A0 s)(l,c,e,s,__VA_ARGS__)
+#define _HW_HD44780_43(l,c,e,s,...)		_HW_B(_HW_HD44780_43,HW_A0 s)(l,c,e,s,__VA_ARGS__)
 #define _HW_HD44780_431(l,c,e,s,...)		,HW_HD44780(...),(HW_HD44780(...): HW_A2 s)
-#define _HW_HD44780_430(l,c,e,s,k,...)		HW_YW(_HW_HD44780_5,rw,k)(l,c,e,s,k,__VA_ARGS__)
+#define _HW_HD44780_430(l,c,e,s,k,...)		HW_BW(_HW_HD44780_5,rw,k)(l,c,e,s,k,__VA_ARGS__)
 #define _HW_HD44780_50(l,c,e,s,k,...)		_HW_HD44780_E(k,__VA_ARGS__)
 #define _HW_HD44780_51(l,c,e,s,k,...)		_HW_HD44780_52(l,c,e,s,HW_AD(__VA_ARGS__))
 #define _HW_HD44780_52(...)			_HW_HD44780_53(__VA_ARGS__)
-#define _HW_HD44780_53(l,c,e,s,w,...)		HW_Y0(_HW_HD44780_53,HW_A0 w)(l,c,e,s,w,__VA_ARGS__)
+#define _HW_HD44780_53(l,c,e,s,w,...)		_HW_B(_HW_HD44780_53,HW_A0 w)(l,c,e,s,w,__VA_ARGS__)
 #define _HW_HD44780_531(l,c,e,s,w,...)		,HW_HD44780(...),(HW_HD44780(...): HW_A2 w)
-#define _HW_HD44780_530(l,c,e,s,w,k,...)	HW_YW(_HW_HD44780_6,data,k)(l,c,e,s,w,k,__VA_ARGS__)
+#define _HW_HD44780_530(l,c,e,s,w,k,...)	HW_BW(_HW_HD44780_6,data,k)(l,c,e,s,w,k,__VA_ARGS__)
 #define _HW_HD44780_60(l,c,e,s,w,k,...)		_HW_HD44780_E(k,__VA_ARGS__)
 #define _HW_HD44780_61(l,c,e,s,w,k,...)		_HW_HD44780_62(l,c,e,s,w,HW_AD(__VA_ARGS__))
 #define _HW_HD44780_62(...)			_HW_HD44780_63(__VA_ARGS__)
-#define _HW_HD44780_63(l,c,e,s,w,d,...)		HW_Y0(_HW_HD44780_63,HW_A0 d)(l,c,e,s,w,d,__VA_ARGS__)
+#define _HW_HD44780_63(l,c,e,s,w,d,...)		_HW_B(_HW_HD44780_63,HW_A0 d)(l,c,e,s,w,d,__VA_ARGS__)
 #define _HW_HD44780_631(l,c,e,s,w,d,...)	,HW_HD44780(...),(HW_HD44780(...): HW_A2 d)
-#define _HW_HD44780_630(l,c,e,s,w,d,g,...)	HW_Y(_HW_HD44780_7,g)(l,c,e,s,w,d,g,__VA_ARGS__)
+#define _HW_HD44780_630(l,c,e,s,w,d,g,...)	HW_B(_HW_HD44780_7,g)(l,c,e,s,w,d,g,__VA_ARGS__)
 #define _HW_HD44780_70(x,...)			HW_E_G(x)
 
 /*  Verify that e is of class _io8574
  */
 #define _HW_HD44780_71(l,c,e,s,w,d,...)		_HW_HD44780_72(HW_A0_A1 e, HW_A2 d, l,c,e,s,w,d)
 #define _HW_HD44780_72(...)			_HW_HD44780_73(__VA_ARGS__)
-#define _HW_HD44780_73(ec,eo,df,...)		HW_YW(_HW_HD44780_73,_io8574,ec)(ec,eo,HW_A0 df,__VA_ARGS__)
+#define _HW_HD44780_73(ec,eo,df,...)		HW_BW(_HW_HD44780_73,_io8574,ec)(ec,eo,HW_A0 df,__VA_ARGS__)
 #define _HW_HD44780_730(ec,...)			,HW_HD44780(...),HW_HD44780(...): class ec for "e" is not supported
 #define _HW_HD44780_731(ec,eo,...)		_hd44780,hd44780_##eo,(ec,__VA_ARGS__)
 
@@ -450,41 +450,41 @@
 #define _hw_hd44780_direction_left	, 0
 #define _hw_hd44780_direction_right	, 1
 
-#define _hw_cfhd44780_(k,...)		HW_YW(_hw_cfhd44780_ini,init,k)(k,__VA_ARGS__)
-#define _hw_cfhd44780_ini0(k,...)	HW_YW(_hw_cfhd44780_dis1,display,k)(k,__VA_ARGS__)
-#define _hw_cfhd44780_ini1(k,v,...)	HW_KV(_hw_cfhd44780_ini2,_hw_state_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_(k,...)		HW_BW(_hw_cfhd44780_ini,init,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_ini0(k,...)	HW_BW(_hw_cfhd44780_dis1,display,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_ini1(k,v,...)	HW_BV(_hw_cfhd44780_ini2,_hw_state_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_ini20(v)		HW_E(HW_EM_ST(v)) HW_EAT
 #define _hw_cfhd44780_ini21(v)		init=v; _hw_cfhd44780_dis
 
-#define _hw_cfhd44780_dis(k,...)	HW_YW(_hw_cfhd44780_dis1,display,k)(k,__VA_ARGS__)
-#define _hw_cfhd44780_dis10(k,...)	HW_YW(_hw_cfhd44780_shf1,shift,k)(k,__VA_ARGS__)
-#define _hw_cfhd44780_dis11(k,v,...)	HW_KV(_hw_cfhd44780_dis2,_hw_state_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_dis(k,...)	HW_BW(_hw_cfhd44780_dis1,display,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_dis10(k,...)	HW_BW(_hw_cfhd44780_shf1,shift,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_dis11(k,v,...)	HW_BV(_hw_cfhd44780_dis2,_hw_state_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_dis20(v)		HW_E(HW_EM_ST(v)) HW_EAT
 #define _hw_cfhd44780_dis21(v)		display=v; _hw_cfhd44780_cur
 
-#define _hw_cfhd44780_cur(k,...)	HW_YW(_hw_cfhd44780_cur1,cursor,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_cur(k,...)	HW_BW(_hw_cfhd44780_cur1,cursor,k)(k,__VA_ARGS__)
 #define _hw_cfhd44780_cur10(k,...)	HW_E(HW_EM_KX(cursor,k))
-#define _hw_cfhd44780_cur11(k,v,...)	HW_KV(_hw_cfhd44780_cur2,_hw_state_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_cur11(k,v,...)	HW_BV(_hw_cfhd44780_cur2,_hw_state_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_cur20(v)		HW_E(HW_EM_ST(v)) HW_EAT
 #define _hw_cfhd44780_cur21(v)		cursor=v; _hw_cfhd44780_blk
 
-#define _hw_cfhd44780_blk(k,...)	HW_YW(_hw_cfhd44780_blk1,blink,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_blk(k,...)	HW_BW(_hw_cfhd44780_blk1,blink,k)(k,__VA_ARGS__)
 #define _hw_cfhd44780_blk10(k,...)	HW_E(HW_EM_KX(blink,k))
-#define _hw_cfhd44780_blk11(k,v,...)	HW_KV(_hw_cfhd44780_blk2,_hw_state_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_blk11(k,v,...)	HW_BV(_hw_cfhd44780_blk2,_hw_state_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_blk20(v)		HW_E(HW_EM_ST(v)) HW_EAT
 #define _hw_cfhd44780_blk21(v)		blink=v; _hw_cfhd44780_shf
 
-#define _hw_cfhd44780_shf(k,...)	HW_YW(_hw_cfhd44780_shf1,shift,k)(k,__VA_ARGS__)
-#define _hw_cfhd44780_shf10(k,...)	HW_Y(_hw_cfhd44780_shf2,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_shf(k,...)	HW_BW(_hw_cfhd44780_shf1,shift,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_shf10(k,...)	HW_B(_hw_cfhd44780_shf2,k)(k,__VA_ARGS__)
 #define _hw_cfhd44780_shf21(...)	HW_EOL(__VA_ARGS__)
 #define _hw_cfhd44780_shf20(k,...)	HW_E(HW_EM_XNIL(k,(init,display,shift)))
-#define _hw_cfhd44780_shf11(k,v,...)	HW_KV(_hw_cfhd44780_shf3,_hw_hd44780_shift_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_shf11(k,v,...)	HW_BV(_hw_cfhd44780_shf3,_hw_hd44780_shift_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_shf30(v)		HW_E(HW_EM_XNIL(v,(cursor,display))) HW_EAT
 #define _hw_cfhd44780_shf31(v)		shift=v; _hw_cfhd44780_drn
 
-#define _hw_cfhd44780_drn(k,...)	HW_YW(_hw_cfhd44780_drn1,direction,k)(k,__VA_ARGS__)
+#define _hw_cfhd44780_drn(k,...)	HW_BW(_hw_cfhd44780_drn1,direction,k)(k,__VA_ARGS__)
 #define _hw_cfhd44780_drn10(k,...)	HW_E_KX(direction,k)
-#define _hw_cfhd44780_drn11(k,v,...)	HW_KV(_hw_cfhd44780_drn2,_hw_hd44780_direction_,v)(__VA_ARGS__)
+#define _hw_cfhd44780_drn11(k,v,...)	HW_BV(_hw_cfhd44780_drn2,_hw_hd44780_direction_,v)(__VA_ARGS__)
 #define _hw_cfhd44780_drn20(v)		HW_E(HW_EM_XNIL(v,(left,right))) HW_EAT
 #define _hw_cfhd44780_drn21(v)		direction=v; HW_EOL /*__VA_ARGS__*/
 

@@ -24,8 +24,8 @@
 #define hw_write_usbprescaler		, _hw_wrusbpsc
 #define hwa_write_usbprescaler		, _hwa_wrusbpsc
 
-#define _hw_wrusbpsc(i,a,v,g,...)	HW_Y(_hwx_wrusbpsc1_,g)(_hw,v,g)
-#define _hwa_wrusbpsc(i,a,v,g,...)	HW_Y(_hwx_wrusbpsc1_,g)(_hwa,v,g)
+#define _hw_wrusbpsc(i,a,v,g,...)	HW_B(_hwx_wrusbpsc1_,g)(_hw,v,g)
+#define _hwa_wrusbpsc(i,a,v,g,...)	HW_B(_hwx_wrusbpsc1_,g)(_hwa,v,g)
 
 /*  Can not check that 'v' is not void since the preprocessor does not accept to
  *  concatenate '1.5'. Let's do it another way.

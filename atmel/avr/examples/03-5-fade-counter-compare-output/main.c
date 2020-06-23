@@ -62,7 +62,7 @@ HW_ISR( (COUNTER,irq,overflow) )
      *	code will probably have to read the hardware to retrieve unknown bit
      *	values.
      */
-    if ( !STRCMP(HW_QUOTE(COUNTMODE),"up_loop") ) {
+    if ( !STRCMP(HW_Q(COUNTMODE),"up_loop") ) {
       if ( phase == 2 )
 	hw( configure, (COUNTER,COMPARE), output, disconnected );
       else if ( phase == 0 )
@@ -93,7 +93,7 @@ int main ( )
        bottom,	  0,
        top,	  TOP );
 
-  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
+  if ( !STRCMP(HW_Q(COUNTMODE),"updown_loop") )
     hwa( configure, (COUNTER,COMPARE),
 	 output, clear_after_match_up_set_after_match_down );
   else /* up_loop */

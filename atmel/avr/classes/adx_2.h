@@ -130,10 +130,10 @@ HW_INLINE uint8_t _hwa_adx_clkmax( float v )
 /*	Turn ADC on / off
  */
 #define _hw_turn_adx_(o,a, v, ...)			\
-  HW_Y(_hwx_turn_adx__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+  HW_B(_hwx_turn_adx__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
 
 #define _hwa_turn_adx_(o,a, v, ...)			\
-  HW_Y(_hwx_turn_adx__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+  HW_B(_hwx_turn_adx__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 
 #define _hwx_turn_adx__0(x,o, v, ...)			\
   HW_E_ST(v)
@@ -150,7 +150,7 @@ HW_INLINE uint8_t _hwa_adx_clkmax( float v )
 
 /*	Read the result of the conversion
  */
-#define _hw_rdad10_(o,a,...)		HW_Y0(_hw_rdad10__,__VA_ARGS__)(o,__VA_ARGS__,)
+#define _hw_rdad10_(o,a,...)		_HW_B(_hw_rdad10__,__VA_ARGS__)(o,__VA_ARGS__,)
 
 #define _hw_rdad10__1(o,...)		_hw_read(o, adc)
 

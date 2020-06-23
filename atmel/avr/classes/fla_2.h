@@ -141,19 +141,19 @@ HW_INLINE void _hw_fla_spm( intptr_t ptr )
 
 #define _hw_fla_ldpgbf(o, src)				\
   do {								\
-    hw_asm("CSR = " HW_QUOTE(HW_ADDRESS((o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(HW_POSITION((o, rwwsre))) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(HW_POSITION((o, spmen))) "\n"		\
-	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
+    hw_asm("CSR = " HW_Q(HW_ADDRESS((o, csr))-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_Q(HW_POSITION((o, rwwsre))) "\n"	\
+	   "BP_SPMEN = " HW_Q(HW_POSITION((o, spmen))) "\n"		\
+	   "PGSIZE = " HW_Q(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
-    __hw_fla_ldpgbf( src );					\
+    _hw___fla_ldpgbf( src );					\
   }while(0)
 
 
 /**
  * @brief Load page buffer with data from src
  */
-HW_INLINE void __hw_fla_ldpgbf( void *src )
+HW_INLINE void _hw___fla_ldpgbf( void *src )
 {
   uint8_t r1 ;
 
@@ -212,20 +212,20 @@ HW_INLINE void __hw_fla_ldpgbf( void *src )
 #define _hw_fla_pgers(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_fla_dospm( HW_ADDRESS((o,csr)), ptr,			\
+    _hw___fla_dospm( HW_ADDRESS((o,csr)), ptr,			\
 		       1<<HW_POSITION((o, pgers)) | 1<<HW_POSITION((o, spmen))); \
   }while(0)
 
 #define _hw_fla_pgwrt(o, ptr)					\
   do {									\
     hw_asm("wdr");							\
-    __hw_fla_dospm( HW_ADDRESS((o,csr)), ptr,			\
+    _hw___fla_dospm( HW_ADDRESS((o,csr)), ptr,			\
 		       1<<HW_POSITION((o, pgwrt)) | 1<<HW_POSITION((o, spmen))); \
   }while(0)
 
 /**
  */
-HW_INLINE void __hw_fla_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
+HW_INLINE void _hw___fla_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 {
   if ( csr-0x20 < 0x20 ) {
     hw_asm("	out	CSR, %[r1]				\n"
@@ -275,19 +275,19 @@ HW_INLINE void __hw_fla_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 
 #define _hw_fla_ldpgbf(o, src)				\
   do {								\
-    hw_asm("CSR = " HW_QUOTE(HW_ADDRESS((o, csr))-0x20) "\n"		\
-	   "BP_RWWSRE = " HW_QUOTE(HW_POSITION((o, rwwsre))) "\n"	\
-	   "BP_SPMEN = " HW_QUOTE(HW_POSITION((o, spmen))) "\n"		\
-	   "PGSIZE = " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
+    hw_asm("CSR = " HW_Q(HW_ADDRESS((o, csr))-0x20) "\n"		\
+	   "BP_RWWSRE = " HW_Q(HW_POSITION((o, rwwsre))) "\n"	\
+	   "BP_SPMEN = " HW_Q(HW_POSITION((o, spmen))) "\n"		\
+	   "PGSIZE = " HW_Q(HW_DEVICE_FLASH_PAGE_SIZE) "\n"	\
 	   );							\
-    __hw_fla_ldpgbf( src );					\
+    _hw___fla_ldpgbf( src );					\
   }while(0)
 
 
 /**
  * @brief Load page buffer with data from src
  */
-HW_INLINE void __hw_fla_ldpgbf( void *src )
+HW_INLINE void _hw___fla_ldpgbf( void *src )
 {
   uint8_t r1 ;
 
@@ -331,7 +331,7 @@ HW_INLINE void __hw_fla_ldpgbf( void *src )
 
 
 #if 0	/* Alternate version */
-HW_INLINE void __hw_fla_ldpgbf( intptr_t dst, void *src )
+HW_INLINE void _hw___fla_ldpgbf( intptr_t dst, void *src )
 {
   uint8_t r1, r2 ;
 
@@ -347,7 +347,7 @@ HW_INLINE void __hw_fla_ldpgbf( intptr_t dst, void *src )
 
 	 /*  Load page buffer
 	  */
-	 "    ldi   %[r1], " HW_QUOTE(HW_DEVICE_FLASH_PAGE_SIZE/2) "\n"
+	 "    ldi   %[r1], " HW_Q(HW_DEVICE_FLASH_PAGE_SIZE/2) "\n"
 	 "1:  ld    r0, %a2+			\n"
 	 "    ld    r1, %a2+			\n"
 

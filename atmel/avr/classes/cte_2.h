@@ -66,20 +66,20 @@
  *    3 arguments following the last non-void argument.
  */
 #define _hwa_cfcte(o,a,k,...)					\
-  do { HW_Y(_hwa_cfcte_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_B(_hwa_cfcte_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfcte_kclock_0(o,k,...)				\
   HW_E_VL(k,clock)
 
 #define _hwa_cfcte_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcte_vclock_,_hw_c1clk_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfcte_vclock_,_hw_c1clk_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, none | ioclk [/ 8|64|256|1024] | external_falling | external_rising)
 
 #define _hwa_cfcte_vclock_1(o,v,k,...)					\
   hwa->o.config.clock = HW_VF(_hw_c1clk_##v);				\
-  HW_Y(_hwa_cfcte_kmode_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_kmode_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `direction`
  */
@@ -90,14 +90,14 @@
   HW_E_VL(k,direction)
 
 #define _hwa_cfcte_kmode_1(o,k,v,...)					\
-  HW_Y(_hwa_cfcte_vmode_,_hw_cte_direction_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfcte_vmode_,_hw_cte_direction_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_vmode_0(o,v,...)					\
   HW_E_AVL(direction, v, up_loop | updown_loop)
 
 #define _hwa_cfcte_vmode_1(o,v,k,...)					\
   hwa->o.config.direction = HW_A1(_hw_cte_direction_##v);			\
-  HW_Y(_hwa_cfcte_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
@@ -108,25 +108,25 @@
   HW_E_AVL(bottom, v, `0`)
 
 #define _hwa_cfcte_vbottom_1(o,v,k,...)	\
-  HW_Y(_hwa_cfcte_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcte_kbottom_0(o,k,...)				\
-  HW_Y(_hwa_cfcte_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `top`
  */
 #define _hwa_cfcte_ktop_1(o,k,v,...)					\
-  HW_Y(_hwa_cfcte_vtop_,_hw_cte_top_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfcte_vtop_,_hw_cte_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_vtop_0(o,v,...)					\
   HW_E_AVL(top, v, 0xFF | 0x1FF | 0x3FF | 0xFFFF | max | capture0 | compare0)
 
 #define _hwa_cfcte_vtop_1(o,v,k,...)					\
   hwa->o.config.top = HW_A1(_hw_cte_top_##v);				\
-  HW_Y(_hwa_cfcte_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcte_ktop_0(o,k,...)					\
-  HW_Y(_hwa_cfcte_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfcte_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 #define _hw_cte_top_0xFF		, 1
 #define _hw_cte_top_0x00FF		, 1
@@ -146,7 +146,7 @@
 /*  Optionnal argument `overflow`
  */
 #define _hwa_cfcte_koverflow_1(o,k,v,...)				\
-  HW_Y(_hwa_cfcte_voverflow_,_hw_cte_overflow_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfcte_voverflow_,_hw_cte_overflow_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_voverflow_0(o,v,...)				\
   HW_E_OAVL(overflow, v, after_bottom | after_top | after_max)

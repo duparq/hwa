@@ -47,40 +47,40 @@
     typedef struct { uint8_t commit ; hwa_uarta_t o ; } hwa_t ;		\
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup_o( o );							\
-    HW_Y(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,);		\
+    HW_B(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,);		\
     hwa->commit = 1 ; _hwa_commit_o( o );					\
   }while(0)
 
 #define _hwa_cfuarta(o,a,k,...)					\
-  do{ HW_Y(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
+  do{ HW_B(_hwx_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) }while(0)
 
 /*	Optionnal parameter `bps`
  */
 #define _hwx_cfuarta_kbps_1(o,k,v,...)			\
-  HW_Y(_hwx_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
 
 #define _hwx_cfuarta_vbps_0(o,v,k,...)					\
   _hwa_write(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
-  HW_Y(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kbps_0(o,k,...)					\
-  HW_Y(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `databits`
  */
 #define _hwx_cfuarta_kdatabits_1(o,k,v,...)				\
-  HW_Y(_hwx_cfuarta_vdatabits_,_hw_uarta_databits_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_vdatabits_,_hw_uarta_databits_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E_AVL(databits, v, 5 | 6 | 7 | 8)
 
 #define _hwx_cfuarta_vdatabits_1(o,v,k,...)			\
   _hwa_write(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
-  HW_Y(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kdatabits_0(o,k,...)			\
-  HW_Y(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_databits_5		, 0
 #define _hw_uarta_databits_6		, 1
@@ -90,16 +90,16 @@
 /*	Optionnal parameter `parity`
  */
 #define _hwx_cfuarta_kparity_1(o,k,v,...)				\
-  HW_Y(_hwx_cfuarta_vparity_,_hw_uarta_parity_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_vparity_,_hw_uarta_parity_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vparity_0(o,v,...)		HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
   _hwa_write(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
-  HW_Y(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hwx_cfuarta_kparity_0(o,k,...)					\
-    HW_Y(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+    HW_B(_hwx_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_parity_none		, 0
 #define _hw_uarta_parity_even		, 2
@@ -108,7 +108,7 @@
 /*	Optionnal parameter `stopbits`
  */
 #define _hwx_cfuarta_kstopbits_1(o,k,v,...)				\
-    HW_Y(_hwx_cfuarta_vstopbits_,_hw_uarta_stopbits_##v)(o,v,__VA_ARGS__)
+    HW_B(_hwx_cfuarta_vstopbits_,_hw_uarta_stopbits_##v)(o,v,__VA_ARGS__)
 
 #define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E_AVL(stopbits, v, 1 | 1_5 | 2)
 
@@ -211,10 +211,10 @@
 /* #define _hw_sttuarta(o,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__) */
 
 /* #define hw_stat__uarta			, _hw_stuarta */
-/* #define _hw_stuarta(o,a,...)		HW_TX(__hw_stuarta(_hw_read(o,csra)), \ */
+/* #define _hw_stuarta(o,a,...)		HW_TX(_hw___stuarta(_hw_read(o,csra)), \ */
 /*					      __VA_ARGS__) */
 
-/* HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte ) */
+/* HW_INLINE _hw_uarta_stat_t _hw___stuarta ( uint8_t byte ) */
 /* { */
 /*   _hw_uarta_stat_t	st ; */
 /*   st.byte = byte ; */

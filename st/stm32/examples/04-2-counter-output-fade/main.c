@@ -92,7 +92,7 @@ int main ( )
    */
   hwa( configure, (COUNTER,CHANNEL),
        function,  compare,
-       rule,      clear_on_match_up_set_on_match_down,
+       result,    clear_on_match_up_set_on_match_down,
        output,    connected );
 
   hwa( commit );

@@ -63,7 +63,7 @@
 #define hw_rel__ioa			, _hw_rel_ioa
 
 #define _hw_rel_ioa(o,x,...)	\
-  HW_Y(_hw_rel_ioa_,_hw_is_port_##x)(o,x,__VA_ARGS__)
+  HW_B(_hw_rel_ioa_,_hw_is_port_##x)(o,x,__VA_ARGS__)
 
 #define _hw_rel_ioa_1(o,x,p,...)	p
 

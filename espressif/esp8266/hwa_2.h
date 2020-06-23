@@ -28,8 +28,8 @@
 /*  Merge hw_power() and hwa_power() to _hwx_pwr(), check the validity of the
  *  given state.
  */
-#define _hw_power(o,a,v,...)		HW_Y(_hwx_pwr_,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
-#define _hwa_power(o,a,v,...)		HW_Y(_hwx_pwr_,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
+#define _hw_power(o,a,v,...)		HW_B(_hwx_pwr_,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
+#define _hwa_power(o,a,v,...)		HW_B(_hwx_pwr_,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
 
 #define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
 
@@ -480,7 +480,7 @@ HW_INLINE uint32_t _hw_read__r32 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 #define _hw_atomic_read__r8		_hw_read__r8
 
 
-HW_INLINE uint16_t __hw_atomic_read__r16 ( intptr_t ra )
+HW_INLINE uint16_t _hw___atomic_read__r16 ( intptr_t ra )
 {
   uint16_t r;
 
@@ -523,7 +523,7 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   else if ( (m>>8) == 0 )
     v = *(volatile uint8_t *)ra;
   else
-    v = __hw_atomic_read__r16( ra );
+    v = _hw___atomic_read__r16( ra );
 #endif
 
   return (v>>rbp) & m ;

@@ -44,7 +44,7 @@
 //#define _hw_cficb_kw_			, _hw_cficb_
 
 #define _hw_cficb(o,a,k,...)					\
-  HW_Y(_hw_cficbkw1_,_hw_cficb_kw_##k)(o,k,__VA_ARGS__,)
+  HW_B(_hw_cficbkw1_,_hw_cficb_kw_##k)(o,k,__VA_ARGS__,)
 
 #define _hw_cficbkw1_0(o,kw,...)					\
   HW_E_VL(k,input | edge | filter)
@@ -53,7 +53,7 @@
   HW_A1(_hw_cficb_kw_##kw)(o,__VA_ARGS__)
 
 #define _hw_cficb_edge(o,v,...)					\
-  HW_Y(_hw_cficb_vedge_,hw_icb_edge_##v)(o,v,__VA_ARGS__)
+  HW_B(_hw_cficb_vedge_,hw_icb_edge_##v)(o,v,__VA_ARGS__)
 #define _hw_cficb_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 #define _hw_cficb_vedge_1(o,v,...)			\
@@ -78,39 +78,39 @@
 #define hwa_configure__icb		, _hwa_cficb
 
 #define _hwa_cficb(o,a,k,...)					\
-  do { HW_Y(_hwa_cficb_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_B(_hwa_cficb_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cficb_kinput_0(o,k,...)					\
   HW_E_VL(k,input)
 
 #define _hwa_cficb_kinput_1(o,k,v,...)				\
-  HW_Y(_hwa_cficb_vinput_,hw_icb_input_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cficb_vinput_,hw_icb_input_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cficb_vinput_0(o,v,...)					\
   HW_E_AVL(`input`, v, `pin_icp`)
 
 #define _hwa_cficb_vinput_1(o,v,k,...)				\
   hwa->o.config.input = HW_A1(hw_icb_input_##v);			\
-  HW_Y(_hwa_cficb_kedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cficb_kedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cficb_kedge_0(o,k,...)					\
   HW_E_VL(k,edge)
 
 #define _hwa_cficb_kedge_1(o,k,v,...)				\
-  HW_Y(_hwa_cficb_vedge_,hw_icb_edge_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cficb_vedge_,hw_icb_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cficb_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising)
 
 #define _hwa_cficb_vedge_1(o,v,k,...)				\
   hwa->o.config.edge = HW_A1(hw_icb_edge_##v);				\
-  HW_Y(_hwa_cficb_kfilter_,_hw_is_filter_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cficb_kfilter_,_hw_is_filter_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cficb_kfilter_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
 #define _hwa_cficb_kfilter_1(o,k,v,...)				\
-  HW_Y(_hwa_cficb_vfilter_,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cficb_vfilter_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cficb_vfilter_0(o,v,...)					\
   HW_E_OAVL(filter, v, on | off)

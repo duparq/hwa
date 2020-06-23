@@ -35,13 +35,13 @@
 /*	Mandatory argument `sense`
  */
 #define _hwx_cfinta(x,o,k,...)					\
-  HW_Y(_hwx_cfinta_ksense_,_hw_is_sense_##k)(x,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfinta_ksense_,_hw_is_sense_##k)(x,o,k,__VA_ARGS__)
 
 #define _hwx_cfinta_ksense_0(x,o,k,...)			\
   HW_E_VL(k,sense)
 
 #define _hwx_cfinta_ksense_1(x,o,k,v,...)				\
-  HW_Y(_hwx_cfinta_vsense_,_hw_inta_sense_##v)(x,o,v,__VA_ARGS__)
+  HW_B(_hwx_cfinta_vsense_,_hw_inta_sense_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cfinta_vsense_0(x,o,v,...)					\
   HW_E_AVL(sense, v, low_level | edge | falling_edge | rising_edge)

@@ -54,7 +54,7 @@ HW_INLINE void setup_hwa_context ( hwa_t *hwa )
        bottom,	  0,
        top,	  TOP );
 
-  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
+  if ( !STRCMP(HW_Q(COUNTMODE),"updown_loop") )
     hwa( configure, PWM, output, clear_after_match_up_set_after_match_down );
   else /* up_loop */
     hwa( configure, PWM, output, set_at_bottom_clear_after_match );
@@ -90,7 +90,7 @@ HW_ISR( (PWM,counter,irq,overflow) )
     /*	In 'up_loop' counting mode, we must disconnect/reconnect the output of
      *	the compare unit as it can not provide pulses of less than 1 cycle.
      */
-    if ( !STRCMP(HW_QUOTE(COUNTMODE),"up_loop") ) {
+    if ( !STRCMP(HW_Q(COUNTMODE),"up_loop") ) {
 
       /*  Start from the hardawre configuration used at initialization
        */

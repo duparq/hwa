@@ -86,28 +86,28 @@
 
 /*  Optionnal keyword 'frequency'
  */
-#define _hwx_cft3k2(h,o,a,k,...)	HW_Y(_hwx_cft3k2_kfq_,_hw_is_frequency_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cft3k2_kfq_1(h,o,k,v,...)	HW_Y(_hwx_cft3k2_vfq_,_hw_t3k2_fq_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cft3k2(h,o,a,k,...)	HW_B(_hwx_cft3k2_kfq_,_hw_is_frequency_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cft3k2_kfq_1(h,o,k,v,...)	HW_B(_hwx_cft3k2_vfq_,_hw_t3k2_fq_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cft3k2_vfq_0(h,o,v,...)	HW_E_OKVL(frequency,v,`0|12kHz|120kHz|600kHz`)
 #define _hwx_cft3k2_vfq_1(h,o,v,k,...)				\
   h(write,hw_##o##_s1, HW_A1(_hw_t3k2_fq_##v));		\
   h(write,hw_##o##_s0, HW_A2(_hw_t3k2_fq_##v));		\
-  HW_Y(_hwx_cft3k2_kfl_,_hw_is_filter_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cft3k2_kfl_,_hw_is_filter_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal keyword 'filter'
  */
-#define _hwx_cft3k2_kfq_0(h,o,k,...)	HW_Y(_hwx_cft3k2_kfl_,_hw_is_filter_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cft3k2_kfl_1(h,o,k,v,...)	HW_Y(_hwx_cft3k2_vfl_,_hw_t3k2_fl_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cft3k2_kfq_0(h,o,k,...)	HW_B(_hwx_cft3k2_kfl_,_hw_is_filter_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cft3k2_kfl_1(h,o,k,v,...)	HW_B(_hwx_cft3k2_vfl_,_hw_t3k2_fl_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cft3k2_vfl_0(h,o,v,...)	HW_E_OKVL(filter,v,`10_12kHz|100_120kHz|500_600kHz`)
 #define _hwx_cft3k2_vfl_1(h,o,v,k,...)				\
   h(write,hw_##o##_s3, HW_A1(_hw_t3k2_fl_##v));		\
   h(write,hw_##o##_s2, HW_A2(_hw_t3k2_fl_##v));		\
-  HW_Y(_hwx_cft3k2_kou_,_hw_is_output_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cft3k2_kou_,_hw_is_output_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal keyword 'output'
  */
-#define _hwx_cft3k2_kfl_0(h,o,k,...)	HW_Y(_hwx_cft3k2_kou_,_hw_is_output_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cft3k2_kou_1(h,o,k,v,...)	HW_Y(_hwx_cft3k2_vou_,_hw_state_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cft3k2_kfl_0(h,o,k,...)	HW_B(_hwx_cft3k2_kou_,_hw_is_output_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cft3k2_kou_1(h,o,k,v,...)	HW_B(_hwx_cft3k2_vou_,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cft3k2_vou_0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_cft3k2_vou_1(h,o,v,...)			\
   h(write,hw_##o##_oe, HW_A1(_hw_state_##v));	\

@@ -84,17 +84,17 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
  *    3 arguments following the last non-void argument.
  */
 #define _hwa_cfctb(o,a,k,...)						\
-  do { HW_Y(_hwa_cfctb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_B(_hwa_cfctb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define _hwa_cfctb_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfctb_kclock_1(o,k,v,...)		HW_Y(_hwa_cfctb_vclock_,_hw_ctb_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfctb_kclock_1(o,k,v,...)		HW_B(_hwa_cfctb_vclock_,_hw_ctb_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, `none` | `ioclk [/ 2**n]` with n in {0..14})
 
 #define _hwa_cfctb_vclock_1(o,v,k,...)					\
   _hwa_write(o, cs, HW_VF(_hw_ctb_clock_##v));				\
-  HW_Y(_hwa_cfctb_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfctb_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ctb_clock_none		, _hw_ctbck_none, 0
 #define _hw_ctb_clock_ioclk		, _hw_ctbck_ioclk, 16384.0
@@ -111,7 +111,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   _hwa_cfctb_kdirection_0(o,__VA_ARGS__)
 
 #define _hwa_cfctb_kdirection_0(o,k,...)			\
-  HW_Y(_hwa_cfctb_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfctb_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
@@ -125,7 +125,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   _hwa_cfctb_kbottom_0(o,__VA_ARGS__)
 
 #define _hwa_cfctb_kbottom_0(o,k,...)				\
-  HW_Y(_hwa_cfctb_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfctb_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `top`
@@ -137,7 +137,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
 #define _hw_ctb_top_compare2		, 1
 
 #define _hwa_cfctb_ktop_1(o,k,v,...)				\
-  HW_Y(_hwa_cfctb_vtop_,_hw_ctb_top_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfctb_vtop_,_hw_ctb_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_vtop_0(o,v,...)				\
   HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
@@ -147,7 +147,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   _hwa_cfctb_ktop_0(v,__VA_ARGS__)
 
 #define _hwa_cfctb_ktop_0(o,k,...)					\
-  HW_Y(_hwa_cfctb_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfctb_koverflow_,_hw_is_overflow_##k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal argument `overflow`

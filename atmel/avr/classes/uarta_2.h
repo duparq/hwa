@@ -45,7 +45,7 @@
  * @endcode
  */
 #define _hwa_cfuarta(o,a,k,...)					\
-  do { HW_Y(_hwa_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) } while(0)
+  do { HW_B(_hwa_cfuarta_kbps_,_hw_is_bps_##k)(o,k,__VA_ARGS__,,) } while(0)
 
 #define hwa_configure__uarta		, _hwa_cfuarta
 
@@ -53,7 +53,7 @@
  *	  Choose the U2X value that gives the lowest error
  */
 #define _hwa_cfuarta_kbps_1(o,k,v,...)					\
-  HW_Y(_hwa_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vbps_1(o,v,...)	HW_E_VM(bps)
 
@@ -74,25 +74,25 @@
   }									\
   else									\
     HWA_ERR("can not solve the configuration for the required transfer rate."); \
-  HW_Y(_hwa_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfuarta_kbps_0(o,k,...)					\
-  HW_Y(_hwa_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kdatabits_,_hw_is_databits_##k)(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `databits`
  */
 #define _hwa_cfuarta_kdatabits_1(o,k,v,...)				\
-  HW_Y(_hwa_cfuarta_vdatabits_,_hw_uarta_csz_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vdatabits_,_hw_uarta_csz_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vdatabits_0(o,v,...)				\
   HW_E_AVL(databits, v, 5 | 6 | 7 | 8 | 9)
 
 #define _hwa_cfuarta_vdatabits_1(o,v,k,...)	\
   hwa->o.config.csz = HW_A1(_hw_uarta_csz_##v);	\
-  HW_Y(_hwa_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfuarta_kdatabits_0(o,k,...)				\
-  HW_Y(_hwa_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kparity_,_hw_is_parity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_csz_5			, 0
 #define _hw_uarta_csz_6			, 1
@@ -103,17 +103,17 @@
 /*	Optionnal parameter `parity`
  */
 #define _hwa_cfuarta_kparity_1(o,k,v,...)				\
-  HW_Y(_hwa_cfuarta_vparity_,_hw_uarta_pm_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vparity_,_hw_uarta_pm_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vparity_0(o,v,...)					\
   HW_E_AVL(parity, v, none | even | odd)
 
 #define _hwa_cfuarta_vparity_1(o,v,k,...)	\
   hwa->o.config.pm = HW_A1(_hw_uarta_pm_##v);	\
-  HW_Y(_hwa_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfuarta_kparity_0(o,k,...)					\
-  HW_Y(_hwa_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kstopbits_,_hw_is_stopbits_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_pm_none		, 0
 #define _hw_uarta_pm_even		, 2
@@ -122,17 +122,17 @@
 /*	Optionnal parameter `stopbits`
  */
 #define _hwa_cfuarta_kstopbits_1(o,k,v,...)				\
-  HW_Y(_hwa_cfuarta_vstopbits_,_hw_uarta_sbs_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vstopbits_,_hw_uarta_sbs_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vstopbits_0(o,v,...)				\
   HW_E_AVL(stopbits, v, 1 | 2)
 
 #define _hwa_cfuarta_vstopbits_1(o,v,k,...)	\
   hwa->o.config.sbs = HW_A1(_hw_uarta_sbs_##v);	\
-  HW_Y(_hwa_cfuarta_kreceiver_,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kreceiver_,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfuarta_kstopbits_0(o,k,...)				\
-  HW_Y(_hwa_cfuarta_kreceiver_,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_kreceiver_,_hw_is_receiver_##k)(o,k,__VA_ARGS__)
 
 #define _hw_uarta_sbs_1			, 0
 #define _hw_uarta_sbs_2			, 1
@@ -140,22 +140,22 @@
 /*	Optionnal parameter `receiver`
  */
 #define _hwa_cfuarta_kreceiver_1(o,k,v,...)				\
-  HW_Y(_hwa_cfuarta_vreceiver_,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vreceiver_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vreceiver_0(o,v,...)			\
   HW_E_AVL(receiver, v, enabled | disabled)
 
 #define _hwa_cfuarta_vreceiver_1(o,v,k,...)	\
   hwa->o.config.rxen = HW_A1(_hw_state_##v);				\
-  HW_Y(_hwa_cfuarta_ktransmitter_,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_ktransmitter_,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfuarta_kreceiver_0(o,k,...)				\
-  HW_Y(_hwa_cfuarta_ktransmitter_,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_ktransmitter_,_hw_is_transmitter_##k)(o,k,__VA_ARGS__)
 
 /*	Optionnal parameter `transmitter`
  */
 #define _hwa_cfuarta_ktransmitter_1(o,k,v,...)				\
-  HW_Y(_hwa_cfuarta_vtransmitter_,_hw_state_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfuarta_vtransmitter_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfuarta_vtransmitter_0(o,v,...)				\
   HW_E_AVL(transmitter, v, enabled | disabled)
@@ -264,9 +264,9 @@ typedef union {
 #define _hw_sttuarta(o,a,...)		 _hw_uarta_stat_t HW_EOL(__VA_ARGS__)
 
 #define hw_stat__uarta			, _hw_stuarta
-#define _hw_stuarta(o,a,...)		__hw_stuarta(_hw_read(o,csra)) HW_EOL(__VA_ARGS__)
+#define _hw_stuarta(o,a,...)		_hw___stuarta(_hw_read(o,csra)) HW_EOL(__VA_ARGS__)
 
-HW_INLINE _hw_uarta_stat_t __hw_stuarta ( uint8_t byte )
+HW_INLINE _hw_uarta_stat_t _hw___stuarta ( uint8_t byte )
 {
   _hw_uarta_stat_t	st ;
   st.byte = byte ;

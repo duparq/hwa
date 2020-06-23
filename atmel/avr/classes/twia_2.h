@@ -44,11 +44,11 @@
   do {									\
     /*	The 'TWEN' bit that makes the TWI take control of the */	\
     /*	I/O pins is set by the 'bus_' actions */			\
-    HW_Y(_hwx_cftwia_kbps_,_hw_is_bps_##k)(x,o,k,__VA_ARGS__);		\
+    HW_B(_hwx_cftwia_kbps_,_hw_is_bps_##k)(x,o,k,__VA_ARGS__);		\
   } while(0)
 
 #define _hwx_cftwia_kbps_1(x,o,k,v,...)		\
-  HW_Y(_hwx_cftwia_vbps_,v)(x,o,v,__VA_ARGS__)
+  HW_B(_hwx_cftwia_vbps_,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vbps_1(x,o,v,...)		HW_E_VM(bps)
 
@@ -85,7 +85,7 @@
 /*	Optionnal argument `slave_address`
  */
 #define _hwx_cftwia_ksladdr_1(x,o,k,v,...)		\
-  HW_Y(_hwx_cftwia_vsladdr_,v)(x,o,v,__VA_ARGS__)
+  HW_B(_hwx_cftwia_vsladdr_,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vsladdr_1(x,o,v,...)	HW_E_VM(slave_address)
 
@@ -101,7 +101,7 @@
 /*	Optionnal argument `general_call`
  */
 #define _hwx_cftwia_kgcall_1(x,o,k,v,...)			\
-  HW_Y(_hwx_cftwia_vgcall_,_hw_state_##v)(x,o,v,__VA_ARGS__)
+  HW_B(_hwx_cftwia_vgcall_,_hw_state_##v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vgcall_0(x,o,v,...)		\
   HW_E_AVL(general_call, v, enabled | disabled)
@@ -116,7 +116,7 @@
 /*	Optionnal argument `slave_address_mask`
  */
 #define _hwx_cftwia_kslam_1(x,o,k,v,...)	\
-  HW_Y(_hwx_cftwia_vslam_,v)(x,o,v,__VA_ARGS__)
+  HW_B(_hwx_cftwia_vslam_,v)(x,o,v,__VA_ARGS__)
 
 #define _hwx_cftwia_vslam_1(x,o,v,...)		HW_E_VM(slave_address_mask)
 
@@ -144,8 +144,8 @@
 #define hw_turn__twia			, _hw_tntwia_
 #define hwa_turn__twia			, _hwa_tntwia_
 
-#define _hw_tntwia_(o,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
-#define _hwa_tntwia_(o,a, v, ...)	HW_Y(_hwx_tntwia__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
+#define _hw_tntwia_(o,a, v, ...)	HW_B(_hwx_tntwia__,_hw_state_##v)(_hw,o,v,__VA_ARGS__)
+#define _hwa_tntwia_(o,a, v, ...)	HW_B(_hwx_tntwia__,_hw_state_##v)(_hwa,o,v,__VA_ARGS__)
 #define _hwx_tntwia__0(x,o, v, ...)	HW_E_ST(v)
 #define _hwx_tntwia__1(x,o, v, ...)	x##_write(o, en, HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 
@@ -191,54 +191,54 @@
  *   * use get/put for bus transfers?
  */
 #define hw_bus_start__twia		, _hw_twia_txstart
-#define _hw_twia_txstart(o,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
+#define _hw_twia_txstart(o,a,k,...)	HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstart,k,__VA_ARGS__)
 
 
 #define hw_bus_stop__twia		, _hw_twia_txstop
-#define _hw_twia_txstop(o,a,k,...)	HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
+#define _hw_twia_txstop(o,a,k,...)	HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenstop,k,__VA_ARGS__)
 
 
 #define hw_bus_slaw__twia		, _hw_twia_txslaw
-#define _hw_twia_txslaw(o,a,...)	HW_Y(_hw_twia_txslawv_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txslaw(o,a,...)	HW_B(_hw_twia_txslawv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_txslawv_1(...)		HW_E(missing slave address)
 #define _hw_twia_txslawv_0(o,v,k,...)				\
   do {								\
     if ( ((uint8_t)(v)) > 127 )					\
       HWA_ERR("slave address must be in the range 0..127.");	\
     _hw_write(o,dr,((v)<<1)+0);					\
-    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
+    HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
 #define hw_bus_slar__twia		, _hw_twia_txslar
-#define _hw_twia_txslar(o,a,...)	HW_Y(_hw_twia_vtxslar_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twia_txslar(o,a,...)	HW_B(_hw_twia_vtxslar_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twia_vtxslar_1(...)		HW_E(missing slave address)
 #define _hw_twia_vtxslar_0(o,v,k,...)				\
   do {								\
     if ( ((uint8_t)(v)) > 127 )					\
       HWA_ERR("slave address must be in the range 0..127.");	\
     _hw_write(o,dr,((v)<<1)+1);					\
-    HW_Y(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
+    HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 /*  FIXME: could use a function 'hw_id(uint8_t v){ return v; }' to check the
  *  presence of a value so that '*ptr' would be OK?
  */
 #define hw_bus_write__twia		, _hw_twiawr
-#define _hw_twiawr(o,a,...)		HW_Y(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
+#define _hw_twiawr(o,a,...)		HW_B(_hw_twiawrv_,__VA_ARGS__)(o,__VA_ARGS__)
 #define _hw_twiawrv_1(...)		HW_E(missing value)
 #define _hw_twiawrv_0(o,v,k,...)					\
   do {									\
     _hw_write(o,dr,v);							\
-    HW_Y(_hw_twia_txend_,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
+    HW_B(_hw_twia_txend_,_hw_is_irq_##k,)(o,ifen,k,__VA_ARGS__);	\
   } while(0)
 
 
 #define hw_bus_read__twia		, _hw_twiard
-#define _hw_twiard(o,a,k,...)		HW_Y0(_hw_twiard_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
-#define _hw_twiard_ack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
-#define _hw_twiard_ack0(o,k,...)	HW_Y0(_hw_twiard_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
-#define _hw_twiard_nack1(o,ok,k,...)	HW_Y0(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
+#define _hw_twiard(o,a,k,...)		_HW_B(_hw_twiard_ack,_hw_is_ack_##k)(o,k,__VA_ARGS__,,)
+#define _hw_twiard_ack1(o,ok,k,...)	_HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifenack,k,__VA_ARGS__)
+#define _hw_twiard_ack0(o,k,...)	_HW_B(_hw_twiard_nack,_hw_is_nack_##k)(o,k,__VA_ARGS__)
+#define _hw_twiard_nack1(o,ok,k,...)	_HW_B(_hw_twia_txend_,_hw_is_irq_##k)(o,ifen,k,__VA_ARGS__)
 #define _hw_twiard_nack0(o,k,...)	HW_E_VL(k, ack | nack)
 
 

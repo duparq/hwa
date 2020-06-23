@@ -77,32 +77,32 @@
   do {									\
     uint8_t mux __attribute__((unused)) = 0xFF ;			\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfadb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
+    HW_B(_hwa_cfadb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
     if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
   } while(0)
 
 #define _hwa_cfadb_kclock_0(o,k,...)			\
   HW_E_VL(k,clock)
 #define _hwa_cfadb_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadb_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadb_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 #define _hwa_cfadb_vclock_1(o,v,k,...)				\
   _hwa_write(o, ps, HW_A1(_hw_adx_clock_##v)(HW_A2(_hw_adx_clock_##v))); \
-  HW_Y(_hwa_cfadb_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadb_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 /*	Mandatory parameter 'trigger'
  */
 #define _hwa_cfadb_ktrigger_0(o,k,...)		\
   HW_E_VL(k,trigger)
 #define _hwa_cfadb_ktrigger_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadb_vtrigger_,_hw_adb_trigger_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadb_vtrigger_,_hw_adb_trigger_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | int0 | acmp0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
 #define _hwa_cfadb_vtrigger_1(o,v,k,...)				\
   _hwa_write(o,ate, HW_A1(_hw_adb_trigger_##v));			\
   _hwa_write(o,ts, HW_A2(_hw_adb_trigger_##v));			\
-  HW_Y(_hwa_cfadb_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadb_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_adb_trigger_manual	, 0, 0	/* , ate, ts */
 #define _hw_adb_trigger_auto		, 1, 0
@@ -117,7 +117,7 @@
 /*	Mandatory parameter 'vref'
  */
 #define _hwa_cfadb_kvref_0(o,k,...)		HW_E_VL(k,vref)
-#define _hwa_cfadb_kvref_1(o,k,v,...)		HW_Y(_hwa_cfadb_vvref_,_hw_adb_vref_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfadb_kvref_1(o,k,v,...)		HW_B(_hwa_cfadb_vvref_,_hw_adb_vref_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_vvref_0(o,v,...)		HW_E_AVL(vref, v, vcc | pin_avcc | pin_aref | bandgap_1100mV)
 #define _hwa_cfadb_vvref_1(o,v,...)			\
   _hwa_write(o,refs, HW_A1(_hw_adb_vref_##v));	\
@@ -130,11 +130,11 @@
 /*	Optionnal parameter 'align'
  */
 #define _hwa_cfadb_align(o,k,...)				\
-  HW_Y(_hwa_cfadb_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadb_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfadb_kalign_0(o,...)		\
   _hwa_cfadb_in(o,__VA_ARGS__)
 #define _hwa_cfadb_kalign_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadb_valign_,_hw_adb_align_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadb_valign_,_hw_adb_align_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_valign_0(o,v,...)				\
   HW_E_AVL(align, v, left | right)
 #define _hwa_cfadb_valign_1(o,v,...)			\
@@ -147,7 +147,7 @@
 /*	Mandatory parameter 'input'
  */
 #define _hwa_cfadb_kinput(o,k,...)					\
-  HW_Y(_hwa_cfadb_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadb_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfadb_kinput_0(o,k,...)		\
   HW_E_VL(k,input)
 #define _hwa_cfadb_kinput_1(o,k,v,...)				\
@@ -178,8 +178,8 @@
 
 /*	Mandatory parameter `input`
  */
-#define _hwa_cfadb_in(o,k,...)		HW_YW(_hwa_cfadb_in,input,k)(o,k,__VA_ARGS__)
-#define _hwa_cfadb_in1(o,k,v,...)	HW_KV(_hwa_cfadb_in1,_hw__adbinput_,v)(o,v,__VA_ARGS__)
+#define _hwa_cfadb_in(o,k,...)		HW_BW(_hwa_cfadb_in,input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadb_in1(o,k,v,...)	HW_BV(_hwa_cfadb_in1,_hw__adbinput_,v)(o,v,__VA_ARGS__)
 #define _hwa_cfadb_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfadb_in12
 #define _hwa_cfadb_in11(v)		mux=v;	_hwa_cfadb_in12
 #define _hwa_cfadb_in12(o,k,...)	HW_EOL(__VA_ARGS__)

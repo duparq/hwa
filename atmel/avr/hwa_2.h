@@ -33,7 +33,7 @@
 #define _hwa_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,0,__VA_ARGS__,)
 
 #define _hwx_tirq01(...)		_hwx_tirq02(__VA_ARGS__)
-#define _hwx_tirq02(h,n,m,v,x,...)	HW_Y0(_hwx_tirq02_,x)(h,n,m,v,x,__VA_ARGS__)
+#define _hwx_tirq02(h,n,m,v,x,...)	_HW_B(_hwx_tirq02_,x)(h,n,m,v,x,__VA_ARGS__)
 #define _hwx_tirq02_0(h,n,m,v,x,...)	HW_E_G(x)
 #define _hwx_tirq02_1(h,n,m,v,...)	h##_write(n,m,v)
 
@@ -100,12 +100,12 @@
 #define hw_power		, _hw_power
 #define hwa_power		, _hwa_power
 
-#define _hw_power(c,o,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hw,o,v,g)
-#define _hwa_power(c,o,a,v,g,...)	HW_Y(_hwx_pwr1_,g)(_hwa,o,v,g)
+#define _hw_power(c,o,a,v,g,...)	HW_B(_hwx_pwr1_,g)(_hw,o,v,g)
+#define _hwa_power(c,o,a,v,g,...)	HW_B(_hwx_pwr1_,g)(_hwa,o,v,g)
 #define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
-#define _hwx_pwr1_1(x,o,v,g)		HW_Y(_hwx_pwr2_,_hw_state_v)(x,o,v)
+#define _hwx_pwr1_1(x,o,v,g)		HW_B(_hwx_pwr2_,_hw_state_v)(x,o,v)
 #define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_Y(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##prr))(x,o,v)
+#define _hwx_pwr2_1(x,o,v)		HW_B(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##prr))(x,o,v)
 #define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
 #define _hwx_pwr3_1(x,o,v)		x##_write(o,prr,HW_A1(_hw_state_##v)==0)
 
@@ -434,7 +434,7 @@ HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 #define _hw_atomic_read__r8		_hw_read__r8
 
 
-HW_INLINE uint16_t __hw_atomic_read__r16 ( intptr_t ra )
+HW_INLINE uint16_t _hw___atomic_read__r16 ( intptr_t ra )
 {
   uint16_t r;
 
@@ -477,7 +477,7 @@ HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp 
   else if ( (m>>8) == 0 )
     v = *(volatile uint8_t *)ra;
   else
-    v = __hw_atomic_read__r16( ra );
+    v = _hw___atomic_read__r16( ra );
 #endif
 
   return (v>>rbp) & m ;

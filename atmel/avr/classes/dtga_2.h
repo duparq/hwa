@@ -68,17 +68,17 @@
 #define hwa_configure__dtga		, _hwa_cfdtga
 
 
-#define _hwa_cfdtga(o,ct,oc,k,...)	do { HW_YW(_hwx_cfdtga_kpsc_,prescaler,k)(_hwa,ct,oc,k,__VA_ARGS__) } while(0)
-#define _hw_cfdtga(o,ct,oc,k,...)	do { HW_YW(_hwx_cfdtga_kpsc_,prescaler,k)(_hw,ct,oc,k,__VA_ARGS__) } while(0)
+#define _hwa_cfdtga(o,ct,oc,k,...)	do { HW_BW(_hwx_cfdtga_kpsc_,prescaler,k)(_hwa,ct,oc,k,__VA_ARGS__) } while(0)
+#define _hw_cfdtga(o,ct,oc,k,...)	do { HW_BW(_hwx_cfdtga_kpsc_,prescaler,k)(_hw,ct,oc,k,__VA_ARGS__) } while(0)
 /*
  *  Optionnal argument 'prescaler'
  */
-#define _hwx_cfdtga_kpsc_1(h,ct,oc,k,v,...)	HW_Y0(_hwx_cfdtga_vpsc_,HW_A0(_hw_dtga_vpsc_##v))(h,ct,oc,v,__VA_ARGS__)
+#define _hwx_cfdtga_kpsc_1(h,ct,oc,k,v,...)	_HW_B(_hwx_cfdtga_vpsc_,HW_A0(_hw_dtga_vpsc_##v))(h,ct,oc,v,__VA_ARGS__)
 #define _hwx_cfdtga_vpsc_0(h,ct,oc,v,...)	HW_E_AVL(psc, v, 1 | 2 | 4 | 8)
 #define _hwx_cfdtga_vpsc_1(h,ct,oc,v,k,...)		\
   _hwa_write(ct,dtgps,HW_A1(_hw_dtga_vpsc_##v));	\
-  HW_YW(_hwx_cfdtga_kdlh_,delay_h,k)(h,ct,oc,k,__VA_ARGS__)
-#define _hwx_cfdtga_kpsc_0(h,ct,oc,k,...)	HW_YW(_hwx_cfdtga_kdlh_,delay_h,k)(h,ct,oc,k,__VA_ARGS__)
+  HW_BW(_hwx_cfdtga_kdlh_,delay_h,k)(h,ct,oc,k,__VA_ARGS__)
+#define _hwx_cfdtga_kpsc_0(h,ct,oc,k,...)	HW_BW(_hwx_cfdtga_kdlh_,delay_h,k)(h,ct,oc,k,__VA_ARGS__)
 
 #define _hw_dtga_kpsc_prescaler
 #define _hw_dtga_vpsc_1			, 0
@@ -93,10 +93,10 @@
     x##_write(ct,dtg##oc##h,v);						\
   else									\
     HWA_ERR("`delay_h` must be in the 0..15 range, not `" #v "`.");	\
-  HW_YW(_hwx_cfdtga_kdll_,delay_l,k)(x,ct,oc,k,__VA_ARGS__)
+  HW_BW(_hwx_cfdtga_kdll_,delay_l,k)(x,ct,oc,k,__VA_ARGS__)
 
 #define _hwx_cfdtga_kdlh_0(h,ct,oc,k,...)			\
-  HW_YW(_hwx_cfdtga_kdll_,delay_l,k)(h,ct,oc,k,__VA_ARGS__)
+  HW_BW(_hwx_cfdtga_kdll_,delay_l,k)(h,ct,oc,k,__VA_ARGS__)
 /*
  *  Optionnal argument 'delay_l'
  */

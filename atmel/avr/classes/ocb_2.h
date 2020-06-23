@@ -44,7 +44,7 @@
  */
 #define _hwa_cfocb(o,ct,oc,k,...)					\
   do {									\
-    HW_Y(_hwa_cfocb_kupdate_,_hw_is_update_##k)(ct,oc,k,__VA_ARGS__,)	\
+    HW_B(_hwa_cfocb_kupdate_,_hw_is_update_##k)(ct,oc,k,__VA_ARGS__,)	\
       } while(0)
 
 #define _hwa_cfocb_kupdate_1(ct,oc,kw,v,...)				\
@@ -57,7 +57,7 @@
   _hwa_cfocb_kupdate_0(ct,oc,__VA_ARGS__)
 
 #define _hwa_cfocb_kupdate_0(ct,oc,kw,...)					\
-  HW_Y(_hwa_cfocb_koutputh_,_hw_ocb_koutputh_##kw)(ct,oc,kw,__VA_ARGS__)
+  HW_B(_hwa_cfocb_koutputh_,_hw_ocb_koutputh_##kw)(ct,oc,kw,__VA_ARGS__)
 
 
 /*  Optionnal argument `output` (or `output_h`)
@@ -76,7 +76,7 @@
 
 
 #define _hwa_cfocb_koutputh_1(ct,oc,kw,v,...)				\
-  HW_Y(_hwa_cfocb_voutputh_,_hw_ocb_voutputh_##v)(ct,oc,v,__VA_ARGS__)
+  HW_B(_hwa_cfocb_voutputh_,_hw_ocb_voutputh_##v)(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfocb_voutputh_0(ct,oc,v,...)					\
   HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match`)
@@ -97,7 +97,7 @@
 #define _hw_ocb_voutputl_clear_at_bottom_set_after_match	, 1	// 1	  1
 
 #define _hwa_cfocb_koutputl_1(ct,oc,kw,v,...)				\
-  HW_Y(_hwa_cfocb_voutputl_,_hw_ocb_voutputl_##v)(ct,oc,v,__VA_ARGS__)
+  HW_B(_hwa_cfocb_voutputl_,_hw_ocb_voutputl_##v)(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfocb_voutputl_0(ct,oc,v,...)				\
   HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_after_match)

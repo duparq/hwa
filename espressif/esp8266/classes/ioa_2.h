@@ -75,7 +75,7 @@
 
 /*  Key 'function'
  */
-#define _hwa_cfioa1(o,cf,p,bn,bp,k,...)		HW_Y(_hwa_cfioa_kfn_,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa1(o,cf,p,bn,bp,k,...)		HW_B(_hwa_cfioa_kfn_,_hw_is_function_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 
 /* FIXME: look at STM32 code that does not use UBKT
@@ -84,28 +84,28 @@
  * @brief Return a single argument or concat 2 arguments inside parentheses
  * @hideinitializer
  */
-#define _HW_UBKT(...)			HW_Y(_HW_UBKT_,_hw_prn __VA_ARGS__)(__VA_ARGS__)
+#define _HW_UBKT(...)			HW_B(_HW_UBKT_,_hw_par __VA_ARGS__)(__VA_ARGS__)
 #define _HW_UBKT_0(...)			__VA_ARGS__
 #define _HW_UBKT_1(...)			_HW_UBKT1 __VA_ARGS__
 #define _HW_UBKT1(...)			_HW_UBKT2(__VA_ARGS__,,)
-#define _HW_UBKT2(a,x,...)		HW_Y(_HW_UBKT3_,x)(a,x,__VA_ARGS__)
+#define _HW_UBKT2(a,x,...)		HW_B(_HW_UBKT3_,x)(a,x,__VA_ARGS__)
 #define _HW_UBKT3_1(a,...)		a
-#define _HW_UBKT3_0(a,b,x,...)		HW_Y(_HW_UBKT4_,x)(a,b,x,__VA_ARGS__)
+#define _HW_UBKT3_0(a,b,x,...)		HW_B(_HW_UBKT4_,x)(a,b,x,__VA_ARGS__)
 #define _HW_UBKT4_1(a,b,...)		a##b
 #define _HW_UBKT4_0(...)		HW_E((__VA_ARGS__):too many arguments)
 
 
-#define _hwa_cfioa_kfn_0(o,cf,p,bn,bp,k,...)	HW_Y(_hwa_cfioa_kmd_,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_kfn_0(o,cf,p,bn,bp,k,...)	HW_B(_hwa_cfioa_kmd_,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioa_kfn_1(o,cf,p,bn,bp,k,v,...)	_hwa_cfioa_kfn_2(o,cf,p,bn,bp,v,_HW_UBKT(v),__VA_ARGS__)
 #define _hwa_cfioa_kfn_2(...)			_hwa_cfioa_kfn_3(__VA_ARGS__)
-#define _hwa_cfioa_kfn_3(o,cf,p,bn,bp,v,x,...)	HW_Y(_hwa_cfioa_vfn_,_hw_pf_##o##_##x)(o,cf,p,bn,bp,v,x,__VA_ARGS__)
+#define _hwa_cfioa_kfn_3(o,cf,p,bn,bp,v,x,...)	HW_B(_hwa_cfioa_vfn_,_hw_pf_##o##_##x)(o,cf,p,bn,bp,v,x,__VA_ARGS__)
 #define _hwa_cfioa_vfn_0(o,cf,p,bn,bp,v,x,...)	HW_E_NIL(v, _hw_pf_##o)
 #define _hwa_cfioa_vfn_1(o,cf,p,bn,bp,v,x,k,...)			\
   _hwa_write( cf, fn, HW_A1(_hw_pf_##o##_##x) );			\
   HW_A2(_hw_pf_##o##_##x) /* Optionnal supplement of actions, e.g. swap	 */ \
-  HW_Y(_hwa_cfioa_vfn1_,_hw_is_gpio_##x)(o,cf,p,bn,bp,v,x,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_vfn1_,_hw_is_gpio_##x)(o,cf,p,bn,bp,v,x,k,__VA_ARGS__)
 
-#define _hwa_cfioa_vfn1_1(o,cf,p,bn,bp,v,x,k,...)	HW_Y(_hwa_cfioa_kmd_,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_vfn1_1(o,cf,p,bn,bp,v,x,k,...)	HW_B(_hwa_cfioa_kmd_,_hw_is_mode_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioa_vfn1_0(o,cf,p,bn,bp,v,x,...)	HW_EOL(__VA_ARGS__)
 
 /*  Key 'mode'
@@ -124,7 +124,7 @@
 #define _hw_cfioa_md_analog_input	, ai
 
 #define _hwa_cfioa_kmd_0(o,cf,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
-#define _hwa_cfioa_kmd_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfioa_vmd_,_hw_cfioa_md_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioa_kmd_1(o,cf,p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vmd_,_hw_cfioa_md_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioa_vmd_0(o,cf,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating, digital_input_pullup, \
 							     digital_input_pullup_when_awake, \
 							     digital_output, digital_output_pushpull, \
@@ -135,42 +135,42 @@
 
 #define _hwa_cfioa_di(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 0 );						\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_dif(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 0 );						\
   _hwa_write( cf, pux, 0 /* pull-up off */ );			\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_dipu(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 0 /* input */ );				\
   _hwa_write( cf, pux, 3 /* pull-up on */ );			\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_dipuwa(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 0 /* input */ );				\
   _hwa_write( cf, pux, 2 /* pull-up when awake */ );		\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_dipuws(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 0 /* input */ );				\
   _hwa_write( cf, pux, 1 /* pull-up when sleeping */ );		\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_dopp(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 3 /* output */ );				\
   _hwa_write_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_doppwa(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 1 /* output when awake */ );			\
   _hwa_write_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_doppws(o,cf,p,bn,bp,k,...)				\
   _hwa_write( cf, oex, 2 /* output when sleeping */ );		\
   _hwa_write_m( p, _enb, 1UL<<bp, 1UL<<bp );			\
-  HW_Y(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
+  HW_B(_hwa_cfioa_kpu_,_hw_is_pullup_##k)(o,cf,p,bn,bp,k,__VA_ARGS__)
 
 
 /*  Key `pullup`
@@ -181,7 +181,7 @@
 #define _hw_cfioa_pu_on		, 3
 
 #define _hwa_cfioa_kpu_0(o,cf,p,bn,bp,...)	HW_EOL(__VA_ARGS__)
-#define _hwa_cfioa_kpu_1(o,cf,p,bn,bp,k,v,...)	HW_Y(_hwa_cfioa_vpu_,_hw_cfioa_pu_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioa_kpu_1(o,cf,p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vpu_,_hw_cfioa_pu_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioa_vpu_1(o,cf,p,bn,bp,v,...)	_hwa_write( cf, pux, HW_A1(_hw_cfioa_pu_##v) ); HW_EOL(__VA_ARGS__)
 #define _hwa_cfioa_vpu_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, (on,off,when_awake,when_sleeping))
 

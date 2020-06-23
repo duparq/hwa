@@ -161,7 +161,7 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
     x( configure, (o,sda),						\
        function,  gpio,							\
        mode,      digital_output_opendrain_pullup );			\
-    HW_Y(_hwx_cfswtwia_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,);		\
+    HW_B(_hwx_cfswtwia_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,);		\
   }while(0)
 
 /*  Key `bps`
@@ -169,7 +169,7 @@ void __attribute__((section (".irom.text"))) __attribute__((weak)) hw_swtwi0_txs
 #define _hwx_cfswtwia_kbps_0(o,k,...)		HW_E_NIL(k,(bps))
 
 #define _hwx_cfswtwia_kbps_1(o,k,v,...)				\
-  HW_Y(_hwx_cfswtwia_kbps1,_hw_is_max_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwx_cfswtwia_kbps1,_hw_is_max_##v)(o,v,__VA_ARGS__)
 #define _hwx_cfswtwia_kbps1_0(o,v,...)					\
   HW_G2(_hwx_cfswtwia_kbps2,HW_IS(max,hw_##o##_bps))(o,v,__VA_ARGS__)
 #define _hwx_cfswtwia_kbps2_0(o,v,...)					\

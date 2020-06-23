@@ -70,7 +70,7 @@
 #endif
 
 #undef CANRX
-#if !HW_Y0(RXD)
+#if !_HW_B(RXD)
 #  if HW_ADDRESS(RXD) != -1
 #    define CANRX 1
 	RXDPORT	  = HW_ADDRESS((RXD,port,port))
@@ -297,7 +297,7 @@ DATA(dtn):	.byte	0		; 1 bit duration
 #  define _hw_swuarta_autosync_101_101	, swuarta_autosync_101.sx
 #  if AUTOSYNC > 0
 #    if HW_IS(,HW_G2(_hw_swuarta_autosync,AUTOSYNC))
-#      include HW_QUOTE(HW_A1(HW_G2(_hw_swuarta_autosync,AUTOSYNC)))
+#      include HW_Q(HW_A1(HW_G2(_hw_swuarta_autosync,AUTOSYNC)))
 #    else
 #      error `autosync` must be `51`, `91`, or `101`.
 #    endif

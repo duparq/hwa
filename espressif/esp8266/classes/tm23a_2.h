@@ -57,17 +57,17 @@
     hwa_t hwa_st ; hwa_t *hwa= &hwa_st ;				\
     _hwa_setup_o( shared );						\
     _hwa_setup_o( o );							\
-    HW_YW(_hwa_cftm23a_kclock_,clock,k)(o,k,__VA_ARGS__,,);		\
+    HW_BW(_hwa_cftm23a_kclock_,clock,k)(o,k,__VA_ARGS__,,);		\
     hwa->commit = 1; _hwa_commit_o( o ); _hwa_commit_o( shared );	\
   }while(0)
 
-#define _hwa_cftm23a(o,a,k,...)	HW_YW(_hwa_cftm23a_kclock_,clock,k)(o,k,__VA_ARGS__,,)
+#define _hwa_cftm23a(o,a,k,...)	HW_BW(_hwa_cftm23a_kclock_,clock,k)(o,k,__VA_ARGS__,,)
 
 
 /*  Key `clock`
  */
-#define _hwa_cftm23a_kclock_0(o,k,...)		HW_YW(_hwa_cftm23a_kdir_,direction,k)(o,k,__VA_ARGS__)
-#define _hwa_cftm23a_kclock_1(o,k,v,...)	HW_Y(_hwa_cftm23a_vclock_,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cftm23a_kclock_0(o,k,...)		HW_BW(_hwa_cftm23a_kdir_,direction,k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_kclock_1(o,k,v,...)	HW_B(_hwa_cftm23a_vclock_,_hw_tm23a_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_1(o,v,...)		_hwa_cftm23a_vclock_2(o,v,_hw_tm23a_clock_##v,__VA_ARGS__)
 #define _hwa_cftm23a_vclock_2(...)		_hwa_cftm23a_vclock_3(__VA_ARGS__)
 #define _hwa_cftm23a_vclock_3(o,v,z,x,k,...)			\
@@ -75,7 +75,7 @@
   else if (  16*x == 1 ) _hwa_write(o,psc,1);			\
   else if ( 256*x == 1 ) _hwa_write(o,psc,2);			\
   else HWA_E_NIL(v,(apb, apb/16, apb/256));			\
-  HW_YW(_hwa_cftm23a_kdir_,direction,k)(o,k,__VA_ARGS__)
+  HW_BW(_hwa_cftm23a_kdir_,direction,k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
 
@@ -84,17 +84,17 @@
 /*  Key `direction`
  */
 #define _hwa_cftm23a_kdir_1(o,k,v,...)					\
-  HW_Y(_hwa_cftm23a_vdir_,_hw_tm23a_direction_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cftm23a_vdir_,_hw_tm23a_direction_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vdir_1(o,v,k,...)					\
   _hwa_write(o,en,HW_A1(_hw_tm23a_direction_##v));			\
   _hwa_write(o,arl,HW_A2(_hw_tm23a_direction_##v));			\
-  HW_Y(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cftm23a_vdir_0(o,v,...)	HW_E_AVL(direction, v, down | down_loop | stop)
 
 #define _hwa_cftm23a_kdir_0(o,k,...)					\
-  HW_Y(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 #define _hw_tm23a_direction_stop	, 0, 0	/* en, arl */
 #define _hw_tm23a_direction_down	, 1, 0
@@ -104,23 +104,23 @@
  */
 #define _hwa_cftm23a_kbottom_1(o,k,v,...)	HW_G2(_hwa_cftm23a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 #define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E_AVL(bottom, v, 0)
-#define _hwa_cftm23a_vbottom_1(o,v,k,...)	HW_Y(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
-#define _hwa_cftm23a_kbottom_0(o,k,...)		HW_Y(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_vbottom_1(o,v,k,...)	HW_B(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
+#define _hwa_cftm23a_kbottom_0(o,k,...)		HW_B(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 /*  Key `top`
  */
 #define _hwa_cftm23a_ktop_1(o,k,v,kk,...)				\
   _hwa_write(o,load,(uint32_t)(v));					\
-  HW_YW(_hwa_cftm23a_kaction_,action,kk)(o,kk,__VA_ARGS__)
+  HW_BW(_hwa_cftm23a_kaction_,action,kk)(o,kk,__VA_ARGS__)
 
 #define _hwa_cftm23a_ktop_0(o,k,...)					\
-  HW_YW(_hwa_cftm23a_kaction_,action,k)(o,k,__VA_ARGS__)
+  HW_BW(_hwa_cftm23a_kaction_,action,k)(o,k,__VA_ARGS__)
 
 #if 0
 /*	Optionnal parameter `irq_type`
  */
 #define _hwa_cftm23a_kirqtype_1(o,k,v,...)				\
-  HW_Y(_hwa_cftm23a_virqtype_,_hw_tm23a_irqtype_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cftm23a_virqtype_,_hw_tm23a_irqtype_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_virqtype_1(o,v,...)		\
   _hwa_write(o,ie, HW_A1(_hw_tm23a_irqtype_##v));	\
@@ -141,7 +141,7 @@
 /*  Key `action`
  */
 #define _hwa_cftm23a_kaction_1(o,k,v,...)				\
-  HW_Y(_hwa_cftm23a_vaction_,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cftm23a_vaction_,_hw_tm23a_action_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cftm23a_vaction_1(o,v,...)					\
   _hwa_write(o,irqtype,0);						\

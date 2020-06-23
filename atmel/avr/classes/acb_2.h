@@ -52,11 +52,11 @@
 
 #define _hwa_cfacb(o,a,k,...)					\
   do {									\
-    HW_Y(_hwa_cfacb_xedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
+    HW_B(_hwa_cfacb_xedge_,_hw_is_edge_##k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
 #define _hwa_cfacb_xedge_1(o,k,v,...)					\
-  HW_Y(_hwa_cfacb_vedge_,_hw_acb_edge_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfacb_vedge_,_hw_acb_edge_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacb_vedge_0(o,v,...)					\
   HW_E_AVL(edge, v, falling | rising | both)
@@ -71,7 +71,7 @@
 /*  Optionnal parameter `positive_input`
  */
 #define _hwa_cfacb_xposin_1(o,k,v,...)				\
-  HW_Y(_hwa_cfacb_vposin_bandgap_,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfacb_vposin_bandgap_,_hw_is_bandgap_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfacb_vposin_bandgap_1(o,v,k,...)			\
   _hwa_write(o,acbg,1);						\

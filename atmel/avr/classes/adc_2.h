@@ -111,7 +111,7 @@
     uint8_t mux __attribute__((unused)) = 0xFF ;			\
     uint8_t gain __attribute__((unused)) = 1 ;				\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfadc_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,);	\
+    HW_B(_hwa_cfadc_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,);	\
     if ( gain != 1 && gain != 20 ) HWA_ERR("optionnal parameter `gain` must be 1 or 20."); \
     if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
   } while(0)
@@ -119,12 +119,12 @@
 #define _hwa_cfadc_kclock_0(o,k,...)					\
   HW_E_VL(k,clock)
 #define _hwa_cfadc_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadc_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 #define _hwa_cfadc_vclock_1(o,v,k,...)				\
   _hwa_write(o, ps, HW_A1(_hw_adx_clock_##v)(HW_A2(_hw_adx_clock_##v))); \
-  HW_Y(_hwa_cfadc_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 
 /*  Mandatory parameter `trigger`
@@ -132,13 +132,13 @@
 #define _hwa_cfadc_ktrigger_0(o,k,...)		\
   HW_E_VL(k,trigger)
 #define _hwa_cfadc_ktrigger_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadc_vtrigger_,_hw_adc_trigger_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_vtrigger_,_hw_adc_trigger_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | acmp0 | int0 | counter0_compare0 | counter0_overflow | counter0_compare1 | pcic0)
 #define _hwa_cfadc_vtrigger_1(o,v,k,...)				\
   _hwa_write(o,ate, HW_A1(_hw_adc_trigger_##v));		\
   _hwa_write(o,ts, HW_A2(_hw_adc_trigger_##v));		\
-  HW_Y(_hwa_cfadc_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_adc_trigger_manual			, 0, 0	/* , ate, ts */
 #define _hw_adc_trigger_auto			, 1, 0
@@ -154,12 +154,12 @@
 #define _hwa_cfadc_kvref_0(o,k,...)					\
   HW_E_VL(k,vref)
 #define _hwa_cfadc_kvref_1(o,k,v,...)					\
-  HW_Y(_hwa_cfadc_vvref_,_hw_adc_vref_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_vvref_,_hw_adc_vref_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vvref_0(o,v,...)				\
   HW_E_AVL(vref, v, vcc | pin_aref | bandgap_1100mV | handgap_2560mV | handgap_2560mV_aref)
 #define _hwa_cfadc_vvref_1(o,v,k,...)			\
   _hwa_write(o,refs, HW_A1(_hw_adc_vref_##v));	\
-  HW_Y(_hwa_cfadc_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
 #define _hw_adc_vref_vcc			, 0	/* , refs */
 #define _hw_adc_vref_pin_aref			, 1
@@ -170,14 +170,14 @@
 /*  Optionnal parameter `align`
  */
 #define _hwa_cfadc_kalign_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadc_valign_,_hw_adc_align_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_valign_,_hw_adc_align_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_valign_0(o,v,...)				\
   HW_E_OAVL(align, v, left | right)
 #define _hwa_cfadc_valign_1(o,v,k,...)				\
   _hwa_write(o,lar, HW_A1(_hw_adc_align_##v));			\
-  HW_Y(_hwa_cfadc_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfadc_kalign_0(o,k,...)					\
-  HW_Y(_hwa_cfadc_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_adc_align_left			, 1	/* , lar */
 #define _hw_adc_align_right			, 0
@@ -185,27 +185,27 @@
 /*  Optionnal parameter `polarity`
  */
 #define _hwa_cfadc_kpolarity_1(o,k,v,...)				\
-  HW_Y(_hwa_cfadc_vpolarity_,_hw_adc_polarity_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_vpolarity_,_hw_adc_polarity_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vpolarity_0(o,v,...)				\
     HW_E_OAVL(polarity, v, unipolar | bipolar)
 #define _hwa_cfadc_vpolarity_1(o,v,k,...)				\
     _hwa_write(o,bin, HW_A1(_hw_adc_polarity_##vpolarity));	\
-    HW_Y(_hwa_cfadc_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+    HW_B(_hwa_cfadc_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 #define _hwa_cfadc_kpolarity_0(o,k,...)			\
-  HW_Y(_hwa_cfadc_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfadc_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hw_adc_polarity_unipolar		, 0	/* , bin */
 #define _hw_adc_polarity_bipolar		, 1
 
 /*  Optionnal parameter `gain`
  */
-#define _hwa_cfadc_kgain_1(o,k0,v,k,...)	gain = (uint8_t)(v); HW_YW(_hwa_cfadc_pi,input,k))(o,k,__VA_ARGS__)
-#define _hwa_cfadc_kgain_0(o,k,...)		HW_YW(_hwa_cfadc_in,input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadc_kgain_1(o,k0,v,k,...)	gain = (uint8_t)(v); HW_BW(_hwa_cfadc_pi,input,k))(o,k,__VA_ARGS__)
+#define _hwa_cfadc_kgain_0(o,k,...)		HW_BW(_hwa_cfadc_in,input,k)(o,k,__VA_ARGS__)
 
 
 /*  Optionnal parameter `input`
  */
-#define _hwa_cfadc_in1(o,k,v,...)	HW_KV(_hwa_cfadc_in1,_hw__adcinput_,v)(o,v,__VA_ARGS__)
+#define _hwa_cfadc_in1(o,k,v,...)	HW_BV(_hwa_cfadc_in1,_hw__adcinput_,v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfadc_in12
 #define _hwa_cfadc_in11(v)		mux=v;	_hwa_cfadc_in12
 #define _hwa_cfadc_in12(o,k,...)	HW_EOL(__VA_ARGS__)
@@ -227,7 +227,7 @@
 /*	Process 'positive_input' & 'negative_input' in differential mode
  */
 #define _hwa_cfadc_pi0(o,k,...)		HW_E(HW_EM_XNIL(k,(input,positive_input)))
-#define _hwa_cfadc_pi1(o,k,v,...)	HW_Y(_hwa_cfadc_vpositive_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfadc_pi1(o,k,v,...)	HW_B(_hwa_cfadc_vpositive_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
 #define x_hwa_cfadc_vpositive_input_0(o,v,...)			\
   HW_E_AVL(`positive_input`, v, '(pin,adc0..3)' or synonyms)
 #define _hwa_cfadc_vpositive_input_1(o,v,k,...)			\
@@ -236,7 +236,7 @@
 #define _hwa_cfadc_knegative_input_0(o,k,...)	\
   HW_E_VL(k,negative_input)
 #define _hwa_cfadc_knegative_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfadc_vnegative_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfadc_vnegative_input_,_hw__adcinput_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfadc_vnegative_input_0(o,v,...)			\
   HW_E_AVL(`negative_input`, v, '(pin,adc0..3)' or synonyms)
 #define _hwa_cfadc_vnegative_input_1(o,v,...)				\

@@ -248,7 +248,7 @@ typedef struct {
  */
 #define hw_class__ionum
 
-#define hw_pin_gpio(x)			HW_Y(hw_pin_gpio_var_,_hw_is_var_##x)(x)
+#define hw_pin_gpio(x)			HW_B(hw_pin_gpio_var_,_hw_is_var_##x)(x)
 #define hw_pin_gpio_var_0(x)		hw_pin_gpio##x
 #define hw_pin_gpio_var_1(x)		_ionum, 0, /* hw_port */, x
 

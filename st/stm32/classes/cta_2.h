@@ -58,13 +58,13 @@
 #define hw_configure__cta		, _hw_cfctd
 #define hwa_configure__cta		, _hwa_cfctd
 
-#define _hw_cfctd(o,a,k,...)		do{ HW_Y(_hwx_cfctd,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfctd(o,a,k,...)		do{ HW_Y(_hwx_cfctd,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfctd(o,a,k,...)		do{ HW_B(_hwx_cfctd,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfctd(o,a,k,...)		do{ HW_B(_hwx_cfctd,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
 #define _hwx_cfctd1(...)		HW_E_ML((clock,reload))
-#define _hwx_cfctd0(h,o,k,...)		HW_Y(_hwx_cfctd_kmode,_hw_is_mode_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfctd0(h,o,k,...)		HW_B(_hwx_cfctd_kmode,_hw_is_mode_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `mode`
  */
@@ -73,15 +73,15 @@
 #define _hw_cfctd_mode_slave		, HW_E_TBI
 
 #define _hwx_cfctd_kmode0(...)		_hwx_cfctd(__VA_ARGS__)
-#define _hwx_cfctd_kmode1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vmode,_hw_cfctd_mode_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfctd_kmode1(h,o,k,v,...)	HW_B(_hwx_cfctd_vmode,_hw_cfctd_mode_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vmode1(h,o,v,...)	HW_A1(_hw_cfctd_mode_##v)(h,o,__VA_ARGS__)
 #define _hwx_cfctd_vmode0(h,o,v,...)	HW_E_NIL(v,(counter,encoder,slave))
 
 /*  Mode 'counter' - Mandatory parameter `clock`
  */
-#define _hwx_cfctd(h,o,k,...)		HW_Y(_hwx_cfctd_kclock,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfctd(h,o,k,...)		HW_B(_hwx_cfctd_kclock,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfctd_kclock0(h,o,k,...)	HW_E_NIL(k,(clock))
-#define _hwx_cfctd_kclock1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vclock,_hw_cfctd_clock_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfctd_kclock1(h,o,k,v,...)	HW_B(_hwx_cfctd_vclock,_hw_cfctd_clock_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vclock0(h,o,v,...)	HW_E_NIL(v,_hw_cfctd_clocks)
 #define _hwx_cfctd_vclock1(h,o,v,...)	HW_A1(_hw_cfctd_clock_##v)(h,o,__VA_ARGS__)
 
@@ -95,21 +95,21 @@
 
 #define _hwx_cfctd_clock_from_apb1_psc(h,o,k,...)			\
   h##_write(o,sms,0);							\
-  HW_Y(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfctd_clock_ti1fp1(h,o,k,...)				\
   h##_write(o,sms,7);							\
   h##_write(o,ts,5);							\
-  HW_Y(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfctd_clock_ti1fp2(h,o,k,...)				\
   h##_write(o,sms,7);							\
   h##_write(o,ts,6);							\
-  HW_Y(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
 
 
 /*  Mode 'counter' - Mandatory parameter `direction`
  */
 #define _hwx_cfctd_kdir0(h,o,k,...)	HW_E_NIL(k,(direction))
-#define _hwx_cfctd_kdir1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vdir,_hw_cfctd_dir_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfctd_kdir1(h,o,k,v,...)	HW_B(_hwx_cfctd_vdir,_hw_cfctd_dir_##v)(h,o,v,__VA_ARGS__)
 
 #define _hw_cfctd_dirs			(up_loop,up_noloop,down_loop,down_noloop,updown_loop,updown_noloop)
 //					, jump,              v =  cms  dir  opm
@@ -125,22 +125,22 @@
   uint8_t cmsdiropm = HW_A2(_hw_cfctd_dir_##v) ;			\
   HW_A1(_hw_cfctd_dir_##v)(h,o,k,__VA_ARGS__)
 
-#define _hwx_cfctd_vdir2(h,o,k,...)	HW_Y(_hwx_cfctd_kocf,_hw_is_compare_flag_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfctd_vdir2(h,o,k,...)	HW_B(_hwx_cfctd_kocf,_hw_is_compare_flag_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `compare_flag`, only when counting up-down
  */
-#define _hwx_cfctd_kocf1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vocf,_hw_cfctd_compare_flag_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfctd_kocf1(h,o,k,v,...)	HW_B(_hwx_cfctd_vocf,_hw_cfctd_compare_flag_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vocf0(h,o,v,...)	HW_E_NIL(v,(counting_up,counting_down,counting_up_or_down))
 #define _hwx_cfctd_vocf1(h,o,v,k,...)					\
   cmsdiropm += HW_A1(_hw_cfctd_compare_flag_##v);			\
   h##_write(o,cmsdiropm,cmsdiropm);					\
-  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
-  /* HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
+  HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+  /* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
 #define _hwx_cfctd_kocf0(h,o,k,...)				\
   h##_write(o,cmsdiropm,cmsdiropm);				\
-  HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
-  /* HW_Y(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
+  HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
+  /* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
 #define _hw_cfctd_compare_flag_counting_down		, -8
 #define _hw_cfctd_compare_flag_counting_up		, -4
@@ -148,34 +148,34 @@
 
 /*  Optionnal parameter `loop`
  */
-/* #define _hwx_cfctd_kloop1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__) */
+/* #define _hwx_cfctd_kloop1(h,o,k,v,...)	HW_B(_hwx_cfctd_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__) */
 /* #define _hwx_cfctd_vloop0(h,o,v,...)	HW_E_ST(v) */
 /* #define _hwx_cfctd_vloop1(h,o,v,k,...)					\ */
 /*   h##_write(o,opm,HW_A2(_hw_state_##v));				\ */
-/*   HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
+/*   HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
 
 /* #define _hwx_cfctd_kloop0(h,o,k,...)					\ */
-/*   HW_Y(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
+/*   HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
 
 /*  Optionnal parameter `prescaler`
  */
 #define _hwx_cfctd_kpsc1(h,o,k0,v,k,...)			\
   h##_write(o,psc,(uint16_t)(v));				\
-  HW_Y(_hwx_cfctd_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfctd_kpsc0(h,o,k,...)				\
-  HW_Y(_hwx_cfctd_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_krld,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `reload`
  */
 #define _hwx_cfctd_krld1(h,o,k0,v,k,...)			\
   h##_write(o,arr,(uint16_t)(v));				\
-  HW_Y(_hwx_cfctd_krun,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_krun,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfctd_krld0(h,o,k,...)				\
-  HW_Y(_hwx_cfctd_krun,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfctd_krun,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `run`
  */
-#define _hwx_cfctd_krun1(h,o,k,v,...)	HW_Y(_hwx_cfctd_vrun,_hw_state_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfctd_krun1(h,o,k,v,...)	HW_B(_hwx_cfctd_vrun,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vrun0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_cfctd_vrun1(h,o,v,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(__VA_ARGS__);
 #define _hwx_cfctd_krun0(h,o,k,...)	HW_EOL(__VA_ARGS__)

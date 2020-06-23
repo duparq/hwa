@@ -52,11 +52,11 @@
  */
 #define _hw_cfioa_fn_gpio
 
-#define _hwx_cfioa(x,o,p,bn,bp,k,...)		HW_Y(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
-#define _hwx_cfioa_kfn_0(x,o,p,bn,bp,k,...)	HW_Y(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
-#define _hwx_cfioa_kfn_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfioa_vfn_,_hw_cfioa_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfioa(x,o,p,bn,bp,k,...)		HW_B(_hwx_cfioa_kfn_,_hw_is_function_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfioa_kfn_0(x,o,p,bn,bp,k,...)	HW_B(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfioa_kfn_1(x,o,p,bn,bp,k,v,...)	HW_B(_hwx_cfioa_vfn_,_hw_cfioa_fn_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfioa_vfn_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (gpio) )
-#define _hwx_cfioa_vfn_1(x,o,p,bn,bp,v,k,...)	HW_Y(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwx_cfioa_vfn_1(x,o,p,bn,bp,v,k,...)	HW_B(_hwx_cfioa_kmd_,_hw_is_mode_##k)(x,o,p,bn,bp,k,__VA_ARGS__)
 
 /*  Key 'mode'
  */
@@ -70,7 +70,7 @@
 #define _hw_cfioa_md_analog_input_pullup	, aipu
 
 #define _hwx_cfioa_kmd_0(x,o,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
-#define _hwx_cfioa_kmd_1(x,o,p,bn,bp,k,v,...)	HW_Y(_hwx_cfioa_vmd_,_hw_cfioa_md_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwx_cfioa_kmd_1(x,o,p,bn,bp,k,v,...)	HW_B(_hwx_cfioa_vmd_,_hw_cfioa_md_##v)(x,o,p,bn,bp,v,__VA_ARGS__)
 #define _hwx_cfioa_vmd_0(x,o,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input|digital_output|analog_input) )
 #define _hwx_cfioa_vmd_1(x,o,p,bn,bp,v,...)	HW_G2(_hwx_cfioa,HW_A1(_hw_cfioa_md_##v))(x,o,p,bn,bp,__VA_ARGS__)
 
@@ -90,13 +90,13 @@
 //do{_hwx_cfioa_ai(_hwa,pin_13,porta,1,0,,,,)while(0)
 #define _hwx_cfioa_ai(h,o,p,bn,bp,...)		_hwx_cfioa_ai1(h,o,HW_X(o,did))
 #define _hwx_cfioa_ai1(...)			_hwx_cfioa_ai2(__VA_ARGS__)
-#define _hwx_cfioa_ai2(h,o,x,...)		HW_YW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
+#define _hwx_cfioa_ai2(h,o,x,...)		HW_BW(_hwx_cfioa_ai2_,_m111,x)(h,o,x,__VA_ARGS__)
 #define _hwx_cfioa_ai2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
 #define _hwx_cfioa_ai2_1(h,o,c,...)		h##_write__m111( __VA_ARGS__, 1, );
 
 #define _hwx_cfioa_aipu(h,o,p,bn,bp,...)	_hwx_cfioa_aipu1(h,o,p,bn,bp,HW_X(o,did))
 #define _hwx_cfioa_aipu1(...)			_hwx_cfioa_aipu2(__VA_ARGS__)
-#define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_YW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
+#define _hwx_cfioa_aipu2(h,o,p,bn,bp,x,...)	HW_BW(_hwx_cfioa_aipu2_,_m111,x)(h,o,p,bn,bp,x,__VA_ARGS__)
 #define _hwx_cfioa_aipu2_0(h,o,...)		HW_E(HW_EM(o does not support analog_input mode))
 #define _hwx_cfioa_aipu2_1(h,o,p,bn,bp,c,...)				\
   h##_write__m111( __VA_ARGS__, 1, );					\

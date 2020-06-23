@@ -114,7 +114,7 @@
     uint8_t input1 __attribute__((unused)) = 0xFF ;			\
     uint8_t input2 __attribute__((unused)) = 0xFF ;			\
     _hwa_write( o, en, 1 ); /* turn the ADC on */			\
-    HW_Y(_hwa_cfada_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
+    HW_B(_hwa_cfada_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
     if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
   } while(0)
 
@@ -122,14 +122,14 @@
   HW_E_VL(k,clock)
 
 #define _hwa_cfada_kclock_1(o,k,v,...)				\
-  HW_Y(_hwa_cfada_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vclock_0(o,v,...)					\
   HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
 
 #define _hwa_cfada_vclock_1(o,v,k,...)				\
   _hwa_write(o, ps, HW_A1(_hw_adx_clock_##v)(HW_A2(_hw_adx_clock_##v))); \
-  HW_Y(_hwa_cfada_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
 
 
 /*  Mandatory parameter `trigger`
@@ -138,7 +138,7 @@
   HW_E_VL(k,trigger)
 
 #define _hwa_cfada_ktrigger_1(o,k,v,...)				\
-  HW_Y(_hwa_cfada_vtrigger_,_hw_ada_trigger_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vtrigger_,_hw_ada_trigger_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vtrigger_0(o,v,...)				\
   HW_E_AVL(trigger, v, manual | auto | acmp0 | int0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
@@ -146,7 +146,7 @@
 #define _hwa_cfada_vtrigger_1(o,v,k,...)			\
   _hwa_write(o,ate, HW_A1(_hw_ada_trigger_##v));		\
   _hwa_write(o,ts, HW_A2(_hw_ada_trigger_##v));		\
-  HW_Y(_hwa_cfada_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ada_trigger_manual			, 0, 0	/* , ate, ts */
 #define _hw_ada_trigger_auto			, 1, 0
@@ -164,14 +164,14 @@
   HW_E_VL(k,vref)
 
 #define _hwa_cfada_kvref_1(o,k,v,...)					\
-  HW_Y(_hwa_cfada_vvref_,_hw_ada_vref_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vvref_,_hw_ada_vref_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vvref_0(o,v,...)				\
   HW_E_AVL(vref, v, vcc | pin_aref | bandgap)
 
 #define _hwa_cfada_vvref_1(o,v,k,...)			\
   _hwa_write(o,refs, HW_A1(_hw_ada_vref_##v));	\
-  HW_Y(_hwa_cfada_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ada_vref_vcc		, 0	/* , refs */
 #define _hw_ada_vref_pin_aref		, 1
@@ -180,16 +180,16 @@
 /*  Optionnal parameter `align`
  */
 #define _hwa_cfada_kalign_1(o,k,v,...)				\
-  HW_Y(_hwa_cfada_valign_,_hw_ada_align_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_valign_,_hw_ada_align_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_valign_0(o,v,...)				\
   HW_E_OAVL(align, v, left | right)
 #define _hwa_cfada_valign_1(o,v,k,...)				\
   _hwa_write(o,lar, HW_A1(_hw_ada_align_##v));			\
-  HW_Y(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfada_kalign_0(o,k,...)					\
-  HW_Y(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ada_align_left		, 1	/* , lar */
 #define _hw_ada_align_right		, 0
@@ -197,17 +197,17 @@
 /*  Optionnal parameter `polarity`
  */
 #define _hwa_cfada_kpolarity_1(o,k,v,...)				\
-  HW_Y(_hwa_cfada_vpolarity_,_hw_ada_polarity_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vpolarity_,_hw_ada_polarity_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vpolarity_0(o,v,...)				\
   HW_E_OAVL(polarity, v, unipolar | bipolar)
 
 #define _hwa_cfada_vpolarity_1(o,v,k,...)			\
   _hwa_write(o,bin, HW_A1(_hw_ada_polarity_##vpolarity));	\
-  HW_Y(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfada_kpolarity_0(o,k,...)			\
-  HW_Y(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
 
 #define _hw_ada_polarity_unipolar	, 0	/* , bin */
 #define _hw_ada_polarity_bipolar	, 1
@@ -221,12 +221,12 @@
   HW_G2(_hwa_cfada_kpositive_input,HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
 
 #define _hwa_cfada_kgain_0(o,k,...)				\
-  /* HW_Y(_hwa_cfada_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__) */	\
-  HW_YW(_hwa_cfada_in,input,k)(o,k,__VA_ARGS__)
+  /* HW_B(_hwa_cfada_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__) */	\
+  HW_BW(_hwa_cfada_in,input,k)(o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `input`: indicates single-end mode, last parameter.
  */
-#define _hwa_cfada_in1(o,k,v,...)	HW_KV(_hwa_cfada_in1,_hw__adainput_,v)(o,v,__VA_ARGS__)
+#define _hwa_cfada_in1(o,k,v,...)	HW_BV(_hwa_cfada_in1,_hw__adainput_,v)(o,v,__VA_ARGS__)
 #define _hwa_cfada_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfada_in12
 #define _hwa_cfada_in11(v)		mux=v;	_hwa_cfada_in12
 #define _hwa_cfada_in12(o,k,...)	HW_EOL(__VA_ARGS__)
@@ -256,7 +256,7 @@
   HW_E_VL(k,input | positive_input)
 
 #define _hwa_cfada_kpositive_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfada_vpositive_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vpositive_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vpositive_input_0(o,v,...)				\
   HW_E_AVL(`positive_input`, v, '(pin,adc0..7)' or synonyms)
@@ -268,7 +268,7 @@
   HW_E_VL(k,negative_input)
 
 #define _hwa_cfada_knegative_input_1(o,k,v,...)			\
-  HW_Y(_hwa_cfada_vnegative_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwa_cfada_vnegative_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfada_vnegative_input_0(o,v,...)		\
   HW_E_AVL(`negative_input`, v, '(pin,adc0..7)' or synonyms)

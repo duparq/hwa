@@ -72,7 +72,7 @@ int main ( )
   /*  FIXME: should subtract 1 from the compare value because the compare match
    *  flag is set one counting cycle after the match.
    */
-  if ( !STRCMP(HW_QUOTE(COUNTMODE),"updown_loop") )
+  if ( !STRCMP(HW_Q(COUNTMODE),"updown_loop") )
     hwa( write, (COUNTER,COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV/2 );
   else /* up_loop */
     hwa( write, (COUNTER,COMPARE), 0.5 + 0.001*HW_SYSHZ/CLKDIV );

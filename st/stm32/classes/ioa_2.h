@@ -64,7 +64,7 @@
 /*  Transaction. Handle signals remapping.
  */
 #define hwa_configure__ioa			, _hwa_cfioa
-#define _hwa_cfioa(o,p,bn,...)			HW_Y0(_hwa_cfioa,_hw_is_1_##bn)(o,p,bn,__VA_ARGS__)
+#define _hwa_cfioa(o,p,bn,...)			_HW_B(_hwa_cfioa,_hw_is_1_##bn)(o,p,bn,__VA_ARGS__)
 #define _hwa_cfioa0(...)			do{ uint8_t cnf, mode, odr=0 ; _hwa_cfioa_(0,__VA_ARGS__); }while(0)
 #define _hwa_cfioa1(...)				\
   do{							\
@@ -78,17 +78,17 @@
 /*  The first argument 'x' is an indicator that can be 0 or 1, telling that
  *  hwa() is used to configure one single pin and can process signal remaping.
  */
-#define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_YW(_hwa_cfioa_kfn,function,k)(x,(o,p,bn,bp),k,__VA_ARGS__)
+#define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_BW(_hwa_cfioa_kfn,function,k)(x,(o,p,bn,bp),k,__VA_ARGS__)
 
 /*  Optionnal argument 'function'. Select default or alternate function (df/af). Register signal-pin association for 'af'.
  */
-#define _hwa_cfioa_kfn1(x,va,k,v,...)		HW_Y(_hwa_cfioa_vfn,_hw_prn v)(x,va,v,__VA_ARGS__)
+#define _hwa_cfioa_kfn1(x,va,k,v,...)		HW_B(_hwa_cfioa_vfn,_hw_par v)(x,va,v,__VA_ARGS__)
 /*
  *    Value is not a (). Must be 'gpio'. Can drop the indicator 'x'. Indicate default function with 'df'
  */
-#define _hwa_cfioa_vfn0(x,va,v,...)		HW_YW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
+#define _hwa_cfioa_vfn0(x,va,v,...)		HW_BW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
 #define _hwa_cfioa_vfn00(va,v,...)		HW_E_NIL(v,(gpio))
-#define _hwa_cfioa_vfn01(va,v,k,...)		HW_YW(_hwa_cfioa_kmd,mode,k)(df,HW_XB va,k,__VA_ARGS__)
+#define _hwa_cfioa_vfn01(va,v,k,...)		HW_BW(_hwa_cfioa_kmd,mode,k)(df,HW_RP va,k,__VA_ARGS__)
 /*
  *    Value is a (). Verify that indicator 'x' is 1 before trying to process signal mapping.
  */
@@ -99,30 +99,30 @@
  */
 #define _hwa_cfioa_vfn11(va,v,...)		_hwa_cfioa_vfn2(va,(__VA_ARGS__),v,HW_X(v))
 #define _hwa_cfioa_vfn2(...)			_hwa_cfioa_vfn3(__VA_ARGS__)
-#define _hwa_cfioa_vfn3(va1,va2,v,c,...)	HW_Y0(_hwa_cfioa_vfn3,c)(va1,va2,v,c,__VA_ARGS__)
+#define _hwa_cfioa_vfn3(va1,va2,v,c,...)	_HW_B(_hwa_cfioa_vfn3,c)(va1,va2,v,c,__VA_ARGS__)
 #define _hwa_cfioa_vfn31(va1,va2,v,...)		HW_E(HW_Q(v) is not a signal)
 /*
  *      Record association of signal to pin. Verification and processing is made by commit.
  */
-#define _hwa_cfioa_vfn30(va1,va2,v,c,n,...)	_hwa_cfioa_vfn32(HW_XB va1,v,n,HW_XB va2)
+#define _hwa_cfioa_vfn30(va1,va2,v,c,n,...)	_hwa_cfioa_vfn32(HW_RP va1,v,n,HW_RP va2)
 #define _hwa_cfioa_vfn32(...)			_hwa_cfioa_vfn33(__VA_ARGS__)
 #define _hwa_cfioa_vfn33(o,p,bn,bp,v,n,k,...)			\
   if ( hwa->map.n == 0 )					\
     hwa->map.n = HW_ADDRESS((p,bn,bp));				\
   else if ( hwa->map.n != HW_ADDRESS((p,bn,bp)) )		\
     HWA_E(signal is already mapped to another pin);		\
-  HW_YW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
+  HW_BW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
 
-#define _hwa_cfioa_kfn0(x,va,...)		_hwa_cfioa_kfn2(HW_XB va,__VA_ARGS__)
+#define _hwa_cfioa_kfn0(x,va,...)		_hwa_cfioa_kfn2(HW_RP va,__VA_ARGS__)
 #define _hwa_cfioa_kfn2(...)			_hwa_cfioa_kfn3(__VA_ARGS__)
-#define _hwa_cfioa_kfn3(o,p,bn,bp,k,...)	HW_YW(_hwa_cfioa_kmd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_kfn3(o,p,bn,bp,k,...)	HW_BW(_hwa_cfioa_kmd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
 /*
  *  Mandatory argument 'mode'. Can drop 'o'.
  */
 #define _hwa_cfioa_kmd0(f,o,p,bn,bp,k,v,...)	HW_E_K(mode,k)
 
 #define _hwa_cfioa_kmd1(...)			_hwa_cfioa_kmd2(__VA_ARGS__)
-#define _hwa_cfioa_kmd2(f,o,p,bn,bp,k,v,...)	HW_Y0(_hwa_cfioa_vmd,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioa_kmd2(f,o,p,bn,bp,k,v,...)	_HW_B(_hwa_cfioa_vmd,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioa_vmd0(f,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating,digital_input_pullup,	\
 							     digital_input_pulldown,analog_input,digital_output, \
 							     digital_output_pushpull, digital_output_opendrain))
@@ -152,10 +152,10 @@
 #define _hwa_cfioa_dipu(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=1 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa_dipd(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=0 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa_ai(p,bn,bp,...)		cnf=0 ; mode=0 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_dopp(p,bn,bp,k,...)		cnf=0 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_dood(p,bn,bp,k,...)		cnf=1 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdopp(p,bn,bp,k,...)	cnf=2 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdood(p,bn,bp,k,...)	cnf=3 ; HW_YW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_dopp(p,bn,bp,k,...)		cnf=0 ; HW_BW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_dood(p,bn,bp,k,...)		cnf=1 ; HW_BW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_afdopp(p,bn,bp,k,...)	cnf=2 ; HW_BW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_afdood(p,bn,bp,k,...)	cnf=3 ; HW_BW(_hwa_cfioa_kfq_,frequency,k)(p,bn,bp,k,__VA_ARGS__)
 /*
  *  Optionnal argument 'frequency' (only for output modes)
  */
@@ -165,15 +165,15 @@
 #define _hw_cfioa_fq_50MHz			, 3
 #define _hw_cfioa_fq_highest			, 3
 
-#define _hwa_cfioa_kfq_0(p,bn,bp,k,...)	HW_Y(_hwa_cfioa_kfq0_,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_kfq_0(p,bn,bp,k,...)	HW_B(_hwa_cfioa_kfq0_,k)(p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioa_kfq0_1(p,bn,bp,k,...)	mode=2 ; _hwa_do_cfioa( &hwa->p, bn, bp, cnf, mode, odr )
 #define _hwa_cfioa_kfq0_0(p,bn,bp,k,...)	HW_E_K(frequency,k)
 
-#define _hwa_cfioa_kfq_1(p,bn,bp,k,v,...)	HW_Y(_hwa_cfioa_vfq_,_hw_cfioa_fq_##v)(p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioa_kfq_1(p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vfq_,_hw_cfioa_fq_##v)(p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioa_vfq_1(p,bn,bp,v,...)	mode=HW_A1(_hw_cfioa_fq_##v); _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa_vfq_0(p,bn,bp,v,...)	HW_E_NIL(v,(2MHz,10MHz,50MHz))
 
-#define _hwa_cfioa9(p,bn,bp,...)		HW_Y(_hwa_cfioa9_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__)
+#define _hwa_cfioa9(p,bn,bp,...)		HW_B(_hwa_cfioa9_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfioa9_0(p,bn,bp,g,...)		HW_E_G(g)
 #define _hwa_cfioa9_1(p,bn,bp,g,...)		_hwa_do_cfioa( &hwa->p, bn, bp, cnf, mode, odr )
 
@@ -244,7 +244,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * uint8_t value = hw( read, (porta,0) );
  * @endcode
  */
-#define _hw_rdioa(o,p,bn,bp,...)	HW_Y(_hw_rdioa_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
+#define _hw_rdioa(o,p,bn,bp,...)	HW_B(_hw_rdioa_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
 #define _hw_rdioa_0(p,bn,bp,g,...)	HW_E_G(g)
 #define _hw_rdioa_1(p,bn,bp,...)	( (_hw_read(p,idr) & ((1UL<<bn)-1)) >> bp )
 
@@ -271,10 +271,10 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  *  BSRR: MSB16 bits reset the ODR bits
  *	  LSB16 bits set the ODR bits, it has the priority over MSB16
  */
-#define _hw_wrioa(o,p,bn,bp,v,g,...)		HW_Y(_hwx_wrioa1_,v)(_hw,p,bn,bp,v,g)
-#define _hwa_wrioa(o,p,bn,bp,v,g,...)		HW_Y(_hwx_wrioa1_,v)(_hwa,p,bn,bp,v,g)
+#define _hw_wrioa(o,p,bn,bp,v,g,...)		HW_B(_hwx_wrioa1_,v)(_hw,p,bn,bp,v,g)
+#define _hwa_wrioa(o,p,bn,bp,v,g,...)		HW_B(_hwx_wrioa1_,v)(_hwa,p,bn,bp,v,g)
 #define _hwx_wrioa1_1(x,p,bn,bp,v,g)		HW_E_V()
-#define _hwx_wrioa1_0(x,p,bn,bp,v,g)		HW_Y(_hwx_wrioa2_,g)(x,p,bn,bp,v,g)
+#define _hwx_wrioa1_0(x,p,bn,bp,v,g)		HW_B(_hwx_wrioa2_,g)(x,p,bn,bp,v,g)
 #define _hwx_wrioa2_0(x,p,bn,bp,v,g)		HW_E_G(g)
 #define _hwx_wrioa2_1(x,p,bn,bp,v,g)					\
   { uint32_t v32 = (v); /* v could be volatile, boolean expr... */	\
@@ -297,7 +297,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  */
 /*  Use the BSRR instead of a read-modify-write on the ODR.
  */
-#define _hw_tgioa(o,p,bn,bp,g,...)		HW_Y(_hw_tgioa_,g)(p,bn,bp,g)
+#define _hw_tgioa(o,p,bn,bp,g,...)		HW_B(_hw_tgioa_,g)(p,bn,bp,g)
 #define _hw_tgioa_0(p,bn,bp,g)			HW_E_G(g)
 #define _hw_tgioa_1(p,bn,bp,g)						\
     do {								\
@@ -321,6 +321,6 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * hwa( commit );	   //  Toggle all registered pins at once
  * @endcode
  */
-#define _hwa_tgioa(o,p,bn,bp,g,...)		HW_Y(_hwa_tgioa_,g)(p,bn,bp,g)
+#define _hwa_tgioa(o,p,bn,bp,g,...)		HW_B(_hwa_tgioa_,g)(p,bn,bp,g)
 #define _hwa_tgioa_0(p,bn,bp,g)		HW_E_G(g)
 #define _hwa_tgioa_1(p,bn,bp,g)		hwa->p.toggles |= (((1UL<<bn)-1) << bp)

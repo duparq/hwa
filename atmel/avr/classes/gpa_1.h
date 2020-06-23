@@ -29,7 +29,7 @@
  *  single pin at position n of portx.
  */
 #define hw__gpa_			, _hw_gpa_
-#define _hw_gpa_(o,n,a)			HW_YA(_hw_gpa_,_hw_isa_4bn_,n)(o,n)
+#define _hw_gpa_(o,n,a)			HW_BX(_hw_gpa_,_hw_isa_4bn_,n)(o,n)
 #define _hw_gpa_1(o,n)			_ioa,o##_1_##n,(o,1,n)
 #define _hw_gpa_0(o,n)			,(o,n),HW_EM(o has no relative n)
 
@@ -38,7 +38,7 @@
  */
 /* #define HW_IO__gpa			, _hw_io_gpa */
 /* //#define _hw_io_gpa(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp) */
-/* #define _hw_io_gpa(o,a,bn,bp,...)	HW_Y(_hw_io_gpa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) */
+/* #define _hw_io_gpa(o,a,bn,bp,...)	HW_B(_hw_io_gpa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) */
 /* #define _hw_io_gpa1(o,a,bn,bp,...)	_ioa,o##_##bn##_##bp,(o,bn,bp) HW_EOL(__VA_ARGS__) */
 
 

@@ -24,7 +24,7 @@
   } while(0)
 
 
-#define HWA_E(s)		_HWA_ERR_2(__COUNTER__,HW_QUOTE(HWA: s.))
+#define HWA_E(s)		_HWA_ERR_2(__COUNTER__,HW_Q(HWA: s.))
 #define HWA_E_INTERNAL()	HWA_E(internal error)
 #define HWA_E_VL(v,l)		HWA_E(`v` is not `l`)
 #define HWA_E_NIL(v,l)		HWA_E(`v` is not in `l`)
@@ -59,7 +59,7 @@ extern void hw_foo();
  *
  * Nothing is written into the hardware until `hwa(commit)` is called.
  */
-#define _hwa_begin_(g,...)		HW_Y(_hwa_begin_,g)(g,__VA_ARGS__)
+#define _hwa_begin_(g,...)		HW_B(_hwa_begin_,g)(g,__VA_ARGS__)
 #define _hwa_begin_0(g,...)		HW_E(HW_EM_IA(g))
 #define _hwa_begin_1(...)						\
   _hwa_check_optimizations(0);						\
@@ -78,7 +78,7 @@ extern void hw_foo();
  *
  * Nothing is written into the hardware until `hwa(commit)` is called.
  */
-#define _hwa_begin_reset(r,g,...)	HW_Y(_hwa_begin_reset_,g)(g,__VA_ARGS__)
+#define _hwa_begin_reset(r,g,...)	HW_B(_hwa_begin_reset_,g)(g,__VA_ARGS__)
 #define _hwa_begin_reset_0(r,g,...)	HW_E(HW_EM_IA(g))
 #define _hwa_begin_reset_1(...)			\
   _hwa_check_optimizations(0);			\

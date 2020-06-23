@@ -12,18 +12,12 @@ Reserved symbols   {#using_symbols}
 ================
 
 HWA defines a lot of symbols, all beginning with one of these:
- * `hw_...`
- * `hwa_...`
- * `_hw_...`
- * `__hw_...`
- * `_hwa_...`
- * `__hwa_...`
- * `HW_...`
- * `HWA_...`
- * `_HW_...`
- * `_HWA_...`
+ * `hw_...`, `_hw_...`, 
+ * `HW_...`, `_HW_...`,
+ * `hwa_...`, `_hwa_...`,
+ * `HWA_...`, `_HWA_...`
 
-plus: `hw`, `hwa`, `_hw`, `_hwa`, `HW`.
+plus: `hw`, `_hw`, `HW`, `hwa`, `_hwa`.
 
 
 Header file {#using_header}

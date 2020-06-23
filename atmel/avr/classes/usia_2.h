@@ -50,20 +50,20 @@
 #define _hwa_cfusia(o,a,k,...)					\
   do {									\
     uint8_t mode, clock ;						\
-    HW_Y(_hwa_cfusia_kmode_,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
+    HW_B(_hwa_cfusia_kmode_,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
       } while(0)
 #define _hwa_cfusia_kmode_0(o,k,...)	HW_E_VL(k, mode)
-#define _hwa_cfusia_kmode_1(o,k,v,...)	HW_Y(_hwa_cfusia_vmode_,_hw_usia_mode_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfusia_kmode_1(o,k,v,...)	HW_B(_hwa_cfusia_vmode_,_hw_usia_mode_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfusia_vmode_0(o,v,...)	HW_E_AVL(mode, v, spi_master | spi_slave)
 #define _hwa_cfusia_vmode_1(o,v,k,...)					\
   mode = HW_A1(_hw_usia_mode_##v);					\
-  HW_Y(_hwa_cfusia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)
+  HW_B(_hwa_cfusia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfusia_kclock_0(o,k,...)	HW_E_VL(k, clock)
 
 /*	Mandatory argument `clock`
  */
-#define _hwa_cfusia_kclock_1(o,k,v,...)	HW_Y(_hwa_cfusia_vclock_,_hw_usia_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfusia_kclock_1(o,k,v,...)	HW_B(_hwa_cfusia_vclock_,_hw_usia_clock_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | compare0 | external_rising | external_falling)
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\

@@ -65,6 +65,6 @@
  */
 #define hw_rel__iob			, _hw_rel_iob
 
-#define _hw_rel_iob(o,x,...)		HW_Y(_hw_rel_iob_,_hw_is_port_##x)(o,x,__VA_ARGS__)
+#define _hw_rel_iob(o,x,...)		HW_B(_hw_rel_iob_,_hw_is_port_##x)(o,x,__VA_ARGS__)
 #define _hw_rel_iob_1(o,x,p,...)	p
 #define _hw_rel_iob_0(o,x,...)		HW_E(`o` has no relative named `x`)

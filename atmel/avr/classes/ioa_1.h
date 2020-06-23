@@ -118,20 +118,20 @@
  *  FIXME: define hw__ioa_did and hw__ioa_pcic
  */
 #define hw__ioa_			, _hw_ioa_
-#define _hw_ioa_(o,r,p,bn,bp)		HW_Y0(_hw_ioa_,_hw_is_1_##bn)(o,r,p,bn,bp)
+#define _hw_ioa_(o,r,p,bn,bp)		_HW_B(_hw_ioa_,_hw_is_1_##bn)(o,r,p,bn,bp)
 #define _hw_ioa_0(o,r,...)		,(o,r),HW_EM(o has no relative r)
-#define _hw_ioa_1(o,r,p,bn,bp)		HW_Y0(_hw_ioa1_,_hw_isa_4bn_##r)(o,r,p,bn,bp)
+#define _hw_ioa_1(o,r,p,bn,bp)		_HW_B(_hw_ioa1_,_hw_isa_4bn_##r)(o,r,p,bn,bp)
 #define _hw_ioa1_1(o,r,p,bn,bp)		_ioa,p##_##bp##_##r,(p,bp,r)
 /* #define _hw_ioa1_0(o,r,p,bn,bp)		,(o),HW_EM(o has no relative r) */
 #define _hw_ioa1_0(o,r,p,bn,bp)		_hw_ioa10(o,r,p,bn,bp,hw_##p##_##bn##_##bp##_##r)
 #define _hw_ioa10(...)			_hw_ioa11(__VA_ARGS__)
-#define _hw_ioa11(o,r,p,bn,bp,...)	HW_Y0(_hw_ioa2,_hw_isa_reg_##__VA_ARGS__)(o,r,p,bn,bp,__VA_ARGS__)
+#define _hw_ioa11(o,r,p,bn,bp,...)	_HW_B(_hw_ioa2,_hw_isa_reg_##__VA_ARGS__)(o,r,p,bn,bp,__VA_ARGS__)
 /* #define _hw_ioa21(o,r,p,bn,bp,...)	HW_D3(__VA_ARGS__) */
 #define _hw_ioa21(o,r,p,bn,bp,cr,...)	HW_OXR(cr,r,__VA_ARGS__,_ioa,o,__VA_ARGS__)
 /* #define _hw_ioa20(o,r,p,bn,bp,...)	,(o),HW_EM(o has no relative r) */
 #define _hw_ioa20(o,r,p,bn,bp,...)	_hw_ioa22(o,r,p,bn,bp,HW_XO(__VA_ARGS__))
 #define _hw_ioa22(...)			_hw_ioa23(__VA_ARGS__)
-#define _hw_ioa23(o,r,p,bn,bp,x,...)	HW_Y0(_hw_ioa23,x)(o,r,p,bn,bp,x,__VA_ARGS__)
+#define _hw_ioa23(o,r,p,bn,bp,x,...)	_HW_B(_hw_ioa23,x)(o,r,p,bn,bp,x,__VA_ARGS__)
 #define _hw_ioa231(o,r,p,bn,bp,...)	,(o),HW_EM(o has no relative r)
 #define _hw_ioa230(o,r,p,bn,bp,...)	__VA_ARGS__
 
@@ -143,7 +143,7 @@
 
 /* #define HW_IO__ioa			, _hw_io_ioa */
 /* //#define _hw_io_ioa(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(p,bn,bp) */
-/* /\* #define _hw_io_ioa(o,p,bn,bp,...)	HW_Y(_hw_io_ioa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) *\/ */
+/* /\* #define _hw_io_ioa(o,p,bn,bp,...)	HW_B(_hw_io_ioa,__VA_ARGS__)(o,p,bn,bp,__VA_ARGS__) *\/ */
 /* /\* #define _hw_io_ioa1(o,p,bn,bp,...)	_ioa,p##_##bn##_##bp,(p,bn,bp) *\/ */
 /*   //_hw_io_ioa0((port1,4,2),port1,4,2,(port1,2,6),); */
 /* /\* #define _hw_io_ioa0(o1,p1,bn1,bp1,...)	_ioa,p##_##bn##_##bp,(p,bn,bp) *\/ */

@@ -75,7 +75,7 @@ extern uint8_t hw_swtwi0_sr ;
 void __attribute__((weak)) hw_swtwi0_delay (  )
 {
   // 1 * CALL + 2 * LDI + 1 * JMP + 1 * RET = 4 + 2*1 + 3 + 4 = 13 cycles
-  //  __hw_loop_16 ( (HW_SYSHZ / (2*hw_swtwi0_bps) - 13 + 2) / 4 );
+  //  _hw___loop_16 ( (HW_SYSHZ / (2*hw_swtwi0_bps) - 13 + 2) / 4 );
 
   // 1 * CALL + 1 * RET = 4 + 4 = 8 cycles
   hw_waste_cycles( HW_SYSHZ / (2*hw_swtwi0_bps) - 8 );
@@ -163,7 +163,7 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
     h( configure, (o,scl), mode, digital_input );			\
     h( write, (o,sda), 0 );						\
     h( write, (o,scl), 0 );						\
-    HW_Y(_hwx_cfswtwia_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,);		\
+    HW_B(_hwx_cfswtwia_kbps,_hw_is_bps_##k)(o,k,__VA_ARGS__,);		\
   }while(0)
 
 /*  Key `bps`
@@ -171,7 +171,7 @@ void __attribute__((weak)) hw_swtwi0_txslaw ( uint8_t sla )
 #define _hwx_cfswtwia_kbps_0(o,k,...)		HW_E_NIL(k,(bps))
 
 #define _hwx_cfswtwia_kbps_1(o,k,v,...)				\
-  HW_Y(_hwx_cfswtwia_kbps1,_hw_is_max_##v)(o,v,__VA_ARGS__)
+  HW_B(_hwx_cfswtwia_kbps1,_hw_is_max_##v)(o,v,__VA_ARGS__)
 #define _hwx_cfswtwia_kbps1_0(o,v,...)					\
   HW_G2(_hwx_cfswtwia_kbps2,HW_IS(max,hw_##o##_bps))(o,v,__VA_ARGS__)
 #define _hwx_cfswtwia_kbps2_0(o,v,...)					\

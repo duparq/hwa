@@ -48,8 +48,8 @@
 #define _hw_cfusarta_clk_from_apb1	, 17
 
 #if 0
-#define _hw_cfusarta(o,a,k,...)		do{ HW_Y(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfusarta(o,a,k,...)	do{ HW_Y(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hw_cfusarta(o,a,k,...)		do{ HW_B(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfusarta(o,a,k,...)	do{ HW_B(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 #else
 #define _hw_cfusarta(o,a,k,...)		HW_E_TBI()
 #define _hwa_cfusarta(o,a,k,...)	HW_E_TBI()
@@ -58,11 +58,11 @@
 /*  At least one keyword
  */
 #define _hwx_cfusarta_k_1(h,o,k,...)	HW_E_ML((clock,reload))
-#define _hwx_cfusarta_k_0(h,o,k,...)	HW_Y(_hwx_cfusarta_kclk_,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfusarta_k_0(h,o,k,...)	HW_B(_hwx_cfusarta_kclk_,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `clock`
  */
-#define _hwx_cfusarta_kclk_1(h,o,k,v,...)	HW_Y(_hwx_cfusarta_vclk_,_hw_cfusarta_clk_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfusarta_kclk_1(h,o,k,v,...)	HW_B(_hwx_cfusarta_vclk_,_hw_cfusarta_clk_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfusarta_vclk_0(h,o,v,...)	HW_E_NIL(v,(apb1))
 #define _hwx_cfusarta_vclk_1(h,o,v,...)	_hwx_cfusarta_vclk_2(h,o,v,_hw_cfusarta_clk_##v,__VA_ARGS__)
 #define _hwx_cfusarta_vclk_2(...)		_hwx_cfusarta_vclk_3(__VA_ARGS__)
@@ -70,22 +70,22 @@
   if	  ( 8*xv == 17 ) h##_write(o,clksource,0);			\
   else if (   xv == 17 ) h##_write(o,clksource,1);			\
   else HWA_E_NIL(v,(ahb/8, ahb));					\
-  HW_Y(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
-#define _hwx_cfusarta_kclk_0(h,o,k,...)	HW_Y(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfusarta_kclk_0(h,o,k,...)	HW_B(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `reload`
  */
 #define _hwx_cfusarta_krld_1(h,o,k0,v,k,...)			\
   h##_write(o,arr,(uint32_t)(v));				\
-  HW_Y(_hwx_cfusarta_krn_,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
+  HW_B(_hwx_cfusarta_krn_,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
-#define _hwx_cfusarta_krld_0(h,o,k,...)	HW_Y(_hwx_cfusarta_krn_,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
+#define _hwx_cfusarta_krld_0(h,o,k,...)	HW_B(_hwx_cfusarta_krn_,_hw_is_run_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `run`
  */
 #define _hwx_cfusarta_krn_0(h,o,k,...)	HW_EOL(k)
-#define _hwx_cfusarta_krn_1(h,o,k,v,...)	HW_Y(_hwx_cfusarta_vrn_,_hw_state_##v)(h,o,v,__VA_ARGS__)
+#define _hwx_cfusarta_krn_1(h,o,k,v,...)	HW_B(_hwx_cfusarta_vrn_,_hw_state_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfusarta_vrn_0(h,o,v,...)	HW_E_ST(v)
 #define _hwx_cfusarta_vrn_1(h,o,v,g,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 

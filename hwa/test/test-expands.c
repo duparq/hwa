@@ -13,7 +13,7 @@
  *      f2 if x is not a word (void or parenthesis)
  */
 #define HW_K(...)			_HW_K01(__VA_ARGS__,,,)
-#define _HW_K01(f,k,v,...)		_HW_K02(f,k,v,_hw_prn v, 0,)
+#define _HW_K01(f,k,v,...)		_HW_K02(f,k,v,_hw_par v, 0,)
 #define _HW_K02(...)			_HW_K03(__VA_ARGS__)
 #define _HW_K03(f,k,v,z,x,...)		_HW_K03##x(f,k,v)
 #define _HW_K031(f,k,v)			HW_E_KW(v) f##2
@@ -44,7 +44,7 @@
 
 
 #define HW_V(...)			_HW_V01(__VA_ARGS__,,,)
-#define _HW_V01(v,...)			_HW_V02(v,_hw_prn v, 0,)
+#define _HW_V01(v,...)			_HW_V02(v,_hw_par v, 0,)
 #define _HW_V02(...)			_HW_V03(__VA_ARGS__)
 #define _HW_V03(v,z,x,...)		_HW_V03##x(v)
 #define _HW_V031(v)			Expand v /**/
