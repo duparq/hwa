@@ -1,106 +1,90 @@
 
 /* This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
+ * Copyright (c) 2012,2015,2020 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
 /**
  * @file
  * @brief Atmel AVR ATtiny24/44/84
- * @page attinyx4 ATtiny24/44/84
  */
+
+/**
+ * @ingroup atmelavr_devices
+ * @defgroup attinyx4 ATtiny24/44/84
+ * @{
+ *
+ * Content of the device:
+ *
+ *  * @ref atmelavr_corea "core0":			the core
+ *  * @ref atmelavr_wda "watchdog0":			watchdog (WDG)
+ *  * @ref atmelavr_inta "int0":			Low level interrupt (INT0)
+ *  * @ref atmelavr_gpa "porta":			general purpose I/O port A (PORTA)
+ *    * @ref atmelavr_ioa "(porta,0..7)":		general purpose I/O pins (PA0..PA7)
+ *    * @ref atmelavr_pxa "(porta,pcic)":		pin change interrupt controller
+ *  * @ref atmelavr_gpa "portb":			general purpose I/O port B (PORTB)
+ *    * @ref atmelavr_ioa "(portb,0..3)":		general purpose I/O pins (PB0..PB3)
+ *    * @ref atmelavr_pxa "(portb,pcic)":		pin-change interrupt controller
+ *  * @ref atmelavr_cta "counter0":			8-bit counter-timer (TCNT0)
+ *    * @ref atmelavr_psa "(counter0,prescaler)":	counter0/counter1 prescaler
+ *    * @ref atmelavr_oca "(counter0,compare0)":	compare unit 0 of counter0
+ *      * @ref atmelavr_ioa "(counter0,compare0,pin)":	counter0 compare0 output (OC0A)
+ *    * @ref atmelavr_oca "(counter0,compare1)":	compare unit 1 of counter0
+ *      * @ref atmelavr_ioa "(counter0,compare1,pin)":	counter0 compare1 output (OC0B)
+ *    * @ref atmelavr_ioa "(counter0,pin)":		external clock source (T0)
+ *  * @ref atmelavr_ctd "counter1":			16-bit counter-timer (TCNT1)
+ *    * @ref atmelavr_psa "(counter1,prescaler)":	counter0/counter1 prescaler
+ *    * @ref atmelavr_occ "(counter1,compare0)":	compare unit 0 of counter1
+ *      * @ref atmelavr_ioa "(counter1,compare0,pin)":	counter1 compare0 output (OC1A)
+ *    * @ref atmelavr_occ "(counter1,compare1)":	compare unit 1 of counter1
+ *      * @ref atmelavr_ioa "(counter1,compare1,pin)":	counter1 compare1 output (OC1B)
+ *    * @ref atmelavr_ica "(counter1,capture0)":	capture unit 0 of counter1
+ *      * @ref atmelavr_ioa "(counter1,capture0,pin)":	counter1 capture0 input (ICP1)
+ *    * @ref atmelavr_ioa "(counter1,pin)":		external clock source (T1)
+ *  * @ref atmelavr_usia "usi0":			Universal Serial Interface
+ *    * @ref atmelavr_ioa "(pin,usck)":			USI clock (3 wire mode)
+ *    * @ref atmelavr_ioa "(pin,di)":			USI data input (3 wire mode)
+ *    * @ref atmelavr_ioa "(pin,do)":			USI data output (3 wire mode)
+ *  * @ref atmelavr_aca "acmp0":			analog Comparator
+ *    * @ref atmelavr_ioa "(pin,ain0)":			analog comparator positive input (AIN0)
+ *    * @ref atmelavr_ioa "(pin,ain1)":			analog comparator negative input (AIN1)
+ *  * @ref atmelavr_ada "adc0":				10-bit Analog to Digital Converter (ADC)
+ *    * @ref atmelavr_ioa "(pin,adc0..7)":		ADC inputs
+ *  * @ref atmelavr_fla "flash0":			Flash memory
+ *  * @ref atmelavr_eea "eeprom0":			EEPROM memory
+ */
+
+/**
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name.
+ *
+ * @{
+ */
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_ATTINYX4
+
+/**
+ *  Address of first RAM byte
+ */
+#define HW_DEVICE_RAM_START		0x0060
+
+/**
+ *  Address of first application byte (after IRQ vector table)
+ */
+#define HW_DEVICE_APP_START		0x0022
+
+/** @} */ 
+/** @} */ 
+
 
 #include "../hwa_1.h"
-
-/**
- * @page attinyx4
- * @section attinyx4_object Objects
- * 
- * Object name		|Class				 | Comments
- * :--------------------|--------------------------------|:--------------------------------------
- * `core0`		|@ref atmelavr_corea "_corea"	 | The core
- * `int0`		|@ref atmelavr_inta "_inta"	 | External interrupt INT0
- * `port0`		|@ref atmelavr_gpa "_gpa"	 | General purpose I/O port A (PORT0)
- * `port1`		|@ref atmelavr_gpa "_gpa"	 | General purpose I/O port B (PORT1)
- * `pcic0`		|@ref atmelavr_pxa "_pxa"	 | Pin change interrupt controller
- * `pcic1`		|@ref atmelavr_pxa "_pxa"	 | Pin change interrupt controller
- * `watchdog0`		|@ref atmelavr_wda "_wda"	 | Watchdog (WDG)
- * `prescaler0`		|@ref atmelavr_psa "_psa"	 | counter0/counter1 prescaler (PSC0)
- * `counter0`		|@ref atmelavr_cta "_cta"	 | 8-bit counter-timer (T0)
- * `(counter0,compare0)`|@ref atmelavr_oca "_oca"	 | Compare unit 0 of counter0 (OC0A)
- * `(counter0,compare1)`|@ref atmelavr_oca "_oca"	 | Compare unit 1 of counter0 (OC0B)
- * `counter1`		|@ref atmelavr_ctd "_ctd"	 | 16-bit counter-timer (T1)
- * `(counter1,compare0)`|@ref atmelavr_occ "_occ"	 | Compare unit 0 of counter1 (OC1A)
- * `(counter1,compare1)`|@ref atmelavr_occ "_occ"	 | Compare unit 1 of counter1 (OC1B)
- * `(counter1,capture0)`|@ref atmelavr_ica "_ica"	 | Capture unit 0 of counter1 (ICP)
- * `usi0`		|@ref atmelavr_usia "_usia"	 | Universal Serial Interface
- * `acmp0`		|@ref atmelavr_aca "_aca"	 | Analog Comparator
- * `adc0`		|@ref atmelavr_ada "_ada"	 | 10-bit Analog to Digital Converter
- * `eeprom0`		|@ref atmelavr_eea "_eea"	 | Eeprom memory
- * `flash0`		|@ref atmelavr_fla "_fla"	 | Flash memory
- *
- * @subsection attinyx4_swobj Software-emulated peripherals
- * 
- * HWA provides the following software-emulated peripherals:
- * 
- * Name			  | Class		  | Comments
- * :----------------------|-----------------------|:--------------------------------------
- * `spimaster_swclk0`  | @ref atmelavr_usia_spimaster_swclk "_usia_spimaster_swclk" | Universal Serial Interface used as SPI master and clocked by software
- * `swuart0`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
- * `swuart1`		  | @ref atmelavr_swuarta "_swuarta" | Software UART
- *
- * @subsection attinyx4_objrel Aliases and relations
- *
- * Some objects can be accessed from their relatives or can have more than one
- * name. There are the existing relations between the device's objects and their
- * different names:
- *
- * Name			 | Aliases		    | Relations
- * :---------------------|--------------------------|:------------------------------
- * `prescaler0`		 | `counter0prescaler`	    | `(counter0, prescaler)`
- * `prescaler0`		 | `counter0prescaler0`	    | `(counter0, prescaler0)`
- * `prescaler0`		 | `counter1prescaler`	    | `(counter1, prescaler)`
- * `prescaler0`		 | `counter1prescaler0`	    | `(counter1, prescaler0)`
- * `counter0compare0`	 | `counter0compare0`	    | `(counter0, compare0)`
- * `counter0compare1`	 | `counter0compare1`	    | `(counter0, compare1)`
- * `counter0`		 | `counter0compare0counter`| `(counter0compare0, counter)`
- * `counter0`		 | `counter0compare1counter`| `(counter0compare1, counter)`
- * `pin_counter0compare0`| `counter0compare0pin`    | `(counter0compare0, pin)`
- * `pin_counter0compare1`| `counter0compare1pin`    | `(counter0compare1, pin)`
- * `counter1compare0`	 | `counter1compare0`	    | `(counter1, compare0)`
- * `counter1compare1`	 | `counter1compare1`	    | `(counter1, compare1)`
- * `counter1`		 | `counter1compare0counter`| `(counter1compare0, counter)`
- * `counter1`		 | `counter1compare1counter`| `(counter1compare1, counter)`
- * `pin_counter1compare0`| `counter1compare0pin`    | `(counter1compare0, pin)`
- * `pin_counter1compare1`| `counter1compare1pin`    | `(counter1compare1, pin)`
- */
+#include "attinyx4_fuses.h"
 
 
-/**
- * @page attinyx4
- * @subsection attinyx4_interrupts Interrupts
- * 
- * Interrupt name	  | Atmel label | Comments
- * :----------------------|-------------|------------------------
- * `int0`		  | INT0	| External interrupt INT0
- * `pcic0`		  | PCINT0	| Pin-change interrupt
- * `pcic1`		  | PCINT1	| Pin-change interrupt
- * `watchdog0`		  | WDT		| Watchdog timeout
- * `counter1,capture0`	  | TIM1_CAPT	| Capture event on counter 1
- * `counter1,compare0`	  | TIM1_COMPA	| Compare-match A on counter 1
- * `counter1,compare1`	  | TIM1_COMPB	| Compare-match B on counter 1
- * `counter1,overflow`	  | TIM1_OVF	| Counter 1 overflow
- * `counter0,compare0`	  | TIM0_COMPA	| Compare-match A on counter 0
- * `counter0,compare1`	  | TIM0_COMPB	| Compare-match B on counter 0
- * `counter0,overflow`	  | TIM0_OVF	| Counter 0 overflow
- * `acmp0`		  | ANA_COMP	| Analog comparator
- * `adc0`		  | ADC		| ADC conversion complete
- * `eeprom0`		  | EE_RDY	| EEPROM ready
- * `eeprom0,ready`	  | EE_RDY	| EEPROM ready
- * `usi0,start`		  | USI_STR	| USI start
- * `usi0,overflow`	  | USI_OVF	| USI overflow
- * `usi0,txc`		  | USI_OVF	| USI overflow (transmit completed)
- */
 #define hw_int0_irq			_irq,  1, core0,     ie,    if
 #define hw_pcic0_irq			_irq,  2, pcic0,     ie,    if
 #define hw_pcic1_irq			_irq,  3, pcic1,     ie,    if
@@ -129,374 +113,6 @@
 #define hw_usi0_irq			_irq, 16, usi0,	     ieov,  ifov
 
 
-/**
- * @page attinyx4
- * @subsection attinyx4_pins Ports and pins
- *
- * Some of the pins `(portb,0)`..`(portb,3)` may not be available depending on
- * the fuses configuration.
- *
- * HWA name | 14pdip	   | Class			| Atmel name
- * ---------|--------------|----------------------------|-----------
- * `porta`  |		   | @ref atmelavr_gpa "_gpa"	| PORTA
- * `(porta,0)`    | `(pin,13)` | @ref atmelavr_ioa "_ioa" | PA0
- * `(porta,1)`    | `(pin,12)` | @ref atmelavr_ioa "_ioa" | PA1
- * `(porta,2)`    | `(pin,11)` | @ref atmelavr_ioa "_ioa" | PA2
- * `(porta,3)`    | `(pin,10)` | @ref atmelavr_ioa "_ioa" | PA3
- * `(porta,4)`    | `(pin,9)`  | @ref atmelavr_ioa "_ioa" | PA4
- * `(porta,5)`    | `(pin,8)`  | @ref atmelavr_ioa "_ioa" | PA5
- * `(porta,6)`    | `(pin,7)`  | @ref atmelavr_ioa "_ioa" | PA6
- * `(porta,7)`    | `(pin,6)`  | @ref atmelavr_ioa "_ioa" | PA7
- * `portb`  |		   | @ref atmelavr_gpa "_gpa"	| PORTB
- * `(portb,0)`    | `(pin,2)`  | @ref atmelavr_ioa "_ioa" | PB0
- * `(portb,1)`    | `(pin,3)`  | @ref atmelavr_ioa "_ioa" | PB1
- * `(portb,2)`    | `(pin,5)`  | @ref atmelavr_ioa "_ioa" | PB2
- * `(portb,3)`    | `(pin,4)`  | @ref atmelavr_ioa "_ioa" | PB3
- */
-
-
-/**
- * @page attinyx4
- * @subsection attinyx4_pwr Power Management
- *
- * The following peripherals can be powered on/off with the `power` action to
- * manage power consumption of the device:
- *
- * * `counter0`
- * * `counter1`
- * * `usi0`
- * * `adc0`
- * * `acmp0`
- *
- * @code
- * hw( power, counter0, off );
- * @endcode
- */
-
-
-/**
- * @page attinyx4
- * @section attinyx4_device Symbols
- *
- * HWA defines the following symbols describing the target device and its
- * hardware configuration:
- *
- * Symbol		    | Comments
- * :------------------------|:-----------
- * `HW_DEVICE_ATTINYX4`	    |Void.
- * `HW_DEVICE_RAM_START`    |Address of first RAM byte: `0x0060`.
- * `HW_DEVICE_APP_START`    |Address of first application byte (after IRQ vector table): `0x0022`.
- *
- * See also:
- * * @subpage attiny24
- * * @subpage attiny44
- * * @subpage attiny84
- */
-#define HW_DEVICE_ATTINYX4
-#define HW_DEVICE_RAM_START		0x0060
-#define HW_DEVICE_APP_START		0x0022
-
-/**
- * @page attinyx4
- * @section attinyx4_fuses Fuses
- *
- * ATtinyX4 devices hold 3 fuse bytes describing their hardware configuration.
- * HWA computes the value of these fuse bytes from the fuse values (detailed in
- * the following subsections) that must be defined prior to including the HWA
- * header. Undefined fuse values are replaced by factory default values.
- *
- * Symbol		| Comments
- * :--------------------|:-----------
- * `HW_DEVICE_FUSE_EB`	| Fuse extended byte
- * `HW_DEVICE_FUSE_HB`	| Fuse high byte
- * `HW_DEVICE_FUSE_LB`	| Fuse low byte
- */
-#define HW_DEVICE_FUSE_EB			\
-  0xFE | HW_DEVICE_SELFPRGEN
-
-#define HW_DEVICE_FUSE_HB			\
-  HW_DEVICE_RSTDISBL<<7 |			\
-  HW_DEVICE_DWEN<<6 |				\
-  HW_DEVICE_SPIEN<<5 |				\
-  HW_DEVICE_WDTON<<4 |				\
-  HW_DEVICE_EESAVE<<3 |				\
-  HW_DEVICE_BODLEVEL
-
-#define HW_DEVICE_FUSE_LB			\
-  HW_DEVICE_CKDIV8<<7 |				\
-  HW_DEVICE_CKOUT<<6 |				\
-  HW_DEVICE_SUT10<<4 |				\
-  HW_DEVICE_CKSEL31<<1 |			\
-  HW_DEVICE_CKSEL0
-
-
-/**
- * @page attinyx4
- *
- * Optionnaly, before including the device-specific header, fuses values can be
- * defined to describe the target more precisely. If these symbols are not
- * defined by the user, HWA will define them with the factory values.
- *
- */
-#define _hw_is_rc_8MHz_rc_8MHz			, 1
-#define _hw_is_rc_128kHz_rc_128kHz		, 1
-#define _hw_is_low_freq_xosc_low_freq_xosc	, 1
-#define _hw_is_xosc_xosc		, 1
-
-/**
- * @page attinyx4
- * @subsection attinyx4_fuses_clocking Clocking
- *
- * Symbol		 |Valid values | Comments
- * :---------------------|-------------|:-----------
- * `HW_DEVICE_CLK_SRC`	 |`external`<br><b>`rc_8MHz`</b><br>`rc_128kHz`<br>`low_freq_xosc`<br>`xosc`|External source on pin CLKI<br>Internal RC oscillator<br>Internal RC oscillator (watchdog)<br>Crystal/resonator oscillator between pins XTAL1 and XTAL2<br> <br>
- * `HW_DEVICE_CLK_SRC_HZ`|Integer     |Clock frequency for `external`, `low_freq_xosc`, and `xosc` clock source
- * `HW_DEVICE_CLK_PSC`	 |<b>`8`</b><br>`1`|Clock divided by 8<br>Clock not divided
- */
-#ifndef HW_DEVICE_CLK_SRC
-#  define HW_DEVICE_CLK_SRC				rc_8MHz
-#endif
-
-#if HW_IS(external,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				0
-#  define HW_DEVICE_CKSEL0				0
-#elif HW_IS(rc_8MHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				1
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					8000000
-#elif HW_IS(rc_128kHz,HW_DEVICE_CLK_SRC)
-#  define HW_DEVICE_CKSEL31				2
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					128000
-#elif HW_IS(HW_DEVICE_CLK_SRC, low_freq_xosc)
-#  define HW_DEVICE_CKSEL31				3
-#  define HW_DEVICE_CKSEL0				0
-#  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
-#elif HW_IS(xosc, HW_DEVICE_CLK_SRC)
-#  if HW_DEVICE_CLK_SRC_HZ < 900000
-#    define HW_DEVICE_CKSEL31				4
-#  elif HW_DEVICE_CLK_SRC_HZ < 3000000
-#    define HW_DEVICE_CKSEL31				5
-#  elif HW_DEVICE_CLK_SRC_HZ < 8000000
-#    define HW_DEVICE_CKSEL31				6
-#  else
-#    define HW_DEVICE_CKSEL31				7
-#  endif
-#  define hw_syshz_base					HW_DEVICE_CLK_SRC_HZ
-#else
-#  error HW_DEVICE_CLK_SRC must be defined as one of `external`, `rc_8MHz`, `rc_128kHz`, `low_freq_xosc`, or `xosc`.
-#endif
-
-#if hw_syshz_base == 0
-#  error HW_DEVICE_CLK_SRC_HZ must be defined when HW_DEVICE_CLK_SRC is `xosc` or `low_freq_xosc`.
-#endif
-
-#if !defined HW_DEVICE_CLK_PSC
-#  define HW_DEVICE_CLK_PSC				8
-#endif
-
-#if HW_DEVICE_CLK_PSC == 8
-#  define HW_DEVICE_CKDIV8				0
-#  define HW_SYSHZ					hw_syshz_base/8
-#elif HW_DEVICE_CLK_PSC == 1
-#  define HW_DEVICE_CKDIV8				1
-#  define HW_SYSHZ					hw_syshz_base
-#else
-HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
-#endif
-
-/**
- * @page attinyx4
- * @subsection attinyx4_fuses_sut Startup delays
- *
- * Symbol		| Valid values | Comments
- * :--------------------|--------------|:-----------
- * `HW_DEVICE_STARTUP_DELAYS` | `6CK_14CK`<br>`6CK_14CK_4ms`<br>`6CK_14CK_64ms`<br>`1KCK_4ms`<br>`1KCK_64ms`<br>`32KCK_64ms`<br>`258CK_14CK_4ms`<br>`258CK_14CK_64ms`<br>`1KCK_14CK`<br>`1KCK_14CK_4ms`<br>`1KCK_14CK_64ms`<br>`16KCK_14CK`<br>`16KCK_14CK_4ms`<br>`16KCK_14CK_64ms` | Valid values depend on the clocking configuration
-*/
-#define _hw_is_6CK_14CK_6CK_14CK			, 1
-#define _hw_is_6CK_14CK_4ms_6CK_14CK_4ms		, 1
-#define _hw_is_6CK_14CK_64ms_6CK_14CK_64ms		, 1
-#define _hw_is_1KCK_4ms_1KCK_4ms			, 1
-#define _hw_is_1KCK_64ms_1KCK_64ms			, 1
-#define _hw_is_32KCK_64ms_32KCK_64ms			, 1
-#define _hw_is_258CK_14CK_4ms_258CK_14CK_4ms		, 1
-#define _hw_is_258CK_14CK_64ms_258CK_14CK_64ms		, 1
-#define _hw_is_1KCK_14CK_1KCK_14CK			, 1
-#define _hw_is_1KCK_14CK_4ms_1KCK_14CK_4ms		, 1
-#define _hw_is_1KCK_14CK_64ms_1KCK_14CK_64ms		, 1
-#define _hw_is_16KCK_14CK_16KCK_14CK			, 1
-#define _hw_is_16KCK_14CK_4ms_16KCK_14CK_4ms		, 1
-#define _hw_is_16KCK_14CK_64ms_16KCK_14CK_64ms		, 1
-
-#if defined HW_DEVICE_STARTUP_DELAYS
-#  if HW_DEVICE_CKSEL31 < 3
-#    define HW_DEVICE_CKSEL0				0
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK)
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_4ms)
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 6CK_14CK_64ms)
-#      define HW_DEVICE_SUT10				2
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
-#    endif
-#  elif HW_DEVICE_CKSEL31 == 3
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_4ms)
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_64ms)
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 32KCK_64ms)
-#      define HW_DEVICE_SUT10				2
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `6CK_14CK`, `6CK_14CK_4ms`, or `6CK_14CK_64ms`.
-#    endif
-#  else
-#    if HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 258CK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				2
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				0
-#      define HW_DEVICE_SUT10				3
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 1KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				0
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				1
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_4ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				2
-#    elif HW_IS(HW_DEVICE_STARTUP_DELAYS, 16KCK_14CK_64ms)
-#      define HW_DEVICE_CKSEL0				1
-#      define HW_DEVICE_SUT10				3
-#    else
-#      error HW_DEVICE_STARTUP_DELAYS must be defined as one of `258CK_14CK_4ms`, `258CK_14CK_64ms`, `1KCK_14CK`, `1KCK_14CK_4ms`, `1KCK_14CK_64ms`, `16KCK_14CK`, `16KCK_14CK_4ms`, or `16KCK_14CK_64ms`.
-#    endif
-#  endif
-#else
-#  define HW_DEVICE_SUT10				2
-#endif
-
-
-/**
- * @page attinyx4
- * @subsection attinyx4_fuses_other Other fuses
- *
- * Symbol		  | Valid values | Comments
- * :----------------------|--------------|:-----------
- * `HW_DEVICE_EXTERNAL_RESET`	 |`enabled`<br>`disabled`|Whether the device can be reset via its RESET pin
- * `HW_DEVICE_SELF_PROGRAMMING`	 |`enabled`<br>`disabled`|Whether the device can write into its Flash program memory
- * `HW_DEVICE_SERIAL_PROGRAMMING`|`enabled`<br>`disabled`|Whether the device can be programmed via the SPI
- * `HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE`|`enabled`<br>`disabled`|Whether the EEPROM memory is erased when a chip erase occurs
- * `HW_DEVICE_DEBUG_WIRE`	 |`disabled`<br>`enabled`|Whether the Debug Wire is operationnal
- * `HW_DEVICE_WATCHDOG_ALWAYS_ON`|`no`<br>`yes`		 |Whether the watchdog is always running
- * `HW_DEVICE_CLOCK_OUTPUT`	 |`disabled`<br>`enabled`|Whether the device outputs its clock
- * `HW_DEVICE_BROWNOUT_DETECTION`|`2500_2900mV`<br>`1700_2000mV`<br>`4100_4500mV`|Brown-out detection level
- *
- */
-#if !defined HW_DEVICE_CLOCK_OUTPUT
-#  define HW_DEVICE_CLOCK_OUTPUT			disabled
-#endif
-#if HW_IS(HW_DEVICE_CLOCK_OUTPUT, enabled)
-#  define HW_DEVICE_CKOUT				0
-#elif HW_IS(HW_DEVICE_CLOCK_OUTPUT, disabled)
-#  define HW_DEVICE_CKOUT				1
-#else
-#  error HW_DEVICE_CLOCK_OUTPUT must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_SELF_PROGRAMMING
-#  define HW_DEVICE_SELF_PROGRAMMING			enabled
-#endif
-#if HW_IS(HW_DEVICE_SELF_PROGRAMMING, enabled)
-#  define HW_DEVICE_SELFPRGEN				0
-#elif HW_IS(HW_DEVICE_SELF_PROGRAMMING, disabled)
-#  define HW_DEVICE_SELFPRGEN				1
-#else
-#  error HW_DEVICE_SELF_PROGRAMMING must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_EXTERNAL_RESET
-#  define HW_DEVICE_EXTERNAL_RESET			enabled
-#endif
-#if HW_IS(HW_DEVICE_EXTERNAL_RESET, enabled)
-#  define HW_DEVICE_RSTDISBL				1
-#elif HW_IS(HW_DEVICE_EXTERNAL_RESET, disabled)
-#  define HW_DEVICE_RSTDISBL				0
-#else
-#  error HW_DEVICE_EXTERNAL_RESET must be defined as `enabled` (default) or `disabled`.
-#endif
-
-#if !defined HW_DEVICE_DEBUG_WIRE
-#  define HW_DEVICE_DEBUG_WIRE				disabled
-#endif
-#if HW_IS(HW_DEVICE_DEBUG_WIRE, enabled)
-#  define HW_DEVICE_DWEN				0
-#elif HW_IS(HW_DEVICE_DEBUG_WIRE, disabled)
-#  define HW_DEVICE_DWEN				1
-#else
-#  error HW_DEVICE_DEBUG_WIRE must be defined as `enabled` or `disabled` (default).
-#endif
-
-#if !defined HW_DEVICE_SERIAL_PROGRAMMING
-#  define HW_DEVICE_SERIAL_PROGRAMMING			enabled
-#endif
-#if HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, enabled)
-#  define HW_DEVICE_SPIEN				0
-#elif HW_IS(HW_DEVICE_SERIAL_PROGRAMMING, disabled)
-#  define HW_DEVICE_SPIEN				1
-#else
-#  error HW_DEVICE_SERIAL_PROGRAMMING must be defined as `enabled` (default) or `disabled`.
-#endif
-
-#if !defined HW_DEVICE_WATCHDOG_ALWAYS_ON
-#  define HW_DEVICE_WATCHDOG_ALWAYS_ON			no
-#endif
-#if HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, yes)
-#  define HW_DEVICE_WDTON				0
-#elif HW_IS(HW_DEVICE_WATCHDOG_ALWAYS_ON, no)
-#  define HW_DEVICE_WDTON				1
-#else
-#  error HW_DEVICE_WATCHDOG_ALWAYS_ON must be defined as `yes` or `no` (default).
-#endif
-
-#if !defined HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE
-#  define HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE	no
-#endif
-#if HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, yes)
-#  define HW_DEVICE_EESAVE				0
-#elif HW_IS(HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE, no)
-#  define HW_DEVICE_EESAVE				1
-#else
-#  error HW_DEVICE_PRESERVE_EEPROM_FROM_CHIP_ERASE must be defined as `yes` or `no` (default).
-#endif
-
-#define _hw_is_1700_2000mV_1700_2000mV			, 1
-#define _hw_is_2500_2900mV_2500_2900mV			, 1
-#define _hw_is_4100_4500mV_4100_4500mV			, 1
-
-#if !defined HW_DEVICE_BROWNOUT_DETECTION
-#  define HW_DEVICE_BROWNOUT_DETECTION			off
-#endif
-#if HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 1700_2000mV)
-#  define HW_DEVICE_BODLEVEL				6
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 2500_2900mV)
-#  define HW_DEVICE_BODLEVEL				5
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, 4100_4500mV)
-#  define HW_DEVICE_BODLEVEL				4
-#elif HW_IS(HW_DEVICE_BROWNOUT_DETECTION, off)
-#  define HW_DEVICE_BODLEVEL				7
-#else
-#  error HW_DEVICE_BROWNOUT_DETECTION must be defined as `1700_2000mV`, `2500_2900mV`, `4100_4500mV` or `off` (default).
-#endif
-
-
 /*******************************************************************************
  *									       *
  *	Shared registers						       *
@@ -523,9 +139,9 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 /*  FIXME: find a way for HW_X() to expand that correctly (without inserting the
  *  name in second position)
  */
-#define hw_gpior2			_xob1, gpior2, shared, 8, 0
-#define hw_gpior1			_xob1, gpior1, shared, 8, 0
-#define hw_gpior0			_m111,(shared,gpior0),shared,gpior0,_r8,0 +0x33,0xFF,0x00,8,0;
+#define hw_gpior2			_xb1, gpior2, shared, 8, 0
+#define hw_gpior1			_xb1, gpior1, shared, 8, 0
+#define hw_gpior0			_m11,(shared,gpior0),shared,gpior0,_r8,0 +0x33,0xFF,0x00,8,0;
 
 
 #if !defined __ASSEMBLER__
@@ -564,50 +180,45 @@ typedef struct {
 #define hw_porta			_gpa, 0x39
 #define hw_portb			_gpa, 0x36
 
-/*  Pins				class, port, bn, bp
+/*  Not-connected pins
  */
+#if !defined HW_NC_PB0
+#  define HW_NC_PB0			0
+#endif
 
-/* #if !HW_IS(external,HW_DEVICE_CLK_SRC) && !HW_IS(xosc,HW_DEVICE_CLK_SRC) */
-/* #  define hw_pb0			_ioa, port1, 1, 0 */
-/* #endif */
-/* #define hw_pb1				_ioa, port1, 1, 1 */
-/* #if !HW_IS(enabled,HW_DEVICE_CLOCK_OUTPUT) && !HW_IS(xosc,HW_DEVICE_CLK_SRC) */
-/* #  define hw_pb2			_ioa, port1, 1, 2 */
-/* #endif */
-/* #if !HW_IS(enabled,HW_DEVICE_EXTERNAL_RESET) && !HW_IS(enabled,HW_DEVICE_DEBUG_WIRE) */
-/* #  define hw_pb3			_ioa, port1, 1, 3 */
-/* #endif */
-/* #define hw_portb			_ioa, port1, 4, 0 */
+#if !defined HW_NC_PB1
+#  define HW_NC_PB1			0
+#endif
+
+#if !defined HW_NC_PB2
+#  define HW_NC_PB2			0
+#endif
+
+#if !defined HW_NC_PB3
+#  define HW_NC_PB3			0
+#endif
+
+#define HW_PORTB_NCMSK			HW_NC_PB3*0x08 + HW_NC_PB2*0x04 + HW_NC_PB1*0x02 + HW_NC_PB0
+
+#if HW_PORTB_NCMSK
+#  define _hw_portb_ncmsk		, HW_PORTB_NCMSK
+#endif
 
 /*  Digital input disable bits for analog input pins
  */
-#define hw_porta_1_0_did		_xob1, shared, did, 1, 0
-#define hw_porta_1_1_did		_xob1, shared, did, 1, 1
-#define hw_porta_1_2_did		_xob1, shared, did, 1, 2
-#define hw_porta_1_3_did		_xob1, shared, did, 1, 3
-#define hw_porta_1_4_did		_xob1, shared, did, 1, 4
-#define hw_porta_1_5_did		_xob1, shared, did, 1, 5
-#define hw_porta_1_6_did		_xob1, shared, did, 1, 6
-#define hw_porta_1_7_did		_xob1, shared, did, 1, 7
+#define hw_porta_1_0_did		_xb1, shared, did, 1, 0
+#define hw_porta_1_1_did		_xb1, shared, did, 1, 1
+#define hw_porta_1_2_did		_xb1, shared, did, 1, 2
+#define hw_porta_1_3_did		_xb1, shared, did, 1, 3
+#define hw_porta_1_4_did		_xb1, shared, did, 1, 4
+#define hw_porta_1_5_did		_xb1, shared, did, 1, 5
+#define hw_porta_1_6_did		_xb1, shared, did, 1, 6
+#define hw_porta_1_7_did		_xb1, shared, did, 1, 7
 
 /*  Pin-change controllers
  */
 #define hw_porta_pcic			pcic0
 #define hw_portb_pcic			pcic1
-
-#define hw_porta_1_0_pcic		pcic0
-#define hw_porta_1_1_pcic		pcic0
-#define hw_porta_1_2_pcic		pcic0
-#define hw_porta_1_3_pcic		pcic0
-#define hw_porta_1_4_pcic		pcic0
-#define hw_porta_1_5_pcic		pcic0
-#define hw_porta_1_6_pcic		pcic0
-#define hw_porta_1_7_pcic		pcic0
-
-#define hw_portb_1_0_pcic		pcic1
-#define hw_portb_1_1_pcic		pcic1
-#define hw_portb_1_2_pcic		pcic1
-#define hw_portb_1_3_pcic		pcic1
 
 /*  Canonical pin names
  */
@@ -618,7 +229,7 @@ typedef struct {
 #define hw_pin_do			_ioa, porta, 1, 5
 #define hw_pin_di			_ioa, porta, 1, 6
 
-#define hw_pin_icp			_ioa, porta, 1, 7
+//#define hw_pin_icp			_ioa, porta, 1, 7
 
 #define hw_pin_adc0			_ioa, porta, 1, 0
 #define hw_pin_adc1			_ioa, porta, 1, 1
@@ -697,9 +308,9 @@ typedef struct {
 #include "../classes/inta_1.h"
 #define hw_int0				_inta, 0
 
-#define hw_int0_sc			_xob1, core0,  mcucr, 2, 0
-#define hw_int0_ie			_xob1, shared, gimsk, 1, 6
-#define hw_int0_if			_xob1, shared, gifr,  1, 6
+#define hw_int0_sc			_xb1, core0,  mcucr, 2, 0
+#define hw_int0_ie			_xb1, shared, gimsk, 1, 6
+#define hw_int0_if			_xb1, shared, gifr,  1, 6
 
 
 /*******************************************************************************
@@ -720,8 +331,8 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_pcic0_ie			_xob1, shared, gimsk, 1, 4
-#define hw_pcic0_if			_xob1, shared, gifr,  1, 4
+#define hw_pcic0_ie			_xb1, shared, gimsk, 1, 4
+#define hw_pcic0_if			_xb1, shared, gifr,  1, 4
 
 /*	Object				class, address
  */
@@ -733,8 +344,8 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_pcic1_ie			_xob1, shared, gimsk, 1, 5
-#define hw_pcic1_if			_xob1, shared, gifr,  1, 5
+#define hw_pcic1_ie			_xb1, shared, gimsk, 1, 5
+#define hw_pcic1_if			_xb1, shared, gifr,  1, 5
 
 
 /*******************************************************************************
@@ -761,7 +372,7 @@ typedef struct {
 #define hw__wda_eie			_cb2, csr, 1, 3, 1, csr, 1, 6, 0 /* convenient */
 #define hw__wda_ifie			_cb1, csr, 2, 6 /* convenient for clearing irq */
 
-#define hw__wda_wdrf			_xob1, core0, mcusr, 1, 3
+#define hw__wda_wdrf			_xb1, core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -778,12 +389,12 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_prescaler0_tsm		_xob1, shared, gtccr, 1, 7
-#define hw_prescaler0_psr		_xob1, shared, gtccr, 1, 0
+#define hw_prescaler0_tsm		_xb1, shared, gtccr, 1, 7
+#define hw_prescaler0_psr		_xb1, shared, gtccr, 1, 0
 
 /*  This is a convenient logical register definition for stopping the prescaler
  */
-#define hw_prescaler0_tsmpsr		_xob2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
+#define hw_prescaler0_tsmpsr		_xb2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -883,7 +494,7 @@ typedef struct {
 #define hw_counter1_ocif0		_ob1, ifr,  1, 1
 #define hw_counter1_if			_ob1, ifr,  1, 0
 
-#define hw_counter1_acic		_xob1, acmp0, csr, 1, 2
+#define hw_counter1_acic		_xb1, acmp0, csr, 1, 2
 
 /*	Relatives
  */
@@ -971,9 +582,9 @@ typedef struct {
  */
 #define hw_acmp0_csr			_r8, 0x28, 0xDF, 0x10
 
-#define hw_acmp0_acme			_xob1, adc0, srb,   1, 6
-#define hw_acmp0_aden			_xob1, adc0, sra,   1, 7
-#define hw_acmp0_admux			_xob1, adc0, admux, 6, 0
+#define hw_acmp0_acme			_xb1, adc0, srb,   1, 6
+#define hw_acmp0_aden			_xb1, adc0, sra,   1, 7
+#define hw_acmp0_admux			_xb1, adc0, admux, 6, 0
 
 
 /*******************************************************************************

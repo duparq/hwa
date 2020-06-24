@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_dtga
+ * @addtogroup atmelavr_dtga
  * @section atmelavr_dtga_act Actions
  *
  * <br>
@@ -74,7 +74,7 @@
  *  Optionnal argument 'prescaler'
  */
 #define _hwx_cfdtga_kpsc_1(h,ct,oc,k,v,...)	_HW_B(_hwx_cfdtga_vpsc_,HW_A0(_hw_dtga_vpsc_##v))(h,ct,oc,v,__VA_ARGS__)
-#define _hwx_cfdtga_vpsc_0(h,ct,oc,v,...)	HW_E_AVL(psc, v, 1 | 2 | 4 | 8)
+#define _hwx_cfdtga_vpsc_0(h,ct,oc,v,...)	HW_E(HW_EM_VAL(v,prescaler,(1,2,4,8)))
 #define _hwx_cfdtga_vpsc_1(h,ct,oc,v,k,...)		\
   _hwa_write(ct,dtgps,HW_A1(_hw_dtga_vpsc_##v));	\
   HW_BW(_hwx_cfdtga_kdlh_,delay_h,k)(h,ct,oc,k,__VA_ARGS__)
@@ -92,7 +92,7 @@
   if ( v>=0 && v<=15 )							\
     x##_write(ct,dtg##oc##h,v);						\
   else									\
-    HWA_ERR("`delay_h` must be in the 0..15 range, not `" #v "`.");	\
+    HWA_E(HW_EM_VAL(v,delay_h,(0..15)));				\
   HW_BW(_hwx_cfdtga_kdll_,delay_l,k)(x,ct,oc,k,__VA_ARGS__)
 
 #define _hwx_cfdtga_kdlh_0(h,ct,oc,k,...)			\
@@ -104,7 +104,7 @@
   if ( v>=0 && v<=15 )							\
     h##_write(ct,dtg##oc##l,v);						\
   else									\
-    HWA_ERR("`delay_l` must be in the 0..15 range, not `" #v "`.");	\
+    HWA_E(HW_EM_VAL(v,delay_l,(0..15)));				\
   HW_EOL(__VA_ARGS__)
 
 #define _hwx_cfdtga_kdll_0(h,ct,oc,k,...)				\
@@ -134,7 +134,7 @@
 
 
 /**
- * @page atmelavr_dtga
+ * @addtogroup atmelavr_dtga
  * @section atmelavr_dtga_internals Internals
  *
  * Class `_dtga` objects hold the following hardware registers:

@@ -31,7 +31,7 @@
 
 /*  Service the compare-match IRQ
  */
-HW_ISR( (COUNTER,irq,COMPARE) )
+HW_ISR( (COUNTER,COMPARE,irq) )
 {
   hw( write, COUNTER, 0 );
 
@@ -79,7 +79,7 @@ int main ( )
 
   /*  Enable compare IRQ
    */
-  hwa( enable, (COUNTER,irq,COMPARE) );
+  hwa( enable, (COUNTER,COMPARE,irq) );
 
   /*  Write this configuration into the hardware
    */

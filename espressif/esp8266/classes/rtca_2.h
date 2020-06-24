@@ -48,9 +48,3 @@
 /* _hwa_commit_r( o, _store2 );		\ */
 /* _hwa_commit_r( o, _store3 );		\ */
 /* _hwa_commit_r( o, _gpioin );		\ */
-
-
-/**
- * @page espressif_rtca
- * <br>
- */

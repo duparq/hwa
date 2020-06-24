@@ -6,15 +6,20 @@
 
 /**
  * @file
- * @brief Counter capture/compare channel
- * @page stm32_cca Class _cca: 16-bit capture-compare channel
+ * @brief STM32 16-bit capture-compare channel
  */
 
 /**
- * @page stm32_cca
+ * @ingroup stm32_classes
+ * @defgroup stm32_cca Class _cca: 16-bit capture-compare channel
  *
- * A `_cca` class object is a 16-bit capture-compare channel that is associated
- * with a _cta counter.
+ * This class is used by:
+ *
+ * * @ref stm32f103 "STM32F103": `(COUNTER,CHANNEL)`
+ *
+ * @section stm32_ccarel Relatives
+ *
+ * * @ref stm32_cta "(CHANNEL,counter)": the counter associated to the channel
  *
  */
 #define hw_class__cca

@@ -6,65 +6,48 @@
 
 /**
  * @file
- * @brief 8-bit counter
+ * @brief Atmel AVR 8-bit counter with two compare units
  */
 
 /**
- * @page atmelavr_ctc Class _ctc: 8-bit counter/timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_ctc Class _ctc: 8-bit counter with two compare units
  *
- * A class `_ctc` object is an 8-bit counting unit. It has the following
- * relatives:
- *
- *  * one `prescaler` of class @ref atmelavr_psa "_psa"
- *
- *  * two compare units with waveform generators: `compare0` and `compare1`, of
- *    class @ref atmelavr_oca "_oca"
- *
- * __Note__ Currently, this class is not fully implemented. It lacks asynchronous
- * clocking possibilities.
- *
- * The only difference between this class and the `_cta` class is the different
- * clocking possibilities.
- *
- * It is used in:
+ * This class is used by:
  *
  *  * @ref atmegax8 : `counter2`
+ *
+ * @note Currently, this class is not fully implemented. It lacks asynchronous
+ * clocking possibilities.
+ *
+ * The only difference between this class and the @ref atmelavr_cta "_cta" class
+ * is the different clocking possibilities.
+ *
+ * @section atmelavr_ctcrl Relatives
+ *
+ *  * `(COUNTER,prescaler)`: class @ref atmelavr_psa "_psa" prescaler
+ *  * `(COUNTER,compare0)`: class @ref atmelavr_oca "_oca" compare unit with waveform generator;
+ *  * `(COUNTER,compare1)`: class @ref atmelavr_oca "_oca" compare unit with waveform generator.
+ *
+ * @section atmelavr_ctcirq Interrupts
+ *
+ *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
+ *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  */
 #define hw_class__ctc
 
-/**
- * @page atmelavr_ctc
- * @par Instructions that do not produce C code
- *
- * The `HW_BITS()` instruction returns the number of bits of the counting register:
- *
- * @code
- * #if HW_BITS( counter0 ) != 8
- * #  error You must choose a 8-bit counter!
- * #endif
- * @endcode
- */
 #define HW_BITS__ctc			, _hw_bits_ctc
 #define _hw_bits_ctc(o,a,...)		8
 
-#define hw__ctc_bits			, _hw_bits_ctc
+//#define hw__ctc_bits			, _hw_bits_ctc
 
 
 /*  Return the counting register of a _ctc
- *    HW_CODR is blued.
  */
 #define hw__ctc_reg			, _hw_ctc_reg
-#define _hw_ctc_reg(o,a)		HW_XOR(o,count)
+#define _hw_ctc_reg(o,a)		HW_XOR(o,count)		/* HW_CODR is blued */
 
-
-/**
- * @page atmelavr_ctc
- * @par Interrupts
- *
- * Class `_ctc` objects can trigger the following IRQs:
- *
- *  * `counter0` or `counter0,overflow`: counter overflow
- */
 
 #if !defined __ASSEMBLER__
 

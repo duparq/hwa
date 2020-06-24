@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_eea _eea
+ * @addtogroup atmelavr_eea
  * __Actions__
  *
  * `read`:
@@ -42,7 +42,7 @@ HW_INLINE uint8_t _hw_rdeeproma( intptr_t ar,
 
 
 /**
- * @page atmelavr_eea _eea
+ * @addtogroup atmelavr_eea
  *
  * `read_bytes`:
  *
@@ -77,7 +77,7 @@ HW_INLINE void _hw_eea_rdn( uint8_t *dst, intptr_t src, uint8_t n,
 
 
 /**
- * @page atmelavr_eea _eea
+ * @addtogroup atmelavr_eea
  *
  * `write`:
  *
@@ -112,7 +112,7 @@ HW_INLINE void _hw_wreeproma( uint16_t a, uint8_t v,
 
 
 /**
- * @page atmelavr_eea _eea
+ * @addtogroup atmelavr_eea
  *
  * `write_bytes`:
  *

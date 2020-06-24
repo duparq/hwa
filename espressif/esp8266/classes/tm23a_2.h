@@ -10,8 +10,8 @@
  */
 
 /**
- * @page espressif_tm23a
- * @section espressif_tm23a_config Configuration
+ * @addtogroup esp8266_tm23a
+ * @section esp8266_tm23a_config Configuration
  *
  * @code
  * hwa( configure,   timer0,
@@ -74,10 +74,10 @@
   if	  (	x == 1 ) _hwa_write(o,psc,0);			\
   else if (  16*x == 1 ) _hwa_write(o,psc,1);			\
   else if ( 256*x == 1 ) _hwa_write(o,psc,2);			\
-  else HWA_E_NIL(v,(apb, apb/16, apb/256));			\
+  else HWA_E(HW_EM_VAL(v,clock,(apb, apb/16, apb/256)));	\
   HW_BW(_hwa_cftm23a_kdir_,direction,k)(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vclock_0(o,v,...)		HW_E_AVL(clock, v, apb_div(1 | 16 | 256))
+#define _hwa_cftm23a_vclock_0(o,v,...)		HW_E(HW_EM_VAL(v,clock,(apb,apb/16,apb/256)))
 
 #define _hw_tm23a_clock_apb		, 1
 
@@ -91,7 +91,7 @@
   _hwa_write(o,arl,HW_A2(_hw_tm23a_direction_##v));			\
   HW_B(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
-#define _hwa_cftm23a_vdir_0(o,v,...)	HW_E_AVL(direction, v, down | down_loop | stop)
+#define _hwa_cftm23a_vdir_0(o,v,...)	HW_E(HW_EM_VAL(v,direction,(stop,down,down_loop)))
 
 #define _hwa_cftm23a_kdir_0(o,k,...)					\
   HW_B(_hwa_cftm23a_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
@@ -103,7 +103,7 @@
 /*  Key `bottom`
  */
 #define _hwa_cftm23a_kbottom_1(o,k,v,...)	HW_G2(_hwa_cftm23a_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
-#define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E_AVL(bottom, v, 0)
+#define _hwa_cftm23a_vbottom_0(o,v,...)		HW_E(HW_EM_VAL(v,bottom,(0)))
 #define _hwa_cftm23a_vbottom_1(o,v,k,...)	HW_B(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 #define _hwa_cftm23a_kbottom_0(o,k,...)		HW_B(_hwa_cftm23a_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
@@ -127,7 +127,7 @@
   _hwa_write(o,irqtype,HW_A2(_hw_tm23a_irqtype_##v));	\
   HW_EOL(__VA_ARGS__)
 
-#define _hwa_cftm23a_virqtype_0(o,v,...)	HW_E_AVL(irq_type, v, edge | level)
+#define _hwa_cftm23a_virqtype_0(o,v,...)	HW_E(HW_EM_VAL(v,irq_type,(edge,level,none)))
 
 #define _hwa_cftm23a_kirqtype_0(o,...)		\
   HW_EOL(__VA_ARGS__)
@@ -158,7 +158,7 @@
   }									\
   HW_EOL(__VA_ARGS__)
 
-#define _hwa_cftm23a_vaction_0(o,v,...)		HW_E_AVL(action, v, none | irq | nmi)
+#define _hwa_cftm23a_vaction_0(o,v,...)		HW_E(HW_EM_VAL(v,action,(none,irq,nmi)))
 
 #define _hwa_cftm23a_kaction_0(o,...)		HW_EOL(__VA_ARGS__)
 
@@ -167,7 +167,7 @@
 #define _hw_tm23a_action_nmi		, 2
 
 /**
- * @page espressif_tm23a
+ * @addtogroup esp8266_tm23a
  * @section espressif_tm23a_data Count
  *
  * The `read` instruction returns the content of the counting register:
@@ -181,7 +181,7 @@
 
 
 /**
- * @page espressif_tm23a
+ * @addtogroup esp8266_tm23a
  *
  * The `hw_write()` instruction sets the content of the counting register:
  *
@@ -226,9 +226,3 @@
 /*	 _hwa_write(o,ie,0);						\ */
 /*	 _hwa_commit_r( shared, _edgeie );				\ */
 /* }									\ */
-
-
-/**
- * @page espressif_tm23a
- * <br>
- */

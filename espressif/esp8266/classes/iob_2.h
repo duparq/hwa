@@ -10,7 +10,7 @@
  */
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  * @section espressif_iob_config Configuration
  *
  * `configure`:
@@ -55,30 +55,31 @@
 
 /*  Key 'function'
  */
-#define _hwa_cfio1b_kfn_0(o,k,...)		HW_B(_hwa_cfio1b_kmd_,_hw_is_mode_##k)(o,k,__VA_ARGS__)
-#define _hwa_cfio1b_kfn_1(o,k,v,...)		HW_B(_hwa_cfio1b_vfn_,_hw_##o##_fn_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfio1b_vfn_0(o,v,...)		HW_E_IOFN(o, function, v, _hw_##o##_fns)
-#define _hwa_cfio1b_vfn_1(o,v,k,...)				\
+#define _hwa_cfio1b_kfn_0(o,k,...)	HW_B(_hwa_cfio1b_kmd_,_hw_is_mode_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfio1b_kfn_1(o,k,v,...)	HW_B(_hwa_cfio1b_vfn_,_hw_##o##_fn_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfio1b_vfn_0(o,v,...)	HW_E(HW_EM_VAL(v, function, _hw_##o##_fns))
+#define _hwa_cfio1b_vfn_1(o,v,k,...)			\
   _hwa_write(hw_##o##_fn,HW_A1(_hw_##o##_fn_##v) );	\
   _hwa_write(hw_##o##_cf,0);				\
   HW_B(_hwa_cfio1b_gpio_,_hw_is_gpio_##v)(o,v,k,__VA_ARGS__)
-#define _hwa_cfio1b_gpio_0(o,v,k,...)		HW_EOL(__VA_ARGS__)
-#define _hwa_cfio1b_gpio_1(o,v,k,...)		HW_B(_hwa_cfio1b_kmd_,_hw_is_mode_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfio1b_gpio_0(o,v,k,...)	HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1b_gpio_1(o,v,k,...)	HW_B(_hwa_cfio1b_kmd_,_hw_is_mode_##k)(o,k,__VA_ARGS__)
 
 /*  Key `mode`
  */
-#define _hw_cfio1b_md_digital_input	, di
-#define _hw_cfio1b_md_digital_input_floating	, dif
-#define _hw_cfio1b_md_digital_input_pulldown	, dipd
+#define _hw_cfio1b_md_digital_input			, di
+#define _hw_cfio1b_md_digital_input_floating		, dif
+#define _hw_cfio1b_md_digital_input_pulldown		, dipd
 #define _hw_cfio1b_md_digital_input_pulldown_when_awake	, dipdwa
-#define _hw_cfio1b_md_digital_output	, dopp
-#define _hw_cfio1b_md_digital_output_pushpull	, dopp
+#define _hw_cfio1b_md_digital_output			, dopp
+#define _hw_cfio1b_md_digital_output_pushpull		, dopp
 
-#define _hwa_cfio1b_kmd_0(o,k,...)	HW_E_NIL(k, (mode) )
+#define _hwa_cfio1b_kmd_0(o,k,...)	HW_E(HW_EM_AN(k,(mode)))
 #define _hwa_cfio1b_kmd_1(o,k,v,...)	HW_B(_hwa_cfio1b_vmd_,_hw_cfio1b_md_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfio1b_vmd_0(o,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating, \
-						     digital_input_pulldown, digital_input_pulldown_when_awake, \
-						     digital_output, digital_output_pushpull) )
+#define _hwa_cfio1b_vmd_0(o,v,...)	\
+  HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating,		\
+			 digital_input_pulldown, digital_input_pulldown_when_awake, \
+			 digital_output, digital_output_pushpull)))
 #define _hwa_cfio1b_vmd_1(o,v,...)	HW_G2(_hwa_cfio1b,HW_A1(_hw_cfio1b_md_##v))(o,__VA_ARGS__)
 
 #define _hwa_cfio1b_di(o,k,...)				\
@@ -104,9 +105,9 @@
 
 /*  Key `pulldown`
  */
-#define _hwa_cfio1b_kpd_0(o,...)		HW_EOL(__VA_ARGS__)
+#define _hwa_cfio1b_kpd_0(o,...)	HW_EOL(__VA_ARGS__)
 #define _hwa_cfio1b_kpd_1(o,k,v,...)	HW_B(_hwa_cfio1b_vpd_,_hw_cfio1b_pulldown_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfio1b_vpd_0(o,v,...)		HW_AVL(pulldown,v,(on,off,when_awake))
+#define _hwa_cfio1b_vpd_0(o,v,...)	HW_VAL(v,pulldown,(on,off,when_awake))
 #define _hwa_cfio1b_vpd_1(o,v,...)	_hwa_write( cf, pux, HW_A1(_hw_cfio1b_pulldown_##v) ); HW_EOL(__VA_ARGS__)
 
 /*  FIXME: fake values
@@ -118,7 +119,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  * @section espressif_iob_read State
  *
  * The instruction `read` returns the state of the I/O object:
@@ -134,7 +135,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  *
  * The instruction `hw_write()` changes the state of the I/O object:
  *
@@ -149,7 +150,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  *
  * @code
  * hwa( write, gpio0, value );
@@ -162,7 +163,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  * @code
  * hw( toggle, gpio0 );	//  Toggle one or several consecutive pins at once
  * @endcode
@@ -173,6 +174,6 @@
 #define _hw_tgio1b_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  * <br>
  */

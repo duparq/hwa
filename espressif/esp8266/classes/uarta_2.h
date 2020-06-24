@@ -10,7 +10,7 @@
  */
 
 /**
- * @page espressif_uarta
+ * @addtogroup esp8266_uarta
  * @section espressif_uarta_config Configuration
  *
  * @code
@@ -59,7 +59,7 @@
 #define _hwx_cfuarta_kbps_1(o,k,v,...)			\
   HW_B(_hwx_cfuarta_vbps_,v)(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vbps_1(o,v,...)		HW_E_VM(bps)
+#define _hwx_cfuarta_vbps_1(o,v,...)		HW_E(HW_EM_VAM(bps))
 
 #define _hwx_cfuarta_vbps_0(o,v,k,...)					\
   _hwa_write(o, clkdiv, (int)(0.5 + HW_APBHZ*1.0/(v)) );		\
@@ -73,7 +73,7 @@
 #define _hwx_cfuarta_kdatabits_1(o,k,v,...)				\
   HW_B(_hwx_cfuarta_vdatabits_,_hw_uarta_databits_##v)(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E_AVL(databits, v, 5 | 6 | 7 | 8)
+#define _hwx_cfuarta_vdatabits_0(o,v,...)	HW_E(HW_EM_VAL(v,databits,(5,6,7,8)))
 
 #define _hwx_cfuarta_vdatabits_1(o,v,k,...)			\
   _hwa_write(o, cbn, HW_A1(_hw_uarta_databits_##v));	\
@@ -92,7 +92,7 @@
 #define _hwx_cfuarta_kparity_1(o,k,v,...)				\
   HW_B(_hwx_cfuarta_vparity_,_hw_uarta_parity_##v)(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vparity_0(o,v,...)		HW_E_AVL(parity, v, none | even | odd)
+#define _hwx_cfuarta_vparity_0(o,v,...)		HW_E(HW_EM_VAL(v,parity,(none,even,odd)))
 
 #define _hwx_cfuarta_vparity_1(o,v,k,...)				\
   _hwa_write(o, cpx, HW_A1(_hw_uarta_parity_##v));			\
@@ -110,7 +110,7 @@
 #define _hwx_cfuarta_kstopbits_1(o,k,v,...)				\
     HW_B(_hwx_cfuarta_vstopbits_,_hw_uarta_stopbits_##v)(o,v,__VA_ARGS__)
 
-#define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E_AVL(stopbits, v, 1 | 1_5 | 2)
+#define _hwx_cfuarta_vstopbits_0(o,v,...)	HW_E(HW_EM_VAL(v,stopbits,(1,1_5,2)))
 
 #define _hwx_cfuarta_vstopbits_1(o,v,k,...)			\
   _hwa_write(o, csbn, HW_A1(_hw_uarta_stopbits_##v));	\
@@ -126,7 +126,7 @@
 
 
 /*
- * @page espressif_uarta
+ * @addtogroup esp8266_uarta
  * @section espressif_uarta_data Data
  *
  * The `read` returns the content of the data register but it does not
@@ -144,7 +144,7 @@
 
 
 /*
- * @page espressif_uarta
+ * @addtogroup esp8266_uarta
  *
  * The `hw_write()` instruction writes a character into the data registerbut it
  * does not verify that the transmit buffer of the UART is not full before
@@ -166,7 +166,7 @@
 
 
 /*
- * @page espressif_uarta
+ * @addtogroup esp8266_uarta
  * @section espressif_uarta_stat Status
  *
  * The UART status contains the following flags:
@@ -248,8 +248,3 @@
   _hwa_commit_r( o, _conf1 );			\
   _hwa_commit_r( o, _ic );			\
   _hwa_commit_r( o, _ie )
-
-/**
- * @page espressif_uarta
- * <br>
- */

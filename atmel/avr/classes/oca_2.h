@@ -6,17 +6,14 @@
 
 /**
  * @file
- * @brief 8-bit compare unit
+ * @brief Atmel AVR 8-bit compare unit with waveform generator
  */
 
 /**
- * @page atmelavr_oca
- * @section atmelavr_oca_act Actions
+ * @addtogroup atmelavr_oca
+ * @section atmelavr_ocaact Actions
  *
- * <br>
- * `configure`:
- *
- * The hw(config,...) instruction only permits to change the behavior of the output
+ * <br><br>hw( configure, ... ) only permits to change the behavior of the output
  * pin and does not perform any verification against the counter configuration:
  *
  * @code
@@ -31,7 +28,8 @@
  *		| set_at_bottom_clear_after_match
  *		| clear_at_bottom_set_after_match
  *		| clear_after_match_up_set_after_match_down
- *		| set_after_match_up_clear_after_match_down );
+ *		| set_after_match_up_clear_after_match_down
+ * );
  * @endcode
  */
 #define hw_configure__oca		, _hw_cfoca
@@ -55,19 +53,19 @@
   }while(0)
 
 #define _hw_cfoca_koutput_0(ct,oc,k,...)		\
-  HW_E_VL(k,output)
+  HW_E(HW_EM_AN(k,output))
 #define _hw_cfoca_koutput_1(ct,oc,k,v,...)					\
   HW_B(_hw_cfoca_voutput_,_hw_oca_output_##v)(ct,oc,v,__VA_ARGS__)
 #define _hw_cfoca_voutput_0(ct,oc,v,...)					\
-  HW_E_AVL(mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)
+  HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match,clear_after_match_up_set_after_match_down,set_after_match_up_clear_after_match_down)))
 #define _hw_cfoca_voutput_1(ct,oc,v,...)					\
   _hw_write(ct, com##oc, HW_A2(_hw_oca_output_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_oca
+ * @addtogroup atmelavr_oca
  *
- * The `hwa(configure,...)` instruction allows the `update` parameter to be set. It
+ * <br><br>hwa( configure, ... ) allows the `update` parameter to be set. It
  * tells when the compare value is transferred from the latch register to the
  * compare register. This is used to complete and check the configuration of the
  * related counter when the hwa(commit) instruction is encountered:
@@ -90,7 +88,8 @@
  *		 | set_at_bottom_clear_after_match
  *		 | clear_at_bottom_set_after_match
  *		 | clear_after_match_up_set_after_match_down
- *		 | set_after_match_up_clear_after_match_down ] );
+ *		 | set_after_match_up_clear_after_match_down ]
+ * );
  * @endcode
  */
 #define hwa_configure__oca		, _hwa_cfoca
@@ -112,7 +111,7 @@
 #define _hwa_cfoca_kupdate_1(ct,oc,k,v,...)				\
   HW_B(_hwa_cfoca_vupdate_,_hw_oca_update_##v)(ct,oc,v,__VA_ARGS__)
 #define _hwa_cfoca_vupdate_0(ct,oc,v,...)		\
-  HW_E_AVL(update mode of `o`, v, `immediately | after_bottom | after_top`)
+  HW_E(HW_EM_VAL(v,update,(immediately,after_bottom,after_top)))
 
 #define _hwa_cfoca_vupdate_1(ct,oc,v,k,...)			\
   hwa->o.config.update = HW_A1(_hw_oca_update_##v);		\
@@ -127,16 +126,21 @@
   HW_B(_hwa_cfoca_voutput_,_hw_oca_output_##v)(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfoca_voutput_0(ct,oc,v,...)			\
-  HW_E_AVL(mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)
+  HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match,clear_after_match_up_set_after_match_down,set_after_match_up_clear_after_match_down)))
 #define _hwa_cfoca_voutput_1(ct,oc,v,...)					\
   hwa->ct.compare##oc.config.output = HW_A1(_hw_oca_output_##v) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_oca
+ * @addtogroup atmelavr_oca
  *
- * <br>
- * `write`:
+ * <br><br>hw( read, ... ): get the compare value
+ *
+ * @code
+ * uint8_t ocr = hw( read, (counter0,compare0) );
+ * @endcode
+ *
+ * <br><br>hw( write, ... ), hwa( write, ... ): set the compare value
  *
  * @code
  * hw( write, (counter0,compare0), value );
@@ -145,30 +149,21 @@
  * @code
  * hwa( write, (counter0,compare0), value );
  * @endcode
- *
- *
- * <br>
- * `read`:
- *
- * @code
- * uint8_t ocr = hw( read, (counter0,compare0) );
- * @endcode
  */
+#define hw_read__oca			, _hw_read_oca
+#define _hw_read_oca(o,ct,oc,...)	_hw_read(ct,ocr##oc) HW_EOL(__VA_ARGS__)
+
 #define hw_write__oca			, _hw_write_oca
 #define _hw_write_oca(o,ct,oc,v,...)	_hw_write(ct,ocr##oc,v) HW_EOL(__VA_ARGS__)
 
 #define hwa_write__oca			, _hwa_write_oca
 #define _hwa_write_oca(o,ct,oc,v,...)	_hwa_write(ct,ocr##oc,v) HW_EOL(__VA_ARGS__)
 
-#define hw_read__oca			, _hw_read_oca
-#define _hw_read_oca(o,ct,oc,...)	_hw_read(ct,ocr##oc) HW_EOL(__VA_ARGS__)
-
 
 /**
- * @page atmelavr_oca
+ * @addtogroup atmelavr_oca
  *
- * <br>
- * `trigger`:
+ * <br><br>hw( trigger, ... ), hwa( trigger, ... ): force a compare-match
  *
  * @code
  * hw( trigger, (counter0,compare0) );
@@ -183,3 +178,11 @@
 
 #define hwa_trigger__oca		, _hwa_trigger_oca
 #define _hwa_trigger_oca(o,ct,oc)	_hwa_write(ct,foc##oc,1)
+
+
+/**
+ * @addtogroup atmelavr_oca
+ * @section atmelavr_ocareg Registers
+ *
+ * Registers are hold by the parent counter.
+ */

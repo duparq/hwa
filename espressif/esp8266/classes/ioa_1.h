@@ -10,7 +10,8 @@
  */
 
 /**
- * @page espressif_ioa Class _ioa: General Purpose I/O definition
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_ioa Class _ioa: General Purpose I/O definition
  *
  * A class `_ioa` object is a single or a group of consecutive pins inside the
  * same I/O port.
@@ -19,7 +20,7 @@
 
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  * @par Instructions that do not produce C code:
  *
  * The `hw_bn()` instruction returns the number of bits of an I/O definition:
@@ -36,7 +37,7 @@
 
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  *
  * For a group of consecutive pins, the `hw_bp()` instruction gives the position
  * of the least significant bit:
@@ -49,22 +50,3 @@
  */
 #define HW_POSITION__ioa		, _hw_bp_ioa
 #define _hw_bp_ioa(o, cn,bn,bp,...)	       bp
-
-
-/**
- * @page espressif_ioa
- *
- * @code
- * #if (HW_ADDRESS((porta,3)) != -1) && (HW_ADDRESS((porta,3),port) != HW_ADDRESS(porta))
- * #  Pin (porta,3) is not a pin of PORTA?
- * #endif
- * @endcode
- */
-#define hw_rel__ioa			, _hw_rel_ioa
-
-#define _hw_rel_ioa(o,x,...)	\
-  HW_B(_hw_rel_ioa_,_hw_is_port_##x)(o,x,__VA_ARGS__)
-
-#define _hw_rel_ioa_1(o,x,p,...)	p
-
-#define _hw_rel_ioa_0(o,x,...)		HW_E(`o` has no relative named `x`)

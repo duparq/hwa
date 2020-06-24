@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_usarta Class _usarta: Universal Synchronous Asynchronous Receiver Transmitter
+ * @ingroup stm32_classes
+ * @defgroup stm32_usarta Class _usarta: Universal Synchronous Asynchronous Receiver Transmitter
  *
  * `_usarta` objects are universal synchronous asynchronous receivers transmitters.
  *

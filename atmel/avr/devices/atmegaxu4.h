@@ -12,7 +12,8 @@
 #include "../hwa_1.h"
 
 /**
- * @page atmegaxu4 ATmega16U4/32U4
+ * @ingroup atmelavr_devices
+ * @defgroup atmegaxu4 ATmega16U4/32U4
  *
  * @note This needs to be rewritten.
  *
@@ -46,7 +47,7 @@
 
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @section atmegaxu4_fuses Configuration fuses
  *
  * ATmegaXU4 devices hold 3 fuse bytes describing their hardware configuration.
@@ -88,7 +89,7 @@
   HW_DEVICE_FUSE_CKSEL0
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @subsection atmegaxu4_fuses_clocking Clocking
  *
  * HWA uses these settings to compute the system clock frequency `syshz`.
@@ -154,12 +155,12 @@
 #  define HW_DEVICE_FUSE_CKDIV8				1
 #  define HW_SYSHZ					hw_syshz_base
 #else
-HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
+HW_E(HW_EM_VAL(HW_DEVICE_CLK_PSC,HW_DEVICE_CLK_PSC,(1,8)))
 #endif
 
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @subsection atmegaxu4_fuses_sut Startup delays
  *
  * Symbol		| Valid values | Comments
@@ -244,7 +245,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
 
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @subsection atmegaxu4_fuses_other Other fuses
  *
  * Symbol		  | Valid values | Comments
@@ -406,7 +407,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  *******************************************************************************/
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @section atmegaxu4_object Peripherals
  *
  * __Note__ A missing class name means that the peripheral is not implemented yet.
@@ -453,7 +454,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  */
 
 /*
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @subsection atmegaxu4_swobj Software-emulated peripherals
  * 
  * HWA provides the following software-emulated peripherals:
@@ -504,7 +505,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  *******************************************************************************/
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @section atmegaxu4_interrupts Interrupts
  * 
  * Interrupt definition			   | Atmel label  | Comments
@@ -514,7 +515,7 @@ HW_E_AVL('HW_DEVICE_CLK_PSC', HW_DEVICE_CLK_PSC, 1 | 8)
  * `eeprom0,ready`			   | EE READY	  | EEPROM ready
  * `flash0`				   | SPM READY	  | Store Program Memory Ready
  */
-/**
+/*
  * @ingroup atmegaxu4_interrupts
  * @brief Definition of the interrupts
  */
@@ -676,7 +677,7 @@ typedef struct {
 
 /*	Class logical registers
  */
-#define hw__wdb_wdrf			_xob1, core0, mcusr, 1, 3
+#define hw__wdb_wdrf			_xb1, core0, mcusr, 1, 3
 
 
 /*******************************************************************************
@@ -686,7 +687,7 @@ typedef struct {
  *******************************************************************************/
 
 /**
- * @page atmegaxu4
+ * @addtogroup atmegaxu4
  * @section atmegaxu4_pins I/O ports and pins
  *
  * HWA name	| 44Q	      | Class			   | Atmel name
@@ -772,37 +773,37 @@ typedef struct {
  */
 #include "../classes/io0a_1.h"
 
-#define hw_counter3compare1		_io0a
-#define hw_counter3compare2		_io0a
+#define hw_counter3compare1		_ionc
+#define hw_counter3compare2		_ionc
 
 /*  Digital input disable bits for analog input pins
  */
-#define hw_pf0_did			_xob1, shared, did0, 1, 0	/* ADC0 */
-#define hw_pf1_did			_xob1, shared, did0, 1, 1	/* ADC1 */
-#define hw_pf4_did			_xob1, shared, did0, 1, 4	/* ADC4 */
-#define hw_pf5_did			_xob1, shared, did0, 1, 5	/* ADC5 */
-#define hw_pf6_did			_xob1, shared, did0, 1, 6	/* ADC6 */
-#define hw_pf7_did			_xob1, shared, did0, 1, 7	/* ADC7 */
+#define hw_pf0_did			_xb1, shared, did0, 1, 0	/* ADC0 */
+#define hw_pf1_did			_xb1, shared, did0, 1, 1	/* ADC1 */
+#define hw_pf4_did			_xb1, shared, did0, 1, 4	/* ADC4 */
+#define hw_pf5_did			_xb1, shared, did0, 1, 5	/* ADC5 */
+#define hw_pf6_did			_xb1, shared, did0, 1, 6	/* ADC6 */
+#define hw_pf7_did			_xb1, shared, did0, 1, 7	/* ADC7 */
 
-#define hw_pd4_did			_xob1, shared, did2, 1, 0	/* ADC8 */
-#define hw_pd6_did			_xob1, shared, did2, 1, 1	/* ADC9 */
-#define hw_pd7_did			_xob1, shared, did2, 1, 2	/* ADC10 */
-#define hw_pb4_did			_xob1, shared, did2, 1, 3	/* ADC11 */
-#define hw_pb5_did			_xob1, shared, did2, 1, 4	/* ADC12 */
-#define hw_pb6_did			_xob1, shared, did2, 1, 5	/* ADC13 */
+#define hw_pd4_did			_xb1, shared, did2, 1, 0	/* ADC8 */
+#define hw_pd6_did			_xb1, shared, did2, 1, 1	/* ADC9 */
+#define hw_pd7_did			_xb1, shared, did2, 1, 2	/* ADC10 */
+#define hw_pb4_did			_xb1, shared, did2, 1, 3	/* ADC11 */
+#define hw_pb5_did			_xb1, shared, did2, 1, 4	/* ADC12 */
+#define hw_pb6_did			_xb1, shared, did2, 1, 5	/* ADC13 */
 
-#define hw_pe6_did			_xob1, shared, did1, 1, 0	/* AIN0 */
+#define hw_pe6_did			_xb1, shared, did1, 1, 0	/* AIN0 */
 
 /*  Pin change controller mask
  */
-#define hw_pb0_pcic			_xob1, 135, msk, 1, 0
-#define hw_pb1_pcic			_xob1, 136, msk, 1, 1
-#define hw_pb2_pcic			_xob1, 137, msk, 1, 2
-#define hw_pb3_pcic			_xob1, 138, msk, 1, 3
-#define hw_pb4_pcic			_xob1, 139, msk, 1, 4
-#define hw_pb5_pcic			_xob1, 140, msk, 1, 5
-#define hw_pb6_pcic			_xob1, 141, msk, 1, 6
-#define hw_pb7_pcic			_xob1, 142, msk, 1, 7
+#define hw_pb0_pcic			_xb1, 135, msk, 1, 0
+#define hw_pb1_pcic			_xb1, 136, msk, 1, 1
+#define hw_pb2_pcic			_xb1, 137, msk, 1, 2
+#define hw_pb3_pcic			_xb1, 138, msk, 1, 3
+#define hw_pb4_pcic			_xb1, 139, msk, 1, 4
+#define hw_pb5_pcic			_xb1, 140, msk, 1, 5
+#define hw_pb6_pcic			_xb1, 141, msk, 1, 6
+#define hw_pb7_pcic			_xb1, 142, msk, 1, 7
 
 /*  Relative pin change controllers
  */
@@ -916,9 +917,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_int0_sc			_xob1, shared, eicra, 2, 0
-#define hw_int0_ie			_xob1, shared, eimsk, 1, 0
-#define hw_int0_if			_xob1, shared, eifr,  1, 0
+#define hw_int0_sc			_xb1, shared, eicra, 2, 0
+#define hw_int0_ie			_xb1, shared, eimsk, 1, 0
+#define hw_int0_if			_xb1, shared, eifr,  1, 0
 
 /*	Object				class, id, address
  */
@@ -926,9 +927,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_int1_sc			_xob1, shared, eicra, 2, 2
-#define hw_int1_ie			_xob1, shared, eimsk, 1, 1
-#define hw_int1_if			_xob1, shared, eifr,  1, 1
+#define hw_int1_sc			_xb1, shared, eicra, 2, 2
+#define hw_int1_ie			_xb1, shared, eimsk, 1, 1
+#define hw_int1_if			_xb1, shared, eifr,  1, 1
 
 /*	Object				class, id, address
  */
@@ -936,9 +937,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_int2_sc			_xob1, shared, eicra, 2, 4
-#define hw_int2_ie			_xob1, shared, eimsk, 1, 2
-#define hw_int2_if			_xob1, shared, eifr,  1, 2
+#define hw_int2_sc			_xb1, shared, eicra, 2, 4
+#define hw_int2_ie			_xb1, shared, eimsk, 1, 2
+#define hw_int2_if			_xb1, shared, eifr,  1, 2
 
 /*	Object				class, id, address
  */
@@ -946,9 +947,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_int3_sc			_xob1, shared, eicra, 2, 6
-#define hw_int3_ie			_xob1, shared, eimsk, 1, 3
-#define hw_int3_if			_xob1, shared, eifr,  1, 3
+#define hw_int3_sc			_xb1, shared, eicra, 2, 6
+#define hw_int3_ie			_xb1, shared, eimsk, 1, 3
+#define hw_int3_if			_xb1, shared, eifr,  1, 3
 
 /*	Object				class, id, address
  */
@@ -956,9 +957,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_int6_sc			_xob1, shared, eicrb, 2, 4
-#define hw_int6_ie			_xob1, shared, eimsk, 1, 6
-#define hw_int6_if			_xob1, shared, eifr,  1, 6
+#define hw_int6_sc			_xb1, shared, eicrb, 2, 4
+#define hw_int6_ie			_xb1, shared, eimsk, 1, 6
+#define hw_int6_if			_xb1, shared, eifr,  1, 6
 
 
 /*******************************************************************************
@@ -979,8 +980,8 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_pcic0_ie			_xob1, shared, pcicr, 1, 0
-#define hw_pcic0_if			_xob1, shared, pcifr, 1, 0
+#define hw_pcic0_ie			_xb1, shared, pcicr, 1, 0
+#define hw_pcic0_if			_xb1, shared, pcifr, 1, 0
 
 
 /*******************************************************************************
@@ -997,12 +998,12 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_prescaler0_tsm		_xob1, shared, gtccr, 1, 7
-#define hw_prescaler0_psr		_xob1, shared, gtccr, 1, 0
+#define hw_prescaler0_tsm		_xb1, shared, gtccr, 1, 7
+#define hw_prescaler0_psr		_xb1, shared, gtccr, 1, 0
 
 /*  This is a convenient logical register definition for stopping the prescaler
  */
-#define hw_prescaler0_tsmpsr		_xob2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
+#define hw_prescaler0_tsmpsr		_xb2, shared, gtccr, 1, 7, 1, gtccr, 1, 0, 0
 
 
 /*******************************************************************************
@@ -1031,7 +1032,7 @@ typedef struct {
 #define hw_counter0_cs			_ob1, ccrb, 3, 0
 #define hw_counter0_ie			_ob1, imsk, 1, 0
 #define hw_counter0_if			_ob1, ifr, 1, 0
-#define hw_counter0_prr			_xob1, shared, prr, 1, 5
+#define hw_counter0_prr			_xb1, shared, prr, 1, 5
 
 
 /*	Relatives
@@ -1060,10 +1061,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter0compare0_com		_xob1, counter0, ccra, 2, 6
-#define hw_counter0compare0_force	_xob1, counter0, ccrb, 1, 7
-#define hw_counter0compare0_ie		_xob1, counter0, imsk, 1, 1
-#define hw_counter0compare0_if		_xob1, counter0, ifr,  1, 1
+#define hw_counter0compare0_com		_xb1, counter0, ccra, 2, 6
+#define hw_counter0compare0_force	_xb1, counter0, ccrb, 1, 7
+#define hw_counter0compare0_ie		_xb1, counter0, imsk, 1, 1
+#define hw_counter0compare0_if		_xb1, counter0, ifr,  1, 1
 
 /*	Relatives
  */
@@ -1081,10 +1082,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter0compare1_com		_xob1, counter0, ccra, 2, 4
-#define hw_counter0compare1_force	_xob1, counter0, ccrb, 1, 6
-#define hw_counter0compare1_ie		_xob1, counter0, imsk, 1, 2
-#define hw_counter0compare1_if		_xob1, counter0, ifr,  1, 2
+#define hw_counter0compare1_com		_xb1, counter0, ccra, 2, 4
+#define hw_counter0compare1_force	_xb1, counter0, ccrb, 1, 6
+#define hw_counter0compare1_ie		_xb1, counter0, imsk, 1, 2
+#define hw_counter0compare1_if		_xb1, counter0, ifr,  1, 2
 
 /*	Relatives
  */
@@ -1119,7 +1120,7 @@ typedef struct {
 #define hw_counter1_wgm			_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
 #define hw_counter1_ie			_ob1, imsk, 1, 0
 #define hw_counter1_if			_ob1, ifr,  1, 0
-#define hw_counter1_prr			_xob1, shared, prr0, 1, 3
+#define hw_counter1_prr			_xb1, shared, prr0, 1, 3
 
 /*	Relatives
  */
@@ -1149,10 +1150,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter1compare0_com		_xob1, counter1, ccra, 2, 6
-#define hw_counter1compare0_force	_xob1, counter1, ccrc, 1, 7
-#define hw_counter1compare0_ie		_xob1, counter1, imsk, 1, 1
-#define hw_counter1compare0_if		_xob1, counter1, ifr,  1, 1
+#define hw_counter1compare0_com		_xb1, counter1, ccra, 2, 6
+#define hw_counter1compare0_force	_xb1, counter1, ccrc, 1, 7
+#define hw_counter1compare0_ie		_xb1, counter1, imsk, 1, 1
+#define hw_counter1compare0_if		_xb1, counter1, ifr,  1, 1
 
 /*	Relatives
  */
@@ -1176,10 +1177,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter1compare1_com		_xob1, counter1, ccra, 2, 4
-#define hw_counter1compare1_force	_xob1, counter1, ccrc, 1, 6
-#define hw_counter1compare1_ie		_xob1, counter1, imsk, 1, 2
-#define hw_counter1compare1_if		_xob1, counter1, ifr,  1, 2
+#define hw_counter1compare1_com		_xb1, counter1, ccra, 2, 4
+#define hw_counter1compare1_force	_xb1, counter1, ccrc, 1, 6
+#define hw_counter1compare1_ie		_xb1, counter1, imsk, 1, 2
+#define hw_counter1compare1_if		_xb1, counter1, ifr,  1, 2
 
 /*	Relatives
  */
@@ -1203,10 +1204,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter1compare2_com		_xob1, counter1, ccra, 2, 2
-#define hw_counter1compare2_force	_xob1, counter1, ccrc, 1, 5
-#define hw_counter1compare2_ie		_xob1, counter1, imsk, 1, 3
-#define hw_counter1compare2_if		_xob1, counter1, ifr,  1, 3
+#define hw_counter1compare2_com		_xb1, counter1, ccra, 2, 2
+#define hw_counter1compare2_force	_xb1, counter1, ccrc, 1, 5
+#define hw_counter1compare2_ie		_xb1, counter1, imsk, 1, 3
+#define hw_counter1compare2_if		_xb1, counter1, ifr,  1, 3
 
 /*	Relatives
  */
@@ -1232,11 +1233,11 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter1capture0_acic	_xob1, acmp0, csr, 1, 2
-#define hw_counter1capture0_icnc	_xob1, counter1, ccrb, 1, 7
-#define hw_counter1capture0_ices	_xob1, counter1, ccrb, 1, 6
-#define hw_counter1capture0_ie		_xob1, counter1, imsk, 1, 5
-#define hw_counter1capture0_if		_xob1, counter1, ifr,  1, 5
+#define hw_counter1capture0_acic	_xb1, acmp0, csr, 1, 2
+#define hw_counter1capture0_icnc	_xb1, counter1, ccrb, 1, 7
+#define hw_counter1capture0_ices	_xb1, counter1, ccrb, 1, 6
+#define hw_counter1capture0_ie		_xb1, counter1, imsk, 1, 5
+#define hw_counter1capture0_if		_xb1, counter1, ifr,  1, 5
 
 /*	Relatives
  */
@@ -1269,7 +1270,7 @@ typedef struct {
 #define hw_counter3_wgm			_ob2, ccrb, 2, 3, 2, ccra, 2, 0, 0
 #define hw_counter3_ie			_ob1, imsk, 1, 0
 #define hw_counter3_if			_ob1, ifr,  1, 0
-#define hw_counter3_prr			_xob1, shared, prr1, 1, 3
+#define hw_counter3_prr			_xb1, shared, prr1, 1, 3
 
 /*	Relatives
  */
@@ -1297,10 +1298,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter3compare0_com		_xob1, counter3, ccra, 2, 6
-#define hw_counter3compare0_force	_xob1, counter3, ccrc, 1, 7
-#define hw_counter3compare0_ie		_xob1, counter3, imsk, 1, 1
-#define hw_counter3compare0_if		_xob1, counter3, ifr,  1, 1
+#define hw_counter3compare0_com		_xb1, counter3, ccra, 2, 6
+#define hw_counter3compare0_force	_xb1, counter3, ccrc, 1, 7
+#define hw_counter3compare0_ie		_xb1, counter3, imsk, 1, 1
+#define hw_counter3compare0_if		_xb1, counter3, ifr,  1, 1
 
 /*	Relatives
  */
@@ -1324,10 +1325,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter3compare1_com		_xob1, counter3, ccra, 2, 4
-#define hw_counter3compare1_force	_xob1, counter3, ccrc, 1, 6
-#define hw_counter3compare1_ie		_xob1, counter3, imsk, 1, 2
-#define hw_counter3compare1_if		_xob1, counter3, ifr,  1, 2
+#define hw_counter3compare1_com		_xb1, counter3, ccra, 2, 4
+#define hw_counter3compare1_force	_xb1, counter3, ccrc, 1, 6
+#define hw_counter3compare1_ie		_xb1, counter3, imsk, 1, 2
+#define hw_counter3compare1_if		_xb1, counter3, ifr,  1, 2
 
 /*	Relatives
  */
@@ -1351,10 +1352,10 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter3compare2_com		_xob1, counter3, ccra, 2, 2
-#define hw_counter3compare2_force	_xob1, counter3, ccrc, 1, 5
-#define hw_counter3compare2_ie		_xob1, counter3, imsk, 1, 3
-#define hw_counter3compare2_if		_xob1, counter3, ifr,  1, 3
+#define hw_counter3compare2_com		_xb1, counter3, ccra, 2, 2
+#define hw_counter3compare2_force	_xb1, counter3, ccrc, 1, 5
+#define hw_counter3compare2_ie		_xb1, counter3, imsk, 1, 3
+#define hw_counter3compare2_if		_xb1, counter3, ifr,  1, 3
 
 /*	Relatives
  */
@@ -1380,11 +1381,11 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_counter3capture0_acic	_xob1, acmp0, csr, 1, 2
-#define hw_counter3capture0_icnc	_xob1, counter3, ccrb, 1, 7
-#define hw_counter3capture0_ices	_xob1, counter3, ccrb, 1, 6
-#define hw_counter3capture0_ie		_xob1, counter3, imsk, 1, 5
-#define hw_counter3capture0_if		_xob1, counter3, ifr,  1, 5
+#define hw_counter3capture0_acic	_xb1, acmp0, csr, 1, 2
+#define hw_counter3capture0_icnc	_xb1, counter3, ccrb, 1, 7
+#define hw_counter3capture0_ices	_xb1, counter3, ccrb, 1, 6
+#define hw_counter3capture0_ie		_xb1, counter3, imsk, 1, 5
+#define hw_counter3capture0_if		_xb1, counter3, ifr,  1, 5
 
 /*	Relatives
  */
@@ -1415,9 +1416,9 @@ typedef struct {
 
 /*	Object logical registers
  */
-#define hw_acmp0_acme			_xob1, adc0, srb,   1, 6
-#define hw_acmp0_aden			_xob1, adc0, sra,   1, 7
-#define hw_acmp0_admux			_xob1, adc0, admux, 4, 0
+#define hw_acmp0_acme			_xb1, adc0, srb,   1, 6
+#define hw_acmp0_aden			_xb1, adc0, sra,   1, 7
+#define hw_acmp0_admux			_xb1, adc0, admux, 4, 0
 
 
 /*******************************************************************************
@@ -1653,8 +1654,3 @@ HW_INLINE void _hwa_commit_context( hwa_t *hwa )
 }
 
 #endif /* !defined __ASSEMBLER__ */
-
-/**
- * @page atmegaxu4
- * <br>
- */

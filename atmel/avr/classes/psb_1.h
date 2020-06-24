@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_psb Class _psb: clock prescaler
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_psb Class _psb: clock prescaler
  *
  * A class `_psb` object is a resettable clock prescaler that can be connected
  * to one of 3 possible clocks:

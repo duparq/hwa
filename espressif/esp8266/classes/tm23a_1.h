@@ -10,7 +10,8 @@
  */
 
 /**
- * @page espressif_tm23a Class _tm23a: 23-bit timer
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_tm23a Class _tm23a: 23-bit timer
  *
  * A class `_tm23a` object is a 23-bit timer.
  *

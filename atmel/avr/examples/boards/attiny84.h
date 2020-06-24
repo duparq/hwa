@@ -10,9 +10,8 @@
  */
 
 /**
- * @page atmelavr_boards
- *
- * @section boards_attiny84 Board attiny84
+ * @ingroup atmelavr_boards
+ * @defgroup board_attiny84 Board ATtiny84
  *
  * This is just a ATTINY84A-PU on a breadboard with a USB/Serial adapter and a
  * LED connected at pin #7 (PA6/OC1A). No crystal.
@@ -52,41 +51,59 @@
  *
  * @par attiny84.h
  * @include boards/attiny84.h
- * <br>
  */
 
-/*  Device configuration
+/**
+ * @addtogroup board_attiny84
+ * @{
+ * @name Device configuration
+ * @{
  */
-#define HW_DEVICE_CLK_SRC		rc_8MHz
-#define HW_DEVICE_CLK_PSC		1
-#define HW_DEVICE_EXTERNAL_RESET	enabled
-#define HW_DEVICE_SELF_PROGRAMMING	enabled
-#define HW_DEVICE_DEBUG_WIRE		disabled
-#define HW_DEVICE_WATCHDOG_ALWAYS_ON	no
-#define HW_DEVICE_CLOCK_OUTPUT		disabled
-#define HW_DEVICE_BROWNOUT_DETECTION	2500_2900mV
 
-/*  Settings for building the Diabolo bootloader
+#define HW_DEVICE_CLK_SRC		rc_8MHz			/**<> */
+#define HW_DEVICE_CLK_PSC		1			/**<> */
+#define HW_DEVICE_EXTERNAL_RESET	enabled			/**<> */
+#define HW_DEVICE_SELF_PROGRAMMING	enabled			/**<> */
+#define HW_DEVICE_DEBUG_WIRE		disabled		/**<> */
+#define HW_DEVICE_WATCHDOG_ALWAYS_ON	no			/**<> */
+#define HW_DEVICE_CLOCK_OUTPUT		disabled		/**<> */
+#define HW_DEVICE_BROWNOUT_DETECTION	2500_2900mV		/**<> */
+
+/**
+ * @}
+ *
+ * @name Settings for the Diabolo bootloader
+ *
  *  Settings for the Diabolo application are in the board's Makefile
+ *
+ * @{
  */
-#define DIABOLO_PIN_RX			(pin,2)		// PB0
-#define DIABOLO_PIN_TX			(pin,2)
-#define DIABOLO_SYNC			51
+#define DIABOLO_PIN_RX			(pin,2)			/**<> */
+#define DIABOLO_PIN_TX			(pin,2)			/**<> */
+#define DIABOLO_SYNC			51			/**<> */
 
-/*  The pin at which the LED is connected. The target device name indicates its
- *  package, then pin numbers can be used as well as pin names.
+/**
+ * @}
+ *
+ * @name Board pins
+ *
+ * The pin at which the LED is connected. The target device name indicates its
+ * package, then pin numbers can be used as well as pin names.
+ *
+ * @{
  */
-#define PIN_LED				(pin,7)		// OC1A
-//#define PIN_LED			  (pin,5)	// OC0A
+#define PIN_LED				(pin,7)		/* OC1A */	/**<> */
+//#define PIN_LED			  (pin,5)	/* OC0A */	/**<> */
 
-/*  Analog input pin
- */
-#define PIN_ANALOG_INPUT		(pin,13)	// ADC0
+#define PIN_ANALOG_INPUT		(pin,13)	/* ADC0 */	/**<> */
 
 /*  Pins for hw_swuart1
  */
-#define PIN_TX2				(pin,8)
-#define PIN_RX2				(pin,9)
+#define PIN_TX2				(pin,8)			/**<> */
+#define PIN_RX2				(pin,9)			/**<> */
+
+/** @} */
+/** @} */
 
 /*  Include HWA definitions
  */

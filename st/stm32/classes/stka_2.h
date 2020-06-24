@@ -15,7 +15,8 @@
 /* #define hw__stka_flag			_cb1, ctrl, 1, 16 */
 
 /**
- * @page stm32_stka
+ * @ingroup stm32_classes
+ * @addtogroup stm32_stka
  * __Actions__
  *
  * `configure`:
@@ -36,23 +37,23 @@
 #define _hw_cfstka_clk_ahb		, 17
 
 #define _hw_cfstka(o,a,k,...)		do{ HW_B(_hwx_cfstka_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfstka(o,a,k,...)	do{ HW_B(_hwx_cfstka_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfstka(o,a,k,...)		do{ HW_B(_hwx_cfstka_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
-#define _hwx_cfstka_k_1(h,o,k,...)	HW_E_ML((clock,reload))
+#define _hwx_cfstka_k_1(h,o,k,...)	HW_E(HW_EM_AML((clock,reload,run)))
 #define _hwx_cfstka_k_0(h,o,k,...)	HW_B(_hwx_cfstka_kclk_,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `clock`
  */
 #define _hwx_cfstka_kclk_1(h,o,k,v,...)	HW_B(_hwx_cfstka_vclk_,_hw_cfstka_clk_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfstka_vclk_0(h,o,v,...)	HW_E_NIL(v,(ahb, ahb/8))
+#define _hwx_cfstka_vclk_0(h,o,v,...)	HW_E(HW_EM_XNIL(v,(ahb, ahb/8)))
 #define _hwx_cfstka_vclk_1(h,o,v,...)	_hwx_cfstka_vclk_2(h,o,v,_hw_cfstka_clk_##v,__VA_ARGS__)
 #define _hwx_cfstka_vclk_2(...)		_hwx_cfstka_vclk_3(__VA_ARGS__)
 #define _hwx_cfstka_vclk_3(h,o,v,z,xv,k,...)				\
   if	  ( 8*xv == 17 ) h##_write(o,clksource,0);			\
   else if (   xv == 17 ) h##_write(o,clksource,1);			\
-  else HWA_E_NIL(v,(ahb/8, ahb));					\
+  else HWA_E(HW_EM_VAL(v,clock,(ahb/8, ahb)));				\
   HW_B(_hwx_cfstka_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfstka_kclk_0(h,o,k,...)	HW_B(_hwx_cfstka_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
@@ -69,13 +70,13 @@
  */
 #define _hwx_cfstka_krn_0(h,o,k,...)	HW_EOL(k)
 #define _hwx_cfstka_krn_1(h,o,k,v,...)	HW_B(_hwx_cfstka_vrn_,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfstka_vrn_0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_cfstka_vrn_0(h,o,v,...)	HW_E(HW_EM_ST(v))
 #define _hwx_cfstka_vrn_1(h,o,v,g,...)				\
   h##_write(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
- * @page stm32_stka
+ * @addtogroup stm32_stka
  * <br>
  * `turn`:
  * @code
@@ -89,12 +90,12 @@
 #define _hwa_tnstka(o,a,...)		do{ _hwx_tnstka(_hwa,o,__VA_ARGS__) }while(0)
 
 #define _hwx_tnstka(h,o,v,...)		HW_B(_hwx_tnstka_,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_tnstka_0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_tnstka_0(h,o,v,...)	HW_E(HW_EM_ST(v))
 #define _hwx_tnstka_1(h,o,v,g,...)	h##_write(o,enable,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
- * @page stm32_stka
+ * @addtogroup stm32_stka
  * <br>
  * `read:`
  * @code
@@ -106,7 +107,7 @@
 
 
 /**
- * @page stm32_stka
+ * @addtogroup stm32_stka
  * <br>
  * __IRQ__
  * @code
@@ -125,7 +126,7 @@
 
 
 /**
- * @page stm32_stka
+ * @addtogroup stm32_stka
  * <br>
  * __Registers__
  *

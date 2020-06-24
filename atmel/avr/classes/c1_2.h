@@ -9,7 +9,7 @@
 HW_INLINE uint8_t _hw_c1ck_none( float v )
 {
   if ( v != 0 )
-    HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|64|256|1024]`, `external_falling`, `external_rising`));
+    HWA_E(HW_EM_AVL(clock,(none, ioclk/(1, 8, 256, 1024, external_falling, external_rising))));
 
   return 0 ;
 }
@@ -27,14 +27,14 @@ HW_INLINE uint8_t _hw_c1ck_ioclk( float v )
   if ( v == 1.0/1024 )
     return 5 ;
 
-  HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|64|256|1024]`, `external_falling`, `external_rising`));
+  HWA_E(HW_EM_AVL(clock,(none, ioclk/(1, 8, 256, 1024, external_falling, external_rising))));
   return 0 ;
 }
 
 HW_INLINE uint8_t _hw_c1ck_external_rising( float v )
 {
   if ( v != 0 )
-    HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|64|256|1024]`, `external_falling`, `external_rising`));
+    HWA_E(HW_EM_AVL(clock,(none, ioclk/(1, 8, 256, 1024, external_falling, external_rising))));
 
   return 6 ;
 }
@@ -42,7 +42,7 @@ HW_INLINE uint8_t _hw_c1ck_external_rising( float v )
 HW_INLINE uint8_t _hw_c1ck_external_falling( float v )
 {
   if ( v != 0 )
-    HWA_E_NIL(value of `clock`, (`none`, `ioclk [/ 8|64|256|1024]`, `external_falling`, `external_rising`));
+    HWA_E(HW_EM_AVL(clock,(none, ioclk/(1, 8, 256, 1024, external_falling, external_rising))));
 
   return 7 ;
 }

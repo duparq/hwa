@@ -37,6 +37,8 @@ int main ( )
        timeout,	  250ms,
        action,	  irq	    );
 
+  //  hwa( write, (portb,1,4), 2 );
+
   /*  Write this configuration into the hardware
    */
   hwa( commit );

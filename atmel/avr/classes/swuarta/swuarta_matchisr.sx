@@ -12,8 +12,8 @@
 	CY_RX_SEI=0
 
 	.section .text
-	.global HW_ISR((COUNTER,irq,COMPARE))
-HW_ISR((COUNTER,irq,COMPARE)):
+	.global HW_ISR((COUNTER,COMPARE,irq))
+HW_ISR((COUNTER,COMPARE,irq)):
 
 	CYCLES=4		; [4]	<- call
 

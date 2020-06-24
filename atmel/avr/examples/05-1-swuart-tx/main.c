@@ -56,6 +56,7 @@ main ( )
 
     /*	Send a '.'
      */
+    while ( !hw(stat,UART).txc ) {}
     hw( write, UART, '.');
   }
 }

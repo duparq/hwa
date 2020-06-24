@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_acb Class _acb: analog comparator
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_acb Class _acb: analog comparator
  *
  * A class `_acb` object is an analog comparator.
  *
@@ -21,7 +22,7 @@
 #define hw_class__acb
 
 /**
- * @page atmelavr_acb
+ * @addtogroup atmelavr_acb
  * @par Interrupts
  *
  * Class `_acb` objects can trigger the following IRQs:

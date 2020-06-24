@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_ioa Class _ioa: General Purpose Input/Output
+ * @ingroup stm32_classes
+ * @defgroup stm32_ioa Class _ioa: General Purpose Input/Output
  *
  * `_ioa` objects are groups of one or more consecutive pins inside the same
  * GPIO port.
@@ -18,15 +19,8 @@
 #define hw_class__ioa
 
 
-/*  The virtual object 'pin' handles the '(pin,...)' notation.
- */
-#define hw_class__pin
-
-#define hw_pin				_pin, 0
-
-
-/*
- * @page stm32_ioa
+/**
+ * @addtogroup stm32_ioa
  *
  * `HW_IO(port,bn,bp)` creates an I/O object made of `bn` consecutive gpio pins
  * of port `port` starting at position `bp`.
@@ -43,7 +37,7 @@
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * The relative `port` names the GPIO port the I/O pertains to:
  *
@@ -109,7 +103,7 @@
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * `HW_ADDRESS()` returns an address for an I/O definition, computed as:
  *  address_of_port + (number_of_bits-1)*16 + position_of_lsb.
@@ -132,7 +126,7 @@
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * `HW_BITS()` returns the number of bits of an I/O definition:
  * @code
@@ -146,7 +140,7 @@
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * `HW_POSITION()` returns the position of the least significant bit:
  * @code

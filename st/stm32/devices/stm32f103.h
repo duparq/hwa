@@ -14,35 +14,101 @@
  *  * M3 Guide: The Definitive Guide to the ARM CORTEX-M3, by Joseph Yiu
  */
 
-/**
- * @file
- * @brief STM32F103
- * @page stm32f103 STM32F103
- */
 
 #include "../hwa_1.h"
 
-/**
- * @page stm32f103
- * @section stm32f103_objects Objects
- */
-
 
 /**
- * @page stm32f103
- * @subsection stm32f103_interrupts Interrupts
+ * @ingroup stm32_devices
+ * @defgroup stm32f103 STM32F103
  *
- * The device has a Nested Vectored Interrupt Controller (@ref stm32_nvica "NVIC").
- * 
- * Interrupt name	| Comments
- * :--------------------|------------------------
- * `systick`		| SysTick timer reached 0
- * `systick,alarm`	| SysTick timer reached 0
- * `counter2`		| Counter 2 update
- * `counter3`		| Counter 3 update
- * `counter4`		| Counter 4 update
+ * Content of the device:
  *
+ *  * Clocks
+ *    * @ref stm32_hsia "hsi": 8 MHz internal RC oscillator.
+ *    * @ref stm32_hsea "hse": crystal external oscillator.
+ *    * @ref stm32_plla "pll": PLL multiplying HSI or HSE clock.
+ *    * @ref stm32_sclka "sysclk": connected to HSI, PLL, or HSE, clocks
+ *      * @ref stm32_ahba "ahb": clocks
+ *    	* sdio
+ *    	* fsmc
+ *    	* core
+ *    	* memory
+ *    	* dma
+ *    	* Cortex system timer
+ *    	* FCLK Cortex free running clock
+ *    	* @ref stm32_apba "apb1" (low-speed): clocks (36 MHz max.)
+ *    	  * counter2..7, counter12..14
+ *    	  * APB1 peripherals
+ *    	* @ref stm32_apba "apb2" (high-speed): clocks
+ *    	  * counter1, counter8..11
+ *    	  * adc and other APB2 peripherals
+ *      * i2s2
+ *      * i2s3
+ *
+ *  * Nested Vectored Interrupt Controller
+ *    * @ref stm32_nvica "nvic"
+ *
+ *  * System Tick timer
+ *    * @ref stm32_stka "systick"
+ *
+ *  * I/Os
+ *    * @ref stm32_gpa "porta": @ref stm32_ioa "(porta,0..15)"
+ *    * @ref stm32_gpa "portb": @ref stm32_ioa "(portb,0..15)"
+ *    * @ref stm32_gpa "portc": @ref stm32_ioa "(portc,0..15)"
+ *    * @ref stm32_gpa "portd": @ref stm32_ioa "(portd,0..15)"
+ *    * @ref stm32_gpa "porte": @ref stm32_ioa "(porte,0..15)"
+ *
+ *  * Analog-to-digital converter
+ *    * @ref stm32_ada "adc1"
+ *    * @ref stm32_ada "adc2"
+ *
+ *  * Advanced-control counter-timer
+ *    * counter1
+ *
+ *  * General-purpose counter-timers
+ *    * @ref stm32_cta "counter2"
+ *    * @ref stm32_cta "counter3"
+ *    * @ref stm32_cta "counter4"
+ *
+ *  * Universal synchronous asynchronous receiver transmitter (USART)
+ *    * @ref stm32_usarta "usart1"
+ *    * @ref stm32_usarta "usart2"
+ *    * @ref stm32_usarta "usart3"
+ *    * uart4
+ *    * uart5
  */
+
+/**
+ * @name Name
+ * Name
+ * @{
+ */
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_STM32F103
+
+/**
+ *  Frequency of the high-speed internal clock
+ */
+#define HW_DEVICE_HSIHZ			8*1000000
+
+/**
+ *  Frequency of the low-speed internal clock
+ */
+#define HW_DEVICE_LSIHZ			40*1000
+
+/** @} */
+
+
+/*******************************************************************************
+ *									       *
+ *	Interrupts							       *
+ *									       *
+ *******************************************************************************/
+
 #define hw_nmi_irq			_irq,  x2, core,       ,
 #define hw_systick_irq			_irq, x15, systick,  ie, if
 #define hw_systick_irq_alarm		_irq, x15, systick,  ie, if
@@ -66,36 +132,6 @@
 /* #define hw_isr_50				hw_isr_counter5 */
 
 
-/**
- * @page stm32f103
- *
- *  * @subpage stm32f103rbt6
- *  * @subpage stm32f103c8t6
- *  * @subpage stm32f103vct6
- */
-
-/**
- * @page stm32f103
- * @section stm32f103_sym Defined symbols
- *
- * HWA defines the following symbols describing the target device and its
- * hardware configuration:
- *
- * Symbol		    | Value
- * :------------------------|:-----------
- * `HW_DEVICE_STM32F103`    |Void.
- * `HW_DEVICE_HSIHZ`	    |8*1000000
- * `HW_DEVICE_LSIHZ`	    |40*1000
- */
-#define HW_DEVICE_STM32F103
-/* #define HW_DEVICE_ARCH		arm */
-#define HW_DEVICE_HSIHZ			8*1000000
-#define HW_DEVICE_LSIHZ			40*1000
-
-
-
-
-
 #include "../classes/nvica_1.h"
 
 /*	Object				class, address
@@ -109,68 +145,31 @@
  *									       *
  *******************************************************************************/
 
-/**
- * @page stm32f103
- * @section stm32f103_rcc Clocks
- *
- * Low-, medium-, high- and XL-density devices embed a RCC of class @ref
- * stm32_rcca "_rcca" that holds hardware registers shared by several objects to
- * access the device's RCC in order to configure various clocks in the device:
- *
- *  * @ref stm32_hsia "hsi": 8 MHz internal RC oscillator.
- *  * @ref stm32_hsea "hse": crystal external oscillator.
- *  * @ref stm32_plla "pll": PLL multiplying HSI or HSE clock.
- *  * @ref stm32_sclka "sysclk": connected to HSI, PLL, or HSE, clocks
- *    * @ref stm32_ahba "ahb": clocks
- *	* sdio
- *	* fsmc
- *	* core
- *	* memory
- *	* dma
- *	* Cortex system timer
- *	* FCLK Cortex free running clock
- *	* @ref stm32_apba "apb1" (low-speed): clocks (36 MHz max.)
- *	  * counter2..7, counter12..14
- *	  * APB1 peripherals
- *	* @ref stm32_apba "apb2" (high-speed): clocks
- *	  * counter1, counter8..11
- *	  * adc and other APB2 peripherals
- *    * i2s2
- *    * i2s3
- *
- * The RCC is also used transparently by several other objects to enable/disable
- * their clocking for power management purpose.
- *
- * @note Connectivity line devices embed a RCC of class `_rccb` that is not implemented yet.
- */
-
 #include "../classes/rcca_1.h"
 
 /*	Object				class, address
  */
 #define hw_rcc				_rcca, 0x40021000
 
-//#define hw_rcc_usart1				_rccp, 0
+
+/*******************************************************************************
+ *									       *
+ *	SysTick								       *
+ *									       *
+ *******************************************************************************/
+
+#include "../classes/stka_1.h"
+
+/*	Object				class, address
+ */
+#define hw_systick			_stka, 0xE000E010
 
 
 /*******************************************************************************
  *									       *
- *	Ports and pins							       *
+ *	I/Os								       *
  *									       *
  *******************************************************************************/
-
-/**
- * @page stm32f103
- * @section stm32f103_pins Ports and pins
- *
- * STM32 devices have up to 7 GPIO ports each holding 16 GPIO pins:
- *
- *  * @ref stm32_gpa "porta" (PORTA): @ref stm32_ioa "pa0..15"
- *  * @ref stm32_gpa "portb" (PORTB): @ref stm32_ioa "pb0..15"
- *  * @ref stm32_gpa "portc" (PORTC): @ref stm32_ioa "pc0..15"
- *  * @ref stm32_gpa "portd" (PORTD): @ref stm32_ioa "pd0..15"
- *  * @ref stm32_gpa "porte" (PORTE): @ref stm32_ioa "pe0..15"
- */
 
 #include "../classes/gpa_1.h"
 #include "../classes/ioa_1.h"
@@ -179,7 +178,7 @@
 /*	Objects				class, address
  */
 #define hw_afio				_afioa, 0x40010000
-#define hw_afio_cken			_xob1, rcc, apb2enr, 1,  0	/* convenient */
+#define hw_afio_cken			_xb1, rcc, apb2enr, 1,  0	/* convenient */
 
 #define hw_porta			_gpa, 0x40010800
 #define hw_porta_rcc			_rccen, portaen
@@ -193,18 +192,18 @@
 
 /*	Object registers
  */
-#define hw_porta_cken			_xob1, rcc, apb2enr, 1, 2	/* convenient */
-#define hw_portb_cken			_xob1, rcc, apb2enr, 1, 3	/* convenient */
-#define hw_portc_cken			_xob1, rcc, apb2enr, 1, 4	/* convenient */
-#define hw_portd_cken			_xob1, rcc, apb2enr, 1, 5	/* convenient */
-#define hw_porte_cken			_xob1, rcc, apb2enr, 1, 6	/* convenient */
-#define hw_portf_cken			_xob1, rcc, apb2enr, 1, 7	/* convenient */
-#define hw_portg_cken			_xob1, rcc, apb2enr, 1, 8	/* convenient */
+#define hw_porta_cken			_xb1, rcc, apb2enr, 1, 2	/* convenient */
+#define hw_portb_cken			_xb1, rcc, apb2enr, 1, 3	/* convenient */
+#define hw_portc_cken			_xb1, rcc, apb2enr, 1, 4	/* convenient */
+#define hw_portd_cken			_xb1, rcc, apb2enr, 1, 5	/* convenient */
+#define hw_porte_cken			_xb1, rcc, apb2enr, 1, 6	/* convenient */
+#define hw_portf_cken			_xb1, rcc, apb2enr, 1, 7	/* convenient */
+#define hw_portg_cken			_xb1, rcc, apb2enr, 1, 8	/* convenient */
 
-#define hw_counter2_cken		_xob1, rcc, apb1enr, 1, 0	/* convenient */
-#define hw_counter3_cken		_xob1, rcc, apb1enr, 1, 1	/* convenient */
-#define hw_counter4_cken		_xob1, rcc, apb1enr, 1, 2	/* convenient */
-#define hw_counter5_cken		_xob1, rcc, apb1enr, 1, 3	/* convenient */
+#define hw_counter2_cken		_xb1, rcc, apb1enr, 1, 0	/* convenient */
+#define hw_counter3_cken		_xb1, rcc, apb1enr, 1, 1	/* convenient */
+#define hw_counter4_cken		_xb1, rcc, apb1enr, 1, 2	/* convenient */
+#define hw_counter5_cken		_xb1, rcc, apb1enr, 1, 3	/* convenient */
 
 
 /*  Pin functions and mappings		STM32F103-x8-xB.pdf, p. 28
@@ -228,7 +227,6 @@
  */
 #define _hw_af_porta_1_0		(gpio,wkup,(usart2,cts),(adc12,in0),(counter2,channel1),(counter2,etr))
 #define _hw_af_porta_1_1		(gpio,(usart2,rts),(adc12,in1),(counter2,channel2))
-#define _hw_af_porta_1_2		(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
 #define _hw_af_porta_1_2		(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
 #define _hw_af_porta_1_3		(gpio,(usart2,rx),(adc12,in3),(counter2,channel4))
 #define _hw_af_porta_1_4		(gpio,(spi1,nss),(usart2,ck),(adc12,in4))
@@ -264,47 +262,21 @@
 
 /*******************************************************************************
  *									       *
- *	SysTick								       *
+ *	Analog-to-digital converters					       *
  *									       *
  *******************************************************************************/
 
-/**
- * @page stm32f103
- * @section stm32f103_systick SysTick timer
- * The Cortex-M3 processor has a @ref stm32_stka "24 bit system timer".
- * 
- */
+#include "../classes/ada_1.h"
 
-#include "../classes/stka_1.h"
+#define hw_adc1				_ada, 0x40012400
+#define hw_adc2				_ada, 0x40012800
 
-/*	Object				class, address
- */
-#define hw_systick			_stka, 0xE000E010
-//#define hw_systick_irq			_irq, systick, x15, ie, if
-
-
-/**
- * @page stm32f103
- * @section stm32f103_acc Advanced-control counter-timers
- *
- * STM32F103 devices have 1 advanced-control counter-timers: @ref stm32_cta "counter1".
- *
- * @note This counter is not implemented yet.
- */
 
 /*******************************************************************************
  *									       *
- *	General-purpose counter-timers					       *
+ *	Counter-timers							       *
  *									       *
  *******************************************************************************/
-
-/**
- * @page stm32f103
- * @section stm32f103_gpc General-purpose counter-timers
- *
- * The STM32F103 devices have 3 general-purpose counter-timers: @ref stm32_cta
- * "counter2..4".
- */
 
 #include "../classes/cta_1.h"
 #include "../classes/cca_1.h"
@@ -330,9 +302,9 @@
 #define hw_counter4_channel3		_cca, counter4, 3
 #define hw_counter4_channel4		_cca, counter4, 4
 
-#define hw_counter2_remap		_xob1, afio, mapr, 2,  8
-#define hw_counter3_remap		_xob1, afio, mapr, 2, 10
-#define hw_counter4_remap		_xob1, afio, mapr, 1, 12
+#define hw_counter2_remap		_xb1, afio, mapr, 2,  8
+#define hw_counter3_remap		_xb1, afio, mapr, 2, 10
+#define hw_counter4_remap		_xb1, afio, mapr, 1, 12
 
 
 /*******************************************************************************
@@ -341,28 +313,19 @@
  *									       *
  *******************************************************************************/
 
-/**
- * @page stm32f103
- * @section stm32f103_usarts USART
- *
- * The STM32F103 devices have 5 USARTs:
- *  * @ref stm32_usarta "_usarta": usart1, usart2, usart3
- *  * @ref stm32_usarta "_usartb": usart4, usart5
- */
-
 #include "../classes/usarta_1.h"
 
 /*	Object				class, address
  */
 #define hw_usart1			_usarta, 0x40013800
-//#define hw_usart1_irq			_irq, usart1, 37, ie, if
+
 #define hw_usart1_nvic			_nvirq, 37
 #define hw_usart1_rcc			_rccen, usart1en
 
 #define hw_usart2			_usarta, 0x40004400
 #define hw_usart3			_usarta, 0x40004800
-#define hw_uart4			_uarta,	 0x40004C00
-#define hw_uart5			_uarta,	 0x40005000
+/* #define hw_uart4			_uarta,	 0x40004C00 */
+/* #define hw_uart5			_uarta,	 0x40005000 */
 
 
 #if !defined __ASSEMBLER__

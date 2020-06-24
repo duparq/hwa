@@ -17,7 +17,7 @@
  */
 
 /*
- * @page espressif_pcf2a Class _pcf2a: I/O configurator
+ * espressif_pcf2a Class _pcf2a: I/O configurator
  *
  * A class `_pcf2a` object is a I/O configurator. It configures the wake-up,
  * interrupt input, output driver, and signal source.

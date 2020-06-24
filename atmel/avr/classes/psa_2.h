@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_psa
+ * @addtogroup atmelavr_psa
  * @section atmelavr_psa_act Actions
  *
  * <br>
@@ -31,7 +31,7 @@
 
 
 /**
- * @page atmelavr_psa
+ * @addtogroup atmelavr_psa
  * @section atmelavr_psa_stop Stop
  *
  * The `turn` action can reset and stop the prescaler:
@@ -51,7 +51,7 @@
   HW_G2(_hw_turnpsa, HW_IS(,_hw_state_##v))(o,v)	\
   HW_EOL(__VA_ARGS__)
 
-#define _hw_turnpsa_0(o,v)		HW_E_VL(v, on | off)
+#define _hw_turnpsa_0(o,v)		HW_E(HW_EM_ST(v))
 #define _hw_turnpsa_1(o,v)		HW_G2(_hw_turnpsa_1,HW_A1(_hw_state_##v))(o)
 
 /*  Stopping the prescaler requires setting its `tsm` and `psr` bits to 1
@@ -64,7 +64,7 @@
 
 
 /**
- * @page atmelavr_psa
+ * @addtogroup atmelavr_psa
  * @section atmelavr_psa_acfg Configuration
  *
  * `_psa` class prescalers are all clocked by the I/O clock.
@@ -81,7 +81,7 @@
 #define _hwa_cfpsa(o,a,k,...)					\
   do { HW_B(_hwa_cfpsa_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
-#define _hwa_cfpsa_kclock_0(o,k,...)	HW_E_VL(k,clock)
+#define _hwa_cfpsa_kclock_0(o,k,...)	HW_E(HW_EM_AN(k,clock))
 
 #define _hwa_cfpsa_kclock_1(o,k,v,...)					\
   HW_B(_hwa_cfpsa_vclock_,_hw_psa_clock_##v)(o,v,__VA_ARGS__)
@@ -89,7 +89,7 @@
 #define _hw_psa_clock_ioclk		, 0
 
 #define _hwa_cfpsa_vclock_0(o,v,...)					\
-  HW_E_AVL(`clock`, v, `ioclk`)
+  HW_E(HW_EM_VAL(v,clock,(ioclk)))
 
 #define _hwa_cfpsa_vclock_1(o,v,...)					\
   HW_EOL(__VA_ARGS__)

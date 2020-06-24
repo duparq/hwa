@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_psa Class _psa: clock prescaler
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_psa Class _psa: clock prescaler
  *
  * A class `_psa` object is a resettable clock prescaler connected to the
  * I/O clock.

@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_coreb Class _coreb: core of the device
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_coreb Class _coreb: core of the device
  *
  * A class `_coreb` object is a core of the device.
  *

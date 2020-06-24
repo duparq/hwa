@@ -30,7 +30,7 @@
 
 /*  Load HWA declarations for the TCS3200
  */
-#include <hwa/tcs3200.h>
+#include <hwa/ext/tcs3200.h>
 
 
 /*  Create a 'sensor0' device of class _tcs3200a.
@@ -58,6 +58,22 @@ typedef struct {
  */
 static region_t HW_MEM_EEPROM	ee_regions[16] ;
 static uint16_t HW_MEM_EEPROM	ee_tclear_max ;
+
+
+uint8_t uart_getbyte ( )
+{
+  while ( !hw(stat,UART).rxc )
+    hw( wait, irq );
+  return hw( read, UART );
+}
+
+
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
 
 
 /*  Measure the output signal period of the sensor. As we use period ratios,
@@ -140,7 +156,7 @@ static void tx1h ( uint8_t n )
   else
     n = n - 10 + 'A' ;
 
-  hw( write, UART, n );
+  uart_putbyte( n );
 }
 
 
@@ -325,8 +341,8 @@ main ( )
 	  tx2h( rn  );
 	}
 	else
-	  hw( write, UART, '.');
-	hw( write, UART, '\n' );
+	  uart_putbyte( '.');
+	uart_putbyte( '\n' );
       }
       else if ( cmd=='r' ) {
 	/*
@@ -342,7 +358,7 @@ main ( )
 	    tx2h(r.green);
 	    tx2h(r.blue);
 	    tx2h(r.id);
-	    hw( write, UART, '\n');
+	    uart_putbyte( '\n');
 	  }
 	}
       }
@@ -356,7 +372,7 @@ main ( )
 	 *  sends several meanwhile. So, the host will have to wait a ' '
 	 *  indicating that we're listening before it completes the command.
 	 */
-	hw( write,UART, ' ');
+	uart_putbyte( ' ' );
 	/*
 	 *  Receive the remaining of the command
 	 *
@@ -407,7 +423,7 @@ main ( )
 	if ( __builtin_memcmp(&region, &region0, sizeof(region_t)) )
 	  hw( write_bytes, eeprom0, &ee_regions[rn], &region, sizeof(region) );
 
-	hw( write, UART, '\n' );
+	uart_putbyte( '\n' );
       }
       else if ( cmd=='l' ) {
 	/*
@@ -415,7 +431,7 @@ main ( )
 	 *  channel)
 	 */
 	tx4h(tclear_max);
-	hw( write,UART, '\n');
+	uart_putbyte( '\n' );
       }
       else if ( cmd=='L' ) {
 	/*
@@ -424,7 +440,7 @@ main ( )
 	/*
 	 *  Send a ' ' to indicate the host that we're now listening
 	 */
-	hw( write,UART, ' ');
+	uart_putbyte( ' ' );
 
 	/*  Receive command line
 	 */
@@ -452,22 +468,16 @@ main ( )
 	if ( max != tclear_max ) {
 	  tclear_max = max ;
 	  hw( write_bytes, eeprom0, &ee_tclear_max, &tclear_max, sizeof(tclear_max) );
-	  hw( write, UART, 'w' );
+	  uart_putbyte( 'w' );
 	}
-	hw( write, UART, '\n' );
+	uart_putbyte( '\n' );
       }
       else if ( cmd=='\n' )
-	hw( write, UART, '\n' );
+	uart_putbyte( '\n' );
       else {
       error:
-	hw( write, UART, '!' );
+	uart_putbyte( '!' );
       }
     }
   }
 }
-
-hw( configure, sensor0, filter, clear ); tclear = measure();
-
-HW_SHOW( HW_X(sensor0) );
-
-HW_SHOW( HW_X(sensor0,s0) );

@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_spia Class _spia: Serial Peripheral Interface
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_spia Class _spia: Serial Peripheral Interface
  *
  * A class `_spia` object is a Serial Peripheral Interface. It has the following
  * relatives:
@@ -28,7 +29,7 @@
 
 
 /**
- * @page atmelavr_spia
+ * @addtogroup atmelavr_spia
  * @par Interrupts
  *
  * Class `_spia` objects can trigger the following IRQs:

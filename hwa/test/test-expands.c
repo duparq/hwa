@@ -2,35 +2,35 @@
 //#include <hwa/stm32f103rbt6.h>
 
 
-#define HW_E_KW(x)			HW_E(expected a keyword instead of HW_Q(x))
+/* #define HW_E_KW(x)			HW_E(expected a keyword instead of HW_Q(x)) */
 
   
-/*  Branch depending on a key
- *
- *    HW_K(f,k,x) expands to:
- *      f0 if k is not v.
- *      f1 if k is v	(there must a: #define _hw_is_k_k , 1)
- *      f2 if x is not a word (void or parenthesis)
- */
-#define HW_K(...)			_HW_K01(__VA_ARGS__,,,)
-#define _HW_K01(f,k,v,...)		_HW_K02(f,k,v,_hw_par v, 0,)
-#define _HW_K02(...)			_HW_K03(__VA_ARGS__)
-#define _HW_K03(f,k,v,z,x,...)		_HW_K03##x(f,k,v)
-#define _HW_K031(f,k,v)			HW_E_KW(v) f##2
-#define _HW_K030(f,k,v)			_HW_K04(f,k,v,_hw_is__##v, 0,)
-#define _HW_K04(...)			_HW_K05(__VA_ARGS__)
-#define _HW_K05(f,k,v,z,x,...)		_HW_K05##x(f,k,v)
-#define _HW_K051(f,k,v)			HW_E_KW(v) f##2
-#define _HW_K050(f,k,v)			_HW_K06(f,k,v,_hw_is_##k##_##v, 0,)
-#define _HW_K06(...)			_HW_K07(__VA_ARGS__)
-#define _HW_K07(f,k,v,z,x,...)		f##x
+/* /\*  Branch depending on a key */
+/*  * */
+/*  *    HW_K(f,k,x) expands to: */
+/*  *      f0 if k is not v. */
+/*  *      f1 if k is v	(there must a: #define _hw_is_k_k , 1) */
+/*  *      f2 if x is not a word (void or parenthesis) */
+/*  *\/ */
+/* #define HW_K(...)			_HW_K01(__VA_ARGS__,,,) */
+/* #define _HW_K01(f,k,v,...)		_HW_K02(f,k,v,_hw_par v, 0,) */
+/* #define _HW_K02(...)			_HW_K03(__VA_ARGS__) */
+/* #define _HW_K03(f,k,v,z,x,...)		_HW_K03##x(f,k,v) */
+/* #define _HW_K031(f,k,v)			HW_E_KW(v) f##2 */
+/* #define _HW_K030(f,k,v)			_HW_K04(f,k,v,_hw_is__##v, 0,) */
+/* #define _HW_K04(...)			_HW_K05(__VA_ARGS__) */
+/* #define _HW_K05(f,k,v,z,x,...)		_HW_K05##x(f,k,v) */
+/* #define _HW_K051(f,k,v)			HW_E_KW(v) f##2 */
+/* #define _HW_K050(f,k,v)			_HW_K06(f,k,v,_hw_is_##k##_##v, 0,) */
+/* #define _HW_K06(...)			_HW_K07(__VA_ARGS__) */
+/* #define _HW_K07(f,k,v,z,x,...)		f##x */
 
 
 #define hw_config__io1a			, _hw_cfgio1a
 
 #define _hw_cfgio1a(o,p,bn,bp,k,...)	HW_K(_hw_cfgio1a_kf,function,k)(o,(p,bn,bp),k,__VA_ARGS__)
 #define _hw_cfgio1a_kf2(...)
-#define _hw_cfgio1a_kf0(o,d,k,...)	HW_E_NIL(k,(function))
+#define _hw_cfgio1a_kf0(o,d,k,...)	HW_E(HW_EM_XNIL(k,(function)))
 #define _hw_cfgio1a_kf1(o,d,k,...)	
 
 //#define _hw_cfgio1a_kf1(o,d,k,v,...)	v
@@ -43,18 +43,18 @@
 /* hw( config, (porta,2), function, (counter2,channel3) ); */
 
 
-#define HW_V(...)			_HW_V01(__VA_ARGS__,,,)
-#define _HW_V01(v,...)			_HW_V02(v,_hw_par v, 0,)
-#define _HW_V02(...)			_HW_V03(__VA_ARGS__)
-#define _HW_V03(v,z,x,...)		_HW_V03##x(v)
-#define _HW_V031(v)			Expand v /**/
-#define _HW_V030(v)			_HW_V04(v,_hw_is__##v, 0,)
-#define _HW_V04(...)			_HW_V05(__VA_ARGS__)
-#define _HW_V05(v,z,x,...)		_HW_V05##x(v)
-#define _HW_V051(v)			HW_E_KW(v) f##2
-#define _HW_V050(v)			_HW_V06(v,_hw_is_##k##_##v, 0,)
-#define _HW_V06(...)			_HW_V07(__VA_ARGS__)
-#define _HW_V07(v,z,x,...)		f##x
+/* #define HW_V(...)			_HW_V01(__VA_ARGS__,,,) */
+/* #define _HW_V01(v,...)			_HW_V02(v,_hw_par v, 0,) */
+/* #define _HW_V02(...)			_HW_V03(__VA_ARGS__) */
+/* #define _HW_V03(v,z,x,...)		_HW_V03##x(v) */
+/* #define _HW_V031(v)			Expand v /\**\/ */
+/* #define _HW_V030(v)			_HW_V04(v,_hw_is__##v, 0,) */
+/* #define _HW_V04(...)			_HW_V05(__VA_ARGS__) */
+/* #define _HW_V05(v,z,x,...)		_HW_V05##x(v) */
+/* #define _HW_V051(v)			HW_E_KW(v) f##2 */
+/* #define _HW_V050(v)			_HW_V06(v,_hw_is_##k##_##v, 0,) */
+/* #define _HW_V06(...)			_HW_V07(__VA_ARGS__) */
+/* #define _HW_V07(v,z,x,...)		f##x */
 
 
 /* HW_V(f,); */
@@ -111,9 +111,9 @@
 
 HW_OX((porta,2),port); // _p16a,port0,(0x40010800);
 
-HW_OX(counter2,oreg); // _m111,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
+HW_OX(counter2,oreg); // _m11,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
 
-HW_OX(counter2,creg); // _m111,(counter2,creg),(counter2,creg,_r16,0x40000000 +0x00,0x03FF,0,16,0);
+HW_OX(counter2,creg); // _m11,(counter2,creg),(counter2,creg,_r16,0x40000000 +0x00,0x03FF,0,16,0);
 
 HW_OX(counter2,channel1); // _cca,counter2channel1,(counter2, 1);
 
@@ -124,21 +124,21 @@ HW_OX(counter2_channel2,ocm);
 
 HW_X(((porta,2),port)); // _p16a,port0,(0x40010800);
 
-HW_X((counter2,oreg)); // _m111,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
+HW_X((counter2,oreg)); // _m11,(counter2,oreg),(counter2,oreg,_r16,0x40000000 +0x7F,0x03,0x00,16,0);
 
-HW_X((counter2,creg)); // _m111,(counter2,creg),(counter2,creg,_r16,0x40000000 +0x00,0x03FF,0,16,0);
+HW_X((counter2,creg)); // _m11,(counter2,creg),(counter2,creg,_r16,0x40000000 +0x00,0x03FF,0,16,0);
 
 HW_X((counter2,channel1)); // _cca,counter2channel1,(counter2, 1);
 
 HW_X((counter2,channel2)); // _cca,counter2,(counter2, 2);
 
-HW_X((counter2,channel2,ocm)); // _m111,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
+HW_X((counter2,channel2,ocm)); // _m11,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
 
-HW_X(counter2,channel2,ocm); // _m111,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
+HW_X(counter2,channel2,ocm); // _m11,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
 
-#define hw_write__m111			, _hw_wrm111
+#define hw_write__m11			, _hw_wrm11
 
-hw( write, (counter2,channel2,ocm), 1); // _m111,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
+hw( write, (counter2,channel2,ocm), 1); // _m11,(counter2,creg),counter2,creg,_r16,0x40000000 +0x00,0x03FF, 0,7,13;
 
 
 /*  attinyx4
@@ -148,7 +148,7 @@ HW_X((pin,2),pcic);				// _pxa,pcic1,0x40;
 HW_X((pin,2),pcic,irq);				// _irq,pcic1_irq,3, pcic1, ie, if;
 
 HW_X((pin,13));					// _ioa,pin_13,porta, 1, 0;
-HW_X((pin,13,did));				// _m111,(shared,did),shared,did,_r8,0 +0x21,0xFF,0x00,1,0;
+HW_X((pin,13,did));				// _m11,(shared,did),shared,did,_r8,0 +0x21,0xFF,0x00,1,0;
 
 HW_CODR(_ioa,(pin,2),(portb, 1, 0),pcic);	// _pxa,pcic1,(0x40);
 HW_CODR(_ioa,(pin,2),(portb, 1, 0),pcid);	// ,((pin,2)),HW_EM((pin,2) has no relative pcid);

@@ -1,9 +1,6 @@
 
-#ifndef HWA_H
-#define HWA_H
-
 /* This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
+ * Copyright (c) 2012,2015,2020 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
@@ -13,34 +10,66 @@
  */
 
 /**
- * @page attiny45 ATtiny45
- * @section attiny45_symbols Defined symbols
+ * @ingroup attinyx5
+ * @defgroup attiny45 ATtiny45
  *
- * Symbol		       | Value
- * :---------------------------|:------------
- * `HW_DEVICE`                 |attiny45
- * `HW_DEVICE_ATTINY45`        |Void.
- * `HW_DEVICE_SIGNATURE`       |0x1E,0x92,0x06
- * `HW_DEVICE_FLASH_SIZE`      |4096
- * `HW_DEVICE_FLASH_PAGE_SIZE` |64
- * `HW_DEVICE_EEPROM_SIZE`     |256
- * `HW_DEVICE_EEPROM_PAGE_SIZE`|4
- * `HW_DEVICE_RAM_SIZE`	       |256
+ * Header file:
  *
- * See also:
- * * @ref attinyx5
- * * @subpage attiny45_20pu
+ * @code
+ * #include <hwa/attiny45.h>
+ * @endcode
+ *
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name.
+ *
+ * @{
  */
 
+/**
+ *  Name of the device (for the compiler/programmer)
+ */
 #define HW_DEVICE			attiny45
+
+/**
+ *  Device family
+ */
 #define HW_DEVICE_ATTINY45
+
+/**
+ *  Signature bytes
+ */
 #define HW_DEVICE_SIGNATURE		0x1E,0x92,0x06
+
+/**
+ *  Flash size in bytes
+ */
 #define HW_DEVICE_FLASH_SIZE		4096
+
+/**
+ *  Flash page size in bytes
+ */
 #define HW_DEVICE_FLASH_PAGE_SIZE	64
+
+/**
+ *  EEPROM size in bytes
+ */
 #define HW_DEVICE_EEPROM_SIZE		256
+
+/**
+ *  EEPROM page size in bytes
+ */
 #define HW_DEVICE_EEPROM_PAGE_SIZE	4
+
+/**
+ *  RAM size in bytes
+ */
 #define HW_DEVICE_RAM_SIZE		256
 
-#include "../../atmel/avr/devices/attinyx5.h"
+/** @} */
+/** @} */
 
-#endif
+
+#include "../../atmel/avr/devices/attinyx5.h"

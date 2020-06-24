@@ -10,30 +10,29 @@
  */
 
 /**
- * @page atmelavr_ocb
- * @section atmelavr_ocb_act Actions
+ * @addtogroup atmelavr_ocb
+ * @section atmelavr_ocbact Actions
  *
- * <br>
- * `configure`:
+ * <br><br>hwa( configure, ... ):
  *
  * @code
- * hwa( configure, (counter0,compare0),
+ * hwa( configure, (counter1,compare0),
  *
- *    [ update,	    after_top, ]
+ *    [ update,	    after_top, ]			// Default, no other choice
  *
  *  [	output
- *    | output_h,   disconnected
+ *    | output_h,   disconnected			// Default
  *		  | toggle_after_match
  *		  | clear_after_match
  *		  | set_after_match
  *		  | set_at_bottom_clear_after_match
  *		  | clear_at_bottom_set_after_match, ]
  *
- *    [ output_l,   disconnected
- *		  | clear_at_bottom_set_after_match ] );
+ *    [ output_l,   disconnected			// Default
+ *		  | clear_at_bottom_set_after_match ]
+ * );
  * @endcode
  */
-
 #define hwa_configure__ocb		, _hwa_cfocb
 
 
@@ -51,7 +50,7 @@
   HW_G2(_hwa_cfocb_vupdate,HW_IS(after_top,v))(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfocb_vupdate_0(ct,oc,v,...)				\
-  HW_E_AVL(`update`, v, `after_top`)
+  HW_E(HW_EM_VAL(v,update,(after_top)))
 
 #define _hwa_cfocb_vupdate_1(ct,oc,v,...)		\
   _hwa_cfocb_kupdate_0(ct,oc,__VA_ARGS__)
@@ -79,7 +78,7 @@
   HW_B(_hwa_cfocb_voutputh_,_hw_ocb_voutputh_##v)(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfocb_voutputh_0(ct,oc,v,...)					\
-  HW_E_AVL(`output_h` (or `output`), v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match`)
+  HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match)))
 
 #define _hwa_cfocb_voutputh_1(ct,oc,v,...)		\
   hwa->ct.compare##oc.config.outputh = HW_A1(_hw_ocb_voutputh_##v);	\
@@ -100,7 +99,7 @@
   HW_B(_hwa_cfocb_voutputl_,_hw_ocb_voutputl_##v)(ct,oc,v,__VA_ARGS__)
 
 #define _hwa_cfocb_voutputl_0(ct,oc,v,...)				\
-  HW_E_AVL(output_l, v, disconnected | clear_at_bottom_set_after_match)
+  HW_E(HW_EM_VAL( v,output_l,(disconnected,clear_at_bottom_set_after_match)))
 
 #define _hwa_cfocb_voutputl_1(ct,oc,v,...)			\
   hwa->ct.compare##oc.config.outputl = HW_A1(_hw_ocb_voutputl_##v);	\
@@ -111,10 +110,15 @@
 
 
 /**
- * @page atmelavr_ocb
+ * @addtogroup atmelavr_ocb
  *
- * <br>
- * `write`:
+ * <br><br>hw( read, ... ): get the compare value
+ *
+ * @code
+ * uint8_t ocr = hw( read, (counter0,compare0) );
+ * @endcode
+ *
+ * <br><br>hw( write, ... ), hwa( write, ... ): set the compare value
  *
  * @code
  * hw( write, (counter0,compare0), value );
@@ -122,14 +126,6 @@
  *
  * @code
  * hwa( write, (counter0,compare0), value );
- * @endcode
- *
- *
- * <br>
- * `read`:
- *
- * @code
- * uint8_t ocr = hw( read, (counter0,compare0) );
  * @endcode
  */
 #define hw_write__ocb			, _hw_write_ocb
@@ -142,22 +138,6 @@
 #define _hw_read_ocb(o,ct,oc,...)	_hw_read(ct,ocr##oc) HW_EOL(__VA_ARGS__)
 
 
-/**
- * @page atmelavr_ocb
- * @section atmelavr_ocb_st Status
- *
- * The compare event flag can be accessed through interrupt-related
- * instructions:
- *
- * @code
- * if ( hw( read,(counter0,compare0,irq) ) ) {	// Read compare IRQ flag
- *   hw( clear,(counter0,compare0,irq) );		// Clear compare IRQ flag
- *   hw( disable,(counter0,compare0,irq) );		// Disable compare IRQs
- * }
- * @endcode
- */
-
-
 /*******************************************************************************
  *									       *
  *	Context management						       *
@@ -168,8 +148,7 @@
   if ( hwa->counter.compare##oc.config.outputh != 0xFF || hwa->counter.compare##oc.config.outputl != 0xFF ) { \
     if ( hwa->counter.compare##oc.config.outputl == HW_A1(_hw_ocb_voutputl_clear_at_bottom_set_after_match) ) { \
       if ( hwa->counter.compare##oc.config.outputh != HW_A1(_hw_ocb_voutputh_set_at_bottom_clear_after_match) ) \
-	HWA_ERR("`output_h` must be `set_at_bottom_clear_after_match` "	\
-		"when `output_l` is `clear_at_bottom_set_after_match`."); \
+	HWA_E(HW_EM_3((o,oc)));					\
       _hwa_write(counter,pwm##oc,1);					\
       _hwa_write(counter,com##oc,1);					\
     }									\
@@ -202,3 +181,11 @@
     if ( hwa->counter.compare##oc.config.outputl != 0xFF && hwa->counter.compare##oc.config.outputl != 0 ) \
       _hwa( configure, (counter,compare##oc##_pin_l), mode, digital_output ); \
   }
+
+
+/**
+ * @addtogroup atmelavr_ocb
+ * @section atmelavr_ocbreg Registers
+ *
+ * Registers are hold by the parent counter.
+ */

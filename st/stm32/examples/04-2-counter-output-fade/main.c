@@ -77,6 +77,12 @@ int main ( )
   hwa( configure, LED1, function, (COUNTER,CHANNEL), mode, digital_output );
   hwa( configure, LED2, function, gpio, mode, digital_output );
 
+  /* FIXME: no error triggered when setting function gpio and (counter2,channel1) to pa0 */
+
+  //  hwa( configure, (porta,0), function, gpio, mode, digital_output );
+  /* hwa( configure, (porta,0), function, (counter2,channel1), mode, digital_output ); */
+  /* hwa( configure, (porta,0), function, (adc12,in0), mode, digital_output ); */
+
   /* hwa( configure, (portb,10), function, (counter2,channel3), mode, digital_output ); */
 
   /*  Configure and start the counter (sms=0, cms=3, opm=0, cen=1)
@@ -97,7 +103,7 @@ int main ( )
 
   hwa( commit );
 
-  hw( enable, nvic, COUNTER );
+  hw( enable, (nvic,COUNTER) );
   hw( enable, (COUNTER,irq) );
 
   /*  Sleep between IRQs.

@@ -6,20 +6,14 @@
 
 /**
  * @file
- * @brief 16-bit counter
+ * @brief Atmel AVR 16-bit counter with three compare units and one capture unit
  */
 
 /**
- * @page atmelavr_cte
- * @section atmelavr_cte_act Actions
+ * @addtogroup atmelavr_cte
+ * @section atmelavr_cteact Actions
  *
- * <br>
- * `configure`:
- *
- * __Note__ If the optionnal argument `overflow` is not stated, an acceptable value
- * will be selected according to the configuration of the compare units found in
- * the HWA context. If `overflow` is stated, the validity of its value will be
- * verified.
+ * <br><br>hwa( configure, ... ): configure the counting unit
  *
  * @code
  * hwa( configure, counter0,
@@ -27,36 +21,42 @@
  *	//  How the counter is clocked
  *	//
  *	clock,	     none			// No clock, the counter is stopped
- *		   | ioclk [/ 8|64|256|1024]	// I/O clock
+ *		   | ioclk [/ 8|64|256|1024]	// IOCLK divided by 1,8,64...
  *		   | external_rising		// External input, rising edge
  *		   | external_falling,		// External input, falling edge
  *
  *	//  How does this counter count
  *	//
- *	direction,   up_loop			// Count up and loop
+ *	direction,   up_loop			// Count from bottom to top and loop
  *		   | updown_loop,		// Count up and down alternately
  *
- *	//  Class _cte counters all count from 0
- *	//
- *    [ bottom,	     0, ]
+ *    [ bottom,	     0, ]			// Default, no other choice
  *
  *	//  The maximum value the counter reaches (the default is `max`)
  *	//
  *    [ top,	     0xFF | 0x00FF | 255	// Hardware fixed value 0x00FF
  *		   | 0x1FF | 0x01FF | 511	// Hardware fixed value 0x01FF
  *		   | 0x3FF | 0x03FF | 1023	// Hardware fixed value 0x03FF
- *		   | 0xFFFF | 65535		// Hardware fixed value 0xFFFF
- *		   | max			// Hardware fixed value 0xFFFF
+ *		   | 0xFFFF | 65535 | max	// Hardware fixed value 0xFFFF (default)
  *		   | compare0			// Value stored in the compare0 unit
  *		   | capture0, ]		// Value stored in the capture0 unit
  *
  *	//  When the overflow flag is set
  *	//
- *    [ overflow,    after_bottom		   // When the counter resets to bottom
- *		   | after_top			   // When the counter reaches the top value
- *		   | after_max ]		   // When the counter reaches its max value
- *    );
+ *    [ overflow,    after_bottom		// When the counter resets to bottom
+ *		   | after_top			// When the counter reaches the top value
+ *		   | after_max ]		// When the counter reaches its max value
+ * );
  * @endcode
+ *
+ * @note If a compare unit is used, its configuration must be done inside the
+ * same context as the counter so that HWA has all the necessary informations to
+ * choose the correct register settings.
+ *
+ * @note If the optionnal argument `overflow` is not stated, an acceptable value
+ * will be selected according to the configuration of the compare units found in
+ * the HWA context. If `overflow` is stated, the validity of its value will be
+ * verified.
  */
 #define hwa_configure__cte		, _hwa_cfcte
 
@@ -65,20 +65,20 @@
  *    Add 2 void arguments to the end of the list so that there are always
  *    3 arguments following the last non-void argument.
  */
-#define _hwa_cfcte(o,a,k,...)					\
+#define _hwa_cfcte(o,a,k,...)						\
   do { HW_B(_hwa_cfcte_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
 
-#define _hwa_cfcte_kclock_0(o,k,...)				\
-  HW_E_VL(k,clock)
+#define _hwa_cfcte_kclock_0(o,k,...)		\
+  HW_E(HW_EM_AN(k,clock))
 
 #define _hwa_cfcte_kclock_1(o,k,v,...)				\
   HW_B(_hwa_cfcte_vclock_,_hw_c1clk_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, none | ioclk [/ 8|64|256|1024] | external_falling | external_rising)
+  HW_E(HW_EM_VAL(v,clock,(none,ioclk/8,ioclk/64,ioclk/256,ioclk/1024,external_falling,external_rising)))
 
-#define _hwa_cfcte_vclock_1(o,v,k,...)					\
-  hwa->o.config.clock = HW_VF(_hw_c1clk_##v);				\
+#define _hwa_cfcte_vclock_1(o,v,k,...)				\
+  hwa->o.config.clock = HW_VF(_hw_c1clk_##v);			\
   HW_B(_hwa_cfcte_kmode_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `direction`
@@ -86,28 +86,28 @@
 #define _hw_cte_direction_up_loop	, 1
 #define _hw_cte_direction_updown_loop	, 2
 
-#define _hwa_cfcte_kmode_0(o,k,...)					\
-  HW_E_VL(k,direction)
+#define _hwa_cfcte_kmode_0(o,k,...)		\
+  HW_E(HW_EM_AN(k,direction))
 
 #define _hwa_cfcte_kmode_1(o,k,v,...)					\
   HW_B(_hwa_cfcte_vmode_,_hw_cte_direction_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfcte_vmode_0(o,v,...)					\
-  HW_E_AVL(direction, v, up_loop | updown_loop)
+#define _hwa_cfcte_vmode_0(o,v,...)			\
+  HW_E(HW_EM_VAL(v,direction,(up_loop,updown_loop)))
 
-#define _hwa_cfcte_vmode_1(o,v,k,...)					\
-  hwa->o.config.direction = HW_A1(_hw_cte_direction_##v);			\
+#define _hwa_cfcte_vmode_1(o,v,k,...)				\
+  hwa->o.config.direction = HW_A1(_hw_cte_direction_##v);	\
   HW_B(_hwa_cfcte_kbottom_,_hw_is_bottom_##k)(o,k,__VA_ARGS__)
 
 /*  Optionnal argument `bottom`
  */
-#define _hwa_cfcte_kbottom_1(o,k,v,...)		\
+#define _hwa_cfcte_kbottom_1(o,k,v,...)			\
   HW_G2(_hwa_cfcte_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
-#define _hwa_cfcte_vbottom_0(o,v,...)	\
-  HW_E_AVL(bottom, v, `0`)
+#define _hwa_cfcte_vbottom_0(o,v,...)		\
+  HW_E(HW_EM_VOAL(v,bottom,(0)))
 
-#define _hwa_cfcte_vbottom_1(o,v,k,...)	\
+#define _hwa_cfcte_vbottom_1(o,v,k,...)				\
   HW_B(_hwa_cfcte_ktop_,_hw_is_top_##k)(o,k,__VA_ARGS__)
 
 #define _hwa_cfcte_kbottom_0(o,k,...)				\
@@ -115,11 +115,11 @@
 
 /*  Optionnal argument `top`
  */
-#define _hwa_cfcte_ktop_1(o,k,v,...)					\
+#define _hwa_cfcte_ktop_1(o,k,v,...)				\
   HW_B(_hwa_cfcte_vtop_,_hw_cte_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcte_vtop_0(o,v,...)					\
-  HW_E_AVL(top, v, 0xFF | 0x1FF | 0x3FF | 0xFFFF | max | capture0 | compare0)
+  HW_E(HW_EM_VAL(v,top,(0xFF,0x1FF,0x3FF,0xFFFF,max,capture0,compare0)))
 
 #define _hwa_cfcte_vtop_1(o,v,k,...)					\
   hwa->o.config.top = HW_A1(_hw_cte_top_##v);				\
@@ -148,13 +148,13 @@
 #define _hwa_cfcte_koverflow_1(o,k,v,...)				\
   HW_B(_hwa_cfcte_voverflow_,_hw_cte_overflow_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfcte_voverflow_0(o,v,...)				\
-  HW_E_OAVL(overflow, v, after_bottom | after_top | after_max)
+#define _hwa_cfcte_voverflow_0(o,v,...)					\
+  HW_E(HW_EM_VOAL(v,overflow,(after_bottom,after_top,after_max)))
 
-#define _hwa_cfcte_voverflow_1(o,v,...)				\
+#define _hwa_cfcte_voverflow_1(o,v,...)					\
   hwa->o.config.overflow = HW_A1(_hw_cte_overflow_##v) HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfcte_koverflow_0(o,...)	\
+#define _hwa_cfcte_koverflow_0(o,...)		\
   HW_EOL(__VA_ARGS__)
 
 #define _hw_cte_overflow_after_bottom	, 0
@@ -162,8 +162,7 @@
 #define _hw_cte_overflow_after_max	, 2
 
 
-/**
- * @brief Solve and check the configuration of the counter and its compare units.
+/* Solve and check the configuration of the counter and its compare units.
  *
  * Writing code for a HW_INLINE function is more comfortable than for a
  * function-like macro but functions can not use object names. So, this
@@ -174,103 +173,110 @@
  * the objects and then can put computed registers values into the context, even
  * in the case of external register access, and display accurate error messages.
  */
-#define _hwa_solve__cte( o,a )	\
+#define _hwa_solve__cte( o,a )						\
   hwa_solve__cte_2( o, hw_##o##_compare0, hw_##o##_compare1, hw_##o##_compare2, hw_##o##_capture0 )
 
 #define _hwa_solve__cte_2(...)		_hwa_solve__cte_3(__VA_ARGS__)
 
-#define _hwa_solve__cte_3( o, compare0, compare1, compare2, ic0 )			\
+#define _hwa_solve__cte_3( o, compare0, compare1, compare2, ic0 )	\
   do {									\
-    uint8_t r = _hwa_solve_cte( &hwa->o, &hwa->compare0, &hwa->compare1, &hwa->compare2, &hwa->ic0 ); \
-    if ( r == 0 ) {							\
-      /*								\
-       *  Write solved registers					\
-       */								\
-      if ( hwa->o.solved.cs != 0xFF ) _hwa_write( o, cs, hwa->o.solved.cs ); \
-      if ( hwa->o.solved.wgm != 0xFF ) _hwa_write( o, wgm, hwa->o.solved.wgm ); \
-      if ( hwa->compare0.solved.com != 0xFF ) _hwa_write( compare0, com, hwa->compare0.solved.com ); \
-      if ( hwa->compare1.solved.com != 0xFF ) _hwa_write( compare1, com, hwa->compare1.solved.com ); \
-      if ( hwa->compare2.solved.com != 0xFF ) _hwa_write( compare2, com, hwa->compare2.solved.com ); \
-      if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write( ic0, acic, hwa->ic0.solved.acic ); \
-      if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write( ic0, ices, hwa->ic0.solved.ices ); \
-      if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write( ic0, icnc, hwa->ic0.solved.icnc ); \
-      /*								\
-       *  Configure used compare outputs as I/O outputs			\
-       */								\
-      if ( hwa->compare0.config.output != 0xFF				\
-	   && hwa->compare0.config.output != HW_A1(_hw_occ_output_disconnected) ) \
-	_hwa( configure, (compare0,pin), direction, output );		\
-      if ( hwa->compare1.config.output != 0xFF				\
-	   && hwa->compare1.config.output != HW_A1(_hw_occ_output_disconnected) ) \
-	_hwa( configure, (compare1,pin), direction, output );		\
-      if ( hwa->compare2.config.output != 0xFF				\
-	   && hwa->compare2.config.output != HW_A1(_hw_occ_output_disconnected) ) \
-	_hwa( configure, (compare2,pin), direction, output );		\
-    }									\
-    else if ( r == 1 )							\
-      HWA_ERR("`update` must be the same for both compare units of `" #o "`."); \
-    else if ( r == 2 )							\
-      HWA_ERR("WGM value could not be solved for `" #o "`.");		\
-    else if ( r == 3 )							\
-      HWA_ERR("configuration of `" #o "` is required.");		\
-    else if ( r == 4 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "`disconnected`, `toggle_after_match`, `clear_after_match`, or " \
-	      "`set_after_match`.");					\
-    else if ( r == 5 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "`disconnected`, `set_at_bottom_clear_after_match`, or "	\
-	      "`clear_at_bottom_set_after_match`.");			\
-    else if ( r == 6 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "`disconnected`, `toggle_after_match`, "			\
-	      "`set_at_bottom_clear_after_match`, or "			\
-	      "`clear_at_bottom_set_after_match`.");			\
-    else if ( r == 7 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "`disconnected`, `clear_after_match_up_set_after_match_down`, " \
-	      "or `set_after_match_up_clear_after_match_down`.");		\
-    else if ( r == 8 )							\
-      HWA_ERR("`mode` of `" #compare0 "` can be "				\
-	      "`disconnected`, `toggle_after_match`, "			\
-	      "`clear_after_match_up_set_after_match_down`, "			\
-	      "or `set_after_match_up_clear_after_match_down`.");		\
-    else if ( r == 9 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "`disconnected`, `toggle_after_match`, `clear_after_match`, or " \
-	      "`set_after_match`.");					\
-    else if ( r == 10 )							\
-      /* HWA_ERR("`mode` of `" #compare1 "` can be " */			\
-      /* "`disconnected`, `set_at_bottom_clear_after_match`, or " */	\
-      /* "`clear_at_bottom_set_after_match`."); */				\
-      HWA_ERR("when the counter is configured in normal mode, "		\
-	      "`mode` of `" #compare1 "` can be "				\
-	      "`disconnected`, `clear_after_match`, `set_after_match`, or "	\
-	      "`toggle_after_match`.");					\
-    else if ( r == 11 )							\
-      HWA_ERR("`mode` of `" #compare1 "` can be "				\
-	      "`disconnected`, `clear_after_match_up_set_after_match_down`, "	\
-	      "or `set_after_match_up_clear_after_match_down`.");		\
-    else if ( r == 12 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `update` must be `immediately`."); \
-    else if ( r == 13 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `update` must be `after_bottom`."); \
-    else if ( r == 14 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `update` must be `after_top`."); \
-    else if ( r == 15 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `overflow` must be `after_top`."); \
-    else if ( r == 16 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `overflow` must be `after_bottom`."); \
-    else if ( r == 17 )							\
-      HWA_ERR("for `" #o "`, `optionnal parameter `overflow` must be `after_max`."); \
-    else								\
-      HWA_ERR("for `" #o "`, `unknown error code`.");			\
-  } while(0)
+  uint8_t r = _hwa_solve_cte( &hwa->o, &hwa->compare0, &hwa->compare1, &hwa->compare2, &hwa->ic0 ); \
+  if ( r == 0 ) {							\
+    /*									\
+     *  Write solved registers						\
+     */									\
+    if ( hwa->o.solved.cs != 0xFF ) _hwa_write( o, cs, hwa->o.solved.cs ); \
+    if ( hwa->o.solved.wgm != 0xFF ) _hwa_write( o, wgm, hwa->o.solved.wgm ); \
+    if ( hwa->compare0.solved.com != 0xFF ) _hwa_write( compare0, com, hwa->compare0.solved.com ); \
+    if ( hwa->compare1.solved.com != 0xFF ) _hwa_write( compare1, com, hwa->compare1.solved.com ); \
+    if ( hwa->compare2.solved.com != 0xFF ) _hwa_write( compare2, com, hwa->compare2.solved.com ); \
+    if ( hwa->ic0.solved.acic != 0xFF ) _hwa_write( ic0, acic, hwa->ic0.solved.acic ); \
+    if ( hwa->ic0.solved.ices != 0xFF ) _hwa_write( ic0, ices, hwa->ic0.solved.ices ); \
+    if ( hwa->ic0.solved.icnc != 0xFF ) _hwa_write( ic0, icnc, hwa->ic0.solved.icnc ); \
+    /*									\
+     *  Configure used compare outputs as I/O outputs			\
+     */									\
+    if ( hwa->compare0.config.output != 0xFF				\
+	 && hwa->compare0.config.output != HW_A1(_hw_occ_output_disconnected) ) \
+      _hwa( configure, (compare0,pin), direction, output );		\
+    if ( hwa->compare1.config.output != 0xFF				\
+	 && hwa->compare1.config.output != HW_A1(_hw_occ_output_disconnected) ) \
+      _hwa( configure, (compare1,pin), direction, output );		\
+    if ( hwa->compare2.config.output != 0xFF				\
+	 && hwa->compare2.config.output != HW_A1(_hw_occ_output_disconnected) ) \
+      _hwa( configure, (compare2,pin), direction, output );		\
+  }									\
+  else if ( r == 1 ) /* almost copy of _hwa_solve__cta */		\
+    /* `update` must be the same for both compare units of `o`" */	\
+    HWA_E(HW_EM_ADOO(update,(o,compare0),(o,compare1)));		\
+  else if ( r == 2 )							\
+    /* "WGM value could not be solved for o" */				\
+    HWA_E(HW_EM_XSO(wgm,o));						\
+  else if ( r == 3 )							\
+    /* "configuration of `o` is required */				\
+    HWA_E(HW_EM_COR(o));						\
+  else if ( r == 4 )							\
+    HWA_E(HW_EM_AVOL(mode,compare0, (disconnected,			\
+				       toggle_after_match,		\
+				       clear_after_match,		\
+				       set_after_match)));		\
+  else if ( r == 5 )							\
+    HWA_E(HW_EM_AVOL(mode,compare0, (disconnected,			\
+				       set_at_bottom_clear_after_match, \
+				       clear_at_bottom_set_after_match))); \
+  else if ( r == 6 )							\
+    HWA_E(HW_EM_AVOL(mode,compare0, (disconnected,			\
+				       toggle_after_match,		\
+				       set_at_bottom_clear_after_match, \
+				       clear_at_bottom_set_after_match))); \
+  else if ( r == 7 )							\
+    HWA_E(HW_EM_AVOL(mode,compare0,	(disconnected,			\
+					 clear_after_match_up_set_after_match_down, \
+					 set_after_match_up_clear_after_match_down))); \
+  else if ( r == 8 )							\
+    HWA_E(HW_EM_AVOL(mode,compare0, (disconnected,			\
+				       toggle_after_match,		\
+				       clear_after_match_up_set_after_match_down, \
+				       set_after_match_up_clear_after_match_down))); \
+  else if ( r == 9 )							\
+    HWA_E(HW_EM_2(o));						\
+  else if ( r == 10 )							\
+    HWA_E(HW_EM_AVOL(mode,compare1, (disconnected,			\
+				       toggle_after_match,		\
+				       clear_after_match,		\
+				       set_after_match)));		\
+  else if ( r == 11 )							\
+    HWA_E(HW_EM_AVOL(mode,compare1, (disconnected,			\
+				       set_at_bottom_clear_after_match, \
+				       clear_at_bottom_set_after_match))); \
+  else if ( r == 12 )							\
+    HWA_E(HW_EM_AVOL(mode,compare1, (disconnected,			\
+				       clear_after_match_up_set_after_match_down, \
+				       set_after_match_up_clear_after_match_down))); \
+  else if ( r == 13 )							\
+    HWA_E(HW_EM_AOVM(update,o,immediately));				\
+  else if ( r == 14 )							\
+    HWA_E(HW_EM_AOVM(update,o,after_bottom));				\
+  else if ( r == 15 )							\
+    HWA_E(HW_EM_AOVM(update,o,after_top));				\
+  else if ( r == 16 )							\
+    HWA_E(HW_EM_AOVM(overflow,o,after_max));				\
+  else if ( r == 17 )							\
+    HWA_E(HW_EM_AOVM(overflow,o,after_top));				\
+  else if ( r == 18 )							\
+    HWA_E(HW_EM_AOVM(overflow,o,after_bottom));			\
+  else if ( r == 19 )							\
+    HWA_E(HW_EM_CMOO(compare0,compare1));				\
+  else if ( r == 20 )							\
+    HWA_E(HW_EM_CMOO(compare0,compare2));				\
+  else									\
+    HWA_E(HW_EM_X(in _hwa_solve__cta: __LINE__));			\
+  }while(0)
 
 /*	Solve the configuration of the counter with its compare and capture units
  */
 HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
-				    hwa_occ_t *compare1, hwa_occ_t *compare2, hwa_ica_t *ic0 )
+				   hwa_occ_t *compare1, hwa_occ_t *compare2, hwa_ica_t *ic0 )
 {
   c->solved.cs	 = 0xFF ;
   c->solved.wgm	 = 0xFF ;
@@ -310,15 +316,15 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
     compare_update = compare0->config.update ;
   if ( compare1->config.update != 0xFF ) {
     if ( compare_update != 0xFF && compare_update != compare1->config.update ) {
-      HWA_ERR("optionnal parameter `update` of class _occ compare unit must all be the same.");
-      return 1 ;
+      /* "optionnal parameter `update` of class _occ compare unit must all be the same." */
+      return 19 ;
     }
     compare_update = compare0->config.update ;
   }
   if ( compare2->config.update != 0xFF ) {
     if ( compare_update != 0xFF && compare_update != compare2->config.update ) {
-      HWA_ERR("optionnal parameter `update` of class _occ compare unit must all be the same.");
-      return 1 ;
+      /* "optionnal parameter `update` of class _occ compare unit must all be the same." */
+      return 20 ;
     }
     compare_update = compare0->config.update ;
   }
@@ -417,7 +423,7 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
     }
       
   if ( wgm == 0xFF )
-    return 2 ; // HWA_ERR("WGM value could not be solved for _cte class counter.");
+    return 2 ; // ("WGM value could not be solved for _cte class counter.");
   c->solved.wgm = wgm ;
 
   /*	Solve the configuration of compare output A
@@ -475,7 +481,7 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
   if ( c->config.direction != 0xFF || compare0->config.output != 0xFF || compare1->config.output != 0xFF ) {
 
     if ( c->config.direction == 0xFF )
-      return 3 ; // HWA_ERR("configuration of counter is required.");
+      return 3 ; // ("configuration of counter is required.");
 
     /*	Check compare output A
      */
@@ -486,7 +492,7 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_occ_output_set_after_match)
 	     && compare0->config.output != HW_A1(_hw_occ_output_toggle_after_match) )
 	  return 4 ;
-	/* HWA_ERR("compare output A of class _cte counter mode must be " */
+	/* ("compare output A of class _cte counter mode must be " */
 	/*	  "`disconnected`, `clear_after_match`, `set_after_match`, or " */
 	/*	  "`toggle_after_match`."); */
       }
@@ -495,9 +501,9 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_occ_output_set_at_bottom_clear_after_match)
 	     && compare0->config.output != HW_A1(_hw_occ_output_clear_at_bottom_set_after_match) )
 	  return 5 ;
-	  /* HWA_ERR("compare output A of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `set_at_bottom_clear_after_match`, or " */
-	  /*	  "`clear_at_bottom_set_after_match`."); */
+	/* ("compare output A of class _cte counter mode must be " */
+	/*	  "`disconnected`, `set_at_bottom_clear_after_match`, or " */
+	/*	  "`clear_at_bottom_set_after_match`."); */
       }
       else if ( wgm==14 ) {
 	if ( compare0->config.output != HW_A1(_hw_occ_output_disconnected)
@@ -505,19 +511,19 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_occ_output_set_at_bottom_clear_after_match)
 	     && compare0->config.output != HW_A1(_hw_occ_output_clear_at_bottom_set_after_match) )
 	  return 6 ;
-	  /* HWA_ERR("compare output A of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `toggle_after_match`, " */
-	  /*	  "`set_at_bottom_clear_after_match`, or " */
-	  /*	  "`clear_at_bottom_set_after_match`."); */
+	/* ("compare output A of class _cte counter mode must be " */
+	/*	  "`disconnected`, `toggle_after_match`, " */
+	/*	  "`set_at_bottom_clear_after_match`, or " */
+	/*	  "`clear_at_bottom_set_after_match`."); */
       }
       else if ( wgm==1 || wgm==2 || wgm==3 ) {
 	if ( compare0->config.output != HW_A1(_hw_occ_output_disconnected)
 	     && compare0->config.output != HW_A1(_hw_occ_output_clear_after_match_up_set_after_match_down)
 	     && compare0->config.output != HW_A1(_hw_occ_output_set_after_match_up_clear_after_match_down) )
 	  return 7 ;
-	  /* HWA_ERR("compare output A of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `clear_after_match_up_set_after_match_down`, " */
-	  /*	  "or `set_after_match_up_clear_after_match_down`."); */
+	/* ("compare output A of class _cte counter mode must be " */
+	/*	  "`disconnected`, `clear_after_match_up_set_after_match_down`, " */
+	/*	  "or `set_after_match_up_clear_after_match_down`."); */
       }
       else if ( wgm==8 || wgm==10 ) {
 	if ( compare0->config.output != HW_A1(_hw_occ_output_disconnected)
@@ -525,15 +531,15 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 	     && compare0->config.output != HW_A1(_hw_occ_output_clear_after_match_up_set_after_match_down)
 	     && compare0->config.output != HW_A1(_hw_occ_output_set_after_match_up_clear_after_match_down) )
 	  return 8 ;
-	  /* HWA_ERR("compare output A of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `toggle_after_match`, " */
-	  /*	  "`clear_after_match_up_set_after_match_down`, " */
-	  /*	  "or `set_after_match_up_clear_after_match_down`."); */
+	/* ("compare output A of class _cte counter mode must be " */
+	/*	  "`disconnected`, `toggle_after_match`, " */
+	/*	  "`clear_after_match_up_set_after_match_down`, " */
+	/*	  "or `set_after_match_up_clear_after_match_down`."); */
       }
       //    else if ( c->top == HW_A1(_hw_cte_top_compare0)
       else if ( compare0->config.output )
 	return 9 ;
-	/* HWA_ERR("can not use of `compare_a` as both top value and output of class _cte counter."); */
+      /* ("can not use of `compare_a` as both top value and output of class _cte counter."); */
     }
 
     /*	Check compare output B
@@ -545,27 +551,27 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 	     && compare1->config.output != HW_A1(_hw_occ_output_set_after_match)
 	     && compare1->config.output != HW_A1(_hw_occ_output_toggle_after_match) )
 	  return 10 ;
-	  /* HWA_ERR("compare output B of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `clear_after_match`, `set_after_match`, or " */
-	  /*	  "`toggle_after_match`."); */
+	/* ("compare output B of class _cte counter mode must be " */
+	/*	  "`disconnected`, `clear_after_match`, `set_after_match`, or " */
+	/*	  "`toggle_after_match`."); */
       }
       else if ( wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15 ) {
 	if ( compare1->config.output != HW_A1(_hw_occ_output_disconnected)
 	     && compare1->config.output != HW_A1(_hw_occ_output_set_at_bottom_clear_after_match)
 	     && compare1->config.output != HW_A1(_hw_occ_output_clear_at_bottom_set_after_match) )
 	  return 11 ;
-	  /* HWA_ERR("compare output B of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `set_at_bottom_clear_after_match`, or " */
-	  /*	  "`clear_at_bottom_set_after_match`."); */
+	/* ("compare output B of class _cte counter mode must be " */
+	/*	  "`disconnected`, `set_at_bottom_clear_after_match`, or " */
+	/*	  "`clear_at_bottom_set_after_match`."); */
       }
       else /* if ( wgm==1 || wgm==2 || wgm==3 || wgm==8 || wgm==9 || wgm==10 || wgm==11 ) */ {
 	if ( compare1->config.output != HW_A1(_hw_occ_output_disconnected)
 	     && compare1->config.output != HW_A1(_hw_occ_output_clear_after_match_up_set_after_match_down)
 	     && compare1->config.output != HW_A1(_hw_occ_output_set_after_match_up_clear_after_match_down) )
 	  return 12 ;
-	  /* HWA_ERR("compare output B of class _cte counter mode must be " */
-	  /*	  "`disconnected`, `clear_after_match_up_set_after_match_down`, " */
-	  /*	  "or `set_after_match_up_clear_after_match_down`."); */
+	/* ("compare output B of class _cte counter mode must be " */
+	/*	  "`disconnected`, `clear_after_match_up_set_after_match_down`, " */
+	/*	  "or `set_after_match_up_clear_after_match_down`."); */
       }
     }
 
@@ -575,20 +581,20 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
       if ( wgm==0 || wgm==4 || wgm==12 ) {
 	if ( compare_update != HW_A1(_hw_occ_update_immediately) )
 	  return 13 ;
-	  /* HWA_ERR("optionnal parameter `update` of class _cte counter must be "\ */
-	  /*	  "`immediately`."); */
+	/* ("optionnal parameter `update` of class _cte counter must be "\ */
+	/*	  "`immediately`."); */
       }
       else if ( wgm==8 || wgm==9 ) {
 	if ( compare_update != HW_A1(_hw_occ_update_after_bottom) )
 	  return 14 ;
-	  /* HWA_ERR("optionnal parameter `update` of class _cte counter must be " */
-	  /*	  "`after_bottom`."); */
+	/* ("optionnal parameter `update` of class _cte counter must be " */
+	/*	  "`after_bottom`."); */
       }
       else
 	if( compare_update != HW_A1(_hw_occ_update_after_top) )
 	  return 15 ;
-	  /* HWA_ERR("optionnal parameter `update` of class _cte counter must be " */
-	  /*	  "`after_top`."); */
+      /* ("optionnal parameter `update` of class _cte counter must be " */
+      /*	  "`after_top`."); */
     }
 
     /*	Overflow
@@ -597,19 +603,19 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
       if ( (wgm==0 || wgm==4 || wgm==12) ) {
 	if ( overflow != HW_A1(_hw_cte_overflow_after_max) )
 	  return 16 ;
-	  /* HWA_ERR("optionnal parameter `overflow` of class _cte counter must be " */
-	  /*	  "`after_max`."); */
+	/* ("optionnal parameter `overflow` of class _cte counter must be " */
+	/*	  "`after_max`."); */
       }
       else if ( (wgm==5 || wgm==6 || wgm==7 || wgm==14 || wgm==15) ) {
 	if ( overflow != HW_A1(_hw_cte_overflow_after_top) )
 	  return 17 ;
-	  /* HWA_ERR("optionnal parameter `overflow` of class _cte counter must be " */
-	  /*	  "`after_top`."); */
+	/* ("optionnal parameter `overflow` of class _cte counter must be " */
+	/*	  "`after_top`."); */
       }
       else if ( overflow != HW_A1(_hw_cte_overflow_after_bottom) )
 	return 18 ;
-	/* HWA_ERR("optionnal parameter `overflow` of class _cte counter must be " */
-	/*	"`after_bottom`."); */
+      /* ("optionnal parameter `overflow` of class _cte counter must be " */
+      /*	"`after_bottom`."); */
     }
   }
 
@@ -618,61 +624,32 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
 
 
 /**
- * @page atmelavr_cte
+ * @addtogroup atmelavr_cte
  *
- * <br>
- * `read`:
+ * <br><br>hw( read, ... ): get the count
  *
- * The count value is accessible for reading and writing through the following
- * instructions:
- */
-
-/**
- * @page atmelavr_cte
  * @code
- * hw( read, counter0 );
+ * uint8_t n = hw( read, counter0 );
+ * @endcode
+ *
+ * <br><br>hw( write, ... ), hwa( write, ... ): set the count
+ *
+ * @code
+ * hw( write, counter0, value );
+ * @endcode
+ *
+ * @code
+ * hwa( write, counter0, value );
  * @endcode
  */
 #define hw_read__cte			, _hw_read_cte
 #define _hw_read_cte(o,a,...)	_hw_read(o,count) HW_EOL(__VA_ARGS__)
 
-
-/**
- * @page atmelavr_cte
- *
- * <br>
- * `write`:
- *
- * @code
- * hw( write, counter0, value );
- * @endcode
- */
 #define hw_write__cte			, _hw_write_cte
 #define _hw_write_cte(o,a,v,...)	_hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
-/**
- * @page atmelavr_cte
- * @code
- * hwa( write, counter0, value );
- * @endcode
- */
 #define hwa_write__cte			, _hwa_write_cte
 #define _hwa_write_cte(o,a,v)	_hwa_write(o,count,v)
-
-
-/**
- * @page atmelavr_cte
- * @section atmelavr_cte_st Status
- *
- * The overflow flag can be accessed through interrupt-related instructions:
- *
- * @code
- * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
- *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
- *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
- * }
- * @endcode
- */
 
 
 /*******************************************************************************
@@ -681,38 +658,39 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cte(o,a)		\
-  _hwa_setup_r( o, ccra	    );		\
-  _hwa_setup_r( o, ccrb	    );		\
-  _hwa_setup_r( o, ccrc	    );		\
-  _hwa_setup_r( o, count    );		\
-  _hwa_setup_r( o, imsk	    );		\
-  _hwa_setup_r( o, ifr	    );		\
+#define _hwa_setup__cte(o,a)			\
+  _hwa_setup_r( o, ccra	 );			\
+  _hwa_setup_r( o, ccrb	 );			\
+  _hwa_setup_r( o, ccrc	 );			\
+  _hwa_setup_r( o, count );			\
+  _hwa_setup_r( o, imsk	 );			\
+  _hwa_setup_r( o, ifr	 );			\
   hwa->o.config.clock	  = 0xFF;		\
   hwa->o.config.direction = 0xFF;		\
   hwa->o.config.top	  = 0xFF;		\
   hwa->o.config.overflow  = 0xFF
 
 #define _hwa_init__cte(o,a)			\
-  _hwa_init_r( o, ccra, 0x00 );		\
-  _hwa_init_r( o, ccrb, 0x00	   );		\
-  _hwa_init_r( o, ccrc, 0x00	   );		\
-  _hwa_init_r( o, count, 0x00	   );		\
-  _hwa_init_r( o, imsk, 0x00	   );		\
-  _hwa_init_r( o, ifr, 0x00	   )
+  _hwa_init_r( o, ccra, 0x00  );		\
+  _hwa_init_r( o, ccrb, 0x00  );		\
+  _hwa_init_r( o, ccrc, 0x00  );		\
+  _hwa_init_r( o, count, 0x00 );		\
+  _hwa_init_r( o, imsk, 0x00  );		\
+  _hwa_init_r( o, ifr, 0x00   )
 
-#define _hwa_commit__cte(o,a)		\
-  _hwa_commit_r( o, ccra     );		\
-  _hwa_commit_r( o, ccrb     );		\
-  _hwa_commit_r( o, ccrc     );		\
-  _hwa_commit_r( o, count    );		\
-  _hwa_commit_r( o, imsk     )
+#define _hwa_commit__cte(o,a)			\
+  _hwa_commit_r( o, ccra  );			\
+  _hwa_commit_r( o, ccrb  );			\
+  _hwa_commit_r( o, ccrc  );			\
+  _hwa_commit_r( o, count );			\
+  _hwa_commit_r( o, imsk  )
+
 
 /**
- * @page atmelavr_cte
- * @section atmelavr_cte_internals Internals
+ * @addtogroup atmelavr_cte
+ * @section atmelavr_cteregs Registers
  *
- * Class `_cte` objects hold the following hardware registers:
+ * Hardware registers:
  *
  *  * `ccra`: control register a
  *  * `ccrb`: control register b
@@ -721,7 +699,7 @@ HW_INLINE uint8_t _hwa_solve_cte ( hwa_cte_t *c, hwa_occ_t *compare0,
  *  * `ifr`: interrupt flag register
  *  * `imsk`: interrupt flag register
  *
- * that hold the following logical registers:
+ * Logical registers:
  *
  *  * `wgm`: counting and waveform generation mode
  *  * `cs`: clock selection

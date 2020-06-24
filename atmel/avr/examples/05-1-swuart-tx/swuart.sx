@@ -9,4 +9,4 @@
 
 //#define SWUART_COMPUTE_CYCLES
 
-#include <hwa/swuarta.sx>
+#include <hwa/ext/swuarta.sx>

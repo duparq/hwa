@@ -3,7 +3,7 @@
 #
 SOURCES		=	main.c
 
-BOARD		= 	nanodccduino
+BOARD		?= 	nanodccduino
 
 CONFIG		=	HW_DEVICE			\
 			HW_SYSHZ

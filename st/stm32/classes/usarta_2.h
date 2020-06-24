@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_usarta
+ * @ingroup stm32_classes
+ * @addtogroup stm32_usarta
  * @section stm32_usarta_actions Actions
  *
  * `configure`:
@@ -51,25 +52,25 @@
 #define _hw_cfusarta(o,a,k,...)		do{ HW_B(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfusarta(o,a,k,...)	do{ HW_B(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 #else
-#define _hw_cfusarta(o,a,k,...)		HW_E_TBI()
-#define _hwa_cfusarta(o,a,k,...)	HW_E_TBI()
+#define _hw_cfusarta(o,a,k,...)		HW_E(HW_EM_NIY())
+#define _hwa_cfusarta(o,a,k,...)	HW_E(HW_EM_NIY())
 #endif
 
 /*  At least one keyword
  */
-#define _hwx_cfusarta_k_1(h,o,k,...)	HW_E_ML((clock,reload))
+#define _hwx_cfusarta_k_1(h,o,k,...)	HW_E(HW_EM_AML((clock,reload,run)))
 #define _hwx_cfusarta_k_0(h,o,k,...)	HW_B(_hwx_cfusarta_kclk_,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `clock`
  */
 #define _hwx_cfusarta_kclk_1(h,o,k,v,...)	HW_B(_hwx_cfusarta_vclk_,_hw_cfusarta_clk_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfusarta_vclk_0(h,o,v,...)	HW_E_NIL(v,(apb1))
+#define _hwx_cfusarta_vclk_0(h,o,v,...)	HW_E(HW_EM_XNIL(v,(apb1)))
 #define _hwx_cfusarta_vclk_1(h,o,v,...)	_hwx_cfusarta_vclk_2(h,o,v,_hw_cfusarta_clk_##v,__VA_ARGS__)
 #define _hwx_cfusarta_vclk_2(...)		_hwx_cfusarta_vclk_3(__VA_ARGS__)
 #define _hwx_cfusarta_vclk_3(h,o,v,z,xv,k,...)				\
   if	  ( 8*xv == 17 ) h##_write(o,clksource,0);			\
   else if (   xv == 17 ) h##_write(o,clksource,1);			\
-  else HWA_E_NIL(v,(ahb/8, ahb));					\
+  else HWA_E(HW_EM_VAL(v,clock,(ahb/8, ahb)));				\
   HW_B(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfusarta_kclk_0(h,o,k,...)	HW_B(_hwx_cfusarta_krld_,_hw_is_reload_##k)(h,o,k,__VA_ARGS__)
@@ -86,12 +87,12 @@
  */
 #define _hwx_cfusarta_krn_0(h,o,k,...)	HW_EOL(k)
 #define _hwx_cfusarta_krn_1(h,o,k,v,...)	HW_B(_hwx_cfusarta_vrn_,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfusarta_vrn_0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_cfusarta_vrn_0(h,o,v,...)	HW_E(HW_EM_ST(v))
 #define _hwx_cfusarta_vrn_1(h,o,v,g,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(g)
 
 
 /**
- * @page stm32_usarta
+ * @addtogroup stm32_usarta
  *
  * `read:`
  * @code
@@ -103,8 +104,8 @@
 
 
 /**
- * @page stm32_usarta
- * @section Interrupts
+ * @addtogroup stm32_usarta
+ * @section stm32_usartairq Interrupts
  * @code
  * hw | hwa ( turn, (systick,irq), on | off );
  * @endcode
@@ -112,7 +113,7 @@
 
 
 /**
- * @page stm32_usarta
+ * @addtogroup stm32_usarta
  * <br>
  * @code
  * if ( hw( read, (systick,irq) )	// Reading the flag clears it
@@ -123,8 +124,8 @@
 
 
 /**
- * @page stm32_usarta
- * @section Registers
+ * @addtogroup stm32_usarta
+ * @section stm32_usartareg Registers
  * 
  *   * sr
  *     * cts

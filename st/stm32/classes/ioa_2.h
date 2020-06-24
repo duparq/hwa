@@ -13,37 +13,62 @@
 #define hw_write__ioa			, _hw_wrioa
 #define hwa_write__ioa			, _hwa_wrioa
 #define hw_toggle__ioa			, _hw_tgioa
-#define hwa_toggle__ioa		, _hwa_tgioa
+#define hwa_toggle__ioa			, _hwa_tgioa
 
 
 /**
- * @page stm32_ioa
- * @section stm32_ioa_actions Actions
+ * @ingroup stm32_classes
+ * @addtogroup stm32_ioa
+ * @section stm32_ioaact Actions
  *
- * `configure`: configure one set of consecutive pins in the same port.
- *
- * @note You can not map one signal to a set of multiple pins.
- * @note You can not map one signal to one pin with hw(). Use hwa() instead.
+ * <br><br>hw( configure, ... ) configures one set of consecutive pins in the
+ * same port assuming the `gpio` function:
  *
  * @code
- * hw | hwa( configure,	  (porta,0),
+ * hw( configure,   (porta,0),
  *
- *	   [ function,	  gpio						// Default
- *			| (controller,...), ]				// Alternate function
+ *   [ function,    gpio, ]					// Default
  *
- *	     mode,	  digital_input | digital_input_floating	// Default
- *			| digital_input_pullup
- *			| digital_input_pulldown
- *			| analog_input
- *			| digital_output | digital_output_pushpull
- *			| digital_output_opendrain,
+ *     mode,	    digital_input | digital_input_floating	// Default
+ *		  | digital_input_pullup
+ *		  | digital_input_pulldown
+ *		  | analog_input
+ *		  | digital_output | digital_output_pushpull
+ *		  | digital_output_opendrain,
  *
- *	     // Only for output modes
- *	     //
- *	   [ frequency,	  2MHz | lowest
- *			| 10MHz						// Default
- *			| 50MHz | highest ] );
+ *     // Only for output modes
+ *     //
+ *   [ frequency,   2MHz | lowest
+ *		  | 10MHz					// Default
+ *		  | 50MHz | highest ]
+ * );
  * @endcode
+ *
+ * <br><br>hwa( configure, ... ) configures one set of consecutive pins in the
+ * same port, can set alternate function (remapping):
+ *
+ * @code
+ * hwa( configure,   (porta,0),
+ *
+ *    [ function,    gpio					// Default
+ *		   | (controller,...), ]			// Alternate function
+ *
+ *	mode,	     digital_input | digital_input_floating	// Default
+ *		   | digital_input_pullup
+ *		   | digital_input_pulldown
+ *		   | analog_input
+ *		   | digital_output | digital_output_pushpull
+ *		   | digital_output_opendrain,
+ *
+ *	// Only for output modes
+ *	//
+ *    [ frequency,   2MHz | lowest
+ *		   | 10MHz					// Default
+ *		   | 50MHz | highest ]
+ * );
+ * @endcode
+ *
+ * @note You can not map one signal to multiple pins.
  */
 
 
@@ -62,16 +87,17 @@
   }while(0)
 
 /*  Transaction. Handle signals remapping.
+ *    TODO: verify how errors are triggered at different levels of parsing
  */
 #define hwa_configure__ioa			, _hwa_cfioa
 #define _hwa_cfioa(o,p,bn,...)			_HW_B(_hwa_cfioa,_hw_is_1_##bn)(o,p,bn,__VA_ARGS__)
 #define _hwa_cfioa0(...)			do{ uint8_t cnf, mode, odr=0 ; _hwa_cfioa_(0,__VA_ARGS__); }while(0)
-#define _hwa_cfioa1(...)				\
+#define _hwa_cfioa1(o,p,bn,bp,...)			\
   do{							\
     uint8_t __attribute__((unused)) cnf, mode, odr=0 ;	\
-    _hwa_cfioa_(1,__VA_ARGS__);			\
+    _hwa_cfioa_(1,o,p,bn,bp,__VA_ARGS__);		\
     if ( hwa->map.error )				\
-      HWA_E(signal remapping failed [_hwa_cfioa1]);	\
+      HWA_E(HW_EM_PMAP((o,bp)));			\
   }while(0)
 
 
@@ -87,22 +113,22 @@
  *    Value is not a (). Must be 'gpio'. Can drop the indicator 'x'. Indicate default function with 'df'
  */
 #define _hwa_cfioa_vfn0(x,va,v,...)		HW_BW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
-#define _hwa_cfioa_vfn00(va,v,...)		HW_E_NIL(v,(gpio))
+#define _hwa_cfioa_vfn00(va,v,...)		HW_E(HW_EM_VAL(v,function,(gpio)))
 #define _hwa_cfioa_vfn01(va,v,k,...)		HW_BW(_hwa_cfioa_kmd,mode,k)(df,HW_RP va,k,__VA_ARGS__)
 /*
  *    Value is a (). Verify that indicator 'x' is 1 before trying to process signal mapping.
  */
 #define _hwa_cfioa_vfn1(x,va,...)		_hwa_cfioa_vfn1##x(va,__VA_ARGS__)
-#define _hwa_cfioa_vfn10(...)			HW_E(can not remap multiple pins or one pin out of a HWA context)
+#define _hwa_cfioa_vfn10(...)			HW_E(HW_EM_1)
 /*
- *      OK, get the signal name.
+ *	OK, get the signal name.
  */
 #define _hwa_cfioa_vfn11(va,v,...)		_hwa_cfioa_vfn2(va,(__VA_ARGS__),v,HW_X(v))
 #define _hwa_cfioa_vfn2(...)			_hwa_cfioa_vfn3(__VA_ARGS__)
 #define _hwa_cfioa_vfn3(va1,va2,v,c,...)	_HW_B(_hwa_cfioa_vfn3,c)(va1,va2,v,c,__VA_ARGS__)
 #define _hwa_cfioa_vfn31(va1,va2,v,...)		HW_E(HW_Q(v) is not a signal)
 /*
- *      Record association of signal to pin. Verification and processing is made by commit.
+ *	Record association of signal to pin. Verification and processing is made by commit.
  */
 #define _hwa_cfioa_vfn30(va1,va2,v,c,n,...)	_hwa_cfioa_vfn32(HW_RP va1,v,n,HW_RP va2)
 #define _hwa_cfioa_vfn32(...)			_hwa_cfioa_vfn33(__VA_ARGS__)
@@ -110,7 +136,7 @@
   if ( hwa->map.n == 0 )					\
     hwa->map.n = HW_ADDRESS((p,bn,bp));				\
   else if ( hwa->map.n != HW_ADDRESS((p,bn,bp)) )		\
-    HWA_E(signal is already mapped to another pin);		\
+    HWA_E(HW_EM_PMAP((p,bp)));					\
   HW_BW(_hwa_cfioa_kmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
 
 #define _hwa_cfioa_kfn0(x,va,...)		_hwa_cfioa_kfn2(HW_RP va,__VA_ARGS__)
@@ -119,13 +145,14 @@
 /*
  *  Mandatory argument 'mode'. Can drop 'o'.
  */
-#define _hwa_cfioa_kmd0(f,o,p,bn,bp,k,v,...)	HW_E_K(mode,k)
+#define _hwa_cfioa_kmd0(f,o,p,bn,bp,k,v,...)	HW_E(HW_EM_AN(k,mode))
 
 #define _hwa_cfioa_kmd1(...)			_hwa_cfioa_kmd2(__VA_ARGS__)
 #define _hwa_cfioa_kmd2(f,o,p,bn,bp,k,v,...)	_HW_B(_hwa_cfioa_vmd,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfioa_vmd0(f,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating,digital_input_pullup,	\
-							     digital_input_pulldown,analog_input,digital_output, \
-							     digital_output_pushpull, digital_output_opendrain))
+#define _hwa_cfioa_vmd0(f,p,bn,bp,v,...)	\
+  HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating,digital_input_pullup, \
+			 digital_input_pulldown,analog_input,digital_output, \
+			 digital_output_pushpull, digital_output_opendrain)))
 #define _hwa_cfioa_vmd1(f,p,bn,bp,v,...)	HW_G2(_hwa_cfioa,HW_A1(_hw_cfioa_##f##_##v))(p,bn,bp,__VA_ARGS__)
 /*
  *  Default/alternate function			, branch
@@ -165,16 +192,16 @@
 #define _hw_cfioa_fq_50MHz			, 3
 #define _hw_cfioa_fq_highest			, 3
 
-#define _hwa_cfioa_kfq_0(p,bn,bp,k,...)	HW_B(_hwa_cfioa_kfq0_,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioa_kfq_0(p,bn,bp,k,...)		HW_B(_hwa_cfioa_kfq0_,k)(p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioa_kfq0_1(p,bn,bp,k,...)	mode=2 ; _hwa_do_cfioa( &hwa->p, bn, bp, cnf, mode, odr )
-#define _hwa_cfioa_kfq0_0(p,bn,bp,k,...)	HW_E_K(frequency,k)
+#define _hwa_cfioa_kfq0_0(p,bn,bp,k,...)	HW_E(HW_EM_AN(k,frequency))
 
 #define _hwa_cfioa_kfq_1(p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vfq_,_hw_cfioa_fq_##v)(p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfioa_vfq_1(p,bn,bp,v,...)	mode=HW_A1(_hw_cfioa_fq_##v); _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_vfq_0(p,bn,bp,v,...)	HW_E_NIL(v,(2MHz,10MHz,50MHz))
+#define _hwa_cfioa_vfq_1(p,bn,bp,v,...)		mode=HW_A1(_hw_cfioa_fq_##v); _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
+#define _hwa_cfioa_vfq_0(p,bn,bp,v,...)		HW_E(HW_EM_VAL(v,frequency,(lowest,2MHz,10MHz,50MHz,highest)))
 
 #define _hwa_cfioa9(p,bn,bp,...)		HW_B(_hwa_cfioa9_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa9_0(p,bn,bp,g,...)		HW_E_G(g)
+#define _hwa_cfioa9_0(p,bn,bp,g,...)		HW_E(HW_EM_G(g))
 #define _hwa_cfioa9_1(p,bn,bp,g,...)		_hwa_do_cfioa( &hwa->p, bn, bp, cnf, mode, odr )
 
 
@@ -237,7 +264,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  * <br>
  * `read`:
  * @code
@@ -245,12 +272,12 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * @endcode
  */
 #define _hw_rdioa(o,p,bn,bp,...)	HW_B(_hw_rdioa_,__VA_ARGS__)(p,bn,bp,__VA_ARGS__,)
-#define _hw_rdioa_0(p,bn,bp,g,...)	HW_E_G(g)
+#define _hw_rdioa_0(p,bn,bp,g,...)	HW_E(HW_EM_G(g))
 #define _hw_rdioa_1(p,bn,bp,...)	( (_hw_read(p,idr) & ((1UL<<bn)-1)) >> bp )
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  * <br>
  * `write`:
  * @code
@@ -273,9 +300,9 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  */
 #define _hw_wrioa(o,p,bn,bp,v,g,...)		HW_B(_hwx_wrioa1_,v)(_hw,p,bn,bp,v,g)
 #define _hwa_wrioa(o,p,bn,bp,v,g,...)		HW_B(_hwx_wrioa1_,v)(_hwa,p,bn,bp,v,g)
-#define _hwx_wrioa1_1(x,p,bn,bp,v,g)		HW_E_V()
+#define _hwx_wrioa1_1(x,p,bn,bp,v,g)		HW_E(HW_EM_V)
 #define _hwx_wrioa1_0(x,p,bn,bp,v,g)		HW_B(_hwx_wrioa2_,g)(x,p,bn,bp,v,g)
-#define _hwx_wrioa2_0(x,p,bn,bp,v,g)		HW_E_G(g)
+#define _hwx_wrioa2_0(x,p,bn,bp,v,g)		HW_E(HW_EM_G(g))
 #define _hwx_wrioa2_1(x,p,bn,bp,v,g)					\
   { uint32_t v32 = (v); /* v could be volatile, boolean expr... */	\
     x##_write_m( p, bsrr, 0xffffffff,					\
@@ -284,7 +311,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * `toggle`: toggles one or several consecutive pins at once.
  *
@@ -298,7 +325,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
 /*  Use the BSRR instead of a read-modify-write on the ODR.
  */
 #define _hw_tgioa(o,p,bn,bp,g,...)		HW_B(_hw_tgioa_,g)(p,bn,bp,g)
-#define _hw_tgioa_0(p,bn,bp,g)			HW_E_G(g)
+#define _hw_tgioa_0(p,bn,bp,g)			HW_E(HW_EM_G(g))
 #define _hw_tgioa_1(p,bn,bp,g)						\
     do {								\
     uint32_t v = _hw_read(p,odr);					\
@@ -313,7 +340,7 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
 
 
 /**
- * @page stm32_ioa
+ * @addtogroup stm32_ioa
  *
  * @code
  * hwa( toggle, (porta,0) );	   //  Register _ioa, porta, 1, 0 for toggling
@@ -321,6 +348,6 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * hwa( commit );	   //  Toggle all registered pins at once
  * @endcode
  */
-#define _hwa_tgioa(o,p,bn,bp,g,...)		HW_B(_hwa_tgioa_,g)(p,bn,bp,g)
-#define _hwa_tgioa_0(p,bn,bp,g)		HW_E_G(g)
+#define _hwa_tgioa(o,p,bn,bp,g,...)	HW_B(_hwa_tgioa_,g)(p,bn,bp,g)
+#define _hwa_tgioa_0(p,bn,bp,g)		HW_E(HW_EM_G(g))
 #define _hwa_tgioa_1(p,bn,bp,g)		hwa->p.toggles |= (((1UL<<bn)-1) << bp)

@@ -42,6 +42,22 @@
 #include "config.h"
 
 
+uint8_t uart_getbyte ( )
+{
+  while ( !hw(stat,UART).rxc )
+    hw( wait, irq );
+  return hw( read, UART );
+}
+
+
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
+
+
 /*  Process received bytes. Valid sequences are:
  *
  *  'f'+al+ah+n+'\n'	Read n bytes of Flash from address al:ah
@@ -93,7 +109,7 @@ static void process ( uint8_t byte )
 	hw( erase_page,	 flash0, zpage );
 	hw( write_page,	 flash0, zpage );
 
-	hw( write, UART, '$');
+	uart_putbyte( '$');
 	return ;
       }
       else if ( buf.cmd == 'f' ) {
@@ -102,13 +118,13 @@ static void process ( uint8_t byte )
 	 */
 	while ( buf.n-- ) {
 	  uint8_t byte = hw( read, flash0, buf.addr++ );
-	  hw( write, UART,  byte );
+	  uart_putbyte(  byte );
 	}
-	hw( write, UART, '$');
+	uart_putbyte( '$');
 	return ;
       }
     }
-    hw( write, UART, '!');
+    uart_putbyte( '!');
     return ;
   }
 }
@@ -142,7 +158,7 @@ main ( )
    */
   while ( !hw(stat,UART).sync )
     hw( wait, irq );
-  hw( write, UART, '$');
+  uart_putbyte( '$');
 
   for(;;) {
     /*
@@ -155,7 +171,7 @@ main ( )
        *  MCU awakened by SWUART that has received a stop bit
        *  Get the received byte (clears rxc flag)
        */
-      process( hw( read,UART) );
+      process( uart_getbyte() );
     }
   }
 }

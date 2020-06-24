@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_pxa Class _pxa: pin change interrupt controller
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_pxa Class _pxa: pin change interrupt controller
  *
  * A class `_pxa` object is a pin change interrupt controller.
  *
@@ -24,7 +25,7 @@
 
 
 /**
- * @page atmelavr_pxa
+ * @addtogroup atmelavr_pxa
  * @par Interrupts
  *
  * Class `_pxa` objects can trigger the following IRQs as soon as the state of

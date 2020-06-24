@@ -6,66 +6,43 @@
 
 /**
  * @file
- * @brief 16-bit counter
- */
-
-/*	This is the same as _ctd but handles 3 compare outputs. May be the same
- *	code could handle both classes.
+ * @brief Atmel AVR 16-bit counter with three compare units and one capture unit
  */
 
 /**
- * @page atmelavr_cte Class _cte: 16-bit counter/timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_cte Class _cte: 16-bit counter with three compare units and one capture unit
  *
- * A class `_cte` object is a 16-bit counting unit. It has the following
- * relatives:
+ * This is the same as class @ref atmelavr_ctd "_ctd" except that it handles 3
+ * compare outputs.
  *
- *  * one prescaler, of class @ref atmelavr_psa "_psa": `prescaler`
- *
- *  * three compare units with waveform generators, of class @ref atmelavr_oca
- *    "_occ": `compare0`, `compare1`, and `compare2`
- *
- *  * one capture unit, of class @ref atmelavr_ica "_ica": `capture`
- *
- * It is used in:
+ * This class is used by:
  *
  *  * @ref atmegaxu4 : `counter1`, `counter3`
+ *
+ * @section atmelavr_cterl Relatives
+ *
+ *  * `(COUNTER,prescaler)`: class @ref atmelavr_psa "_psa" prescaler;
+ *  * `(COUNTER,compare0)`: class @ref atmelavr_occ "_occ" compare unit with waveform generator;
+ *  * `(COUNTER,compare1)`: class @ref atmelavr_occ "_occ" compare unit with waveform generator;
+ *  * `(COUNTER,compare2)`: class @ref atmelavr_occ "_occ" compare unit with waveform generator;
+ *  * `(COUNTER,capture0)`: class @ref atmelavr_ica "_ica" capture unit.
+ *
+ * @section atmelavr_cteirq Interrupts
+ *
+ *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
+ *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  */
 #define hw_class__cte
 
-
-/**
- * @page atmelavr_cte
- * @par Instructions that do not produce C code
- *
- * The `HW_BITS()` instruction returns the number of bits of the counting register:
- *
- * @code
- * #if HW_BITS( counter0 ) != 16
- * #  error You must choose a 16-bit counter!
- * #endif
- * @endcode
- */
 #define HW_BITS__cte			, _hw_bits_cte
 #define _hw_bits_cte(o,a,...)		16
 
-#define hw__cte_bits			, _hw_bits_cte
-
-
 /*  Return the counting register of a _cte
- *    HW_CODR is blued.
  */
 #define hw__cte_reg			, _hw_cte_reg
-#define _hw_cte_reg(o,a)		HW_XOR(o,count)
-
-
-/**
- * @page atmelavr_cte
- * @par Interrupts
- *
- * Class `_cte` objects can trigger the following IRQs:
- *
- *  * `counter0` or `counter0,overflow`: counter overflow
- */
+#define _hw_cte_reg(o,a)		HW_XOR(o,count)		/* HW_CODR is blued */
 
 
 #ifndef __ASSEMBLER__

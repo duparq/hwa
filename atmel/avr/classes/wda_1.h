@@ -6,18 +6,21 @@
 
 /**
  * @file
- * @brief Watchdog timer
+ * @brief Atmel AVR Watchdog timer
  */
 
 /**
- * @page atmelavr_wda Class _wda: watchdog timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_wda Class _wda: watchdog timer
  *
- * A class `_wdiga` object is a watchdog timer.
- *
- * It is used in:
+ * This is used by:
  *
  * * @ref attinyx4 : `watchdog0`
  * * @ref attinyx5 : `watchdog0`
+ *
+ * @section Interrupts
+ *
+ *  * `(watchdog0,irq)`: watchdog overflow
  */
 #define hw_class__wda
 

@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_stka Class _stka: SysTick timer (STK)
+ * @ingroup stm32_classes
+ * @defgroup stm32_stka Class _stka: SysTick timer (STK)
  */
 #define hw_class__stka
 

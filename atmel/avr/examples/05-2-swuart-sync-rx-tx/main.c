@@ -22,6 +22,14 @@
 #include "config.h"
 
 
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
+
+
 int
 main ( )
 {
@@ -33,8 +41,8 @@ main ( )
   /*  Configure the software UART
    */
   hwa( configure, UART );
-  hwa( enable, (DIABOLO_PIN_RX,pcic,irq) );
-  hwa( turn, (DIABOLO_PIN_RX,pcic), DIABOLO_PIN_RX, on );
+  hwa( enable, (DIABOLO_PIN_RX,port,pcic,irq) );
+  hwa( turn, (DIABOLO_PIN_RX,port,pcic), DIABOLO_PIN_RX, on );
 
   /*  Configure the LED pin
    */
@@ -108,14 +116,14 @@ main ( )
 	uint16_t dt ;
 
 	dt = hw( read, (UART,dtn) ) ;
-	hw( write, UART, (dt>>0) & 0xFF );
-	hw( write, UART, (dt>>8) & 0xFF );
+	uart_putbyte( (dt>>0) & 0xFF );
+	uart_putbyte( (dt>>8) & 0xFF );
 
 	dt = hw( read, (UART,dt0) ) ;
-	hw( write, UART, (dt>>0) & 0xFF );
-	hw( write, UART, (dt>>8) & 0xFF );
+	uart_putbyte( (dt>>0) & 0xFF );
+	uart_putbyte( (dt>>8) & 0xFF );
 
-	hw( write, UART,'$');
+	uart_putbyte( '$' );
 
 	hw( write, PIN_LED, 0 );
       }

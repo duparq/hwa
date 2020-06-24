@@ -10,11 +10,10 @@
  */
 
 /**
- * @page atmelavr_twia Class _twia: 2-wire interface
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_twia Class _twia: 2-wire interface
  *
- * A class `_twia` object is a 2-wire interface.
- *
- * It is used in:
+ * This class is used by:
  *
  *  * @ref atmegax8 : `twi0`
  */
@@ -51,7 +50,7 @@
 
 
 /**
- * @page atmelavr_twia
+ * @addtogroup atmelavr_twia
  * @par Interrupts
  *
  * Class `_twia` objects can trigger the following IRQs:

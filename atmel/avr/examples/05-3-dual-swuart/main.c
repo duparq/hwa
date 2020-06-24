@@ -45,6 +45,20 @@
 #endif
 
 
+void uart0_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART0).txc ) {}
+  hw( write, UART0, byte );
+}
+
+
+void uart1_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART1).txc ) {}
+  hw( write, UART1, byte );
+}
+
+
 int
 main ( )
 {
@@ -93,19 +107,25 @@ main ( )
     for(;;) {
       hw( wait, irq );
       if ( hw(stat,UART0).sync ) {
-	hw( write, UART0, '$');     /* signal the synchronization */
-	hw( write, (UART1, dt0), hw( read, (UART0, dt0) ) );
-	hw( write, (UART1, dtn), hw( read, (UART0, dtn) ) );
+	/*
+	 *  Configure UART1 with the baudrate detected on UART0
+	 */
+	uart0_putbyte( '$' );	// signal the synchronization
+	hw( write, (UART1,dt0), hw( read, (UART0,dt0) ) );
+	hw( write, (UART1,dtn), hw( read, (UART0,dtn) ) );
 	hw( write, (UART1,sync), 1 );
-	hw( write, UART1, '$');     /* signal the synchronization */
+	uart1_putbyte( '$' );	// signal the synchronization
 	break ;
       }
       if ( hw(stat,UART1).sync ) {
-	hw( write, UART1, '$');     /* signal the synchronization */
-	hw( write, (UART0, dt0), hw( read, (UART1, dt0) ) );
-	hw( write, (UART0, dtn), hw( read, (UART1, dtn) ) );
+	/*
+	 *  Configure UART0 with the baudrate detected on UART1
+	 */
+	uart1_putbyte( '$' );	// signal the synchronization
+	hw( write, (UART0,dt0), hw( read, (UART1,dt0) ) );
+	hw( write, (UART0,dtn), hw( read, (UART1,dtn) ) );
 	hw( write, (UART0,sync), 1 );
-	hw( write, UART0, '$');     /* signal the synchronization */
+	uart0_putbyte( '$' );	// signal the synchronization
 	break ;
       }
     }
@@ -124,8 +144,8 @@ main ( )
 	  break ;	/* null stop bit -> resynchronize */
 
 	uint8_t byte = hw( read, UART0 );
-	hw( write, UART0, byte );
-	hw( write, UART1, byte );
+	uart0_putbyte( byte );
+	uart1_putbyte( byte );
       }
       if ( hw(stat,UART1).rxc ) {
 	/*
@@ -135,8 +155,8 @@ main ( )
 	  break ;	/* null stop bit -> resynchronize */
 
 	uint8_t byte = hw( read, UART1 );
-	hw( write, UART1, byte );
-	hw( write, UART0, byte );
+	uart1_putbyte( byte );
+	uart0_putbyte( byte );
       }
     }
   }

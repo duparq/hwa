@@ -57,7 +57,7 @@ int main ( )
      *	When a compare-match occurs, clear the counter, clear the flag and count
      *	the elapsed millisecond
      */
-    if ( hw( read, (COUNTER,irq,COMPARE) ) ) {
+    if ( hw( read, (COUNTER,COMPARE,irq) ) ) {
       hw( write, COUNTER, 0 );
       hw( clear, (COUNTER,COMPARE,irq) );
       n++ ;

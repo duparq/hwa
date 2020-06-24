@@ -10,8 +10,8 @@
  */
 
 /**
- * @page stm32_boards
- * @section mini-stm32-v3-0 Board from www.PowerMCU.com
+ * @ingroup stm32_boards
+ * @defgroup mini-stm32-v3-0 Board from www.PowerMCU.com
  *
  * There is a STM32F103RBT6 with:
  *  * one 8 MHz crystal
@@ -24,22 +24,39 @@
  *  * two I/O LEDs: LED1 + LED2
  *  * two USB connectors
  *
- * @par 
- * @include boards/mini-stm32-v3.0.h
- * <br>
+ * @image html mini-stm32-v3.0.jpeg
+ *
+ * @{
  */
 
-/*  Device configuration
+/**
+ * @name Board description
+ * @{
+ */
+
+/**
+ * Frequency of the HSE oscillator crystal
  */
 #define HW_DEVICE_HSEHZ			8e6
+
+/**
+ * Frequency of the LSE oscillator crystal
+ */
 #define HW_DEVICE_LSEHZ			32768
 
-/*  The pin at which the LED is connected. The target device name indicates its
- *  package, then pin numbers can be used as well as pin names.
+/** @} */
+
+
+/**
+ * @name Pin definitions
+ * @{
  */
-#define LED				(porta,2)
-#define LED1				(porta,2)
-#define LED2				(porta,3)
+#define LED				(porta,2)	///< X
+#define LED1				(porta,2)	///< X
+#define LED2				(porta,3)	///< X
+
+/** @} */
+/** @} */
 
 
 /*  Include HWA definitions

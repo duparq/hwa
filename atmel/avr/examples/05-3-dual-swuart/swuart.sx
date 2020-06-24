@@ -4,8 +4,8 @@
 #include "config.h"
 
 #define UART	UART0
-#include <hwa/swuarta.sx>
+#include <hwa/ext/swuarta.sx>
 
 #undef UART
 #define UART	UART1
-#include <hwa/swuarta.sx>
+#include <hwa/ext/swuarta.sx>

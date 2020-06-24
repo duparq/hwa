@@ -10,17 +10,19 @@
  */
 
 /**
- * @page stm32_cta Class _cta: General-purpose 16-bit counter-timer
+ * @ingroup stm32_classes
+ * @defgroup stm32_cta Class _cta: General-purpose 16-bit counter-timer
  *
- * `_cta` class objects are 16-bit counters able to count up, down, and
- * up/down with a programmable auto-reload value.
+ * This class is used by:
  *
- * `_cta` counters have the following relatives:
+ * * @ref stm32f103 "STM32F103": `counter2`, `counter3`, `counter4`
  *
- * * one 16-bit prescaler,
+ * @section stm32f103_ctarel Relatives
  *
- * * 4 independent channels of capture (input) or compare (output)
- *
+ * * @ref hwa_irq "(COUNTER,irq)": counter overflow IRQ
+ * * @ref hwa_cb1 "(COUNTER,prescaler)": one 16-bit prescaler
+ * * @ref hwa_cb1 "(COUNTER,reload)": reload register (ARR)
+ * * @ref stm32_cca "(COUNTER,channel1..4)": 4 independent channels of capture (input) or compare (output)
  * * . . .
  *
  */

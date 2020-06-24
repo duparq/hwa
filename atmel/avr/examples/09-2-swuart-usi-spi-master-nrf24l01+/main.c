@@ -61,7 +61,7 @@
 /*  We need a device with an USI
  */
 #if HW_ADDRESS(usi0) == -1
-HW_E(device `HW_DEVICE` does not have a USI)
+#  error device `HW_DEVICE` does not have a USI
 #endif
 
 
@@ -69,6 +69,22 @@ HW_E(device `HW_DEVICE` does not have a USI)
  */
 #define SPI		spimaster_swclk0
 #define NRF_CSN		(pin,3)
+
+
+uint8_t uart_getbyte ( )
+{
+  while ( !hw(stat,UART).rxc )
+    hw( wait, irq );
+  return hw( read, UART );
+}
+
+
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
 
 
 int
@@ -108,22 +124,22 @@ main ( )
 
     /*	Prompt
      */
-    hw( write, UART, '$' );
+    uart_putbyte( '$' );
 
     /*	Get command
      */
-    uint8_t c = hw( read, UART );
+    uint8_t c = uart_getbyte();
     if ( c == '=' ) {
 
       /*  Number of bytes to send to SPI slave
        */
-      uint8_t ntx = hw( read, UART );
+      uint8_t ntx = uart_getbyte();
       if ( ntx < 1 || ntx > 33 )
 	goto error ;
 
       /*  Number of bytes to send back to talker
        */
-      uint8_t nrx = hw( read, UART );
+      uint8_t nrx = uart_getbyte();
       if ( nrx > 32 )
 	goto error ;
 
@@ -131,7 +147,7 @@ main ( )
        */
       hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-	c = hw( read, UART );
+	c = uart_getbyte();
 	hw( write, SPI, c );
       }
 
@@ -140,7 +156,7 @@ main ( )
       while ( nrx-- ) {
 	hw( write, SPI, 0 );
 	c = hw( read, SPI );
-	hw( write, UART, c );
+	uart_putbyte( c );
       }
       hw( write, NRF_CSN, 1 );
     }
@@ -151,8 +167,8 @@ main ( )
        */
       do {
       error:
-	hw( write, UART, '!' );
-	c = hw( read, UART );
+	uart_putbyte( '!' );
+	c = uart_getbyte();
       } while ( c != '\n' ) ;
     }
   }

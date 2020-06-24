@@ -6,10 +6,7 @@
 
 /*	Interrupts
  */
-#define hw_enable__irq			, _hw_enirq
 #define _hw_enirq(o,v,n,m,f,...)	ets_isr_unmask(1<<v)
-
-#define hw_disable__irq			, _hw_dsirq
 #define _hw_dsirq(o,v,n,m,f,...)	ets_isr_mask(1<<v)
 
 
@@ -31,24 +28,25 @@
 #define _hw_power(o,a,v,...)		HW_B(_hwx_pwr_,_hw_state_##v)(o,_hw,v,__VA_ARGS__,)
 #define _hwa_power(o,a,v,...)		HW_B(_hwx_pwr_,_hw_state_##v)(o,_hwa,v,__VA_ARGS__,)
 
-#define _hwx_pwr_0(o,x,v, ...)		HW_E_VL(v, o | off)
+#define _hwx_pwr_0(o,x,v, ...)		HW_E(HW_EM_VL(v,(on,off)))
 
 #define _hwx_pwr_1(o,x,v, ...)						\
   HW_G2(_hwx_pwr1,HW_IS(hw_error,hw_(o,prr)))(o,x,v) HW_EOL(__VA_ARGS__)
 
 /*  Register prr exists, process the instruction
  */
-#define _hwx_pwr1_0(o,x,v)	x##_write(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr1_0(o,x,v)		x##_write(o,prr,HW_A1(_hw_state_##v)==0)
 
 /*  Register prr does not exist
  */
-#define _hwx_pwr1_1(o,x,v)	HW_E(`o` does not support power management)
+#define _hwx_pwr1_1(o,x,v)		HW_E(HW_EM_FO(x##_power,o))
 
 
 /**
- * @ingroup public_ins_espressif
- * @brief Execute a block with interrupts disabled
+ * @ingroup esp8266_pub
  * @hideinitializer
+ *
+ * Execute a block with interrupts disabled
  */
 #define HW_ATOMIC(...)				\
   do{						\
@@ -60,10 +58,11 @@
 
 
 /**
- * @ingroup public_ins_espressif
- * @brief EEPROM memory segment storage
+ * @ingroup esp8266_pub
+ * @hideinitializer
  *
- * Syntax:
+ * EEPROM memory segment storage
+ *
  * @code
  * static uint16_t HW_MEM_EEPROM numbers[16] ;	// 16 16-bit numbers in EEPROM
  * @endcode
@@ -88,24 +87,24 @@
   {
 #if defined HWA_CHECK_ACCESS
     if ( ra == ~0 )
-      HWA_ERR("invalid access");
+      HWA_E(HW_EM_X("_hw_write_r8: invalid access"));
 #endif
 
 #if !defined HWA_NO_CHECK_USEFUL
     if ( mask == 0 )
-      HWA_ERR("no bit to be changed?");
+      HWA_E(HW_EM_X("_hw_write_r8: no bit to be changed?"));
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
     if ( value & (~mask) ) {
-      HWA_ERR("value overflows mask");
+      HWA_E(HW_EM_X("_hw_write_r8: value overflows mask"));
     }
 #endif
 
     /*  Verify that we do not try to set non-writeable bits
      */
     if ( (value & mask & rwm) != (value & mask) )
-      HWA_ERR("bits not writeable.");
+      HWA_E(HW_EM_X("_hw_write_r8: bits not writeable."));
 
     volatile uint8_t *p = (volatile uint8_t *)ra ;
 
@@ -156,18 +155,18 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint8_t 
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
-    HWA_ERR("invalid access");
+    HWA_E(HW_EM_X("_hw_write_r16: invalid access"));
 #endif
 
   if ( bn == 0 )
-    HWA_ERR("no bit to be changed?");
+    HWA_E(HW_EM_X("_hw_write_r16: no bit to be changed?"));
 
   /*	Mask of bits to modify
    */
   uint16_t wm = (1U<<bn)-1 ;
 
   if (v > wm)
-    HWA_ERR("value too high for number of bits");
+    HWA_E(HW_EM_X("_hw_write_r16: value too high for number of bits"));
 
   wm <<= bp ;
   v <<= bp ;
@@ -175,7 +174,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint8_t 
   /*	Check that we do not try to set non-writeable bits
    */
   if ( (v & wm & rwm) != (v & wm) )
-    HWA_ERR("bits not writeable.");
+    HWA_E(HW_EM_X("_hw_write_r16: bits not writeable."));
 
   volatile uint16_t *p = (volatile uint16_t *)ra ;
 
@@ -195,7 +194,7 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint8_t 
       *p |= wm ; /* sbi */
     else {
       if ( wm & rfm )
-	HWA_ERR("flag bit can only be cleared by writing 1 into it.");
+	HWA_E(HW_EM_X("_hw_write_r16: flag bit can only be cleared by writing 1 into it."));
       *p &= ~wm ; /* cbi */
     }
   }
@@ -238,24 +237,24 @@ HW_INLINE void _hw_write_r32 ( intptr_t ra, uint32_t rwm, uint32_t rfm, uint32_t
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
-    HWA_ERR("invalid access");
+    HWA_E(HW_EM_X("_hw_write_r32: invalid access"));
 #endif
 
 #if !defined HWA_NO_CHECK_USEFUL
   if ( mask == 0 )
-    HWA_ERR("no bit to be changed?");
+    HWA_E(HW_EM_X("_hw_write_r32: no bit to be changed?"));
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
   if ( value & (~mask) ) {
-    HWA_ERR("value overflows mask");
+    HWA_E(HW_EM_X("_hw_write_r32: value overflows mask"));
   }
 #endif
 
   /*  Verify that we do not try to set non-writeable bits
    */
   if ( (value & mask & rwm) != (value & mask) )
-    HWA_ERR("bits not writeable.");
+    HWA_E(HW_EM_X("_hw_write_r32: bits not writeable."));
 
   volatile uint32_t *p = (volatile uint32_t *)ra ;
 

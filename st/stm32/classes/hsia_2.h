@@ -10,25 +10,44 @@
  */
 
 /**
- * @page stm32_hsia Class _hsia: HSI oscillator
+ * @ingroup stm32_classes
+ * @defgroup stm32_hsia Class _hsia: HSI oscillator
  *
- * `power`:
+ * @section stm32_hsia_act Actions
+ *
+ * * Power the HSI on/off:
+ *
  * @code
- * hw | hwa ( power, hsi,   on
- *			  | off );
+ * hw|hwa( power, hsi,   on
+ *                     | off
+ * );
  * @endcode
  */
 
 /* Implemented in stm32/hwa_2.h */
 
 /**
- * @page stm32_hsia
- * <br>
- * `stat`:
+ * @addtogroup stm32_hsia
+ *
+ * * Get the status of the HSI (the only flag it
+ * contains is `ready`):
+ *
+ * @code
+ * hw_stat_t(hsi) st = hw(stat,hsi) ;
+ * @endcode
+ *
  * @code
  * while ( ! hw(stat,hsi).ready ) {}	// Wait for the HSI clock to be stable.
  * @endcode
  * <br>
+ *
+ * @section stm32_hsia_reg Registers
+ *
+ * Logical registers:
+ *
+ */
+
+/*  Status of the HSI
  */
 typedef struct {
     unsigned int _0    :  1 ;

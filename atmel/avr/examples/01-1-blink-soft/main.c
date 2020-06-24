@@ -35,10 +35,11 @@
 
 #define PERIOD			0.5
 
+
 int main ( )
 {
   hw( configure, PIN_LED, mode, digital_output );
-
+  
   for(;;) {
     hw( toggle, PIN_LED );
     hw_waste_cycles( PERIOD/2 * HW_SYSHZ );

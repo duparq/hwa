@@ -133,7 +133,7 @@
 	;;
 #undef CHECK_START
 #if CANRX
-#  if HW_ADDRESS(RXD) == HW_ADDRESS((pin,int0)) || HW_ADDRESS(RXD) == HW_ADDRESS((pin,ain1))
+#  if HW_ADDRESS(RXD) == HW_ADDRESS(pin_int0) || HW_ADDRESS(RXD) == HW_ADDRESS(pin_ain1)
 #    define CHECK_START 0
 #  else
 #    define CHECK_START 1
@@ -151,12 +151,10 @@
 #define AP(x)		HW_ADDRESS(x), HW_POSITION(x)
 
 #if CANRX
-#  undef STARTISR
-#  define STARTISR	(RXD,pcic,irq)
 #  undef START_IE
-#  define START_IE	AP((STARTISR,mask))
+#  define START_IE	AP((STARTIRQ,mask))
 #  undef START_IF
-#  define START_IF	AP((STARTISR,flag))
+#  define START_IF	AP((STARTIRQ,flag))
 #endif
 
 #undef MATCH_IE
@@ -167,7 +165,7 @@
 
 
 #if COUNT_BN != 8 && COUNT_BN != 16
-#  error HWA: size of counter for HW_SWUART must be 8 or 16 bits
+#  error HWA: size of counter for HW_SWUARTA must be 8 or 16 bits
 #endif
 
 
@@ -229,7 +227,7 @@ DATA(dtn):	.byte	0		; 1 bit duration
 #define F_RXC	 stat, 0		// RX complete (stop bit sampled)
 #define F_TXC	 stat, 1		// TX complete
 #define F_STOP	 stat, 2		// RX: Stop bit value / TX: 0 means TX fail
-#define F_SYNC	 stat, 3		// 0: swuart needs to be synced
+#define F_SYNC	 stat, 3		// 0: swuarta needs to be synced
 
 #define F_RXTX	 stat, 4		// 0==RX, 1==TX
 #define F_WBTX	 stat, 5		// 1: wait one match before tx
@@ -262,8 +260,8 @@ DATA(dtn):	.byte	0		; 1 bit duration
 	;; HW_SHOW( HW_POSITION(DBG) )
 	;; HW_SHOW(ONEWIRE)
 	;; HW_SHOW(CHECKTX)
-	;; HW_SHOW(STARTISR)
-	;; HW_SHOW(HW_X(STARTISR))
+	;; HW_SHOW(STARTIRQ)
+	;; HW_SHOW(HW_X(STARTIRQ))
 	;; HW_SHOW(START_IE)
 	;; HW_SHOW(START_IF)
 	;; HW_SHOW(MATCH_IE)

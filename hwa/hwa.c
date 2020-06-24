@@ -4,7 +4,7 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-/**
+/*
  * @file
  * @brief This file is not used yet.
  *

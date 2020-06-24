@@ -10,9 +10,8 @@
  */
 
 /**
- * @page atmelavr_boards
- *
- * @section boards_tcs3200 Board attiny84-tcs3200
+ * @ingroup atmelavr_boards
+ * @defgroup board_tcs3200 Board attiny84-tcs3200
  *
  * This is a ATTINY84A-PU on a breadboard with a USB/Serial adapter, a
  * TCS3200 color detector and 3 LED. No crystal.

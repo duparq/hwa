@@ -10,7 +10,8 @@
  */
 
 /**
- * @page espressif_iob Class _iob: General Purpose I/O definition
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_iob Class _iob: General Purpose I/O definition
  *
  * A class `_iob` object is a single or a group of consecutive pins inside the
  * same I/O port.
@@ -19,7 +20,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  * @par Instructions that do not produce C code:
  *
  * The `HW_BN()` instruction returns the number of bits of an I/O definition:
@@ -36,7 +37,7 @@
 
 
 /**
- * @page espressif_iob
+ * @addtogroup esp8266_iob
  *
  * For a group of consecutive pins, the `hw_bp()` instruction gives the position
  * of the least significant bit:
@@ -49,22 +50,3 @@
  */
 #define HW_POSITION__iob	, _hw_bp_iob
 #define _hw_bp_iob(o, cn,bn,bp,...)	bp
-
-
-/**
- * @page espressif_iob
- *
- * The `hw_rel()` instruction is usefull to retrieve the name of the I/O port
- * associated to the I/O:
- *
- * @code
- * #if hw_id((porta,3)) && hw_id(rel(hw_pa3,port)) != hw_id(port_a)
- * #  Pin PA3 should be a PORTA pin!
- * #endif
- * @endcode
- */
-#define hw_rel__iob			, _hw_rel_iob
-
-#define _hw_rel_iob(o,x,...)		HW_B(_hw_rel_iob_,_hw_is_port_##x)(o,x,__VA_ARGS__)
-#define _hw_rel_iob_1(o,x,p,...)	p
-#define _hw_rel_iob_0(o,x,...)		HW_E(`o` has no relative named `x`)

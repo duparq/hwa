@@ -6,71 +6,42 @@
 
 /**
  * @file
- * @brief 8-bit counter
+ * @brief Atmel AVR 8-bit counter with two compare units and one dead-time generator
  */
 
 /**
- * @page atmelavr_ctb Class _ctb: 8-bit counter/timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_ctb Class _ctb: 8-bit counter with two compare units and one dead-time generator
  *
- * `_ctb` objects are 8-bit counting units that have 4 relative objects:
- *  * one @ref atmelavr_psb "_psb" prescaler: `(COUNTER,prescaler)`
- *  * two @ref atmelavr_ocb "_ocb" compare units with waveform generators:
- *    `(COUNTER,compare0)` and `(COUNTER,compare1)`
- *  * one @ref atmelavr_dtga "_dtga" dead time generator: `(COUNTER,dtg)`
+ * This class is used by:
  *
- * They are used in:
  *  * @ref attinyx5 : `counter1`
+ *
+ * @section atmelavr_ctbrl Relatives
+ *
+ *  * `(COUNTER,prescaler)`: class @ref atmelavr_psb "_psb" prescaler
+ *  * `(COUNTER,compare0)`: class @ref atmelavr_ocb "_ocb" compare unit with waveform generator
+ *  * `(COUNTER,compare1)`: class @ref atmelavr_ocb "_ocb" compare unit with waveform generator
+ *  * `(COUNTER,dtg)`: class @ref atmelavr_dtga "_dtga" dead time generator
+ *
+ * @section atmelavr_ctbirq Interrupts
+ *
+ *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
+ *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  */
 #define hw_class__ctb
 
-/**
- * @page atmelavr_ctb
- * @par Instructions that do not produce C code
- *
- * The `HW_BITS()` instruction returns the number of bits of the counting register:
- *
- * @code
- * #if HW_BITS( counter0 ) != 8
- * #  error You must choose a 8-bit counter!
- * #endif
- * @endcode
- */
 #define HW_BITS__ctb			, _hw_bits_ctb
 #define _hw_bits_ctb(o,a,...)		8
 
 #define hw__ctb_bits			, _hw_bits_ctb
 
-/**
- * @page atmelavr_ctb
- * @par Interrupts
- *
- * The counting unit can trigger an @ref using_interrupts "`overflow` IRQ" when
- * it counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
- * it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
- *
- * @code
- * HW_ISR(counter0)
- * {
- *    // Process overflow event
- * }
- * @endcode
- *
- * @code
- * HW_ISR(counter0,overflow)
- * {
- *    // Process overflow event
- * }
- * @endcode
- *
- * The compare units @ref atmelavr_ocb "_ocb" can also trigger IRQs.
- */
-
 
 /*  Return the counting register of a _ctb
- *    HW_CODR is blued.
  */
 #define hw__ctb_reg			, _hw_ctb_reg
-#define _hw_ctb_reg(o,a)		HW_XOR(o,count)
+#define _hw_ctb_reg(o,a)		HW_XOR(o,count)		/* HW_CODR is blued */
 
 
 #if !defined __ASSEMBLER__

@@ -11,7 +11,7 @@
 
 
 /**
- * @page atmelavr_pxa
+ * @addtogroup atmelavr_pxa
  * @section atmelavr_pxa_act Actions
  * <br>
  *
@@ -54,16 +54,15 @@
 #define _hwx_tnpxa2(h,o,c,...)		do{ _HW_B(_hwx_tnpxa2,c)(h,o,c,__VA_ARGS__) }while(0)
 #define _hwx_tnpxa21(h,o,z,oe,e,...)	HW_E(e)
 #define _hwx_tnpxa20(h,o,c,...)		HW_BW(_hwx_tnpxa3,_ioa,c)(h,o,c,__VA_ARGS__)
-#define _hwx_tnpxa30(h,o,c,p,...)	HW_E(`p` is not an I/O pin)
-#define _hwx_tnpxa31(h,o,c,p,po,bn,bp,v,...)	HW_BV(_hwx_tnpxa4,_hw_state_,v)(h,o,bn,bp,__VA_ARGS__)	/* -> */ )
-#define _hwx_tnpxa40(v)			HW_E(HW_EM_ST(v))
-#define _hwx_tnpxa41(v)			_hwx_tnpxa42(v, HW_RP /* <- ...) */
-#define _hwx_tnpxa42(...)		_hwx_tnpxa43(__VA_ARGS__)
-#define _hwx_tnpxa43(v,h,o,bn,bp,...)	h##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*v<<bp)); HW_EOL(__VA_ARGS__)
+#define _hwx_tnpxa30(h,o,c,p,...)	HW_E(HW_EM_OT(p,gpio))
+#define _hwx_tnpxa31(h,o,c,p,po,bn,bp,v,...)	HW_BV(_hwx_tnpxa4,state_,v,h,o,bn,bp) HW_EOL(__VA_ARGS__)
+#define _hwx_tnpxa40(v,...)		HW_E(HW_EM_ST(v))
+#define _hwx_tnpxa4_(v,v_,h,o,bn,bp)	h##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*v<<bp));
+#define _hwx_tnpxa41(v,v_,h,o,bn,bp)	h##_write_m(o,msk,((1U<<bn)-1)<<bp,(((1U<<bn)-1)*v<<bp));
 
 
 /**
- * @page atmelavr_pxa
+ * @addtogroup atmelavr_pxa
  * @section atmelavr_pxa_stat Status
  *
  * The pin change IRQ flag and the enable bit can be accessed through
@@ -79,20 +78,18 @@
 
 
 /**
- * @page atmelavr_pxa
- * @section atmelavr_pxa_internals Internals
+ * @addtogroup atmelavr_pxa
+ * @section atmelavr_pxareg Registers
  *
- * Class `_pxa` objects hold the following hardware registers:
+ * Hardware registers:
  *
- *  * `msk`: mask of monitored pins
+ *  * @ref hwa_r8 "msk": mask of monitored pins
  *
- * and the following logical registers:
+ * Logical registers:
  *
- *  * `ie`: pin change IRQ mask
- *  * `if`: pin change IRQ flag
+ *  * @ref hwa_cb1 "ie": pin change IRQ mask
+ *  * @ref hwa_cb1 "if": pin change IRQ flag
  *
- * These registers are accessible through the @ref public_ins
- * "register access intructions".
  */
 
 

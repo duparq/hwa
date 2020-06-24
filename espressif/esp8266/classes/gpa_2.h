@@ -28,9 +28,3 @@
   _hwa_commit_r( o, _enb );			\
   _hwa_commit_r( o, _in );			\
   _hwa_commit_r( o, _ie )
-
-
-/**
- * @page espressif_gpa
- * <br>
- */

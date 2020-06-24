@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_psb
+ * @addtogroup atmelavr_psb
  * @section atmelavr_psb_act Actions
  *
  * <br>
@@ -51,26 +51,25 @@
 #define _hwa_cfpsb(o,a,k,...)					\
   do { HW_B(_hwa_cfpsb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,) } while(0)
 
-#define _hwa_cfpsb_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfpsb_kclock_1(o,k,v,...)		HW_B(_hwa_cfpsb_vclock_,_hw_psb_clock_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfpsb_kclock_0(o,k,...)	HW_E(HW_EM_AN(k,clock))
+#define _hwa_cfpsb_kclock_1(o,k,v,...)	HW_B(_hwa_cfpsb_vclock_,_hw_psb_clock_##v)(o,v,__VA_ARGS__)
 
 #define _hw_psb_clock_ioclk		, 0
 #define _hw_psb_clock_pll_32MHz		, 1
 #define _hw_psb_clock_pll_64MHz		, 2
 
-#define _hwa_cfpsb_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, ioclk | pll_32MHz | pll_64MHz)
+#define _hwa_cfpsb_vclock_0(o,v,...)	HW_E(HW_EM_VAL(v,clock,(ioclk,pll_32MHz,pll_64MHz)))
 
 #if HW_IS(HW_DEVICE_CLK_SRC, rc_pll_16MHz)
 #  define _hwa_cfpsb_vclock_1(o,v,...)					\
   if ( HW_A1(_hw_psb_clock_##v) == HW_A1(_hw_psb_clock_pll_32MHz) )	\
-    HWA_ERR( "`pll_32MHz` is not available when PLL is used as system clock." ); \
+    HWA_E(HW_EM_VAL(v,clock,(ioclk, pll_64MHz)));			\
   _hwa_write( o, pcke, HW_A1(_hw_psb_clock_##v) != HW_A1(_hw_psb_clock_ioclk) ); \
   HW_EOL(__VA_ARGS__)
 #else
 #  define _hwa_cfpsb_vclock_1(o,v,...)					\
   if ( HW_DEVICE_BODLEVEL==6 && HW_A1(_hw_psb_clock_##v)==HW_A1(_hw_psb_clock_pll_64MHz) ) \
-    HWA_ERR( "`pll_64MHz` is not available for suplly voltage < 2.7 V." ); \
+    HWA_E(HW_EM_VAL(v,clock,(ioclk, pll_32MHz)));			\
   if ( HW_A1(_hw_psb_clock_##v) == HW_A1(_hw_psb_clock_pll_32MHz) )	\
     _hwa_write(o,lsm,1);						\
   else if ( HW_A1(_hw_psb_clock_##v) == HW_A1(_hw_psb_clock_pll_64MHz) ) \
@@ -81,7 +80,7 @@
 
 
 /**
- * @page atmelavr_psb
+ * @addtogroup atmelavr_psb
  * @section atmelavr_psb_reset Reset
  *
  * The `reset` action resets the prescaler immediately without stopping it:

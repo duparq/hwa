@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_corec
+ * @addtogroup atmelavr_corec
  * @section atmelavr_corec_act Actions
  *
  * <br>
@@ -51,7 +51,7 @@
 #define _hwa_cfcorec_ksleep_1(o,k,v,...)				\
   HW_B(_hwa_cfcorec_vsleep_,_hw_state_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfcorec_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
+#define _hwa_cfcorec_vsleep_0(o,v,...)		HW_E(HW_EM_VL(v, (enabled,disabled)))
 #define _hwa_cfcorec_vsleep_1(o,v,k,...)				\
   _hwa_write( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcorec_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
@@ -74,14 +74,14 @@
 #define _hw_sleepmode_extended_standby	, 7
 
 #define _hwa_cfcorec_vsleepmode_0(o,v,...)				\
-  HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down | power_save | standby | extended_standby)
+  HW_E(HW_EM_VAL(v,sleep_mode,(idle,adc_noise_reduction,power_down,power_save,standby,extended_standby)))
 
 #define _hwa_cfcorec_vsleepmode_1(o,v,...)	\
   _hwa_write( o, sm, HW_A1(_hw_sleepmode_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_corec
+ * @addtogroup atmelavr_corec
  *
  * <br>
  * `wait, irq`: puts the core into sleeping mode
@@ -93,7 +93,7 @@
 
 
 /**
- * @page atmelavr_corec
+ * @addtogroup atmelavr_corec
  * @section atmelavr_corec_stat Status
  *
  * The `hw(stat,)` instruction returns the status flags of the core in a
@@ -153,7 +153,7 @@ HW_INLINE _hw_corec_stat_t _hw_corec_stat( uint8_t byte )
 
 
 /**
- * @page atmelavr_corec
+ * @addtogroup atmelavr_corec
  *
  * <br>
  * `clear`: clears the status flags all at once

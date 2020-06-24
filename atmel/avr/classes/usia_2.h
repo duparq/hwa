@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_usia
+ * @addtogroup atmelavr_usia
  * @section atmelavr_usia_act Actions
  *
  * <br>
@@ -52,32 +52,32 @@
     uint8_t mode, clock ;						\
     HW_B(_hwa_cfusia_kmode_,_hw_is_mode_##k)(o,k,__VA_ARGS__,,)		\
       } while(0)
-#define _hwa_cfusia_kmode_0(o,k,...)	HW_E_VL(k, mode)
+#define _hwa_cfusia_kmode_0(o,k,...)	HW_E(HW_EM_AN(k, mode))
 #define _hwa_cfusia_kmode_1(o,k,v,...)	HW_B(_hwa_cfusia_vmode_,_hw_usia_mode_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfusia_vmode_0(o,v,...)	HW_E_AVL(mode, v, spi_master | spi_slave)
+#define _hwa_cfusia_vmode_0(o,v,...)	HW_E(HW_EM_VAL(v,mode,(disconnected,spi_master,spi_slave,twi_master,twi_slave)))
 #define _hwa_cfusia_vmode_1(o,v,k,...)					\
   mode = HW_A1(_hw_usia_mode_##v);					\
   HW_B(_hwa_cfusia_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__)
 
-#define _hwa_cfusia_kclock_0(o,k,...)	HW_E_VL(k, clock)
+#define _hwa_cfusia_kclock_0(o,k,...)	HW_E(HW_EM_AN(k,clock))
 
 /*	Mandatory argument `clock`
  */
 #define _hwa_cfusia_kclock_1(o,k,v,...)	HW_B(_hwa_cfusia_vclock_,_hw_usia_clock_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfusia_vclock_0(o,v,...)	HW_E_AVL(clock, v, software | compare0 | external_rising | external_falling)
+#define _hwa_cfusia_vclock_0(o,v,...)	HW_E(HW_EM_VAL(v,clock,(software,compare0,external_rising,external_falling)))
 #define _hwa_cfusia_vclock_1(o,v,...)					\
   clock = HW_A1(_hw_usia_clock_##v);					\
   _hwa_docfusia(o,mode,clock) HW_EOL(__VA_ARGS__);
 
-#define _hwa_docfusia( o, mode, clock )				\
-  if ( mode != HW_A1(_hw_usia_mode_spi_master)			\
-       && mode != HW_A1(_hw_usia_mode_spi_slave) )		\
-    HWA_ERR("sorry, desired mode is not supported yet.");	\
-  if ( clock != HW_A1(_hw_usia_clock_software) )		\
-    HWA_ERR("sorry, desired clock mode is not supported yet.");	\
+#define _hwa_docfusia( o, _mode, _clock )			\
+  if ( _mode != HW_A1(_hw_usia_mode_spi_master)			\
+       && _mode != HW_A1(_hw_usia_mode_spi_slave) )		\
+    HWA_E(HW_EM_VANI(mode,_mode));				\
+  if ( _clock != HW_A1(_hw_usia_clock_software) )		\
+    HWA_E(HW_EM_VANI(clock,_clock));				\
   _hwa_write( o, wm, 1 );					\
   _hwa_write( o, cs, 2 );					\
-  if ( mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
+  if ( _mode == HW_A1(_hw_usia_mode_spi_master) ) {		\
     _hwa( configure, (o,ck), mode, digital_output );		\
     _hwa( configure, (o,do), mode, digital_output );		\
     _hwa( configure, (o,di), mode, digital_input  );		\
@@ -88,7 +88,7 @@
 
 
 /**
- * @page atmelavr_usia
+ * @addtogroup atmelavr_usia
  *
  * <br>
  * `read`:
@@ -106,7 +106,7 @@
 
 
 /**
- * @page atmelavr_usia
+ * @addtogroup atmelavr_usia
  *
  * <br>
  * `write`:
@@ -121,7 +121,7 @@
 
 
 /**
- * @page atmelavr_usia
+ * @addtogroup atmelavr_usia
  *
  * <br>
  * `trigger`:
@@ -140,7 +140,7 @@
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk
+ * @addtogroup atmelavr_usia_spimaster_swclk
  * @section atmelavr_usia_spimaster_swclk_act Actions
  *
  * <br>
@@ -167,7 +167,7 @@
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk
+ * @addtogroup atmelavr_usia_spimaster_swclk
  *
  * <br>
  * `read`:
@@ -184,7 +184,7 @@
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk
+ * @addtogroup atmelavr_usia_spimaster_swclk
  *
  * <br>
  * `write`: send one byte.

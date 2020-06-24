@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_sclka Class _sclka: SYSCLK
+ * @ingroup stm32_classes
+ * @defgroup stm32_sclka Class _sclka: SYSCLK
  *
  * `connect`:
  * @code
@@ -33,7 +34,7 @@
 #define _hw_cnsysclka(o,a,v,g,...)	HW_B(_hwx_cnsysclka1_,g)(_hw,v,g)
 #define _hwa_cnsysclka(o,a,v,g,...)	HW_B(_hwx_cnsysclka1_,g)(_hwa,v,g)
 
-#define _hwx_cnsysclka1_0(h,v,g)	HW_E_G(g)
+#define _hwx_cnsysclka1_0(h,v,g)	HW_E(HW_EM_G(g))
 #define _hwx_cnsysclka1_1(h,v,g)	HW_B(_hwx_cnsysclka2_,_hw_cnsysclka_##v)(h,v)
-#define _hwx_cnsysclka2_0(h,v)		HW_E_VL(v,hsi | hse | pll)
+#define _hwx_cnsysclka2_0(h,v)		HW_E(HW_EM_VL(v,(hsi,hse,pll)))
 #define _hwx_cnsysclka2_1(h,v)		h##_write(rcc,sw,HW_A1(_hw_cnsysclka_##v))

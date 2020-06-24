@@ -6,57 +6,42 @@
 
 /**
  * @file
- * @brief 8-bit counter
+ * @brief Atmel AVR 8-bit counter with two compare units
  */
 
 /**
- * @page atmelavr_cta Class _cta: 8-bit counter/timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_cta Class _cta: 8-bit counter with two compare units
  *
- * `_cta` objects are 8-bit counter/timers used by:
+ * This class is used by:
  *
  *  * @ref attinyx4 : `counter0`
  *  * @ref attinyx5 : `counter0`
  *  * @ref atmegax8 : `counter0`
  *  * @ref atmegaxu4 : `counter0`
  *
- * @code
- * #if HW_BITS( counter0 ) != 8
- * #  error You must choose a 8-bit counter!
- * #endif
- * @endcode
+ * @section atmelavr_ctarl Relatives
  *
- * @par Relatives
+ *  * `(COUNTER,prescaler)`: class @ref atmelavr_psa "_psa" prescaler;
+ *  * `(COUNTER,compare0)`: class @ref atmelavr_oca "_oca" compare unit with waveform generator;
+ *  * `(COUNTER,compare1)`: class @ref atmelavr_oca "_oca" compare unit with waveform generator.
  *
- * * `(COUNTER,prescaler)`: @ref atmelavr_psa "_psa" prescaler;
- * * `(COUNTER,compare0)`, `(COUNTER,compare1)`: @ref atmelavr_oca "_oca"
- *   compare units with waveform generators.
+ * @section atmelavr_ctairq Interrupts
  *
+ *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
+ *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  */
 #define hw_class__cta
 
 #define HW_BITS__cta			, _hw_bits_cta
 #define _hw_bits_cta(...)		8
 
-//#define hw__cta_bits			, _hw_bits_cta
-
-
 /*  Return the counting register of a _cta
- *    HW_CODR is blued.
  */
 #define hw__cta_reg			, _hw_cta_reg
-#define _hw_cta_reg(o,a)		HW_XOR(o,count)
+#define _hw_cta_reg(o,a)		HW_XOR(o,count) /* HW_CODR is blued */
 
-
-/**
- * @page atmelavr_cta
- * @par Interrupts
- *
- *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
- *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
- *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode;
- *  * `(COUNTER,irq,compare0)`, `(COUNTER,compare0,irq)`: triggered on compare match A
- *  * `(COUNTER,irq,compare1)`, `(COUNTER,compare1,irq)`: triggered on compare match B
- */
 
 #if !defined __ASSEMBLER__
 

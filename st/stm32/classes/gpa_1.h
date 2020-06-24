@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_gpa Class _gpa: 16-bit GPIO port
+ * @ingroup stm32_classes
+ * @defgroup stm32_gpa Class _gpa: 16-bit GPIO port
  *
  * A class `_gpa` object is a 16-bit GPIO port.
  */

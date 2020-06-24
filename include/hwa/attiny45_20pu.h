@@ -1,4 +1,3 @@
-
 /* This file is part of the HWA project.
  * Copyright (c) 2012,2015 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
@@ -6,23 +5,40 @@
 
 /**
  * @file
- * @brief ATtiny45-20PU header file
+ * @brief ATtiny45-20PU
  */
 
 /**
- * @page attiny45_20pu ATtiny45-20PU
- * @section attiny45_20pu_symbols Defined symbols
+ * @ingroup attiny45
+ * @defgroup attiny45_20pu ATtiny45-20PU
  *
- * Symbol		       | Value
- * :---------------------------|:------------
- * `HW_DEVICE_ATTINY45_20PU`   |Void.
- * `HW_DEVICE_PACKAGE_8P3`     |Void.
+ * This header file allows using the `(pin,number)` notation:
  *
- * See also:
- * * @ref attiny45
+ * @code
+ * #include <hwa/attiny45_20pu.h>
+ * @endcode
+ *
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name.
+ *
+ * @{
  */
 
+/**
+ *  Device family
+ */
 #define HW_DEVICE_ATTINY45_20PU
+
+/**
+ *  Device package
+ */
 #define HW_DEVICE_PACKAGE_8P3
+
+/** @} */
+/** @} */
+
 
 #include "attiny45.h"

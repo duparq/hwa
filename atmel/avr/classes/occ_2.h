@@ -6,34 +6,31 @@
 
 /**
  * @file
- * @brief 16-bit compare unit
+ * @brief Atmel AVR 16-bit compare unit with waveform generator
  */
 
 /**
- * @page atmelavr_occ
- * @section atmelavr_occ_act Actions
+ * @addtogroup atmelavr_occ
+ * @section atmelavr_occact Actions
  *
- * <br>
- * `configure`:
- *
- * The hw(configure,...) instruction only permits to change the behavior of the
+ * <br><br>hw( configure, ... ) only permits to change the behavior of the
  * output pin and does not perform any verification against the counter
  * configuration:
  *
  * @code
  * hw( configure, (counter0,compare0),
  *
- *	       //  Behavior of the ouput pin
- *	       //
- *	      output,	disconnected
- *		      | toggle_after_match
- *		      | clear_after_match
- *		      | set_after_match
- *		      | set_at_bottom_clear_after_match
- *		      | clear_at_bottom_set_after_match
- *		      | clear_after_match_up_set_after_match_down
- *		      | set_after_match_up_clear_after_match_down
- *	     );
+ *     //  Behavior of the ouput pin
+ *     //
+ *     output,   disconnected
+ *	       | toggle_after_match
+ *	       | clear_after_match
+ *	       | set_after_match
+ *	       | set_at_bottom_clear_after_match
+ *	       | clear_at_bottom_set_after_match
+ *	       | clear_after_match_up_set_after_match_down
+ *	       | set_after_match_up_clear_after_match_down
+ * );
  * @endcode
  */
 #define _hw_occ_update_immediately	, 0
@@ -62,19 +59,19 @@
   }while(0)
 
 #define _hw_cfocc_xoutput_0(o,k,...)					\
-  HW_E_VL(k,output)
+  HW_E(HW_EM_AN(k,output))
 #define _hw_cfocc_xoutput_1(o,k,v,...)				\
   HW_B(_hw_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
 #define _hw_cfocc_voutput_0(o,v,...)					\
-  HW_E_AVL(mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)
+  HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match,clear_after_match_up_set_after_match_down,set_after_match_up_clear_after_match_down)))
 #define _hw_cfocc_voutput_1(o,v,...)				\
   _hw_write(o, com, HW_A2(_hw_occ_output_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_occ
+ * @addtogroup atmelavr_occ
  *
- * The `hwa(configure,...)` instruction allows the `update` parameter to be set. It
+ * <br><br>hwa( configure, ... ) allows the `update` parameter to be set. It
  * tells when the compare value is transferred from the latch register to the
  * compare register. This is used to complete and check the configuration of the
  * related counter when the hwa(commit) instruction is encountered:
@@ -82,23 +79,23 @@
  * @code
  * hwa( configure, (counter0,compare0),
  *
- *	       //  When the content of the compare register is latched
- *	       //
- *	     [ update,	 after_bottom
- *		       | after_top
- *		       | after_max,   ]
+ *      //  When the content of the compare register is latched
+ *      //
+ *    [ update,   after_bottom
+ *	        | after_top
+ *	        | after_max,   ]
  *
- *	       //  Behavior of the ouput pin
- *	       //
- *	     [ output,	 disconnected
- *		       | toggle_after_match
- *		       | clear_after_match
- *		       | set_after_match
- *		       | set_at_bottom_clear_after_match
- *		       | clear_at_bottom_set_after_match
- *		       | clear_after_match_up_set_after_match_down
- *		       | set_after_match_up_clear_after_match_down ]
- *	      );
+ *      //  Behavior of the ouput pin
+ *      //
+ *    [ output,   disconnected
+ *	        | toggle_after_match
+ *	        | clear_after_match
+ *	        | set_after_match
+ *	        | set_at_bottom_clear_after_match
+ *	        | clear_at_bottom_set_after_match
+ *	        | clear_after_match_up_set_after_match_down
+ *	        | set_after_match_up_clear_after_match_down ]
+ * );
  * @endcode
  */
 #define hwa_configure__occ		, _hwa_cfocc
@@ -114,7 +111,7 @@
 #define _hwa_cfocc_xupdate_1(o,k,v,...)					\
   HW_B(_hwa_cfocc_vupdate_,_hw_occ_update_##v)(o,v,__VA_ARGS__)
 #define _hwa_cfocc_vupdate_0(o,v,...)			\
-  HW_E_AVL(update mode of `o`, v, `immediately | after_bottom | after_top`)
+  HW_E(HW_EM_VAL(v,update,(immediately,after_bottom,after_top)))
 
 #define _hwa_cfocc_vupdate_1(o,v,k,...)			\
   hwa->o.config.update = HW_A1(_hw_occ_update_##v);\
@@ -127,16 +124,21 @@
   HW_B(_hwa_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfocc_voutput_0(o,v,...)			\
-  HW_E_AVL(output mode of `o`, v, `disconnected | toggle_after_match | clear_after_match | set_after_match | set_at_bottom_clear_after_match | clear_at_bottom_set_after_match | clear_after_match_up_set_after_match_down | set_after_match_up_clear_after_match_down`)
+  HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match,clear_after_match_up_set_after_match_down,set_after_match_up_clear_after_match_down)))
 #define _hwa_cfocc_voutput_1(o,v,...)				\
   hwa->o.config.output = HW_A1(_hw_occ_output_##v) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_occ
+ * @addtogroup atmelavr_occ
  *
- * <br>
- * `write`:
+ * <br><br>hw( read, ... ): get the compare value
+ *
+ * @code
+ * uint8_t ocr = hw( read, (counter0,compare0) );
+ * @endcode
+ *
+ * <br><br>hw( write, ... ), hwa( write, ... ): set the compare value
  *
  * @code
  * hw( write, (counter0,compare0), value );
@@ -144,14 +146,6 @@
  *
  * @code
  * hwa( write, (counter0,compare0), value );
- * @endcode
- *
- *
- * <br>
- * `read`:
- *
- * @code
- * uint16_t ocr = hw( read, (counter0,compare0) );
  * @endcode
  */
 #define hw_write__occ			, _hw_write_occ
@@ -165,10 +159,9 @@
 
 
 /**
- * @page atmelavr_occ
+ * @addtogroup atmelavr_occ
  *
- * <br>
- * `trigger`:
+ * <br><br>hw( trigger, ... ), hwa( trigger, ... ): force a compare-match
  *
  * @code
  * hw( trigger, (counter0,compare0) );
@@ -186,16 +179,8 @@
 
 
 /**
- * @page atmelavr_occ
- * @section atmelavr_occ_st Status
+ * @addtogroup atmelavr_occ
+ * @section atmelavr_occreg Registers
  *
- * The compare event flag can be accessed through interrupt-related
- * instructions:
- *
- * @code
- * if ( hw( read,(counter0,compare0,irq) ) ) {	   // Read compare IRQ flag
- *   hw( clear,(counter0,compare0,irq) );		   // Clear compare IRQ flag
- *   hw( disable,(counter0,compare0,irq) );		   // Disable compare IRQs
- * }
- * @endcode
+ * Registers are hold by the parent counter.
  */

@@ -2,8 +2,8 @@
 HardWare Advanced
 =================
 
-HWA stands for HardWare Advanced. HWA is a set of C definitions designed for
-bare metal programming with a pleasant style.
+HWA stands for HardWare Advanced. It is essentially a set of C definitions
+designed for bare metal programming with a pleasant style.
 
 To give you an idea, the following code blinks a LED connected to an
 STM32F103RBT6 using Systick interrupts and sleeping mode:
@@ -43,18 +43,15 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
       }
     }
 
-The resulting binary is 402 bytes long: 94 bytes of code + 308 bytes of vectors.
+This compiles to 94 bytes of application code.
 
 
-HWA in short
-============
-
-HWA provides:
+Briefly, HWA provides:
 
  * a set of objects that represent the hardware,
- * the generic instruction, `hw(...)`, that acts on these objects using
+ * a generic instruction, `hw(...)`, that acts on these objects using
    various types and numbers of mandatory and optionnal symbolic arguments,
- * the generic instruction, `hwa(...)`, that provides a transactional processing
+ * a generic instruction, `hwa(...)`, that provides a transactional processing
    mechanism that allows further optimization of the binary code produced,
  * an error-checking mechanism that produces meaningful messages to help the
    developer quickly solve the problems.
@@ -75,19 +72,18 @@ as if the developer had written smart accesses to hardware registers himself.
 HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,
 a few features of HWA can be used for assembly programming. The implementation
-of a [software UART for Atmel AVR microcontrollers](atmelavr_swuarta.html) (see
-`atmel/avr/classes/swuarta/`) and the [Diabolo bootloader](atmelavr_diabolo.html) (see
-`atmel/avr/examples/diabolo/`) are examples of such a usage.
-
+of a [software UART for Atmel AVR
+microcontrollers](group__atmelavr__swuarta.html) and the [Diabolo
+bootloader](group__atmelavr__diabolo.html) are examples of such a usage.
 
 
 Examples
 ========
 
 A [set of commented examples](http://duparq.free.fr/hwa/examples.html) is
-provided. Example projects are store in the `vendor/architecture/examples/`
-directories (e.g. `atmel/avr/examples/`) where a `README.md` file explains how
-to compile them.
+provided. Example projects are store in `vendor/architecture/examples/`
+directories (e.g. `atmel/avr/examples/`). The documentation explains how to
+compile the examples.
 
 
 Documentation
@@ -117,6 +113,7 @@ Supported hardware
 
  * ST STM32:
    * [STM32F103](http://duparq.free.fr/hwa/stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+
  * Espressif
    * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
 

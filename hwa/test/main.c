@@ -16,7 +16,7 @@
 /* hwa( begin, all ); */
 /* hwa( begin, reset, all ); */
 
-//#define hw_wait_irq		, _hw_wait_irq
+#define hw_wait_irq		, _hw_wait_irq
 
 HW_XP( irq );
 
@@ -61,4 +61,4 @@ HW_ISR( (watchdog0,irq), naked );
 
 hw( clear, (counter0,compare0,irq) );
 
-HW_X((counter0,compare0,irq);
+HW_X((counter0,compare0,irq));

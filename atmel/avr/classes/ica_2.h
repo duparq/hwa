@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  * @section atmelavr_ica_act Actions
  *
  * <br>
@@ -46,23 +46,23 @@
 #define _hw_cfica(o,ct,ic,k,...)				\
   HW_B(_hw_cficakw1_,_hw_cfica_kw_##k)(ct,k,__VA_ARGS__,)
 
-#define _hw_cficakw1_0(ct,kw,...)	HW_E_VL(k,input | edge | filter)
+#define _hw_cficakw1_0(ct,kw,...)	HW_E(HW_EM_AL(k,(input,edge,filter)))
 
 #define _hw_cficakw1_1(ct,kw,...)	HW_A1(_hw_cfica_kw_##kw)(ct,__VA_ARGS__)
 
 #define _hw_cfica_edge(ct,v,...)	HW_B(_hw_cfica_vedge_,hw_ica_edge_##v)(ct,v,__VA_ARGS__)
 #define _hw_cfica_vedge_0(ct,v,...)		\
-  HW_E_AVL(edge, v, falling | rising)
+  HW_E(HW_EM_VAL(v,edge,(falling,rising)))
 #define _hw_cfica_vedge_1(ct,v,...)					\
   _hw_write(ct, ices, HW_A1(hw_ica_edge_##v)-1 ) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  * @code
  * hwa( configure, counter0capture0,
  *
- *    [ input,	   pin_icp
+ *    [ input,	   pin_icp	// FIXME: (pin,icp)
  *		 | acmp0, ]
  *
  *    [ edge,	   falling
@@ -78,20 +78,20 @@
   do { HW_BW(_hwa_cfica_kinput_,input,k)(ct,k,__VA_ARGS__) } while(0)
 
 #define _hwa_cfica_kinput_0(ct,k,...)					\
-  HW_BW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__) //HW_E_VL(k,input)
+  HW_BW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__) //HW_E(HW_EM_AN(k,input))
 #define _hwa_cfica_kinput_1(ct,k,v,...)		HW_B(_hwa_cfica_vinput_,hw_ica_input_##v)(ct,v,__VA_ARGS__)
-#define _hwa_cfica_vinput_0(ct,v,...)		HW_E_AVL(input, v, pin_icp | acmp0)
+#define _hwa_cfica_vinput_0(ct,v,...)		HW_E(HW_EM_VAL(v,input,(pin_icp,acmp0)))
 #define _hwa_cfica_vinput_1(ct,v,k,...)				\
   hwa->ct.capture0.config.input = HW_A1(hw_ica_input_##v);		\
   HW_BW(_hwa_cfica_kedge_,edge,k)(ct,k,__VA_ARGS__)
 
 #define _hwa_cfica_kedge_0(ct,k,...)					\
-  HW_BW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__) //  HW_E_VL(k,edge)
+  HW_BW(_hwa_cfica_kfilter_,filter,k)(ct,k,__VA_ARGS__) //  HW_E(HW_EM_AN(k,edge))
 
 #define _hwa_cfica_kedge_1(ct,k,v,...)				\
   HW_B(_hwa_cfica_vedge_,hw_ica_edge_##v)(ct,v,__VA_ARGS__)
 
-#define _hwa_cfica_vedge_0(ct,v,...)		HW_E_AVL(edge, v, falling | rising)
+#define _hwa_cfica_vedge_0(ct,v,...)		HW_E(HW_EM_VAL(v,edge,(falling,rising)))
 
 #define _hwa_cfica_vedge_1(ct,v,k,...)				\
   hwa->ct.capture0.config.edge = HW_A1(hw_ica_edge_##v);			\
@@ -104,7 +104,7 @@
   HW_B(_hwa_cfica_vfilter_,_hw_state_##v)(ct,v,__VA_ARGS__)
 
 #define _hwa_cfica_vfilter_0(ct,v,...)		\
-  HW_E_OAVL(filter, v, on | off)
+  HW_E(HW_EM_VOAL(v,filter,(on,off)))
 
 #define _hwa_cfica_vfilter_1(ct,v,...)		\
   hwa->ct.capture0.config.filter = HW_A1(_hw_state_##v);	\
@@ -112,7 +112,7 @@
 
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  *
  * <br>
  * `read`:
@@ -126,7 +126,7 @@
 
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  *
  * <br>
  * `write`:
@@ -139,7 +139,7 @@
 #define _hw_write_ica(o,ct,ic,v,...)	_hw_write(ct,icr##ic,v) HW_EOL(__VA_ARGS__)
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  *
  * @code
  * hwa( write, capture0, value );
@@ -150,7 +150,7 @@
 
 
 /**
- * @page atmelavr_ica
+ * @addtogroup atmelavr_ica
  * @section atmelavr_ica_st Status
  *
  * The capture event flag can be accessed through interrupt-related

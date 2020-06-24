@@ -10,9 +10,8 @@
  */
 
 /**
- * @page atmelavr_boards
- *
- * @section boards_pro_micro Board pro-micro
+ * @ingroup atmelavr_boards
+ * @defgroup board_pro_micro Board pro-micro
  *
  * This is an Arduino Leonardo clone board with a MEGA32U4-MI microcontroller
  * that provides the USB interface, and a 16 MHz crystal.

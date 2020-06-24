@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_afioa
+ * @ingroup stm32_classes
+ * @addtogroup stm32_afioa
  */
 #define hw_class__afioa
 
@@ -61,8 +62,10 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
       remap0 = 0 ;
     else if ( hwa->map.counter2_etr == HW_ADDRESS((porta,15)) )
       remap0 = 1 ;
-    else
+    else {
       hwa->map.error = 1 ;
+      HWA_E(HW_EM_OMAP((counter2,etr))) ;
+    }
   }
 
   if ( hwa->map.counter2_channel1 != 0 ) {
@@ -70,8 +73,10 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
       remap0 = 0 ;
     else if ( hwa->map.counter2_channel1 == HW_ADDRESS((porta,15)) )
       remap0 = 1 ;
-    else
+    else {
       hwa->map.error = 1 ;
+      HWA_E(HW_EM_OMAP((counter2,channel1)));
+    }
   }
 
   if ( hwa->map.counter2_channel2 != 0 ) {
@@ -79,8 +84,10 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
       remap0 = 0 ;
     else if ( hwa->map.counter2_channel2 == HW_ADDRESS((portb,3)) && remap0 == -1 )
       remap0 = 1 ;
-    else
+    else {
       hwa->map.error = 1 ;
+      HWA_E(HW_EM_OMAP((counter2,channel2)));
+    }
   }
 
   if ( hwa->map.counter2_channel3 != 0 ) {
@@ -90,7 +97,7 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
       remap1 = 1 ;
     else {
       hwa->map.error = 1 ;
-      HWA_E([_hwa_setup_map]);
+      HWA_E(HW_EM_OMAP((counter2,channel3)));
     }
   }
 
@@ -99,14 +106,14 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
       remap1 = 0 ;
     else if ( hwa->map.counter2_channel4 == HW_ADDRESS((portb,11)) && remap1 == -1 )
       remap1 = 1 ;
-    else
+    else {
       hwa->map.error = 1 ;
+      HWA_E(HW_EM_OMAP((counter2,channel4)));
+    }
   }
 
-  if ( hwa->map.error ) {
-    HWA_E(maping error);
+  if ( hwa->map.error )
     return ;
-  }
 
   if ( remap0 != -1 || remap1 != -1 ) {
     if ( remap0 == -1 ) remap0 = 0 ;
@@ -114,7 +121,7 @@ HW_INLINE void _hwa_commit_map( hwa_t *hwa )
     uint8_t remap = (remap1*2 + remap0) & 3 ;
 
     if ( hwa->map.counter2_remap != -1 && hwa->map.counter2_remap != remap )
-      HWA_E(maping error);
+      HWA_E(HW_EM_OMAP(counter2));
 
     hwa->map.counter2_remap = remap ;
     _hwa_write( afio, counter2_remap, remap );

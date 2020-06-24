@@ -9,15 +9,14 @@ extern void ets_isr_unmask(unsigned intr);
 
 
 /**
- * @ingroup public_irq_instructions
- * @brief Declaration of an ISR
+ * @ingroup esp8266_pub
+ * @hideinitializer
  *
- * The `os_set_isr()` instruction declares a user ISR for an IRQ.
+ * Declare a user ISR for an IRQ.
  *
  * @code
  * os_set_isr( (timer1,irq), ev_timer );
  * @endcode
- * @hideinitializer
  */
 #define os_set_isr(...)			HW_F(os_set_isr,__VA_ARGS__,)
 

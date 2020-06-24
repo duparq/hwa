@@ -17,7 +17,7 @@
 
 #include BOARD_H
 
-#include <hwa/24cxx.h>
+#include <hwa/ext/24cxx.h>
 
 #define TWI			twi0
 
@@ -27,7 +27,6 @@
 					   address,     0x50,	\
 					   addresssize, 2,	\
 					   pagesize,    8 )
-
 
 HW_DECLARE(EEPROM);
 HW_IMPLEMENT(EEPROM);

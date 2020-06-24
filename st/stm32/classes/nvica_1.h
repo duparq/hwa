@@ -9,26 +9,38 @@
  * @brief Class _nvica
  */
 
-/**
- * @page stm32_nvica Class _nvica: Nested Vectored Interrupt Controller (NVIC)
+/* Logical registers are implemented as object registers since there is only one
+ * NVIC in the device and HW_X() will find them faster this way.
  */
 #define hw_class__nvica
 
-#define hw__nvica_iser0			_r32, 0x0000, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_iser1			_r32, 0x0004, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_iser2			_r32, 0x0008, 0x0000FFFF, 0x0000FFFF
+#define hw_nvic_iser0			_r32, 0x0000, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_iser1			_r32, 0x0004, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_iser2			_r32, 0x0008, 0x0000FFFF, 0x0000FFFF
 
-#define hw__nvica_icer0			_r32, 0x0080, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_icer1			_r32, 0x0084, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_icer2			_r32, 0x0088, 0x0000FFFF, 0x0000FFFF
+#define hw_nvic_icer0			_r32, 0x0080, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_icer1			_r32, 0x0084, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_icer2			_r32, 0x0088, 0x0000FFFF, 0x0000FFFF
 
-#define hw__nvica_ispr0			_r32, 0x0100, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_ispr1			_r32, 0x0104, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_ispr2			_r32, 0x0108, 0x0000FFFF, 0x0000FFFF
+#define hw_nvic_ispr0			_r32, 0x0100, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_ispr1			_r32, 0x0104, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_ispr2			_r32, 0x0108, 0x0000FFFF, 0x0000FFFF
 
-#define hw__nvica_icpr0			_r32, 0x0180, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_icpr1			_r32, 0x0184, 0xFFFFFFFF, 0xFFFFFFFF
-#define hw__nvica_icpr2			_r32, 0x0188, 0x0000FFFF, 0x0000FFFF
+#define hw_nvic_icpr0			_r32, 0x0180, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_icpr1			_r32, 0x0184, 0xFFFFFFFF, 0xFFFFFFFF
+#define hw_nvic_icpr2			_r32, 0x0188, 0x0000FFFF, 0x0000FFFF
+
+
+/*  NVIC relatives: _nvi object that holds an IRQ number
+ */
+#define hw_class__nvi
+
+#define hw__nvica_			, _hw_nvicarl
+#define _hw_nvicarl(o1,o2,...)		_hw_nvicarl1(o1,o2,hw_##o2##_irq,)
+#define _hw_nvicarl1(...)		_hw_nvicarl2(__VA_ARGS__)
+#define _hw_nvicarl2(o1,o2,x,...)	HW_BW(_hw_nvicarl2,_irq,x)(o1,o2,x,__VA_ARGS__) // PUSH
+#define _hw_nvicarl21(o1,o2,c,a,...)	_nvi, a
+#define _hw_nvicarl20(o1,o2,...)	,o1,HW_EM_OO(o1,o2)
 
 
 #if !defined __ASSEMBLER__

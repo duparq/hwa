@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_corea
+ * @addtogroup atmelavr_corea
  * @section atmelavr_corea_act Actions
  *
  * <br>
@@ -53,7 +53,7 @@
   HW_B(_hwa_cfcorea_vsleep_,_hw_state_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleep_0(o,v,...)					\
-  HW_E_AVL(sleep, v, enabled | disabled)
+  HW_E(HW_EM_VOAST(v,sleep))
 
 #define _hwa_cfcorea_vsleep_1(o,v,k,...)				\
   _hwa_write( o, se, HW_A1(_hw_state_##v) );			\
@@ -61,10 +61,10 @@
 
 /*	Optionnal parameter `sleep_mode`
  */
-#define hw_sleepmode_idle		, 0
+#define hw_sleepmode_idle			, 0
 #define hw_sleepmode_adc_noise_reduction	, 1
-#define hw_sleepmode_power_down		, 2
-#define hw_sleepmode_standby		, 3
+#define hw_sleepmode_power_down			, 2
+#define hw_sleepmode_standby			, 3
 
 #define _hwa_cfcorea_ksleepmode_0(o,...)	HW_EOL(__VA_ARGS__)
 
@@ -72,7 +72,7 @@
   HW_B(_hwa_cfcorea_vsleepmode_,hw_sleepmode_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfcorea_vsleepmode_0(o,v,...)				\
-  HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down)
+  HW_E(HW_EM_VAL(v,sleep_mode,(idle,adc_noise_reduction,power_down,standby)))
 
 #define _hwa_cfcorea_vsleepmode_1(o,v,...)		\
   _hwa_write( o, sm, HW_A1(hw_sleepmode_##v) );	\
@@ -80,7 +80,7 @@
 
 
 /**
- * @page atmelavr_corea
+ * @addtogroup atmelavr_corea
  *
  * <br>
  * `wait, irq`: puts the core into sleeping mode
@@ -92,7 +92,7 @@
 
 
 /**
- * @page atmelavr_corea
+ * @addtogroup atmelavr_corea
  *
  * <br>
  * `stat`: returns the status flags of the core in a
@@ -146,7 +146,7 @@ HW_INLINE _hw_corea_stat_t _hw_corea_stat( uint8_t byte )
 
 
 /**
- * @page atmelavr_corea
+ * @addtogroup atmelavr_corea
  *
  * <br>
  * `clear`:

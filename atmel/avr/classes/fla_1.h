@@ -6,21 +6,21 @@
 
 /**
  * @file
- * @brief Flash memory
+ * @brief Atmel AVR Flash memory
  */
 
 /**
- * @page atmelavr_fla Class _fla: Flash memory
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_fla Class _fla: Flash memory
  *
- * A class `_fla` object is a Flash memory.
- *
- * It is used in:
+ * This class is used by:
  *  * @ref attinyx4 : `flash0`
  *  * @ref attinyx5 : `flash0`
  *  * @ref atmegax8 : `flash0`
  *  * @ref atmegaxu4 : `flash0`
  */
 #define hw_class__fla
+
 
 /*	Class logical registers
  */					

@@ -9,46 +9,40 @@
  * @brief Definitions that produce C code specific to Atmel AVR devices
  */
 
-/**
- * @ingroup public_ins_atmelavr
- * @brief Puts the core in sleep mode.
- */
-
 
 /*	Interrupts
  */
-#define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,1)	/* Write 1 to clear */
-#define _hwa_clirq(o,v,n,m,f,...)	_hwa_write(n,f,1)
+#define _hw_enirq(o,v,n,m,f,...)	_hw_write(n,m,1)  HW_EOL(__VA_ARGS__)
+#define _hwa_enirq(o,v,n,m,f,...)	_hwa_write(n,m,1)  HW_EOL(__VA_ARGS__)
 
-#define hw_enable__irq			, _hw_enirq
-#define hwa_enable__irq			, _hwa_enirq
+#define _hw_dsirq(o,v,n,m,f,...)	_hw_write(n,m,0)  HW_EOL(__VA_ARGS__)
+#define _hwa_dsirq(o,v,n,m,f,...)	_hwa_write(n,m,0)  HW_EOL(__VA_ARGS__)
 
-#define _hw_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,1,__VA_ARGS__,)
-#define _hwa_enirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,1,__VA_ARGS__,)
+#define _hw_rdirq(o,v,n,m,f,...)	_hw_read(n,f)  HW_EOL(__VA_ARGS__)
 
-#define hw_disable__irq			, _hw_dsirq
-#define hwa_disable__irq		, _hwa_dsirq
-
-#define _hw_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hw,n,m,0,__VA_ARGS__,)
-#define _hwa_dsirq(o,v,n,m,f,...)	_hwx_tirq01(_hwa,n,m,0,__VA_ARGS__,)
-
-#define _hwx_tirq01(...)		_hwx_tirq02(__VA_ARGS__)
-#define _hwx_tirq02(h,n,m,v,x,...)	_HW_B(_hwx_tirq02_,x)(h,n,m,v,x,__VA_ARGS__)
-#define _hwx_tirq02_0(h,n,m,v,x,...)	HW_E_G(x)
-#define _hwx_tirq02_1(h,n,m,v,...)	h##_write(n,m,v)
-
-#define hw_read__irq			, _hw_rdirq
-#define _hw_rdirq(o,v,n,m,f,...)	_hw_read(n,f)
-
-#define hw_clear__irq			, _hw_clirq
-#define hwa_clear__irq			, _hwa_clirq
-
-#define hw_enable_interrupts		, _hw_enirqs
-#define hw_disable_interrupts		, _hw_dsirqs
+#define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,1)  HW_EOL(__VA_ARGS__)	/* Write 1 to clear */
+#define _hwa_clirq(o,v,n,m,f,...)	_hwa_write(n,f,1)  HW_EOL(__VA_ARGS__)	/* Write 1 to clear */
 
 #define _hw_enirqs(o,a,...)		hw_asm("sei") HW_EOL(__VA_ARGS__)
 #define _hw_dsirqs(o,a,...)		hw_asm("cli") HW_EOL(__VA_ARGS__)
 
+
+
+/**
+ * @ingroup atmelavr
+ * @defgroup atmelavr_msc Miscellaneous
+ */
+
+/**
+ * @ingroup atmelavr_msc
+ * @hideinitializer
+ *
+ * @par Wait for an interrupt (sleep until an interrupt occurs)
+ *
+ * @code
+ * hw( wait, irq );
+ * @endcode
+ */
 #define hw_wait_irq			, _hw_wait_irq
 #define _hw_wait_irq(...)		hw_asm("sleep")
 
@@ -80,40 +74,44 @@
 
 
 /**
- * @ingroup public_ins_atmelavr
- * @brief Software loop of \c n system clock cycles.
+ * @ingroup atmelavr_msc
+ * @hideinitializer
  *
- * Only works with compile-time constants.
+ * Software loop of \c n CPU clock cycles (only works with compile-time constants).
+ *
+ * @code
+ * hw_waste_cycles( 0.5 * HW_SYSHZ );	// At least 0.5 s
+ * @endcode
  */
 #define hw_waste_cycles(n)		__builtin_avr_delay_cycles(n)
 
 
-
 #include "../../hwa/hwa_2.h"
-
 
 
 /* This is a generic method that can be implemented by all peripheral
  * classes. An object supports power management if it has a logical register
  * named `prr`.
  */
-#define hw_power		, _hw_power
-#define hwa_power		, _hwa_power
+#define hw_power			, _hw_power
+#define hwa_power			, _hwa_power
 
 #define _hw_power(c,o,a,v,g,...)	HW_B(_hwx_pwr1_,g)(_hw,o,v,g)
 #define _hwa_power(c,o,a,v,g,...)	HW_B(_hwx_pwr1_,g)(_hwa,o,v,g)
-#define _hwx_pwr1_0(x,o,v,g)		HW_E_G(g)
-#define _hwx_pwr1_1(x,o,v,g)		HW_B(_hwx_pwr2_,_hw_state_v)(x,o,v)
-#define _hwx_pwr2_0(x,o,v)		HW_E_ST(v)
-#define _hwx_pwr2_1(x,o,v)		HW_B(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##prr))(x,o,v)
-#define _hwx_pwr3_0(x,o,v)		HW_E(`o` does not support power management)
-#define _hwx_pwr3_1(x,o,v)		x##_write(o,prr,HW_A1(_hw_state_##v)==0)
+#define _hwx_pwr1_0(h,o,v,g)		HW_E(HW_EM_G(g))
+#define _hwx_pwr1_1(h,o,v,g)		HW_B(_hwx_pwr2_,_hw_state_v)(h,o,v)
+#define _hwx_pwr2_0(h,o,v)		HW_E(HW_EM_ST(v))
+#define _hwx_pwr2_1(h,o,v)		HW_B(_hwx_pwr3_,HW_G2(_hw_isa_reg, hw_##o##_##prr))(h,o,v)
+#define _hwx_pwr3_0(h,o,v)		HW_E(HW_EM_FO(h##_power,o))
+#define _hwx_pwr3_1(h,o,v)		h##_write(o,prr,HW_A1(_hw_state_##v)==0)
 
 
 /**
- * @ingroup public_ins_atmelavr
- * @brief Execute a block with interrupts disabled
+ * @ingroup atmelavr_msc
  * @hideinitializer
+ *
+ * Execute a block with interrupts disabled
+ *
  */
 #define HW_ATOMIC(...)				\
   do{						\
@@ -125,10 +123,10 @@
 
 
 /**
- * @ingroup public_ins_atmelavr
- * @brief EEPROM memory segment storage
+ * @ingroup atmelavr_msc
  *
- * Syntax:
+ * @par Tell the linker to put data in EEPROM memory segment
+ *
  * @code
  * static uint16_t HW_MEM_EEPROM numbers[16] ;	// 16 16-bit numbers in EEPROM
  * @endcode
@@ -137,8 +135,8 @@
 
 
 /**
- * @ingroup private
- * @brief  Write one 8-bit hardware register.
+ * @ingroup hwa_pri
+ *   Write one 8-bit hardware register.
  *
  * Write `value` through `mask` bits of the hardware register at address `ra`.
  * Trying to write `1`s into non-writeable bits triggers an error.
@@ -153,12 +151,12 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mas
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
-    HWA_ERR("invalid access");
+    HWA_E(HW_EM_X("_hw_write_r8: invalid access"));
 #endif
 
 #if !defined HWA_NO_CHECK_USEFUL
   if ( mask == 0 )
-    HWA_ERR("no bit to be changed?");
+    HWA_E(HW_EM_X("_hw_write_r8: no bit to be changed?"));
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
@@ -169,14 +167,14 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mas
     /* *(volatile uint8_t*)0 = mask ; */
     /* *(volatile uint8_t*)0 = value & mask ; */
     /* hw_asm("wdr"); */
-    HWA_ERR("value overflows mask");
+    HWA_E(HW_EM_X("_hw_write_r8: value overflows mask"));
   }
 #endif
 
   /*  Verify that we do not try to set non-writeable bits
    */
   if ( (value & mask & rwm) != (value & mask) )
-    HWA_ERR("bits not writeable.");
+    HWA_E(HW_EM_X("_hw_write_r8: bits not writeable."));
 
   volatile uint8_t *p = (volatile uint8_t *)ra ;
 
@@ -216,9 +214,9 @@ HW_INLINE void _hw_write_r8 ( intptr_t ra, uint8_t rwm, uint8_t rfm, uint8_t mas
 }
 
 
-/**
+/*
  * @ingroup private
- * @brief  Write one 16-bit hardware register
+ *   Write one 16-bit hardware register
  *
  * Write `value` through `mask` bits of the hardware register at address `ra`.
  * Trying to write `1`s into non-writeable bits triggers an error.
@@ -233,24 +231,24 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint16_t
 {
 #if defined HWA_CHECK_ACCESS
   if ( ra == ~0 )
-    HWA_ERR("invalid access");
+    HWA_E(HW_EM_X("_hw_write_r16: invalid access"));
 #endif
 
 #if !defined HWA_NO_CHECK_USEFUL
   if ( mask == 0 )
-    HWA_ERR("no bit to be changed?");
+    HWA_E(HW_EM_X("_hw_write_r16: no bit to be changed?"));
 #endif
 
 #if !defined HWA_NO_CHECK_LIMITS
   if ( value & (~mask) ) {
-    HWA_ERR("value overflows mask");
+    HWA_E(HW_EM_X("_hw_write_r16: value overflows mask"));
   }
 #endif
 
   /*  Verify that we do not try to set non-writeable bits
    */
   if ( (value & mask & rwm) != (value & mask) )
-    HWA_ERR("bits not writeable.");
+    HWA_E(HW_EM_X("_hw_write_r16: bits not writeable."));
 
   volatile uint16_t *p = (volatile uint16_t *)ra ;
 
@@ -292,9 +290,9 @@ HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint16_t
 }
 
 
-/**
+/*
  * @ingroup private
- * @brief Commit an 8-bit HWA register to hardware
+ *  Commit an 8-bit HWA register to hardware
  * @hideinitializer
  *
  * The code is meant to produce the best machine code among (verified on Atmel
@@ -401,8 +399,8 @@ HW_INLINE void _hwa_commit__r16 ( hwa_r16_t *r, uint16_t rwm, uint16_t rfm, _Boo
 
 
 
-/**
- * @brief Read from one hardware register.
+/*
+ *  Read from one hardware register.
  *
  * @param ra	address of register.
  * @param rbn	number of consecutive bits conderned.
@@ -425,15 +423,16 @@ HW_INLINE uint16_t _hw_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )
 }
 
 
-/*	Atomic read
- *
- *	FIXME: if the I bit is set after writing SREG with its prior value, is
- *	the execution of the next opcode guaranteed as if the SEI instruction
- *	was used?
- */
 #define _hw_atomic_read__r8		_hw_read__r8
 
-
+/*
+ * @addtogroup atmelavr8
+ *  Atomic read 16-bit value
+ *
+ * Interrupts are re-enabled as soon as possible.
+ *
+ * @note Interrupts are enabled after reading even if they were not before.
+ */
 HW_INLINE uint16_t _hw___atomic_read__r16 ( intptr_t ra )
 {
   uint16_t r;
@@ -448,6 +447,12 @@ HW_INLINE uint16_t _hw___atomic_read__r16 ( intptr_t ra )
 	 );
   return r;
 }
+/* FIXME: if the I bit is set after writing SREG with its prior value, is the
+ * execution of the next opcode guaranteed as if the SEI instruction was used?
+ */
+
+
+#define _hw_atomic_read__m11(oo,o,r,rc,ra,rwm,rfm,bn,bp,...)	_hw_atomic_read_##rc(ra,bn,bp)
 
 
 HW_INLINE uint16_t _hw_atomic_read__r16 ( intptr_t ra, uint8_t rbn, uint8_t rbp )

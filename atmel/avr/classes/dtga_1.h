@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_dtga Class _dtga: dead time generator
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_dtga Class _dtga: dead time generator
  *
  * `_dtga` objects are dead time generators.
  *

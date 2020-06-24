@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_afioa Class _afioa: AFIO for low-, medium- high- and XL-density devices
+ * @ingroup stm32_classes
+ * @defgroup stm32_afioa Class _afioa: AFIO for low-, medium- high- and XL-density devices
  *
  */
 #define hw_class__afioa

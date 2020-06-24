@@ -53,7 +53,7 @@ int main ( )
 
   hwa( commit );
 
-  hw( enable, nvic, COUNTER );
+  hw( enable, (nvic,COUNTER) );
   hw( enable, (COUNTER,irq) );
 
   /*  Toggle the LED between sleeps

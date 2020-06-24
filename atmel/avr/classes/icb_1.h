@@ -15,7 +15,8 @@
  */
 
 /**
- * @page atmelavr_icb Class _icb: 16-bit capture unit
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_icb Class _icb: 16-bit capture unit
  *
  * A class `_icb` object is a 16-bit capture unit. It has the following
  * relative objects:
@@ -31,7 +32,7 @@
 #define hw_class__icb
 
 /**
- * @page atmelavr_icb
+ * @addtogroup atmelavr_icb
  * @par Instructions that do not produce C code
  *
  * The `HW_BITS()` instruction returns the number of bits of the capture
@@ -48,7 +49,7 @@
 
 
 /**
- * @page atmelavr_icb
+ * @addtogroup atmelavr_icb
  * @par Interrupts
  *
  * The capture unit can trigger an @ref using_interrupts "anonymous IRQ" when

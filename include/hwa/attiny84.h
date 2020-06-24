@@ -1,6 +1,6 @@
 
 /* This file is part of the HWA project.
- * Copyright (c) 2012,2015 Christophe Duparquet.
+ * Copyright (c) 2012,2015,2020 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
@@ -10,32 +10,66 @@
  */
 
 /**
- * @page attiny84 ATtiny84
- * @section attiny84_symbols Defined symbols
+ * @ingroup attinyx4
+ * @defgroup attiny84 ATtiny84
  *
- * Symbol		       | Value
- * :---------------------------|:------------
- * `HW_DEVICE`                 |attiny84
- * `HW_DEVICE_ATTINY84`        |Void.
- * `HW_DEVICE_SIGNATURE`       |0x1E,0x93,0x0C
- * `HW_DEVICE_FLASH_SIZE`      |8192
- * `HW_DEVICE_FLASH_PAGE_SIZE` |64
- * `HW_DEVICE_EEPROM_SIZE`     |512
- * `HW_DEVICE_EEPROM_PAGE_SIZE`|4
- * `HW_DEVICE_RAM_SIZE`	       |512
+ * Header file:
  *
- * See also:
- * * @subpage attiny84a_pu
- * * @ref attinyx4
+ * @code
+ * #include <hwa/attiny84.h>
+ * @endcode
+ *
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name.
+ *
+ * @{
  */
 
+/**
+ *  Name of the device (for the compiler/programmer)
+ */
 #define HW_DEVICE			attiny84
+
+/**
+ *  Device family
+ */
 #define HW_DEVICE_ATTINY84
+
+/**
+ *  Signature bytes
+ */
 #define HW_DEVICE_SIGNATURE		0x1E,0x93,0x0C
+
+/**
+ *  Flash size in bytes
+ */
 #define HW_DEVICE_FLASH_SIZE		8192
+
+/**
+ *  Flash page size in bytes
+ */
 #define HW_DEVICE_FLASH_PAGE_SIZE	64
+
+/**
+ *  EEPROM size in bytes
+ */
 #define HW_DEVICE_EEPROM_SIZE		512
+
+/**
+ *  EEPROM page size in bytes
+ */
 #define HW_DEVICE_EEPROM_PAGE_SIZE	4
+
+/**
+ *  RAM size in bytes
+ */
 #define HW_DEVICE_RAM_SIZE		512
+
+/** @} */
+/** @} */
+
 
 #include "../../atmel/avr/devices/attinyx4.h"

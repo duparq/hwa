@@ -1,8 +1,9 @@
 
 	;; -*- asm -*-
 
-	;; Return last received byte or wait until a byte is received and return
-	;; it. FIXME: should not wait here. This is up to the application.
+	;; Clears the RXC bit and returns the last byte received.
+	;; // or wait until a byte is received and return it
+	;; // FIXME: should not wait here. This is up to the application.
 	;;
 	.global		LABEL(getbyte)
 	.section	.text.LABEL(getbyte),"ax",@progbits
@@ -11,8 +12,8 @@ LABEL(getbyte):
 	sbi	DBGPORT, DBGBIT
 	.endif
 
-1:	XSBIS	R24, F_RXC
-	rjmp	1b
+;; 1:	XSBIS	R24, F_RXC
+;; 	rjmp	1b
 
 	XCBAS	R24, R25, F_RXC
 

@@ -6,21 +6,24 @@
 
 /**
  * @file
- * @brief Watchdog timer
+ * @brief Atmel AVR Watchdog timer
  */
 
 /**
- * @page atmelavr_wdb Class _wdb: watchdog timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_wdb Class _wdb: watchdog timer
  *
- * A class `_wdb` object is a watchdog timer.
- *
- * It is identical to the class @ref atmelavr_wda "_wda" except that it uses
- * a different method for applying changes to the configuration.
- *
- * It is used in:
+ * This is used by:
  *
  * * @ref atmegax8 : `watchdog0`
  * * @ref atmegaxu4 : `watchdog0`
+ *
+ * This class is identical to the @ref atmelavr_wda "_wda" class except that it
+ * uses a different method for applying changes to the configuration.
+ *
+ * @section atmelavr_wdbirq Interrupts
+ *
+ *  * `(watchdog0,irq)`: watchdog overflow
  */
 #define hw_class__wdb
 

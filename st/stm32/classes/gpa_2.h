@@ -10,7 +10,8 @@
  */
 
 /**
- * @page stm32_gpa
+ * @addtogroup stm32_gpa
+ * @section stm32_gpa_act Actions
  *
  * `power`:
  * @code
@@ -83,9 +84,3 @@ HW_INLINE void _hwa_commit_toggles ( hwa_gpa_t *o )
     o->toggles = 0 ;
   }
 }
-
-
-/**
- * @page stm32_gpa
- * <br>
- */

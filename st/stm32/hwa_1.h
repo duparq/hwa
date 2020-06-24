@@ -8,12 +8,44 @@
  * @file
  * @brief Definitions common to all STM32 devices that do not produce C code
  */
-#if !defined DOXYGEN
-#  define HW_DEVICE_VENDOR_ST
-#  define HW_DEVICE_ARCH_STM32
-#  define HW_DEVICE_VENDOR		st
-#  define HW_DEVICE_ARCH		stm32
-#endif
+
+/**
+ * @addtogroup stm32
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name and the
+ * definitions provided by the user.
+ *
+ * @{
+ */
+
+/**
+ *  Device vendor
+ */
+#define HW_DEVICE_VENDOR_ST
+
+/**
+ *  Device vendor
+ */
+#define HW_DEVICE_VENDOR		st
+
+/**
+ *  Device architecture
+ */
+#define HW_DEVICE_ARCH_STM32
+
+/**
+ *  Device architecture
+ */
+#define HW_DEVICE_ARCH			stm32
+
+/** @} */
+/** @} */
+
+
+#include "hwa_errors.h"
 
 
 /*  Keywords for stm32
@@ -22,14 +54,14 @@
 
 
 #if !defined __ASSEMBLER__
-typedef signed int int8_t __attribute__((__mode__(__QI__)));
-typedef unsigned int uint8_t __attribute__((__mode__(__QI__)));
-typedef signed int int16_t __attribute__ ((__mode__ (__HI__)));
-typedef unsigned int uint16_t __attribute__ ((__mode__ (__HI__)));
-typedef signed int int32_t __attribute__ ((__mode__ (__SI__)));
-typedef unsigned int uint32_t __attribute__ ((__mode__ (__SI__)));
-typedef int32_t intptr_t;
-typedef uint32_t uintptr_t;
+typedef signed int		int8_t __attribute__((__mode__(__QI__)));
+typedef unsigned int		uint8_t __attribute__((__mode__(__QI__)));
+typedef signed int		int16_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int		uint16_t __attribute__ ((__mode__ (__HI__)));
+typedef signed int		int32_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int		uint32_t __attribute__ ((__mode__ (__SI__)));
+typedef int32_t			intptr_t;
+typedef uint32_t		uintptr_t;
 #endif
 
 #include "../../hwa/hwa_1.h"

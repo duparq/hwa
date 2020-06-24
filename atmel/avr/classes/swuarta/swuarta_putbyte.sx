@@ -14,10 +14,12 @@ LABEL(putbyte):
 	XCB	R25, START_IE	;	Disable START interrupts
 #  endif
 
+#if 0
+	;; Disabled this since its up to the application
+	
 1:	XSBIC	R25, MATCH_IE	;	Wait end of current rx/tx,
 	rjmp	1b		;	  i.e. match interrupt disabled
-
-	XCB	R25, F_TXC	;	Status = tx not completed
+#  endif
 
 	;; FIXME: WBTX is needed between end of reception and beginning
 	;; of transmission since the stop bit is sampled before the end
@@ -30,6 +32,8 @@ LABEL(putbyte):
 2:	XSBIS	R25, MATCH_IF	;	Wait one bit time
 	rjmp	2b
 1:
+	XCB	R25, F_TXC	;	Status = tx not completed
+
 	sts	shift, R24	;	Set shift register
 
 	ldi	R25, 8		;	Number of data bits to send

@@ -6,14 +6,14 @@
 
 /**
  * @file
- * @brief Flash memory
+ * @brief Atmel AVR Flash memory
  */
 
 /**
- * @page atmelavr_fla
+ * @addtogroup atmelavr_fla
+ * @section atmelavr_flaact Actions
  *
- * <br>
- * `read`: reads one byte at given memory address:
+ * <br><br>hw( read, ... ) - Read one byte at given memory address:
  *
  * @code
  * uint8_t byte = hw( read, flash0, addr ); // Read byte at address addr
@@ -38,9 +38,9 @@ HW_INLINE uint8_t _hw_flardbyte( uint16_t a )
 
 
 /**
- * @page atmelavr_fla
+ * @addtogroup atmelavr_fla
  *
- * `read_bytes`: reads multiple bytes from given memory address:
+ * <br><br>hw( read_bytes, ... ) - Copy n bytes from Flash memory to RAM:
  *
  * @code
  * uint8_t dst[10];
@@ -48,14 +48,11 @@ HW_INLINE uint8_t _hw_flardbyte( uint16_t a )
  * hw( read_bytes, flash0, dst, addr, count ); // Copy count bytes from Flash address addr to dst
  * @endcode
  */
+#define hw_read_bytes__fla			, _hw_read_bytes_fla
 
-#define hw_read_bytes__fla		, _hw_read_bytes_fla
+#define _hw_read_bytes_fla(o,a,dst,addr,n,...)	_hw_flardbytes(dst,addr,n) HW_EOL(__VA_ARGS__)
 
-#define _hw_read_bytes_fla(o,a,dst,addr,n,...)	\
-   _hw_flardbytes(dst,addr,n) HW_EOL(__VA_ARGS__)
-
-/**
- * @brief Store into dst count bytes read from Flash memory address addr
+/* Store into dst count bytes read from Flash memory address addr
  */
 HW_INLINE void _hw_flardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 {
@@ -74,10 +71,9 @@ HW_INLINE void _hw_flardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
 
 
 /**
- * @page atmelavr_fla
+ * @addtogroup atmelavr_fla
  *
- * <br>
- * `write`:
+ * <br><br>hw( load_buffer, ... ), hw( erase_page, ... ), hw( write_page, ... ) - Write data to Flash memory
  *
  * Writing into the memory requires a special procedure:
  *
@@ -100,14 +96,14 @@ HW_INLINE void _hw_flardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
  * @endcode
  */
 
-#define hw_load_buffer__fla		, _hw_fla_load_buffer
+#define hw_load_buffer__fla			, _hw_fla_load_buffer
 #define _hw_fla_load_buffer(o,a,src,...)	_hw_fla_ldpgbf(o,src) HW_EOL(__VA_ARGS__)
 
-#define hw_erase_page__fla		, _hw_fla_erase_page
-#define _hw_fla_erase_page(o,a,src,...)	_hw_fla_pgers(o,src) HW_EOL(__VA_ARGS__)
+#define hw_erase_page__fla			, _hw_fla_erase_page
+#define _hw_fla_erase_page(o,a,src,...)		_hw_fla_pgers(o,src) HW_EOL(__VA_ARGS__)
 
-#define hw_write_page__fla		, _hw_fla_write_page
-#define _hw_fla_write_page(o,a,src,...)	_hw_fla_pgwrt(o,src) HW_EOL(__VA_ARGS__)
+#define hw_write_page__fla			, _hw_fla_write_page
+#define _hw_fla_write_page(o,a,src,...)		_hw_fla_pgwrt(o,src) HW_EOL(__VA_ARGS__)
 
 
 #if !defined HW_DEVICE_FUSE_BOOTRST
@@ -128,8 +124,7 @@ HW_INLINE void _hw_flardbytes( uint8_t *dst, uint16_t addr, uint8_t count )
   }while(0)
 
 
-/**
- * @brief  Preload Z register before outputting SPM instruction
+/*  Preload Z register before outputting SPM instruction
  */
 HW_INLINE void _hw_fla_spm( intptr_t ptr )
 {
@@ -150,8 +145,7 @@ HW_INLINE void _hw_fla_spm( intptr_t ptr )
   }while(0)
 
 
-/**
- * @brief Load page buffer with data from src
+/*  Load page buffer with data from src
  */
 HW_INLINE void _hw___fla_ldpgbf( void *src )
 {
@@ -223,7 +217,7 @@ HW_INLINE void _hw___fla_ldpgbf( void *src )
 		       1<<HW_POSITION((o, pgwrt)) | 1<<HW_POSITION((o, spmen))); \
   }while(0)
 
-/**
+/*
  */
 HW_INLINE void _hw___fla_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
 {
@@ -284,8 +278,7 @@ HW_INLINE void _hw___fla_dospm( intptr_t csr, intptr_t ptr, uint8_t cmd )
   }while(0)
 
 
-/**
- * @brief Load page buffer with data from src
+/*  Load page buffer with data from src
  */
 HW_INLINE void _hw___fla_ldpgbf( void *src )
 {
@@ -377,3 +370,24 @@ HW_INLINE void _hw___fla_ldpgbf( intptr_t dst, void *src )
 	 );
 }
 #endif
+
+
+/**
+ * @addtogroup atmelavr_fla
+ * @section Registers
+ *
+ * Harware registers:
+ *
+ * * csr
+ *
+ * Logical registers:
+ *
+ * * spmie
+ * * rwwsb
+ * * sigrd
+ * * rwwsre
+ * * blbset
+ * * pgwrt
+ * * pgers
+ * * spmen
+ */

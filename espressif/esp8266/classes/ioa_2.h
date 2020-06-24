@@ -10,7 +10,7 @@
  */
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  * @section espressif_ioa_config Configuration
  *
  * __Actions__
@@ -99,7 +99,7 @@
 #define _hwa_cfioa_kfn_1(o,cf,p,bn,bp,k,v,...)	_hwa_cfioa_kfn_2(o,cf,p,bn,bp,v,_HW_UBKT(v),__VA_ARGS__)
 #define _hwa_cfioa_kfn_2(...)			_hwa_cfioa_kfn_3(__VA_ARGS__)
 #define _hwa_cfioa_kfn_3(o,cf,p,bn,bp,v,x,...)	HW_B(_hwa_cfioa_vfn_,_hw_pf_##o##_##x)(o,cf,p,bn,bp,v,x,__VA_ARGS__)
-#define _hwa_cfioa_vfn_0(o,cf,p,bn,bp,v,x,...)	HW_E_NIL(v, _hw_pf_##o)
+#define _hwa_cfioa_vfn_0(o,cf,p,bn,bp,v,x,...)	HW_E(HW_EM_XNIL(v,_hw_pf_##o))
 #define _hwa_cfioa_vfn_1(o,cf,p,bn,bp,v,x,k,...)			\
   _hwa_write( cf, fn, HW_A1(_hw_pf_##o##_##x) );			\
   HW_A2(_hw_pf_##o##_##x) /* Optionnal supplement of actions, e.g. swap	 */ \
@@ -110,27 +110,28 @@
 
 /*  Key 'mode'
  */
-#define _hw_cfioa_md_digital_input	, di
-#define _hw_cfioa_md_digital_input_floating	, dif
-#define _hw_cfioa_md_digital_input_pullup	, dipu
-#define _hw_cfioa_md_digital_input_pullup_when_awake	, dipuwa
-#define _hw_cfioa_md_digital_input_pullup_when_sleeping	, dipuws
-#define _hw_cfioa_md_digital_output	, dopp
-#define _hw_cfioa_md_digital_output_pushpull	, dopp
-#define _hw_cfioa_md_digital_output_when_awake	, doppwa
-#define _hw_cfioa_md_digital_output_pushpull_when_awake	, doppwa
-#define _hw_cfioa_md_digital_output_when_sleeping	, doppws
+#define _hw_cfioa_md_digital_input				, di
+#define _hw_cfioa_md_digital_input_floating			, dif
+#define _hw_cfioa_md_digital_input_pullup			, dipu
+#define _hw_cfioa_md_digital_input_pullup_when_awake		, dipuwa
+#define _hw_cfioa_md_digital_input_pullup_when_sleeping		, dipuws
+#define _hw_cfioa_md_digital_output				, dopp
+#define _hw_cfioa_md_digital_output_pushpull			, dopp
+#define _hw_cfioa_md_digital_output_when_awake			, doppwa
+#define _hw_cfioa_md_digital_output_pushpull_when_awake		, doppwa
+#define _hw_cfioa_md_digital_output_when_sleeping		, doppws
 #define _hw_cfioa_md_digital_output_pushpull_when_sleeping	, doppws
-#define _hw_cfioa_md_analog_input	, ai
+#define _hw_cfioa_md_analog_input				, ai
 
-#define _hwa_cfioa_kmd_0(o,cf,p,bn,bp,k,...)	HW_E_NIL(k, (mode) )
+#define _hwa_cfioa_kmd_0(o,cf,p,bn,bp,k,...)	HW_E(HW_EM_AN(k,(mode)))
 #define _hwa_cfioa_kmd_1(o,cf,p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vmd_,_hw_cfioa_md_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfioa_vmd_0(o,cf,p,bn,bp,v,...)	HW_E_NIL(v, (digital_input,digital_input_floating, digital_input_pullup, \
-							     digital_input_pullup_when_awake, \
-							     digital_output, digital_output_pushpull, \
-							     digital_output_when_awake, digital_output_pushpull_when_awake, \
-							     digital_output_when_sleeping, digital_output_pushpull_when_sleeping,\
-							     analog_input) )
+#define _hwa_cfioa_vmd_0(o,cf,p,bn,bp,v,...)				\
+  HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating, digital_input_pullup, \
+			 digital_input_pullup_when_awake,		\
+			 digital_output, digital_output_pushpull,	\
+			 digital_output_when_awake, digital_output_pushpull_when_awake, \
+			 digital_output_when_sleeping, digital_output_pushpull_when_sleeping, \
+			 analog_input)))
 #define _hwa_cfioa_vmd_1(o,cf,p,bn,bp,v,...)	HW_G2(_hwa_cfioa,HW_A1(_hw_cfioa_md_##v))(o,cf,p,bn,bp,__VA_ARGS__)
 
 #define _hwa_cfioa_di(o,cf,p,bn,bp,k,...)				\
@@ -183,11 +184,11 @@
 #define _hwa_cfioa_kpu_0(o,cf,p,bn,bp,...)	HW_EOL(__VA_ARGS__)
 #define _hwa_cfioa_kpu_1(o,cf,p,bn,bp,k,v,...)	HW_B(_hwa_cfioa_vpu_,_hw_cfioa_pu_##v)(o,cf,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioa_vpu_1(o,cf,p,bn,bp,v,...)	_hwa_write( cf, pux, HW_A1(_hw_cfioa_pu_##v) ); HW_EOL(__VA_ARGS__)
-#define _hwa_cfioa_vpu_0(o,cf,p,bn,bp,v,...)	HW_AVL(pullup, v, (on,off,when_awake,when_sleeping))
+#define _hwa_cfioa_vpu_0(o,cf,p,bn,bp,v,...)	HW_E(HW_EM_VAL(v,pullup, (on,off,when_awake,when_sleeping)))
 
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  * @section espressif_ioa_read State
  *
  * The instruction `read` returns the state of the I/O object:
@@ -204,7 +205,7 @@
 
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  *
  * `write`:
  *
@@ -227,7 +228,7 @@
 
 
 /**
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  *
  * `toggle`:
  *
@@ -242,7 +243,7 @@
 #define _hw_tgioa_2(r,msk)		*(volatile uint32_t *)r = *(volatile uint32_t *)r ^ msk
 
 /*
- * @page espressif_ioa
+ * @addtogroup esp8266_ioa
  * @code
  * // All the pins of the same I/O port toggled in the same transaction will be
  * // toggled at once by the `hwa_commit()` instruction.
@@ -255,8 +256,3 @@
 /* #define _hwa_toggle_ioa_2(...)			_hwa_toggle_ioa_3(__VA_ARGS__) */
 /* #define _hwa_toggle_ioa_3(_m1,p,a,r,rw,ra,rwm,rfm,_bn,_bp,bn,bp,...)	\ */
 /*   _hwa_write(_m1,p,a,r,rw,ra,rwm,rfm,bn,bp, 1) HW_EOL(__VA_ARGS__) */
-
-/**
- * @page espressif_ioa
- * <br>
- */

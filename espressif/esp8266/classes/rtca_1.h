@@ -10,7 +10,8 @@
  */
 
 /**
- * @page espressif_rtca Class _rtca: RTC
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_rtca Class _rtca: RTC
  *
  */
 #define hw_class__rtca

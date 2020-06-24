@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_eea Class _eea: EEPROM memory
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_eea Class _eea: EEPROM memory
  *
  * A class `_eea` object is an EEPROM memory.
  *

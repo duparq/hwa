@@ -9,12 +9,14 @@
  * @brief Espressif's ESP8266
  */
 
+/**
+ * @ingroup esp8266_devices
+ * @defgroup esp8266 ESP8266
+ */
+
 #include "../hwa_1.h"
 #include "os.h"
 
-/**
- * @page esp8266 ESP8266
- */
 #define HW_SYSHZ				80000000
 #define HW_APBHZ				HW_SYSHZ
 
@@ -29,16 +31,16 @@
  *******************************************************************************/
 
 /**
- * @page esp8266
+ * @addtogroup esp8266
  * @section espressif_peripherals Peripherals
  *
  * __Note__ All the peripherals are not completely implemented yet.
  *
  * Object name	| Class				 | Comments
  * :------------|--------------------------------|:-----------------------------
- * `port0`	| @ref espressif_gpa "_gpa"	 | General purpose I/O port
- * `timer1`	| @ref espressif_tm23a "_tm23a"	 | 23-bit timer
- * `uart0`	| @ref espressif_uarta "_uarta"	 | UART
+ * `port0`	| @ref esp8266_gpa "_gpa"	 | General purpose I/O port
+ * `timer1`	| @ref esp8266_tm23a "_tm23a"	 | 23-bit timer
+ * `uart0`	| @ref esp8266_uarta "_uarta"	 | UART
  */
 
 
@@ -47,7 +49,7 @@
  *	Interrupts							       *
  *									       *
  *******************************************************************************/
-/**
+/*
  * @ingroup espressif_interrupts
  * @brief Definition of the interrupts
  */
@@ -169,30 +171,30 @@ typedef struct {
  *******************************************************************************/
 
 /**
- * @page esp8266
+ * @addtogroup esp8266
  * @section espressif_pins Pins
  *
  * Each pin can be connected to different signals with the `configure` action:
  *
  * Pin	  | HWA name | Class			 | Functions
  * -------|----------|---------------------------|-------------
- * GPIO0  | `gpio0`  | @ref espressif_ioa "_ioa" | `gpio`, `(spi0,cs2)`, `clk_out`
- * GPIO1  | `gpio1`  | @ref espressif_ioa "_ioa" | `gpio`, `(uart0,txd)`, `(spi0,cs1)`, `clk_rtc`
- * GPIO2  | `gpio2`  | @ref espressif_ioa "_ioa" | `gpio`, `(i2so0,ws)`, `(uart1,txd)`, `(uart0,txd)`
- * GPIO3  | `gpio3`  | @ref espressif_ioa "_ioa" | `gpio`, `(uart0,rxd)`, `(i2so,data)`, `fn_clk_xtal`
- * GPIO4  | `gpio4`  | @ref espressif_ioa "_ioa" | `gpio`, `clk_xtal`
- * GPIO5  | `gpio5`  | @ref espressif_ioa "_ioa" | `gpio`, `clk_rtc`
- * GPIO6  | `gpio6`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_clk`, `(spi0,clk)`, `(uart1,cts)`
- * GPIO7  | `gpio7`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data0`, `(spi0,q)`, `(uart1,txd)`
- * GPIO8  | `gpio8`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data1`, `(spi0,d)`, `(uart1,rxd)`
- * GPIO9  | `gpio9`  | @ref espressif_ioa "_ioa" | `gpio`, `sd_data2`, `(spi0,hd)`, `(hspi0,hd)`
- * GPIO10 | `gpio10` | @ref espressif_ioa "_ioa" | `gpio`, `sd_data3`, `(spi0,wp)`, `(hspi0,wp)`
- * GPIO11 | `gpio11` | @ref espressif_ioa "_ioa" | `gpio`, `sd_cmd`, `(spi0,cs0)`, `(uart1,rts)`
- * GPIO12 | `gpio12` | @ref espressif_ioa "_ioa" | `gpio`, `mtdi`, `(i2si,data)`, `(hspi0,miso)`, `(uart0,dtr)`
- * GPIO13 | `gpio13` | @ref espressif_ioa "_ioa" | `gpio`, `mtck`, `(i2s0,bck)`, `(hspi0,mosi)`, `(uart0,cts)`
- * GPIO14 | `gpio14` | @ref espressif_ioa "_ioa" | `gpio`, `mtms`, `(i2si,ws)`, `(hspi0,clk)`, `(uart0,dsr)`
- * GPIO15 | `gpio15` | @ref espressif_ioa "_ioa" | `gpio`, `mtdo`, `(i2so0,bck)`, `(hspi0,cs)`, `(uart0,rts)`, `(uart0,txd)`
- * GPIO16 | `gpio16` | @ref espressif_iob "_iob" | `gpio`, `xpd_dcdc`, `external_wakeup`, `deep_sleep`, `bt_xtal_en`
+ * GPIO0  | `gpio0`  | @ref esp8266_ioa "_ioa" | `gpio`, `(spi0,cs2)`, `clk_out`
+ * GPIO1  | `gpio1`  | @ref esp8266_ioa "_ioa" | `gpio`, `(uart0,txd)`, `(spi0,cs1)`, `clk_rtc`
+ * GPIO2  | `gpio2`  | @ref esp8266_ioa "_ioa" | `gpio`, `(i2so0,ws)`, `(uart1,txd)`, `(uart0,txd)`
+ * GPIO3  | `gpio3`  | @ref esp8266_ioa "_ioa" | `gpio`, `(uart0,rxd)`, `(i2so,data)`, `fn_clk_xtal`
+ * GPIO4  | `gpio4`  | @ref esp8266_ioa "_ioa" | `gpio`, `clk_xtal`
+ * GPIO5  | `gpio5`  | @ref esp8266_ioa "_ioa" | `gpio`, `clk_rtc`
+ * GPIO6  | `gpio6`  | @ref esp8266_ioa "_ioa" | `gpio`, `sd_clk`, `(spi0,clk)`, `(uart1,cts)`
+ * GPIO7  | `gpio7`  | @ref esp8266_ioa "_ioa" | `gpio`, `sd_data0`, `(spi0,q)`, `(uart1,txd)`
+ * GPIO8  | `gpio8`  | @ref esp8266_ioa "_ioa" | `gpio`, `sd_data1`, `(spi0,d)`, `(uart1,rxd)`
+ * GPIO9  | `gpio9`  | @ref esp8266_ioa "_ioa" | `gpio`, `sd_data2`, `(spi0,hd)`, `(hspi0,hd)`
+ * GPIO10 | `gpio10` | @ref esp8266_ioa "_ioa" | `gpio`, `sd_data3`, `(spi0,wp)`, `(hspi0,wp)`
+ * GPIO11 | `gpio11` | @ref esp8266_ioa "_ioa" | `gpio`, `sd_cmd`, `(spi0,cs0)`, `(uart1,rts)`
+ * GPIO12 | `gpio12` | @ref esp8266_ioa "_ioa" | `gpio`, `mtdi`, `(i2si,data)`, `(hspi0,miso)`, `(uart0,dtr)`
+ * GPIO13 | `gpio13` | @ref esp8266_ioa "_ioa" | `gpio`, `mtck`, `(i2s0,bck)`, `(hspi0,mosi)`, `(uart0,cts)`
+ * GPIO14 | `gpio14` | @ref esp8266_ioa "_ioa" | `gpio`, `mtms`, `(i2si,ws)`, `(hspi0,clk)`, `(uart0,dsr)`
+ * GPIO15 | `gpio15` | @ref esp8266_ioa "_ioa" | `gpio`, `mtdo`, `(i2so0,bck)`, `(hspi0,cs)`, `(uart0,rts)`, `(uart0,txd)`
+ * GPIO16 | `gpio16` | @ref esp8266_iob "_iob" | `gpio`, `xpd_dcdc`, `external_wakeup`, `deep_sleep`, `bt_xtal_en`
  */
 
 
@@ -415,12 +417,12 @@ typedef struct {
 #define hw_rtc__gpiocf			_r32, 0x90, 0xFFFFFFFF, 0
 #define hw_rtc__gpiocr			_r32, 0xA0, 0xFFFFFFFF, 0
 
-#define hw_gpio16_fn			_xob2, rtc, _gpiocr, 1, 6, 2, _gpiocr, 2, 0, 0
-#define hw_gpio16_spd			_xob1, rtc, _gpiocr, 1, 5
-#define hw_gpio16_pd			_xob1, rtc, _gpiocr, 1, 3
-#define hw_gpio16_pdx			_xob2, rtc, _gpiocr, 1, 5, 1, _gpiocr, 1, 3, 0 /* convenient */
-#define hw_gpio16_oe			_xob1, rtc, _gpioen, 1, 0 /* convenient */
-#define hw_gpio16_cf			_xob1, rtc, _gpiocf, 1, 0 /* convenient */
+#define hw_gpio16_fn			_xb2, rtc, _gpiocr, 1, 6, 2, _gpiocr, 2, 0, 0
+#define hw_gpio16_spd			_xb1, rtc, _gpiocr, 1, 5
+#define hw_gpio16_pd			_xb1, rtc, _gpiocr, 1, 3
+#define hw_gpio16_pdx			_xb2, rtc, _gpiocr, 1, 5, 1, _gpiocr, 1, 3, 0 /* convenient */
+#define hw_gpio16_oe			_xb1, rtc, _gpioen, 1, 0 /* convenient */
+#define hw_gpio16_cf			_xb1, rtc, _gpiocf, 1, 0 /* convenient */
 
 
 /*******************************************************************************
@@ -459,7 +461,7 @@ typedef struct {
 
 #define hw__tm23a_ifclr			_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-#define hw_timer1_ie			_xob1, shared, _edgeie, 1, 1
+#define hw_timer1_ie			_xb1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -497,7 +499,7 @@ typedef struct {
 
 #define hw__tm32a_ifclr			_cb1, _flags,  1, 0	// Write 1 to clear interrupt flag
 
-//#define hw_timer1_ie				_xob1, shared, _edgeie, 1, 1
+//#define hw_timer1_ie				_xb1, shared, _edgeie, 1, 1
 
 
 /*******************************************************************************
@@ -619,7 +621,7 @@ typedef struct {
 #define hw__uarta_cfet			_cb1, _conf1, 7,  8	// TX FIFO Empty Treshold (7bit)
 #define hw__uarta_cfft			_cb1, _conf1, 7,  0	// RX FIFO Full Treshold (7bit)
 
-#define hw__uarta_swap			_xob1, shared, _swap, 1, 2
+#define hw__uarta_swap			_xb1, shared, _swap, 1, 2
 
 // #define hw__uarta_				_cb1, _, 1,	//
 

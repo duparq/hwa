@@ -10,30 +10,58 @@
  */
 
 /**
- * @ingroup public_atmelavr_def
- * @brief Defined for all Atmel AVR devices
- * @hideinitializer
+ * @addtogroup atmelavr
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name and the
+ * definitions provided by the user.
+ *
+ * @{
  */
-#if !defined DOXYGEN
-#  define HW_DEVICE_VENDOR_ATMEL
-#  define HW_DEVICE_ARCH_AVR
-#  define HW_DEVICE_VENDOR		atmel
-#  define HW_DEVICE_ARCH		avr
-#endif
 
-/*  Address correction of a memory definition (C and assembler address differ!)
+/**
+ * Device vendor
  */
-#if defined __ASSEMBLER__
-#  define HW_AC					-0x20
+#define HW_DEVICE_VENDOR		atmel
+
+/**
+ * Device vendor
+ */
+#define HW_DEVICE_VENDOR_ATMEL
+
+/**
+ * Device architecture
+ */
+#define HW_DEVICE_ARCH			avr
+
+/**
+ * Device architecture
+ */
+#define HW_DEVICE_ARCH_AVR
+
+
+/**
+ * Address correction for memory definitions (C and assembler address differ!)
+ */
+#if defined __ASSEMBLER__ || DOXYGEN
+#  define HW_AC				-0x20
 #else
-typedef signed int int8_t __attribute__((__mode__(__QI__)));
-typedef unsigned int uint8_t __attribute__((__mode__(__QI__)));
-typedef signed int int16_t __attribute__ ((__mode__ (__HI__)));
-typedef unsigned int uint16_t __attribute__ ((__mode__ (__HI__)));
-typedef signed int int32_t __attribute__ ((__mode__ (__SI__)));
-typedef unsigned int uint32_t __attribute__ ((__mode__ (__SI__)));
-typedef int16_t intptr_t;
-typedef uint16_t uintptr_t;
+typedef signed int			int8_t __attribute__((__mode__(__QI__)));
+typedef unsigned int			uint8_t __attribute__((__mode__(__QI__)));
+typedef signed int			int16_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int			uint16_t __attribute__ ((__mode__ (__HI__)));
+typedef signed int			int32_t __attribute__ ((__mode__ (__SI__)));
+typedef unsigned int			uint32_t __attribute__ ((__mode__ (__SI__)));
+
+typedef int16_t				intptr_t;
+typedef uint16_t			uintptr_t;
 #endif
 
+/** @} */
+/** @} */
+
+
+#include "hwa_errors.h"
 #include "../../hwa/hwa_1.h"

@@ -63,7 +63,7 @@ int main ( )
     /*	When the device is reset by the watchdog, the watchdog remains enabled
      *	so we must stop it.
      */
-    hwa( turn, watchdog0, off );
+    hwa( disable, watchdog0 );
     hwa( commit );
     hw( wait, irq );
     for (;;)			/* This should */

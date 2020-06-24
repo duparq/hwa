@@ -6,27 +6,27 @@
 
 /**
  * @file
- * @brief 8-bit compare unit
+ * @brief Atmel AVR 8-bit compare unit with waveform generator
  */
 
 /**
- * @page atmelavr_oca Class _oca: 8-bit compare unit with waveform generator
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_oca Class _oca: 8-bit compare unit with waveform generator
  *
- * Class `_oca` objects are 8-bit compare units with waveform generator used in:
+ * This class is used by:
+ *
  * * @ref attinyx4 : `(counter0,compare0)`, `(counter0,compare1)`
  * * @ref attinyx5 : `(counter0,compare0)`, `(counter0,compare1)`
  * * @ref atmegax8 : `(counter0,compare0)`, `(counter0,compare1)`, `(counter2,compare0)`, `(counter2,compare1)`
  *
- * @code
- * #if HW_BITS( (counter0,compare0) ) != 8
- * #  error A 8-bit compare unit is required!
- * #endif
- * @endcode
+ * @section atmelavr_ocarl Relatives
  *
- * @par Relatives
+ * * `(counter0,compare0,counter)`: parent counter;
+ * * `(counter0,compare0,pin)`: output pin.
  *
- * * `(counter0,compare0, counter)`: parent counter;
- * * `(counter0,compare0, pin)`: output pin.
+ * @section atmelavr_ocairq Interrupts
+ *
+ *  * `(COUNTER,COMPARE,irq)`: triggered on compare match
  */
 #define hw_class__oca
 
@@ -36,19 +36,10 @@
 
 
 /*  Return the compare register of a _oca
- *    HW_CODR is blued.
  */
 #define hw__oca_reg			, _hw_oca_reg
-#define _hw_oca_reg(oo,ct,cp)		HW_XOR(ct,ocr##cp)
+#define _hw_oca_reg(oo,ct,cp)		HW_XOR(ct,ocr##cp) /* HW_CODR is blued */
 
-
-/**
- * @page atmelavr_oca
- * @par Interrupts
- *
- * * `(counter0,compare0,irq)`: triggered on compare match A
- * * `(counter0,compare1,irq)`: triggered on compare match B
- */
 
 #if !defined __ASSEMBLER__
 

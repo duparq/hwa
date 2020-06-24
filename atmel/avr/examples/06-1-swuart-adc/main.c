@@ -34,6 +34,15 @@
 #include "config.h"
 
 
+/*  Use pin AVCC as Vref when possible
+ */
+#if HW_ADDRESS((pin,avcc)) == -1
+#  define VREF			vcc
+#else
+#  define VREF			(pin,avcc)
+#endif
+
+
 /*  The counter used to schedule the ADC conversions
  *
  *    FIXME: using the same counter as for swuart overrides the configuration
@@ -45,12 +54,20 @@ volatile uint16_t		adc ;	// Last adc value
 volatile uint8_t		x_adc ; // Set to 1 after adc is written
 
 
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
+
+
 /*  Service counter overflow interrupt:
  *    turn the ADC on, it will start a conversion as the MCU enters sleep
  */
 HW_ISR( (COUNTER,irq,overflow) )
 {
-  hw( turn, adc0, on );
+  hw( enable, adc0 );
   hw( toggle, PIN_LED );
 }
 
@@ -61,7 +78,7 @@ HW_ISR( (COUNTER,irq,overflow) )
 HW_ISR( (adc0,irq) )
 {
   adc = hw( read, adc0 );
-  hw( turn, adc0, off );
+  hw( disable, adc0 );
   x_adc = 1 ;
 }
 
@@ -112,7 +129,7 @@ main ( )
   hwa( configure, adc0,
        clock,     ioclk / 128,
        trigger,   manual,
-       vref,      vcc,
+       vref,      VREF,
        align,     right,
        input,     PIN_ANALOG_INPUT );
 
@@ -142,8 +159,8 @@ main ( )
 	x_adc = 0 ;
 	x = adc ;
       } while( x_adc );
-      hw( write, UART, (x & 0x00FF)>>0 );
-      hw( write, UART, (x & 0xFF00)>>8 );
+      uart_putbyte( (x & 0x00FF)>>0 );
+      uart_putbyte( (x & 0xFF00)>>8 );
     }
   }
 }

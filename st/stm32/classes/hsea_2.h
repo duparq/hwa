@@ -13,7 +13,9 @@
  /* * HSE oscillator. */
 
 /**
- * @page stm32_hsea Class _hsea: HSE oscillator
+ * @ingroup stm32_classes
+ * @defgroup stm32_hsea Class _hsea: HSE oscillator
+ * @section stm32_hsea_act Actions
  *
  * `power`:
  * @code
@@ -25,7 +27,7 @@
 /* Implemented in stm32/hwa_2.h */
 
 /**
- * @page stm32_hsea
+ * @addtogroup stm32_hsea
  * <br>
  * `stat`:
  * @code

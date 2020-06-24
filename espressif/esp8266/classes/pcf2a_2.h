@@ -17,7 +17,7 @@
  */
 
 /*
- * @page espressif_pcf2a
+ * espressif_pcf2a
  *
  */
 

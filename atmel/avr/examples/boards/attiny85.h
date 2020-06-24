@@ -10,13 +10,15 @@
  */
 
 /**
- * @page atmelavr_boards
- *
- * @section boards_attiny85 Board attiny85
+ * @ingroup atmelavr_boards
+ * @defgroup board_attiny85 Board ATtiny85
  *
  * This is a single ATTINY85-20PU without crystal on a breadboard with a
  * USB/Serial adapter for 1-wire communication, a LED connected at pin #5
  * (PB0/OC0A), one analog input pin.
+ *
+ * @image html attiny85.jpeg
+ *
  *
  * @par Pin Configuration
  *
@@ -48,8 +50,9 @@
  *
  * @par attiny85.h
  * @include boards/attiny85.h
- * <br>
+ * @{
  */
+
 
 /*  Device configuration
  */
@@ -79,6 +82,8 @@
 /*  Analog input pin
  */
 #define PIN_ANALOG_INPUT		(pin,7)	// ADC1
+
+/** @} */
 
 /*  HWA
  */

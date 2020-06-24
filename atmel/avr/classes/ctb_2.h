@@ -6,13 +6,68 @@
 
 /**
  * @file
- * @brief 8-bit counter
+ * @brief Atmel AVR 8-bit counter with two compare units and one dead-time generator
  */
+
+/**
+ * @addtogroup atmelavr_ctb
+ * @section atmelavr_ctbact Actions
+ *
+ * <br><br>hwa( configure, ... ): configure the counting unit
+ *
+ * @code
+ * hwa( configure, counter0,
+ *
+ *	//  How the counter is clocked
+ *	//
+ *	clock,	     none			// No clock, counter stopped
+ *		   | ioclk [/ 2**(0..14)]	// IOCLK divided by 1,2,4,..16384
+ *
+ *    [ direction,   up_loop, ]			// Default, no other choice
+ *    [ bottom,	     0,	      ]			// Default, no other choice
+ *
+ *	//  The maximum value the counter reaches
+ *	//
+ *    [ top,	     0xFF | 0x00FF | 255 | max	// Hardware fixed value 0xFF (default)
+ *		   | compare2, ]		// Value stored in compare2
+ *
+ *	//  When the overflow flag is set
+ *	//
+ *    [ overflow,    after_bottom ]		// When the counter restarts from 0
+ * );
+ * @endcode
+ *
+ * @note If a compare unit is used, its configuration must be done inside the
+ * same context as the counter so that HWA has all the necessary informations to
+ * choose the correct register settings.
+ */
+#define hwa_configure__ctb		, _hwa_cfctb
+
+/*  Mandatory argument `clock`
+ *
+ *    Add 2 void arguments to the end of the list so that there are always
+ *    3 arguments following the last non-void argument.
+ */
+#define _hwa_cfctb(o,a,k,...)						\
+  do { HW_B(_hwa_cfctb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
+
+#define _hwa_cfctb_kclock_0(o,k,...)		HW_E(HW_EM_AN(k,clock))
+#define _hwa_cfctb_kclock_1(o,k,v,...)		HW_B(_hwa_cfctb_vclock_,_hw_ctb_clock_##v)(o,v,__VA_ARGS__)
+
+#define _hwa_cfctb_vclock_0(o,v,...)					\
+  HW_E(HW_EM_VAL(v,clock,(none,ioclk [/ 2**n] with n in {0..14})))
+
+#define _hwa_cfctb_vclock_1(o,v,k,...)					\
+  _hwa_write(o, cs, HW_VF(_hw_ctb_clock_##v));				\
+  HW_B(_hwa_cfctb_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
+
+#define _hw_ctb_clock_none		, _hw_ctbck_none, 0
+#define _hw_ctb_clock_ioclk		, _hw_ctbck_ioclk, 16384.0
 
 HW_INLINE uint8_t _hw_ctbck_none( float v )
 {
   if ( v != 0 )
-    HWA_E(value of `clock` must be in (`none`, `ioclk/2**n` with n in [1..14], `external_falling`, `external_rising`));
+    HWA_E(HW_EM_VL(clock,(none, ioclk/2**(0..14), external_falling, external_rising)));
 
   return 0 ;
 }
@@ -35,69 +90,10 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   if ( v ==     2 ) return 14 ;
   if ( v ==     1 ) return 15 ;
 
-  HWA_E(value of `clock` must be in (`none`, `ioclk/2**n` with n in [1..14], `external_falling`, `external_rising`));
+  HWA_E(HW_EM_VL(clock,(none, ioclk/2**(0..14), external_falling, external_rising)));
 
   return 0 ;
 }
-
-/**
- * @page atmelavr_ctb
- * @section atmelavr_ctb_act Actions
- *
- * <br>
- * `configure`:
- *
- * __Note__ If the a compare unit is used, its configuration must be done inside
- * the same context as its counter so that HWA has all the necessary
- * informations to choose the correct register settings.
- *
- * @code
- * hwa( configure, counter0,
- *
- *	//  Clock source
- *	//
- *	clock,	     none			 // No clock, counter stopped
- *		   | ioclk [/ 2**{n}]		 // I/O clock [divided], n in [ 0..14 ]
- *
- *	//  Class _ctb counters all loop from 0 to top
- *	//
- *    [ direction,   up_loop, ]
- *    [ bottom,	     0,	      ]
- *
- *	//  The maximum value the counter reaches (the default is `max`)
- *	//
- *    [ top,	     0xFF | 0x00FF | 255	  // Hardware fixed value 0xFF
- *		   | max			  // Hardware fixed value 0xFF
- *		   | compare2, ]		  // Value stored in the compare unit 2
- *
- *	//  When the overflow flag is set
- *	//
- *    [ overflow,    after_bottom ]		  // When the counter restarts from 0
- *     );
- * @endcode
- */
-#define hwa_configure__ctb		, _hwa_cfctb
-
-/*  Mandatory argument `clock`
- *
- *    Add 2 void arguments to the end of the list so that there are always
- *    3 arguments following the last non-void argument.
- */
-#define _hwa_cfctb(o,a,k,...)						\
-  do { HW_B(_hwa_cfctb_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,) } while(0)
-
-#define _hwa_cfctb_kclock_0(o,k,...)		HW_E_VL(k,clock)
-#define _hwa_cfctb_kclock_1(o,k,v,...)		HW_B(_hwa_cfctb_vclock_,_hw_ctb_clock_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfctb_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, `none` | `ioclk [/ 2**n]` with n in {0..14})
-
-#define _hwa_cfctb_vclock_1(o,v,k,...)					\
-  _hwa_write(o, cs, HW_VF(_hw_ctb_clock_##v));				\
-  HW_B(_hwa_cfctb_kdirection_,_hw_is_direction_##k)(o,k,__VA_ARGS__)
-
-#define _hw_ctb_clock_none		, _hw_ctbck_none, 0
-#define _hw_ctb_clock_ioclk		, _hw_ctbck_ioclk, 16384.0
 
 /*  Optionnal argument `direction`
  */
@@ -105,7 +101,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   HW_G2(_hwa_cfctb_vdirection,HW_IS(up_loop,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_vdirection_0(o,v,...)	\
-  HW_E_AVL(`direction`, v, `up_loop`)
+  HW_E(HW_EM_VAL(v,direction,(up_loop)))
 
 #define _hwa_cfctb_vdirection_1(o,v,...)	\
   _hwa_cfctb_kdirection_0(o,__VA_ARGS__)
@@ -119,7 +115,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   HW_G2(_hwa_cfctb_vbottom,HW_IS(0,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_vbottom_0(o,v,...)		\
-  HW_E_AVL(`bottom`, v, `0`)
+  HW_E(HW_EM_VAL(v,bottom,(0)))
 
 #define _hwa_cfctb_vbottom_1(o,v,...)		\
   _hwa_cfctb_kbottom_0(o,__VA_ARGS__)
@@ -140,7 +136,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   HW_B(_hwa_cfctb_vtop_,_hw_ctb_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_vtop_0(o,v,...)				\
-  HW_E_AVL(top, v, 0xFF | 0x00FF | 255 | max | compare2)
+  HW_E(HW_EM_VAL(v,top,(0xFF,0x00FF,255,max,compare2)))
 
 #define _hwa_cfctb_vtop_1(o,v,...)		\
   _hwa_write(o, ctc, HW_A1(_hw_ctb_top_##v));	\
@@ -156,7 +152,7 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
   HW_G2(_hwa_cfctb_voverflow,HW_IS(after_bottom,v))(o,v,__VA_ARGS__)
 
 #define _hwa_cfctb_voverflow_0(o,v,...)		\
-  HW_E_AVL(`overflow`, v, `after_bottom`)
+  HW_E(HW_EM_VAL(v,overflow,(after_bottom)))
 
 #define _hwa_cfctb_voverflow_1(o,v,...)		\
   _hwa_cfctb_koverflow_0(o,__VA_ARGS__)
@@ -165,53 +161,32 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
 
 
 /**
- * @page atmelavr_ctb
+ * @addtogroup atmelavr_ctb
  *
- * <br>
- * `read`:
- *
- * The count value is accessible for reading and writing through the following
- * instructions:
+ * <br><br>hw( read, ... ): get the count
  *
  * @code
- * hw( read, counter0 );
+ * uint8_t n = hw( read, counter0 );
+ * @endcode
+ *
+ * <br><br>hw( write, ... ), hwa( write, ... ): set the count
+ *
+ * @code
+ * hw( write, counter0, value );
+ * @endcode
+ *
+ * @code
+ * hwa( write, counter0, value );
  * @endcode
  */
 #define hw_read__ctb			, _hw_ctbrd
 #define _hw_ctbrd(o,a,...)		 _hw_read(o,count) HW_EOL(__VA_ARGS__)
 
-/**
- * @page atmelavr_ctb
- * @code
- * hw( write, counter0, value );
- * @endcode
- */
 #define hw_write__ctb			, _hw_ctbwr
 #define _hw_ctbwr(o,a,v,...)		 _hw_write(o,count,v) HW_EOL(__VA_ARGS__)
 
-/**
- * @page atmelavr_ctb
- * @code
- * hwa( write, counter0, value );
- * @endcode
- */
 #define hwa_write__ctb			, _hwa_ctbwr
 #define _hwa_ctbwr(o,a,v,...)		 _hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
-
-
-/**
- * @page atmelavr_ctb
- * @section atmelavr_ctb_st Status
- *
- * The overflow flag can be accessed through interrupt-related instructions:
- *
- * @code
- * if ( hw( read, (counter0,irq) ) ) {	// Read overflow IRQ flag
- *   hw( clear, (counter0,irq) );		// Clear overflow IRQ flag
- *   hw( disable, (counter0,irq) );		// Disable overflow IRQs
- * }
- * @endcode
- */
 
 
 /*******************************************************************************
@@ -220,10 +195,9 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
  *									       *
  *******************************************************************************/
 
-/**
- * @brief Solve the configuration of the counter and its related peripherals.
- */
-/*  This kind of counter does not trigger overflow IRQs on compare match with
+/* Solve the configuration of the counter and its related peripherals.
+ *
+ *  This kind of counter does not trigger overflow IRQs on compare match with
  *  OCRC if no compare output is in pwm mode:
  *
  *  "In the normal mode an overflow interrupt (TOV1) is generated when
@@ -233,31 +207,33 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
  *  in normal mode."
  *
  * -> If one compare output has been put in PWM mode, the other must have been
- *    too if it us used.
- * -> If 
+ *    too if it is used.
  */
-#define _hwa_solve__ctb( counter, a )					\
-  _hwa_solve_ocb( counter, 0 );						\
-  _hwa_solve_ocb( counter, 1 );						\
-  if ( _hwa_mmask(counter,pwm0) && _hwa_mmask(counter,pwm1)		\
-       && _hwa_mvalue(counter,pwm0) != _hwa_mvalue(counter,pwm1) )	\
-    HWA_ERR("used compare outputs must be in the same NORMAL or PWM mode."); \
-  else if ( _hwa_mmask(counter,ctc) && _hwa_mvalue(counter,ctc)==0	\
-	    && (   (_hwa_mmask(counter,pwm0) && _hwa_mvalue(counter,pwm1)) \
-		   || (_hwa_mmask(counter,pwm1) && _hwa_mvalue(counter,pwm1))) ) \
-    HWA_ERR("`top` must be `compare2` for `" #counter "` when using the PWM mode."); \
-  if ( _hwa_mvalue(counter,ie)==1					\
-       && _hwa_mvalue(counter,ctc)==1					\
-       && _hwa_mvalue(counter,pwm0) == 0				\
-       && _hwa_mvalue(counter,pwm1) == 0 ) {				\
-    if ( _hwa_mmask(counter,pwm0)==1 || _hwa_mmask(counter,pwm1)== 1 )	\
-      HWA_ERR("`" #counter "` does not trigger overflow IRQs when not using PWM mode for outputs."); \
+#define _hwa_solve__ctb(o,a)						\
+  _hwa_solve_ocb(o,0);							\
+  _hwa_solve_ocb(o,1);							\
+  if ( _hwa_mmask(o,pwm0) && _hwa_mmask(o,pwm1)				\
+       && _hwa_mvalue(o,pwm0) != _hwa_mvalue(o,pwm1) )			\
+    /* "used compare outputs must be in the same NORMAL or PWM mode." */ \
+    HWA_E(HW_EM_CMOO((o,compare0),(o,compare1)));			\
+  else if ( _hwa_mmask(o,ctc) && _hwa_mvalue(o,ctc)==0			\
+	    && (   (_hwa_mmask(o,pwm0) && _hwa_mvalue(o,pwm1))		\
+		   || (_hwa_mmask(o,pwm1) && _hwa_mvalue(o,pwm1))) )	\
+    /* "`top` must be `compare2` for `" #o "` when using the PWM mode." */ \
+    HWA_E(HW_EM_AOVM(top,o,compare2));				\
+  if ( _hwa_mvalue(o,ie)==1						\
+       && _hwa_mvalue(o,ctc)==1						\
+       && _hwa_mvalue(o,pwm0) == 0					\
+       && _hwa_mvalue(o,pwm1) == 0 ) {					\
+    if ( _hwa_mmask(o,pwm0)==1 || _hwa_mmask(o,pwm1)== 1 )		\
+      /* "`" #o "` does not trigger overflow IRQs when not using PWM mode for outputs." */ \
+      HWA_E(HW_EM_1(o));						\
     else								\
-      if ( _hwa_mmask(counter,pwm0)==0 )				\
-	_hwa_write(counter,pwm0,1);					\
+      if ( _hwa_mmask(o,pwm0)==0 )					\
+	_hwa_write(o,pwm0,1);						\
       else								\
-	_hwa_write(counter,pwm0,1);					\
-  }
+	_hwa_write(o,pwm0,1);						\
+    }
 
 
 #define _hwa_setup__ctb(o,a)			\
@@ -296,19 +272,39 @@ HW_INLINE uint8_t _hw_ctbck_ioclk( float v )
 
 
 /**
- * @page atmelavr_ctb
+ * @addtogroup atmelavr_ctb
  * @section atmelavr_ctb_internals Internals
  *
- * Class `_ctb` objects hold the following hardware registers:
+ * Hardware registers:
  *
  *  * `ccr`: control register
  *  * `count`: count register
- *  * `compare2`: compare register c, storing the top value
+ *  * `ocr0`: output-compare A register
+ *  * `ocr1`: output-compare B register
+ *  * `ocr2`:        compare C register
+ *  * `dtps`: dead-time prescaler register
+ *  * `dta`: dead-time A register
+ *  * `dtb`: dead-time B register
  *
- * and 1 external register, that hold the following logical registers:
+ * Logical registers:
  *
- *  * `ctc`: clear on compare
- *  * `cs`: clock selection
- *  * `ie`: overflow interrupt mask
- *  * `if`: overflow interrupt flag
+ *  * `com0`
+ *  * `com1`
+ *  * `cs`
+ *  * `ctc`
+ *  * `dtg0h`
+ *  * `dtg0l`
+ *  * `dtg1h`
+ *  * `dtg1l`
+ *  * `dtgs`
+ *  * `foc0`
+ *  * `foc1`
+ *  * `ie`
+ *  * `if`
+ *  * `ocie0`
+ *  * `ocie1`
+ *  * `ocif0`
+ *  * `ocif1`
+ *  * `pwm0`
+ *  * `pwm1`
  */

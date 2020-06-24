@@ -10,13 +10,14 @@
  */
 
 /**
- * @page atmelavr_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_uarta Class _uarta: Universal Asynchronous serial Receiver Transmitter
  *
- * A class `_uarta` object is a UART.
- *
- * It is used in:
+ * This class is used by:
  *
  *  * @ref atmegax8 : `uart0`
+ *
+ * @note Synchronous mode of USART is not implemented.
  */
 #define hw_class__uarta
 

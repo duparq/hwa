@@ -1,4 +1,12 @@
 
+#projectname {
+    display: inline;
+}
+
+#projectbrief {
+    display: inline;
+}
+
 .title {
     font-size: 180%;
     /* color: #AAAAAA; */
@@ -26,7 +34,7 @@ h3 {
 }
 
 div.contents {
-    max-width: 7in;
+    max-width: 7.5in;
     margin-bottom: 1in;
 }
 
@@ -80,6 +88,11 @@ div.textblock {
     margin-bottom: 5em;
 }
 
+ul {
+    margin-left: 0px;
+    padding-left: 3ex;
+}
+
 div.fragment {
     padding: 0.5em;
     margin-left: 1em;
@@ -102,4 +115,16 @@ code {
     color: #a8200b;
     font-weight: bold;
     font-family: monospace;
+}
+
+/* Description list entry
+ */
+div.memdoc > dl > dt {
+    font-family: monospace;
+    font-weight: normal;
+    color: green;
+}
+
+div.image img {
+    width:80%; 
 }

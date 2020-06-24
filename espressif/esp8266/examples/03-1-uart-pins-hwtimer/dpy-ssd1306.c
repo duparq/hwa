@@ -157,14 +157,14 @@ static IROM uint8_t dpy_data ( uint8_t data )
 
   /*  TWI interface
    */
-  hw( bus_start, TWI );				// START
+  hw( xfr_start, TWI );				// START
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
-  hw( bus_slaw, TWI, DPY_SLA );			// Send SLA+W
+  hw( xfr_slaw, TWI, DPY_SLA );			// Send SLA+W
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
   if ( hw(stat,TWI) != HW_TWI_MT_SLA_ACK ) {	// Slave acknowledged?
-    hw( bus_stop, TWI );			//   STOP
+    hw( xfr_stop, TWI );			//   STOP
     return 1 ;					//   Slave unreachable
   }
 
@@ -174,7 +174,7 @@ static IROM uint8_t dpy_data ( uint8_t data )
   hw( bus_data, TWI, data );			// Data byte
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
-  hw( bus_stop, TWI );				// STOP
+  hw( xfr_stop, TWI );				// STOP
 #endif
 
   return 0 ;
@@ -200,14 +200,14 @@ static IROM uint8_t dpy_command ( uint8_t c )
 
   /*  TWI interface
    */
-  hw( bus_start, TWI );				// START
+  hw( xfr_start, TWI );				// START
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
-  hw( bus_slaw, TWI, DPY_SLA );			// Send SLA+W
+  hw( xfr_slaw, TWI, DPY_SLA );			// Send SLA+W
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
   if ( hw(stat,TWI) != HW_TWI_MT_SLA_ACK ) {	// Slave acknowledge?
-    hw( bus_stop, TWI );			//   STOP
+    hw( xfr_stop, TWI );			//   STOP
     return 1 ;					//   Slave unreachable
   }
 
@@ -217,7 +217,7 @@ static IROM uint8_t dpy_command ( uint8_t c )
   hw( bus_data, TWI, c );			// Command byte
   while( !hw(read, HW_IRQFLAG(TWI)) ) {}	//   Wait for transmission
 
-  hw( bus_stop, TWI );				// STOP
+  hw( xfr_stop, TWI );				// STOP
 
 #endif
 

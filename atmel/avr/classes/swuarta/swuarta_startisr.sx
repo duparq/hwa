@@ -20,8 +20,8 @@
 	CY_ST_SEI=0
 
 	.section .text
-	.global HW_ISR(STARTISR)
-HW_ISR(STARTISR):
+	.global HW_ISR(STARTIRQ)
+HW_ISR(STARTIRQ):
 	CYCLES=4		; [4] <- call
 
 	push	R24		; [2]

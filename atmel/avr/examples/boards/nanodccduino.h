@@ -10,15 +10,16 @@
  */
 
 /**
- * @page atmelavr_boards
- *
- * @section boards_nanodccduino Board nanodccduino
+ * @ingroup atmelavr_boards
+ * @defgroup board_nanodccduino Board nanodccduino
  *
  * This is an Arduino clone board with a MEGA328P-AU microcontroller, a 16 MHz
  * crystal and a CH340 USB/Serial adapter.
  *
- * __Note__ I've discovered that my Linux driver for CH340/CH341 is buggy and does
- * not send parity bytes. So, use the 5+1 synchronization sequence.
+ * @note I've discovered that my Linux driver for CH340/CH341 is buggy and does
+ * not send parity bytes. So, use the 51 synchronization sequence.
+ *
+ * @image html nanodccduino.png
  *
  * @par USBASP wiring
  *

@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_aca Class _aca: analog comparator
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_aca Class _aca: analog comparator
  *
  * A class `_aca` object is an analog comparator.
  *
@@ -22,7 +23,7 @@
 #define hw_class__aca
 
 /**
- * @page atmelavr_aca
+ * @addtogroup atmelavr_aca
  * @par Interrupts
  *
  * Class `_aca` objects can trigger the following IRQs:

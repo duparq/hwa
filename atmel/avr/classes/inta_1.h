@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_inta Class _inta: external interrupt controller
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_inta Class _inta: external interrupt controller
  *
  * A class `_inta` object is an external interrupt controller.
  *
@@ -24,7 +25,7 @@
 
 
 /**
- * @page atmelavr_inta
+ * @addtogroup atmelavr_inta
  * @par Interrupts
  *
  * Class `_inta` objects can trigger the following IRQs:

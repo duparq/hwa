@@ -10,12 +10,13 @@
  */
 
 /**
- * @page espressif_pcfa Class _pcfa: I/O configurator
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_pcfa Class _pcfa: I/O configurator
  *
- * A class `_pcfa` object is a I/O configurator. It configures the function,
- * direction, and pull-up of an I/O pin.
+ * Configures the function, direction, and pull-up of an I/O pin.
  *
- * It is used in:
+ * This class is used in:
+ *
  *  * @ref esp8266
  *
  */

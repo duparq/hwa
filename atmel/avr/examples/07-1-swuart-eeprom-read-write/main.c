@@ -24,6 +24,22 @@
 #include "config.h"
 
 
+uint8_t uart_getbyte ( )
+{
+  while ( !hw(stat,UART).rxc )
+    hw( wait, irq );
+  return hw( read, UART );
+}
+
+
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
+
+
 /*  Process received bytes. Valid sequences are:
  *
  *  'e'+al+ah+n+'\n'	Read n bytes from eeprom address al:ah
@@ -57,14 +73,14 @@ static void process ( uint8_t byte )
       else {
 	while ( buf.n-- ) {
 	  uint8_t byte = hw( read, eeprom0, buf.addr );
-	  hw( write, UART, byte );
+	  uart_putbyte( byte );
 	  buf.addr++ ;
 	}
       }
-      hw( write, UART, '$' );
+      uart_putbyte( '$' );
       return ;
     }
-    hw( write, UART, '!' );
+    uart_putbyte( '!' );
   }
 }
 
@@ -97,7 +113,7 @@ main ( )
    */
   while ( !hw(stat,UART).sync )
     hw( wait, irq );
-  hw( write, UART, '$');
+  uart_putbyte( '$');
 
   for(;;) {
     /*
@@ -111,7 +127,7 @@ main ( )
        *  MCU awakened by SWUART that has received a stop bit
        *  Process the received byte (clears rxc flag)
        */
-      process( hw( read,UART) );
+      process( hw( read, UART) );
     }
   }
 }

@@ -10,7 +10,8 @@
  */
 
 /**
- * @page atmelavr_usia Class _usia: Universal Serial Interface
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_usia Class _usia: Universal Serial Interface
  *
  * A class `_usia` object is an USI.
  */
@@ -18,7 +19,8 @@
 
 
 /**
- * @page atmelavr_usia_spimaster_swclk Class _usia_spimaster_swclk: software clocked SPI master over USI
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_usia_spimaster_swclk Class _usia_spimaster_swclk: software clocked SPI master over USI
  *
  * A class `_usia_spimaster_swclk` object is an SPI master clocked by software
  * implemented on top of the USI interface.

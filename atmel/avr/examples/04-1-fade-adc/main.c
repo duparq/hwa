@@ -60,6 +60,15 @@
 #endif
 
 
+/*  Use pin AVCC as Vref when possible
+ */
+#if HW_ADDRESS((pin,avcc)) == -1
+#  define VREF			vcc
+#else
+#  define VREF			(pin,avcc)
+#endif
+
+
 /*  Value to store in the compare unit (must be the same size as the count
  *  register)
  */
@@ -117,14 +126,14 @@ HW_ISR( (COUNTER,irq,overflow), non_interruptible )
     hw( write, PIN_LED, 1 );
     if ( duty < COUNT_TOP ) {
       hw( write, (COUNTER,compare1), duty );
-      hw( enable, (COUNTER,irq,compare1) );
+      hw( enable, (COUNTER,compare1,irq) );
     }
     else
-      hw( disable, (COUNTER,irq,compare1) );
+      hw( disable, (COUNTER,compare1,irq) );
   }
   else {
     hw( write, PIN_LED, 0 );
-    hw( disable, (COUNTER,irq,compare1) );
+    hw( disable, (COUNTER,compare1,irq) );
   }
 }
 
@@ -135,7 +144,7 @@ HW_ISR( (COUNTER,irq,overflow), non_interruptible )
  *  spare a few bytes and have a faster code using a naked ISR.
  */
 #if HW_ADDRESS((PIN_LED,port,port)) < 0x40
-HW_ISR( (COUNTER,irq,compare1), naked )
+HW_ISR( (COUNTER,compare1,irq), naked )
 {
   hw( write, PIN_LED, 0 );
   hw_asm("reti");
@@ -176,7 +185,7 @@ int main ( )
    *  here since the C preprocessor does not allow floats in expressions.
    */
   if ( COUNT_TOP > ((1UL<<HW_BITS(COUNTER))-1) )
-    HWA_ERR("PWM_COUNTER can not afford PWM_PERIOD.") ;
+    HWA_E("PWM_COUNTER can not afford PWM_PERIOD.") ;
 
   /*  Configure the counter prescaler
    */
@@ -190,9 +199,8 @@ int main ( )
        clock,	  ioclk / COUNTER_CLK_DIV,
        direction, up_loop,
        bottom,	  0,
-       top,	  TOP_OBJ,
-       //	    overflow,  after_top,
-       );
+       top,	  TOP_OBJ );
+
   hwa( write, (COUNTER,TOP_OBJ), COUNT_TOP );
   hwa( enable, (COUNTER,irq,overflow) );
 
@@ -202,7 +210,7 @@ int main ( )
   hwa( configure, adc0,
        clock,	  ioclk / ADC_CLK_DIV,
        trigger,	  manual,
-       vref,	  vcc,
+       vref,	  VREF,
        align,	  right,
        input,	  PIN_ANALOG_INPUT );
 
@@ -219,6 +227,4 @@ int main ( )
     hw( wait, irq );
 
   return 0 ;
-
-
 }

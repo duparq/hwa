@@ -10,7 +10,9 @@
  */
 
 /**
- * @page stm32_apba Class _apba: Advanced Peripheral Bus (APB)
+ * @ingroup stm32_classes
+ * @defgroup stm32_apba Class _apba: Advanced Peripheral Bus (APB)
+ * @section stm32_apba_act Actions
  *
  * `configure`:
  * @code
@@ -32,30 +34,30 @@
 #define hwa_configure__apba		, _hwa_cfapba
 
 #define _hw_cfapba(o,a,k,...)		do{ HW_B(_hwx_cfapba_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
-#define _hwa_cfapba(o,a,k,...)	do{ HW_B(_hwx_cfapba_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
+#define _hwa_cfapba(o,a,k,...)		do{ HW_B(_hwx_cfapba_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 
 /*  At least one keyword
  */
-#define _hwx_cfapba_k_1(h,o,k,...)	HW_E_ML((clock, prescaler))
+#define _hwx_cfapba_k_1(h,o,k,...)	HW_E(HW_EM_AML((clock,prescaler)))
 #define _hwx_cfapba_k_0(h,o,k,...)	HW_B(_hwx_cfapba_ksrc_,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `clock`
  */
 #define _hwx_cfapba_ksrc_1(h,o,k,v,...)	HW_B(_hwx_cfapba_vsrc_,_hw_is_ahb_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfapba_vsrc_0(h,o,v,...)	HW_E_OKMV(clock,v,ahb)
+#define _hwx_cfapba_vsrc_0(h,o,v,...)	HW_E(HW_EM_VOAL(v,clock,(ahb))
 #define _hwx_cfapba_vsrc_1(h,o,v,k,...)	HW_B(_hwx_cfapba_kpsc_,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
 #define _hwx_cfapba_ksrc_0(h,o,k,...)	HW_B(_hwx_cfapba_kpsc_,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
 
 /*  Mandatory parameter `prescaler`
  */
-#define _hwx_cfapba_kpsc_0(h,o,k,...)	HW_E_K(prescaler,k)
+#define _hwx_cfapba_kpsc_0(h,o,k,...)	HW_E(HW_EM_AN(k,prescaler))
 #define _hwx_cfapba_kpsc_1(h,o,k,v,g,...)	_hwx_cfapba_vpsc1_1(h,o,v,g) HW_EOL(g)
 #define _hwx_cfapba_vpsc1_1(h,o,v,g)		HW_B(_hwx_cfapba_vpsc2_,v)(h,o,v)
-#define _hwx_cfapba_vpsc2_1(h,o,v)		HW_E_V()
+#define _hwx_cfapba_vpsc2_1(h,o,v)		HW_E(HW_EM_V)
 #define _hwx_cfapba_vpsc2_0(h,o,v)				\
     if	    ( v ==  1 ) h##_write(rcc,o,0);	\
     else if ( v ==  2 ) h##_write(rcc,o,4);	\
     else if ( v ==  4 ) h##_write(rcc,o,5);	\
     else if ( v ==  8 ) h##_write(rcc,o,6);	\
     else if ( v == 16 ) h##_write(rcc,o,7);	\
-    else HWA_E_NIL(v,(1, 2, 4, 8, 16));
+    else HWA_E(HW_EM_VAL(v,prescaler,(1, 2, 4, 8, 16)));

@@ -6,85 +6,40 @@
 
 /**
  * @file
- * @brief 16-bit counter
+ * @brief Atmel AVR 16-bit counter with two compare units and one capture unit
  */
 
 /**
- * @page atmelavr_ctd Class _ctd: 16-bit counter/timer
+ * @ingroup atmelavr_classes
+ * @defgroup atmelavr_ctd Class _ctd: 16-bit counter with two compare units and one capture unit
  *
- * A class `_ctd` object is a 16-bit counting unit that has 4 relative objects:
- *  * one prescaler of class @ref atmelavr_psa "_psa": `(counter0,prescaler)`
- *  * two compare units with waveform generators, of class @ref atmelavr_occ "_occ":
- *    `(counter0,compare0)` and `(counter0,compare1)`
- *  * one capture unit of class @ref atmelavr_ica "_ica": `(counter0,capture0)`
- *
- * It is used by:
+ * This class is used by:
  *
  *  * @ref attinyx4 : `counter1`
  *  * @ref atmegax8 : `counter1`
+ *
+ * @section atmelavr_ctdrl Relatives
+ *
+ *  * `(COUNTER,prescaler)`: class @ref atmelavr_psa "_psa" prescaler;
+ *  * `(COUNTER,compare0)`: class @ref atmelavr_occ "_occ" compare unit with waveform generator;
+ *  * `(COUNTER,compare1)`: class @ref atmelavr_occ "_occ" compare unit with waveform generator;
+ *  * `(COUNTER,capture0)`: class @ref atmelavr_ica "_ica" capture unit.
+ *
+ * @section atmelavr_ctdirq Interrupts
+ *
+ *  * `(COUNTER,irq)`, `(COUNTER,irq,overflow)`: triggered when the counter
+ *    counts from "max" to 0 (`after_max`) in `up_loop` counting mode, or when
+ *    it counts from 0 to 1 (`after_bottom`) in `updown_loop` counting mode.
  */
 #define hw_class__ctd
 
-
-/**
- * @page atmelavr_ctd
- * @par Instructions that do not produce C code
- *
- * The `HW_BITS()` instruction returns the number of bits of the counting register:
- *
- * @code
- * #if HW_BITS( counter0 ) != 16
- * #  error You must choose a 16-bit counter!
- * #endif
- * @endcode
- */
 #define HW_BITS__ctd			, _hw_bits_ctd
 #define _hw_bits_ctd(...)		16
 
-#define hw__ctd_bits			, _hw_bits_ctd
-
-
 /*  Return the counting register of a _ctd
- *    HW_CODR is blued.
  */
 #define hw__ctd_reg			, _hw_ctd_reg
-#define _hw_ctd_reg(o,a)		HW_XOR(o,count)
-
-
-/**
- * @page atmelavr_ctd
- * @par Interrupts
- *
- * Class `_ctd` objects can trigger the following IRQs:
- *
- *  * `counter0` or `counter0,overflow`: counter overflow
- */
-
-
-#if 0
-/*  Class registers
- */
-#define hw__ctd_compare0_mode		_cb1, ccra, 2, 6	/* COMA */
-#define hw__ctd_compare1_mode		_cb1, ccra, 2, 4	/* COMB */
-
-#define hw__ctd_icnc			_cb1, ccrb, 1, 7
-#define hw__ctd_ices			_cb1, ccrb, 1, 6
-#define hw__ctd_cs			_cb1, ccrb, 3, 0
-#define hw__ctd_wgm			_cb2, ccrb, 2, 3, 2, ccra, 2, 0, 0
-
-#define hw__ctd_foca			_cb1, ccrc, 1, 7
-#define hw__ctd_focb			_cb1, ccrc, 1, 6
-
-#define hw__ctd_ieic			_cb1, imsk, 1, 5
-#define hw__ctd_iecm1			_cb1, imsk, 1, 2
-#define hw__ctd_iecm0			_cb1, imsk, 1, 1
-#define hw__ctd_ieov			_cb1, imsk, 1, 0
-
-#define hw__ctd_ific			_cb1, ifr, 1, 5
-#define hw__ctd_ifcm1			_cb1, ifr, 1, 2
-#define hw__ctd_ifcm0			_cb1, ifr, 1, 1
-#define hw__ctd_ifov			_cb1, ifr, 1, 0
-#endif
+#define _hw_ctd_reg(o,a)		HW_XOR(o,count)		/* HW_CODR is blued */
 
 
 #ifndef __ASSEMBLER__

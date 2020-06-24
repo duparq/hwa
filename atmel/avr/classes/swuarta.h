@@ -6,14 +6,14 @@
 
 /**
  * @file
- * @brief Software-emulated UART
+ * @brief Atmel AVR software-emulated UART
  */
 
 /**
- * @page atmelavr_swuarta Class _swuarta: software-emulated UART
+ * @ingroup swec
+ * @defgroup atmelavr_swuarta Class _swuarta: software-emulated UART
  *
- * Class `_swuarta` implements a software-emulated UART with the following
- * features:
+ * This class implements a software-emulated UART with the following features:
  *
  * * simplex or half-duplex communication over 1 or 2 wires
  * * frames of 1 start bit, 8 data bits, 1 stop bit (no parity bit)
@@ -24,19 +24,21 @@
  * * optionnal automatic baudrate detection
  * * optionnal bus-collision detection
  *
+ * @note Currently, this is only supported by @ref atmelavr_devices.
+ *
  * @par Performances
  *
- * `_swuarta` has been successfully tested on ATtinyX4 with internal oscillator
- * (~8 MHz):
+ * Tested on @ref attinyx4 with internal oscillator (rc_8MHz):
  *
- *  * 1200..115200 bps with 16-bit timer not prescaled
- *  * 450.. 50000 bps with 16-bit timer 1/8 prescaled
- *  * 38400..115200 bps with 8-bit timer not prescaled
- *  * 10000 bps with 8-bit timer 1/8 prescaled
+ *  * 1200..115200 bps with 16-bit counter, clk_div=1
+ *  * 450.. 50000 bps with 16-bit counter, clk_div=8
+ *  * 38400..115200 bps with 8-bit counter, clk_div=1
+ *  * 10000 bps with 8-bit counter, clk_div=8
  *
- *  * ATtiny85 rc_8MHz hw_counter1compare0 clk_div=1 sync=5_1: 45..140 kbps
+ *  * 45..140 kbps with @ref attiny85, rc_8MHz, counter1, compare0,
+ *    clk_div=1 sync=51
  *
- * __Note__ The make rule `swuart-perfs` defined in
+ * @note The make rule `swuarta-perfs` defined in
  * `hwa/atmel/avr/examples/make/Makefile.cc` displays the number of CPU cycles
  * spent in different sections of the `_swuarta` code and in critical sections
  * according to the configuration. These figures determine the performances that
@@ -44,10 +46,10 @@
  *
  * @par Pins
  *
- * If pins `rxd` and `txd` are both defined as the same, the UART automatically
+ * If the same pin is used for `rxd` and `txd` signals, the UART automatically
  * reverts to RX mode after a transmission is completed and transmissions are
- * delayed, i.e. `hw(write,UART,data)` blocks until a reception is completed
- * once it has started.<br>
+ * delayed one a reception is started, i.e. `hw(write,UART,data)` blocks until a
+ * reception is completed once it has started.
  *
  * @par Start detection
  *
@@ -63,52 +65,61 @@
  *
  * @par Automatic baudrate detection
  *
- * If defined, `autosync` gives the UART the capability to automatically detect
- * the baudrate.
+ * If defined, `autosync` a method to automatically detect the baudrate:
  *
- * * The `51` value waits for a sequence of 5 low-level bits followed by
- *   1 low-level bit. The ASCII characters 'A' or 'p' will do that.
+ * * `51`: waits for a sequence of 5 low-level bits followed by 1 low-level
+ *   bit. The ASCII characters 'A' or 'p' will do that.
  *
- * * The `91` value waits for a sequence of 9 low-level bits followed by
- *   1 low-level bit. E.g.: 0x00 / 0xFF bytes.
+ * * `91`: waits for a sequence of 9 low-level bits followed by 1 low-level
+ *   bit. E.g.: 0x00 / 0xFF bytes.
  *
- * * The `101` method waits for a sequence of 10 low-level bits followed by 1
- *   low-level bit. This can be done by sending a break byte of 10 low-level
- *   bits or a '0' byte with even parity, followed by a 0xFF byte.
+ * * `101`: waits for a sequence of 10 low-level bits followed by 1 low-level
+ *   bit. This can be done by sending a break byte of 10 low-level bits or a '0'
+ *   byte with even parity, followed by a 0xFF byte.
  *
- * __Note__ It is advised to disable the sleep instruction and all interrupts
+ * @note It is advised to disable the sleep instruction and all interrupts
  * except the UART starter for a better accuracy of the baudrate detection. Once
  * the UART is synchronized, interrupts can be re-enabled.
  *
- * __Note__ Do not forget that the software UART is interrupt-driven and that
+ * @note Do not forget that the software UART is interrupt-driven and that
  * too long delays before the UART IRQs are serviced will lead to loss of data.
  *
- * __Note__ Currently, baudrate detection is started when the UART receives a
+ * @note Currently, baudrate detection is started when the UART receives a
  * character and it is not synced. The processing is blocking. Non blocking
  * alternatives are provided but not yet useable.
  *
  * @par Bus collision detection
  *
- * If `check_tx` is defined, each time a new bit has to be transfered the status
- * of the bus is first compared to the last bit sent. If there is a mismatch
- * (collision), the UART releases the TXD pin and sets the `stop` status flag to
- * 0. The UART continues virtually to send until the end of the frame when it
- * sets the `txc` bit as usual. That way, the application remains synchronized
- * with the bus and can decide whether to retry the transmission or to listen to
- * what is happening on the bus.
+ * If `check_tx` is defined, the status of the bus is compared with the last bit
+ * sent before sending a new one. If there is a mismatch (collision), the UART
+ * releases the TXD pin and sets the `stop` status flag to 0. The UART continues
+ * virtually to send until the end of the frame when it sets the `txc` bit as
+ * usual. That way, the application remains synchronized with the bus and can
+ * decide whether to retry the transmission or to listen to what is happening on
+ * the bus.
  *
- * __Note__ Currently, `check_tx` can not be set by the constructor.
- */
-
-
-/**
- * @page atmelavr_swuarta
+ * @note Currently, `check_tx` can not be set by the constructor.
  *
- * <br>
- * `Constructor`
+ * @section atmelavr_swuartaimp Implementation
+ *
+ * Header file:
  *
  * @code
- * HW_SWUART(   txd,       ...,		// Pin TXD
+ * #include <hwa/ext/swuarta.h>
+ * @endcode
+ *
+ * <br><br>HW_SWUARTA(...) declares an object. You must provide:
+ *  * an I/O for the TXD signal;
+ *  * an I/O for the RXD signal;
+ *  * an IRQ for start bit detection;
+ *  * a counter;
+ *  * a compare unit of the counter;
+ *  * a prescaler value for the counter's clock;
+ *  * a synchronization method;
+ *  * the address of a fast access register.
+ *
+ * @code
+ * HW_SWUARTA(  txd,       ...,		// Pin TXD
  *            [ rxd,       ...,		// Pin RXD
  *              startirq,  ..., ]	// IRQ used for RX start bit
  *              counter,   ...,		// Counter unit used
@@ -120,58 +131,63 @@
  *
  * @code
  *
- * #include <hwa/swuarta.h>
+ * #include <hwa/ext/swuarta.h>
  *
- * #define UART		HW_SWUART( txd,       (portb,0),
- *                                 rxd,       (portb,1),
- *                                 startirq,  ((portb,1),pcic,irq),
- *                                 counter,   counter0,
- *                                 compare,   compare0,
- *                                 clkdiv,    2,
- *                                 autosync,  51,
- *                                 fastreg,   (shared,gpior0) );
+ * #define UART		HW_SWUARTA( txd,      (portb,0),
+ *                                  rxd,      (portb,1),
+ *                                  startirq, ((portb,1),port,pcic,irq),
+ *                                  counter,  counter0,
+ *                                  compare,  compare0,
+ *                                  clkdiv,   2,
+ *                                  autosync, 51,
+ *                                  fastreg,  (shared,gpior0) );
  * @endcode
  */
 #define hw_class__swuarta
 
-#define HW_SWUART(...)					_HW_SWUART10(__VA_ARGS__,,,,,)
-#define _HW_SWUART10(k,...)				HW_BW(_HW_SWUART10,txd,k)(k,__VA_ARGS__)
+/**
+ * @ingroup atmelavr_swuarta
+ * @brief Constructor for @ref atmelavr_swuarta "SWUARTA"
+ * @hideinitializer
+ */
+#define HW_SWUARTA(...)					_HW_SWUARTA10(__VA_ARGS__,,,,,)
+#define _HW_SWUARTA10(k,...)				HW_BW(_HW_SWUARTA10,txd,k)(k,__VA_ARGS__)
 
-#define _HW_SWUART100(k,...)				HW_BW(_HW_SWUART20,rxd,k)((),k,__VA_ARGS__)
-#define _HW_SWUART101(k,...)				_HW_SWUART11(HW_AD(__VA_ARGS__))
-#define _HW_SWUART11(...)				_HW_SWUART12(__VA_ARGS__)
-#define _HW_SWUART12(v,...)				HW_BW(_HW_SWUART12,_ioa,HW_A0 v)(v,__VA_ARGS__)
-#define _HW_SWUART120(v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART121(t,k,...)				HW_BW(_HW_SWUART20,rxd,k)(t,k,__VA_ARGS__)
+#define _HW_SWUARTA100(k,...)				HW_BW(_HW_SWUARTA20,rxd,k)((),k,__VA_ARGS__)
+#define _HW_SWUARTA101(k,...)				_HW_SWUARTA11(HW_AD(__VA_ARGS__))
+#define _HW_SWUARTA11(...)				_HW_SWUARTA12(__VA_ARGS__)
+#define _HW_SWUARTA12(v,...)				HW_BW(_HW_SWUARTA12,_ioa,HW_A0 v)(v,__VA_ARGS__)
+#define _HW_SWUARTA120(v,...)				,HW_SWUARTA(...),HW_EM_OT(v, pin name)
+#define _HW_SWUARTA121(t,k,...)				HW_BW(_HW_SWUARTA20,rxd,k)(t,k,__VA_ARGS__)
 
-#define _HW_SWUART200(t,k,...)				HW_BW(_HW_SWUART40,counter,k)(t,(),,k,__VA_ARGS__)
-#define _HW_SWUART201(t,k,...)				_HW_SWUART21(t,HW_AD(__VA_ARGS__))
-#define _HW_SWUART21(...)				_HW_SWUART22(__VA_ARGS__)
-#define _HW_SWUART22(t,v,...)				HW_BW(_HW_SWUART22,_ioa,HW_A0 v)(t,v,__VA_ARGS__)
-#define _HW_SWUART220(t,v,...)				,HW_SWUART(...),HW_EM_ONAP(v)
-#define _HW_SWUART221(t,r,k,...)			HW_BW(_HW_SWUART30,startirq,k)(t,r,k,__VA_ARGS__)
+#define _HW_SWUARTA200(t,k,...)				HW_BW(_HW_SWUARTA40,counter,k)(t,(),,k,__VA_ARGS__)
+#define _HW_SWUARTA201(t,k,...)				_HW_SWUARTA21(t,HW_AD(__VA_ARGS__))
+#define _HW_SWUARTA21(...)				_HW_SWUARTA22(__VA_ARGS__)
+#define _HW_SWUARTA22(t,v,...)				HW_BW(_HW_SWUARTA22,_ioa,HW_A0 v)(t,v,__VA_ARGS__)
+#define _HW_SWUARTA220(t,v,...)				,HW_SWUARTA(...),HW_EM_OT(v, pin name)
+#define _HW_SWUARTA221(t,r,k,...)			HW_BW(_HW_SWUARTA30,startirq,k)(t,r,k,__VA_ARGS__)
 
-#define _HW_SWUART300(t,r,k,...)			,HW_SWUART(...),HW_EM_IKW(HW_SWUART(...),startirq,k)
-#define _HW_SWUART301(t,r,k,...)			_HW_SWUART31(t,r,HW_AD(__VA_ARGS__))
-#define _HW_SWUART31(...)				_HW_SWUART32(__VA_ARGS__)
-#define _HW_SWUART32(t,r,v,...)				HW_BW(_HW_SWUART32,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
-#define _HW_SWUART320(t,r,v,...)			,HW_SWUART(...),HW_EM_ONAI(v)
-#define _HW_SWUART321(t,r,i,k,...)			HW_BW(_HW_SWUART40,counter,k)(t,r,i,k,__VA_ARGS__)
+#define _HW_SWUARTA300(t,r,k,...)			,HW_SWUARTA(...),HW_EM_CAN(HW_SWUARTA(...),k,startirq)
+#define _HW_SWUARTA301(t,r,k,...)			_HW_SWUARTA31(t,r,HW_AD(__VA_ARGS__))
+#define _HW_SWUARTA31(...)				_HW_SWUARTA32(__VA_ARGS__)
+#define _HW_SWUARTA32(t,r,v,...)			HW_BW(_HW_SWUARTA32,_irq,HW_A0 v)(t,r,v,__VA_ARGS__)
+#define _HW_SWUARTA320(t,r,v,...)			,HW_SWUARTA(...),HW_EM_OT(v,irq)
+#define _HW_SWUARTA321(t,r,i,k,...)			HW_BW(_HW_SWUARTA40,counter,k)(t,r,i,k,__VA_ARGS__)
 
-#define _HW_SWUART400(t,r,i,k,...)			,HW_SWUART(...),HW_EM_KX(counter,k)
-#define _HW_SWUART401(t,r,i,k1,ct,k,...)		HW_BW(_HW_SWUART5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
-#define _HW_SWUART5_0(t,r,i,ct,k,...)			,HW_SWUART(...),HW_EM_KX(compare,k)
-#define _HW_SWUART5_1(t,r,i,ct,k1,cp,k,...)		HW_BW(_HW_SWUART6_,clkdiv,k)(t,r,i,ct,HW_BITS(ct),cp,k,__VA_ARGS__)
-#define _HW_SWUART6_0(t,r,i,ct,cp,k,...)		,HW_SWUART(...),HW_EM_KX(clkdiv,k)
-#define _HW_SWUART6_1(t,r,i,ct,cw,cp,k1,ps,k,...)	HW_BW(_HW_SWUART7_,autosync,k)(t,r,i,ct,cw,cp,ps,k,__VA_ARGS__)
-#define _HW_SWUART7_0(t,r,i,ct,cw,cp,ps,k,...)		HW_BW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,0,k,__VA_ARGS__)
-#define _HW_SWUART7_1(t,r,i,ct,cw,cp,ps,k1,as,k,...)	HW_BW(_HW_SWUART8_,fastreg,k)(t,r,i,ct,cw,cp,ps,as,k,__VA_ARGS__)
-#define _HW_SWUART8_0(t,r,i,ct,cw,cp,ps,as,k,...)	_HW_B(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,-1,k,__VA_ARGS__)
-#define _HW_SWUART8_1(t,r,i,ct,cw,cp,ps,as,k1,fr,k,...)	_HW_B(_HW_SWUART9_,k)(t,r,i,ct,cw,cp,ps,as,HW_ADDRESS(fr),k,__VA_ARGS__)
-#define _HW_SWUART9_0(t,r,i,ct,cw,cp,ps,as,fr,g,...)	,HW_SWUART(...),HW_EM_G(g)
-#define _HW_SWUART9_1(t,r,i,ct,cw,cp,ps,as,fr,...)	_swuarta, HW_G3(swuart,HW_A1 t,HW_A1 r), (t,r,i,ct,cw,cp,ps,as,fr)
+#define _HW_SWUARTA400(t,r,i,k,...)			,HW_SWUARTA(...),HW_EM_KX(counter,k)
+#define _HW_SWUARTA401(t,r,i,k1,ct,k,...)		HW_BW(_HW_SWUARTA5_,compare,k)(t,r,i,ct,k,__VA_ARGS__)
+#define _HW_SWUARTA5_0(t,r,i,ct,k,...)			,HW_SWUARTA(...),HW_EM_KX(compare,k)
+#define _HW_SWUARTA5_1(t,r,i,ct,k1,cp,k,...)		HW_BW(_HW_SWUARTA6_,clkdiv,k)(t,r,i,ct,HW_BITS(ct),cp,k,__VA_ARGS__)
+#define _HW_SWUARTA6_0(t,r,i,ct,cp,k,...)		,HW_SWUARTA(...),HW_EM_KX(clkdiv,k)
+#define _HW_SWUARTA6_1(t,r,i,ct,cw,cp,k1,ps,k,...)	HW_BW(_HW_SWUARTA7_,autosync,k)(t,r,i,ct,cw,cp,ps,k,__VA_ARGS__)
+#define _HW_SWUARTA7_0(t,r,i,ct,cw,cp,ps,k,...)		HW_BW(_HW_SWUARTA8_,fastreg,k)(t,r,i,ct,cw,cp,ps,0,k,__VA_ARGS__)
+#define _HW_SWUARTA7_1(t,r,i,ct,cw,cp,ps,k1,as,k,...)	HW_BW(_HW_SWUARTA8_,fastreg,k)(t,r,i,ct,cw,cp,ps,as,k,__VA_ARGS__)
+#define _HW_SWUARTA8_0(t,r,i,ct,cw,cp,ps,as,k,...)	_HW_B(_HW_SWUARTA9_,k)(t,r,i,ct,cw,cp,ps,as,-1,k,__VA_ARGS__)
+#define _HW_SWUARTA8_1(t,r,i,ct,cw,cp,ps,as,k1,fr,k,...)	_HW_B(_HW_SWUARTA9_,k)(t,r,i,ct,cw,cp,ps,as,HW_ADDRESS(fr),k,__VA_ARGS__)
+#define _HW_SWUARTA9_0(t,r,i,ct,cw,cp,ps,as,fr,g,...)	,HW_SWUARTA(...),HW_EM_G(g)
+#define _HW_SWUARTA9_1(t,r,i,ct,cw,cp,ps,as,fr,...)	_swuarta, HW_G3(swuarta,HW_A1 t,HW_A1 r), (t,r,i,ct,cw,cp,ps,as,fr)
 
-#define _HW_SWUART_E	,HW_SWUART(...), HW_E(HW_EM_S(HW_SWUARTX( txd,..., [rxd,..., startirq,...,] counter,..., compare,..., clkdiv,..., autosync,..., fastreg,... )))
+#define _HW_SWUARTA_E	,HW_SWUARTA(...), HW_E(HW_EM_SY(HW_SWUARTA( txd,..., [rxd,..., startirq,...,] counter,..., compare,..., clkdiv,..., autosync,..., fastreg,... )))
 
 
 #define _hw_is_startirq_startirq		, 1
@@ -180,27 +196,41 @@
 #define _hw_is_fastreg_fastreg			, 1
 
 
-/*  Return the address of the compare register as address of the swuart
+/*  Return the address of the compare register as address of the swuarta
  */
 #define HW_ADDRESS__swuarta			, _hw_adswuarta
 #define _hw_adswuarta(oo,t,r,i,ct,cw,cp,...)	_hw_adswuarta1( HW_X((ct,cp,reg)) )
 #define _hw_adswuarta1(...)			_hw_adswuarta2(__VA_ARGS__)
-#define _hw_adswuarta2(m111,oo,o,r,rc,ra,...)	ra
+#define _hw_adswuarta2(m11,oo,o,r,rc,ra,...)	ra
 
 
 #if !defined __ASSEMBLER__
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * <br> `Definition`
- *
- * `HW_DECLARE()` expands the prototypes of the functions that implement the
- * UART.
+ * <br><br>HW_DECLARE( UART ) declares the functions that implement the device. You
+ * can put it in your header files:
  *
  * @code
  * HW_DECLARE( UART );
+ * @endcode
+ *
+ * Currently, class _swuarta does not support HW_IMPLEMENT(). You must include
+ * the assembly file `hwa/ext/swuarta.sx` in one of your source files after having
+ * defined a `UART` symbol, once per object:
+ *
+ * @code
+ * 	;; -*- asm -*-
+ *
+ * #undef UART
+ * #define UART	UART0
+ * #include <hwa/ext/swuarta.sx>	// Implement UART0
+ *
+ * #undef UART
+ * #define UART	UART1
+ * #include <hwa/ext/swuarta.sx>	// Implement UART1
  * @endcode
  */
 #define HW_DECLARE__swuarta		, _hw_dcswuarta
@@ -227,57 +257,33 @@
 #define _hw_swuartadt0(o,t,r,i,ct,cw,cp,ps,as,fr)	_mem##cw,(o,dt0),(&hw_##o##_dt0)
 
 #define hw__swuarta_stat				, _hw_swuartast
-#define _hw_swuartast(o,t,r,i,ct,cw,cp,ps,as,fr)	_m111,(o,stat),(o,stat,_r8,(intptr_t)&hw_##o##_stat,0xFF,0x00,8,0)
+#define _hw_swuartast(o,t,r,i,ct,cw,cp,ps,as,fr)	_m11,(o,stat),(o,stat,_r8,(intptr_t)&hw_##o##_stat,0xFF,0x00,8,0)
 
 #define hw__swuarta_sync				, _hw_swuartasyn
-#define _hw_swuartasyn(o,t,r,i,ct,cw,cp,ps,as,fr)	_m111,(o,sync),(o,sync,_r8,(intptr_t)&hw_##o##_stat,0xFF,0x00,1,3)
+#define _hw_swuartasyn(o,t,r,i,ct,cw,cp,ps,as,fr)	_m11,(o,sync),(o,sync,_r8,(intptr_t)&hw_##o##_stat,0xFF,0x00,1,3)
 
 
 /**
- * @page atmelavr_swuarta
- *
- * <br> `Implementation`
- *
- * You must define a `UART` symbol and include the file `<hwa/swuarta.sx>`
- * (assembly) in your source code to implement the functions of the `_swuarta`
- * objects, once per object:
- *
- * @code
- * 	;; -*- asm -*-	 
- * 			 
- * #define UART	UART0
- * #include <hwa/swuarta.sx>	// Implement UART0
- * 			 
- * #undef UART		 
- * #define UART	UART1	 
- * #include <hwa/swuarta.sx>	// Implement UART1
- * @endcode
- */
-
-
-/**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  * @section atmelavr_swuarta_act Actions
  *
- * <br>
- * `configure`
+ * <br><br>Both hw( configure, UART, ... ) and hwa( configure, UART, ... )
+ * configure the object but they differ slightly in what they do:
  *
- * `hwa(configure,UART,...)` and `hw(configure,UART,...)` differ slightly in
- * what they do:
+ * * hwa(configure,UART,...) configures the UART, its pins TXD, RXD, and its
+ *   counting unit;
  *
- * * `hwa(configure,UART,...)` configures the UART, its pins TXD,
- *   RXD, and its counting unit.
- *
- * * `hw(configure,UART,...)` can only be used to change the baudrate or to
+ * * hw(configure,UART,...) can only be used to change the baudrate or to
  *   enable/disable the receiver by enabling/disabling start bit interrupts.
  *
- * Optionnal arguments are used for consistency with the class `_uarta`.
+ * Optionnal arguments are used for consistency with the class @ref
+ * atmelavr_uarta "_uarta".
  *
  * @code
  * hwa( configure,     UART,
  *
  *    [ bps,	       BPS, ]		//  Baudrate in bits per second
- *    
+ *
  *    [ cpb,	       N, ]		//  Baudrate in CPU clock pulses per bit
  *
  *    [ databits,      8, ]		//  Number of data bits in frame. Must be `8`.
@@ -300,6 +306,12 @@
 #define hw_configure__swuarta		, _hw_cfswuarta
 #define hwa_configure__swuarta		, _hwa_cfswuarta
 
+/**
+ * @ingroup hwa_dev
+ *
+ * @todo HW_SWUARTA() now uses _hw_a() instead of _hwa() now used by IOs.
+ */
+
 #define _hwa_cfswuarta(o,t,r,i,ct,cw,cp,ps,as,fr,k,...)			\
   do {									\
     _hwa_cfswuarta_t(r,t);						\
@@ -315,28 +327,28 @@
 #define _hwa_cfswuarta_t1(r,t)
 #define _hwa_cfswuarta_t0(r,t)						\
   if ( HW_ADDRESS(t) != -1 && HW_ADDRESS(r) != HW_ADDRESS(t) ) {	\
-    _hwa( write, t, 1 );						\
-    _hwa( configure, t, mode, digital_output );				\
+    _hw_a( write, t, 1 );						\
+    _hw_a( configure, t, mode, digital_output );			\
   }									\
 
 /*  RXD pin & interrupts (for reception / sync)
  */
 #define _hwa_cfswuarta_ri(r,i)		HW_B(_hwa_cfswuarta_ri,HW_A1 r)(r,i)
 #define _hwa_cfswuarta_ri1(r,i)
-#define _hwa_cfswuarta_ri0(r,i)						\
-    if ( HW_ADDRESS(r) != -1 ) {					\
-      _hwa( configure, r, mode, digital_input );			\
-      _hwa( turn, (r,pcic), r, on );					\
-      _hwa( enable, (r,pcic,irq) );					\
-    }
+#define _hwa_cfswuarta_ri0(r,i)			\
+  if ( HW_ADDRESS(r) != -1 ) {			\
+    _hw_a( configure, r, mode, digital_input );	\
+    _hw_a( turn, (r,port,pcic), r, on );		\
+    _hw_a( enable, (r,port,pcic,irq) );		\
+  }
 
 /*  Counter
  */
 #define _hwa_cfswuarta_c(ct,ps)			\
-  _hwa( configure, ct,				\
-	clock,     ioclk / ps,			\
-	direction, up_loop,			\
-	top,	   max )
+  _hw_a( configure, ct,				\
+	 clock,     ioclk / ps,			\
+	 direction, up_loop,			\
+	 top,	   max )
 
 #define _hw_cfswuarta(o,t,r,i,ct,cw,cp,ps,as,fr,k,...)			\
   do {									\
@@ -369,7 +381,7 @@
   HW_B(_hwx_cfswuarta_vdatabits_,_hw_swuarta_csz_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vdatabits_0(h,o,r,v,...)	\
-  HW_E_AVL(`databits`, v, `8`)
+  HW_E(HW_EM_VAL(v,databits,(8)))
 
 #define _hwx_cfswuarta_vdatabits_1(h,o,r,v,...)	\
   _hwx_cfswuarta_kdatabits_0(h,o,r,__VA_ARGS__)
@@ -385,7 +397,7 @@
   HW_B(_hwx_cfswuarta_vparity_,_hw_swuarta_pm_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vparity_0(h,o,r,v,...)	\
-  HW_E_AVL(`parity`, v, `none`)
+  HW_E(HW_EM_VAL(v,parity,(none)))
 
 #define _hwx_cfswuarta_vparity_1(h,o,r,v,...)	\
   _hwx_cfswuarta_kparity_0(h,o,r,__VA_ARGS__)
@@ -401,7 +413,7 @@
   HW_B(_hwx_cfswuarta_vstopbits_,_hw_swuarta_sbs_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vstopbits_0(h,o,r,v,...)	\
-  HW_E_AVL(`stopbits`, v, `1`)
+  HW_E(HW_EM_VAL(v,stopbits,(1)))
 
 #define _hwx_cfswuarta_vstopbits_1(h,o,r,v,...)	\
   _hwx_cfswuarta_kstopbits_0(h,o,r,__VA_ARGS__)
@@ -417,7 +429,7 @@
   HW_B(_hwx_cfswuarta_vreceiver_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vreceiver_0(h,o,r,v,...)	\
-  HW_E_AVL(receiver, v, enabled | disabled)
+  HW_E(HW_EM_VAL(v,receiver,(enabled)))
 
 #define _hwx_cfswuarta_vreceiver_1(h,o,r,v,...)	\
   h( turn, (r,pcic,irq), _hw_state_##v);	\
@@ -432,7 +444,7 @@
   HW_B(_hwx_cfswuarta_vtransmitter_,_hw_state_##v)(h,o,r,v,__VA_ARGS__)
 
 #define _hwx_cfswuarta_vtransmitter_0(h,o,r,v,...)	\
-  HW_E_AVL(`transmitter`, v, `enabled`)
+  HW_E(HW_EM_VAL(v,transmitter,(enabled)))
 
 #define _hwx_cfswuarta_vtransmitter_1(h,o,r,v,...)	\
   _hwx_cfswuarta_end(o,__VA_ARGS__)
@@ -446,17 +458,13 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * <br>
- * `read`: waits for the reception of a byte, clears the `rxc` flag, and returns
- * the byte.
- *
- * FIXME: _swuarta should not wait and let the application check the status.
+ * <br><br>hw( read, UART ) clears the `rxc` flag, and returns the last byte received.
  *
  * @code
  * while ( hw(stat,UART).rxc == 0 );
- * uint8_t byte = hw( read, UART );	// Clears the 'rxc' status flag
+ * uint8_t byte = hw( read, UART );
  * @endcode
  */
 #define hw_read__swuarta				, _hw_rdswuarta
@@ -464,19 +472,17 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * <br>
- * `write`: waits for the completion of the transmission (and the reception in
- * 1-wire mode) and places the byte to send into the shift register. This
- * instruction returns before the byte is actually transmitted. You need to
+ * <br><br>hw( write, UART, byte ) places a byte into the shift register, clears
+ * the `txc` flag and starts the transmission.
+ *
+ * This instruction returns before the byte is actually transmitted. You need to
  * check the `txc` flag to know when the transmission is complete.
- *
- * FIXME: _swuarta should not wait and let the application check the status.
  *
  * @code
  * while ( hw(stat,UART).txc == 0 );
- * hw( write, UART, '#' );		// Clears the 'txc' status flag
+ * hw( write, UART, '#' );
  * @endcode
  */
 #define hw_write__swuarta				, _hw_wrswuarta
@@ -484,12 +490,11 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * <br>
- * `stat`: returns the status, containing the following flags:
+ * <br><br>hw( stat, UART ) returns the status with the following flags:
  *
- * * `stop`: the state of the received stop bit, 0 if the byte failed to
+ * * `stop`: the state of the last stop bit received, 0 if the byte failed to
  *	     transmit (collision)
  * * `rxc`: 1 when a reception is completed (stop bit sampled)
  * * `txc`: 1 when the transmission is completed (stop bit sent)
@@ -503,16 +508,16 @@
  *   byte = hw( read, UART );
  * @endcode
  */
-  typedef struct {
-    unsigned int	rxc  : 1 ;
-    unsigned int	txc  : 1 ;
-    unsigned int	stop : 1 ;
-    unsigned int	sync : 1 ;
-    unsigned int	rxtx : 1 ;
-    unsigned int	wbtx : 1 ;
-    unsigned int	__6  : 1 ;
-    unsigned int	__7  : 1 ;
-  } hw_swuarta_stat_t ;
+    typedef struct {
+      unsigned int	rxc  : 1 ;
+      unsigned int	txc  : 1 ;
+      unsigned int	stop : 1 ;
+      unsigned int	sync : 1 ;
+      unsigned int	rxtx : 1 ;
+      unsigned int	wbtx : 1 ;
+      unsigned int	__6  : 1 ;
+      unsigned int	__7  : 1 ;
+    } hw_swuarta_stat_t ;
 
 
 #define hw_stat_t__swuarta				, _hw_sttswuarta
@@ -523,9 +528,9 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * `clear`: clears the `rxc` and `txc` status flags.
+ * <br><br>hw( clear, UART ) clears the `rxc` and `txc` status flags.
  *
  * @code
  * hw( clear, UART );
@@ -544,10 +549,10 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * `reset`: aborts any transmission or reception. If the UART has automatic
- * baudrate detection, the UART will first resynchronize.
+ * <br><br>hw( reset, UART ) aborts any transmission or reception. If the UART
+ * has automatic baudrate detection, the UART will first resynchronize.
  *
  * @code
  * hw( reset, UART );
@@ -558,10 +563,9 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  *
- * <br>
- * `wait_idle`: wait n idle bits
+ * <br><br>hw( wait_idle, UART, n ) wait n idle bits:
  *
  * @code
  * hw( wait_idle, UART, 25 );
@@ -572,14 +576,13 @@
 
 
 /**
- * @page atmelavr_swuarta
+ * @addtogroup atmelavr_swuarta
  * @section atmelavr_swuarta_regs Registers
  *
- * Class `_swuarta` objects hold the following registers:
- *
- *  * `dt0`: number of counter clocks between the start condition and the sampling of data bit 0
- *  * `dtn`: number of counter clocks between samplings
- *  * `sr`: status byte
+ * * `dt0`: number of counter clocks between the start condition and the
+ *          sampling of data bit #0
+ * * `dtn`: number of counter clocks between samplings
+ * * `sr`: status byte
  */
 
 #else /* !defined __ASSEMBLER__ */

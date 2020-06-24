@@ -10,39 +10,43 @@
  */
 
 /**
- * @page stm32_cta
- * __Actions__
+ * @ingroup stm32_classes
+ * @addtogroup stm32_cta
+ * @section stm32_cta_act Actions
  *
- * `configure` as counter
+ * By default, hw( configure, COUNTER, ... ) and hwa( configure, COUNTER, ... )
+ * configure the COUNTER as a counter:
+ *
  * @code
- * hw | hwa ( configure,      counter2,
+ * hw | hwa( configure,	     counter2,
  *
- *          [ mode,           counter, ]                   // Default mode
+ *	   [ mode,	     counter, ]			// Default mode
  *
- *            //  How the counter is clocked
- *            //
- *            clock,          from_apb1_psc                // See note
- *                          | channel1
- *                          | channel2
- *                          | external
- *                          | xor123,
+ *	     //	 How the counter is clocked
+ *	     //
+ *	     clock,	     from_apb1_psc		// See note
+ *			   | channel1
+ *			   | channel2
+ *			   | external
+ *			   | xor123,
  *
- *            direction,      up
- *                          | down
- *                          | updown,
+ *	     direction,	     up
+ *			   | down
+ *			   | updown,
  *
- *            //  The following is accepted only when direction is 'up_down'
- *            //
- *          [ compare_flag,   counting_up
- *                          | counting_down
- *                          | counting_up_or_down, ]       // Default
+ *	     //	 The following is accepted only when direction is 'up_down'
+ *	     //
+ *	   [ compare_flag,   counting_up
+ *			   | counting_down
+ *			   | counting_up_or_down, ]	// Default
  *
- *          [ prescaler,      x, ]                         // Any value in 0..0xFFFF
+ *	   [ prescaler,	     x, ]			// Any value in 0..0xFFFF
  *
- *          [ reload,         x, ]                         // Any value in 0..0xFFFF
+ *	   [ reload,	     x, ]			// Any value in 0..0xFFFF
  *
- *          [ run,            yes
- *                          | no ] );
+ *	   [ run,	     yes
+ *			   | no ]
+ * );
  * @endcode
  *
  * @note RM0008, p. 126: The timer clock frequencies are automatically fixed by
@@ -63,7 +67,7 @@
 
 /*  At least one keyword
  */
-#define _hwx_cfctd1(...)		HW_E_ML((clock,reload))
+#define _hwx_cfctd1(...)		HW_E(HW_EM_AML((clock,direction)))
 #define _hwx_cfctd0(h,o,k,...)		HW_B(_hwx_cfctd_kmode,_hw_is_mode_##k)(h,o,k,__VA_ARGS__)
 
 /*  Optionnal parameter `mode`
@@ -75,14 +79,14 @@
 #define _hwx_cfctd_kmode0(...)		_hwx_cfctd(__VA_ARGS__)
 #define _hwx_cfctd_kmode1(h,o,k,v,...)	HW_B(_hwx_cfctd_vmode,_hw_cfctd_mode_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vmode1(h,o,v,...)	HW_A1(_hw_cfctd_mode_##v)(h,o,__VA_ARGS__)
-#define _hwx_cfctd_vmode0(h,o,v,...)	HW_E_NIL(v,(counter,encoder,slave))
+#define _hwx_cfctd_vmode0(h,o,v,...)	HW_E(HW_EM_VAL(v,mode,(counter,encoder,slave)))
 
 /*  Mode 'counter' - Mandatory parameter `clock`
  */
 #define _hwx_cfctd(h,o,k,...)		HW_B(_hwx_cfctd_kclock,_hw_is_clock_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cfctd_kclock0(h,o,k,...)	HW_E_NIL(k,(clock))
+#define _hwx_cfctd_kclock0(h,o,k,...)	HW_E(HW_EM_AN(k,clock))
 #define _hwx_cfctd_kclock1(h,o,k,v,...)	HW_B(_hwx_cfctd_vclock,_hw_cfctd_clock_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfctd_vclock0(h,o,v,...)	HW_E_NIL(v,_hw_cfctd_clocks)
+#define _hwx_cfctd_vclock0(h,o,v,...)	HW_E(HW_EM_VAL(v,clock,_hw_cfctd_clocks))
 #define _hwx_cfctd_vclock1(h,o,v,...)	HW_A1(_hw_cfctd_clock_##v)(h,o,__VA_ARGS__)
 
 
@@ -108,19 +112,19 @@
 
 /*  Mode 'counter' - Mandatory parameter `direction`
  */
-#define _hwx_cfctd_kdir0(h,o,k,...)	HW_E_NIL(k,(direction))
+#define _hwx_cfctd_kdir0(h,o,k,...)	HW_E(HW_EM_AN(k,direction))
 #define _hwx_cfctd_kdir1(h,o,k,v,...)	HW_B(_hwx_cfctd_vdir,_hw_cfctd_dir_##v)(h,o,v,__VA_ARGS__)
 
 #define _hw_cfctd_dirs			(up_loop,up_noloop,down_loop,down_noloop,updown_loop,updown_noloop)
-//					, jump,              v =  cms  dir  opm
-#define _hw_cfctd_dir_up_loop		, _hwx_cfctd_kocf0,  0 //  00   0    0
-#define _hw_cfctd_dir_up_noloop		, _hwx_cfctd_kocf0,  1 //  00   0    1
-#define _hw_cfctd_dir_down_loop		, _hwx_cfctd_kocf0,  2 //  00   1    0
-#define _hw_cfctd_dir_down_noloop	, _hwx_cfctd_kocf0,  3 //  00   1    1
-#define _hw_cfctd_dir_updown_loop	, _hwx_cfctd_vdir2, 12 //  11   x    0
-#define _hw_cfctd_dir_updown_noloop	, _hwx_cfctd_vdir2, 13 //  11   x    1
+//					, jump,		     v =  cms  dir  opm
+#define _hw_cfctd_dir_up_loop		, _hwx_cfctd_kocf0,  0 //  00	0    0
+#define _hw_cfctd_dir_up_noloop		, _hwx_cfctd_kocf0,  1 //  00	0    1
+#define _hw_cfctd_dir_down_loop		, _hwx_cfctd_kocf0,  2 //  00	1    0
+#define _hw_cfctd_dir_down_noloop	, _hwx_cfctd_kocf0,  3 //  00	1    1
+#define _hw_cfctd_dir_updown_loop	, _hwx_cfctd_vdir2, 12 //  11	x    0
+#define _hw_cfctd_dir_updown_noloop	, _hwx_cfctd_vdir2, 13 //  11	x    1
 
-#define _hwx_cfctd_vdir0(h,o,v,...)	HW_E_NIL(v,_hw_cfctd_dirs)
+#define _hwx_cfctd_vdir0(h,o,v,...)	HW_E(HW_EM_VAL(v,direction,_hw_cfctd_dirs))
 #define _hwx_cfctd_vdir1(h,o,v,k,...)					\
   uint8_t cmsdiropm = HW_A2(_hw_cfctd_dir_##v) ;			\
   HW_A1(_hw_cfctd_dir_##v)(h,o,k,__VA_ARGS__)
@@ -130,7 +134,7 @@
 /*  Optionnal parameter `compare_flag`, only when counting up-down
  */
 #define _hwx_cfctd_kocf1(h,o,k,v,...)	HW_B(_hwx_cfctd_vocf,_hw_cfctd_compare_flag_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfctd_vocf0(h,o,v,...)	HW_E_NIL(v,(counting_up,counting_down,counting_up_or_down))
+#define _hwx_cfctd_vocf0(h,o,v,...)	HW_E(HW_EM_VOAL(v,compare_flag,(counting_up,counting_down,counting_up_or_down)))
 #define _hwx_cfctd_vocf1(h,o,v,k,...)					\
   cmsdiropm += HW_A1(_hw_cfctd_compare_flag_##v);			\
   h##_write(o,cmsdiropm,cmsdiropm);					\
@@ -149,7 +153,7 @@
 /*  Optionnal parameter `loop`
  */
 /* #define _hwx_cfctd_kloop1(h,o,k,v,...)	HW_B(_hwx_cfctd_vloop,_hw_state_##v)(h,o,v,__VA_ARGS__) */
-/* #define _hwx_cfctd_vloop0(h,o,v,...)	HW_E_ST(v) */
+/* #define _hwx_cfctd_vloop0(h,o,v,...)	HW_E(HW_EM_ST(v)) */
 /* #define _hwx_cfctd_vloop1(h,o,v,k,...)					\ */
 /*   h##_write(o,opm,HW_A2(_hw_state_##v));				\ */
 /*   HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__) */
@@ -176,58 +180,62 @@
 /*  Optionnal parameter `run`
  */
 #define _hwx_cfctd_krun1(h,o,k,v,...)	HW_B(_hwx_cfctd_vrun,_hw_state_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfctd_vrun0(h,o,v,...)	HW_E_ST(v)
+#define _hwx_cfctd_vrun0(h,o,v,...)	HW_E(HW_EM_ST(v))
 #define _hwx_cfctd_vrun1(h,o,v,...)	h##_write(o,cen,HW_A1(_hw_state_##v)); HW_EOL(__VA_ARGS__);
 #define _hwx_cfctd_krun0(h,o,k,...)	HW_EOL(__VA_ARGS__)
 
 
 /**
- * `configure` as encoder
- *
- * @note To be implemented.
- *
- * @code
- * hw | hwa ( configure,   counter2,
- *
- *	      mode	   encoder );
- * @endcode
- */
-
-/**
- * `configure` as slave
- *
- * @note To be implemented.
+ * <br><br>
+ * @note To be implemented. Configure the counter as an encoder:
  *
  * @code
- * hw | hwa ( configure,   counter2,
+ * hw | hwa( configure, counter2,
  *
- *	      mode,	   slave,
+ *	     mode,	encoder,
  *
- *	      //  How the counter is clocked
- *	      //
- *	      clock,	   from_apb1	   // Internal clock (CK_INT)
- *			 | channel1
- *			 | channel2
- *			 | external
- *			 | encode(channel1,channel2)
- *			 | xor(channel1,channel2,channel3)
- *
- *	      //  How the counter is reset (slave mode)
- *	      //
- *	    [ reset,	   counter1
- *			 | counter2
- *			 | counter3
- *			 | counter4
- *			 | counter5
- *			 | counter8, ] );
+ *           ...
+ * );
  * @endcode
  */
 
 
 /**
- * @page stm32_cta
- * <br>
- * `run`:
+ * <br><br>
+ * @note To be implemented. Configure the counter as a slave:
+ *
+ * @code
+ * hw | hwa( configure,	  counter2,
+ *
+ *	     mode,	  slave,
+ *
+ *	     //	 How the counter is clocked
+ *	     //
+ *	     clock,	  from_apb1		// Internal clock (CK_INT)
+ *			| channel1
+ *			| channel2
+ *			| external
+ *			| encode(channel1,channel2)
+ *			| xor(channel1,channel2,channel3)
+ *
+ *	     //	 How the counter is reset (slave mode)
+ *	     //
+ *	   [ reset,	  counter1
+ *			| counter2
+ *			| counter3
+ *			| counter4
+ *			| counter5
+ *			| counter8, ]
+ * );
+ * @endcode
+ */
+
+
+/**
+ * @addtogroup stm32_cta
+ *
+ * <br><br>hw( run, COUNTER ) and hwa( run, COUNTER ) run the counter:
+ *
  * @code
  * hw | hwa ( run, counter2 );
  * @endcode
@@ -240,9 +248,10 @@
 
 
 /**
- * @page stm32_cta
- * <br>
- * `stop`:
+ * @addtogroup stm32_cta
+ *
+ * <br><br>hw( stop, COUNTER ) and hwa( stop, COUNTER ) stop the counter:
+ *
  * @code
  * hw | hwa ( stop, counter2 );
  * @endcode
@@ -255,9 +264,10 @@
 
 
 /**
- * @page stm32_cta
+ * @addtogroup stm32_cta
  *
- * `read:`
+ * <br><br>hw( read, COUNTER ) returns the value of the counting register:
+ *
  * @code
  * uint16_t v = hw( read, counter2 );
  * @endcode
@@ -267,9 +277,10 @@
 
 
 /**
- * @page stm32_cta
+ * @addtogroup stm32_cta
  *
- * `write:`
+ * <br><br>hw( write, COUNTER, value ) sets the value of the counting register:
+ *
  * @code
  * uint16_t v = hw( write, counter2, 500 );
  * @endcode
@@ -279,9 +290,10 @@
 
 
 /**
- * @page stm32_cta
+ * @addtogroup stm32_cta
  *
- * `stat:` get the status flags and clear them.
+ * <br><br>hw( stat, COUNTER ) gets the status flags and clears them:
+ *
  * @code
  * uint16_t v = hw( stat, counter2 );
  * @endcode
@@ -291,11 +303,111 @@
 
 
 /**
- * @page stm32_cta
- * <br>
- * __Registers__
+ * @addtogroup stm32_cta
+ * @section stm32_cta_reg Registers
  *
- * <br>
+ * Hardware registers:
+ *
+ *  * @ref hwa_r16 "(COUNTER,cr1)"
+ *  * @ref hwa_r16 "(COUNTER,cr2)"
+ *  * @ref hwa_r16 "(COUNTER,smcr)"
+ *  * @ref hwa_r16 "(COUNTER,dier)"
+ *  * @ref hwa_r16 "(COUNTER,sr)"
+ *  * @ref hwa_r16 "(COUNTER,egr)"
+ *  * @ref hwa_r16 "(COUNTER,ccmr1)"
+ *  * @ref hwa_r16 "(COUNTER,ccmr2)"
+ *  * @ref hwa_r16 "(COUNTER,ccer)"
+ *  * @ref hwa_r16 "(COUNTER,cnt)"
+ *  * @ref hwa_r16 "(COUNTER,psc)"
+ *  * @ref hwa_r16 "(COUNTER,arr)"
+ *  * @ref hwa_r16 "(COUNTER,ccr1)"
+ *  * @ref hwa_r16 "(COUNTER,ccr2)"
+ *  * @ref hwa_r16 "(COUNTER,ccr3)"
+ *  * @ref hwa_r16 "(COUNTER,ccr4)"
+ *  * @ref hwa_r16 "(COUNTER,dcr)"
+ *  * @ref hwa_r16 "(COUNTER,dmar)"
+ *
+ * Logical registers:
+ *
+ *  * @ref hwa_cb1 "(COUNTER,ckd)"
+ *  * @ref hwa_cb1 "(COUNTER,arpe)"
+ *  * @ref hwa_cb1 "(COUNTER,cms)"
+ *  * @ref hwa_cb1 "(COUNTER,dir)"
+ *  * @ref hwa_cb1 "(COUNTER,cmsdir)"
+ *  * @ref hwa_cb1 "(COUNTER,opm)"
+ *  * @ref hwa_cb1 "(COUNTER,cmsdiropm)"
+ *  * @ref hwa_cb1 "(COUNTER,urs)"
+ *  * @ref hwa_cb1 "(COUNTER,udis)"
+ *  * @ref hwa_cb1 "(COUNTER,cen)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,ti1s)"
+ *  * @ref hwa_cb1 "(COUNTER,mms)"
+ *  * @ref hwa_cb1 "(COUNTER,ccds)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,etp)"
+ *  * @ref hwa_cb1 "(COUNTER,ece)"
+ *  * @ref hwa_cb1 "(COUNTER,etps)"
+ *  * @ref hwa_cb1 "(COUNTER,etf)"
+ *  * @ref hwa_cb1 "(COUNTER,msm)"
+ *  * @ref hwa_cb1 "(COUNTER,ts)"
+ *  * @ref hwa_cb1 "(COUNTER,sms)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,tde)"
+ *  * @ref hwa_cb1 "(COUNTER,cc4de)"
+ *  * @ref hwa_cb1 "(COUNTER,cc3de)"
+ *  * @ref hwa_cb1 "(COUNTER,cc2de)"
+ *  * @ref hwa_cb1 "(COUNTER,cc1de)"
+ *  * @ref hwa_cb1 "(COUNTER,ude)"
+ *  * @ref hwa_cb1 "(COUNTER,tie)"
+ *  * @ref hwa_cb1 "(COUNTER,cc4ie)"
+ *  * @ref hwa_cb1 "(COUNTER,cc3ie)"
+ *  * @ref hwa_cb1 "(COUNTER,cc2ie)"
+ *  * @ref hwa_cb1 "(COUNTER,cc1ie)"
+ *  * @ref hwa_cb1 "(COUNTER,uie)"
+ *  * @ref hwa_cb1 "(COUNTER,ie)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,if)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,cc4p)"
+ *  * @ref hwa_cb1 "(COUNTER,cc4e)"
+ *  * @ref hwa_cb1 "(COUNTER,cc3p)"
+ *  * @ref hwa_cb1 "(COUNTER,cc3e)"
+ *  * @ref hwa_cb1 "(COUNTER,cc2p)"
+ *  * @ref hwa_cb1 "(COUNTER,cc2e)"
+ *  * @ref hwa_cb1 "(COUNTER,cc1p)"
+ *  * @ref hwa_cb1 "(COUNTER,cc1e)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,oc2ce)"
+ *  * @ref hwa_cb1 "(COUNTER,oc2m)"
+ *  * @ref hwa_cb1 "(COUNTER,ic2f)"
+ *  * @ref hwa_cb1 "(COUNTER,oc2pe)"
+ *  * @ref hwa_cb1 "(COUNTER,oc2fe)"
+ *  * @ref hwa_cb1 "(COUNTER,ic2psc)"
+ *  * @ref hwa_cb1 "(COUNTER,cc2s)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,oc1ce)"
+ *  * @ref hwa_cb1 "(COUNTER,oc1m)"
+ *  * @ref hwa_cb1 "(COUNTER,ic1f)"
+ *  * @ref hwa_cb1 "(COUNTER,oc1pe)"
+ *  * @ref hwa_cb1 "(COUNTER,oc1fe)"
+ *  * @ref hwa_cb1 "(COUNTER,ic1psc)"
+ *  * @ref hwa_cb1 "(COUNTER,cc1s)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,oc4ce)"
+ *  * @ref hwa_cb1 "(COUNTER,oc4m)"
+ *  * @ref hwa_cb1 "(COUNTER,ic4f)"
+ *  * @ref hwa_cb1 "(COUNTER,oc4pe)"
+ *  * @ref hwa_cb1 "(COUNTER,oc4fe)"
+ *  * @ref hwa_cb1 "(COUNTER,ic4psc)"
+ *  * @ref hwa_cb1 "(COUNTER,cc4s)"
+ * <br><br>
+ *  * @ref hwa_cb1 "(COUNTER,oc3ce)"
+ *  * @ref hwa_cb1 "(COUNTER,oc3m)"
+ *  * @ref hwa_cb1 "(COUNTER,ic3f)"
+ *  * @ref hwa_cb1 "(COUNTER,oc3pe)"
+ *  * @ref hwa_cb1 "(COUNTER,oc3fe)"
+ *  * @ref hwa_cb1 "(COUNTER,ic3psc)"
+ *  * @ref hwa_cb1 "(COUNTER,cc3s)"
  */
 
 
@@ -320,10 +432,10 @@
 #define _hwa_init__cta(o,a)			\
   _hwa_init_r( o, cr1,	 0x00000000 );		\
   _hwa_init_r( o, cr2,	 0x00000000 );		\
-  _hwa_init_r( o, smcr,  0x00000000 );		\
-  _hwa_init_r( o, dier,  0x00000000 );		\
+  _hwa_init_r( o, smcr,	 0x00000000 );		\
+  _hwa_init_r( o, dier,	 0x00000000 );		\
   _hwa_init_r( o, ccmr2, 0x00000000 );		\
-  _hwa_init_r( o, ccer,  0x00000000 );		\
+  _hwa_init_r( o, ccer,	 0x00000000 );		\
   _hwa_init_r( o, psc,	 0x00000000 );		\
   _hwa_init_r( o, arr,	 0x00000000 );		\
   _hwa_init_r( o, ccr3,	 0x00000000 )

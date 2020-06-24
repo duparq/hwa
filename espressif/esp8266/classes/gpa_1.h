@@ -10,7 +10,8 @@
  */
 
 /**
- * @page espressif_gpa Class _gpa: 16-bit I/O port
+ * @ingroup esp8266_classes
+ * @defgroup esp8266_gpa Class _gpa: 16-bit I/O port
  *
  * A class `_gpa` object is a 16-bit I/O port.
  *

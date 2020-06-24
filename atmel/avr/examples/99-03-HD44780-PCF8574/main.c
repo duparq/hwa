@@ -34,7 +34,7 @@ int main(void)
   hw( configure, TWI, bps, TWI_BPS );
   hw( configure, PCF );
 
-  hw( write, LCD_LED, 0 );
+  hw( clear, LCD_LED );
 
   hw( configure, LCD,
       init,	 yes,

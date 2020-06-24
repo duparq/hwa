@@ -13,18 +13,14 @@
  */
 #include "adx_2.h"
 
-#define hw_prescaler_max__ada		, hw_adx_prescaler_max
-#define hw_prescaler_min__ada		, hw_adx_prescaler_min
+/* #define hw_prescaler_max__ada		, hw_adx_prescaler_max */
+/* #define hw_prescaler_min__ada		, hw_adx_prescaler_min */
 
 /**
- * @page atmelavr_ada
- * @section atmelavr_ada_act Actions
+ * @addtogroup atmelavr_ada
+ * @section atmelavr_adaac Actions
  *
- * <br>
- * `configure`:
- *
- * __Note__ The ADC is turned off by default. Configuring the ADC automatically
- * turns it on.
+ * <br><br> hwa( configure, ... ) configures the ADC.
  *
  * Single-end mode:
  *
@@ -35,27 +31,27 @@
  *	//  the 50..200 kHz range for maximum resolution, and in all
  *	//  case lower than 1 MHz.
  *	//
- *	clock,	   min			     // choose the nearest 50 kHz
- *		 | max			     // choose the nearest 200 kHz
- *		 | ioclk / 2**n,	     // with n in 1..7
+ *	clock,	   min				// choose the nearest 50 kHz
+ *		 | max				// choose the nearest 200 kHz
+ *		 | ioclk / 2**(1..7),		// IOCLK divided by 2,4,..,128
  *
  *	//  How a conversation is started
  *	//
- *	trigger,   manual		     // with the `trigger` action
- *		 | auto			     // as soon as a conversion is completed
- *		 | acmp0		     // ANA_COMP interrupt request
- *		 | int0			     // INT0 interrupt request
- *		 | counter0_compare0	     // TIMER0_COMPA interrupt request
- *		 | counter0_overflow	     // TIMER0_OVF interrupt request
- *		 | counter1_compare1	     // TIMER1_COMPB interrupt request
- *		 | counter1_overflow	     // TIMER1_OVF interrupt request
- *		 | counter1_capture,	     // TIMER1_CAPT interrupt request
+ *	trigger,   manual			// Use hw(trigger,adc0)
+ *		 | auto				// as soon as a conversion is completed
+ *		 | (acmp0,irq)			// Other trigger sources
+ *		 | (int0,irq)			//
+ *		 | (counter0,compare0,irq)	//
+ *		 | (counter0,overflow,irq)	//
+ *		 | (counter1,compare1,irq)	//
+ *		 | (counter1,overflow,irq)	//
+ *		 | (counter1,capture,irq),	//
  *
  *	//  Voltage reference
  *	//
- *	vref,	   vcc			     // Vcc
- *		 | pin_aref		     // Voltage on AREF pin
- *		 | bandgap,		     // Internal 1.1V bandgap
+ *	vref,	   vcc				// Vcc
+ *		 | (pin,aref)			// Voltage on AREF pin
+ *		 | bandgap_1100mV,		// Internal 1.1V bandgap
  * 
  *	//  Result alignment (default is `right`)
  *	//
@@ -65,229 +61,199 @@
  *	//  Input
  *	//
  *	input,	   (pin,adc0..7)
- *		 | agnd
+ *		 | gnd
  *		 | bandgap
  *		 | temperature );
  * @endcode
  *
- * Differential mode allows the use of the 20x gain stage:
+ * The differential mode allows the use of the 20x gain stage:
  *
  * @code
  * hwa( configure, adc0,
  * 
- *	clock, ... ,				// See above
- *	trigger, ... ,
- *	vref, ... ,
- *    [ align, ... , ]
+ *	clock,           ... ,			// See above
+ *	trigger,         ... ,			//
+ *	vref,            ... ,			//
+ *    [ align,           ... , ]		//
  *
- *	//  Type of conversion (default is `unipolar`)
- *	//
- *    [ polarity,	  unipolar
- *			| bipolar, ]
+ *    [ polarity,	 unipolar		// Default
+ *    		       | bipolar, ]
  *
- *	//  Amplification (default is 1)
- *	//
- *    [ gain,		  1
- *			| 20, ]
- *
- *	//  HWA will trigger an error if you try to use a combination
- *	//  of inputs that is not available
- *	//
- *	positive_input,	  (pin,adc0..7),
+ *    [ gain,		 1			// Default
+ *    		       | 20, ]
  * 
- *	negative_input,	  (pin,adc0..7) );
+ *      positive_input,	 (pin,adc0..7)		// HWA will trigger an error if you
+ * 						// try to use a combination of inputs
+ *      negative_input,	 (pin,adc0..7)		// that is not available
+ * );
  * @endcode
+ *
+ * @note The ADC and the analog comparator share the same output of the analog
+ * multiplexer. The ADC is disabled after reset. Configuring the ADC
+ * automatically enables it. When the ADC is enabled, the analog comparator
+ * `acmp0` can not use the analog multiplexer output. Use hw(disable,adc0) to
+ * disable the ADC and let acmp0 use the analog multiplexer output.
  */
-
-/* FIXME: use irq for trigger?
- * FIXME: add a 'start' parameter instead of starting the adc silently.
- */
-
 #define hwa_configure__ada		, _hwa_cfada
 
 /*  Mandatory parameter `clock`
  */
-#define _hwa_cfada(o,a,k,...)						\
-  do {									\
-    uint8_t mux __attribute__((unused)) = 0xFF ;			\
-    uint8_t gain __attribute__((unused)) = 1 ;				\
-    uint8_t input1 __attribute__((unused)) = 0xFF ;			\
-    uint8_t input2 __attribute__((unused)) = 0xFF ;			\
-    _hwa_write( o, en, 1 ); /* turn the ADC on */			\
-    HW_B(_hwa_cfada_kclock_,_hw_is_clock_##k)(o,k,__VA_ARGS__,,);	\
-    if ( mux != 0xFF ) _hwa_write(o,mux,mux);				\
+#define _hwa_cfada(o,a,k,...)				\
+  do {							\
+    uint8_t gain __attribute__((unused)) =  1 ;		\
+    _hwa_write(o,en,1); /* enable the ADC */		\
+    HW_BW(_hwa_cfadack,clock,k)(o,k,__VA_ARGS__,,);	\
   } while(0)
 
-#define _hwa_cfada_kclock_0(o,k,...)					\
-  HW_E_VL(k,clock)
 
-#define _hwa_cfada_kclock_1(o,k,v,...)				\
-  HW_B(_hwa_cfada_vclock_,_hw_adx_clock_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfada_vclock_0(o,v,...)					\
-  HW_E_AVL(clock, v, (min, max, ioclk / 2**n with n in 1..7))
-
-#define _hwa_cfada_vclock_1(o,v,k,...)				\
-  _hwa_write(o, ps, HW_A1(_hw_adx_clock_##v)(HW_A2(_hw_adx_clock_##v))); \
-  HW_B(_hwa_cfada_ktrigger_,_hw_is_trigger_##k)(o,k,__VA_ARGS__)
-
-
-/*  Mandatory parameter `trigger`
+/*	Mandatory parameter 'clock'
  */
-#define _hwa_cfada_ktrigger_0(o,k,...)		\
-  HW_E_VL(k,trigger)
+#define _hwa_cfadack0(o,k,...)		HW_E(HW_EM_AN(k,clock))
+#define _hwa_cfadack1(o,k,v,...)	HW_BV(_hwa_cfadack1,adxclock_,v,o)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadack10(v,o)		HW_E(HW_EM_VAL(v,clock,(min, max, ioclk/2**(1..7)))) HW_EAT // Pop
+#define _hwa_cfadack11(f,v,o)		_hwa_write(o,ps,f(v)); _hwa_cfadatrg // Pop
 
-#define _hwa_cfada_ktrigger_1(o,k,v,...)				\
-  HW_B(_hwa_cfada_vtrigger_,_hw_ada_trigger_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfada_vtrigger_0(o,v,...)				\
-  HW_E_AVL(trigger, v, manual | auto | acmp0 | int0 | counter0_compare0 | counter0_overflow | counter1_compare1 | counter1_overflow | counter1_capture0)
-
-#define _hwa_cfada_vtrigger_1(o,v,k,...)			\
-  _hwa_write(o,ate, HW_A1(_hw_ada_trigger_##v));		\
-  _hwa_write(o,ts, HW_A2(_hw_ada_trigger_##v));		\
-  HW_B(_hwa_cfada_kvref_,_hw_is_vref_##k)(o,k,__VA_ARGS__)
-
-#define _hw_ada_trigger_manual			, 0, 0	/* , ate, ts */
-#define _hw_ada_trigger_auto			, 1, 0
-#define _hw_ada_trigger_acmp0			, 1, 1
-#define _hw_ada_trigger_int0			, 1, 2
-#define _hw_ada_trigger_counter0_compare0	, 1, 3
-#define _hw_ada_trigger_counter0_overflow	, 1, 4
-#define _hw_ada_trigger_counter1_compare1	, 1, 5
-#define _hw_ada_trigger_counter1_overflow	, 1, 6
-#define _hw_ada_trigger_counter1_capture0	, 1, 7
-
-/*  Mandatory parameter `vref`
+/*	Mandatory parameter 'trigger'
  */
-#define _hwa_cfada_kvref_0(o,k,...)					\
-  HW_E_VL(k,vref)
+#define _hwa_cfadatrg(o,v,k,...)	HW_BW(_hwa_cfadatrg,trigger,k)(o,v,__VA_ARGS__)
+#define _hwa_cfadatrg0(o,k,...)		HW_E(HW_EM_AN(k,trigger))
+#define _hwa_cfadatrg1(o,k,v,...)	HW_B(_hwa_cfadatrg2, _hw_par v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfada_kvref_1(o,k,v,...)					\
-  HW_B(_hwa_cfada_vvref_,_hw_ada_vref_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfada_vvref_0(o,v,...)				\
-  HW_E_AVL(vref, v, vcc | pin_aref | bandgap)
-
-#define _hwa_cfada_vvref_1(o,v,k,...)			\
-  _hwa_write(o,refs, HW_A1(_hw_ada_vref_##v));	\
-  HW_B(_hwa_cfada_kalign_,_hw_is_align_##k)(o,k,__VA_ARGS__)
-
-#define _hw_ada_vref_vcc		, 0	/* , refs */
-#define _hw_ada_vref_pin_aref		, 1
-#define _hw_ada_vref_bandgap		, 2
-
-/*  Optionnal parameter `align`
+/*		"manual" or "auto"
  */
-#define _hwa_cfada_kalign_1(o,k,v,...)				\
-  HW_B(_hwa_cfada_valign_,_hw_ada_align_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfadatrg20(o,v,...)	HW_BV(_hwa_cfadatrg20,adatrg_,v,o)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadatrg201(_ate,_ts,o)	_hwa_write(o,ate,_ate); _hwa_write(o,ts,_ts); _hwa_cfadaref
+#define _hwa_cfadatrg200(v,...)		HW_E(HW_EM_VAL(v,trigger,(manual, auto, (int0,irq), (acmp0,irq), \
+								  (counter0,compare0,irq), (counter0,overflow,irq), \
+								  (counter1,compare1,irq), (counter1,overflow,irq), \
+								  (counter1,capture0,irq)))); HW_EAT // Pop
+/*		IRQs
+ */
+#define _hwa_cfadatrg21(o,v,...)	_hwa_cfadatrg22((HW_X(v)),o,v,__VA_ARGS__)
+#define _hwa_cfadatrg22(...)		_hwa_cfadatrg23(__VA_ARGS__)
+#define _hwa_cfadatrg23(d,...)		HW_BW(_hwa_cfadatrg3,_irq,HW_RP d)(d,__VA_ARGS__)
+#define _hwa_cfadatrg30(d,o,v,...)	_hwa_cfadatrg200(v,)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadatrg31(d,o,v,...)	HW_BV(_hwa_cfadatrg20,adatrg_,HW_A1 d,)(o,v,__VA_ARGS__) // Push
 
-#define _hwa_cfada_valign_0(o,v,...)				\
-  HW_E_OAVL(align, v, left | right)
-#define _hwa_cfada_valign_1(o,v,k,...)				\
-  _hwa_write(o,lar, HW_A1(_hw_ada_align_##v));			\
-  HW_B(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+#define _hw_adatrg_manual			, 0, 0	/* , ate, ts */
+#define _hw_adatrg_auto				, 1, 0
+#define _hw_adatrg_acmp0_irq			, 1, 1
+#define _hw_adatrg_int0_irq			, 1, 2
+#define _hw_adatrg_counter0_compare0_irq	, 1, 3
+#define _hw_adatrg_counter0_overflow_irq	, 1, 4
+#define _hw_adatrg_counter1_compare1_irq	, 1, 5
+#define _hw_adatrg_counter1_overflow_irq	, 1, 6
+#define _hw_adatrg_counter1_capture0_irq	, 1, 7
 
-#define _hwa_cfada_kalign_0(o,k,...)					\
-  HW_B(_hwa_cfada_kpolarity_,_hw_is_polarity_##k)(o,k,__VA_ARGS__)
+/*	Mandatory parameter 'vref'
+ */
+#define _hwa_cfadaref(o,v,k,...)	HW_BW(_hwa_cfadaref,vref,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadaref0(o,k,...)		HW_E(HW_EM_AN(k,vref))
+#define _hwa_cfadaref1(o,k,v,...)	HW_B(_hwa_cfadaref2, _hw_par v)(o,v,__VA_ARGS__)
 
-#define _hw_ada_align_left		, 1	/* , lar */
-#define _hw_ada_align_right		, 0
+/*		"bandgap_1100mV"
+ */
+#define _hwa_cfadaref20(o,v,...)	HW_BV(_hwa_cfadaref20,adaref_,v,o)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadaref201(v,o)		_hwa_write(o,refs,v); _hwa_cfadaal // Pop
+#define _hwa_cfadaref200(v,...)		HW_E(HW_EM_VAL(v,vref,(vcc, (pin,aref), bandgap_1100mV))) HW_EAT // Pop
+
+/*		vcc, (pin,aref)
+ */
+#define _hwa_cfadaref21(o,v,...)	_hwa_cfadaref22((HW_X(v)),o,v,__VA_ARGS__)
+#define _hwa_cfadaref22(...)		_hwa_cfadaref23(__VA_ARGS__)
+#define _hwa_cfadaref23(d,...)		HW_BW(_hwa_cfadaref3,_pin,HW_RP d)(d,__VA_ARGS__)
+#define _hwa_cfadaref30(d,o,v,...)	_hwa_cfadaref200(v,)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadaref31(d,o,v,...)	HW_BV(_hwa_cfadaref20,adaref_,HW_A1 d,o)(o,v,__VA_ARGS__) // Push
+
+#define _hw_adaref_vcc			, 0	/* , refs */
+#define _hw_adaref_pin_aref		, 1
+#define _hw_adaref_bandgap_1100mV	, 2
+
+/*  Optionnal parameter 'align'
+ */
+#define _hwa_cfadaal(o,v,k,...)		HW_BW(_hwa_cfadaal,align,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadaal0			_hwa_cfadapo
+#define _hwa_cfadaal1(o,k,v,...)	HW_BV(_hwa_cfadaal1,adaal_,v,o)(o,v,__VA_ARGS__) // Push
+#define _hwa_cfadaal10(v,o)		HW_E(HW_EM_VOAL(v,align,(left,right))) HW_EAT // Pop
+#define _hwa_cfadaal11(v,o)		_hwa_write(o,lar,v); _hwa_cfadaal12 // Pop
+#define _hwa_cfadaal12(o,v,k,...)	_hwa_cfadapo(o,k,__VA_ARGS__)
+
+#define _hw_adaal_left			, 1	/* , lar */
+#define _hw_adaal_right			, 0
 
 /*  Optionnal parameter `polarity`
  */
-#define _hwa_cfada_kpolarity_1(o,k,v,...)				\
-  HW_B(_hwa_cfada_vpolarity_,_hw_ada_polarity_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfadapo(o,k,...)		HW_BW(_hwa_cfadapo,polarity,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadapo0			_hwa_cfadagn
+#define _hwa_cfadapo1(o,k,v,...)	HW_BV(_hwa_cfadapo1,adapo_,v,o)(o,v,__VA_ARGS__) // PUSH
+#define _hwa_cfadapo10(v,o)		HW_E(HW_EM_VOAL(v,polarity,(unipolar,bipolar))) HW_EAT // POP
+#define _hwa_cfadapo11(v,o)		_hwa_write(o,bin,v); _hwa_cfadagn  // POP
 
-#define _hwa_cfada_vpolarity_0(o,v,...)				\
-  HW_E_OAVL(polarity, v, unipolar | bipolar)
-
-#define _hwa_cfada_vpolarity_1(o,v,k,...)			\
-  _hwa_write(o,bin, HW_A1(_hw_ada_polarity_##vpolarity));	\
-  HW_B(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
-
-#define _hwa_cfada_kpolarity_0(o,k,...)			\
-  HW_B(_hwa_cfada_kgain_,_hw_is_gain_##k)(o,k,__VA_ARGS__)
-
-#define _hw_ada_polarity_unipolar	, 0	/* , bin */
-#define _hw_ada_polarity_bipolar	, 1
+#define _hw_adapo_unipolar		, 0	/* , bin */
+#define _hw_adapo_bipolar		, 1
 
 /*  Optionnal parameter `gain`
  */
-#define _hwa_cfada_kgain_1(o,k,v,...)					\
-  gain = (uint8_t)(v) ;							\
-  if ( gain != 1 && gain != 20 )					\
-    HWA_ERR("optionnal parameter `gain` must be 1 or 20.");		\
-  HW_G2(_hwa_cfada_kpositive_input,HW_IS(positive_input,__VA_ARGS__))(o,__VA_ARGS__)
+#define _hwa_cfadagn(o,k,...)		HW_BW(_hwa_cfadagn,gain,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadagn0			_hwa_cfadain // -> 'input'
+#define _hwa_cfadagn1(o,k0,v,k,...)	gain = (uint8_t)(v); _hwa_cfadapi(o,k,__VA_ARGS__) // -> 'positive_input'
 
-#define _hwa_cfada_kgain_0(o,k,...)				\
-  /* HW_B(_hwa_cfada_kinput_,_hw_is_input_##k)(o,k,__VA_ARGS__) */	\
-  HW_BW(_hwa_cfada_in,input,k)(o,k,__VA_ARGS__)
-
-/*  Optionnal parameter `input`: indicates single-end mode, last parameter.
+/*  Optionnal parameter `input`
  */
-#define _hwa_cfada_in1(o,k,v,...)	HW_BV(_hwa_cfada_in1,_hw__adainput_,v)(o,v,__VA_ARGS__)
-#define _hwa_cfada_in10(k)		HW_E(HW_EM_XNIL(k,((pin,adc0..7),temperature,bandgap,ground))) // _hwa_cfada_in12
-#define _hwa_cfada_in11(v)		mux=v;	_hwa_cfada_in12
-#define _hwa_cfada_in12(o,k,...)	HW_EOL(__VA_ARGS__)
-#define _hwa_cfada_in1b(o,v,...)					\
-  uint32_t a = HW_ADDRESS(v);						\
-  if ( a==HW_ADDRESS((pin,adc0)) )	mux=0;				\
-  else if ( a==HW_ADDRESS((pin,adc1)) )	mux=1;				\
-  else if ( a==HW_ADDRESS((pin,adc2)) )	mux=2;				\
-  else if ( a==HW_ADDRESS((pin,adc3)) )	mux=3;				\
-  else if ( a==HW_ADDRESS((pin,adc4)) )	mux=4;				\
-  else if ( a==HW_ADDRESS((pin,adc5)) )	mux=5;				\
-  else if ( a==HW_ADDRESS((pin,adc6)) )	mux=6;				\
-  else if ( a==HW_ADDRESS((pin,adc7)) )	mux=7;				\
-  else HWA_ERR(HW_Q(HW_Q(v) is not in ((pin,adc0..7),temperature,bandgap,ground))); HW_EOL(__VA_ARGS__)
+#define _hwa_cfadain(o,k,...)		HW_BW(_hwa_cfadain,input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadain0			_hwa_cfadapi
+#define _hwa_cfadain1(o,k,v,...)	HW_BV(_hwa_cfadain1,adain_,v,o)(o,v,__VA_ARGS__) // PUSH
+#define _hwa_cfadain10(v,o)		HW_E(HW_EM_VAL(v,input,((pin,ada0..3),temperature,bandgap,gnd))) HW_EAT // POP
+#define _hwa_cfadain11(v,o)		_hwa_write(o,mux,v); _hwa_cfadain12 // Pop
+#define _hwa_cfadain12(o,v,...)		if ( gain != 1 ) HWA_E(HW_EM_AVM(gain,1)); HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfada_in0(o,k,...)					\
-  HW_G2(_hwa_cfada_kpositive_input,HW_IS(positive_input,k))(o,k,__VA_ARGS__)
+#define _hwa_cfadain1_(o,v,...)		_hwa_write(o,mux,_hw_adamuxse(HW_ADDRESS(v))); HW_EOL(__VA_ARGS__)
 
-#define _hw__adainput_bandgap		, 0x21	/* , mux */
-#define _hw__adainput_ground		, 0x20
-#define _hw__adainput_temperature	, 0x22
+#define _hw_adain_gnd			, 0x20	/* , mux */
+#define _hw_adain_bandgap		, 0x21
+#define _hw_adain_temperature		, 0x22
 
-
-/*  'positive_input' & 'negative_input' for differential mode
+/*  Compute the mux register value from input pin address
  */
-#define _hwa_cfada_kpositive_input_0(o,k,...)				\
-  HW_E_VL(k,input | positive_input)
-
-#define _hwa_cfada_kpositive_input_1(o,k,v,...)			\
-  HW_B(_hwa_cfada_vpositive_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfada_vpositive_input_0(o,v,...)				\
-  HW_E_AVL(`positive_input`, v, '(pin,adc0..7)' or synonyms)
-#define _hwa_cfada_vpositive_input_1(o,v,k,...)			\
-  uint8_t positive_input = HW_A1(_hw__adainput_##v);		\
-  HW_G2(_hwa_cfada_knegative_input,HW_IS(negative_input,k))(o,k,__VA_ARGS__)
-
-#define _hwa_cfada_knegative_input_0(o,k,...)				\
-  HW_E_VL(k,negative_input)
-
-#define _hwa_cfada_knegative_input_1(o,k,v,...)			\
-  HW_B(_hwa_cfada_vnegative_input_,_hw__adainput_##v)(o,v,__VA_ARGS__)
-
-#define _hwa_cfada_vnegative_input_0(o,v,...)		\
-  HW_E_AVL(`negative_input`, v, '(pin,adc0..7)' or synonyms)
-
-#define _hwa_cfada_vnegative_input_1(o,v,...)				\
-  uint8_t negative_input = HW_A1(_hw__adainput_##v);			\
-  _hwa_write(o,mux,_hwa_ada_compute_mux( positive_input, negative_input, gain )); \
-  HW_EOL(__VA_ARGS__)
-
-
-/*	Check the combination of differential inputs & gain, return the MUX
- *	value.
- */
-HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain )
+HW_INLINE uint8_t _hw_adamuxse( uint32_t a )
 {
+  if ( a==HW_ADDRESS(pin_adc0) ) return 0;
+  if ( a==HW_ADDRESS(pin_adc1) ) return 1;
+  if ( a==HW_ADDRESS(pin_adc2) ) return 2;
+  if ( a==HW_ADDRESS(pin_adc3) ) return 3;
+  if ( a==HW_ADDRESS(pin_adc4) ) return 4;
+  if ( a==HW_ADDRESS(pin_adc5) ) return 5;
+  if ( a==HW_ADDRESS(pin_adc6) ) return 6;
+  if ( a==HW_ADDRESS(pin_adc7) ) return 7;
+  HWA_E(HW_EM_AVL(input,((pin,adc0..7),temperature,bandgap,gnd)));
+  return 0 ;  
+}
+
+/*	Process 'positive_input' & 'negative_input' for differential mode
+ */
+#define _hwa_cfadapi(o,k,...)		HW_BW(_hwa_cfadapi,positive_input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadapi0(o,k,...)		HW_E(HW_EM_AN(k,positive_input))
+#define _hwa_cfadapi1(o,k0,v,k,...)	\
+  uint8_t pi __attribute__((unused)) = _hw_adain(HW_ADDRESS(v));	\
+  HW_BW(_hwa_cfadani,negative_input,k)(o,k,__VA_ARGS__)
+#define _hwa_cfadani0(o,k,...)		HW_E(HW_EM_AN(k,negative_input))
+#define _hwa_cfadani1(o,k,v,...)	\
+  uint8_t ni __attribute__((unused)) = _hw_adain(HW_ADDRESS(v));	\
+  _hwa_write(o,mux,_hw_adamuxdi(pi,ni,gain)); HW_EOL(__VA_ARGS__)
+
+/*  Compute the mux register value from inputs and gain
+ */
+HW_INLINE uint8_t _hw_adamuxdi ( uint8_t pos, uint8_t neg, uint8_t gain )
+{
+  if ( gain != 1 && gain != 20 ) {
+    HWA_E(HW_EM_AVL(gain,(1, 20)));
+    return 0;
+  }
+
   if ( pos==0 ) {
     if ( neg==0 ) {
       if ( gain != 20 )
-	HWA_ERR("parameter `gain` must be 20 when pin_adc0 is used for both inputs.");
+	HWA_E(HW_EM_AVM(gain,20));
       else
 	return 0x23 ;
     }
@@ -295,7 +261,7 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x08 + (gain==20);
     else if ( neg==3 )
       return 0x0A + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc0`, `pin_adc1`, or `pin_adc3`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc0), (pin,adc1), (pin,adc3))));
   }
   else if ( pos==1 ) {
     if ( neg==0 )
@@ -304,14 +270,14 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x0C + (gain==20);
     else if ( neg==3 )
       return 0x0E + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc0`, `pin_adc2`, or `pin_adc3`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc0), (pin,adc2), (pin,adc3))));
   }
   else if ( pos==2 ) {
     if ( neg==1 )
       return 0x2C + (gain==20);
     else if ( neg==3 )
       return 0x10 + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc1` or `pin_adc3`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc1), (pin,adc3))));
   }
   else if ( pos==3 ) {
     const uint8_t v[8] = { 0x2A, 0x2E, 0x30, 0x24, 0x12, 0x14, 0x16, 0x18 };
@@ -322,7 +288,7 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x32 + (gain==20);
     else if ( neg==5 )
       return 0x1A + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc3` or `pin_adc5`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc3), (pin,adc5))));
   }
   else if ( pos==5 ) {
     if ( neg==3 )
@@ -331,7 +297,7 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x3A + (gain==20);
     else if ( neg==6 )
       return 0x1C + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc3`, `pin_adc4`, or `pin_adc6`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc3), (pin,adc4), (pin,adc6))));
   }
   else if ( pos==6 ) {
     if ( neg==3 )
@@ -340,7 +306,7 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x3C + (gain==20);
     else if ( neg==7 )
       return 0x1E + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc3`, `pin_adc5`, or `pin_adc7`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc3), (pin,adc5), (pin,adc7))));
   }
   else if ( pos==7 ) {
     if ( neg==3 )
@@ -349,10 +315,10 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
       return 0x3E + (gain==20);
     else if ( neg==7 )
       return 0x16 + (gain==20);
-    HWA_ERR("`negative_input` must be `pin_adc3`, `pin_adc6`, or `pin_adc7`.");
+    HWA_E(HW_EM_AVL(negative_input,((pin,adc3), (pin,adc6), (pin,adc7))));
   }
   else
-    HWA_ERR("`positive_input` must be between 0 and 7.");
+    HWA_E(HW_EM_AVL(positive_input,((pin,adc0..7))));
   return 0;
 }
 
@@ -364,107 +330,100 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
 
 
 /**
- * @page atmelavr_ada
+ * @addtogroup atmelavr_ada
  *
- * <br>
- * `turn`:
- *
- * The ADC must be turned off for the analog comparator to have access to the
- * analog multiplexer.
- *
- * __Note__ This is not related to power management. Assuming the target device
- * supports it, use the `power` instruction if you want power the ADC on/off.
+ * <br><br> hw( enable, ... ) / hwa( enable, ... ) enables the ADC.
  *
  * @code
- * hw( turn, adc0, on | off );
+ * hw( enable, adc0 );
  * @endcode
- */
-#define hw_turn__ada			, _hw_turn_adx_
-
-/**
- * @page atmelavr_ada
+ *
  * @code
- * hwa( turn, adc0, on | off );
+ * hwa( enable, adc0 );
  * @endcode
  */
-#define hwa_turn__ada			, _hwa_turn_adx_
+#define hw_enable__ada			, _hw_enable_adx_
+#define hwa_enable__ada			, _hwa_enable_adx_
 
 
 /**
- * @page atmelavr_ada
+ * @addtogroup atmelavr_ada
+ *
+ * <br><br> hw( disable, ... ) / hwa( disable, ... ) disables the ADC.
+ *
+ * @code
+ * hw( disable, adc0 );
+ * @endcode
+ *
+ * @code
+ * hwa( disable, adc0 );
+ * @endcode
+ */
+#define hw_disable__ada			, _hw_disable_adx_
+#define hwa_disable__ada		, _hwa_disable_adx_
+
+
+/**
+ * @addtogroup atmelavr_ada
+ *
+ * <br><br> hw( trigger, ... ) / hwa( trigger, ... ) starts a conversion.
  *
  * @code
  * hw( trigger, adc0 );
  * @endcode
- */
-#define hw_trigger__ada			, _hw_trigger_adx_
-
-/**
- * @page atmelavr_ada
- *
- * <br>
- * `trigger`:
  *
  * @code
  * hwa( trigger, adc0 );
  * @endcode
  */
+#define hw_trigger__ada			, _hw_trigger_adx_
 #define hwa_trigger__ada		, _hwa_trigger_adx_
 
 
 /**
- * @page atmelavr_ada
+ * @addtogroup atmelavr_ada
  *
- * <br>
- * `read`:
+ * <br><br> hw( read, ... ) returns the result of the conversion.
  *
  * @code
  * uint16_t adc = hw( read, adc0 );
  * @endcode
+ */
+#define hw_read__ada			, _hw_rdadx_
+
+/**
+ * @addtogroup atmelavr_ada
  *
- * Optionnally, read a single byte:
+ * <br><br> hw( read_atomic, ... ) returns the result of the conversion after having
+ * cleared the I bit of the status register and set it again as soon as possible.
+ *
  * @code
- * uint8_t adc = hw( read, adc0, lo8 | hi8 );
+ * uint16_t adc = hw( read_atomic, adc0 );
  * @endcode
  */
-#define hw_read__ada			, _hw_rdad10_
+#define hw_read_atomic__ada		, _hw_ardadx_
 
 
 /**
- * @page atmelavr_ada
+ * @addtogroup atmelavr_ada
  *
- * <br>
- * `read_atomic`: read the ADC result with interrupts disabled and restore state as soon as
- * possible:
+ * <br><br> hw( stat, ... ) returns the status of the ADC, that contains a
+ * single 'busy' bit.
  *
  * @code
- * uint16_t adc = hw_atomic_read( adc0 );
+ * hw_stat_t(adc0)	st ;
+ * st = hw(stat,adc0);
+ * if ( !st.busy )		// No conversion pending?
+ *   hw( trigger, adc0 );	//   Trigger one
  * @endcode
- */
-#define hw_atomic_read__ada		, _hw_ardad10_
-
-
-/**
- * @page atmelavr_ada
- * @section atmelavr_ada_stat Status
  *
- * You'll usually use the IRQ flag to test whether a conversion is completed:
+ * You'll use the IRQ flag to test whether a conversion is completed:
  *
  * @code
  * hw( trigger, adc0 );
  * while ( !hw( read, (adc0,irq) ) ) {}
  * hw( clear, (adc0,irq) );
  * uint16_t result = hw( read, adc0 );
- * @endcode
- *
- * but you can also check the `busy` flag of the status of the converter to know
- * whether a conversion is in progress:
- *
- * @code
- * hw_stat_t(adc0)	st ;
- * st = hw(stat,adc0);
- * if ( !st.busy )
- *   hw( trigger, adc0 );
  * @endcode
  */
 #define hw_stat__ada			, _hw_stat_adx_
@@ -476,23 +435,23 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__ada(o,a)	_hwa_setup__adx_(o)
+#define _hwa_setup__ada(o,a)		_hwa_setup__adx_(o)
 #define _hwa_init__ada(o,a)		_hwa_init__adx_(o)
-#define _hwa_commit__ada(o,a)	_hwa_commit__adx_(o)
+#define _hwa_commit__ada(o,a)		_hwa_commit__adx_(o)
 
 
 /**
- * @page atmelavr_ada
- * @section atmelavr_ada_internals Internals
+ * @addtogroup atmelavr_ada
+ * @section atmelavr_adaregs Registers
  *
- * Class `_ada` objects hold the following hardware registers:
+ * Hardware registers:
  *
  *  * `admux`: analog multiplexer and voltage reference
  *  * `sra`: control/status register a
  *  * `srb`: control/status register b
  *  * `adc`: conversion result
  *
- * that hold the following logical registers:
+ * Logical registers:
  *
  *  * `refs`: voltage reference
  *  * `mux`: analog multiplexer
@@ -503,6 +462,6 @@ HW_INLINE uint8_t _hwa_ada_compute_mux ( uint8_t pos, uint8_t neg, uint8_t gain 
  *  * `bin`: bipolar input mode
  *  * `lar`: left-aligned result
  *  * `ts`: trigger source
- *  * `ie`: overflow IRQ mask
- *  * `if`: overflow IRQ flag
+ *  * `ie`: conversion done IRQ mask
+ *  * `if`: conversion done IRQ flag
  */

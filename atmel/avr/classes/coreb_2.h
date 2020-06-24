@@ -10,7 +10,7 @@
  */
 
 /**
- * @page atmelavr_coreb
+ * @addtogroup atmelavr_coreb
  * @section atmelavr_coreb_act Actions
  *
  * <br>
@@ -61,7 +61,7 @@
 #define _hwa_cfcoreb_ksleep_1(o,k,v,...)				\
   HW_B(_hwa_cfcoreb_vsleep_,_hw_state_##v)(o,v,__VA_ARGS__)
 
-#define _hwa_cfcoreb_vsleep_0(o,v,...)		HW_E_VL(v, enabled | disabled)
+#define _hwa_cfcoreb_vsleep_0(o,v,...)		HW_E(HW_EM_VOAST(v,sleep))
 #define _hwa_cfcoreb_vsleep_1(o,v,k,...)				\
   _hwa_write( o, se, HW_A1(_hw_state_##v) );			\
   HW_G2(_hwa_cfcoreb_ksleepmode,HW_IS(sleep_mode,k))(o,k,__VA_ARGS__)
@@ -76,22 +76,22 @@
 #define _hwa_cfcoreb_ksleepmode_1(o,k,v,...)				\
   HW_B(_hwa_cfcoreb_vsleepmode_,_hw_sleepmode_##v)(o,v,__VA_ARGS__)
 
-#define _hw_sleepmode_idle		, 0
+#define _hw_sleepmode_idle			, 0
 #define _hw_sleepmode_adc_noise_reduction	, 1
-#define _hw_sleepmode_power_down	, 2
-#define _hw_sleepmode_power_save	, 3
-#define _hw_sleepmode_standby		, 6
-#define _hw_sleepmode_extended_standby	, 7
+#define _hw_sleepmode_power_down		, 2
+#define _hw_sleepmode_power_save		, 3
+#define _hw_sleepmode_standby			, 6
+#define _hw_sleepmode_extended_standby		, 7
 
 #define _hwa_cfcoreb_vsleepmode_0(o,v,...)				\
-  HW_E_AVL(sleep_mode, v, idle | adc_noise_reduction | power_down | power_save | standby | extended_standby)
+  HW_E(HW_EM_VOAL(v,sleep_mode,(idle,adc_noise_reduction,power_down,power_save,standby,extended_standby)))
 
 #define _hwa_cfcoreb_vsleepmode_1(o,v,...)	\
   _hwa_write( o, sm, HW_A1(_hw_sleepmode_##v)) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @page atmelavr_coreb
+ * @addtogroup atmelavr_coreb
  *
  * <br>
  * `wait, irq`: puts the core into sleeping mode
@@ -103,7 +103,7 @@
 
 
 /**
- * @page atmelavr_coreb
+ * @addtogroup atmelavr_coreb
  *
  * <br>
  * `stat`: returns the status flags of the core in a
@@ -157,7 +157,7 @@ HW_INLINE _hw_coreb_stat_t _hw_coreb_stat( uint8_t byte )
 
 
 /**
- * @page atmelavr_coreb
+ * @addtogroup atmelavr_coreb
  *
  * <br>
  * `clear`:

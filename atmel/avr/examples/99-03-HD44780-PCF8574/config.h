@@ -8,15 +8,17 @@
  */
 #include BOARD_H
 
-#include <hwa/swtwimaster.h>
-#include <hwa/pcf8574.h>
-#include <hwa/hd44780.h>
+#include <hwa/ext/swtwimaster.h>
+#include <hwa/ext/pcf8574.h>
+#include <hwa/ext/hd44780.h>
 
-/* #define TWI		HW_SWTWIMASTER( scl, (portc,5),	\ */
-/* 					sda, (portc,4),	\ */
-/* 					bps, TWI_BPS ) */
-
-#define TWI		twi0
+#if HW_ADDRESS(twi0) != -1
+#  define TWI		twi0
+#else
+#  define TWI		HW_SWTWIMASTER( scl, (portc,5),	\
+					sda, (portc,4),	\
+					bps, TWI_BPS )
+#endif
 
 #define TWI_BPS		100000
 

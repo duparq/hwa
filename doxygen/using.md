@@ -5,8 +5,7 @@ Using HWA {#using}
 [TOC]
 
 This section gives general informations about how to use HWA, whatever the
-target device. Look at the @ref devices "Devices" page for
-device-specific documentation.
+target device. Look at the "Modules" for device-specific documentation.
 
 Reserved symbols   {#using_symbols}
 ================
@@ -100,24 +99,24 @@ See also: <a href="modules.html">instructions sorted by category</a>.
 Actions {#using_actions}
 =======
 
-Actions are lower-cased words.
+Actions are lower-cased words:
+ * `power`
+ * `turn`
+ * `configure`
+ * `write`
+ * `read`
+ * `read_atomic`
+ * `stat`
+ * `toggle`
+ * `trigger`
+ * `clear`
+ * `reset`
+ * `enable`
+ * `disable`
+ * ...
 
-Action	    | Comments
-:-----------|:-----------
-`power`	    | Power the object ON/OFF.
-`configure` | Configure the object.
-`write`	    | Write a value in the object.
-`clear`	    | Clear the object.
-`reset`	    | Reset the object.
-`read`	    | Read the object.
-`stat`	    | Read the status of the object.
-`toggle`    | Toggle the state of the object (usually an I/O pin).
-`trigger`   | Trigger the object (start a ADC conversion...).
-`turn`	    | Turn the object ON/OFF.
-
-
-How the objects are named {#using_objects}
-=========================
+Objects {#using_objects}
+=======
 
 Object names are based on manufacturers' but using lower case:
  * `porta`, `portb`... ;
@@ -130,24 +129,32 @@ Objects can be designated using a _path_, between parentheses:
  * `(counter0,compare0,counter)`: equals `counter0`;
  * `(counter0,count)`: the `count` register of counter0;
  * `(counter0,irq)`: the IRQ object of counter0;
- * `((portb,1,0),port)`: GPIO port of PB0, equals `portb`;
- * `(portb,pcic)`: pin-change interrupt controller of portb...
+ * `((portb,1,0),port)`: GPIO port of pin PB0, equals `portb`;
+ * `(portb,pcic)`: pin-change interrupt controller of portb
+ * ...
 
-HWA can drive external controllers, through a constructor:
- * `HW_PCF8574( interface, twi0, address, 0x27 )`: @ref pcf8574 "PCF8574"
- * `HW_HD44780( lines, 2, cols, 16, e, pc2, rs, pc0, rw, pc1, data, (port2,4,4) )`: @ref hd44780 "HD44780"
+HWA can drive external controllers, using a constructor:
+ * @ref pcf8574 "PCF8574": `HW_PCF8574( interface, twi0, address, 0x27 )`
+ * @ref hd44780 "HD44780": `HW_HD44780( lines, 2, cols, 16, e, pc2, rs, pc0, rw, pc1, data, (port2,4,4) )`
 
 
 I/Os {#using_ios}
 ====
 
-I/O pins are designated using a path made of a port name, a number of consecutive
-pins (or 1 if ommitted), and the lowest pin number:
+I/Os such as PA2, PB4... can be designated using a _path_ made of a GPIO port
+name, the number of consecutive pins (assumed to be 1 if ommitted), and the
+lowest pin number:
  * `(porta,2)` or `(porta,1,2)`: aka PA2;
- * `(portb,4,2)`: pins PB5,PB4,PB4,PB2;
+ * `(portb,4,2)`: pins PB5,PB4,PB4,PB2.
 
-The port can designate an external controller, you can then drive its pins using the same HWA
-instructions as for internal GPIO ports:
+I/Os can also be designated using the `(pin,...)` notation:
+ * `(pin,2)`: pin number 2 (pin numbers are defined if the package of the device
+   is known);
+ * `(pin,adc0)`: pin named ADC0. Note that `adc0` would designate an ADC converter.
+
+External controllers can give access to their I/Os using the same notation as
+with GPIO ports. You can then drive their I/Os using the same instructions as
+for internal GPIO ports:
 
 @code
 #define PCF             HW_PCF8574( interface, twi0, address, 0x27 )
@@ -157,27 +164,27 @@ hw( write, PINS, 5 );   // Sets pins 4 & 2, clears pins 5 & 3 of PCF
 @endcode
 
 
-Configuration
--------------
+Configuring GPIOs
+-----------------
 
-I/O pins are configured with the `configure` action. At least these two
-parameters may be used:
- * `function`: indicates the function of the pin;
- * `mode`: indicates the electrical behavior of the pin.
+GPIOs are configured with the `configure` action. GPIOs can support multiple
+functions and modes, hence the parameters:
+ * `function`: to indicate the function;
+ * `mode`: to indicate the electrical behavior.
 
 @code
 hw( configure, pin,
-    function,  gpio,
+    function,  gpio,                    // Optionnal, `gpio` is the default value
     mode,      output_push_pull );
 @endcode
 
-`function` is an optionnal parameter that indicates the function of the pin (if
-ommitted, `gpio` is assumed):
- * `gpio`: the pin acts as a GPIO pin;
+The optionnal `function` parameter indicates the function of the pin:
+ * `gpio`: the pin acts as a GPIO pin (assumed by default if the `function`
+   parameter is ommitted);
  * `(CONTROLLER,SIGNAL)`: the pin is driven by an internal peripheral controller
    signal:
-   * `(uart0,txd)`: output of uart0
-   * `(counter0,clock)`: input of counter0
+   * `(uart0,txd)`: TXD signal of uart0
+   * `(counter0,clock)`: clock input of counter0
    * ...
 
 @code
@@ -187,9 +194,9 @@ hwa( configure, gpio13, function, (uart0,rxd) );        //
 hwa( commit );
 @endcode
 
-
-`mode` tells how, electrically, the pin behaves. It is mandatory or forbidden
-depending on the `function` of the pin. Values for AVR, STM32, and ESP8266 are:
+The `mode` parameter tells how, electrically, the pin behaves. It may be
+mandatory or forbidden depending on the `function` of the pin. Typical values
+are:
     *  `analog_input`
     *  `analog_input_floating`
     *  `analog_input_pullup`
@@ -226,7 +233,7 @@ hw( toggle, (portb,2,2) );      // Toggle PB3 and PB2
 Interrupts {#using_interrupts}
 ==========
 
-IRQs, their flags and masks are objects that can be accessed with the `irq`
+IRQs, their flags and masks are objects that can be accessed using the `irq`
 element in a path:
 
  * `(counter0,irq)`: the IRQ triggered by counter0;
@@ -308,6 +315,30 @@ hw( enable, interrupts );
 @code
 hw( disable, interrupts );
 @endcode
+
+
+Registers {#using_registers}
+=========
+
+HWA gives access to the registers of the MCU through a path that start with the
+name of the object that holds the register.
+ * hardware registers are bytes or words defined by the MCU vendor;
+ * logical registers are one or two sets of consecutive bits inside one or two
+   hardware registers that have a semantical meaning.
+   
+Both hardware and logical registers are managed by the same instructions hw(...)
+and hwa(...) with actions `read`, `write`, `set`, `clear`.
+
+The following sets the values of the WGM bits of the 8-bit timer/counter0 of an
+Atmel ATmega328. These bits are spread over two hardware registers: TCCR0A holds
+bits 0 and 1 in position 0 and 1, and TCCR0B holds bit 2 in position:
+
+@code
+hw( write, (counter0,wgm), 5 );
+@endcode
+
+Note that using hwa() instructions optimizes the resulting binary code since the
+accesses to hardware registers will be combined.
 
 
 Useful macros {#using_macros}

@@ -72,7 +72,7 @@ SIZE		:= $(ARCH)size
 
 #  Basic flags (evaluation of DEVICE must be delayed)
 #
-FLAGS		= -mmcu=$(DEVICE)
+FLAGS		+= -mmcu=$(DEVICE)
 
 #  Variables used by external scripts
 #

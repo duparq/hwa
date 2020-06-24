@@ -45,9 +45,9 @@
  *    turn the LED off
  *    turn analog comparator IRQ on
  */
-HW_ISR( (COUNTER,irq,COMPARE) )
+HW_ISR( (COUNTER,COMPARE,irq) )
 {
-  hw( disable, (COUNTER,irq,COMPARE) );
+  hw( disable, (COUNTER,COMPARE,irq) );
   hw( write, PIN_LED, 0 );
   hw( clear, (acmp0,irq) );
   hw( enable, (acmp0,irq) );
@@ -73,8 +73,8 @@ HW_ISR( (acmp0,irq) )
   if ( COUNTER_CLK_DIV > 1 )
     hw( turn, (COUNTER,prescaler0), on);
 
-  hw( clear, (COUNTER,irq,COMPARE) );
-  hw( enable, (COUNTER,irq,COMPARE) );
+  hw( clear, (COUNTER,COMPARE,irq) );
+  hw( enable, (COUNTER,COMPARE,irq) );
 }
 
 
@@ -112,7 +112,7 @@ int main ( )
    *  here since the C preprocessor does not allow floats in expressions.
    */
   if ( ON_TIME_COUNT > ((1UL<<HW_BITS(COUNTER))-1) )
-    HWA_ERR("COUNTER can not afford ON_TIME.") ;
+    HWA_E("COUNTER can not afford ON_TIME.") ;
 
   /*  Configure the counter to count from 0 to max
    */

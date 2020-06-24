@@ -11,7 +11,7 @@
  */
 
 /**
- * @page atmelavr_aca
+ * @addtogroup atmelavr_aca
  * @section atmelavr_aca_act Actions
  *
  * <br>
@@ -50,9 +50,10 @@
  */
 #define _hwa_cfaca(o,a,k,...)		do { HW_BW(_hwa_cfaca_ed,edge,k)(o,k,__VA_ARGS__,,); } while(0)
 #define _hwa_cfaca_ed0(o,k,...)		HW_BW(_hwa_cfaca_po,positive_input,k)(o,k,__VA_ARGS__)
-#define _hwa_cfaca_ed1(o,k,v,...)	HW_BV(_hwa_cfaca_ed1,_hw_aca_edge_,v)(o,__VA_ARGS__))
-#define _hwa_cfaca_ed10(v)		HW_EM_XNIL(v,(falling,rising,both)); HW_EAT(
-#define _hwa_cfaca_ed11(v)		_hwa_cfaca_ed12(v, HW_RP
+#define _hwa_cfaca_ed1(o,k,v,...)	HW_BV(_hwa_cfaca_ed1,aca_edge_,v,)(o,__VA_ARGS__))
+#define _hwa_cfaca_ed1_(v,...)		HW_EM_XNIL(v,(falling,rising,both)); HW_EAT(
+#define _hwa_cfaca_ed10(v,...)		HW_EM_XNIL(v,(falling,rising,both)); HW_EAT(
+#define _hwa_cfaca_ed11(v,...)		_hwa_cfaca_ed12(v, HW_RP
 #define _hwa_cfaca_ed12(...)		_hwa_cfaca_ed13(__VA_ARGS__)
 #define _hwa_cfaca_ed13(v,o,k,...)	_hwa_write(o,acis,v); HW_BW(_hwa_cfaca_po,positive_input,k)(o,k,__VA_ARGS__)
 
@@ -65,9 +66,11 @@
 #define _hwa_cfaca_po0(o,k,...)		HW_BW(_hwa_cfaca_ne,negative_input,k)(o,k,__VA_ARGS__)
 #define _hwa_cfaca_po1(o,k,v,...)	HW_BW(_hwa_cfaca_po1,bandgap,v)(o,v,__VA_ARGS__)
 #define _hwa_cfaca_po11(o,v,k,...)	_hwa_write(o,acbg,1); HW_BW(_hwa_cfaca_ne,negative_input,k)(o,k,__VA_ARGS__)
-#define _hwa_cfaca_po10(o,v,k,...)					\
-  if ( HW_ADDRESS(v)==HW_ADDRESS((pin,ain0)) )	_hwa_write(o,acbg,0);	\
-  else						HWA_ERR(HW_EM_XNIL(v,((pin,ain0),bandgap))); \
+#define _hwa_cfaca_po10(o,v,k,...)				\
+  if ( HW_ADDRESS(v)==HW_ADDRESS(pin_ain0) )			\
+    _hwa_write(o,acbg,0);					\
+  else								\
+    HWA_E(HW_EM_VAL(v,positive_input,((pin,ain0),bandgap)));	\
   HW_BW(_hwa_cfaca_ne,negative_input,k)(o,k,__VA_ARGS__)
 
 
@@ -76,21 +79,21 @@
 #define _hwa_cfaca_ne0(o,...)		HW_EOL(__VA_ARGS__)
 #define _hwa_cfaca_ne1(o,k,v,...)					\
   uint32_t a = HW_ADDRESS(v);						\
- if ( a == HW_ADDRESS((pin,ain1)) )		_hwa_write(o,acme,0);	\
- else {									\
-   _hwa_write(o,acme,1);						\
-   _hwa_write(o,aden,0);						\
-   if      ( a == HW_ADDRESS((pin,adc0)) )	_hwa_write(o,admux,0);	\
-   else if ( a == HW_ADDRESS((pin,adc1)) )	_hwa_write(o,admux,1);	\
-   else if ( a == HW_ADDRESS((pin,adc2)) )	_hwa_write(o,admux,2);	\
-   else if ( a == HW_ADDRESS((pin,adc3)) )	_hwa_write(o,admux,3);	\
-   else if ( a == HW_ADDRESS((pin,adc4)) )	_hwa_write(o,admux,4);	\
-   else if ( a == HW_ADDRESS((pin,adc5)) )	_hwa_write(o,admux,5);	\
-   else if ( a == HW_ADDRESS((pin,adc6)) )	_hwa_write(o,admux,6);	\
-   else if ( a == HW_ADDRESS((pin,adc7)) )	_hwa_write(o,admux,7);	\
-   else	HWA_ERR(HW_EM_XNIL(v,((pin,ain1), (pin,adc0..X))));		\
- }									\
- HW_EOL(__VA_ARGS__)
+  if ( a == HW_ADDRESS(pin_ain1) )		_hwa_write(o,acme,0);	\
+  else {								\
+    _hwa_write(o,acme,1);						\
+    _hwa_write(o,aden,0);						\
+    if      ( a == HW_ADDRESS(pin_adc0) )	_hwa_write(o,admux,0);	\
+    else if ( a == HW_ADDRESS(pin_adc1) )	_hwa_write(o,admux,1);	\
+    else if ( a == HW_ADDRESS(pin_adc2) )	_hwa_write(o,admux,2);	\
+    else if ( a == HW_ADDRESS(pin_adc3) )	_hwa_write(o,admux,3);	\
+    else if ( a == HW_ADDRESS(pin_adc4) )	_hwa_write(o,admux,4);	\
+    else if ( a == HW_ADDRESS(pin_adc5) )	_hwa_write(o,admux,5);	\
+    else if ( a == HW_ADDRESS(pin_adc6) )	_hwa_write(o,admux,6);	\
+    else if ( a == HW_ADDRESS(pin_adc7) )	_hwa_write(o,admux,7);	\
+    else HWA_E(HW_EM_VAL(v,negative_input,((pin,ain1), (pin,adc0..7)))); \
+  }									\
+  HW_EOL(__VA_ARGS__)
 
 
 /*******************************************************************************
@@ -99,26 +102,23 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__aca(o,a)	_hwa_setup_r( o, csr	);
+#define _hwa_setup__aca(o,a)		_hwa_setup_r( o, csr	);
 
 #define _hwa_init__aca(o,a)		_hwa_init_r( o, csr, 0x00 );
 
-#define _hwa_commit__aca(o,a)	_hwa_commit_r( o, csr );
+#define _hwa_commit__aca(o,a)		_hwa_commit_r( o, csr );
 
 
 /**
- * @page atmelavr_aca
- * @section atmelavr_aca_internals Internals
+ * @addtogroup atmelavr_aca
+ * @section atmelavr_acaregs Registers
  *
- * Class `_aca` objects hold the following hardware registers:
+ * Hardware registers:
  *
  *  * `csr`: control/status register
  *
- * that hold the following logical registers:
+ * Logical registers:
  *
- *  * `acme`: analog comparator multiplexer enabled
- *  * `aden`: A/D converter enable
- *  * `admux`: analog multiplexer input select
  *  * `acd` : analog comparator disable (power management)
  *  * `acbg` : analog comparator bandgap select
  *  * `aco` : analog comparator output

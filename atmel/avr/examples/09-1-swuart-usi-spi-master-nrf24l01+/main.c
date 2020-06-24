@@ -16,7 +16,7 @@
  *            SCL <- SCK  (5)(6)  MOSI -> DO or MOSI
  *     MISO or DI <- MISO (7)(8)  IRQ
  * 
- * __Note__ For devices that use an USI to emulate an SPI interface, the MCU is
+ * @note For devices that use an USI to emulate an SPI interface, the MCU is
  * considered a slave regarding the SPI pin names. Pin MISO, output of the nRF,
  * has to be connected to pin MOSI/DI of the MCU, and pin MOSI, input of the
  * nRF, has to be connected to pin MISO/DO of the MCU.
@@ -58,7 +58,7 @@
 /*  We need a device with an USI
  */
 #if HW_ADDRESS(usi0) == -1
-HW_E(device `HW_DEVICE` does not have a USI)
+#  error device `HW_DEVICE` does not have a USI
 #endif
 
 
@@ -69,6 +69,22 @@ HW_E(device `HW_DEVICE` does not have a USI)
 #  define USI		usi0
 #  define NRF_CSN	(pin,3)
 #endif
+
+
+uint8_t uart_getbyte ( )
+{
+  while ( !hw(stat,UART).rxc )
+    hw( wait, irq );
+  return hw( read, UART );
+}
+
+
+void uart_putbyte ( uint8_t byte )
+{
+  while ( !hw(stat,UART).txc )
+    hw( wait, irq );
+  hw( write, UART, byte );
+}
 
 
 /*  USI is configured as SPI master clocked by software.
@@ -125,25 +141,25 @@ main ( )
 
     /*	Prompt
      */
-    hw( write, UART, '$' );
+    uart_putbyte( '$' );
 
     /*	The host sends commands starting with '=' and followed by:
      *	  * the number of bytes to send to SPI slave (1 byte)
      *	  * the number of bytes to read (1 byte)
      *	  * the bytes to send
      */
-    uint8_t c = hw( read, UART );
+    uint8_t c = uart_getbyte();
     if ( c == '=' ) {
 
       /*  Number of bytes to send to SPI slave
        */
-      uint8_t ntx = hw( read, UART );
+      uint8_t ntx = uart_getbyte();
       if ( ntx < 1 || ntx > 33 )
 	goto error ;
 
       /*  Number of bytes to send back to talker
        */
-      uint8_t nrx = hw( read, UART );
+      uint8_t nrx = uart_getbyte();
       if ( nrx > 32 )
 	goto error ;
 
@@ -151,7 +167,7 @@ main ( )
        */
       hw( write, NRF_CSN, 0 );
       while ( ntx-- ) {
-	c = hw( read, UART );
+	c = uart_getbyte();
 	write_usi( c );
       }
 
@@ -160,7 +176,7 @@ main ( )
       while ( nrx-- ) {
 	write_usi( 0 );
 	c = hw( read, USI );
-	hw( write, UART, c );
+	uart_putbyte( c );
       }
       hw( write, NRF_CSN, 1 );
     }
@@ -171,8 +187,8 @@ main ( )
        */
       do {
       error:
-	hw( write, UART, '!' );
-	c = hw( read, UART );
+	uart_putbyte( '!' );
+	c = uart_getbyte();
       } while ( c != '\n' ) ;
     }
   }

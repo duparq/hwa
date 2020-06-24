@@ -55,7 +55,7 @@
 #define hw_define__tcs3200a		, _hw_imt3k2a
 
 #define _hw_imt3k2a(o,a,...)		HW_B(_hw_imt3k2a_,__VA_ARGS__)(o,__VA_ARGS__)
-#define _hw_imt3k2a_0(o,g,...)		HW_E_G(g)
+#define _hw_imt3k2a_0(o,g,...)		HW_E(HW_EM_G(g))
 #define _hw_imt3k2a_1(o,...)					\
   _hw_imt3k2a_2(o,hw_##o##_s2, hw_##o##_s3,		\
 		_HW_REL(hw_##o##_capture,counter),		\
