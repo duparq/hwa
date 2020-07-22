@@ -922,7 +922,8 @@ EXCLUDE_SYMBOLS        =
 
 EXAMPLE_PATH           = ../atmel/avr/examples \
                          ../espressif/esp8266/examples \
-                         ../st/stm32/examples
+                         ../st/stm32/examples \
+			 ../include/hwa
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
@@ -942,9 +943,7 @@ EXAMPLE_RECURSIVE      = YES
 # that contain images that are to be included in the documentation (see the
 # \image command).
 
-IMAGE_PATH             = ../atmel/avr/examples/boards		\
-		         ../espressif/esp8266/examples/boards	\
-		       	 ../st/stm32/examples/boards
+IMAGE_PATH             = ../include/hwa/boards
 		       	 
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should

@@ -19,7 +19,7 @@ fi
 #  If no board name is given, do it for all boards
 #
 BOARDS=${BOARD}
-[ -n "${BOARDS}" ] || BOARDS=$(cd boards ; ls *.h | sed -e 's/.h//g')
+[ -n "${BOARDS}" ] || BOARDS=$(cd ../../../include/hwa/boards ; ls *.h | sed -e 's/.h//g')
 
 #  Load the examples-for-board function
 #

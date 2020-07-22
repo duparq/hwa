@@ -1,11 +1,9 @@
 
-CWD		:=	$(dir $(lastword $(MAKEFILE_LIST)))
-
 #  Produce HTML documentation
 #
 .PHONY: doc
 doc:
-	@cd $(CWD)../../../../doxygen && $(MAKE) --no-print-directory
+	@cd ../../../doxygen && $(MAKE) --no-print-directory
 
 #  Store flash program memory and fuse bytes
 #    Use this on a newly received board to backup its content

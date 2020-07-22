@@ -15,12 +15,13 @@ all:	deps bin lst size crc32
 
 #  Directory of boards
 #
-BOARDS		:= $(MFD)../boards
+BOARDS		:= ../../../../include/hwa/boards
+BOARDSBUILD	:= ../build
 
 #  Choose a default board if none specified
 #
 ifeq (,$(BOARD))
-  BOARD		:=	$(shell cat $(BOARDS)/default)
+  BOARD		:=	mini-stm32-v3.0
   $(info Selected default board '$(BOARD)')
 endif
 
@@ -40,7 +41,7 @@ diabolo		:= $(MFD)../diabolo/software/diabolo.py
 #  BOARD_H indicates the board definition header file the example project source
 #  must use
 #
-DEFINES		+= -DBOARD_H=\"../boards/$(BOARD).h\"
+DEFINES		+= -DBOARD_H=\<hwa/boards/$(BOARD).h\>
 
 #  Search include files in ~hwa/include/
 #

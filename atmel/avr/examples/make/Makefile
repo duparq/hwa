@@ -23,12 +23,13 @@ doc:
 
 #  Directory of boards
 #
-BOARDS		:= $(MFD)../boards
+BOARDS		:= ../../../../include/hwa/boards
+BOARDSBUILD	:= ../build
 
 #  Choose a default board if none specified
 #
 ifeq (,$(BOARD))
-  BOARD		:=	$(shell cat $(BOARDS)/default)
+  BOARD		:=	attiny84
   $(info Selected default board '$(BOARD)')
 endif
 
@@ -48,7 +49,7 @@ diabolo		:= $(MFD)../diabolo/software/diabolo.py
 #  BOARD_H indicates the board definition header file the example project source
 #  must use
 #
-DEFINES		+= -DBOARD_H=\"../boards/$(BOARD).h\"
+DEFINES		+= -DBOARD_H=\<hwa/boards/$(BOARD).h\>
 
 #  Search include files in ~hwa/include/
 #
@@ -95,9 +96,9 @@ export OUT
 #	Quoting with HW_QUOTE is required for make not to show an error message
 #	when it reads complex values.
 #
-$(BOARDS)/build/$(BOARD).c:
+$(BOARDSBUILD)/$(BOARD).c:
 #	@echo "RULE: $@"
-	@mkdir -p $(BOARDS)/build
+	@mkdir -p $(BOARDSBUILD)
 	@echo "DEVICE=HW_DEVICE" >$@
 	@echo "DEVICE_FLASH_SIZE=HW_DEVICE_FLASH_SIZE" >>$@
 	@echo "DEVICE_FUSE_EB=HW_QUOTE(HW_DEVICE_FUSE_EB)" >>$@
@@ -111,17 +112,17 @@ $(BOARDS)/build/$(BOARD).c:
 #  file. __ASSEMBLER__ is defined so that HWA will not load the definitions that
 #  produce C code and that are useless for what we want to do.
 #
-$(BOARDS)/build/$(BOARD): $(BOARDS)/build/$(BOARD).c $(BOARDS)/$(BOARD).h
+$(BOARDSBUILD)/$(BOARD): $(BOARDSBUILD)/$(BOARD).c $(BOARDS)/$(BOARD).h
 #	@echo "RULE: $@ : $^"
 	@avr-cpp -I$(MFD)../../../../include					\
 		-D__ASSEMBLER__							\
-		-imacros $(BOARDS)/$(BOARD).h $(BOARDS)/build/$(BOARD).c | grep '^DEVICE' >$@
+		-imacros $(BOARDS)/$(BOARD).h $(BOARDSBUILD)/$(BOARD).c | grep '^DEVICE' >$@
 
 #  Include informations about the target device, borrowed from the board header
 #  file
 #
-#$(warning include $(BOARDS)/build/$(BOARD))
--include $(BOARDS)/build/$(BOARD)
+#$(warning include $(BOARDSBUILD)/$(BOARD))
+-include $(BOARDSBUILD)/$(BOARD)
 
 
 ################################################################################
