@@ -300,7 +300,11 @@ class Device():
         #trace("i: %s\n" % s2hex(r))
         self.protocol = r[0]
 
-        if self.protocol != 4 and self.protocol != 5:
+        # Protocol 5: read pages of 256 bytes, whatever the actual page size is.
+        # Protocol 6: EEPCNT resized, EECRC relocated
+
+        #if self.protocol != 4 and self.protocol != 5:
+        if self.protocol not in (4,5,6):
             die(_('protocol #%d not supported' % self.protocol))
 
         signature=r[1:4]
@@ -317,6 +321,17 @@ class Device():
         device.appcrc = int.from_bytes(r[5:7], byteorder='big')
         device.fuses = r[7:11]
 
+        if self.protocol < 6:
+            device.eepcntad = device.eepromsize-4
+            device.eepcntsz = 4
+            device.eecrcad = device.eepromsize-8
+            device.eecrcsz = 2
+        else:
+            device.eepcntad = device.eepromsize-2
+            device.eepcntsz = 2
+            device.eecrcad = device.eepromsize-4
+            device.eecrcsz = 2
+
         device.eeappcrc = device.read_eeprom_appcrc()
         if device.eeappcrc is None:
             raise Exception(_('could not get EEPROM application CRC'))
@@ -325,7 +340,7 @@ class Device():
         if device.pgmcount is None:
             raise Exception(_('could not get EEPROM programmings count'))
 
-        if device.pgmcount == 0xFFFFFFFF:
+        if device.pgmcount == 0xFFFFFFFF or device.pgmcount == 0xFFFF:
             device.pgmcount = 0
 
         return device
@@ -337,7 +352,7 @@ class Device():
         s = bytes([ord('f'),al,ah])
         if self.protocol == 4:
             return self.execute(s, self.pagesize+2+1, timeout=0.5)
-        else: # protocol 5
+        else: # protocol >4
             return self.execute(s, 256+2+1, timeout=0.5)
 
     def read_eeprom_bytes(self, address, n):
@@ -347,14 +362,14 @@ class Device():
         return self.execute( s, n+3 )
 
     def read_eeprom_appcrc(self):
-        crc = self.read_eeprom_bytes( self.eepromsize-8, 2 )
-        crc = int.from_bytes(crc[0:2], byteorder='big')
+        crc = self.read_eeprom_bytes( self.eecrcad, self.eecrcsz )
+        crc = int.from_bytes(crc[0:self.eecrcsz], byteorder='big')
         return crc
 
 
     def read_eeprom_pgmcount(self):
-        pcount = self.read_eeprom_bytes( self.eepromsize-4, 4 )
-        pcount = int.from_bytes(pcount[0:4], byteorder='big')
+        pcount = self.read_eeprom_bytes( self.eepcntad, self.eepcntsz )
+        pcount = int.from_bytes(pcount[0:self.eepcntsz], byteorder='big')
         return pcount
 
     def write_flash_page(self, address, data):
@@ -417,15 +432,13 @@ class Device():
         self.execute(s, 1, timeout=0.1)
 
     def write_eeprom_pgmcount(self, n):
-        self.write_eeprom( self.eepromsize-4, n.to_bytes(4,byteorder='big'))
+        self.write_eeprom( self.eepcntad, n.to_bytes(self.eepcntsz,byteorder='big'))
         self.pgmcount = n
-
 
     def write_eeprom_appcrc(self, crc):
         enable_trace()
-        self.write_eeprom( self.eepromsize-8, crc.to_bytes(2,byteorder='big'))
+        self.write_eeprom( self.eecrcad, crc.to_bytes(self.eecrcsz,byteorder='big'))
         self.eeappcrc = crc
-
 
     def start_application(self):
         self.resume()

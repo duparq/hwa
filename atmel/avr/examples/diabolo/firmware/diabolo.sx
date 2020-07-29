@@ -3,7 +3,7 @@
 
 	;; Include board (and HWA device) definition
 	;; 
-#include "../board.h"
+#include BOARD_H
 
 	;; Diabolo Is A BOotLOader
 	;; 
@@ -33,7 +33,7 @@
 
 	;; Constants
 	;;
-	PROTOCOL   = 5
+	PROTOCOL   = 6
 	PAGESIZE   = HW_DEVICE_FLASH_PAGE_SIZE	; from HWA
 	FLASHSIZE  = HW_DEVICE_FLASH_SIZE	;
 	RAMSTART   = HW_DEVICE_RAM_START	;
@@ -66,8 +66,8 @@
 	;;   App CRC is stored MSB first in EEPROM because it must be
 	;;   sent to the CRC algorithm in this order for checking
 	;; 
-	EEPCNT = HW_DEVICE_EEPROM_SIZE-4 ; 32 bit programmings count (MSB first)
-	EECRC  = EEPCNT-4		 ; 16 bits application CRC (MSB first)
+	EEPCNT = HW_DEVICE_EEPROM_SIZE-2 ; 16 bit programmings count (MSB first)
+	EECRC  = HW_DEVICE_EEPROM_SIZE-4 ; 16 bits application CRC (MSB first)
 
 
 	;; Register affectation
