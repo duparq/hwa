@@ -18,6 +18,8 @@
 #define _hw_dsirq(o,v,n,m,f,...)	_hw_write(n,m,0)  HW_EOL(__VA_ARGS__)
 #define _hwa_dsirq(o,v,n,m,f,...)	_hwa_write(n,m,0)  HW_EOL(__VA_ARGS__)
 
+#define _hw_isenirq(o,v,n,m,f,...)	_hw_read(n,m)  HW_EOL(__VA_ARGS__)
+
 #define _hw_rdirq(o,v,n,m,f,...)	_hw_read(n,f)  HW_EOL(__VA_ARGS__)
 
 #define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,1)  HW_EOL(__VA_ARGS__)	/* Write 1 to clear */
@@ -44,7 +46,7 @@
  * @endcode
  */
 #define hw_wait_irq			, _hw_wait_irq
-#define _hw_wait_irq(...)		hw_asm("sleep")
+#define _hw_wait_irq(...)		do{ _hw_write(core0,se,1); hw_asm("sleep"); }while(0)
 
 
 #if (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) || (__GNUC__ > 4)
@@ -64,6 +66,14 @@
 #define _HW_ISR_(v,...)							\
   HW_EXTERN_C void __vector_##v(void) HW_ISR_ATTRIBUTES __VA_ARGS__ ;	\
   void __vector_##v(void)
+
+
+/*  Alias
+ */
+#define _HW_ISR_ALIAS(v1,v2)						\
+  HW_EXTERN_C void __vector_##v1(void) __attribute__((signal,used,externally_visible)) \
+    __attribute__((alias(HW_Q(__vector_##v2))));			\
+  void __vector_##v1(void)
 
 
 /*  Void ISR
