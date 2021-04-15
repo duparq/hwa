@@ -102,26 +102,26 @@ Supported hardware
 ==================
 
  * Atmel AVR:
-   * [ATtinyX4](http://duparq.free.fr/hwa/attinyx4.html): ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
-   * [ATtinyX5](http://duparq.free.fr/hwa/attinyx5.html): ATtiny25, ATtiny45, ATtiny85,
-   * [ATmegaX8](http://duparq.free.fr/hwa/atmegax8.html): ATmega328P
+   * [ATtinyX4](http://duparq.free.fr/hwa/group__attinyx4.html): ATtiny24, ATtiny24A, ATtiny44, ATtiny44A, ATtiny84, ATtiny84A
+   * [ATtinyX5](http://duparq.free.fr/hwa/group__attinyx5.html): ATtiny25, ATtiny45, ATtiny85,
+   * [ATmegaX8](http://duparq.free.fr/hwa/group__atmegax8.html): ATmega328P
    * Software-emulated devices:
-     * [HW_SWUART](http://duparq.free.fr/hwa/atmelavr_swuarta.html) Software UART
-     * [HW_SWTWIMASTER](http://duparq.free.fr/hwa/atmelavr_swtwimaster.html) Software TWI master
+     * [HW_SWUART](http://duparq.free.fr/hwa/group__atmelavr__swuarta.html) Software UART
+     * [HW_SWTWIMASTER](http://duparq.free.fr/hwa/group__swtwimaster.html) Software TWI master
    * Very partial support (old, must be rewritten):
-     * [ATmega32U4](http://duparq.free.fr/hwa/atmegaxu4.html): ATmega32U4
+     * [ATmega32U4](http://duparq.free.fr/hwa/group__atmegaxu4.html): ATmega32U4
 
  * ST STM32:
-   * [STM32F103](http://duparq.free.fr/hwa/stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+   * [STM32F103](http://duparq.free.fr/hwa/group__stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
 
  * Espressif
-   * [ESP8266](http://duparq.free.fr/hwa/esp8266.html): ESP8266
+   * [ESP8266](http://duparq.free.fr/hwa/group__esp8266.html): ESP8266
 
  * External devices:
-   * [24CXX](http://duparq.free.fr/hwa/ext_24cxx.html) I²C EEPROM
-   * [HD44780](http://duparq.free.fr/hwa/hd44780.html) LCD driver
-   * [PCF8574](http://duparq.free.fr/hwa/pcf8574.html) I²C expander
-   * [TCS3200](http://duparq.free.fr/hwa/tcs3200.html) colour detector
+   * [24CXX](http://duparq.free.fr/hwa/group__ee24cxx.html) I²C EEPROM
+   * [HD44780](http://duparq.free.fr/hwa/group__hd44780.html) LCD driver
+   * [PCF8574](http://duparq.free.fr/hwa/group__pcf8574.html) I²C expander
+   * [TCS3200](http://duparq.free.fr/hwa/group__tcs3200.html) colour detector
 
 
 Status
