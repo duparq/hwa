@@ -562,6 +562,19 @@ HW_INLINE uint8_t _hwa_solve_cta ( hwa_cta_t *p, hwa_oca_t *compare0, hwa_oca_t 
 #define _hwa_write_cta(o,a,v,...)	_hwa_write(o,count,v) HW_EOL(__VA_ARGS__)
 
 
+/**
+ * @addtogroup atmelavr_cta
+ *
+ * @act hw( clear, ... ): set the count to 0
+ *
+ * @code
+ * hw( clear, counter0 );
+ * @endcode
+ */
+#define hw_clear__cta			, _hw_clear_cta
+#define _hw_clear_cta(o,a,...)		_hw_write(o,count,0) HW_EOL(__VA_ARGS__)
+
+
 /*******************************************************************************
  *									       *
  *	Context management						       *

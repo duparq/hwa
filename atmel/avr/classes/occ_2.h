@@ -42,7 +42,7 @@
 #define _hw_occ_output_disconnected		, 0, 0	/* Non-PWM */
 #define _hw_occ_output_toggle_after_match	, 1, 1	/* Non-PWM */
 #define _hw_occ_output_clear_after_match	, 2, 2	/* Non-PWM */
-#define _hw_occ_output_set_after_match	, 3, 3	/* Non-PWM */
+#define _hw_occ_output_set_after_match		, 3, 3	/* Non-PWM */
 
 #define _hw_occ_output_set_at_bottom_clear_after_match	, 4, 2	/* Fast PWM */
 #define _hw_occ_output_clear_at_bottom_set_after_match	, 5, 3
@@ -100,33 +100,35 @@
  */
 #define hwa_configure__occ		, _hwa_cfocc
 
-#define _hwa_cfocc(o,ct,oc,k,...)					\
+#define _hwa_cfocc(o,ct,oc,k,...)						\
   do {									\
-    HW_B(_hwa_cfocc_xupdate_,_hw_is_update_##k)(o,k,__VA_ARGS__,);	\
+    HW_B(_hwa_cfocc_kupdate_,_hw_is_update_##k)(ct,oc,k,__VA_ARGS__,);	\
   }while(0)
 
-#define _hwa_cfocc_xupdate_0(o,k,...)					\
-  HW_B(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfocc_kupdate_0(ct,oc,k,...)				\
+  HW_B(_hwa_cfocc_koutput_,_hw_is_output_##k)(ct,oc,k,__VA_ARGS__)
 
-#define _hwa_cfocc_xupdate_1(o,k,v,...)					\
-  HW_B(_hwa_cfocc_vupdate_,_hw_occ_update_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfocc_vupdate_0(o,v,...)			\
+#define _hwa_cfocc_kupdate_1(ct,oc,k,v,...)				\
+  HW_B(_hwa_cfocc_vupdate_,_hw_occ_update_##v)(ct,oc,v,__VA_ARGS__)
+#define _hwa_cfocc_vupdate_0(ct,oc,v,...)		\
   HW_E(HW_EM_VAL(v,update,(immediately,after_bottom,after_top)))
 
-#define _hwa_cfocc_vupdate_1(o,v,k,...)			\
-  hwa->o.config.update = HW_A1(_hw_occ_update_##v);\
-  HW_B(_hwa_cfocc_xoutput_,_hw_is_output_##k)(o,k,__VA_ARGS__)
+#define _hwa_cfocc_vupdate_1(ct,oc,v,k,...)			\
+  hwa->ct.compare##oc.config.update = HW_A1(_hw_occ_update_##v);	\
+  HW_B(_hwa_cfocc_koutput_,_hw_is_output_##k)(ct,oc,k,__VA_ARGS__)
 
-#define _hwa_cfocc_xoutput_0(o,...)	\
+/*  Optionnal parameter `output`
+ */
+#define _hwa_cfocc_koutput_0(ct,oc,...)		\
    HW_EOL(__VA_ARGS__)
 
-#define _hwa_cfocc_xoutput_1(o,k,v,...)				\
-  HW_B(_hwa_cfocc_voutput_,_hw_occ_output_##v)(o,v,__VA_ARGS__)
+#define _hwa_cfocc_koutput_1(ct,oc,k,v,...)					\
+  HW_B(_hwa_cfocc_voutput_,_hw_occ_output_##v)(ct,oc,v,__VA_ARGS__)
 
-#define _hwa_cfocc_voutput_0(o,v,...)			\
+#define _hwa_cfocc_voutput_0(ct,oc,v,...)			\
   HW_E(HW_EM_VAL(v,output,(disconnected,toggle_after_match,clear_after_match,set_after_match,set_at_bottom_clear_after_match,clear_at_bottom_set_after_match,clear_after_match_up_set_after_match_down,set_after_match_up_clear_after_match_down)))
-#define _hwa_cfocc_voutput_1(o,v,...)				\
-  hwa->o.config.output = HW_A1(_hw_occ_output_##v) HW_EOL(__VA_ARGS__)
+#define _hwa_cfocc_voutput_1(ct,oc,v,...)					\
+  hwa->ct.compare##oc.config.output = HW_A1(_hw_occ_output_##v) HW_EOL(__VA_ARGS__)
 
 
 /**

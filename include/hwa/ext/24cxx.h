@@ -96,7 +96,7 @@
   uint8_t _hw_##o##_read_bytes ( uint8_t, uint8_t, uint16_t, int, uint8_t* ) weak ; \
   uint8_t _hw_##o##_write_page ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ) weak ; \
   uint8_t _hw_##o##_write_bytes ( uint8_t, uint8_t, uint8_t, uint16_t, int, const uint8_t* ) weak ; \
-  extern void hw_foo()
+  extern uint8_t hw_foo()
 
 /**
  * @ingroup ee24cxx_dev
@@ -109,7 +109,7 @@
   _hw_im24cxx_read_bytes(twi)			\
     _hw_im24cxx_write_page(twi)			\
     _hw_im24cxx_write_bytes(twi)		\
-    extern void hw_foo()
+    extern uint8_t hw_foo()
 
 
 /**

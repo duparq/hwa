@@ -12,9 +12,9 @@
 
 /**
  * @addtogroup atmelavr_ioa
- * @section atmelavr_ioa_act Actions
+ * @section atmelavr_ioaif Interface
  *
- * <br><br>hw( configure, IO, ... ) and hwa( configure, IO, ... ) configure an IO:
+ * @act hw( configure, IO, ... ) and hwa( configure, IO, ... ) configure an IO:
  *
  * @code
  * hw | hwa( configure,	  (porta,0),
@@ -117,7 +117,7 @@
 /**
  * @addtogroup atmelavr_ioa
  *
- * <br><br>hw( read, IO, ... ) returns the state of the IO:
+ * @act hw( read, IO, ... ) returns the state of the IO:
  *
  * @code
  * uint8_t value = hw( read, (porta,0) );
@@ -126,17 +126,28 @@
 #define hw_read__ioa			, _hw_rdioa
 
 /*  Handle not-connected pins
+ *    Must use a fonction so that hw(read,...) can appear in if(...).
  */
-#define _hw_rdioa(o,p,bn,bp,...)	HW_BV(_hw_rdioa,p,_ncmsk,bn,bp) (o,p,bn,bp,__VA_ARGS__) // PUSH
+#define _hw_rdioa(o,p,bn,bp,...)	HW_EOL(__VA_ARGS__) HW_BV(_hw_rdioa,p,_ncmsk,p,bn,bp) (o,p,bn,bp) // PUSH
 #define _hw_rdioa0(...)			_hw_rdioa2 // POP
-#define _hw_rdioa1(v,bn,bp)		if ( (v) & (((1<<bn)-1)<<bp) ) HWA_E(HW_EM_IONC); _hw_rdioa2 // POP
-#define _hw_rdioa2(o,p,bn,bp,...)	_hw(readnp,(p,pin),bn,bp) HW_EOL(__VA_ARGS__)
+#define _hw_rdioa1(v,p,bn,bp)		_hw_rdioa_(HW_ADDRESS((p,pin)),bn,bp,v) HW_EAT // POP
+#define _hw_rdioa2(o,p,bn,bp)		_hw(readnp,(p,pin),bn,bp)
+
+HW_INLINE uint8_t _hw_rdioa_ ( uintptr_t r, uint8_t bn, uint8_t bp, uint8_t nc )
+{
+  uint8_t msk = (1U<<bn)-1;
+  if ( r <= 0 )
+    HWA_E(internal error [__FILE__:__LINE__]);
+  if ( msk<<bp & nc )
+    HWA_E(HW_EM_IONC);
+  return (*(volatile uint8_t *)(r))>>bp ;
+}
 
 
 /**
  * @addtogroup atmelavr_ioa
  *
- * <br><br>hw( write, IO, value ) and hwa( write, IO, value ) set the state of an IO:
+ * @act hw( write, IO, value ) and hwa( write, IO, value ) set the state of an IO:
  *
  * @code
  * hw | hwa( write, (porta,0), 1 );	// PA0 = 1
@@ -157,7 +168,7 @@
 /**
  * @addtogroup atmelavr_ioa
  *
- * <br><br>hw( set, IO ) and hwa( set, IO ) set all the bits of the IO to 1:
+ * @act hw( set, IO ) and hwa( set, IO ) set all the bits of the IO to 1:
  *
  * @code
  * hw | hwa( set, (porta,0) );		// PA0 = 1
@@ -180,7 +191,7 @@
 /**
  * @addtogroup atmelavr_ioa
  *
- * <br><br>hw( clear, IO ) and hwa( clear, IO ) clear all the bits of the IO:
+ * @act hw( clear, IO ) and hwa( clear, IO ) clear all the bits of the IO:
  *
  * @code
  * hw | hwa( clear, (porta,0) );	// PA0 = 0
@@ -203,7 +214,7 @@
 /**
  * @addtogroup atmelavr_ioa
  *
- * <br><br>hw( toggle, IO ) and hwa( toggle, IO ) toggle all the bits of the IO:
+ * @act hw( toggle, IO ) and hwa( toggle, IO ) toggle all the bits of the IO:
  *
  * @code
  * hw( toggle, (porta,0) );		// Toggle pin PA0

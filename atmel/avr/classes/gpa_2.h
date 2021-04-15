@@ -11,11 +11,11 @@
 
 /**
  * @addtogroup atmelavr_gpa
- * @section atmelavr_gpaact Actions
+ * @section atmelavr_gpaif Interface
+ *
+ * @act hw( configure, ... ) and hwa( configure, ... ): configure all the pins of the gpio port PORT.
  *
  * @note These actions are not implemented yet. Configure the GPIO pins instead.
- *
- * <br><br>hw( configure, ... ) and hwa( configure, ... ): configure all the pins of the gpio port PORT.
  *
  * @code
  * hw( configure, portb, mode, output_pushpull );
@@ -32,18 +32,20 @@
 /**
  * @addtogroup atmelavr_gpa
  *
- * <br><br>hw( read, PORT ): gets the status of all the pins of the gpio port PORT.
+ * @act hw( read, PORT ) returns the status of all the pins of the gpio port PORT.
  *
  * @code
  * hw( read, portb );
  * @endcode
  */
+#define hw_read__gpa		, _hw_rdgpa
+#define _hw_rdgpa(o,a,...)	_hw_read(o,pin)
 
 
 /**
  * @addtogroup atmelavr_gpa
  *
- * <br><br>hw( write, PORT, ... ) and hwa( write, PORT, ... ): configure all the pins of the gpio port PORT.
+ * @act hw( write, PORT, ... ) and hwa( write, PORT, ... ): configure all the pins of the gpio port PORT.
  *
  * @code
  * hw( write, portb, 0xBE );

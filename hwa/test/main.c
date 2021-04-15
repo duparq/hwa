@@ -50,15 +50,17 @@ HW_X(shared, gimsk);
 
 HW_X(watchdog0,irq);
 
-hw(read,(watchdog0,irq);
+/* hw(read,(watchdog,irq)); */
 
-hwa( begin );
-hwa( begin, reset );
+/* hwa( begin ); */
+/* hwa( begin, reset ); */
 
 //HW_ISR( watchdog0 );
-HW_ISR( (watchdog0,irq) );
-HW_ISR( (watchdog0,irq), naked );
+/* HW_ISR( (watchdog0,irq) ); */
+/* HW_ISR( (watchdog0,irq), naked ); */
 
-hw( clear, (counter0,compare0,irq) );
+/* hw( clear, (counter0,compare0,irq) ); */
 
-HW_X((counter0,compare0,irq));
+/* HW_X((counter0,compare0,irq)); */
+
+HW_ISR(counter0);

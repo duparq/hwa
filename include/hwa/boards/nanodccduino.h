@@ -90,11 +90,11 @@
 
 #define PIN_LED				(portb,5)
 
-/*  Pins for hw_swuart1
+/*  Pins for swuart1
  */
 #define PIN_TX2				PIN_D8
 #define PIN_RX2				PIN_D9
 
-/*  Include HWA definitions
+/*  Include HWA MCU definitions
  */
 #include <hwa/atmega328p_au.h>

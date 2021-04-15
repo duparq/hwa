@@ -68,7 +68,7 @@
 #define _hwa_cfctd(o,a,k,...)		do { HW_BW(_hwa_cfctd1,clock,k)(o,k,__VA_ARGS__,,) } while(0)
 #define _hwa_cfctd10(o,k,...)		HW_E(HW_EM_AN(k,clock))
 #define _hwa_cfctd11(o,k,v,...)		HW_B(_hwa_cfctd11,_hw_c1clk_##v)(o,v,__VA_ARGS__)
-#define _hwa_cfctd110(o,v,...)		HW_E(HW_EM_VAL(v,clock,(none,ioclk/8,ioclk/64,ioclk/256,ioclk/1024,external_falling,external_rising)))
+#define _hwa_cfctd110(o,v,...)		HW_E(HW_EM_VAL(v,clock,(none,ioclk,ioclk/8,ioclk/64,ioclk/256,ioclk/1024,external_falling,external_rising)))
 #define _hwa_cfctd111(o,v,k,...)			\
   hwa->o.config.clock = HW_VF(_hw_c1clk_##v);		\
   HW_BW(_hwa_cfctd_kmode_,direction,k)(o,k,__VA_ARGS__)
@@ -99,10 +99,17 @@
 
 /*  Optionnal argument `top`
  */
-#define _hw_ctd_top_fixed_0xFF		, 1
-#define _hw_ctd_top_fixed_0x1FF		, 2
-#define _hw_ctd_top_fixed_0x3FF		, 3
-#define _hw_ctd_top_fixed_0xFFFF	, 4
+#define _hw_ctd_top_0x00FF		, 1
+#define _hw_ctd_top_0xFF		, 1
+#define _hw_ctd_top_255			, 1
+#define _hw_ctd_top_0x01FF		, 2
+#define _hw_ctd_top_0x1FF		, 2
+#define _hw_ctd_top_511			, 2
+#define _hw_ctd_top_0x03FF		, 3
+#define _hw_ctd_top_0x3FF		, 3
+#define _hw_ctd_top_1023		, 3
+#define _hw_ctd_top_0xFFFF		, 4
+#define _hw_ctd_top_65536		, 4
 #define _hw_ctd_top_max			, 4
 #define _hw_ctd_top_capture0		, 5
 #define _hw_ctd_top_compare0		, 6
@@ -111,7 +118,7 @@
   HW_B(_hwa_cfctd_vtop_,_hw_ctd_top_##v)(o,v,__VA_ARGS__)
 
 #define _hwa_cfctd_vtop_0(o,v,...)					\
-  HW_E(HW_EM_VAL(v,top,(fixed_0xFF,fixed_0x1FF,fixed_0x3FF,fixed_0xFFFF,max,capture0,compare0)))
+  HW_E(HW_EM_VAL(v,top,(0xFF,0x1FF,0x3FF,0xFFFF,max,capture0,compare0)))
 
 #define _hwa_cfctd_vtop_1(o,v,k,...)			\
   hwa->o.config.top = HW_A1(_hw_ctd_top_##v);		\
@@ -309,13 +316,13 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
     wgm = 15 ;
   else	  
     if ( c->config.direction == HW_A1(_hw_ctd_direction_up_loop) ) {
-      if ( c->config.top == HW_A1(_hw_ctd_top_fixed_0xFFFF) )
+      if ( c->config.top == HW_A1(_hw_ctd_top_0xFFFF) )
 	wgm = 0 ;
-      else if (c->config.top == HW_A1(_hw_ctd_top_fixed_0xFF) )
+      else if (c->config.top == HW_A1(_hw_ctd_top_0xFF) )
 	wgm = 5 ;
-      else if (c->config.top == HW_A1(_hw_ctd_top_fixed_0x1FF) )
+      else if (c->config.top == HW_A1(_hw_ctd_top_0x1FF) )
 	wgm = 6 ;
-      else if (c->config.top == HW_A1(_hw_ctd_top_fixed_0x3FF) )
+      else if (c->config.top == HW_A1(_hw_ctd_top_0x3FF) )
 	wgm = 7 ;
       else if (c->config.top == HW_A1(_hw_ctd_top_compare0) ) {
 	if ( compare_update == HW_A1(_hw_occ_update_immediately)
@@ -340,11 +347,11 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
       }
     }
     else {
-      if (c->config.top == HW_A1(_hw_ctd_top_fixed_0xFF) )
+      if (c->config.top == HW_A1(_hw_ctd_top_0xFF) )
 	wgm = 1 ;
-      else if (c->config.top == HW_A1(_hw_ctd_top_fixed_0x1FF) )
+      else if (c->config.top == HW_A1(_hw_ctd_top_0x1FF) )
 	wgm = 2 ;
-      else if (c->config.top == HW_A1(_hw_ctd_top_fixed_0x3FF) )
+      else if (c->config.top == HW_A1(_hw_ctd_top_0x3FF) )
 	wgm = 3 ;
       else if (c->config.top == HW_A1(_hw_ctd_top_compare0) ) {
 	if (compare_update == HW_A1(_hw_occ_update_after_bottom)
@@ -369,6 +376,7 @@ HW_INLINE uint8_t _hwa_solve_ctd ( hwa_ctd_t *c, hwa_occ_t *compare0,
       
   if ( wgm == 0xFF )
     return 2 ; // ("WGM value could not be solved for _ctd class counter.");
+
   c->solved.wgm = wgm ;
 
   /*	Solve the configuration of compare output A

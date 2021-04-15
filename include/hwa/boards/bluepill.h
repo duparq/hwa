@@ -49,6 +49,8 @@
  *
  *  The pin the LED is connected to. The target device name indicates its
  *  package, then pin numbers can be used as well as pin names.
+ *
+ *  @note: the LED is on at level 0.
  */
 #define LED				(portc, 13)	///< X
 #define LED1				(portc, 13)	///< X

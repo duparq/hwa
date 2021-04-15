@@ -85,7 +85,7 @@
 #include "attinyx4_fuses.h"
 
 
-#define hw_int0_irq			_irq,  1, core0,     ie,    if
+#define hw_int0_irq			_irq,  1, int0,     ie,    if
 #define hw_pcic0_irq			_irq,  2, pcic0,     ie,    if
 #define hw_pcic1_irq			_irq,  3, pcic1,     ie,    if
 #define hw_watchdog0_irq		_irq,  4, watchdog0, ie,    if
@@ -239,6 +239,8 @@ typedef struct {
 #define hw_pin_adc5			_ioa, porta, 1, 5
 #define hw_pin_adc6			_ioa, porta, 1, 6
 #define hw_pin_adc7			_ioa, porta, 1, 7
+
+#define hw_pin_int0			_ioa, portb, 1, 2
 
 #if defined HW_DEVICE_PACKAGE_14P3
 #
@@ -706,6 +708,7 @@ typedef struct {
 #include "../hwa_2.h"
 #include "../classes/c1_2.h"
 #include "../classes/corea_2.h"
+#include "../classes/inta_2.h"
 #include "../classes/ioa_2.h"
 #include "../classes/gpa_2.h"
 #include "../classes/pxa_2.h"

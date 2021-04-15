@@ -22,6 +22,8 @@
     hwa_##num();							\
   }while(0)
 
+extern uint8_t			hw_foo();
+
 
 /**
  * @ingroup hwa_pub
@@ -215,6 +217,11 @@
 #define _hw_write__m11(n,o,r,c,a,wm,fm,bn,bp,v,...)	\
   _hw_write_##c(a,wm,fm,bn,bp,v)
 
+#define hw_toggle__m11		, _hw_toggle__m11
+
+#define _hw_toggle__m11(n,o,r,c,a,wm,fm,bn,bp,...)	\
+  _hw_write_##c(a,wm,fm,bn,bp,((1UL<<bn)-1)&(((1UL<<bn)-1)^_hw_read_##c(a,bn,bp)))
+
 #define _hw_write__m12(n,o,r,c,a,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2,v,...)	\
   do{									\
     hw_uint_t_##c val = v ;						\
@@ -222,6 +229,7 @@
 		  (((1ULL<<bn1)-1)<<bp1) | (((1ULL<<bn2)-1)<<bp2),	\
 		  (((val>>vp1)&((1<<bn1)-1))<<bp1) | (((val>>bp2)&((1<<bn2)-1))<<bp2));	\
   }while(0)
+
 
 #define hwa_write__m22		, _hwa_write__m22
 

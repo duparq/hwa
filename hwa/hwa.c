@@ -21,6 +21,6 @@
 
 /*	ISO forbids an empty translation unit
  */
-void hw_foo() {}
+uint8_t hw_foo() {}
 
 #endif /* !defined __ASSEMBLER__ */

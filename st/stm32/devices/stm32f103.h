@@ -109,12 +109,12 @@
  *									       *
  *******************************************************************************/
 
-#define hw_nmi_irq			_irq,  x2, core,       ,
-#define hw_systick_irq			_irq, x15, systick,  ie, if
-#define hw_systick_irq_alarm		_irq, x15, systick,  ie, if
-#define hw_counter2_irq			_irq,  28, counter2, ie, if
-#define hw_counter3_irq			_irq,  29, counter3, ie, if
-#define hw_counter4_irq			_irq,  30, counter4, ie, if
+#define _hw_isr_nmi			,   x2
+#define _hw_isr_systick			,  x15
+#define _hw_isr_systick_alarm		,  x15
+#define _hw_isr_counter2		,   28
+#define _hw_isr_counter3		,   29
+#define _hw_isr_counter4		,   30
 
 #define __vector_x2			hw_esr_nmi
 #define __vector_x3			hw_esr_hard
@@ -130,6 +130,14 @@
 #define __vector_29			hw_isr_counter3
 #define __vector_30			hw_isr_counter4
 /* #define hw_isr_50				hw_isr_counter5 */
+
+#define hw_nmi_irq			_irq,  x2, core,       ,
+#define hw_systick_irq			_irq, x15, systick,  ie, if
+#define hw_systick_irq_alarm		_irq, x15, systick,  ie, if
+#define hw_counter2_irq			_irq,  28, counter2, uie, uif
+#define hw_counter2_channel3_irq	_irq,    , counter2, cc3ie, cc3if
+#define hw_counter3_irq			_irq,  29, counter3, ie, if
+#define hw_counter4_irq			_irq,  30, counter4, ie, if
 
 
 #include "../classes/nvica_1.h"
@@ -227,7 +235,12 @@
  */
 #define _hw_af_porta_1_0		(gpio,wkup,(usart2,cts),(adc12,in0),(counter2,channel1),(counter2,etr))
 #define _hw_af_porta_1_1		(gpio,(usart2,rts),(adc12,in1),(counter2,channel2))
+
 #define _hw_af_porta_1_2		(gpio,(usart2,tx),(adc12,in2),(counter2,channel3))
+#define _hw_af_porta_1_2_usart2_tx
+#define _hw_af_porta_1_2_adc12_in2
+#define _hw_af_porta_1_2_counter2_channel3
+
 #define _hw_af_porta_1_3		(gpio,(usart2,rx),(adc12,in3),(counter2,channel4))
 #define _hw_af_porta_1_4		(gpio,(spi1,nss),(usart2,ck),(adc12,in4))
 #define _hw_af_porta_1_5		(gpio,(spi1,sck),(adc12,in5))

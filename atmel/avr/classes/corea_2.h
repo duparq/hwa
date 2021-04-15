@@ -11,10 +11,8 @@
 
 /**
  * @addtogroup atmelavr_corea
- * @section atmelavr_corea_act Actions
  *
- * <br>
- * `configure`:
+ * @act hwa( configure, ... )
  *
  * @code
  * hwa( configure, core0,
@@ -33,6 +31,37 @@
  *                  | standby             ]
  *      );
  * @endcode
+ *
+ * @par Argument `sleep_mode`:
+ *
+ * * `idle`: the SLEEP instruction makes the MCU enter Idle mode, stopping the
+ *   CPU but allowing Analog Comparator, ADC, USI, Timer/Counter, Watchdog, and the
+ *   interrupt system to continue oper- ating. This sleep mode basically halts clk
+ *   CPU and clk FLASH , while allowing the other clocks to run.  Idle mode enables
+ *   the MCU to wake up from external triggered interrupts as well as internal ones
+ *   like the Timer Overflow. If wake-up from the Analog Comparator interrupt is not
+ *   required, the Analog Comparator can be powered down by setting the ACD bit in
+ *   “ACSR – Analog Comparator Control and Status Register” on page 120. This will
+ *   reduce power consumption in Idle mode. If the ADC is enabled, a conversion
+ *   starts automatically when this mode is entered.
+ *
+ * * `adc_noise_reduction`: the SLEEP instruction makes the MCU enter ADC Noise
+ *   Reduction mode, stopping the CPU but allowing the ADC, the external interrupts,
+ *   and the Watchdog to continue operating (if enabled). This sleep mode halts clk
+ *   I/O , clk CPU , and clk FLASH , while allowing the other clocks to run.  This
+ *   improves the noise environment for the ADC, enabling higher resolution
+ *   measurements. If the ADC is enabled, a conversion starts automatically when this
+ *   mode is entered. Apart form the ADC Conversion Complete interrupt, only an
+ *   External Reset, a Watchdog Reset, a Brown-out Reset, an SPM/EEPROM ready
+ *   interrupt, an external level interrupt on INT0 or a pin change interrupt can
+ *   wake up the MCU from ADC Noise Reduction mode.
+ *
+ * * `power_down`: the oscillator is stopped, while the external interrupts, the
+ *   USI start condition detection and the Watchdog continue operating (if
+ *   enabled). Only an External Reset, a Watchdog Reset, a Brown-out Reset, USI
+ *   start condition interupt, an external level interrupt on INT0 or a pin
+ *   change interrupt can wake up the MCU. This sleep mode halts all generated
+ *   clocks, allowing operation of asynchronous modules only.
  */
 #define hwa_configure__corea		, _hwa_cfcorea
 
@@ -82,8 +111,7 @@
 /**
  * @addtogroup atmelavr_corea
  *
- * <br>
- * `wait, irq`: puts the core into sleeping mode
+ * @act hw( wait, irq ) puts the core into sleeping mode
  *
  * @code
  * hw( wait, irq );

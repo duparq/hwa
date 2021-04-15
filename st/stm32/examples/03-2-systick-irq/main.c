@@ -21,7 +21,7 @@
 
 /*  The IRQ is used only to wake the core up.
  */
-HW_ISR( (systick,irq) ) {}
+HW_ISR(systick) {}
 
 
 int main ( )

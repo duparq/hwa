@@ -34,6 +34,7 @@
  *   * _m12,(o,r),(o,r,rc,a,wm,fm,bn1,bp1,vp1,bn2,bp2,vp2)
  *   * _m22,(o,r),(o,r1,rc1,a1,wm1,fm1,bn1,bp1,vp1,r2,rc2,a2,wm2,fm2,bn2,bp2,vp2)
  */
+/* HW_OXR(rc,,r,rbn,rbp,c,o,a) */
 #define HW_OXR(...)			_HW_OXR2(__VA_ARGS__)
 #define _HW_OXR2(rc,...)		_HW_OXR##rc(__VA_ARGS__)
 
@@ -95,7 +96,7 @@
  * @hideinitializer
  *
  * Expands to ',o,error message' if the relative r can not be found.
- * Register definitions are converted to memory definitions.
+ * Register definitions are finally converted to memory definitions.
  */
 #define HW_CODR(c,o,...)		_HW_B(_HW_CODR_,_hw_par o)(c,o,__VA_ARGS__)
 #define _HW_CODR_1(c,o,d,r)		_HW_CODR2(c,o,d,r,hw_##c##_##r)	// Can not compute o_r since o is ()
@@ -136,9 +137,14 @@
 /*
  *  hw_c_r is void -> delegate to the provided function
  */
-#define _HW_CODR3_1(c,o,d,r,z,f)	_HW_CODR4(f,o,HW_RP d)
+/* #define _HW_CODR3_1(c,o,d,r,z,f)	_HW_CODR4(f,o,HW_RP d) */
+/* #define _HW_CODR4(f,...)		_HW_CODR5(f(__VA_ARGS__)) */
+/* #define _HW_CODR5(...)			__VA_ARGS__ */
+
+#define _HW_CODR3_1(c,o,d,r,z,...)	_HW_CODR4(__VA_ARGS__,o,HW_RP d)
 #define _HW_CODR4(f,...)		_HW_CODR5(f(__VA_ARGS__))
 #define _HW_CODR5(...)			__VA_ARGS__
+
 /*
  *  hw_c_r is not void. FIXME: remove this when its known that it will never be used.
  */
@@ -166,7 +172,7 @@
 #define _HW_CODR8(f,...)		_HW_CODR9(f(__VA_ARGS__))
 #define _HW_CODR9(...)			__VA_ARGS__
 
-#define _HW_CODR7_0(c,o,d,r,...)	,o,o has no relative r
+#define _HW_CODR7_0(c,o,d,r,...)	,o,HW_EM_OO(o,r)
 
 
 /**
@@ -234,7 +240,7 @@
 
 #define _HW_X6(c,o,d,x,...)		HW_B(_HW_X6_,x)(c,o,d,x,__VA_ARGS__)	// End
 #define _HW_X6_1(c,o,d,...)		_HW_X9(c,o,d)
-#define _HW_X6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_X6_0]
+#define _HW_X6_0(c,o,d,x,...)		,o,HW_EM(too many elements in path starting from x) [_HW_X6_0:c,o,d,x,__VA_ARGS__]
 
 #define _HW_X9(c,o,d)			_HW_B(_HW_X9_,_hw_par d)(c,o,d)
 #define _HW_X9_1(c,o,d)			_HW_X9_0(c,o,HW_RP d)
@@ -254,3 +260,12 @@
 #define _HW_2(c,o,...)			_HW_B(_HW_2,o)(c,o,__VA_ARGS__)
 #define _HW_20(...)			__VA_ARGS__	/* definition */
 #define _HW_21(c,o,...)			c		/* function name */
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief Reduce a list to a triplet c,o,(d).
+ * @hideinitializer
+ */
+#define HW_C3(...)		_HW_C3(__VA_ARGS__)
+#define _HW_C3(c,o,...)		c,o,(__VA_ARGS__)

@@ -20,7 +20,7 @@
 
 /*  The IRQ is used only to wake the core up.
  */
-HW_ISR( (COUNTER,irq) )
+HW_ISR(COUNTER)
 {
   hw( clear, (COUNTER,irq) );
 }

@@ -498,6 +498,6 @@
       return hw( read, o );					\
     }								\
 								\
-    extern void hw_foo()					\
+    extern uint8_t hw_foo()					\
     								\
       HW_EOL(__VA_ARGS__)

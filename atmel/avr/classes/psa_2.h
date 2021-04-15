@@ -32,6 +32,18 @@
 
 /**
  * @addtogroup atmelavr_psa
+ *
+ * @act hw( clear, ... ) resets the prescaler immediately without stopping it:
+ *
+ * @code
+ * hw( clear, prescaler0 );
+ * @endcode
+ */
+#define hw_clear__psa			, _hw_psa_reset
+
+
+/**
+ * @addtogroup atmelavr_psa
  * @section atmelavr_psa_stop Stop
  *
  * The `turn` action can reset and stop the prescaler:

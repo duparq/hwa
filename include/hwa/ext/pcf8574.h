@@ -133,7 +133,7 @@
     _hw_##o##_commit();							\
   }									\
 									\
-  extern void hw_foo()
+  extern uint8_t hw_foo()
 
 
 #define HW_IMPLEMENT__pcf8574		, _hw_define_pcf8574_

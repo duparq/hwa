@@ -162,7 +162,7 @@
     _hw_dfhd44780_newline(o,__VA_ARGS__)		\
     _hw_dfhd44780_home(o,__VA_ARGS__)			\
     _hw_dfhd44780_putchar(o,__VA_ARGS__)		\
-    extern void hw_foo()
+    extern uint8_t hw_foo()
 
 /*  FIXME: 'hw(pulse,e)' could spare a few bytes by not updating the data cache
  *  of PCF.

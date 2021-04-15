@@ -20,7 +20,7 @@
  *
  *      function,        compare,               // (ccs=0) Default
  *
- *      result,          frozen                 // (ocm=0) Default
+ *      level,           frozen                 // (ocm=0) Default
  *                     | set_on_match           // (ocm=1)
  *                     | clear_on_match         // (ocm=2)
  *                     | toggle_on_match        // (ocm=3)
@@ -55,7 +55,7 @@
 #define _hw_cfcca(o,c,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hw,c,n,k,__VA_ARGS__) }while(0)
 #define _hwa_cfcca(o,c,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hwa,c,n,k,__VA_ARGS__) }while(0)
 
-#define _hwx_cfcca1(...)		HW_E(HW_EM_AML((function,result)))
+#define _hwx_cfcca1(...)		HW_E(HW_EM_AML((function,level)))
 
 /*  Mandatory argument 'function'
  */
@@ -63,13 +63,13 @@
 #define _hwx_cfcca_fun0(h,c,n,k,...)	HW_E(HW_EM_AN(k,function))
 #define _hwx_cfcca_fun1(h,c,n,k,v,...)	HW_BW(_hwx_cfcca_fun1,compare,v)(h,c,n,v,__VA_ARGS__)
 #define _hwx_cfcca_fun10(h,c,n,v,...)	HW_E(HW_EM_VANI(v,function)
-#define _hwx_cfcca_fun11(h,c,n,v,k,...)	h##_write(c,cc##n##s,0); HW_BW(_hwx_cfcca_res,result,k)(h,c,n,k,__VA_ARGS__)
+#define _hwx_cfcca_fun11(h,c,n,v,k,...)	h##_write(c,cc##n##s,0); HW_BW(_hwx_cfcca_res,level,k)(h,c,n,k,__VA_ARGS__)
 
-/*  Mandatory argument 'result'
+/*  Mandatory argument 'level'
  */
-#define _hwx_cfcca_res0(h,c,n,k,...)	HW_E(HW_EM_AN(k,result))
+#define _hwx_cfcca_res0(h,c,n,k,...)	HW_E(HW_EM_AN(k,level))
 #define _hwx_cfcca_res1(h,c,n,k,v,...)	HW_BV(_hwx_cfcca_res1,ccares_,v,h,c,n)(h,c,n,__VA_ARGS__) // PUSH
-#define _hwx_cfcca_res10(v,...)		HW_E(HW_EM_VAL(v,result,(frozen, set_on_match, clear_on_match,	\
+#define _hwx_cfcca_res10(v,...)		HW_E(HW_EM_VAL(v,level,(frozen, set_on_match, clear_on_match,	\
 								 toggle_on_match, low, high, \
 								 clear_on_match_up_set_on_match_down, \
 								 set_on_match_up_clear_on_match_down))) HW_EAT // POP

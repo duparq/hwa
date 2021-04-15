@@ -35,17 +35,18 @@
 /*  Error messages
  */
 #define HW_EM_AI(a)		invalid argument HW_Q(a)
-#define HW_EM_AL(a,l)		argument named HW_Q(a) is not in l
+#define HW_EM_AL(a,l)		argument HW_Q(a) is not in l
 #define HW_EM_ACCESS		invalid access
 #define HW_EM_ADOO(a,o1,o2)	value of parameter `a` mismatch beween `o1` and `o2`
+#define HW_EM_AOCL(a,o,c,l)	action HW_Q(a) for object HW_Q(o) of class HW_Q(c) is not in l
 #define HW_EM_AVL(a,l)		value of parameter `a` is not in l
 #define HW_EM_AVOL(a,o,l)	value of parameter `a` for `o` is not in l
 #define HW_EM_AVM(a,v)		value of parameter `a` must be `v`
 #define HW_EM_AOVM(a,o,v)	value of parameter `a` for `o` must be `v`
 #define HW_EM_AM(a)		missing argument HW_Q(a)
 #define HW_EM_AML(l)		expected at least one argument of l
-#define HW_EM_AN(a,n)		expected argument named HW_Q(n) instead of HW_Q(a)
-#define HW_EM_CAN(c,a,n)	constructor c expects an argument named HW_Q(n) instead of HW_Q(a)
+#define HW_EM_AN(a,n)		expected argument HW_Q(n) instead of HW_Q(a)
+#define HW_EM_CAN(c,a,n)	constructor c expects an argument HW_Q(n) instead of HW_Q(a)
 #define HW_EM_COR(o)		configuration of `o` is required
 #define HW_EM_COMMITRQ		committing is required before setting a new value
 #define HW_EM_CMOO(o1,o2)	configuration mismatch beween `o1` and `o2`
@@ -57,13 +58,13 @@
 #define HW_EM_NOP		no operation
 #define HW_EM_O(x)		HW_Q(x) is not an object
 #define HW_EM_OAVI(o,a,v)	`o` does not support value `v` for `a`
-#define HW_EM_OCM(o,c,m)	object HW_Q(o) of class HW_Q(c) has no method named HW_Q(m)
-#define HW_EM_OM()		HW_Q(missing object name)
+#define HW_EM_OCM(o,c,m)	object HW_Q(o) of class HW_Q(c) has no method HW_Q(m)
+#define HW_EM_OM()		missing object name
 #define HW_EM_OMAP(o)		remapping error for `o`
 #define HW_EM_PMAP(p)		pin `o` is already mapped to another signal
 #define HW_EM_IONC		IO contains disconnected pins
 #define HW_EM_ONC(o)		HW_Q(o) is not connected
-#define HW_EM_OO(o,x)		HW_Q(o) has no relative named HW_Q(x)
+#define HW_EM_OO(o,x)		HW_Q(o) has no relative HW_Q(x)
 #define HW_EM_OPTIM		you may have forgotten to turn optimizations on
 #define HW_EM_OT(o,t)		HW_Q(o) is not a t
 #define HW_EM_OVL(v,l)		optionnal value HW_Q(v) is not in l

@@ -1,9 +1,9 @@
 
-HardWare Advanced
-=================
+HWA: HardWare Advanced
+======================
 
-HWA stands for HardWare Advanced. It is essentially a set of C definitions
-designed for bare metal programming with a pleasant style.
+HWA is essentially a set of C definitions designed for bare metal hardware
+programming with a pleasant generic style.
 
 To give you an idea, the following code blinks a LED connected to an
 STM32F103RBT6 using Systick interrupts and sleeping mode:

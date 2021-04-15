@@ -68,6 +68,7 @@
 #define _hw_ioa10(...)			_hw_ioa11(__VA_ARGS__)
 #define _hw_ioa11(o,r,p,bn,bp,...)	_HW_B(_hw_ioa2,_hw_isa_reg_##__VA_ARGS__)(o,r,p,bn,bp,__VA_ARGS__)
 #define _hw_ioa21(o,r,p,bn,bp,cr,...)	HW_OXR(cr,r,__VA_ARGS__,_ioa,o,__VA_ARGS__)
+
 #define _hw_ioa20(o,r,p,bn,bp,...)	_hw_ioa22(o,r,p,bn,bp,HW_XO(__VA_ARGS__))
 #define _hw_ioa22(...)			_hw_ioa23(__VA_ARGS__)
 #define _hw_ioa23(o,r,p,bn,bp,x,...)	_HW_B(_hw_ioa23,x)(o,r,p,bn,bp,x,__VA_ARGS__)

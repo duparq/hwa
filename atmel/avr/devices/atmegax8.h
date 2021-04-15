@@ -98,6 +98,36 @@
 #include "../hwa_1.h"
 #include "atmegax8_fuses.h"
 
+#define _hw_isr_int0			,  1
+#define _hw_isr_int1			,  2
+#define _hw_isr_pcic0			,  3
+#define _hw_isr_pcic1			,  4
+#define _hw_isr_pcic2			,  5
+#define _hw_isr_watchdog0		,  6
+#define _hw_isr_counter2_compare0	,  7
+#define _hw_isr_counter2_compare1	,  8
+#define _hw_isr_counter2_overflow	,  9
+#define _hw_isr_counter2		,  9
+#define _hw_isr_counter1_capture0	, 10
+#define _hw_isr_counter1_compare0	, 11
+#define _hw_isr_counter1_compare1	, 12
+#define _hw_isr_counter1_overflow	, 13
+#define _hw_isr_counter1		, 13
+#define _hw_isr_counter0_compare0	, 14
+#define _hw_isr_counter0_compare1	, 15
+#define _hw_isr_counter0_overflow	, 16
+#define _hw_isr_counter0		, 16
+#define _hw_isr_spi0			, 17
+#define _hw_isr_spi0_txc		, 17
+#define _hw_isr_uart0_rxc		, 18
+#define _hw_isr_uart0_txqnf		, 19
+#define _hw_isr_uart0_txc		, 20
+#define _hw_isr_adc0			, 21
+#define _hw_isr_eeprom0			, 22
+#define _hw_isr_eeprom0_ready		, 22
+#define _hw_isr_acmp0			, 23
+#define _hw_isr_twi0			, 24
+#define _hw_isr_flash0			, 25
 
 #define hw_int0_irq			_irq,  1, int0,	     ie,     if
 #define hw_int1_irq			_irq,  2, int1,	     ie,     if

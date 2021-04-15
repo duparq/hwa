@@ -19,9 +19,7 @@
  *
  * This class implements a software-emulated TWI master.
  *
- * @note This may not be supported by all the devices.
- *
- * @section Implementation
+ * @attention This class may not be supported by all devices.
  *
  * Header file:
  *
@@ -29,30 +27,20 @@
  * #include <hwa/ext/swtwimaster.h>
  * @endcode
  *
- * <br><br>HW_SWTWIMASTER(...) declares a SWTWIMASTER object. You must provide:
- *  * an I/O for the SCL signal;
- *  * an I/O for the SDA signal;
- *  * the SCL frequency.
+ * @section swtwimaster Interface
+ *
+ * @act @anchor HW_SWTWIMASTER HW_SWTWIMASTER( scl, <scl>, sda, <sda>, bps, <bps> ) defines a
+ * SWTWIMASTER object:
+ *  @arg `<scl>`: an @ref using_ios "I/O" for the SCL signal;
+ *  @arg `<sds>`: an @ref using_ios "I/O" for the SDA signal;
+ *  @arg `<bps>`: the SCL frequency.
+ *
+ * Example:
  *
  * @code
  * #define TWI     HW_SWTWIMASTER( scl, (portc,5),
  *                                 sda, (portc,4),
  *                                 bps, 400000 )
- * @endcode
- *
- * <br><br>HW_DECLARE( TWI ) declares the functions that implement the device. You
- * can put it in your header files:
- *
- * @code
- * HW_DECLARE( TWI );
- * @endcode
- *
- * <br><br>The implementation of this device focuses on code size rather than on
- * speed, so it relies on extern C functions that must be defined with
- * HW_IMPLEMENT(). This must appear in one of your source files:
- *
- * @code
- * HW_IMPLEMENT( TWI );
  * @endcode
  */
 #define hw_class__swtwimaster
@@ -88,9 +76,13 @@
 
 
 /**
- * @ingroup swtwimaster
- * @brief Declare the functions that implement the class.
- * @hideinitializer
+ * @addtogroup swtwimaster
+ *
+ * @act HW_DECLARE( TWI ) declares the functions that implement the TWI object:
+ *
+ * @code
+ * HW_DECLARE( TWI );
+ * @endcode
  */
 #define HW_DECLARE__swtwimaster		, _hw_dcswtwimaster
 
@@ -112,9 +104,13 @@
 
 
 /**
- * @ingroup swtwimaster
- * @brief Define the functions that implement the class.
- * @hideinitializer
+ * @addtogroup swtwimaster
+ *
+ * @act HW_IMPLEMENT( TWI ) declares the functions that implement the TWI object:
+ *
+ * @code
+ * HW_IMPLEMENT( TWI );
+ * @endcode
  */
 #define HW_IMPLEMENT__swtwimaster		, _hw_dfswtwimaster
 
@@ -237,14 +233,13 @@
     return v;								\
   }									\
 									\
-  extern void hw_foo()
+  extern uint8_t hw_foo()
 
 
 /**
  * @addtogroup swtwimaster
- * @section swtwimasteract Actions
  *
- * <br><br>hw( configure, TWI ) and hwa( configure, TWI ) configure the object:
+ * @act hw( configure, TWI ) and hwa( configure, TWI ) configure the object:
  *
  * @code
  * hw( configure, TWI );
@@ -284,43 +279,43 @@
 /**
  * @addtogroup swtwimaster
  *
- * <br><br>hw( xfr_start, TWI ) sends a start condition on the TWI bus:
+ * @act hw( xfr_start, TWI ) sends a start condition on the TWI bus:
  *
  * @code
  * hw( xfr_start, TWI );
  * @endcode
  *
- * <br><br>hw( xfr_slar, TWI, slave_address ) sends slave address + read bit:
+ * @act hw( xfr_slar, TWI, slave_address ) sends slave address + read bit:
  *
  * @code
  * hw( xfr_slar, TWI, slave_address );
  * @endcode
  *
- * <br><br>hw( xfr_slaw, TWI, slave_address ) sends slave address + write bit:
+ * @act hw( xfr_slaw, TWI, slave_address ) sends slave address + write bit:
  *
  * @code
  * hw( xfr_slaw, TWI, slave_address );
  * @endcode
  *
- * <br><br>hw( xfr_read, TWI, data, ack|nack ) receive one data byte:
+ * @act hw( xfr_read, TWI, data, ack|nack ) receive one data byte:
  *
  * @code
  * uint8_t r = hw( xfr_read, TWI, ack );
  * @endcode
  *
- * <br><br>hw( xfr_write, TWI, data ) transmit one data byte:
+ * @act hw( xfr_write, TWI, data ) transmit one data byte:
  *
  * @code
  * uint8_t r = hw( xfr_write, TWI, data ); // r = ack|nack
  * @endcode
  *
- * <br><br>hw( xfr_stop, TWI ) sends a start condition on the TWI bus:
+ * @act hw( xfr_stop, TWI ) sends a start condition on the TWI bus:
  *
  * @code
  * hw( xfr_stop, TWI );
  * @endcode
  *
- * <br><br>hw( stat, TWI ) get the status byte of the object:
+ * @act hw( stat, TWI ) get the status byte of the object:
  *
  * @code
  * uint8_t st = hw( stat, TWI );
@@ -356,4 +351,3 @@
 
 #define hw_stat__swtwimaster				, _hw_swtwimaster_stat
 #define _hw_swtwimaster_stat(o,a,scl,sda,bps,...)	_hw_##o##__sr HW_EOL(__VA_ARGS__)
-

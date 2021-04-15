@@ -45,6 +45,7 @@
 #define _hw_is_after_bottom_after_bottom	, 1
 #define _hw_is_after_top_after_top		, 1
 #define _hw_is_ahb_ahb				, 1
+#define _hw_is_alias_alias			, 1
 #define _hw_is_align_align			, 1
 #define _hw_is_bandgap_bandgap			, 1
 #define _hw_is_bottom_bottom			, 1
@@ -85,6 +86,7 @@
 #define _hw_is_irq_irq				, 1
 #define _hw_is_irq_type_irq_type		, 1
 #define _hw_is_latch_latch			, 1
+#define _hw_is_level_level			, 1
 #define _hw_is_lines_lines			, 1
 #define _hw_is_lo8_lo8				, 1
 #define _hw_is_mode_mode			, 1
@@ -107,7 +109,6 @@
 #define _hw_is_receiver_receiver		, 1
 #define _hw_is_reload_reload			, 1
 #define _hw_is_reset_reset			, 1
-#define _hw_is_result_result			, 1
 #define _hw_is_rs_rs				, 1
 #define _hw_is_rule_rule			, 1
 #define _hw_is_run_run				, 1
@@ -199,9 +200,13 @@
 
 
 /**
- * @ingroup hwa_dev
- * @defgroup hwa_r8 Class _r8
- * @brief 8-bit hardware register class.
+ * @ingroup hwa_classes
+ * @defgroup hwa_r8 Class _r8: 8-bit hardware register class.
+ *
+ * @section hwa_r8_rel Relatives
+ *
+ *  * `(register,p)`: the single bit at position `p` of `register`.
+ *  * `(register,n,p)`: n consecutive bits at position `p` of `register`.
  */
 #define hw_class__r8
 
@@ -277,6 +282,26 @@
  */
 #define hw_class__m11
 
+#define hw_actions__m11		, (read,toggle,write)
+#define hwa_actions__m11	, (toggle,write)
+
+
+/*
+ *  Provide relative notation for accessing one group of bits of a memory location
+ *    '(register,bp)' -> one bit at position bp
+ *    '(register,bn,bp)' -> bn bits at position bp
+ *    '(register,bn,bp,x)' -> FIXME should trigger an error
+ *
+ *  FIXME: assumes 8 bit register (3bn for position). TODO: consider 16 bit registers.
+ *  FIXME: should use classes _m11p and _m11np
+ */
+#define hw__m11_					, _hw_m11_
+#define _hw_m11_(oo,x,...)				_HW_B(_hw_m11r,_hw_isa_3bn_##x)(oo,x,__VA_ARGS__)
+#define _hw_m11r0(oo,x,...)				,,HW_EM_XNIL(x,(0..7))
+#define _hw_m11r1(oo,x,o,r,rc,ra,rwm,rfm,rbn,rbp)	_HW_B(_hw_m11r1,_hw_is_1_##rbn)(oo,x,o,r,rc,ra,rwm,rfm,rbn,rbp)
+#define _hw_m11r10(oo,x,o,r,rc,ra,rwm,rfm,rbn,rbp)	_m11,(o,r,1,x),(o,r,rc,ra,rwm,rfm,1,x)
+#define _hw_m11r11(oo,x,o,r,rc,ra,rwm,rfm,rbn,rbp)	_m11,(o,r,rbp,x),(o,r,rc,ra,rwm,rfm,rbp,x)
+
 
 /**
  * @ingroup hwa_dev
@@ -292,6 +317,9 @@
  * @brief Memory definition for two groups of consecutive bits at two different addresses.
  */
 #define hw_class__m22
+
+#define hw_actions__m22		, (read,toggle,write)
+#define hwa_actions__m22	, (toggle,write)
 
 
 /**
@@ -368,8 +396,10 @@
 
 /**
  * @ingroup hwa_pub
- * @brief Returns the number of bits of an @ref using_objects "object".
  * @hideinitializer
+ *
+ * Number of bits of an @ref using_objects "object", 0 if the object has no bits
+ * or does not exist (no error is emitted).
  *
  * @code
  * #if HW_BITS(counter0) != 16
@@ -404,7 +434,7 @@
  * @endcode
  */
 #define HW_DECLARE(...)			HW_F(HW_DECLARE,__VA_ARGS__)
-#define HW_DECLARE_E(e)			HW_E(e) extern void hw_foo()
+#define HW_DECLARE_E(e)			HW_E(e) extern uint8_t hw_foo()
 
 #define _hw_declare_			, 
 #define _hw_declare_weak		, __attribute__((weak))
@@ -426,7 +456,7 @@
  * @endcode
  */
 #define HW_IMPLEMENT(...)		HW_F(HW_IMPLEMENT,__VA_ARGS__)
-#define HW_IMPLEMENT_E(e)		HW_E(e) extern void hw_foo()
+#define HW_IMPLEMENT_E(e)		HW_E(e) extern uint8_t hw_foo()
 
 
 /**
@@ -436,6 +466,7 @@
  */
 #define HW_POSITION(...)		HW_F( HW_POSITION, __VA_ARGS__ )
 #define HW_POSITION_E(...)		0 // An error occured
+//#define HW_POSITION_E(e)		HW_E(e) /* FIXME: causes problems with swuarta */
 
 #define HW_POSITION__m11				, _hw_position_m11
 #define _hw_position_m11(n,o,r,c,a,wm,fm,bn,bp,...)	bp

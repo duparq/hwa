@@ -36,7 +36,7 @@
  *    Phase 2: off
  *    Phase 3: off
  */
-HW_ISR( (COUNTER,irq) )
+HW_ISR(COUNTER)
 {
   static uint16_t	duty ;
   static uint8_t	phase ;
@@ -98,7 +98,7 @@ int main ( )
    */
   hwa( configure, (COUNTER,CHANNEL),
        function,  compare,
-       result,    clear_on_match_up_set_on_match_down,
+       level,     clear_on_match_up_set_on_match_down,
        output,    connected );
 
   hwa( commit );

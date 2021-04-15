@@ -23,8 +23,8 @@ doc:
 
 #  Directory of boards
 #
-BOARDS		:= ../../../../include/hwa/boards
-BOARDSBUILD	:= ../build
+BOARDS		:= $(MFD)../../../../include/hwa/boards
+BOARDSBUILD	:= $(MFD)../build
 
 #  Choose a default board if none specified
 #
@@ -73,7 +73,7 @@ SIZE		:= $(ARCH)size
 
 #  Basic flags (evaluation of DEVICE must be delayed)
 #
-FLAGS		+= -mmcu=$(DEVICE)
+MMCU		+= -mmcu=$(DEVICE)
 
 #  Variables used by external scripts
 #
@@ -150,7 +150,7 @@ DEPS	:= $(addprefix $(OUTDIR)/,$(DEPS))
 $(OUTDIR)/%.d: %.c
 #	@echo "RULE: $@: $^"
 	@mkdir -p $(OUTDIR)
-	@set -e ; rm -f $@ ; $(CPP) -MM $(INCLUDES) $(DEFINES) $< >$@.tmp	;\
+	@set -e ; rm -f $@ ; $(CPP) -MM $(MMCU) $(INCLUDES) $(DEFINES) $< >$@.tmp	;\
 	sed 's,\($*\)\.o[ :]*,$(OUTDIR)/\1.o $@ : ,g' < $@.tmp > $@
 
 #	Dependencies of .sx files
@@ -168,7 +168,7 @@ $(OUTDIR)/%.d: %.sx
 #									       #
 ################################################################################
 
-AFLAGS		+= $(FLAGS)
+AFLAGS		+= $(MMCU)
 AFLAGS		+= -Wall
 AFLAGS		+= -fno-diagnostics-show-caret	# GCC 4.8
 #AFLAGS		+= -Wextra
@@ -189,8 +189,8 @@ AFLAGS		+= $(INCLUDES)
 #  format them for a correct display
 #
 $(OUTDIR)/%.cp.sx %.cp.sx: %.sx
-#	@echo "RULE $@: $^"
-	@$(CPP) $(AFLAGS) $< >$@
+	@echo "RULE $@: $^"
+	$(CPP) $(AFLAGS) $< >$@
 
 
 ################################################################################
@@ -201,7 +201,7 @@ $(OUTDIR)/%.cp.sx %.cp.sx: %.sx
 
 #  Compiling options
 #
-CFLAGS		+= $(FLAGS)
+CFLAGS		+= $(MMCU)
 CFLAGS		+= -std=c1x
 CFLAGS		+= -Wall
 CFLAGS		+= -Wextra
@@ -233,9 +233,9 @@ $(OUTDIR)/%.o: %.c
 #  We want .sx files to be preprocessed first
 #
 $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
-#	@echo "RULE: $@ : $^"
+	@echo "RULE: $@ : $^"
 	@mkdir -p $(OUTDIR)
-	@$(CC) $(AFLAGS) -c $< -o $@
+	$(CC) $(AFLAGS) -c $< -o $@
 
 
 ################################################################################
@@ -250,7 +250,7 @@ OBJECTS		:= $(SOURCES:.c=.o)
 OBJECTS		:= $(OBJECTS:.sx=.o)
 OBJECTS		:= $(addprefix $(OUTDIR)/,$(OBJECTS))
 
-LDFLAGS		+= $(FLAGS)
+LDFLAGS		+= $(MMCU)
 #LDFLAGS		+= -s
 LDFLAGS		+= -Wl,-Map,$(OUT).map,--cref
 #LDFLAGS		+= -Wl,-u,vfprintf -lprintf_min
@@ -269,7 +269,7 @@ LDFLAGS		+= -Wl,--gc-sections
 #    ATtinyX4 / X5: avr25.ld
 #
 ifneq (,$(LOCALLD))
-  LDFLAGS	+= -Tavr$(shell echo __AVR_ARCH__ | avr-cpp -mmcu=$(DEVICE) | tail -1).ld
+  LDFLAGS	+= -Tavr$(shell echo __AVR_ARCH__ | avr-cpp $(MMCU) | tail -1).ld
 endif
 
 
@@ -314,7 +314,9 @@ size:	$(OUT).elf
 #
 .PHONY: stat
 stat:	$(OUT).bin
-	@if python3 -V >/dev/null 2>&1 ; then					\
+	@if [ ! -f "$(diabolo)" ] ; then					\
+	  echo "Diabolo is required for make target 'stat'." ;			\
+	elif python3 -V >/dev/null 2>&1 ; then					\
 	  $(diabolo) --mcu=$(DEVICE) --stat $(OUT).bin -q			;\
 	else									\
 	  echo "Install Python if you want Diabolo to stat your application."	;\

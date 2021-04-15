@@ -17,8 +17,11 @@
  *
  * @section atmelavr_gparel Relatives
  *
- *  * `(portx,p)` designates the single gpio pin at position `p` of `portx`.
- *  * `(portx,n,p)` designates the `n` consecutive gpio pins at position `p` of `portx`.
+ *  * `(portx,p)`: the single gpio pin at position `p` of `portx`.
+ *  * `(portx,n,p)`: the `n` consecutive gpio pins at position `p` of `portx`.
+ *  * @ref hwa_r8 "(portx,ddr)": the `DDR` register of `portx`.
+ *  * @ref hwa_r8 "(portx,pin)": the `PIN` register of `portx`.
+ *  * @ref hwa_r8 "(portx,port)": the `PORT` register of `portx`.
  */
 #define hw_class__gpa
 

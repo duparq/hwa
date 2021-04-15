@@ -114,7 +114,7 @@
   HW_E(HW_EM_VAL(v,update,(immediately,after_bottom,after_top)))
 
 #define _hwa_cfoca_vupdate_1(ct,oc,v,k,...)			\
-  hwa->o.config.update = HW_A1(_hw_oca_update_##v);		\
+  hwa->ct.compare##oc.config.update = HW_A1(_hw_oca_update_##v);	\
   HW_B(_hwa_cfoca_koutput_,_hw_is_output_##k)(ct,oc,k,__VA_ARGS__)
 
 /*  Optionnal parameter `output`

@@ -15,6 +15,8 @@
 #define hw_toggle__ioa			, _hw_tgioa
 #define hwa_toggle__ioa			, _hwa_tgioa
 
+#define hw_actions__ioa			, (configure,read,toggle,write)
+#define hwa_actions__ioa		, (configure,toggle,write)
 
 /**
  * @ingroup stm32_classes
@@ -82,7 +84,7 @@
     struct { uint8_t commit ; hwa_gpa_t p ; hwa_afioa_t afio ; } hwa_st ; \
     hwa_t *hwa = (hwa_t*)&hwa_st ;					\
     _hwa_setup_o(p);							\
-    _hwa_cfioa_(0,o,p,__VA_ARGS__);					\
+    _hwa_cfioa_(0,o,p,__VA_ARGS__,);					\
     hwa_st.commit = 1 ; _hwa_commit_o(p);				\
   }while(0)
 
@@ -90,7 +92,7 @@
  *    TODO: verify how errors are triggered at different levels of parsing
  */
 #define hwa_configure__ioa			, _hwa_cfioa
-#define _hwa_cfioa(o,p,bn,...)			_HW_B(_hwa_cfioa,_hw_is_1_##bn)(o,p,bn,__VA_ARGS__)
+#define _hwa_cfioa(o,p,bn,...)			_HW_B(_hwa_cfioa,_hw_is_1_##bn)(o,p,bn,__VA_ARGS__,)
 #define _hwa_cfioa0(...)			do{ uint8_t cnf, mode, odr=0 ; _hwa_cfioa_(0,__VA_ARGS__); }while(0)
 #define _hwa_cfioa1(o,p,bn,bp,...)			\
   do{							\
@@ -113,7 +115,7 @@
  *    Value is not a (). Must be 'gpio'. Can drop the indicator 'x'. Indicate default function with 'df'
  */
 #define _hwa_cfioa_vfn0(x,va,v,...)		HW_BW(_hwa_cfioa_vfn0,gpio,v)(va,v,__VA_ARGS__)
-#define _hwa_cfioa_vfn00(va,v,...)		HW_E(HW_EM_VAL(v,function,(gpio)))
+#define _hwa_cfioa_vfn00(va,v,...)		HW_E(HW_EM_VAL(v,function,(gpio,(controller,signal))))
 #define _hwa_cfioa_vfn01(va,v,k,...)		HW_BW(_hwa_cfioa_kmd,mode,k)(df,HW_RP va,k,__VA_ARGS__)
 /*
  *    Value is a (). Verify that indicator 'x' is 1 before trying to process signal mapping.
@@ -132,7 +134,10 @@
  */
 #define _hwa_cfioa_vfn30(va1,va2,v,c,n,...)	_hwa_cfioa_vfn32(HW_RP va1,v,n,HW_RP va2)
 #define _hwa_cfioa_vfn32(...)			_hwa_cfioa_vfn33(__VA_ARGS__)
-#define _hwa_cfioa_vfn33(o,p,bn,bp,v,n,k,...)			\
+#define _hwa_cfioa_vfn33(o,p,bn,bp,v,n,k,...)	HW_B(_hwa_cfioa_vfn33,_hw_af_##o##_##n)(o,p,bn,bp,v,n,k,__VA_ARGS__)
+#define _hwa_cfioa_vfn330(o,p,bn,bp,v,n,k,...)	HW_E(HW_EM_VAL(v,function,_hw_af_##o))
+  
+#define _hwa_cfioa_vfn331(o,p,bn,bp,v,n,k,...)			\
   if ( hwa->map.n == 0 )					\
     hwa->map.n = HW_ADDRESS((p,bn,bp));				\
   else if ( hwa->map.n != HW_ADDRESS((p,bn,bp)) )		\
@@ -343,9 +348,9 @@ HW_INLINE void _hwa_do_cfioa( hwa_gpa_t *p, uint8_t bn, uint8_t bp, uint8_t cnf,
  * @addtogroup stm32_ioa
  *
  * @code
- * hwa( toggle, (porta,0) );	   //  Register _ioa, porta, 1, 0 for toggling
- * hwa( toggle, (porta,4) );	   //  Register _ioa, porta, 1, 4 for toggling
- * hwa( commit );	   //  Toggle all registered pins at once
+ * hwa( toggle, (porta,0) );	   //  Register PA0 for toggling
+ * hwa( toggle, (porta,4) );	   //  Register PA4 for toggling
+ * hwa( commit );		   //  Toggle PA0 and PA4 at once
  * @endcode
  */
 #define _hwa_tgioa(o,p,bn,bp,g,...)	HW_B(_hwa_tgioa_,g)(p,bn,bp,g)

@@ -38,6 +38,11 @@ div.contents {
     margin-bottom: 1in;
 }
 
+/*  Hide "Detail description" headers
+ */
+/* div.contents > h2.groupheader { */
+/*     display: none; */
+/* } */
 
 table.doxtable th {
     font-size: 100%;

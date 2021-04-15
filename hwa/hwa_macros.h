@@ -426,14 +426,17 @@
  * FIXME: using the object name to distinguish a no-object call and an
  * error-object call. A class _err would be faster?
  */
+/*  h: prefix used, "hw" or "hwa"
+ *  f: 1st arg, function
+ *  c: 2nd arg, class
+ */
 #define hwx(h,f,x,...)			_HW_B(_hwx0_,_hw_par x)(h,f,x,__VA_ARGS__)
 /*
  *  x is ()
  */
-//#define _hwx0_1(h,f,x,...)		_hwx_0(h,f,HW_X x,__VA_ARGS__)
 #define _hwx0_1(h,f,x,...)		_hwx01(h,f,HW_X x,__VA_ARGS__)
 #define _hwx01(h,f,x,...)		_HW_B(_hwx01,x)(h,f,x,__VA_ARGS__)
-#define _hwx011(h,f,x,o,e,...)		HW_E(e) do{}while(0)
+#define _hwx011(h,f,x,o,e,...)		HW_E(e) hw_foo()
 #define _hwx010				_hwx_0
 
 /*
@@ -463,7 +466,6 @@
 /*
  *  o is not an object. Look for h_f_o
  */
-//#define _hwx_11(h,f,c,o,e,...)		_hwx_12(h,e,f,h##f##_##o,o,__VA_ARGS__)
 #define _hwx_11(h,f,c,o,...)		_HW_B(_hwx_11,_hw_par o)(h,f,c,o,__VA_ARGS__)
 #define _hwx_111(h,f,c,o,e,...)		_hwx_14(h,e,f,h##f##_,__VA_ARGS__)
 #define _hwx_110(h,f,c,o,e,...)		_hwx_12(h,e,f,h##f##_##o,o,__VA_ARGS__)
@@ -472,14 +474,13 @@
 #define _hwx_13(h,e,f,x,...)		_HW_B(_hwx_13,x)(h,e,f,x,__VA_ARGS__)
 #define _hwx_131(h,e,f,z,y,...)		y(__VA_ARGS__)
 /*
- *			      Look for h_f_
+ *      Look for h_f_
  */
 #define _hwx_130(h,e,f,m,...)		_hwx_14(h,e,f,h##f##_,__VA_ARGS__)
 #define _hwx_14(...)			_hwx_15(__VA_ARGS__)
 #define _hwx_15(h,e,f,x,...)		_HW_B(_hwx_15,x)(h,e,f,x,__VA_ARGS__)
 #define _hwx_151(h,f,z,y,...)		y(__VA_ARGS__)
-//#define _hwx_150(...)			HW_E(internal error [_hwx_150(__VA_ARGS__)] )
-#define _hwx_150(h,e,...)		HW_E(e) do{}while(0)
+#define _hwx_150(h,e,...)		HW_E(e) hw_foo()
 /*
  *  2nd arg is an object of class c
  */
@@ -496,7 +497,12 @@
 /* Fake object? */
 #define _hwx_70(h,f,c,o,x,...)		_HW_B(_hwx_8,_hw_is__fake_##c)(h,f,c,o)
 #define _hwx_81(...)			// Nothing to do, fake is always OK.
-#define _hwx_80(h,f,c,o)		/* h##f##_ */ HW_E_OCM(o,c,f)
+/*
+ *  Error
+ */
+#define _hwx_80(h,f,c,o)		HW_B(_hwx_80,h##actions_##c)(h,f,c,o)
+#define _hwx_800(h,f,c,o)		HW_E(HW_EM_OCM(o,c,f)) hw_foo()
+#define _hwx_801(h,f,c,o)		HW_E(HW_EM_AOCL(f,o,c,HW_A1(h##actions_##c))) hw_foo()
 
 
 /**
@@ -582,5 +588,5 @@
 #define _hw_uintt01(n)			uint8_t
 #define _hw_uintt00(n)			HW_BW(_hw_uintt1,16,n)(n)
 #define _hw_uintt11(n)			uint16_t
-#define _hw_uintt10(n)			HW_E(HW_EM_XNIL(n,(8,16)) uint8_t
+#define _hw_uintt10(n)			HW_E(HW_EM_XNIL(n,(8,16))) uint8_t
 

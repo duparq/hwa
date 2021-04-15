@@ -73,7 +73,7 @@
 #include "attinyx5_fuses.h"
 
 
-#define hw_int0_irq			_irq,  1, core0,     ie,    if
+#define hw_int0_irq			_irq,  1, int0,      ie,    if
 #define hw_pcic0_irq			_irq,  2, pcic0,     ie,    if
 #define hw_counter1_compare0_irq	_irq,  3, counter1,  ocie0, ocif0
 #define hw_counter1_irq			_irq,  4, counter1,  ie,    if
@@ -176,7 +176,7 @@ typedef struct {
 #  define HW_NC_PB5			0
 #endif
 
-#define HW_PORTB_NCMSK			0xC0 + HW_NC_PB5*0x20 + HW_NC_PB4*0x10 + HW_NC_PB3*0x08
+#define HW_PORTB_NCMSK			(0xC0 + HW_NC_PB5*0x20 + HW_NC_PB4*0x10 + HW_NC_PB3*0x08)
 
 #define _hw_portb_ncmsk			, HW_PORTB_NCMSK
 
@@ -192,10 +192,13 @@ typedef struct {
 /*  Relatives
  */
 #define hw_portb_pcic			pcic0
+//#define hw_portb_pcic			_pxa, 0, ~HW_PORTB_NCMSK
+
 
 /*  (pin,...) notation
  */
 #define hw_pin_usck			_ioa, portb, 1, 2
+#define hw_pin_int0			_ioa, portb, 1, 2
 #define hw_pin_do			_ioa, portb, 1, 1
 #define hw_pin_di			_ioa, portb, 1, 0
 
@@ -709,10 +712,11 @@ typedef struct {
 #include "../hwa_2.h"
 #include "../classes/c1_2.h"
 #include "../classes/corea_2.h"
+#include "../classes/wda_2.h"
+#include "../classes/inta_2.h"
 #include "../classes/ioa_2.h"
 #include "../classes/gpa_2.h"
 #include "../classes/pxa_2.h"
-#include "../classes/wda_2.h"
 #include "../classes/psa_2.h"
 #include "../classes/oca_2.h"
 #include "../classes/cta_2.h"

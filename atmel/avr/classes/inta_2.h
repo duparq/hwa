@@ -11,10 +11,9 @@
 
 /**
  * @addtogroup atmelavr_inta
- * @section atmelavr_inta_act Actions
+ * @section atmelavr_intaif Interface
  *
- * <br>
- * `configure`:
+ * @act hw( configure, ... ) and hwa( configure, ... )
  *
  * @code
  * hw | hwa( configure,   int0,
@@ -26,24 +25,24 @@
  * @endcode
  */
 #define hw_configure__inta		, _hw_cfinta
-#define _hw_cfinta( o,a, ...)		_hwx_cfinta(_hw,o,__VA_ARGS__,)
+#define _hw_cfinta( o,a, ...)		_hw_cfinta_(_hw,o,__VA_ARGS__,)
 
 #define hwa_configure__inta		, _hwa_cfinta
-#define _hwa_cfinta( o,a, ...)		_hwx_cfinta(_hwa,o,__VA_ARGS__,)
+#define _hwa_cfinta( o,a, ...)		_hw_cfinta_(_hwa,o,__VA_ARGS__,)
 
 
 /*	Mandatory argument `sense`
  */
-#define _hwx_cfinta(h,o,k,...)		HW_BW(_hwx_cfinta1,sense,k)(h,o,k,__VA_ARGS__)
-#define _hwx_cfinta10(h,o,k,...)	HW_E(HW_EM_AN(k,sense))
-#define _hwx_cfinta11(h,o,k,v,...)	HW_B(_hwx_cfinta11,_hw_inta_sense_##v)(h,o,v,__VA_ARGS__)
-#define _hwx_cfinta110(h,o,v,...)	HW_E(HW_EM_VAL(v,sense,(low_level,edge,falling_edge,rising_edge)))
-#define _hwx_cfinta111(h,o,v,...)	x##_write(o,sc,HW_A1(_hw_inta_sense_##v)) HW_EOL(__VA_ARGS__)
+#define _hw_cfinta_(h,o,k,...)		HW_BW(_hw_cfinta1,sense,k)(h,o,k,__VA_ARGS__)
+#define _hw_cfinta10(h,o,k,...)		HW_E(HW_EM_AN(k,sense))
+#define _hw_cfinta11(h,o,k,v,...)	HW_BV(_hw_cfinta11,intasense_,v,o,h)(__VA_ARGS__) // PUSH
+#define _hw_cfinta110(v,o,h)		HW_E(HW_EM_VAL(v,sense,(low_level,edge,falling_edge,rising_edge))) HW_EAT // POP
+#define _hw_cfinta111(v,o,h)		h##_write(o,sc,v) HW_EOL // POP
 
-#define _hw_inta_sense_low_level	, 0
-#define _hw_inta_sense_edge		, 1
-#define _hw_inta_sense_falling_edge	, 2
-#define _hw_inta_sense_rising_edge	, 3
+#define _hw_intasense_low_level		, 0
+#define _hw_intasense_edge		, 1
+#define _hw_intasense_falling_edge	, 2
+#define _hw_inta1sense_rising_edge	, 3
 
 
 /**
