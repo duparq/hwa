@@ -245,7 +245,6 @@ class Application:
                 sys.stdout.write("%d\n" % x )
             return
 
-
         #  Compute a CRC32?
         #
         if self.options.crc32:

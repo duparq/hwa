@@ -43,10 +43,10 @@ class Device():
         if decode_fuses:
             s += self.s_fuses(self.fuses)
         elif show_fuses:
-            s += _("  Fuses ext byte: 0x%02X\n" % ord(self.fuses[2]))
-            s += _("  Fuses high byte: 0x%02X\n" % ord(self.fuses[3]))
-            s += _("  Fuses low byte: 0x%02X\n" % ord(self.fuses[0]))
-            s += _("  Fuses lock bits: 0x%02X\n" % ord(self.fuses[1]))
+            s += _("  Fuses ext byte: 0x%02X\n" % self.fuses[2])
+            s += _("  Fuses high byte: 0x%02X\n" % self.fuses[3])
+            s += _("  Fuses low byte: 0x%02X\n" % self.fuses[0])
+            s += _("  Fuses lock bits: 0x%02X\n" % self.fuses[1])
         return s
 
     def s_fuses(self, fuses):
@@ -57,16 +57,16 @@ class Device():
             +self.s_fuse_lb(fuses)+self.s_fuse_lk(fuses)
 
     def s_fuse_eb(self, fuses):
-        return _("  Fuses ext byte: 0x%02X\n" % ord(fuses[2]))
+        return _("  Fuses ext byte: 0x%02X\n" % fuses[2])
 
     def s_fuse_hb(self, fuses):
-        return _("  Fuses high byte: 0x%02X\n" % ord(fuses[3]))
+        return _("  Fuses high byte: 0x%02X\n" % fuses[3])
 
     def s_fuse_lb(self, fuses):
-        return _("  Fuses low byte: 0x%02X\n" % ord(fuses[0]))
+        return _("  Fuses low byte: 0x%02X\n" % fuses[0])
 
     def s_fuse_lk(self, fuses):
-        return _("  Fuses lock bits: 0x%02X\n" % ord(fuses[1]))
+        return _("  Fuses lock bits: 0x%02X\n" % fuses[1])
 
 
     def appstat(self, data):
