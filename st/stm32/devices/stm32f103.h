@@ -46,35 +46,26 @@
  *      * i2s2
  *      * i2s3
  *
- *  * Nested Vectored Interrupt Controller
- *    * @ref stm32_nvica "nvic"
+ *  * Interrupts
+ *    * @ref stm32_nvica "nvic": Nested Vectored Interrupt Controller
  *
  *  * System Tick timer
  *    * @ref stm32_stka "systick"
  *
- *  * I/Os
- *    * @ref stm32_gpa "porta": @ref stm32_ioa "(porta,0..15)"
- *    * @ref stm32_gpa "portb": @ref stm32_ioa "(portb,0..15)"
- *    * @ref stm32_gpa "portc": @ref stm32_ioa "(portc,0..15)"
- *    * @ref stm32_gpa "portd": @ref stm32_ioa "(portd,0..15)"
- *    * @ref stm32_gpa "porte": @ref stm32_ioa "(porte,0..15)"
+ *  * GPIOs
+ *    * @ref stm32_gpa "porta..e": GPIO ports
+ *      * @ref stm32_ioa "(porta..e,0..15)": GPIO pins
  *
  *  * Analog-to-digital converter
- *    * @ref stm32_ada "adc1"
- *    * @ref stm32_ada "adc2"
+ *    * @ref stm32_ada "adc1..2"
  *
- *  * Advanced-control counter-timer
- *    * counter1
+ *  * Counter-timers
+ *    * counter1: advanced-control counter-timer
+ *    * @ref stm32_cta "counter2..4": general-purpose counter-timers
+ *      * @ref stm32_cca "channel1..4": capture-compare channel
  *
- *  * General-purpose counter-timers
- *    * @ref stm32_cta "counter2"
- *    * @ref stm32_cta "counter3"
- *    * @ref stm32_cta "counter4"
- *
- *  * Universal synchronous asynchronous receiver transmitter (USART)
- *    * @ref stm32_usarta "usart1"
- *    * @ref stm32_usarta "usart2"
- *    * @ref stm32_usarta "usart3"
+ *  * Serial interfaces
+ *    * @ref stm32_usarta "usart1..3": universal synchronous asynchronous receiver transmitter (USART)
  *    * uart4
  *    * uart5
  */

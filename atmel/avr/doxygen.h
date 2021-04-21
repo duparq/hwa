@@ -5,11 +5,6 @@
  */
 
 /**
- * @ingroup atmel
- * @defgroup atmelavr AVR
- */
-
-/**
  * @ingroup atmelavr
  * @defgroup atmelavr_devices Devices
  * 										

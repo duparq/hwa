@@ -9,12 +9,51 @@
  * @brief Definitions common to all Espressif devices that do not produce C code
  */
 
-#if !defined DOXYGEN
-#  define HW_DEVICE_VENDOR_ESPRESSIF
-#  define HW_DEVICE_ARCH_XTENSA
-#  define HW_DEVICE_VENDOR		espressif
-#  define HW_DEVICE_ARCH		xtensa
-#endif
+/**
+ * @addtogroup esp8266
+ * @{
+ *
+ * @name Target device description
+ *
+ * These definitions are computed by HWA from the target device name and the
+ * definitions provided by the user.
+ *
+ * @{
+ */
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY		esp8266
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY_ESP8266
+
+/**
+ * Device vendor
+ */
+#define HW_DEVICE_VENDOR		espressif
+
+/**
+ * Device vendor
+ */
+#define HW_DEVICE_VENDOR_ESPRESSIF
+
+/**
+ * Device architecture
+ */
+#define HW_DEVICE_ARCH			xtensa
+
+/**
+ * Device architecture
+ */
+#define HW_DEVICE_ARCH_XTENSA
+
+/** @} */
+/** @} */
+
 
 #if !defined __ASSEMBLER__
 typedef signed int int8_t __attribute__((__mode__(__QI__)));
@@ -28,5 +67,7 @@ typedef unsigned int uint64_t __attribute__((__mode__(__DI__)));
 typedef int32_t intptr_t;
 typedef uint32_t uintptr_t;
 #endif
+
+#include "hwa_errors.h"		/* Family specific error messages */
 
 #include "../hwa/hwa_1.h"

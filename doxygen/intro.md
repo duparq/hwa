@@ -1,5 +1,5 @@
 
-Intro {#intro}
-==============
+Introduction {#intro}
+============
 
 #include "../README.md"

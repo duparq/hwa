@@ -2,10 +2,6 @@
 /* These groups will be listed in the same order in the documentation */
 
 /**
- * @defgroup hwa HWA
- */
-
-/**
  * @defgroup atmel Atmel
  */
 
@@ -29,6 +25,10 @@
  * Software-emulated controllers can provide features that are not implemented
  * on a target device. Their interface is designed in the hope that they can be
  * used as a drop-in replacement.
+ */
+
+/**
+ * @defgroup hwa HWA
  */
 
 /**

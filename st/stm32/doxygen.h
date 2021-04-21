@@ -5,18 +5,13 @@
  */
 
 /**
- * @ingroup stm
- * @defgroup stm32 STM32
+ * @ingroup stm32
+ * @defgroup stm32_devices STM32 Devices
  */
 
 /**
  * @ingroup stm32
- * @defgroup stm32_devices Devices
- */
-
-/**
- * @ingroup stm32
- * @defgroup stm32_classes Classes
+ * @defgroup stm32_classes STM32 Classes
  *
  * * @ref hwa_irq
  * * @ref stm32_evt
@@ -24,7 +19,7 @@
 
 /**
  * @ingroup stm32
- * @defgroup stm32_boards Development boards
+ * @defgroup stm32_boards STM32 Development boards
  *
  * Pre-defined boards used to compile the examples.
  */

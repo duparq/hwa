@@ -22,6 +22,16 @@
  */
 
 /**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY		stm32
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY_STM32
+
+/**
  *  Device vendor
  */
 #define HW_DEVICE_VENDOR_ST
@@ -45,7 +55,7 @@
 /** @} */
 
 
-#include "hwa_errors.h"
+#include "hwa_errors.h"		/* Family specific error messages */
 
 
 /*  Keywords for stm32

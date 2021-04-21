@@ -2,8 +2,8 @@
 HWA: HardWare Advanced
 ======================
 
-HWA is essentially a set of C definitions designed for bare metal hardware
-programming with a pleasant generic style.
+HWA is essentially a set of C definitions designed for bare metal programming
+of hardware with a generic, pleasant style.
 
 To give you an idea, the following code blinks a LED connected to an
 STM32F103RBT6 using Systick interrupts and sleeping mode:
@@ -54,7 +54,7 @@ Briefly, HWA provides:
  * a generic instruction, `hwa(...)`, that provides a transactional processing
    mechanism that allows further optimization of the binary code produced,
  * an error-checking mechanism that produces meaningful messages to help the
-   developer quickly solve the problems.
+   developer quickly find a solution.
 
 
 Performances and compatibility
@@ -64,10 +64,9 @@ Any C compiler compatible with the
 [C11](https://en.wikipedia.org/wiki/C11_%28C_standard_revision%29) standard
 should be able to compile HWA code.
 
-Because it is not a library, using HWA does not affect negatively the efficiency
-of the binary code produced either in terms of size, execution speed, or memory
-used. HWA helps the compiler's optimizers produce a binary that is as efficient
-as if the developer had written smart accesses to hardware registers himself.
+Being a header-only library, HWA helps the compiler to produce the most
+efficient machine code, as if the developer had himself written smart accesses
+to hardware registers.
 
 HWA relies heavily on macro definitions to implement object-oriented generic
 instructions. As the C preprocessor can be used to parse assembly language code,

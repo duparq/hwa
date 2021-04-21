@@ -22,6 +22,16 @@
  */
 
 /**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY		avr
+
+/**
+ *  Device family
+ */
+#define HW_DEVICE_FAMILY_AVR
+
+/**
  * Device vendor
  */
 #define HW_DEVICE_VENDOR		atmel
@@ -63,5 +73,6 @@ typedef uint16_t			uintptr_t;
 /** @} */
 
 
-#include "hwa_errors.h"
+#include "hwa_errors.h"		/* Family specific error messages */
+
 #include "../../hwa/hwa_1.h"

@@ -233,7 +233,7 @@ $(OUTDIR)/%.o: %.c
 #  We want .sx files to be preprocessed first
 #
 $(OUTDIR)/%.o: $(OUTDIR)/%.cp.sx
-	@echo "RULE: $@ : $^"
+#	@echo "RULE: $@ : $^"
 	@mkdir -p $(OUTDIR)
 	$(CC) $(AFLAGS) -c $< -o $@
 

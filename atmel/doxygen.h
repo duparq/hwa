@@ -5,5 +5,6 @@
  */
 
 /**
- * @defgroup atmel Atmel
+ * @ingroup atmel
+ * @defgroup atmelavr Atmel AVR
  */

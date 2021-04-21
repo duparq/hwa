@@ -65,12 +65,15 @@
 #define ARDUINO
 #define NANODCCDUINO
 
+#define PIN_RX0				(portd,0)
+#define PIN_TX1				(portd,1)
 #define PIN_D2				(portd,2)	// INT0
 #define PIN_D3				(portd,3)	// OC2B INT1
 #define PIN_D4				(portd,4)	//	T0
 #define PIN_D5				(portd,5)	// OC0B T1
 #define PIN_D6				(portd,6)	// OC0A AIN0
 #define PIN_D7				(portd,7)	//	AIN1
+
 #define PIN_D8				(portb,0)	// ICP1
 #define PIN_D9				(portb,1)	// OC1A
 #define PIN_D10				(portb,2)	// OC1B SS
@@ -89,6 +92,7 @@
 #define PIN_ANALOG_INPUT		(pin,adc0)
 
 #define PIN_LED				(portb,5)
+
 
 /*  Pins for swuart1
  */
