@@ -153,16 +153,26 @@
 /*
  *  hw_c_r is a word.
  */
-#define _HW_CODR4_0(c,o,d,r,...)	_HW_B(_HW_CODR5_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+//#define _HW_CODR4_0(c,o,d,r,...)	_HW_B(_HW_CODR5_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+#define _HW_CODR4_0(c,o,d,r,...)	_HW_B(_HW_CODR40,hw_class_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
+/*
+ *  hw_c_r is an object
+ */
+#define _HW_CODR401(c,o,d,r,...)	_HW_B(_HW_CODR5_,_hw_isa_reg_##__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*
  *  hw_c_r is a register
  *    Convert the register definition to a memory definition.
  */
 #define _HW_CODR5_1(c,o,d,r,cr,...)	HW_OXR(cr,r,__VA_ARGS__,c,o,HW_RP d)
 /*
- *  hw_c_r is not a register, try a function hw_c_
+ *  hw_c_r is not a register
+ *    Return the definition
  */
-#define _HW_CODR5_0(c,o,d,r,...)	_HW_CODR6(c,o,d,r,hw_##c##_)
+#define _HW_CODR5_0(c,o,d,r,rc,...)	rc,(o,r),(__VA_ARGS__)
+/*
+ *  hw_c_r is not an object, try a function hw_c_
+ */
+#define _HW_CODR400(c,o,d,r,...)	_HW_CODR6(c,o,d,r,hw_##c##_)
 #define _HW_CODR6(...)			_HW_CODR7(__VA_ARGS__)
 #define _HW_CODR7(c,o,d,r,...)		_HW_B(_HW_CODR7_,__VA_ARGS__)(c,o,d,r,__VA_ARGS__)
 /*

@@ -9,18 +9,19 @@
  * @brief HSI
  */
 
+#define _hw_actions__hsia	, (power,stat)
+#define _hwa_actions__hsia	, (power,stat)
+
 /**
- * @ingroup stm32_classes
- * @defgroup stm32_hsia Class _hsia: HSI oscillator
+ * @addtogroup stm32_hsia
  *
- * @section stm32_hsia_act Actions
+ * @section stm32_hsiaif Interface
  *
- * * Power the HSI on/off:
+ * * Power control
  *
  * @code
  * hw|hwa( power, hsi,   on
- *                     | off
- * );
+ *                     | off );
  * @endcode
  */
 
@@ -29,22 +30,14 @@
 /**
  * @addtogroup stm32_hsia
  *
- * * Get the status of the HSI (the only flag it
- * contains is `ready`):
+ * * Status:
  *
  * @code
+ * // Wait for the HSI clock to be stable.
+ * //
  * hw_stat_t(hsi) st = hw(stat,hsi) ;
+ * while ( ! st.ready ) {}
  * @endcode
- *
- * @code
- * while ( ! hw(stat,hsi).ready ) {}	// Wait for the HSI clock to be stable.
- * @endcode
- * <br>
- *
- * @section stm32_hsia_reg Registers
- *
- * Logical registers:
- *
  */
 
 /*  Status of the HSI
@@ -55,8 +48,8 @@ typedef struct {
     unsigned int _2_31 : 30 ;
 } _hw_sthsi_t ;
 
-#define hw_stat_t__hsia			, _hw_stthsi
-#define _hw_stthsi(o,a,...)		 _hw_sthsi_t HW_EOL(__VA_ARGS__)
+#define hw_stat_t__hsia		, _hw_stthsi
+#define _hw_stthsi(o,a,...)	 _hw_sthsi_t HW_EOL(__VA_ARGS__)
 
-#define hw_stat__hsia			, _hw_sthsi
-#define _hw_sthsi(o,a,...)		(*(volatile _hw_sthsi_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)
+#define hw_stat__hsia		, _hw_sthsi
+#define _hw_sthsi(o,a,...)	(*(volatile _hw_sthsi_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)

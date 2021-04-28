@@ -11,17 +11,13 @@
 
 /**
  * @addtogroup stm32_gpa
- * @section stm32_gpa_act Actions
+ * @section stm32_gpaif Interface
  *
- * `power`:
+ *  * Power control
+ *
  * @code
- * hw | hwa( power, port0,   on
- *			   | off );
- * @endcode
- * <br>
- * @code
- * hw | hwa( power, ((porta,0),port),	  on
- *					   | off );
+ * hw|hwa( power, PORT,   on
+ *			| off );
  * @endcode
  */
 

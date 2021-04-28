@@ -167,11 +167,12 @@ AFLAGS		+= $(INCLUDES)
 #  went wrong with the HWA macros. Use the -B option to force make rebuild the
 #  target.
 #
-%.cp.c: %.c
+%.cp.c: %.c force
 #	@echo "RULE $@: $^"
-	@echo "$(CPP) $(CFLAGS) $< >$@"
-	@$(CPP) $(CFLAGS) $< >$@
-#	$(CPP) $(CFLAGS) $< |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl | sed -e 's/#/\/\//g' > $@
+	@$(CPP) $(CFLAGS) $< >$@ && sed -n '/^--/,$$p' $@ |sed -e 's/;/;\n/g'|bcpp -s -i 2 -bcl
+
+.PHONY: force
+force: ;
 
 #  .sx files must first be preprocessed in order to catch HWA error messages and
 #  format them for a correct display

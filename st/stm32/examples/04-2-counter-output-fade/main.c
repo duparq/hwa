@@ -7,14 +7,14 @@
 /**
  * @example
  *
- * This program fades LED1 ((porta,2)) using one channel output of a counter.
+ * This program fades LED1 (porta,2) using one channel output of a counter.
  *
  * The counting direction of the counter (up/down) is output on LED2. It can
  * synchronize an oscilloscope to view the PWM signal.
  *
- * You can direct the output signal to _ioa, portb, 1, 10 instead of LED2 ((porta,3)) after having
- * powered its port and the afio. This requires a remapping of the counter that
- * is handled by HWA.
+ * You can direct the output signal to (portb,10) instead of LED2 (porta,3)
+ * after having powered its port and the afio. This requires a remapping of the
+ * counter that is handled by HWA.
  *
  * @par main.c
  */
@@ -24,7 +24,6 @@
 #define COUNTER		counter2
 #define CHANNEL		channel3
 #define DUTYMAX		100
-
 
 /*  Service the counter IRQ (every overflow or underflow, then the frequency of
  *  the IRQ does not depend on the counting mode of the counter, but the

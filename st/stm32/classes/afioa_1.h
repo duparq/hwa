@@ -65,6 +65,9 @@ typedef struct {
 
 
 /*  Table of signals mapping for alternate pin functions
+ *
+ *    Each signal name gets the address of the pin that must be configured for
+ *    this alternate function.
  */
 typedef struct {
   uint8_t	error ;

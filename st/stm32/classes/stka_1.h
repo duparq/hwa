@@ -12,6 +12,34 @@
 /**
  * @ingroup stm32_classes
  * @defgroup stm32_stka Class _stka: SysTick timer (STK)
+ *
+ * @section stm32_stkarel Relatives
+ *
+ * * @ref hwa_irq "Interrupts"
+ *   * `(systick,irq)`
+ *
+ * * @ref hwa_reg "Registers"
+ *   * `(systick,tenms)`
+ *   * `(systick,onems)`
+ *
+ * According to PM0056, the `_stka` class SysTick timer has a `tenms` logical
+ * register that holds the factory calibration value for a 10 ms period.
+ *
+ * In fact, for the STM32F103, the value of `tenms` is 9000. Then, the
+ * calibration value minus 1 gives a 1 ms period (yes, ONE ms) when the SysTick
+ * is clocked at 9 MHz (72 MHz / 8).
+ *
+ * For that reason, HWA also provides a `onems` logical register that is the
+ * same as `tenms` but maybe less confusing.
+ *
+ * @code
+ * //  1 ms period when AHB is clocked at 9 MHz
+ * //
+ * hw( configure, systick,
+ *     clock,	  ahb,
+ *     reload,	  (hw(read, (systick,onems)) - 1) & 0xFFFFFF,
+ *     run,	  yes );
+ * @endcode
  */
 #define hw_class__stka
 
@@ -32,6 +60,8 @@
 #define hw__stka_skew			_cb1, calib, 1, 30
 #define hw__stka_tenms			_cb1, calib, 24, 0
 #define hw__stka_onems			_cb1, calib, 24, 0	// PM0056 fix
+
+#define hw__stka_irq			_irq, ie, if, 0		// Clear flag writing 0
 
 
 #if !defined __ASSEMBLER__

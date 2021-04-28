@@ -72,9 +72,9 @@
 #define _hwa_docfusia( o, _mode, _clock )			\
   if ( _mode != HW_A1(_hw_usia_mode_spi_master)			\
        && _mode != HW_A1(_hw_usia_mode_spi_slave) )		\
-    HWA_E(HW_EM_VANI(mode,_mode));				\
+    HWA_E(HW_EM_TBD(mode,_mode));				\
   if ( _clock != HW_A1(_hw_usia_clock_software) )		\
-    HWA_E(HW_EM_VANI(clock,_clock));				\
+    HWA_E(HW_EM_TBD(clock,_clock));				\
   _hwa_write( o, wm, 1 );					\
   _hwa_write( o, cs, 2 );					\
   if ( _mode == HW_A1(_hw_usia_mode_spi_master) ) {		\

@@ -52,8 +52,8 @@
 #define _hw_cfusarta(o,a,k,...)		do{ HW_B(_hwx_cfusarta_k_,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfusarta(o,a,k,...)	do{ HW_B(_hwx_cfusarta_k_,k)(_hwa,o,k,__VA_ARGS__) }while(0)
 #else
-#define _hw_cfusarta(o,a,k,...)		HW_E(HW_EM_NIY())
-#define _hwa_cfusarta(o,a,k,...)	HW_E(HW_EM_NIY())
+#define _hw_cfusarta(o,a,k,...)		HW_E(HW_EM_TBD())
+#define _hwa_cfusarta(o,a,k,...)	HW_E(HW_EM_TBD())
 #endif
 
 /*  At least one keyword

@@ -185,16 +185,18 @@
 
 /**
  * @ingroup hwa_dev
- * @brief Whether an argument in surrounded by parentheses.
  * @hideinitializer
+ *
+ * Detect an argument surrounded by parentheses.
  */
 #define _hw_par(...)			, 1
 
 
 /**
  * @ingroup hwa_dev
- * @defgroup hwa_obj Class _obj
- * @brief Generic object class.
+ * @hideinitializer
+ *
+ * Generic object class.
  */
 #define hw_class__obj
 
@@ -282,8 +284,8 @@
  */
 #define hw_class__m11
 
-#define hw_actions__m11		, (read,toggle,write)
-#define hwa_actions__m11	, (toggle,write)
+#define _hw_actions__m11	, (read,toggle,write)
+#define _hwa_actions__m11	, (toggle,write)
 
 
 /*
@@ -318,8 +320,89 @@
  */
 #define hw_class__m22
 
-#define hw_actions__m22		, (read,toggle,write)
-#define hwa_actions__m22	, (toggle,write)
+#define _hw_actions__m22	, (read,toggle,write)
+#define _hwa_actions__m22	, (toggle,write)
+
+/**
+ * @ingroup hwa_classes
+ * @defgroup hwa_reg Register
+ *
+ * A HWA register object is a set of consecutive bits (1 or more). It can
+ * correspond to a hardware register or to one or two subsets of one or two
+ * hardware registers.
+ *
+ * A register object is accessed through the object it pertains to, using the
+ * path notation: `(object, register)`.
+ *
+ * Register objects give access to subsets of their content using the path
+ * notation:
+ *
+ *  * `(object,register,p)`: the single bit at position `p` in the register object;
+ *  * `(object,register,n,p)`: `n` bits from position `p` in the register object.
+ *
+ * `HW_ADDRESS()` gives the address of a register object if it corresponds to a
+ * single hardware register:
+ *
+ * @code
+ * addr = HW_ADDRESS( (counter0,cs) )
+ * @endcode
+ *
+ * `HW_POSITION()` gives the position of the least significant bit in the
+ * corresponding hardware register:
+ *
+ * @code
+ * addr = HW_POSITION( (counter0,cs) )
+ * @endcode
+ *
+ * `HW_BITS()` gives the number of bits of a register:
+ *
+ * @code
+ * addr = HW_BITS( (counter0,cs) )
+ * @endcode
+ *
+ * @section hwa_regif Interface
+ *
+ * Operations on registers can use the `hw(...)` instruction to act immediatly,
+ * or the transactional machanism with `hwa(...)`.
+ *
+ *  * Reading a register:
+ *
+ * @code
+ * //  Read register `wgm` of `counter0`:
+ * //
+ * uint8_t x = hw( read, (counter0,wgm) );
+ * @endcode
+ *
+ * @code
+ * //  Store bits 7 & 6 of register `pin` of `porta`
+ * //  in bits 1 & 0 of `x`:
+ * //
+ * uint8_t x = hw( read, (porta,pin,2,6) );
+ * @endcode
+ *
+ *  * Writing a register:
+ *
+ * @code
+ * //  write register `wgm` of `counter0`:
+ * //
+ * hw( write, (counter0,wgm), 2 );
+ * @endcode
+ *
+ * @code
+ * //  Set bits 5 & 4, and reset bits 3 & 2 of
+ * //  register `ddr` of `porta`:
+ * //
+ * hw( write, (porta,ddr,4,2), 0x0C );
+ * @endcode
+ *
+ *  * Toggling a register:
+ *
+ * @code
+ * //  Toggle bit 1 of register `port` of `porta`:
+ * //
+ * hw( toggle, (porta,port,1) );
+ * @endcode
+ */
 
 
 /**
@@ -343,6 +426,8 @@
  * @ingroup hwa_dev
  * @brief The virtual object 'pin' handles the '(pin,...)' notation.
  * @hideinitializer
+ *
+ * -
  */
 #define hw_pin				_pin, -1
 #define hw_class__pin
@@ -442,7 +527,7 @@
 
 /**
  * @ingroup hwa_pub
- * @brief `HW_IMPLEMENT(object,...)` defines the functions that implement an object.
+ * @brief Defines the functions that implement an object.
  * @hideinitializer
  *
  * External objects usually rely on functions to implement their HWA

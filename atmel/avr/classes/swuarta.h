@@ -306,12 +306,6 @@
 #define hw_configure__swuarta		, _hw_cfswuarta
 #define hwa_configure__swuarta		, _hwa_cfswuarta
 
-/**
- * @ingroup hwa_dev
- *
- * @todo HW_SWUARTA() now uses _hw_a() instead of _hwa() now used by IOs.
- */
-
 #define _hwa_cfswuarta(o,t,r,i,ct,cw,cp,ps,as,fr,k,...)			\
   do {									\
     _hwa_cfswuarta_t(r,t);						\

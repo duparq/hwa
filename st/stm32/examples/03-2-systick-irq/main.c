@@ -33,14 +33,14 @@ int main ( )
    * the PLL to be locked before actually switching.
    */
   hwa( configure,  pll,
-       source,     hsi/2,
+       input,      hsi/2,
        multiplier, SYSHZ/(HW_DEVICE_HSIHZ/2) );
   hwa( connect, sysclk, pll );
   hwa( commit );
 
   /*  Turn the PLL on.
    */
-  hwa( turn, pll, on );
+  hwa( power, pll, on );
   hwa( commit );
 
   /* Wait for the PLL to be locked.
@@ -49,9 +49,7 @@ int main ( )
 
   /*  Configure the AHB
    */
-  hwa( configure, ahb,
-       clock,     sysclk,
-       prescaler, SYSHZ/AHBHZ );
+  hwa( clock, ahb, sysclk / (SYSHZ/AHBHZ) );
   hwa( commit );
 
   /*  Configure the GPIO pin

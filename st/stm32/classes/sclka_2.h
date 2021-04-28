@@ -8,33 +8,34 @@
  * @file
  * @brief Class _sclka
  */
+#define hw_class__sclka
+
+#define hw_sysclk			_sclka, 0
 
 /**
  * @ingroup stm32_classes
  * @defgroup stm32_sclka Class _sclka: SYSCLK
  *
- * `connect`:
+ * @section stm32_sclkaif Interface
+ *
+ * * Source
+ *
  * @code
- * hw | hwa ( connect, sysclk,	 hsi
- *			       | pll
- *			       | hse );
+ * hw|hwa( connect, sysclk,   hsi
+ *			    | pll
+ *			    | hse );
  * @endcode
- * <br>
  */
-#define hw_class__sclka
-#define hw_sysclk			_sclka, 0
-
 #define hw_connect__sclka		, _hw_cnsysclka
+#define _hw_cnsysclka(o,a,v,...)	HW_BV(_hwx_cnsysclka,cnsysclka_,v,_hw,o,__VA_ARGS__)
+
 #define hwa_connect__sclka		, _hwa_cnsysclka
+#define _hwa_cnsysclka(o,a,v,...)	HW_BV(_hwx_cnsysclka,cnsysclka_,v,_hwa,o,__VA_ARGS__)
 
 #define _hw_cnsysclka_hsi		, 0
 #define _hw_cnsysclka_hse		, 1
 #define _hw_cnsysclka_pll		, 2
 
-#define _hw_cnsysclka(o,a,v,g,...)	HW_B(_hwx_cnsysclka1_,g)(_hw,v,g)
-#define _hwa_cnsysclka(o,a,v,g,...)	HW_B(_hwx_cnsysclka1_,g)(_hwa,v,g)
-
-#define _hwx_cnsysclka1_0(h,v,g)	HW_E(HW_EM_G(g))
-#define _hwx_cnsysclka1_1(h,v,g)	HW_B(_hwx_cnsysclka2_,_hw_cnsysclka_##v)(h,v)
-#define _hwx_cnsysclka2_0(h,v)		HW_E(HW_EM_VL(v,(hsi,hse,pll)))
-#define _hwx_cnsysclka2_1(h,v)		h##_write(rcc,sw,HW_A1(_hw_cnsysclka_##v))
+#define _hwx_cnsysclka_(v,...)		HW_E(HW_EM_VL(v,(hsi,hse,pll)))
+#define _hwx_cnsysclka0(v,...)		HW_E(HW_EM_VL(v,(hsi,hse,pll)))
+#define _hwx_cnsysclka1(r,h,o,...)	h##_write(rcc,sw,r)

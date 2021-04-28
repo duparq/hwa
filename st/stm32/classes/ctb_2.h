@@ -1,18 +1,18 @@
 
 /* This file is part of the HWA project.
- * Copyright (c) 2017 Christophe Duparquet.
+ * Copyright (c) 2021 Christophe Duparquet.
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
 /**
  * @file
- * @brief General-purpose 16-bit counter-timer
+ * @brief General-purpose 32-bit counter-timer
  */
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
- * @section stm32_ctaif Interface
+ * @section stm32_ctbif Interface
  *
  * By default, hw( configure, COUNTER, ... ) and hwa( configure, COUNTER, ... )
  * configure the COUNTER as a counter:
@@ -57,10 +57,10 @@
  *     which the timers are connected.
  */
 
-#define hw_class__cta
+#define hw_class__ctb
 
-#define hw_configure__cta		, _hw_cfctd
-#define hwa_configure__cta		, _hwa_cfctd
+#define hw_configure__ctb		, _hw_cfctd
+#define hwa_configure__ctb		, _hwa_cfctd
 
 #define _hw_cfctd(o,a,k,...)		do{ HW_B(_hwx_cfctd,k)(_hw,o,k,__VA_ARGS__) }while(0)
 #define _hwa_cfctd(o,a,k,...)		do{ HW_B(_hwx_cfctd,k)(_hwa,o,k,__VA_ARGS__) }while(0)
@@ -97,16 +97,16 @@
 #define _hw_cfctd_clock_channel2	, _hwx_cfctd_clock_ti2fp2
 #define _hw_cfctd_clock_xor123		, HW_E_TBI			// ti1s=  (p. 393)
 
-#define _hwx_cfctd_clock_from_apb1_psc(h,o,k,...)		\
-  h##_write(o,sms,0);						\
+#define _hwx_cfctd_clock_from_apb1_psc(h,o,k,...)			\
+  h##_write(o,sms,0);							\
   HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cfctd_clock_ti1fp1(h,o,k,...)			\
-  h##_write(o,sms,7);						\
-  h##_write(o,ts,5);						\
+#define _hwx_cfctd_clock_ti1fp1(h,o,k,...)				\
+  h##_write(o,sms,7);							\
+  h##_write(o,ts,5);							\
   HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
-#define _hwx_cfctd_clock_ti1fp2(h,o,k,...)			\
-  h##_write(o,sms,7);						\
-  h##_write(o,ts,6);						\
+#define _hwx_cfctd_clock_ti1fp2(h,o,k,...)				\
+  h##_write(o,sms,7);							\
+  h##_write(o,ts,6);							\
   HW_B(_hwx_cfctd_kdir,_hw_is_direction_##k)(h,o,k,__VA_ARGS__)
 
 
@@ -125,8 +125,8 @@
 #define _hw_cfctd_dir_updown_noloop	, _hwx_cfctd_vdir2, 13 //  11	x    1
 
 #define _hwx_cfctd_vdir0(h,o,v,...)	HW_E(HW_EM_VAL(v,direction,_hw_cfctd_dirs))
-#define _hwx_cfctd_vdir1(h,o,v,k,...)			\
-  uint8_t cmsdiropm = HW_A2(_hw_cfctd_dir_##v) ;	\
+#define _hwx_cfctd_vdir1(h,o,v,k,...)					\
+  uint8_t cmsdiropm = HW_A2(_hw_cfctd_dir_##v) ;			\
   HW_A1(_hw_cfctd_dir_##v)(h,o,k,__VA_ARGS__)
 
 #define _hwx_cfctd_vdir2(h,o,k,...)	HW_B(_hwx_cfctd_kocf,_hw_is_compare_flag_##k)(h,o,k,__VA_ARGS__)
@@ -135,16 +135,16 @@
  */
 #define _hwx_cfctd_kocf1(h,o,k,v,...)	HW_B(_hwx_cfctd_vocf,_hw_cfctd_compare_flag_##v)(h,o,v,__VA_ARGS__)
 #define _hwx_cfctd_vocf0(h,o,v,...)	HW_E(HW_EM_VOAL(v,compare_flag,(counting_up,counting_down,counting_up_or_down)))
-#define _hwx_cfctd_vocf1(h,o,v,k,...)				\
-  cmsdiropm += HW_A1(_hw_cfctd_compare_flag_##v);		\
-  h##_write(o,cmsdiropm,cmsdiropm);				\
+#define _hwx_cfctd_vocf1(h,o,v,k,...)					\
+  cmsdiropm += HW_A1(_hw_cfctd_compare_flag_##v);			\
+  h##_write(o,cmsdiropm,cmsdiropm);					\
   HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
-/* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
+  /* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
 #define _hwx_cfctd_kocf0(h,o,k,...)				\
   h##_write(o,cmsdiropm,cmsdiropm);				\
   HW_B(_hwx_cfctd_kpsc,_hw_is_prescaler_##k)(h,o,k,__VA_ARGS__)
-/* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
+  /* HW_B(_hwx_cfctd_kloop,_hw_is_loop_##k)(h,o,k,__VA_ARGS__) */
 
 #define _hw_cfctd_compare_flag_counting_down		, -8
 #define _hw_cfctd_compare_flag_counting_up		, -4
@@ -232,7 +232,7 @@
 
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
  * <br><br>hw( run, COUNTER ) and hwa( run, COUNTER ) run the counter:
  *
@@ -240,15 +240,15 @@
  * hw | hwa ( run, counter2 );
  * @endcode
  */
-#define hw_run__cta			, _hw_rnctd
+#define hw_run__ctb			, _hw_rnctd
 #define _hw_rnctd(o,a,...)		_hw_write(o,cen,1) HW_EOL(__VA_ARGS__)
 
-#define hwa_run__cta			, _hwa_rnctd
+#define hwa_run__ctb			, _hwa_rnctd
 #define _hwa_rnctd(o,a,...)		_hwa_write(o,cen,1) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
  * <br><br>hw( stop, COUNTER ) and hwa( stop, COUNTER ) stop the counter:
  *
@@ -256,15 +256,15 @@
  * hw | hwa ( stop, counter2 );
  * @endcode
  */
-#define hw_stop__cta			, _hw_spctd
+#define hw_stop__ctb			, _hw_spctd
 #define _hw_spctd(o,a,...)		_hw_write(o,cen,0) HW_EOL(__VA_ARGS__)
 
-#define hwa_stop__cta			, _hwa_spctd
+#define hwa_stop__ctb			, _hwa_spctd
 #define _hwa_spctd(o,a,...)		_hwa_write(o,cen,0) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
  * <br><br>hw( read, COUNTER ) returns the value of the counting register:
  *
@@ -272,12 +272,12 @@
  * uint16_t v = hw( read, counter2 );
  * @endcode
  */
-#define hw_read__cta			, _hw_rdctd
+#define hw_read__ctb			, _hw_rdctd
 #define _hw_rdctd(o,a,...)		_hw_read(o,cnt)
 
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
  * <br><br>hw( write, COUNTER, value ) sets the value of the counting register:
  *
@@ -285,12 +285,12 @@
  * uint16_t v = hw( write, counter2, 500 );
  * @endcode
  */
-#define hw_write__cta			, _hw_wrctd
+#define hw_write__ctb			, _hw_wrctd
 #define _hw_wrctd(o,a,v,...)		_hw_write(o,cnt,(v) & 0xFFFF) HW_EOL(__VA_ARGS__)
 
 
 /**
- * @addtogroup stm32_cta
+ * @addtogroup stm32_ctb
  *
  * <br><br>hw( stat, COUNTER ) gets the status flags and clears them:
  *
@@ -298,7 +298,7 @@
  * uint16_t v = hw( stat, counter2 );
  * @endcode
  */
-#define hw_stat__cta			, _hw_stctd
+#define hw_stat__ctb			, _hw_stctd
 #define _hw_stctd(o,a,...)		_hw_read(o,sr)
 
 
@@ -308,47 +308,38 @@
  *									       *
  *******************************************************************************/
 
-#define _hwa_setup__cta(o,a)			\
-  _hwa_setup_r( o, cr1   );			\
-  _hwa_setup_r( o, cr2   );			\
-  _hwa_setup_r( o, smcr  );			\
-  _hwa_setup_r( o, dier  );			\
-  _hwa_setup_r( o, ccmr1 );			\
-  _hwa_setup_r( o, ccmr2 );			\
-  _hwa_setup_r( o, ccer  );			\
-  _hwa_setup_r( o, psc   );			\
-  _hwa_setup_r( o, arr   );			\
-  _hwa_setup_r( o, ccr1  );			\
-  _hwa_setup_r( o, ccr2  );			\
-  _hwa_setup_r( o, ccr3  );			\
-  _hwa_setup_r( o, ccr4  )
+#define _hwa_setup__ctb(o,a)			\
+  _hwa_setup_r( o, cr1 );			\
+  _hwa_setup_r( o, cr2 );			\
+  _hwa_setup_r( o, smcr );			\
+  _hwa_setup_r( o, dier );			\
+  _hwa_setup_r( o, psc );			\
+  _hwa_setup_r( o, arr )
+  /* _hwa_setup_r( o, ccr3 ) */
 
-#define _hwa_init__cta(o,a)			\
+/* _hwa_setup_r( o, ccmr2 );			\ */
+  /* _hwa_setup_r( o, ccer );			\ */
+
+#define _hwa_init__ctb(o,a)			\
   _hwa_init_r( o, cr1,	 0x00000000 );		\
   _hwa_init_r( o, cr2,	 0x00000000 );		\
   _hwa_init_r( o, smcr,	 0x00000000 );		\
   _hwa_init_r( o, dier,	 0x00000000 );		\
-  _hwa_init_r( o, ccmr1, 0x00000000 );		\
-  _hwa_init_r( o, ccmr2, 0x00000000 );		\
-  _hwa_init_r( o, ccer,	 0x00000000 );		\
   _hwa_init_r( o, psc,	 0x00000000 );		\
-  _hwa_init_r( o, arr,	 0x00000000 );		\
-  _hwa_init_r( o, ccr1,	 0x00000000 );		\
-  _hwa_init_r( o, ccr2,	 0x00000000 );		\
-  _hwa_init_r( o, ccr3,	 0x00000000 );		\
-  _hwa_init_r( o, ccr4,	 0x00000000 )
+  _hwa_init_r( o, arr,	 0x00000000 )
+  /* _hwa_init_r( o, ccr3,	 0x00000000 ) */
 
-#define _hwa_commit__cta(o,a)			\
-  _hwa_commit_r( o, cr1   );			\
-  _hwa_commit_r( o, cr2   );			\
-  _hwa_commit_r( o, smcr  );			\
-  _hwa_commit_r( o, dier  );			\
-  _hwa_commit_r( o, ccmr1 );			\
-  _hwa_commit_r( o, ccmr2 );			\
-  _hwa_commit_r( o, ccer  );			\
-  _hwa_commit_r( o, psc   );			\
-  _hwa_commit_r( o, arr	  );			\
-  _hwa_commit_r( o, ccr1  );			\
-  _hwa_commit_r( o, ccr2  );			\
-  _hwa_commit_r( o, ccr3  );			\
-  _hwa_commit_r( o, ccr4  )
+/* _hwa_init_r( o, ccmr2, 0x00000000 );		\ */
+  /* _hwa_init_r( o, ccer,	 0x00000000 );		\ */
+
+#define _hwa_commit__ctb(o,a)			\
+  _hwa_commit_r( o, cr1 );			\
+  _hwa_commit_r( o, cr2 );			\
+  _hwa_commit_r( o, smcr );			\
+  _hwa_commit_r( o, dier );			\
+  _hwa_commit_r( o, psc );			\
+  _hwa_commit_r( o, arr	 );			\
+  /* _hwa_commit_r( o, ccr3 ) */
+
+/* _hwa_commit_r( o, ccmr2 );			\ */
+  /* _hwa_commit_r( o, ccer );			\ */

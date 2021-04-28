@@ -6,6 +6,8 @@
 
 /*	Interrupts
  */
+#if 0
+// STM32F103 to update
 #define _hw_enirq(o,v,n,m,f,...)	_hw_write(n,m,1)  HW_EOL(__VA_ARGS__)
 #define _hwa_enirq(o,v,n,m,f,...)	_hwa_write(n,m,1)  HW_EOL(__VA_ARGS__)
 
@@ -18,9 +20,26 @@
 
 #define _hw_clirq(o,v,n,m,f,...)	_hw_write(n,f,0)  HW_EOL(__VA_ARGS__)	/* Write 0 to clear */
 #define _hwa_clirq(o,v,n,m,f,...)	_hwa_write(n,f,0)  HW_EOL(__VA_ARGS__)	/* Write 0 to clear */
+#endif
+
+// Update for STM32F4
+//   o is "(object,irq)"
+//
+#define _hw_enirq(o,mask,flag,clr,...)	_hw_write( HW_A0 o, mask, 1 )  HW_EOL(__VA_ARGS__)
+#define _hwa_enirq(o,mask,flag,clr,...)	_hwa_write( HW_A0 o, mask, 1 )  HW_EOL(__VA_ARGS__)
+
+#define _hw_dsirq(o,mask,flag,clr,...)	_hw_write( HW_A0 o, mask, 0 )  HW_EOL(__VA_ARGS__)
+#define _hwa_dsirq(o,mask,flag,clr,...)	_hwa_write( HW_A0 o, mask, 0 )  HW_EOL(__VA_ARGS__)
+
+#define _hw_clirq(o,mask,flag,clr,...)	_hw_write( HW_A0 o, flag, clr )  HW_EOL(__VA_ARGS__)
+#define _hwa_clirq(o,mask,flag,clr,...)	_hwa_write( HW_A0 o, flag, clr )  HW_EOL(__VA_ARGS__)
+
+/* FIXME: should use (oject,irq,flag) and (oject,irq,mask) */
+#define _hw_rdirq(o,mask,flag,clr,...)		_hw_read( HW_A0 o, flag )  HW_EOL(__VA_ARGS__)
+#define _hw_isenirq(o,mask,flag,clr,...)	_hw_read( HW_A0 o, mask )  HW_EOL(__VA_ARGS__)
+
 
 #define _hw_enirqs(o,a,...)		hw_asm("cpsie i") HW_EOL(__VA_ARGS__)
-
 #define _hw_dsirqs(o,a,...)		hw_asm("cpsid i") HW_EOL(__VA_ARGS__)
 
 
@@ -127,6 +146,7 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
 #define _hwpwr01(h,c,o)			HW_E(HW_EM_AOCL(power,o,c,HW_A1(h##_actions_##c))) hw_foo()
 
 #define _hwpwr1(h,c,o,a,v,...)		HW_B(_hwpwr1,_hw_state_##v)(h,c,o,v,__VA_ARGS__)
+#define _hwpwr1_			_hwpwr10
 #define _hwpwr10(h,c,o,v,...)		HW_E(HW_EM_ST(v)) hw_foo()
 #define _hwpwr11(h,c,o,v,...)		_##h##_write(o,cken,HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
 

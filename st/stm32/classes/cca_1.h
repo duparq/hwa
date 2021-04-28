@@ -46,26 +46,36 @@
 #define hw__cca_ccp			, _hw_ccarg, cc, p
 
 #define hw__cca_ccie			, _hw_ccarg, cc, ie
+#define hw__cca_ccif			, _hw_ccarg, cc, if
 
-/* #define _hw_ccarg(p1,p2,o,c,n)		_hw_ccarg1(hw__cta_##p1##n##p2,c,hw_##c) */
-/* #define _hw_ccarg1(...)			_hw_ccarg2(__VA_ARGS__) */
-/* #define _hw_ccarg2(rc,r,rbn,rbp,o,c,a)	HW_OXR(rc,,r,rbn,rbp,c,o,a) */
-
-#define _hw_ccarg(p1,p2,o,c,n)		_hw_ccarg1((c,channel##n,p1##p2),hw__cta_##p1##n##p2,c,hw_##c,hw__cta_dier)
+#define _hw_ccarg(a,b,o,n)		_hw_ccarg1(HW_RP o, a##n##b)
 #define _hw_ccarg1(...)			_hw_ccarg2(__VA_ARGS__)
-#define _hw_ccarg2(s,cb1,r,rbn,rbp,o,c,a,rc,ra,rwm,rfm)	_m11,s,(o,r,rc,a+ra,rwm,rfm,rbn,rbp)
+#define _hw_ccarg2(ct,cn,x)		HW_BED(_hw_ccarg2,hw__cta_##x,ct,cn,x)
+#define _hw_ccarg20(ct,cn,x,...)	HW_E(HW_EM_OO(o,x))
+#define _hw_ccarg21(ct,cn,x,rc,r,bn,bp)	_hw_ccarg3(ct,hw_##ct,hw__cta_##r,r,bn,bp)
+#define _hw_ccarg3(...)			_hw_ccarg4(__VA_ARGS__)
+#define _hw_ccarg4(ct,ctc,cta,rc,ra,rwm,rfm,r,rbn,rbp)	_m11,(ct,r),(ct,r,rc,cta+ra,rwm,rfm,rbn,rbp)
+
+/*	Generate IRQ objects
+ *	  _hw_ccairq is called by HW_X() with the channel name "(counterX,channelY)"
+ *        and the channel definition "Y".
+ *	  The IRQ object references the counter's registers.
+ */
+#define hw__cca_irq			, _hw_ccairq
+
+#define _hw_ccairq(o,n)			_hw_ccairq1(HW_RP o, n)
+#define _hw_ccairq1(...)		_hw_ccairq2(__VA_ARGS__)
+#define _hw_ccairq2(ct,cn,n)		_irq, (ct,irq), (cc##n##ie, cc##n##if, 0)
 
 
 #define hwa_read__cca			, _hwa_rdcca
-#define _hwa_rdcca(o,c,n,...)		_hwa_read(c,ccr##n) HW_EOL(__VA_ARGS__)
+#define _hwa_rdcca(o,n,...)		_hwa_read(HW_A0 o,ccr##n) HW_EOL(__VA_ARGS__)
 
 #define hw_read__cca			, _hw_rdcca
-#define _hw_rdcca(o,c,n,...)		_hw_read(c,ccr##n) HW_EOL(__VA_ARGS__)
-
-
+#define _hw_rdcca(o,n,...)		_hw_read(HW_A0 o,ccr##n) HW_EOL(__VA_ARGS__)
 
 #define hwa_write__cca			, _hwa_wrcca
-#define _hwa_wrcca(o,c,n,v,...)		_hwa_write(c,ccr##n,v) HW_EOL(__VA_ARGS__)
+#define _hwa_wrcca(o,n,v,...)		_hwa_write(HW_A0 o,ccr##n,v) HW_EOL(__VA_ARGS__)
 
 #define hw_write__cca			, _hw_wrcca
-#define _hw_wrcca(o,c,n,v,...)		_hw_write(c,ccr##n,v) HW_EOL(__VA_ARGS__)
+#define _hw_wrcca(o,n,v,...)		_hw_write(HW_A0 o,ccr##n,v) HW_EOL(__VA_ARGS__)

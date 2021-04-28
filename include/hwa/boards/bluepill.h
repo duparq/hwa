@@ -13,7 +13,7 @@
  * @ingroup stm32_boards
  * @defgroup stm32_board_bluepill Board from www.vcc-gnd.com aka "Blue pill"
  *
- * There is a STM32F103C8T6 with:
+ * There is a @ref stm32f103 "STM32F103C8T6" with:
  *  * one 8 MHz crystal
  *  * one 32768 Hz crystal
  *  * one reset button

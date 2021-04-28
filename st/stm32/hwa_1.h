@@ -13,7 +13,7 @@
  * @addtogroup stm32
  * @{
  *
- * @name Target device description
+ * @name Device description
  *
  * These definitions are computed by HWA from the target device name and the
  * definitions provided by the user.
@@ -60,7 +60,24 @@
 
 /*  Keywords for stm32
  */
+#define _hw_is_48MHzdiv_48MHzdiv		, 1
 #define _hw_is_compare_flag_compare_flag	, 1
+#define _hw_is_sysclkdiv_sysclkdiv		, 1
+#define _hw_is__isr__isr			, 1
+
+
+#define hw__irq_flag			, _hw_irqf
+#define _hw_irqf(o,m,f,x)		HW_CODG(HW_COD(HW_A0 o),f)
+
+#define hw__irq_mask			, _hw_irqm
+#define _hw_irqm(o,m,f,x)		HW_CODG(HW_COD(HW_A0 o),m)
+
+
+#define HW_ISR(...)			_HW_ISR01(__VA_ARGS__,,,,)
+#define _HW_ISR01(o,r,...)		_HW_ISR02(_hw_isr_##o##_##r,o,r,__VA_ARGS__)
+#define _HW_ISR02(x,...)		HW_BW(_HW_ISR1,_isr,x)(x,__VA_ARGS__)
+#define _HW_ISR10(x,o,r,...)		HW_E(HW_EM_ISR(o r)) void HW_G2(hw,__COUNTER__)()
+#define _HW_ISR11(c,n,esr,o,x,...)	void esr() HW_ISR_ATTRIBUTES; HW_EOL(__VA_ARGS__) void esr()
 
 
 #if !defined __ASSEMBLER__

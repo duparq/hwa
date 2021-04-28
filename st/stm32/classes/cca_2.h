@@ -52,8 +52,8 @@
 
 /*  At least one keyword
  */
-#define _hw_cfcca(o,c,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hw,c,n,k,__VA_ARGS__) }while(0)
-#define _hwa_cfcca(o,c,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hwa,c,n,k,__VA_ARGS__) }while(0)
+#define _hw_cfcca(o,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hw,HW_A0 o,n,k,__VA_ARGS__) }while(0)
+#define _hwa_cfcca(o,n,k,...)		do{ HW_B(_hwx_cfcca,k)(_hwa,HW_A0 o,n,k,__VA_ARGS__) }while(0)
 
 #define _hwx_cfcca1(...)		HW_E(HW_EM_AML((function,level)))
 
@@ -62,7 +62,7 @@
 #define _hwx_cfcca0(h,c,n,k,...)	HW_BW(_hwx_cfcca_fun,function,k)(h,c,n,k,__VA_ARGS__)
 #define _hwx_cfcca_fun0(h,c,n,k,...)	HW_E(HW_EM_AN(k,function))
 #define _hwx_cfcca_fun1(h,c,n,k,v,...)	HW_BW(_hwx_cfcca_fun1,compare,v)(h,c,n,v,__VA_ARGS__)
-#define _hwx_cfcca_fun10(h,c,n,v,...)	HW_E(HW_EM_VANI(v,function)
+#define _hwx_cfcca_fun10(h,c,n,v,...)	HW_E(HW_EM_TBD(v,function)
 #define _hwx_cfcca_fun11(h,c,n,v,k,...)	h##_write(c,cc##n##s,0); HW_BW(_hwx_cfcca_res,level,k)(h,c,n,k,__VA_ARGS__)
 
 /*  Mandatory argument 'level'
@@ -92,10 +92,10 @@
 
 #define _hwx_cfcca_coe(h,c,n,k,...)	HW_BW(_hwx_cfcca_coe,clear_on_etr,k)(h,c,n,k,__VA_ARGS__)
 #define _hwx_cfcca_coe0(h,c,n,k,...)	HW_BW(_hwx_cfcca_lat,latch,k)(h,c,n,k,__VA_ARGS__)
-#define _hwx_cfcca_coe1(h,c,n,k,v,...)	HW_BV(_hwx_cfcca_coe1,state_,v,h,c,n)(h,c,n,__VA_ARGS__)
+#define _hwx_cfcca_coe1(h,c,n,k,v,...)	HW_BV(_hwx_cfcca_coe1,state_,v,h,c,n)(h,c,n,__VA_ARGS__)//PUSH
 #define _hwx_cfcca_coe10(v,...)		HW_E(HW_EM_ST(v)) HW_EAT
-#define _hwx_cfcca_coe1_(v,h,c,n)	h##_write(c,oc##n##ce,v); _hwx_cfcca_lat
-#define _hwx_cfcca_coe11(v,h,c,n)	h##_write(c,oc##n##ce,v); _hwx_cfcca_lat
+#define _hwx_cfcca_coe1_(v,h,c,n)	h##_write(c,oc##n##ce,v); _hwx_cfcca_lat//POP
+#define _hwx_cfcca_coe11(v,h,c,n)	h##_write(c,oc##n##ce,v); _hwx_cfcca_lat//POP
 
 
 /*  Optionnal argument 'latch'

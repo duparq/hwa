@@ -36,11 +36,19 @@
 #define hw_class__nvi
 
 #define hw__nvica_			, _hw_nvicarl
-#define _hw_nvicarl(o1,o2,...)		_hw_nvicarl1(o1,o2,hw_##o2##_irq,)
+/* #define _hw_nvicarl(o1,o2,...)		_hw_nvicarl1(o1,o2,hw_##o2##_irq,) */
+/* #define _hw_nvicarl1(...)		_hw_nvicarl2(__VA_ARGS__) */
+/* #define _hw_nvicarl2(o1,o2,x,...)	HW_BW(_hw_nvicarl2,_irq,x)(o1,o2,x,__VA_ARGS__) // PUSH */
+/* #define _hw_nvicarl21(o1,o2,c,a,...)	_nvi, a */
+/* #define _hw_nvicarl20(o1,o2,...)	,o1,HW_EM_OO(o1,o2) */
+
+#define _hw_nvicarl(o1,o2,...)		_hw_nvicarl1(o2,_hw_isr_##o2##_,)
 #define _hw_nvicarl1(...)		_hw_nvicarl2(__VA_ARGS__)
-#define _hw_nvicarl2(o1,o2,x,...)	HW_BW(_hw_nvicarl2,_irq,x)(o1,o2,x,__VA_ARGS__) // PUSH
-#define _hw_nvicarl21(o1,o2,c,a,...)	_nvi, a
-#define _hw_nvicarl20(o1,o2,...)	,o1,HW_EM_OO(o1,o2)
+#define _hw_nvicarl2(o,x,...)		HW_BW(_hw_nvicarl2,_isr,x)(o,x,__VA_ARGS__)
+#define _hw_nvicarl20(o,...)		,(nvic,o),HW_EM_OO(nvic,o)
+#define _hw_nvicarl21(o,c,n,isr,...)	HW_B(_hw_nvicarl3,n)(o,n,__VA_ARGS__)
+#define _hw_nvicarl31(o,n,...)		,(nvic,o),HW_EM_OO(nvic,o)
+#define _hw_nvicarl30(o,n,...)		_nvi, n
 
 
 #if !defined __ASSEMBLER__

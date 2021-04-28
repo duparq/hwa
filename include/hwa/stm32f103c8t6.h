@@ -55,12 +55,12 @@
 /**
  *  Flash size in bytes
  */
-#define HW_DEVICE_FLASH_SIZE		64*1024
+#define HW_DEVICE_FLASH_SIZE		(64*1024)
 
 /**
  *  RAM size in bytes
  */
-#define HW_DEVICE_RAM_SIZE		20*1024
+#define HW_DEVICE_RAM_SIZE		(20*1024)
 
 /** @} */
 

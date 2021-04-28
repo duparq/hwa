@@ -38,7 +38,7 @@ int main ( )
   /* Configure the PLL source and multiplier (must be done before it is enabled).
    */
   hwa( configure,  pll,
-       source,     hse/2,
+       input,      hse/2,
        multiplier, SYSHZ/HW_DEVICE_HSEHZ );
 
   /* Prepare the connection of the sysclk to the pll. The hardware will wait for
@@ -49,7 +49,7 @@ int main ( )
 
   /*  Turn the PLL on.
    */
-  hwa( turn, pll, on );
+  hwa( power, pll, on );
   hwa( commit );
 
   /* Wait for the PLL to be locked.
@@ -62,9 +62,8 @@ int main ( )
 
   /*  Configure the AHB
    */
-  hwa( configure, ahb,
-       clock,     sysclk,
-       prescaler, SYSHZ/AHBHZ );
+  hwa( clock, ahb, sysclk / (SYSHZ/AHBHZ) );
+
   hwa( commit );
 
   /*  Configure the GPIO pin

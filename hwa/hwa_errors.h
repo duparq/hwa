@@ -47,13 +47,13 @@
 #define HW_EM_AML(l)		expected at least one argument of l
 #define HW_EM_AN(a,n)		expected argument HW_Q(n) instead of HW_Q(a)
 #define HW_EM_CAN(c,a,n)	constructor c expects an argument HW_Q(n) instead of HW_Q(a)
+#define HW_EM_CANTREMAP		remapping is impossible
 #define HW_EM_COR(o)		configuration of `o` is required
 #define HW_EM_COMMITRQ		committing is required before setting a new value
 #define HW_EM_CMOO(o1,o2)	configuration mismatch beween `o1` and `o2`
 #define HW_EM_FO(f,o)		no function `f` for `o`
 #define HW_EM_G(x)		garbage starting at HW_Q(x)
 #define HW_EM_KX(k,x)		expected HW_Q(k) instead of HW_Q(x)
-#define HW_EM_NIY(...)		not implemented yet
 #define HW_EM_NKX(n,k,x)	expected HW_Q(k) instead of HW_Q(x) in HW_Q(n)
 #define HW_EM_NOP		no operation
 #define HW_EM_O(x)		HW_Q(x) is not an object
@@ -61,8 +61,9 @@
 #define HW_EM_OCM(o,c,m)	object HW_Q(o) of class HW_Q(c) has no method HW_Q(m)
 #define HW_EM_OM()		missing object name
 #define HW_EM_OMAP(o)		remapping error for `o`
-#define HW_EM_PMAP(p)		pin `o` is already mapped to another signal
+#define HW_EM_MAP		signal is already mapped to another pin
 #define HW_EM_IONC		IO contains disconnected pins
+#define HW_EM_ISR(o)		no ISR known for `o`
 #define HW_EM_ONC(o)		HW_Q(o) is not connected
 #define HW_EM_OO(o,x)		HW_Q(o) has no relative HW_Q(x)
 #define HW_EM_OPTIM		you may have forgotten to turn optimizations on
@@ -72,10 +73,10 @@
 #define HW_EM_SL(l)		suggest you try one of l
 #define HW_EM_ST(x)		HW_Q(x) is not in (0,1,on,off,yes,no)
 #define HW_EM_SY(s)		syntax is s
+#define HW_EM_TBD(...)		to be done (this feature is not implemented yet) [__VA_ARGS__]
 #define HW_EM_V			missing value
 #define HW_EM_VAL(v,a,l)	value HW_Q(v) for argument HW_Q(a) is not in l
 #define HW_EM_VAM(a)		missing value for argument HW_Q(a)
-#define HW_EM_VANI(v,a)		value HW_Q(v) for argument HW_Q(a) is not implemented yet
 #define HW_EM_VL(v,l)		value HW_Q(v) is not in l
 #define HW_EM_VOAL(v,a,l)	value HW_Q(v) for optionnal argument HW_Q(a) is not in l
 #define HW_EM_VOAST(v,a)	value HW_Q(v) for optionnal argument HW_Q(a) is not in (0,1,on,off,yes,no)

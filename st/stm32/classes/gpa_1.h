@@ -13,7 +13,14 @@
  * @ingroup stm32_classes
  * @defgroup stm32_gpa Class _gpa: 16-bit GPIO port
  *
- * A class `_gpa` object is a 16-bit GPIO port.
+ * @section stm32_gparel Relatives
+ *
+ *  * Access to GPIO @ref stm32_ioa "pins":
+ *    * `(PORT,p)`: single pin at position `p`
+ *    * `(PORT,n,p)`: `n` consecutive pins at position `p`
+ *
+ *  * @ref hwa_reg "Registers"
+ *    * `crl`, `crh`, `idr`, `odr`, `bsrr`, `brr`, `lckr`
  */
 #define hw_class__gpa
 
@@ -75,13 +82,13 @@
 #if !defined __ASSEMBLER__
 
 typedef struct {
-  hwa_r32_t crl ;
-  hwa_r32_t crh ;
-  hwa_r32_t idr ;
-  hwa_r32_t odr ;
-  hwa_r32_t bsrr;
-  hwa_r32_t brr ;
-  hwa_r32_t lckr;
+  hwa_r32_t	crl ;
+  hwa_r32_t	crh ;
+  hwa_r32_t	idr ;
+  hwa_r32_t	odr ;
+  hwa_r32_t	bsrr;
+  hwa_r32_t	brr ;
+  hwa_r32_t	lckr;
 
   uint32_t	toggles ;
 } hwa_gpa_t ;

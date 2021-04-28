@@ -33,15 +33,19 @@
 /*  Return the mask register of an _irq.
  *  Can not use HW_CODR since it's blued.
  */
+#ifndef hw__irq_mask
 #define hw__irq_mask			, _hw_irqm
 #define _hw_irqm(oo,v,o,m,f)		_hw_irqm1(o,hw_##o,hw_##o##_##m)
 #define _hw_irqm1(...)			_hw_irqm2(__VA_ARGS__)
 #define _hw_irqm2(o,c,a,rc,...)		HW_OXR(rc,,__VA_ARGS__,c,o,a)
+#endif
 
+#ifndef hw__irq_flag
 #define hw__irq_flag			, _hw_irqf
 #define _hw_irqf(oo,v,o,m,f)		_hw_irqf1(o,hw_##o,hw_##o##_##f)
 #define _hw_irqf1(...)			_hw_irqf2(__VA_ARGS__)
 #define _hw_irqf2(o,c,a,rc,...)		HW_OXR(rc,,__VA_ARGS__,c,o,a)
+#endif
 
 #define hw__irq_			, _hw_irq_
 #define _hw_irq_(oo,r,v,o,m,f)		_hw_irq1(o,r,hw_##o##_irq_##r)
@@ -72,6 +76,7 @@
  *    AVR use '(object,irq)' as argument for HW_ISR().
  *    STM32 use 'object[,reason]' and looks for a _hw_isr_object[_reason] declaration (-> _HW_ISR20)
  */
+#ifndef HW_ISR
 #define HW_ISR(...)			_HW_ISR0(__VA_ARGS__,,,)
 #define _HW_ISR0(o,...)			_HW_ISR1( HW_C3(HW_X(o)), __VA_ARGS__ )
 #define _HW_ISR1(...)			_HW_ISR2(__VA_ARGS__)
@@ -148,6 +153,7 @@
 #define _HW_ISRXX30(x,...)	__attribute((x)) HW_B(_HW_ISRXX3,__VA_ARGS__)(__VA_ARGS__)
 #define _HW_ISRXX21(...)
 #define _HW_ISRXX31(...)
+#endif // ifndef HW_ISR
 
 
 /**

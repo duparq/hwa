@@ -16,10 +16,11 @@
  * This class is used by:
  *
  * * @ref stm32f103 "STM32F103": `nvic`
+ * * @ref stm32f411 "STM32F411": `nvic`
  *
  * @section Actions
  *
- * * enable/disable IRQs at the NVIC level:
+ * * enable/disable an ISR:
  *
  * @code
  * hw|hwa( enable, (nvic,OBJECT) );

@@ -13,6 +13,8 @@
  * @ingroup hwa_dev
  * @brief Element a0 of the list a0,...
  * @hideinitializer
+ *
+ * -
  */
 #define HW_A0(...)			_HW_A0_2(__VA_ARGS__,)
 #define _HW_A0_2(a0,...)		a0
@@ -28,6 +30,8 @@
  * @ingroup hwa_dev
  * @brief Element a1 of the list a0,a1,...
  * @hideinitializer
+ *
+ * -
  */
 #define HW_A1(...)			_HW_A1_2(__VA_ARGS__,,)
 #define _HW_A1_2(a0,a1,...)		a1
@@ -51,41 +55,33 @@
 
 /**
  * @ingroup hwa_dev
- * @brief Replace the definition of an object by its name in the beginning of a list.
- *
- *    This is used by functions that accept HWA-built objects as arguments, such
- *    as HW_SWTWIMASTER. The functions get the definition instead of the object
- *    name.
- *
- * @hideinitializer
- */
-#define HW_ANAME(x,...)			_HW_B(_HW_ANAME1_,_hw_par x)(x,__VA_ARGS__)
-#define _HW_ANAME1_1(...)		HW_E(HW_EM_TBI)
-#define _HW_ANAME1_0(x,...)		_HW_B(_HW_ANAME2_,hw_class_##x)(x,__VA_ARGS__)
-#define _HW_ANAME2_1(c,o,d,...)		o,__VA_ARGS__
-#define _HW_ANAME2_0(...)		__VA_ARGS__
-
-
-/**
- * @ingroup hwa_dev
- * @brief  Put parentheses around arguments of a definition from 3rd position on.
- * @hideinitializer
- */
-#define HW_D3(...)			_HW_D3(__VA_ARGS__)
-#define _HW_D3(c,o,...)			c,o,(__VA_ARGS__)
-
-
-/**
- * @ingroup hwa_dev
  * @brief  Reduce the definition of the object in first position to one single
  *  element in parentheses: '(c,o,d)'
  * @hideinitializer
+ *
+ * -
  */
 #define HW_AD(x,...)			_HW_B(_HW_AD1,_hw_par x)(x,__VA_ARGS__)
 #define _HW_AD11(x,...)			(HW_D3(HW_X x)),__VA_ARGS__
 #define _HW_AD10(x,...)			_HW_B(_HW_AD2,hw_class_##x)(x,__VA_ARGS__)
 #define _HW_AD21(c,o,d,...)		(c,o,d),__VA_ARGS__
 #define _HW_AD20(x,...)			(HW_D3(HW_X(x))),__VA_ARGS__
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief Replace the definition of an object by its name in the beginning of a list.
+ * @hideinitializer
+ *
+ *    This is used by functions that accept HWA-built objects as arguments, such
+ *    as HW_SWTWIMASTER. The functions get the definition instead of the object
+ *    name.
+ */
+#define HW_ANAME(x,...)			_HW_B(_HW_ANAME1_,_hw_par x)(x,__VA_ARGS__)
+#define _HW_ANAME1_1(...)		HW_E(HW_EM_TBI)
+#define _HW_ANAME1_0(x,...)		_HW_B(_HW_ANAME2_,hw_class_##x)(x,__VA_ARGS__)
+#define _HW_ANAME2_1(c,o,d,...)		o,__VA_ARGS__
+#define _HW_ANAME2_0(...)		__VA_ARGS__
 
 
 /**
@@ -122,13 +118,76 @@
 
 /**
  * @ingroup hwa_dev
- * @brief  Branch depending on the value of a symbol.
+ * @brief  Branch depending on the expansion of a definition.
+ * @hideinitializer
+ *
+ * HW_BED(f,x,...) expands to:
+ *  * f1(...,{definition of x}) if x expands to the definition of an object
+ *  * f0(...,x) otherwise
+ */
+#define HW_BED(f,x,...)		_HW_BED1((f,__VA_ARGS__),x,) ,x)//PUSH
+#define _HW_BED1(a,x,...)	_HW_BED2(a,hw_class_##x)
+#define _HW_BED2(...)		_HW_BED3(__VA_ARGS__,)
+#define _HW_BED3(a,x,...)	_HW_BED4(a,_hw_is__##x,0,)
+#define _HW_BED4(...)		_HW_BED5(__VA_ARGS__)
+#define _HW_BED5(a,x,r,...)	_HW_BED6(r, HW_RP a)
+#define _HW_BED6(...)		_HW_BED7(__VA_ARGS__)
+#define _HW_BED7(x,f,...)	f##x(__VA_ARGS__ //POP
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief  Branch depending on an expansion starting with void
+ * @hideinitializer
+ *
+ * HW_BEZ(f,x,...) expands to:
+ *  * f1(...,{expansion of x}) if x expands to ' , ...'
+ *  * f0(...,x) otherwise
+ */
+#define HW_BEZ(f,x,...)		_HW_BEZ1((f,__VA_ARGS__),x,)	,x)//PUSH
+#define _HW_BEZ1(a,x,...)	_HW_BEZ4(a,_hw_is__##x,0,)
+#define _HW_BEZ4(...)		_HW_BEZ5(__VA_ARGS__)
+#define _HW_BEZ5(a,x,r,...)	_HW_BEZ6(r, HW_RP a)
+#define _HW_BEZ6(...)		_HW_BEZ7(__VA_ARGS__)
+#define _HW_BEZ7(x,f,...)	f##x(__VA_ARGS__ //POP
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief  Branch depending on a parenthesis element.
+ * @hideinitializer
+ *
+ * HW_BP(f,x) expands to:
+ *  * f1 if x is '(...)'
+ *  * f0 otherwise
+ */
+#define HW_BP(f,x)			_HW_BP0(f,_hw_par x,0)
+#define _HW_BP0(...)			_HW_BP1(__VA_ARGS__)
+#define _HW_BP1(f,x,r,...)		f##r
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief  Branch depending on a value.
  * @hideinitializer
  *
  * HW_BV(f,p,s,...) expands to:
- *  * f_(s,...) if s is '(...)'
- *  * f0(s,...) if _hw_ps is not defined, i.e. its expansion does not start with a void
- *  * f1(r,...) where r is the 2nd and following elements of expansion of _hw_ps, i.e. the defined value
+ *  * `f_(s,...)` if `s` is '(...)'.
+ *  * `f0(s,...)` if the expansion of `_hw_<p><s>` does not start with a void.
+ *  * `f1(r,...)` where `r` is the 2nd and following elements of the expansion of `_hw_<p><s>`.
+ *
+ * Example:
+ * @code
+ * //  The following code provides the following expansions:
+ * //
+ * //      fun((foo),bar) -> fun_((foo),x) (bar)
+ * //      fun(foo,bar) -> fun0(foo,x) (bar)
+ * //      fun(yes,bar) -> fun1(yesval,x) (bar)
+ * //
+ * #define fun(v,...)			HW_BV(fun,funval_,v,x)(__VA_ARGS__)
+ *
+ * #define _hw_funval_yes		, yesval
+ * @endcode
  */
 #define HW_BV(f,p,s,...)		_HW_B(_HW_BV1,_hw_par s)(f,p,s,__VA_ARGS__)
 #define _HW_BV11(f,p,s,...)		f##_
@@ -147,6 +206,13 @@
  * HW_BW(f,k,w) expands to:
  *  * f0 if k is not w
  *  * f1 if k is w	(there must a: `#define` _hw_is_k_k , 1)
+ *
+ * @code
+ * #define _hw_is_key_key	, 1
+ *
+ * HW_BW(func,key,word)  ->  func0
+ * HW_BW(func,key,key)   ->  func1
+ * @endcode
  */
 #define HW_BW(...)			_HW_BW01(__VA_ARGS__,,,)
 #define _HW_BW01(f,k,w,...)		_HW_BW02(f,k,w,_hw_par w, 0,)
@@ -159,7 +225,17 @@
 #define _HW_BW051(f,k,w)		f##0
 #define _HW_BW050(f,k,w)		_HW_BW06(f,k,w,_hw_is_##k##_##w, 0,)
 #define _HW_BW06(...)			_HW_BW07(__VA_ARGS__)
-#define _HW_BW07(f,k,w,z,x,...)		f##x
+/*
+ *  Avoid concatenation in case of math expression, e.g.:
+ *    HW_BW(func,key,key/x) -> func1/x
+ */
+//#define _HW_BW07(f,k,w,z,x,...)		f##x
+#define _HW_BW07(f,k,w,z,x,...)		_HW_BW08(f,_HW_BW_##x,)
+#define _HW_BW08(...)			_HW_BW09(__VA_ARGS__)
+#define _HW_BW09(f,v,...)		f##v
+
+#define _HW_BW_0			0,
+#define _HW_BW_1			1,
 
 
 /**
@@ -193,6 +269,47 @@
 #define _HW_BZ(...)			_HW_BZ1(__VA_ARGS__,,)
 #define _HW_BZ1(f,x,...)		_HW_BZ2(f,x,0,)
 #define _HW_BZ2(f,x,r,...)		f##r
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief Get the definition of object `o` as c,o,(d). No error checking.
+ * @hideinitializer
+ *
+ * See HW_XO() for error checking.
+ */
+#define _HW_COD(o)			_HW_COD0(o)
+#define _HW_COD0(o)			_HW_COD1(o,hw_##o)
+#define _HW_COD1(...)			_HW_COD2(__VA_ARGS__)
+#define _HW_COD2(o,c,...)		c,o,(__VA_ARGS__)
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief Get the memory definition of register `r` of object `o`.
+ * @hideinitializer
+ *
+ * FIXME: to be continued.
+ *
+ */
+#define HW_CODG(...)			_HW_CODG(__VA_ARGS__)
+#define _HW_CODG(c,o,d,r)		HW_BED(_HW_CODG,hw_##o##_##r,) (c,o,d,r)//PUSH
+#define _HW_CODG0(...)			_HW_CODG01 //POP
+#define _HW_CODG01(c,o,d,r)		HW_BED(_HW_CODG1,hw_##c##_##r,) c,o,d,r)//PUSH
+#define _HW_CODG11(z,...)		_HW_CODG2(__VA_ARGS__, //POP
+#define _HW_CODG2(c,...)		_HW_CODG##c(__VA_ARGS__)
+#define _HW_CODG_cb1(r,bn,bp,c,o,d,r0)	_HW_OXR_ob1_01(o,HW_RP d,r,hw_##c##_##r,bn,bp)
+
+
+/**
+ * @ingroup hwa_dev
+ * @brief  Put parentheses around arguments of a definition from 3rd position on.
+ * @hideinitializer
+ *
+ * -
+ */
+#define HW_D3(...)			_HW_D3(__VA_ARGS__)
+#define _HW_D3(c,o,...)			c,o,(__VA_ARGS__)
 
 
 /**
@@ -325,6 +442,8 @@
  * @ingroup hwa_dev
  * @brief Build a C string from a list of elements
  * @hideinitializer
+ *
+ * -
  */
 #define HW_Q(...)			_HW_Q_2(__VA_ARGS__)
 #define _HW_Q_2(...)			#__VA_ARGS__
@@ -338,10 +457,28 @@
 #define HW_SHOW(x)			#x: x
 
 
+#if 0	// HW_BD may be used instead
+/**
+ *  Test a definition:
+ *    HW_TD(x)	expands to:
+ *      1,<definition of x> if x is the definition of an object (has a class)
+ *      0,x otherwise.
+ */
+#define HW_TD(...)		_HW_TD1(__VA_ARGS__,), __VA_ARGS__)
+#define _HW_TD1(x,...)		_HW_TD2(hw_class_##x)
+#define _HW_TD2(...)		_HW_TD3(__VA_ARGS__,)
+#define _HW_TD3(x,...)		_HW_TD4(_hw_is__##x,0,)
+#define _HW_TD4(...)		_HW_TD5(__VA_ARGS__)
+#define _HW_TD5(x,r,...)	r
+#endif
+
+
 /**
  * @ingroup hwa_dev
  * @brief Elements a1,... of the list a0,a1,...
  * @hideinitializer
+ *
+ * -
  */
 #define HW_TL(...)			_HW_TL2(__VA_ARGS__,)
 #define _HW_TL2(a0,...)			__VA_ARGS__
@@ -363,6 +500,8 @@
  * @ingroup hwa_dev
  * @brief Remove parentheses
  * @hideinitializer
+ *
+ * -
  */
 #define HW_RP(...)			__VA_ARGS__
 
@@ -498,17 +637,19 @@
 #define _hwx_70(h,f,c,o,x,...)		_HW_B(_hwx_8,_hw_is__fake_##c)(h,f,c,o)
 #define _hwx_81(...)			// Nothing to do, fake is always OK.
 /*
- *  Error
+ *  Error: list valid actions if known.
  */
-#define _hwx_80(h,f,c,o)		HW_B(_hwx_80,h##actions_##c)(h,f,c,o)
+#define _hwx_80(h,f,c,o)		HW_B(_hwx_80,_##h##actions_##c)(h,f,c,o)
 #define _hwx_800(h,f,c,o)		HW_E(HW_EM_OCM(o,c,f)) hw_foo()
-#define _hwx_801(h,f,c,o)		HW_E(HW_EM_AOCL(f,o,c,HW_A1(h##actions_##c))) hw_foo()
+#define _hwx_801(h,f,c,o)		HW_E(HW_EM_AOCL(f,o,c,HW_A1(_##h##actions_##c))) hw_foo()
 
 
 /**
  * @ingroup hwa_dev
  * @brief Private version of hw().
  * @hideinitializer
+ *
+ * -
  */
 #define _hw(...)			_hw_1(__VA_ARGS__,,)
 #define _hw_1(f,o,...)			_hw_2(f,HW_X(o),__VA_ARGS__)
@@ -524,6 +665,8 @@
  * @ingroup hwa_dev
  * @brief Private version of hwa().
  * @hideinitializer
+ *
+ * -
  */
 #define _hwa(...)			_hwa_1(__VA_ARGS__,)
 #define _hwa_1(f,o,...)			_hwa_2(f,HW_X(o),__VA_ARGS__)

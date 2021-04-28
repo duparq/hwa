@@ -1,0 +1,9 @@
+
+#	-*- Makefile -*-
+
+CPU		=	cortex-m4
+CRT0		=	st/stm32/devices/stm32f4.crt0.c
+RAMSIZE		=	131072 #(128*1024)
+FLASHSIZE	=	524288 #(512*1024)
+PROGIF		=	stlink-v2
+PROGTG		=	stm32f4x

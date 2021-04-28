@@ -9,18 +9,19 @@
  * @brief HSE
  */
 
- /* * You should define the HW_HSEHZ symbol as the crystal frequency if you use the */
- /* * HSE oscillator. */
+#define _hw_actions__hsea	, (power,stat)
+#define _hwa_actions__hsea	, (power,stat)
 
 /**
- * @ingroup stm32_classes
- * @defgroup stm32_hsea Class _hsea: HSE oscillator
- * @section stm32_hsea_act Actions
+ * @addtogroup stm32_hsea
  *
- * `power`:
+ * @section stm32_hseaif Interface
+ *
+ * * Power control
+ *
  * @code
- * hw | hwa ( power, hse,   on
- *			  | off );
+ * hw|hwa( power, hse,   on
+ *		       | off );
  * @endcode
  */
 
@@ -28,21 +29,25 @@
 
 /**
  * @addtogroup stm32_hsea
- * <br>
- * `stat`:
+ *
+ * * Status:
+ *
  * @code
- * while ( ! hw(stat,hse).ready ) {}	// Wait for the HSE clock to be stable.
+ * // Wait for the HSE clock to be stable.
+ * //
+ * hw_stat_t(hse) st = hw(stat,hse) ;
+ * while ( ! st.ready ) {}
  * @endcode
- * <br>
  */
+
 typedef struct {
     unsigned int _0_16	: 17 ;
     unsigned int ready	:  1 ;
     unsigned int _18_31 : 14 ;
 } _hw_sthse_t ;
 
-#define hw_stat_t__hsea			, _hw_stthse
-#define _hw_stthse(o,a,...)		 _hw_sthse_t HW_EOL(__VA_ARGS__)
+#define hw_stat_t__hsea		, _hw_stthse
+#define _hw_stthse(o,a,...)	 _hw_sthse_t HW_EOL(__VA_ARGS__)
 
-#define hw_stat__hsea			, _hw_sthse
-#define _hw_sthse(o,a,...)		(*(volatile _hw_sthse_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)
+#define hw_stat__hsea		, _hw_sthse
+#define _hw_sthse(o,a,...)	(*(volatile _hw_sthse_t*)HW_ADDRESS((rcc,cr))) HW_EOL(__VA_ARGS__)

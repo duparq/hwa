@@ -13,7 +13,7 @@
  * @ingroup stm32_boards
  * @defgroup mini-stm32-v3-0 Board from www.PowerMCU.com
  *
- * There is a STM32F103RBT6 with:
+ * There is a @ref stm32f103 "STM32F103RBT6" with:
  *  * one 8 MHz crystal
  *  * one 32768 Hz crystal
  *  * one reset button

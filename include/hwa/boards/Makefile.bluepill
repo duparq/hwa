@@ -1,0 +1,12 @@
+
+#	-*- Makefile -*-
+
+#ARCH		=	arm-none-eabi-
+#MMCU		=	-mcpu=cortex-m3 -mthumb 
+
+CPU		=	cortex-m3
+RAMSIZE		=	20480 #(20*1024)
+FLASHSIZE	=	65536 #(64*1024)
+CRT0		=	st/stm32/devices/stm32f1.crt0.c
+PROGIF		=	stlink-v2
+PROGTG		=	stm32f3x

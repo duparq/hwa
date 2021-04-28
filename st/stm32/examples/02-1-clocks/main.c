@@ -33,15 +33,16 @@ int main ( )
    *    the clocks to be stable before switching.
    */
   hwa( power, hse, on );
-  hwa( connect, pll, hse );
-  hwa( write, pll, (SYSHZ / HW_DEVICE_HSEHZ) );
+  hwa( configure,  pll,
+       input,      hse,
+       multiplier, SYSHZ/HW_DEVICE_HSEHZ );
   hwa( connect, sysclk, pll );
   hwa( commit );
 
   /*  Now turn the PLL on and the hardware will use it as sysclk when the PLL is
    *  locked.
    */
-  hwa( turn, pll, on );
+  hwa( power, pll, on );
   hwa( commit );
 
   /*  Power the GPIO port

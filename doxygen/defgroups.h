@@ -45,7 +45,7 @@
 
 /**
  * @ingroup hwa
- * @defgroup hwa_dev Definitions for implementating a device
+ * @defgroup hwa_dev Definitions for HWA developers
  *
  * These definitions can be used to add HWA support to a device.
  */
