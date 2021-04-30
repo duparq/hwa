@@ -1,9 +1,11 @@
 
-#	Source files
-#
-SOURCES		=	main.c stm32.c
+SOURCES		=	main.c
 
-CONFIG		=	HW_DEVICE	\
-			PIN_LED
+BOARD		?=	mini-stm32-v3.0
+BOOT		?=	RAM
+LTO		?=	OFF
+
+
+all:	elf lst size
 
 include ../make/Makefile

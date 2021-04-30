@@ -39,14 +39,14 @@
 
 int main ( )
 {
-  hw( power, (LED1,port), on );
+  hw( power, (LED,port), on );
 
-  hw( configure, LED1,
+  hw( configure, LED,
       mode,	 digital_output,
       frequency, lowest );
 
   for(;;) {
-    hw( toggle, LED1 );
+    hw( toggle, LED );
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
   }
 }

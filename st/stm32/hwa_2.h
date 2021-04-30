@@ -142,15 +142,16 @@ HW_INLINE void _hw_waste_cycles ( volatile uint32_t n )
 #define _hwa_power(c,o,...)		HW_B(_hwpwr,HW_G2(_hw_isa_reg, hw_##o##_##cken))(hwa,c,o,__VA_ARGS__)
 
 #define _hwpwr0(h,c,o,...)		HW_B(_hwpwr0,h##_actions_##c)(h,c,o)
-#define _hwpwr00(h,c,o)			HW_E(HW_EM_OCM(o,c,power)) hw_foo()
+#define _hwpwr00(h,c,o)			HW_BW(_hwpwr00,_fake,c)(h,c,o)
+#define _hwpwr000(h,c,o)		HW_E(HW_EM_OCM(o,c,power)) hw_foo()
+#define _hwpwr001(h,c,o)		extern uint8_t hw_foo()
+
 #define _hwpwr01(h,c,o)			HW_E(HW_EM_AOCL(power,o,c,HW_A1(h##_actions_##c))) hw_foo()
 
 #define _hwpwr1(h,c,o,a,v,...)		HW_B(_hwpwr1,_hw_state_##v)(h,c,o,v,__VA_ARGS__)
 #define _hwpwr1_			_hwpwr10
 #define _hwpwr10(h,c,o,v,...)		HW_E(HW_EM_ST(v)) hw_foo()
 #define _hwpwr11(h,c,o,v,...)		_##h##_write(o,cken,HW_A1(_hw_state_##v)) HW_EOL(__VA_ARGS__)
-
-
 
 
 HW_INLINE void _hw_write_r16 ( intptr_t ra, uint16_t rwm, uint16_t rfm, uint16_t mask, uint16_t value )

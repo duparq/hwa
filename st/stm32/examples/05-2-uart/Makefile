@@ -1,7 +1,9 @@
 
+#	Source files
+#
 SOURCES		=	main.c
 
-BOARD		?=	bluepill
+BOARD		?=	stm32f411e-disco
 BOOT		?=	RAM
 LTO		?=	OFF
 

@@ -57,12 +57,12 @@
   }while(0)
 
 
-
 #define _hwa_cfiob_(o,p,bn,bp,k,...)		HW_BW(_hwa_cfiobfn,function,k)(o,p,bn,bp,k,__VA_ARGS__)
 
-/*	Function?
- */
 #define _hwa_cfiobfn0(o,p,bn,bp,k,...)		HW_BW(_hwa_cfiobmd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
+/*
+ *	Function
+ */
 #define _hwa_cfiobfn1(o,p,bn,bp,k,v,...)	HW_BW(_hwa_cfiobfn1,gpio,v)(o,p,bn,bp,v,__VA_ARGS__)
 /*
  *		GPIO
@@ -75,13 +75,13 @@
 /*
  *		Can't set alternate function to multiple pins
  */
-#define _hwa_cfiobfn20(o,p,bn,bp,...)		HW_E(error)
+#define _hwa_cfiobfn20(o,p,bn,bp,...)		HW_E(HW_EM_CANTREMAP)
 /*
  *		Single pin, is function '(...)'?
  */
 #define _hwa_cfiobfn21(o,p,bn,bp,v,...)		HW_BP(_hwa_cfiobfn3,v)(o,p,bn,bp,v,__VA_ARGS__)
 /*
- *		Function is '(...)', insert expanded signal name
+ *		Function is '(...)', insert expanded signal name (assume there's only 2 elements).
  */
 #define _hwa_cfiobfn31(o,p,bn,bp,v,...)		_hwa_cfiobfn32(o,p,bn,bp,HW_G2 v,v,__VA_ARGS__)
 #define _hwa_cfiobfn32(...)			_hwa_cfiobfn4(__VA_ARGS__)

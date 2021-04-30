@@ -54,10 +54,10 @@ int main ( )
 
   /*  Configure the GPIO pin
    */
-  hwa( power, (LED1,port), on );
+  hwa( power, (LED,port), on );
   hwa( commit );
 
-  hwa( configure, LED1,
+  hwa( configure, LED,
        mode,      digital_output,
        frequency, lowest );
   hwa( commit );

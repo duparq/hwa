@@ -421,6 +421,11 @@
  */
 #define hw_fake				_fake, -1
 
+/*	Relatives of fake are fake
+ */
+#define hw__fake_			, _hw_fake_
+#define _hw_fake_(o,x,d)		_fake, fake, (-1)
+
 
 /**
  * @ingroup hwa_dev

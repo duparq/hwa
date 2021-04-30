@@ -103,55 +103,62 @@
   }while(0)
 
 
-/*  The first argument 'x' is an indicator that can be 0 or 1, telling that
- *  hwa(...) is used to configure one single pin and can process signal remaping.
- *  x==0 for hw(...).
+/*  The first argument 'x' is an indicator:
+ *    1: hwa(...) is used to configure one single pin and can process signal remaping;
+ *    0: hw(...) or multiple pins to configure -> signal remaping impossible.
  */
 #define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_BW(_hwa_cfioafn,function,k)(x,o,p,bn,bp,k,__VA_ARGS__)
 #define _hwa_cfioafn0(x,o,p,bn,bp,k,...)	HW_BW(_hwa_cfioamd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
-/*
- *  'function'. Select default or alternate function (df/af). Register signal-pin association for 'af'.
+
+/*	Function
  */
-#define _hwa_cfioafn1(x,o,p,bn,bp,k,v,...)	HW_B(_hwa_cfioafn1,_hw_par v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioafn1(x,o,p,bn,bp,k,v,...)	HW_BW(_hwa_cfioafn1,gpio,v)(x,o,p,bn,bp,v,__VA_ARGS__)
 /*
- *  Value is '(...)'. Expand it to a single name (assume there's only 2 elements).
+ *		GPIO
  */
-#define _hwa_cfioafn11(x,o,p,bn,bp,v,...)	_hwa_cfioafn12(x,o,p,bn,bp,HW_G2 v,__VA_ARGS__)
-#define _hwa_cfioafn12(...)			_hwa_cfioafn10(__VA_ARGS__)
+#define _hwa_cfioafn11(x,o,p,bn,bp,v,k,...)	HW_BW(_hwa_cfioamd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
 /*
- *  Value is a single name.
+ *		Alternate
  */
-#define _hwa_cfioafn10(x,o,p,bn,bp,v,...)	HW_BW(_hwa_cfioafn2,gpio,v)(x,o,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioafn10(x,o,p,bn,bp,...)		_hwa_cfioafn2##x(o,p,bn,bp,__VA_ARGS__)
 /*
- *  Value is 'gpio'. Drop the indicator 'x'. Indicate default function with 'df'. Continue.
+ *		x==0, can't set alternate function
  */
-#define _hwa_cfioafn21(x,o,p,bn,bp,v,k,...)	HW_BW(_hwa_cfioamd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioafn20(o,p,bn,bp,...)		HW_E(HW_EM_CANTREMAP)
 /*
- *  Value is not 'gpio'. Verify that indicator 'x' is 1.
+ *		Is function '(...)'?
  */
-#define _hwa_cfioafn20(x,...)			_hwa_cfioafn3##x(__VA_ARGS__)
-#define _hwa_cfioafn30(...)			HW_E(HW_EM_CANTREMAP)
+#define _hwa_cfioafn21(o,p,bn,bp,v,...)		HW_BP(_hwa_cfioafn3,v)(o,p,bn,bp,v,__VA_ARGS__)
 /*
- *  Verify that there is a definition: _hw_af_<port_1_x>_<name>
+ *		Function is '(...)', insert expanded signal name (assume there's only 2 elements).
  */
-#define _hwa_cfioafn31(o,p,bn,bp,v,...)		HW_B(_hwa_cfioafn4,_hw_af_##o##_##v)(o,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfioafn40(o,p,bn,bp,v,...)		HW_E(HW_EM_VAL(v,function,_hw_af_##o))
+#define _hwa_cfioafn31(o,p,bn,bp,v,...)		_hwa_cfioafn32(o,p,bn,bp,HW_G2 v,v,__VA_ARGS__)
+#define _hwa_cfioafn32(...)			_hwa_cfioafn4(__VA_ARGS__)
 /*
- *	Record association of signal to pin. Verification and processing is made by commit.
+ *		Function is not '(...)', copy signal name
  */
-#define _hwa_cfioafn41(o,p,bn,bp,v,k,...)			\
-  if ( hwa->map.v == 0 )					\
-    hwa->map.v = HW_ADDRESS((p,bn,bp));				\
-  else if ( hwa->map.v != HW_ADDRESS((p,bn,bp)) )		\
+#define _hwa_cfioafn30(o,p,bn,bp,v,...)		_hwa_cfioafn4(o,p,bn,bp,v,v,__VA_ARGS__)
+/*
+ *		Verify that there is a definition: _hw_af_<port_1_x>_<name>
+ */
+#define _hwa_cfioafn4(o,p,bn,bp,vx,v,...)	HW_B(_hwa_cfioafn4,_hw_af_##o##_##vx)(o,p,bn,bp,vx,v,__VA_ARGS__)
+#define _hwa_cfioafn40(o,p,bn,bp,vx,v,...)	HW_E(HW_EM_VAL(v,function,_hw_af_##o))
+/*
+ *		Record association of signal to pin. Verification and processing is made at commit time.
+ */
+#define _hwa_cfioafn41(o,p,bn,bp,vx,v,k,...)			\
+  if ( hwa->map.vx == 0 )					\
+    hwa->map.vx = HW_ADDRESS((p,bn,bp));			\
+  else if ( hwa->map.vx != HW_ADDRESS((p,bn,bp)) )		\
     HWA_E(HW_EM_MAP);						\
   HW_BW(_hwa_cfioamd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
-/*
- *  'mode'. Can drop 'o'.
- */
-#define _hwa_cfioamd0(f,o,p,bn,bp,k,v,...)	HW_E(HW_EM_AN(k,mode))
 
-#define _hwa_cfioamd1(...)			_hwa_cfioamd2(__VA_ARGS__)
-#define _hwa_cfioamd2(f,o,p,bn,bp,k,v,...)	_HW_B(_hwa_cfioamd2,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
+#define _hwa_cfioamd0(f,o,p,bn,bp,k,...)	HW_E(HW_EM_AN(k,mode))
+
+/*	Mode. Can drop 'o'.
+ */
+//#define _hwa_cfioamd1(...)			_hwa_cfioamd2(__VA_ARGS__)
+#define _hwa_cfioamd1(f,o,p,bn,bp,k,v,...)	_HW_B(_hwa_cfioamd2,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
 #define _hwa_cfioamd20(f,p,bn,bp,v,...)	\
   HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating,digital_input_pullup, \
 			 digital_input_pulldown,analog_input,digital_output, \

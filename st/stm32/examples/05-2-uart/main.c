@@ -26,6 +26,7 @@ int main ( )
 
   /*  Power the controllers we use
    */
+  /* hwa( power, (LED3,port), on ); */
   hwa( power, (UART_TX,port), on );
   hwa( power, UART, on );
   hwa( commit );
@@ -47,9 +48,16 @@ int main ( )
 
   hwa( commit );
 
+  //   Sleep between IRQs.
+  //
+  //  for(;;) hw( wait, irq );
+
   for (;;) {
     while ( hw(read,(UART,txe)) != 1 ) {}
     hw_waste_cycles( 0.003*AHBHZ );
     hw( write, (UART,dr), '.' );
+    //    hw( write, (UART,dr), '\x7F' );
+    //    hw_waste_cycles( 0.02*AHBHZ );
+    //    hw( toggle, UART_TX );
   }
 }

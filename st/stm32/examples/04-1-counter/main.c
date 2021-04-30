@@ -32,13 +32,13 @@ int main ( )
 
   /*  Power the controllers we use
    */
-  hwa( power, (LED1,port), on );
+  hwa( power, (LED,port), on );
   hwa( power, COUNTER, on );
   hwa( commit );
 
   /*  Configure GPIOs
    */
-  hwa( configure, LED1, mode, digital_output, frequency, lowest );
+  hwa( configure, LED, mode, digital_output, frequency, lowest );
   hwa( commit );
 
   /*  Configure the counter
@@ -60,6 +60,6 @@ int main ( )
    */
   for(;;) {
     hw( wait, irq );
-    hw( toggle, LED1 );
+    hw( toggle, LED );
   }
 }

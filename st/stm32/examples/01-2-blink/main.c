@@ -37,21 +37,21 @@ int main ( )
 {
   hwa( begin, reset );
 
-  hwa( power, (LED1,port), on );
+  hwa( power, (LED,port), on );
 
-  hwa( configure, LED1,
+  hwa( configure, LED,
        mode,	  digital_output,
        frequency, lowest );
 
   hwa( commit );
 
   for(;;) {
-    hwa( write, LED1, 1 );
+    hwa( write, LED, 1 );
     hwa( commit );
 
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );
 
-    hwa( write, LED1, 0 );
+    hwa( write, LED, 0 );
     hwa( commit );
 
     hw_waste_cycles( PERIOD/2 * HW_DEVICE_HSIHZ );

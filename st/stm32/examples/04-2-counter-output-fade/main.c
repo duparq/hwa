@@ -25,6 +25,10 @@
 #define CHANNEL		channel3
 #define DUTYMAX		100
 
+#if HW_ADDRESS(LED2) == -1
+#  define LED2		fake
+#endif
+
 /*  Service the counter IRQ (every overflow or underflow, then the frequency of
  *  the IRQ does not depend on the counting mode of the counter, but the
  *  frequency of the PWM output does): compute the next value of the compare
@@ -67,8 +71,7 @@ int main ( )
   hwa( power, (LED1,port), on );
   hwa( power, (LED2,port), on );
   hwa( power, COUNTER, on );
-  /* hwa( power, ((portb,10),port), on ); */
-  /* hwa( power, afio, on ); */
+  hwa( power, afio, on );
   hwa( commit );
 
   /*  Configure GPIOs
@@ -77,12 +80,6 @@ int main ( )
   hwa( configure, LED2, function, gpio, mode, digital_output );
 
   /* FIXME: no error triggered when setting function gpio and (counter2,channel1) to pa0 */
-
-  //  hwa( configure, (porta,0), function, gpio, mode, digital_output );
-  /* hwa( configure, (porta,0), function, (counter2,channel1), mode, digital_output ); */
-  /* hwa( configure, (porta,0), function, (adc12,in0), mode, digital_output ); */
-
-  /* hwa( configure, (portb,10), function, (counter2,channel3), mode, digital_output ); */
 
   /*  Configure and start the counter (sms=0, cms=3, opm=0, cen=1)
    */
