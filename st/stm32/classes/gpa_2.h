@@ -9,6 +9,10 @@
  * @brief GPIO port
  */
 
+/*  Load pins interface definitions
+ */
+#include "ioa_2.h"
+
 /**
  * @addtogroup stm32_gpa
  * @section stm32_gpaif Interface

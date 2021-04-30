@@ -1,3 +1,4 @@
+#ifndef hw_class__cca
 
 /* This file is part of the HWA project.
  * Copyright (c) 2020 Christophe Duparquet.
@@ -6,21 +7,22 @@
 
 /**
  * @file
- * @brief STM32 16-bit capture-compare channel
+ * @brief STM32 capture-compare channel
  */
 
 /**
  * @ingroup stm32_classes
- * @defgroup stm32_cca Class _cca: 16-bit capture-compare channel
+ * @defgroup stm32_cca Class _cca: capture-compare channel
  *
  * This class is used by:
  *
  * * @ref stm32f103 "STM32F103": `(COUNTER,CHANNEL)`
+ * * @ref stm32f411 "STM32F411": `(COUNTER,CHANNEL)`
  *
  * @section stm32_ccarel Relatives
  *
- * * @ref stm32_cta "(CHANNEL,counter)": the counter associated to the channel
- *
+ * * `(CHANNEL,counter)`: @ref stm32_cta "16-bit" or @ref stm32_ctb "32-bit"
+ *   counter associated to the channel
  */
 #define hw_class__cca
 
@@ -56,10 +58,12 @@
 #define _hw_ccarg3(...)			_hw_ccarg4(__VA_ARGS__)
 #define _hw_ccarg4(ct,ctc,cta,rc,ra,rwm,rfm,r,rbn,rbp)	_m11,(ct,r),(ct,r,rc,cta+ra,rwm,rfm,rbn,rbp)
 
-/*	Generate IRQ objects
- *	  _hw_ccairq is called by HW_X() with the channel name "(counterX,channelY)"
- *        and the channel definition "Y".
- *	  The IRQ object references the counter's registers.
+/*  Generate IRQ objects
+ *
+ *  _hw_ccairq is called by HW_X():
+ *	`o`: channel name "(counterX,channelY)"
+ *      `n`: channel definition (Y).
+ *  The IRQ object references the counter's registers.
  */
 #define hw__cca_irq			, _hw_ccairq
 
@@ -79,3 +83,6 @@
 
 #define hw_write__cca			, _hw_wrcca
 #define _hw_wrcca(o,n,v,...)		_hw_write(HW_A0 o,ccr##n,v) HW_EOL(__VA_ARGS__)
+
+
+#endif /* ifndef hw_class__cca */

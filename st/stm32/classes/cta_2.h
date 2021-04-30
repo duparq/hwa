@@ -9,6 +9,10 @@
  * @brief General-purpose 16-bit counter-timer
  */
 
+/*  Load the channels interface definitions
+ */
+#include "cca_2.h"
+
 /**
  * @addtogroup stm32_cta
  *

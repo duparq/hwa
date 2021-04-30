@@ -139,7 +139,6 @@
 /*	GPIO
  */
 #include "../classes/gpa_1.h"
-#include "../classes/ioa_1.h"
 
 #define hw_porta			_gpa, 0x40010800
 #define hw_portb			_gpa, 0x40010C00
@@ -303,11 +302,9 @@ typedef struct {
 
 #include "../classes/afioa_2.h"
 #include "../classes/nvica_2.h"
-#include "../classes/ioa_2.h"
 #include "../classes/gpa_2.h"
 #include "../classes/stka_2.h"
 #include "../classes/cta_2.h"
-#include "../classes/cca_2.h"
 #include "../classes/usarta_2.h"
 
 

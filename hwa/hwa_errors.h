@@ -81,6 +81,7 @@
 #define HW_EM_VOAL(v,a,l)	value HW_Q(v) for optionnal argument HW_Q(a) is not in l
 #define HW_EM_VOAST(v,a)	value HW_Q(v) for optionnal argument HW_Q(a) is not in (0,1,on,off,yes,no)
 #define HW_EM_VSL(s,l)		value `s` of symbol #s is not in l
+#define HW_EM_XWW(x,w1,w2)	expected HW_Q(w2) instead of HW_Q(x) after HW_Q(w1)
 
 #define HW_EM_XNIL(x,l)		HW_Q(x) is not in l
 #define HW_EM_XSO(x,o)		can not solve value of `x` for `o`

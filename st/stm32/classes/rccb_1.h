@@ -56,22 +56,23 @@
  * * `sw`
  */
 
-/*  Hardware registers
- *    Note: reserved bits "must be kept at reset value"
+/*  Hardware registers								   Reset value
  */
-#define hw_rcc_cr			_r32, 0x00, 0xFFFFFFFF, 0		/* rwm 0x050D00F9 */
-#define hw_rcc_pllcfgr			_r32, 0x04, 0xFFFFFFFF, 0		/* rwm 0x0F437FFF */
-#define hw_rcc_cfgr			_r32, 0x08, 0xFFFFFFFF, 0		/* rwm 0xFFFFFCF3 */
-#define hw_rcc_cir			_r32, 0x0C, 0xFFFFFFFF, 0x00BF0000 	/* rwm 0x00BF3F00 */
+#define hw_rcc_cr			_r32, 0x00, 0x050D00F9, 0		// 0x0000 XX81
+#define hw_rcc_pllcfgr			_r32, 0x04, 0x0F437FFF, 0		// 0x2400 3010
+#define hw_rcc_cfgr			_r32, 0x08, 0xFFFFFCF3, 0		// 0x0000 0000
+#define hw_rcc_cir			_r32, 0x0C, 0x00BF3F00, 0x00BF0000 	// 0x0000 0000
 //#define hw_rcc_ahb1rstr			_r32, 0x10, 
 //#define hw_rcc_ahb2rstr			_r32, 0x14, 
+
 //#define hw_rcc_apb1rstr			_r32, 0x20, 
 //#define hw_rcc_apb2rstr			_r32, 0x24, 
-#define hw_rcc_ahb1enr			_r32, 0x30, 0xFFFFFFFF, 0 
-#define hw_rcc_ahb2enr			_r32, 0x34, 0xFFFFFFFF, 0
 
-#define hw_rcc_apb1enr			_r32, 0x40, 0x3AFED3FF, 0
-#define hw_rcc_apb2enr			_r32, 0x44, 0x0038FFFD, 0
+#define hw_rcc_ahb1enr			_r32, 0x30, 0x0060109F, 0		// 0x0000 0000
+#define hw_rcc_ahb2enr			_r32, 0x34, 0x00000080, 0		// 0x0000 0000
+
+#define hw_rcc_apb1enr			_r32, 0x40, 0x10E2C80F, 0		// 0x0000 0000
+#define hw_rcc_apb2enr			_r32, 0x44, 0x00177931, 0		// 0x0000 0000
 
 /* Logical registers are implemented as object registers since there is only one
  * RCC in the device and HW_X() will find them faster this way.
@@ -163,10 +164,18 @@
 #define hw_portv_cken			_xb1, rcc, ahb1enr, 1,  1
 #define hw_porta_cken			_xb1, rcc, ahb1enr, 1,  0
 
+#define hw_usart2_en			_xb1, rcc, apb1enr, 1, 17
+#define hw_usart2_cken			_xb1, rcc, apb1enr, 1, 17	/* convenient */
+
 #define hw_counter5_cken		_xb1, rcc, apb1enr, 1, 3	/* convenient */
 #define hw_counter4_cken		_xb1, rcc, apb1enr, 1, 2	/* convenient */
 #define hw_counter3_cken		_xb1, rcc, apb1enr, 1, 1	/* convenient */
 #define hw_counter2_cken		_xb1, rcc, apb1enr, 1, 0	/* convenient */
+
+#define hw_usart1_en			_xb1, rcc, apb2enr, 1, 4
+#define hw_usart1_cken			_xb1, rcc, apb2enr, 1, 4	/* convenient */
+#define hw_usart6_en			_xb1, rcc, apb2enr, 1, 5
+#define hw_usart6_cken			_xb1, rcc, apb2enr, 1, 5	/* convenient */
 
 
 #if !defined __ASSEMBLER__
@@ -179,7 +188,9 @@ typedef struct {
   hwa_r32_t cfgr ;
   hwa_r32_t cir ;
   hwa_r32_t ahb1enr ;
+  hwa_r32_t ahb2enr ;
   hwa_r32_t apb1enr ;
+  hwa_r32_t apb2enr ;
 } hwa_rccb_t ;
 
 #endif

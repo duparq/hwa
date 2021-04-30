@@ -9,9 +9,15 @@
  * @brief General-purpose 32-bit counter-timer
  */
 
+/*  The channels rely on their counter's registers, so we can use the cca
+ *  implementation definitions with ctb counters.
+ */
+
+#include "cca_1.h"
+
 /**
  * @ingroup stm32_classes
- * @defgroup stm32_ctb Class _ctb: General-purpose 16-bit counter-timer
+ * @defgroup stm32_ctb Class _ctb: General-purpose 32-bit counter-timer
  *
  * This class is used by:
  *

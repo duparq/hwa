@@ -30,7 +30,9 @@
   _hwa_setup_r( o, cfgr	   );			\
   _hwa_setup_r( o, cir     );			\
   _hwa_setup_r( o, ahb1enr );			\
-  _hwa_setup_r( o, apb1enr )
+  _hwa_setup_r( o, ahb2enr );			\
+  _hwa_setup_r( o, apb1enr );			\
+  _hwa_setup_r( o, apb2enr )
 
 #define _hwa_init__rccb(o,a)			\
   _hwa_init_r( o, cr,	   0x00000081 );	\
@@ -38,7 +40,9 @@
   _hwa_init_r( o, cfgr,	   0x00000000 );	\
   _hwa_init_r( o, cir,     0x00000000 );	\
   _hwa_init_r( o, ahb1enr, 0x00000000 );	\
-  _hwa_init_r( o, apb1enr, 0x00000000 )
+  _hwa_init_r( o, ahb2enr, 0x00000000 );	\
+  _hwa_init_r( o, apb1enr, 0x00000000 );	\
+  _hwa_init_r( o, apb2enr, 0x00000000 )
 
 #define _hwa_commit__rccb(o,a)		\
   _hwa_commit_r( o, cr	    );		\
@@ -46,4 +50,6 @@
   _hwa_commit_r( o, cfgr    );		\
   _hwa_commit_r( o, cir     );		\
   _hwa_commit_r( o, ahb1enr );		\
-  _hwa_commit_r( o, apb1enr )
+  _hwa_commit_r( o, ahb2enr );		\
+  _hwa_commit_r( o, apb1enr );		\
+  _hwa_commit_r( o, apb2enr )

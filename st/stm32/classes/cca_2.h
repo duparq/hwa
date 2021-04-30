@@ -1,3 +1,4 @@
+#ifndef hw_configure__cca
 
 /* This file is part of the HWA project.
  * Copyright (c) 2020 Christophe Duparquet.
@@ -13,7 +14,9 @@
  * @addtogroup stm32_cca
  * @section stm32_ccaif Interface
  *
- * @subsection stm32_ccacf Configuring the channel as a compare unit with optionnal output
+ * * Configuration
+ *
+ *  Configuring the channel as a compare unit with optionnal output:
  *
  * @code
  * hwa( configure,       (counter2,channel3),   // Fig. 131, RM0008, p. 389
@@ -46,7 +49,6 @@
  * );
  * @endcode
  */
-
 #define hw_configure__cca		, _hw_cfcca
 #define hwa_configure__cca		, _hwa_cfcca
 
@@ -139,3 +141,6 @@
 #define _hwx_cfcca_out10(h,c,n,v,...)	HW_BW(_hwx_cfcca_out2,disconnected,v)(h,c,n,v,__VA_ARGS__)
 #define _hwx_cfcca_out21(h,c,n,v,...)	h##_write(c,cc##n##e,0);
 #define _hwx_cfcca_out20(h,c,n,v,...)	HW_E(HW_EM_VAL(v,output,(connected,disconnected)))
+
+
+#endif /* ifndef hw_configure__cca */

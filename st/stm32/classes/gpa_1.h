@@ -9,6 +9,10 @@
  * @brief GPIO port
  */
 
+/*  Load pins implementation definitions
+ */
+#include "ioa_1.h"
+
 /**
  * @ingroup stm32_classes
  * @defgroup stm32_gpa Class _gpa: 16-bit GPIO port

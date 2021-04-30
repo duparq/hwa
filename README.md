@@ -112,6 +112,7 @@ Supported hardware
 
  * ST STM32:
    * [STM32F103](http://duparq.free.fr/hwa/group__stm32f103.html): STM32F103C8T6, STM32F103RBT6, STM32F103VCT6
+   * [STM32F411](http://duparq.free.fr/hwa/group__stm32f411.html): STM32F411VET6
 
  * Espressif
    * [ESP8266](http://duparq.free.fr/hwa/group__esp8266.html): ESP8266

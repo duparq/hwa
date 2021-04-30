@@ -4,12 +4,14 @@
  * All rights reserved. Read LICENSE.TXT for details.
  */
 
-#include "../classes/cca_1.h"
-
 /**
  * @file
  * @brief General-purpose 16-bit counter-timer
  */
+
+/*  Load the channels implementation definitions
+ */
+#include "cca_1.h"
 
 /**
  * @ingroup stm32_classes

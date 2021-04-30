@@ -9,6 +9,10 @@
  * @brief GPIO port
  */
 
+/*  Load pins interface definitions
+ */
+#include "iob_2.h"
+
 /**
  * @addtogroup stm32_gpb
  * @section stm32_gpbif Interface

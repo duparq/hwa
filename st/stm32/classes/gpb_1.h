@@ -9,6 +9,10 @@
  * @brief GPIO port
  */
 
+/*  Load pins implementation definitions
+ */
+#include "iob_1.h"
+
 #define hw_class__gpb
 
 /**

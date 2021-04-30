@@ -92,9 +92,9 @@
 /*
  *		Verify function name for pin
  */
-#define _hwa_cfiobfn4(o,p,bn,bp,vx,v,...)	HW_BV(_hwa_cfiobfn4,af_##o##_,vx,v)  o,p,bn,bp,__VA_ARGS__)//PUSH
-#define _hwa_cfiobfn40(vx,v)			HW_E(v) HW_EAT(//POP
-#define _hwa_cfiobfn41(r,v)			af=r; _hwa_cfiobfn42(//POP
+#define _hwa_cfiobfn4(o,p,bn,bp,vx,v,...)	HW_BV(_hwa_cfiobfn4,af_##o##_,vx,v,o)  (o,p,bn,bp,__VA_ARGS__)//PUSH
+#define _hwa_cfiobfn40(vx,v,o)			HW_E(HW_EM_XNIL(v,_hw_af_##o)) HW_EAT//POP
+#define _hwa_cfiobfn41(r,v,o)			af=r; _hwa_cfiobfn42//POP
 #define _hwa_cfiobfn42(o,p,bn,bp,k,...)		HW_BW(_hwa_cfiobmd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
 
 /*
@@ -107,7 +107,7 @@
 #define _hwa_cfiobmd20(v,...)						\
   HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating,digital_input_pullup, \
 			 digital_input_pulldown,analog_input,digital_output, \
-			 digital_output_pushpull, digital_output_opendrain)))
+			 digital_output_pushpull, digital_output_opendrain)))		HW_EAT//POP
 #define _hwa_cfiobmd21(code,branch,...)		code branch//POP
 /*
  *  Default/alternate function
@@ -156,7 +156,7 @@
 
 #define _hwa_cfiobfq1(p,bn,bp,k,v,...)		HW_BV(_hwa_cfiobfq1,cfiob_fq_,v,)(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfiobfq11(r,...)			ospeed=r; _hwa_cfiob9
-#define _hwa_cfiobfq10(v,...)			HW_E(HW_EM_VAL(v,frequency,(lowest,2MHz,10MHz,50MHz,highest)))
+#define _hwa_cfiobfq10(v,...)			HW_E(HW_EM_VAL(v,frequency,(lowest,2MHz,10MHz,50MHz,highest))) HW_EAT
 
 #define _hwa_cfiob9(p,bn,bp,...)		HW_B(_hwa_cfiob9,__VA_ARGS__)(p,bn,bp,__VA_ARGS__)
 #define _hwa_cfiob90(p,bn,bp,g,...)		HW_E(HW_EM_G(g))
