@@ -24,6 +24,12 @@
  *  * two I/O LEDs: LED1 + LED2
  *  * two USB connectors
  *
+ * JTAG/SWD connector (J4, 20 pins):
+ *  * 3.3V: 1
+ *  * SWDIO: 7
+ *  * SWCLK: 9
+ *  * GND: 2,4,...,20
+ *
  * @image html mini-stm32-v3.0.jpeg
  *
  * @{

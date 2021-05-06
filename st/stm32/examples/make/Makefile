@@ -329,7 +329,7 @@ install: $(OUT).elf $(OUT).lst
 	  SHUTDOWN="mon shutdown" ;				\
 	  sleep 0.1 ; 						\
 	fi ;							\
-	if pidof openocd ; then					\
+	if pidof -q openocd ; then				\
 	$(GDB)	-ex "set architecture arm"			\
 		-ex "target remote localhost:3333" 		\
 		-ex "mon reset halt"				\

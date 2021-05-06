@@ -39,7 +39,7 @@ int main ( )
    */
   hwa( configure,  pll,
        input,      hse/2,
-       multiplier, SYSHZ/HW_DEVICE_HSEHZ );
+       multiplier, 2*SYSHZ/HW_DEVICE_HSEHZ );
 
   /* Prepare the connection of the sysclk to the pll. The hardware will wait for
    * the PLL to be locked before actually switching.

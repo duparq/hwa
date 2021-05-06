@@ -108,7 +108,7 @@
  *    0: hw(...) or multiple pins to configure -> signal remaping impossible.
  */
 #define _hwa_cfioa_(x,o,p,bn,bp,k,...)		HW_BW(_hwa_cfioafn,function,k)(x,o,p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioafn0(x,o,p,bn,bp,k,...)	HW_BW(_hwa_cfioamd,mode,k)(af,o,p,bn,bp,k,__VA_ARGS__)
+#define _hwa_cfioafn0(x,o,p,bn,bp,k,...)	HW_BW(_hwa_cfioamd,mode,k)(df,o,p,bn,bp,k,__VA_ARGS__)
 
 /*	Function
  */
@@ -157,45 +157,37 @@
 
 /*	Mode. Can drop 'o'.
  */
-//#define _hwa_cfioamd1(...)			_hwa_cfioamd2(__VA_ARGS__)
-#define _hwa_cfioamd1(f,o,p,bn,bp,k,v,...)	_HW_B(_hwa_cfioamd2,_hw_cfioa_##f##_##v)(f,p,bn,bp,v,__VA_ARGS__)
-#define _hwa_cfioamd20(f,p,bn,bp,v,...)	\
+#define _hwa_cfioamd1(f,o,p,bn,bp,k,v,...)	HW_BV(_hwa_cfioamd2,cfioa_##f##_,v,)(p,bn,bp,__VA_ARGS__)//PUSH
+#define _hwa_cfioamd20(v,...)	\
   HW_E(HW_EM_VAL(v,mode,(digital_input,digital_input_floating,digital_input_pullup, \
 			 digital_input_pulldown,analog_input,digital_output, \
-			 digital_output_pushpull, digital_output_opendrain)))
-#define _hwa_cfioamd21(f,p,bn,bp,v,...)		HW_G2(_hwa_cfioa,HW_A1(_hw_cfioa_##f##_##v))(p,bn,bp,__VA_ARGS__)
+			 digital_output_pushpull, digital_output_opendrain))) HW_EAT//POP
+#define _hwa_cfioamd21(v,...)			v//POP
 /*
- *  Default/alternate function			, branch
+ *  Default/alternate function			, code ; branch
  */
-#define _hw_cfioa_df_digital_input		, dif
-#define _hw_cfioa_df_digital_input_floating	, dif
-#define _hw_cfioa_df_digital_input_pullup	, dipu
-#define _hw_cfioa_df_digital_input_pulldown	, dipd
-#define _hw_cfioa_df_digital_output		, dopp
-#define _hw_cfioa_df_digital_output_pushpull	, dopp
-#define _hw_cfioa_df_digital_output_opendrain	, dood
-#define _hw_cfioa_df_analog_input		, ai
+#define _hw_cfioa_df_digital_input		, cnf=1 ; mode=0 ;         _hwa_cfioa9
+#define _hw_cfioa_df_digital_input_floating	, cnf=1 ; mode=0 ;         _hwa_cfioa9
+#define _hw_cfioa_df_digital_input_pullup	, cnf=2 ; mode=0 ; odr=1 ; _hwa_cfioa9
+#define _hw_cfioa_df_digital_input_pulldown	, cnf=2 ; mode=0 ; odr=0 ; _hwa_cfioa9
+#define _hw_cfioa_df_digital_output		, cnf=0 ; 		   _hwa_cfioafq
+#define _hw_cfioa_df_digital_output_pushpull	, cnf=0 ; 		   _hwa_cfioafq
+#define _hw_cfioa_df_digital_output_opendrain	, cnf=1 ; 		   _hwa_cfioafq
+#define _hw_cfioa_df_analog_input		, cnf=0 ; mode=0 ;         _hwa_cfioa9
 
-#define _hw_cfioa_af_digital_input		, dif
-#define _hw_cfioa_af_digital_input_floating	, dif
-#define _hw_cfioa_af_digital_input_pullup	, dipu
-#define _hw_cfioa_af_digital_input_pulldown	, dipd
-#define _hw_cfioa_af_digital_output		, afdopp
-#define _hw_cfioa_af_digital_output_pushpull	, afdopp
-#define _hw_cfioa_af_digital_output_opendrain	, afdood
-#define _hw_cfioa_af_analog_input		, ai
-
-#define _hwa_cfioa_dif(p,bn,bp,...)		cnf=1 ; mode=0 ;         _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_dipu(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=1 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_dipd(p,bn,bp,...)		cnf=2 ; mode=0 ; odr=0 ; _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_ai(p,bn,bp,...)		cnf=0 ; mode=0 ;         _hwa_cfioa9(p,bn,bp,__VA_ARGS__)
-#define _hwa_cfioa_dopp(p,bn,bp,k,...)		cnf=0 ; HW_BW(_hwa_cfioafq,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_dood(p,bn,bp,k,...)		cnf=1 ; HW_BW(_hwa_cfioafq,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdopp(p,bn,bp,k,...)	cnf=2 ; HW_BW(_hwa_cfioafq,frequency,k)(p,bn,bp,k,__VA_ARGS__)
-#define _hwa_cfioa_afdood(p,bn,bp,k,...)	cnf=3 ; HW_BW(_hwa_cfioafq,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+#define _hw_cfioa_af_digital_input		, cnf=1 ; mode=0 ;         _hwa_cfioa9
+#define _hw_cfioa_af_digital_input_floating	, cnf=1 ; mode=0 ;         _hwa_cfioa9
+#define _hw_cfioa_af_digital_input_pullup	, cnf=2 ; mode=0 ; odr=1 ; _hwa_cfioa9
+#define _hw_cfioa_af_digital_input_pulldown	, cnf=2 ; mode=0 ; odr=0 ; _hwa_cfioa9
+#define _hw_cfioa_af_digital_output		, cnf=2 ; 		   _hwa_cfioafq
+#define _hw_cfioa_af_digital_output_pushpull	, cnf=2 ; 		   _hwa_cfioafq
+#define _hw_cfioa_af_digital_output_opendrain	, cnf=3 ; 		   _hwa_cfioafq
+#define _hw_cfioa_af_analog_input		, cnf=0 ; mode=0 ;         _hwa_cfioa9
 /*
  *  Optionnal argument 'frequency' (only for output modes)
  */
+#define _hwa_cfioafq(p,bn,bp,k,...)		HW_BW(_hwa_cfioafq,frequency,k)(p,bn,bp,k,__VA_ARGS__)
+
 #define _hw_cfioa_fq_10MHz			, 1
 #define _hw_cfioa_fq_2MHz			, 2
 #define _hw_cfioa_fq_lowest			, 2
