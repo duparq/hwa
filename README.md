@@ -14,7 +14,7 @@ STM32F103RBT6 using Systick interrupts and sleeping mode:
     #define LED     (porta,2)               // PA2
     #define PERIOD  0.5                     // Blinking period in seconds
     
-    HW_ISR( (systick,irq) ) {}              // The IRQ is used only to wake the core up.
+    HW_ISR(systick) {}                      // The IRQ is used only to wake the core up.
     
     int main ( )
     {
